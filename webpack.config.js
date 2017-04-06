@@ -23,27 +23,31 @@ var common = {
 			'~': __dirname + '/core/static/js',
 			modernizr$: path.resolve(__dirname, '.modernizrrc')
 		},
-		extensions: ['', '.js', '.jsx'],
-		modulesDirectories: ['node_modules']
+		extensions: ['.js', '.jsx'],
+		modules: ['node_modules']
 	},
 
 	module: {
-		loaders: [
-		{
-			test: /\.jsx?$/,
-			loader: 'babel',
-			query: {
-				presets: ['react', 'es2015', 'stage-0', 'stage-1', 'stage-2'],
-				plugins: ['add-module-exports']
+		rules: [
+			{
+				test: /\.jsx?$/,
+				use: [
+					{
+						loader: 'babel-loader',
+						query: {
+							presets: ['react', 'es2015', 'stage-0', 'stage-1', 'stage-2'],
+							plugins: ['add-module-exports']
+						},
+					}
+				],
+				include: [
+					path.join(__dirname, '/core/static/js'),
+				],
 			},
-			include: [
-				path.join(__dirname, '/core/static/js'),
-			],
-		},
-		{
-			test: /\.modernizrrc$/,
-			loader: 'modernizr'
-		}
+			{
+				test: /\.modernizrrc$/,
+				loader: 'modernizr'
+			}
 		]
 	},
 
