@@ -1,5 +1,6 @@
 var webpack       = require('webpack');
 var merge         = require('webpack-merge');
+var autoprefixer  = require('autoprefixer');
 var BundleTracker = require('webpack-bundle-tracker');
 var path = require('path');
 
@@ -7,6 +8,23 @@ var TARGET = process.env.npm_lifecycle_event;
 process.env.BABEL_ENV = TARGET;
 
 var target = __dirname + '/common/static/js/bundles';
+
+var postCSSPlugins = function() {
+	return {
+		defaults: [autoprefixer],
+		cleaner: [autoprefixer({ browsers: [
+			'Chrome >= 35',
+			'Firefox >= 31',
+			'Edge >= 12',
+			'Explorer >= 9',
+			'iOS >= 8',
+			'Safari >= 8',
+			'Android 2.3',
+			'Android >= 4',
+			'Opera >= 12'
+		]})]
+	}
+}
 
 var common = {
 	entry: {
@@ -45,8 +63,42 @@ var common = {
 				],
 			},
 			{
+				test: /\.s[ca]ss$/,
+				use: [
+					'style-loader',
+					'css-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							plugins: postCSSPlugins
+						}
+					},
+					{
+						loader: 'sass-loader',
+						options: {
+							includePaths: [path.resolve(__dirname, 'node_modules/')]
+						}
+					}
+				],
+				include: path.resolve(__dirname, 'app/')
+			},
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					'css-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							plugins: postCSSPlugins
+						}
+					}
+				]
+			},
+			// Currently unused, but we'll want it if we install modernizr:
+			{
 				test: /\.modernizrrc$/,
-				loader: 'modernizr'
+				use: ['modernizr']
 			}
 		]
 	},
