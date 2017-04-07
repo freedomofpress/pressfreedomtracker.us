@@ -93,13 +93,9 @@ WSGI_APPLICATION = 'pressfreedom.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 import dj_database_url
 
-default_url = "postgres://{}:{}@localhost:5432/{}".format(
-    os.environ.get('DATABASE_USER'),
-    os.environ.get('DATABASE_PASSWORD'),
-    os.environ.get('DATABASE_NAME'))
-
+# Set the url as DATABASE_URL in the environment
 DATABASES = {
-    'default': dj_database_url.config(default=default_url)
+    'default': dj_database_url.config(default="sqlite:///db.sqlite3")
 }
 
 

@@ -1,6 +1,6 @@
 ## Database configuration
 
 Set the database url as the `DATABASE_URL` enviromnent variable.
-Alternatively, use the default url, supplying `DATABASE_USER`, `DATABASE_PASSWORD` and `DATABASE_NAME`
-enviromnent variables. (Defaults to a locally run postgreSQL database).
+The format for `DATABASE_URL` urls is
+`<database_user>:<database_password>@<server>:<port>/<database_name>`
 
