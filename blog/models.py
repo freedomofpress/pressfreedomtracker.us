@@ -1,44 +1,44 @@
-from django.core.validators import MaxValueValidator
 from django.db import models
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import StreamField, RichTextField
-from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.models import Page
 
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
+
 class BlogIndexPage(Page):
-  body = StreamField([
-      ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
-      ('image', ImageChooserBlock()),
-      ('raw_html', blocks.RawHTMLBlock()),
-  ])
+    body = StreamField([
+        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+        ('image', ImageChooserBlock()),
+        ('raw_html', blocks.RawHTMLBlock()),
+    ])
 
-  content_panels = Page.content_panels + [
-    StreamFieldPanel('body'),
-  ]
+    content_panels = Page.content_panels + [
+        StreamFieldPanel('body'),
+    ]
 
-  subpage_types = ['blog.BlogPage']
+    subpage_types = ['blog.BlogPage']
 
 
 class BlogPage(Page):
-  publication_datetime = models.DateTimeField(
+    publication_datetime = models.DateTimeField(
         help_text='Past or future date of publication'
     )
 
-  body = StreamField([
-      ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
-      ('image', ImageChooserBlock()),
-      ('raw_html', blocks.RawHTMLBlock()),
-  ])
+    body = StreamField([
+        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+        ('image', ImageChooserBlock()),
+        ('raw_html', blocks.RawHTMLBlock()),
+    ])
 
-  teaser_text = RichTextField(
+    teaser_text = RichTextField(
         null=True,
         blank=True
     )
 
-  organization = models.ForeignKey(
+    organization = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
         blank=True,
@@ -46,7 +46,7 @@ class BlogPage(Page):
         related_name='+',
     )
 
-  author = models.ForeignKey(
+    author = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
         blank=True,
@@ -54,13 +54,12 @@ class BlogPage(Page):
         related_name='+',
     )
 
-  content_panels = Page.content_panels + [
-    FieldPanel('publication_datetime'),
-    StreamFieldPanel('body'),
-    FieldPanel('teaser_text'),
-    PageChooserPanel('organization', 'common.OrganizationPage'),
-    PageChooserPanel('author', 'common.PersonPage'),
-  ]
+    content_panels = Page.content_panels + [
+        FieldPanel('publication_datetime'),
+        StreamFieldPanel('body'),
+        FieldPanel('teaser_text'),
+        PageChooserPanel('organization', 'common.OrganizationPage'),
+        PageChooserPanel('author', 'common.PersonPage'),
+    ]
 
-  parent_page_types = ['blog.BlogIndexPage']
-
+    parent_page_types = ['blog.BlogIndexPage']
