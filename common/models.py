@@ -9,6 +9,11 @@ from modelcluster.fields import ParentalKey
 from taggit.models import TaggedItemBase
 
 
+class OrganizationIndexPage(Page):
+    subpage_types = ['common.OrganizationPage']
+    content_panels = Page.content_panels
+
+
 class OrganizationPage(Page):
     website = models.URLField(blank=True, null=True)
     logo = models.ForeignKey(
