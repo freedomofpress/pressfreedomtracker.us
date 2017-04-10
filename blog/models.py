@@ -8,6 +8,19 @@ from wagtail.wagtailcore.models import Page, Orderable
 
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
+class BlogIndexPage(Page):
+  body = StreamField([
+      ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+      ('image', ImageChooserBlock()),
+      ('raw_html', blocks.RawHTMLBlock()),
+  ])
+
+  content_panels = Page.content_panels + [
+    StreamFieldPanel('body'),
+  ]
+
+  subpage_types = ['blog.BlogPage']
+
 
 class BlogPage(Page):
   publication_datetime = models.DateTimeField(
@@ -48,4 +61,6 @@ class BlogPage(Page):
     PageChooserPanel('organization', 'common.OrganizationPage'),
     PageChooserPanel('author', 'common.PersonPage'),
   ]
+
+  parent_page_types = ['blog.BlogIndexPage']
 
