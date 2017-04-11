@@ -1,8 +1,10 @@
 from django.db import models
 
 from wagtail.wagtailcore.models import Page
-from wagtail.wagtailadmin.edit_handlers import FieldPanel
-from wagtail.wagtailcore.fields import RichTextField
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.wagtailcore import blocks
+from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 from modelcluster.fields import ParentalKey
@@ -58,6 +60,18 @@ class CategoryPage(Page):
         FieldPanel('description'),
         FieldPanel('methodology'),
         FieldPanel('retrospective_info'),
+    ]
+
+
+class SimplePage(Page):
+    body = StreamField([
+        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+        ('image', ImageChooserBlock()),
+        ('raw_html', blocks.RawHTMLBlock()),
+    ])
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel('body'),
     ]
 
 
