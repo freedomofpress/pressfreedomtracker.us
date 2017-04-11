@@ -34,7 +34,8 @@ class IncidentPage(Page):
         StreamFieldPanel('body'),
         PageChooserPanel('category', 'common.CategoryPage'),
         FieldPanel('tags'),
-        InlinePanel('related_incidents', label='Related incidents')
+        InlinePanel('related_incidents', label='Related incidents'),
+        InlinePanel('updates', label='Updates')
     ]
 
 
@@ -50,4 +51,21 @@ class IncidentPageRelatedLinks(Orderable):
 
     panels = [
         PageChooserPanel('related_incident', IncidentPage)
+    ]
+
+
+class IncidentPageUpdates(Orderable):
+    page = ParentalKey(IncidentPage, related_name='updates')
+    title = models.CharField(max_length=255)
+    date = models.DateTimeField()
+    body = StreamField([
+        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+        ('image', ImageChooserBlock()),
+        ('raw_html', blocks.RawHTMLBlock()),
+    ])
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('date'),
+        StreamFieldPanel('body'),
     ]
