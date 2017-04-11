@@ -26,20 +26,11 @@ class IncidentPage(Page):
         related_name='incidents'
     )
 
-    org_reported_by = models.ForeignKey(
-        'wagtailcore.Page',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='reported_incidents'
-    )
-
     tags = ClusterTaggableManager(through='common.Tag', blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('date'),
         StreamFieldPanel('body'),
         PageChooserPanel('category', 'common.CategoryPage'),
-        PageChooserPanel('org_reported_by', 'common.OrganizationPage'),
         FieldPanel('tags')
     ]
