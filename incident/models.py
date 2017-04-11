@@ -19,24 +19,17 @@ class IncidentPage(Page):
         ('raw_html', blocks.RawHTMLBlock()),
     ])
 
-    category = models.ForeignKey(
-        'wagtailcore.Page',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='category_incidents'
-    )
-
     tags = ClusterTaggableManager(through='common.Tag', blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('date'),
         StreamFieldPanel('body'),
-        PageChooserPanel('category', 'common.CategoryPage'),
         FieldPanel('tags'),
         InlinePanel('related_incidents', label='Related incidents'),
         InlinePanel('updates', label='Updates')
     ]
+
+    parent_page_types = ['common.CategoryPage']
 
 
 class IncidentPageRelatedLinks(Orderable):

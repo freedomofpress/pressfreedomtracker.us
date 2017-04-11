@@ -62,6 +62,8 @@ class CategoryPage(Page):
         FieldPanel('retrospective_info'),
     ]
 
+    subpage_types = ['incident.IncidentPage']
+
 
 class SimplePage(Page):
     body = StreamField([
