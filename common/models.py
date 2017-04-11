@@ -15,6 +15,8 @@ class OrganizationIndexPage(Page):
     subpage_types = ['common.OrganizationPage']
     content_panels = Page.content_panels
 
+    subpage_types = ['common.OrganizationPage']
+
 
 class OrganizationPage(Page):
     website = models.URLField(blank=True, null=True)
@@ -32,6 +34,8 @@ class OrganizationPage(Page):
         FieldPanel('website'),
         ImageChooserPanel('logo'),
     ]
+
+    parent_page_types = ['common.OrganizationIndexPage']
 
 
 class PersonPage(Page):
