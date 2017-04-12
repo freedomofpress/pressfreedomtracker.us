@@ -56,9 +56,9 @@ class PersonPage(Page):
 
 
 class CategoryPage(Page):
-    description = RichTextField()
-    methodology = RichTextField()
-    retrospective_info = RichTextField()
+    description = RichTextField(null=True, blank=True)
+    methodology = RichTextField(null=True, blank=True)
+    retrospective_info = RichTextField(null=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('description'),
