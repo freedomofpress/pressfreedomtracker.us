@@ -1,13 +1,12 @@
 from django.db import models
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, PageChooserPanel, StreamFieldPanel, InlinePanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.blocks import ImageChooserBlock
-
-from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
 
 class IncidentPage(Page):
@@ -21,30 +20,17 @@ class IncidentPage(Page):
 
     tags = ClusterTaggableManager(through='common.Tag', blank=True)
 
+    related_incidents = ParentalManyToManyField('self', blank=True)
+
     content_panels = Page.content_panels + [
         FieldPanel('date'),
         StreamFieldPanel('body'),
         FieldPanel('tags'),
-        InlinePanel('related_incidents', label='Related incidents'),
-        InlinePanel('updates', label='Updates')
+        InlinePanel('updates', label='Updates'),
+        FieldPanel('related_incidents')
     ]
 
     parent_page_types = ['common.CategoryPage']
-
-
-class IncidentPageRelatedLinks(Orderable):
-    page = ParentalKey(IncidentPage, related_name='related_incidents')
-    related_incident = models.ForeignKey(
-        'wagtailcore.Page',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='incidents'
-    )
-
-    panels = [
-        PageChooserPanel('related_incident', IncidentPage)
-    ]
 
 
 class IncidentPageUpdates(Orderable):
