@@ -80,7 +80,6 @@ var common = {
 						}
 					}
 				],
-				include: path.resolve(__dirname, 'app/')
 			},
 			{
 				test: /\.css$/,
