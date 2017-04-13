@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'webpack_loader',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -143,3 +144,18 @@ WAGTAIL_SITE_NAME = "pressfreedom"
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+# Django-webpack configuration
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'webpack_bundles/', # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+    }
+}
