@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block maincontainer%}
+<article>
+  <h1>{{page.title}}</h1>
+  <h3>{{page.get_parent.title}}</h3>
+  <h5>{{page.date|date:"F j, Y" }}</h5>
+  {% for block in page.body %}
+      <section>{% include_block block %}</section>
+  {% endfor %}
+  {% if page.updates %}
+    {% for update in page.updates.all %}
+    <section>
+      <h5>{{update.date|date:"F j, Y"}} Update</h5>
+      {% for block in update.body %}
+      <section>{% include_block block %}</section>
+      {% endfor %}
+    </section>
+    {% endfor %}
+  {% endif %}
+</article>
+{% if page.related_incidents %}
+<div class='related_cases'>
+  <h3>Related cases</h3>
+  {% for related_case in page.related_incidents.all %}
+    <div class='incident_card'>
+      <h3>{{related_case.get_parent.title}}</h3>
+      <h2>{{related_case.title}}</h2>
+      <p>{{related_case.body|truncatewords:15}}</p>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<aside>
+  <table class='details'>
+    <tr class='details__row'>
+      <td class="details__row details__row--bold">Date of Incident</td>
+      <td>{{page.date|date:"F j, Y" }}</td>
+    </tr>
+    {% if page.updates %}
+    <tr class='details__row'>
+      <td class="details__row details__row--bold">Last Updated</td>
+      <td>{{ page.updates.first.date|date:"F j, Y" }}
+    </tr>
+    {% endif %}
+    <tr class='details__row'>
+      <td class="details__row details__row--bold">Related cases</td>
+      <td>
+        {% for related_case in page.related_incidents.all %}
+        <a href="">{{related_case.title}}</a>
+        {% endfor %}
+      </td>
+    </tr>
+    <tr class='details__row'>
+      <td class="details__row details__row--bold">Tags</td>
+      <td>
+        {% for tag in page.tags.all %}
+        <a href="">{{tag.name}}</a>
+        {% endfor %}
+      </td>
+    </tr>
+  </table>
+  {% with page.get_parent as category %}
+    {% if category.title %}
+      <div class='methodology'>
+          {{category.title}}
+          <p>This is where the methodology goes?</p>
+      </div>
+    {% endif %}
+  {% endwith %}
+</aside>
+
+
+{% endblock %}
