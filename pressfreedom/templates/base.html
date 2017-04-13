@@ -1,4 +1,5 @@
 {% load static wagtailuserbar %}
+{% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -21,24 +22,28 @@
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/pressfreedom.css' %}">
-
-        {% block extra_css %}
-            {# Override this in templates to add extra stylesheets #}
+        {% block css %}
+            <link rel="stylesheet" type="text/x-sass" href="{% static 'pressfreedom.sass' %}">
         {% endblock %}
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
-        {% block content %}{% endblock %}
+        {% block top %}
+        {% endblock %}
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/pressfreedom.js' %}"></script>
+        {% block maincontainer %}
+          <main role="main" class="site-main container">
+            {% block main %}{% endblock %}
+          </main>{# /.main #}
+        {% endblock %}
 
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
+        {% block bottom %}
+        {% endblock %}
+
+        {% block js %}
+          {% render_bundle 'common' %}
         {% endblock %}
     </body>
 </html>
