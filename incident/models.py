@@ -18,6 +18,8 @@ class IncidentPage(Page):
         ('raw_html', blocks.RawHTMLBlock()),
     ])
 
+    journalists = ParentalManyToManyField('common.PersonPage', blank=True)
+
     tags = ClusterTaggableManager(through='common.Tag', blank=True)
 
     related_incidents = ParentalManyToManyField('self', blank=True)
@@ -25,6 +27,7 @@ class IncidentPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('date'),
         StreamFieldPanel('body'),
+        FieldPanel('journalists'),
         FieldPanel('tags'),
         InlinePanel('updates', label='Updates'),
         FieldPanel('related_incidents')
