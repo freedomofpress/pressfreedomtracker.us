@@ -1,76 +1,141 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags %}
+{% load kebab %}
 
-{% block maincontainer%}
-<article>
-  <h1>{{page.title}}</h1>
-  <h3>{{page.get_parent.title}}</h3>
-  <h5>{{page.date|date:"F j, Y" }}</h5>
-  {% for block in page.body %}
-      <section>{% include_block block %}</section>
-  {% endfor %}
-  {% if page.updates %}
-    {% for update in page.updates.all %}
-    <section>
-      <h5>{{update.date|date:"F j, Y"}} Update</h5>
-      {% for block in update.body %}
-      <section>{% include_block block %}</section>
+{% block maincontainer %}
+<div class="row">
+  <div class="col span_8">
+    <article class='incident incident__main
+                    incident--border-{{page.get_parent.title|kebab}}
+                    incident--white-background'
+    >
+      <h3 class='incident__h3 incident--color-{{page.get_parent.title|kebab}}'>{{page.get_parent.title|upper}}</h3>
+      <h1 class='incident__h1'>{{page.title}}</h1>
+      <h5>{{page.date|date:"F j, Y" }}</h5>
+      {% for block in page.body %}
+          <section>{% include_block block %}</section>
       {% endfor %}
-    </section>
-    {% endfor %}
-  {% endif %}
-</article>
-{% if page.related_incidents %}
-<div class='related_cases'>
-  <h3>Related cases</h3>
-  {% for related_case in page.related_incidents.all %}
-    <div class='incident_card'>
-      <h3>{{related_case.get_parent.title}}</h3>
-      <h2>{{related_case.title}}</h2>
-      <p>{{related_case.body|truncatewords:15}}</p>
-    </div>
-  {% endfor %}
+      {% if page.updates %}
+        {% for update in page.updates.all %}
+        <section>
+          <h5>{{update.date|date:"F j, Y"}} Update</h5>
+          {% for block in update.body %}
+          <section>{% include_block block %}</section>
+          {% endfor %}
+        </section>
+        {% endfor %}
+      {% endif %}
+    </article>
+  </div>
+
+  <aside class='col span_4'>
+    <table class='incident incident__details'>
+       <tbody>
+        <tr class='incident__details_row'>
+          <td class="incident__details_cell incident__details_cell--bold">
+            Date of Incident
+          </td>
+          <td class="incident__details_cell">{{page.date|date:"F j, Y" }}</td>
+        </tr>
+        {% if page.journalists.all %}
+        <tr class='incident__details_row'>
+          <td class="incident__details_cell incident__details_cell--bold">Journalists</td>
+          <td class="incident__details_cell">
+          {% with page.journalists.all as journalists %}
+            {% for journalistPage in journalists %}
+              {% if not forloop.last %}
+                {{journalistPage.title}}, 
+              {% else %}
+                {{journalistPage.title}}
+              {% endif %}
+            {% endfor %}
+          {% endwith %}
+          </td>
+        </tr>
+        {% endif %}
+        <tr class='incident__details_row'>
+          <td class="incident__details_cell incident__details_cell--bold">
+            Last Updated
+          </td>
+
+          <td class="incident__details_cell" >
+            {% if page.updates.all %}
+              {{ page.updates.first.date|date:"F j, Y" }}
+            {% else %}
+              {{page.published_date|date:"F j, Y" }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr class='incident__details_row'>
+          <td class="incident__details_cell incident__details_cell--bold">
+            Related cases
+          </td>
+          <td class="incident__details_cell">
+            {% for related_case in page.related_incidents.all %}
+            <a href="{{related_case.url}}" class="incident__text-link" >{{related_case.title}}</a>
+            {% endfor %}
+          </td>
+        </tr>
+        <tr class='incident__details_row'>
+          <td class="incident__details_cell incident__details_cell--bold">
+            Tags
+          </td>
+          <td class="incident__details_cell">
+            {% for tag in page.tags.all %}
+            <a href="" class="incident__text-link" >{{tag.name}}</a>
+            {% endfor %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    {% with page.get_parent as category %}
+      {% if category.title %}
+        <div class='incident'>
+            {{category.title}}
+            <p>This is where the methodology goes?</p>
+        </div>
+      {% endif %}
+    {% endwith %}
+  </aside>
 </div>
+
+{% if page.related_incidents.all %}
+    <div class='row'>
+      <h3 class="incident incident__h3 col span_9">RELATED CASES</h3>
+    </div>
+    <div class='row'>
+      {% for related_case in page.related_incidents.all %}
+          {% if forloop.counter0 < 2 %}
+              <div class='incident incident__related_card incident--white-background
+                          incident--border-{{related_case.get_parent.title|kebab}}
+                          col span_4'
+              >
+                <h3 class="incident__h3
+                           incident--color-{{related_case.get_parent.title|kebab}}"
+                >
+                  {{related_case.get_parent.title|upper}}
+                </h3>
+                <h2 class='incident__h2'>{{related_case.title}}</h2>
+                {% for block in page.body %}
+                  {% if block.block_type == 'rich_text' %}
+                    <section>{% include_block block|truncatewords:20 %}</section>
+                  {% endif %}
+                {% endfor %}
+              </div>
+          {% elif forloop.counter0 == 3 %}
+              <div class='col span_8 incident__related_card
+                          incident__related_card--centered'
+              >
+                <a href='' class='incident__more_related
+                                  incident__card-link
+                                  incident--white-background'
+                >
+                    MORE RELATED CASES
+                </a>
+              <div>
+          {% endif %}
+      {% endfor %}
+    </div>
 {% endif %}
-
-<aside>
-  <table class='details'>
-    <tr class='details__row'>
-      <td class="details__row details__row--bold">Date of Incident</td>
-      <td>{{page.date|date:"F j, Y" }}</td>
-    </tr>
-    {% if page.updates %}
-    <tr class='details__row'>
-      <td class="details__row details__row--bold">Last Updated</td>
-      <td>{{ page.updates.first.date|date:"F j, Y" }}
-    </tr>
-    {% endif %}
-    <tr class='details__row'>
-      <td class="details__row details__row--bold">Related cases</td>
-      <td>
-        {% for related_case in page.related_incidents.all %}
-        <a href="">{{related_case.title}}</a>
-        {% endfor %}
-      </td>
-    </tr>
-    <tr class='details__row'>
-      <td class="details__row details__row--bold">Tags</td>
-      <td>
-        {% for tag in page.tags.all %}
-        <a href="">{{tag.name}}</a>
-        {% endfor %}
-      </td>
-    </tr>
-  </table>
-  {% with page.get_parent as category %}
-    {% if category.title %}
-      <div class='methodology'>
-          {{category.title}}
-          <p>This is where the methodology goes?</p>
-      </div>
-    {% endif %}
-  {% endwith %}
-</aside>
-
 
 {% endblock %}
