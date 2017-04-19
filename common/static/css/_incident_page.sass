@@ -1,14 +1,22 @@
+$title-top-margin: 20px
+
 .incident
   font-family: quicksand
 
 .incident__main
-  padding: 1em
+  padding: 0 1em
 
 .incident__title, .incident__related-incident-title
   font-family: "Times New Roman"
+  margin-top: 0
 
-.incident__category-name
+.incident__category-name, .incident__related-cases-title
   font-size: .8em
+  margin-top: $title-top-margin
+  margin-bottom: $title-top-margin * 0.33
+
+.incident__related-cases-title
+  margin-bottom: $row-margin / 2
 
 .incident__details
   border-collapse: collapse
