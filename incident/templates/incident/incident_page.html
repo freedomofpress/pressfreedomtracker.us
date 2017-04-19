@@ -8,8 +8,8 @@
                     incident--border-{{page.get_parent.title|slugify}}
                     incident--white-background'
     >
-      <h3 class='incident__h3 incident--color-{{page.get_parent.title|slugify}}'>{{page.get_parent.title|upper}}</h3>
-      <h1 class='incident__h1'>{{page.title}}</h1>
+      <h3 class='incident__category-name incident--color-{{page.get_parent.title|slugify}}'>{{page.get_parent.title|upper}}</h3>
+      <h1 class='incident__title'>{{page.title}}</h1>
       <h5>{{page.date|date:"F j, Y" }}</h5>
       {% for block in page.body %}
           <section>{% include_block block %}</section>
@@ -30,16 +30,16 @@
   <aside class='col span_4'>
     <table class='incident incident__details'>
        <tbody>
-        <tr class='incident__details_row'>
-          <td class="incident__details_cell incident__details_cell--bold">
+        <tr class='incident__details-row'>
+          <td class="incident__details-cell incident__details-cell--bold">
             Date of Incident
           </td>
-          <td class="incident__details_cell">{{page.date|date:"F j, Y" }}</td>
+          <td class="incident__details-cell">{{page.date|date:"F j, Y" }}</td>
         </tr>
         {% if page.journalists.all %}
-        <tr class='incident__details_row'>
-          <td class="incident__details_cell incident__details_cell--bold">Journalists</td>
-          <td class="incident__details_cell">
+        <tr class='incident__details-row'>
+          <td class="incident__details-cell incident__details-cell--bold">Journalists</td>
+          <td class="incident__details-cell">
           {% with page.journalists.all as journalists %}
             {% for journalistPage in journalists %}
               {% if not forloop.last %}
@@ -52,12 +52,12 @@
           </td>
         </tr>
         {% endif %}
-        <tr class='incident__details_row'>
-          <td class="incident__details_cell incident__details_cell--bold">
+        <tr class='incident__details-row'>
+          <td class="incident__details-cell incident__details-cell--bold">
             Last Updated
           </td>
 
-          <td class="incident__details_cell" >
+          <td class="incident__details-cell" >
             {% if page.updates.all %}
               {{ page.updates.first.date|date:"F j, Y" }}
             {% else %}
@@ -65,21 +65,21 @@
             {% endif %}
           </td>
         </tr>
-        <tr class='incident__details_row'>
-          <td class="incident__details_cell incident__details_cell--bold">
+        <tr class='incident__details-row'>
+          <td class="incident__details-cell incident__details-cell--bold">
             Related cases
           </td>
-          <td class="incident__details_cell">
+          <td class="incident__details-cell">
             {% for related_case in page.related_incidents.all %}
             <a href="{{related_case.url}}" class="incident__text-link" >{{related_case.title}}</a>
             {% endfor %}
           </td>
         </tr>
-        <tr class='incident__details_row'>
-          <td class="incident__details_cell incident__details_cell--bold">
+        <tr class='incident__details-row'>
+          <td class="incident__details-cell incident__details-cell--bold">
             Tags
           </td>
-          <td class="incident__details_cell">
+          <td class="incident__details-cell">
             {% for tag in page.tags.all %}
             <a href="" class="incident__text-link" >{{tag.name}}</a>
             {% endfor %}
@@ -100,21 +100,21 @@
 
 {% if page.related_incidents.all %}
     <div class='row'>
-      <h3 class="incident incident__h3 col span_9">RELATED CASES</h3>
+      <h3 class="incident incident__category-name col span_9">RELATED CASES</h3>
     </div>
     <div class='row'>
       {% for related_case in page.related_incidents.all %}
           {% if forloop.counter0 < 2 %}
-              <div class='incident incident__related_card incident--white-background
+              <div class='incident incident__related-card incident--white-background
                           incident--border-{{related_case.get_parent.title|slugify}}
                           col span_4'
               >
-                <h3 class="incident__h3
+                <h3 class="incident__category-name
                            incident--color-{{related_case.get_parent.title|slugify}}"
                 >
                   {{related_case.get_parent.title|upper}}
                 </h3>
-                <h2 class='incident__h2'>{{related_case.title}}</h2>
+                <h2 class='incident__related-incident-title'>{{related_case.title}}</h2>
                 {% for block in page.body %}
                   {% if block.block_type == 'rich_text' %}
                     <section>{% include_block block|truncatewords:20 %}</section>
@@ -122,10 +122,10 @@
                 {% endfor %}
               </div>
           {% elif forloop.counter0 == 3 %}
-              <div class='col span_8 incident__related_card
-                          incident__related_card--centered'
+              <div class='col span_8 incident__related-card
+                          incident__related-card--centered'
               >
-                <a href='' class='incident__more_related
+                <a href='' class='incident__more-related
                                   incident__card-link
                                   incident--white-background'
                 >
