@@ -2,11 +2,13 @@
 {% load wagtailcore_tags %}
 
 {% block maincontainer %}
-<div class="row">
-  <div class="col span_8">
+<div class="layout-right-sidebar layout-right-sidebar__row">
+  <div class="layout-right-sidebar">
     <article class='incident incident__main
                     incident--border-{{page.get_parent.title|slugify}}
-                    incident--white-background'
+                    incident--white-background
+                    layout-right-sidebar
+                    layout-right-sidebar__main'
     >
       <h3 class='incident__category-name incident--color-{{page.get_parent.title|slugify}}'>{{page.get_parent.title|upper}}</h3>
       <h1 class='incident__title'>{{page.title}}</h1>
@@ -27,7 +29,7 @@
     </article>
   </div>
 
-  <aside class='col span_4'>
+  <aside class='layout-right-sidebar layout-right-sidebar__sidebar'>
     <table class='incident incident__details'>
        <tbody>
         <tr class='incident__details-row'>
@@ -99,15 +101,21 @@
 </div>
 
 {% if page.related_incidents.all %}
-    <div class='row'>
-      <h3 class="incident incident__category-name col span_9">RELATED CASES</h3>
-    </div>
-    <div class='row'>
+    <div class='layout-right-sidebar layout-right-sidebar__row'>
+      <h3 class="incident
+                 incident__related-cases-title
+                 layout-right-sidebar
+                 layout-right-sidebar__main">
+        RELATED CASES
+      </h3>
+
       {% for related_case in page.related_incidents.all %}
           {% if forloop.counter0 < 2 %}
               <div class='incident incident__related-card incident--white-background
                           incident--border-{{related_case.get_parent.title|slugify}}
-                          col span_4'
+                          layout-right-sidebar
+                          layout-right-sidebar__main
+                          layout-right-sidebar__main--half-width'
               >
                 <h3 class="incident__category-name
                            incident--color-{{related_case.get_parent.title|slugify}}"
@@ -115,23 +123,27 @@
                   {{related_case.get_parent.title|upper}}
                 </h3>
                 <h2 class='incident__related-incident-title'>{{related_case.title}}</h2>
-                {% for block in page.body %}
+                {% for block in related_case.body %}
                   {% if block.block_type == 'rich_text' %}
                     <section>{% include_block block|truncatewords:20 %}</section>
                   {% endif %}
                 {% endfor %}
               </div>
-          {% elif forloop.counter0 == 3 %}
-              <div class='col span_8 incident__related-card
-                          incident__related-card--centered'
-              >
-                <a href='' class='incident__more-related
-                                  incident__card-link
-                                  incident--white-background'
+          {% elif forloop.counter0 == 2 %}
+              <div class='layout-right-sidebar layout-right-sidebar__row'>
+                <div class='incident__related-card
+                            incident__related-card--centered
+                            layout-right-sidebar
+                            layout-right-sidebar__main'
                 >
-                    MORE RELATED CASES
-                </a>
-              <div>
+                  <a href='' class='incident__more-related
+                                    incident__card-link
+                                    incident--white-background'
+                  >
+                      MORE RELATED CASES
+                  </a>
+                <div>
+              </div>
           {% endif %}
       {% endfor %}
     </div>

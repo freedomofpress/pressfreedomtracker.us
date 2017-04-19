@@ -1,0 +1,25 @@
+.layout-right-sidebar
+  box-sizing: border-box
+
+.layout-right-sidebar__row
+  margin-left: 0
+  width: 100%
+  margin-bottom: $row-margin
+  // clearfix hack - puts rows in the right place
+  &:before, &:after
+    content: ""
+    display: table
+    clear: both
+
+.layout-right-sidebar__main
+  width: $main-content-width
+  margin: 0 $main-content-margin
+  padding: 0 0.5%
+  float: left
+
+.layout-right-sidebar__main--half-width
+  width: $half-main-width
+
+.layout-right-sidebar__sidebar
+  width: $sidebar-width
+  float: right
