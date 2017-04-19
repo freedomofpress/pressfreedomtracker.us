@@ -23,3 +23,13 @@
 .layout-right-sidebar__sidebar
   width: $sidebar-width
   float: right
+
+@media(max-width: $small-screen)
+  .layout-right-sidebar
+    margin: 0 $main-content-margin
+
+  .layout-right-sidebar__main, .layout-right-sidebar__sidebar
+    float: none
+    width: 100%
+
+
