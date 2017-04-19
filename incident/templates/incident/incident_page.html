@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags %}
-{% load kebab %}
 
 {% block maincontainer %}
 <div class="row">
   <div class="col span_8">
     <article class='incident incident__main
-                    incident--border-{{page.get_parent.title|kebab}}
+                    incident--border-{{page.get_parent.title|slugify}}
                     incident--white-background'
     >
-      <h3 class='incident__h3 incident--color-{{page.get_parent.title|kebab}}'>{{page.get_parent.title|upper}}</h3>
+      <h3 class='incident__h3 incident--color-{{page.get_parent.title|slugify}}'>{{page.get_parent.title|upper}}</h3>
       <h1 class='incident__h1'>{{page.title}}</h1>
       <h5>{{page.date|date:"F j, Y" }}</h5>
       {% for block in page.body %}
@@ -107,11 +106,11 @@
       {% for related_case in page.related_incidents.all %}
           {% if forloop.counter0 < 2 %}
               <div class='incident incident__related_card incident--white-background
-                          incident--border-{{related_case.get_parent.title|kebab}}
+                          incident--border-{{related_case.get_parent.title|slugify}}
                           col span_4'
               >
                 <h3 class="incident__h3
-                           incident--color-{{related_case.get_parent.title|kebab}}"
+                           incident--color-{{related_case.get_parent.title|slugify}}"
                 >
                   {{related_case.get_parent.title|upper}}
                 </h3>
