@@ -2,7 +2,7 @@
 {% load wagtailcore_tags %}
 
 {% block maincontainer %}
-<main class="layout-right-sidebar">
+<main class="incident layout-right-sidebar">
   <div class="layout-right-sidebar layout-right-sidebar__row">
     <article class='incident incident__main
                     incident--border-{{page.get_parent.title|slugify}}
@@ -102,9 +102,8 @@
   {% if page.related_incidents.all %}
       <div class='layout-right-sidebar layout-right-sidebar__row'>
         <h3 class="incident
-                   incident__related-cases-title
-                   layout-right-sidebar
-                   layout-right-sidebar__main">
+                   incident__related-cases-title"
+        >
           RELATED CASES
         </h3>
 
@@ -129,15 +128,11 @@
                   {% endfor %}
                 </div>
             {% elif forloop.counter0 == 2 %}
-                <div class='layout-right-sidebar layout-right-sidebar__row'>
-                  <div class='incident__related-card
-                              incident__related-card--centered
-                              layout-right-sidebar
-                              layout-right-sidebar__main'
+                  <div class='layout-right-sidebar__main
+                              layout-right-sidebar__main--centered'
                   >
                     <a href='' class='incident__more-related
-                                      incident__card-link
-                                      incident--white-background'
+                                      incident__card-link'
                     >
                         MORE RELATED CASES
                     </a>

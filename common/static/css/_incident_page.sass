@@ -1,10 +1,8 @@
-$title-top-margin: 20px
-
 .incident
   font-family: quicksand
 
 .incident__main
-  padding: 0 1em
+  padding: 0 1.2em
 
 .incident__title, .incident__related-incident-title
   font-family: "Times New Roman"
@@ -16,7 +14,7 @@ $title-top-margin: 20px
   margin-bottom: $title-top-margin * 0.33
 
 .incident__related-cases-title
-  margin-bottom: $row-margin / 2
+  margin-bottom: $related-cases-margin
 
 .incident__details
   border-collapse: collapse
@@ -57,12 +55,17 @@ $title-top-margin: 20px
 
 .incident__related-card
   margin-bottom: 2em
-
-.incident__related-card--centered
-  text-align: center
+  margin-right: $incident-card-margin
 
 .incident__more-related
   padding: 1em 100px
   font-family: quicksand
   border: 1px solid $black
   background-color: $gray-very-light
+  text-align: center
+
+  margin: 0 auto
+
+@media(max-width: $small-screen)
+  .incident__more-related
+    padding: 1em 80px

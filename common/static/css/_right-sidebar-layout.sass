@@ -1,10 +1,10 @@
 .layout-right-sidebar
   box-sizing: border-box
+  display: inline-block
+  margin: 0 auto
 
 .layout-right-sidebar__row
-  margin-left: 0
-  width: 100%
-  margin-bottom: $row-margin
+  margin: 0 $row-margin-side $row-margin-bottom $row-margin-side
   // clearfix hack - puts rows in the right place
   &:before, &:after
     content: ""
@@ -13,12 +13,17 @@
 
 .layout-right-sidebar__main
   width: $main-content-width
-  margin: 0 $main-content-margin
   padding: 0 0.5%
   float: left
 
 .layout-right-sidebar__main--half-width
   width: $half-main-width
+
+.layout-right-sidebar__main--no-margin
+  margin: 0
+
+.layout-right-sidebar__main--centered
+  text-align: center
 
 .layout-right-sidebar__sidebar
   width: $sidebar-width
