@@ -91,9 +91,20 @@
       {% with page.get_parent as category %}
         {% if category.title %}
           <div class='incident'>
-              {{category.title}}
-              <p>This is where the methodology goes?</p>
+              <h3 class="incident
+                   incident__related-cases-title"
+              >
+              How we track {{category.title}}s
+              </h3>
+              <p>{{category.specific.methodology|richtext}}</p>
           </div>
+          <h3 class="incident
+                   incident__related-cases-title"
+              >
+              <a href="{% pageurl category %}" class="incident__text-link" >
+                More {{category.title}}s&gt;
+              </a>
+          </h3>
         {% endif %}
       {% endwith %}
     </aside>
@@ -104,7 +115,7 @@
         <h3 class="incident
                    incident__related-cases-title"
         >
-          RELATED CASES
+          Related Cases
         </h3>
 
         {% for related_case in page.related_incidents.all %}
