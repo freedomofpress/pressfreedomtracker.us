@@ -1,40 +1,42 @@
 .layout-right-sidebar
   box-sizing: border-box
-  display: inline-block
+  display: flex
+  flex-flow: row wrap
+  flex-align: flex-start
+  justify-content: flex-start
   margin: 0 auto
+  padding: 0 $page-margin-side
+  width: 100%
 
-.layout-right-sidebar__row
-  margin: 0 $row-margin-side $row-margin-bottom $row-margin-side
-  // clearfix hack - puts rows in the right place
-  &:before, &:after
-    content: ""
-    display: table
-    clear: both
+.layout-right-sidebar__column
+  flex-direction: column
+
+.layout-right-sidebar__line-break
+  width: 100%
+
+.layout-right-sidebar__main, .layout-right-sidebar--two-thirds
+  width: $main-content-width
+  margin: 0 $main-content-margin $main-content-margin 0
 
 .layout-right-sidebar__main
-  width: $main-content-width
-  padding: 0 0.5%
-  float: left
-
-.layout-right-sidebar__main--half-width
-  width: $half-main-width
-
-.layout-right-sidebar__main--no-margin
-  margin: 0
-
-.layout-right-sidebar__main--centered
-  text-align: center
+  order: 1
 
 .layout-right-sidebar__sidebar
   width: $sidebar-width
-  float: right
+  order: 2
+
+.layout-right-sidebar--two-thirds
+  width: $main-content-width
+  margin: 0 $main-content-margin $main-content-margin 0
+  order: 3
+
+
 
 @media(max-width: $small-screen)
   .layout-right-sidebar
     margin: 0 $main-content-margin
 
-  .layout-right-sidebar__main, .layout-right-sidebar__sidebar
-    float: none
+  .layout-right-sidebar__main, .layout-right-sidebar__sidebar, .layout-right-sidebar--two-thirds
     width: 100%
 
 

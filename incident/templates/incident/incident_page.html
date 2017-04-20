@@ -3,16 +3,18 @@
 
 {% block maincontainer %}
 <main class="incident layout-right-sidebar">
-  <div class="layout-right-sidebar layout-right-sidebar__row">
-    <article class='incident incident__main
+    <article class="incident incident__main
                     incident--border-{{page.get_parent.title|slugify}}
                     incident--white-background
-                    layout-right-sidebar
-                    layout-right-sidebar__main'
+                    layout-right-sidebar__main"
     >
-      <h3 class='incident__category-name incident--color-{{page.get_parent.title|slugify}}'>{{page.get_parent.title|upper}}</h3>
-      <h1 class='incident__title'>{{page.title}}</h1>
-      <h5>{{page.date|date:"F j, Y" }}</h5>
+      <div class='layout-right-sidebar__column'>
+        <h3 class='incident__category-name incident--color-{{page.get_parent.title|slugify}}'>
+            {{page.get_parent.title|upper}}
+        </h3>
+        <h1 class='incident__title'>{{page.title}}</h1>
+        <h5>{{page.date|date:"F j, Y" }}</h5>
+      </div>
       {% for block in page.body %}
           <section>{% include_block block %}</section>
       {% endfor %}
@@ -28,7 +30,7 @@
       {% endif %}
     </article>
 
-    <aside class='layout-right-sidebar layout-right-sidebar__sidebar'>
+    <aside class='layout-right-sidebar__sidebar layout-right-sidebar__column'>
       <table class='incident incident__details'>
          <tbody>
           <tr class='incident__details-row'>
@@ -92,66 +94,63 @@
         {% if category.title %}
           <div class='incident'>
               <h3 class="incident
-                   incident__related-cases-title"
+                   incident__uppercase-title"
               >
               How we track {{category.title}}s
               </h3>
               <p>{{category.specific.methodology|richtext}}</p>
           </div>
           <h3 class="incident
-                   incident__related-cases-title"
+                   incident__uppercase-title"
               >
               <a href="{% pageurl category %}" class="incident__text-link" >
-                More {{category.title}}s&gt;
+                More {{category.title}}s &gt;
               </a>
           </h3>
         {% endif %}
       {% endwith %}
     </aside>
-  </div>
 
   {% if page.related_incidents.all %}
-      <div class='layout-right-sidebar layout-right-sidebar__row'>
-        <h3 class="incident
-                   incident__related-cases-title"
-        >
-          Related Cases
-        </h3>
+      <div class="incident incident__related-group layout-right-sidebar--two-thirds">
+          <h3 class="incident__uppercase-title
+                     layout-right-sidebar__line-break"
+          >
+            Related Cases
+          </h3>
 
-        {% for related_case in page.related_incidents.all %}
-            {% if forloop.counter0 < 2 %}
-                <div class='incident incident__related-card incident--white-background
-                            incident--border-{{related_case.get_parent.title|slugify}}
-                            layout-right-sidebar
-                            layout-right-sidebar__main
-                            layout-right-sidebar__main--half-width'
-                >
-                  <h3 class="incident__category-name
-                             incident--color-{{related_case.get_parent.title|slugify}}"
+          {% for related_case in page.related_incidents.all %}
+              {% if forloop.counter0 < 2 %}
+                  <a  href="{% pageurl related_case %}"
+                      class="incident incident--white-background
+                              incident--border-{{related_case.get_parent.title|slugify}}
+                              incident__related-card
+                              incident__card-link"
                   >
-                    {{related_case.get_parent.title|upper}}
-                  </h3>
-                  <h2 class='incident__related-incident-title'>{{related_case.title}}</h2>
-                  {% for block in related_case.body %}
-                    {% if block.block_type == 'rich_text' %}
-                      <section>{% include_block block|truncatewords:20 %}</section>
-                    {% endif %}
-                  {% endfor %}
-                </div>
-            {% elif forloop.counter0 == 2 %}
-                  <div class='layout-right-sidebar__main
-                              layout-right-sidebar__main--centered'
-                  >
-                    <a href='' class='incident__more-related
-                                      incident__card-link'
+                      <h3 class="incident__category-name
+                                 incident--color-{{related_case.get_parent.title|slugify}}"
+                      >
+                        {{related_case.get_parent.title|upper}}
+                      </h3>
+                      <h2 class='incident__related-incident-title'>{{related_case.title}}</h2>
+                      {% for block in related_case.body %}
+                        {% if block.block_type == 'rich_text' %}
+                          <section>{% include_block block|truncatewords:20 %}</section>
+                        {% endif %}
+                      {% endfor %}
+                  </a>
+              {% elif forloop.counter0 == 2 %}
+                    <div class='layout-right-sidebar--two-thirds'
                     >
-                        MORE RELATED CASES
-                    </a>
-                  </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-      </div>
+                      <a href='' class='incident__more-related
+                                        incident__card-link'
+                      >
+                          MORE RELATED CASES
+                      </a>
+                    </div>
+              {% endif %}
+          {% endfor %}
+        </div>
   {% endif %}
 </main>
 
