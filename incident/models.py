@@ -32,6 +32,7 @@ class IncidentPage(Page):
         FieldPanel('date'),
         StreamFieldPanel('body'),
         FieldPanel('tags'),
+        InlinePanel('categories', label='Incident categories'),
         InlinePanel('updates', label='Updates'),
         FieldPanel('related_incidents')
     ]
@@ -54,3 +55,8 @@ class IncidentPageUpdates(Orderable):
         FieldPanel('date'),
         StreamFieldPanel('body'),
     ]
+
+
+class IncidentCategorization(Orderable):
+    incident_page = ParentalKey(IncidentPage, related_name='categories')
+    category = ParentalKey('common.CategoryPage', related_name='incidents')
