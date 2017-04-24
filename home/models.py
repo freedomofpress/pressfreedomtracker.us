@@ -16,11 +16,29 @@ class HomePage(Page):
         ('raw_html', blocks.RawHTMLBlock()),
     ], null=True)
 
+    about_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
+    blog_index_page = models.ForeignKey(
+        'blog.BlogIndexPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
     incident_index_page = ParentalKey('incident.IncidentIndexPage', related_name='homepage',
                                       null=True, blank=True, on_delete=models.SET_NULL)
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('about'),
+        FieldPanel('about_page'),
+        FieldPanel('blog_index_page'),
         FieldPanel('incident_index_page'),
         InlinePanel('categories', label='Incident Categories')
     ]
