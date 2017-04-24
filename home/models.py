@@ -32,8 +32,13 @@ class HomePage(Page):
         related_name='+'
     )
 
-    incident_index_page = ParentalKey('incident.IncidentIndexPage', related_name='homepage',
-                                      null=True, blank=True, on_delete=models.SET_NULL)
+    incident_index_page = models.ForeignKey(
+        'incident.IncidentIndexPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('about'),
@@ -46,4 +51,10 @@ class HomePage(Page):
 
 class HomePageCategories(Orderable):
     page = ParentalKey('home.HomePage', related_name='categories')
-    category = ParentalKey('common.CategoryPage', related_name='homepage')
+    category = models.ForeignKey(
+        'common.CategoryPage',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
