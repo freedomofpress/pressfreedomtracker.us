@@ -45,7 +45,8 @@ class HomePage(Page):
         FieldPanel('about_page'),
         FieldPanel('blog_index_page'),
         FieldPanel('incident_index_page'),
-        InlinePanel('categories', label='Incident Categories')
+        InlinePanel('categories', label='Incident Categories'),
+        InlinePanel('incidents', label='Featured Incidents')
     ]
 
 
@@ -53,6 +54,17 @@ class HomePageCategories(Orderable):
     page = ParentalKey('home.HomePage', related_name='categories')
     category = models.ForeignKey(
         'common.CategoryPage',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
+
+class HomePageIncidents(Orderable):
+    page = ParentalKey('home.HomePage', related_name='incidents')
+    incident = models.ForeignKey(
+        'incident.IncidentPage',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
