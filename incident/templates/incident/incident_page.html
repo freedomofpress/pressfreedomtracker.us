@@ -40,66 +40,68 @@
 		</article>
 	</div>{# /.layout-right-sidebar__main #}
 
-	<aside class='layout-right-sidebar__sidebar layout-right-sidebar__column'>
-	  <table class='incident incident__details'>
-		 <tbody>
-		  <tr class='incident__details-row'>
-			<td class="incident__details-cell incident__details-cell--bold">
-			  Date of Incident
-			</td>
-			<td class="incident__details-cell">{{page.date|date:"F j, Y" }}</td>
-		  </tr>
-		  {% if page.journalists.all %}
-		  <tr class='incident__details-row'>
-			<td class="incident__details-cell incident__details-cell--bold">Journalists</td>
-			<td class="incident__details-cell">
-			{% with page.journalists.all as journalists %}
-			  {% for journalistPage in journalists %}
-				{% if not forloop.last %}
-				  {{journalistPage.title}},
-				{% else %}
-				  {{journalistPage.title}}
+	<aside class='layout-right-sidebar__sidebar'>
+		<table class='data-table'>
+			<tbody>
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Date of Incident
+					</th>
+					<td class="data-table__value">{{page.date|date:"F j, Y" }}</td>
+				</tr>
+				{% if page.journalists.all %}
+					<tr class='data-table__row'>
+						<th class="data-table__label">
+							Journalists
+						</th>
+						<td class="data-table__value">
+							{% with page.journalists.all as journalists %}
+								{% for journalistPage in journalists %}
+									{% if not forloop.last %}
+										{{journalistPage.title}},
+									{% else %}
+										{{journalistPage.title}}
+									{% endif %}
+								{% endfor %}
+							{% endwith %}
+						</td>
+					</tr>
 				{% endif %}
-			  {% endfor %}
-			{% endwith %}
-			</td>
-		  </tr>
-		  {% endif %}
-		  <tr class='incident__details-row'>
-			<td class="incident__details-cell incident__details-cell--bold">
-			  Last Updated
-			</td>
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Last Updated
+					</th>
+					<td class="data-table__value">
+						{% if page.updates.all %}
+							{{ page.updates.first.date|date:"F j, Y" }}
+						{% else %}
+							{{page.published_date|date:"F j, Y" }}
+						{% endif %}
+					</td>
+				</tr>
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Related cases
+					</th>
+					<td class="data-table__value">
+						{% for related_case in page.related_incidents.all %}
+							<a href="{{related_case.url}}">{{related_case.title}}</a>
+						{% endfor %}
+					</td>
+				</tr>
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Tags
+					</th>
+					<td class="data-table__value">
+						{% for tag in page.tags.all %}
+							<a href="#">{{tag.name}}</a>
+						{% endfor %}
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
-			<td class="incident__details-cell" >
-			  {% if page.updates.all %}
-				{{ page.updates.first.date|date:"F j, Y" }}
-			  {% else %}
-				{{page.published_date|date:"F j, Y" }}
-			  {% endif %}
-			</td>
-		  </tr>
-		  <tr class='incident__details-row'>
-			<td class="incident__details-cell incident__details-cell--bold">
-			  Related cases
-			</td>
-			<td class="incident__details-cell">
-			  {% for related_case in page.related_incidents.all %}
-			  <a href="{{related_case.url}}" class="incident__text-link" >{{related_case.title}}</a>
-			  {% endfor %}
-			</td>
-		  </tr>
-		  <tr class='incident__details-row'>
-			<td class="incident__details-cell incident__details-cell--bold">
-			  Tags
-			</td>
-			<td class="incident__details-cell">
-			  {% for tag in page.tags.all %}
-			  <a href="" class="incident__text-link" >{{tag.name}}</a>
-			  {% endfor %}
-			</td>
-		  </tr>
-		</tbody>
-	  </table>
 	  {% with page.get_parent as category %}
 		{% if category.title %}
 		  <div class='incident'>
@@ -113,7 +115,7 @@
 		  <h3 class="incident
 				   incident__uppercase-title"
 			  >
-			  <a href="{% pageurl category %}" class="incident__text-link" >
+			  <a href="{% pageurl category %}" >
 				More {{category.title}}s &gt;
 			  </a>
 		  </h3>
