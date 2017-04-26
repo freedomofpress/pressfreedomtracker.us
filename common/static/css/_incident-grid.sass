@@ -10,5 +10,10 @@
 	flex-shrink: 1
 	flex-grow: 1
 	padding-right: $column-gutter-width
+	overflow: hidden
 	&:nth-child(even)
 		padding-right: 0
+
+	@media(max-width: $small-screen)
+		flex-basis: 100%
+		padding: 0
