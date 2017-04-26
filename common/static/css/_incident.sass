@@ -27,6 +27,13 @@
 	margin-top: 0
 	margin: 0 0 15px 0
 
+.incident__title-link
+	color: inherit
+	text-decoration: none
+	display: block
+	&:hover
+		text-decoration: underline
+
 .incident__date
 	margin: 0 0 15px 0
 	color: #888
@@ -40,6 +47,12 @@
 	border-top: 1px solid #DDD
 
 // Modifiers:
+
+.incident--teaser
+	margin-bottom: 20px
+
+.incident--full
+	margin-bottom: 40px
 
 .incident--arrest
 	border-left-color: $arrest-color
@@ -65,15 +78,3 @@
 	display: inline-block
 	height: 200px
 	overflow: hidden
-
-.incident__more-related
-	padding: 1em 100px
-	font-family: quicksand
-	border: 1px solid $black
-	background-color: $gray-very-light
-	text-align: center
-	margin: 0 auto
-
-@media(max-width: $small-screen)
-	.incident__more-related
-		padding: 1em 80px

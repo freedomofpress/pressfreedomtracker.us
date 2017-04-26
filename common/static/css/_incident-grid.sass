@@ -1,0 +1,14 @@
+.incident-grid
+	display: flex
+	flex-direction: row
+	flex-wrap: wrap
+	align-items: stretch
+
+.incident-grid__item
+	box-sizing: border-box
+	flex-basis: 50%
+	flex-shrink: 1
+	flex-grow: 1
+	padding-right: $column-gutter-width
+	&:nth-child(even)
+		padding-right: 0
