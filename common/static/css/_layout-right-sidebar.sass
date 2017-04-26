@@ -1,42 +1,25 @@
 .layout-right-sidebar
-  box-sizing: border-box
-  display: flex
-  flex-flow: row wrap
-  align-items: flex-start
-  justify-content: flex-start
-  margin: 0 auto
-  padding: 0 $page-margin-side
-  width: 100%
+	box-sizing: border-box
+	display: flex
+	flex-direction: row
+	margin: 0 $column-gutter-width
 
-.layout-right-sidebar__column
-  flex-direction: column
-
-.layout-right-sidebar__line-break
-  width: 100%
-
-.layout-right-sidebar__main, .layout-right-sidebar--two-thirds
-  width: $main-content-width
-  margin: 0 $main-content-margin $main-content-margin 0
+	@media(max-width: $small-screen)
+		flex-direction: column
 
 .layout-right-sidebar__main
-  order: 1
+	flex-grow: 1
+	flex-shrink: 1
+	order: 1
 
 .layout-right-sidebar__sidebar
-  width: $sidebar-width
-  order: 2
+	flex-grow: 0
+	flex-shrink: 0
+	width: 300px
+	margin-left: $column-gutter-width
+	order: 2
 
-.layout-right-sidebar--two-thirds
-  width: $main-content-width
-  margin: 0 $main-content-margin $main-content-margin 0
-  order: 3
-
-
-
-@media(max-width: $small-screen)
-  .layout-right-sidebar
-    margin: 0 $main-content-margin
-
-  .layout-right-sidebar__main, .layout-right-sidebar__sidebar, .layout-right-sidebar--two-thirds
-    width: 100%
-
-
+	@media(max-width: $small-screen)
+		margin-top: 20px
+		margin-left: 0
+		width: auto
