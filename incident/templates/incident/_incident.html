@@ -1,0 +1,67 @@
+{% comment %}
+This template displays the incident box for a single incident page.
+It can take the following context variables:
+
+	incident -- an IncidentPage instance
+	teaser -- whether this is a short teaser of an incident (default: False)
+{% endcomment %}
+
+{% load wagtailcore_tags %}
+
+<article class="
+	incident
+	incident--{{ incident.get_parent.title|slugify }}
+	{% if teaser %}
+		incident--teaser
+	{% else %}
+		incident--full
+	{% endif %}
+">
+	<div class="incident__body">
+		<h3 class='incident__category-name incident__category-name--{{ incident.get_parent.title|slugify }}'>
+			{{ incident.get_parent.title|upper }}
+		</h3>
+		<h1 class='incident__title'>
+			{% if teaser %}
+				<a class="incident__title-link" href="{% pageurl incident %}">
+					{{ incident.title }}
+				</a>
+			{% else %}
+				{{ incident.title }}
+			{% endif %}
+		</h1>
+		{% if not teaser %}
+			<h5 class='incident__date'>
+				{{ incident.date|date:"F j, Y" }}
+			</h5>
+		{% endif %}
+		<div class="incident__description">
+			{% if teaser %}
+				<section>
+					{% include_block incident.body.0|truncatewords_html:20 %}
+				</section>
+			{% else %}
+				{% for block in incident.body %}
+					<section>{% include_block block %}</section>
+				{% endfor %}
+			{% endif %}
+		</div>
+		{% if not teaser %}
+			{% for update in incident.updates.all %}
+				<div class="incident__update-item">
+					<h5 class='incident__date'>
+						{{update.date|date:"F j, Y"}} Update
+					</h5>
+					<div class="incident__description">
+						{% for block in update.body %}
+							<section>{% include_block block %}</section>
+						{% endfor %}
+					</div>
+				</div>
+				<section>
+					<h5></h5>
+				</section>
+			{% endfor %}
+		{% endif %}
+	</div>
+</article>

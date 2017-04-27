@@ -1,0 +1,80 @@
+.incident
+	font-family: quicksand
+	background: #FFF
+	padding-bottom: 5px
+	padding-top: 20px
+	border-left-width: 25px
+	border-left-style: solid
+
+.incident__top-image
+	margin-top: -20px
+	margin-bottom: 20px
+	display: block
+	max-width: 100%
+
+.incident__body
+	margin: 0 20px
+
+.incident__category-name
+	font-size: .8em
+	text-transform: uppercase
+	letter-spacing: .1em
+	margin: 0 0 5px 0
+
+.incident__title
+	font-family: "Times New Roman"
+	font-weight: normal
+	margin-top: 0
+	margin: 0 0 15px 0
+
+.incident__title-link
+	color: inherit
+	text-decoration: none
+	display: block
+	&:hover
+		text-decoration: underline
+
+.incident__date
+	margin: 0 0 15px 0
+	color: #888
+
+.incident__description
+	margin: 0 0 15px 0
+
+.incident__update-item
+	margin: 20px 0 0 0
+	padding-top: 20px
+	border-top: 1px solid #DDD
+
+// Modifiers:
+
+.incident--teaser
+	margin-bottom: 20px
+
+.incident--full
+	margin-bottom: 40px
+
+.incident--arrest
+	border-left-color: $arrest-color
+
+.incident--equipment-seizure
+	border-left-color: $equipment-seizure-color
+
+.incident__category-name--arrest
+	color: $arrest-color
+
+.incident__category-name--equipment-seizure
+	color: $equipment-seizure-color
+
+// TODO: Move these to a different module
+
+.incident__related-group
+	display: inline-block
+
+.incident__related-card
+	margin-bottom: 2em
+	margin-right: $incident-card-margin
+	width: $half-main-width
+	display: inline-block
+	height: 200px
+	overflow: hidden

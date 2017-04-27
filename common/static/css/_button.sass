@@ -1,0 +1,26 @@
+.button
+	padding: 15px 25px
+	font-family: quicksand
+	text-transform: uppercase
+	text-align: center
+	display: inline-block
+	text-decoration: none
+
+.button--outline
+	border: 1px solid $gray-medium-dark
+	color: $gray-medium-dark
+	background-color: $gray-very-light
+
+	&:hover
+		background-color: darken($gray-very-light, 10%)
+
+.button--center
+	display: block
+	max-width: 33%
+	margin: 0 auto 20px auto
+
+	@media(max-width: $small-screen)
+		max-width: 60%
+
+	@media(max-width: $extra-small-screen)
+		max-width: none
