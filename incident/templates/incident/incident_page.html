@@ -83,16 +83,14 @@
 			</tbody>
 		</table>
     {% with page.categories.all.first.category as main_category %}
-		  <div class='incident'>
-			  <h3 class="incident
-				   incident__uppercase-title"
+		  <div>
+			  <h3 class="section-heading"
 			  >
 			  How we track {{main_category|title}}s
 			  </h3>
 			  <p>{{main_category.methodology|richtext}}</p>
 		  </div>
-		  <h3 class="incident
-				   incident__uppercase-title"
+		  <h3 class="section-heading"
 			  >
 			  <a href="{% pageurl main_category %}" >
 				More {{main_category.title}}s &gt;
