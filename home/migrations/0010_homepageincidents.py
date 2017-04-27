@@ -10,7 +10,7 @@ import modelcluster.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0009_incidentcategorization'),
+        ('incident', '0010_incidentcategorization'),
         ('home', '0009_auto_20170424_1639'),
     ]
 

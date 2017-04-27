@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('common', '0005_auto_20170412_1751'),
         ('incident', '0008_incidentindexpage'),
+        ('incident', '0009_incidentpage_journalists'),
     ]
 
     operations = [
