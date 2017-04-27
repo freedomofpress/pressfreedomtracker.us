@@ -9,6 +9,12 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
 
+class IncidentIndexPage(Page):
+    content_panels = Page.content_panels
+
+    subpage_types = ['incident.IncidentPage']
+
+
 class IncidentPage(Page):
     date = models.DateTimeField()
 
@@ -26,11 +32,12 @@ class IncidentPage(Page):
         FieldPanel('date'),
         StreamFieldPanel('body'),
         FieldPanel('tags'),
+        InlinePanel('categories', label='Incident categories'),
         InlinePanel('updates', label='Updates'),
         FieldPanel('related_incidents')
     ]
 
-    parent_page_types = ['common.CategoryPage']
+    parent_page_types = ['incident.IncidentIndexPage']
 
 
 class IncidentPageUpdates(Orderable):
@@ -48,3 +55,8 @@ class IncidentPageUpdates(Orderable):
         FieldPanel('date'),
         StreamFieldPanel('body'),
     ]
+
+
+class IncidentCategorization(Orderable):
+    incident_page = ParentalKey(IncidentPage, related_name='categories')
+    category = ParentalKey('common.CategoryPage', related_name='incidents')
