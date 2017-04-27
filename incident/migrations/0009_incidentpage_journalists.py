@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('common', '0005_auto_20170412_1751'),
         ('incident', '0007_replace_related_incidents'),
+        ('incident', '0008_incidentindexpage'),
     ]
 
     operations = [
