@@ -41,7 +41,10 @@ class HomePage(Page):
         FieldPanel('blog_index_page'),
         FieldPanel('incident_index_page'),
         InlinePanel('categories', label='Incident Categories'),
-        InlinePanel('incidents', label='Featured Incidents')
+        InlinePanel('incidents',
+                    label='Featured Incidents',
+                    min_num=4,
+                    max_num=6)
     ]
 
 
