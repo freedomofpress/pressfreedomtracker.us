@@ -2,6 +2,7 @@
 {% load wagtailcore_tags %}
 
 {% block maincontainer %}
+
 <main class="layout-right-sidebar">
 	<div class="layout-right-sidebar__main">
 		{% include 'incident/_incident.html' with incident=page only %}
@@ -81,26 +82,23 @@
 				</tr>
 			</tbody>
 		</table>
-
-	  {% with page.get_parent as category %}
-		{% if category.title %}
+    {% with page.categories.all.first.category as main_category %}
 		  <div class='incident'>
 			  <h3 class="incident
 				   incident__uppercase-title"
 			  >
-			  How we track {{category.title}}s
+			  How we track {{main_category|title}}s
 			  </h3>
-			  <p>{{category.specific.methodology|richtext}}</p>
+			  <p>{{main_category.methodology|richtext}}</p>
 		  </div>
 		  <h3 class="incident
 				   incident__uppercase-title"
 			  >
-			  <a href="{% pageurl category %}" >
-				More {{category.title}}s &gt;
+			  <a href="{% pageurl main_category %}" >
+				More {{main_category.title}}s &gt;
 			  </a>
 		  </h3>
-		{% endif %}
-	  {% endwith %}
+    {% endwith %}
 	</aside>
 </main>
 
