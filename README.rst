@@ -48,6 +48,8 @@ Install node dependencies for react / webpack.
     npm install
     npm run start
 
+An environment variable is available to specify the URL static files are served from, ``STATIC_URL``.
+
 Database initialization
 +++++++++++++++++++++++
 
