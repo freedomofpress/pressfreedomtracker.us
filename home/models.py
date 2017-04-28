@@ -1,20 +1,15 @@
 from __future__ import absolute_import, unicode_literals
 from django.db import models
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.fields import StreamField
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel
+from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page, Orderable
-from wagtail.wagtailimages.blocks import ImageChooserBlock
+
 from modelcluster.fields import ParentalKey
 
 
 class HomePage(Page):
-    about = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
-        ('image', ImageChooserBlock()),
-        ('raw_html', blocks.RawHTMLBlock()),
-    ], null=True)
+    about = RichTextField(blank=True, null=True)
 
     about_page = models.ForeignKey(
         'wagtailcore.Page',
@@ -41,12 +36,15 @@ class HomePage(Page):
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('about'),
+        FieldPanel('about'),
         FieldPanel('about_page'),
         FieldPanel('blog_index_page'),
         FieldPanel('incident_index_page'),
         InlinePanel('categories', label='Incident Categories'),
-        InlinePanel('incidents', label='Featured Incidents')
+        InlinePanel('incidents',
+                    label='Featured Incidents',
+                    min_num=4,
+                    max_num=6)
     ]
 
 
