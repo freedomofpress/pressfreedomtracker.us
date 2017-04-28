@@ -1,7 +1,7 @@
 from django.db import models
 
-from wagtail.wagtailcore.models import Page
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailadmin.edit_handlers import FieldPanel,  InlinePanel, StreamFieldPanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailimages.blocks import ImageChooserBlock
@@ -55,6 +55,12 @@ class PersonPage(Page):
     ]
 
 
+class QuickFact(Orderable):
+    page = ParentalKey('common.CategoryPage', related_name='quick_facts')
+    body = RichTextField()
+    link_url = models.URLField(null=True, blank=True)
+
+
 class CategoryPage(Page):
     description = RichTextField(null=True, blank=True)
     methodology = RichTextField(null=True, blank=True)
@@ -64,6 +70,7 @@ class CategoryPage(Page):
         FieldPanel('description'),
         FieldPanel('methodology'),
         FieldPanel('retrospective_info'),
+        InlinePanel('quick_facts', label='Quick Facts')
     ]
 
 
