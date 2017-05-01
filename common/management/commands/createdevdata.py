@@ -6,7 +6,8 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.text import slugify
 
-from common.models import CategoryPage, SimplePage
+from blog.models import BlogIndexPage, BlogPage
+from common.models import CategoryPage, PersonPage, SimplePage
 from home.models import HomePage
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
@@ -105,7 +106,31 @@ class Command(BaseCommand):
                 ),
             ])
 
-        # Create Incidents
+        # BLOG RELATED PAGES
+        blog_index_page = BlogIndexPage(
+            title='FPF Blog',
+            slug='fpf-blog'
+        )
+        home_page.add_child(instance=blog_index_page)
+
+        author_page = PersonPage(title='Rachel S')
+        home_page.add_child(instance=author_page)
+
+        for x in range(0, 10):
+            page = BlogPage(
+                title='Nisl placerat volutpat{}'.format(x),
+                slug='nisl-placerat-{}'.format(x),
+                publication_datetime=timezone.now(),
+                body=[(
+                    'rich_text',
+                    RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
+                )],
+                author=author_page
+            )
+
+            blog_index_page.add_child(instance=page)
+
+        # INCIDENT RELATED PAGES
         incident_index_page = IncidentIndexPage(
             title='All Incidents',
             slug='all-incidents'
