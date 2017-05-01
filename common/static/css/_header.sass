@@ -1,38 +1,44 @@
-$header-margin-top: 10px
+$header-margin-top: 15px
 $header-height: $header-margin-top + 60px
 $nav-item-height: 15px
+$nav-link-padding: 5px
 
 .header
-  margin-bottom: 30px
-  justify-content: flex-end
-  height: $header-height
+  margin-top: $header-margin-top
+  margin-bottom: $header-margin-top * 2
+  display: flex
+  flex-direction: row
+  justify-content: space-between
 
 .header__logo
 	background-color: $header-color
 	position: relative
-	left: -$page-margin-side
+	left: -$column-gutter-width
 	margin: 0
-	top: $header-margin-top
 	padding: 15px
-	padding-left: $page-margin-side
-	float: left
+	padding-left: $page-margin-side * 2
 
 	svg g path
 		fill: white
 
 .header__nav
   font-family: $sans-serif
-  margin-top: $header-height - $nav-item-height
+  display: flex
+  flex-direction: column
+  justify-content: flex-end
 
 .header__nav-list
   list-style-type: none
   display: inline
+  margin: 0
+  margin-bottom: $nav-link-padding
 
 .header__nav-item
   display: inline
+  font-size: 1.1em
 
 .header__nav-link
-  padding: 5px
+  padding: $nav-link-padding
   text-decoration: none
   text-transform: uppercase
   color: $gray-medium-dark
