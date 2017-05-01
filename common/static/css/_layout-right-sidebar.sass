@@ -1,23 +1,10 @@
-.layout-right-sidebar
-	display: flex
-	flex-direction: column
-	height: 100%
-
-.layout-right-sidebar__row
-	display: flex
-	flex-direction: row
-	box-sizing: border-box
-
-	&:last-child
-		flex-grow: 1
-
-.layout-right-sidebar__row__main
+.layout-right-sidebar__main
 	// If a sidebar width is set then flex-grow: 1 on here ensures the
 	// main element populates the remaining horizontal space.
 	flex-grow: 1
 	padding-left: $column-gutter-width
 
-.layout-right-sidebar__row__sidebar
+.layout-right-sidebar__sidebar
 	// flex-shrink ensures the width is 25%
 	flex-shrink: 0
 	width: $sidebar-width
@@ -30,5 +17,5 @@
 		margin-left: 0
 		width: auto
 
-.layout-right-sidebar__row__sidebar--light
+.layout-right-sidebar__sidebar--light
 	background-color: $fpf-sidebar
