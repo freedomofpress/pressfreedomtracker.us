@@ -1,6 +1,7 @@
 $header-margin-top: 15px
 $header-height: $header-margin-top + 60px
 $nav-item-height: 15px
+$nav-link-padding: 5px
 
 .header
   margin-top: $header-margin-top
@@ -29,12 +30,15 @@ $nav-item-height: 15px
 .header__nav-list
   list-style-type: none
   display: inline
+  margin: 0
+  margin-bottom: $nav-link-padding
 
 .header__nav-item
   display: inline
+  font-size: 1.2em
 
 .header__nav-link
-  padding: 5px
+  padding: $nav-link-padding
   text-decoration: none
   text-transform: uppercase
   color: $gray-medium-dark

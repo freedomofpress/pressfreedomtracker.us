@@ -6,7 +6,8 @@
 	//@media(max-width: $small-screen)
 
 .layout-right-sidebar__main
-	display: block
+	// If a sidebar width is set then flex-grow: 1 on here ensures the
+	// main element populates the remaining space.
 	flex-grow: 1
 	padding-left: $column-gutter-width
 
