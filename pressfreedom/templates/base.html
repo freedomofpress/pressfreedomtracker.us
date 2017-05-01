@@ -45,7 +45,7 @@
 				</div>
 			</div>
 
-			<div class="flex-container__row layout-right-sidebar">
+			<div class="flex-container__row flex-container__row--grow layout-right-sidebar">
 				<div class="layout-right-sidebar__main">
 					{% block maincontainer %}
 					  <main role="main" class="site-main container">
@@ -59,10 +59,12 @@
 					{% endblock %}
 				</div>
 			</div>
-		</div>
 
-		{% block bottom %}
-		{% endblock %}
+			<div class="flex-container__row">
+				{% block bottom %}
+				{% endblock %}
+			</div>
+		</div>
 
         {% block js %}
           {% render_bundle 'common' %}

@@ -1,0 +1,23 @@
+<form class="search-block">
+	<span class="search-block__intro">
+		Search and browse recorded cases
+	</span>
+
+	<div class="search-form">
+		{% include "common/_search_icon.html" with class="search-form__icon" %}
+
+		<input
+			type="text"
+			class="search-form__input"
+			placeholder="Search"
+			name="query"
+		/>
+	</div>
+
+	<button
+		class="search-block__button button button--outline"
+		type="submit"
+	>
+		Advanced Search
+	</button>
+</form>

@@ -1,0 +1,57 @@
+.search-block
+	display: flex
+	flex-direction: column
+	justify-content: space-between
+	align-items: center
+	width: 50%
+	height: 300px
+	padding: 30px
+
+	background-color: $purple
+	color: white
+
+.search-block__intro
+	margin: 0 10%
+
+	font-size: 28px
+	font-weight: 300
+	line-height: 1.2
+	letter-spacing: 1px
+	text-align: center
+
+.search-block__button
+	padding: 10px 25px
+	background-color: transparent
+	color: white
+	border-color: white
+	letter-spacing: 1px
+
+	&:hover
+		background-color: white
+		color: $purple
+
+.search-form
+	width: 60%
+	position: relative
+
+.search-form__icon
+	position: absolute
+	left: 0
+	height: 40px
+	width: auto
+	fill: white
+
+.search-form__input
+	width: 100%
+	font-size: 30px
+	font-weight: 300
+
+	text-align: center
+
+	background-color: transparent
+	color: white
+	border-width: 0
+	border-bottom-width: 1px
+
+	&::placeholder
+		color: rgba(255, 255, 255, 0.6)
