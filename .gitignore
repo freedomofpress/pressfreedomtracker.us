@@ -14,7 +14,7 @@ webpack-stats.json
 logs/
 
 # devops virtualenv
-devops/venv
+devops/.venv
 devops/.vagrant
 devops/.molecule
 devops/deploy_key
