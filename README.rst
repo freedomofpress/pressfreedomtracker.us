@@ -36,6 +36,18 @@ Then install the requirements:
 
     pip install -r requirements.txt
 
+You can continually ensure your environment is synced by using pip-tools:
+
+.. code:: bash
+
+    pip-sync
+
+If you need to add any new dependencies, do so in ``requirements.in`` and then run:
+
+.. code:: bash
+
+    pip-compile > requirements.txt
+
 If you encounter errors during ``pip install``, you may need to install build dependencies for some of the Python packages. Instructions for doing so are commonly found in the package's installation documentation (e.g. for `cryptography <https://cryptography.io/en/latest/installation/.>`_).
 
 Front-end development
