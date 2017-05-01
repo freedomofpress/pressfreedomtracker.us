@@ -5,8 +5,9 @@ $nav-item-height: 15px
 .header
   margin-top: $header-margin-top
   margin-bottom: $header-margin-top * 2
-  justify-content: flex-end
-  height: $header-height
+  display: flex
+  flex-direction: row
+  justify-content: space-between
 
 .header__logo
 	background-color: $header-color
@@ -15,13 +16,15 @@ $nav-item-height: 15px
 	margin: 0
 	padding: 15px
 	padding-left: $page-margin-side * 2
-	float: left
 
 	svg g path
 		fill: white
 
 .header__nav
   font-family: $sans-serif
+  display: flex
+  flex-direction: column
+  justify-content: flex-end
 
 .header__nav-list
   list-style-type: none
