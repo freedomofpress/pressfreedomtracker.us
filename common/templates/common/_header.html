@@ -7,6 +7,8 @@
 	</a>
 
 	<nav class='header__nav'>
+		{% include "common/_search_bar.html" %}
+
 		<ul class='header__nav-list'>
 			{% get_menu 'main' as menu %}
 			{% for item in menu.menu_items.all %}

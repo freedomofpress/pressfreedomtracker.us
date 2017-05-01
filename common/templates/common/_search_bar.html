@@ -1,0 +1,17 @@
+<form class="search-bar">
+	{% include "common/_search_bar_icon.html" %}
+
+	<input
+		type="text"
+		class="search-bar__input"
+		name="query"
+	/>
+
+	<button
+		type="submit"
+		class="search-bar__button"
+	>
+		{% include "common/_search_bar_chevron.html" %}
+		<span class="sr-only">Search</span>
+	</button>
+</form>
