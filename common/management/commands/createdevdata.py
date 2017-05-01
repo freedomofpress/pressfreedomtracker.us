@@ -123,11 +123,17 @@ class Command(BaseCommand):
             incident_index_page.add_child(instance=page)
 
         # Create superuser
-        if not User.objects.filter(username='test').exists():
+        if not User.objects.filter(is_superuser=True).exists():
             User.objects.create_superuser(
                 'test',
                 'test@pressfreedom',
                 'test',
+            )
+            self.stdout.write(
+                'Superuser created:\n'
+                '\tname: test\n'
+                '\temail: test@pressfreedom\n'
+                '\tpassword: test'
             )
 
         self.stdout.write('Done.')
