@@ -8,9 +8,10 @@ It can take the following context variables:
 
 {% load wagtailcore_tags %}
 
+{% with incident.categories.all.first.category as main_category %}
 <article class="
 	incident
-	incident--{{ incident.get_parent.title|slugify }}
+	incident--{{ main_category|slugify }}
 	{% if teaser %}
 		incident--teaser
 	{% else %}
@@ -18,8 +19,8 @@ It can take the following context variables:
 	{% endif %}
 ">
 	<div class="incident__body">
-		<h3 class='incident__category-name incident__category-name--{{ incident.get_parent.title|slugify }}'>
-			{{ incident.get_parent.title|upper }}
+		<h3 class='incident__category-name incident__category-name--{{ main_category|slugify }}'>
+			{{ main_category }}
 		</h3>
 		<h1 class='incident__title'>
 			{% if teaser %}
@@ -65,3 +66,4 @@ It can take the following context variables:
 		{% endif %}
 	</div>
 </article>
+{% endwith %}

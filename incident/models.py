@@ -35,7 +35,7 @@ class IncidentPage(Page):
         StreamFieldPanel('body'),
         FieldPanel('journalists'),
         FieldPanel('tags'),
-        InlinePanel('categories', label='Incident categories'),
+        InlinePanel('categories', label='Incident categories', min_num=1),
         InlinePanel('updates', label='Updates'),
         FieldPanel('related_incidents')
     ]
