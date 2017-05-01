@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -6,7 +8,7 @@ from django.utils.text import slugify
 
 from common.models import CategoryPage, SimplePage
 from home.models import HomePage
-from incident.models import IncidentIndexPage, IncidentPage
+from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
 from wagtail.wagtailcore.models import Page, Site
@@ -120,6 +122,10 @@ class Command(BaseCommand):
                     RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
                 )],
             )
+            random_idx = random.randint(0, CategoryPage.objects.count() - 1)
+            page.categories = [
+                IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
+            ]
             incident_index_page.add_child(instance=page)
 
         # Create superuser
