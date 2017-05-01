@@ -9,6 +9,11 @@ process.env.BABEL_ENV = TARGET;
 
 var target = __dirname + '/common/static/js/bundles';
 
+var STATIC_URL = process.env.STATIC_URL || '/static/';
+var sassData = '$staticUrl: "' + STATIC_URL + '";';
+console.log('Using STATIC_URL', STATIC_URL);
+
+
 var postCSSPlugins = function() {
 	return {
 		defaults: [autoprefixer],
@@ -76,7 +81,8 @@ var common = {
 					{
 						loader: 'sass-loader',
 						options: {
-							includePaths: [path.resolve(__dirname, 'node_modules/')]
+							includePaths: [path.resolve(__dirname, 'node_modules/')],
+							data: sassData
 						}
 					}
 				],

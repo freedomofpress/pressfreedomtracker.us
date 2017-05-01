@@ -7,23 +7,22 @@ $nav-item-height: 15px
   justify-content: flex-end
   height: $header-height
 
-.header__title
-  text-transform: uppercase
-  color: #fff
-  background-color: $header-color
-  position: relative
-  left: -$page-margin-side
-  margin: 0
-  top: $header-margin-top
-  padding: 4px 10px 4px $page-margin-side
-  float: left
-  font-family: quicksand
-  font-size: 1.5em
+.header__logo
+	background-color: $header-color
+	position: relative
+	left: -$page-margin-side
+	margin: 0
+	top: $header-margin-top
+	padding: 15px
+	padding-left: $page-margin-side
+	float: left
+
+	svg g path
+		fill: white
 
 .header__nav
-  font-family: quicksand
+  font-family: $sans-serif
   margin-top: $header-height - $nav-item-height
-  font-family: quicksand
 
 .header__nav-list
   list-style-type: none

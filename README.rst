@@ -48,6 +48,8 @@ Install node dependencies for react / webpack.
     npm install
     npm run start
 
+An environment variable is available to specify the URL static files are served from, ``STATIC_URL``.
+
 Database initialization
 +++++++++++++++++++++++
 
@@ -102,3 +104,12 @@ Load basic data with the following command:
 .. code:: bash
 
     python manage.py createdevdata
+
+
+Adobe Font Licenses
+-------------------
+
+Licenses for `Source Serif Pro <https://github.com/adobe-fonts/source-serif-pro>`_ and `Source Sans Pro <https://github.com/adobe-fonts/source-sans-pro>`_ are available at the paths below.
+
+- `common/static/fonts/LICENSE.SourceSansPro.txt`
+- `common/static/fonts/LICENSE.SourceSerifPro.txt`
