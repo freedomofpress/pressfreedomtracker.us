@@ -104,8 +104,10 @@ class Command(BaseCommand):
             ])
 
         # Create Incidents
-        incident_index_page = IncidentIndexPage(title='All Incidents',
-                                                slug='all-incidents')
+        incident_index_page = IncidentIndexPage(
+            title='All Incidents',
+            slug='all-incidents'
+        )
         home_page.add_child(instance=incident_index_page)
 
         for x in range(0, 10):
