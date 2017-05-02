@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from blog.models import BlogIndexPage, BlogPage
 from common.models import CategoryPage, PersonPage, SimplePage
 from forms.models import FormPage
-from home.models import HomePage
+from home.models import HomePage, HomePageCategories
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
@@ -62,11 +62,16 @@ class Command(BaseCommand):
             'US Precident Cited Abroad'
         ]
 
-        for category_name in CATEGORIES:
+        for index, category_name in enumerate(CATEGORIES):
             category_page = CategoryPage(
                 title=category_name,
                 slug=slugify(category_name))
             home_page.add_child(instance=category_page)
+            HomePageCategories.objects.create(
+                sort_order=index + 1,
+                page=home_page,
+                category=category_page,
+            )
 
         # ABOUT PAGE
         about_page = SimplePage(title='About', slug='about')
