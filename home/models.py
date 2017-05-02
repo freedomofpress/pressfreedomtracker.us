@@ -46,10 +46,12 @@ class HomePage(Page):
         PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
         PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
         InlinePanel('categories', label='Incident Categories'),
-        InlinePanel('incidents',
-                    label='Featured Incidents',
-                    min_num=4,
-                    max_num=6)
+        InlinePanel(
+            'incidents',
+            label='Featured Incidents',
+            min_num=4,
+            max_num=6,
+        )
     ]
 
 
