@@ -8,6 +8,7 @@ from django.utils.text import slugify
 
 from blog.models import BlogIndexPage, BlogPage
 from common.models import CategoryPage, PersonPage, SimplePage
+from forms.models import FormPage
 from home.models import HomePage
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
@@ -75,6 +76,10 @@ class Command(BaseCommand):
         resources_page = SimplePage(title='Resources', slug='resources')
         home_page.add_child(instance=resources_page)
 
+        # SUBMIT INCIDENT FORM
+        incident_form = FormPage(title='Submit an incident', slug='submit-incident')
+        home_page.add_child(instance=incident_form)
+
         # CREATE MENUS
         # delete any the existing main menu
         if not Menu.objects.filter(slug='main').exists():
@@ -100,7 +105,7 @@ class Command(BaseCommand):
                 ),
                 MenuItem(
                     text='Submit an Incident',
-                    link_url='#',
+                    link_page=incident_form,
                     menu=main,
                     sort_order=4
                 ),
