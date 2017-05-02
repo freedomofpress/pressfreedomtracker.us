@@ -1,17 +1,10 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
-
-{% block body_class %}template-searchresults{% endblock %}
+{% load static wagtailcore_tags common_tags %}
 
 {% block title %}Search{% endblock %}
 
 {% block main %}
     <h1>Search</h1>
-
-    <form action="{% url 'search' %}" method="get">
-        <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
-        <input type="submit" value="Search" class="button">
-    </form>
 
     {% if search_results %}
         <ul>
@@ -20,6 +13,12 @@
                     <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
                     {% if result.search_description %}
                         {{ result.search_description|safe }}
+                    {% elif result.content_type.name in content_types_with_body %}
+                        {% with first_text_block=result.specific.body|first_block_of:'rich_text' %}
+                            {% if first_text_block %}
+                                {% firstof result.search_description|safe first_text_block|truncatewords_html:'40'|striptags %}
+                            {% endif %}
+                        {% endwith %}
                     {% endif %}
                 </li>
             {% endfor %}
