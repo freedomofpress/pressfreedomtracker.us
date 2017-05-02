@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 from __future__ import absolute_import, unicode_literals
 
+import logging
+logger = logging.getLogger(__name__)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -137,6 +140,30 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+# Elasticsearch Backend
+
+es_host = os.environ.get('DJANGO_ES_HOST', False)
+if es_host:
+    ca_path = os.environ.get('DJANGO_ES_CA_PATH', '')
+    options = dict()
+    if ca_path:
+        logger.warning('Warning: DJANGO_ES_CA_PATH is not populated. Will not use SSL.')
+    else:
+        options['ca_certs'] = ca_path
+        options['use_ssl'] = True
+    WAGTAILSEARCH_BACKENDS = {
+        'default': {
+            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch2',
+            'URLS': [es_host],
+            'INDEX': 'wagtail',
+            'TIMEOUT': 5,
+            'OPTIONS': options,
+        }
+    }
+else:
+    WAGTAILSEARCH_BACKENDS = {}
 
 
 # Wagtail settings
