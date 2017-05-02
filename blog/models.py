@@ -4,6 +4,7 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, PageChooserPanel, Str
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import StreamField, RichTextField
 from wagtail.wagtailcore.models import Page
+from wagtail.wagtailsearch import index
 
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
@@ -20,6 +21,10 @@ class BlogIndexPage(Page):
     ]
 
     subpage_types = ['blog.BlogPage']
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+    ]
 
 
 class BlogPage(Page):
@@ -63,3 +68,9 @@ class BlogPage(Page):
     ]
 
     parent_page_types = ['blog.BlogIndexPage']
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+        index.SearchField('teaser_text'),
+        index.FilterField('publication_datetime'),
+    ]
