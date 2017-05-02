@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from django.db import models
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page, Orderable
 
@@ -57,6 +57,10 @@ class HomePageCategories(Orderable):
         on_delete=models.SET_NULL,
         related_name='+',
     )
+
+    panels = [
+        PageChooserPanel('category', 'common.CategoryPage'),
+    ]
 
 
 class HomePageIncidents(Orderable):
