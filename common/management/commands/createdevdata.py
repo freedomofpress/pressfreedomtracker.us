@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from blog.models import BlogIndexPage, BlogPage
-from common.models import CategoryPage, PersonPage, SimplePage
+from common.models import CategoryPage, PersonPage, SimplePage, SimplePageWithSidebar
 from forms.models import FormPage
 from home.models import HomePage, HomePageCategories
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
@@ -74,12 +74,42 @@ class Command(BaseCommand):
             )
 
         # ABOUT PAGE
-        about_page = SimplePage(title='About', slug='about')
+        about_page = SimplePage(
+            title='About',
+            slug='about',
+            body=[(
+                'rich_text',
+                RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
+            )])
         home_page.add_child(instance=about_page)
 
         # RESOURCES PAGE
-        resources_page = SimplePage(title='Resources', slug='resources')
-        home_page.add_child(instance=resources_page)
+        if not Menu.objects.filter(slug='resources').exists():
+            resources_menu = Menu.objects.create(name='Resources Sidebar', slug='resources')
+            MenuItem.objects.bulk_create([
+                MenuItem(
+                    text='About',
+                    link_page=about_page,
+                    menu=resources_menu,
+                    sort_order=1
+                ),
+                MenuItem(
+                    text='A menu item',
+                    link_url='#',
+                    menu=resources_menu,
+                    sort_order=2
+                ),
+            ])
+            resources_page = SimplePageWithSidebar(
+                title='Resources',
+                slug='resources',
+                sidebar_menu=resources_menu,
+                body=[(
+                    'rich_text',
+                    RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
+                )])
+
+            home_page.add_child(instance=resources_page)
 
         # SUBMIT INCIDENT FORM
         incident_form = FormPage(title='Submit an incident', slug='submit-incident')
