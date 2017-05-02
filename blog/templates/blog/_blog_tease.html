@@ -1,0 +1,20 @@
+{% load wagtailcore_tags %}
+
+<div class="blog-tease">
+	<div class="blog-tease__title">
+		<a class="blog-tease__link" href="{% pageurl page %}">
+			{{ page.title }}
+		</a>
+	</div>
+
+	<div class="blog-tease__tease">
+		{{ page.teaser_text|richtext }}
+	</div>
+
+	<div class="blog-tease__organization">
+		Freedom of the Press Foundation
+		{% if page.organization %}
+			{{ page.organization.title }}
+		{% endif %}
+	</div>
+</div>
