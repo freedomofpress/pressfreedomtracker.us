@@ -3,7 +3,6 @@
 	flex-direction: column
 	height: 100%
 
-	// This is not very BEM, but we allow it as one of the less bad ways of
-	// accomplishing this. Layout is hard T_T
-	> :last-child
-		flex-grow: 1
+
+.flex-container--grow-2 > :nth-child(2)
+	flex-grow: 1
