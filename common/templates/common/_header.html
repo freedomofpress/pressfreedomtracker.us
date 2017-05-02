@@ -1,12 +1,14 @@
 {% load get_menu %}
 <header class='header'>
-	<div class='header__logo'>
+	<a class='header__logo' href="/">
 		{% include "common/_logo.html" %}
 
 		<h1 class='header__logo__title sr-only'>U.S. Press Freedom Tracker</h1>
-	</div>
+	</a>
 
 	<nav class='header__nav'>
+		{% include "common/_search_bar.html" %}
+
 		<ul class='header__nav-list'>
 			{% get_menu 'main' as menu %}
 			{% for item in menu.menu_items.all %}
