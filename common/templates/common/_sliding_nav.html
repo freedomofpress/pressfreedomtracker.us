@@ -1,0 +1,14 @@
+{% load get_menu %}
+
+<nav class="sliding-nav js-sliding-nav">
+  <ul class='sliding-nav__list'>
+      {% get_menu 'main' as menu %}
+      {% for item in menu.menu_items.all %}
+      <li class="sliding-nav__item {{ item.html_classes }}">
+        <a class='sliding-nav__link' href="{{ item.url }}">
+          {{ item.text }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+</nav>

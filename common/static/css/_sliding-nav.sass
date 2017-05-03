@@ -1,0 +1,34 @@
+.sliding-nav
+  font-family: $sans-serif
+  width: $sliding-nav-width
+  position: fixed
+  top: 0
+  #{$sliding-nav-side}: -$sliding-nav-width
+  bottom: 0
+  overflow: auto
+  background: $white
+  transition: $sliding-nav-transition-ms transform ease-out
+  z-index: 10
+  &.is-active
+    @if $sliding-nav-side == 'right'
+      transform: translate3d(-$sliding-nav-width, 0, 0)
+      // IE9
+      -ms-transform: translate($sliding-nav-width, 0)
+    @if $sliding-nav-side == 'left'
+      transform: translate3d($sliding-nav-width, 0, 0)
+      // IE9
+      -ms-transform: translate($sliding-nav-width, 0)
+
+.sliding-nav__list
+  list-style-type: none
+  margin: 0
+  margin-bottom: $nav-link-padding
+
+.sliding-nav__link
+  padding: $nav-link-padding
+  text-decoration: none
+  text-transform: uppercase
+  color: $black
+  &:hover
+    background-color: $gray-medium-dark
+    color: #fff

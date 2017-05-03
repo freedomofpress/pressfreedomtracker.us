@@ -1,0 +1,17 @@
+.shade
+  position: fixed
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  background-color: rgba($purple, .5)
+  opacity: 0
+  z-index: -1
+  transition: $sliding-nav-transition-ms opacity ease-out
+  pointer-events: none
+
+
+.shade--is-active
+  z-index: 9
+  opacity: 1
+  pointer-events: auto
