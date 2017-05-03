@@ -37,14 +37,21 @@ class HomePage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('about'),
-        FieldPanel('about_page'),
-        FieldPanel('blog_index_page'),
-        FieldPanel('incident_index_page'),
+        PageChooserPanel(
+            'about_page',
+            [ 'common.SimplePage'
+            , 'common.SimplePageWithSidebar'
+            ]
+        ),
+        PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
+        PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
         InlinePanel('categories', label='Incident Categories'),
-        InlinePanel('incidents',
-                    label='Featured Incidents',
-                    min_num=4,
-                    max_num=6)
+        InlinePanel(
+            'incidents',
+            label='Featured Incidents',
+            min_num=4,
+            max_num=6,
+        )
     ]
 
 

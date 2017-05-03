@@ -12,6 +12,10 @@
     <p>If you haven't already given the documentation a read, head over to <a href="http://docs.wagtail.io/">http://docs.wagtail.io</a> to start building on Wagtail</p>
 {% endblock %}
 
+{% block sidebar %}
+	{% include "home/_blog_sidebar.html" %}
+{% endblock %}
+
 {% block bottom %}
 	{% include "home/category_block.html" %}
 	{% include "home/search_block.html" %}

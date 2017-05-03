@@ -82,6 +82,7 @@ class Command(BaseCommand):
                 RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
             )])
         home_page.add_child(instance=about_page)
+        home_page.about_page = about_page
 
         # RESOURCES PAGE
         if not Menu.objects.filter(slug='resources').exists():
@@ -152,6 +153,7 @@ class Command(BaseCommand):
             slug='fpf-blog'
         )
         home_page.add_child(instance=blog_index_page)
+        home_page.blog_index_page = blog_index_page
 
         author_page = PersonPage(title='Rachel S')
         home_page.add_child(instance=author_page)
@@ -165,7 +167,8 @@ class Command(BaseCommand):
                     'rich_text',
                     RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
                 )],
-                author=author_page
+                author=author_page,
+                teaser_text=RichText('<p>Our neural pathways have become accustomed to your sensory input patterns. Ensign Babyface! I\'ll be sure to note that in my log. Could someone survive inside a transporter buffer for 75 years? and attack the Romulans.</p>'),
             )
 
             blog_index_page.add_child(instance=page)
@@ -176,6 +179,7 @@ class Command(BaseCommand):
             slug='all-incidents'
         )
         home_page.add_child(instance=incident_index_page)
+        home_page.incident_index_page = incident_index_page
 
         for x in range(0, 10):
             page = IncidentPage(
@@ -192,6 +196,8 @@ class Command(BaseCommand):
                 IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
             ]
             incident_index_page.add_child(instance=page)
+
+        home_page.save()
 
         # Create superuser
         if not User.objects.filter(is_superuser=True).exists():
