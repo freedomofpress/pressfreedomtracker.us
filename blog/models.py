@@ -70,7 +70,7 @@ class BlogPage(Page):
     parent_page_types = ['blog.BlogIndexPage']
 
     search_fields = Page.search_fields + [
-        index.SearchField('body'),
+        index.SearchField('body', partial=True),
         index.SearchField('teaser_text'),
         index.FilterField('publication_datetime'),
     ]
