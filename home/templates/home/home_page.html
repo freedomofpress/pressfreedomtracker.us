@@ -13,9 +13,7 @@
 {% endblock %}
 
 {% block sidebar %}
-	{% for page in page.blog_index_page.get_children.live %}
-		{% include "blog/_blog_tease.html" %}
-	{% endfor %}
+	{% include "home/_blog_sidebar.html" %}
 {% endblock %}
 
 {% block bottom %}
