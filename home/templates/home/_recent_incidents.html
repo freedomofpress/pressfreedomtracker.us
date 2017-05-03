@@ -1,10 +1,9 @@
 {% load wagtailcore_tags %}
 
 {% if page.incident_index_page %}
-
-<div class="recent-incidents">
+<div class="incident-grid">
 	{% for related in page.incidents.all %}
-		<div class="recent-incidents__incident">
+		<div class="incident-grid__item">
 			{% include "incident/_incident.html" with incident=related.incident teaser=True %}
 		</div>
 	{% endfor %}
