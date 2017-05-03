@@ -1,6 +1,6 @@
 machine:
   python:
-    version: 3.5.0
+    version: 3.4.2
   environment:
     DJANGO_ES_HOST: http://localhost:9200
     DATABASE_URL: postgresql://ubuntu:@127.0.0.1:5432/circle_test
