@@ -11,6 +11,9 @@
   // Places nav above shade
   z-index: 10
 
+  >:first-child
+    margin-bottom: 20px
+
 .sliding-nav--is-active
   @if $sliding-nav-side == 'right'
     transform: translate3d(-$sliding-nav-width, 0, 0)
