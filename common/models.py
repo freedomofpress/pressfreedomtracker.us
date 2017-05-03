@@ -6,6 +6,7 @@ from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailsearch import index
 
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
@@ -75,6 +76,11 @@ class OrganizationPage(Page):
 
     parent_page_types = ['common.OrganizationIndexPage']
 
+    search_fields = Page.search_fields + [
+        index.SearchField('website', partial_match=True),
+        index.SearchField('description'),
+    ]
+
 
 class PersonPage(Page):
     photo = models.ForeignKey(
@@ -90,6 +96,10 @@ class PersonPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('bio'),
         ImageChooserPanel('photo'),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('bio'),
     ]
 
 
@@ -111,6 +121,12 @@ class CategoryPage(Page):
         InlinePanel('quick_facts', label='Quick Facts')
     ]
 
+    search_fields = Page.search_fields + [
+        index.SearchField('description'),
+        index.SearchField('methodology'),
+        index.SearchField('retrospective_info'),
+    ]
+
 
 class SimplePage(Page):
     body = StreamField([
@@ -121,6 +137,10 @@ class SimplePage(Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
+    ]
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
     ]
 
 
@@ -136,6 +156,10 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     ]
 
     settings_panels = Page.settings_panels + BaseSidebarPageMixin.settings_panels
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+    ]
 
 
 class Tag(TaggedItemBase):

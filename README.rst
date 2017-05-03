@@ -68,6 +68,29 @@ The first time you run, you'll need to run migrations and create a superuser:
 the production site, which is useful for development. It also creates a default
 super (username: **test**, password: **test**).
 
+Elasticsearch
++++++++++++++
+
+Installing Elasticsearch for development on macOS with a JVM runtime already
+installed is not the worst.
+
+Wagtail>=1.8 supports Elasticsearch 5.x.
+
+Download Elasticsearch `here <https://www.elastic.co/downloads/elasticsearch>`_.
+Follow the instructions below to run an instance and build an index.
+
+.. code:: bash
+
+    unzip elasticsearch-5.*.zip
+    cd elasticsearch-5.*
+    bin/elasticsearch
+
+    # Back in repo directory
+    python manage.py update_index
+
+You must specify a ``DJANGO_ES_HOST`` environment variable with ``manage.py`` commands.
+This should be ``DJANGO_ES_HOST=http://localhost:9200`` in development on a local machine.
+
 Get it running
 --------------
 

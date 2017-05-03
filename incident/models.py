@@ -5,6 +5,7 @@ from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.wagtailsearch import index
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
@@ -51,6 +52,10 @@ class IncidentPage(Page):
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+    ]
 
 
 class IncidentPageUpdates(Orderable):
