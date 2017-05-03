@@ -17,7 +17,6 @@ logs/
 devops/.venv
 devops/.vagrant
 devops/.molecule
-devops/deploy_key
 devops/roles
 
 # Functional tests

@@ -1,0 +1,41 @@
+---
+ansible:
+  verbose: v
+  diff: yes
+  config_file: ./ansible.cfg
+  host_key_checking: False
+
+docker:
+  containers:
+    - name: prod
+      ansible_groups:
+        - django
+        - database
+      image: msheiny/debian-jessie-systemd
+      image_version: latest
+      #privileged: True
+      port_bindings:
+        4443: 443
+      volume_mounts:
+        - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+
+vagrant:
+  platforms:
+    - name: jessie64
+      box: debian/jessie64
+
+  providers:
+    - name: libvirt
+      type: libvirt
+      options:
+        memory: 2048
+
+  instances:
+    - name: djangoserver
+      ansible_groups:
+        - django
+        - database
+      raw_config_args:
+        - "vm.synced_folder '../', '/var/www/django'"
+        - "vm.network 'forwarded_port', guest: 443, host: 4443"
+        - "vm.network 'forwarded_port', guest: 80, host: 8080"
