@@ -1,8 +1,17 @@
+{% load wagtailcore_tags %}
+
 {% if page.blog_index_page %}
 <section class="blog-sidebar">
 	<h1 class="blog-sidebar__title">{{ page.blog_index_page.title }}</h1>
 	{% for page in page.blog_index_page.get_children.live|slice:":4" %}
 		{% include "blog/_blog_tease.html" %}
 	{% endfor %}
+
+	<a
+		class="button button--outline button--expand-center"
+		href="{% pageurl page.blog_index_page %}"
+	>
+		More Articles
+	</a>
 </section>
 {% endif %}
