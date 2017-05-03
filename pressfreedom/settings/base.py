@@ -155,11 +155,12 @@ if es_host:
         options['use_ssl'] = True
     WAGTAILSEARCH_BACKENDS = {
         'default': {
-            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch2',
+            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch5',
             'URLS': [es_host],
             'INDEX': 'wagtail',
             'TIMEOUT': 5,
             'OPTIONS': options,
+            'INDEX_SETTINGS': {},
         }
     }
 else:
