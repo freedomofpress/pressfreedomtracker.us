@@ -7,9 +7,9 @@
 	</a>
 
 	<nav class='header__nav'>
-		{% include "common/_search_bar.html" %}
+		{% include "common/_search_bar.html" with class="search-bar--mobile-hidden" %}
 
-		<ul class='header__nav-list'>
+		<ul class='header__nav-list header__nav-list--mobile-hidden'>
 			{% get_menu 'main' as menu %}
 			{% for item in menu.menu_items.all %}
 			<li class="header__nav-item {{ item.html_classes }}"><a class='header__nav-link' href="{{ item.url }}">
