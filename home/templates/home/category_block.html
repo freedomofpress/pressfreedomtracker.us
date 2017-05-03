@@ -1,0 +1,18 @@
+<div class="category-block">
+	<div class="category-block__header">
+		All Categories
+	</div>
+
+	<ul class="category-block__list">
+		{% for category_relation in page.categories.all %}
+			<li class="category-block__list-item">
+				<a
+					class="category-block__link"
+					href="{{ category_relation.category.url }}"
+				>
+					{{ category_relation.category.title }}
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+</div>

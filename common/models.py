@@ -167,10 +167,3 @@ class Tag(TaggedItemBase):
         'incident.IncidentPage',
         related_name='tagged_items',
     )
-
-    category = models.ForeignKey(
-        'wagtailcore.Page',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
-    )

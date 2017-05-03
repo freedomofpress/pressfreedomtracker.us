@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block main %}
+    {% include 'common/_simple_page_body.html' %}
+{% endblock %}
+
+{% block sidebar %}
+  <ul>
+    {% for item in page.get_sidebar_menu.menu_items.all %}
+      <li>
+        <a href="{{ item.url }}" class="{{ item.html_classes }}" {% if item.title %}title="{{ item.title }}"{% endif %}>
+          {{ item.text }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -6,6 +6,7 @@ from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailsearch import index
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
@@ -25,6 +26,14 @@ class IncidentPage(Page):
         ('raw_html', blocks.RawHTMLBlock()),
     ])
 
+    teaser_image = models.ForeignKey(
+        'wagtailimages.image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
     journalists = ParentalManyToManyField('common.PersonPage', blank=True)
 
     tags = ClusterTaggableManager(through='common.Tag', blank=True)
@@ -38,6 +47,7 @@ class IncidentPage(Page):
         FieldPanel('tags'),
         InlinePanel('categories', label='Incident categories', min_num=1),
         InlinePanel('updates', label='Updates'),
+        ImageChooserPanel('teaser_image'),
         FieldPanel('related_incidents')
     ]
 

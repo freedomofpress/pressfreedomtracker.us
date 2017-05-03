@@ -3,6 +3,15 @@
 	flex-direction: column
 	height: 100%
 
+	> *
+		// The flex item should not be able to shrink to a dimension smaller
+		// than its children. For instance, if one flex-container child
+		// containing the main body of the homepage is taller than the
+		// viewport then this should not compromise the dimension of the
+		// header.
+		flex-shrink: 0
 
 .flex-container--grow-2 > :nth-child(2)
+	// Allow this particular flex item to take the remaining main size
+	// (height in this case, as the main axis here vertical).
 	flex-grow: 1

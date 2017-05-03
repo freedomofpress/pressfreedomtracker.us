@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from django.db import models
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page, Orderable
 
@@ -37,14 +37,21 @@ class HomePage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('about'),
-        FieldPanel('about_page'),
-        FieldPanel('blog_index_page'),
-        FieldPanel('incident_index_page'),
+        PageChooserPanel(
+            'about_page',
+            [ 'common.SimplePage'
+            , 'common.SimplePageWithSidebar'
+            ]
+        ),
+        PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
+        PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
         InlinePanel('categories', label='Incident Categories'),
-        InlinePanel('incidents',
-                    label='Featured Incidents',
-                    min_num=4,
-                    max_num=6)
+        InlinePanel(
+            'incidents',
+            label='Featured Incidents',
+            min_num=4,
+            max_num=6,
+        )
     ]
 
 
@@ -58,6 +65,10 @@ class HomePageCategories(Orderable):
         related_name='+',
     )
 
+    panels = [
+        PageChooserPanel('category', 'common.CategoryPage'),
+    ]
+
 
 class HomePageIncidents(Orderable):
     page = ParentalKey('home.HomePage', related_name='incidents')
@@ -68,3 +79,7 @@ class HomePageIncidents(Orderable):
         on_delete=models.SET_NULL,
         related_name='+',
     )
+
+    panels = [
+        PageChooserPanel('incident', 'incident.IncidentPage'),
+    ]
