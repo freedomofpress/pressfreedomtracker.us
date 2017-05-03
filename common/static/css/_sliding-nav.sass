@@ -10,15 +10,16 @@
   width: $sliding-nav-width
   // Places nav above shade
   z-index: 10
-  &.is-active
-    @if $sliding-nav-side == 'right'
-      transform: translate3d(-$sliding-nav-width, 0, 0)
-      // IE9
-      -ms-transform: translate($sliding-nav-width, 0)
-    @if $sliding-nav-side == 'left'
-      transform: translate3d($sliding-nav-width, 0, 0)
-      // IE9
-      -ms-transform: translate($sliding-nav-width, 0)
+
+.sliding-nav--is-active
+  @if $sliding-nav-side == 'right'
+    transform: translate3d(-$sliding-nav-width, 0, 0)
+    // IE9
+    -ms-transform: translate($sliding-nav-width, 0)
+  @if $sliding-nav-side == 'left'
+    transform: translate3d($sliding-nav-width, 0, 0)
+    // IE9
+    -ms-transform: translate($sliding-nav-width, 0)
 
 .sliding-nav__list
   list-style-type: none

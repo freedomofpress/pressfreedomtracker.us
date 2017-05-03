@@ -18,11 +18,11 @@ class SlidingNav {
 	render() {
 		const { navEl, triggerEl, overlayEl } = this
 		if (this.active) {
-			navEl.classList.add('is-active')
+			navEl.classList.add('sliding-nav--is-active')
 			triggerEl.classList.add('is-active')
 			overlayEl.classList.add('shade--is-active')
 		} else {
-			navEl.classList.remove('is-active')
+			navEl.classList.remove('sliding-nav--is-active')
 			triggerEl.classList.remove('is-active')
 			overlayEl.classList.remove('shade--is-active')
 		}
