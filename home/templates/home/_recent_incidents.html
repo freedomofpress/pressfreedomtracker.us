@@ -2,11 +2,11 @@
 
 {% if page.incident_index_page %}
 
-{% for related in page.incidents.all %}
-	{% include "incident/_incident.html" with incident=related.incident %}
-{% endfor %}
-
 <div class="recent-incidents">
+	{% for related in page.incidents.all %}
+		{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+	{% endfor %}
+
 	<a
 		class="button button--outline button--center"
 		href="{% pageurl page.incident_index_page %}"
