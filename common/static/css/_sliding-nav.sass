@@ -1,13 +1,13 @@
 .sliding-nav
+  #{$sliding-nav-side}: -$sliding-nav-width
+  background: $white
+  bottom: 0
   font-family: $sans-serif
-  width: $sliding-nav-width
+  overflow: auto
   position: fixed
   top: 0
-  #{$sliding-nav-side}: -$sliding-nav-width
-  bottom: 0
-  overflow: auto
-  background: $white
   transition: $sliding-nav-transition-ms transform ease-out
+  width: $sliding-nav-width
   // Places nav above shade
   z-index: 10
   &.is-active
@@ -22,11 +22,13 @@
 
 .sliding-nav__list
   list-style-type: none
-  margin: 0
   margin-bottom: $nav-link-padding
+  margin: 0
+  padding: 0
 
 .sliding-nav__link
-  padding: $nav-link-padding
+  display: block
+  padding: 10px 20px
   text-decoration: none
   text-transform: uppercase
   color: $black
