@@ -11,7 +11,7 @@ from django.utils.text import slugify
 from blog.models import BlogIndexPage, BlogPage
 from common.models import CategoryPage, PersonPage, SimplePage, SimplePageWithSidebar
 from forms.models import FormPage
-from home.models import HomePage, HomePageCategories
+from home.models import HomePage, HomePageCategories, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
@@ -199,6 +199,12 @@ class Command(BaseCommand):
                 IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
             ]
             incident_index_page.add_child(instance=page)
+            if x == 0:
+                HomePageIncidents.objects.create(
+                    sort_order=4,
+                    page=home_page,
+                    incident=page,
+                )
 
         incident_data = [
             dict(
@@ -230,6 +236,11 @@ class Command(BaseCommand):
                 IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
             ]
             incident_index_page.add_child(instance=page)
+            HomePageIncidents.objects.create(
+                sort_order=index + 1,
+                page=home_page,
+                incident=page,
+            )
 
         home_page.save()
 
