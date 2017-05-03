@@ -1,6 +1,8 @@
 machine:
   python:
     version: 3.5.0
+  environment:
+    DJANGO_ES_HOST: http://localhost:9200
 
 
 dependencies:
@@ -11,9 +13,7 @@ dependencies:
     - wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.3.2.tar.gz
     - tar -xvf elasticsearch-5.3.2.tar.gz
     - elasticsearch-5.3.2/bin/elasticsearch: {background: true}
-    - sleep 10 && curl --retry 10 --retry-delay 5 -v http://127.0.0.1:9200/
-    - wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz
-    - tar -xzf geckodriver-v0.14.0-linux64.tar.gz -C /home/ubuntu/bin
+    - sleep 10 && curl --retry 10 --retry-delay 5 -v $DJANGO_ES_HOST
 
 database:
   post:
