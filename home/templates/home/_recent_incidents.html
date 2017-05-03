@@ -2,8 +2,8 @@
 
 {% if page.incident_index_page %}
 
-{% for incident in page.incident_index_page.get_children.live|slice:":4" %}
-	{% include "incident/_incident.html" %}
+{% for related in page.incidents.all %}
+	{% include "incident/_incident.html" with incident=related.incident %}
 {% endfor %}
 
 <div class="recent-incidents">
