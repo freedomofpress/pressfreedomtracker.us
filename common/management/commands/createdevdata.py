@@ -1,4 +1,5 @@
 import random
+from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.core.files.images import ImageFile
@@ -187,7 +188,7 @@ class Command(BaseCommand):
             page = IncidentPage(
                 title='Maecenas convallis sem malesuada nisl placerat volutpat{}'.format(x),
                 slug='maecenas-convallis-{}'.format(x),
-                date=timezone.now(),
+                date=timezone.now() - timedelta(x),
                 body=[(
                     'rich_text',
                     RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
@@ -217,11 +218,11 @@ class Command(BaseCommand):
             title='Sample Image',
             file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
         )
-        for data in incident_data:
+        for index, data in enumerate(incident_data):
             page = IncidentPage(
                 title=data['title'],
                 body=[('rich_text', RichText('<p>{}</p>'.format(data['body'])))],
-                date=timezone.now(),
+                date=timezone.now() + timedelta(index + 1),
                 teaser_image=image,
             )
             random_idx = random.randint(0, CategoryPage.objects.count() - 1)
