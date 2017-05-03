@@ -1,6 +1,11 @@
 {% load wagtailcore_tags %}
 
 {% if page.incident_index_page %}
+
+{% for incident in page.incident_index_page.get_children.live|slice:":4" %}
+	{% include "incident/_incident.html" %}
+{% endfor %}
+
 <div class="recent-incidents">
 	<a
 		class="button button--outline button--center"
