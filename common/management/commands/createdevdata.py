@@ -1,6 +1,8 @@
 import random
+from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
@@ -9,12 +11,13 @@ from django.utils.text import slugify
 from blog.models import BlogIndexPage, BlogPage
 from common.models import CategoryPage, PersonPage, SimplePage, SimplePageWithSidebar
 from forms.models import FormPage
-from home.models import HomePage, HomePageCategories
+from home.models import HomePage, HomePageCategories, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
 from wagtail.wagtailcore.models import Page, Site
 from wagtail.wagtailcore.rich_text import RichText
+from wagtail.wagtailimages.models import Image
 
 
 class Command(BaseCommand):
@@ -185,7 +188,7 @@ class Command(BaseCommand):
             page = IncidentPage(
                 title='Maecenas convallis sem malesuada nisl placerat volutpat{}'.format(x),
                 slug='maecenas-convallis-{}'.format(x),
-                date=timezone.now(),
+                date=timezone.now() - timedelta(x),
                 body=[(
                     'rich_text',
                     RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
@@ -196,6 +199,48 @@ class Command(BaseCommand):
                 IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
             ]
             incident_index_page.add_child(instance=page)
+            if x == 0:
+                HomePageIncidents.objects.create(
+                    sort_order=4,
+                    page=home_page,
+                    incident=page,
+                )
+
+        incident_data = [
+            dict(
+                title="BBC journalist questioned by US border agents, devices searched",
+                body="Ali Hamedani, a reporter for BBC World Service, was detained at Chicago O'Hare airport for over two hours.",
+            ),
+            dict(
+                title="Vocativ journalist charged with rioting in Washington",
+                body="Police arrested Evan Engel, a senior producer at the news website Vocativ.",
+            ),
+            dict(
+                title="Media outlets excluded from gaggle",
+                body="At least nine news outlets were excluded from an informal briefing known as 'a gaggle' by President Donald Trump's White House Press Secretary Sean Spicer.",
+            ),
+        ]
+        image = Image.objects.create(
+            title='Sample Image',
+            file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
+        )
+        for index, data in enumerate(incident_data):
+            page = IncidentPage(
+                title=data['title'],
+                body=[('rich_text', RichText('<p>{}</p>'.format(data['body'])))],
+                date=timezone.now() + timedelta(index + 1),
+                teaser_image=image,
+            )
+            random_idx = random.randint(0, CategoryPage.objects.count() - 1)
+            page.categories = [
+                IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
+            ]
+            incident_index_page.add_child(instance=page)
+            HomePageIncidents.objects.create(
+                sort_order=index + 1,
+                page=home_page,
+                incident=page,
+            )
 
         home_page.save()
 

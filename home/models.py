@@ -79,3 +79,7 @@ class HomePageIncidents(Orderable):
         on_delete=models.SET_NULL,
         related_name='+',
     )
+
+    panels = [
+        PageChooserPanel('incident', 'incident.IncidentPage'),
+    ]

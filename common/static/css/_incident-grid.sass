@@ -3,16 +3,16 @@
 	flex-direction: row
 	flex-wrap: wrap
 	align-items: stretch
+	margin-left: -$column-gutter-width
 
 .incident-grid__item
+	display: flex
 	box-sizing: border-box
 	flex-basis: 50%
 	flex-shrink: 1
 	flex-grow: 1
-	padding-right: $column-gutter-width
+	padding-left: $column-gutter-width
 	overflow: hidden
-	&:nth-child(even)
-		padding-right: 0
 
 	@media(max-width: $small-screen)
 		flex-basis: 100%
