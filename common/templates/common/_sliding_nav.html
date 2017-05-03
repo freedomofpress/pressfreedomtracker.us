@@ -1,6 +1,7 @@
 {% load get_menu %}
 
 <nav class="sliding-nav js-sliding-nav">
+  {% include "common/_search_bar.html" with class="search-bar--mobile" %}
   <ul class='sliding-nav__list'>
       {% get_menu 'main' as menu %}
       {% for item in menu.menu_items.all %}
@@ -10,5 +11,5 @@
         </a>
       </li>
       {% endfor %}
-    </ul>
+  </ul>
 </nav>
