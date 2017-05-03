@@ -4,14 +4,16 @@
 
 <div class="recent-incidents">
 	{% for related in page.incidents.all %}
-		{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+		<div class="recent-incidents__incident">
+			{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+		</div>
 	{% endfor %}
-
-	<a
-		class="button button--outline button--center"
-		href="{% pageurl page.incident_index_page %}"
-	>
-		More Cases
-	</a>
 </div>
+
+<a
+	class="button button--outline button--center"
+	href="{% pageurl page.incident_index_page %}"
+>
+	More Cases
+</a>
 {% endif %}
