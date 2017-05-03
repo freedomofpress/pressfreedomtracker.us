@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+
+{% if page.incident_index_page %}
+<div class="recent-incidents">
+	<a
+		class="button button--outline button--center"
+		href="{% pageurl page.incident_index_page %}"
+	>
+		More Cases
+	</a>
+</div>
+{% endif %}

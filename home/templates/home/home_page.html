@@ -4,6 +4,10 @@
 {% block top_sidebar_class %}layout-right-sidebar__sidebar--light{% endblock %}
 {% block sidebar_class %}layout-right-sidebar__sidebar--light{% endblock %}
 
+{% block main %}
+	{% include "home/_recent_incidents.html" %}
+{% endblock %}
+
 {% block sidebar %}
 	{% include "home/_blog_sidebar.html" %}
 {% endblock %}
