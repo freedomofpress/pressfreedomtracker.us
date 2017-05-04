@@ -1,0 +1,43 @@
+.intro
+	margin: 20px 0
+	padding: 20px
+
+	font-size: 1.4rem
+	line-height: 1.5
+
+	background-color: white
+	color: black
+
+	p
+		margin: 0
+		color: $dim-grey
+
+	p b:first-child
+		color: $gray-medium-dark
+
+	div,
+	p
+		display: inline
+
+a.intro__read-more
+	text-decoration: none
+	text-transform: uppercase
+	color: $gamboge
+	font-size: 0.8em
+	transition: color 0.1s ease
+	font-weight: 600
+
+	svg
+		width: 0.8em
+
+	svg path
+		transition: fill 0.1s ease
+		fill: $gamboge
+
+	&:hover,
+	&:focus,
+	&:active
+		color: $gamboge-hover
+
+		svg path
+			fill: $gamboge-hover
