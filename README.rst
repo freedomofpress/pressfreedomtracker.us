@@ -6,7 +6,7 @@ Prerequisites
 
 The installation instructions below assume you have the following software on your machine:
 
-* `Python 3.5.x <http://www.python.org/download/releases/3.5.0/>`_
+* `Python 3.4.x <http://www.python.org/download/releases/3.5.0/>`_
 * `Pip <https://pip.readthedocs.org/en/latest/installing.html>`_
 * `virtualenv <http://www.virtualenv.org/en/latest/virtualenv.html#installation>`_ (optional)
 * `virtualenvwrapper <http://virtualenvwrapper.readthedocs.org/en/latest/install.html>`_ (optional)
