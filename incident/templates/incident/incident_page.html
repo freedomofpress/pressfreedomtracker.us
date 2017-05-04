@@ -56,7 +56,7 @@
 					{% if page.updates.all %}
 						{{ page.updates.first.date|date:"F j, Y" }}
 					{% else %}
-						{{page.published_date|date:"F j, Y" }}
+						{{page.first_published_at|date:"F j, Y" }}
 					{% endif %}
 				</td>
 			</tr>
