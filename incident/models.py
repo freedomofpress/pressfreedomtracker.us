@@ -1,6 +1,10 @@
 from django.db import models
+from django.forms import CheckboxSelectMultiple
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel
+from wagtail.wagtailadmin.edit_handlers import (
+    FieldPanel, StreamFieldPanel,
+    InlinePanel, PageChooserPanel,
+)
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.models import Page, Orderable
@@ -34,7 +38,12 @@ class IncidentPage(Page):
         related_name='+',
     )
 
-    journalists = ParentalManyToManyField('common.PersonPage', blank=True)
+    targets = ParentalManyToManyField(
+        'wagtailcore.Page',
+        blank=True,
+        related_name='targets',
+        verbose_name='Targets (Journalists/Organizations)',
+    )
 
     tags = ClusterTaggableManager(through='common.Tag', blank=True)
 
@@ -43,7 +52,8 @@ class IncidentPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('date'),
         StreamFieldPanel('body'),
-        FieldPanel('journalists'),
+        # This will require some future filtering.
+        FieldPanel('targets', widget=CheckboxSelectMultiple),
         FieldPanel('tags'),
         InlinePanel('categories', label='Incident categories', min_num=1),
         InlinePanel('updates', label='Updates'),
