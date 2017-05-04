@@ -70,16 +70,18 @@
 					{% endfor %}
 				</td>
 			</tr>
-			<tr class='data-table__row'>
-				<th class="data-table__label">
-					Tags
-				</th>
-				<td class="data-table__value">
-					{% for tag in page.tags.all %}
-						<a href="#">{{tag.name}}</a>
-					{% endfor %}
-				</td>
-			</tr>
+			{% if page.tags.all %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Tags
+					</th>
+					<td class="data-table__value">
+						{% for tag in page.tags.all %}
+							<a href="#">{{tag.name}}</a>
+						{% endfor %}
+					</td>
+				</tr>
+			{% endif %}
 		</tbody>
 	</table>
 
