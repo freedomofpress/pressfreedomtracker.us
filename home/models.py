@@ -39,8 +39,9 @@ class HomePage(Page):
         FieldPanel('about'),
         PageChooserPanel(
             'about_page',
-            [ 'common.SimplePage'
-            , 'common.SimplePageWithSidebar'
+            [
+                'common.SimplePage',
+                'common.SimplePageWithSidebar'
             ]
         ),
         PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
