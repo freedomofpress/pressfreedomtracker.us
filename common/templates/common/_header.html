@@ -1,15 +1,15 @@
 {% load get_menu %}
 <header class='header'>
 	<a class='header__logo' href="/">
-		{% include "common/_logo.html" %}
+		{% include "common/_desktop_logo.html" %}
 
 		<h1 class='header__logo__title sr-only'>U.S. Press Freedom Tracker</h1>
 	</a>
 
 	<nav class='header__nav'>
-		{% include "common/_search_bar.html" %}
+		{% include "common/_search_bar.html" with class="search-bar--mobile-hidden" %}
 
-		<ul class='header__nav-list'>
+		<ul class='header__nav-list header__nav-list--mobile-hidden'>
 			{% get_menu 'main' as menu %}
 			{% for item in menu.menu_items.all %}
 			<li class="header__nav-item {{ item.html_classes }}"><a class='header__nav-link' href="{{ item.url }}">
@@ -17,5 +17,17 @@
 			</a></li>
 			{% endfor %}
 		</ul>
+
+		<button
+			class="hamburger hamburger--collapse js-sliding-nav-trigger"
+			type="button"
+			aria-label="Menu"
+			aria-controls="navigation"
+			aria-expanded="false"
+		>
+			<span class="hamburger-box">
+				<span class="hamburger-inner"></span>
+			</span>
+		</button>
 	</nav>
 </header>

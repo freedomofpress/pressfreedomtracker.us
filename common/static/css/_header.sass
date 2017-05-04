@@ -10,6 +10,9 @@ $nav-link-padding: 5px
   flex-direction: row
   justify-content: space-between
 
+  @media(max-width: $small-screen)
+    margin-top: 0
+
 .header__logo
 	background-color: $header-color
 	position: relative
@@ -17,12 +20,6 @@ $nav-link-padding: 5px
 	margin: 0
 	padding: 15px
 	padding-left: $page-margin-side * 2
-
-	svg
-		display: block
-
-	svg g path
-		fill: white
 
 .header__nav
   font-family: $sans-serif
@@ -49,3 +46,7 @@ $nav-link-padding: 5px
   &:hover
     background-color: $gray-medium-dark
     color: #fff
+
+@media(max-width: $small-screen)
+  .header__nav-list--mobile-hidden
+    display: none
