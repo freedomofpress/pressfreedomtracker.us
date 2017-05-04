@@ -21,7 +21,14 @@ It can take the following context variables:
 ">
 	<div class="incident__body">
 		{% if incident.teaser_image %}
-			{% image incident.teaser_image height-800 class="incident__top-image" %}
+			{% image incident.teaser_image fill-665x440 as x1 %}
+			{% image incident.teaser_image fill-1330x880 as x2 %}
+			<img
+				class="incident__top-image"
+				alt="{{ x1.alt }}"
+				src="{{ x1.url }}"
+				srcset="{{ x2.url }} 2x"
+			/>
 		{% endif %}
 
 		<h3 class='incident__category-name incident__category-name--{{ main_category|slugify }}'>

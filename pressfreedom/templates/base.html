@@ -25,6 +25,10 @@
         {% block css %}
             <link rel="stylesheet" type="text/x-sass" href="{% static 'pressfreedom.sass' %}">
         {% endblock %}
+
+		<!--[if lte IE 11]>
+		<script type="text/javascript" src="{% static 'js/picturefill.3.0.2.min.js' %}"></script>
+		<![endif]-->
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
