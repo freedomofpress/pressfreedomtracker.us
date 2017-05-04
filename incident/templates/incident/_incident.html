@@ -9,7 +9,7 @@ It can take the following context variables:
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
 
-{% with incident.categories.all.first.category as main_category %}
+{% with incident.get_main_category as main_category %}
 <article class="
 	incident
 	incident--{{ main_category|slugify }}

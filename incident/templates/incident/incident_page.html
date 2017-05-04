@@ -87,7 +87,7 @@
 		</tbody>
 	</table>
 
-	{% with page.categories.all.first.category as main_category %}
+	{% with page.get_main_category as main_category %}
 		  <div>
 			  <h3 class="section-heading"
 			  >

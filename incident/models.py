@@ -57,6 +57,12 @@ class IncidentPage(Page):
         index.SearchField('body'),
     ]
 
+    def get_main_category(self):
+        """
+        Returns the first category in the list of categories
+        """
+        return self.categories.all().first().category
+
     def get_related_incidents(self):
         """
         Returns related incidents or other incidents in the same category
@@ -64,12 +70,12 @@ class IncidentPage(Page):
         if self.related_incidents.all():
             return self.related_incidents.all()
         else:
-            main_category = self.categories.all().first().category
+            main_category = self.get_main_category()
             incidents = self.get_parent().get_descendants()
 
             related_incidents = [
                 incident for incident in incidents
-                if incident.specific.categories.all().first().category == main_category and
+                if incident.specific.get_main_category() == main_category and
                 incident.specific.title != self.title
             ]
 
