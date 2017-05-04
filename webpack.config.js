@@ -43,7 +43,7 @@ var common = {
 
 	resolve: {
 		alias: {
-			'~': __dirname + '/core/static/js',
+			'~': __dirname + '/common/static/js',
 			modernizr$: path.resolve(__dirname, '.modernizrrc')
 		},
 		extensions: ['.js', '.jsx'],

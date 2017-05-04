@@ -1,0 +1,35 @@
+.stats
+	display: flex
+	flex-direction: row
+	flex-wrap: wrap
+	margin: 0 -10px
+	margin-bottom: 10px
+
+.stats__item
+	flex-basis: 25%
+	// Faux padding
+	border: 10px solid $fpf-grey-light
+	border-top-width: 0
+	padding: 15px 10px
+
+	display: flex
+	flex-direction: column
+	align-items: center
+
+	font-size: 18px
+	color: white
+
+.stats__number,
+.stats__label
+	display: block
+	font-weight: 300
+
+.stats__number
+	font-size: 4em
+	font-family: $serif
+	line-height: 1
+	letter-spacing: 0.08px
+
+.stats__label
+	text-align: center
+	margin-top: 0.5em

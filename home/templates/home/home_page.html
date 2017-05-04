@@ -6,6 +6,7 @@
 
 {% block main %}
 	{% include "home/_intro.html" with text=page.about read_more=page.about_page %}
+	{% include "home/_stats.html" with label="Press Freedom in 2017" stats=recent_incidents %}
 	{% include "home/_recent_incidents.html" %}
 {% endblock %}
 
