@@ -58,7 +58,22 @@ class IncidentPage(Page):
     ]
 
     def get_related_incidents(self):
-        return self.related_incidents.all()
+        """
+        Returns related incidents or other incidents in the same category
+        """
+        if self.related_incidents.all():
+            return self.related_incidents.all()
+        else:
+            main_category = self.categories.all().first().category
+            incidents = self.get_parent().get_descendants()
+
+            related_incidents = [
+                incident for incident in incidents
+                if incident.specific.categories.all().first().category == main_category and
+                incident.specific.title != self.title
+            ]
+
+            return related_incidents[:2]
 
 
 class IncidentPageUpdates(Orderable):

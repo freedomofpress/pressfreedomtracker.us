@@ -60,16 +60,18 @@
 					{% endif %}
 				</td>
 			</tr>
-			<tr class='data-table__row'>
-				<th class="data-table__label">
-					Related cases
-				</th>
-				<td class="data-table__value">
-					{% for related_case in page.get_related_incidents %}
-						<a href="{{related_case.url}}">{{related_case.title}}</a>
-					{% endfor %}
-				</td>
-			</tr>
+			{% if page.get_related_incidents %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Related cases
+					</th>
+						<td class="data-table__value">
+							{% for related_case in page.get_related_incidents %}
+								<a href="{{related_case.url}}">{{related_case.title}}</a>
+							{% endfor %}
+						</td>
+				</tr>
+			{% endif %}
 			{% if page.tags.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
