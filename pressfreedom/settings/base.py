@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 from __future__ import absolute_import, unicode_literals
 
-import logging
-logger = logging.getLogger(__name__)
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
+import dj_database_url
+import logging
+logger = logging.getLogger(__name__)
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -101,7 +102,6 @@ WSGI_APPLICATION = 'pressfreedom.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-import dj_database_url
 
 # Set the url as DATABASE_URL in the environment
 DATABASES = {
@@ -182,7 +182,7 @@ DEBUG = True
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'js/bundles/', # must end with slash
+        'BUNDLE_DIR_NAME': 'js/bundles/',  # must end with slash
         'STATS_FILE': os.path.join(BASE_DIR, 'common/static/js/bundles/webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
