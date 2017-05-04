@@ -57,17 +57,13 @@
 .incident--full
 	margin-bottom: 40px
 
-.incident--arrest
-	border-left-color: $arrest-color
+@each $name, $color in $border-colors
+      .incident--#{$name}
+          border-left-color: $color
 
-.incident--equipment-seizure
-	border-left-color: $equipment-seizure-color
+      .incident__category-name--#{$name}
+      		color: $color
 
-.incident__category-name--arrest
-	color: $arrest-color
-
-.incident__category-name--equipment-seizure
-	color: $equipment-seizure-color
 
 // TODO: Move these to a different module
 
