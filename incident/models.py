@@ -57,6 +57,9 @@ class IncidentPage(Page):
         index.SearchField('body'),
     ]
 
+    def get_related_incidents(self):
+        return self.related_incidents.all()
+
 
 class IncidentPageUpdates(Orderable):
     page = ParentalKey(IncidentPage, related_name='updates')

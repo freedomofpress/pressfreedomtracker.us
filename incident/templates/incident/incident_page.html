@@ -65,7 +65,7 @@
 					Related cases
 				</th>
 				<td class="data-table__value">
-					{% for related_case in page.related_incidents.all %}
+					{% for related_case in page.get_related_incidents %}
 						<a href="{{related_case.url}}">{{related_case.title}}</a>
 					{% endfor %}
 				</td>
