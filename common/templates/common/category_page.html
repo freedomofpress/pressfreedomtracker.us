@@ -2,6 +2,10 @@
 
 {% load wagtailcore_tags %}
 
+{% block top_sidebar_class %}
+  layout-right-sidebar__sidebar--light
+{% endblock%}
+
 {% block secondary-header %}
 <div class="layout-right-sidebar">
   <div class="layout-right-sidebar__main
@@ -37,6 +41,10 @@
 </div>
 {% endblock %}
 
+{% block main_class %}
+  layout-right-sidebar__main--padded
+{% endblock %}
+
 {% block main %}
   <div class="incident-grid">
     {% for incident in page.incidents.all %}
@@ -46,5 +54,20 @@
     {% empty %}
       <p>There are no incidents in this category yet.</p>
     {% endfor %}
+  </div>
+{% endblock %}
+
+
+{% block sidebar_class %}
+  layout-right-sidebar__sidebar--light
+  layout-right-sidebar__sidebar--padded
+{% endblock %}
+
+{% block sidebar %}
+  <h4 class="section-heading">
+    How we track {{page.title}}
+  </h4>
+  <div>
+    {{ page.methodology|richtext }}
   </div>
 {% endblock %}

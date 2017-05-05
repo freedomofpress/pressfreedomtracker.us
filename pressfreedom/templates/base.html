@@ -53,7 +53,7 @@
       {% endblock %}
 
 			<div class="layout-right-sidebar">
-				<div class="layout-right-sidebar__main">
+				<div class="layout-right-sidebar__main {% block main_class %} {% endblock %}">
 					{% block maincontainer %}
 					  <main role="main" class="site-main container">
 						{% block main %}{% endblock %}

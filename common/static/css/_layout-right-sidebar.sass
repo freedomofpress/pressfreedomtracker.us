@@ -1,6 +1,6 @@
-$category-page-margin-bottom: 20px
+$layout-top-padding: 20px
 $category-page-header-max-height: 300px
-$category-page-header-min-height: 150px + $category-page-margin-bottom
+$category-page-header-min-height: 150px
 
 .layout-right-sidebar
 	display: flex
@@ -30,6 +30,9 @@ $category-page-header-min-height: 150px + $category-page-margin-bottom
 
 
 // MODIFIER
+.layout-right-sidebar__main--padded
+	padding-top: $layout-top-padding
+
 .layout-right-sidebar__sidebar--light
 	background-color: $fpf-sidebar
 
@@ -37,14 +40,15 @@ $category-page-header-min-height: 150px + $category-page-margin-bottom
 	background-color: $dark-layout-color
 	max-height: $category-page-header-max-height
 	min-height: $category-page-header-min-height
-	margin-bottom: $category-page-margin-bottom
 
 .layout-right-sidebar__sidebar--dark
 	background-color: lighten($dark-layout-color, 20%)
 	margin-left: 0
 	max-height: $category-page-header-max-height
 	min-height: $category-page-header-min-height
-	margin-bottom: $category-page-margin-bottom
+
+.layout-right-sidebar__sidebar--padded
+	padding-top: 20px
 
 @each $name, $color in $border-colors
 	.layout-right-sidebar__main--#{$name}
@@ -52,6 +56,3 @@ $category-page-header-min-height: 150px + $category-page-margin-bottom
 
 	.layout-right-sidebar__sidebar--#{$name}
 		border-top: 20px solid $color
-
-
-
