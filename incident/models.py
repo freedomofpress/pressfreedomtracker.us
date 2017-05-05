@@ -1,9 +1,10 @@
 from django.db import models
-from django.forms import CheckboxSelectMultiple, ChoiceField
+from django.forms import CheckboxSelectMultiple, ChoiceField, RadioSelect
 
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel, StreamFieldPanel,
     InlinePanel, PageChooserPanel, MultiFieldPanel,
+    FieldRowPanel,
 )
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import StreamField, RichTextField
@@ -13,7 +14,7 @@ from wagtail.wagtailsearch import index
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from taggit.models import TaggedItemBase
+from taggit.models import TaggedItemBase, TagBase
 
 from . import choices
 
@@ -95,12 +96,6 @@ class IncidentPage(Page):
     unnecessary_use_of_force = models.BooleanField(default=False)
 
     # Equipment Seizure or Damage
-    equipment_seized = ClusterTaggableManager(
-        through='incident.EquipmentTag',
-        blank=True,
-        related_name='equipment_seized_incidents',
-        verbose_name='Equipment Seized',
-    )
     status_of_seized_equipment = models.CharField(
         choices=choices.STATUS_OF_SEIZED_EQUIPMENT,
         max_length=255,
@@ -239,10 +234,11 @@ class IncidentPage(Page):
             ]
         ),
 
+        InlinePanel('equipment', label='Equipment'),
+
         MultiFieldPanel(
             heading='Equipment Seizure or Damage',
             children=[
-                FieldPanel('equipment_seized'),
                 FieldPanel('status_of_seized_equipment'),
                 FieldPanel('is_search_warrant_obtained'),
                 FieldPanel('actor'),
@@ -343,11 +339,24 @@ class ChargesTag(TaggedItemBase):
     )
 
 
-class EquipmentTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_equipment',
+class EquipmentTag(models.Model):
+    incident = ParentalKey(IncidentPage, related_name='equipment')
+    name = models.CharField(
+        max_length=255,
+        unique=True,
     )
+    category = models.CharField(
+        choices=choices.EQUIPMENT,
+        default=choices.EQUIPMENT[0][0],
+        max_length=255,
+    )
+
+    panels = [
+        FieldRowPanel([
+            FieldPanel('name'),
+            FieldPanel('category', widget=RadioSelect),
+        ])
+    ]
 
 
 class NationalityTag(TaggedItemBase):

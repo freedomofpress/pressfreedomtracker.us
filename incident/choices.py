@@ -88,3 +88,9 @@ CONTEMPT_STATUS = [
     ('HELD_NOT_JAILED', 'held in contempt but not jailed'),
     ('HELD_AND_JAILED', 'held in contempt and jailed'),
 ]
+
+
+EQUIPMENT = [
+    ('SEIZED', 'seized'),
+    ('BROKEN', 'broken'),
+]
