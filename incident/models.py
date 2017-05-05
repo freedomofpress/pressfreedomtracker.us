@@ -76,6 +76,7 @@ class IncidentPage(Page):
         through='incident.ChargesTag',
         blank=True,
         related_name='charge_incidents',
+        verbose_name='Charges',
     )
 
     content_panels = Page.content_panels + [
@@ -98,7 +99,6 @@ class IncidentPage(Page):
                 FieldPanel('charges'),
             ]
         ),
-
         InlinePanel('categories', label='Incident categories', min_num=1),
         InlinePanel('updates', label='Updates'),
 
@@ -138,4 +138,18 @@ class ChargesTag(TaggedItemBase):
     content_object = ParentalKey(
         'incident.IncidentPage',
         related_name='tagged_charges',
+    )
+
+
+class EquipmentTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'incident.IncidentPage',
+        related_name='tagged_equipment',
+    )
+
+
+class NationalityTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'incident.IncidentPage',
+        related_name='tagged_nationalities',
     )
