@@ -10,8 +10,8 @@ $nav-link-padding: 5px
   flex-direction: row
   justify-content: space-between
 
-  @media(max-width: $small-screen)
-    margin-top: 0
+  @media (max-width: $small-screen)
+	  margin-top: 0
 
 .header__logo
 	background-color: $header-color
@@ -22,31 +22,32 @@ $nav-link-padding: 5px
 	padding-left: $page-margin-side * 2
 
 .header__nav
-  font-family: $sans-serif
-  display: flex
-  flex-direction: column
-  justify-content: space-between
-  align-items: flex-end
+	font-family: $sans-serif
+	display: flex
+	flex-direction: column
+	justify-content: space-between
+	align-items: flex-end
 
 .header__nav-list
-  list-style-type: none
-  display: inline
-  margin: 0
-  margin-bottom: $nav-link-padding
+	list-style-type: none
+	display: inline
+	margin: 0
+	margin-bottom: $nav-link-padding
 
 .header__nav-item
-  display: inline
-  font-size: 1.1em
+	display: inline
+	font-size: 1.1em
 
 .header__nav-link
-  padding: $nav-link-padding
-  text-decoration: none
-  text-transform: uppercase
-  color: $gray-medium-dark
-  &:hover
-    background-color: $gray-medium-dark
-    color: #fff
+	padding: $nav-link-padding
+	text-decoration: none
+	text-transform: uppercase
+	color: $gray-medium-dark
+
+	&:hover
+		background-color: $gray-medium-dark
+		color: #fff
 
 @media(max-width: $small-screen)
-  .header__nav-list--mobile-hidden
-    display: none
+	.header__nav-list--mobile-hidden
+		display: none
