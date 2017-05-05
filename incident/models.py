@@ -57,6 +57,29 @@ class IncidentPage(Page):
         index.SearchField('body'),
     ]
 
+    def get_main_category(self):
+        """
+        Returns the first category in the list of categories
+        """
+        return self.categories.all().first().category
+
+    def get_related_incidents(self):
+        """
+        Returns related incidents or other incidents in the same category
+        """
+        if self.related_incidents.all():
+            return self.related_incidents.all()
+        else:
+            main_category = self.get_main_category()
+
+            related_incidents = IncidentPage.objects.filter(
+                live=True,
+                categories__category=main_category
+            ).exclude(id=self.id)
+
+            # Only return two related incidents (Categories have too many incidents)
+            return related_incidents[:2]
+
 
 class IncidentPageUpdates(Orderable):
     page = ParentalKey(IncidentPage, related_name='updates')

@@ -56,45 +56,53 @@
 					{% if page.updates.all %}
 						{{ page.updates.first.date|date:"F j, Y" }}
 					{% else %}
-						{{page.published_date|date:"F j, Y" }}
+						{{page.first_published_at|date:"F j, Y" }}
 					{% endif %}
 				</td>
 			</tr>
-			<tr class='data-table__row'>
-				<th class="data-table__label">
-					Related cases
-				</th>
-				<td class="data-table__value">
-					{% for related_case in page.related_incidents.all %}
-						<a href="{{related_case.url}}">{{related_case.title}}</a>
-					{% endfor %}
-				</td>
-			</tr>
-			<tr class='data-table__row'>
-				<th class="data-table__label">
-					Tags
-				</th>
-				<td class="data-table__value">
-					{% for tag in page.tags.all %}
-						<a href="#">{{tag.name}}</a>
-					{% endfor %}
-				</td>
-			</tr>
+			{% if page.get_related_incidents %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Related cases
+					</th>
+						<td class="data-table__value">
+							<ul class="data-table__list">
+								{% for related_case in page.get_related_incidents %}
+										<li>
+											<a href="{{related_case.url}}">{{related_case.title}}</a>
+										</li>
+								{% endfor %}
+							</ul>
+						</td>
+				</tr>
+			{% endif %}
+			{% if page.tags.all %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Tags
+					</th>
+					<td class="data-table__value">
+						{% for tag in page.tags.all %}
+							<a href="#">{{tag.name}}</a>
+						{% endfor %}
+					</td>
+				</tr>
+			{% endif %}
 		</tbody>
 	</table>
 
-	{% with page.categories.all.first.category as main_category %}
+	{% with page.get_main_category as main_category %}
 		  <div>
 			  <h3 class="section-heading"
 			  >
-			  How we track {{main_category|title}}s
+			  How we track {{main_category|title}}
 			  </h3>
 			  <p>{{main_category.methodology|richtext}}</p>
 		  </div>
 		  <h3 class="section-heading"
 			  >
 			  <a href="{% pageurl main_category %}" >
-				More {{main_category.title}}s &gt;
+				More {{main_category.title}} &gt;
 			  </a>
 		  </h3>
 	{% endwith %}
