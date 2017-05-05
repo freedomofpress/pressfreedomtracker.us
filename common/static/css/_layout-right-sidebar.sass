@@ -38,14 +38,18 @@ $category-page-header-min-height: 150px
 
 .layout-right-sidebar__main--dark
 	background-color: $dark-layout-color
-	max-height: $category-page-header-max-height
 	min-height: $category-page-header-min-height
 
 .layout-right-sidebar__sidebar--dark
 	background-color: lighten($dark-layout-color, 20%)
 	margin-left: 0
-	max-height: $category-page-header-max-height
 	min-height: $category-page-header-min-height
+
+	@media(max-width: $small-screen)
+		margin-top: 0
+		min-height: 0
+		max-height: none
+
 
 .layout-right-sidebar__sidebar--padded
 	padding-top: 20px
@@ -56,3 +60,5 @@ $category-page-header-min-height: 150px
 
 	.layout-right-sidebar__sidebar--#{$name}
 		border-top: 20px solid $color
+		@media(max-width: $small-screen)
+		 border-top: none
