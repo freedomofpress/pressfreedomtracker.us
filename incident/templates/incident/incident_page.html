@@ -66,13 +66,13 @@
 						Related cases
 					</th>
 						<td class="data-table__value">
-							{% for related_case in page.get_related_incidents %}
-								{% if not forloop.last %}
-									<a href="{{related_case.url}}">{{related_case.title}}</a><br/>
-								{% else %}
-									<a href="{{related_case.url}}">{{related_case.title}}</a>
-								{% endif %}
-							{% endfor %}
+							<ul class="data-table__list">
+								{% for related_case in page.get_related_incidents %}
+										<li>
+											<a href="{{related_case.url}}">{{related_case.title}}</a>
+										</li>
+								{% endfor %}
+							</ul>
 						</td>
 				</tr>
 			{% endif %}
