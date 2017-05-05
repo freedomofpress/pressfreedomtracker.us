@@ -64,10 +64,31 @@
 {% endblock %}
 
 {% block sidebar %}
-  <h4 class="section-heading">
-    How we track {{page.title}}
-  </h4>
-  <div>
-    {{ page.methodology|richtext }}
+  <div class="category-sidebar">
+    <h4 class="section-heading">
+      Data Summary
+    </h4>
+    <table class="data-table">
+      <tr class='data-table__row'>
+        <th class="data-table__label">
+          Total cases
+        </th>
+        <td class="data-table__value">{{ page.incidents.all.count }}</td>
+      </tr>
+      <tr class='data-table__row'>
+        <th class="data-table__label">
+          Cases in 2019
+        </th>
+        <td class="data-table__value">33</td>
+      </tr>
+    </table>
+    {% if page.methodology %}
+      <h4 class="section-heading">
+        How we track {{page.title}}
+      </h4>
+      <div>
+        {{ page.methodology|richtext }}
+      </div>
+    {% endif %}
   </div>
 {% endblock %}
