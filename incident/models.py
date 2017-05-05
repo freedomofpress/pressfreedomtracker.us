@@ -218,6 +218,8 @@ class IncidentPage(Page):
         FieldPanel('targets', widget=CheckboxSelectMultiple),
         FieldPanel('tags'),
 
+        InlinePanel('categories', label='Incident categories', min_num=1),
+
         MultiFieldPanel(
             heading='Detention/Arrest, Leak Prosecution',
             children=[
@@ -297,7 +299,6 @@ class IncidentPage(Page):
             ]
         ),
 
-        InlinePanel('categories', label='Incident categories', min_num=1),
         InlinePanel('updates', label='Updates'),
 
         FieldPanel('related_incidents')
