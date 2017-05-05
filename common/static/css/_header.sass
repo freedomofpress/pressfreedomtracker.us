@@ -4,14 +4,17 @@ $nav-item-height: 15px
 $nav-link-padding: 5px
 
 .header
-  margin-top: $header-margin-top
-  margin-bottom: $header-margin-top * 2
-  display: flex
-  flex-direction: row
-  justify-content: space-between
+	margin-top: $header-margin-top
+	margin-bottom: $header-margin-top * 2
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	// In the case of menu being taller than the logo, the logo
+	// should still be flush with the bottom of the menu.
+	align-items: flex-end
 
-  @media (max-width: $small-screen)
-	  margin-top: 0
+	@media (max-width: $small-screen)
+		margin-top: 0
 
 .header__logo
 	background-color: $header-color
@@ -20,6 +23,10 @@ $nav-link-padding: 5px
 	margin: 0
 	padding: 15px
 	padding-left: $page-margin-side * 2
+	// This height should match the SVG logo height so that
+	// extra background in $header-color is not displayed.
+	box-sizing: content-box
+	height: 60px
 
 .header__nav
 	font-family: $sans-serif
