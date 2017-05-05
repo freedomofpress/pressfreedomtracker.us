@@ -71,12 +71,12 @@ class IncidentPage(Page):
             return self.related_incidents.all()
         else:
             main_category = self.get_main_category()
-            incidents = self.get_siblings(inclusive=False).filter(live=True)
 
-            related_incidents = [
-                incident for incident in incidents
-                if incident.specific.get_main_category() == main_category
-            ]
+            related_incidents = IncidentPage.objects.filter(
+                live=True,
+                categories__category=main_category
+            ).exclude(id=self.id)
+
             # Only return two related incidents (Categories have too many incidents)
             return related_incidents[:2]
 
