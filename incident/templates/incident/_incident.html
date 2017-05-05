@@ -36,8 +36,11 @@ It can take the following context variables:
 			/>
 		{% endif %}
 
-		<h3 class='incident__category-name incident__category-name--{{ main_category|slugify }}'>
-			{{ main_category }}
+		<h3 class="incident__category-name incident__category-name--{{ main_category|slugify }}">
+			<a
+				href="{% pageurl main_category %}"
+				class="incident__title-link">{{ main_category }}
+			</a>
 		</h3>
 		<h1 class='incident__title'>
 			{% if teaser %}
