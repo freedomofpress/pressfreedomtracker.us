@@ -222,6 +222,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Detention/Arrest, Leak Prosecution',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('status_of_charges'),
                 FieldPanel('charges'),
@@ -230,6 +231,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Detention/Arrest',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('is_in_custody'),
                 FieldPanel('unnecessary_use_of_force'),
@@ -240,6 +242,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Equipment Seizure or Damage',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('status_of_seized_equipment'),
                 FieldPanel('is_search_warrant_obtained'),
@@ -249,6 +252,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Border Stop/Search',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('border_point'),
                 FieldPanel('target_us_citizenship_status'),
@@ -263,6 +267,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Physical Assault',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('assailant'),
                 FieldPanel('was_journalist_targeted'),
@@ -273,6 +278,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Leak Prosecution, Subpoena Related to Journalism',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('lawsuit_name'),
                 FieldPanel('jurisdiction'),
@@ -281,6 +287,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Leak Prosecution',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('subject_of_prosecution'),
                 FieldPanel('charged_under_espionage_act'),
@@ -289,6 +296,7 @@ class IncidentPage(Page):
 
         MultiFieldPanel(
             heading='Subpoena Related to Journalism',
+            classname='collapsible collapsed',
             children=[
                 FieldPanel('subject_of_subpoena'),
                 FieldPanel('subject_of_subpoena_journalist'),
