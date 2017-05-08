@@ -35,8 +35,23 @@ class IncidentPage(Page):
         blank=True,
         null=True,
     )
-    location = models.CharField(
+    address = models.CharField(
         max_length=500,
+        blank=True,
+        null=True,
+    )
+    city = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    state = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    zip = models.CharField(
+        max_length=6,
         blank=True,
         null=True,
     )
@@ -215,7 +230,10 @@ class IncidentPage(Page):
 
         FieldPanel('date'),
         FieldPanel('affiliation'),
-        FieldPanel('location'),
+        FieldPanel('address'),
+        FieldPanel('city'),
+        FieldPanel('state'),
+        FieldPanel('zip'),
         # This will require some future filtering.
         FieldPanel('targets', widget=CheckboxSelectMultiple),
         FieldPanel('tags'),
