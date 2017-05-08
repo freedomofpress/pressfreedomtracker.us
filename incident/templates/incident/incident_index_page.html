@@ -3,4 +3,12 @@
 {% block main %}
 <h2>{{ page.title }}</h2>
 
+<div class="incident-grid">
+    {% for incident in page.get_children.all %}
+      <div class="incident-grid__item">
+        {% include "incident/_incident.html" with incident=incident.specific teaser=True %}
+      </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
