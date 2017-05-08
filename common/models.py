@@ -112,19 +112,16 @@ class QuickFact(Orderable):
 class CategoryPage(Page):
     description = RichTextField(null=True, blank=True)
     methodology = RichTextField(null=True, blank=True)
-    retrospective_info = RichTextField(null=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('description'),
         FieldPanel('methodology'),
-        FieldPanel('retrospective_info'),
         InlinePanel('quick_facts', label='Quick Facts')
     ]
 
     search_fields = Page.search_fields + [
         index.SearchField('description'),
         index.SearchField('methodology'),
-        index.SearchField('retrospective_info'),
     ]
 
 
