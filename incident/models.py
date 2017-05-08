@@ -57,6 +57,15 @@ class IncidentPage(Page):
         index.SearchField('body'),
     ]
 
+    def last_updated(self):
+        """
+        Returns the date this incident was last updated on.
+        """
+        first = self.updates.first()
+        if first:
+            return first.date
+        return self.first_published_at
+
     def get_main_category(self):
         """
         Returns the first category in the list of categories
