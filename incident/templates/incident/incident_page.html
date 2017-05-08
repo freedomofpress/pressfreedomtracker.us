@@ -30,13 +30,13 @@
 				</th>
 				<td class="data-table__value">{{page.date|date:"F j, Y" }}</td>
 			</tr>
-			{% if page.journalists.all %}
+			{% if page.targets.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
 						Journalists
 					</th>
 					<td class="data-table__value">
-						{% with page.journalists.all as journalists %}
+						{% with page.targets.all as journalists %}
 							{% for journalistPage in journalists %}
 								{% if not forloop.last %}
 									{{journalistPage.title}},
