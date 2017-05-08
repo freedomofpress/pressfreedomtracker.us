@@ -22,7 +22,7 @@ MEDIA_URL = os.environ.get('DJANGO_MEDIA_URL', '/media/')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'fpf',
+        'NAME': os.environ['DJANGO_DB_NAME'],
         'USER': os.environ['DJANGO_DB_USER'],
         'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
         'HOST': os.environ['DJANGO_DB_HOST'],
@@ -83,7 +83,7 @@ else:
                 'backupCount': 5,
                 'maxBytes': 10000000,
                 'filename': os.environ.get('DJANGO_LOGFILE',
-                                           '/var/log/freedompress/django.log')
+                                           '/var/log/pressfreedom/django.log')
             },
         },
         'loggers': {
