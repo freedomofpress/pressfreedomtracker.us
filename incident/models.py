@@ -27,10 +27,13 @@ class IncidentIndexPage(Page):
 
         entry_qs = self.get_incidents()
 
-        paginator, entries = paginate(request, entry_qs,
-                                      page_key=DEFAULT_PAGE_KEY,
-                                      per_page=8,
-                                      orphans=5)
+        paginator, entries = paginate(
+            request,
+            entry_qs,
+            page_key=DEFAULT_PAGE_KEY,
+            per_page=8,
+            orphans=5
+        )
 
         context['entries_page'] = entries
         context['paginator'] = paginator
