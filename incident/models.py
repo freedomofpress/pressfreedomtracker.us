@@ -12,7 +12,9 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailsearch import index
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailsnippets.models import register_snippet
 from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from taggit.models import TaggedItemBase, TagBase
 
@@ -238,11 +240,21 @@ class IncidentPage(Page):
             ]
         ),
 
+        InlinePanel(
+            'equipment_seized',
+            classname='collapsible collapsed',
+            label='Equipment Seized',
+        ),
+        InlinePanel(
+            'equipment_broken',
+            classname='collapsible collapsed',
+            label='Equipment Broken',
+        ),
+
         MultiFieldPanel(
             heading='Equipment Seizure or Damage',
             classname='collapsible collapsed',
             children=[
-                InlinePanel('equipment', label='Equipment'),
                 FieldPanel('status_of_seized_equipment'),
                 FieldPanel('is_search_warrant_obtained'),
                 FieldPanel('actor'),
@@ -379,24 +391,45 @@ class ChargesTag(TaggedItemBase):
     )
 
 
-class EquipmentTag(models.Model):
-    incident = ParentalKey(IncidentPage, related_name='equipment')
+@register_snippet
+class Equipment(ClusterableModel):
     name = models.CharField(
         max_length=255,
         unique=True,
-    )
-    category = models.CharField(
-        choices=choices.EQUIPMENT,
-        default=choices.EQUIPMENT[0][0],
-        max_length=255,
     )
 
     panels = [
         FieldRowPanel([
             FieldPanel('name'),
-            FieldPanel('category', widget=RadioSelect),
         ])
     ]
+
+    def __str__(self):
+        return self.name
+
+
+class EquipmentSeized(models.Model):
+    incident = ParentalKey(
+        'incident.IncidentPage',
+        related_name='equipment_seized',
+    )
+    equipment = ParentalKey(
+        'incident.Equipment',
+        verbose_name='Equipment Seized',
+    )
+    quantity = models.PositiveSmallIntegerField(default=1)
+
+
+class EquipmentBroken(models.Model):
+    incident = ParentalKey(
+        'incident.IncidentPage',
+        related_name='equipment_broken',
+    )
+    equipment = ParentalKey(
+        'incident.Equipment',
+        verbose_name='Equipment Broken',
+    )
+    quantity = models.PositiveSmallIntegerField(default=1)
 
 
 class NationalityTag(TaggedItemBase):
