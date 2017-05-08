@@ -238,12 +238,11 @@ class IncidentPage(Page):
             ]
         ),
 
-        InlinePanel('equipment', label='Equipment'),
-
         MultiFieldPanel(
             heading='Equipment Seizure or Damage',
             classname='collapsible collapsed',
             children=[
+                InlinePanel('equipment', label='Equipment'),
                 FieldPanel('status_of_seized_equipment'),
                 FieldPanel('is_search_warrant_obtained'),
                 FieldPanel('actor'),
