@@ -9,7 +9,7 @@ It can take the following context variables:
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
 
-{% with incident.categories.all.first.category as main_category %}
+{% with incident.get_main_category as main_category %}
 <article class="
 	incident
 	incident--{{ main_category|slugify }}
@@ -21,8 +21,13 @@ It can take the following context variables:
 ">
 	<div class="incident__body">
 		{% if incident.teaser_image %}
-			{% image incident.teaser_image fill-665x440 as x1 %}
-			{% image incident.teaser_image fill-1330x880 as x2 %}
+			{% if teaser %}
+				{% image incident.teaser_image fill-665x440 as x1 %}
+				{% image incident.teaser_image fill-1330x880 as x2 %}
+			{% else %}
+				{% image incident.teaser_image fill-1440x600-c60 as x1 %}
+				{% image incident.teaser_image fill-2880x1200-c60 as x2 %}
+			{% endif %}
 			<img
 				class="incident__top-image"
 				alt="{{ x1.alt }}"
@@ -31,8 +36,11 @@ It can take the following context variables:
 			/>
 		{% endif %}
 
-		<h3 class='incident__category-name incident__category-name--{{ main_category|slugify }}'>
-			{{ main_category }}
+		<h3 class="incident__category-name incident__category-name--{{ main_category|slugify }}">
+			<a
+				href="{% pageurl main_category %}"
+				class="incident__title-link">{{ main_category }}
+			</a>
 		</h3>
 		<h1 class='incident__title'>
 			{% if teaser %}

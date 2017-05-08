@@ -5,6 +5,9 @@
 	padding-top: 20px
 	border-left-width: 25px
 	border-left-style: solid
+	// Ensures that incidents take up the whole
+	// width of their flex parent
+	width: 100%
 
 .incident__body > *
 	padding: 0 20px
@@ -15,7 +18,7 @@
 	padding-right: 0
 	margin-bottom: 20px
 	display: block
-	max-width: 100%
+	width: 100%
 	height: auto
 
 .incident__category-name
@@ -77,3 +80,8 @@
 	display: inline-block
 	height: 200px
 	overflow: hidden
+
+@media (max-width: $medium-screen)
+	.incident__title
+		font-size: 1.4em
+		margin-bottom: 5px

@@ -10,6 +10,7 @@
 	// main element populates the remaining horizontal space.
 	flex-grow: 1
 	padding-left: $column-gutter-width
+	max-width: 1440px - $column-gutter-width
 
 .layout-right-sidebar__sidebar
 	// flex-shrink ensures the width is 25%
@@ -22,6 +23,38 @@
 		margin-top: 20px
 		margin-left: 0
 		width: auto
+		margin-bottom: 15px
+
+// MODIFIER
+.layout-right-sidebar__main--padded
+	padding-top: $layout-top-padding
 
 .layout-right-sidebar__sidebar--light
 	background-color: $fpf-sidebar
+
+.layout-right-sidebar__main--dark
+	background-color: $dark-layout-color
+	min-height: $category-page-header-min-height
+
+.layout-right-sidebar__sidebar--dark
+	background-color: lighten($dark-layout-color, 20%)
+	margin-left: 0
+	min-height: $category-page-header-min-height
+
+	@media(max-width: $small-screen)
+		margin-top: 0
+		min-height: 0
+		max-height: none
+
+
+.layout-right-sidebar__sidebar--padded
+	padding-top: 20px
+
+@each $name, $color in $border-colors
+	.layout-right-sidebar__main--#{$name}
+		border-top: 20px solid $color
+
+	.layout-right-sidebar__sidebar--#{$name}
+		border-top: 20px solid $color
+		@media(max-width: $small-screen)
+		  border-top: none

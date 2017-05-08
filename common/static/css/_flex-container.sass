@@ -11,7 +11,8 @@
 		// header.
 		flex-shrink: 0
 
-.flex-container--grow-2 > :nth-child(2)
-	// Allow this particular flex item to take the remaining main size
-	// (height in this case, as the main axis here vertical).
-	flex-grow: 1
+@for $index from 1 through 4
+	.flex-container--grow-#{$index} > :nth-child(#{$index})
+		// Allow this particular flex item to take the remaining main size
+		// (height in this case, as the main axis here vertical).
+		flex-grow: 1
