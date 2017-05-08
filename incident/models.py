@@ -16,6 +16,9 @@ class IncidentIndexPage(Page):
 
     subpage_types = ['incident.IncidentPage']
 
+    def get_incidents(self):
+        """Returns all published incident pages"""
+        return IncidentPage.objects.live()
 
 class IncidentPage(Page):
     date = models.DateTimeField()
