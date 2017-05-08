@@ -64,7 +64,7 @@ var common = {
 					}
 				],
 				include: [
-					path.join(__dirname, '/core/static/js'),
+					path.join(__dirname, '/common/static/js'),
 				],
 			},
 			{
