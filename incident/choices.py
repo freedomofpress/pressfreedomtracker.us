@@ -1,7 +1,7 @@
 MAYBE_BOOLEAN = [
     ('NOTHING', 'unknown'),
     ('JUST_TRUE', 'yes'),
-    ('JUST_FALSE', 'false'),
+    ('JUST_FALSE', 'no'),
 ]
 
 
