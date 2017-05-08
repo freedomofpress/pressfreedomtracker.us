@@ -189,3 +189,7 @@ WEBPACK_LOADER = {
         'IGNORE': ['.+\.hot-update.js', '.+\.map']
     }
 }
+
+
+# django-taggit
+TAGGIT_CASE_INSENSITIVE = True
