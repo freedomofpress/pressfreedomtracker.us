@@ -4,11 +4,19 @@
 <h2>{{ page.title }}</h2>
 
 <div class="incident-grid">
-    {% for incident in page.get_incidents %}
+    {% for incident in entries_page %}
       <div class="incident-grid__item">
         {% include "incident/_incident.html" with incident=incident.specific teaser=True %}
       </div>
     {% endfor %}
 </div>
+
+    {% if entries_page.has_previous %}
+        <a href="?page={{ entries_page.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% if entries_page.has_next %}
+        <a href="?page={{ entries_page.next_page_number }}">Next</a>
+    {% endif %}
 
 {% endblock %}
