@@ -5,6 +5,7 @@ Django<1.12
 #django-logging-json
 django-modelcluster
 django-webpack-loader
+gunicorn
 pip-tools
 psycopg2
 pyparsing

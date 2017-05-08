@@ -14,6 +14,7 @@ django-webpack-loader==0.4.1
 django==1.11.1            # via django-treebeard, wagtail
 djangorestframework==3.6.2  # via wagtail
 first==2.0.1              # via pip-tools
+gunicorn==19.7.1
 html5lib==0.999999999     # via wagtail
 olefile==0.44             # via pillow
 pillow==4.1.1             # via wagtail
