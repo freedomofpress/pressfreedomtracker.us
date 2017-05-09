@@ -29,6 +29,10 @@
 .layout-right-sidebar__main--padded
 	padding-top: $layout-top-padding
 
+.layout-right-sidebar__main--header
+	@media(max-width: $small-screen)
+		padding: 0
+
 .layout-right-sidebar__sidebar--light
 	background-color: $fpf-sidebar
 
@@ -45,10 +49,20 @@
 		margin-top: 0
 		min-height: 0
 		max-height: none
+		padding: 0
 
 
 .layout-right-sidebar__sidebar--padded
 	padding-top: 20px
+
+	@media(max-width: $small-screen)
+	 padding-top: 0
+
+.layout-right-sidebar__sidebar--hide-mobile
+	@media(max-width: $small-screen)
+		display: none
+		margin: 0
+		padding: 0
 
 @each $name, $color in $border-colors
 	.layout-right-sidebar__main--#{$name}

@@ -36,14 +36,19 @@
 
 		<div class="flex-container {% block flex_class %} flex-container--grow-2 {% endblock %}">
 			<div class="layout-right-sidebar">
-				<div class="layout-right-sidebar__main">
+				<div class="layout-right-sidebar__main layout-right-sidebar__main--header">
 					{% block top %}
 						{% include "common/_header.html" %}
 					{% endblock %}
 
 				</div>
 
-				<div class="layout-right-sidebar__sidebar {% block top_sidebar_class %}{% endblock %}">
+				<div
+          class="layout-right-sidebar__sidebar
+                 {% block top_sidebar_class %}
+                    layout-right-sidebar__sidebar--hide-mobile
+                 {% endblock %}"
+        >
 					{% block top_sidebar %}
 					{% endblock %}
 				</div>
