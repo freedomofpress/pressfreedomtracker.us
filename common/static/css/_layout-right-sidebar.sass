@@ -1,3 +1,5 @@
+$small-screen-side-padding: 13px
+
 .layout-right-sidebar
 	display: flex
 	flex-direction: row
@@ -12,22 +14,31 @@
 	padding-left: $column-gutter-width
 	max-width: 1440px - $column-gutter-width
 
+	@media(max-width: $small-screen)
+		padding: $small-screen-side-padding
+
 .layout-right-sidebar__sidebar
 	// flex-shrink ensures the width is 25%
 	flex-shrink: 0
 	width: $sidebar-width
 	min-width: $sidebar-min-width
 	margin-left: $column-gutter-width
+	padding: 0 13px 13px 13px
 
 	@media(max-width: $small-screen)
 		margin-top: 20px
 		margin-left: 0
 		width: auto
 		margin-bottom: 15px
+		padding: $layout-top-padding $small-screen-side-padding
 
 // MODIFIER
 .layout-right-sidebar__main--padded
 	padding-top: $layout-top-padding
+
+.layout-right-sidebar__main--header
+	@media(max-width: $small-screen)
+		padding: 0
 
 .layout-right-sidebar__sidebar--light
 	background-color: $fpf-sidebar
@@ -45,10 +56,17 @@
 		margin-top: 0
 		min-height: 0
 		max-height: none
+		padding: 0
 
 
 .layout-right-sidebar__sidebar--padded
 	padding-top: 20px
+
+.layout-right-sidebar__sidebar--hide-mobile
+	@media(max-width: $small-screen)
+		display: none
+		margin: 0
+		padding: 0
 
 @each $name, $color in $border-colors
 	.layout-right-sidebar__main--#{$name}
