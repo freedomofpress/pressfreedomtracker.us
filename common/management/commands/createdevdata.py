@@ -150,6 +150,9 @@ class Command(BaseCommand):
                 ),
             ])
 
+        # PEOPLE PAGES
+        rachel = PersonPage(title='Rachel S')
+
         # BLOG RELATED PAGES
         blog_index_page = BlogIndexPage(
             title='FPF Blog',
@@ -158,8 +161,7 @@ class Command(BaseCommand):
         home_page.add_child(instance=blog_index_page)
         home_page.blog_index_page = blog_index_page
 
-        author_page = PersonPage(title='Rachel S')
-        home_page.add_child(instance=author_page)
+        home_page.add_child(instance=rachel)
 
         for x in range(0, 10):
             page = BlogPage(
@@ -170,7 +172,7 @@ class Command(BaseCommand):
                     'rich_text',
                     RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
                 )],
-                author=author_page,
+                author=rachel,
                 teaser_text=RichText('<p>Our neural pathways have become accustomed to your sensory input patterns. Ensign Babyface! I\'ll be sure to note that in my log. Could someone survive inside a transporter buffer for 75 years? and attack the Romulans.</p>'),
             )
 
@@ -197,6 +199,9 @@ class Command(BaseCommand):
             random_idx = random.randint(0, CategoryPage.objects.count() - 1)
             page.categories = [
                 IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
+            ]
+            page.targets = [
+                rachel
             ]
             incident_index_page.add_child(instance=page)
             if x == 0:
