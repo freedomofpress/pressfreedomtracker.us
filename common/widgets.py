@@ -1,8 +1,12 @@
+import json
+
 from django.forms import Widget
 from django.utils.html import format_html
 from django.conf import settings
 
+from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore import hooks
+from wagtail.contrib.wagtailapi.serializers import PageSerializer
 from webpack_loader.utils import get_loader
 
 
@@ -16,13 +20,17 @@ def editor_js():
     return format_html(html)
 
 
+def format(page):
+    return dict(id=page.id, title=page.title)
+
+
 class Autocomplete(Widget):
     template_name = 'autocomplete.html'
 
     def format_value(self, value):
         if type(value) == list:
-            return ','.join([str(val) for val in value])
-        return ''
+            return json.dumps([format(page) for page in Page.objects.filter(id__in=value)])
+        return '[]'
 
     def value_from_datadict(self, data, files, name):
         return [int(val) for val in data.get(name).split(',')]
