@@ -142,26 +142,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
-# Elasticsearch Backend
+# Search Backend
 
-es_host = os.environ.get('DJANGO_ES_HOST', False)
-if es_host:
-    ca_path = os.environ.get('DJANGO_ES_CA_PATH', '')
-    options = dict()
-    if ca_path:
-        logger.warning('Warning: DJANGO_ES_CA_PATH is not populated. Will not use SSL.')
-    else:
-        options['ca_certs'] = ca_path
-        options['use_ssl'] = True
+if 'postgres' in DATABASES['default']['ENGINE']:
+    INSTALLED_APPS.append('wagtail.contrib.postgres_search')
     WAGTAILSEARCH_BACKENDS = {
         'default': {
-            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch5',
-            'URLS': [es_host],
-            'INDEX': 'wagtail',
-            'TIMEOUT': 5,
-            'OPTIONS': options,
-            'INDEX_SETTINGS': {},
-        }
+            'BACKEND': 'wagtail.contrib.postgres_search.backend',
+        },
     }
 else:
     WAGTAILSEARCH_BACKENDS = {}
