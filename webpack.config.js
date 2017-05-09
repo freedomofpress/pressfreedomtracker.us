@@ -18,6 +18,7 @@ console.log('Using STATIC_URL', STATIC_URL);
 var common = {
 	entry: {
 		common: __dirname + '/common/static/js/common.js',
+		editor: __dirname + '/common/static/js/editor.js',
 	},
 
 	output: {
