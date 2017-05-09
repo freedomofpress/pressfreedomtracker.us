@@ -1,13 +1,13 @@
 from django.db import models
-from django.forms import CheckboxSelectMultiple, ChoiceField, RadioSelect
+from django.forms import CheckboxSelectMultiple
 
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel, StreamFieldPanel,
-    InlinePanel, PageChooserPanel, MultiFieldPanel,
+    InlinePanel, MultiFieldPanel,
     FieldRowPanel,
 )
 from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.fields import StreamField, RichTextField
+from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailsearch import index
@@ -16,7 +16,7 @@ from wagtail.wagtailsnippets.models import register_snippet
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from taggit.models import TaggedItemBase, TagBase
+from taggit.models import TaggedItemBase
 
 from . import choices
 
