@@ -45,10 +45,8 @@ ACTORS = [
 
 CITIZENSHIP_STATUS_CHOICES = [
     ('US_CITIZEN', 'U.S. citizen'),
-    ('PERMANENT_RESIDENT', 'permanent resident (green card)'),
-    ('IMMIGRANT_VISA', 'immigrant visa'),
-    ('OTHER_VALID_VISA', 'other valid visa'),
-    ('UNDOCUMENTED', 'undocumented immigrant (including visa overstays)'),
+    ('PERMANENT_RESIDENT', 'U.S. permanent resident (green card)'),
+    ('NON_RESIDENT', 'U.S. non-resident'),
 ]
 
 
