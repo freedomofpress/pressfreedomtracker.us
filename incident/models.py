@@ -177,24 +177,45 @@ class IncidentPage(Page):
         related_name='nationality_incidents',
         verbose_name='Target Nationality',
     )
-    did_authorities_ask_for_device_access = models.BooleanField(default=False)
-    did_authorities_ask_for_device_access_clarify = models.CharField(
-        max_length=255,
+    did_authorities_ask_for_device_access = models.CharField(
+        choices=choices.MAYBE_BOOLEAN,
         blank=True,
         null=True,
     )
-    did_journalist_give_device = models.BooleanField(default=False)
-    did_authorities_ask_for_social_media = models.BooleanField(default=False)
-    did_authorities_ask_about_work = models.BooleanField(default=False)
+    did_authorities_ask_for_social_media_user = models.CharField(
+        choices=choices.MAYBE_BOOLEAN,
+        blank=True,
+        null=True,
+    )
+    did_authorities_ask_for_social_media_pass = models.CharField(
+        choices=choices.MAYBE_BOOLEAN,
+        blank=True,
+        null=True,
+    )
+    did_authorities_ask_about_work = models.CharField(
+        choices=choices.MAYBE_BOOLEAN,
+        blank=True,
+        null=True,
+        verbose_name='Did authorities ask intrusive questions about journalist\'s work?',
+    )
+    were_devices_searched_or_seized = models.CharField(
+        choices=choices.MAYBE_BOOLEAN,
+        blank=True,
+        null=True,
+    )
 
     # Physical Assault
     assailant = models.CharField(
-        choices=choices.ASSAILANT,
+        choices=choices.ACTORS,
         max_length=255,
         blank=True,
         null=True,
     )
-    was_journalist_targeted = models.BooleanField(default=False)
+    was_journalist_targeted = models.CharField(
+        choices=choices.MAYBE_BOOLEAN,
+        blank=True,
+        null=True,
+    )
     injury_severity = models.CharField(
         choices=choices.INJURY_SEVERITY,
         max_length=255,
@@ -323,8 +344,10 @@ class IncidentPage(Page):
                 FieldPanel('did_authorities_ask_for_device_access'),
                 FieldPanel('did_authorities_ask_for_device_access_clarify'),
                 FieldPanel('did_journalist_give_device'),
-                FieldPanel('did_authorities_ask_for_social_media'),
+                FieldPanel('did_authorities_ask_for_social_media_user'),
+                FieldPanel('did_authorities_ask_for_social_media_pass'),
                 FieldPanel('did_authorities_ask_about_work'),
+                FieldPanel('were_devices_searched_or_seized'),
             ]
         ),
 

@@ -50,13 +50,6 @@ CITIZENSHIP_STATUS_CHOICES = [
 ]
 
 
-ASSAILANT = [
-    ('LAW_ENFORCEMENT', 'law enforcement'),
-    ('PRIVATE_SECURITY', 'private security'),
-    ('PRIVATE_INDIVIDUAL', 'private individual'),
-]
-
-
 INJURY_SEVERITY = [
     ('MINOR', 'minor'),
     ('MODERATE', 'moderate'),
