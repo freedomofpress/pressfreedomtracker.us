@@ -34,9 +34,12 @@ STATUS_OF_SEIZED_EQUIPMENT = [
 
 
 ACTORS = [
-    ('LAW', 'law enforcement'),
-    ('SECURITY', 'private security'),
-    ('CITIZEN', 'private citizen'),
+    ('UNKNOWN', 'unknown'),
+    ('LAW_ENFORCEMENT', 'law enforcement'),
+    ('PRIVATE_SECURITY', 'private security'),
+    ('POLITICIAN', 'politician'),
+    ('PUBLIC_FIGURE', 'public figure'),
+    ('PRIVATE_INDIVIDUAL', 'private individual'),
 ]
 
 
