@@ -284,7 +284,7 @@ class IncidentPage(Page):
         InlinePanel(
             'equipment_seized',
             classname='collapsible collapsed',
-            label='Equipment Seized',
+            label='Equipment Searched or Seized',
         ),
         InlinePanel(
             'equipment_broken',
