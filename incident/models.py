@@ -175,27 +175,32 @@ class IncidentPage(Page):
     )
     did_authorities_ask_for_device_access = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
+        max_length=255,
         blank=True,
         null=True,
     )
     did_authorities_ask_for_social_media_user = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
+        max_length=255,
         blank=True,
         null=True,
     )
     did_authorities_ask_for_social_media_pass = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
+        max_length=255,
         blank=True,
         null=True,
     )
     did_authorities_ask_about_work = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
+        max_length=255,
         blank=True,
         null=True,
         verbose_name='Did authorities ask intrusive questions about journalist\'s work?',
     )
     were_devices_searched_or_seized = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
+        max_length=255,
         blank=True,
         null=True,
     )
@@ -209,6 +214,7 @@ class IncidentPage(Page):
     )
     was_journalist_targeted = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
+        max_length=255,
         blank=True,
         null=True,
     )
@@ -338,7 +344,6 @@ class IncidentPage(Page):
                 FieldPanel('denial_of_entry'),
                 FieldPanel('target_nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
-                FieldPanel('did_journalist_give_device'),
                 FieldPanel('did_authorities_ask_for_social_media_user'),
                 FieldPanel('did_authorities_ask_for_social_media_pass'),
                 FieldPanel('did_authorities_ask_about_work'),
