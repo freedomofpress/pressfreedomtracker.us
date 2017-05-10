@@ -130,6 +130,12 @@ class IncidentPage(Page):
 
     # Detention/Arrest
     is_in_custody = models.BooleanField(default=False)
+    release_date = models.DateTimeField(blank=True, null=True)
+    detention_date = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text='This field will default to the date field if not specified.',
+    )
     unnecessary_use_of_force = models.BooleanField(default=False)
 
     # Equipment Seizure or Damage
@@ -295,6 +301,8 @@ class IncidentPage(Page):
             classname='collapsible collapsed',
             children=[
                 FieldPanel('is_in_custody'),
+                FieldPanel('detention_date'),
+                FieldPanel('release_date'),
                 FieldPanel('unnecessary_use_of_force'),
             ]
         ),
@@ -390,6 +398,17 @@ class IncidentPage(Page):
     search_fields = Page.search_fields + [
         index.SearchField('body'),
     ]
+
+    def detention_duration(self):
+        """
+        Returns the total duration of detention.
+        If a detention_date is not explicitly provided, the incident date is
+        used instead. The end date is either today, for a live duration, or
+        the release_date, if specified.
+        """
+        start_date = self.detention_date if self.detention_date else self.date
+        end_date = self.release_date if self.release_date else datetime.datetime.today()
+        return end_date - start_date
 
     def last_updated(self):
         """
