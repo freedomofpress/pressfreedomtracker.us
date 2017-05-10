@@ -13,9 +13,11 @@ docker:
         - database
       image: msheiny/debian-jessie-systemd
       image_version: latest
-      #privileged: True
+      build_image: False
+      command: /lib/systemd/systemd
+      privileged: True
       port_bindings:
-        4443: 443
+        443: 4443
       volume_mounts:
         - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
 

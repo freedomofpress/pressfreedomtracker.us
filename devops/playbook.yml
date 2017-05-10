@@ -39,11 +39,11 @@
       - name: django_user
         pass: django_password
     postgresql_databases:
-      - name: fpf
+      - name: pressfreedom
         owner: django_user
     postgresql_user_privileges:
       - name: django_user
-        db: fpf
+        db: pressfreedom
         priv: "ALL"
         role_attr_flags: "CREATEDB"
 
@@ -57,9 +57,6 @@
         home: "{{ django_stack_gcorn_home }}"
         createhome: yes
       tags: node
-  post_tasks:
-    - debug:
-        msg: "You can hit the www interface at https://{{ django_ip }} or https://localhost:4443"
   roles:
     - role: jdauphant.nginx
       tags: nginx
@@ -73,7 +70,7 @@
     django_stack_superuser_admin: admin
     django_stack_superuser_email: mike@freedom.press
     django_db_user: django_user
-
+    django_db_password: django_password
     django_stack_app_name: pressfreedom
     django_secret_key: f1822d2fe58daeadc88e0e4eef2f155fc3edd3713ff9a5d1e27696afd9231d905db51c98dc
     django_stack_es_host_url: disable
@@ -95,10 +92,12 @@
       - createdevdata
     django_stack_npm_commands:
       - install
+      - run build
     django_stack_gunicorn_opt_envs:
       DJANGO_ALLOWED_HOSTS: "'*'"
       MAILGUN_FAIL_SILENTLY: True
       DJANGO_SETTINGS_MODULE: pressfreedom.settings.production
-      DJANGO_JSON_LOG: True
+      DJANGO_JSON_LOG: False
+      DJANGO_DB_NAME: pressfreedom
     django_stack_gcorn_app_settings: pressfreedom.settings.production
     django_stack_force_refresh: true
