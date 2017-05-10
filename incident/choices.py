@@ -20,8 +20,8 @@ STATUS_OF_CHARGES = [
 STATUS_OF_SEIZED_EQUIPMENT = [
     ('UNKNOWN', 'unknown'),
     ('CUSTODY', 'in custody'),
-    ('RETURNED', 'returned'),
-    ('RETURNED_BUT', 'returned but film or SIM cards retained'),
+    ('RETURNED_FULL', 'returned in full'),
+    ('RETURNED_PART', 'returned in part'),
 ]
 
 
