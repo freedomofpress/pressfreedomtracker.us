@@ -330,7 +330,6 @@ class IncidentPage(Page):
                 FieldPanel('denial_of_entry'),
                 FieldPanel('target_nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
-                FieldPanel('did_authorities_ask_for_device_access_clarify'),
                 FieldPanel('did_journalist_give_device'),
                 FieldPanel('did_authorities_ask_for_social_media_user'),
                 FieldPanel('did_authorities_ask_for_social_media_pass'),
