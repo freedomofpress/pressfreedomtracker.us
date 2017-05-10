@@ -170,6 +170,7 @@ class IncidentPage(Page):
         blank=True,
         null=True,
     )
+    denial_of_entry = models.BooleanField(default=False)
     target_nationality = ClusterTaggableManager(
         through='incident.NationalityTag',
         blank=True,
@@ -317,6 +318,7 @@ class IncidentPage(Page):
                 FieldPanel('border_point'),
                 FieldPanel('stopped_at_border'),
                 FieldPanel('target_us_citizenship_status'),
+                FieldPanel('denial_of_entry'),
                 FieldPanel('target_nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
                 FieldPanel('did_authorities_ask_for_device_access_clarify'),
