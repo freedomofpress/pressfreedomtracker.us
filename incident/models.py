@@ -94,11 +94,11 @@ class IncidentPage(Page):
         related_name='+',
     )
 
-    targets = ParentalManyToManyField(
-        'wagtailcore.Page',
+    targets = ClusterTaggableManager(
+        through='incident.TargetsTag',
         blank=True,
-        related_name='targets',
         verbose_name='Targets (Journalists/Organizations)',
+        related_name='targets_incidents',
     )
 
     tags = ClusterTaggableManager(through='common.Tag', blank=True)
@@ -258,8 +258,7 @@ class IncidentPage(Page):
         FieldPanel('city'),
         FieldPanel('state'),
         FieldPanel('zip'),
-        # This will require some future filtering.
-        FieldPanel('targets', widget=CheckboxSelectMultiple),
+        FieldPanel('targets'),
         FieldPanel('tags'),
 
         InlinePanel('categories', label='Incident categories', min_num=1),
@@ -430,6 +429,13 @@ class ChargesTag(TaggedItemBase):
     content_object = ParentalKey(
         'incident.IncidentPage',
         related_name='tagged_charges',
+    )
+
+
+class TargetsTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'incident.IncidentPage',
+        related_name='tagged_targets',
     )
 
 
