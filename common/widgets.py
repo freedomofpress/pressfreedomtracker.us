@@ -33,4 +33,4 @@ class Autocomplete(Widget):
         return '[]'
 
     def value_from_datadict(self, data, files, name):
-        return [int(val) for val in data.get(name).split(',')]
+        return [obj['id'] for obj in json.loads(data.get(name))]
