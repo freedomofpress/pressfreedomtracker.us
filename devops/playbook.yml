@@ -4,7 +4,6 @@
   hosts: all
   become: yes
   tasks:
-  tasks:
     - set_fact:
         django_root: /var/www/django
 #    - hostname:
@@ -13,6 +12,7 @@
 
 - name: Establish certs
   hosts: all
+  gather_facts: false
   become: yes
   roles:
     - role: freedomofpress.openssl_node
@@ -20,6 +20,7 @@
 
 - name: Setup postgres
   hosts: database
+  gather_facts: false
   become: yes
   pre_tasks:
     - name: Ensure ssl-cert user exists
@@ -49,6 +50,8 @@
 
 - name: Run django environment
   hosts: django
+  gather_facts: false
+  become: yes
   become: yes
   pre_tasks:
     - name: Create user
@@ -90,8 +93,10 @@
     django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../" 
     django_stack_manage_post:
       - createdevdata
+    # Hit some weird bug that only saw in docker
+    # regular install dies without verbose flag :|
+    django_stack_npm_install_cmd: npm install --verbose
     django_stack_npm_commands:
-      - install
       - run build
     django_stack_gunicorn_opt_envs:
       DJANGO_ALLOWED_HOSTS: "'*'"
