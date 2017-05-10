@@ -39,6 +39,7 @@ ACTORS = [
     ('CITIZEN', 'private citizen'),
 ]
 
+
 CITIZENSHIP_STATUS_CHOICES = [
     ('US_CITIZEN', 'U.S. citizen'),
     ('PERMANENT_RESIDENT', 'permanent resident (green card)'),
