@@ -85,15 +85,42 @@ SUBPOENA_STATUS = [
 ]
 
 
-CONTEMPT_STATUS = [
-    ('NOT_HELD', 'not held in contempt'),
-    ('THREATENED', 'threatened with contempt'),
-    ('HELD_NOT_JAILED', 'held in contempt but not jailed'),
-    ('HELD_AND_JAILED', 'held in contempt and jailed'),
-]
-
-
 EQUIPMENT = [
     ('SEIZED', 'seized'),
     ('BROKEN', 'broken'),
+]
+
+
+DETENTION_STATUS = [
+    ('HELD_IN_CONTEMPT_NO_JAIL', 'held in contempt but not jailed'),
+    ('IN_JAIL', 'in jail'),
+    ('RELEASED', 'released from jail'),
+]
+
+
+THIRD_PARTY_BUSINESS = [
+    ('TELECOM', 'telecom company'),
+    ('TECH_COMPANY', 'tech company'),
+    ('ISP', 'internet service provider'),
+    ('FINANCIAL', 'bank/financial institution'),
+    ('TRAVEL', 'travel company'),
+    ('OTHER', 'other'),
+]
+
+
+LEGAL_ORDER_TYPES = [
+    ('SUBPOENA', 'subpoena'),
+    ('2703', '2703(d) court order'),
+    ('WARRANT', 'warrant'),
+    ('NATIONAL_SECURITY_LETTER', 'national security letter'),
+    ('FISA', 'FISA order'),
+    ('OTHER', 'other'),
+]
+
+
+PRIOR_RESTRAINT_STAUTS = [
+    ('PENDING', 'pending'),
+    ('DROPPED', 'dropped'),
+    ('STRUCK_DOWN', 'struck down'),
+    ('UPHELD', 'upheld'),
 ]

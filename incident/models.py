@@ -95,7 +95,7 @@ class IncidentPage(Page):
 
     related_incidents = ParentalManyToManyField('self', blank=True)
 
-    # Detention/Arrest, Leak Prosecution
+    # Detention/Arrest
     arrest_status = models.CharField(
         choices=choices.ARREST_STATUS,
         max_length=255,
@@ -108,14 +108,27 @@ class IncidentPage(Page):
         null=True,
         blank=True,
     )
-    charges = ClusterTaggableManager(
-        through='incident.ChargesTag',
+    current_charges = ClusterTaggableManager(
+        through='incident.CurrentChargesTag',
         blank=True,
-        related_name='charge_incidents',
-        verbose_name='Charges',
+        related_name='current_charge_incidents',
+        verbose_name='Current Changes',
     )
+    dropped_charges = ClusterTaggableManager(
+        through='incident.DroppedChargesTag',
+        blank=True,
+        related_name='dropped_charge_incidents',
+        verbose_name='Dropped Changes',
+    )
+    release_date = models.DateTimeField(blank=True, null=True)
+    detention_date = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text='This field will default to the date field if not specified.',
+    )
+    unnecessary_use_of_force = models.BooleanField(default=False)
 
-    # Leak Prosecution, Subpoena Related to Journalism
+    # Legal Case
     lawsuit_name = models.CharField(
         max_length=1024,
         blank=True,
@@ -127,16 +140,6 @@ class IncidentPage(Page):
         null=True,
         verbose_name='Jurisdiction',
     )
-
-    # Detention/Arrest
-    is_in_custody = models.BooleanField(default=False)
-    release_date = models.DateTimeField(blank=True, null=True)
-    detention_date = models.DateTimeField(
-        blank=True,
-        null=True,
-        help_text='This field will default to the date field if not specified.',
-    )
-    unnecessary_use_of_force = models.BooleanField(default=False)
 
     # Equipment Seizure or Damage
     status_of_seized_equipment = models.CharField(
@@ -153,7 +156,7 @@ class IncidentPage(Page):
         blank=True,
     )
 
-    # Border Stop/Search
+    # Border Stop/Denial of Entry
     border_point = models.CharField(
         max_length=500,
         blank=True,
@@ -167,6 +170,7 @@ class IncidentPage(Page):
         null=True,
     )
     denial_of_entry = models.BooleanField(default=False)
+    stopped_previously = models.BooleanField(default=False)
     target_nationality = ClusterTaggableManager(
         through='incident.NationalityTag',
         blank=True,
@@ -218,40 +222,17 @@ class IncidentPage(Page):
         blank=True,
         null=True,
     )
-    injury_severity = models.CharField(
-        choices=choices.INJURY_SEVERITY,
-        max_length=255,
-        blank=True,
-        null=True,
-    )
-    was_assailant_held_accountable = models.CharField(
-        choices=choices.MAYBE_BOOLEAN,
-        max_length=255,
-        blank=True,
-        null=True,
-    )
 
     # Leak Prosecution
-    subject_of_prosecution = models.CharField(
-        max_length=500,
+    targets_whose_communications_were_obtained = ClusterTaggableManager(
+        through='incident.TargetsCommunicationsObtainedTag',
         blank=True,
-        null=True,
+        verbose_name='Journalists/Organizations whose communications were obtained in leak investigation',
+        related_name='targets_communications_obtained_incidents',
     )
     charged_under_espionage_act = models.BooleanField(default=False)
 
-    # Subpoena Related to Journalism
-    subject_of_subpoena = models.CharField(
-        max_length=1024,
-        blank=True,
-        null=True,
-    )
-    subject_of_subpoena_journalist = models.CharField(
-        choices=choices.SUBPOENA_SUBJECT,
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='Is subject of subpoena a journalist?',
-    )
+    # Subpoena of Journalism
     subpoena_type = models.CharField(
         choices=choices.SUBPOENA_TYPE,
         max_length=255,
@@ -264,19 +245,53 @@ class IncidentPage(Page):
         blank=True,
         null=True,
     )
-    did_party_cooperate = models.CharField(
+    held_in_contempt = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
         blank=True,
         null=True,
-        verbose_name='Did journalist or third-party cooperate?',
+        verbose_name='If subject refused to cooperate, were they held in contempt?',
     )
-    held_in_contempt = models.CharField(
-        choices=choices.CONTEMPT_STATUS,
+    detention_status = models.CharField(
+        choices=choices.DETENTION_STATUS,
         max_length=255,
         blank=True,
         null=True,
-        verbose_name='If subject refused to cooperate, were they held in contempt?',
+    )
+
+    # Legal Order for Journalist's Records
+    third_party_in_possession_of_communications = models.CharField(
+        max_length=512,
+        blank=True,
+        null=True,
+    )
+    third_party_business = models.CharField(
+        choices=choices.THIRD_PARTY_BUSINESS,
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    legal_order_type = models.CharField(
+        choices=choices.LEGAL_ORDER_TYPES,
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+
+    # Prior Restraint
+    status_of_prior_restraint = models.CharField(
+        choices=choices.PRIOR_RESTRAINT_STAUTS,
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+
+    # Denial of Access
+    politicians_or_public_figures_involved = ClusterTaggableManager(
+        through='incident.PoliticiansOrPublicTag',
+        blank=True,
+        related_name='politicians_or_public_incidents',
+        verbose_name='Politicians or public officials involved',
     )
 
     content_panels = Page.content_panels + [
@@ -293,26 +308,29 @@ class IncidentPage(Page):
         InlinePanel('categories', label='Incident categories', min_num=1),
 
         MultiFieldPanel(
-            heading='Detention/Arrest, Leak Prosecution',
+            heading='Detention/Arrest',
             classname='collapsible collapsed',
             children=[
                 FieldPanel('arrest_status'),
                 FieldPanel('status_of_charges'),
-                FieldPanel('charges'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Detention/Arrest',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('is_in_custody'),
+                FieldPanel('current_charges'),
+                FieldPanel('dropped_charges'),
                 FieldPanel('detention_date'),
                 FieldPanel('release_date'),
                 FieldPanel('unnecessary_use_of_force'),
             ]
         ),
 
+        MultiFieldPanel(
+            heading='Legal Case',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('lawsuit_name'),
+                FieldPanel('jurisdiction'),
+            ]
+        ),
+
+        # Not in an MFP because we want their headings to show up.
         InlinePanel(
             'equipment_seized',
             classname='collapsible collapsed',
@@ -335,13 +353,14 @@ class IncidentPage(Page):
         ),
 
         MultiFieldPanel(
-            heading='Border Stop/Search',
+            heading='Border Stop/Denial of Entry',
             classname='collapsible collapsed',
             children=[
                 FieldPanel('border_point'),
                 FieldPanel('stopped_at_border'),
                 FieldPanel('target_us_citizenship_status'),
                 FieldPanel('denial_of_entry'),
+                FieldPanel('stopped_previously'),
                 FieldPanel('target_nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
                 FieldPanel('did_authorities_ask_for_social_media_user'),
@@ -357,39 +376,52 @@ class IncidentPage(Page):
             children=[
                 FieldPanel('assailant'),
                 FieldPanel('was_journalist_targeted'),
-                FieldPanel('injury_severity'),
-                FieldPanel('was_assailant_held_accountable'),
             ]
         ),
 
         MultiFieldPanel(
-            heading='Leak Prosecution, Subpoena Related to Journalism',
+            heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('lawsuit_name'),
-                FieldPanel('jurisdiction'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Leak Prosecution',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('subject_of_prosecution'),
+                FieldPanel('targets_whose_communications_were_obtained'),
                 FieldPanel('charged_under_espionage_act'),
             ]
         ),
 
         MultiFieldPanel(
-            heading='Subpoena Related to Journalism',
+            heading='Subpoena of Journalism (incl. Legal Case)',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('subject_of_subpoena'),
-                FieldPanel('subject_of_subpoena_journalist'),
                 FieldPanel('subpoena_type'),
                 FieldPanel('subpoena_status'),
-                FieldPanel('did_party_cooperate'),
                 FieldPanel('held_in_contempt'),
+                FieldPanel('detention_status'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Legal Order for Journalist\'s Records (incl. Legal Case)',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('third_party_in_possession_of_communications'),
+                FieldPanel('third_party_business'),
+                FieldPanel('legal_order_type'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Prior Restraint (incl. Legal Case)',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('status_of_prior_restraint'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Denial of Access',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('politicians_or_public_figures_involved'),
             ]
         ),
 
@@ -470,10 +502,17 @@ class IncidentCategorization(Orderable):
     category = ParentalKey('common.CategoryPage', related_name='incidents')
 
 
-class ChargesTag(TaggedItemBase):
+class CurrentChargesTag(TaggedItemBase):
     content_object = ParentalKey(
         'incident.IncidentPage',
-        related_name='tagged_charges',
+        related_name='tagged_current_charges',
+    )
+
+
+class DroppedChargesTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'incident.IncidentPage',
+        related_name='tagged_dropped_charges',
     )
 
 
@@ -529,4 +568,18 @@ class NationalityTag(TaggedItemBase):
     content_object = ParentalKey(
         'incident.IncidentPage',
         related_name='tagged_nationalities',
+    )
+
+
+class TargetsCommunicationsObtainedTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'incident.IncidentPage',
+        related_name='tagged_targets_communications_obtained',
+    )
+
+
+class PoliticiansOrPublicTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'incident.IncidentPage',
+        related_name='tagged_politicians_or_public',
     )
