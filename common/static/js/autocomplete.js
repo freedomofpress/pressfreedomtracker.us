@@ -55,7 +55,11 @@ class Autocomplete extends PureComponent {
 
 	render() {
 		const { name } = this.props
-		const { value, input, suggestions } = this.state
+		const { value, input } = this.state
+
+		const suggestions = this.state.suggestions.filter(suggestion => {
+			return value.every(({ id }) => id !== suggestion.id)
+		})
 
 		return (
 			<span>
