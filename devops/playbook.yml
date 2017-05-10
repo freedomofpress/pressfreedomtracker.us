@@ -69,6 +69,11 @@
 
     - role: freedomofpress.django_stack
       tags: django
+  post_tasks:
+    - name: Run tests
+      script: scripts/django_tests.sh
+      tags: tests
+      become_user: "{{ django_stack_gcorn_user }}"
   vars:
     django_stack_superuser_admin: admin
     django_stack_superuser_email: mike@freedom.press
