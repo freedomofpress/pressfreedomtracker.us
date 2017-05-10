@@ -163,6 +163,7 @@ class IncidentPage(Page):
         blank=True,
         null=True,
     )
+    stopped_at_border = models.BooleanField(default=False)
     target_us_citizenship_status = models.CharField(
         choices=choices.CITIZENSHIP_STATUS_CHOICES,
         max_length=255,
@@ -314,6 +315,7 @@ class IncidentPage(Page):
             classname='collapsible collapsed',
             children=[
                 FieldPanel('border_point'),
+                FieldPanel('stopped_at_border'),
                 FieldPanel('target_us_citizenship_status'),
                 FieldPanel('target_nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
