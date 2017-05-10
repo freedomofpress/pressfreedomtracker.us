@@ -5,10 +5,18 @@ MAYBE_BOOLEAN = [
 ]
 
 
-STATUS_OF_CHARGES = [
+ARREST_STATUS = [
     ('UNKNOWN', 'unknown'),
     ('DETAINED_NO_PROCESSING', 'detained and released without being processed'),
-    ('ARRESTED_NO_CHARGE', 'arrested but not charged'),
+    ('DETAINED_CUSTODY', 'detained and still in custody'),
+    ('ARRESTED_CUSTODY', 'arrested and still in custody'),
+    ('ARRESTED_RELEASED', 'arrested and released'),
+]
+
+
+STATUS_OF_CHARGES = [
+    ('UNKNOWN', 'unknown'),
+    ('NOT_CHARGED', 'not charged'),
     ('CHARGES_PENDING', 'charges pending'),
     ('CHARGES_DROPPED', 'charges dropped'),
     ('CONVICTED', 'convicted'),

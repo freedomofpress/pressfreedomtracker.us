@@ -106,6 +106,12 @@ class IncidentPage(Page):
     related_incidents = ParentalManyToManyField('self', blank=True)
 
     # Detention/Arrest, Leak Prosecution
+    arrest_status = models.CharField(
+        choices=choices.ARREST_STATUS,
+        max_length=255,
+        null=True,
+        blank=True,
+    )
     status_of_charges = models.CharField(
         choices=choices.STATUS_OF_CHARGES,
         max_length=255,
@@ -267,6 +273,7 @@ class IncidentPage(Page):
             heading='Detention/Arrest, Leak Prosecution',
             classname='collapsible collapsed',
             children=[
+                FieldPanel('arrest_status'),
                 FieldPanel('status_of_charges'),
                 FieldPanel('charges'),
             ]
