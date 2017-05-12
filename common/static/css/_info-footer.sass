@@ -1,0 +1,74 @@
+.info-footer
+	background-color: $black
+	color: $grey
+	padding: 40px
+	font-size: 16px
+
+	a
+		transition: color ease 0.15s
+
+
+.info-footer__body
+	font-family: $serif
+	font-size: 1.7em
+
+	p
+		padding: 0
+
+	a
+		color: rgba($white, 0.85)
+		text-decoration: none
+
+		&:hover,
+		&:focus,
+		&:active
+			color: $white
+
+
+.info-footer__nav
+	max-width: 400px
+
+
+/**
+ * flex-grow and space-between is used to ensure the anchor tap target sizes
+ * are as large possible and allows for a flexible amount of horizontal padding
+ * between menu items.
+ */
+.info-footer__nav-list
+	list-style-type: none
+	margin: 0
+	padding: 0
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+
+
+.info-footer__nav-item
+	flex-grow: 1
+
+	&:first-child .info-footer__nav-link
+		padding-left: 0
+
+	&:last-child .info-footer__nav-link
+		padding-right: 0
+
+
+.info-footer__nav-link
+	display: block
+	flex-grow: 1
+	padding: 1em 0.5em
+	color: inherit
+	text-decoration: none
+
+	&:hover,
+	&:focus,
+	&:active
+		color: $white
+
+
+@media (max-width: $small-screen)
+	.info-footer__body
+		font-size: 1.4em
+
+	.info-footer__nav-link
+		padding: 0.5em 0
