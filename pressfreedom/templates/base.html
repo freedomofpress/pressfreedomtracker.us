@@ -72,13 +72,13 @@
 				</div>
 			</div>
 
-			<div class="footer">
-				{% block bottom %}
-					{% include "common/category_block.html" %}
-					{% include "common/search_block.html" %}
-					{% include "common/info_footer.html" %}
-				{% endblock %}
-			</div>
+			{% block bottom %}
+				<div class="footer">
+						{% include "common/category_block.html" %}
+						{% include "common/search_block.html" %}
+				</div>
+				{% include "common/info_footer.html" %}
+			{% endblock %}
 		</div>
 
         <div class="shade js-sliding-nav-overlay"></div>
