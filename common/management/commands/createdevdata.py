@@ -9,9 +9,12 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from blog.models import BlogIndexPage, BlogPage
-from common.models import CategoryPage, PersonPage, SimplePage, SimplePageWithSidebar
+from common.models import (
+    CategoryPage, TaxonomyCategoryPage, TaxonomySettings,
+    PersonPage, SimplePage, SimplePageWithSidebar,
+)
 from forms.models import FormPage
-from home.models import HomePage, HomePageCategories, HomePageIncidents
+from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
@@ -41,13 +44,15 @@ class Command(BaseCommand):
         )
         root_page.add_child(instance=home_page)
 
-        Site.objects.create(
+        site = Site.objects.create(
             site_name='Press Freedom Incidents (Dev)',
             hostname='localhost',
             port='8000',
             root_page=home_page,
             is_default_site=True
         )
+
+        taxonomy_settings = TaxonomySettings.for_site(site)
 
         # CREATE CATEGORIES
 
@@ -70,9 +75,9 @@ class Command(BaseCommand):
                 methodology=RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
             )
             home_page.add_child(instance=category_page)
-            HomePageCategories.objects.create(
+            TaxonomyCategoryPage.objects.create(
                 sort_order=index + 1,
-                page=home_page,
+                taxonomy_setting=taxonomy_settings,
                 category=category_page,
             )
 
