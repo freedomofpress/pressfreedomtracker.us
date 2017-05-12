@@ -18,7 +18,11 @@ from taggit.models import TaggedItemBase
 @register_setting
 class TaxonomySettings(BaseSetting, ClusterableModel):
     panels = [
-        InlinePanel('categories', label='Incident Categories'),
+        InlinePanel(
+            'categories',
+            label='Incident Categories',
+            help_text='The categories listed here will be used for navigation menus throughout the site.',
+        ),
     ]
 
     class Meta:
