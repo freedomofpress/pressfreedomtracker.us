@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'menus',
     'styleguide',
 
+    'wagtail.contrib.settings',
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
     'wagtail.wagtailembeds',

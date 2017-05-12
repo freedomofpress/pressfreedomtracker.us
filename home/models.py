@@ -46,7 +46,6 @@ class HomePage(Page):
         ),
         PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
         PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
-        InlinePanel('categories', label='Incident Categories'),
         InlinePanel(
             'incidents',
             label='Featured Incidents',
@@ -64,21 +63,6 @@ class HomePage(Page):
             dict(number=12, label="journalist arrests", color="#dc810b"),
         ]
         return context
-
-
-class HomePageCategories(Orderable):
-    page = ParentalKey('home.HomePage', related_name='categories')
-    category = models.ForeignKey(
-        'common.CategoryPage',
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-
-    panels = [
-        PageChooserPanel('category', 'common.CategoryPage'),
-    ]
 
 
 class HomePageIncidents(Orderable):

@@ -1,16 +1,28 @@
 from django.db import models
 
+from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.wagtailcore.models import Page, Orderable
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
+from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from taggit.models import TaggedItemBase
+
+
+@register_setting
+class TaxonomySettings(BaseSetting, ClusterableModel):
+    panels = [
+        InlinePanel('categories', label='Incident Categories'),
+    ]
+
+    class Meta:
+        verbose_name = 'Taxonomy'
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -107,6 +119,15 @@ class QuickFact(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='quick_facts')
     body = RichTextField()
     link_url = models.URLField(null=True, blank=True)
+
+
+class TaxonomyCategoryPage(Orderable):
+    taxonomy_setting = ParentalKey('common.TaxonomySettings', related_name='categories')
+    category = ParentalKey('common.CategoryPage', related_name='taxonomy_settings')
+
+    panels = [
+        PageChooserPanel('category', 'common.CategoryPage'),
+    ]
 
 
 class CategoryPage(Page):

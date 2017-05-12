@@ -1,4 +1,5 @@
-{% load home_tags %}
+{% load wagtailsettings_tags %}
+{% get_settings %}
 
 <div class="category-block">
 	<div class="category-block__header">
@@ -6,7 +7,7 @@
 	</div>
 
 	<ul class="category-block__list">
-		{% for category_relation in page|home_page_categories %}
+		{% for category_relation in settings.common.TaxonomySettings.categories.all %}
 			<li class="category-block__list-item">
 				<a
 					class="category-block__link"
