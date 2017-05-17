@@ -42,6 +42,7 @@ class Autocomplete extends PureComponent {
 		const params = {
 			query: value,
 			type: this.props.type,
+			exclude: this.props.value.map(({ id }) => id).join(','),
 		}
 		axios.get('/autocomplete/search/', { params })
 			.then(res => {

@@ -22,8 +22,17 @@ def search(request):
         model = apps.get_model(type)
     except:
         return HttpResponseBadRequest
-    queryset = model.objects.filter(title__icontains=search_query).live()[:20]
-    results = map(render_page, queryset)
+
+    queryset = model.objects.filter(title__icontains=search_query).live()
+
+    exclude = request.GET.get('exclude', '')
+    try:
+        exclusions = [int(item) for item in exclude.split(',')]
+        queryset = queryset.exclude(pk__in=exclusions)
+    except:
+        pass
+
+    results = map(render_page, queryset[:20])
     return JsonResponse(dict(pages=list(results)))
 
 
