@@ -61,6 +61,12 @@ class Autocomplete extends PureComponent {
 		})
 	}
 
+	handleRemove(page) {
+		this.setState({
+			value: this.state.value.filter(({ id }) => id !== page.id)
+		})
+	}
+
 	handleCreate() {
 		const { value } = this.state.input
 		if (value.trim() === '') {
@@ -132,7 +138,16 @@ class Autocomplete extends PureComponent {
 
 				<h3>Selected</h3>
 				{value.map(page =>
-					<div key={page.id}>{page.label}</div>
+					<div key={page.id}>
+						{page.label}
+
+						<button
+							type="button"
+							onClick={this.handleRemove.bind(this, page)}
+						>
+							Remove
+						</button>
+					</div>
 				)}
 			</span>
 		)
