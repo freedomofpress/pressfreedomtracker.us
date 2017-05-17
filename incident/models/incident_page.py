@@ -33,7 +33,8 @@ class IncidentPage(Page):
         null=True,
     )
     state = models.CharField(
-        max_length=255,
+        help_text="Two character state abbreviation",
+        max_length=2,
         blank=True,
         null=True,
     )
@@ -264,16 +265,21 @@ class IncidentPage(Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
-        ImageChooserPanel('teaser_image'),
+        InlinePanel('updates', label='Updates'),
 
-        FieldPanel('date'),
-        FieldPanel('affiliation'),
-        FieldPanel('city'),
-        FieldPanel('state'),
-        FieldPanel('targets'),
-        FieldPanel('tags'),
-
-        InlinePanel('categories', label='Incident categories', min_num=1),
+        MultiFieldPanel(
+            heading='Details',
+            children=[
+                    ImageChooserPanel('teaser_image'),
+                    FieldPanel('date'),
+                    FieldPanel('affiliation'),
+                    FieldPanel('city'),
+                    FieldPanel('state'),
+                    FieldPanel('targets'),
+                    FieldPanel('tags'),
+                    InlinePanel('categories', label='Incident categories', min_num=1),
+            ]
+        ),
 
         MultiFieldPanel(
             heading='Detention/Arrest',
@@ -392,8 +398,6 @@ class IncidentPage(Page):
                 FieldPanel('politicians_or_public_figures_involved'),
             ]
         ),
-
-        InlinePanel('updates', label='Updates'),
 
         FieldPanel('related_incidents')
     ]
