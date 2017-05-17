@@ -1,54 +1,22 @@
-from django.db import models
-from django.forms import CheckboxSelectMultiple
+import datetime
 
+from django.db import models
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalManyToManyField
 from wagtail.wagtailadmin.edit_handlers import (
-    FieldPanel, StreamFieldPanel,
-    InlinePanel, MultiFieldPanel,
-    FieldRowPanel,
+    FieldPanel,
+    InlinePanel,
+    MultiFieldPanel,
+    StreamFieldPanel,
 )
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.models import Page
 from wagtail.wagtailimages.blocks import ImageChooserBlock
-from wagtail.wagtailsearch import index
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailsnippets.models import register_snippet
-from modelcluster.contrib.taggit import ClusterTaggableManager
-from modelcluster.models import ClusterableModel
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from taggit.models import TaggedItemBase
+from wagtail.wagtailsearch import index
 
-from . import choices
-
-from common.utils import DEFAULT_PAGE_KEY, paginate
-
-
-class IncidentIndexPage(Page):
-    content_panels = Page.content_panels
-
-    subpage_types = ['incident.IncidentPage']
-
-    def get_incidents(self):
-        """Returns all published incident pages"""
-        return IncidentPage.objects.live()
-
-    def get_context(self, request):
-        context = super(IncidentIndexPage, self).get_context(request)
-
-        entry_qs = self.get_incidents()
-
-        paginator, entries = paginate(
-            request,
-            entry_qs,
-            page_key=DEFAULT_PAGE_KEY,
-            per_page=8,
-            orphans=5
-        )
-
-        context['entries_page'] = entries
-        context['paginator'] = paginator
-
-        return context
+from incident.models import choices
 
 
 class IncidentPage(Page):
@@ -478,108 +446,3 @@ class IncidentPage(Page):
 
             # Only return two related incidents (Categories have too many incidents)
             return related_incidents[:2]
-
-
-class IncidentPageUpdates(Orderable):
-    page = ParentalKey(IncidentPage, related_name='updates')
-    title = models.CharField(max_length=255)
-    date = models.DateTimeField()
-    body = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
-        ('image', ImageChooserBlock()),
-        ('raw_html', blocks.RawHTMLBlock()),
-    ])
-
-    panels = [
-        FieldPanel('title'),
-        FieldPanel('date'),
-        StreamFieldPanel('body'),
-    ]
-
-
-class IncidentCategorization(Orderable):
-    incident_page = ParentalKey(IncidentPage, related_name='categories')
-    category = ParentalKey('common.CategoryPage', related_name='incidents')
-
-
-class CurrentChargesTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_current_charges',
-    )
-
-
-class DroppedChargesTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_dropped_charges',
-    )
-
-
-class TargetsTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_targets',
-    )
-
-
-@register_snippet
-class Equipment(ClusterableModel):
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    panels = [
-        FieldRowPanel([
-            FieldPanel('name'),
-        ])
-    ]
-
-    def __str__(self):
-        return self.name
-
-
-class EquipmentSeized(models.Model):
-    incident = ParentalKey(
-        'incident.IncidentPage',
-        related_name='equipment_seized',
-    )
-    equipment = ParentalKey(
-        'incident.Equipment',
-        verbose_name='Equipment Seized',
-    )
-    quantity = models.PositiveSmallIntegerField(default=1)
-
-
-class EquipmentBroken(models.Model):
-    incident = ParentalKey(
-        'incident.IncidentPage',
-        related_name='equipment_broken',
-    )
-    equipment = ParentalKey(
-        'incident.Equipment',
-        verbose_name='Equipment Broken',
-    )
-    quantity = models.PositiveSmallIntegerField(default=1)
-
-
-class NationalityTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_nationalities',
-    )
-
-
-class TargetsCommunicationsObtainedTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_targets_communications_obtained',
-    )
-
-
-class PoliticiansOrPublicTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_politicians_or_public',
-    )
