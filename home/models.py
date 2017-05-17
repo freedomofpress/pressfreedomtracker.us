@@ -9,7 +9,11 @@ from modelcluster.fields import ParentalKey
 
 
 class HomePage(Page):
-    about = RichTextField(blank=True, null=True)
+    about = RichTextField(
+        blank=True,
+        null=True,
+        help_text='Headings and line breaks will be stripped'
+    )
 
     about_page = models.ForeignKey(
         'wagtailcore.Page',

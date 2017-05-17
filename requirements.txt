@@ -5,6 +5,7 @@
 #    pip-compile --output-file requirements.txt requirements.in
 #
 beautifulsoup4==4.6.0     # via wagtail
+bleach==2.0.0
 click==6.7                # via pip-tools
 dj-database-url==0.4.2
 django-modelcluster==3.1
@@ -12,10 +13,10 @@ django-taggit==0.22.1     # via wagtail
 django-treebeard==4.1.0   # via wagtail
 django-webpack-loader==0.4.1
 django==1.11.1            # via django-treebeard, wagtail
-djangorestframework==3.6.2  # via wagtail
+djangorestframework==3.6.3  # via wagtail
 first==2.0.1              # via pip-tools
 gunicorn==19.7.1
-html5lib==0.999999999     # via wagtail
+html5lib==0.999999999     # via bleach, wagtail
 olefile==0.44             # via pillow
 pillow==4.1.1             # via wagtail
 pip-tools==1.9.0
@@ -23,7 +24,7 @@ psycopg2==2.7.1
 pyparsing==2.2.0
 pytz==2017.2              # via django, django-modelcluster
 requests==2.14.2          # via wagtail
-six==1.10.0               # via html5lib, pip-tools
+six==1.10.0               # via bleach, html5lib, pip-tools
 unidecode==0.4.20         # via wagtail
 wagtail==1.10
 webencodings==0.5.1       # via html5lib
