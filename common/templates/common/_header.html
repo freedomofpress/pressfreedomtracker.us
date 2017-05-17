@@ -12,9 +12,11 @@
 		<ul class='header__nav-list header__nav-list--mobile-hidden'>
 			{% get_menu 'main' as menu %}
 			{% for item in menu.menu_items.all %}
-			<li class="header__nav-item {{ item.html_classes }}"><a class='header__nav-link' href="{{ item.url }}">
+			<li class="header__nav-item">
+				<a class="header__nav-link {{ item.html_classes }}" href="{{ item.url }}">
 					{{ item.text }}
-			</a></li>
+				</a>
+			</li>
 			{% endfor %}
 		</ul>
 

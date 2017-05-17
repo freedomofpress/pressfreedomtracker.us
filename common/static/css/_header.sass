@@ -74,14 +74,36 @@ $nav-link-padding: 5px
 	font-size: 1.1em
 
 .header__nav-link
-	padding: $nav-link-padding
+	display: block
+	// 1px to adjust the text baseline to be better centered
+	padding: #{$nav-link-padding + 1px} 0 #{$nav-link-padding - 1px} 0
+	margin: 0 $nav-link-padding
 	text-decoration: none
 	text-transform: uppercase
+	letter-spacing: .05em
 	color: $gray-mid-dark-text
+	transition: .15s linear all
+	position: relative
+	font-size: .9em
+	border-bottom: 1px solid transparent
 
 	&:hover
-		background-color: $gray-mid-dark
-		color: #fff
+		color: $gray-dark
+		border-bottom: 1px solid $gray-dark
+
+.header__nav-link--highlighted
+	padding-left: #{$nav-link-padding * 2}
+	padding-right: #{$nav-link-padding * 2}
+	margin: 0
+	background-color: $gray-mid-dark
+	transition: .15s linear all
+	color: $white
+	border-bottom: 1px solid transparent
+
+	&:hover
+		color: $white
+		background-color: $gray-dark
+		border-bottom: 1px solid transparent
 
 @media(max-width: $small-screen)
 	.header__nav-list--mobile-hidden
