@@ -48,6 +48,7 @@
     "money-math": "^2.4.3",
     "normalize-css": "^2.3.1",
     "normalize.css": "^6.0.0",
+    "prop-types": "^15.5.10",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
   }

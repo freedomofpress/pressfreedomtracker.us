@@ -27,12 +27,24 @@ class Autocomplete(Widget):
         context = super(Autocomplete, self).get_context(*args, **kwargs)
         context['widget']['page_type'] = self.page_type
         context['widget']['can_create'] = self.can_create
+        context['widget']['is_single'] = self.is_single
         return context
 
     def format_value(self, value):
+        if not value:
+            return 'null'
+
         if type(value) == list:
             return json.dumps([render_page(page) for page in Page.objects.filter(id__in=value)])
-        return '[]'
+        else:
+            return json.dumps(render_page(Page.objects.get(pk=value)))
 
     def value_from_datadict(self, data, files, name):
-        return [obj['id'] for obj in json.loads(data.get(name))]
+        value = json.loads(data.get(name))
+        if not value:
+            return None
+
+        if type(value) == list:
+            return [obj['id'] for obj in value]
+
+        return value['id']

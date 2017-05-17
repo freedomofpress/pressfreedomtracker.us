@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { render } from 'react-dom'
+import PropTypes from 'prop-types'
 import axios from 'axios'
 
 
@@ -34,6 +35,19 @@ class Autocomplete extends PureComponent {
 		})
 	}
 
+	getExclusions() {
+		const { value } = this.state
+		if (!value) {
+			return ''
+		}
+
+		if (this.props.isSingle && value) {
+			return value.id
+		}
+
+		return value.map(({ id }) => id).join(',')
+	}
+
 	checkNewSuggestions(value) {
 		if (value === this.state.value) {
 			return
@@ -42,7 +56,7 @@ class Autocomplete extends PureComponent {
 		const params = {
 			query: value,
 			type: this.props.type,
-			exclude: this.props.value.map(({ id }) => id).join(','),
+			exclude: this.getExclusions(),
 		}
 		axios.get('/autocomplete/search/', { params })
 			.then(res => {
@@ -57,15 +71,27 @@ class Autocomplete extends PureComponent {
 	}
 
 	handleClick(suggestion) {
-		this.setState({
-			value: this.state.value.concat(suggestion),
-		})
+		if (this.props.isSingle) {
+			this.setState({
+				value: suggestion,
+			})
+		} else {
+			this.setState({
+				value: this.state.value.concat(suggestion),
+			})
+		}
 	}
 
 	handleRemove(page) {
-		this.setState({
-			value: this.state.value.filter(({ id }) => id !== page.id)
-		})
+		if (this.props.isSingle) {
+			this.setState({
+				value: null,
+			})
+		} else {
+			this.setState({
+				value: this.state.value.filter(({ id }) => id !== page.id)
+			})
+		}
 	}
 
 	handleCreate() {
@@ -84,12 +110,48 @@ class Autocomplete extends PureComponent {
 					return
 				}
 
+				const value = this.props.isSingle ? res.data : this.state.value.concat(res.data)
+
 				this.setState({
 					isLoading: false,
-					value: this.state.value.concat(res.data),
+					value,
 				})
 			})
 		this.setState({ isLoading: true })
+	}
+
+	renderValue(value) {
+		if (!value) {
+			return <div>Nothing selected.</div>
+		}
+
+		if (typeof value.map === 'function') {
+			return value.map(page =>
+				<div key={page.id}>
+					{page.label}
+
+					<button
+						type="button"
+						onClick={this.handleRemove.bind(this, page)}
+					>
+						Remove
+					</button>
+				</div>
+			)
+		}
+
+		return (
+			<div>
+				{value.label}
+
+				<button
+					type="button"
+					onClick={this.handleRemove.bind(this, value)}
+				>
+					Remove
+				</button>
+			</div>
+		)
 	}
 
 	render() {
@@ -97,6 +159,12 @@ class Autocomplete extends PureComponent {
 		const { value, input } = this.state
 
 		const suggestions = this.state.suggestions.filter(suggestion => {
+			if (this.props.isSingle) {
+				if (!value) {
+					return true
+				}
+				return value.id !== suggestion.id
+			}
 			return value.every(({ id }) => id !== suggestion.id)
 		})
 
@@ -138,31 +206,29 @@ class Autocomplete extends PureComponent {
 				</ul>
 
 				<h3>Selected</h3>
-				{value.map(page =>
-					<div key={page.id}>
-						{page.label}
-
-						<button
-							type="button"
-							onClick={this.handleRemove.bind(this, page)}
-						>
-							Remove
-						</button>
-					</div>
-				)}
+				{this.renderValue(value)}
 			</span>
 		)
 	}
 }
 
 
-window.renderAutocompleteWidget = (id, name, value, type, canCreate) => {
+Autocomplete.propTypes = {
+	name: PropTypes.string.isRequired,
+	type: PropTypes.string.isRequired,
+	canCreate: PropTypes.bool.isRequired,
+	isSingle: PropTypes.bool.isRequired,
+}
+
+
+window.renderAutocompleteWidget = (id, name, value, type, canCreate, isSingle) => {
 	render(
 		<Autocomplete
 			name={name}
 			value={value}
 			type={type}
 			canCreate={canCreate}
+			isSingle={isSingle}
 		/>,
 		document.getElementById(id)
 	)
