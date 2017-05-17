@@ -6,7 +6,6 @@ from django.conf import settings
 
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore import hooks
-from wagtail.contrib.wagtailapi.serializers import PageSerializer
 from webpack_loader.utils import get_loader
 
 
