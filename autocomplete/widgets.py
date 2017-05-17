@@ -26,6 +26,7 @@ class Autocomplete(Widget):
     def get_context(self, *args, **kwargs):
         context = super(Autocomplete, self).get_context(*args, **kwargs)
         context['widget']['page_type'] = self.page_type
+        context['widget']['can_create'] = self.can_create
         return context
 
     def format_value(self, value):

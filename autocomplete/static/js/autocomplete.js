@@ -12,6 +12,7 @@ class Autocomplete extends PureComponent {
 		super(props, ...args)
 
 		this.handleChange = this.handleChange.bind(this)
+		this.handleCreate = this.handleCreate.bind(this)
 
 		this.state = {
 			value: props.value,
@@ -60,6 +61,30 @@ class Autocomplete extends PureComponent {
 		})
 	}
 
+	handleCreate() {
+		const { value } = this.state.input
+		if (value.trim() === '') {
+			return
+		}
+
+		const data = new FormData()
+		data.set('type', this.props.type)
+		data.set('value', value)
+		axios.post('/autocomplete/create/', data)
+			.then(res => {
+				if (res.status !== 200) {
+					this.setState({ isLoading: false })
+					return
+				}
+
+				this.setState({
+					isLoading: false,
+					value: this.state.value.concat(res.data),
+				})
+			})
+		this.setState({ isLoading: true })
+	}
+
 	render() {
 		const { name } = this.props
 		const { value, input } = this.state
@@ -67,6 +92,8 @@ class Autocomplete extends PureComponent {
 		const suggestions = this.state.suggestions.filter(suggestion => {
 			return value.every(({ id }) => id !== suggestion.id)
 		})
+
+		const canCreate = this.props.canCreate && input.value.trim() !== ''
 
 		return (
 			<span>
@@ -82,6 +109,7 @@ class Autocomplete extends PureComponent {
 					{...input}
 				/>
 
+				<h3>Search</h3>
 				<ul>
 					{suggestions.map(suggestion =>
 						<li
@@ -91,8 +119,18 @@ class Autocomplete extends PureComponent {
 							{suggestion.label}
 						</li>
 					)}
+
+					{canCreate && (
+						<li
+							key="create"
+							onClick={this.handleCreate}
+						>
+							Create new “{input.value}”
+						</li>
+					)}
 				</ul>
 
+				<h3>Selected</h3>
 				{value.map(page =>
 					<div key={page.id}>{page.label}</div>
 				)}
@@ -102,12 +140,13 @@ class Autocomplete extends PureComponent {
 }
 
 
-window.renderAutocompleteWidget = (id, name, value, type) => {
+window.renderAutocompleteWidget = (id, name, value, type, canCreate) => {
 	render(
 		<Autocomplete
 			name={name}
 			value={value}
 			type={type}
+			canCreate={canCreate}
 		/>,
 		document.getElementById(id)
 	)

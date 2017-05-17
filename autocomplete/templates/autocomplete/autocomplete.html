@@ -4,6 +4,7 @@
 		'js-{{ widget.attrs.id }}',
 		'{{ widget.name }}',
 		JSON.parse('{{ widget.value|safe }}'),
-		'{{ widget.page_type }}'
+		'{{ widget.page_type }}',
+		'{{ widget.can_create }}' === 'True'
 	);
 </script>
