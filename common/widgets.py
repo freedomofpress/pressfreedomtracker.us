@@ -8,6 +8,8 @@ from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore import hooks
 from webpack_loader.utils import get_loader
 
+from autocomplete.views import render_page
+
 
 @hooks.register('insert_editor_js')
 def editor_js():
@@ -19,16 +21,12 @@ def editor_js():
     return format_html(html)
 
 
-def format(page):
-    return dict(id=page.id, title=page.title)
-
-
 class Autocomplete(Widget):
     template_name = 'autocomplete.html'
 
     def format_value(self, value):
         if type(value) == list:
-            return json.dumps([format(page) for page in Page.objects.filter(id__in=value)])
+            return json.dumps([render_page(page) for page in Page.objects.filter(id__in=value)])
         return '[]'
 
     def value_from_datadict(self, data, files, name):

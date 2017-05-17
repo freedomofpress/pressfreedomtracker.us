@@ -81,13 +81,13 @@ class Autocomplete extends PureComponent {
 							key={suggestion.id}
 							onClick={this.handleClick.bind(this, suggestion)}
 						>
-							{suggestion.title}
+							{suggestion.label}
 						</li>
 					)}
 				</ul>
 
 				{value.map(page =>
-					<div key={page.id}>{page.title}</div>
+					<div key={page.id}>{page.label}</div>
 				)}
 			</span>
 		)
