@@ -5,6 +5,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from search import views as search_views
+from autocomplete import urls as autocomplete_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
@@ -12,6 +13,8 @@ from wagtail.contrib.wagtailapi import urls as wagtailapi_urls
 
 urlpatterns = [
     url(r'^django-admin/', include(admin.site.urls)),
+
+    url(r'^autocomplete/', include(autocomplete_urls.urlpatterns)),
 
     url(r'^api/', include(wagtailapi_urls)),
     url(r'^admin/', include(wagtailadmin_urls)),

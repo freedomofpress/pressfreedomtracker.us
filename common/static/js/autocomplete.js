@@ -34,8 +34,8 @@ class Autocomplete extends PureComponent {
 			return
 		}
 
-		const params = { search: value }
-		axios.get('/api/v1/pages/', { params })
+		const params = { query: value }
+		axios.get('/autocomplete/search/', { params })
 			.then(res => {
 				if (res.status !== 200) {
 					return
