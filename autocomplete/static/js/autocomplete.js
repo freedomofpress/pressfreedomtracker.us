@@ -3,6 +3,10 @@ import { render } from 'react-dom'
 import axios from 'axios'
 
 
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+
 class Autocomplete extends PureComponent {
 	constructor(props, ...args) {
 		super(props, ...args)
