@@ -18,7 +18,7 @@ console.log('Using STATIC_URL', STATIC_URL);
 var common = {
 	entry: {
 		common: __dirname + '/common/static/js/common.js',
-		editor: __dirname + '/common/static/js/editor.js',
+		editor: __dirname + '/autocomplete/static/js/editor.js',
 	},
 
 	output: {
@@ -50,6 +50,7 @@ var common = {
 				],
 				include: [
 					path.join(__dirname, '/common/static/js'),
+					path.join(__dirname, '/autocomplete/static/js'),
 				],
 			},
 			{

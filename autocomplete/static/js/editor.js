@@ -1,2 +1,2 @@
 import classlist from 'classlist-polyfill'
-import '~/autocomplete'
+import './autocomplete'

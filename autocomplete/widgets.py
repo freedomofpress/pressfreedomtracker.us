@@ -8,7 +8,7 @@ from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore import hooks
 from webpack_loader.utils import get_loader
 
-from autocomplete.views import render_page
+from .views import render_page
 
 
 @hooks.register('insert_editor_js')
@@ -22,7 +22,7 @@ def editor_js():
 
 
 class Autocomplete(Widget):
-    template_name = 'autocomplete.html'
+    template_name = 'autocomplete/autocomplete.html'
 
     def format_value(self, value):
         if type(value) == list:

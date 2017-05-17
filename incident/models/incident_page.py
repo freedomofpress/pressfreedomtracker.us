@@ -16,7 +16,7 @@ from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
-from common.widgets import Autocomplete
+from autocomplete.widgets import Autocomplete
 from incident.models import choices
 
 
