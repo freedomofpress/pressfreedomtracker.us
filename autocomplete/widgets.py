@@ -2,7 +2,6 @@ import json
 
 from django.forms import Widget
 from django.utils.html import format_html
-from django.conf import settings
 
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore import hooks
@@ -23,6 +22,11 @@ def editor_js():
 
 class Autocomplete(Widget):
     template_name = 'autocomplete/autocomplete.html'
+
+    def get_context(self, *args, **kwargs):
+        context = super(Autocomplete, self).get_context(*args, **kwargs)
+        context['widget']['page_type'] = self.page_type
+        return context
 
     def format_value(self, value):
         if type(value) == list:

@@ -34,7 +34,10 @@ class Autocomplete extends PureComponent {
 			return
 		}
 
-		const params = { query: value }
+		const params = {
+			query: value,
+			type: this.props.type,
+		}
 		axios.get('/autocomplete/search/', { params })
 			.then(res => {
 				if (res.status !== 200) {
@@ -95,11 +98,12 @@ class Autocomplete extends PureComponent {
 }
 
 
-window.renderAutocompleteWidget = (id, name, value) => {
+window.renderAutocompleteWidget = (id, name, value, type) => {
 	render(
 		<Autocomplete
 			name={name}
 			value={value}
+			type={type}
 		/>,
 		document.getElementById(id)
 	)

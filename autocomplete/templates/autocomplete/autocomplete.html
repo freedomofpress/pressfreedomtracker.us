@@ -3,6 +3,7 @@
 	window.renderAutocompleteWidget(
 		'js-{{ widget.attrs.id }}',
 		'{{ widget.name }}',
-		JSON.parse('{{ widget.value|safe }}')
+		JSON.parse('{{ widget.value|safe }}'),
+		'{{ widget.page_type }}'
 	);
 </script>
