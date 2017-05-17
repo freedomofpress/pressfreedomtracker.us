@@ -1,4 +1,5 @@
 import datetime
+
 from django.db import models
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
@@ -15,6 +16,7 @@ from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
+from common.widgets import Autocomplete
 from incident.models import choices
 
 
@@ -431,7 +433,7 @@ class IncidentPage(Page):
             ]
         ),
 
-        FieldPanel('related_incidents')
+        FieldPanel('related_incidents', widget=Autocomplete)
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']
