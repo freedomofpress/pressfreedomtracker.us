@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'styleguide',
 
     'wagtail.contrib.settings',
-    'wagtail.contrib.wagtailapi',
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
     'wagtail.wagtailembeds',
@@ -57,7 +56,6 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
     'webpack_loader',
-    'rest_framework',
 
     'django.contrib.admin',
     'django.contrib.auth',
