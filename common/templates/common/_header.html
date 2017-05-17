@@ -1,7 +1,7 @@
 {% load get_menu %}
 <header class='header'>
 	<a class='header__logo' href="/">
-		{% include "common/_desktop_logo.html" %}
+		{% include "common/_desktop_logo.html" with class="header__logo-svg" %}
 
 		<h1 class='header__logo__title sr-only'>U.S. Press Freedom Tracker</h1>
 	</a>
@@ -12,9 +12,11 @@
 		<ul class='header__nav-list header__nav-list--mobile-hidden'>
 			{% get_menu 'main' as menu %}
 			{% for item in menu.menu_items.all %}
-			<li class="header__nav-item {{ item.html_classes }}"><a class='header__nav-link' href="{{ item.url }}">
+			<li class="header__nav-item">
+				<a class="header__nav-link {{ item.html_classes }}" href="{{ item.url }}">
 					{{ item.text }}
-			</a></li>
+				</a>
+			</li>
 			{% endfor %}
 		</ul>
 
