@@ -48,16 +48,15 @@
         priv: "ALL"
         role_attr_flags: "CREATEDB"
 
-- name: Run django environment
+- name: Django deps
   hosts: django
   gather_facts: false
-  become: yes
   become: yes
   pre_tasks:
     - name: Create user
       user:
-        name: "{{ django_stack_gcorn_user }}"
-        home: "{{ django_stack_gcorn_home }}"
+        name: gcorn
+        home: /home/gcorn
         createhome: yes
       tags: node
   roles:
@@ -66,22 +65,9 @@
 
     - role: geerlingguy.nodejs
       tags: node
-
-    - role: freedomofpress.django_stack
-      tags: django
-  post_tasks:
-    - name: Run tests
-      script: scripts/django_tests.sh
-      tags: tests
-      become_user: "{{ django_stack_gcorn_user }}"
   vars:
-    django_stack_superuser_admin: admin
-    django_stack_superuser_email: mike@freedom.press
-    django_db_user: django_user
-    django_db_password: django_password
-    django_stack_app_name: pressfreedom
-    django_secret_key: f1822d2fe58daeadc88e0e4eef2f155fc3edd3713ff9a5d1e27696afd9231d905db51c98dc
-    django_stack_es_host_url: disable
+    nodejs_version: "6.x"
+    nodejs_install_npm_user: gcorn
     nginx_sites:
       default:
         - listen 80
@@ -93,9 +79,52 @@
         - location /media { alias /var/www/django-media; }
         - ssl_certificate /etc/ssl/certs/{{ansible_fqdn}}.pem
         - ssl_certificate_key /etc/ssl/private/{{ansible_fqdn}}-key.pem
-    nodejs_version: "6.x"
-    nodejs_install_npm_user: "{{ django_stack_gcorn_user }}"
-    django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../" 
+
+- name: Run django environment
+  hosts: django
+  gather_facts: false
+  become: yes
+  pre_tasks:
+    - name: Install GRSEC utilities
+      package:
+        name: "paxctld"
+      when: "'grsec' in ansible_kernel"
+
+    - name: Layout pax config
+      lineinfile:
+        dest: /etc/paxctld.conf
+        line: "{{ item }}"
+      with_items:
+        - "/usr/bin/nodejs m"
+        - "/home/gcorn/pressfreedom/bin/python3 m"
+        - "/home/gcorn/pressfreedom/bin/pip m"
+      when: "'grsec' in ansible_kernel"
+      notify: Restart paxctld
+      register: grsec_config_results
+
+  handlers:
+    - name: Restart paxctld
+      service:
+        name: paxctld
+        state: restarted
+  roles:
+    - role: freedomofpress.django_stack
+      tags: django
+  post_tasks:
+    - name: Run tests
+      script: scripts/django_tests.sh
+      tags: tests
+      become: yes
+      become_user: "{{ django_stack_gcorn_user }}"
+  vars:
+    django_stack_superuser_admin: admin
+    django_stack_superuser_email: mike@freedom.press
+    django_db_user: django_user
+    django_db_password: django_password
+    django_stack_app_name: pressfreedom
+    django_secret_key: f1822d2fe58daeadc88e0e4eef2f155fc3edd3713ff9a5d1e27696afd9231d905db51c98dc
+    django_stack_es_host_url: disable
+    django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../"
     django_stack_manage_post:
       - createdevdata
     # Hit some weird bug that only saw in docker
@@ -105,9 +134,12 @@
       - run build
     django_stack_gunicorn_opt_envs:
       DJANGO_ALLOWED_HOSTS: "'*'"
-      MAILGUN_FAIL_SILENTLY: True
       DJANGO_SETTINGS_MODULE: pressfreedom.settings.production
       DJANGO_JSON_LOG: False
       DJANGO_DB_NAME: pressfreedom
     django_stack_gcorn_app_settings: pressfreedom.settings.production
     django_stack_force_refresh: true
+    django_stack_rsync_opts:
+      - "--exclude=.git"
+      - "--exclude=devops"
+      - "--exclude=node_modules"

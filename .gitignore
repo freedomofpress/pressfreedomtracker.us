@@ -18,6 +18,7 @@ devops/.venv
 devops/.vagrant
 devops/.molecule
 devops/roles
+.cache
 
 # Functional tests
 geckodriver.log
