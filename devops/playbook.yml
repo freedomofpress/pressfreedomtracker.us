@@ -4,10 +4,9 @@
   hosts: all
   become: yes
   tasks:
-    - set_fact:
+    - name: Set django root
+      set_fact:
         django_root: /var/www/django
-#    - hostname:
-#        name: "{{ inventory_hostname }}"
   tags: always
 
 - name: Establish certs
