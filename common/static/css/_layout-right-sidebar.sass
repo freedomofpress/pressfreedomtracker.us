@@ -7,6 +7,7 @@ $small-screen-side-padding: 13px
 	@media(max-width: $small-screen)
 		flex-direction: column
 
+
 .layout-right-sidebar__main
 	// If a sidebar width is set then flex-grow: 1 on here ensures the
 	// main element populates the remaining horizontal space.
@@ -16,6 +17,7 @@ $small-screen-side-padding: 13px
 
 	@media(max-width: $small-screen)
 		padding: $small-screen-side-padding
+
 
 .layout-right-sidebar__sidebar
 	// flex-shrink ensures the width is 25%
@@ -32,6 +34,7 @@ $small-screen-side-padding: 13px
 		margin-bottom: 15px
 		padding: $layout-top-padding $small-screen-side-padding
 
+
 // MODIFIER
 .layout-right-sidebar__main--padded
 	padding-top: $layout-top-padding
@@ -39,6 +42,7 @@ $small-screen-side-padding: 13px
 .layout-right-sidebar__main--header
 	@media(max-width: $small-screen)
 		padding: 0
+
 
 .layout-right-sidebar__sidebar--light
 	background-color: $fpf-sidebar
@@ -68,11 +72,13 @@ $small-screen-side-padding: 13px
 		margin: 0
 		padding: 0
 
+
 @each $name, $color in $border-colors
 	.layout-right-sidebar__main--#{$name}
 		border-top: 20px solid $color
 
 	.layout-right-sidebar__sidebar--#{$name}
 		border-top: 20px solid $color
+
 		@media(max-width: $small-screen)
-			border-top: none
+			border-top: 0

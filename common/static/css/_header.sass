@@ -14,6 +14,7 @@ $nav-link-padding: 5px
 	@media (max-width: $small-screen)
 		margin-top: 0
 
+
 .header__logo
 	background-color: $header-color
 	position: relative
@@ -26,24 +27,27 @@ $nav-link-padding: 5px
 	box-sizing: content-box
 	height: $header-logo-height
 	overflow: hidden
+
 	&::after
-		content: ""
+		content: ''
 		display: block
 		width: 200%
 		padding-bottom: 200%
 		height: 0
-		background-color: #FFF
+		background-color: #fff
 		position: absolute
 		top: 0
 		left: 0
 		// I donno why this number
 		transform: rotateZ(45deg) translate3d(0, 65px, 0)
 		transform-origin: 0 0
-		transition: .25s linear transform
+		transition: 0.25s linear transform
 		z-index: 0
+
 	&:hover
 		.header__logo-svg path
 			fill: $header-color
+
 		&::after
 			transform: rotateZ(45deg) translate3d(0, -260px, 0)
 
@@ -52,8 +56,8 @@ $nav-link-padding: 5px
 	z-index: 1
 
 .header__logo-svg path
-	fill: #FFF
-	transition: .25s linear fill
+	fill: #fff
+	transition: 0.25s linear fill
 
 .header__nav
 	font-family: $sans-serif
@@ -80,11 +84,11 @@ $nav-link-padding: 5px
 	margin: 0 $nav-link-padding
 	text-decoration: none
 	text-transform: uppercase
-	letter-spacing: .05em
+	letter-spacing: 0.05em
 	color: $gray-mid-dark-text
-	transition: .15s linear all
+	transition: 0.15s linear all
 	position: relative
-	font-size: .9em
+	font-size: 0.9em
 	border-bottom: 1px solid transparent
 
 	&:hover
@@ -96,7 +100,7 @@ $nav-link-padding: 5px
 	padding-right: #{$nav-link-padding * 2}
 	margin: 0
 	background-color: $gray-mid-dark
-	transition: .15s linear all
+	transition: 0.15s linear all
 	color: $white
 	border-bottom: 1px solid transparent
 
