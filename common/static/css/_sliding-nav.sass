@@ -1,41 +1,41 @@
 .sliding-nav
-  #{$sliding-nav-side}: -$sliding-nav-width
-  background: $white
-  bottom: 0
-  font-family: $sans-serif
-  overflow: auto
-  position: fixed
-  top: 0
-  transition: $sliding-nav-transition-ms transform ease-out
-  width: $sliding-nav-width
-  // Places nav above shade
-  z-index: 10
+	#{$sliding-nav-side}: -$sliding-nav-width
+	background: $white
+	bottom: 0
+	font-family: $sans-serif
+	overflow: auto
+	position: fixed
+	top: 0
+	transition: $sliding-nav-transition-ms transform ease-out
+	width: $sliding-nav-width
+	// Places nav above shade
+	z-index: 10
 
-  >:first-child
-    margin-bottom: 20px
+	>:first-child
+		margin-bottom: 20px
 
 .sliding-nav--is-active
-  @if $sliding-nav-side == 'right'
-    transform: translate3d(-$sliding-nav-width, 0, 0)
-    // IE9
-    -ms-transform: translate($sliding-nav-width, 0)
-  @if $sliding-nav-side == 'left'
-    transform: translate3d($sliding-nav-width, 0, 0)
-    // IE9
-    -ms-transform: translate($sliding-nav-width, 0)
+	@if $sliding-nav-side == 'right'
+		transform: translate3d(-$sliding-nav-width, 0, 0)
+		// IE9
+		-ms-transform: translate($sliding-nav-width, 0)
+	@if $sliding-nav-side == 'left'
+		transform: translate3d($sliding-nav-width, 0, 0)
+		// IE9
+		-ms-transform: translate($sliding-nav-width, 0)
 
 .sliding-nav__list
-  list-style-type: none
-  margin-bottom: $nav-link-padding
-  margin: 0
-  padding: 0
+	list-style-type: none
+	margin-bottom: $nav-link-padding
+	margin: 0
+	padding: 0
 
 .sliding-nav__link
-  display: block
-  padding: 10px 20px
-  text-decoration: none
-  text-transform: uppercase
-  color: $black
-  &:hover
-    background-color: $gray-mid-dark
-    color: #fff
+	display: block
+	padding: 10px 20px
+	text-decoration: none
+	text-transform: uppercase
+	color: $black
+	&:hover
+		background-color: $gray-mid-dark
+		color: #fff
