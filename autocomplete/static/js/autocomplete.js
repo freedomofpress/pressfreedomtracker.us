@@ -8,10 +8,177 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 
+class Suggestions extends PureComponent {
+	render() {
+		const {
+			suggestions,
+			canCreate,
+			onClick,
+			onCreate,
+			input,
+		} = this.props
+
+		return (
+			<ul>
+				{suggestions.map(suggestion =>
+					<li
+						key={suggestion.id}
+						onClick={onClick.bind(null, suggestion)}
+					>
+						{suggestion.label}
+					</li>
+				)}
+
+				{canCreate && (
+					<li
+						key="create"
+						onClick={onCreate}
+					>
+						Create new “{input.value}”
+					</li>
+				)}
+			</ul>
+		)
+	}
+}
+
+
+class Single extends PureComponent {
+	render() {
+		const {
+			selected,
+			onChange,
+			onClick,
+			onCreate,
+			input,
+			canCreate,
+		} = this.props
+
+		if (selected) {
+			return (
+				<span>
+					{selected.label}
+
+					<button
+						type="button"
+						onClick={onClick.bind(null, null)}
+					>
+						Remove
+					</button>
+				</span>
+			)
+		}
+
+		const suggestions = this.props.suggestions.filter(suggestion => {
+			if (!selected) {
+				return true
+			}
+			return suggestion.id !== selected.id
+		})
+
+		return (
+			<span>
+				<input
+					type="text"
+					onChange={onChange}
+					{...input}
+				/>
+
+				<Suggestions
+					suggestions={suggestions}
+					onClick={onClick}
+					onCreate={onCreate}
+					canCreate={canCreate}
+					input={input}
+				/>
+			</span>
+		)
+	}
+}
+
+
+class Multi extends PureComponent {
+	constructor(...args) {
+		super(...args)
+
+		this.handleClick = this.handleClick.bind(this)
+	}
+
+	handleClick(suggestion) {
+		const { onClick, selections } = this.props
+		onClick(selections.concat(suggestion))
+	}
+
+	handleRemove(page) {
+		const { onClick, selections } = this.props
+		onClick(selections.filter(({ id }) => id !== page.id))
+	}
+
+	render() {
+		const {
+			selections,
+			onChange,
+			onCreate,
+			canCreate,
+			input,
+		} = this.props
+
+		const suggestions = this.props.suggestions.filter(suggestion => {
+			if (!selections) {
+				return true
+			}
+			return selections.every(({ id }) => id !== suggestion.id)
+		})
+
+		return (
+			<span>
+				<h3>Search</h3>
+				<input
+					type="text"
+					onChange={onChange}
+					{...input}
+				/>
+
+				<Suggestions
+					suggestions={suggestions}
+					onClick={this.handleClick}
+					onCreate={onCreate}
+					canCreate={canCreate}
+					input={input}
+				/>
+
+				<h3>Selected</h3>
+				{selections.length === 0 && (
+					<span>Nothing selected.</span>
+				)}
+				{selections.map(selection =>
+					<div key={selection.id}>
+						{selection.label}
+
+						<button
+							type="button"
+							onClick={this.handleRemove.bind(this, selection)}
+						>
+							Remove
+						</button>
+					</div>
+				)}
+			</span>
+		)
+	}
+}
+
+
+Multi.defaultProps = {
+	selections: [],
+}
+
+
 class Autocomplete extends PureComponent {
 	constructor(props, ...args) {
 		super(props, ...args)
 
+		this.handleClick = this.handleClick.bind(this)
 		this.handleChange = this.handleChange.bind(this)
 		this.handleCreate = this.handleCreate.bind(this)
 
@@ -70,28 +237,8 @@ class Autocomplete extends PureComponent {
 			})
 	}
 
-	handleClick(suggestion) {
-		if (this.props.isSingle) {
-			this.setState({
-				value: suggestion,
-			})
-		} else {
-			this.setState({
-				value: this.state.value.concat(suggestion),
-			})
-		}
-	}
-
-	handleRemove(page) {
-		if (this.props.isSingle) {
-			this.setState({
-				value: null,
-			})
-		} else {
-			this.setState({
-				value: this.state.value.filter(({ id }) => id !== page.id)
-			})
-		}
+	handleClick(value) {
+		this.setState({ value })
 	}
 
 	handleCreate() {
@@ -120,53 +267,9 @@ class Autocomplete extends PureComponent {
 		this.setState({ isLoading: true })
 	}
 
-	renderValue(value) {
-		if (!value) {
-			return <div>Nothing selected.</div>
-		}
-
-		if (typeof value.map === 'function') {
-			return value.map(page =>
-				<div key={page.id}>
-					{page.label}
-
-					<button
-						type="button"
-						onClick={this.handleRemove.bind(this, page)}
-					>
-						Remove
-					</button>
-				</div>
-			)
-		}
-
-		return (
-			<div>
-				{value.label}
-
-				<button
-					type="button"
-					onClick={this.handleRemove.bind(this, value)}
-				>
-					Remove
-				</button>
-			</div>
-		)
-	}
-
 	render() {
-		const { name } = this.props
+		const { name, isSingle } = this.props
 		const { value, input } = this.state
-
-		const suggestions = this.state.suggestions.filter(suggestion => {
-			if (this.props.isSingle) {
-				if (!value) {
-					return true
-				}
-				return value.id !== suggestion.id
-			}
-			return value.every(({ id }) => id !== suggestion.id)
-		})
 
 		const canCreate = this.props.canCreate && input.value.trim() !== ''
 
@@ -178,35 +281,28 @@ class Autocomplete extends PureComponent {
 					name={name}
 				/>
 
-				<input
-					type="text"
-					onChange={this.handleChange}
-					{...input}
-				/>
+				{isSingle && (
+					<Single
+						suggestions={this.state.suggestions}
+						onCreate={this.handleCreate}
+						onChange={this.handleChange}
+						onClick={this.handleClick}
+						input={input}
+						selected={value}
+						canCreate={canCreate}
+					/>
+				)}
 
-				<h3>Search</h3>
-				<ul>
-					{suggestions.map(suggestion =>
-						<li
-							key={suggestion.id}
-							onClick={this.handleClick.bind(this, suggestion)}
-						>
-							{suggestion.label}
-						</li>
-					)}
-
-					{canCreate && (
-						<li
-							key="create"
-							onClick={this.handleCreate}
-						>
-							Create new “{input.value}”
-						</li>
-					)}
-				</ul>
-
-				<h3>Selected</h3>
-				{this.renderValue(value)}
+				{!isSingle && (
+					<Multi
+						suggestions={this.state.suggestions}
+						onCreate={this.handleCreate}
+						onChange={this.handleChange}
+						onClick={this.handleClick}
+						input={input}
+						selections={value || Multi.defaultProps.selections}
+					/>
+				)}
 			</span>
 		)
 	}
