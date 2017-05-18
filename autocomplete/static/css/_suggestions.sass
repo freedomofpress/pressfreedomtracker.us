@@ -27,10 +27,37 @@
 	border-right-width: 0
 	font-size: 1.2em
 	padding: 0.9em 0.6em
-	margin: 0 0.6em
-	background-color: $white
+	background-color: $suggestions-bg
 	// Minimum factor of 10 that is above Wagtail admin components.
 	z-index: 1000
 
+	// We don't want the flex parent to crush our content to get us to
+	// fit into the max-height, bro.
+	flex-shrink: 0
+
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	align-items: center
+
 	&:last-child
 		border-bottom-width: 0
+
+	svg
+		width: 1.2em
+		height: 1.2em
+		flex-shrink: 0
+
+	path
+		fill: $suggestions-bg
+
+
+.suggestions__item--active,
+.suggestions__item:hover,
+.suggestions__item:focus,
+.suggestions__item:active,
+	background-color: $suggestions-bg-active
+	color: $suggestions-fg-active
+
+	path
+		fill: $white
