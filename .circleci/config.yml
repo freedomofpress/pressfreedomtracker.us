@@ -11,8 +11,12 @@ jobs:
           name: Run flake8 tests
           command: flake8
 
+      - run:
+          name: Run sass-lint tests
+          command: npm run sass-link
+
       - setup_remote_docker
 
-      - run: 
+      - run:
           name: Run molecule and testinfra tests
           command: make ci-go
