@@ -38,6 +38,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "classlist-polyfill": "^1.2.0",
+    "classnames": "^2.2.5",
     "decimal.js": "^7.1.2",
     "element-dataset": "^2.2.6",
     "hamburgers": "^0.8.1",

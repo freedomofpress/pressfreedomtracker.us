@@ -1,0 +1,15 @@
+.suggestions
+	display: flex
+	flex-direction: column
+
+
+.suggestions__item
+	cursor: pointer
+	border: 1px solid $input-border-color
+	font-size: 1.2em
+	border-top-width: 0
+	padding: 0.9em 1.2em
+
+	&:last-child
+		border-bottom-left-radius: $wagtail-border-radius
+		border-bottom-right-radius: $wagtail-border-radius

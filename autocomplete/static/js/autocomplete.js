@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { render } from 'react-dom'
 import PropTypes from 'prop-types'
 import axios from 'axios'
+import classNames from 'classnames'
 
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -19,11 +20,12 @@ class Suggestions extends PureComponent {
 		} = this.props
 
 		return (
-			<ul>
+			<ul className="suggestions">
 				{suggestions.map(suggestion =>
 					<li
 						key={suggestion.id}
 						onClick={onClick.bind(null, suggestion)}
+						className="suggestions__item"
 					>
 						{suggestion.label}
 					</li>
@@ -33,6 +35,7 @@ class Suggestions extends PureComponent {
 					<li
 						key="create"
 						onClick={onCreate}
+						className="suggestions__item--create"
 					>
 						Create new “{input.value}”
 					</li>
@@ -80,6 +83,8 @@ class Single extends PureComponent {
 			<span>
 				<input
 					type="text"
+					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
+					className="autocomplete__search"
 					onChange={onChange}
 					{...input}
 				/>
@@ -135,6 +140,7 @@ class Multi extends PureComponent {
 				<h3>Search</h3>
 				<input
 					type="text"
+					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
 					onChange={onChange}
 					{...input}
 				/>
@@ -152,14 +158,19 @@ class Multi extends PureComponent {
 					<span>Nothing selected.</span>
 				)}
 				{selections.map(selection =>
-					<div key={selection.id}>
-						{selection.label}
+					<div
+						key={selection.id}
+						className="selection"
+					>
+						<span className="selection__label">{selection.label}</span>
 
 						<button
 							type="button"
+							className="selection__button"
 							onClick={this.handleRemove.bind(this, selection)}
 						>
-							Remove
+							<svg className="selection__icon" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg>
+							<span className="sr-only">Remove</span>
 						</button>
 					</div>
 				)}
@@ -274,7 +285,7 @@ class Autocomplete extends PureComponent {
 		const canCreate = this.props.canCreate && input.value.trim() !== ''
 
 		return (
-			<span>
+			<span className="autocomplete">
 				<input
 					type="hidden"
 					value={JSON.stringify(value)}
