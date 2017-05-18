@@ -1,20 +1,18 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/pressfreedom
+    working_directory: /root/pressfreedom
     docker:
       - image: msheiny/pressfreedomci:latest
     steps:
-      # This is really dumb that Im doing this, basically
-      # I want to clone to ~/pressfreedom and work out of there
-      # the working_directory creates that directory first
-      - run: rm -r ~/pressfreedom
-      - checkout:
-          path: ~/pressfreedom
+      - checkout
+
       - run:
           name: Run flake8 tests
           command: flake8
+
       - setup_remote_docker
+
       - run: 
-          name: Run molecule and manage tests
-          command: make ops-localprod
+          name: Run molecule and testinfra tests
+          command: make ci-go

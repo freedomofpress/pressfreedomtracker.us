@@ -8,12 +8,14 @@ beautifulsoup4==4.6.0     # via wagtail
 bleach==2.0.0
 click==6.7                # via pip-tools
 dj-database-url==0.4.2
+django-logging-json==1.5.4
 django-modelcluster==3.1
 django-taggit==0.22.1     # via wagtail
 django-treebeard==4.1.0   # via wagtail
 django-webpack-loader==0.4.1
-django==1.11.1            # via django-treebeard, wagtail
+django==1.11.1            # via django-logging-json, django-treebeard, wagtail
 djangorestframework==3.6.3  # via wagtail
+elasticsearch==2.4.1      # via django-logging-json
 first==2.0.1              # via pip-tools
 gunicorn==19.7.1
 html5lib==0.999999999     # via bleach, wagtail
@@ -24,8 +26,9 @@ psycopg2==2.7.1
 pyparsing==2.2.0
 pytz==2017.2              # via django, django-modelcluster
 requests==2.14.2          # via wagtail
-six==1.10.0               # via bleach, html5lib, pip-tools
+six==1.10.0               # via bleach, django-logging-json, html5lib, pip-tools
 unidecode==0.4.20         # via wagtail
+urllib3==1.21.1           # via elasticsearch
 wagtail==1.10
 webencodings==0.5.1       # via html5lib
 willow==0.4               # via wagtail
