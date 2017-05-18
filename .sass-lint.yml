@@ -6,4 +6,13 @@ files:
 
 rules:
     indentation:
-        size: 'tab'
+        - 2
+        - size: 'tab'
+    property-sort-order: 0
+    no-color-keywords: 0
+    leading-zero:
+        - 2
+        - include: true
+    class-name-format:
+        - 2
+        - convention: hyphenatedbem
