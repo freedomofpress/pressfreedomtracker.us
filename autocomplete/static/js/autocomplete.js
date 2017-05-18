@@ -269,7 +269,7 @@ class Autocomplete extends PureComponent {
 
 	render() {
 		const { name, isSingle } = this.props
-		const { value, input } = this.state
+		const { value, input, suggestions } = this.state
 
 		const canCreate = this.props.canCreate && input.value.trim() !== ''
 
@@ -283,24 +283,29 @@ class Autocomplete extends PureComponent {
 
 				{isSingle && (
 					<Single
-						suggestions={this.state.suggestions}
+						input={input}
+						suggestions={suggestions}
+						selected={value}
+
+						canCreate={canCreate}
+
 						onCreate={this.handleCreate}
 						onChange={this.handleChange}
 						onClick={this.handleClick}
-						input={input}
-						selected={value}
-						canCreate={canCreate}
 					/>
 				)}
 
 				{!isSingle && (
 					<Multi
-						suggestions={this.state.suggestions}
+						input={input}
+						suggestions={suggestions}
+						selections={value || Multi.defaultProps.selections}
+
+						canCreate={canCreate}
+
 						onCreate={this.handleCreate}
 						onChange={this.handleChange}
 						onClick={this.handleClick}
-						input={input}
-						selections={value || Multi.defaultProps.selections}
 					/>
 				)}
 			</span>
