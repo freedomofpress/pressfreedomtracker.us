@@ -19,6 +19,7 @@ devops/.vagrant
 devops/.molecule
 devops/roles
 .cache
+*.retry
 
 # Functional tests
 geckodriver.log

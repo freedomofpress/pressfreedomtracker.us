@@ -1,0 +1,43 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Provision Dev docker environment
+  hosts: localhost
+  become: no
+  gather_facts: no
+  tasks:
+    - name: Start postgresql
+      docker_container:
+        name: postgresql
+        image: postgres:9.3
+        exposed_ports:
+          - 5432
+        state: started
+        env:
+          POSTGRES_PASSWORD: trackerpassword
+          POSTGRES_USER: tracker
+          POSTGRES_DB: trackerdb
+
+    - name: Start node
+      docker_container:
+        name: node
+        image: node:6.10.3-alpine
+        volumes:
+          - ../../:/var/www/django
+        state: started
+        working_dir: /var/www/django
+        command: /bin/ash -c "apk add paxctl --no-cache; paxctl -cm /usr/local/bin/node; npm install; npm run start"
+
+    - name: Start Django server
+      docker_container:
+        name: django
+        image: python:3.4-slim
+        volumes:
+          - ../../:/var/www/django
+        state: started
+        working_dir: /var/www/django
+        exposed_ports:
+          - 8000
+        published_ports:
+          - "8000:8000"
+        command: |
+          /bin/bash -c "pip install -r requirements.txt; ./manage.py migrate; ./manage.py createdevdata; ./manage.py runserver 0.0.0.0:8000"
