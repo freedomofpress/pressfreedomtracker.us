@@ -16,6 +16,7 @@
           POSTGRES_PASSWORD: trackerpassword
           POSTGRES_USER: tracker
           POSTGRES_DB: trackerdb
+      register: pg_container_results
 
     - name: Start node
       docker_container:
@@ -41,3 +42,9 @@
           - "8000:8000"
         command: |
           /bin/bash -c "pip install -r requirements.txt; ./manage.py migrate; ./manage.py createdevdata; ./manage.py runserver 0.0.0.0:8000"
+        env:
+          DJANGO_DB_PASSWORD: trackerpassword
+          DJANGO_DB_USER: tracker
+          DJANGO_DB_NAME: trackerdb
+          DJANGO_DB_PORT: 5432
+          DJANGO_DB_HOST: "{{ pg_container_results.ansible_facts.docker_container.NetworkSettings.IPAddress }}"
