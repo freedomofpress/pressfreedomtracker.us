@@ -10,6 +10,49 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 
 class Suggestions extends PureComponent {
+	constructor(...args) {
+		super(...args)
+
+		this.handleKeyPress = this.handleKeyPress.bind(this)
+
+		this.state = {
+			index: 0,
+		}
+	}
+
+	componentDidMount() {
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.shouldResetIndex(nextProps)) {
+			this.setState({
+				index: 0,
+			})
+		}
+	}
+
+	/**
+	 * If the suggestion at the curent index has changed, the index
+	 * needs to be reset.
+	 */
+	shouldResetIndex(nextProps) {
+		const { suggestions } = this.props
+		if (suggestions.length === 0) {
+			return true
+		}
+
+		const { index } = this.state
+		if (index >= nextProps.length) {
+			return true
+		}
+
+		const currentId = suggestions[index].id
+		return nextProps.suggestions[index].id !== currentId
+	}
+
+	handleKeyPress(event) {
+	}
+
 	render() {
 		const {
 			suggestions,
