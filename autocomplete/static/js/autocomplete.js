@@ -59,37 +59,47 @@ class Suggestions extends PureComponent {
 			canCreate,
 			onClick,
 			onCreate,
+			onChange,
 			input,
 		} = this.props
 
 		return (
-			<ul
-				className={classNames(
-					'suggestions',
-					{ 'suggestions--populated': suggestions.length > 0 }
-				)}
-			>
-				{suggestions.map(suggestion =>
-					<li
-						key={suggestion.id}
-						onClick={onClick.bind(null, suggestion)}
-						className="suggestions__item"
-					>
-						<span>{suggestion.label}</span>
-						<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293h-704q-52 0-84.5-37.5t-32.5-90.5v-128q0-53 32.5-90.5t84.5-37.5h704l-293-294q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/></svg>
-					</li>
-				)}
+			<span>
+				<input
+					type="text"
+					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
+					onChange={onChange}
+					{...input}
+				/>
 
-				{canCreate && (
-					<li
-						key="create"
-						onClick={onCreate}
-						className="suggestions__item--create"
-					>
-						Create new “{input.value}”
-					</li>
-				)}
-			</ul>
+				<ul
+					className={classNames(
+						'suggestions',
+						{ 'suggestions--populated': suggestions.length > 0 }
+					)}
+				>
+					{suggestions.map(suggestion =>
+						<li
+							key={suggestion.id}
+							onClick={onClick.bind(null, suggestion)}
+							className="suggestions__item"
+						>
+							<span>{suggestion.label}</span>
+							<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293h-704q-52 0-84.5-37.5t-32.5-90.5v-128q0-53 32.5-90.5t84.5-37.5h704l-293-294q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/></svg>
+						</li>
+					)}
+
+					{canCreate && (
+						<li
+							key="create"
+							onClick={onCreate}
+							className="suggestions__item--create"
+						>
+							Create new “{input.value}”
+						</li>
+					)}
+				</ul>
+			</span>
 		)
 	}
 }
@@ -129,23 +139,14 @@ class Single extends PureComponent {
 		})
 
 		return (
-			<span>
-				<input
-					type="text"
-					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
-					className="autocomplete__search"
-					onChange={onChange}
-					{...input}
-				/>
-
-				<Suggestions
-					suggestions={suggestions}
-					onClick={onClick}
-					onCreate={onCreate}
-					canCreate={canCreate}
-					input={input}
-				/>
-			</span>
+			<Suggestions
+				suggestions={suggestions}
+				onClick={onClick}
+				onCreate={onCreate}
+				onChange={onChange}
+				canCreate={canCreate}
+				input={input}
+			/>
 		)
 	}
 }
@@ -188,19 +189,14 @@ class Multi extends PureComponent {
 			<span className="autocomplete-layout">
 				<span className="autocomplete-layout__item">
 					<h3>Search</h3>
-					<input
-						type="text"
-						className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
-						onChange={onChange}
-						{...input}
-					/>
-
 					<Suggestions
 						suggestions={suggestions}
 						onClick={this.handleClick}
+						onChange={onChange}
 						onCreate={onCreate}
 						canCreate={canCreate}
 						input={input}
+						inputElm={this.inputElm}
 					/>
 				</span>
 
