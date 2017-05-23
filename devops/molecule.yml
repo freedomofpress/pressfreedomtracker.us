@@ -23,3 +23,9 @@ docker:
         443: 4443
       volume_mounts:
         - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+
+molecule:
+  ignore_paths:
+    # Don't lint upstream libraries
+    - .venv
+    - roles
