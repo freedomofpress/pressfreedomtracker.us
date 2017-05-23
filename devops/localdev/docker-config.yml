@@ -4,6 +4,9 @@
   hosts: localhost
   become: no
   gather_facts: no
+  vars:
+    # Port to connect to locally, e.g. http://127.0.0.1:8000
+    dev_web_port_forward: 8000
   tasks:
     - name: Start postgresql
       docker_container:
@@ -37,14 +40,20 @@
         state: started
         working_dir: /var/www/django
         exposed_ports:
-          - 8000
+          - "{{ dev_web_port_forward }}"
         published_ports:
-          - "8000:8000"
+          - "{{ dev_web_port_forward }}:{{ dev_web_port_forward }}"
         command: |
-          /bin/bash -c "pip install -r requirements.txt; ./manage.py migrate; ./manage.py createdevdata; ./manage.py runserver 0.0.0.0:8000"
+          /bin/bash -c "pip install -r requirements.txt; ./manage.py migrate; ./manage.py createdevdata; ./manage.py runserver 0.0.0.0:{{ dev_web_port_forward }}"
         env:
           DJANGO_DB_PASSWORD: trackerpassword
           DJANGO_DB_USER: tracker
           DJANGO_DB_NAME: trackerdb
           DJANGO_DB_PORT: 5432
           DJANGO_DB_HOST: "{{ pg_container_results.ansible_facts.docker_container.NetworkSettings.IPAddress }}"
+
+    - name: Display address for local development.
+      debug:
+        msg: >-
+          Development environment ready. You can browse to the website at
+          http://127.0.0.1:{{ dev_web_port_forward }}
