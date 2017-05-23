@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    working_directory: /root/pressfreedom
+    docker:
+      - image: msheiny/pressfreedomci:latest
+    steps:
+      - checkout
+
+      - run:
+          name: Run flake8 tests
+          command: flake8
+
+      - setup_remote_docker
+
+      - run: 
+          name: Run molecule and testinfra tests
+          command: make ci-go

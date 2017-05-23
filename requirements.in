@@ -1,9 +1,7 @@
 bleach
 dj-database-url
 Django<1.12
-# There is a current conflict between utilizing elasticsearch >3.0.0
-# and django-logging-json module, commenting out for now
-#django-logging-json
+django-logging-json
 django-modelcluster
 django-webpack-loader
 gunicorn
