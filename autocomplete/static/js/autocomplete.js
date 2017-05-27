@@ -20,9 +20,6 @@ class Suggestions extends PureComponent {
 		}
 	}
 
-	componentDidMount() {
-	}
-
 	componentWillReceiveProps(nextProps) {
 		if (this.shouldResetIndex(nextProps)) {
 			this.setState({
@@ -51,6 +48,30 @@ class Suggestions extends PureComponent {
 	}
 
 	handleKeyPress(event) {
+		const { index } = this.state
+		const { suggestions, canCreate } = this.props
+
+		if (event.key === 'ArrowDown') {
+			// Creation takes the nth index
+			const max = canCreate ? suggestions.length : suggestions.length - 1
+			this.setState({
+				index: Math.min(max, index + 1),
+			})
+		} else if (event.key === 'ArrowUp') {
+			this.setState({
+				index: Math.max(0, index - 1),
+			})
+		} else if (event.key === 'Enter') {
+			// Enter should add the selected item, not submit the form.
+			event.stopPropagation()
+			event.preventDefault()
+
+			if (index === suggestions.length) {
+				this.props.onCreate()
+			} else {
+				this.props.onClick(suggestions[index])
+			}
+		}
 	}
 
 	render() {
@@ -69,6 +90,7 @@ class Suggestions extends PureComponent {
 					type="text"
 					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
 					onChange={onChange}
+					onKeyDown={this.handleKeyPress}
 					{...input}
 				/>
 
@@ -78,11 +100,14 @@ class Suggestions extends PureComponent {
 						{ 'suggestions--populated': suggestions.length > 0 }
 					)}
 				>
-					{suggestions.map(suggestion =>
+					{suggestions.map((suggestion, index) =>
 						<li
 							key={suggestion.id}
 							onClick={onClick.bind(null, suggestion)}
-							className="suggestions__item"
+							className={classNames(
+								'suggestions__item',
+								{ 'suggestions__item--active': index === this.state.index },
+							)}
 						>
 							<span>{suggestion.label}</span>
 							<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293h-704q-52 0-84.5-37.5t-32.5-90.5v-128q0-53 32.5-90.5t84.5-37.5h704l-293-294q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/></svg>
@@ -93,7 +118,10 @@ class Suggestions extends PureComponent {
 						<li
 							key="create"
 							onClick={onCreate}
-							className="suggestions__item--create"
+							className={classNames(
+								'suggestions__item--create',
+								{ 'suggestions__item--active': suggestions.length === this.state.index },
+							)}
 						>
 							Create new “{input.value}”
 						</li>
