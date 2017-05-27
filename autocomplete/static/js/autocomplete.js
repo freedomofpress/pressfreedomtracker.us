@@ -42,7 +42,7 @@ class Suggestions extends PureComponent {
 		}
 
 		const { index } = this.state
-		if (index >= nextProps.length) {
+		if (index >= nextProps.suggestions.length) {
 			return true
 		}
 
