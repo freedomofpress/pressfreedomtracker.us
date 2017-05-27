@@ -345,7 +345,7 @@ class Autocomplete extends PureComponent {
 					return
 				}
 
-				const value = this.props.isSingle ? res.data : this.state.value.concat(res.data)
+				const value = this.props.isSingle ? res.data : (this.state.value || []).concat(res.data)
 
 				this.setState({
 					isLoading: false,
