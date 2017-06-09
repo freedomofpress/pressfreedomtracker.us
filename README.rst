@@ -8,6 +8,19 @@ The installation instructions below assume you have the following software on yo
 
 * `virtualenv <http://www.virtualenv.org/en/latest/virtualenv.html#installation>`_
 * `docker <https://docs.docker.com/engine/installation/>`_
+* `openssl <https://www.openssl.org/>`_ (required for ``cryptography``)*
+
+OpenSSL Installation Note
+-------------------------
+
+If installing OpenSSL with Homebrew on macOS 10.7+, you will want to set
+the following env vars in your shell profile (see this `GitHub comment <https://github.com/pyca/cryptography/issues/2692#issuecomment-272773481>`_):
+
+.. code:: bash
+
+    export LDFLAGS="-L/usr/local/opt/openssl/lib"
+    export CPPFLAGS="-I/usr/local/opt/openssl/include"
+    export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 
 Installation instructions
 -------------------------
