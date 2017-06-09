@@ -271,13 +271,13 @@ class IncidentPage(Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
-        FieldPanel('teaser'),
         InlinePanel('updates', label='Updates'),
 
         MultiFieldPanel(
             heading='Details',
             children=[
                     ImageChooserPanel('teaser_image'),
+                    FieldPanel('teaser'),
                     FieldPanel('date'),
                     FieldPanel('affiliation'),
                     FieldPanel('city'),
