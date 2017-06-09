@@ -82,3 +82,31 @@ class HomePageIncidents(Orderable):
     panels = [
         PageChooserPanel('incident', 'incident.IncidentPage'),
     ]
+
+
+class StatBox(Orderable):
+    page = ParentalKey('home.HomePage', related_name='statboxes')
+    value = models.CharField(max_length=1000)
+    label = models.CharField(max_length=1000)
+    color = models.CharField(
+        max_length=7,
+        choices=[
+            ('#119abc', 'Blue'),
+            ('#5b9932', 'Green'),
+            ('#803e79', 'Purple'),
+            ('#dc810b', 'Orange'),
+        ],
+    )
+    link = models.ForeignKey(
+        'wagtailcore.Page',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+    panels = [
+        FieldPanel('value'),
+        FieldPanel('label'),
+        FieldPanel('color'),
+        PageChooserPanel('link')
+    ]
