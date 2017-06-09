@@ -157,7 +157,6 @@ class CategoryPage(Page):
         )
 
 
-
 class SimplePage(Page):
     body = StreamField([
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
