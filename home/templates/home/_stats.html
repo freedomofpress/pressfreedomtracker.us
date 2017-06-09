@@ -1,20 +1,22 @@
 {% load wagtailcore_tags %}
 {% include "common/_section_heading.html" %}
-<div class="stats">
-	{% for stat in stats %}
-		<div class="stats__item" style="background-color: {{ stat.color }}">
-			{% if stat.link %}
-				<a href="{% pageurl stat.link %}">
-			{% endif %}
-		<span class="stats__number">
-			{{ stat.value }}
-		</span>
-		<span class="stats__label">
-			{{ stat.label }}
-		</span>
-		{% if stat.link %}
-			</a>
-		{% endif %}
+{% if stats %}
+	<div class="stats">
+		{% for stat in stats %}
+			<div class="stats__item" style="background-color: {{ stat.color }}">
+				{% if stat.link %}
+					<a href="{% pageurl stat.link %}">
+				{% endif %}
+				<span class="stats__number">
+					{{ stat.value }}
+				</span>
+				<span class="stats__label">
+					{{ stat.label }}
+				</span>
+				{% if stat.link %}
+					</a>
+				{% endif %}
+			</div>
+		{% endfor %}
 	</div>
-	{% endfor %}
-</div>
+{% endif %}
