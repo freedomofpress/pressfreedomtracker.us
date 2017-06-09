@@ -10,7 +10,7 @@ from wagtail.wagtailadmin.edit_handlers import (
     StreamFieldPanel,
 )
 from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.fields import StreamField
+from wagtail.wagtailcore.fields import StreamField, RichTextField
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
@@ -44,6 +44,12 @@ class IncidentPage(Page):
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
     ])
+
+    teaser = RichTextField(
+        help_text="This field is optional and overrides the default teaser text.",
+        blank=True,
+        null=True,
+    )
 
     teaser_image = models.ForeignKey(
         'wagtailimages.image',
@@ -265,6 +271,7 @@ class IncidentPage(Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
+        FieldPanel('teaser'),
         InlinePanel('updates', label='Updates'),
 
         MultiFieldPanel(
