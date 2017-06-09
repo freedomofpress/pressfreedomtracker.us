@@ -134,7 +134,7 @@
     django_stack_gunicorn_opt_envs:
       DJANGO_ALLOWED_HOSTS: "'*'"
       DJANGO_SETTINGS_MODULE: pressfreedom.settings.production
-      DJANGO_JSON_LOG: False
+      DJANGO_JSON_LOG: True
       DJANGO_DB_NAME: pressfreedom
     django_stack_gcorn_app_settings: pressfreedom.settings.production
     django_stack_force_refresh: true
