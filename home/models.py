@@ -58,16 +58,6 @@ class HomePage(Page):
         )
     ]
 
-    def get_context(self, *args):
-        context = super(HomePage, self).get_context(*args)
-        context['recent_incidents'] = [
-            dict(number=49, label="Trump tweets insulting reporters", color="#119abc"),
-            dict(number=6, label="journalist equipment seizures", color="#5b9932"),
-            dict(number=2, label="journalist border stops", color="#803e79"),
-            dict(number=12, label="journalist arrests", color="#dc810b"),
-        ]
-        return context
-
 
 class HomePageIncidents(Orderable):
     page = ParentalKey('home.HomePage', related_name='incidents')
