@@ -55,7 +55,11 @@ class HomePage(Page):
             label='Featured Incidents',
             min_num=4,
             max_num=6,
-        )
+        ),
+        InlinePanel(
+            'statboxes',
+            label='Statboxes',
+        ),
     ]
 
 
