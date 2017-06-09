@@ -1,7 +1,7 @@
 bleach
 dj-database-url
 Django<1.12
--e git+git://github.com/freedomofpress/django-logging.git@dfd8904#egg=django-logging-json
+-e git+https://github.com/freedomofpress/django-logging.git@dfd8904#egg=django-logging-json
 django-modelcluster
 django-webpack-loader
 gunicorn
