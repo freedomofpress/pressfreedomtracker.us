@@ -1,37 +1,38 @@
 .incident
 	font-family: $sans-serif
 	background: #FFF
-	padding-bottom: 5px
-	padding-top: 20px
 	border-left-width: 25px
 	border-left-style: solid
 	// Ensures that incidents take up the whole
 	// width of their flex parent
 	width: 100%
 
-.incident__body > *
-	padding: 0 20px
+.incident__body
+	padding: 20px 20px 5px 20px
+
+.incident__image-link
+	display: block
+	transition: .1s linear opacity
+	&:hover
+		opacity: .9
 
 .incident__top-image
-	margin-top: -20px
-	padding-left: 0
-	padding-right: 0
-	margin-bottom: 20px
 	display: block
 	width: 100%
-	height: auto
 
 .incident__category-name
 	font-size: .8em
 	text-transform: uppercase
-	letter-spacing: .1em
-	margin: 0 0 5px 0
+	letter-spacing: .05em
+	margin: 0
+	font-weight: $sans-regular
 
 .incident__title
 	font-family: $serif
 	font-weight: normal
 	margin-top: 0
 	margin: 0 0 15px 0
+	line-height: 1.25
 
 .incident__title-link
 	color: inherit
@@ -43,9 +44,11 @@
 .incident__date
 	margin: 0 0 15px 0
 	color: #888
+	font-weight: $sans-regular
 
 .incident__description
 	margin: 0 0 15px 0
+	color: $gray-mid-dark-text
 
 .incident__update-item
 	margin: 20px 0 0 0

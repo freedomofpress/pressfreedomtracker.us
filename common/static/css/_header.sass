@@ -1,5 +1,7 @@
+$header-logo-height: 60px
+$header-logo-height-mobile: 54px
 $header-margin-top: 15px
-$header-height: $header-margin-top + 60px
+$header-height: $header-margin-top + $header-logo-height
 $nav-item-height: 15px
 $nav-link-padding: 5px
 
@@ -23,7 +25,36 @@ $nav-link-padding: 5px
 	// This height should match the SVG logo height so that
 	// extra background in $header-color is not displayed.
 	box-sizing: content-box
-	height: 60px
+	height: $header-logo-height
+	overflow: hidden
+	&::after
+		content: ""
+		display: block
+		width: 200%
+		padding-bottom: 200%
+		height: 0
+		background-color: #FFF
+		position: absolute
+		top: 0
+		left: 0
+		// I donno why this number
+		transform: rotateZ(45deg) translate3d(0, 65px, 0)
+		transform-origin: 0 0
+		transition: .25s linear transform
+		z-index: 0
+	&:hover
+		.header__logo-svg path
+			fill: $header-color
+		&::after
+			transform: rotateZ(45deg) translate3d(0, -260px, 0)
+
+.header__logo-svg
+	position: relative
+	z-index: 1
+
+.header__logo-svg path
+	fill: #FFF
+	transition: .25s linear fill
 
 .header__nav
 	font-family: $sans-serif
@@ -44,15 +75,44 @@ $nav-link-padding: 5px
 	font-size: 1.1em
 
 .header__nav-link
-	padding: $nav-link-padding
+	display: block
+	// 1px to adjust the text baseline to be better centered
+	padding: #{$nav-link-padding + 1px} 0 #{$nav-link-padding - 1px} 0
+	margin: 0 $nav-link-padding
 	text-decoration: none
 	text-transform: uppercase
-	color: $gray-medium-dark
+	letter-spacing: .05em
+	color: $gray-mid-dark-text
+	transition: .15s linear all
+	position: relative
+	font-size: .9em
+	border-bottom: 1px solid transparent
 
 	&:hover
-		background-color: $gray-medium-dark
-		color: #fff
+		color: $gray-dark
+		border-bottom: 1px solid $gray-dark
+
+.header__nav-link--highlighted
+	padding-left: #{$nav-link-padding * 2}
+	padding-right: #{$nav-link-padding * 2}
+	margin: 0
+	background-color: $gray-mid-dark
+	transition: .15s linear all
+	color: $white
+	border-bottom: 1px solid transparent
+
+	&:hover
+		color: $white
+		background-color: $gray-dark
+		border-bottom: 1px solid transparent
 
 @media(max-width: $small-screen)
+	.header__logo
+		height: $header-logo-height-mobile
+		padding-top: 0
+		padding-bottom: 0
+		width: 100%
+		left: 0
+
 	.header__nav-list--mobile-hidden
 		display: none

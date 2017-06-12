@@ -4,12 +4,13 @@
 	flex-wrap: wrap
 	margin: 0 -10px
 	margin-bottom: 10px
+	text-shadow: 1px 1px 0 rgba(#000, .2)
 
 .stats__item
-	flex-basis: 25%
-	// Faux padding
-	border: 10px solid $fpf-grey-light
-	border-top-width: 0
+	flex-basis: calc(25% - 20px)
+	overflow: hidden
+	flex-grow: 1
+	margin: 0 10px 10px 10px
 	padding: 15px 10px
 
 	display: flex
@@ -23,12 +24,17 @@
 		font-size: 16px
 
 	@media (max-width: $small-screen + 30px)
-		flex-basis: 50%
+		flex-basis: calc(50% - 20px)
+
+.stats__item--link
+	text-decoration: none
+	&:hover
+		opacity: 0.9
 
 .stats__number,
 .stats__label
 	display: block
-	font-weight: 300
+	font-weight: 400
 
 .stats__number
 	font-size: 4em
@@ -39,3 +45,8 @@
 .stats__label
 	text-align: center
 	margin-top: 0.5em
+	flex-grow: 1
+	display: flex
+	flex-direction: column
+	justify-content: center
+	opacity: 0.8

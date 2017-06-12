@@ -14,11 +14,15 @@ webpack-stats.json
 logs/
 
 # devops virtualenv
-devops/venv
+devops/.venv
 devops/.vagrant
 devops/.molecule
-devops/deploy_key
 devops/roles
+.cache
+*.retry
 
 # Functional tests
 geckodriver.log
+
+# pip+docker install artifacts
+src/
