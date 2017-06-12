@@ -151,7 +151,7 @@ class CategoryPage(Page):
 
     def get_incidents(self):
         """Returns the published incident pages in this category."""
-        return self.incidents.all().order_by(
+        return self.incidents.filter(incident_page__live=True).order_by(
             '-incident_page__date',
             'incident_page__path',
         )
