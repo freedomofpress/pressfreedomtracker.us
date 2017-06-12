@@ -21,8 +21,8 @@ It can take the following context variables:
 ">
 	{% if incident.teaser_image %}
 		{% if teaser %}
-			{% image incident.teaser_image fill-665x440 as x1 %}
-			{% image incident.teaser_image fill-1330x880 as x2 %}
+			{% image incident.teaser_image fill-665x440 monotone as x1 %}
+			{% image incident.teaser_image fill-1330x880 monotone as x2 %}
 			<a href="{% pageurl incident %}" class="incident__image-link">
 				<img
 					class="incident__top-image"
@@ -32,8 +32,8 @@ It can take the following context variables:
 				/>
 			</a>
 		{% else %}
-			{% image incident.teaser_image width-1440 as x1 %}
-			{% image incident.teaser_image width-2880 as x2 %}
+			{% image incident.teaser_image width-1440 monotone as x1 %}
+			{% image incident.teaser_image width-2880 monotone as x2 %}
 			<img
 				class="incident__top-image"
 				alt="{{ x1.alt }}"
