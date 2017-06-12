@@ -1,6 +1,8 @@
 {% load wagtailcore_tags %}
-{% include "common/_section_heading.html" %}
+
+
 {% if stats %}
+	{% include "common/_section_heading.html" with label=label %}
 	<div class="stats">
 		{% for stat in stats %}
 				{% if stat.link %}

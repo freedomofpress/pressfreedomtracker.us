@@ -1,7 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 from django.db import models
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailadmin.edit_handlers import (
+    FieldPanel,
+    InlinePanel,
+    PageChooserPanel,
+    MultiFieldPanel,
+)
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page, Orderable
 
@@ -39,7 +44,22 @@ class HomePage(Page):
         related_name='+'
     )
 
+    statboxes_label = models.CharField(
+        blank=True,
+        null=True,
+        default='Quick Stats',
+        max_length=255,
+        help_text='Title displayed above stat boxes'
+    )
+
     content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel('statboxes_label'),
+            InlinePanel(
+                'statboxes',
+                label='Statboxes',
+            ),
+        ], 'Statboxes'),
         FieldPanel('about'),
         PageChooserPanel(
             'about_page',
@@ -55,10 +75,6 @@ class HomePage(Page):
             label='Featured Incidents',
             min_num=4,
             max_num=6,
-        ),
-        InlinePanel(
-            'statboxes',
-            label='Statboxes',
         ),
     ]
 
