@@ -34,7 +34,7 @@
     - name: Start Django server
       docker_container:
         name: django
-        image: python:3.4-slim
+        image: quay.io/freedomofpress/ci-python
         volumes:
           - ../../:/var/www/django
         state: started
@@ -55,5 +55,5 @@
     - name: Display address for local development.
       debug:
         msg: >-
-          Development environment ready. You can browse to the website at
-          http://127.0.0.1:{{ dev_web_port_forward }}
+          Development environment spinning-up. You can browse to the web interface at
+          http://127.0.0.1:{{ dev_web_port_forward }} once containers finish running.

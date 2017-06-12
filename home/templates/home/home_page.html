@@ -8,7 +8,7 @@
 {% block sidebar_class %}layout-right-sidebar__sidebar--light{% endblock %}
 
 {% block main %}
-	{% include "home/_stats.html" with label="Press Freedom in 2017" stats=recent_incidents %}
+	{% include "home/_stats.html" with label=page.statboxes_label stats=page.statboxes.all %}
 	{% include "home/_intro.html" with text=page.about read_more=page.about_page %}
 	{% include "home/_recent_incidents.html" %}
 {% endblock %}

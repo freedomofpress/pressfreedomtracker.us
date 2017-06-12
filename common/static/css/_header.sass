@@ -1,4 +1,5 @@
 $header-logo-height: 60px
+$header-logo-height-mobile: 54px
 $header-margin-top: 15px
 $header-height: $header-margin-top + $header-logo-height
 $nav-item-height: 15px
@@ -106,5 +107,12 @@ $nav-link-padding: 5px
 		border-bottom: 1px solid transparent
 
 @media(max-width: $small-screen)
+	.header__logo
+		height: $header-logo-height-mobile
+		padding-top: 0
+		padding-bottom: 0
+		width: 100%
+		left: 0
+
 	.header__nav-list--mobile-hidden
 		display: none
