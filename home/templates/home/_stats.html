@@ -3,20 +3,25 @@
 {% if stats %}
 	<div class="stats">
 		{% for stat in stats %}
-			<div class="stats__item" style="background-color: {{ stat.color }}">
 				{% if stat.link %}
-					<a href="{% pageurl stat.link %}">
-				{% endif %}
-				<span class="stats__number">
-					{{ stat.value }}
-				</span>
-				<span class="stats__label">
-					{{ stat.label }}
-				</span>
-				{% if stat.link %}
+					<a class="stats__item stats__item--link" style="background-color: {{ stat.color }}" href="{% pageurl stat.link %}">
+						<span class="stats__number">
+							{{ stat.value }}
+						</span>
+						<span class="stats__label">
+							{{ stat.label }}
+						</span>
 					</a>
+				{% else %}
+					<div class="stats__item" style="background-color: {{ stat.color }}">
+						<span class="stats__number">
+							{{ stat.value }}
+						</span>
+						<span class="stats__label">
+							{{ stat.label }}
+						</span>
+					</div>
 				{% endif %}
-			</div>
 		{% endfor %}
 	</div>
 {% endif %}
