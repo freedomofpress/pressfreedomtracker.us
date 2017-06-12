@@ -23,3 +23,6 @@ devops/roles
 
 # Functional tests
 geckodriver.log
+
+# pip+docker install artifacts
+src/
