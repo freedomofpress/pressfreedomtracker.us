@@ -16,6 +16,26 @@ from taggit.models import TaggedItemBase
 
 
 @register_setting
+class FooterSettings(BaseSetting):
+    body = RichTextField(blank=True, null=True)
+    menu = models.ForeignKey(
+        'menus.Menu',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
+    panels = [
+        FieldPanel('body'),
+        SnippetChooserPanel('menu'),
+    ]
+
+    class Meta:
+        verbose_name = 'Site Footer'
+
+
+@register_setting
 class TaxonomySettings(BaseSetting, ClusterableModel):
     panels = [
         InlinePanel(

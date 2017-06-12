@@ -1,0 +1,23 @@
+{% load wagtailcore_tags %}
+{% load wagtailsettings_tags %}
+{% get_settings %}
+
+{% with footer=settings.common.FooterSettings %}
+<div class="info-footer">
+	<div class="info-footer__body">
+		{{ footer.body|richtext }}
+	</div>
+
+	<nav class="info-footer__nav">
+		<ul class="info-footer__nav-list">
+			{% for item in footer.menu.menu_items.all %}
+			<li class="info-footer__nav-item {{ item.html_classes }}">
+				<a class="info-footer__nav-link" href="{{ item.url }}">
+					{{ item.text }}
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</nav>
+</div>
+{% endwith %}

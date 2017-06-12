@@ -12,6 +12,7 @@ from blog.models import BlogIndexPage, BlogPage
 from common.models import (
     CategoryPage, TaxonomyCategoryPage, TaxonomySettings,
     PersonPage, SimplePage, SimplePageWithSidebar,
+    FooterSettings,
 )
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
@@ -155,6 +156,42 @@ class Command(BaseCommand):
                     html_classes='header__nav-link--highlighted'
                 ),
             ])
+
+        if not Menu.objects.filter(slug='footer').exists():
+            footer_menu = Menu.objects.create(name='Footer Menu', slug='footer')
+            MenuItem.objects.bulk_create([
+                MenuItem(
+                    text='About',
+                    link_page=about_page,
+                    menu=footer_menu,
+                    sort_order=1,
+                ),
+                MenuItem(
+                    text='Our Partners',
+                    link_url='#',
+                    menu=footer_menu,
+                    sort_order=2,
+                ),
+                MenuItem(
+                    text='Privacy Policy',
+                    link_url='#',
+                    menu=footer_menu,
+                    sort_order=3,
+                ),
+                MenuItem(
+                    text='Contact',
+                    link_url='#',
+                    menu=footer_menu,
+                    sort_order=4,
+                ),
+            ])
+
+        # FOOTER
+        footer_settings = FooterSettings.for_site(site)
+        footer_settings.body = RichText('U.S. Press Freedom Tracker is a project of <a href="https://freedom.press">Freedom of the Press Foundation</a> and the <a href="https://www.cpj.org/">Committee to Protect Journalists</a>.')
+        if footer_menu:
+            footer_settings.menu = footer_menu
+        footer_settings.save()
 
         # BLOG RELATED PAGES
         blog_index_page = BlogIndexPage(
