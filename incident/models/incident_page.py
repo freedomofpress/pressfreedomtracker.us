@@ -49,6 +49,7 @@ class IncidentPage(Page):
         help_text="This field is optional and overrides the default teaser text.",
         blank=True,
         null=True,
+        max_length=384,
     )
 
     teaser_image = models.ForeignKey(

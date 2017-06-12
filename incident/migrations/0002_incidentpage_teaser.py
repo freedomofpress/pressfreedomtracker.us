@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='incidentpage',
             name='teaser',
-            field=wagtail.wagtailcore.fields.RichTextField(blank=True, help_text='This field is optional and overrides the default teaser text.', null=True),
+            field=wagtail.wagtailcore.fields.RichTextField(blank=True, help_text='This field is optional and overrides the default teaser text.', null=True, max_length=384),
         ),
     ]
