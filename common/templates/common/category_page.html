@@ -52,7 +52,7 @@
 
 {% block main %}
   <div class="incident-grid">
-    {% for incident in page.incidents.all %}
+    {% for incident in page.get_incidents %}
       <div class="incident-grid__item">
         {% include "incident/_incident.html" with incident=incident.incident_page teaser=True %}
       </div>
