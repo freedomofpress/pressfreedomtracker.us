@@ -11,7 +11,12 @@ class IncidentIndexPage(Page):
 
     def get_incidents(self):
         """Returns all published incident pages"""
-        return IncidentPage.objects.live()
+        return IncidentPage.objects.live().order_by(
+            # Incidents should be in reverse-chronological order by the
+            # incident date, not when they were published.
+            '-date',
+            'path',
+        )
 
     def get_context(self, request):
         context = super(IncidentIndexPage, self).get_context(request)
