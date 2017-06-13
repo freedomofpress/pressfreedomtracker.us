@@ -1,5 +1,4 @@
 import datetime
-
 from django.db import models
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
@@ -435,6 +434,15 @@ class IncidentPage(Page):
         if first:
             return first.date
         return self.first_published_at
+
+    def recently_updated(self):
+        """
+        Determines whether an incident has been updated within the last week. Returns a boolean.
+        """
+        if self.last_updated():
+            delta = datetime.datetime.now(datetime.timezone.utc) - self.last_updated()
+            return delta.days < 7
+        return False
 
     def get_main_category(self):
         """
