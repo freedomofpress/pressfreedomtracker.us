@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'common',
     'forms',
     'incident',
+    'statistics',
     'menus',
     'styleguide',
 
