@@ -25,3 +25,7 @@ dev-attach-django:
 .PHONY: dev-attach-postgresql
 dev-attach-postgresql:
 	docker attach --sig-proxy=false postgresql
+
+.PHONY: dev-sass-lint
+dev-sass-lint:
+	docker run -it -v "${PWD}:/lintme" -w /lintme quay.io/freedomofpress/sasslinter
