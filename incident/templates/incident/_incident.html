@@ -68,7 +68,11 @@ It can take the following context variables:
 		<div class="incident__description">
 			{% if teaser %}
 				<section>
+					{% if incident.teaser %}
+					{{ incident.teaser|richtext }}
+					{% else %}
 					{% include_block incident.body.0|truncatewords_html:20 %}
+					{% endif %}
 				</section>
 			{% else %}
 				{% for block in incident.body %}
