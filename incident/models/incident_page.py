@@ -431,7 +431,7 @@ class IncidentPage(Page):
         """
         Returns the date this incident was last updated on.
         """
-        first = self.updates.first()
+        first = self.updates.order_by('-date').first()
         if first:
             return first.date
         return self.first_published_at
