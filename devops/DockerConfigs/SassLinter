@@ -9,4 +9,4 @@ RUN apk add paxctl --no-cache &&\
 
 RUN npm install sass-lint -g && npm cache clean
 
-ENTRYPOINT /usr/local/bin/sass-lint
+ENTRYPOINT ["/usr/local/bin/sass-lint", "-v"]

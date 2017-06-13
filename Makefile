@@ -28,4 +28,4 @@ dev-attach-postgresql:
 
 .PHONY: dev-sass-lint
 dev-sass-lint:
-	docker run -it -v "${PWD}:/lintme" -w /lintme quay.io/freedomofpress/sasslinter
+	bash -c ". ./.docker_versions && docker run -it -v \"${PWD}:/lintme\" -w /lintme \"quay.io/freedomofpress/sasslinter@sha256:${SASSLINT_VER}\""
