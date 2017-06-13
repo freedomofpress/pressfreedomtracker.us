@@ -1,6 +1,6 @@
 .incident
 	font-family: $sans-serif
-	background: #FFF
+	background: #fff
 	border-left-width: 25px
 	border-left-style: solid
 	// Ensures that incidents take up the whole
@@ -12,18 +12,19 @@
 
 .incident__image-link
 	display: block
-	transition: .1s linear opacity
+	transition: 0.1s linear opacity
+
 	&:hover
-		opacity: .9
+		opacity: 0.9
 
 .incident__top-image
 	display: block
 	width: 100%
 
 .incident__category-name
-	font-size: .8em
+	font-size: 0.8em
 	text-transform: uppercase
-	letter-spacing: .05em
+	letter-spacing: 0.05em
 	margin: 0
 	font-weight: $sans-regular
 
@@ -38,6 +39,7 @@
 	color: inherit
 	text-decoration: none
 	display: block
+
 	&:hover
 		text-decoration: underline
 
@@ -53,7 +55,7 @@
 .incident__update-item
 	margin: 20px 0 0 0
 	padding-top: 20px
-	border-top: 1px solid #DDD
+	border-top: 1px solid #ddd
 
 // Modifiers:
 
@@ -64,11 +66,11 @@
 	margin-bottom: 40px
 
 @each $name, $color in $border-colors
-      .incident--#{$name}
-          border-left-color: $color
+	.incident--#{$name}
+		border-left-color: $color
 
-      .incident__category-name--#{$name}
-      		color: $color
+	.incident__category-name--#{$name}
+		color: $color
 
 
 // TODO: Move these to a different module

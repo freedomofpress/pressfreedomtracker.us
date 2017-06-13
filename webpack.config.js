@@ -10,7 +10,7 @@ process.env.BABEL_ENV = TARGET;
 var target = __dirname + '/common/static/js/bundles';
 
 var STATIC_URL = process.env.STATIC_URL || '/static/';
-var sassData = '$staticUrl: "' + STATIC_URL + '";';
+var sassData = '$static-url: "' + STATIC_URL + '";';
 console.log('Using STATIC_URL', STATIC_URL);
 
 

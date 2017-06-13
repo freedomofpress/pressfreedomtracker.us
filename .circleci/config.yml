@@ -13,6 +13,6 @@ jobs:
 
       - setup_remote_docker
 
-      - run: 
+      - run:
           name: Run molecule and testinfra tests
           command: make ci-go
