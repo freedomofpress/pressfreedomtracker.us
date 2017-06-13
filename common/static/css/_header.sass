@@ -5,6 +5,7 @@
 	flex-direction: row
 	justify-content: space-between
 	align-items: center
+	background-color: $header-color
 
 	@media (max-width: $small-screen)
 		margin-top: 0
@@ -28,6 +29,10 @@
 		left: 0
 		padding-left: 1rem
 		padding-right: 0
+
+	@media(max-width: $extra-small-screen)
+		// gives logo the width it needs
+		padding-left: 0.5rem
 
 	&::after
 		content: ''
