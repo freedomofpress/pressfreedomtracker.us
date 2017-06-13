@@ -4,6 +4,7 @@
 	display: flex
 	flex-direction: row
 	justify-content: space-between
+	align-items: center
 
 	@media (max-width: $small-screen)
 		margin-top: 0
@@ -11,16 +12,22 @@
 
 .header__logo
 	background-color: $header-color
+	box-sizing: content-box
 	position: relative
 	left: -$column-gutter-width
 	margin: 0
 	padding: 15px
 	padding-left: $page-margin-side * 2
-	// This height should match the SVG logo height so that
-	// extra background in $header-color is not displayed.
-	box-sizing: content-box
-	height: $header-logo-height
 	overflow: hidden
+
+	@media(max-width: $small-screen)
+		height: $header-logo-height-mobile
+		padding-top: 0
+		padding-bottom: 0
+		width: 100%
+		left: 0
+		padding-left: 1rem
+		padding-right: 0
 
 	&::after
 		content: ''
@@ -104,12 +111,5 @@
 		border-bottom: 1px solid transparent
 
 @media(max-width: $small-screen)
-	.header__logo
-		height: $header-logo-height-mobile
-		padding-top: 0
-		padding-bottom: 0
-		width: 100%
-		left: 0
-
 	.header__nav-list--mobile-hidden
 		display: none
