@@ -35,7 +35,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "axios": "^0.16.0",
+    "axios": "^0.16.2",
     "classlist-polyfill": "^1.2.0",
     "decimal.js": "^7.1.2",
     "hamburgers": "^0.8.1",
