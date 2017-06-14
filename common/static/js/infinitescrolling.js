@@ -72,6 +72,8 @@ class InfiniteScroller {
 		}
 
 		this.isLoading = true
+		this.nextLinkElm.innerHTML = '<div class="loader">Loading…</div>'
+
 		axios.get(this.nextLinkElm.href)
 			.then(response => {
 				this.isLoading = false
