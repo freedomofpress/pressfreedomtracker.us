@@ -34,4 +34,9 @@ class IncidentIndexPage(Page):
         context['entries_page'] = entries
         context['paginator'] = paginator
 
+        if request.is_ajax():
+            context['layout_template'] = 'base.ajax.html'
+        else:
+            context['layout_template'] = 'base.html'
+
         return context
