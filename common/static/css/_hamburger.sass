@@ -13,7 +13,8 @@ $hamburger-extra-small-width: 30px
 
 
 .hamburger-box
-	width: $hamburger-extra-small-width
+	@media(max-width: $extra-small-screen)
+		width: $hamburger-extra-small-width
 
 .hamburger-inner
 	background-color: $white

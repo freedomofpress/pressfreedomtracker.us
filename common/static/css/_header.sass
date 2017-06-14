@@ -32,7 +32,6 @@
 		height: $header-logo-height-mobile
 		padding-top: 0
 		padding-bottom: 0
-		width: 100%
 		left: 0
 		padding-left: 1rem
 		padding-right: 0
@@ -79,6 +78,9 @@
 	justify-content: space-between
 	align-items: flex-end
 	height: $header-height
+
+	@media(max-width: $small-screen)
+		height: $header-logo-height-mobile
 
 .header__nav-list
 	list-style-type: none
