@@ -23,6 +23,7 @@ class InfiniteScroller {
 		this.fetches = 0
 
 		this.handleScroll = throttle(this.handleScroll.bind(this), 20)
+		this.getNextPage = this.getNextPage.bind(this)
 
 		window.addEventListener('scroll', this.handleScroll)
 	}
@@ -52,6 +53,7 @@ class InfiniteScroller {
 		// Swap the old next page link with the new
 		const _elm = tempElm.querySelector('.js-infinite-scrolling-next-link:last-child')
 		if (_elm) {
+			_elm.addEventListener('click', this.getNextPage)
 			this.nextLinkElm.parentNode.replaceChild(_elm, this.nextLinkElm)
 			this.nextLinkElm = _elm
 		} else {
@@ -62,12 +64,17 @@ class InfiniteScroller {
 		this.parentElm.appendChild(fragment)
 	}
 
-	getNextPage() {
+	getNextPage(event) {
+		if (event) {
+			event.preventDefault()
+		}
+
 		if (this.isLoading) {
 			return
 		}
 
-		if (!this.nextLinkElm) {
+		const cameFromClick = event && event.target.className.indexOf('js-infinite-scrolling-next-link') !== -1
+		if (!cameFromClick && !this.nextLinkElm) {
 			return null
 		}
 
