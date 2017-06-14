@@ -6,3 +6,4 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
 import '../css/common.sass'
 import '~/slidingnav'
+import '~/infinitescrolling'

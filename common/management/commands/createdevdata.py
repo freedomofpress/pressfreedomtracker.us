@@ -227,7 +227,7 @@ class Command(BaseCommand):
         home_page.add_child(instance=incident_index_page)
         home_page.incident_index_page = incident_index_page
 
-        for x in range(0, 10):
+        for x in range(0, 100):
             page = IncidentPage(
                 title='Maecenas convallis sem malesuada nisl placerat volutpat{}'.format(x),
                 slug='maecenas-convallis-{}'.format(x),
