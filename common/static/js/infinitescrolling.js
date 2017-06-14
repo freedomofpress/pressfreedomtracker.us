@@ -28,7 +28,16 @@ class InfiniteScroller {
 			fragment.appendChild(items[i])
 		}
 
-		this.nextLinkElm = tempElm.querySelector('.js-infinite-scrolling-next-link:last-child')
+		// Swap the old next page link with the new
+		const _elm = tempElm.querySelector('.js-infinite-scrolling-next-link:last-child')
+		if (_elm) {
+			this.nextLinkElm.parentNode.replaceChild(_elm, this.nextLinkElm)
+			this.nextLinkElm = _elm
+		} else {
+			this.nextLinkElm.remove()
+			this.nextLinkElm = null
+		}
+
 		this.parentElm.appendChild(fragment)
 	}
 
