@@ -4,8 +4,22 @@ import { throttle, isElementVisible } from '~/utils'
 
 class InfiniteScroller {
 	constructor() {
+		// InfiniteScroller is a go! We can remove the Previous link
+		// since we don't need it in the context of infinite scrolling.
+		const prevLinkElm = document.querySelector('.js-infinite-scrolling-prev-link')
+		if (prevLinkElm) {
+			prevLinkElm.remove()
+		}
+
+		// We're going to keep track of the next link element so we can
+		// replace it on load and use it for the next XHR URL.
 		this.nextLinkElm = document.querySelector('.js-infinite-scrolling-next-link:last-child')
+
+		// This is going to be our insertion parent for new items.
 		this.parentElm = document.querySelector('.js-infinite-scrolling-parent')
+
+		// We're going to keep track of the number of fetches we've made
+		// because only a certain number are going to occur automatically.
 		this.fetches = 0
 
 		this.handleScroll = throttle(this.handleScroll.bind(this), 20)
