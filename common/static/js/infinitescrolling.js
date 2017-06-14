@@ -45,6 +45,17 @@ class InfiniteScroller {
 		const fragment = document.createDocumentFragment()
 		const tempElm = document.createElement('span')
 		tempElm.innerHTML = ajaxBodyHtml
+
+		const parentElm = tempElm.querySelector('.js-infinite-scrolling-parent')
+		const page = parentElm.dataset.pageNum
+		const total = parentElm.dataset.pageTotal
+
+		const divider = document.createElement('a')
+		divider.className = 'infinite-scrolling-divider'
+		divider.href = this.nextLinkElm.href
+		divider.innerText = `Page ${page} of ${total}`
+		fragment.appendChild(divider)
+
 		const items = tempElm.querySelectorAll('.js-infinite-scrolling-item')
 		for (var i = 0; i < items.length; i++) {
 			fragment.appendChild(items[i])

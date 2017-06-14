@@ -33,6 +33,7 @@ class IncidentIndexPage(Page):
 
         context['entries_page'] = entries
         context['paginator'] = paginator
+        context['page_number'] = request.GET.get(DEFAULT_PAGE_KEY)
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
