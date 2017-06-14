@@ -25,5 +25,7 @@ export function throttle(fn, threshhold, scope) {
 
 export function isElementVisible(elm) {
 	const height = window.innerHeight
-	return elm.getBoundingClientRect().top < height
+	const rect = elm.getBoundingClientRect()
+	const threshold = (rect.top + rect.bottom) * 0.75
+	return threshold < height
 }
