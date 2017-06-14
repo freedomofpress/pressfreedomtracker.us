@@ -6,10 +6,17 @@ class InfiniteScroller {
 	constructor() {
 		this.nextLinkElm = document.querySelector('.js-infinite-scrolling-next-link:last-child')
 		this.parentElm = document.querySelector('.js-infinite-scrolling-parent')
+		this.fetches = 0
 
 		this.handleScroll = throttle(this.handleScroll.bind(this), 20)
 
 		window.addEventListener('scroll', this.handleScroll)
+	}
+
+	incrementFetches() {
+		if (++this.fetches == InfiniteScroller.NUM_AUTO_FETCHES) {
+			window.removeEventListener('scroll', this.handleScroll)
+		}
 	}
 
 	handleScroll(event) {
@@ -54,12 +61,17 @@ class InfiniteScroller {
 		axios.get(this.nextLinkElm.href)
 			.then(response => {
 				this.isLoading = false
+				this.incrementFetches()
+
 				if (response.status === 200) {
 					this.insertPageFromBody(response.data)
 				}
 			})
 	}
 }
+
+
+InfiniteScroller.NUM_AUTO_FETCHES = 1
 
 
 document.addEventListener('DOMContentLoaded', () => new InfiniteScroller())
