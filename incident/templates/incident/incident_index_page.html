@@ -13,11 +13,21 @@
 	    </div>
 
 	    {% if entries_page.has_previous %}
-		<a href="?page={{ entries_page.previous_page_number }}">Previous</a>
+		<a
+		    href="?page={{ entries_page.previous_page_number }}"
+		    class="js-infinite-scrolling-prev-link"
+		>
+		    Previous
+		</a>
 	    {% endif %}
 
 	    {% if entries_page.has_next %}
-		<a href="?page={{ entries_page.next_page_number }}">Next</a>
+		<a
+		    href="?page={{ entries_page.next_page_number }}"
+		    class="js-infinite-scrolling-next-link"
+		>
+		    Next
+		</a>
 	    {% endif %}
     {% endblock %}
 
