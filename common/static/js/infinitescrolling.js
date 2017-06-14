@@ -88,4 +88,8 @@ class InfiniteScroller {
 InfiniteScroller.NUM_AUTO_FETCHES = 1
 
 
-document.addEventListener('DOMContentLoaded', () => new InfiniteScroller())
+document.addEventListener('DOMContentLoaded', () => {
+	if (document.querySelector('.js-infinite-scrolling-parent')) {
+		new InfiniteScroller()
+	}
+})
