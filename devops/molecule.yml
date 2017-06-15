@@ -14,7 +14,7 @@ docker:
       ansible_groups:
         - django
         - database
-      image: msheiny/debian-jessie-systemd
+      image: quay.io/freedomofpress/ci-webserver
       image_version: latest
       build_image: False
       command: /lib/systemd/systemd

@@ -4,6 +4,8 @@
 
 set -e
 
+curdir="$(dirname $(realpath "$0") )"
+
 source .docker_versions
 SASSLINT_IMAGE="quay.io/freedomofpress/sasslinter"
 
@@ -22,20 +24,16 @@ echo "Copying git directory to remote docker container..."
 docker cp "${PWD}" sasslint:/lintme
 docker exec -it sasslint ash -c 'cd /lintme && /usr/local/bin/sass-lint -v'
 
-if [ ! -f devops/.venv/bin/activate ]; then virtualenv --no-site-packages devops/.venv; fi
-source devops/.venv/bin/activate
+# Ensure virtualenv activated and ansible roles installed
+"${curdir}/env-startup"
+source "${curdir}/../.venv/bin/activate"
 
-cd devops || exit
-echo "##### Install pip requirements"
-pip install -U -r requirements.txt 1> /dev/null
+# Ensure we are in the devops directory
+cd "$(dirname $(dirname $(realpath $0) )../)"|| exit
 
-# Install external ansible role dependencies
-echo "##### Install ansible galaxy requirements"
-ansible-galaxy install -r requirements.yml &> /dev/null
-
-
-echo "##### Run Debian playbook"
-docker pull msheiny/debian-jessie-systemd:latest &> /dev/null
+echo "##### Pull Docker Image"
+docker pull quay.io/freedomofpress/ci-webserver:latest &> /dev/null
+echo "##### Run Django provision"
 if [ "$1" != "only_tests" ]; then
     molecule create
     molecule converge
