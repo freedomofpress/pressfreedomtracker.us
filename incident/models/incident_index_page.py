@@ -1,3 +1,4 @@
+from django.utils.cache import patch_cache_control
 from wagtail.wagtailcore.models import Page
 
 from common.utils import DEFAULT_PAGE_KEY, paginate
@@ -33,5 +34,28 @@ class IncidentIndexPage(Page):
 
         context['entries_page'] = entries
         context['paginator'] = paginator
+        context['page_number'] = request.GET.get(DEFAULT_PAGE_KEY)
+
+        if request.is_ajax():
+            context['layout_template'] = 'base.ajax.html'
+        else:
+            context['layout_template'] = 'base.html'
 
         return context
+
+    def serve(self, request, *args, **kwargs):
+        response = super(IncidentIndexPage, self).serve(request, *args, **kwargs)
+        if request.is_ajax():
+            # We don't want the browser to cache the response to an XHR because
+            # it gets served with a different layout template. This becomes
+            # problematic when a visitor hits the Back button in her browser
+            # and ends up seeing the cached version without any typical layout.
+            #
+            # n.b. This method mutates the response and returns None.
+            patch_cache_control(
+                response,
+                no_cache=True,
+                no_store=True,
+                must_revalidate=True,
+            )
+        return response
