@@ -7,6 +7,9 @@
 	align-items: center
 	height: $header-height
 
+	@media(max-width: $medium-large-screen)
+		height: $header-height-medium-large
+
 	@media (max-width: $small-screen)
 		margin-top: 0
 		// This height should match the SVG logo height so that
@@ -27,6 +30,10 @@
 	// This height should match the SVG logo height so that
 	// extra background in $header-color is not displayed.
 	height: $header-logo-height
+
+	@media(max-width: $medium-large-screen)
+		height: $header-logo-height-medium-large
+		padding: 30px
 
 	@media(max-width: $small-screen)
 		height: $header-logo-height-mobile
@@ -56,6 +63,11 @@
 		transition: 0.25s linear transform
 		z-index: 0
 
+		@media(max-width: $medium-large-screen)
+			// I don't understand quite why these numbers work
+			top: 25px
+			left: -25px
+
 	&:hover
 		.header__logo-svg path
 			fill: $header-color
@@ -79,6 +91,9 @@
 	align-items: flex-end
 	height: $header-height
 
+	@media(max-width: $medium-large-screen)
+		height: $header-height-medium-large
+
 	@media(max-width: $small-screen)
 		height: $header-logo-height-mobile
 
@@ -92,6 +107,7 @@
 .header__nav-item
 	display: inline-block
 	font-size: 1.1em
+	float: right
 
 .header__nav-link
 	display: block
@@ -110,6 +126,9 @@
 	&:hover
 		color: $gray-dark
 		border-bottom: 1px solid $gray-dark
+
+	@media(max-width: $medium-large-screen)
+		margin-bottom: 2*$nav-link-padding
 
 .header__nav-link--highlighted
 	padding-left: #{$nav-link-padding * 2}
