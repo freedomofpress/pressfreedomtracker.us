@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load wagtailcore_tags %}
+
 {% block body_class %}template-homepage{% endblock %}
 {% block top_sidebar_class %}
   {{ block.super }}
@@ -9,8 +11,34 @@
 
 {% block main %}
 	{% include "home/_stats.html" with label=page.statboxes_label stats=page.statboxes.all %}
-	{% include "home/_intro.html" with text=page.about read_more=page.about_page %}
-	{% include "home/_recent_incidents.html" %}
+
+	{% if page.incident_index_page %}
+		{% with incidents=page.incidents.all %}
+			{% include "common/_section_heading.html" with label="Recent Incidents" %}
+			<div class="incident-grid">
+				{% for related in incidents|slice:":2" %}
+					<div class="incident-grid__item">
+						{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+					</div>
+				{% endfor %}
+			</div>
+			{% include "home/_intro.html" with text=page.about read_more=page.about_page %}
+			<div class="incident-grid">
+				{% for related in incidents|slice:"2:" %}
+					<div class="incident-grid__item">
+						{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+					</div>
+				{% endfor %}
+			</div>
+		{% endwith %}
+		<a
+			class="button button--outline button--center"
+			href="{% pageurl page.incident_index_page %}"
+		>
+			More Cases
+		</a>
+	{% endif %}
+
 {% endblock %}
 
 {% block sidebar %}
