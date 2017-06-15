@@ -32,6 +32,12 @@ class IncidentCategorization(Orderable):
     category = ParentalKey('common.CategoryPage', related_name='incidents')
 
 
+class IncidentPageLinks(Orderable):
+    page = ParentalKey('incident.IncidentPage', related_name='links')
+    title = models.CharField(max_length=255, null=False, blank=False)
+    url = models.URLField(null=False, blank=False)
+
+
 class EquipmentSeized(models.Model):
     incident = ParentalKey(
         'incident.IncidentPage',

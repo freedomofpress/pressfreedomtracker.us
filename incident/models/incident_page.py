@@ -283,6 +283,11 @@ class IncidentPage(Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
+        InlinePanel(
+            'links',
+            label='Links',
+            help_text="Links will be displayed below the body text."
+        ),
         InlinePanel('updates', label='Updates'),
 
         MultiFieldPanel(
