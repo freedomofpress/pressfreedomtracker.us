@@ -28,7 +28,7 @@
     - name: Start node
       docker_container:
         name: node
-        image: node:6.10.3-alpine
+        image: node:6.11.0-alpine
         volumes:
           - ../../:/var/www/django
         state: started
