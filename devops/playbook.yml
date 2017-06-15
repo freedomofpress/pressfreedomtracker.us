@@ -39,5 +39,6 @@
       - "--exclude=.git"
       - "--exclude=devops"
       - "--exclude=node_modules"
+      - "--exclude=src"
     # The default packages are preinstalled on the base dockerimage
     django_stack_pkgs: []

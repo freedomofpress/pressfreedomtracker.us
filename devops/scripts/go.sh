@@ -9,20 +9,23 @@ curdir="$(dirname $(realpath "$0") )"
 source .docker_versions
 SASSLINT_IMAGE="quay.io/freedomofpress/sasslinter"
 
-echo "##### Run sass linter"
-# Start sasslinter container, have to get a little hacky
-# since its running on a remote docker instance
 
-# idempotency check...
-docker kill sasslint &> /dev/null || true
-docker rm sasslint &> /dev/null || true
+if [ "$1" != "only_tests" ]; then
+    echo "##### Run sass linter"
+    # Start sasslinter container, have to get a little hacky
+    # since its running on a remote docker instance
 
-# Run sasslint as a long-running container (hence the tail hack)
-docker run -d --entrypoint=/bin/ash --name sasslint "${SASSLINT_IMAGE}@sha256:${SASSLINT_VER}" -c 'tail -f /dev/null'
-# This bit can take a while :(
-echo "Copying git directory to remote docker container..."
-docker cp "${PWD}" sasslint:/lintme
-docker exec -it sasslint ash -c 'cd /lintme && /usr/local/bin/sass-lint -v'
+    # idempotency check...
+    docker kill sasslint &> /dev/null || true
+    docker rm sasslint &> /dev/null || true
+
+    # Run sasslint as a long-running container (hence the tail hack)
+    docker run -d --entrypoint=/bin/ash --name sasslint "${SASSLINT_IMAGE}@sha256:${SASSLINT_VER}" -c 'tail -f /dev/null' &> /dev/null
+    # This bit can take a while :(
+    echo "Copying git directory to remote docker container..."
+    docker cp "${PWD}" sasslint:/lintme
+    docker exec -it sasslint ash -c 'cd /lintme && /usr/local/bin/sass-lint -v'
+fi
 
 # Ensure virtualenv activated and ansible roles installed
 "${curdir}/env-startup"
