@@ -7,8 +7,6 @@ set -e
 curdir="$(dirname $(realpath "$0") )"
 
 source .docker_versions
-SASSLINT_IMAGE="quay.io/freedomofpress/sasslinter"
-
 
 if [ "$1" != "only_tests" ]; then
     echo "##### Run sass linter"
@@ -35,7 +33,9 @@ source "${curdir}/../.venv/bin/activate"
 cd "$(dirname $(dirname $(realpath $0) )../)"|| exit
 
 echo "##### Pull Docker Image"
-docker pull "quay.io/freedomofpress/ci-webserver@sha256:${CIWWW_VER}" &> /dev/null
+docker pull "${CIWWW_IMAGE}@sha256:${CIWWW_VER}" &> /dev/null
+# molecule needs a tag to import
+docker tag "${CIWWW_IMAGE}@sha256:${CIWWW_VER}" "${CIWWW_IMAGE}:latest"
 echo "##### Run Django provision"
 if [ "$1" != "only_tests" ]; then
     molecule create

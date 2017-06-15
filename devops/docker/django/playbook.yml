@@ -118,6 +118,7 @@
     - name: Restart paxctld
       service:
         name: paxctld
+        enabled: yes
         state: restarted
 
 - name: preload django_stack stuff
