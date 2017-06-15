@@ -62,8 +62,28 @@ and get a bash shell (for example the postgresql container):
 
     docker exec -it postgresql bash
 
+Advanced actions against the database
++++++++++++++++++++++++++++++++++++++
+
+Database import
+---------------
+
+Drop a postgres database dump into the root of the repo and rename it to
+`import.db`. To import it into a running dev session (ensure `make dev-go` has
+already been started) run `make dev-import-db`. Note that this will not pull in
+images that are referenced from an external site backup.
+
+
+Connect to postgresql service from host
+---------------------------------------
+
+The postgresql service is exposed to your host on port `15432`. If you have a GUI
+database manipulation application you'd like to utilize point it to `localhost`,
+port `15432`, username `tracer`, password `trackerpassword`, dbname `trackerdb`.
+
+
 Adobe Font Licenses
--------------------
++++++++++++++++++++
 
 Licenses for `Source Serif Pro <https://github.com/adobe-fonts/source-serif-pro>`_ and `Source Sans Pro <https://github.com/adobe-fonts/source-sans-pro>`_ are available at the paths below.
 

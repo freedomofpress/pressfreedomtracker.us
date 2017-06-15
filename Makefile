@@ -29,3 +29,7 @@ dev-attach-postgresql:
 .PHONY: dev-sass-lint
 dev-sass-lint:
 	bash -c ". ./.docker_versions && docker run -it -v \"${PWD}:/lintme\" -w /lintme \"quay.io/freedomofpress/sasslinter@sha256:${SASSLINT_VER}\""
+
+.PHONY: dev-import-db
+dev-import-db:
+	docker exec -it postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ tracker/g' | psql trackerdb -U tracker &> /dev/null"
