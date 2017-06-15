@@ -32,7 +32,7 @@ source "${curdir}/../.venv/bin/activate"
 cd "$(dirname $(dirname $(realpath $0) )../)"|| exit
 
 echo "##### Pull Docker Image"
-docker pull quay.io/freedomofpress/ci-webserver:latest &> /dev/null
+docker pull "quay.io/freedomofpress/ci-webserver@sha256:${CIWWW_VER}" &> /dev/null
 echo "##### Run Django provision"
 if [ "$1" != "only_tests" ]; then
     molecule create
