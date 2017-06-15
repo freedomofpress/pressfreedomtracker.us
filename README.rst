@@ -77,9 +77,9 @@ images that are referenced from an external site backup.
 Connect to postgresql service from host
 ---------------------------------------
 
-The postgresql service is exposed to your host on port `5432`. If you have a GUI
+The postgresql service is exposed to your host on port `15432`. If you have a GUI
 database manipulation application you'd like to utilize point it to `localhost`,
-port `5432`, username `tracer`, password `trackerpassword`, dbname `trackerdb`.
+port `15432`, username `tracer`, password `trackerpassword`, dbname `trackerdb`.
 
 
 Adobe Font Licenses

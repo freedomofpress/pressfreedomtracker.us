@@ -15,7 +15,7 @@
         exposed_ports:
           - 5432
         published_ports:
-          - 5432:5432
+          - 15432:5432
         volumes:
           - ../../:/django
         state: started
