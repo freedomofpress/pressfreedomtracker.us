@@ -78,6 +78,22 @@
 						</td>
 				</tr>
 			{% endif %}
+			{% if page.links.exists %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Links
+					</th>
+						<td class="data-table__value">
+							<ul class="data-table__list">
+								{% for link in page.links.all %}
+										<li>
+											<a href="{{ link.url }}">{{link.title}}</a>
+										</li>
+								{% endfor %}
+							</ul>
+						</td>
+				</tr>
+			{% endif %}
 			{% if page.tags.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
