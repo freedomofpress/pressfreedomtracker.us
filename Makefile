@@ -33,3 +33,7 @@ dev-sass-lint:
 .PHONY: dev-import-db
 dev-import-db:
 	docker exec -it postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ tracker/g' | psql trackerdb -U tracker &> /dev/null"
+
+.PHONY: ci-devops-builder
+ci-devops-builder:
+	./devops/scripts/ci-django-build.sh
