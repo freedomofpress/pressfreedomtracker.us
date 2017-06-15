@@ -58,6 +58,8 @@ class InfiniteScroller {
 
 		const items = tempElm.querySelectorAll('.js-infinite-scrolling-item')
 		for (var i = 0; i < items.length; i++) {
+			items[i].classList.add('animation-fade-in')
+			items[i].classList.add(`animation-fade-in--${i + 1}`)
 			fragment.appendChild(items[i])
 		}
 
