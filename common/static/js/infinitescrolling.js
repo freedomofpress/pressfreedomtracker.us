@@ -21,6 +21,11 @@ class InfiniteScroller {
 		// We're going to keep track of the number of fetches we've made
 		// because only a certain number are going to occur automatically.
 		this.fetches = 0
+		this.shouldAutoFetch = true
+
+		// We're going to keep track of all page links so that we can
+		// pushState when we scroll into a visible one.
+		this.pageLinkElms = []
 
 		this.handleScroll = throttle(this.handleScroll.bind(this), 20)
 		this.getNextPage = this.getNextPage.bind(this)
@@ -30,14 +35,28 @@ class InfiniteScroller {
 
 	incrementFetches() {
 		if (++this.fetches == InfiniteScroller.NUM_AUTO_FETCHES) {
-			window.removeEventListener('scroll', this.handleScroll)
+			this.shouldAutoFetch = false
 		}
 	}
 
 	handleScroll(event) {
-		const elm = this.parentElm.querySelector('.js-infinite-scrolling-item:last-child')
-		if (isElementVisible(elm)) {
-			this.getNextPage()
+		if (this.shouldAutoFetch) {
+			const elm = this.parentElm.querySelector('.js-infinite-scrolling-item:last-child')
+			if (isElementVisible(elm)) {
+				this.getNextPage()
+			}
+		}
+
+		// Work our way back from the bottom page link/divider. The first
+		// visible one should get pushed on to our browser state. This
+		// means our URL will update to the correct page if we start at
+		// the bottom of the page and scroll up.
+		for (var i = this.pageLinkElms.length - 1; i >= 0; i--) {
+			const elm = this.pageLinkElms[i]
+			if (isElementVisible(elm)) {
+				history.pushState(null, null, elm.href)
+				return
+			}
 		}
 	}
 
@@ -54,7 +73,10 @@ class InfiniteScroller {
 		divider.className = 'infinite-scrolling-divider'
 		divider.href = this.nextLinkElm.href
 		divider.innerText = `Page ${page} of ${total}`
+		this.pageLinkElms.push(divider)
 		fragment.appendChild(divider)
+
+		history.pushState(null, null, divider.href)
 
 		const items = tempElm.querySelectorAll('.js-infinite-scrolling-item')
 		for (var i = 0; i < items.length; i++) {
