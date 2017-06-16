@@ -22,3 +22,7 @@ def statistic(name=None, fn=None):
 def get_stats():
     """Return registered statistics names and functions"""
     return _stats
+
+
+def get_stats_choices():
+    return [(name, name) for name in get_stats().keys()]
