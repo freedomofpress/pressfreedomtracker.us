@@ -59,6 +59,18 @@ class IncidentPage(Page):
         related_name='+',
     )
 
+    image_caption = RichTextField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+
+    image_attribution = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+
     targets = ClusterTaggableManager(
         through='incident.TargetsTag',
         blank=True,
@@ -274,10 +286,17 @@ class IncidentPage(Page):
         InlinePanel('updates', label='Updates'),
 
         MultiFieldPanel(
+            heading='Teaser',
+            children=[
+                ImageChooserPanel('teaser_image'),
+                FieldPanel('image_caption'),
+                FieldPanel('image_attribution'),
+                FieldPanel('teaser'),
+            ]
+        ),
+        MultiFieldPanel(
             heading='Details',
             children=[
-                    ImageChooserPanel('teaser_image'),
-                    FieldPanel('teaser'),
                     FieldPanel('date'),
                     FieldPanel('affiliation'),
                     FieldPanel('city'),
