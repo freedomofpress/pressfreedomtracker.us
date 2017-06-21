@@ -14,10 +14,20 @@ class Suggestions extends PureComponent {
 		super(...args)
 
 		this.handleKeyPress = this.handleKeyPress.bind(this)
+		this.handleBlurClick = this.handleBlurClick.bind(this)
 
 		this.state = {
 			index: 0,
+			visible: false,
 		}
+	}
+
+	componentDidMount() {
+		window.addEventListener('click', this.handleBlurClick)
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('click', this.handleBlurClick)
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -51,6 +61,8 @@ class Suggestions extends PureComponent {
 		const { index } = this.state
 		const { suggestions, canCreate } = this.props
 
+		this.setState({ visible: true })
+
 		if (event.key === 'ArrowDown') {
 			// Creation takes the nth index
 			const max = canCreate ? suggestions.length : suggestions.length - 1
@@ -74,6 +86,20 @@ class Suggestions extends PureComponent {
 		}
 	}
 
+	handleBlurClick(event) {
+		const inComponent = (
+			this.containerElm.contains(event.target) ||
+			// A clicked suggestion won't end up being apart of the container
+			// element. We need to manually check if the event target is apart
+			// of a suggestion item.
+			event.target.classList.contains('suggestions__item') ||
+			event.target.parentNode.classList.contains('suggestions__item')
+		)
+		if (!inComponent && this.state.visible) {
+			this.setState({ visible: false })
+		}
+	}
+
 	render() {
 		const {
 			suggestions,
@@ -84,8 +110,10 @@ class Suggestions extends PureComponent {
 			input,
 		} = this.props
 
+		const display = this.state.visible ? 'block' : 'none'
+
 		return (
-			<span>
+			<span ref={ref => this.containerElm = ref}>
 				<input
 					type="text"
 					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
@@ -99,6 +127,7 @@ class Suggestions extends PureComponent {
 						'suggestions',
 						{ 'suggestions--populated': suggestions.length > 0 }
 					)}
+					style={{ display }}
 				>
 					{suggestions.map((suggestion, index) =>
 						<li
