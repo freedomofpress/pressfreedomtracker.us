@@ -24,6 +24,7 @@
 
         {% block css %}
             <link rel="stylesheet" type="text/x-sass" href="{% static 'pressfreedom.sass' %}">
+	    {% render_bundle 'common' 'css' %}
         {% endblock %}
 
 		<!--[if lte IE 11]>
@@ -86,7 +87,7 @@
         {% include "common/_sliding_nav.html" %}
 
         {% block js %}
-          {% render_bundle 'common' %}
+          {% render_bundle 'common' 'js' %}
         {% endblock %}
     </body>
 </html>
