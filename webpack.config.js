@@ -14,23 +14,6 @@ var sassData = '$static-url: "' + STATIC_URL + '";';
 console.log('Using STATIC_URL', STATIC_URL);
 
 
-var postCSSPlugins = function() {
-	return {
-		defaults: [autoprefixer],
-		cleaner: [autoprefixer({ browsers: [
-			'Chrome >= 35',
-			'Firefox >= 31',
-			'Edge >= 12',
-			'Explorer >= 9',
-			'iOS >= 8',
-			'Safari >= 8',
-			'Android 2.3',
-			'Android >= 4',
-			'Opera >= 12'
-		]})]
-	}
-}
-
 var common = {
 	entry: {
 		common: __dirname + '/common/static/js/common.js',
@@ -72,12 +55,7 @@ var common = {
 				use: [
 					'style-loader',
 					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							plugins: postCSSPlugins
-						}
-					},
+					'postcss-loader',
 					{
 						loader: 'sass-loader',
 						options: {
@@ -92,13 +70,8 @@ var common = {
 				use: [
 					'style-loader',
 					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							plugins: postCSSPlugins
-						}
-					}
-				]
+					'postcss-loader'
+				])
 			},
 			// Currently unused, but we'll want it if we install modernizr:
 			{
