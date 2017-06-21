@@ -87,7 +87,15 @@ var common = {
 	},
 
 	plugins: [
-		new ExtractTextPlugin('[name].css'),
+		new ExtractTextPlugin({
+			filename: (getPath) => {
+				if (TARGET === 'build') {
+					return getPath('[name]-[hash].css');
+				} else {
+					return getPath('[name].css');
+				}
+			}
+		}),
 
 		new BundleTracker({
 			path: target,
