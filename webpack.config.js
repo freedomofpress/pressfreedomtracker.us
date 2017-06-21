@@ -8,7 +8,7 @@ var path = require('path');
 var TARGET = process.env.npm_lifecycle_event;
 process.env.BABEL_ENV = TARGET;
 
-var target = __dirname + '/common/static/js/bundles';
+var target = __dirname + '/common/static/bundles';
 
 var STATIC_URL = process.env.STATIC_URL || '/static/';
 var sassData = '$static-url: "' + STATIC_URL + '";';
