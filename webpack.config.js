@@ -53,26 +53,30 @@ var common = {
 			},
 			{
 				test: /\.s[ca]ss$/,
-				use: ExtractTextPlugin.extract([
-					'style-loader',
-					'css-loader',
-					'postcss-loader',
-					{
-						loader: 'sass-loader',
-						options: {
-							includePaths: [path.resolve(__dirname, 'node_modules/')],
-							data: sassData
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [
+						'css-loader',
+						'postcss-loader',
+						{
+							loader: 'sass-loader',
+							options: {
+								includePaths: [path.resolve(__dirname, 'node_modules/')],
+								data: sassData
+							}
 						}
-					}
-				]),
+					]
+				}),
 			},
 			{
 				test: /\.css$/,
-				use: ExtractTextPlugin.extract([
-					'style-loader',
-					'css-loader',
-					'postcss-loader'
-				])
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [
+						'css-loader',
+						'postcss-loader'
+					]
+				})
 			},
 			// Currently unused, but we'll want it if we install modernizr:
 			{
