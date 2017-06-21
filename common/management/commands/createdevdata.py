@@ -157,7 +157,9 @@ class Command(BaseCommand):
                 ),
             ])
 
-        if not Menu.objects.filter(slug='footer').exists():
+        footer_menu, created = Menu.objects.get_or_create(
+            name='Footer Menu', slug='footer')
+        if created:
             footer_menu = Menu.objects.create(name='Footer Menu', slug='footer')
             MenuItem.objects.bulk_create([
                 MenuItem(
