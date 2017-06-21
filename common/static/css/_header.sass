@@ -1,33 +1,51 @@
-$header-logo-height: 60px
-$header-logo-height-mobile: 54px
-$header-margin-top: 15px
-$header-height: $header-margin-top + $header-logo-height
-$nav-item-height: 15px
-$nav-link-padding: 5px
-
 .header
 	margin-top: $header-margin-top
 	margin-bottom: $header-margin-top * 2
 	display: flex
 	flex-direction: row
 	justify-content: space-between
+	align-items: center
+	height: $header-height
+
+	@media(max-width: $medium-large-screen)
+		height: $header-height-medium-large
 
 	@media (max-width: $small-screen)
 		margin-top: 0
+		// This height should match the SVG logo height so that
+		// extra background in $header-color is not displayed.
+		height: $header-logo-height
+		background-color: $header-color
 
 
 .header__logo
 	background-color: $header-color
+	box-sizing: content-box
 	position: relative
 	left: -$column-gutter-width
 	margin: 0
-	padding: 15px
+	padding: $header-logo-padding
 	padding-left: $page-margin-side * 2
+	overflow: hidden
 	// This height should match the SVG logo height so that
 	// extra background in $header-color is not displayed.
-	box-sizing: content-box
 	height: $header-logo-height
-	overflow: hidden
+
+	@media(max-width: $medium-large-screen)
+		height: $header-logo-height-medium-large
+		padding: 30px
+
+	@media(max-width: $small-screen)
+		height: $header-logo-height-mobile
+		padding-top: 0
+		padding-bottom: 0
+		left: 0
+		padding-left: 1rem
+		padding-right: 0
+
+	@media(max-width: $extra-small-screen)
+		// gives logo the width it needs
+		padding-left: 0.4rem
 
 	&::after
 		content: ''
@@ -44,6 +62,11 @@ $nav-link-padding: 5px
 		transform-origin: 0 0
 		transition: 0.25s linear transform
 		z-index: 0
+
+		@media(max-width: $medium-large-screen)
+			// I don't understand quite why these numbers work
+			top: 25px
+			left: -25px
 
 	&:hover
 		.header__logo-svg path
@@ -66,6 +89,13 @@ $nav-link-padding: 5px
 	flex-direction: column
 	justify-content: space-between
 	align-items: flex-end
+	height: $header-height
+
+	@media(max-width: $medium-large-screen)
+		height: $header-height-medium-large
+
+	@media(max-width: $small-screen)
+		height: $header-logo-height-mobile
 
 .header__nav-list
 	list-style-type: none
@@ -73,9 +103,10 @@ $nav-link-padding: 5px
 	margin: 0
 	margin-bottom: $nav-link-padding
 	padding: 0
+	display: flex
+	justify-content: flex-end
 
 .header__nav-item
-	display: inline-block
 	font-size: 1.1em
 
 .header__nav-link
@@ -96,6 +127,9 @@ $nav-link-padding: 5px
 		color: $gray-dark
 		border-bottom: 1px solid $gray-dark
 
+	@media(max-width: $medium-large-screen)
+		margin-bottom: 2*$nav-link-padding
+
 .header__nav-link--highlighted
 	padding-left: #{$nav-link-padding * 2}
 	padding-right: #{$nav-link-padding * 2}
@@ -111,12 +145,5 @@ $nav-link-padding: 5px
 		border-bottom: 1px solid transparent
 
 @media(max-width: $small-screen)
-	.header__logo
-		height: $header-logo-height-mobile
-		padding-top: 0
-		padding-bottom: 0
-		width: 100%
-		left: 0
-
 	.header__nav-list--mobile-hidden
 		display: none

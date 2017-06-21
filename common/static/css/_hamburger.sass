@@ -1,13 +1,20 @@
+$hamburger-extra-small-width: 30px
+
 .hamburger
 	background-color: $header-color
 	padding-bottom: 11px
 
-	@media(min-width: $small-screen)
+	@media(max-width: $extra-small-screen)
+		padding-left: 0.5rem
+		padding-right: 0.5rem
+
+	@media(min-width: $small-screen-min)
 		display: none
 
 
-.hamberger-box
-	color: white
+.hamburger-box
+	@media(max-width: $extra-small-screen)
+		width: $hamburger-extra-small-width
 
 .hamburger-inner
 	background-color: $white
@@ -16,5 +23,12 @@
 	&:after
 		background-color: $white
 
-	@media(min-width: $small-screen)
+	@media(min-width: $small-screen-min)
 		display: none
+
+	@media(max-width: $extra-small-screen)
+		width: $hamburger-extra-small-width
+
+		&:before,
+		&:after
+			width: $hamburger-extra-small-width

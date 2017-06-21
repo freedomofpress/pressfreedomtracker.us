@@ -2,34 +2,32 @@
 	display: block
 
 	g path
-		fill: white
+		fill: $white
+
+	@media(max-width: $medium-large-screen)
+		max-width: 100%
+
+.logo--desktop
+	@media(max-width: $small-screen)
+		display: none
 
 .logo--mobile
 	display: none
 
+	@media(max-width: $small-screen)
+		display: block
+		height: $header-logo-height-mobile
+		width: 100%
+
+	@media(max-width: $extra-small-screen)
+		display: none
+
 .logo--mobile-xs
+	display: none
 	max-width: 100%
 
-
-@media (max-width: $small-screen)
-
-	.logo--desktop
+	@media(max-width: $small-screen)
 		display: none
 
-	.logo--mobile
-		display: block
-
-	.logo--mobile-xs
-		display: none
-
-
-@media (max-width: $extra-small-screen)
-
-	.logo--deskop
-		display: none
-
-	.logo--mobile
-		display: none
-
-	.logo--mobile-xs
+	@media(max-width: $extra-small-screen)
 		display: block
