@@ -17,9 +17,9 @@ def render_page(page):
 @login_required
 def search(request):
     search_query = request.GET.get('query', '')
-    type = request.GET.get('type', 'wagtailcore.Page')
+    page_type = request.GET.get('type', 'wagtailcore.Page')
     try:
-        model = apps.get_model(type)
+        model = apps.get_model(page_type)
     except:
         return HttpResponseBadRequest
 
@@ -43,9 +43,9 @@ def create(request, *args, **kwargs):
     if not value:
         return HttpResponseBadRequest
 
-    type = request.POST.get('type', 'wagtailcore.Page')
+    page_type = request.POST.get('type', 'wagtailcore.Page')
     try:
-        model = apps.get_model(type)
+        model = apps.get_model(page_type)
     except:
         return HttpResponseBadRequest
 
