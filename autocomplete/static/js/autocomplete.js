@@ -61,7 +61,7 @@ class Suggestions extends PureComponent {
 		const { index } = this.state
 		const { suggestions, canCreate } = this.props
 
-		this.setState({ visible: true })
+		let visible = true
 
 		if (event.key === 'ArrowDown') {
 			// Creation takes the nth index
@@ -83,7 +83,11 @@ class Suggestions extends PureComponent {
 			} else {
 				this.props.onClick(suggestions[index])
 			}
+		} else if (event.key === 'Escape') {
+			visible = false
 		}
+
+		this.setState({ visible })
 	}
 
 	handleBlurClick(event) {
