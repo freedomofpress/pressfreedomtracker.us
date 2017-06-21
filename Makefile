@@ -28,7 +28,7 @@ dev-attach-postgresql:
 
 .PHONY: dev-sass-lint
 dev-sass-lint:
-	bash -c ". ./.docker_versions && docker run -it -v \"${PWD}:/lintme\" -w /lintme \"quay.io/freedomofpress/sasslinter@sha256:${SASSLINT_VER}\""
+	./devops/scripts/dev-sasslint.sh
 
 .PHONY: dev-import-db
 dev-import-db:
