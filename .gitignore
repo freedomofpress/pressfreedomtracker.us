@@ -10,6 +10,7 @@ npm-debug.log
 webpack-stats.json
 # Do not make a bundles/ ignore line ;-)
 /common/static/js/bundles/
+/common/static/bundles/
 .manage_cmds_ran/
 logs/
 
