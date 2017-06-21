@@ -53,9 +53,9 @@ Attaching to running containers
 +++++++++++++++++++++++++++++++
 
 So there are two ways to attach, the first is to attach to an actual running
-process using the `make` commands listed under installation. The second, is to
+process using the ``make`` commands listed under installation. The second, is to
 connect to a container but land in a shell to run arbitrary commands. The
-available containers are - `django`, `node`, and `postgresql`. To connect to one
+available containers are - ``django``, ``node``, and ``postgresql``. To connect to one
 and get a bash shell (for example the postgresql container):
 
 .. code:: bash
@@ -69,17 +69,17 @@ Database import
 ---------------
 
 Drop a postgres database dump into the root of the repo and rename it to
-`import.db`. To import it into a running dev session (ensure `make dev-go` has
-already been started) run `make dev-import-db`. Note that this will not pull in
+``import.db``. To import it into a running dev session (ensure ``make dev-go`` has
+already been started) run ``make dev-import-db``. Note that this will not pull in
 images that are referenced from an external site backup.
 
 
 Connect to postgresql service from host
 ---------------------------------------
 
-The postgresql service is exposed to your host on port `15432`. If you have a GUI
-database manipulation application you'd like to utilize point it to `localhost`,
-port `15432`, username `tracer`, password `trackerpassword`, dbname `trackerdb`.
+The postgresql service is exposed to your host on port ``15432``. If you have a GUI
+database manipulation application you'd like to utilize point it to ``localhost``,
+port ``15432``, username ``tracer``, password ``trackerpassword``, dbname ``trackerdb``.
 
 
 Adobe Font Licenses

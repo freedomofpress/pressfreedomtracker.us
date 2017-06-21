@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Jump into devops directory 
+cd "$(dirname $(dirname $(realpath $0) )../)"|| exit
+
+if [ ! -f .venv/bin/activate ]; then virtualenv --no-site-packages .venv; fi
+source .venv/bin/activate
+
+echo "##### Ensure python dependencies up-to-date"
+pip install -U -r requirements.txt 1> /dev/null
+
+# Install external ansible role dependencies
+echo "##### Ensure ansible role requirements downloaded"
+ansible-galaxy install -r requirements.yml &> /dev/null
