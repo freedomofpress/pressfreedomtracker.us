@@ -19,7 +19,7 @@ from incident.models import choices
 
 
 class IncidentPage(Page):
-    date = models.DateTimeField()
+    date = models.DateField()
     affiliation = models.CharField(
         max_length=255,
         default='Independent',
@@ -95,8 +95,8 @@ class IncidentPage(Page):
         related_name='dropped_charge_incidents',
         verbose_name='Dropped Changes',
     )
-    release_date = models.DateTimeField(blank=True, null=True)
-    detention_date = models.DateTimeField(
+    release_date = models.DateField(blank=True, null=True)
+    detention_date = models.DateField(
         blank=True,
         null=True,
         help_text='This field will default to the date field if not specified.',
