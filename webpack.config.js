@@ -2,6 +2,7 @@ var webpack       = require('webpack');
 var merge         = require('webpack-merge');
 var autoprefixer  = require('autoprefixer');
 var BundleTracker = require('webpack-bundle-tracker');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
 
 var TARGET = process.env.npm_lifecycle_event;
@@ -52,7 +53,7 @@ var common = {
 			},
 			{
 				test: /\.s[ca]ss$/,
-				use: [
+				use: ExtractTextPlugin.extract([
 					'style-loader',
 					'css-loader',
 					'postcss-loader',
@@ -63,11 +64,11 @@ var common = {
 							data: sassData
 						}
 					}
-				],
+				]),
 			},
 			{
 				test: /\.css$/,
-				use: [
+				use: ExtractTextPlugin.extract([
 					'style-loader',
 					'css-loader',
 					'postcss-loader'
@@ -82,6 +83,8 @@ var common = {
 	},
 
 	plugins: [
+		new ExtractTextPlugin('[name].css'),
+
 		new BundleTracker({
 			path: target,
 			filename: './webpack-stats.json'
