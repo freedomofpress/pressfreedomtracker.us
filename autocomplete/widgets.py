@@ -1,5 +1,6 @@
 import json
 
+from django.apps import apps
 from django.forms import Widget
 from django.utils.html import format_html
 
@@ -34,10 +35,11 @@ class Autocomplete(Widget):
         if not value:
             return 'null'
 
+        model = apps.get_model(self.page_type)
         if type(value) == list:
-            return json.dumps([render_page(page) for page in Page.objects.filter(id__in=value)])
+            return json.dumps([render_page(page) for page in model.objects.filter(id__in=value)])
         else:
-            return json.dumps(render_page(Page.objects.get(pk=value)))
+            return json.dumps(render_page(model.objects.get(pk=value)))
 
     def value_from_datadict(self, data, files, name):
         value = json.loads(data.get(name))
