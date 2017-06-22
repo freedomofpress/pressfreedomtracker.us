@@ -9,6 +9,8 @@ from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.models import Orderable
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
+from autocomplete.edit_handlers import AutocompletePageChooserPanel
+
 
 class IncidentPageUpdates(Orderable):
     page = ParentalKey('incident.IncidentPage', related_name='updates')
@@ -48,6 +50,11 @@ class EquipmentSeized(models.Model):
         verbose_name='Equipment Seized',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
+
+    panels = [
+            AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
+            FieldPanel('quantity'),
+    ]
 
 
 class EquipmentBroken(models.Model):
