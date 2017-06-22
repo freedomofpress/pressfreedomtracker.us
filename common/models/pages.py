@@ -3,6 +3,7 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFi
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
@@ -161,6 +162,7 @@ class SimplePage(Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('video', EmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
@@ -180,6 +182,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('video', EmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
