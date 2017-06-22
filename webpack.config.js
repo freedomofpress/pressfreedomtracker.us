@@ -2,34 +2,18 @@ var webpack       = require('webpack');
 var merge         = require('webpack-merge');
 var autoprefixer  = require('autoprefixer');
 var BundleTracker = require('webpack-bundle-tracker');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
 
 var TARGET = process.env.npm_lifecycle_event;
 process.env.BABEL_ENV = TARGET;
 
-var target = __dirname + '/common/static/js/bundles';
+var target = __dirname + '/common/static/bundles';
 
 var STATIC_URL = process.env.STATIC_URL || '/static/';
 var sassData = '$static-url: "' + STATIC_URL + '";';
 console.log('Using STATIC_URL', STATIC_URL);
 
-
-var postCSSPlugins = function() {
-	return {
-		defaults: [autoprefixer],
-		cleaner: [autoprefixer({ browsers: [
-			'Chrome >= 35',
-			'Firefox >= 31',
-			'Edge >= 12',
-			'Explorer >= 9',
-			'iOS >= 8',
-			'Safari >= 8',
-			'Android 2.3',
-			'Android >= 4',
-			'Opera >= 12'
-		]})]
-	}
-}
 
 var common = {
 	entry: {
@@ -69,36 +53,30 @@ var common = {
 			},
 			{
 				test: /\.s[ca]ss$/,
-				use: [
-					'style-loader',
-					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							plugins: postCSSPlugins
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [
+						'css-loader',
+						'postcss-loader',
+						{
+							loader: 'sass-loader',
+							options: {
+								includePaths: [path.resolve(__dirname, 'node_modules/')],
+								data: sassData
+							}
 						}
-					},
-					{
-						loader: 'sass-loader',
-						options: {
-							includePaths: [path.resolve(__dirname, 'node_modules/')],
-							data: sassData
-						}
-					}
-				],
+					]
+				}),
 			},
 			{
 				test: /\.css$/,
-				use: [
-					'style-loader',
-					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							plugins: postCSSPlugins
-						}
-					}
-				]
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [
+						'css-loader',
+						'postcss-loader'
+					]
+				})
 			},
 			// Currently unused, but we'll want it if we install modernizr:
 			{
@@ -109,6 +87,16 @@ var common = {
 	},
 
 	plugins: [
+		new ExtractTextPlugin({
+			filename: (getPath) => {
+				if (TARGET === 'build') {
+					return getPath('[name]-[hash].css');
+				} else {
+					return getPath('[name].css');
+				}
+			}
+		}),
+
 		new BundleTracker({
 			path: target,
 			filename: './webpack-stats.json'
