@@ -10,6 +10,12 @@ from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
+from common.blocks import (
+    Heading1,
+    Heading2,
+    Heading3,
+)
+
 
 class BaseSidebarPageMixin(models.Model):
     """
@@ -155,6 +161,9 @@ class SimplePage(Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('heading_1', Heading1()),
+        ('heading_2', Heading2()),
+        ('heading_3', Heading3()),
     ])
 
     content_panels = Page.content_panels + [
@@ -171,6 +180,9 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('heading_1', Heading1()),
+        ('heading_2', Heading2()),
+        ('heading_3', Heading3()),
     ])
 
     content_panels = Page.content_panels + [
