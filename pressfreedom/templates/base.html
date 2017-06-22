@@ -2,37 +2,37 @@
 {% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>
-            {% block title %}
-                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-                {% with self.get_site.site_name as site_name %}
-                    {% if site_name %}- {{ site_name }}{% endif %}
-                {% endwith %}
-            {% endblock %}
-        </title>
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>
+			{% block title %}
+				{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+			{% endblock %}
+			{% block title_suffix %}
+				{% with self.get_site.site_name as site_name %}
+					{% if site_name %}- {{ site_name }}{% endif %}
+				{% endwith %}
+			{% endblock %}
+		</title>
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {% block css %}
-	    {% render_bundle 'common' 'css' %}
-        {% endblock %}
+		{% block css %}
+		{% render_bundle 'common' 'css' %}
+		{% endblock %}
 
 		<!--[if lte IE 11]>
 		<script type="text/javascript" src="{% static 'js/picturefill.3.0.2.min.js' %}"></script>
 		<![endif]-->
-    </head>
+	</head>
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% wagtailuserbar %}
+	<body class="{% block body_class %}{% endblock %}">
+		{% wagtailuserbar %}
 
 		<div class="flex-container {% block flex_class %} flex-container--grow-2 {% endblock %}">
 			<div class="layout-right-sidebar">
@@ -44,18 +44,18 @@
 				</div>
 
 				<div
-          class="layout-right-sidebar__sidebar
-                 {% block top_sidebar_class %}
-                    layout-right-sidebar__sidebar--hide-mobile
-                 {% endblock %}"
-        >
+					class="layout-right-sidebar__sidebar
+					 {% block top_sidebar_class %}
+						layout-right-sidebar__sidebar--hide-mobile
+					 {% endblock %}"
+				>
 					{% block top_sidebar %}
 					{% endblock %}
 				</div>
 			</div>
 
-      {% block secondary-header %}
-      {% endblock %}
+			{% block secondary-header %}
+			{% endblock %}
 
 			<div class="layout-right-sidebar">
 				<div class="layout-right-sidebar__main {% block main_class %} {% endblock %}">
@@ -81,12 +81,12 @@
 			{% endblock %}
 		</div>
 
-        <div class="shade js-sliding-nav-overlay"></div>
+		<div class="shade js-sliding-nav-overlay"></div>
 
-        {% include "common/_sliding_nav.html" %}
+		{% include "common/_sliding_nav.html" %}
 
-        {% block js %}
-          {% render_bundle 'common' 'js' %}
-        {% endblock %}
-    </body>
+		{% block js %}
+		  {% render_bundle 'common' 'js' %}
+		{% endblock %}
+	</body>
 </html>
