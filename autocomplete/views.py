@@ -1,6 +1,7 @@
 from django.apps import apps
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.contenttypes.models import ContentType
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.http import require_GET, require_POST
 
 
@@ -14,7 +15,7 @@ def render_page(page):
 
 
 @require_GET
-@login_required
+@staff_member_required
 def search(request):
     search_query = request.GET.get('query', '')
     page_type = request.GET.get('type', 'wagtailcore.Page')
@@ -37,7 +38,7 @@ def search(request):
 
 
 @require_POST
-@login_required
+@staff_member_required
 def create(request, *args, **kwargs):
     value = request.POST.get('value', None)
     if not value:
@@ -48,6 +49,14 @@ def create(request, *args, **kwargs):
         model = apps.get_model(page_type)
     except:
         return HttpResponseBadRequest
+
+    content_type = ContentType.objects.get_for_model(page_type)
+    permission_label = '{}.add_{}'.format(
+        content_type.app_label,
+        content_type.model
+    )
+    if not request.user.has_perm(permission_label):
+        return HttpResponseForbidden
 
     method = getattr(model, 'autocomplete_create', None)
     if not callable(method):
