@@ -15,6 +15,7 @@ class Suggestions extends PureComponent {
 
 		this.handleKeyPress = this.handleKeyPress.bind(this)
 		this.handleBlurClick = this.handleBlurClick.bind(this)
+		this.handleFocus = this.handleFocus.bind(this)
 
 		this.state = {
 			index: 0,
@@ -104,6 +105,10 @@ class Suggestions extends PureComponent {
 		}
 	}
 
+	handleFocus() {
+		this.setState({ visible: true })
+	}
+
 	render() {
 		const {
 			suggestions,
@@ -121,6 +126,7 @@ class Suggestions extends PureComponent {
 				<input
 					type="text"
 					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
+					onFocus={this.handleFocus}
 					onChange={onChange}
 					onKeyDown={this.handleKeyPress}
 					{...input}
@@ -312,6 +318,10 @@ class Autocomplete extends PureComponent {
 		}
 	}
 
+	componentDidMount() {
+		this.checkNewSuggestions('', false)
+	}
+
 	handleChange(event) {
 		const { value } = event.target
 		this.checkNewSuggestions(value)
@@ -336,8 +346,8 @@ class Autocomplete extends PureComponent {
 		return value.map(({ id }) => id).join(',')
 	}
 
-	checkNewSuggestions(value) {
-		if (value === this.state.value) {
+	checkNewSuggestions(value, checkDifferent = true) {
+		if (checkDifferent && value === this.state.value) {
 			return
 		}
 
