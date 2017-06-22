@@ -4,11 +4,7 @@
 	<h2>{{ page.title }}</h2>
 
 	{% block ajax %}
-		<div
-			class="incident-grid js-infinite-scrolling-parent"
-			data-page-num="{{ page_number }}"
-			data-page-total="{{ paginator.num_pages }}"
-		>
+		<div class="incident-grid js-infinite-scrolling-parent">
 			{% for incident in entries_page %}
 				<div class="incident-grid__item js-infinite-scrolling-item">
 					{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
