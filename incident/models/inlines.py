@@ -52,8 +52,8 @@ class EquipmentSeized(models.Model):
     quantity = models.PositiveSmallIntegerField(default=1)
 
     panels = [
-            AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
-            FieldPanel('quantity'),
+        AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
+        FieldPanel('quantity'),
     ]
 
 
