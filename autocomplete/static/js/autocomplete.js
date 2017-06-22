@@ -119,13 +119,15 @@ class Suggestions extends PureComponent {
 			input,
 		} = this.props
 
+		const { visible } = this.state
+
 		const display = this.state.visible ? 'block' : 'none'
 
 		return (
 			<span ref={ref => this.containerElm = ref}>
 				<input
 					type="text"
-					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': suggestions.length > 0 })}
+					className={classNames('autocomplete__search', { 'autocomplete__search--has-input': visible && suggestions.length > 0 })}
 					onFocus={this.handleFocus}
 					onChange={onChange}
 					onKeyDown={this.handleKeyPress}
@@ -135,7 +137,7 @@ class Suggestions extends PureComponent {
 				<ul
 					className={classNames(
 						'suggestions',
-						{ 'suggestions--populated': suggestions.length > 0 }
+						{ 'suggestions--populated': visible && suggestions.length > 0 }
 					)}
 					style={{ display }}
 				>
