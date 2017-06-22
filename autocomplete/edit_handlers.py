@@ -1,4 +1,5 @@
 from django.apps import apps
+from django.contrib.contenttypes.models import ContentType
 
 from wagtail.wagtailadmin.edit_handlers import (
     BaseFieldPanel,
@@ -45,11 +46,16 @@ class AutocompletePageChooserPanel:
 
     def bind_to_model(self, model):
         # TODO: support list of page types
+        model = apps.get_model(self.page_type)
+        content_type = ContentType.objects.get_for_model(model)
+
         can_create = _can_create(self.page_type)
+
         base = dict(
             model=model,
             field_name=self.field_name,
             page_type=self.page_type,
+            object_type_name=content_type.model,
             widget=type(
                 '_Autocomplete',
                 (Autocomplete,),
