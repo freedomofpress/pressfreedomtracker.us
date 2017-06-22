@@ -6,7 +6,9 @@ from django.views.decorators.http import require_GET, require_POST
 
 
 def render_page(page):
-    page = page.specific
+    if getattr(page, 'specific', None):
+        # For support of non-Page models like Snippets.
+        page = page.specific
     if callable(getattr(page, 'autocomplete_label', None)):
         label = page.autocomplete_label()
     else:
@@ -24,7 +26,14 @@ def search(request):
     except:
         return HttpResponseBadRequest
 
-    queryset = model.objects.filter(title__icontains=search_query).live()
+    field_name = getattr(model, 'autocomplete_search_field', 'title')
+    filter_kwargs = dict()
+    filter_kwargs[field_name + '__icontains'] = search_query
+    queryset = model.objects.filter(**filter_kwargs)
+    if getattr(queryset, 'live', None):
+        # Non-Page models like Snippets won't have a live/published status
+        # and thus should not be filtered with a call to `live`.
+        queryset = queryset.live()
 
     exclude = request.GET.get('exclude', '')
     try:
