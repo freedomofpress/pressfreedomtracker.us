@@ -93,20 +93,29 @@
 		</tbody>
 	</table>
 
-	{% with page.get_main_category as main_category %}
-		  <div>
-			  <h3 class="section-heading"
-			  >
-			  How we track {{main_category|title}}
-			  </h3>
-			  <p>{{main_category.methodology|richtext}}</p>
-		  </div>
-		  <h3 class="section-heading"
-			  >
-			  <a href="{% pageurl main_category %}" >
-				More {{main_category.title}} &gt;
-			  </a>
-		  </h3>
+	{% with main_category=page.get_main_category %}
+		<div>
+			<h3 class="section-heading">
+				How we track
+				{% if main_category.plural_name %}
+					{{ main_category.plural_name|title }}
+				{% else %}
+					{{ main_category|title }}
+				{% endif %}
+			</h3>
+			<p>{{main_category.methodology|richtext}}</p>
+		</div>
+		<h3 class="section-heading">
+			<a href="{% pageurl main_category %}" >
+				More
+				{% if main_category.plural_name %}
+					{{ main_category.plural_name|title }}
+				{% else %}
+					{{ main_category|title }}
+				{% endif %}
+				&gt;
+			</a>
+		</h3>
 	{% endwith %}
 </aside>
 {% endblock %}

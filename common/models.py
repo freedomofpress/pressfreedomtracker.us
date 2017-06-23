@@ -157,11 +157,16 @@ class TaxonomyCategoryPage(Orderable):
 class CategoryPage(Page):
     description = RichTextField(null=True, blank=True)
     methodology = RichTextField(null=True, blank=True)
+    plural_name = models.CharField(max_length=255, null=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('description'),
         FieldPanel('methodology'),
         InlinePanel('quick_facts', label='Quick Facts')
+    ]
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel('plural_name'),
     ]
 
     search_fields = Page.search_fields + [
