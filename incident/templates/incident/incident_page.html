@@ -93,12 +93,12 @@
 		</tbody>
 	</table>
 
-	{% with main_category=page.get_main_category plural_name=page.get_main_category.plural_name %}
+	{% with main_category=page.get_main_category %}
 		<div>
 			<h3 class="section-heading">
 				How we track
-				{% if plural_name %}
-					{{ plural_name|title }}
+				{% if main_category.plural_name %}
+					{{ main_category.plural_name|title }}
 				{% else %}
 					{{ main_category|title }}
 				{% endif %}
@@ -108,8 +108,8 @@
 		<h3 class="section-heading">
 			<a href="{% pageurl main_category %}" >
 				More
-				{% if plural_name %}
-					{{ plural_name|title }}
+				{% if main_category.plural_name %}
+					{{ main_category.plural_name|title }}
 				{% else %}
 					{{ main_category|title }}
 				{% endif %}
