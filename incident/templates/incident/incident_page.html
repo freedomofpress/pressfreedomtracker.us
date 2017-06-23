@@ -94,30 +94,28 @@
 	</table>
 
 	{% with main_category=page.get_main_category plural_name=page.get_main_category.plural_name %}
-			<div>
-				<h3 class="section-heading"
-				>
+		<div>
+			<h3 class="section-heading">
 				How we track
-					{% if plural_name %}
-						{{ plural_name|title }}
-					{% else %}
-						{{ main_category|title }}
-					{% endif %}
-				</h3>
-				<p>{{main_category.methodology|richtext}}</p>
-			</div>
-			<h3 class="section-heading"
-				>
-				<a href="{% pageurl main_category %}" >
-					More
-					{% if plural_name %}
-						{{ plural_name|title }}
-					{% else %}
-						{{ main_category|title }}
-					{% endif %}
-					&gt;
-				</a>
+				{% if plural_name %}
+					{{ plural_name|title }}
+				{% else %}
+					{{ main_category|title }}
+				{% endif %}
 			</h3>
+			<p>{{main_category.methodology|richtext}}</p>
+		</div>
+		<h3 class="section-heading">
+			<a href="{% pageurl main_category %}" >
+				More
+				{% if plural_name %}
+					{{ plural_name|title }}
+				{% else %}
+					{{ main_category|title }}
+				{% endif %}
+				&gt;
+			</a>
+		</h3>
 	{% endwith %}
 </aside>
 {% endblock %}
