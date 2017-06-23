@@ -10,7 +10,7 @@ def validate_date(date):
         valid_date = datetime.strptime(date, '%Y-%m-%d')
     except (ValueError, TypeError):
         return None
-    return valid_date
+    return str(valid_date)
 
 
 def validate_integer_list(lst):
