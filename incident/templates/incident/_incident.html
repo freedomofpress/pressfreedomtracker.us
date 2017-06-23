@@ -29,6 +29,9 @@ It can take the following context variables:
 					alt="{{ x1.alt }}"
 					src="{{ x1.url }}"
 					srcset="{{ x2.url }} 2x"
+					{% if incident.image_caption %}
+						title="{{ incident.image_caption }} ({{ incident.image_attribution|upper }})"
+					{% endif %}
 				/>
 			</a>
 		{% else %}
@@ -40,6 +43,14 @@ It can take the following context variables:
 				src="{{ x1.url }}"
 				srcset="{{ x2.url }} 2x"
 			/>
+			{% if incident.image_caption %}
+				<aside class="caption">
+					<div class="caption__text">{{ incident.image_caption|richtext }}</div>
+					{% if incident.image_attribution %}
+						<div class="caption__attribution">{{ incident.image_attribution }}</div>
+					{% endif %}
+				</aside>
+			{% endif %}
 		{% endif %}
 	{% endif %}
 	<div class="incident__body">
