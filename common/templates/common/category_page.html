@@ -88,7 +88,12 @@
     </table>
     {% if page.methodology %}
       <h4 class="section-heading">
-        How we track {{page.title}}
+        How we track
+        	{% if page.plural_name %}
+			  		{{ page.plural_name|title }}
+			  	{% else %}
+			  		{{ page.title|title }}
+			  	{% endif %}
       </h4>
       <div>
         {{ page.methodology|richtext }}
