@@ -1,10 +1,13 @@
+$caption-bottom-padding: $incident-body-top-padding
+$caption-side-padding: $incident-body-side-padding
+
 .caption
 	+light-gray-text-small
 	+p-remove-first-and-last-margin
 	display: flex
 	justify-content: space-between
-	margin: 0.5rem $incident-body-side-padding 0
-	padding: 0 0 $incident-body-top-padding
+	margin: 0.5rem $caption-side-padding 0
+	padding: 0 0 $caption-bottom-padding
 	border-bottom: 1px solid $gray-light
 
 	@media(max-width: $small-screen)
