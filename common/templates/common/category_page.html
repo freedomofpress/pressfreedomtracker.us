@@ -3,17 +3,17 @@
 {% load wagtailcore_tags %}
 
 {% block flex_class %}
-	flex-container--grow-3
+    flex-container--grow-3
 {% endblock %}
 
 {% block top_sidebar_class %}
-	{{ block.super }}
-	layout-right-sidebar__sidebar--light
+    {{ block.super }}
+    layout-right-sidebar__sidebar--light
 {% endblock%}
 
 {% block secondary-header %}
 <div class="layout-right-sidebar">
-	<div class="layout-right-sidebar__main
+    <div class="layout-right-sidebar__main
 							layout-right-sidebar__main--dark
 							layout-right-sidebar__main--{{ page.title|slugify }}"
 	>
@@ -52,9 +52,9 @@
 
 {% block main %}
 	<div class="incident-grid">
-		{% for incident in page.get_incidents %}
+		{% for incident in incidents %}
 			<div class="incident-grid__item">
-				{% include "incident/_incident.html" with incident=incident.incident_page teaser=True %}
+				{% include "incident/_incident.html" with incident=incident teaser=True %}
 			</div>
 		{% empty %}
 			<p>There are no incidents in this category yet.</p>
