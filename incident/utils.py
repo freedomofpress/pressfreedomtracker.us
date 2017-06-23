@@ -13,7 +13,7 @@ class IncidentFilter(object):
     def fetch(self):
         incidents = IncidentPage.objects.live()
 
-        if self.lower_date and self.upper_date:
+        if self.lower_date or self.upper_date:
             incidents = self.by_date_range(incidents)
 
         if self.categories:
