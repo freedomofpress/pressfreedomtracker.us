@@ -8,7 +8,7 @@
 	width: 100%
 
 .incident__body
-	padding: 20px 20px 5px 20px
+	padding: $incident-body-top-padding $incident-body-side-padding 5px
 
 .incident__image-link
 	display: block
@@ -55,9 +55,8 @@
 		text-decoration: underline
 
 .incident__date
+	+light-gray-text-small
 	margin: 0 0 15px 0
-	color: #888
-	font-weight: $sans-regular
 
 .incident__description
 	margin: 0 0 15px 0

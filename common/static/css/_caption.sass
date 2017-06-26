@@ -1,0 +1,35 @@
+$caption-bottom-padding: $incident-body-top-padding
+$caption-side-padding: $incident-body-side-padding
+
+.caption
+	+light-gray-text-small
+	+p-remove-first-and-last-margin
+	display: flex
+	justify-content: space-between
+	margin: 0.5rem $caption-side-padding 0
+	padding: 0 0 $caption-bottom-padding
+	border-bottom: 1px solid $gray-light
+
+	@media(max-width: $small-screen)
+		flex-direction: column-reverse
+
+.caption--att-only
+	border-bottom-width: 0
+	padding-bottom: 0
+
+.caption__text
+	max-width: 85%
+
+	@media(max-width: $small-screen)
+		max-width: 100%
+
+.caption__attribution
+	text-transform: uppercase
+	padding-left: 1rem
+
+	@media(max-width: $small-screen)
+		padding-left: 0
+		padding-bottom: 0.25rem
+
+.caption__attirbution--att-only
+	padding-left: 0
