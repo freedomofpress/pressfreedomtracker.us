@@ -9,7 +9,7 @@ It can take the following context variables:
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
 
-{% with main_category=incident.get_main_category caption=incident.image_caption attribution=incident.image_attribution %}
+{% with main_category=incident.get_main_category %}
 <article class="
 	incident
 	incident--{{ main_category|slugify }}
@@ -30,7 +30,7 @@ It can take the following context variables:
 					src="{{ x1.url }}"
 					srcset="{{ x2.url }} 2x"
 					{% if incident.image_caption %}
-						title="{{ caption }} ({{ attribution|upper }})"
+						title="{{ incident.image_caption }} ({{ incident.image_attribution|upper }})"
 					{% endif %}
 				/>
 			</a>
@@ -43,15 +43,20 @@ It can take the following context variables:
 				src="{{ x1.url }}"
 				srcset="{{ x2.url }} 2x"
 			/>
-			{% if caption or attribution %}
+			{% if incident.image_caption or incident.image_attribution %}
 				<aside
-					class="caption {% if not caption %}caption--att-only {% endif %}"
+					class="caption {% if not incident.image_caption %} caption--att-only {% endif %}"
 				>
-					{% if caption %}
-					<div class="caption__text">{{ caption|richtext }}</div>
+					{% if incident.image_caption %}
+						<div class="caption__text">
+							{{ incident.image_caption|richtext }}
+						</div>
 					{% endif %}
+
 					{% if incident.image_attribution %}
-						<div class="caption__attribution {% if not caption %}caption__attirbution--att-only{% endif %}">{{ attribution }}</div>
+						<div class="caption__attribution {% if not caption %} caption__attirbution--att-only {% endif %}">
+							{{ incident.image_attribution }}
+						</div>
 					{% endif %}
 				</aside>
 			{% endif %}
