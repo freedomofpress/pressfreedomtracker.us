@@ -30,8 +30,6 @@ def editor_css():
     return format_html(html)
 
 
-
-
 class Autocomplete(Widget):
     template_name = 'autocomplete/autocomplete.html'
 
