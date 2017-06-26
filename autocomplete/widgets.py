@@ -20,6 +20,18 @@ def editor_js():
     return format_html(html)
 
 
+@hooks.register('insert_editor_css')
+def editor_css():
+    chunks = get_loader('DEFAULT').get_bundle('editor')
+    chunk = next(filter(lambda chunk: chunk['name'].endswith('.css'), chunks))
+    if not chunk:
+        return ''
+    html = '<link rel="stylesheet" type="text/css" href="{}" />'.format(chunk['url'])
+    return format_html(html)
+
+
+
+
 class Autocomplete(Widget):
     template_name = 'autocomplete/autocomplete.html'
 
