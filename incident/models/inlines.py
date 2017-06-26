@@ -67,3 +67,8 @@ class EquipmentBroken(models.Model):
         verbose_name='Equipment Broken',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
+
+    panels = [
+        AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
+        FieldPanel('quantity'),
+    ]
