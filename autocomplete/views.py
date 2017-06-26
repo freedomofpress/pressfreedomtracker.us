@@ -59,7 +59,7 @@ def create(request, *args, **kwargs):
     except:
         return HttpResponseBadRequest
 
-    content_type = ContentType.objects.get_for_model(page_type)
+    content_type = ContentType.objects.get_for_model(model)
     permission_label = '{}.add_{}'.format(
         content_type.app_label,
         content_type.model
