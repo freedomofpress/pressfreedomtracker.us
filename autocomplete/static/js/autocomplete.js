@@ -168,6 +168,7 @@ class Suggestions extends PureComponent {
 							key="create"
 							onClick={onCreate}
 							className={classNames(
+								'suggestions__item',
 								'suggestions__item--create',
 								{ 'suggestions__item--active': suggestions.length === this.state.index },
 							)}
