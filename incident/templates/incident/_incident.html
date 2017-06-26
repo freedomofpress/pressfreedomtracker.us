@@ -122,7 +122,21 @@ It can take the following context variables:
 					<h5></h5>
 				</section>
 			{% endfor %}
-		{% endif %}
+			{% if incident.links.exists %}
+				<div class="related-links">
+					<h4 class="related-links__header">
+						Links
+					</h4>
+					<ol class="related-links__list">
+						{% for link in incident.links.all %}
+							<li class="related-links__item">
+								<a href="{{ link.url }}">{{link.title}}</a>
+							</li>
+						{% endfor %}
+					</ol>
+				</div>
+			{% endif %}{# incident.links.exists #}
+		{% endif %}{# not teaser #}
 	</div>
 </article>
 {% endwith %}
