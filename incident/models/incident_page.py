@@ -16,7 +16,7 @@ from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
-from autocomplete.edit_handlers import AutocompleteFieldPanel
+from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
 from incident.models import choices
 
 
@@ -33,11 +33,11 @@ class IncidentPage(Page):
         blank=True,
         null=True,
     )
-    state = models.CharField(
-        help_text="Two character state abbreviation",
-        max_length=2,
+    state = models.ForeignKey(
+        'incident.State',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )
 
     body = StreamField([
@@ -308,7 +308,7 @@ class IncidentPage(Page):
                     FieldPanel('date'),
                     FieldPanel('affiliation'),
                     FieldPanel('city'),
-                    FieldPanel('state'),
+                    AutocompletePageChooserPanel('state', page_type='incident.State'),
                     FieldPanel('targets'),
                     FieldPanel('tags'),
                     InlinePanel('categories', label='Incident categories', min_num=1),
