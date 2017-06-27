@@ -1,5 +1,4 @@
 from django.apps import apps
-from django.contrib.contenttypes.models import ContentType
 
 from wagtail.wagtailadmin.edit_handlers import (
     BaseFieldPanel,
