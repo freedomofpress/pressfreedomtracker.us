@@ -1,0 +1,15 @@
+<span id="js-{{ widget.attrs.id }}"></span>
+<script type="text/javascript">
+	window.renderAutocompleteWidget(
+		'js-{{ widget.attrs.id }}',
+		'{{ widget.name }}',
+		{% if widget.is_single %}
+		{{ widget.value|safe }},
+		{% else %}
+		JSON.parse('{{ widget.value|safe }}'),
+		{% endif %}
+		'{{ widget.page_type }}',
+		'{{ widget.can_create }}' === 'True',
+		'{{ widget.is_single }}' === 'True',
+	);
+</script>
