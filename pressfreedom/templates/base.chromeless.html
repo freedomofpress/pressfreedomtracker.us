@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
+	<head>
+		{% include "_head.html" %}
+	</head>
+
+	<body class="{% block body_class %}{% endblock %}">
+		{% block maincontainer %}
+			<main role="main" class="site-main container">
+				{% block main %}{% endblock %}
+			</main>{# /.main #}
+		{% endblock %}
+	</body>
+</html>
