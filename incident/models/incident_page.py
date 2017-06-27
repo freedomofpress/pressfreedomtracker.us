@@ -284,6 +284,12 @@ class IncidentPage(Page):
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
         InlinePanel('updates', label='Updates'),
+        InlinePanel(
+            'links',
+            label='Sources',
+            help_text="Links to resources and news articles related to this"
+                      "incident. Displayed as footnotes."
+        ),
 
         MultiFieldPanel(
             heading='Teaser',
