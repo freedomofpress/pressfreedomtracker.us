@@ -1,0 +1,16 @@
+{% if page.politicians_or_public_figures_involved.all %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Politicians or Public Figures Involved
+		</th>
+		<td>
+			<ul class="data-table__list">
+				{% for person in page.politicians_or_public_figures_involved.all %}
+						<li>
+							<a href="#">{{ person.name }}</a>
+						</li>
+				{% endfor %}
+			</ul>
+		</td>
+	</tr>
+{% endif %}
