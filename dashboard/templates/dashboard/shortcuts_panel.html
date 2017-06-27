@@ -1,0 +1,23 @@
+<section class="panel nice-padding" style="font-size: 1.5em; line-height: 1.6">
+	<ul style="list-style-type: none; padding: 0">
+		<li>
+			<a
+				href="{% url 'wagtailimages:add' %}"
+				class="icon icon-image"
+				style="display: block"
+			>
+				Add a new image
+			</a>
+		</li>
+
+		<li>
+			<a
+				href="{% url 'wagtailadmin_pages:add_subpage' incident_page.pk %}"
+				class="icon icon-plus-inverse"
+				style="display: block"
+			>
+				Add a new incident
+			</a>
+		</li>
+	</ul>
+</section>
