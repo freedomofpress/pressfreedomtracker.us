@@ -4,7 +4,7 @@
 			Arrest Status
 		</th>
 		<td class="data-table__value">
-			{{ page.get_arrest_status_display }}
+			{{ page.get_arrest_status_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -15,7 +15,7 @@
 			Status of Charges
 		</th>
 		<td class="data-table__value">
-			{{ page.get_status_of_charges_display }}
+			{{ page.get_status_of_charges_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -29,7 +29,7 @@
 			<ul class="data-table__list">
 				{% for charge in page.current_charges.all %}
 						<li>
-							<a href="#">{{ charge.name }}</a>
+							<a href="#">{{ charge.name|capfirst }}</a>
 						</li>
 				{% endfor %}
 			</ul>
@@ -46,7 +46,7 @@
 			<ul class="data-table__list">
 				{% for charge in page.dropped_charges.all %}
 						<li>
-							<a href="#">{{ charge.name }}</a>
+							<a href="#">{{ charge.name|capfirst }}</a>
 						</li>
 				{% endfor %}
 			</ul>

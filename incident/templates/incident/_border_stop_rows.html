@@ -32,7 +32,7 @@
 			US Citizenship Status of Target
 		</th>
 		<td class="data-table__value">
-			{{ page.get_target_us_citizenship_status_display }}
+			{{ page.get_target_us_citizenship_status_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -73,7 +73,7 @@
 			Asked for device access?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_for_device_access_display }}
+			{{ page.get_did_authorities_ask_for_device_access_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -84,7 +84,7 @@
 			Asked to display social media?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_for_social_media_user_display }}
+			{{ page.get_did_authorities_ask_for_social_media_user_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -95,7 +95,7 @@
 			Asked for social media passwords?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_for_social_media_pass_display }}
+			{{ page.get_did_authorities_ask_for_social_media_pass_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -106,7 +106,7 @@
 			Asked intrusive questions about work?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_about_work_display }}
+			{{ page.get_did_authorities_ask_about_work_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}

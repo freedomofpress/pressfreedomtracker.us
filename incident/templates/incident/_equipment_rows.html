@@ -39,7 +39,7 @@
 			Status of Seized Equipment
 		</th>
 		<td class="data-table__value">
-			{{ page.get_status_of_seized_equipment_display }}
+			{{ page.get_status_of_seized_equipment_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -65,7 +65,7 @@
 			Actor who seized equipment
 		</th>
 		<td class="data-table__value">
-			{{ page.get_actor_display }}
+			{{ page.get_actor_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}

@@ -4,7 +4,7 @@
 			Assailant
 		</th>
 		<td class="data-table__value">
-			{{ page.get_assailant_display|title }}
+			{{ page.get_assailant_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -15,7 +15,7 @@
 			Was the journalist targeted?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_was_journalist_targeted_display|title }}
+			{{ page.get_was_journalist_targeted_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}

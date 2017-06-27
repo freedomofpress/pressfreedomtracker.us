@@ -4,7 +4,7 @@
 			Third Party in Possesstion of Communications
 		</th>
 		<td class="data-table__value">
-			{{ page.third_party_in_possession_of_communications }}
+			{{ page.third_party_in_possession_of_communications|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -15,7 +15,7 @@
 			Third Party in Possesstion of Communications
 		</th>
 		<td class="data-table__value">
-			{{ page.get_third_party_business_display }}
+			{{ page.get_third_party_business_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -26,7 +26,7 @@
 			Third Party in Possesstion of Communications
 		</th>
 		<td class="data-table__value">
-			{{ page.get_legal_order_type_display }}
+			{{ page.get_legal_order_type_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}

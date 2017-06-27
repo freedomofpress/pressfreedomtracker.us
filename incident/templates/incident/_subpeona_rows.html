@@ -4,7 +4,7 @@
 			Subpoena Type
 		</th>
 		<td class="data-table__value">
-			{{ page.get_subpoena_type_display }}
+			{{ page.get_subpoena_type_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -15,7 +15,7 @@
 			Subpoena Status
 		</th>
 		<td class="data-table__value">
-			{{ page.get_subpoena_status_display }}
+			{{ page.get_subpoena_status_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -26,7 +26,7 @@
 			Journalist held in contempt?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_held_in_contempt_display }}
+			{{ page.get_held_in_contempt_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
@@ -37,7 +37,7 @@
 			Detention Status
 		</th>
 		<td class="data-table__value">
-			{{ page.get_detention_status_display }}
+			{{ page.get_detention_status_display|capfirst }}
 		</td>
 	</tr>
 {% endif %}
