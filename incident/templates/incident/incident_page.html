@@ -30,6 +30,7 @@
 				</th>
 				<td class="data-table__value">{{page.date|date:"F j, Y" }}</td>
 			</tr>
+
 			{% if page.targets.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
@@ -45,6 +46,28 @@
 								{% endif %}
 							{% endfor %}
 						{% endwith %}
+					</td>
+				</tr>
+			{% endif %}
+
+			{% if page.affiliation %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Affiliation
+					</th>
+					<td class="data-table__value">
+						{{ page.affiliation }}
+					</td>
+				</tr>
+			{% endif %}
+
+			{% if page.city or page.state %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Location
+					</th>
+					<td class="data-table__value">
+						{{ page.city|default:"" }} {{ page.state|default:""|upper }}
 					</td>
 				</tr>
 			{% endif %}
@@ -71,13 +94,14 @@
 							<ul class="data-table__list">
 								{% for related_case in page.get_related_incidents %}
 										<li>
-											<a href="{{related_case.url}}">{{related_case.title}}</a>
+											<a href="{{ related_case.url }}">{{ related_case.title }}</a>
 										</li>
 								{% endfor %}
 							</ul>
 						</td>
 				</tr>
 			{% endif %}
+
 			{% if page.tags.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
@@ -85,7 +109,7 @@
 					</th>
 					<td class="data-table__value">
 						{% for tag in page.tags.all %}
-							<a href="#">{{tag.name}}</a>
+							<a href="#">{{ tag.name }}</a>
 						{% endfor %}
 					</td>
 				</tr>
