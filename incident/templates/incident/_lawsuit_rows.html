@@ -1,0 +1,21 @@
+{% if page.lawsuit_name %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Name of Lawsuit
+		</th>
+		<td class="data-table__value">
+			{{ page.lawsuit_name }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.jurisdiction %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Jurisdiction
+		</th>
+		<td class="data-table__value">
+			{{ page.jurisdiction }}
+		</td>
+	</tr>
+{% endif %}

@@ -1,0 +1,73 @@
+{% if page.equipment_seized.all %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Equipment Seized
+		</th>
+		<td>
+			<ul class="data-table__list">
+				{% for item in page.equipment_seized.all %}
+						<li>
+							<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
+						</li>
+				{% endfor %}
+			</ul>
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.equipment_broken.all %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Equipment Broken
+		</th>
+		<td>
+			<ul class="data-table__list">
+				{% for item in page.equipment_broken.all %}
+						<li>
+							<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
+						</li>
+				{% endfor %}
+			</ul>
+		</td>
+	</tr>
+{% endif %}
+
+
+{% if page.status_of_seized_equipment %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Status of Seized Equipment
+		</th>
+		<td class="data-table__value">
+			{{ page.get_status_of_seized_equipment_display }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.is_search_warrent_obtained %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Search Warrant Obtained
+		</th>
+		<td class="data-table__value">
+			{% if page.is_search_warrent_obtained %}
+				Yes
+			{% else %}
+				No
+			{% endif %}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.actor %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Actor who seized equipment
+		</th>
+		<td class="data-table__value">
+			{{ page.get_actor_display }}
+		</td>
+	</tr>
+{% endif %}
+
+

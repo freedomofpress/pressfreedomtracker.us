@@ -1,0 +1,77 @@
+{% if page.arrest_status %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Arrest Status
+		</th>
+		<td class="data-table__value">
+			{{ page.get_arrest_status_display }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.status_of_charges %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Status of Charges
+		</th>
+		<td class="data-table__value">
+			{{ page.get_status_of_charges_display }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.current_charges.all %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Current Charges
+		</th>
+		<td>
+			<ul class="data-table__list">
+				{% for charge in page.current_charges.all %}
+						<li>
+							<a href="#">{{ charge.name }}</a>
+						</li>
+				{% endfor %}
+			</ul>
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.dropped_charges.all %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Dropped charges
+		</th>
+		<td>
+			<ul class="data-table__list">
+				{% for charge in page.dropped_charges.all %}
+						<li>
+							<a href="#">{{ charge.name }}</a>
+						</li>
+				{% endfor %}
+			</ul>
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.detention_date %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Detention Date
+		</th>
+		<td class="data-table__value">
+			{{ page.detention_date|date:"F j, Y" }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.release_date %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Release Date
+		</th>
+		<td class="data-table__value">
+			{{ page.release_date|date:"F j, Y" }}
+		</td>
+	</tr>
+{% endif %}
