@@ -1,52 +1,13 @@
 from django.db import models
-
-from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
 from wagtail.wagtailcore import blocks
+from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailsearch import index
-
-from modelcluster.models import ClusterableModel
-from modelcluster.fields import ParentalKey
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
-from taggit.models import TaggedItemBase
-
-
-@register_setting
-class FooterSettings(BaseSetting):
-    body = RichTextField(blank=True, null=True)
-    menu = models.ForeignKey(
-        'menus.Menu',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-
-    panels = [
-        FieldPanel('body'),
-        SnippetChooserPanel('menu'),
-    ]
-
-    class Meta:
-        verbose_name = 'Site Footer'
-
-
-@register_setting
-class TaxonomySettings(BaseSetting, ClusterableModel):
-    panels = [
-        InlinePanel(
-            'categories',
-            label='Incident Categories',
-            help_text='The categories listed here will be used for navigation menus throughout the site.',
-        ),
-    ]
-
-    class Meta:
-        verbose_name = 'Taxonomy'
+from wagtail.wagtailsearch import index
+from modelcluster.fields import ParentalKey
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -220,10 +181,3 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     search_fields = Page.search_fields + [
         index.SearchField('body'),
     ]
-
-
-class Tag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_items',
-    )
