@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
+from modelcluster.models import ClusterableModel
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -18,6 +19,20 @@ from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
 from incident.models import choices
+
+
+class Target(ClusterableModel):
+    @classmethod
+    def autocomplete_create(kls, value):
+        return kls.objects.create(title=value)
+
+    title = models.CharField(
+        max_length=255,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.title
 
 
 class IncidentPage(Page):
@@ -68,8 +83,14 @@ class IncidentPage(Page):
         null=True,
     )
 
-    targets = ClusterTaggableManager(
-        through='incident.TargetsTag',
+    image_attribution = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+
+    targets = ParentalManyToManyField(
+        'incident.Target',
         blank=True,
         verbose_name='Targets (Journalists/Organizations)',
         related_name='targets_incidents',
@@ -303,7 +324,7 @@ class IncidentPage(Page):
                     FieldPanel('affiliation'),
                     FieldPanel('city'),
                     AutocompletePageChooserPanel('state', page_type='incident.State'),
-                    FieldPanel('targets'),
+                    AutocompleteFieldPanel('targets', 'incident.Target'),
                     FieldPanel('tags'),
                     InlinePanel('categories', label='Incident categories', min_num=1),
             ]

@@ -16,13 +16,6 @@ class DroppedChargesTag(TaggedItemBase):
     )
 
 
-class TargetsTag(TaggedItemBase):
-    content_object = ParentalKey(
-        'incident.IncidentPage',
-        related_name='tagged_targets',
-    )
-
-
 class NationalityTag(TaggedItemBase):
     content_object = ParentalKey(
         'incident.IncidentPage',
