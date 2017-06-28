@@ -58,6 +58,10 @@ class Suggestions extends PureComponent {
 		return nextProps.suggestions[index].id !== currentId
 	}
 
+	handleMouseEnter(index) {
+		this.setState({ index })
+	}
+
 	handleKeyPress(event) {
 		const { index } = this.state
 		const { suggestions, canCreate } = this.props
@@ -153,6 +157,7 @@ class Suggestions extends PureComponent {
 						<li
 							key={suggestion.id}
 							onClick={onClick.bind(null, suggestion)}
+							onMouseEnter={this.handleMouseEnter.bind(this, index)}
 							className={classNames(
 								'suggestions__item',
 								{ 'suggestions__item--active': index === this.state.index },
@@ -167,6 +172,7 @@ class Suggestions extends PureComponent {
 						<li
 							key="create"
 							onClick={onCreate}
+							onMouseEnter={this.handleMouseEnter.bind(this, suggestions.length)}
 							className={classNames(
 								'suggestions__item',
 								'suggestions__item--create',
