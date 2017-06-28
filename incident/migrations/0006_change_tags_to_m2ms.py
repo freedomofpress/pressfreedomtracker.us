@@ -185,4 +185,4 @@ class Migration(migrations.Migration):
             name='_tmp_politicians_or_public_figures_involved'
         ),
         migrations.DeleteModel(name='PoliticiansOrPublicTag'),
-]
+    ]

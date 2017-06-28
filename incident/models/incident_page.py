@@ -3,7 +3,6 @@ import datetime
 from django.db import models
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
-from modelcluster.models import ClusterableModel
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel,
     InlinePanel,
