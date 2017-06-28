@@ -38,6 +38,7 @@ class IncidentPage(Page):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
+        help_text='Full name of the state. Abbreviations can be added in the Snippets editor.',
     )
 
     body = StreamField([
