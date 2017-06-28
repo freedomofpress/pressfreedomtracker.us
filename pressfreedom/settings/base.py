@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'dashboard',
 
     'wagtail.contrib.settings',
+    'wagtail.contrib.wagtailroutablepage',
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
     'wagtail.wagtailembeds',

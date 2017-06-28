@@ -1,15 +1,51 @@
+import csv
+
+from django.http import StreamingHttpResponse
 from django.utils.cache import patch_cache_control
 from wagtail.wagtailcore.models import Page
+from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
-from common.utils import DEFAULT_PAGE_KEY, paginate
-
+from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
+from incident.models.export import to_row, is_exportable
+from incident.models.incident_page import IncidentPage
 from incident.utils import IncidentFilter
 
 
-class IncidentIndexPage(Page):
+class IncidentIndexPage(RoutablePageMixin, Page):
     content_panels = Page.content_panels
 
     subpage_types = ['incident.IncidentPage']
+
+    @route('export/')
+    def export_view(self, request):
+        incidents = self.get_incidents()
+        incident_fields = IncidentPage._meta.get_fields()
+        headers = [field.name for field in incident_fields
+                   if is_exportable(field)]
+
+        # Helper function to combine data with headers
+        def stream(headers, data):
+            if headers:
+                yield headers
+            for incident in data:
+                yield to_row(incident)
+
+        pseudo_buffer = Echo()
+        writer = csv.writer(pseudo_buffer)
+        response = StreamingHttpResponse(
+            (writer.writerow(row) for row in stream(headers, incidents)),
+            content_type="text/csv")
+        response['Content-Disposition'] = 'attachment; filename="all_incidents.csv"'
+        return response
+
+    def get_incidents(self):
+        """Returns all published incident pages"""
+        return IncidentPage.objects.live().order_by(
+            # Incidents should be in reverse-chronological order by the
+            # incident date, not when they were published.
+            '-date',
+            'path',
+        )
 
     def get_context(self, request):
         context = super(IncidentIndexPage, self).get_context(request)
