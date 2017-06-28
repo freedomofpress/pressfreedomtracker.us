@@ -8,6 +8,8 @@ from wagtail.wagtailsearch import index
 
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
+from statistics.blocks import StatisticsBlock
+
 
 class BlogIndexPage(Page):
     body = StreamField([
@@ -36,6 +38,7 @@ class BlogPage(Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('statistics', StatisticsBlock()),
     ])
 
     teaser_text = RichTextField(
