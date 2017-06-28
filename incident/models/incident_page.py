@@ -55,7 +55,7 @@ class IncidentPage(Page):
     )
 
     teaser_image = models.ForeignKey(
-        'wagtailimages.image',
+        'common.CustomImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

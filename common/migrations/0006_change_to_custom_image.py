@@ -11,6 +11,18 @@ import wagtail.wagtailimages.models
 import wagtail.wagtailsearch.index
 
 
+def migrate_images(apps, schema_editor):
+    # This operation assumes CustomImage instances will be created with their
+    # original Image instance primary keys reserved.
+    Image = apps.get_model('wagtailimages.Image')
+    CustomImage = apps.get_model('common.CustomImage')
+    for original_image in Image.objects.all():
+        values = dict()
+        for field in original_image._meta.fields:
+            values[field.name] = getattr(original_image, field.name)
+        CustomImage.objects.create(**values)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -61,4 +73,16 @@ class Migration(migrations.Migration):
             name='customrendition',
             unique_together=set([('image', 'filter_spec', 'focal_point_key')]),
         ),
+
+        migrations.AlterField(
+            model_name='organizationpage',
+            name='logo',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+        ),
+        migrations.AlterField(
+            model_name='personpage',
+            name='photo',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+        ),
+        migrations.RunPython(migrate_images),
     ]

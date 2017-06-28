@@ -57,7 +57,7 @@ class OrganizationIndexPage(Page):
 class OrganizationPage(Page):
     website = models.URLField(blank=True, null=True)
     logo = models.ForeignKey(
-        'wagtailimages.Image',
+        'common.CustomImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -81,7 +81,7 @@ class OrganizationPage(Page):
 
 class PersonPage(Page):
     photo = models.ForeignKey(
-        'wagtailimages.Image',
+        'common.CustomImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
