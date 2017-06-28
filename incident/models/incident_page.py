@@ -21,62 +21,6 @@ from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageC
 from incident.models import choices
 
 
-class Target(ClusterableModel):
-    @classmethod
-    def autocomplete_create(kls, value):
-        return kls.objects.create(title=value)
-
-    title = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.title
-
-
-class Charge(ClusterableModel):
-    @classmethod
-    def autocomplete_create(kls, value):
-        return kls.objects.create(title=value)
-
-    title = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.title
-
-
-class Nationality(ClusterableModel):
-    @classmethod
-    def autocomplete_create(kls, value):
-        return kls.objects.create(title=value)
-
-    title = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.title
-
-
-class PoliticianOrPublic(ClusterableModel):
-    @classmethod
-    def autocomplete_create(kls, value):
-        return kls.objects.create(title=value)
-
-    title = models.CharField(
-        max_length=255,
-        unique=True,
-    )
-
-    def __str__(self):
-        return self.title
-
-
 class IncidentPage(Page):
     date = models.DateField()
     affiliation = models.CharField(
