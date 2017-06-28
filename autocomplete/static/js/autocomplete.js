@@ -17,6 +17,11 @@ class Suggestions extends PureComponent {
 		this.handleBlurClick = this.handleBlurClick.bind(this)
 		this.handleFocus = this.handleFocus.bind(this)
 
+		// An object to track individual suggestion items by array index.
+		// This is used to look at scrolling offsets during keyboard
+		// navigation.
+		this.suggestionItemsElm = {}
+
 		this.state = {
 			index: 0,
 			visible: false,
@@ -36,6 +41,29 @@ class Suggestions extends PureComponent {
 			this.setState({
 				index: 0,
 			})
+		}
+	}
+
+	scrollToSuggestion(index) {
+		if (!this.suggestionsElm) {
+			return
+		}
+
+		if (!this.suggestionItemsElm[index]) {
+			return
+		}
+
+		const item = this.suggestionItemsElm[index]
+		const dY = item.offsetHeight
+		const containerBottom = this.suggestionsElm.scrollTop + this.suggestionsElm.offsetHeight
+		if (this.state.index < index && item.offsetTop > containerBottom) {
+			// We only want to be movin' on down if we definitely need to scroll to
+			// see the target item. This means we have to check both that its offset
+			// is past where we've scrolled and the height of the container.
+			this.suggestionsElm.scrollTop += dY
+		} else if (this.state.index > index && item.offsetTop > this.suggestionsElm.scrollTop) {
+			// Movin' on up
+			this.suggestionsElm.scrollTop -= dY
 		}
 	}
 
@@ -71,13 +99,17 @@ class Suggestions extends PureComponent {
 		if (event.key === 'ArrowDown') {
 			// Creation takes the nth index
 			const max = canCreate ? suggestions.length : suggestions.length - 1
+			const target = Math.min(max, index + 1)
 			this.setState({
-				index: Math.min(max, index + 1),
+				index: target,
 			})
+			this.scrollToSuggestion(target)
 		} else if (event.key === 'ArrowUp') {
+			const target = Math.max(0, index - 1)
 			this.setState({
-				index: Math.max(0, index - 1),
+				index: target,
 			})
+			this.scrollToSuggestion(target)
 		} else if (event.key === 'Enter') {
 			// Enter should add the selected item, not submit the form.
 			event.stopPropagation()
@@ -152,6 +184,7 @@ class Suggestions extends PureComponent {
 						{ 'suggestions--populated': visible && suggestions.length > 0 }
 					)}
 					style={{ display }}
+					ref={ref => this.suggestionsElm = ref}
 				>
 					{suggestions.map((suggestion, index) =>
 						<li
@@ -162,6 +195,7 @@ class Suggestions extends PureComponent {
 								'suggestions__item',
 								{ 'suggestions__item--active': index === this.state.index },
 							)}
+							ref={ref => this.suggestionItemsElm[index] = ref}
 						>
 							<span>{suggestion.label}</span>
 							<svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293h-704q-52 0-84.5-37.5t-32.5-90.5v-128q0-53 32.5-90.5t84.5-37.5h704l-293-294q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/></svg>
@@ -173,6 +207,7 @@ class Suggestions extends PureComponent {
 							key="create"
 							onClick={onCreate}
 							onMouseEnter={this.handleMouseEnter.bind(this, suggestions.length)}
+							ref={ref => this.suggestionItemsElm[suggestions.length] = ref}
 							className={classNames(
 								'suggestions__item',
 								'suggestions__item--create',
