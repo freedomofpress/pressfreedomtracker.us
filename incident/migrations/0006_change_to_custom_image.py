@@ -6,10 +6,21 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def migrate_image_attribution(apps, schema_editor):
+    IncidentPage = apps.get_model('incident', 'IncidentPage')
+    for page in IncidentPage.objects.all():
+        if not page.image_attribution or not page.teaser_image:
+            continue
+
+        page.teaser_image.update(attribution=page.image_attribution)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
         ('incident', '0005_merge_20170626_2248'),
+        # This dependency was explicitly added.
+        ('common', '0006_change_to_custom_image'),
     ]
 
     operations = [
@@ -17,5 +28,12 @@ class Migration(migrations.Migration):
             model_name='incidentpage',
             name='teaser_image',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+        ),
+
+        migrations.RunPython(migrate_image_attribution),
+
+        migrations.RemoveField(
+            model_name='incidentpage',
+            name='image_attribution',
         ),
     ]

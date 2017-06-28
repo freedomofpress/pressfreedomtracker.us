@@ -68,12 +68,6 @@ class IncidentPage(Page):
         null=True,
     )
 
-    image_attribution = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-    )
-
     targets = ClusterTaggableManager(
         through='incident.TargetsTag',
         blank=True,
@@ -299,7 +293,6 @@ class IncidentPage(Page):
             children=[
                 ImageChooserPanel('teaser_image'),
                 FieldPanel('image_caption'),
-                FieldPanel('image_attribution'),
                 FieldPanel('teaser'),
             ]
         ),
