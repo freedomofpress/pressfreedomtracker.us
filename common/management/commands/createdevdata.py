@@ -12,7 +12,7 @@ from blog.models import BlogIndexPage, BlogPage
 from common.models import (
     CategoryPage, TaxonomyCategoryPage, TaxonomySettings,
     PersonPage, SimplePage, SimplePageWithSidebar,
-    FooterSettings,
+    FooterSettings, CustomImage,
 )
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
@@ -21,7 +21,6 @@ from menus.models import Menu, MenuItem
 
 from wagtail.wagtailcore.models import Page, Site
 from wagtail.wagtailcore.rich_text import RichText
-from wagtail.wagtailimages.models import Image
 
 
 class Command(BaseCommand):
@@ -265,9 +264,10 @@ class Command(BaseCommand):
                 body="At least nine news outlets were excluded from an informal briefing known as 'a gaggle' by President Donald Trump's White House Press Secretary Sean Spicer.",
             ),
         ]
-        image = Image.objects.create(
+        image = CustomImage.objects.create(
             title='Sample Image',
             file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
+            attribution='createdevdata'
         )
         for index, data in enumerate(incident_data):
             page = IncidentPage(
