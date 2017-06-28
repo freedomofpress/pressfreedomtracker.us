@@ -4,6 +4,8 @@ from wagtail.wagtailcore.models import Site
 
 
 class ShortcutsPanel:
+    # This is an ordering number that is the minimum multiple of 10 to place
+    # this panel underneath the built-in Wagtail panels.
     order = 100
 
     def __init__(self, request):
