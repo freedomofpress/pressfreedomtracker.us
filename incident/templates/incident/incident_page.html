@@ -38,12 +38,10 @@
 					</th>
 					<td class="data-table__value">
 						{% with page.targets.all as journalists %}
-							{% for journalistPage in journalists %}
-								{% if not forloop.last %}
-									{{journalistPage.title}},
-								{% else %}
-									{{journalistPage.title}}
-								{% endif %}
+							<ul class="data-table__list">
+							{% for journalist in journalists %}
+								<li class="data-table__list-item data-table__list-item--inline">
+									{{ journalist.name }}</li>
 							{% endfor %}
 						{% endwith %}
 					</td>
