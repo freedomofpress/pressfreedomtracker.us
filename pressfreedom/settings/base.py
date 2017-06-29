@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'statistics',
     'menus',
     'styleguide',
+    'dashboard',
 
     'wagtail.contrib.settings',
     'wagtail.wagtailforms',
