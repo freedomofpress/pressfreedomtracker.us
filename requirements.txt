@@ -16,19 +16,24 @@ django-webpack-loader==0.4.1
 django==1.11.1
 djangorestframework==3.6.3  # via wagtail
 elasticsearch==2.4.1
+factory-boy==2.8.1
+faker==0.7.17             # via factory-boy
 first==2.0.1              # via pip-tools
 gunicorn==19.7.1
 html5lib==0.999999999     # via bleach, wagtail
+ipaddress==1.0.18         # via faker
 olefile==0.44             # via pillow
 pillow==4.1.1             # via wagtail
 pip-tools==1.9.0
 psycopg2==2.7.1
 pyparsing==2.2.0
+python-dateutil==2.6.0    # via faker
 pytz==2017.2              # via django, django-modelcluster
 requests==2.14.2          # via wagtail
-six==1.10.0               # via bleach, html5lib, pip-tools
+six==1.10.0               # via bleach, faker, html5lib, pip-tools, python-dateutil
 unidecode==0.4.20         # via wagtail
 urllib3==1.21.1           # via elasticsearch
+wagtail-factories==0.3.0
 wagtail==1.10
 webencodings==0.5.1       # via html5lib
 willow==0.4               # via wagtail
