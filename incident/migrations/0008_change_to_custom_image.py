@@ -18,7 +18,7 @@ def migrate_image_attribution(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0005_merge_20170626_2248'),
+        ('incident', '0007_auto_20170627_2234'),
         # This dependency was explicitly added.
         ('common', '0006_change_to_custom_image'),
     ]
