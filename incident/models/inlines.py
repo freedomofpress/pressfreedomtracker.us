@@ -79,7 +79,4 @@ class EquipmentBroken(models.Model):
 
     @property
     def summary(self):
-        if self.quantity == 1:
-            return '{0.quantity} {0.equipment}'.format(self)
-        else:
-            return '{0.quantity} {0.equipment}s'.format(self)
+        return '{0.equipment}: count of {0.quantity}'
