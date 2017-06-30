@@ -60,6 +60,10 @@ class EquipmentSeized(models.Model):
         FieldPanel('quantity'),
     ]
 
+    @property
+    def summary(self):
+        return '{0.equipment}: count of {0.quantity}'
+
 
 class EquipmentBroken(models.Model):
     incident = ParentalKey(
