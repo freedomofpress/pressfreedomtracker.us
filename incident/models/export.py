@@ -25,7 +25,7 @@ EXCLUDED_FIELDS = (
 
 
 def humanize(obj):
-    """Attempt to make a flat, human-readable representation of an object"""
+    """Make a human-readable string-representation of an object"""
     if hasattr(obj, 'summary'):
         return obj.summary
     else:
