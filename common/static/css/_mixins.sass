@@ -25,3 +25,13 @@
 
 	p:last-child
 		margin-bottom: 0
+
+=blue-link
+	a
+		text-decoration-color: $gray-light
+		color: $blue-dark-link
+		&:hover,
+		&:focus,
+		&:active
+			color: $blue-dark-link-hover
+			text-decoration-color: darken($gray-light, 10%)
