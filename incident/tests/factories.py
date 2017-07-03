@@ -43,7 +43,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     title = factory.Faker('sentence')
     date = factory.Faker('date')
     city = factory.Faker('city')
-    state = factory.Faker('state_abbr')
     body = wagtail_factories.StreamFieldFactory({
         'rich_text': RichTextBlockFactory,
         'image': wagtail_factories.ImageChooserBlockFactory,
