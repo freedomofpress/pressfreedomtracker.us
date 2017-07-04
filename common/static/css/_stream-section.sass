@@ -1,9 +1,9 @@
 .stream-sections
 	margin-bottom: 1rem
-	:last-child
-		margin-bottom: 0
 
 .stream-section
+	+p-remove-first-and-last-margin
+	padding: 0 $simple-page-padding
 	color: $white
 
 .stream-section--outline
@@ -17,6 +17,10 @@
 @each $name, $color in $background-colors
  	.stream-section--#{$name}
  		background-color: $color
+ 		padding-top: 1em
+ 		padding-bottom: 1em
 
 .stream-section--white
 	color: $black
+	padding-top: 0
+	padding-bottom: 0
