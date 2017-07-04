@@ -1,6 +1,13 @@
 {% load wagtailcore_tags %}
 
-<div class="stream-section {% if full_bleed %}stream-section--full-bleed{% endif %} text-align-{{ self.text_align }} text-size-{{ self.font_size }} text-{{ self.font_family }}" style="background-color: {{self.background_color}}">
+<div class="stream-section
+			{% if full_bleed %}
+				stream-section--full-bleed
+			{% endif %}
+			text-align-{{ self.text_align }}
+			text-size-{{ self.font_size }}
+			text-{{ self.font_family }}
+			stream-section--{{ self.background_color }}">
 	{% if full_bleed %}
 		<div class="container-narrow">
 			{{ self.text|richtext }}
