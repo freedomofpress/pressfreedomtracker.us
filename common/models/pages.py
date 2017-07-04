@@ -11,10 +11,12 @@ from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
+
 from common.blocks import (
     Heading1,
     Heading2,
     Heading3,
+    StyledTextBlock
 )
 
 
@@ -159,7 +161,7 @@ class CategoryPage(Page):
 
 class SimplePage(Page):
     body = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+        ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', blocks.BlockQuoteBlock()),
@@ -180,7 +182,7 @@ class SimplePage(Page):
 
 class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     body = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+        ('text', StyledTextBlock(label='Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', blocks.BlockQuoteBlock()),
