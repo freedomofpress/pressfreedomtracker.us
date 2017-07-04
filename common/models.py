@@ -174,12 +174,18 @@ class CategoryPage(Page):
         index.SearchField('methodology'),
     ]
 
-    def get_incidents(self):
-        """Returns the published incident pages in this category."""
-        return self.incidents.filter(incident_page__live=True).order_by(
-            '-incident_page__date',
-            'incident_page__path',
-        )
+    def get_context(self, request):
+        # placed here to avoid circular dependency
+        from incident.utils import IncidentFilter
+
+        context = super(CategoryPage, self).get_context(request)
+        context['incidents'] = IncidentFilter(
+            search_text=request.GET.get('search'),
+            lower_date=request.GET.get('lower_date'),
+            upper_date=request.GET.get('upper_date'),
+            categories=str(self.page_ptr_id),
+        ).fetch()
+        return context
 
 
 class SimplePage(Page):
