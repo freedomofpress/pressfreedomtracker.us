@@ -16,7 +16,7 @@ def editor_js():
     chunk = next(filter(lambda chunk: chunk['name'].endswith('.js'), chunks))
     if not chunk:
         return ''
-    html = '<script type="text/javascript" src="{}">'.format(chunk['url'])
+    html = '<script type="text/javascript" src="{}"></script>'.format(chunk['url'])
     return format_html(html)
 
 
