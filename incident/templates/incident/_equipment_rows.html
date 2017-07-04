@@ -23,7 +23,7 @@
 		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for item in page.equipment_broken.all %}
-					<li>
+					<li class="data-table__list-item">
 						<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
 					</li>
 				{% endfor %}

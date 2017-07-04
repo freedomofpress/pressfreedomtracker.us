@@ -6,7 +6,7 @@
 		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for target in page.targets_communications_obtained_incidents.all %}
-					<li>
+					<li class="data-table__list-item">
 						<a href="#">{{ target.name }}</a>
 					</li>
 				{% endfor %}

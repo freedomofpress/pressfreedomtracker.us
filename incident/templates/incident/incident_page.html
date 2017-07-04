@@ -92,7 +92,7 @@
 						<td class="data-table__value">
 							<ul class="data-table__list">
 								{% for related_case in page.get_related_incidents %}
-										<li>
+										<li class="data-table__list-item">
 											<a href="{{ related_case.url }}">{{ related_case.title }}</a>
 										</li>
 								{% endfor %}
@@ -107,9 +107,12 @@
 						Tags
 					</th>
 					<td class="data-table__value">
-						{% for tag in page.tags.all %}
-							<a href="#">{{ tag.name }}</a>
-						{% endfor %}
+						<ul class="data-table__list">
+							{% for tag in page.tags.all %}
+								<li class="data-table__list-item data-table__list-item--inline">
+									<a href="#">{{ tag.name }}</a></li>
+							{% endfor %}
+						</ul>
 					</td>
 				</tr>
 			{% endif %}

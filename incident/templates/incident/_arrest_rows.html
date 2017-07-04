@@ -28,7 +28,7 @@
 		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for charge in page.current_charges.all %}
-					<li>
+					<li class="data-table__list-item">
 						<a href="#">{{ charge.name|capfirst }}</a>
 					</li>
 				{% endfor %}
@@ -45,7 +45,7 @@
 		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for charge in page.dropped_charges.all %}
-					<li>
+					<li class="data-table__list-item">
 						<a href="#">{{ charge.name|capfirst }}</a>
 					</li>
 				{% endfor %}
