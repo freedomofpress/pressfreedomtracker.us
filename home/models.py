@@ -12,6 +12,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 
 from modelcluster.fields import ParentalKey
 
+from common.choices import COLOR_CHOICES
 
 class HomePage(Page):
     about = RichTextField(
@@ -100,13 +101,7 @@ class StatBox(Orderable):
     label = models.CharField(max_length=1000)
     color = models.CharField(
         max_length=7,
-        choices=[
-            ('#119abc', 'Blue'),
-            ('#5b9932', 'Green'),
-            ('#803e79', 'Purple'),
-            ('#dc810b', 'Orange'),
-            ('#2d2e2e', 'Dark Gray'),
-        ],
+        choices=COLOR_CHOICES,
     )
     link = models.ForeignKey(
         'wagtailcore.Page',
