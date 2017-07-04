@@ -1,8 +1,10 @@
 .stream-sections
-	padding: 2rem
 	margin-bottom: 1rem
 	:last-child
 		margin-bottom: 0
+
+.stream-section
+	color: $white
 
 .stream-section--outline
 	border-top: 1px solid $gray-light
@@ -10,3 +12,11 @@
 
 .stream-section--white:first-child
 	padding-top: 0
+
+
+@each $name, $color in $background-colors
+ 	.stream-section--#{$name}
+ 		background-color: $color
+
+.stream-section--white
+	color: $black
