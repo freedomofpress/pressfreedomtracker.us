@@ -3,12 +3,12 @@
 		<th class="data-table__label">
 			Politicians or Public Figures Involved
 		</th>
-		<td>
+		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for person in page.politicians_or_public_figures_involved.all %}
-						<li>
-							<a href="#">{{ person.name }}</a>
-						</li>
+					<li>
+						<a href="#">{{ person.name }}</a>
+					</li>
 				{% endfor %}
 			</ul>
 		</td>

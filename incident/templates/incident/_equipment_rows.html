@@ -3,12 +3,12 @@
 		<th class="data-table__label">
 			Equipment Seized
 		</th>
-		<td>
+		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for item in page.equipment_seized.all %}
-						<li>
-							<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
-						</li>
+					<li>
+						<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
+					</li>
 				{% endfor %}
 			</ul>
 		</td>
@@ -20,12 +20,12 @@
 		<th class="data-table__label">
 			Equipment Broken
 		</th>
-		<td>
+		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for item in page.equipment_broken.all %}
-						<li>
-							<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
-						</li>
+					<li>
+						<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
+					</li>
 				{% endfor %}
 			</ul>
 		</td>

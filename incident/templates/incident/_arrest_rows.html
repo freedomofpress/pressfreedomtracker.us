@@ -25,12 +25,12 @@
 		<th class="data-table__label">
 			Current Charges
 		</th>
-		<td>
+		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for charge in page.current_charges.all %}
-						<li>
-							<a href="#">{{ charge.name|capfirst }}</a>
-						</li>
+					<li>
+						<a href="#">{{ charge.name|capfirst }}</a>
+					</li>
 				{% endfor %}
 			</ul>
 		</td>
@@ -42,12 +42,12 @@
 		<th class="data-table__label">
 			Dropped charges
 		</th>
-		<td>
+		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for charge in page.dropped_charges.all %}
-						<li>
-							<a href="#">{{ charge.name|capfirst }}</a>
-						</li>
+					<li>
+						<a href="#">{{ charge.name|capfirst }}</a>
+					</li>
 				{% endfor %}
 			</ul>
 		</td>

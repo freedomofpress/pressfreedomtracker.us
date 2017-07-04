@@ -3,12 +3,12 @@
 		<th class="data-table__label">
 			Current Charges
 		</th>
-		<td>
+		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for target in page.targets_communications_obtained_incidents.all %}
-						<li>
-							<a href="#">{{ target.name }}</a>
-						</li>
+					<li>
+						<a href="#">{{ target.name }}</a>
+					</li>
 				{% endfor %}
 			</ul>
 		</td>
