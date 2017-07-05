@@ -53,7 +53,7 @@ class Suggestions extends PureComponent {
 			// see the target item. This means we have to check both that its offset
 			// is past where we've scrolled and the height of the container.
 			this.suggestionsElm.scrollTop += dY
-		} else if (this.state.index > index && item.offsetTop > this.suggestionsElm.scrollTop) {
+		} else if (this.state.index > index && item.offsetTop - dY > this.suggestionsElm.scrollTop) {
 			// Movin' on up
 			this.suggestionsElm.scrollTop -= dY
 		}
