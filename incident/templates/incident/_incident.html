@@ -57,7 +57,7 @@ It can take the following context variables:
 						</div>
 					{% endif %}
 
-					{% if incident.teaser_image.attribution %}
+					{% if not incident.teaser_image.attribution %}
 						<div class="caption__attribution {% if not caption %} caption__attirbution--att-only {% endif %}">
 							{{ incident.teaser_image.attribution }}
 						</div>
