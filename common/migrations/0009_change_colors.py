@@ -12,7 +12,7 @@ import wagtail.wagtailimages.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0007_add_header_blocks'),
+        ('common', '0008_add_header_blocks'),
     ]
 
     operations = [

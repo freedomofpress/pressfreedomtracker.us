@@ -12,7 +12,7 @@ import wagtail.wagtailimages.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0008_change_colors'),
+        ('common', '0009_change_colors'),
     ]
 
     operations = [
