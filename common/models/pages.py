@@ -165,6 +165,10 @@ class SimplePage(Page):
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', blocks.BlockQuoteBlock()),
+        ('list', blocks.ListBlock(
+            blocks.CharBlock(label="List Item"),
+            template='common/blocks/list_block_columns.html'
+        )),
         ('video', EmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
@@ -186,6 +190,10 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', blocks.BlockQuoteBlock()),
+        ('list', blocks.ListBlock(
+            blocks.CharBlock(label="List Item"),
+            template='common/blocks/list_block_columns.html'
+        )),
         ('video', EmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
