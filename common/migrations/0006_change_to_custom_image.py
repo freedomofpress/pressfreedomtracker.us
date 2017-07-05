@@ -74,6 +74,8 @@ class Migration(migrations.Migration):
             unique_together=set([('image', 'filter_spec', 'focal_point_key')]),
         ),
 
+        migrations.RunPython(migrate_images),
+
         migrations.AlterField(
             model_name='organizationpage',
             name='logo',
@@ -84,5 +86,4 @@ class Migration(migrations.Migration):
             name='photo',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
         ),
-        migrations.RunPython(migrate_images),
     ]
