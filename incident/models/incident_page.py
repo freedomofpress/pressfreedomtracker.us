@@ -458,7 +458,7 @@ class IncidentPage(Page):
 
     def last_updated(self):
         """
-        Returns the date this incident was last updated on.
+        Returns the date this incident was last updated on or the date of publication if no updates exist.
         """
         first = self.updates.order_by('-date').first()
         if first:
@@ -469,8 +469,9 @@ class IncidentPage(Page):
         """
         Determines whether an incident has been updated within the last week. Returns a boolean.
         """
-        if self.last_updated():
-            delta = datetime.datetime.now(datetime.timezone.utc) - self.last_updated()
+        latest_update = self.updates.order_by('-date').first()
+        if latest_update:
+            delta = datetime.datetime.now(datetime.timezone.utc) - latest_update.date
             return delta.days < 7
         return False
 
