@@ -1,0 +1,112 @@
+{% if page.border_point %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Border Point
+		</th>
+		<td class="data-table__value">
+			{{ page.border_point }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.target_nationality.all %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Target Nationality
+		</th>
+		<td class="data-table__value">
+			<ul class="data-table__list">
+				{% for nationality in page.target_nationality.all %}
+					<li class="data-table__list-item">
+						<a href="#">{{ nationality.name }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.target_us_citizenship_status %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			US Citizenship Status of Target
+		</th>
+		<td class="data-table__value">
+			{{ page.get_target_us_citizenship_status_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.denial_of_entry %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Deinied Entry?
+		</th>
+		<td class="data-table__value">
+			{% if page.denial_of_entry %}
+				Yes
+			{% else %}
+				No
+			{% endif %}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.stopped_previously %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Stopped Previously?
+		</th>
+		<td class="data-table__value">
+			{% if page.stopped_previously %}
+				Yes
+			{% else %}
+				No
+			{% endif %}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.did_authorities_ask_for_device_access %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Asked for device access?
+		</th>
+		<td class="data-table__value">
+			{{ page.get_did_authorities_ask_for_device_access_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.did_authorities_ask_for_social_media_user %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Asked to display social media?
+		</th>
+		<td class="data-table__value">
+			{{ page.get_did_authorities_ask_for_social_media_user_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.did_authorities_ask_for_social_media_pass %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Asked for social media passwords?
+		</th>
+		<td class="data-table__value">
+			{{ page.get_did_authorities_ask_for_social_media_pass_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.did_authorities_ask_about_work %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Asked intrusive questions about work?
+		</th>
+		<td class="data-table__value">
+			{{ page.get_did_authorities_ask_about_work_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}

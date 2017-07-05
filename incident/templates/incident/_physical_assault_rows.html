@@ -1,0 +1,21 @@
+{% if page.assailant %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Assailant
+		</th>
+		<td class="data-table__value">
+			{{ page.get_assailant_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.was_journalist_targeted %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Was the journalist targeted?
+		</th>
+		<td class="data-table__value">
+			{{ page.get_was_journalist_targeted_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}

@@ -22,6 +22,8 @@
 	vertical-align: top
 
 .data-table__list
-	list-style-type: none
-	padding: 0
-	margin: 0
+	+list-unstyled
+
+.data-table__list-item--inline
+	display: inline
+	+list-comma-separated

@@ -1,0 +1,10 @@
+{% if page.status_of_prior_restraint %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Status of Prior Restraint
+		</th>
+		<td class="data-table__value">
+			{{ page.get_status_of_prior_restraint_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}

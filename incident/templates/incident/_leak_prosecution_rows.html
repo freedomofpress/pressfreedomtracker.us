@@ -1,0 +1,30 @@
+{% if page.targets_communications_obtained_incidents.all %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Current Charges
+		</th>
+		<td class="data-table__value">
+			<ul class="data-table__list">
+				{% for target in page.targets_communications_obtained_incidents.all %}
+					<li class="data-table__list-item">
+						<a href="#">{{ target.name }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</td>
+	</tr>
+{% endif %}
+{% if page.get_main_category.title == 'Leak Prosecutions' or page.charged_under_espionage_act %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Charged under Espionage Act
+		</th>
+		<td class="data-table__value">
+			{% if page.charged_under_espionage_act %}
+				Yes
+			{% else %}
+				No
+			{% endif %}
+		</td>
+	</tr>
+{% endif %}

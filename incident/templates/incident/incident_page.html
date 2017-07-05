@@ -30,6 +30,7 @@
 				</th>
 				<td class="data-table__value">{{page.date|date:"F j, Y" }}</td>
 			</tr>
+
 			{% if page.targets.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
@@ -37,14 +38,35 @@
 					</th>
 					<td class="data-table__value">
 						{% with page.targets.all as journalists %}
-							{% for journalistPage in journalists %}
-								{% if not forloop.last %}
-									{{journalistPage.title}},
-								{% else %}
-									{{journalistPage.title}}
-								{% endif %}
-							{% endfor %}
+							<ul class="data-table__list">
+								{% for journalist in journalists %}
+									<li class="data-table__list-item data-table__list-item--inline">
+										{{ journalist.name }}</li>
+								{% endfor %}
+							</ul>
 						{% endwith %}
+					</td>
+				</tr>
+			{% endif %}
+
+			{% if page.affiliation %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Affiliation
+					</th>
+					<td class="data-table__value">
+						{{ page.affiliation }}
+					</td>
+				</tr>
+			{% endif %}
+
+			{% if page.city or page.state %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						Location
+					</th>
+					<td class="data-table__value">
+						{{ page.city|default:"" }} {{ page.state|default:"" }}
 					</td>
 				</tr>
 			{% endif %}
@@ -70,26 +92,41 @@
 						<td class="data-table__value">
 							<ul class="data-table__list">
 								{% for related_case in page.get_related_incidents %}
-										<li>
-											<a href="{{related_case.url}}">{{related_case.title}}</a>
-										</li>
+									<li class="data-table__list-item">
+										<a href="{{ related_case.url }}">{{ related_case.title }}</a>
+									</li>
 								{% endfor %}
 							</ul>
 						</td>
 				</tr>
 			{% endif %}
+
 			{% if page.tags.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
 						Tags
 					</th>
 					<td class="data-table__value">
-						{% for tag in page.tags.all %}
-							<a href="#">{{tag.name}}</a>
-						{% endfor %}
+						<ul class="data-table__list">
+							{% for tag in page.tags.all %}
+								<li class="data-table__list-item data-table__list-item--inline">
+									<a href="#">{{ tag.name }}</a></li>
+							{% endfor %}
+						</ul>
 					</td>
 				</tr>
 			{% endif %}
+
+			{% include 'incident/_arrest_rows.html' %}
+			{% include 'incident/_equipment_rows.html' %}
+			{% include 'incident/_lawsuit_rows.html' %}
+			{% include 'incident/_border_stop_rows.html' %}
+			{% include 'incident/_physical_assault_rows.html' %}
+			{% include 'incident/_leak_prosecution_rows.html' %}
+			{% include 'incident/_subpeona_rows.html' %}
+			{% include 'incident/_legal_order_rows.html' %}
+			{% include 'incident/_prior_restraint_rows.html' %}
+			{% include 'incident/_denial_of_access_rows.html' %}
 		</tbody>
 	</table>
 

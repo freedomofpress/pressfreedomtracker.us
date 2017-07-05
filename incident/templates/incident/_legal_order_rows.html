@@ -1,0 +1,33 @@
+{% if page.third_party_in_possession_of_communications %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Third Party in Possesstion of Communications
+		</th>
+		<td class="data-table__value">
+			{{ page.third_party_in_possession_of_communications|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.third_party_business %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Third Party in Possesstion of Communications
+		</th>
+		<td class="data-table__value">
+			{{ page.get_third_party_business_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.legal_order_type %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Third Party in Possesstion of Communications
+		</th>
+		<td class="data-table__value">
+			{{ page.get_legal_order_type_display|capfirst }}
+		</td>
+	</tr>
+{% endif %}
+
