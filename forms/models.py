@@ -27,3 +27,11 @@ class FormPage(AbstractEmailForm):
             FieldPanel('subject'),
         ], "Email"),
     ]
+
+    def get_context(self, request):
+        context = super(FormPage, self).get_context(request)
+        if request.GET.get('embed', None):
+            context['template_name'] = 'base.chromeless.html'
+        else:
+            context['template_name'] = 'base.html'
+        return context
