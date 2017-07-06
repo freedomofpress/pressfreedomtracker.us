@@ -3,31 +3,34 @@
 {% load wagtailcore_tags render_as_template %}
 
 {% block main %}
-    <h1>{{ page.title }}</h1>
-    <p>{{ page.publication_datetime|date:"F j, Y"  }}</p>
+	<h1>{{ page.title }}</h1>
 
-    {% if page.author %}
-        <a href="{% pageurl page.author %}">
-          {{page.author.specific.title}}
-        </a>
-    {% endif %}
+	<article>
+	{% for block in page.body %}
+		{% if block.block_type == 'rich_text' %}
+			<section>{% render_as_template block.value %}</section>
+		{% else %}
+			<section>{% include_block block %}</section>
+		{% endif %}
+	{% endfor %}
+	</article>
 
-    {% if page.organization %}
-        <a href="{% pageurl page.organization %}">
-          {{page.organization.specific.title}}
-        </a>
-    {% endif %}
+	<p><a href="{% pageurl page.get_parent %}">Return to blogs</a></p>
 
-    <article>
-    {% for block in page.body %}
-        {% if block.block_type == 'rich_text' %}
-            <section>{% render_as_template block.value %}</section>
-        {% else %}
-            <section>{% include_block block %}</section>
-        {% endif %}
-    {% endfor %}
-    </article>
+{% endblock %}
 
-    <p><a href="{% pageurl page.get_parent %}">Return to blogs</a></p>
+{% block sidebar %}
+	<p>{{ page.publication_datetime|date:"F j, Y"  }}</p>
 
+	{% if page.author %}
+		<a href="{% pageurl page.author %}">
+		  {{page.author.specific.title}}
+		</a>
+	{% endif %}
+
+	{% if page.organization %}
+		<a href="{% pageurl page.organization %}">
+		  {{page.organization.specific.title}}
+		</a>
+	{% endif %}
 {% endblock %}
