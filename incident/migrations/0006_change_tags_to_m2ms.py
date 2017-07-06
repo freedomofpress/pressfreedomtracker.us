@@ -18,6 +18,12 @@ def convert_tags_to_many_to_many(page_model, item_model, relation_name):
         getattr(page, relation_name).commit()
 
 
+def migrate_tags(apps, schema_editor):
+    IncidentPage = apps.get_model('incident', 'IncidentPage')
+    CommonTag = apps.get_model('common', 'CommonTag')
+    convert_tags_to_many_to_many(IncidentPage, CommonTag, 'tags')
+
+
 def migrate_targets(apps, schema_editor):
     IncidentPage = apps.get_model('incident', 'IncidentPage')
     Target = apps.get_model('incident', 'Target')
@@ -48,9 +54,26 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('incident', '0005_merge_20170626_2248'),
+        ('common', '0006_add_common_tag'),
     ]
 
     operations = [
+        migrations.RenameField(
+            model_name='incidentpage',
+            old_name='tags',
+            new_name='_tmp_tags',
+        ),
+        migrations.AddField(
+            model_name='incidentpage',
+            name='tags',
+            field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='tagged_items', to='common.CommonTag', verbose_name='Tags'),
+        ),
+        migrations.RunPython(migrate_tags),
+        migrations.RemoveField(
+            model_name='incidentpage',
+            name='_tmp_tags'
+        ),
+
         migrations.CreateModel(
             name='Target',
             fields=[

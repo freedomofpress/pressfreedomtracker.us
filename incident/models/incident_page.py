@@ -1,7 +1,6 @@
 import datetime
 
 from django.db import models
-from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel,
@@ -81,7 +80,12 @@ class IncidentPage(Page):
         related_name='targets_incidents',
     )
 
-    tags = ClusterTaggableManager(through='common.Tag', blank=True)
+    tags = ParentalManyToManyField(
+        'common.CommonTag',
+        blank=True,
+        verbose_name='Tags',
+        related_name='tagged_items',
+    )
 
     related_incidents = ParentalManyToManyField('self', blank=True)
 
@@ -310,7 +314,7 @@ class IncidentPage(Page):
                     FieldPanel('city'),
                     AutocompletePageChooserPanel('state', page_type='incident.State'),
                     AutocompleteFieldPanel('targets', 'incident.Target'),
-                    FieldPanel('tags'),
+                    AutocompleteFieldPanel('tags', 'common.CommonTag'),
                     InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
