@@ -16,7 +16,8 @@ from common.blocks import (
     Heading1,
     Heading2,
     Heading3,
-    StyledTextBlock
+    StyledTextBlock,
+    AlignedCaptionedImageBlock,
 )
 
 
@@ -162,7 +163,7 @@ class CategoryPage(Page):
 class SimplePage(Page):
     body = StreamField([
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
-        ('image', ImageChooserBlock()),
+        ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', blocks.BlockQuoteBlock()),
         ('list', blocks.ListBlock(
@@ -187,7 +188,7 @@ class SimplePage(Page):
 class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     body = StreamField([
         ('text', StyledTextBlock(label='Text')),
-        ('image', ImageChooserBlock()),
+        ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', blocks.BlockQuoteBlock()),
         ('list', blocks.ListBlock(

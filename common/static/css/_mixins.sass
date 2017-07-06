@@ -8,6 +8,12 @@
 			color: $blue-dark-link-hover
 			text-decoration-color: darken($gray-light, 10%)
 
+=clearfix
+	&::after
+		content: ""
+		display: table
+		clear: both
+
 =uppercase
 	letter-spacing: 0.05em
 	text-transform: uppercase

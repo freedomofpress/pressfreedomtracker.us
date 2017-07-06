@@ -1,4 +1,5 @@
 from wagtail.wagtailcore import blocks
+from wagtail.wagtailimages.blocks import ImageChooserBlock
 
 from common.choices import COLOR_CHOICES
 
@@ -28,6 +29,23 @@ class Heading3(blocks.StructBlock):
         template = 'common/blocks/heading_3.html'
         icon = 'title'
         label = 'Heading 3'
+
+
+class AlignedCaptionedImageBlock(blocks.StructBlock):
+    image = ImageChooserBlock()
+    caption = blocks.RichTextBlock(required=False)
+
+    ALIGNMENT_CHOICES = (
+        ('left', 'Left'),
+        ('right', 'Right'),
+        ('full-width', 'Full Width'),
+    )
+    alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
+
+    class Meta:
+        template = 'common/blocks/aligned_captioned_image.html'
+        icon = 'image'
+        label = 'Image'
 
 
 class StyledTextBlock(blocks.StructBlock):
