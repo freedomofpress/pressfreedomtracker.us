@@ -67,6 +67,10 @@ class Autocomplete extends PureComponent {
 					return
 				}
 
+				if (!Array.isArray(res.data.pages)) {
+					return
+				}
+
 				this.setState({
 					suggestions: res.data.pages
 				})
