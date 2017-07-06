@@ -8,7 +8,10 @@ import modelcluster.fields
 
 def convert_tags_to_many_to_many(page_model, item_model, relation_name):
     for page in page_model.objects.all():
-        tmp_relations = getattr(page, '_tmp_' + relation_name).through.objects.all()
+        # The fake model given in migrations doesn't include the typical
+        # related manager functionality we need, so you get this awful
+        # snippet.
+        tmp_relations = getattr(page, '_tmp_' + relation_name).through.objects.filter(content_object=page)
         for relation in tmp_relations:
             item, _ = item_model.objects.get_or_create(title=relation.tag.name)
             getattr(page, relation_name).add(item)
