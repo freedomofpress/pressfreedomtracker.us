@@ -1,8 +1,8 @@
 from django.apps import apps
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.contenttypes.models import ContentType
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.http import require_GET, require_POST
+from wagtail.wagtailadmin.decorators import require_admin_access
 
 
 def render_page(page):
@@ -17,7 +17,7 @@ def render_page(page):
 
 
 @require_GET
-@staff_member_required
+@require_admin_access
 def search(request):
     search_query = request.GET.get('query', '')
     page_type = request.GET.get('type', 'wagtailcore.Page')
@@ -47,7 +47,7 @@ def search(request):
 
 
 @require_POST
-@staff_member_required
+@require_admin_access
 def create(request, *args, **kwargs):
     value = request.POST.get('value', None)
     if not value:
