@@ -14,6 +14,7 @@ from modelcluster.fields import ParentalKey
 
 from common.choices import COLOR_CHOICES
 
+
 class HomePage(Page):
     about = RichTextField(
         blank=True,

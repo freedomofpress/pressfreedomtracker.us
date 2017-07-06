@@ -1,4 +1,4 @@
-COLOR_CHOICES=[
+COLOR_CHOICES = [
     ('blue', 'Blue'),
     ('green', 'Green'),
     ('purple', 'Purple'),
