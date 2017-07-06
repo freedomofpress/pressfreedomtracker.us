@@ -8,41 +8,7 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
-from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
-
-
-@register_setting
-class FooterSettings(BaseSetting):
-    body = RichTextField(blank=True, null=True)
-    menu = models.ForeignKey(
-        'menus.Menu',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-
-    panels = [
-        FieldPanel('body'),
-        SnippetChooserPanel('menu'),
-    ]
-
-    class Meta:
-        verbose_name = 'Site Footer'
-
-
-@register_setting
-class TaxonomySettings(BaseSetting, ClusterableModel):
-    panels = [
-        InlinePanel(
-            'categories',
-            label='Incident Categories',
-            help_text='The categories listed here will be used for navigation menus throughout the site.',
-        ),
-    ]
-
-    class Meta:
-        verbose_name = 'Taxonomy'
+from modelcluster.models import ClusterableModel
 
 
 class BaseSidebarPageMixin(models.Model):
