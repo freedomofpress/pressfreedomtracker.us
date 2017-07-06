@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0005_categorypage_plural_name'),
+        ('common', '0006_change_to_custom_image'),
     ]
 
     operations = [

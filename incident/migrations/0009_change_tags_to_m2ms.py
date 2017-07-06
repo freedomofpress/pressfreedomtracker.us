@@ -53,8 +53,8 @@ def migrate_politicians_or_public(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0005_merge_20170626_2248'),
-        ('common', '0006_add_common_tag'),
+        ('incident', '0008_change_to_custom_image'),
+        ('common', '0007_add_common_tag'),
     ]
 
     operations = [
