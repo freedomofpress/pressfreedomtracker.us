@@ -41,7 +41,7 @@
 							<ul class="data-table__list">
 								{% for journalist in journalists %}
 									<li class="data-table__list-item data-table__list-item--inline">
-										{{ journalist.name }}</li>
+										{{ journalist.title }}</li>
 								{% endfor %}
 							</ul>
 						{% endwith %}
@@ -110,7 +110,7 @@
 						<ul class="data-table__list">
 							{% for tag in page.tags.all %}
 								<li class="data-table__list-item data-table__list-item--inline">
-									<a href="#">{{ tag.name }}</a></li>
+									<a href="#">{{ tag.title }}</a></li>
 							{% endfor %}
 						</ul>
 					</td>

@@ -8,6 +8,7 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -181,3 +182,17 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     search_fields = Page.search_fields + [
         index.SearchField('body'),
     ]
+
+
+class CommonTag(ClusterableModel):
+    @classmethod
+    def autocomplete_create(kls, value):
+        return kls.objects.create(title=value)
+
+    title = models.CharField(
+        max_length=255,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.title

@@ -1,7 +1,6 @@
 import datetime
 
 from django.db import models
-from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel,
@@ -68,14 +67,19 @@ class IncidentPage(Page):
         null=True,
     )
 
-    targets = ClusterTaggableManager(
-        through='incident.TargetsTag',
+    targets = ParentalManyToManyField(
+        'incident.Target',
         blank=True,
         verbose_name='Targets (Journalists/Organizations)',
         related_name='targets_incidents',
     )
 
-    tags = ClusterTaggableManager(through='common.Tag', blank=True)
+    tags = ParentalManyToManyField(
+        'common.CommonTag',
+        blank=True,
+        verbose_name='Tags',
+        related_name='tagged_items',
+    )
 
     related_incidents = ParentalManyToManyField('self', blank=True)
 
@@ -92,17 +96,17 @@ class IncidentPage(Page):
         null=True,
         blank=True,
     )
-    current_charges = ClusterTaggableManager(
-        through='incident.CurrentChargesTag',
+    current_charges = ParentalManyToManyField(
+        'incident.Charge',
         blank=True,
         related_name='current_charge_incidents',
-        verbose_name='Current Changes',
+        verbose_name='Current Charges',
     )
-    dropped_charges = ClusterTaggableManager(
-        through='incident.DroppedChargesTag',
+    dropped_charges = ParentalManyToManyField(
+        'incident.Charge',
         blank=True,
         related_name='dropped_charge_incidents',
-        verbose_name='Dropped Changes',
+        verbose_name='Dropped Charges',
     )
     release_date = models.DateField(blank=True, null=True)
     detention_date = models.DateField(
@@ -155,8 +159,8 @@ class IncidentPage(Page):
     )
     denial_of_entry = models.BooleanField(default=False)
     stopped_previously = models.BooleanField(default=False)
-    target_nationality = ClusterTaggableManager(
-        through='incident.NationalityTag',
+    target_nationality = ParentalManyToManyField(
+        'incident.Nationality',
         blank=True,
         related_name='nationality_incidents',
         verbose_name='Target Nationality',
@@ -208,8 +212,8 @@ class IncidentPage(Page):
     )
 
     # Leak Prosecution
-    targets_whose_communications_were_obtained = ClusterTaggableManager(
-        through='incident.TargetsCommunicationsObtainedTag',
+    targets_whose_communications_were_obtained = ParentalManyToManyField(
+        'incident.Target',
         blank=True,
         verbose_name='Journalists/Organizations whose communications were obtained in leak investigation',
         related_name='targets_communications_obtained_incidents',
@@ -271,8 +275,8 @@ class IncidentPage(Page):
     )
 
     # Denial of Access
-    politicians_or_public_figures_involved = ClusterTaggableManager(
-        through='incident.PoliticiansOrPublicTag',
+    politicians_or_public_figures_involved = ParentalManyToManyField(
+        'incident.PoliticianOrPublic',
         blank=True,
         related_name='politicians_or_public_incidents',
         verbose_name='Politicians or public officials involved',
@@ -303,8 +307,8 @@ class IncidentPage(Page):
                     FieldPanel('affiliation'),
                     FieldPanel('city'),
                     AutocompletePageChooserPanel('state', page_type='incident.State'),
-                    FieldPanel('targets'),
-                    FieldPanel('tags'),
+                    AutocompleteFieldPanel('targets', 'incident.Target'),
+                    AutocompleteFieldPanel('tags', 'common.CommonTag'),
                     InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
@@ -315,8 +319,8 @@ class IncidentPage(Page):
             children=[
                 FieldPanel('arrest_status'),
                 FieldPanel('status_of_charges'),
-                FieldPanel('current_charges'),
-                FieldPanel('dropped_charges'),
+                AutocompleteFieldPanel('current_charges', 'incident.Charge'),
+                AutocompleteFieldPanel('dropped_charges', 'incident.Charge'),
                 FieldPanel('detention_date'),
                 FieldPanel('release_date'),
                 FieldPanel('unnecessary_use_of_force'),
@@ -363,7 +367,7 @@ class IncidentPage(Page):
                 FieldPanel('target_us_citizenship_status'),
                 FieldPanel('denial_of_entry'),
                 FieldPanel('stopped_previously'),
-                FieldPanel('target_nationality'),
+                AutocompleteFieldPanel('target_nationality', 'incident.Nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
                 FieldPanel('did_authorities_ask_for_social_media_user'),
                 FieldPanel('did_authorities_ask_for_social_media_pass'),
@@ -385,7 +389,7 @@ class IncidentPage(Page):
             heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('targets_whose_communications_were_obtained'),
+                AutocompleteFieldPanel('targets_whose_communications_were_obtained', 'incident.Target'),
                 FieldPanel('charged_under_espionage_act'),
             ]
         ),
@@ -423,7 +427,7 @@ class IncidentPage(Page):
             heading='Denial of Access',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('politicians_or_public_figures_involved'),
+                AutocompleteFieldPanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
             ]
         ),
 
