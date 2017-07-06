@@ -67,12 +67,6 @@ class IncidentPage(Page):
         null=True,
     )
 
-    image_attribution = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-    )
-
     targets = ParentalManyToManyField(
         'incident.Target',
         blank=True,
@@ -112,7 +106,7 @@ class IncidentPage(Page):
         'incident.Charge',
         blank=True,
         related_name='dropped_charge_incidents',
-        verbose_name='Dropped Changes',
+        verbose_name='Dropped Charges',
     )
     release_date = models.DateField(blank=True, null=True)
     detention_date = models.DateField(
