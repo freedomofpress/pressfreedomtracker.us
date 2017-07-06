@@ -12,7 +12,8 @@ def migrate_image_attribution(apps, schema_editor):
         if not page.image_attribution or not page.teaser_image:
             continue
 
-        page.teaser_image.update(attribution=page.image_attribution)
+        page.teaser_image.attribution = page.image_attribution
+        page.teaser_image.save()
 
 
 class Migration(migrations.Migration):
