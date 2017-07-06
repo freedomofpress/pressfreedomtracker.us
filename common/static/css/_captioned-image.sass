@@ -1,13 +1,25 @@
 .captioned-image__wrapper
 	+clearfix
-
+	margin-bottom: 1rem
 
 .captioned-image__wrapper--right
 	float: right
-	max-width: 50%
+	width: 50%
 	padding-left: 1rem
 
 .captioned-image__wrapper--left
 	float: left
-	max-width: 50%
+	width: 50%
 	padding-right: 1rem
+
+.captioned-image__wrapper--right,
+.captioned-image__wrapper--left
+	@media(max-width: $small-screen)
+		float: none
+		width: 100%
+		padding-right: 1rem
+		padding-left: 1rem
+
+		img
+			width: 100%
+			height: auto
