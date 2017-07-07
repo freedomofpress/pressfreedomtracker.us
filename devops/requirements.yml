@@ -10,4 +10,4 @@
 
 - src: https://github.com/freedomofpress/django_stack.git
   name: freedomofpress.django_stack
-  version: INFRA-371-PressFreedom
+  version: 0d8b5a51f5f3ff0ac87eeba9fbb6fb3cae9bbacf
