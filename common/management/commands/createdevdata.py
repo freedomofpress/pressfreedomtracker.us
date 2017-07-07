@@ -1,5 +1,6 @@
 import random
 from datetime import timedelta
+import json
 
 from django.contrib.auth.models import User
 from django.core.files.images import ImageFile
@@ -9,6 +10,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from blog.models import BlogIndexPage, BlogPage
+from common.blocks import StyledTextBlock
 from common.models import (
     CategoryPage, TaxonomyCategoryPage, TaxonomySettings,
     PersonPage, SimplePage, SimplePageWithSidebar,
@@ -19,8 +21,12 @@ from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
+from wagtail.wagtailcore.blocks import StreamBlock, StreamValue
 from wagtail.wagtailcore.models import Page, Site
 from wagtail.wagtailcore.rich_text import RichText
+
+
+LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
 
 
 class Command(BaseCommand):
@@ -85,16 +91,18 @@ class Command(BaseCommand):
         about_page = SimplePage(
             title='About',
             slug='about',
-            body=[(
-                'text',
-                ('rich_text',
-                    RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
-                ),
-                ('background_color', 'white'),
-                ('text_align', 'left'),
-                ('font_size', 'large'),
-                ('font_family', 'sans-serif')
-            )]
+            body=json.dumps([
+                    dict(
+                        type='text',
+                        value=dict(
+                            text=LIPSUM,
+                            background_color='white',
+                            text_align='left',
+                            font_size='large',
+                            font_family='sans-serif',
+                        ),
+                    ),
+                ])
         )
         home_page.add_child(instance=about_page)
         home_page.about_page = about_page
@@ -120,16 +128,18 @@ class Command(BaseCommand):
                 title='Resources',
                 slug='resources',
                 sidebar_menu=resources_menu,
-                body=[(
-                    'text',
-                    ('rich_text',
-                        RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
+                body=json.dumps([
+                    dict(
+                        type='text',
+                        value=dict(
+                            text=LIPSUM,
+                            background_color='white',
+                            text_align='left',
+                            font_size='large',
+                            font_family='sans-serif',
+                        ),
                     ),
-                    ('background_color', 'white'),
-                    ('text_align', 'left'),
-                    ('font_size', 'large'),
-                    ('font_family', 'sans-serif')
-                )]
+                ])
             )
 
             home_page.add_child(instance=resources_page)
