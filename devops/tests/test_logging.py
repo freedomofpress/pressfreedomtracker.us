@@ -1,4 +1,3 @@
-import os
 import json
 
 import testinfra.utils.ansible_runner
@@ -13,14 +12,14 @@ def request_and_scrape(url, filter_key, Command):
 
     JSON_LOG_FILE = "/var/www/django/logs/app.log"
     # Generate log event via http requests
-    Command.run("curl --user-agent testinfra http://localhost:8000"+url)
+    Command.run("curl --user-agent testinfra http://localhost:8000" + url)
     # Pick out the last log line from django logs
     # This is obviously only reliable test on a test instance with no
     # other incoming traffic.
     grab_log = Command.check_output("grep {0} {1} | tail -n 1".format(
-                                                        filter_key,
-                                                        JSON_LOG_FILE
-                                                        ))
+                                    filter_key,
+                                    JSON_LOG_FILE
+                                    ))
     # Process JSON
     raw_json = json.loads(grab_log)[filter_key]
     # The current json structure uses the time as the key
@@ -29,36 +28,15 @@ def request_and_scrape(url, filter_key, Command):
 
     return filtered_json
 
+
 def test_json_log_exception(Command):
     """
     Ensure json logging is working for exception
     """
 
-    venv_root = "/home/gcorn/pressfreedom/lib/python3.4/site-packages/"
     url = "/page-doesnt-exist/"
 
-    exception = {
-                "message": "",
-                "traceback": [
-                    {
-                    "file": venv_root+"django/core/handlers/base.py",
-                    "line": 185,
-                    "method": "_get_response"
-                    },
-                    {
-                    "file": venv_root+"wagtail/wagtailcore/views.py",
-                    "line": 20,
-                    "method": "serve"
-                    },
-                    {
-                    "file": venv_root+"wagtail/wagtailcore/models.py",
-                    "line": 618,
-                    "method": "route"
-                    }
-                ],
-                "type": "django.http.response.Http404"
-                }
-    request = { 
+    request = {
                 "data": {},
                 "meta": {
                     "http_host": "localhost:8000",
@@ -71,18 +49,18 @@ def test_json_log_exception(Command):
                 "scheme": "http",
                 "user": "AnonymousUser"
                }
-            
 
     error_line = request_and_scrape(url, 'ERROR', Command)
-    assert error_line['exception'] == exception
+    assert 'exception' in error_line
     assert error_line['request'] == request
+
 
 def test_json_log_200(Command):
     """
     Ensure json logging is working for requests
     """
 
-    should_return = {"request": 
+    should_return = {"request":
                         {"data": {}, 
                              "meta": {"http_host": "localhost:8000",
                                       "http_user_agent": "testinfra",
