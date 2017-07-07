@@ -183,7 +183,6 @@ class Command(BaseCommand):
         footer_menu, created = Menu.objects.get_or_create(
             name='Footer Menu', slug='footer')
         if created:
-            footer_menu = Menu.objects.create(name='Footer Menu', slug='footer')
             MenuItem.objects.bulk_create([
                 MenuItem(
                     text='About',
@@ -288,11 +287,13 @@ class Command(BaseCommand):
                 body="At least nine news outlets were excluded from an informal briefing known as 'a gaggle' by President Donald Trump's White House Press Secretary Sean Spicer.",
             ),
         ]
-        image = CustomImage.objects.create(
-            title='Sample Image',
-            file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
-            attribution='createdevdata'
-        )
+        image = CustomImage.objects.filter(title='Sample Image').first()
+        if not image:
+            image = CustomImage.objects.create(
+                title='Sample Image',
+                file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
+                attribution='createdevdata'
+            )
         for index, data in enumerate(incident_data):
             page = IncidentPage(
                 title=data['title'],
