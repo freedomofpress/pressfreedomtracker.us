@@ -22,8 +22,8 @@ the following env vars in your shell profile (see this `GitHub comment <https://
     export CPPFLAGS="-I/usr/local/opt/openssl/include"
     export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 
-Installation instructions
--------------------------
+Local Development instructions
+------------------------------
 
 Clone the Git repository from ``git@github.com:littleweaver/pressfreedom.git``.
 
@@ -32,11 +32,25 @@ Run the following commands to get up and running:
 .. code:: bash
 
     make dev-go #to launch containers
+
+Whoa? That's it!? Not so fast. It takes a few minutes to kick off (which happens
+in the background); in order to monitor progress use the following two commands
+(ctrl-c will exit each without killing the container):
+
+.. code:: bash
+
     make dev-attach-node #attach a shell to the node process
     make dev-attach-django #attach a shell to the python process
 
-Once both of those terminals stop scrolling, you should be able to hit the
-server at http://localhost:8000 . YAY
+Finally, if you want to inject the development data into the database hit the
+following command:
+
+.. code:: bash
+
+    make dev-createdevdata
+
+You should be able to hit the web server interface at http://localhost:8000.
+You can directly access the database on port `15432` (see further below)
 
 Resetting database
 ++++++++++++++++++
@@ -79,7 +93,22 @@ Connect to postgresql service from host
 
 The postgresql service is exposed to your host on port ``15432``. If you have a GUI
 database manipulation application you'd like to utilize point it to ``localhost``,
-port ``15432``, username ``tracer``, password ``trackerpassword``, dbname ``trackerdb``.
+port ``15432``, username ``tracer``, password ``trackerpassword``, dbname ``trackerdb``
+
+
+Mimic CI and production environment
+-----------------------------------
+
+You can mimic a production environment where django is deployment with gunicorn,
+reverse nginx proxy, and debug mode off using the following command:
+
+.. code:: bash
+
+    make ci-go
+
+This is the same command that is run during CI. It is not run using live-code
+refresh so it's not a great dev environment but is good for replicating issues
+that would come up in production.
 
 
 Adobe Font Licenses

@@ -26,6 +26,10 @@ dev-attach-django:
 dev-attach-postgresql:
 	docker attach --sig-proxy=false postgresql
 
+.PHONY: dev-createdevdata
+dev-createdevdata:
+	docker exec -it django bash -c "./manage.py createdevdata"
+
 .PHONY: dev-sass-lint
 dev-sass-lint:
 	./devops/scripts/dev-sasslint.sh
