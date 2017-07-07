@@ -439,7 +439,6 @@ class IncidentPage(Page):
     search_fields = Page.search_fields + [
         index.SearchField('body'),
         index.FilterField('date'),
-        index.FilterField('category_id'),
     ]
 
     def detention_duration(self):
