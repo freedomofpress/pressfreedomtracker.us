@@ -18,6 +18,7 @@ $padding-y: 1em
 .filters__text
 	font-weight: 300
 	color: $white
+	line-height: 1
 
 
 .filters__text--dim
@@ -25,14 +26,28 @@ $padding-y: 1em
 
 
 .filters__button
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	align-items: center
+
 	padding: $padding-y $padding-x
 	border: 0
 
 	background-color: transparent
 	color: $filters-fg-dim
 	text-transform: uppercase
+	line-height: 1
 
 	&:active,
 	&:hover,
 	&:focus
 		color: $white
+
+
+.filters__icon
+	margin: 0 0.5em
+	width: 1em
+	height: 1em
+
+	color: inherit
