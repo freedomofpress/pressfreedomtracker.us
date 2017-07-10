@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := help
+
 .PHONY: ci-go
 ci-go:
 	./devops/scripts/go.sh
@@ -41,3 +43,7 @@ dev-import-db:
 .PHONY: ci-devops-builder
 ci-devops-builder:
 	./devops/scripts/ci-django-build.sh
+
+.PHONY: help
+help:
+	@cat devops/scripts/help

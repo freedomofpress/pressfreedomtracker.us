@@ -1,0 +1,16 @@
+Make commands in the pressfreedom repo:
+
+# CI helpers ######################
+ci-go               Stands-up a prod like environment under one docker container
+ci-tests            Runs testinfra against a pre-running CI container. Useful for debug
+ci-devops-builder   Creates a container base for CI (not normally needed)
+
+# Developer Tools###################
+dev-go                  Spin-up developer environment with three docker containers
+dev-stop                Stop developer environment. Not really necessary.
+dev-attach-node         Provide a read-only terminal to attach to node spin-up
+dev-attach-django       Provide a read-only terminal to attach to django spin-up
+dev-attach-postgresql   Provide a read-only terminal to attach to django spin-up
+dev-createdevdata       Inject development data into the postgresql database
+dev-sass-lint           Runs sass-lint utility over the code-base
+dev-import-db           Imports a database dump from file named ./import.db

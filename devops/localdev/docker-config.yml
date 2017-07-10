@@ -61,6 +61,6 @@
         msg: >-
           Development environment spinning-up. Recommend entering 'make dev-attach-django'
           or waiting approx 2 minutes for things to completely come up. If you need to inject
-          devdata type 'make createdevdata'.
+          devdata type 'make dev-createdevdata'.
           The web interface will be available at
             http://127.0.0.1:{{ dev_web_port_forward }}
