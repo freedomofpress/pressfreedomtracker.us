@@ -392,6 +392,12 @@ class IncidentFilter(object):
             for page in CategoryPage.objects.live()
         ]
 
+    def get_category_options(self):
+        return [
+            dict(id=page.id, title=page.title)
+            for page in CategoryPage.objects.live()
+        ]
+
     def fetch(self):
         incidents = IncidentPage.objects.live()
 
