@@ -58,6 +58,18 @@ class FiltersHeader extends PureComponent {
 }
 
 
+function FiltersExpandable({ filtersExpanded, children }) {
+	return (
+		<div className={classNames(
+			'filters__expandable',
+			{ 'filters__expandable--expanded': filtersExpanded }
+		)}>
+			{children}
+		</div>
+	)
+}
+
+
 class FiltersCategorySelection extends PureComponent {
 	render() {
 		const { categoriesEnabled } = this.props
@@ -177,18 +189,20 @@ class IncidentFiltering extends PureComponent {
 					handleToggle={this.handleToggle}
 				/>
 
-				<FiltersCategorySelection
-					categoriesEnabled={categoriesEnabled}
-					handleSelection={this.handleSelection}
-				/>
+				<FiltersExpandable filtersExpanded={filtersExpanded}>
+					<FiltersCategorySelection
+						categoriesEnabled={categoriesEnabled}
+						handleSelection={this.handleSelection}
+					/>
 
-				<FiltersTabs
-					categoriesEnabled={categoriesEnabled}
-				/>
+					<FiltersTabs
+						categoriesEnabled={categoriesEnabled}
+					/>
 
-				<FiltersBody />
+					<FiltersBody />
 
-				<FiltersFooter />
+					<FiltersFooter />
+				</FiltersExpandable>
 			</Filters>
 		)
 	}
