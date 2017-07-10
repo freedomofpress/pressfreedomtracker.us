@@ -68,12 +68,16 @@ It can take the following context variables:
 	{% endif %}
 	<div class="incident__body">
 		<h3 class="incident__category-name incident__category-name--{{ main_category|slugify }}">
-			<a
-				href="{% pageurl main_category %}"
-				class="incident__title-link"
-			>
-				{{ main_category }}
-			</a>
+			<ul class="inline-list">
+				{% for category in incident.categories.all %}
+					<li class="inline-list__item"><a
+						href="{% pageurl category.category %}"
+						class="inline-list__link"
+					>
+						{{ category.category.title }}
+					</a></li>
+				{% endfor %}
+			</ul>
 		</h3>
 		<h1 class='incident__title'>
 			{% if teaser %}

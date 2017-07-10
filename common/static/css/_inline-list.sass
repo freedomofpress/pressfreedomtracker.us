@@ -1,0 +1,20 @@
+.inline-list
+	+list-unstyled
+	display: flex
+	margin-bottom: 0.2rem
+
+.inline-list__item
+	margin-left: 1rem
+
+	&:first-child
+		margin-left: 0
+
+.inline-list__link
+	color: inherit
+	transition: color ease-in 0.15s
+
+	&:hover,
+	&:focus,
+	&:active
+		color: $blue-dark-link-hover
+		text-decoration-color: darken($gray-light, 10%)
