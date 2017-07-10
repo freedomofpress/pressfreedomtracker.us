@@ -1,13 +1,3 @@
-=blue-link
-	a
-		text-decoration-color: $gray-light
-		color: $blue-dark-link
-		&:hover,
-		&:focus,
-		&:active
-			color: $blue-dark-link-hover
-			text-decoration-color: darken($gray-light, 10%)
-
 =clearfix
 	&::after
 		content: ""
@@ -41,3 +31,25 @@
 
 	p:last-child
 		margin-bottom: 0
+
+=blue-link
+	a
+		text-decoration-color: $gray-light
+		color: $blue-dark-link
+		&:hover,
+		&:focus,
+		&:active
+			color: $blue-dark-link-hover
+			text-decoration-color: darken($gray-light, 10%)
+
+=underline-link
+	a
+		color: inherit
+		text-decoration: none
+		transition: color ease-in 0.15s
+
+		&:hover,
+		&:focus,
+		&:active
+			color: $black
+			text-decoration: underline

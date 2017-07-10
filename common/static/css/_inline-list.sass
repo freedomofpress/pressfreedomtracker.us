@@ -1,5 +1,6 @@
 .inline-list
 	+list-unstyled
+	+underline-link
 	display: flex
 	margin-bottom: 0.2rem
 
@@ -8,13 +9,3 @@
 
 	&:first-child
 		margin-left: 0
-
-.inline-list__link
-	color: inherit
-	transition: color ease-in 0.15s
-
-	&:hover,
-	&:focus,
-	&:active
-		color: $blue-dark-link-hover
-		text-decoration-color: darken($gray-light, 10%)
