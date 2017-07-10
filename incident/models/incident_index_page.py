@@ -50,7 +50,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
     def get_context(self, request):
         context = super(IncidentIndexPage, self).get_context(request)
 
-        entry_qs = IncidentFilter(
+        incident_filter = IncidentFilter(
             search_text=request.GET.get('search'),
             lower_date=request.GET.get('lower_date'),
             upper_date=request.GET.get('upper_date'),
@@ -100,7 +100,9 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             status_of_prior_restraint=request.GET.get('status_of_prior_restraint'),
             # DENIAL OF ACCESS
             politicians_or_public_figures_involved=request.GET.get('politicians_or_public_figures_involved'),
-        ).fetch()
+        )
+        context['category_options'] = incident_filter.get_category_options()
+        entry_qs = incident_filter.fetch()
 
         paginator, entries = paginate(
             request,

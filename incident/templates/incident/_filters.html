@@ -5,7 +5,8 @@
 			window.ReactDOM.render(
 				window.React.createElement(
 					window.IncidentFiltering,
-					{}
+					{ availableCategories: {{ category_options|safe }}
+					}
 				),
 
 				document.getElementById('js-tag-filters-target')
