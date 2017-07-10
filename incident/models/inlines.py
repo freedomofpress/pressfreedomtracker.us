@@ -33,6 +33,10 @@ class IncidentCategorization(Orderable):
     incident_page = ParentalKey('incident.IncidentPage', related_name='categories')
     category = ParentalKey('common.CategoryPage', related_name='incidents')
 
+    @property
+    def summary(self):
+        return self.category.title
+
 
 class IncidentPageLinks(Orderable):
     page = ParentalKey('incident.IncidentPage', related_name='links')
@@ -56,6 +60,10 @@ class EquipmentSeized(models.Model):
         FieldPanel('quantity'),
     ]
 
+    @property
+    def summary(self):
+        return '{0.equipment}: count of {0.quantity}'
+
 
 class EquipmentBroken(models.Model):
     incident = ParentalKey(
@@ -72,3 +80,7 @@ class EquipmentBroken(models.Model):
         AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
         FieldPanel('quantity'),
     ]
+
+    @property
+    def summary(self):
+        return '{0.equipment}: count of {0.quantity}'
