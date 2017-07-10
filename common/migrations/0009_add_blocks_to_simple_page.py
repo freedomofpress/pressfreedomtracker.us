@@ -36,7 +36,7 @@ def get_stream_data(page, mapper):
         if block['type'] == 'rich_text':
             import pdb
             pdb.set_trace()
-        if block['type'] == 'rich_text' and block['value'] is str:
+        if block['type'] == 'rich_text' and isinstance(block['value'], str):
             print('IN thE iF')
             styletext_block = mapper(block)
             stream_data.append(styletext_block)
