@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import classNames from 'classnames'
 
 
 function SettingsIcon() {
@@ -57,14 +58,77 @@ class FiltersHeader extends PureComponent {
 }
 
 
+class FiltersCategorySelection extends PureComponent {
+	render() {
+		const { categoriesEnabled } = this.props
+
+		return (
+			<div className="filters__category-selection">
+				<div className="filters__text">
+					Include
+				</div>
+
+
+			</div>
+		)
+	}
+}
+
+
+class FiltersTabs extends PureComponent {
+	render() {
+		return (
+			<ul className="filters__tabs">
+				<li className={classNames(
+					'filters__tab',
+					{ 'filters__tab--active': true }
+				)}>
+					General
+				</li>
+			</ul>
+		)
+	}
+}
+
+
+class FiltersBody extends PureComponent {
+	render() {
+		return (
+			<div className="filters__body">
+			</div>
+		)
+	}
+}
+
+
+function FiltersFooter() {
+	return (
+		<div className="filters__footer">
+			<div className="filters__text filters__text--dim filters__text--meta">
+				Need to do more complex filtering?
+				{' '}
+				<a href="#" className="filters__link">Download the Data.</a>
+			</div>
+
+			<button
+				className="filters__button"
+			>
+				Apply Filters
+			</button>
+		</div>
+	)
+}
+
+
 class IncidentFiltering extends PureComponent {
 	constructor(props, ...args) {
 		super(props, ...args)
 
 		this.handleToggle = this.handleToggle.bind(this)
+		this.handleSelection = this.handleSelection.bind(this)
 
 		this.state = {
-			filtersEnabled: props.availableCategories.map(category => {
+			categoriesEnabled: props.availableCategories.map(category => {
 				return {
 					...category,
 					enabled: false,
@@ -83,8 +147,24 @@ class IncidentFiltering extends PureComponent {
 		})
 	}
 
+	handleSelection(id) {
+		const categoriesEnabled = this.state.categoriesEnabled.filter(category => {
+			if (category.id !== id) {
+				return category
+			}
+
+			return {
+				...category,
+				enabled: !category.enabled,
+			}
+		})
+
+		this.setState({ categoriesEnabled })
+	}
+
 	render() {
 		const {
+			categoriesEnabled,
 			filtersApplied,
 			filtersExpanded,
 		} = this.state
@@ -96,6 +176,19 @@ class IncidentFiltering extends PureComponent {
 					filtersExpanded={filtersExpanded}
 					handleToggle={this.handleToggle}
 				/>
+
+				<FiltersCategorySelection
+					categoriesEnabled={categoriesEnabled}
+					handleSelection={this.handleSelection}
+				/>
+
+				<FiltersTabs
+					categoriesEnabled={categoriesEnabled}
+				/>
+
+				<FiltersBody />
+
+				<FiltersFooter />
 			</Filters>
 		)
 	}

@@ -3,16 +3,48 @@ $padding-y: 1em
 
 
 .filters__header
-	display: flex
-	flex-direction: row
-	justify-content: space-between
-	align-items: center
-
+	+flex-vertically-centered-row
 	background-color: $filters-bg-light
 
 	> *
 		padding-left: $padding-x
 		padding-right: $padding-x
+
+
+.filters__category-selection
+	background-color: $filters-bg-medium
+
+
+.filters__tabs
+	+list-unstyled
+	background-color: $filters-bg-medium
+
+
+.filters__tab
+	background-color: $filters-bg-medium
+	color: $filters-fg-dim
+
+
+.filters__tab--active,
+.filters__tab:active,
+.filters__tab:hover,
+.filters__tab:focus
+	background-color: $filters-bg-dark
+	color: $white
+
+
+.filters__body
+	background-color: $filters-bg-dark
+
+
+.filters__footer
+	+flex-vertically-centered-row
+	background-color: $filters-bg-light
+
+
+.filters__link
+	text-decoration: none
+	color: $white
 
 
 .filters__text
@@ -25,18 +57,18 @@ $padding-y: 1em
 	color: $filters-fg-dim
 
 
-.filters__button
-	display: flex
-	flex-direction: row
-	justify-content: space-between
-	align-items: center
+.filters__text--meta
+	font-style: italic
 
+
+.filters__button
+	+flex-vertically-centered-row
+	+uppercase
 	padding: $padding-y $padding-x
 	border: 0
 
 	background-color: transparent
 	color: $filters-fg-dim
-	text-transform: uppercase
 	line-height: 1
 
 	&:active,
