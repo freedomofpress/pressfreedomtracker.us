@@ -30,14 +30,8 @@ def get_stream_data(page, mapper):
     stream_data = []
     mapped = False
 
-    print('Looking at page', page.title)
     for block in page.body.stream_data:
-        print('Before stream data', json.dumps(page.body.stream_data))
-        if block['type'] == 'rich_text':
-            import pdb
-            pdb.set_trace()
         if block['type'] == 'rich_text' and isinstance(block['value'], str):
-            print('IN thE iF')
             styletext_block = mapper(block)
             stream_data.append(styletext_block)
             mapped = True
@@ -56,24 +50,19 @@ def change_rich_text_to_styled_text(apps, schema_editor):
         stream_data, mapped = get_stream_data(page, richtext_to_styledtext)
 
         if mapped:
-            print(page.title, 'got mapped')
             stream_block = page.body.stream_block
-            print(json.dumps(stream_data))
             page.body = StreamValue(stream_block, stream_data, is_lazy=True)
             page.save()
-            print(page.title, 'saved')
-        else:
-            print(page.title, 'did not get mapped, skipped')
 
-    # for page in SimplePageWithSidebar.objects.all():
-    #     new_blocks = []
-    #     for block in page.body.stream_data:
-    #         stream_data, mapped = get_stream_data(page, richtext_to_styledtext)
+    for page in SimplePageWithSidebar.objects.all():
+        new_blocks = []
+        for block in page.body.stream_data:
+            stream_data, mapped = get_stream_data(page, richtext_to_styledtext)
 
-    #         if mapped:
-    #             stream_block = page.body.stream_block
-    #             page.body = StreamValue(stream_block, stream_data, is_lazy=True)
-    #             page.save()
+            if mapped:
+                stream_block = page.body.stream_block
+                page.body = StreamValue(stream_block, stream_data, is_lazy=True)
+                page.save()
 
 class Migration(migrations.Migration):
 
