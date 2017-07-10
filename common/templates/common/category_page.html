@@ -51,9 +51,9 @@
 {% endblock %}
 
 {% block main %}
-	<div class="incident-grid">
+	<div class="grid-50">
 		{% for incident in incidents %}
-			<div class="incident-grid__item">
+			<div class="grid-50__item">
 				{% include "incident/_incident.html" with incident=incident teaser=True %}
 			</div>
 		{% empty %}

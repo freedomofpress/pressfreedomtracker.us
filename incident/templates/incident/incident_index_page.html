@@ -5,9 +5,9 @@
 	<h2>{{ page.title }}</h2>
 
 	{% block ajax %}
-		<div class="incident-grid js-infinite-scrolling-parent">
+		<div class="grid-50 js-infinite-scrolling-parent">
 			{% for incident in entries_page %}
-				<div class="incident-grid__item js-infinite-scrolling-item">
+				<div class="grid-50__item js-infinite-scrolling-item">
 					{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
 				</div>
 			{% endfor %}
