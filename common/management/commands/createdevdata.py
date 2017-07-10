@@ -10,7 +10,6 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from blog.models import BlogIndexPage, BlogPage
-from common.blocks import StyledTextBlock
 from common.models import (
     CategoryPage, TaxonomyCategoryPage, TaxonomySettings,
     PersonPage, SimplePage, SimplePageWithSidebar,
@@ -21,7 +20,6 @@ from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
-from wagtail.wagtailcore.blocks import StreamBlock, StreamValue
 from wagtail.wagtailcore.models import Page, Site
 from wagtail.wagtailcore.rich_text import RichText
 
@@ -92,17 +90,17 @@ class Command(BaseCommand):
             title='About',
             slug='about',
             body=json.dumps([
-                    dict(
-                        type='text',
-                        value=dict(
-                            text=LIPSUM,
-                            background_color='white',
-                            text_align='left',
-                            font_size='large',
-                            font_family='sans-serif',
-                        ),
+                dict(
+                    type='text',
+                    value=dict(
+                        text=LIPSUM,
+                        background_color='white',
+                        text_align='left',
+                        font_size='large',
+                        font_family='sans-serif',
                     ),
-                ])
+                ),
+            ])
         )
         home_page.add_child(instance=about_page)
         home_page.about_page = about_page

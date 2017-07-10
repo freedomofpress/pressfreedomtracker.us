@@ -10,8 +10,6 @@ import wagtail.wagtailimages.blocks
 
 from wagtail.wagtailcore.blocks import StreamValue
 
-import json
-
 
 def richtext_to_styledtext(block):
     return {
@@ -55,7 +53,6 @@ def change_rich_text_to_styled_text(apps, schema_editor):
             page.save()
 
     for page in SimplePageWithSidebar.objects.all():
-        new_blocks = []
         for block in page.body.stream_data:
             stream_data, mapped = get_stream_data(page, richtext_to_styledtext)
 
@@ -63,6 +60,7 @@ def change_rich_text_to_styled_text(apps, schema_editor):
                 stream_block = page.body.stream_block
                 page.body = StreamValue(stream_block, stream_data, is_lazy=True)
                 page.save()
+
 
 class Migration(migrations.Migration):
 
