@@ -10,27 +10,15 @@
 .incident__body
 	padding: $incident-body-top-padding $incident-body-side-padding 5px
 
-.incident__image-link
-	display: block
-
 .incident__top-image
 	display: block
 	width: 100%
 
-.incident__top-image--teaser
-	// Set to prevent a small but annoying single pixel displacement
-	// on hover.
-	backface-visibility: hidden
-
-	transition: filter 0.2s linear
-	filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=1)
-	filter: grayscale(100%)
-
-	&:hover,
-	&:focus,
-	&:active
-		filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=0)
-		filter: grayscale(0%)
+.incident__category-name
+	+uppercase
+	font-size: 0.8em
+	margin: 0
+	font-weight: $sans-regular
 
 .incident__title
 	+underline-link

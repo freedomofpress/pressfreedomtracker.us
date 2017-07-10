@@ -1,0 +1,20 @@
+.teaser-image-link
+	display: block
+
+.teaser-image
+	display: block
+	width: 100%
+
+	// Set to prevent a small but annoying single pixel displacement
+	// on hover.
+	backface-visibility: hidden
+
+	transition: filter 0.2s linear
+	filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=1)
+	filter: grayscale(100%)
+
+	&:hover,
+	&:focus,
+	&:active
+		filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=0)
+		filter: grayscale(0%)
