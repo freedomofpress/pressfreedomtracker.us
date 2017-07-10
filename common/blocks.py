@@ -68,7 +68,7 @@ class StyledTextBlock(blocks.StructBlock):
     )
 
     text = blocks.RichTextBlock()
-    background_color = blocks.ChoiceBlock(choices=COLOR_CHOICES, default='#fff')
+    background_color = blocks.ChoiceBlock(choices=COLOR_CHOICES, default='white')
     text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default='left')
     font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default='normal')
     font_family = blocks.ChoiceBlock(choices=FONT_FAMILY_CHOICES, default='sans-serif')
