@@ -3,19 +3,28 @@
 	margin-bottom: 2em
 	width: 100%
 
+.data-table--light
+	color: $fpf-grey-light
+
 .data-table__row
 	border-top: 1px solid darken($fpf-grey-light, 5%)
 
 	&:first-child
 		border-top: 0
 
+.data-table__row--light
+	border-top-color: $gray-mid-dark
+
 .data-table__label
-	font-weight: bold
+	font-weight: $serif-bold
 	text-align: left
 	padding: 9px
 	padding-left: 0
 	min-width: 125px
 	vertical-align: top
+
+.data-table__label--light
+	font-weight: $serif-regular
 
 .data-table__value
 	+blue-link
