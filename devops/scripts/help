@@ -7,7 +7,8 @@ ci-devops-builder   Creates a container base for CI (not normally needed)
 
 # Developer Tools###################
 dev-go                  Spin-up developer environment with three docker containers
-dev-stop                Stop developer environment. Not really necessary.
+dev-resetapp            Purges django/node and starts them up. Doesnt touch postgres
+dev-killapp             Kills all developer containers.
 dev-attach-node         Provide a read-only terminal to attach to node spin-up
 dev-attach-django       Provide a read-only terminal to attach to django spin-up
 dev-attach-postgresql   Provide a read-only terminal to attach to django spin-up

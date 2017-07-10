@@ -12,9 +12,13 @@ ci-tests:
 dev-go:
 	./devops/scripts/dev.sh
 
-.PHONY: dev-stop
-dev-stop:
+.PHONY: dev-killapp
+dev-killapp:
 	docker kill node postgresql django
+
+.PHONY: dev-resetapp
+dev-resetapp:
+	docker rm -f node django; ./devops/scripts/dev.sh
 
 .PHONY: dev-attach-node
 dev-attach-node:
