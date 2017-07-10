@@ -82,3 +82,23 @@
 	transition-duration: 0.1s
 	transition-timing-function: linear
 	transition-property: color, background-color
+
+=gray-link
+	a,
+	.rich-text > a
+		transition: color ease-in 0.15s
+		color: inherit
+		text-decoration: none
+
+		+hover
+			color: darken($gray-light, 10%)
+
+=white-link
+	a,
+	.rich-text > a
+		text-decoration: none
+		color: $white-link
+		transition: color ease 0.15s
+
+		+hover
+			color: $white
