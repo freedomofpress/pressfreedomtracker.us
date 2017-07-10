@@ -21,6 +21,7 @@ EXCLUDED_FIELDS = (
     'go_live_at',
     'view_restrictions',
     'redirect',
+    'sites_rooted_here',
 )
 
 
