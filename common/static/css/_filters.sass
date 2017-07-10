@@ -1,0 +1,38 @@
+$padding-x: 1em
+$padding-y: 1em
+
+
+.filters__header
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	align-items: center
+
+	background-color: $filters-bg-light
+
+	> *
+		padding-left: $padding-x
+		padding-right: $padding-x
+
+
+.filters__text
+	font-weight: 300
+	color: $white
+
+
+.filters__text--dim
+	color: $filters-fg-dim
+
+
+.filters__button
+	padding: $padding-y $padding-x
+	border: 0
+
+	background-color: transparent
+	color: $filters-fg-dim
+	text-transform: uppercase
+
+	&:active,
+	&:hover,
+	&:focus
+		color: $white
