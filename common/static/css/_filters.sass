@@ -22,17 +22,26 @@ $padding-y: 1em
 
 
 .filters__category-selection
+	padding: $padding-y $padding-x
+
 	background-color: $filters-bg-medium
 
 
 .filters__tabs
 	+list-unstyled
+	padding: 0 $padding-x
+
 	background-color: $filters-bg-medium
 
 
 .filters__tab
+	display: inline-block
+	padding: ($padding-y * 0.75) ($padding-x * 2)
+
 	background-color: $filters-bg-medium
 	color: $filters-fg-dim
+	font-weight: 300
+	line-height: 1
 
 
 .filters__tab--active,
@@ -44,11 +53,14 @@ $padding-y: 1em
 
 
 .filters__body
+	padding: $padding-y $padding-x
+
 	background-color: $filters-bg-dark
 
 
 .filters__footer
 	+flex-vertically-centered-row
+	padding: ($padding-y / 2) $padding-x
 	background-color: $filters-bg-light
 
 
