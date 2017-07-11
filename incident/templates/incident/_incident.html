@@ -67,12 +67,10 @@ It can take the following context variables:
 		{% endif %}
 	{% endif %}
 	<div class="incident__body">
-		<h3 class="incident__category-name">
-			<ul class="category-list {% if teaser %}category-list--teaser{% endif %}">
+			<ul class="category-list">
 				{% for category in incident.categories.all %}
 					<li class="category-list__item
-										 category-list__item--{{ category.category.title|slugify }}
-										 {% if teaser %}category-list__item--teaser{% endif %}"
+										 category-list__item--{{ category.category.title|slugify }}"
 					><a
 						href="{% pageurl category.category %}"
 						class="category-list__link"
@@ -81,7 +79,6 @@ It can take the following context variables:
 					</a></li>
 				{% endfor %}
 			</ul>
-		</h3>
 		<h1 class='incident__title'>
 			{% if teaser %}
 				<a class="incident__title-link" href="{% pageurl incident %}">
