@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import classNames from 'classnames'
+import queryString from 'query-string'
 
 
 function SettingsIcon() {
@@ -145,7 +146,7 @@ class FiltersBody extends PureComponent {
 }
 
 
-function FiltersFooter() {
+function FiltersFooter({ handleApplyFilters }) {
 	return (
 		<div className="filters__footer">
 			<div className="filters__text filters__text--dim filters__text--meta">
@@ -156,6 +157,7 @@ function FiltersFooter() {
 
 			<button
 				className="filters__button filters__button--bordered filters__button--wide"
+				onClick={handleApplyFilters}
 			>
 				Apply Filters
 			</button>
@@ -170,12 +172,16 @@ class IncidentFiltering extends PureComponent {
 
 		this.handleToggle = this.handleToggle.bind(this)
 		this.handleSelection = this.handleSelection.bind(this)
+		this.handleApplyFilters = this.handleApplyFilters.bind(this)
+
+		const params = queryString.parse(location.search)
+		const categoriesEnabledById = (params.categories__enabled || '').split(',').map(n => parseInt(n))
 
 		this.state = {
 			categoriesEnabled: props.availableCategories.map(category => {
 				return {
 					...category,
-					enabled: false,
+					enabled: categoriesEnabledById.includes(category.id),
 				}
 			}),
 
@@ -206,6 +212,19 @@ class IncidentFiltering extends PureComponent {
 		this.setState({ categoriesEnabled })
 	}
 
+	handleApplyFilters() {
+		const categoriesEnabledById = this.state.categoriesEnabled
+			.filter(({ enabled }) => enabled)
+			.map(({ id }) => id)
+
+		const params = {
+			...queryString.parse(window.location.search),
+			categories__enabled: categoriesEnabledById.join(','),
+		}
+
+		history.pushState(null, null, '?' + queryString.stringify(params))
+	}
+
 	render() {
 		const {
 			categoriesEnabled,
@@ -233,7 +252,9 @@ class IncidentFiltering extends PureComponent {
 
 					<FiltersBody />
 
-					<FiltersFooter />
+					<FiltersFooter
+						handleApplyFilters={this.handleApplyFilters}
+					/>
 				</FiltersExpandable>
 			</Filters>
 		)
