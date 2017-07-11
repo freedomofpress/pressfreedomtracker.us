@@ -15,3 +15,5 @@ dev-attach-postgresql   Provide a read-only terminal to attach to django spin-up
 dev-createdevdata       Inject development data into the postgresql database
 dev-sass-lint           Runs sass-lint utility over the code-base
 dev-import-db           Imports a database dump from file named ./import.db
+dev-save-db             Save a snapshot of the database for the current git branch
+dev-restore-db          Restore the most recent database snapshot for the current git branch
