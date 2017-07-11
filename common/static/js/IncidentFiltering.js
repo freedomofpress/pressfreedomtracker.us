@@ -105,31 +105,12 @@ class FiltersCategorySelection extends PureComponent {
 
 
 class FiltersTabs extends PureComponent {
-	constructor(props, ...args) {
-		super(props, ...args)
-
-		this.state = {
-			selectedTab: -1,
-		}
-	}
-
-	componentWillReceiveProps(nextProps) {
-		const isSelectedTabIsEnabled = nextProps.categoriesEnabled.some(category => {
-			return category.enabled && this.state.selectedTab === category.id
-		})
-
-		if (!isSelectedTabIsEnabled) {
-			this.setState({ selectedTab: -1 })
-		}
-	}
-
-	handleClick(id) {
-		this.setState({ selectedTab: id })
-	}
-
 	render() {
-		const { selectedTab } = this.state
-		const { categoriesEnabled } = this.props
+		const {
+			categoriesEnabled,
+			selectedTab,
+			handleTabSelection,
+		} = this.props
 
 		return (
 			<ul className="filters__tabs">
@@ -138,7 +119,7 @@ class FiltersTabs extends PureComponent {
 						'filters__tab',
 						{ 'filters__tab--active': selectedTab === -1 }
 					)}
-					onClick={this.handleClick.bind(this, -1)}
+					onClick={handleTabSelection.bind(null, -1)}
 				>
 					General
 				</li>
@@ -151,7 +132,7 @@ class FiltersTabs extends PureComponent {
 								'filters__tab',
 								{ 'filters__tab--active': category.id === selectedTab }
 							)}
-							onClick={this.handleClick.bind(this, category.id)}
+							onClick={handleTabSelection.bind(null, category.id)}
 						>
 							{category.title}
 						</li>
@@ -200,6 +181,7 @@ class IncidentFiltering extends PureComponent {
 		this.handleToggle = this.handleToggle.bind(this)
 		this.handleSelection = this.handleSelection.bind(this)
 		this.handleApplyFilters = this.handleApplyFilters.bind(this)
+		this.handleTabSelection = this.handleTabSelection.bind(this)
 
 		const params = queryString.parse(location.search)
 		const categoriesEnabledById = (params.categories__enabled || '').split(',').map(n => parseInt(n))
@@ -215,6 +197,8 @@ class IncidentFiltering extends PureComponent {
 			filtersExpanded: false,
 
 			filtersApplied: [],
+
+			selectedTab: -1,
 		}
 	}
 
@@ -236,7 +220,14 @@ class IncidentFiltering extends PureComponent {
 			}
 		})
 
-		this.setState({ categoriesEnabled })
+		const isSelectedTabIsEnabled = categoriesEnabled.some(category => {
+			return category.enabled && this.state.selectedTab === category.id
+		})
+
+		this.setState({
+			categoriesEnabled,
+			selectedTab: isSelectedTabIsEnabled ? this.state.selectedTab : -1,
+		})
 	}
 
 	handleApplyFilters() {
@@ -252,11 +243,16 @@ class IncidentFiltering extends PureComponent {
 		history.pushState(null, null, '?' + queryString.stringify(params))
 	}
 
+	handleTabSelection(id) {
+		this.setState({ selectedTab: id })
+	}
+
 	render() {
 		const {
 			categoriesEnabled,
 			filtersApplied,
 			filtersExpanded,
+			selectedTab,
 		} = this.state
 
 		return (
@@ -275,6 +271,8 @@ class IncidentFiltering extends PureComponent {
 
 					<FiltersTabs
 						categoriesEnabled={categoriesEnabled}
+						selectedTab={selectedTab}
+						handleTabSelection={this.handleTabSelection}
 					/>
 
 					<FiltersBody />
