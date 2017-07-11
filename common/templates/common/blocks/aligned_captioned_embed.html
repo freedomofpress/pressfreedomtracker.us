@@ -11,7 +11,7 @@
 
 	{% if self.caption or self.attribution %}
 		<aside
-			class="caption {% if not self.image_caption %} caption--att-only {% endif %}"
+			class="caption {% if not self.caption %} caption--att-only {% endif %}"
 		>
 			{% if self.caption %}
 				<div class="caption__text">
