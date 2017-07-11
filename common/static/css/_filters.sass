@@ -27,6 +27,40 @@ $padding-y: 1em
 	background-color: $filters-bg-medium
 
 
+.filters__categories
+	+list-unstyled
+	display: flex
+	flex-direction: row
+	flex-wrap: wrap
+	padding: ($padding-y / 2) 0
+	margin: 0 ($padding-y / -2)
+
+
+.filters__category
+	flex-basis: 25%
+	display: flex
+	align-items: center
+	justify-content: center
+	border: 0
+	border-radius: 0.5em
+	padding: ($padding-y * 1.5) $padding-x
+	margin: ($padding-y / 2) ($padding-x / 2)
+
+	background-color: $filters-bg-light
+	color: $filters-fg-dim
+	text-align: center
+
+	cursor: pointer
+
+
+.filters__category--active,
+.filters__category:active,
+.filters__category:hover,
+.filters__category:focus
+	background-color: $white
+	color: $filters-bg-medium
+
+
 .filters__tabs
 	+list-unstyled
 	padding: 0 $padding-x

@@ -72,7 +72,10 @@ function FiltersExpandable({ filtersExpanded, children }) {
 
 class FiltersCategorySelection extends PureComponent {
 	render() {
-		const { categoriesEnabled } = this.props
+		const {
+			categoriesEnabled,
+			handleSelection,
+		} = this.props
 
 		return (
 			<div className="filters__category-selection">
@@ -80,7 +83,20 @@ class FiltersCategorySelection extends PureComponent {
 					Include
 				</div>
 
-
+				<ul className="filters__categories">
+					{categoriesEnabled.map(category => (
+						<li
+							key={category.id}
+							className={classNames(
+								'filters__category',
+								{ 'filters__category--active': category.enabled }
+							)}
+							onClick={handleSelection.bind(null, category.id)}
+						>
+							{category.title}
+						</li>
+					))}
+				</ul>
 			</div>
 		)
 	}
