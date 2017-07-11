@@ -16,3 +16,7 @@
 
 	@media(max-width: $small-screen)
 		margin-left: 0
+
+@each $name, $color in $border-colors
+	.category-list__item--#{$name}
+		color: $color
