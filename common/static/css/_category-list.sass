@@ -1,21 +1,12 @@
 .category-list
 	+list-unstyled
 	+underline-link
-	display: flex
 	margin-bottom: 0.2rem
 
-	@media(max-width: $small-screen)
-		flex-direction: column
-
-
 .category-list__item
-	margin-left: 0.5rem
+	display: inline-block
+	margin-right: 0.5rem
 
-	&:first-child
-		margin-left: 0
-
-	@media(max-width: $small-screen)
-		margin-left: 0
 
 @each $name, $color in $border-colors
 	.category-list__item--#{$name}
