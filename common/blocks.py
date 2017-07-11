@@ -1,4 +1,5 @@
 from wagtail.wagtailcore import blocks
+from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
 from common.choices import COLOR_CHOICES
@@ -31,21 +32,34 @@ class Heading3(blocks.StructBlock):
         label = 'Heading 3'
 
 
+ALIGNMENT_CHOICES = (
+    ('left', 'Left'),
+    ('right', 'Right'),
+    ('full-width', 'Full Width'),
+)
+
+
 class AlignedCaptionedImageBlock(blocks.StructBlock):
     image = ImageChooserBlock()
     caption = blocks.RichTextBlock(required=False)
-
-    ALIGNMENT_CHOICES = (
-        ('left', 'Left'),
-        ('right', 'Right'),
-        ('full-width', 'Full Width'),
-    )
     alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
 
     class Meta:
         template = 'common/blocks/aligned_captioned_image.html'
         icon = 'image'
         label = 'Image'
+
+
+class AlignedCaptionedEmbedBlock(blocks.StructBlock):
+    video = EmbedBlock()
+    caption = blocks.RichTextBlock(required=False)
+    attribution = blocks.CharBlock(max_length=255, required=False)
+    alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
+
+    class Meta:
+        template = 'common/blocks/aligned_captioned_embed.html'
+        icon = 'media'
+        label = 'Video'
 
 
 class StyledTextBlock(blocks.StructBlock):

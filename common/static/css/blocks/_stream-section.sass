@@ -11,10 +11,6 @@
 	padding: 0 $simple-page-padding
 	color: $white
 
-.stream-section--outline
-	border-top: 1px solid $gray-light
-	border-bottom: 1px solid $gray-light
-
 .stream-section--white:first-child
 	padding-top: 0
 
@@ -22,8 +18,8 @@
 @each $name, $color in $background-colors
 	.stream-section--#{$name}
 		background-color: $color
-		padding-top: 1em
-		padding-bottom: 1em
+		padding-top: 1rem
+		padding-bottom: 1rem
 		clear: both
 
 .stream-section--white

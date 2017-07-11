@@ -3,7 +3,7 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFi
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailembeds.blocks import EmbedBlock
+
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
@@ -17,6 +17,7 @@ from common.blocks import (
     Heading3,
     StyledTextBlock,
     AlignedCaptionedImageBlock,
+    AlignedCaptionedEmbedBlock
 )
 
 
@@ -169,7 +170,7 @@ class SimplePage(Page):
             blocks.CharBlock(label="List Item"),
             template='common/blocks/list_block_columns.html'
         )),
-        ('video', EmbedBlock()),
+        ('video', AlignedCaptionedEmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
@@ -194,7 +195,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
             blocks.CharBlock(label="List Item"),
             template='common/blocks/list_block_columns.html'
         )),
-        ('video', EmbedBlock()),
+        ('video', AlignedCaptionedEmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),

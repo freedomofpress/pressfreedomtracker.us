@@ -1,8 +1,5 @@
 {% load wagtailcore_tags %}
-{% load wagtailimages_tags %}
 
-{% image self.image width-1440 as x1 %}
-{% image self.image width-2880 as x2 %}
 
 <div class="captioned-media__wrapper
 	{% if self.alignment == 'full-width' %}
@@ -10,12 +7,9 @@
 	{% else %}
 		captioned-media__wrapper--{% if self.alignment == 'left' %}left{% else %}right{% endif %}
 	{% endif %}">
-	<img
-		alt="{{ x1.alt }}"
-		src="{{ x1.url }}"
-		srcset="{{ x2.url }} 2x"
-	/>
-	{% if self.caption or self.image.attribution %}
+	{{ self.video }}
+
+	{% if self.caption or self.attribution %}
 		<aside
 			class="caption {% if not self.image_caption %} caption--att-only {% endif %}"
 		>
@@ -25,9 +19,9 @@
 				</div>
 			{% endif %}
 
-			{% if self.image.attribution %}
+			{% if self.attribution %}
 				<div class="caption__attribution {% if not self.caption %} caption__attribution--att-only {% endif %}">
-					{{ self.image.attribution }}
+					{{ self.attribution }}
 				</div>
 			{% endif %}
 		</aside>
