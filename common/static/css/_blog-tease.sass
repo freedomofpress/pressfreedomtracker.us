@@ -1,22 +1,40 @@
 .blog-tease
-	font-size: 13px
-	color: $gray-dark
+	font-family: $sans-serif
+	background: #fff
+	width: 100%
+	margin-bottom: 20px
+	padding: $blog-tease-padding
 
-	&:not(:last-child)
-		margin-bottom: 40px
+	&__title
+		font-family: $serif
+		font-weight: normal
+		margin-top: 0
+		margin: 0 0 15px 0
+		font-size: 2em
+		line-height: 1.25
 
-.blog-tease__title
-	padding-bottom: 10px
-	font-family: $serif
-	font-size: 1.75em
+	&__title-link
+		+title-link
 
-.blog-tease__link
-	color: inherit
-	text-decoration: none
+	&__date
+		margin: $incident-attr-margin
+		+light-gray-text-small
 
-.blog-tease__tease .rich-text > p
-	margin: 0
 
-.blog-tease__organization
-	padding-top: 10px
-	color: #848484
+	&__tease
+		margin: $incident-attr-margin
+		color: $gray-mid-dark-text
+
+		.rich-text > p
+			margin: 0
+
+	&__organization
+		padding-top: 10px
+		+uppercase
+		font-size: 0.8em
+		margin: 0
+		font-weight: $sans-regular
+		+list-unstyled
+		& > li
+			+list-comma-separated
+			display: inline

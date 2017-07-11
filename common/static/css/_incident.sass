@@ -25,15 +25,19 @@
 	font-family: $serif
 	font-weight: normal
 	margin-top: 0
-	margin: 0 0 15px 0
+	margin: $incident-attr-margin
 	line-height: 1.25
+
+.incident__title-link
+	+title-link
+	display: block
 
 .incident__date
 	+light-gray-text-small
-	margin: 0 0 15px 0
+	margin: $incident-attr-margin
 
 .incident__description
-	margin: 0 0 15px 0
+	margin: $incident-attr-margin
 	color: $gray-mid-dark-text
 
 .incident__update-item
