@@ -176,7 +176,7 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleSelection(id) {
-		const categoriesEnabled = this.state.categoriesEnabled.filter(category => {
+		const categoriesEnabled = this.state.categoriesEnabled.map(category => {
 			if (category.id !== id) {
 				return category
 			}
