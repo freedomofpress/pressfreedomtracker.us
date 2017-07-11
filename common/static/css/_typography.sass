@@ -1,0 +1,11 @@
+@each $name, $text-align in $text-align-choices
+	.text-align-#{$name}
+		text-align: $text_align
+
+@each $name, $text-size in $text-size-choices
+	.text-size-#{$name}
+		font-size: $text-size
+
+@each $name, $font-family in $font-family-choices
+	.text-#{$name}
+		font-family: $font-family

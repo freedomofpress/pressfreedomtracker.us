@@ -5,3 +5,32 @@ $border-colors: (
 	border-stop-denial-of-entry: #803e79,
 	subpeonas: #3a9d9e
 );
+
+$background-colors: (
+	blue: $blue-klien,
+	green: $green-vida-loca,
+	orange: $gamboge,
+	dark-gray: $gray-dark,
+	purple: $purple-cadillac,
+	white: $white
+);
+
+$text-size-choices: (
+	small: 0.8em,
+	normal: 1em,
+	large: 1.2em,
+	jumbo: 1.5em
+);
+
+$font-family-choices: (
+	serif: $serif,
+	sans-serif: $sans-serif
+);
+
+$text-align-choices: (
+	left: left,
+	center: center,
+	right: right
+);
+
+

@@ -1,0 +1,27 @@
+.stream-sections
+	+clearfix
+	margin-bottom: 1rem
+
+	img
+		max-width: 100%
+		height: auto
+
+.stream-section
+	+p-remove-first-and-last-margin
+	padding: 0 $simple-page-padding
+	color: $white
+
+.stream-section--white:first-child
+	padding-top: 0
+
+
+@each $name, $color in $background-colors
+	.stream-section--#{$name}
+		background-color: $color
+		padding-top: 1rem
+		padding-bottom: 1rem
+		clear: both
+
+.stream-section--white
+	color: $gray-mid-text
+	clear: none

@@ -31,6 +31,10 @@
 	&:hover
 		opacity: 0.9
 
+@each $name, $color in $background-colors
+	.stats__item--#{$name}
+		background-color: $color
+
 
 .stats__number,
 .stats__label

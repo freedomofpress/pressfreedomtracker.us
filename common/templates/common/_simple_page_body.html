@@ -1,8 +1,10 @@
 {% load wagtailcore_tags %}
 
-<h1>{{ page.title }}</h1>
-<main>
+<div class="simple-page">
+	<h1 class="heading-block heading-block--1">{{ page.title }}</h1>
+	<section class="stream-sections">
   {% for block in page.body %}
-    <section>{% include_block block %}</section>
+    {% include_block block %}
   {% endfor %}
-</main>
+  </section>
+</div>

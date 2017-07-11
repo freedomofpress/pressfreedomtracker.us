@@ -3,12 +3,22 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFi
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailimages.blocks import ImageChooserBlock
+
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
+
+
+from common.blocks import (
+    Heading1,
+    Heading2,
+    Heading3,
+    StyledTextBlock,
+    AlignedCaptionedImageBlock,
+    AlignedCaptionedEmbedBlock
+)
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -152,9 +162,18 @@ class CategoryPage(Page):
 
 class SimplePage(Page):
     body = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
-        ('image', ImageChooserBlock()),
+        ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
+        ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('blockquote', blocks.BlockQuoteBlock()),
+        ('list', blocks.ListBlock(
+            blocks.CharBlock(label="List Item"),
+            template='common/blocks/list_block_columns.html'
+        )),
+        ('video', AlignedCaptionedEmbedBlock()),
+        ('heading_1', Heading1()),
+        ('heading_2', Heading2()),
+        ('heading_3', Heading3()),
     ])
 
     content_panels = Page.content_panels + [
@@ -168,9 +187,18 @@ class SimplePage(Page):
 
 class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     body = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
-        ('image', ImageChooserBlock()),
+        ('text', StyledTextBlock(label='Text')),
+        ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('blockquote', blocks.BlockQuoteBlock()),
+        ('list', blocks.ListBlock(
+            blocks.CharBlock(label="List Item"),
+            template='common/blocks/list_block_columns.html'
+        )),
+        ('video', AlignedCaptionedEmbedBlock()),
+        ('heading_1', Heading1()),
+        ('heading_2', Heading2()),
+        ('heading_3', Heading3()),
     ])
 
     content_panels = Page.content_panels + [

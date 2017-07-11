@@ -4,14 +4,26 @@
     {% include 'common/_simple_page_body.html' %}
 {% endblock %}
 
+{% block top_sidebar_class %}
+    {{ block.super }}
+    layout-right-sidebar__sidebar--light
+{% endblock%}
+
+{% block sidebar_class %}
+	layout-right-sidebar__sidebar--light
+{% endblock %}
+
 {% block sidebar %}
-  <ul>
-    {% for item in page.get_sidebar_menu.menu_items.all %}
-      <li>
-        <a href="{{ item.url }}" class="{{ item.html_classes }}" {% if item.title %}title="{{ item.title }}"{% endif %}>
-          {{ item.text }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+	<aside class="simple-page__sidebar">
+		<h5 class="sidebar-menu-heading">{{ page.title }}</h5>
+	  <ul class="sidebar-menu">
+	    {% for item in page.get_sidebar_menu.menu_items.all %}
+	      <li class="sidebar-menu__item">
+	        <a href="{{ item.url }}" class="{{ item.html_classes }}" {% if item.title %}title="{{ item.title }}"{% endif %}>
+	          {{ item.text }}
+	        </a>
+	      </li>
+	    {% endfor %}
+	  </ul>
+	</aside>
 {% endblock %}

@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 
+{% block top_sidebar_class %}
+    {{ block.super }}
+    layout-right-sidebar__sidebar--light
+{% endblock%}
+
+{% block sidebar_class %}
+	layout-right-sidebar__sidebar--light
+	layout-right-sidebar__sidebar--hide-mobile
+{% endblock %}
+
 {% block main %}
     {% include 'common/_simple_page_body.html' %}
 {% endblock %}

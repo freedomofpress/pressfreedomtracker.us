@@ -1,5 +1,6 @@
 import random
 from datetime import timedelta
+import json
 
 from django.contrib.auth.models import User
 from django.core.files.images import ImageFile
@@ -21,6 +22,9 @@ from menus.models import Menu, MenuItem
 
 from wagtail.wagtailcore.models import Page, Site
 from wagtail.wagtailcore.rich_text import RichText
+
+
+LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
 
 
 class Command(BaseCommand):
@@ -85,10 +89,19 @@ class Command(BaseCommand):
         about_page = SimplePage(
             title='About',
             slug='about',
-            body=[(
-                'rich_text',
-                RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
-            )])
+            body=json.dumps([
+                dict(
+                    type='text',
+                    value=dict(
+                        text=LIPSUM,
+                        background_color='white',
+                        text_align='left',
+                        font_size='large',
+                        font_family='sans-serif',
+                    ),
+                ),
+            ])
+        )
         home_page.add_child(instance=about_page)
         home_page.about_page = about_page
 
@@ -113,10 +126,19 @@ class Command(BaseCommand):
                 title='Resources',
                 slug='resources',
                 sidebar_menu=resources_menu,
-                body=[(
-                    'rich_text',
-                    RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
-                )])
+                body=json.dumps([
+                    dict(
+                        type='text',
+                        value=dict(
+                            text=LIPSUM,
+                            background_color='white',
+                            text_align='left',
+                            font_size='large',
+                            font_family='sans-serif',
+                        ),
+                    ),
+                ])
+            )
 
             home_page.add_child(instance=resources_page)
 
@@ -159,7 +181,6 @@ class Command(BaseCommand):
         footer_menu, created = Menu.objects.get_or_create(
             name='Footer Menu', slug='footer')
         if created:
-            footer_menu = Menu.objects.create(name='Footer Menu', slug='footer')
             MenuItem.objects.bulk_create([
                 MenuItem(
                     text='About',
@@ -264,11 +285,13 @@ class Command(BaseCommand):
                 body="At least nine news outlets were excluded from an informal briefing known as 'a gaggle' by President Donald Trump's White House Press Secretary Sean Spicer.",
             ),
         ]
-        image = CustomImage.objects.create(
-            title='Sample Image',
-            file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
-            attribution='createdevdata'
-        )
+        image = CustomImage.objects.filter(title='Sample Image').first()
+        if not image:
+            image = CustomImage.objects.create(
+                title='Sample Image',
+                file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
+                attribution='createdevdata'
+            )
         for index, data in enumerate(incident_data):
             page = IncidentPage(
                 title=data['title'],
