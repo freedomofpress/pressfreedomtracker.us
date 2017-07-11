@@ -71,11 +71,15 @@ $padding-y: 1em
 .filters__tab
 	display: inline-block
 	padding: ($padding-y * 0.75) ($padding-x * 2)
+	margin-right: 0.5em
 
-	background-color: $filters-bg-medium
+	background-color: $filters-bg-light
 	color: $filters-fg-dim
 	font-weight: 300
 	line-height: 1
+
+	:last-child
+		margin-right: 0
 
 
 .filters__tab--active,

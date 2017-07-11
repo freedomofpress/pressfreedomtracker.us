@@ -105,6 +105,8 @@ class FiltersCategorySelection extends PureComponent {
 
 class FiltersTabs extends PureComponent {
 	render() {
+		const { categoriesEnabled } = this.props
+
 		return (
 			<ul className="filters__tabs">
 				<li className={classNames(
@@ -113,6 +115,20 @@ class FiltersTabs extends PureComponent {
 				)}>
 					General
 				</li>
+
+				{categoriesEnabled.map(category => {
+					return category.enabled && (
+						<li
+							key={category.id}
+							className={classNames(
+								'filters__tab',
+								{ 'filters__tab--active': false }
+							)}
+						>
+							{category.title}
+						</li>
+					)
+				})}
 			</ul>
 		)
 	}
