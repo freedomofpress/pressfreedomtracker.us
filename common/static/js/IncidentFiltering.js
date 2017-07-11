@@ -155,7 +155,7 @@ function FiltersFooter() {
 			</div>
 
 			<button
-				className="filters__button"
+				className="filters__button filters__button--bordered filters__button--wide"
 			>
 				Apply Filters
 			</button>
