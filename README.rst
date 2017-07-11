@@ -55,12 +55,19 @@ You can directly access the database on port `15432` (see further below)
 Resetting database
 ++++++++++++++++++
 
-The containers are ephemeral so if you need to reset and start over simply kill
+The containers are ephemeral so if you need to reset and start over, kill
 the containers and build them back up.
 
 .. code:: bash
 
-    make dev-stop
+    docker rm -f node postgresql django
+    make dev-go
+
+If you want to just burn and restart node/django WHILE keeping the postgresql db
+intact, you can run:
+
+.. code:: bash
+    make dev-killapp
     make dev-go
 
 Attaching to running containers
