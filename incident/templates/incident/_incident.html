@@ -68,11 +68,11 @@ It can take the following context variables:
 	{% endif %}
 	<div class="incident__body">
 		<h3 class="incident__category-name incident__category-name--{{ main_category|slugify }}">
-			<ul class="inline-list">
+			<ul class="category-list">
 				{% for category in incident.categories.all %}
-					<li class="inline-list__item"><a
+					<li class="category-list__item"><a
 						href="{% pageurl category.category %}"
-						class="inline-list__link"
+						class="category-list__link"
 					>
 						{{ category.category.title }}
 					</a></li>
