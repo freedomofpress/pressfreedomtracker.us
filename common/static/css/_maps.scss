@@ -1,9 +1,13 @@
 // CATEGORY COLORS
 $border-colors: (
-	arrest: #ff960d,
-	equipment-search-seizure-or-damage: #5b9932,
-	border-stop-denial-of-entry: #803e79,
-	subpeonas: #3a9d9e
+	arrest-detention: $arrest-color,
+	equipment-search-seizure-or-damage: $equipment-seizure-color,
+	border-stop-denial-of-entry: $border-stop-color,
+	subpeonas: $subpeona-color,
+	documented-cases-of-surveillance: $documented-cases-of-surveillance-color,
+	physical-assaults: $physical-assaults-color,
+	leak-prosecutions: $leak-prosecution-color ,
+	us-precident-cited-abroad: $us-precident-cited-abroad-color,
 );
 
 $background-colors: (

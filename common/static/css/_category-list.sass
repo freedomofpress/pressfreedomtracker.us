@@ -1,0 +1,16 @@
+.category-list
+	+list-unstyled
+	+underline-link
+	margin-bottom: 0.2rem
+
+.category-list__item
+	+uppercase
+	font-size: 0.8rem
+	font-weight: $sans-regular
+	display: inline-block
+	margin: 0 0.5rem 0 0
+
+
+@each $name, $color in $border-colors
+	.category-list__item--#{$name}
+		color: $color

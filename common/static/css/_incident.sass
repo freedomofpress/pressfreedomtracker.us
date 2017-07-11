@@ -32,27 +32,13 @@
 		filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=0)
 		filter: grayscale(0%)
 
-.incident__category-name
-	+uppercase
-	font-size: 0.8em
-	margin: 0
-	font-weight: $sans-regular
-
 .incident__title
+	+underline-link
 	font-family: $serif
 	font-weight: normal
 	margin-top: 0
 	margin: 0 0 15px 0
 	line-height: 1.25
-
-.incident__title-link
-	color: $black
-	text-decoration: none
-	display: block
-
-	&:hover
-		color: $black
-		text-decoration: underline
 
 .incident__date
 	+light-gray-text-small
@@ -78,9 +64,6 @@
 @each $name, $color in $border-colors
 	.incident--#{$name}
 		border-left-color: $color
-
-	.incident__category-name--#{$name}
-		color: $color
 
 
 // TODO: Move these to a different module
