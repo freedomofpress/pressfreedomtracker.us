@@ -1,17 +1,27 @@
 .blog-tease
-	font-family: $sans-serif
-	background: #fff
-	width: 100%
-	margin-bottom: 20px
-	padding: $blog-tease-padding
+
+	&--blog-index
+		font-family: $sans-serif
+		background: #fff
+		width: 100%
+		padding: $blog-tease-padding
+		margin-bottom: 20px
+
+	&--homepage
+		margin-bottom: 40px
+
 
 	&__title
 		font-family: $serif
 		font-weight: normal
-		margin-top: 0
-		margin: 0 0 15px 0
-		font-size: 2em
 		line-height: 1.25
+		margin: $incident-attr-margin
+
+		&--blog-index
+			font-size: 2em
+
+		&--homepage
+			font-size: 1.5em
 
 	&__title-link
 		+title-link
@@ -27,6 +37,10 @@
 
 		.rich-text > p
 			margin: 0
+
+		&--homepage
+			font-size: 0.8em
+			line-height: 1.45
 
 	&__organization
 		padding-top: 10px

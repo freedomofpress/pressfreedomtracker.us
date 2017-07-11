@@ -15,9 +15,7 @@
 		<div class="grid-50 js-infinite-scrolling-parent">
 			{% for post in entries_page %}
 				<div class="grid-50__item js-infinite-scrolling-item">
-					<div class="blog-tease">
-						{% include "blog/_blog_tease.html" with page=post.specific %}
-					</div>
+					{% include "blog/_blog_tease.html" with page=post.specific location="blog-index" %}
 				</div>
 			{% endfor %}
 		</div>
