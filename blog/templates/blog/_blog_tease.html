@@ -3,28 +3,33 @@
 {% load wagtailcore_tags %}
 
 <div class="blog-tease blog-tease--{{ location }}">
-	<h3 class="blog-tease__title blog-tease__title--{{ location }}">
-		<a class="blog-tease__title-link" href="{% pageurl page %}">
-			{{ page.title }}
-		</a>
-	</h3>
-
-	{% if location == "blog-index" %}
-		<div class="blog-tease__date">
-			{{ page.publication_datetime|date:"F j, Y" }}
-		</div>
+	{% if page.teaser_image and location == "blog-index" %}
+		{% include "common/_teaser_image.html" %}
 	{% endif %}
+	<div class="blog-tease__body--{{ location }}">
+		<h3 class="blog-tease__title blog-tease__title--{{ location }}">
+			<a class="blog-tease__title-link" href="{% pageurl page %}">
+				{{ page.title }}
+			</a>
+		</h3>
 
-		<div class="blog-tease__tease blog-tease__tease--{{ location }}">
-			{{ page.teaser_text|richtext }}
-		</div>
+		{% if location == "blog-index" %}
+			<div class="blog-tease__date">
+				{{ page.publication_datetime|date:"F j, Y" }}
+			</div>
+		{% endif %}
 
-	<ul class="blog-tease__organization">
-		{% if page.author and location == "blog-index" %}
-			<li>{{ page.author }}</li>
-		{% endif %}
-		{% if page.organization %}
-			<li>{{ page.organization.title }}</li>
-		{% endif %}
-	</ul>
+			<div class="blog-tease__tease blog-tease__tease--{{ location }}">
+				{{ page.teaser_text|richtext }}
+			</div>
+
+		<ul class="blog-tease__organization">
+			{% if page.author and location == "blog-index" %}
+				<li>{{ page.author }}</li>
+			{% endif %}
+			{% if page.organization %}
+				<li>{{ page.organization.title }}</li>
+			{% endif %}
+		</ul>
+	</div>
 </div>
