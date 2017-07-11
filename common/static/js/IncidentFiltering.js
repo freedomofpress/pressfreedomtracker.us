@@ -105,15 +105,41 @@ class FiltersCategorySelection extends PureComponent {
 
 
 class FiltersTabs extends PureComponent {
+	constructor(props, ...args) {
+		super(props, ...args)
+
+		this.state = {
+			selectedTab: -1,
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const isSelectedTabIsEnabled = nextProps.categoriesEnabled.some(category => {
+			return category.enabled && this.state.selectedTab === category.id
+		})
+
+		if (!isSelectedTabIsEnabled) {
+			this.setState({ selectedTab: -1 })
+		}
+	}
+
+	handleClick(id) {
+		this.setState({ selectedTab: id })
+	}
+
 	render() {
+		const { selectedTab } = this.state
 		const { categoriesEnabled } = this.props
 
 		return (
 			<ul className="filters__tabs">
-				<li className={classNames(
-					'filters__tab',
-					{ 'filters__tab--active': true }
-				)}>
+				<li
+					className={classNames(
+						'filters__tab',
+						{ 'filters__tab--active': selectedTab === -1 }
+					)}
+					onClick={this.handleClick.bind(this, -1)}
+				>
 					General
 				</li>
 
@@ -123,8 +149,9 @@ class FiltersTabs extends PureComponent {
 							key={category.id}
 							className={classNames(
 								'filters__tab',
-								{ 'filters__tab--active': false }
+								{ 'filters__tab--active': category.id === selectedTab }
 							)}
+							onClick={this.handleClick.bind(this, category.id)}
 						>
 							{category.title}
 						</li>
