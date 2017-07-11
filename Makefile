@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := help
+
 .PHONY: ci-go
 ci-go:
 	./devops/scripts/go.sh
@@ -10,9 +12,13 @@ ci-tests:
 dev-go:
 	./devops/scripts/dev.sh
 
-.PHONY: dev-stop
-dev-stop:
+.PHONY: dev-killapp
+dev-killapp:
 	docker kill node postgresql django
+
+.PHONY: dev-resetapp
+dev-resetapp:
+	docker rm -f node django; ./devops/scripts/dev.sh
 
 .PHONY: dev-attach-node
 dev-attach-node:
@@ -26,6 +32,10 @@ dev-attach-django:
 dev-attach-postgresql:
 	docker attach --sig-proxy=false postgresql
 
+.PHONY: dev-createdevdata
+dev-createdevdata:
+	docker exec -it django bash -c "./manage.py createdevdata"
+
 .PHONY: dev-sass-lint
 dev-sass-lint:
 	./devops/scripts/dev-sasslint.sh
@@ -37,3 +47,7 @@ dev-import-db:
 .PHONY: ci-devops-builder
 ci-devops-builder:
 	./devops/scripts/ci-django-build.sh
+
+.PHONY: help
+help:
+	@cat devops/scripts/help
