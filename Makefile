@@ -51,3 +51,11 @@ ci-devops-builder:
 .PHONY: help
 help:
 	@cat devops/scripts/help
+
+.PHONY: dev-save-db
+dev-save-db:
+	./devops/scripts/savedb.sh
+
+.PHONY: dev-restore-db
+dev-restore-db:
+	./devops/scripts/restoredb.sh

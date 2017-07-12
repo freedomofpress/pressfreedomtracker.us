@@ -30,3 +30,4 @@ src/
 
 # developer postgres testing
 import.db
+db-snapshots/
