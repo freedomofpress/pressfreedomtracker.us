@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import axios from 'axios'
 import classNames from 'classnames'
 import queryString from 'query-string'
 
@@ -335,6 +336,30 @@ class IncidentFiltering extends PureComponent {
 		}
 
 		history.pushState(null, null, '?' + queryString.stringify(params))
+
+		axios.get('?' + queryString.stringify(params))
+			.then(response => {
+				if (response.status === 200) {
+					this.handlePageLoad(response.data)
+				}
+			})
+	}
+
+	handlePageLoad(ajaxBodyHtml) {
+		const containerElm = document.querySelector('.incident-grid')
+		if (!containerElm) {
+			console.warn('No .incident-grid exists in the current DOM structure.')
+			return
+		}
+
+		const tempContainerElm = document.createElement('span')
+		tempContainerElm.innerHTML = ajaxBodyHtml
+		const newContainerElm = tempContainerElm.querySelector('.incident-grid')
+		if (!newContainerElm) {
+			console.warn('No .incident-grid exists in the newly fetched DOM structure.')
+			return
+		}
+		containerElm.parentNode.replaceChild(newContainerElm, containerElm)
 	}
 
 	handleFilterChange(label, event) {
