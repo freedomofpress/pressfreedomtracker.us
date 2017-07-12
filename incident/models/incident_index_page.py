@@ -70,6 +70,17 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             actors=request.GET.get('actors'),
             charged_under_espionage_act=request.GET.get('charged_under_espionage_act'),
             politicians_or_public_figures_involved=request.GET.get('politicians_or_public_figures_involved'),
+            border_point=request.GET.get('border_point'),
+            stopped_at_border=request.GET.get('stopped_at_border'),
+            target_us_citizenship_status=request.GET.get('target_us_citizenship_status'),
+            denial_of_entry=request.GET.get('denial_of_entry'),
+            stopped_previously=request.GET.get('stopped_previously'),
+            target_nationality=request.GET.get('target_nationality'),
+            did_authorities_ask_for_device_access=request.GET.get('did_authorities_ask_for_device_access'),
+            did_authorities_ask_for_social_media_user=request.GET.get('did_authorities_ask_for_social_media_user'),
+            did_authorities_ask_for_social_media_pass=request.GET.get('did_authorities_ask_for_social_media_pass'),
+            did_authorities_ask_about_work=request.GET.get('did_authorities_ask_about_work'),
+            were_devices_searched_or_seized=request.GET.get('weredevices_searched_or_seized'),
         ).fetch()
 
         paginator, entries = paginate(

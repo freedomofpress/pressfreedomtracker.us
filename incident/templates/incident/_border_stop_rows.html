@@ -1,10 +1,14 @@
+{% load wagtailcore_tags %}
+
 {% if page.border_point %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
 			Border Point
 		</th>
 		<td class="data-table__value">
-			{{ page.border_point }}
+			<a href="{% pageurl page.get_parent %}?border_point={{ page.border_point }}">
+				{{ page.border_point }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -18,7 +22,7 @@
 			<ul class="data-table__list">
 				{% for nationality in page.target_nationality.all %}
 					<li class="data-table__list-item">
-						<a href="#">{{ nationality.title }}</a>
+						<a href="{% pageurl page.get_parent %}?target_nationality={{ nationality.pk }}"">{{ nationality.title }}</a>
 					</li>
 				{% endfor %}
 			</ul>
@@ -32,7 +36,10 @@
 			US Citizenship Status of Target
 		</th>
 		<td class="data-table__value">
-			{{ page.get_target_us_citizenship_status_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?target_us_citizenship_status={{ page.target_us_citizenship_status }}">
+
+				{{ page.get_target_us_citizenship_status_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -43,11 +50,13 @@
 			Deinied Entry?
 		</th>
 		<td class="data-table__value">
-			{% if page.denial_of_entry %}
-				Yes
-			{% else %}
-				No
-			{% endif %}
+			<a href="{% pageurl page.get_parent %}?denial_of_entry={{ page.denial_of_entry }}">
+				{% if page.denial_of_entry %}
+					Yes
+				{% else %}
+					No
+				{% endif %}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -58,11 +67,13 @@
 			Stopped Previously?
 		</th>
 		<td class="data-table__value">
-			{% if page.stopped_previously %}
-				Yes
-			{% else %}
-				No
-			{% endif %}
+			<a href="{% pageurl page.get_parent %}?stopped_previously={{ page.stopped_previously }}">
+				{% if page.stopped_previously %}
+					Yes
+				{% else %}
+					No
+				{% endif %}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -73,7 +84,9 @@
 			Asked for device access?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_for_device_access_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?did_authorities_ask_for_device_access={{ page.did_authorities_ask_for_device_access }}">
+				{{ page.get_did_authorities_ask_for_device_access_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -84,7 +97,9 @@
 			Asked to display social media?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_for_social_media_user_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?did_authorities_ask_for_social_media_user={{ page.did_authorities_ask_for_social_media_user }}">
+				{{ page.get_did_authorities_ask_for_social_media_user_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -95,7 +110,9 @@
 			Asked for social media passwords?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_for_social_media_pass_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?did_authorities_ask_for_social_media_pass={{ page.did_authorities_ask_for_social_media_pass }}">
+				{{ page.get_did_authorities_ask_for_social_media_pass_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -106,7 +123,9 @@
 			Asked intrusive questions about work?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_did_authorities_ask_about_work_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?did_authorities_ask_about_work={{ page.did_authorities_ask_about_work }}">
+				{{ page.get_did_authorities_ask_about_work_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}

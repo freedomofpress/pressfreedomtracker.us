@@ -51,17 +51,33 @@ class IncidentFilter(object):
         affiliation,
         states,
         tags,
+        # ARREST/DETENTION
         arrest_status,
         status_of_charges,
         current_charges,
         dropped_charges,
+        # EQUIPMENT
         equipment_seized,
         equipment_broken,
         status_of_seized_equipment,
         is_search_warrant_obtained,
         actors,
+        # LEAK PROSECUTION
         charged_under_espionage_act,
-        politicians_or_public_figures_involved
+        # DENIAL OF ACCESS
+        politicians_or_public_figures_involved,
+        # BORDER STOP
+        border_point,
+        stopped_at_border,
+        stopped_previously,
+        target_us_citizenship_status,
+        denial_of_entry,
+        target_nationality,
+        did_authorities_ask_for_device_access,
+        did_authorities_ask_for_social_media_user,
+        did_authorities_ask_for_social_media_pass,
+        did_authorities_ask_about_work,
+        were_devices_searched_or_seized,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -90,6 +106,20 @@ class IncidentFilter(object):
 
         # DENIAL OF ACCESS
         self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
+
+        # BORDER STOP
+        self.border_point = border_point
+        self.stopped_at_border = stopped_at_border
+        self.target_us_citizenship_status = target_us_citizenship_status
+        self.denial_of_entry = denial_of_entry
+        self.stopped_previously = stopped_previously
+        self.target_nationality = target_nationality
+        self.did_authorities_ask_for_device_access = did_authorities_ask_for_device_access
+        self.did_authorities_ask_for_social_media_user = did_authorities_ask_for_social_media_user
+        self.did_authorities_ask_for_social_media_pass = did_authorities_ask_for_social_media_pass
+        self.did_authorities_ask_about_work = did_authorities_ask_about_work
+        self.were_devices_searched_or_seized = were_devices_searched_or_seized
+
 
     def fetch(self):
         incidents = IncidentPage.objects.live()
@@ -149,6 +179,38 @@ class IncidentFilter(object):
         # DENIAL OF ACCESS
         if self.politicians_or_public_figures_involved:
             incidents = self.by_politicians_or_public_figures_involved(incidents)
+
+        # BORDER STOP
+        if self.border_point:
+            incidents = self.by_border_point(incidents)
+
+        if self.stopped_at_border:
+            incidents = self.by_stopped_at_border(incidents)
+
+        if self.target_us_citizenship_status:
+            incidents = self.by_target_us_citizenship_status(incidents)
+
+        if self.denial_of_entry:
+            incidents = self.by_denial_of_entry(incidents)
+
+        if self.stopped_previously:
+            incidents = self.by_stopped_previously(incidents)
+
+        if self.target_nationality:
+            incidents = self.by_target_nationality(incidents)
+
+        if self.did_authorities_ask_for_device_access:
+            incidents = self.by_did_authorities_ask_for_device_access(incidents)
+
+        if self.did_authorities_ask_for_social_media_user :
+            incidents = self.by_did_authorities_ask_for_social_media_user (incidents)
+
+        if self.did_authorities_ask_for_social_media_pass :
+            incidents = self.by_did_authorities_ask_for_social_media_pass (incidents)
+
+        if self.did_authorities_ask_about_work:
+            incidents = self.by_did_authorities_ask_about_work(incidents)
+
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -263,3 +325,58 @@ class IncidentFilter(object):
         if not politicians_or_public_figures_involved:
             return incidents
         return incidents.filter(politicians_or_public_figures_involved__in=politicians_or_public_figures_involved)
+
+    # BORDER STOP
+    def by_border_point(self, incidents):
+        return incidents.filter(border_point__iexact=self.border_point)
+
+    def by_stopped_at_border(self, incidents):
+        return incidents.filter(categories__category__slug__iexact="border-stop-denial-of-entry").filter(stopped_at_border=self.stopped_at_border)
+
+    def by_target_us_citizenship_status(self, incidents):
+        target_us_citizenship_status = validate_choices(self.target_us_citizenship_status.split(','), choices.CITIZENSHIP_STATUS_CHOICES)
+        if not target_us_citizenship_status:
+            return incidents
+        return incidents.filter(target_us_citizenship_status__in=target_us_citizenship_status)
+
+    def by_denial_of_entry(self, incidents):
+        return incidents.filter(categories__category__slug__iexact="border-stop-denial-of-entry").filter(stopped_at_border=self.denial_of_entry)
+
+    def by_stopped_previously(self, incidents):
+        return incidents.filter(categories__category__slug__iexact="border-stop-denial-of-entry").filter(stopped_at_border=self.stopped_previously)
+
+    def by_target_nationality(self, incidents):
+        target_nationality = validate_integer_list(self.target_nationality.split(','))
+        if not target_nationality:
+            return incidents
+        return incidents.filter(target_nationality__in=target_nationality)
+
+    def by_did_authorities_ask_for_device_access(self, incidents):
+        did_authorities_ask_for_device_access = validate_choices(self.did_authorities_ask_for_device_access.split(','), choices.MAYBE_BOOLEAN)
+        if not did_authorities_ask_for_device_access:
+            return incidents
+        return incidents.filter(did_authorities_ask_for_device_access__in=did_authorities_ask_for_device_access)
+
+    def by_did_authorities_ask_for_social_media_user(self, incidents):
+        did_authorities_ask_for_social_media_user = validate_choices(self.did_authorities_ask_for_social_media_user.split(','), choices.MAYBE_BOOLEAN)
+        if not did_authorities_ask_for_social_media_user:
+            return incidents
+        return incidents.filter(did_authorities_ask_for_social_media_user__in=did_authorities_ask_for_social_media_user)
+
+    def by_did_authorities_ask_for_social_media_pass(self, incidents):
+        did_authorities_ask_for_social_media_pass = validate_choices(self.did_authorities_ask_for_social_media_pass.split(','), choices.MAYBE_BOOLEAN)
+        if not did_authorities_ask_for_social_media_pass:
+            return incidents
+        return incidents.filter(did_authorities_ask_for_social_media_pass__in=did_authorities_ask_for_social_media_pass)
+
+    def by_did_authorities_ask_about_work(self, incidents):
+        did_authorities_ask_about_work = validate_choices(self.did_authorities_ask_about_work.split(','), choices.MAYBE_BOOLEAN)
+        if not did_authorities_ask_about_work:
+            return incidents
+        return incidents.filter(did_authorities_ask_about_work__in=did_authorities_ask_about_work)
+
+    def by_were_devices_searched_or_seized(self, incidents):
+        were_devices_searched_or_seized = validate_choices(self.were_devices_searched_or_seized.split(','), choices.MAYBE_BOOLEAN)
+        if not were_devices_searched_or_seized:
+            return incidents
+        return incidents.filter(were_devices_searched_or_seized__in=were_devices_searched_or_seized)
