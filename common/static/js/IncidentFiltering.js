@@ -186,7 +186,7 @@ function FilterAccordion({
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
 				/>
-				)}
+			)}
 		</li>
 	)
 }
@@ -263,6 +263,16 @@ class IncidentFiltering extends PureComponent {
 
 		const params = queryString.parse(location.search)
 		const categoriesEnabledById = (params.categories__enabled || '').split(',').map(n => parseInt(n))
+		const filterValues = Object.keys(params).reduce((values, key) => {
+			if (IncidentFiltering.ALL_FILTERS.includes(key)) {
+				return {
+					...values,
+					[key]: params[key],
+				}
+			}
+
+			return values
+		}, {})
 
 		this.state = {
 			categoriesEnabled: props.availableCategories.map(category => {
@@ -274,7 +284,7 @@ class IncidentFiltering extends PureComponent {
 
 			filtersExpanded: false,
 
-			filterValues: {},
+			filterValues,
 
 			selectedAccordion: -1,
 		}
@@ -316,6 +326,7 @@ class IncidentFiltering extends PureComponent {
 		const params = {
 			...queryString.parse(window.location.search),
 			categories__enabled: categoriesEnabledById.join(','),
+			...this.state.filterValues,
 		}
 
 		history.pushState(null, null, '?' + queryString.stringify(params))
@@ -377,6 +388,12 @@ class IncidentFiltering extends PureComponent {
 		)
 	}
 }
+
+
+IncidentFiltering.ALL_FILTERS = [
+	'lower_date',
+	'upper_date',
+]
 
 
 export default IncidentFiltering
