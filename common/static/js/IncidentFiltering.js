@@ -158,7 +158,7 @@ FilterSets['Equipment Search, Seizure, or Damage'] = function() {
 
 function FilterAccordion({
 	category,
-	selectedAccordion,
+	selectedAccordions,
 	handleAccordionSelection,
 	handleFilterChange,
 	filterValues,
@@ -168,7 +168,7 @@ function FilterAccordion({
 	}
 
 	const FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : () => null
-	const isActive = category.id === selectedAccordion
+	const isActive = selectedAccordions.includes(category.id)
 
 	return (
 		<li>
@@ -196,7 +196,7 @@ function FilterAccordion({
 class FiltersBody extends PureComponent {
 	render() {
 		const {
-			selectedAccordion,
+			selectedAccordions,
 			handleAccordionSelection,
 			categoriesEnabled,
 			handleFilterChange,
@@ -213,7 +213,7 @@ class FiltersBody extends PureComponent {
 					}}
 					handleAccordionSelection={handleAccordionSelection}
 					handleFilterChange={handleFilterChange}
-					selectedAccordion={selectedAccordion}
+					selectedAccordions={selectedAccordions}
 					filterValues={filterValues}
 				/>
 
@@ -222,7 +222,7 @@ class FiltersBody extends PureComponent {
 						key={category.id}
 						category={category}
 						handleAccordionSelection={handleAccordionSelection}
-						selectedAccordion={selectedAccordion}
+						selectedAccordions={selectedAccordions}
 						filterValues={filterValues}
 					/>
 				))}
@@ -277,7 +277,7 @@ class IncidentFiltering extends PureComponent {
 
 		this.state = {
 			filtersExpanded: false,
-			selectedAccordion: -1,
+			selectedAccordions: [-1],
 			loading: 0,
 			...this.getStateFromQueryParams(),
 		}
@@ -356,13 +356,16 @@ class IncidentFiltering extends PureComponent {
 			}
 		})
 
-		const isSelectedAccordionIsEnabled = categoriesEnabled.some(category => {
-			return category.enabled && this.state.selectedAccordion === category.id
+		const selectedAccordions = this.state.selectedAccordions.filter(_id => {
+			if (_id === -1) {
+				return true
+			}
+			return categoriesEnabled.some(category => category.enabled && category.id === _id)
 		})
 
 		this.setState({
 			categoriesEnabled,
-			selectedAccordion: isSelectedAccordionIsEnabled ? this.state.selectedAccordion : -1,
+			selectedAccordions,
 		})
 	}
 
@@ -436,7 +439,16 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleAccordionSelection(id) {
-		this.setState({ selectedAccordion: id })
+		const { selectedAccordions } = this.state
+		if (selectedAccordions.includes(id)) {
+			this.setState({
+				selectedAccordions: selectedAccordions.filter(_id => _id !== id)
+			})
+		} else {
+			this.setState({
+				selectedAccordions: this.state.selectedAccordions.concat(id)
+			})
+		}
 	}
 
 	render() {
@@ -444,7 +456,7 @@ class IncidentFiltering extends PureComponent {
 			categoriesEnabled,
 			filterValues,
 			filtersExpanded,
-			selectedAccordion,
+			selectedAccordions,
 		} = this.state
 
 		return (
@@ -462,7 +474,7 @@ class IncidentFiltering extends PureComponent {
 					/>
 
 					<FiltersBody
-						selectedAccordion={selectedAccordion}
+						selectedAccordions={selectedAccordions}
 						categoriesEnabled={categoriesEnabled}
 						filterValues={filterValues}
 						handleAccordionSelection={this.handleAccordionSelection}
