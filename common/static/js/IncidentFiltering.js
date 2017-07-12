@@ -27,19 +27,21 @@ class FiltersHeader extends PureComponent {
 	render() {
 		const {
 			filtersExpanded,
-			filtersApplied,
+			filterValues,
 			handleToggle
 		} = this.props
 
+
+		const hasAnyFilters = Object.keys(filterValues).length > 0
 		return (
 			<div className="filters__header">
-				{filtersApplied.length === 0 && (
+				{!hasAnyFilters && (
 					<div className="filters__text filters__text--dim">
 						No filters applied.
 					</div>
 				)}
 
-				{filtersApplied.length > 0 && (
+				{hasAnyFilters.length > 0 && (
 					<div className="filters__text">
 						Filters
 					</div>
@@ -116,16 +118,35 @@ function FilterSet({ children }) {
 const FilterSets = {}
 
 
-FilterSets['General'] = () => {
+FilterSets['General'] = function({
+	handleFilterChange,
+	filterValues,
+}) {
 	return (
 		<FilterSet>
-			hello
+			<div>
+				Took place between
+				{' '}
+				<input
+					type="date"
+					onChange={handleFilterChange.bind(null, 'lower_date')}
+					value={filterValues.lower_date || ''}
+				/>
+				{' '}
+				and
+				{' '}
+				<input
+					type="date"
+					onChange={handleFilterChange.bind(null, 'upper_date')}
+					value={filterValues.upper_date || ''}
+				/>
+			</div>
 		</FilterSet>
 	)
 }
 
 
-FilterSets['Equipment Search, Seizure, or Damage'] = () => {
+FilterSets['Equipment Search, Seizure, or Damage'] = function() {
 	return (
 		<FilterSet>
 			No filters.
@@ -138,6 +159,8 @@ function FilterAccordion({
 	category,
 	selectedAccordion,
 	handleAccordionSelection,
+	handleFilterChange,
+	filterValues,
 }) {
 	if (!category.enabled) {
 		return null
@@ -158,7 +181,12 @@ function FilterAccordion({
 				{category.title}
 			</button>
 
-			{isActive && <FilterSet />}
+			{isActive && (
+				<FilterSet
+					handleFilterChange={handleFilterChange}
+					filterValues={filterValues}
+				/>
+				)}
 		</li>
 	)
 }
@@ -170,6 +198,8 @@ class FiltersBody extends PureComponent {
 			selectedAccordion,
 			handleAccordionSelection,
 			categoriesEnabled,
+			handleFilterChange,
+			filterValues,
 		} = this.props
 
 		return (
@@ -181,7 +211,9 @@ class FiltersBody extends PureComponent {
 						enabled: true,
 					}}
 					handleAccordionSelection={handleAccordionSelection}
+					handleFilterChange={handleFilterChange}
 					selectedAccordion={selectedAccordion}
+					filterValues={filterValues}
 				/>
 
 				{categoriesEnabled.map(category => (
@@ -190,6 +222,7 @@ class FiltersBody extends PureComponent {
 						category={category}
 						handleAccordionSelection={handleAccordionSelection}
 						selectedAccordion={selectedAccordion}
+						filterValues={filterValues}
 					/>
 				))}
 			</ul>
@@ -226,6 +259,7 @@ class IncidentFiltering extends PureComponent {
 		this.handleSelection = this.handleSelection.bind(this)
 		this.handleApplyFilters = this.handleApplyFilters.bind(this)
 		this.handleAccordionSelection = this.handleAccordionSelection.bind(this)
+		this.handleFilterChange = this.handleFilterChange.bind(this)
 
 		const params = queryString.parse(location.search)
 		const categoriesEnabledById = (params.categories__enabled || '').split(',').map(n => parseInt(n))
@@ -240,7 +274,7 @@ class IncidentFiltering extends PureComponent {
 
 			filtersExpanded: false,
 
-			filtersApplied: [],
+			filterValues: {},
 
 			selectedAccordion: -1,
 		}
@@ -287,6 +321,20 @@ class IncidentFiltering extends PureComponent {
 		history.pushState(null, null, '?' + queryString.stringify(params))
 	}
 
+	handleFilterChange(label, event) {
+		const value = event.target.value
+		if (!value) {
+			return
+		}
+
+		this.setState({
+			filterValues: {
+				...this.state.filterValues,
+				[label]: value,
+			}
+		})
+	}
+
 	handleAccordionSelection(id) {
 		this.setState({ selectedAccordion: id })
 	}
@@ -294,7 +342,7 @@ class IncidentFiltering extends PureComponent {
 	render() {
 		const {
 			categoriesEnabled,
-			filtersApplied,
+			filterValues,
 			filtersExpanded,
 			selectedAccordion,
 		} = this.state
@@ -302,7 +350,7 @@ class IncidentFiltering extends PureComponent {
 		return (
 			<Filters>
 				<FiltersHeader
-					filtersApplied={filtersApplied}
+					filterValues={filterValues}
 					filtersExpanded={filtersExpanded}
 					handleToggle={this.handleToggle}
 				/>
@@ -316,8 +364,9 @@ class IncidentFiltering extends PureComponent {
 					<FiltersBody
 						selectedAccordion={selectedAccordion}
 						categoriesEnabled={categoriesEnabled}
-						filtersApplied={filtersApplied}
+						filterValues={filterValues}
 						handleAccordionSelection={this.handleAccordionSelection}
+						handleFilterChange={this.handleFilterChange}
 					/>
 
 					<FiltersFooter
