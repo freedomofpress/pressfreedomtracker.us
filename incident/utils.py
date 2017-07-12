@@ -3,7 +3,17 @@ from datetime import datetime
 from psycopg2.extras import DateRange
 
 from incident.models.incident_page import IncidentPage
+from incident.models import choices
 
+
+def validate_choices(values, choices):
+    """Ensure that the values given are valid choices for this field"""
+    result = []
+    options = [choice[0] for choice in choices]
+    for value in values:
+        if value in options:
+            result.append(value)
+    return result
 
 def validate_date(date):
     try:
@@ -31,7 +41,22 @@ def validate_integer_list(lst):
 
 
 class IncidentFilter(object):
-    def __init__(self, search_text, lower_date, upper_date, categories, targets, affiliation, states, tags):
+    def __init__(
+        self,
+        search_text,
+        lower_date,
+        upper_date,
+        categories,
+        targets,
+        affiliation,
+        states,
+        tags,
+        arrest_status,
+        status_of_charges,
+        current_charges,
+        dropped_charges,
+
+    ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
         self.upper_date = validate_date(upper_date)
@@ -40,6 +65,12 @@ class IncidentFilter(object):
         self.affiliation = affiliation
         self.states = states
         self.tags = tags
+
+        # Arrest/Detention
+        self.arrest_status = arrest_status
+        self.status_of_charges = status_of_charges
+        self.current_charges = current_charges
+        self.dropped_charges = dropped_charges
 
     def fetch(self):
         incidents = IncidentPage.objects.live()
@@ -61,6 +92,20 @@ class IncidentFilter(object):
 
         if self.tags:
             incidents = self.by_tags(incidents)
+
+        # ARREST/DETENTION FILTERS
+
+        if self.arrest_status:
+            incidents = self.by_arrest_status(incidents)
+
+        if self.status_of_charges:
+            incidents = self.by_status_of_charges(incidents)
+
+        if self.current_charges:
+            incidents = self.by_current_charges(incidents)
+
+        if self.dropped_charges:
+            incidents = self.by_dropped_charges(incidents)
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -104,3 +149,30 @@ class IncidentFilter(object):
         if not tags:
             return incidents
         return incidents.filter(tags__in=tags)
+
+    # ARREST/DETENTION Filters
+    def by_arrest_status(self, incidents):
+        arrest_statuses = validate_choices(self.arrest_status.split(','), choices.ARREST_STATUS)
+        if not arrest_statuses:
+            return incidents
+        return incidents.filter(arrest_status__in=arrest_statuses)
+
+    def by_status_of_charges(self, incidents):
+        status_of_charges = validate_choices(self.status_of_charges.split(','), choices.STATUS_OF_CHARGES)
+        if not status_of_charges:
+            return incidents
+        return incidents.filter(status_of_charges__in=status_of_charges)
+
+    def by_current_charges(self, incidents):
+        current_charges = validate_integer_list(self.current_charges.split(','))
+        if not current_charges:
+            return incidents
+        return incidents.filter(current_charges__in=current_charges)
+
+    def by_dropped_charges(self, incidents):
+        dropped_charges = validate_integer_list(self.dropped_charges.split(','))
+        if not dropped_charges:
+            return incidents
+        return incidents.filter(dropped_charges__in=dropped_charges)
+
+
