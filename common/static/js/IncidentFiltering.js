@@ -104,23 +104,32 @@ class FiltersCategorySelection extends PureComponent {
 }
 
 
+function FilterSet({ children }) {
+	return (
+		<div className="filters__set">
+			{children}
+		</div>
+	)
+}
+
+
 const FilterSets = {}
 
 
 FilterSets['General'] = () => {
 	return (
-		<div>
+		<FilterSet>
 			hello
-		</div>
+		</FilterSet>
 	)
 }
 
 
 FilterSets['Equipment Search, Seizure, or Damage'] = () => {
 	return (
-		<div>
+		<FilterSet>
 			No filters.
-		</div>
+		</FilterSet>
 	)
 }
 
