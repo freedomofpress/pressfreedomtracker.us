@@ -32,13 +32,17 @@
 	p:last-child
 		margin-bottom: 0
 
+=hover
+	&:hover,
+	&:focus,
+	&:active
+		@content
+
 =blue-link
 	a
 		text-decoration-color: $gray-light
 		color: $blue-dark-link
-		&:hover,
-		&:focus,
-		&:active
+		+hover
 			color: $blue-dark-link-hover
 			text-decoration-color: darken($gray-light, 10%)
 
@@ -48,8 +52,14 @@
 		text-decoration: none
 		transition: color ease-in 0.15s
 
-		&:hover,
-		&:focus,
-		&:active
+		+hover
 			color: $black
 			text-decoration: underline
+
+=title-link
+	color: $black
+	text-decoration: none
+
+	+hover
+		color: $black
+		text-decoration: underline

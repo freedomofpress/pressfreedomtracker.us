@@ -10,42 +10,34 @@
 .incident__body
 	padding: $incident-body-top-padding $incident-body-side-padding 5px
 
-.incident__image-link
-	display: block
-
 .incident__top-image
 	display: block
 	width: 100%
 
-.incident__top-image--teaser
-	// Set to prevent a small but annoying single pixel displacement
-	// on hover.
-	backface-visibility: hidden
-
-	transition: filter 0.2s linear
-	filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=1)
-	filter: grayscale(100%)
-
-	&:hover,
-	&:focus,
-	&:active
-		filter: progid:DXImageTransform.Microsoft.BasicImage(grayScale=0)
-		filter: grayscale(0%)
+.incident__category-name
+	+uppercase
+	font-size: 0.8em
+	margin: 0
+	font-weight: $sans-regular
 
 .incident__title
 	+underline-link
 	font-family: $serif
 	font-weight: normal
 	margin-top: 0
-	margin: 0 0 15px 0
+	margin: $incident-attr-margin
 	line-height: 1.25
+
+.incident__title-link
+	+title-link
+	display: block
 
 .incident__date
 	+light-gray-text-small
-	margin: 0 0 15px 0
+	margin: $incident-attr-margin
 
 .incident__description
-	margin: 0 0 15px 0
+	margin: $incident-attr-margin
 	color: $gray-mid-dark-text
 
 .incident__update-item

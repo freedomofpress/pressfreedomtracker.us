@@ -1,20 +1,29 @@
+{# This is used both on the blog index and the homepage sidebar. #}
+
 {% load wagtailcore_tags %}
 
-<div class="blog-tease">
-	<div class="blog-tease__title">
-		<a class="blog-tease__link" href="{% pageurl page %}">
-			{{ page.title }}
-		</a>
-	</div>
+<div class="blog-tease blog-tease--{{ location }}">
+	{% if page.teaser_image and location == "blog-index" %}
+		{% include "common/_teaser_image.html" %}
+	{% endif %}
+	<div class="blog-tease__body--{{ location }}">
+		<h3 class="blog-tease__title blog-tease__title--{{ location }}">
+			<a class="blog-tease__title-link" href="{% pageurl page %}">
+				{{ page.title }}
+			</a>
+		</h3>
 
-	<div class="blog-tease__tease">
-		{{ page.specific.teaser_text|richtext }}
-	</div>
+		<div class="blog-tease__tease blog-tease__tease--{{ location }}">
+			{{ page.teaser_text|richtext }}
+		</div>
 
-	<div class="blog-tease__organization">
-		Freedom of the Press Foundation
-		{% if page.organization %}
-			{{ page.organization.title }}
-		{% endif %}
+		<ul class="blog-tease__organization">
+			{% if page.author and location == "blog-index" %}
+				<li>{{ page.author }}</li>
+			{% endif %}
+			{% if page.organization %}
+				<li>{{ page.organization.title }}</li>
+			{% endif %}
+		</ul>
 	</div>
 </div>

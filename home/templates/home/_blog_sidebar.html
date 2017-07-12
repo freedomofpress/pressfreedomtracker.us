@@ -4,7 +4,7 @@
 <section class="blog-sidebar">
 	{% include "common/_section_heading.html" with label=page.blog_index_page.title %}
 	{% for page in page.blog_index_page.get_children.live|slice:":4" %}
-		{% include "blog/_blog_tease.html" %}
+		{% include "blog/_blog_tease.html" with location="homepage" page=page.specific %}
 	{% endfor %}
 
 	<a

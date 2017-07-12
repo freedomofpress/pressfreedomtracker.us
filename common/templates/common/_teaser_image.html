@@ -1,0 +1,20 @@
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+{% image page.teaser_image fill-665x440 as x1 %}
+{% image page.teaser_image fill-1330x880 as x2 %}
+<a href="{% pageurl page %}">
+	<img
+		class="teaser-image"
+		alt="{{ x1.alt }}"
+		src="{{ x1.url }}"
+		srcset="{{ x2.url }} 2x"
+		{% if page.image_caption and page.teaser_image.attribution %}
+			title="{{ page.image_caption }} ({{ page.teaser_image.attribution|upper }})"
+		{% elif page.image_caption %}
+			title="{{ page.image_caption }}"
+		{% elif page.teaser_image.attribution %}
+			title="({{ page.teaser_image.attribution }})"
+		{% endif %}
+	/>
+</a>
