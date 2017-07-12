@@ -61,6 +61,7 @@ class IncidentFilter(object):
         is_search_warrant_obtained,
         actors,
         charged_under_espionage_act,
+        politicians_or_public_figures_involved
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -86,6 +87,9 @@ class IncidentFilter(object):
 
         # LEAK PROSECUTION
         self.charged_under_espionage_act = charged_under_espionage_act
+
+        # DENIAL OF ACCESS
+        self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
 
     def fetch(self):
         incidents = IncidentPage.objects.live()
@@ -141,6 +145,10 @@ class IncidentFilter(object):
         # LEAK PROSECUTIONS
         if self.charged_under_espionage_act:
             incidents = self.by_charged_under_espionage_act(incidents)
+
+        # DENIAL OF ACCESS
+        if self.politicians_or_public_figures_involved:
+            incidents = self.by_politicians_or_public_figures_involved(incidents)
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -248,3 +256,10 @@ class IncidentFilter(object):
     def by_charged_under_espionage_act(self, incidents):
         if self.charged_under_espionage_act:
             return incidents.filter(charged_under_espionage_act=self.charged_under_espionage_act)
+
+    # DENIAL OF ACCESS
+    def by_politicians_or_public_figures_involved(self, incidents):
+        politicians_or_public_figures_involved = validate_integer_list(self.politicians_or_public_figures_involved.split(','))
+        if not politicians_or_public_figures_involved:
+            return incidents
+        return incidents.filter(politicians_or_public_figures_involved__in=politicians_or_public_figures_involved)

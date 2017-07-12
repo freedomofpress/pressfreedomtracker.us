@@ -1,3 +1,5 @@
+{% load wagtailcore_tags %}
+
 {% if page.politicians_or_public_figures_involved.all %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
@@ -7,7 +9,7 @@
 			<ul class="data-table__list">
 				{% for person in page.politicians_or_public_figures_involved.all %}
 					<li class="data-table__list-item">
-						<a href="#">{{ person.title }}</a>
+						<a href="{% pageurl page.get_parent %}?politicians_or_public_figures_involved={{ person.pk }}">{{ person.title }}</a>
 					</li>
 				{% endfor %}
 			</ul>

@@ -69,6 +69,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             is_search_warrant_obtained=request.GET.get('is_search_warrant_obtained'),
             actors=request.GET.get('actors'),
             charged_under_espionage_act=request.GET.get('charged_under_espionage_act'),
+            politicians_or_public_figures_involved=request.GET.get('politicians_or_public_figures_involved'),
         ).fetch()
 
         paginator, entries = paginate(
