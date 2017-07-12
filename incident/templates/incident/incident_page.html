@@ -125,7 +125,7 @@
 						<ul class="data-table__list">
 							{% for tag in page.tags.all %}
 								<li class="data-table__list-item data-table__list-item--inline">
-									<a href="#">{{ tag.title }}</a></li>
+									<a href="{% pageurl page.get_parent %}?tags={{ tag.pk }}">{{ tag.title }}</a></li>
 							{% endfor %}
 						</ul>
 					</td>
