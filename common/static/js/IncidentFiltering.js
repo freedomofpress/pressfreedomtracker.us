@@ -41,7 +41,7 @@ class FiltersHeader extends PureComponent {
 					</div>
 				)}
 
-				{hasAnyFilters.length > 0 && (
+				{hasAnyFilters && (
 					<div className="filters__text">
 						Filters
 					</div>
