@@ -68,6 +68,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             status_of_seized_equipment=request.GET.get('status_of_seized_equipment'),
             is_search_warrant_obtained=request.GET.get('is_search_warrant_obtained'),
             actors=request.GET.get('actors'),
+            charged_under_espionage_act=request.GET.get('charged_under_espionage_act'),
         ).fetch()
 
         paginator, entries = paginate(

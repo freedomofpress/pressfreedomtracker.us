@@ -60,6 +60,7 @@ class IncidentFilter(object):
         status_of_seized_equipment,
         is_search_warrant_obtained,
         actors,
+        charged_under_espionage_act,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -82,6 +83,9 @@ class IncidentFilter(object):
         self.status_of_seized_equipment = status_of_seized_equipment
         self.is_search_warrant_obtained = is_search_warrant_obtained
         self.actors = actors
+
+        # LEAK PROSECUTION
+        self.charged_under_espionage_act = charged_under_espionage_act
 
     def fetch(self):
         incidents = IncidentPage.objects.live()
@@ -133,6 +137,10 @@ class IncidentFilter(object):
 
         if self.actors:
             incidents = self.by_actors(incidents)
+
+        # LEAK PROSECUTIONS
+        if self.charged_under_espionage_act:
+            incidents = self.by_charged_under_espionage_act(incidents)
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -236,4 +244,7 @@ class IncidentFilter(object):
             return incidents
         return incidents.filter(actor__in=actors)
 
-
+    # LEAK PROSECUTIONS
+    def by_charged_under_espionage_act(self, incidents):
+        if self.charged_under_espionage_act:
+            return incidents.filter(charged_under_espionage_act=self.charged_under_espionage_act)
