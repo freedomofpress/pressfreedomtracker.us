@@ -104,46 +104,6 @@ class FiltersCategorySelection extends PureComponent {
 }
 
 
-class FiltersTabs extends PureComponent {
-	render() {
-		const {
-			categoriesEnabled,
-			selectedTab,
-			handleTabSelection,
-		} = this.props
-
-		return (
-			<ul className="filters__tabs">
-				<li
-					className={classNames(
-						'filters__tab',
-						{ 'filters__tab--active': selectedTab === -1 }
-					)}
-					onClick={handleTabSelection.bind(null, -1)}
-				>
-					General
-				</li>
-
-				{categoriesEnabled.map(category => {
-					return category.enabled && (
-						<li
-							key={category.id}
-							className={classNames(
-								'filters__tab',
-								{ 'filters__tab--active': category.id === selectedTab }
-							)}
-							onClick={handleTabSelection.bind(null, category.id)}
-						>
-							{category.title}
-						</li>
-					)
-				})}
-			</ul>
-		)
-	}
-}
-
-
 const FilterSets = {}
 
 
@@ -165,37 +125,65 @@ FilterSets['Equipment Search, Seizure, or Damage'] = () => {
 }
 
 
+function FilterAccordion({
+	category,
+	selectedAccordion,
+	handleAccordionSelection,
+}) {
+	if (!category.enabled) {
+		return null
+	}
+
+	const FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : () => null
+	const isActive = category.id === selectedAccordion
+
+	return (
+		<li>
+			<button
+				className={classNames(
+					'filters__accordion',
+					{ 'filters__accordion--active': isActive }
+				)}
+				onClick={handleAccordionSelection.bind(null, category.id)}
+			>
+				{category.title}
+			</button>
+
+			{isActive && <FilterSet />}
+		</li>
+	)
+}
+
+
 class FiltersBody extends PureComponent {
-	getCategoryTitle() {
+	render() {
 		const {
-			selectedTab,
+			selectedAccordion,
+			handleAccordionSelection,
 			categoriesEnabled,
 		} = this.props
 
-		if (selectedTab === -1) {
-			return 'General'
-		}
-
-		const category = categoriesEnabled.find(category => category.id === selectedTab)
-		if (!category) {
-			console.warn('Selected tab unassociated with category.')
-			return null
-		}
-		return category.title
-	}
-
-	render() {
-		const {
-			selectedTab,
-		} = this.props
-
-		const title = this.getCategoryTitle()
-		const FilterSet = typeof FilterSets[title] === 'function' ? FilterSets[title] : () => null
-
 		return (
-			<div className="filters__body">
-				<FilterSet />
-			</div>
+			<ul className="filters__body">
+				<FilterAccordion
+					category={{
+						id: -1,
+						title: 'General',
+						enabled: true,
+					}}
+					handleAccordionSelection={handleAccordionSelection}
+					selectedAccordion={selectedAccordion}
+				/>
+
+				{categoriesEnabled.map(category => (
+					<FilterAccordion
+						key={category.id}
+						category={category}
+						handleAccordionSelection={handleAccordionSelection}
+						selectedAccordion={selectedAccordion}
+					/>
+				))}
+			</ul>
 		)
 	}
 }
@@ -228,7 +216,7 @@ class IncidentFiltering extends PureComponent {
 		this.handleToggle = this.handleToggle.bind(this)
 		this.handleSelection = this.handleSelection.bind(this)
 		this.handleApplyFilters = this.handleApplyFilters.bind(this)
-		this.handleTabSelection = this.handleTabSelection.bind(this)
+		this.handleAccordionSelection = this.handleAccordionSelection.bind(this)
 
 		const params = queryString.parse(location.search)
 		const categoriesEnabledById = (params.categories__enabled || '').split(',').map(n => parseInt(n))
@@ -245,7 +233,7 @@ class IncidentFiltering extends PureComponent {
 
 			filtersApplied: [],
 
-			selectedTab: -1,
+			selectedAccordion: -1,
 		}
 	}
 
@@ -267,13 +255,13 @@ class IncidentFiltering extends PureComponent {
 			}
 		})
 
-		const isSelectedTabIsEnabled = categoriesEnabled.some(category => {
-			return category.enabled && this.state.selectedTab === category.id
+		const isSelectedAccordionIsEnabled = categoriesEnabled.some(category => {
+			return category.enabled && this.state.selectedAccordion === category.id
 		})
 
 		this.setState({
 			categoriesEnabled,
-			selectedTab: isSelectedTabIsEnabled ? this.state.selectedTab : -1,
+			selectedAccordion: isSelectedAccordionIsEnabled ? this.state.selectedAccordion : -1,
 		})
 	}
 
@@ -290,8 +278,8 @@ class IncidentFiltering extends PureComponent {
 		history.pushState(null, null, '?' + queryString.stringify(params))
 	}
 
-	handleTabSelection(id) {
-		this.setState({ selectedTab: id })
+	handleAccordionSelection(id) {
+		this.setState({ selectedAccordion: id })
 	}
 
 	render() {
@@ -299,7 +287,7 @@ class IncidentFiltering extends PureComponent {
 			categoriesEnabled,
 			filtersApplied,
 			filtersExpanded,
-			selectedTab,
+			selectedAccordion,
 		} = this.state
 
 		return (
@@ -316,16 +304,11 @@ class IncidentFiltering extends PureComponent {
 						handleSelection={this.handleSelection}
 					/>
 
-					<FiltersTabs
-						categoriesEnabled={categoriesEnabled}
-						selectedTab={selectedTab}
-						handleTabSelection={this.handleTabSelection}
-					/>
-
 					<FiltersBody
-						selectedTab={selectedTab}
+						selectedAccordion={selectedAccordion}
 						categoriesEnabled={categoriesEnabled}
 						filtersApplied={filtersApplied}
+						handleAccordionSelection={this.handleAccordionSelection}
 					/>
 
 					<FiltersFooter

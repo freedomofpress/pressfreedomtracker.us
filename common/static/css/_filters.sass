@@ -66,41 +66,31 @@ $padding-y: 1em
 	color: $filters-bg-medium
 
 
-.filters__tabs
-	+list-unstyled
-	padding: 0 $padding-x
-
-	background-color: $filters-bg-medium
-
-
-.filters__tab
+.filters__accordion
 	+link-transition
-	display: inline-block
-	padding: ($padding-y * 0.75) ($padding-x * 2)
-	margin-right: $padding-x * 1.5
+	border: 0
+	padding: $padding-y $padding-x
+	width: 100%
 
 	background-color: $filters-bg-light
 	color: $filters-fg-dim
 	font-weight: 300
 	line-height: 1
+	text-align: left
 
 	cursor: pointer
 
-	:last-child
-		margin-right: 0
 
-
-.filters__tab--active,
-.filters__tab:active,
-.filters__tab:hover,
-.filters__tab:focus
+.filters__accordion--active,
+.filters__accordion:active,
+.filters__accordion:hover,
+.filters__accordion:focus
 	background-color: $filters-bg-dark
 	color: $white
 
 
 .filters__body
-	padding: $padding-y $padding-x
-
+	+list-unstyled
 	background-color: $filters-bg-dark
 
 
