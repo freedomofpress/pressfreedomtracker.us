@@ -1,6 +1,6 @@
 {% extends layout_template %}
 
-{% load common_tags wagtailcore_tags %}
+{% load common_tags wagtailcore_tags render_as_template %}
 
 {% block flex_class %}
     flex-container--grow-3
@@ -109,7 +109,9 @@
 					{% endif %}
 			</h4>
 			<div>
-				{{ page.methodology|richtext }}
+				{% with method=page.methodology|richtext %}
+					{% render_as_template method %}
+				{% endwith %}
 			</div>
 		{% endif %}
 {% endblock %}
