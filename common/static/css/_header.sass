@@ -103,17 +103,16 @@
 	margin: 0
 	margin-bottom: $nav-link-padding
 	padding: 0
-	display: flex
-	justify-content: flex-end
+	text-align: right
 
 .header__nav-item
 	font-size: 1.1em
+	display: inline-block
 
 .header__nav-link
 	+uppercase
 	display: block
-	// 1px to adjust the text baseline to be better centered
-	padding: #{$nav-link-padding + 1px} 0 #{$nav-link-padding - 1px} 0
+	padding: $nav-link-padding 0
 	margin: 0 $nav-link-padding
 	text-decoration: none
 	color: $gray-mid-dark-text
@@ -125,9 +124,6 @@
 	&:hover
 		color: $gray-dark
 		border-bottom: 1px solid $gray-dark
-
-	@media(max-width: $medium-large-screen)
-		margin-bottom: 2*$nav-link-padding
 
 .header__nav-link--highlighted
 	padding-left: #{$nav-link-padding * 2}
