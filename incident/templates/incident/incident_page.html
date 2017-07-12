@@ -56,7 +56,9 @@
 						Affiliation
 					</th>
 					<td class="data-table__value">
-						{{ page.affiliation }}
+						<a href="{% pageurl page.get_parent %}?affiliation={{ page.affiliation }}">
+							{{ page.affiliation }}
+						</a>
 					</td>
 				</tr>
 			{% endif %}

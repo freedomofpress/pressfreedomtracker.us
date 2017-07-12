@@ -31,12 +31,13 @@ def validate_integer_list(lst):
 
 
 class IncidentFilter(object):
-    def __init__(self, search_text, lower_date, upper_date, categories, targets):
+    def __init__(self, search_text, lower_date, upper_date, categories, targets, affiliation):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
         self.upper_date = validate_date(upper_date)
         self.categories = categories
         self.targets = targets
+        self.affiliation = affiliation
 
     def fetch(self):
         incidents = IncidentPage.objects.live()
@@ -49,6 +50,9 @@ class IncidentFilter(object):
 
         if self.targets:
             incidents = self.by_targets(incidents)
+
+        if self.affiliation:
+            incidents = self.by_affiliation(incidents)
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -77,3 +81,6 @@ class IncidentFilter(object):
         if not targets:
             return incidents
         return incidents.filter(targets__in=targets)
+
+    def by_affiliation(self, incidents):
+        return incidents.filter(affiliation__iexact=self.affiliation)

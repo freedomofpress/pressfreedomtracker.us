@@ -56,6 +56,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             upper_date=request.GET.get('upper_date'),
             categories=request.GET.get('categories'),
             targets=request.GET.get('targets'),
+            affiliation=request.GET.get('affiliation'),
         ).fetch()
 
         paginator, entries = paginate(
