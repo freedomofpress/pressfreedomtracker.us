@@ -13,15 +13,9 @@
 			</a>
 		</h3>
 
-		{% if location == "blog-index" %}
-			<div class="blog-tease__date">
-				{{ page.publication_datetime|date:"F j, Y" }}
-			</div>
-		{% endif %}
-
-			<div class="blog-tease__tease blog-tease__tease--{{ location }}">
-				{{ page.teaser_text|richtext }}
-			</div>
+		<div class="blog-tease__tease blog-tease__tease--{{ location }}">
+			{{ page.teaser_text|richtext }}
+		</div>
 
 		<ul class="blog-tease__organization">
 			{% if page.author and location == "blog-index" %}
