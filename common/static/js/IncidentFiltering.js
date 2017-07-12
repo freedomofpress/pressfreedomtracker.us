@@ -232,7 +232,18 @@ class FiltersBody extends PureComponent {
 }
 
 
-function FiltersFooter({ handleApplyFilters }) {
+function HorizontalLoader() {
+	return (
+		<div className="horizontal-loader">
+			<span className="horizontal-loader__circle"></span>
+			<span className="horizontal-loader__circle"></span>
+			<span className="horizontal-loader__circle"></span>
+		</div>
+	)
+}
+
+
+function FiltersFooter({ handleApplyFilters, loading }) {
 	return (
 		<div className="filters__footer">
 			<div className="filters__text filters__text--dim filters__text--meta">
@@ -245,7 +256,8 @@ function FiltersFooter({ handleApplyFilters }) {
 				className="filters__button filters__button--bordered filters__button--wide"
 				onClick={handleApplyFilters}
 			>
-				Apply Filters
+				{loading > 0 && <HorizontalLoader />}
+				{loading === 0 && 'Apply Filters'}
 			</button>
 		</div>
 	)
@@ -266,6 +278,7 @@ class IncidentFiltering extends PureComponent {
 		this.state = {
 			filtersExpanded: false,
 			selectedAccordion: -1,
+			loading: 0,
 			...this.getStateFromQueryParams(),
 		}
 	}
@@ -367,12 +380,28 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	fetchPage(params) {
+		this.setState({
+			loading: this.state.loading + 1,
+		})
+
 		axios.get('?' + queryString.stringify(params))
-			.then(response => {
-				if (response.status === 200) {
-					this.handlePageLoad(response.data)
+			.then(
+				response => {
+					this.setState({
+						loading: this.state.loading - 1,
+					})
+
+					if (response.status === 200) {
+						this.handlePageLoad(response.data)
+					}
+				},
+
+				() => {
+					this.setState({
+						loading: this.state.loading - 1,
+					})
 				}
-			})
+			)
 	}
 
 	handlePageLoad(ajaxBodyHtml) {
@@ -442,6 +471,7 @@ class IncidentFiltering extends PureComponent {
 
 					<FiltersFooter
 						handleApplyFilters={this.handleApplyFilters}
+						loading={this.state.loading}
 					/>
 				</FiltersExpandable>
 			</Filters>
