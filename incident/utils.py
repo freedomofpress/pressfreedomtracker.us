@@ -55,7 +55,11 @@ class IncidentFilter(object):
         status_of_charges,
         current_charges,
         dropped_charges,
-
+        equipment_seized,
+        equipment_broken,
+        status_of_seized_equipment,
+        is_search_warrant_obtained,
+        actors,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -71,6 +75,13 @@ class IncidentFilter(object):
         self.status_of_charges = status_of_charges
         self.current_charges = current_charges
         self.dropped_charges = dropped_charges
+
+        # EQUIPMENT
+        self.equipment_seized = equipment_seized
+        self.equipment_broken = equipment_broken
+        self.status_of_seized_equipment = status_of_seized_equipment
+        self.is_search_warrant_obtained = is_search_warrant_obtained
+        self.actors = actors
 
     def fetch(self):
         incidents = IncidentPage.objects.live()
@@ -106,6 +117,22 @@ class IncidentFilter(object):
 
         if self.dropped_charges:
             incidents = self.by_dropped_charges(incidents)
+
+        # EQUIPMENT
+        if self.equipment_seized:
+            incidents = self.by_equipment_seized(incidents)
+
+        if self.equipment_broken:
+            incidents = self.by_equipment_broken(incidents)
+
+        if self.status_of_seized_equipment:
+            incidents = self.by_status_of_seized_equipment(incidents)
+
+        if self.is_search_warrant_obtained:
+            incidents = self.by_is_search_warrant_obtained(incidents)
+
+        if self.actors:
+            incidents = self.by_actors(incidents)
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -174,5 +201,39 @@ class IncidentFilter(object):
         if not dropped_charges:
             return incidents
         return incidents.filter(dropped_charges__in=dropped_charges)
+
+    # EQUIPMENT FILTERS
+    def by_equipment_seized(self, incidents):
+        equipment_seized = validate_integer_list(self.equipment_seized.split(','))
+        if not equipment_seized:
+            return incidents
+        return incidents.filter(equipment_seized__equipment__in=equipment_seized)
+
+    def by_equipment_broken(self, incidents):
+        equipment_broken = validate_integer_list(self.equipment_broken.split(','))
+        if not equipment_broken:
+            return incidents
+        return incidents.filter(equipment_broken__equipment__in=equipment_broken)
+
+    def by_status_of_seized_equipment(self, incidents):
+        status_of_seized_equipment = validate_choices(self.status_of_seized_equipment.split(','), choices.STATUS_OF_SEIZED_EQUIPMENT)
+        if not status_of_seized_equipment:
+            return incidents
+        return incidents.filter(status_of_seized_equipment__in=status_of_seized_equipment)
+
+    def by_is_search_warrant_obtained(self, incidents):
+        is_search_warrant_obtained = self.is_search_warrant_obtained
+        if not is_search_warrant_obtained:
+            return incidents
+        if is_search_warrant_obtained == 'False':
+            # We only want to return incidents for which equipment has been seized
+            return incidents.filter(status_of_seized_equipment__isnull=False).filter(is_search_warrant_obtained=False)
+        return incidents.filter(is_search_warrant_obtained=is_search_warrant_obtained)
+
+    def by_actors(self, incidents):
+        actors = validate_choices(self.actors.split(','), choices.ACTORS)
+        if not actors:
+            return incidents
+        return incidents.filter(actor__in=actors)
 
 
