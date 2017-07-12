@@ -261,9 +261,34 @@ class IncidentFiltering extends PureComponent {
 		this.handleApplyFilters = this.handleApplyFilters.bind(this)
 		this.handleAccordionSelection = this.handleAccordionSelection.bind(this)
 		this.handleFilterChange = this.handleFilterChange.bind(this)
+		this.handlePopState = this.handlePopState.bind(this)
 
+		this.state = {
+			filtersExpanded: false,
+			selectedAccordion: -1,
+			...this.getStateFromQueryParams(),
+		}
+	}
+
+	componentDidMount() {
+		window.addEventListener('popstate', this.handlePopState)
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('popstate', this.handlePopState)
+	}
+
+	getStateFromQueryParams() {
 		const params = queryString.parse(location.search)
+
 		const categoriesEnabledById = (params.categories || '').split(',').map(n => parseInt(n))
+		const categoriesEnabled = this.props.availableCategories.map(category => {
+			return {
+				...category,
+				enabled: categoriesEnabledById.includes(category.id),
+			}
+		})
+
 		const filterValues = Object.keys(params).reduce((values, key) => {
 			if (IncidentFiltering.ALL_FILTERS.includes(key)) {
 				return {
@@ -275,20 +300,29 @@ class IncidentFiltering extends PureComponent {
 			return values
 		}, {})
 
-		this.state = {
-			categoriesEnabled: props.availableCategories.map(category => {
-				return {
-					...category,
-					enabled: categoriesEnabledById.includes(category.id),
-				}
-			}),
-
-			filtersExpanded: false,
-
+		return {
+			categoriesEnabled,
 			filterValues,
-
-			selectedAccordion: -1,
 		}
+	}
+
+	getPageFetchParams() {
+		const categoriesEnabledById = this.state.categoriesEnabled
+			.filter(({ enabled }) => enabled)
+			.map(({ id }) => id)
+
+		const params = {
+			...queryString.parse(window.location.search),
+			categories: categoriesEnabledById.join(','),
+			...this.state.filterValues,
+		}
+
+		if (categoriesEnabledById.length === 0) {
+			// Remove blank ?categories= value.
+			delete params.categories
+		}
+
+		return params
 	}
 
 	handleToggle() {
@@ -319,24 +353,20 @@ class IncidentFiltering extends PureComponent {
 		})
 	}
 
+	handlePopState() {
+		this.setState(
+			this.getStateFromQueryParams(),
+			() => this.fetchPage(this.getPageFetchParams())
+		)
+	}
+
 	handleApplyFilters() {
-		const categoriesEnabledById = this.state.categoriesEnabled
-			.filter(({ enabled }) => enabled)
-			.map(({ id }) => id)
-
-		const params = {
-			...queryString.parse(window.location.search),
-			categories: categoriesEnabledById.join(','),
-			...this.state.filterValues,
-		}
-
-		if (categoriesEnabledById.length === 0) {
-			// Remove blank ?categories= value.
-			delete params.categories
-		}
-
+		const params = this.getPageFetchParams()
 		history.pushState(null, null, '?' + queryString.stringify(params))
+		this.fetchPage(params)
+	}
 
+	fetchPage(params) {
 		axios.get('?' + queryString.stringify(params))
 			.then(response => {
 				if (response.status === 200) {
