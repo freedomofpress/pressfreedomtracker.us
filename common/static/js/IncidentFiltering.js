@@ -262,7 +262,7 @@ class IncidentFiltering extends PureComponent {
 		this.handleFilterChange = this.handleFilterChange.bind(this)
 
 		const params = queryString.parse(location.search)
-		const categoriesEnabledById = (params.categories__enabled || '').split(',').map(n => parseInt(n))
+		const categoriesEnabledById = (params.categories || '').split(',').map(n => parseInt(n))
 		const filterValues = Object.keys(params).reduce((values, key) => {
 			if (IncidentFiltering.ALL_FILTERS.includes(key)) {
 				return {
@@ -325,8 +325,13 @@ class IncidentFiltering extends PureComponent {
 
 		const params = {
 			...queryString.parse(window.location.search),
-			categories__enabled: categoriesEnabledById.join(','),
+			categories: categoriesEnabledById.join(','),
 			...this.state.filterValues,
+		}
+
+		if (categoriesEnabledById.length === 0) {
+			// Remove blank ?categories= value.
+			delete params.categories
 		}
 
 		history.pushState(null, null, '?' + queryString.stringify(params))
