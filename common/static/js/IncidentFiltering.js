@@ -144,10 +144,57 @@ class FiltersTabs extends PureComponent {
 }
 
 
+const FilterSets = {}
+
+
+FilterSets['General'] = () => {
+	return (
+		<div>
+			hello
+		</div>
+	)
+}
+
+
+FilterSets['Equipment Search, Seizure, or Damage'] = () => {
+	return (
+		<div>
+			No filters.
+		</div>
+	)
+}
+
+
 class FiltersBody extends PureComponent {
+	getCategoryTitle() {
+		const {
+			selectedTab,
+			categoriesEnabled,
+		} = this.props
+
+		if (selectedTab === -1) {
+			return 'General'
+		}
+
+		const category = categoriesEnabled.find(category => category.id === selectedTab)
+		if (!category) {
+			console.warn('Selected tab unassociated with category.')
+			return null
+		}
+		return category.title
+	}
+
 	render() {
+		const {
+			selectedTab,
+		} = this.props
+
+		const title = this.getCategoryTitle()
+		const FilterSet = typeof FilterSets[title] === 'function' ? FilterSets[title] : () => null
+
 		return (
 			<div className="filters__body">
+				<FilterSet />
 			</div>
 		)
 	}
@@ -275,7 +322,11 @@ class IncidentFiltering extends PureComponent {
 						handleTabSelection={this.handleTabSelection}
 					/>
 
-					<FiltersBody />
+					<FiltersBody
+						selectedTab={selectedTab}
+						categoriesEnabled={categoriesEnabled}
+						filtersApplied={filtersApplied}
+					/>
 
 					<FiltersFooter
 						handleApplyFilters={this.handleApplyFilters}
