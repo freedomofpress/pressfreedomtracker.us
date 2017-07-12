@@ -57,6 +57,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             categories=request.GET.get('categories'),
             targets=request.GET.get('targets'),
             affiliation=request.GET.get('affiliation'),
+            states=request.GET.get('states'),
         ).fetch()
 
         paginator, entries = paginate(

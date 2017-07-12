@@ -69,7 +69,8 @@
 						Location
 					</th>
 					<td class="data-table__value">
-						{{ page.city|default:"" }} {{ page.state|default:"" }}
+						{{ page.city|default:"" }}
+						<a href="{% pageurl page.get_parent %}?states={{ page.state.pk }}">{{ page.state|default:"" }}</a>
 					</td>
 				</tr>
 			{% endif %}
