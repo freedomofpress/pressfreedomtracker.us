@@ -461,7 +461,12 @@ class IncidentFiltering extends PureComponent {
 		}, {})
 
 		this.setState({
-			categories: [-1],
+			categoriesEnabled: this.state.categoriesEnabled.map(category => {
+				return {
+					...category,
+					enabled: false,
+				}
+			}),
 			filterValues: {},
 		})
 
