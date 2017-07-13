@@ -1,190 +1,195 @@
-$padding-x: 1em
-$padding-y: 1em
-
-
 .filters
+	$padding-x: 1em
+	$padding-y: 1em
+	$fg-dim: $white-trans
+	$border-color: $white-very-trans
+	$bg-light: $light-violet
+	$bg-medium: $medium-violet
+	$bg-dark: $dark-violet
+
+
 	margin-bottom: $row-margin-bottom
 
 
-.filters__date-picker > div
-	display: inline-block
+	&__date-picker > div
+		display: inline-block
 
 
-.filters__header
-	+flex-vertically-centered-row
-	background-color: $filters-bg-light
+	&__header
+		+flex-vertically-centered-row
+		background-color: $bg-light
 
-	> *
-		padding-left: $padding-x
-		padding-right: $padding-x
-
-
-.filters__expandable
-	height: 0
-	overflow: hidden
+		> *
+			padding-left: $padding-x
+			padding-right: $padding-x
 
 
-.filters__expandable--expanded
-	height: auto
-	overflow: auto
+	&__expandable
+		height: 0
+		overflow: hidden
 
 
-.filters__category-selection
-	padding: $padding-y $padding-x
-
-	background-color: $filters-bg-medium
-
-
-.filters__categories
-	+list-unstyled
-	display: flex
-	flex-direction: row
-	flex-wrap: wrap
-	padding: ($padding-y / 2) 0
-	margin: 0 ($padding-y / -2)
+	&__expandable--expanded
+		height: auto
+		overflow: auto
 
 
-.filters__category
-	+link-transition
-	display: flex
-	align-items: center
-	justify-content: center
-	border: 0
-	border-radius: 0.5em
-	width: calc(25% - #{$padding-x})
-	margin: ($padding-y / 2) ($padding-x / 2)
-	padding: ($padding-y * 1.5) $padding-x
+	&__category-selection
+		padding: $padding-y $padding-x
 
-	background-color: $filters-bg-light
-	color: $filters-fg-dim
-	text-align: center
-
-	cursor: pointer
-
-	@media (max-width: $medium-screen)
-		width: calc(100% / 3 - #{$padding-x})
-
-	@media (max-width: $mid-small-screen)
-		width: calc(50% - #{$padding-x})
+		background-color: $bg-medium
 
 
-.filters__category--active,
-.filters__category:active,
-.filters__category:hover,
-.filters__category:focus
-	background-color: $white
-	color: $filters-bg-medium
+	&__categories
+		+list-unstyled
+		display: flex
+		flex-direction: row
+		flex-wrap: wrap
+		padding: ($padding-y / 2) 0
+		margin: 0 ($padding-y / -2)
 
 
-.filters__accordion-category:not(:last-child)
-	border-bottom: 1px solid $filters-border-color
+	&__category
+		+link-transition
+		display: flex
+		align-items: center
+		justify-content: center
+		border: 0
+		border-radius: 0.5em
+		width: calc(25% - #{$padding-x})
+		margin: ($padding-y / 2) ($padding-x / 2)
+		padding: ($padding-y * 1.5) $padding-x
+
+		background-color: $bg-light
+		color: $fg-dim
+		text-align: center
+
+		cursor: pointer
+
+		@media (max-width: $medium-screen)
+			width: calc(100% / 3 - #{$padding-x})
+
+		@media (max-width: $mid-small-screen)
+			width: calc(50% - #{$padding-x})
 
 
-.filters__accordion
-	+link-transition
-	+flex-vertically-centered-row
-	justify-content: flex-start
-	border: 0
-	padding: $padding-y $padding-x
-	width: 100%
-
-	background-color: $filters-bg-light
-	color: $filters-fg-dim
-	font-weight: 300
-	line-height: 1
-	text-align: left
-
-	cursor: pointer
-
-	svg
-		margin-right: $padding-x / 2
+	&__category--active,
+	&__category:active,
+	&__category:hover,
+	&__category:focus
+		background-color: $white
+		color: $bg-medium
 
 
-.filters__accordion--active,
-.filters__accordion:active,
-.filters__accordion:hover,
-.filters__accordion:focus
-	background-color: $filters-bg-dark
-	color: $white
+	&__accordion-category:not(:last-child)
+		border-bottom: 1px solid $border-color
 
 
-.filters__body
-	+list-unstyled
-	background-color: $filters-bg-dark
+	&__accordion
+		+link-transition
+		+flex-vertically-centered-row
+		justify-content: flex-start
+		border: 0
+		padding: $padding-y $padding-x
+		width: 100%
+
+		background-color: $bg-light
+		color: $fg-dim
+		font-weight: 300
+		line-height: 1
+		text-align: left
+
+		cursor: pointer
+
+		svg
+			margin-right: $padding-x / 2
 
 
-.filters__set
-	padding: ($padding-y / 2) $padding-x
-
-	color: $white
-
-
-.filters__footer
-	+flex-vertically-centered-row
-	padding: ($padding-y / 2) $padding-x
-	background-color: $filters-bg-light
-
-	@media (max-width: $medium-screen)
-		display: block
-
-
-.filters__link
-	+link-transition
-	text-decoration: none
-	color: $white
-
-
-.filters__text
-	font-weight: 300
-	color: $white
-	line-height: 1
-
-
-.filters__text--dim
-	color: $filters-fg-dim
-
-
-.filters__text--meta
-	font-style: italic
-
-
-.filters__button-toolbar
-	+flex-vertically-centered-row
-
-	@media (max-width: $medium-screen)
-		margin-top: 1em
-		justify-content: flex-end
-
-
-.filters__button
-	+link-transition
-	+flex-vertically-centered-row
-	+uppercase
-	padding: $padding-y $padding-x
-	border: 0
-
-	background-color: transparent
-	color: $filters-fg-dim
-	line-height: 1
-
-	&:active,
-	&:hover,
-	&:focus
+	&__accordion--active,
+	&__accordion:active,
+	&__accordion:hover,
+	&__accordion:focus
+		background-color: $bg-dark
 		color: $white
 
 
-.filters__button--bordered
-	border: 1px solid $white-trans
+	&__body
+		+list-unstyled
+		background-color: $bg-dark
 
 
-.filters__button--wide
-	justify-content: center
-	width: 160px
+	&__set
+		padding: ($padding-y / 2) $padding-x
+
+		color: $white
 
 
-.filters__icon
-	margin: 0 0.5em
-	width: 1em
-	height: 1em
+	&__footer
+		+flex-vertically-centered-row
+		padding: ($padding-y / 2) $padding-x
+		background-color: $bg-light
 
-	color: inherit
+		@media (max-width: $medium-screen)
+			display: block
+
+
+	&__link
+		+link-transition
+		text-decoration: none
+		color: $white
+
+
+	&__text
+		font-weight: 300
+		color: $white
+		line-height: 1
+
+
+	&__text--dim
+		color: $fg-dim
+
+
+	&__text--meta
+		font-style: italic
+
+
+	&__button-toolbar
+		+flex-vertically-centered-row
+
+		@media (max-width: $medium-screen)
+			margin-top: 1em
+			justify-content: flex-end
+
+
+	&__button
+		+link-transition
+		+flex-vertically-centered-row
+		+uppercase
+		padding: $padding-y $padding-x
+		border: 0
+
+		background-color: transparent
+		color: $fg-dim
+		line-height: 1
+
+		&:active,
+		&:hover,
+		&:focus
+			color: $white
+
+
+	&__button--bordered
+		border: 1px solid $white-trans
+
+
+	&__button--wide
+		justify-content: center
+		width: 160px
+
+
+	&__icon
+		margin: 0 0.5em
+		width: 1em
+		height: 1em
+
+		color: inherit
