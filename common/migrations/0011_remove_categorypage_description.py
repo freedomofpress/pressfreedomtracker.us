@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0008_delete_tag'),
+        ('common', '0010_add_custom_embed_block'),
     ]
 
     operations = [
