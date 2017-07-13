@@ -197,7 +197,7 @@ function FilterAccordion({
 	const isActive = selectedAccordions.includes(category.id)
 
 	return (
-		<li>
+		<li className="filters__accordion-category">
 			<button
 				className={classNames(
 					'filters__accordion',
