@@ -235,10 +235,6 @@ class IncidentFilter(object):
         status_of_seized_equipment,
         is_search_warrant_obtained,
         actor,
-        # LEAK PROSECUTION
-        charged_under_espionage_act,
-        # DENIAL OF ACCESS
-        politicians_or_public_figures_involved,
         # BORDER STOP
         border_point,
         stopped_at_border,
@@ -254,6 +250,8 @@ class IncidentFilter(object):
         # PHYSICAL ASSAULT
         assailant,
         was_journalist_targeted,
+        # LEAK PROSECUTION
+        charged_under_espionage_act,
         # SUBPOENA
         subpoena_subject,
         subpoena_type,
@@ -266,6 +264,8 @@ class IncidentFilter(object):
         legal_order_type,
         # PRIOR RESTRAINT
         status_of_prior_restraint,
+        # DENIAL OF ACCESS
+        politicians_or_public_figures_involved,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -289,12 +289,6 @@ class IncidentFilter(object):
         self.is_search_warrant_obtained = is_search_warrant_obtained
         self.actor = actor
 
-        # LEAK PROSECUTION
-        self.charged_under_espionage_act = charged_under_espionage_act
-
-        # DENIAL OF ACCESS
-        self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
-
         # BORDER STOP
         self.border_point = border_point
         self.stopped_at_border = stopped_at_border
@@ -312,6 +306,9 @@ class IncidentFilter(object):
         self.assailant = assailant
         self.was_journalist_targeted = was_journalist_targeted
 
+        # LEAK PROSECUTION
+        self.charged_under_espionage_act = charged_under_espionage_act
+
         # SUBPOENA
         self.subpoena_subject = subpoena_subject
         self.subpoena_type = subpoena_type
@@ -326,6 +323,9 @@ class IncidentFilter(object):
 
         # PRIOR RESTRAINT
         self.status_of_prior_restraint = status_of_prior_restraint
+
+        # DENIAL OF ACCESS
+        self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
 
     def create_filters(self, fields, incidents):
         for field in fields:
@@ -402,16 +402,14 @@ class IncidentFilter(object):
         # EQUIPMENT
         incidents = self.create_filters(EQUIPMENT_FIELDS, incidents)
 
-        # LEAK PROSECUTIONS
-        incidents = self.create_filters(LEAK_PROSECUTIONS_FIELDS, incidents)
-        # DENIAL OF ACCESS
-        incidents = self.create_filters(DENIAL_OF_ACCESS_FIELDS, incidents)
-
         # BORDER STOP
         incidents = self.create_filters(BORDER_STOP_FIELDS, incidents)
 
         #PHYSICAL ASSAULT
         incidents = self.create_filters(PHYSICAL_ASSAULT_FIELDS, incidents)
+
+        # LEAK PROSECUTIONS
+        incidents = self.create_filters(LEAK_PROSECUTIONS_FIELDS, incidents)
 
         # SUBPOENA
         incidents = self.create_filters(SUBPOENA_FIELDS, incidents)
@@ -421,6 +419,9 @@ class IncidentFilter(object):
 
         # PRIOR RESTRAINT
         incidents = self.create_filters(PRIOR_RESTRAINT_FIELDS, incidents)
+
+        # DENIAL OF ACCESS
+        incidents = self.create_filters(DENIAL_OF_ACCESS_FIELDS, incidents)
 
 
         incidents = incidents.order_by('-date', 'path')

@@ -59,17 +59,18 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             affiliation=request.GET.get('affiliation'),
             states=request.GET.get('states'),
             tags=request.GET.get('tags'),
+            # ARREST / DETENTION
             arrest_status=request.GET.get('arrest_status'),
             status_of_charges=request.GET.get('status_of_charges'),
             current_charges=request.GET.get('current_charges'),
             dropped_charges=request.GET.get('dropped_charges'),
+            # EQUIPMENT
             equipment_seized=request.GET.get('equipment_seized'),
             equipment_broken=request.GET.get('equipment_broken'),
             status_of_seized_equipment=request.GET.get('status_of_seized_equipment'),
             is_search_warrant_obtained=request.GET.get('is_search_warrant_obtained'),
             actor=request.GET.get('actors'),
-            charged_under_espionage_act=request.GET.get('charged_under_espionage_act'),
-            politicians_or_public_figures_involved=request.GET.get('politicians_or_public_figures_involved'),
+            # BORDER STOP
             border_point=request.GET.get('border_point'),
             stopped_at_border=request.GET.get('stopped_at_border'),
             target_us_citizenship_status=request.GET.get('target_us_citizenship_status'),
@@ -81,6 +82,12 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             did_authorities_ask_for_social_media_pass=request.GET.get('did_authorities_ask_for_social_media_pass'),
             did_authorities_ask_about_work=request.GET.get('did_authorities_ask_about_work'),
             were_devices_searched_or_seized=request.GET.get('weredevices_searched_or_seized'),
+            # PHYSICAL ASSAULT
+            assailant=request.GET.get('assailant'),
+            was_journalist_targeted=request.GET.get('was_journalist_targeted'),
+            # LEAK PROSECUTION
+            charged_under_espionage_act=request.GET.get('charged_under_espionage_act'),
+            #SUBPOENA
             subpoena_subject=request.GET.get('subpoena_subject'),
             subpoena_type=request.GET.get('subpoena_type'),
             subpoena_status=request.GET.get('subpoena_status'),
@@ -89,9 +96,10 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             third_party_in_possession_of_communications=request.GET.get('third_party_in_possession_of_communications'),
             third_party_business=request.GET.get('third_party_business'),
             legal_order_type=request.GET.get('legal_order_type'),
+            # PRIOR RESTRAINT
             status_of_prior_restraint=request.GET.get('status_of_prior_restraint'),
-            assailant=request.GET.get('assailant'),
-            was_journalist_targeted=request.GET.get('was_journalist_targeted'),
+            # DENIAL OF ACCESS
+            politicians_or_public_figures_involved=request.GET.get('politicians_or_public_figures_involved'),
         ).fetch()
 
         paginator, entries = paginate(
