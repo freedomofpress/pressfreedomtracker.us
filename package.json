@@ -52,8 +52,8 @@
     "normalize.css": "^6.0.0",
     "prop-types": "^15.5.10",
     "query-string": "^4.3.4",
-    "react": "^15.3.2",
+    "react": "15.6.1",
     "react-datepicker": "^0.51.0",
-    "react-dom": "^15.3.2"
+    "react-dom": "15.6.1"
   }
 }
