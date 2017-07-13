@@ -368,12 +368,17 @@ class IncidentFiltering extends PureComponent {
 			...filterValues,
 		}
 
-		if (categoriesEnabledById.length === 0) {
-			// Remove blank ?categories= value.
-			delete params.categories
-		}
+		return Object.keys(params).reduce((obj, key) => {
+			// Remove blank values from the query string.
+			if (!params[key]) {
+				return obj
+			}
 
-		return params
+			return {
+				...obj,
+				[key]: params[key]
+			}
+		}, {})
 	}
 
 	handleToggle() {
@@ -463,13 +468,15 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleFilterChange(label, event) {
-		if (isMoment(event)) {
+		if (!event) {
+			var value = null
+		} else if (isMoment(event)) {
 			var value = event
 		} else {
 			var value = event.target.value
 		}
 
-		if (!value) {
+		if (event && !value) {
 			return
 		}
 
