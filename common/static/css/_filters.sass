@@ -61,6 +61,12 @@ $padding-y: 1em
 
 	cursor: pointer
 
+	@media (max-width: $medium-screen)
+		width: calc(100% / 3 - #{$padding-x})
+
+	@media (max-width: $mid-small-screen)
+		width: calc(50% - #{$padding-x})
+
 
 .filters__category--active,
 .filters__category:active,
