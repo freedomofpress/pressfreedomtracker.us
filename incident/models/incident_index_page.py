@@ -81,6 +81,11 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             did_authorities_ask_for_social_media_pass=request.GET.get('did_authorities_ask_for_social_media_pass'),
             did_authorities_ask_about_work=request.GET.get('did_authorities_ask_about_work'),
             were_devices_searched_or_seized=request.GET.get('weredevices_searched_or_seized'),
+            subpoena_subject=request.GET.get('subpoena_subject'),
+            subpoena_type=request.GET.get('subpoena_type'),
+            subpoena_status=request.GET.get('subpoena_status'),
+            held_in_contempt=request.GET.get('held_in_contempt'),
+            detention_status=request.GET.get('detention_status'),
         ).fetch()
 
         paginator, entries = paginate(

@@ -145,6 +145,34 @@ BORDER_STOP_FIELDS = [
     }
 ]
 
+SUBPOENA_FIELDS = [
+    {
+        'name': 'subpoena_subject',
+        'type': 'choice',
+        'choices': choices.SUBPOENA_SUBJECT,
+    },
+    {
+        'name': 'subpoena_type',
+        'type': 'choice',
+        'choices': choices.SUBPOENA_TYPE,
+    },
+    {
+        'name': 'subpoena_status',
+        'type': 'choice',
+        'choices': choices.SUBPOENA_STATUS,
+    },
+    {
+        'name': 'held_in_contempt',
+        'type': 'choice',
+        'choices': choices.MAYBE_BOOLEAN,
+    },
+    {
+        'name': 'detention_status',
+        'type': 'choice',
+        'choices': choices.DETENTION_STATUS,
+    },
+]
+
 
 class IncidentFilter(object):
     def __init__(
@@ -184,6 +212,12 @@ class IncidentFilter(object):
         did_authorities_ask_for_social_media_pass,
         did_authorities_ask_about_work,
         were_devices_searched_or_seized,
+        # SUBPOENA
+        subpoena_subject,
+        subpoena_type,
+        subpoena_status,
+        held_in_contempt,
+        detention_status,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -225,6 +259,13 @@ class IncidentFilter(object):
         self.did_authorities_ask_for_social_media_pass = did_authorities_ask_for_social_media_pass
         self.did_authorities_ask_about_work = did_authorities_ask_about_work
         self.were_devices_searched_or_seized = were_devices_searched_or_seized
+
+        # SUBPOENA
+        self.subpoena_subject = subpoena_subject
+        self.subpoena_type = subpoena_type
+        self.subpoena_status = subpoena_status
+        self.held_in_contempt = held_in_contempt
+        self.detention_status = detention_status
 
     def create_filters(self, fields, incidents):
         for field in fields:
@@ -270,9 +311,9 @@ class IncidentFilter(object):
                 if field['type'] == 'char':
                     field_name = field['name']
                     kw = {
-                        '{0}__in'.format(field_name): getattr(self, field['name'])
+                        '{0}__in'.format(field_name): getattr(self, field_name)
                     }
-                    return incidents.filter(border_point__iexact=self.border_point)
+                    return incidents.filter(**kw)
 
         return incidents
 
@@ -310,6 +351,9 @@ class IncidentFilter(object):
 
         # BORDER STOP
         incidents = self.create_filters(BORDER_STOP_FIELDS, incidents)
+
+        # SUBPOENA
+        incidents = self.create_filters(SUBPOENA_FIELDS, incidents)
 
         incidents = incidents.order_by('-date', 'path')
 

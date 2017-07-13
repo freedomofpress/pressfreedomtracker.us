@@ -1,10 +1,27 @@
+{% load wagtailcore_tags %}
+
+{% if page.subpoena_subject %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Subpoena Subject
+		</th>
+		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?subpoena_subject={{ page.subpoena_subject }}">
+				{{ page.get_subpoena_subject_display|capfirst }}
+			</a>
+		</td>
+	</tr>
+{% endif %}
+
 {% if page.subpoena_type %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
 			Subpoena Type
 		</th>
 		<td class="data-table__value">
-			{{ page.get_subpoena_type_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?subpoena_type={{ page.subpoena_type }}">
+				{{ page.get_subpoena_type_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -15,7 +32,9 @@
 			Subpoena Status
 		</th>
 		<td class="data-table__value">
-			{{ page.get_subpoena_status_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?subpoena_status={{ page.subpoena_status }}">
+				{{ page.get_subpoena_status_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -26,7 +45,9 @@
 			Journalist held in contempt?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_held_in_contempt_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?held_in_contempt={{ page.held_in_contempt }}">
+				{{ page.get_held_in_contempt_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -37,7 +58,9 @@
 			Detention Status
 		</th>
 		<td class="data-table__value">
-			{{ page.get_detention_status_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?detention_status={{ page.detention_status }}">
+				{{ page.get_detention_status_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
