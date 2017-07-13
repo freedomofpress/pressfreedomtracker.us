@@ -279,20 +279,22 @@ function FiltersFooter({
 				<a href="#" className="filters__link">Download the Data.</a>
 			</div>
 
-			<button
-				className="filters__button"
-				onClick={handleClearFilters}
-			>
-				Clear Filters
-			</button>
+			<span className="filters__button-toolbar">
+				<button
+					className="filters__button"
+					onClick={handleClearFilters}
+				>
+					Clear Filters
+				</button>
 
-			<button
-				className="filters__button filters__button--bordered filters__button--wide"
-				onClick={handleApplyFilters}
-			>
-				{loading > 0 && <HorizontalLoader />}
-				{loading === 0 && 'Apply Filters'}
-			</button>
+				<button
+					className="filters__button filters__button--bordered filters__button--wide"
+					onClick={handleApplyFilters}
+				>
+					{loading > 0 && <HorizontalLoader />}
+					{loading === 0 && 'Apply Filters'}
+				</button>
+			</span>
 		</div>
 	)
 }
