@@ -106,7 +106,7 @@ class FiltersCategorySelection extends PureComponent {
 		return (
 			<div className="filters__category-selection">
 				<div className="filters__text">
-					Include
+					Limit to
 				</div>
 
 				<ul className="filters__categories">
