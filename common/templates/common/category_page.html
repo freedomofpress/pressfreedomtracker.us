@@ -99,6 +99,25 @@
 {% endblock %}
 
 {% block sidebar %}
+		<h4 class="section-heading">
+			Data Summary
+		</h4>
+		<table class="data-table">
+			<tr class='data-table__row'>
+				<th class="data-table__label">
+					Total cases
+				</th>
+				<td class="data-table__value">{{ page.incidents.all.count }}</td>
+			</tr>
+			{% for item in data_items %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						{{ item.label }}
+					</th>
+					<td class="data-table__value">{{ item.value }}</td>
+				</tr>
+			{% endfor %}
+		</table>
 		{% if page.methodology %}
 			<h4 class="section-heading">
 				How we track

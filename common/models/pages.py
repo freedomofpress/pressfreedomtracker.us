@@ -1,3 +1,4 @@
+from inspect import signature
 from django import forms
 from django.db import models
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
@@ -11,7 +12,7 @@ from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
-
+from common.forms import DataItemForm
 from common.blocks import (
     Heading1,
     Heading2,
@@ -21,7 +22,7 @@ from common.blocks import (
     AlignedCaptionedEmbedBlock
 )
 from common.utils import DEFAULT_PAGE_KEY, paginate
-from statistics.registry import get_numbers_choices
+from statistics.registry import get_numbers_choices, get_numbers
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -201,6 +202,25 @@ class CategoryPage(Page):
         else:
             context['layout_template'] = 'base.html'
 
+        def evaluate_statistic(name, params):
+            fn = get_numbers()[name]
+            param_count = len(signature(fn).parameters)
+            if params:
+                args = params.split()[:param_count]
+                return fn(*args)
+            elif param_count == 0:
+                return fn()
+            else:
+                # This means number of parameters given does not match
+                # the number expected by the function.
+                return ''
+
+        context['data_items'] = [
+            {
+                'label': item.label,
+                'value': evaluate_statistic(item.data_point, item.params),
+            } for item in self.data_items.all()
+        ]
         return context
 
 
