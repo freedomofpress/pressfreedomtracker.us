@@ -150,19 +150,23 @@ FilterSets['General'] = function({
 			<div>
 				Took place between
 				{' '}
-				<DatePicker
-					onChange={handleFilterChange.bind(null, 'lower_date')}
-					selected={filterValues.lower_date || ''}
-					isClearable={true}
-				/>
+				<span className="filters__date-picker">
+					<DatePicker
+						onChange={handleFilterChange.bind(null, 'lower_date')}
+						selected={filterValues.lower_date || ''}
+						isClearable={true}
+					/>
+				</span>
 				{' '}
 				and
 				{' '}
-				<DatePicker
-					onChange={handleFilterChange.bind(null, 'upper_date')}
-					selected={filterValues.upper_date || ''}
-					isClearable={true}
-				/>
+				<span className="filters__date-picker">
+					<DatePicker
+						onChange={handleFilterChange.bind(null, 'upper_date')}
+						selected={filterValues.upper_date || ''}
+						isClearable={true}
+					/>
+				</span>
 			</div>
 		</FilterSet>
 	)
