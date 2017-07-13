@@ -15,6 +15,7 @@ def validate_choices(values, choices):
             result.append(value)
     return result
 
+
 def validate_date(date):
     try:
         valid_date = datetime.strptime(date, '%Y-%m-%d')
@@ -39,11 +40,12 @@ def validate_integer_list(lst):
             continue
     return result
 
+
 ARREST_FIELDS = [
     dict([('name', 'arrest_status'), ('type', 'choice'), ('choices', choices.ARREST_STATUS)]),
     dict([('name', 'status_of_charges'), ('type', 'choice'), ('choices', choices.STATUS_OF_CHARGES)]),
-    dict([('name', 'current_charges'), ('type', 'pk'),]),
-    dict([('name', 'dropped_charges'), ('type', 'pk'),]),
+    dict([('name', 'current_charges'), ('type', 'pk'), ]),
+    dict([('name', 'dropped_charges'), ('type', 'pk'), ]),
 ]
 
 EQUIPMENT_FIELDS = [
@@ -91,7 +93,7 @@ DENIAL_OF_ACCESS_FIELDS = [
 
 BORDER_STOP_FIELDS = [
     {
-        'name':'border_point',
+        'name': 'border_point',
         'type': 'char',
     },
     {
@@ -102,7 +104,7 @@ BORDER_STOP_FIELDS = [
     {
         'name': 'stopped_previously',
         'type': 'bool',
-        'category_slug':'border-stop-denial-of-entry',
+        'category_slug': 'border-stop-denial-of-entry',
     },
     {
         'name': 'target_us_citizenship_status',
@@ -112,7 +114,7 @@ BORDER_STOP_FIELDS = [
     {
         'name': 'denial_of_entry',
         'type': 'bool',
-        'category_slug':'border-stop-denial-of-entry',
+        'category_slug': 'border-stop-denial-of-entry',
     },
     {
         'name': 'target_nationality',
@@ -361,8 +363,8 @@ class IncidentFilter(object):
                         }
                     else:
                         kw = {
-                        '{0}__in'.format(field_name): validated_field
-                    }
+                            '{0}__in'.format(field_name): validated_field
+                        }
                     return incidents.filter(**kw)
 
                 if field['type'] == 'bool' and getattr(self, field_name):
@@ -413,7 +415,7 @@ class IncidentFilter(object):
         # BORDER STOP
         incidents = self.create_filters(BORDER_STOP_FIELDS, incidents)
 
-        #PHYSICAL ASSAULT
+        # PHYSICAL ASSAULT
         incidents = self.create_filters(PHYSICAL_ASSAULT_FIELDS, incidents)
 
         # LEAK PROSECUTIONS
@@ -430,7 +432,6 @@ class IncidentFilter(object):
 
         # DENIAL OF ACCESS
         incidents = self.create_filters(DENIAL_OF_ACCESS_FIELDS, incidents)
-
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -474,4 +475,3 @@ class IncidentFilter(object):
         if not tags:
             return incidents
         return incidents.filter(tags__in=tags)
-

@@ -188,7 +188,7 @@ class CategoryPage(Page):
             was_journalist_targeted=request.GET.get('was_journalist_targeted'),
             # LEAK PROSECUTION
             charged_under_espionage_act=request.GET.get('charged_under_espionage_act'),
-            #SUBPOENA
+            # SUBPOENA
             subpoena_subject=request.GET.get('subpoena_subject'),
             subpoena_type=request.GET.get('subpoena_type'),
             subpoena_status=request.GET.get('subpoena_status'),
