@@ -269,9 +269,10 @@ class IncidentFilter(object):
 
     def create_filters(self, fields, incidents):
         for field in fields:
-            if getattr(self, field['name']):
+            field_name = field['name']
+
+            if getattr(self, field_name):
                 if field['type'] == 'choice':
-                    field_name = field['name']
                     validated_field = validate_choices(getattr(self, field_name).split(','), field['choices'])
                     if not validated_field:
                         return incidents
@@ -282,7 +283,6 @@ class IncidentFilter(object):
                     incidents = incidents.filter(**kw)
 
                 if field['type'] == 'pk':
-                    field_name = field['name']
                     validated_field = validate_integer_list(getattr(self, field_name).split(','))
                     if not validated_field:
                         return incidents
@@ -297,19 +297,17 @@ class IncidentFilter(object):
                     }
                     return incidents.filter(**kw)
 
-                if field['type'] == 'bool' and getattr(self, field['name']):
-                    field_name = field['name']
+                if field['type'] == 'bool' and getattr(self, field_name):
                     category_kw = {
                         'categories__category__slug__iexact': field['category_slug'],
                     }
                     filter_kw = {
-                        field_name: getattr(self, field['name']),
+                        field_name: getattr(self, field_name),
                     }
 
                     return incidents.filter(**category_kw).filter(**filter_kw)
 
                 if field['type'] == 'char':
-                    field_name = field['name']
                     kw = {
                         '{0}__in'.format(field_name): getattr(self, field_name)
                     }
