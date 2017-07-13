@@ -124,6 +124,9 @@ $padding-y: 1em
 	padding: ($padding-y / 2) $padding-x
 	background-color: $filters-bg-light
 
+	@media (max-width: $mid-small-screen)
+		display: block
+
 
 .filters__link
 	+link-transition
@@ -147,6 +150,10 @@ $padding-y: 1em
 
 .filters__button-toolbar
 	+flex-vertically-centered-row
+
+	@media (max-width: $mid-small-screen)
+		margin-top: 1em
+		justify-content: flex-end
 
 
 .filters__button
