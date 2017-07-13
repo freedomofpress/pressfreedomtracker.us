@@ -3,7 +3,7 @@ import axios from 'axios'
 import classNames from 'classnames'
 import DatePicker from 'react-datepicker'
 import queryString from 'query-string'
-import { isMoment } from 'moment'
+import moment, { isMoment } from 'moment'
 
 
 function SettingsIcon() {
@@ -324,14 +324,20 @@ class IncidentFiltering extends PureComponent {
 		})
 
 		const filterValues = Object.keys(params).reduce((values, key) => {
-			if (IncidentFiltering.ALL_FILTERS.includes(key)) {
-				return {
-					...values,
-					[key]: params[key],
-				}
+			if (!IncidentFiltering.ALL_FILTERS.includes(key)) {
+				return values
 			}
 
-			return values
+			if (IncidentFiltering.DATE_FILTERS.includes(key)) {
+				var value = moment(params[key])
+			} else {
+				var value = params[key]
+			}
+
+			return {
+				...values,
+				[key]: value,
+			}
 		}, {})
 
 		return {
@@ -528,6 +534,12 @@ class IncidentFiltering extends PureComponent {
 
 
 IncidentFiltering.ALL_FILTERS = [
+	'lower_date',
+	'upper_date',
+]
+
+
+IncidentFiltering.DATE_FILTERS = [
 	'lower_date',
 	'upper_date',
 ]
