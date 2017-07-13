@@ -45,30 +45,35 @@
 
 		@media(max-width: $extra-small-screen)
 			// gives logo the width it needs
-			padding-left: 0.4rem
+			padding: 0
+			margin: 0 auto
 
 		&::after
-			content: ''
-			display: block
-			width: 200%
-			padding-bottom: 200%
-			height: 0
-			background-color: #fff
-			position: absolute
-			top: 0
-			left: 0
-			// I donno why this number
-			transform: rotateZ(45deg) translate3d(0, 65px, 0)
-			transform-origin: 0 0
-			transition: 0.25s linear transform
-			z-index: 0
+			@media(min-width: $small-screen-min)
+				content: ''
+				display: block
+				width: 200%
+				padding-bottom: 200%
+				height: 0
+				background-color: #fff
+				position: absolute
+				top: 0
+				left: 0
+				// I donno why this number
+				transform: rotateZ(45deg) translate3d(0, 65px, 0)
+				transform-origin: 0 0
+				transition: 0.25s linear transform
+				z-index: 0
 
 			@media(max-width: $medium-large-screen)
 				// I don't understand quite why these numbers work
 				top: 25px
 				left: -25px
 
-		&:hover
+	&__logo:hover
+		.header__logo-svg path
+			fill: $gray-light-text
+		@media(min-width: $small-screen-min)
 			.header__logo-svg path
 				fill: $header-color
 
