@@ -328,6 +328,14 @@ class IncidentFilter(object):
         self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
 
     def create_filters(self, fields, incidents):
+        """Creates filters based on dicts for fields
+
+        'name' should be the name of the field AS IT APPEARS ON THE MODEL
+        'type' should be 'choice', 'pk', 'bool', or 'char'
+        'choices' should match the choices on the model, if any
+        'modifier' should be a modifier on the lookup field
+        'category_slug' should be the slug of the category for the field. For boolean fields, the filter uses the category, to show correctly interperet falses.
+        """
         for field in fields:
             field_name = field['name']
 
