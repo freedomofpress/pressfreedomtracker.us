@@ -18,127 +18,126 @@
 		background-color: $header-color
 
 
-.header__logo
-	background-color: $header-color
-	box-sizing: content-box
-	position: relative
-	left: -$column-gutter-width
-	margin: 0
-	padding: $header-logo-padding
-	padding-left: $page-margin-side * 2
-	overflow: hidden
-	// This height should match the SVG logo height so that
-	// extra background in $header-color is not displayed.
-	height: $header-logo-height
-
-	@media(max-width: $medium-large-screen)
-		height: $header-logo-height-medium-large
-		padding: 30px
-
-	@media(max-width: $small-screen)
-		height: $header-logo-height-mobile
-		padding-top: 0
-		padding-bottom: 0
-		left: 0
-		padding-left: 1rem
-		padding-right: 0
-
-	@media(max-width: $extra-small-screen)
-		// gives logo the width it needs
-		padding-left: 0.4rem
-
-	&::after
-		content: ''
-		display: block
-		width: 200%
-		padding-bottom: 200%
-		height: 0
-		background-color: #fff
-		position: absolute
-		top: 0
-		left: 0
-		// I donno why this number
-		transform: rotateZ(45deg) translate3d(0, 65px, 0)
-		transform-origin: 0 0
-		transition: 0.25s linear transform
-		z-index: 0
+	&__logo
+		background-color: $header-color
+		box-sizing: content-box
+		position: relative
+		left: -$column-gutter-width
+		margin-right: $header-logo-padding
+		padding: $header-logo-padding
+		padding-left: $page-margin-side * 2
+		overflow: hidden
+		// This height should match the SVG logo height so that
+		// extra background in $header-color is not displayed.
+		height: $header-logo-height
 
 		@media(max-width: $medium-large-screen)
-			// I don't understand quite why these numbers work
-			top: 25px
-			left: -25px
+			height: $header-logo-height-medium-large
+			padding: 30px
 
-	&:hover
-		.header__logo-svg path
-			fill: $header-color
+		@media(max-width: $small-screen)
+			height: $header-logo-height-mobile
+			padding-top: 0
+			padding-bottom: 0
+			left: 0
+			padding-left: 1rem
+			padding-right: 0
+
+		@media(max-width: $extra-small-screen)
+			// gives logo the width it needs
+			padding-left: 0.4rem
 
 		&::after
-			transform: rotateZ(45deg) translate3d(0, -260px, 0)
+			content: ''
+			display: block
+			width: 200%
+			padding-bottom: 200%
+			height: 0
+			background-color: #fff
+			position: absolute
+			top: 0
+			left: 0
+			// I donno why this number
+			transform: rotateZ(45deg) translate3d(0, 65px, 0)
+			transform-origin: 0 0
+			transition: 0.25s linear transform
+			z-index: 0
 
-.header__logo-svg
-	position: relative
-	z-index: 1
+			@media(max-width: $medium-large-screen)
+				// I don't understand quite why these numbers work
+				top: 25px
+				left: -25px
 
-.header__logo-svg path
-	fill: #fff
-	transition: 0.25s linear fill
+		&:hover
+			.header__logo-svg path
+				fill: $header-color
 
-.header__nav
-	font-family: $sans-serif
-	display: flex
-	flex-direction: column
-	justify-content: space-between
-	align-items: flex-end
-	height: $header-height
+			&::after
+				transform: rotateZ(45deg) translate3d(0, -260px, 0)
 
-	@media(max-width: $medium-large-screen)
-		height: $header-height-medium-large
+	&__logo-svg
+		position: relative
+		z-index: 1
 
-	@media(max-width: $small-screen)
-		height: $header-logo-height-mobile
+		path
+			fill: #fff
+			transition: 0.25s linear fill
 
-.header__nav-list
-	list-style-type: none
-	display: inline-block
-	margin: 0
-	margin-bottom: $nav-link-padding
-	padding: 0
-	text-align: right
+	&__nav
+		font-family: $sans-serif
+		display: flex
+		flex-direction: column
+		justify-content: space-between
+		align-items: flex-end
+		height: $header-height
 
-.header__nav-item
-	font-size: 1.1em
-	display: inline-block
+		@media(max-width: $medium-large-screen)
+			height: $header-height-medium-large
 
-.header__nav-link
-	+uppercase
-	display: block
-	padding: $nav-link-padding 0
-	margin: 0 $nav-link-padding
-	text-decoration: none
-	color: $gray-mid-dark-text
-	transition: 0.15s linear all
-	position: relative
-	font-size: 0.9em
-	border-bottom: 1px solid transparent
+		@media(max-width: $small-screen)
+			height: $header-logo-height-mobile
 
-	&:hover
-		color: $gray-dark
-		border-bottom: 1px solid $gray-dark
+	&__nav-list
+		list-style-type: none
+		display: inline-block
+		margin: 0 -1*$nav-link-padding
+		padding: 0
+		text-align: right
 
-.header__nav-link--highlighted
-	padding-left: #{$nav-link-padding * 2}
-	padding-right: #{$nav-link-padding * 2}
-	margin: 0
-	background-color: $gray-mid-dark
-	transition: 0.15s linear all
-	color: $white
-	border-bottom: 1px solid transparent
+		&--mobile-hidden
+			@media(max-width: $small-screen)
+				display: none
 
-	&:hover
-		color: $white
-		background-color: $gray-dark
+	&__nav-item
+		font-size: 1.1em
+		display: inline-block
+		padding: 0.5*$nav-link-padding 0
+
+	&__nav-link
+		+uppercase
+		display: block
+		padding: $nav-link-padding 0 0.5*$nav-link-padding
+		margin: 0 $nav-link-padding
+		text-decoration: none
+		color: $gray-mid-dark-text
+		transition: 0.15s linear all
+		position: relative
+		font-size: 0.9em
 		border-bottom: 1px solid transparent
 
-@media(max-width: $small-screen)
-	.header__nav-list--mobile-hidden
-		display: none
+		&:hover
+			color: $gray-dark
+			border-bottom: 1px solid $gray-dark
+
+		&--highlighted
+			padding: $nav-link-padding 2*$nav-link-padding
+			margin-bottom: -0.5*$nav-link-padding
+			background-color: $gray-mid-dark
+			transition: 0.15s linear all
+			color: $white
+			border-bottom: 1px solid transparent
+
+			&:hover
+				color: $white
+				background-color: $gray-dark
+				border-bottom: 1px solid transparent
