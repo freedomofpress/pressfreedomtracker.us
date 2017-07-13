@@ -309,7 +309,7 @@ class IncidentFilter(object):
 
                 if field['type'] == 'char':
                     kw = {
-                        '{0}__in'.format(field_name): getattr(self, field_name)
+                        '{0}'.format(field_name): getattr(self, field_name)
                     }
                     return incidents.filter(**kw)
 
