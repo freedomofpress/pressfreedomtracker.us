@@ -15,15 +15,15 @@
 
 {% block sidebar %}
 	<aside class="simple-page__sidebar">
-		<h5 class="sidebar-menu-heading">{{ page.title }}</h5>
-	  <ul class="sidebar-menu">
-	    {% for item in page.get_sidebar_menu.menu_items.all %}
-	      <li class="sidebar-menu__item">
-	        <a href="{{ item.url }}" class="{{ item.html_classes }}" {% if item.title %}title="{{ item.title }}"{% endif %}>
-	          {{ item.text }}
-	        </a>
-	      </li>
-	    {% endfor %}
-	  </ul>
+		<h5 class="simple-page__sidebar-heading">{{ page.title }}</h5>
+		<ul class="simple-page__sidebar-menu">
+			{% for item in page.get_sidebar_menu.menu_items.all %}
+				<li class="simple-page__sidebar-item">
+					<a href="{{ item.url }}" class="simple-page__sidebar-link {{ item.html_classes }}" {% if item.title %}title="{{ item.title }}"{% endif %}>
+						{{ item.text }}
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
 	</aside>
 {% endblock %}
