@@ -39,6 +39,43 @@ def validate_integer_list(lst):
             continue
     return result
 
+ARREST_FIELDS = [
+    'arrest_status',
+    'status_of_charges',
+    'current_charges',
+    'dropped_charges',
+]
+
+EQUIPMENT_FIELDS = [
+    'equipment_seized',
+    'equipment_broken',
+    'status_of_seized_equipment',
+    'is_search_warrant_obtained',
+    'actors',
+]
+
+LEAK_PROSECUTION_FIELDS = [
+    'charged_under_espionage_act',
+]
+
+DENIAL_OF_ACCESS_FIELDS = [
+    'politicians_or_public_figures_involved',
+]
+
+BORDER_STOP_FIELDS = [
+    'border_point',
+    'stopped_at_border',
+    'stopped_previously',
+    'target_us_citizenship_status',
+    'denial_of_entry',
+    'target_nationality',
+    'did_authorities_ask_for_device_access',
+    'did_authorities_ask_for_social_media_user',
+    'did_authorities_ask_for_social_media_pass',
+    'did_authorities_ask_about_work',
+    'were_devices_searched_or_seized',
+]
+
 
 class IncidentFilter(object):
     def __init__(
@@ -143,74 +180,19 @@ class IncidentFilter(object):
             incidents = self.by_tags(incidents)
 
         # ARREST/DETENTION FILTERS
-
-        if self.arrest_status:
-            incidents = self.by_arrest_status(incidents)
-
-        if self.status_of_charges:
-            incidents = self.by_status_of_charges(incidents)
-
-        if self.current_charges:
-            incidents = self.by_current_charges(incidents)
-
-        if self.dropped_charges:
-            incidents = self.by_dropped_charges(incidents)
+        incidents = self.create_filters_fetch(ARREST_FIELDS, incidents)
 
         # EQUIPMENT
-        if self.equipment_seized:
-            incidents = self.by_equipment_seized(incidents)
-
-        if self.equipment_broken:
-            incidents = self.by_equipment_broken(incidents)
-
-        if self.status_of_seized_equipment:
-            incidents = self.by_status_of_seized_equipment(incidents)
-
-        if self.is_search_warrant_obtained:
-            incidents = self.by_is_search_warrant_obtained(incidents)
-
-        if self.actors:
-            incidents = self.by_actors(incidents)
+        incidents = self.create_filters_fetch(EQUIPMENT_FIELDS, incidents)
 
         # LEAK PROSECUTIONS
-        if self.charged_under_espionage_act:
-            incidents = self.by_charged_under_espionage_act(incidents)
+        incidents = self.create_filters_fetch(LEAK_PROSECUTION_FIELDS, incidents)
 
         # DENIAL OF ACCESS
-        if self.politicians_or_public_figures_involved:
-            incidents = self.by_politicians_or_public_figures_involved(incidents)
+        incidents = self.create_filters_fetch(DENIAL_OF_ACCESS_FIELDS, incidents)
 
         # BORDER STOP
-        if self.border_point:
-            incidents = self.by_border_point(incidents)
-
-        if self.stopped_at_border:
-            incidents = self.by_stopped_at_border(incidents)
-
-        if self.target_us_citizenship_status:
-            incidents = self.by_target_us_citizenship_status(incidents)
-
-        if self.denial_of_entry:
-            incidents = self.by_denial_of_entry(incidents)
-
-        if self.stopped_previously:
-            incidents = self.by_stopped_previously(incidents)
-
-        if self.target_nationality:
-            incidents = self.by_target_nationality(incidents)
-
-        if self.did_authorities_ask_for_device_access:
-            incidents = self.by_did_authorities_ask_for_device_access(incidents)
-
-        if self.did_authorities_ask_for_social_media_user :
-            incidents = self.by_did_authorities_ask_for_social_media_user (incidents)
-
-        if self.did_authorities_ask_for_social_media_pass :
-            incidents = self.by_did_authorities_ask_for_social_media_pass (incidents)
-
-        if self.did_authorities_ask_about_work:
-            incidents = self.by_did_authorities_ask_about_work(incidents)
-
+        incidents = self.create_filters_fetch(BORDER_STOP_FIELDS, incidents)
 
         incidents = incidents.order_by('-date', 'path')
 
