@@ -67,7 +67,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             equipment_broken=request.GET.get('equipment_broken'),
             status_of_seized_equipment=request.GET.get('status_of_seized_equipment'),
             is_search_warrant_obtained=request.GET.get('is_search_warrant_obtained'),
-            actors=request.GET.get('actors'),
+            actor=request.GET.get('actors'),
             charged_under_espionage_act=request.GET.get('charged_under_espionage_act'),
             politicians_or_public_figures_involved=request.GET.get('politicians_or_public_figures_involved'),
             border_point=request.GET.get('border_point'),

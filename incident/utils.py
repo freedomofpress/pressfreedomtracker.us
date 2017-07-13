@@ -40,40 +40,109 @@ def validate_integer_list(lst):
     return result
 
 ARREST_FIELDS = [
-    'arrest_status',
-    'status_of_charges',
-    'current_charges',
-    'dropped_charges',
+    dict([('name', 'arrest_status'), ('type', 'choice'), ('choices', choices.ARREST_STATUS)]),
+    dict([('name', 'status_of_charges'), ('type', 'choice'), ('choices', choices.STATUS_OF_CHARGES)]),
+    dict([('name', 'current_charges'), ('type', 'pk'),]),
+    dict([('name', 'dropped_charges'), ('type', 'pk'),]),
 ]
 
 EQUIPMENT_FIELDS = [
-    'equipment_seized',
-    'equipment_broken',
-    'status_of_seized_equipment',
-    'is_search_warrant_obtained',
-    'actors',
+    {
+        'name': 'equipment_seized',
+        'modifier': 'equipment',
+        'type': 'pk',
+    },
+    {
+        'name': 'equipment_broken',
+        'type': 'pk',
+        'modifier': 'equipment',
+    },
+    {
+        'name': 'status_of_seized_equipment',
+        'type': 'choice',
+        'choices': choices.STATUS_OF_SEIZED_EQUIPMENT,
+    },
+    {
+        'name': 'is_search_warrant_obtained',
+        'type': 'bool',
+        'category_slug': 'equipment-search-seizure-or-damage'
+    },
+    {
+        'name': 'actor',
+        'type': 'choice',
+        'choices': choices.ACTORS,
+    },
 ]
 
-LEAK_PROSECUTION_FIELDS = [
-    'charged_under_espionage_act',
+LEAK_PROSECUTIONS_FIELDS = [
+    {
+        'name': 'charged_under_espionage_act',
+        'type': 'bool',
+        'category_slug': 'leak-prosecutions',
+    }
 ]
 
 DENIAL_OF_ACCESS_FIELDS = [
-    'politicians_or_public_figures_involved',
+    {
+        'name': 'politicians_or_public_figures_involved',
+        'type': 'pk',
+    }
 ]
 
 BORDER_STOP_FIELDS = [
-    'border_point',
-    'stopped_at_border',
-    'stopped_previously',
-    'target_us_citizenship_status',
-    'denial_of_entry',
-    'target_nationality',
-    'did_authorities_ask_for_device_access',
-    'did_authorities_ask_for_social_media_user',
-    'did_authorities_ask_for_social_media_pass',
-    'did_authorities_ask_about_work',
-    'were_devices_searched_or_seized',
+    {
+        'name':'border_point',
+        'type': 'char',
+    },
+    {
+        'name': 'stopped_at_border',
+        'type': 'bool',
+        'category_slug': 'border-stop-denial-of-entry',
+    },
+    {
+        'name': 'stopped_previously',
+        'type': 'bool',
+        'category_slug':'border-stop-denial-of-entry',
+    },
+    {
+        'name': 'target_us_citizenship_status',
+        'type': 'choice',
+        'choices': choices.CITIZENSHIP_STATUS_CHOICES,
+    },
+    {
+        'name': 'denial_of_entry',
+        'type': 'bool',
+        'category_slug':'border-stop-denial-of-entry',
+    },
+    {
+        'name': 'target_nationality',
+        'type': 'pk'
+    },
+    {
+        'name': 'did_authorities_ask_for_device_access',
+        'type': 'choice',
+        'choices': choices.MAYBE_BOOLEAN,
+    },
+    {
+        'name': 'did_authorities_ask_for_social_media_user',
+        'type': 'choice',
+        'choices': choices.MAYBE_BOOLEAN,
+    },
+    {
+        'name': 'did_authorities_ask_for_social_media_pass',
+        'type': 'choice',
+        'choices': choices.MAYBE_BOOLEAN,
+    },
+    {
+        'name': 'did_authorities_ask_about_work',
+        'type': 'choice',
+        'choices': choices.MAYBE_BOOLEAN,
+    },
+    {
+        'name': 'were_devices_searched_or_seized',
+        'type': 'choice',
+        'choices': choices.MAYBE_BOOLEAN,
+    }
 ]
 
 
@@ -98,7 +167,7 @@ class IncidentFilter(object):
         equipment_broken,
         status_of_seized_equipment,
         is_search_warrant_obtained,
-        actors,
+        actor,
         # LEAK PROSECUTION
         charged_under_espionage_act,
         # DENIAL OF ACCESS
@@ -136,7 +205,7 @@ class IncidentFilter(object):
         self.equipment_broken = equipment_broken
         self.status_of_seized_equipment = status_of_seized_equipment
         self.is_search_warrant_obtained = is_search_warrant_obtained
-        self.actors = actors
+        self.actor = actor
 
         # LEAK PROSECUTION
         self.charged_under_espionage_act = charged_under_espionage_act
@@ -157,6 +226,55 @@ class IncidentFilter(object):
         self.did_authorities_ask_about_work = did_authorities_ask_about_work
         self.were_devices_searched_or_seized = were_devices_searched_or_seized
 
+    def create_filters(self, fields, incidents):
+        for field in fields:
+            if getattr(self, field['name']):
+                if field['type'] == 'choice':
+                    field_name = field['name']
+                    validated_field = validate_choices(getattr(self, field_name).split(','), field['choices'])
+                    if not validated_field:
+                        return incidents
+
+                    kw = {
+                        '{0}__in'.format(field_name): validated_field
+                    }
+                    incidents = incidents.filter(**kw)
+
+                if field['type'] == 'pk':
+                    field_name = field['name']
+                    validated_field = validate_integer_list(getattr(self, field_name).split(','))
+                    if not validated_field:
+                        return incidents
+
+                    if 'modifier' in field.keys():
+                        kw = {
+                            '{0}__{1}__in'.format(field_name, field['modifier']): validated_field
+                        }
+                    else:
+                        kw = {
+                        '{0}__in'.format(field_name): validated_field
+                    }
+                    return incidents.filter(**kw)
+
+                if field['type'] == 'bool' and getattr(self, field['name']):
+                    field_name = field['name']
+                    category_kw = {
+                        'categories__category__slug__iexact': field['category_slug'],
+                    }
+                    filter_kw = {
+                        field_name: getattr(self, field['name']),
+                    }
+
+                    return incidents.filter(**category_kw).filter(**filter_kw)
+
+                if field['type'] == 'char':
+                    field_name = field['name']
+                    kw = {
+                        '{0}__in'.format(field_name): getattr(self, field['name'])
+                    }
+                    return incidents.filter(border_point__iexact=self.border_point)
+
+        return incidents
 
     def fetch(self):
         incidents = IncidentPage.objects.live()
@@ -180,19 +298,18 @@ class IncidentFilter(object):
             incidents = self.by_tags(incidents)
 
         # ARREST/DETENTION FILTERS
-        incidents = self.create_filters_fetch(ARREST_FIELDS, incidents)
+        incidents = self.create_filters(ARREST_FIELDS, incidents)
 
         # EQUIPMENT
-        incidents = self.create_filters_fetch(EQUIPMENT_FIELDS, incidents)
+        incidents = self.create_filters(EQUIPMENT_FIELDS, incidents)
 
         # LEAK PROSECUTIONS
-        incidents = self.create_filters_fetch(LEAK_PROSECUTION_FIELDS, incidents)
-
+        incidents = self.create_filters(LEAK_PROSECUTIONS_FIELDS, incidents)
         # DENIAL OF ACCESS
-        incidents = self.create_filters_fetch(DENIAL_OF_ACCESS_FIELDS, incidents)
+        incidents = self.create_filters(DENIAL_OF_ACCESS_FIELDS, incidents)
 
         # BORDER STOP
-        incidents = self.create_filters_fetch(BORDER_STOP_FIELDS, incidents)
+        incidents = self.create_filters(BORDER_STOP_FIELDS, incidents)
 
         incidents = incidents.order_by('-date', 'path')
 
@@ -237,128 +354,3 @@ class IncidentFilter(object):
             return incidents
         return incidents.filter(tags__in=tags)
 
-    # ARREST/DETENTION Filters
-    def by_arrest_status(self, incidents):
-        arrest_statuses = validate_choices(self.arrest_status.split(','), choices.ARREST_STATUS)
-        if not arrest_statuses:
-            return incidents
-        return incidents.filter(arrest_status__in=arrest_statuses)
-
-    def by_status_of_charges(self, incidents):
-        status_of_charges = validate_choices(self.status_of_charges.split(','), choices.STATUS_OF_CHARGES)
-        if not status_of_charges:
-            return incidents
-        return incidents.filter(status_of_charges__in=status_of_charges)
-
-    def by_current_charges(self, incidents):
-        current_charges = validate_integer_list(self.current_charges.split(','))
-        if not current_charges:
-            return incidents
-        return incidents.filter(current_charges__in=current_charges)
-
-    def by_dropped_charges(self, incidents):
-        dropped_charges = validate_integer_list(self.dropped_charges.split(','))
-        if not dropped_charges:
-            return incidents
-        return incidents.filter(dropped_charges__in=dropped_charges)
-
-    # EQUIPMENT FILTERS
-    def by_equipment_seized(self, incidents):
-        equipment_seized = validate_integer_list(self.equipment_seized.split(','))
-        if not equipment_seized:
-            return incidents
-        return incidents.filter(equipment_seized__equipment__in=equipment_seized)
-
-    def by_equipment_broken(self, incidents):
-        equipment_broken = validate_integer_list(self.equipment_broken.split(','))
-        if not equipment_broken:
-            return incidents
-        return incidents.filter(equipment_broken__equipment__in=equipment_broken)
-
-    def by_status_of_seized_equipment(self, incidents):
-        status_of_seized_equipment = validate_choices(self.status_of_seized_equipment.split(','), choices.STATUS_OF_SEIZED_EQUIPMENT)
-        if not status_of_seized_equipment:
-            return incidents
-        return incidents.filter(status_of_seized_equipment__in=status_of_seized_equipment)
-
-    def by_is_search_warrant_obtained(self, incidents):
-        is_search_warrant_obtained = self.is_search_warrant_obtained
-        if not is_search_warrant_obtained:
-            return incidents
-        if is_search_warrant_obtained == 'False':
-            # We only want to return incidents for which equipment has been seized
-            return incidents.filter(status_of_seized_equipment__isnull=False).filter(is_search_warrant_obtained=False)
-        return incidents.filter(is_search_warrant_obtained=is_search_warrant_obtained)
-
-    def by_actors(self, incidents):
-        actors = validate_choices(self.actors.split(','), choices.ACTORS)
-        if not actors:
-            return incidents
-        return incidents.filter(actor__in=actors)
-
-    # LEAK PROSECUTIONS
-    def by_charged_under_espionage_act(self, incidents):
-        if self.charged_under_espionage_act:
-            return incidents.filter(charged_under_espionage_act=self.charged_under_espionage_act)
-
-    # DENIAL OF ACCESS
-    def by_politicians_or_public_figures_involved(self, incidents):
-        politicians_or_public_figures_involved = validate_integer_list(self.politicians_or_public_figures_involved.split(','))
-        if not politicians_or_public_figures_involved:
-            return incidents
-        return incidents.filter(politicians_or_public_figures_involved__in=politicians_or_public_figures_involved)
-
-    # BORDER STOP
-    def by_border_point(self, incidents):
-        return incidents.filter(border_point__iexact=self.border_point)
-
-    def by_stopped_at_border(self, incidents):
-        return incidents.filter(categories__category__slug__iexact="border-stop-denial-of-entry").filter(stopped_at_border=self.stopped_at_border)
-
-    def by_target_us_citizenship_status(self, incidents):
-        target_us_citizenship_status = validate_choices(self.target_us_citizenship_status.split(','), choices.CITIZENSHIP_STATUS_CHOICES)
-        if not target_us_citizenship_status:
-            return incidents
-        return incidents.filter(target_us_citizenship_status__in=target_us_citizenship_status)
-
-    def by_denial_of_entry(self, incidents):
-        return incidents.filter(categories__category__slug__iexact="border-stop-denial-of-entry").filter(stopped_at_border=self.denial_of_entry)
-
-    def by_stopped_previously(self, incidents):
-        return incidents.filter(categories__category__slug__iexact="border-stop-denial-of-entry").filter(stopped_at_border=self.stopped_previously)
-
-    def by_target_nationality(self, incidents):
-        target_nationality = validate_integer_list(self.target_nationality.split(','))
-        if not target_nationality:
-            return incidents
-        return incidents.filter(target_nationality__in=target_nationality)
-
-    def by_did_authorities_ask_for_device_access(self, incidents):
-        did_authorities_ask_for_device_access = validate_choices(self.did_authorities_ask_for_device_access.split(','), choices.MAYBE_BOOLEAN)
-        if not did_authorities_ask_for_device_access:
-            return incidents
-        return incidents.filter(did_authorities_ask_for_device_access__in=did_authorities_ask_for_device_access)
-
-    def by_did_authorities_ask_for_social_media_user(self, incidents):
-        did_authorities_ask_for_social_media_user = validate_choices(self.did_authorities_ask_for_social_media_user.split(','), choices.MAYBE_BOOLEAN)
-        if not did_authorities_ask_for_social_media_user:
-            return incidents
-        return incidents.filter(did_authorities_ask_for_social_media_user__in=did_authorities_ask_for_social_media_user)
-
-    def by_did_authorities_ask_for_social_media_pass(self, incidents):
-        did_authorities_ask_for_social_media_pass = validate_choices(self.did_authorities_ask_for_social_media_pass.split(','), choices.MAYBE_BOOLEAN)
-        if not did_authorities_ask_for_social_media_pass:
-            return incidents
-        return incidents.filter(did_authorities_ask_for_social_media_pass__in=did_authorities_ask_for_social_media_pass)
-
-    def by_did_authorities_ask_about_work(self, incidents):
-        did_authorities_ask_about_work = validate_choices(self.did_authorities_ask_about_work.split(','), choices.MAYBE_BOOLEAN)
-        if not did_authorities_ask_about_work:
-            return incidents
-        return incidents.filter(did_authorities_ask_about_work__in=did_authorities_ask_about_work)
-
-    def by_were_devices_searched_or_seized(self, incidents):
-        were_devices_searched_or_seized = validate_choices(self.were_devices_searched_or_seized.split(','), choices.MAYBE_BOOLEAN)
-        if not were_devices_searched_or_seized:
-            return incidents
-        return incidents.filter(were_devices_searched_or_seized__in=were_devices_searched_or_seized)
