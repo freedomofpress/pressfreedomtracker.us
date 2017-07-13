@@ -500,17 +500,17 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handlePageLoad(ajaxBodyHtml) {
-		const containerElm = document.querySelector('.incident-grid')
+		const containerElm = document.querySelector('.js-incident-container')
 		if (!containerElm) {
-			console.warn('No .incident-grid exists in the current DOM structure.')
+			console.warn('No .js-incident-container exists in the current DOM structure.')
 			return
 		}
 
 		const tempContainerElm = document.createElement('span')
 		tempContainerElm.innerHTML = ajaxBodyHtml
-		const newContainerElm = tempContainerElm.querySelector('.incident-grid')
+		const newContainerElm = tempContainerElm.querySelector('.js-incident-container')
 		if (!newContainerElm) {
-			console.warn('No .incident-grid exists in the newly fetched DOM structure.')
+			console.warn('No .js-incident-container exists in the newly fetched DOM structure.')
 			return
 		}
 		containerElm.parentNode.replaceChild(newContainerElm, containerElm)

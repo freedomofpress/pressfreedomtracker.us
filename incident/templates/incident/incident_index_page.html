@@ -7,7 +7,7 @@
 	{% include "incident/_filters.html" %}
 
 	{% block ajax %}
-		<div class="grid-50 js-infinite-scrolling-parent">
+		<div class="grid-50 js-infinite-scrolling-parent js-incident-container">
 			{% for incident in entries_page %}
 				<div class="grid-50__item js-infinite-scrolling-item">
 					{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
