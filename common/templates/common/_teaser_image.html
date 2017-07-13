@@ -10,9 +10,9 @@
 		src="{{ x1.url }}"
 		srcset="{{ x2.url }} 2x"
 		{% if page.image_caption and page.teaser_image.attribution %}
-			title="{{ page.image_caption }} ({{ page.teaser_image.attribution|upper }})"
+			title="{{ page.image_caption|striptags }} ({{ page.teaser_image.attribution|upper }})"
 		{% elif page.image_caption %}
-			title="{{ page.image_caption }}"
+			title="{{ page.image_caption|striptags }}"
 		{% elif page.teaser_image.attribution %}
 			title="({{ page.teaser_image.attribution }})"
 		{% endif %}
