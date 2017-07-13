@@ -104,7 +104,7 @@ class InfiniteScroller {
 }
 
 
-InfiniteScroller.NUM_AUTO_FETCHES = 1
+InfiniteScroller.NUM_AUTO_FETCHES = 0
 
 
 document.addEventListener('DOMContentLoaded', () => {
