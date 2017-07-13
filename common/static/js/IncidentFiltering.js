@@ -153,6 +153,7 @@ FilterSets['General'] = function({
 				<DatePicker
 					onChange={handleFilterChange.bind(null, 'lower_date')}
 					selected={filterValues.lower_date || ''}
+					isClearable={true}
 				/>
 				{' '}
 				and
@@ -160,6 +161,7 @@ FilterSets['General'] = function({
 				<DatePicker
 					onChange={handleFilterChange.bind(null, 'upper_date')}
 					selected={filterValues.upper_date || ''}
+					isClearable={true}
 				/>
 			</div>
 		</FilterSet>
