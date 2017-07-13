@@ -8,6 +8,7 @@ It can take the following context variables:
 
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
+{% load render_as_template %}
 
 {% with main_category=incident.get_main_category %}
 <article class="
@@ -72,7 +73,11 @@ It can take the following context variables:
 				</section>
 			{% else %}
 				{% for block in incident.body %}
-					<section>{% include_block block %}</section>
+					{% if block.block_type == 'rich_text' %}
+						<section>{% render_as_template block.value %}</section>
+					{% else %}
+						<section>{% include_block block %}</section>
+					{% endif %}
 				{% endfor %}
 			{% endif %}
 		</div>
@@ -84,7 +89,11 @@ It can take the following context variables:
 					</div>
 					<div class="incident__description">
 						{% for block in update.body %}
-							<section>{% include_block block %}</section>
+							{% if block.block_type == 'rich_text' %}
+								<section>{% render_as_template block.value %}</section>
+							{% else %}
+								<section>{% include_block block %}</section>
+							{% endif %}
 						{% endfor %}
 					</div>
 				</div>
