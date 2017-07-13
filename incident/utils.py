@@ -173,6 +173,24 @@ SUBPOENA_FIELDS = [
     },
 ]
 
+LEGAL_ORDER_FIELDS = [
+    {
+        'name': 'third_party_in_possession_of_communications',
+        'type': 'char',
+    },
+    {
+        'name': 'third_party_business',
+        'type': 'choice',
+        'choices': choices.THIRD_PARTY_BUSINESS,
+    },
+    {
+        'name': 'legal_order_type',
+        'type': 'choice',
+        'choices': choices.LEGAL_ORDER_TYPES,
+    },
+
+]
+
 
 class IncidentFilter(object):
     def __init__(
@@ -218,6 +236,10 @@ class IncidentFilter(object):
         subpoena_status,
         held_in_contempt,
         detention_status,
+        # LEGAL ORDER
+        third_party_in_possession_of_communications,
+        third_party_business,
+        legal_order_type,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -266,6 +288,11 @@ class IncidentFilter(object):
         self.subpoena_status = subpoena_status
         self.held_in_contempt = held_in_contempt
         self.detention_status = detention_status
+
+        # LEGAL ORDER
+        self.third_party_in_possession_of_communications = third_party_in_possession_of_communications
+        self.third_party_business = third_party_business
+        self.legal_order_type = legal_order_type
 
     def create_filters(self, fields, incidents):
         for field in fields:
@@ -352,6 +379,9 @@ class IncidentFilter(object):
 
         # SUBPOENA
         incidents = self.create_filters(SUBPOENA_FIELDS, incidents)
+
+        # LEGAL ORDER
+        incidents = self.create_filters(LEGAL_ORDER_FIELDS, incidents)
 
         incidents = incidents.order_by('-date', 'path')
 

@@ -86,6 +86,9 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             subpoena_status=request.GET.get('subpoena_status'),
             held_in_contempt=request.GET.get('held_in_contempt'),
             detention_status=request.GET.get('detention_status'),
+            third_party_in_possession_of_communications=request.GET.get('third_party_in_possession_of_communications'),
+            third_party_business=request.GET.get('third_party_business'),
+            legal_order_type=request.GET.get('legal_order_type'),
         ).fetch()
 
         paginator, entries = paginate(
