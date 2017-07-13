@@ -19,6 +19,26 @@ function SettingsIcon() {
 }
 
 
+function ExpandIcon() {
+	return (
+		<svg width="12" height="16" viewBox="0 0 12 16" xmlns="http://www.w3.org/2000/svg">
+			<title>Expand</title>
+			<path d="M12 9H7v5H5V9H0V7h5V2h2v5h5" fill="currentColor" fill-rule="evenodd"/>
+		</svg>
+	)
+}
+
+
+function CollapseIcon() {
+	return (
+		<svg width="8" height="16" viewBox="0 0 8 16" xmlns="http://www.w3.org/2000/svg">
+		  <title>Collapse</title>
+		  <path d="M0 7v2h8V7" fill="currentColor" fill-rule="evenodd"/>
+		</svg>
+	)
+}
+
+
 function Filters({ children }) {
 	return <div className="filters">{children}</div>
 }
@@ -179,6 +199,7 @@ function FilterAccordion({
 				)}
 				onClick={handleAccordionSelection.bind(null, category.id)}
 			>
+				{isActive ? <CollapseIcon /> : <ExpandIcon />}
 				{category.title}
 			</button>
 

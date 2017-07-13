@@ -68,6 +68,8 @@ $padding-y: 1em
 
 .filters__accordion
 	+link-transition
+	+flex-vertically-centered-row
+	justify-content: flex-start
 	border: 0
 	padding: $padding-y $padding-x
 	width: 100%
@@ -79,6 +81,9 @@ $padding-y: 1em
 	text-align: left
 
 	cursor: pointer
+
+	svg
+		margin-right: $padding-x / 2
 
 
 .filters__accordion--active,
