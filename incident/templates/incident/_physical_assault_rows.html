@@ -1,10 +1,14 @@
+{% load wagtailcore_tags %}
+
 {% if page.assailant %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
 			Assailant
 		</th>
 		<td class="data-table__value">
-			{{ page.get_assailant_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?assailant={{ page.assailant }}">
+				{{ page.get_assailant_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -15,7 +19,9 @@
 			Was the journalist targeted?
 		</th>
 		<td class="data-table__value">
-			{{ page.get_was_journalist_targeted_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?was_journalist_targeted={{ page.was_journalist_targeted }}">
+				{{ page.get_was_journalist_targeted_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}

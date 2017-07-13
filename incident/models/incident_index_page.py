@@ -89,6 +89,9 @@ class IncidentIndexPage(RoutablePageMixin, Page):
             third_party_in_possession_of_communications=request.GET.get('third_party_in_possession_of_communications'),
             third_party_business=request.GET.get('third_party_business'),
             legal_order_type=request.GET.get('legal_order_type'),
+            status_of_prior_restraint=request.GET.get('status_of_prior_restraint'),
+            assailant=request.GET.get('assailant'),
+            was_journalist_targeted=request.GET.get('was_journalist_targeted'),
         ).fetch()
 
         paginator, entries = paginate(

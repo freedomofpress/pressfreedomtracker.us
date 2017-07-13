@@ -145,6 +145,19 @@ BORDER_STOP_FIELDS = [
     }
 ]
 
+PHYSICAL_ASSAULT_FIELDS = [
+    {
+        'name': 'assailant',
+        'type': 'choice',
+        'choices': choices.ACTORS,
+    },
+    {
+        'name': 'was_journalist_targeted',
+        'type': 'choice',
+        'choices': choices.MAYBE_BOOLEAN,
+    },
+]
+
 SUBPOENA_FIELDS = [
     {
         'name': 'subpoena_subject',
@@ -191,6 +204,14 @@ LEGAL_ORDER_FIELDS = [
 
 ]
 
+PRIOR_RESTRAINT_FIELDS = [
+    {
+        'name': 'status_of_prior_restraint',
+        'type': 'choice',
+        'choices': choices.PRIOR_RESTRAINT_STATUS,
+    },
+]
+
 
 class IncidentFilter(object):
     def __init__(
@@ -230,6 +251,9 @@ class IncidentFilter(object):
         did_authorities_ask_for_social_media_pass,
         did_authorities_ask_about_work,
         were_devices_searched_or_seized,
+        # PHYSICAL ASSAULT
+        assailant,
+        was_journalist_targeted,
         # SUBPOENA
         subpoena_subject,
         subpoena_type,
@@ -240,6 +264,8 @@ class IncidentFilter(object):
         third_party_in_possession_of_communications,
         third_party_business,
         legal_order_type,
+        # PRIOR RESTRAINT
+        status_of_prior_restraint,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -282,6 +308,10 @@ class IncidentFilter(object):
         self.did_authorities_ask_about_work = did_authorities_ask_about_work
         self.were_devices_searched_or_seized = were_devices_searched_or_seized
 
+        # PHYSICAL ASSAULT
+        self.assailant = assailant
+        self.was_journalist_targeted = was_journalist_targeted
+
         # SUBPOENA
         self.subpoena_subject = subpoena_subject
         self.subpoena_type = subpoena_type
@@ -293,6 +323,9 @@ class IncidentFilter(object):
         self.third_party_in_possession_of_communications = third_party_in_possession_of_communications
         self.third_party_business = third_party_business
         self.legal_order_type = legal_order_type
+
+        # PRIOR RESTRAINT
+        self.status_of_prior_restraint = status_of_prior_restraint
 
     def create_filters(self, fields, incidents):
         for field in fields:
@@ -377,11 +410,18 @@ class IncidentFilter(object):
         # BORDER STOP
         incidents = self.create_filters(BORDER_STOP_FIELDS, incidents)
 
+        #PHYSICAL ASSAULT
+        incidents = self.create_filters(PHYSICAL_ASSAULT_FIELDS, incidents)
+
         # SUBPOENA
         incidents = self.create_filters(SUBPOENA_FIELDS, incidents)
 
         # LEGAL ORDER
         incidents = self.create_filters(LEGAL_ORDER_FIELDS, incidents)
+
+        # PRIOR RESTRAINT
+        incidents = self.create_filters(PRIOR_RESTRAINT_FIELDS, incidents)
+
 
         incidents = incidents.order_by('-date', 'path')
 
