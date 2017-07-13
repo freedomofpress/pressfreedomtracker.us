@@ -266,7 +266,11 @@ function HorizontalLoader() {
 }
 
 
-function FiltersFooter({ handleApplyFilters, loading }) {
+function FiltersFooter({
+	handleApplyFilters,
+	handleClearFilters,
+	loading,
+}) {
 	return (
 		<div className="filters__footer">
 			<div className="filters__text filters__text--dim filters__text--meta">
@@ -274,6 +278,13 @@ function FiltersFooter({ handleApplyFilters, loading }) {
 				{' '}
 				<a href="#" className="filters__link">Download the Data.</a>
 			</div>
+
+			<button
+				className="filters__button"
+				onClick={handleClearFilters}
+			>
+				Clear Filters
+			</button>
 
 			<button
 				className="filters__button filters__button--bordered filters__button--wide"
@@ -294,6 +305,7 @@ class IncidentFiltering extends PureComponent {
 		this.handleToggle = this.handleToggle.bind(this)
 		this.handleSelection = this.handleSelection.bind(this)
 		this.handleApplyFilters = this.handleApplyFilters.bind(this)
+		this.handleClearFilters = this.handleClearFilters.bind(this)
 		this.handleAccordionSelection = this.handleAccordionSelection.bind(this)
 		this.handleFilterChange = this.handleFilterChange.bind(this)
 		this.handlePopState = this.handlePopState.bind(this)
@@ -425,6 +437,32 @@ class IncidentFiltering extends PureComponent {
 		this.fetchPage(params)
 	}
 
+	handleClearFilters() {
+		const currentParams = queryString.parse(window.location.search)
+		const strippedParams = Object.keys(currentParams).reduce((params, key) => {
+			if (IncidentFiltering.ALL_FILTERS.includes(key)) {
+				return params
+			}
+
+			if (key === 'categories') {
+				return params
+			}
+
+			return {
+				...params,
+				[key]: currentParams[key],
+			}
+		}, {})
+
+		this.setState({
+			categories: [-1],
+			filterValues: {},
+		})
+
+		history.pushState(null, null, '?' + queryString.stringify(strippedParams))
+		this.fetchPage(strippedParams)
+	}
+
 	fetchPage(params) {
 		this.setState({
 			loading: this.state.loading + 1,
@@ -533,6 +571,7 @@ class IncidentFiltering extends PureComponent {
 
 					<FiltersFooter
 						handleApplyFilters={this.handleApplyFilters}
+						handleClearFilters={this.handleClearFilters}
 						loading={this.state.loading}
 					/>
 				</FiltersExpandable>
