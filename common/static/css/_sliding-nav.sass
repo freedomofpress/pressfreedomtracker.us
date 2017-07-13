@@ -1,6 +1,6 @@
 .sliding-nav
 	#{$sliding-nav-side}: -$sliding-nav-width
-	background: $white
+	background: $fpf-grey-light
 	bottom: 0
 	font-family: $sans-serif
 	overflow: auto
@@ -34,6 +34,11 @@
 	padding: 10px 20px
 	text-decoration: none
 	color: $black
+
+	// Not BEM but we don't h8 our CMS users so we're not making them add two classes.
+	&.header__nav-link--highlighted
+		color: $white
+		background-color: $gray-dark
 
 	&:hover
 		background-color: $gray-mid-dark
