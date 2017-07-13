@@ -1,3 +1,5 @@
+$data-table-margin-bottom: $category-header-margin-top
+
 .data-table
 	border-collapse: collapse
 	margin-bottom: 2em
@@ -5,6 +7,7 @@
 
 .data-table--light
 	color: $gray-very-light
+	margin-bottom: $data-table-margin-bottom
 
 .data-table__row
 	border-top: 1px solid darken($gray-very-light, 5%)
@@ -13,7 +16,7 @@
 		border-top: 0
 
 .data-table__row--light
-	border-top-color: $gray-mid-dark
+	border-top-color: lighten($dark-layout-sidebar, 15%)
 
 .data-table__label
 	font-weight: $serif-bold
