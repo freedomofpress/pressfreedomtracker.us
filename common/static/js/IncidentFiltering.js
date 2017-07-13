@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react'
 import axios from 'axios'
 import classNames from 'classnames'
+import DatePicker from 'react-datepicker'
 import queryString from 'query-string'
+import { isMoment } from 'moment'
 
 
 function SettingsIcon() {
@@ -148,18 +150,16 @@ FilterSets['General'] = function({
 			<div>
 				Took place between
 				{' '}
-				<input
-					type="date"
+				<DatePicker
 					onChange={handleFilterChange.bind(null, 'lower_date')}
-					value={filterValues.lower_date || ''}
+					selected={filterValues.lower_date || ''}
 				/>
 				{' '}
 				and
 				{' '}
-				<input
-					type="date"
+				<DatePicker
 					onChange={handleFilterChange.bind(null, 'upper_date')}
-					value={filterValues.upper_date || ''}
+					selected={filterValues.upper_date || ''}
 				/>
 			</div>
 		</FilterSet>
@@ -345,10 +345,19 @@ class IncidentFiltering extends PureComponent {
 			.filter(({ enabled }) => enabled)
 			.map(({ id }) => id)
 
+		const filterValues = Object.keys(this.state.filterValues)
+			.reduce((values, key) => {
+				const value = this.state.filterValues[key]
+				return {
+					...values,
+					[key]: isMoment(value) ? value.format('YYYY-MM-DD') : value,
+				}
+			}, {})
+
 		const params = {
 			...queryString.parse(window.location.search),
 			categories: categoriesEnabledById.join(','),
-			...this.state.filterValues,
+			...filterValues,
 		}
 
 		if (categoriesEnabledById.length === 0) {
@@ -446,7 +455,12 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleFilterChange(label, event) {
-		const value = event.target.value
+		if (isMoment(event)) {
+			var value = event
+		} else {
+			var value = event.target.value
+		}
+
 		if (!value) {
 			return
 		}
