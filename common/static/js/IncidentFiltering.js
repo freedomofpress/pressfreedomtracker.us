@@ -53,7 +53,13 @@ class FilterSummary extends PureComponent {
 			categoriesEnabled,
 		} = this.props
 
-		const hasAnyFilters = Object.keys(filterValues).length > 0
+		const hasAnyFilters = (
+			Object.keys(filterValues).length > 0 ||
+			categoriesEnabled.some(category => {
+				// Check if a non-General category has been whitelisted.
+				return category.id !== -1 && category.enabled
+			})
+		)
 
 		if (!hasAnyFilters) {
 			return (
