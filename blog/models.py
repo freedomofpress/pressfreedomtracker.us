@@ -12,6 +12,14 @@ from wagtail.wagtailsearch import index
 from common.utils import DEFAULT_PAGE_KEY, paginate
 
 from statistics.blocks import StatisticsBlock
+from common.blocks import (
+    Heading1,
+    Heading2,
+    Heading3,
+    StyledTextBlock,
+    AlignedCaptionedImageBlock,
+    AlignedCaptionedEmbedBlock
+)
 
 
 class BlogIndexPage(Page):
@@ -79,9 +87,18 @@ class BlogPage(Page):
     )
 
     body = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
-        ('image', ImageChooserBlock()),
+        ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
+        ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('blockquote', blocks.BlockQuoteBlock()),
+        ('list', blocks.ListBlock(
+            blocks.CharBlock(label="List Item"),
+            template='common/blocks/list_block_columns.html'
+        )),
+        ('video', AlignedCaptionedEmbedBlock()),
+        ('heading_1', Heading1()),
+        ('heading_2', Heading2()),
+        ('heading_3', Heading3()),
         ('statistics', StatisticsBlock()),
     ])
 
