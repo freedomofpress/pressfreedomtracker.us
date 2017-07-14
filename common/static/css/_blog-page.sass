@@ -1,0 +1,22 @@
+.blog-page
+	background-color: $white
+	margin-bottom: 1rem
+
+	&__date
+		+light-gray-text-small
+		margin-bottom: 1rem
+
+	&__organization
+		+list-unstyled
+		+uppercase
+		+underline-link
+		font-size: 0.8em
+		margin: 0
+		font-weight: $sans-regular
+		& > li
+			+list-comma-separated
+			display: inline
+
+	&__return-button
+		margin-top: 2rem
+		margin-bottom: 1rem
