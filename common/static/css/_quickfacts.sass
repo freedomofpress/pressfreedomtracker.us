@@ -1,7 +1,14 @@
+$quickfacts-margin-bottom: $category-header-margin-top + 0.25rem
+
 .quickfacts
 	+gray-link
 	color: $gray-very-light
 	overflow: hidden
+	padding-left: 1.25rem
+	margin: 0 0 $quickfacts-margin-bottom 0
 
-.quickfacts__list
-	margin-top: 0
+.quickfacts__item
+	margin-top: 0.5rem
+
+	&:first-child
+		margin-top: 0

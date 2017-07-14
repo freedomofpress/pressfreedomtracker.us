@@ -1,7 +1,6 @@
 {% extends layout_template %}
 
-{% load wagtailcore_tags %}
-{% load common_tags %}
+{% load common_tags wagtailcore_tags %}
 
 {% block flex_class %}
     flex-container--grow-3
@@ -23,21 +22,19 @@
 					{{ page.title }}
 				</h3>
 				{% if page.quick_facts.all %}
-					<div class="quickfacts">
-							<ul class="quickfacts__list">
-								{% for fact in page.quick_facts.all %}
-									{% if fact.link_url %}
-										<a class="quickfacts__link" href="{{ fact.link_url }}"><li class="quickfacts__item">
-											{{ fact.body|richtext }}
-										</li></a>
-									{% else %}
-										<li class="quickfacts__item">
-											{{ fact.body|richtext }}
-										</li>
-									{% endif %}
-								{% endfor %}
-							</ul>
-					</div>
+					<ul class="quickfacts">
+						{% for fact in page.quick_facts.all %}
+							{% if fact.link_url %}
+								<li class="quickfacts__item">
+									<a class="quickfacts__link" href="{{ fact.link_url }}">{{ fact.body|richtext_inline }}</a></li>
+								</li>
+							{% else %}
+								<li class="quickfacts__item">
+									{{ fact.body|richtext_inline }}
+								</li>
+							{% endif %}
+						{% endfor %}
+					</ul>
 				{% endif %}
 			</div>
 	</div>
