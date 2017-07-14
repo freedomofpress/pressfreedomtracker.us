@@ -15,15 +15,6 @@
 					<div class="blog-page__date">
 						{{ page.publication_datetime|date:"F j, Y"  }}
 					</div>
-
-					<ul class="blog-page__organization">
-						{% if page.author %}
-							<li><a href="{% pageurl page.author %}">{{page.author.specific.title}}</a></li>
-						{% endif %}
-						{% if page.organization %}
-							<li><a href="{% pageurl page.organization %}">{{page.organization.specific.title}}</a></li>
-						{% endif %}
-					</ul>
 				</div>
 
 				<section>
@@ -39,4 +30,8 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block sidebar %}
+	{% include "blog/_blog_details.html" %}
 {% endblock %}
