@@ -12,7 +12,6 @@ from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
-from common.forms import DataItemForm
 from common.blocks import (
     Heading1,
     Heading2,
