@@ -46,7 +46,8 @@ class InfiniteScroller {
 		}
 	}
 
-	insertPageFromBody(ajaxBodyHtml) {
+	insertPageFromBody(ajaxBodyHtml, options = {}) {
+		const { replace } = options
 		const fragment = document.createDocumentFragment()
 		const tempElm = document.createElement('span')
 		tempElm.innerHTML = ajaxBodyHtml
@@ -57,7 +58,9 @@ class InfiniteScroller {
 		for (var i = 0; i < items.length; i++) {
 			items[i].classList.add('animation-fade-in')
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
-			fragment.appendChild(items[i])
+			if (!replace) {
+				fragment.appendChild(items[i])
+			}
 		}
 
 		// Swap the old next page link with the new
@@ -71,7 +74,12 @@ class InfiniteScroller {
 			this.nextLinkElm = null
 		}
 
-		this.parentElm.appendChild(fragment)
+		if (replace) {
+			this.parentElm.parentNode.replaceChild(parentElm, this.parentElm)
+			this.parentElm = parentElm
+		} else {
+			this.parentElm.appendChild(fragment)
+		}
 	}
 
 	getNextPage(event) {
@@ -108,7 +116,12 @@ InfiniteScroller.NUM_AUTO_FETCHES = 0
 
 
 document.addEventListener('DOMContentLoaded', () => {
+	if (window._infiniteScroller) {
+		console.warn('An InfiniteScroller instance already exists.')
+		return
+	}
+
 	if (document.querySelector('.js-infinite-scrolling-parent')) {
-		new InfiniteScroller()
+		window._infiniteScroller = new InfiniteScroller()
 	}
 })
