@@ -15,7 +15,6 @@
 
 {% block sidebar %}
 	<aside class="simple-page__sidebar">
-		<h5 class="simple-page__sidebar-heading">{{ page.title }}</h5>
 		<ul class="simple-page__sidebar-menu">
 			{% for item in page.get_sidebar_menu.menu_items.all %}
 				<li class="simple-page__sidebar-item">
