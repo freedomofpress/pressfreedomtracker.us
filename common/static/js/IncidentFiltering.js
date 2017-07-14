@@ -439,8 +439,13 @@ class IncidentFiltering extends PureComponent {
 
 	handleApplyFilters() {
 		const params = this.getPageFetchParams()
-		history.pushState(null, null, '?' + queryString.stringify(params))
-		this.fetchPage(params)
+		const qs = '?' + queryString.stringify(params)
+		if (this.props.applyExternally) {
+			window.location = this.props.external + qs
+		} else {
+			history.pushState(null, null, qs)
+			this.fetchPage(params)
+		}
 	}
 
 	handleClearFilters() {
