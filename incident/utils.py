@@ -2,6 +2,7 @@ from datetime import datetime
 
 from psycopg2.extras import DateRange
 
+from common.models import CategoryPage
 from incident.models.incident_page import IncidentPage
 from incident.models import choices
 
@@ -384,6 +385,12 @@ class IncidentFilter(object):
                     return incidents.filter(**kw)
 
         return incidents
+
+    def get_category_options(self):
+        return [
+            dict(id=page.id, title=page.title)
+            for page in CategoryPage.objects.live()
+        ]
 
     def fetch(self):
         incidents = IncidentPage.objects.live()

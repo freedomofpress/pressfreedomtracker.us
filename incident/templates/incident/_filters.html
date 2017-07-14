@@ -1,0 +1,19 @@
+<span id="js-tag-filters-target"></span>
+<script type="text/javascript">
+	;(function() {
+		function handleLoad() {
+			window.ReactDOM.render(
+				window.React.createElement(
+					window.IncidentFiltering,
+					{ availableCategories: {{ category_options|safe }}
+					}
+				),
+
+				document.getElementById('js-tag-filters-target')
+			);
+
+		}
+
+		document.addEventListener('DOMContentLoaded', handleLoad);
+	})();
+</script>
