@@ -188,6 +188,7 @@ function FilterAccordion({
 	handleAccordionSelection,
 	handleFilterChange,
 	filterValues,
+	noCategoryFiltering
 }) {
 	if (!category.enabled) {
 		return null
@@ -195,19 +196,27 @@ function FilterAccordion({
 
 	const FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : () => null
 	const isActive = selectedAccordions.includes(category.id)
+	const collapsible = !noCategoryFiltering
 
 	return (
-		<li className="filters__accordion-category">
-			<button
-				className={classNames(
-					'filters__accordion',
-					{ 'filters__accordion--active': isActive }
-				)}
-				onClick={handleAccordionSelection.bind(null, category.id)}
-			>
-				{isActive ? <CollapseIcon /> : <ExpandIcon />}
-				{category.title}
-			</button>
+		<li
+			className={classNames(
+				'filters__accordion-category',
+				{ 'filters__accordion-category--no-divider': noCategoryFiltering }
+			)}
+		>
+			{collapsible && (
+				<button
+					className={classNames(
+						'filters__accordion',
+						{ 'filters__accordion--active': isActive }
+					)}
+					onClick={handleAccordionSelection.bind(null, category.id)}
+				>
+					{isActive ? <CollapseIcon /> : <ExpandIcon />}
+					{category.title}
+				</button>
+			)}
 
 			{isActive && (
 				<FilterSet
@@ -228,6 +237,7 @@ class FiltersBody extends PureComponent {
 			categoriesEnabled,
 			handleFilterChange,
 			filterValues,
+			noCategoryFiltering,
 		} = this.props
 
 		return (
@@ -242,6 +252,7 @@ class FiltersBody extends PureComponent {
 					handleFilterChange={handleFilterChange}
 					selectedAccordions={selectedAccordions}
 					filterValues={filterValues}
+					noCategoryFiltering={noCategoryFiltering}
 				/>
 
 				{categoriesEnabled.map(category => (
@@ -251,6 +262,7 @@ class FiltersBody extends PureComponent {
 						handleAccordionSelection={handleAccordionSelection}
 						selectedAccordions={selectedAccordions}
 						filterValues={filterValues}
+						noCategoryFiltering={noCategoryFiltering}
 					/>
 				))}
 			</ul>
@@ -588,6 +600,7 @@ class IncidentFiltering extends PureComponent {
 						filterValues={filterValues}
 						handleAccordionSelection={this.handleAccordionSelection}
 						handleFilterChange={this.handleFilterChange}
+						noCategoryFiltering={noCategoryFiltering}
 					/>
 
 					<FiltersFooter
