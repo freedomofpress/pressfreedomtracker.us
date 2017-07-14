@@ -12,6 +12,12 @@
 					{% else %}
 					, applyExternally: false
 					{% endif %}
+					{% if no_category_filtering and category %}
+					, noCategoryFiltering: true
+					, category: {{ category }}
+					{% else %}
+					, noCategoryFiltering: false
+					{% endif %}
 					}
 				),
 

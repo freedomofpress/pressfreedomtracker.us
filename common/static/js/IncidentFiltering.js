@@ -316,9 +316,14 @@ class IncidentFiltering extends PureComponent {
 		this.handleFilterChange = this.handleFilterChange.bind(this)
 		this.handlePopState = this.handlePopState.bind(this)
 
+		const selectedAccordions = [-1]
+		if (props.noCategoryFiltering && props.category) {
+			selectedAccordions.push(props.category)
+		}
+
 		this.state = {
 			filtersExpanded: false,
-			selectedAccordions: [-1],
+			selectedAccordions,
 			loading: 0,
 			...this.getStateFromQueryParams(),
 		}
@@ -337,9 +342,13 @@ class IncidentFiltering extends PureComponent {
 
 		const categoriesEnabledById = (params.categories || '').split(',').map(n => parseInt(n))
 		const categoriesEnabled = this.props.availableCategories.map(category => {
+			const enabled = (
+				categoriesEnabledById.includes(category.id) ||
+				this.props.category === category.id
+			)
 			return {
 				...category,
-				enabled: categoriesEnabledById.includes(category.id),
+				enabled,
 			}
 		})
 
@@ -553,6 +562,10 @@ class IncidentFiltering extends PureComponent {
 			selectedAccordions,
 		} = this.state
 
+		const {
+			noCategoryFiltering,
+		} = this.props
+
 		return (
 			<Filters>
 				<FiltersHeader
@@ -562,10 +575,12 @@ class IncidentFiltering extends PureComponent {
 				/>
 
 				<FiltersExpandable filtersExpanded={filtersExpanded}>
-					<FiltersCategorySelection
-						categoriesEnabled={categoriesEnabled}
-						handleSelection={this.handleSelection}
-					/>
+					{!noCategoryFiltering && (
+						<FiltersCategorySelection
+							categoriesEnabled={categoriesEnabled}
+							handleSelection={this.handleSelection}
+						/>
+					)}
 
 					<FiltersBody
 						selectedAccordions={selectedAccordions}

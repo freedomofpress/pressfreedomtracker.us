@@ -52,7 +52,7 @@
 {% endblock %}
 
 {% block main %}
-	{% include "incident/_filters.html" %}
+	{% include "incident/_filters.html" with no_category_filtering=True category=page.id %}
 
 	{% block ajax %}
 		<div class="grid-50 js-infinite-scrolling-parent">
