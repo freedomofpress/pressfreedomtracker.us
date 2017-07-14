@@ -1,10 +1,14 @@
+{% load wagtailcore_tags %}
+
 {% if page.third_party_in_possession_of_communications %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
 			Third Party in Possesstion of Communications
 		</th>
 		<td class="data-table__value">
-			{{ page.third_party_in_possession_of_communications|capfirst }}
+			<a href="{% pageurl page.get_parent %}?third_party_in_possession_of_communications={{ page.third_party_in_possession_of_communications }}">
+				{{ page.third_party_in_possession_of_communications|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -12,10 +16,12 @@
 {% if page.third_party_business %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
-			Third Party in Possesstion of Communications
+			Third Party Business
 		</th>
 		<td class="data-table__value">
-			{{ page.get_third_party_business_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?third_party_business={{ page.third_party_business }}">
+				{{ page.get_third_party_business_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -23,10 +29,12 @@
 {% if page.legal_order_type %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
-			Third Party in Possesstion of Communications
+			Legal Order Type
 		</th>
 		<td class="data-table__value">
-			{{ page.get_legal_order_type_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?legal_order_type={{ page.legal_order_type }}">
+				{{ page.get_legal_order_type_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}

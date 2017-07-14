@@ -1,3 +1,5 @@
+{% load wagtailcore_tags %}
+
 {% if page.equipment_seized.all %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
@@ -7,7 +9,7 @@
 			<ul class="data-table__list">
 				{% for item in page.equipment_seized.all %}
 					<li>
-						<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
+						<a href="{% pageurl page.get_parent %}?equipment_seized={{ item.equipment.pk }}">{{ item.equipment.name }}, {{ item.quantity }}</a>
 					</li>
 				{% endfor %}
 			</ul>
@@ -24,7 +26,7 @@
 			<ul class="data-table__list">
 				{% for item in page.equipment_broken.all %}
 					<li class="data-table__list-item">
-						<a href="#">{{ item.equipment.name }}, {{ item.quantity }}</a>
+						<a href="{% pageurl page.get_parent %}?equipment_broken={{ item.equipment.pk }}">{{ item.equipment.name }}, {{ item.quantity }}</a>
 					</li>
 				{% endfor %}
 			</ul>
@@ -39,22 +41,26 @@
 			Status of Seized Equipment
 		</th>
 		<td class="data-table__value">
-			{{ page.get_status_of_seized_equipment_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?status_of_seized_equipment={{ page.status_of_seized_equipment }}">
+				{{ page.get_status_of_seized_equipment_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
 
-{% if page.is_search_warrent_obtained %}
+{% if page.status_of_seized_equipment %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
 			Search Warrant Obtained
 		</th>
 		<td class="data-table__value">
-			{% if page.is_search_warrent_obtained %}
-				Yes
-			{% else %}
-				No
-			{% endif %}
+			<a href="{% pageurl page.get_parent %}?is_search_warrant_obtained={{ page.is_search_warrant_obtained }}">
+				{% if page.is_search_warrant_obtained %}
+					Yes
+				{% else %}
+					No
+				{% endif %}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -65,6 +71,7 @@
 			Actor who seized equipment
 		</th>
 		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?actors={{ page.actor }}">
 			{{ page.get_actor_display|capfirst }}
 		</td>
 	</tr>

@@ -118,7 +118,7 @@ LEGAL_ORDER_TYPES = [
 ]
 
 
-PRIOR_RESTRAINT_STAUTS = [
+PRIOR_RESTRAINT_STATUS = [
     ('PENDING', 'pending'),
     ('DROPPED', 'dropped'),
     ('STRUCK_DOWN', 'struck down'),

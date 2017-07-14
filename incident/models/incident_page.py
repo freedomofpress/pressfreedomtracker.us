@@ -268,7 +268,7 @@ class IncidentPage(Page):
 
     # Prior Restraint
     status_of_prior_restraint = models.CharField(
-        choices=choices.PRIOR_RESTRAINT_STAUTS,
+        choices=choices.PRIOR_RESTRAINT_STATUS,
         max_length=255,
         blank=True,
         null=True,

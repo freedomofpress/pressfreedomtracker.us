@@ -1,13 +1,15 @@
+{% load wagtailcore_tags %}
+
 {% if page.targets_whose_communications_were_obtained.all %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
-			Current Charges
+			Targets whose Communications Were Obtained
 		</th>
 		<td class="data-table__value">
 			<ul class="data-table__list">
 				{% for target in page.targets_whose_communications_were_obtained.all %}
 					<li class="data-table__list-item">
-						<a href="#">{{ target.title }}</a>
+						<a href="{% pageurl page.get_parent %}?targets={{ target.pk }}">{{ target.title }}</a>
 					</li>
 				{% endfor %}
 			</ul>
@@ -21,9 +23,13 @@
 		</th>
 		<td class="data-table__value">
 			{% if page.charged_under_espionage_act %}
-				Yes
+				<a href="{% pageurl page.get_parent %}?charged_under_espionage_act={{page.charged_under_espionage_act}}">
+					Yes
+				</a>
 			{% else %}
-				No
+				<a href="{% pageurl page.get_parent %}?charged_under_espionage_act={{page.charged_under_espionage_act}}&categories={{ page.get_main_category.title }}">
+					No
+				</a>
 			{% endif %}
 		</td>
 	</tr>

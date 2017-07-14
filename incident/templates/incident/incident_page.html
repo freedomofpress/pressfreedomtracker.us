@@ -34,14 +34,15 @@
 			{% if page.targets.all %}
 				<tr class='data-table__row'>
 					<th class="data-table__label">
-						Journalists
+						Targets
 					</th>
 					<td class="data-table__value">
 						{% with page.targets.all as journalists %}
 							<ul class="data-table__list">
 								{% for journalist in journalists %}
 									<li class="data-table__list-item data-table__list-item--inline">
-										{{ journalist.title }}</li>
+										<a href="{% pageurl page.get_parent %}?targets={{ journalist.id }}">
+										{{ journalist.title }}</a></li>
 								{% endfor %}
 							</ul>
 						{% endwith %}
@@ -55,7 +56,9 @@
 						Affiliation
 					</th>
 					<td class="data-table__value">
-						{{ page.affiliation }}
+						<a href="{% pageurl page.get_parent %}?affiliation={{ page.affiliation }}">
+							{{ page.affiliation }}
+						</a>
 					</td>
 				</tr>
 			{% endif %}
@@ -66,7 +69,8 @@
 						Location
 					</th>
 					<td class="data-table__value">
-						{{ page.city|default:"" }} {{ page.state|default:"" }}
+						{{ page.city|default:"" }}
+						<a href="{% pageurl page.get_parent %}?states={{ page.state.pk }}">{{ page.state|default:"" }}</a>
 					</td>
 				</tr>
 			{% endif %}
@@ -121,7 +125,7 @@
 						<ul class="data-table__list">
 							{% for tag in page.tags.all %}
 								<li class="data-table__list-item data-table__list-item--inline">
-									<a href="#">{{ tag.title }}</a></li>
+									<a href="{% pageurl page.get_parent %}?tags={{ tag.pk }}">{{ tag.title }}</a></li>
 							{% endfor %}
 						</ul>
 					</td>

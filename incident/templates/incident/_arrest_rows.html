@@ -1,10 +1,14 @@
+{% load wagtailcore_tags %}
+
 {% if page.arrest_status %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
 			Arrest Status
 		</th>
 		<td class="data-table__value">
-			{{ page.get_arrest_status_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?arrest_status={{ page.arrest_status }}">
+				{{ page.get_arrest_status_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -15,7 +19,9 @@
 			Status of Charges
 		</th>
 		<td class="data-table__value">
-			{{ page.get_status_of_charges_display|capfirst }}
+			<a href="{% pageurl page.get_parent %}?status_of_charges={{ page.status_of_charges }}">
+				{{ page.get_status_of_charges_display|capfirst }}
+			</a>
 		</td>
 	</tr>
 {% endif %}
@@ -29,7 +35,9 @@
 			<ul class="data-table__list">
 				{% for charge in page.current_charges.all %}
 					<li class="data-table__list-item">
-						<a href="#">{{ charge.title|capfirst }}</a>
+						<a href="{% pageurl page.get_parent %}?current_charges={{ charge.pk }}">
+							{{ charge.title|capfirst }}
+						</a>
 					</li>
 				{% endfor %}
 			</ul>
@@ -46,7 +54,9 @@
 			<ul class="data-table__list">
 				{% for charge in page.dropped_charges.all %}
 					<li class="data-table__list-item">
-						<a href="#">{{ charge.title|capfirst }}</a>
+						<a href="{% pageurl page.get_parent %}?dropped_charges={{ charge.pk }}">
+							{{ charge.title|capfirst }}
+						</a>
 					</li>
 				{% endfor %}
 			</ul>
