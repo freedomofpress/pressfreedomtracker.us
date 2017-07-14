@@ -13,6 +13,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 from modelcluster.fields import ParentalKey
 
 from common.choices import COLOR_CHOICES
+from incident.utils import IncidentFilter
 
 
 class HomePage(Page):
@@ -79,6 +80,14 @@ class HomePage(Page):
             max_num=6,
         ),
     ]
+
+    def get_context(self, request):
+        context = super(HomePage, self).get_context(request)
+
+        incident_filter = IncidentFilter.from_request(request)
+        context['category_options'] = incident_filter.get_category_options()
+
+        return context
 
 
 class HomePageIncidents(Orderable):

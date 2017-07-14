@@ -13,8 +13,11 @@
 	{% include "home/_stats.html" with label=page.statboxes_label stats=page.statboxes.all %}
 
 	{% if page.incident_index_page %}
+
 		{% with incidents=page.incidents.all %}
 			{% include "common/_section_heading.html" with label="Recent Incidents" %}
+			{% include "incident/_filters.html" with apply_externally=True %}
+
 			<div class="grid-50">
 				{% for related in incidents|slice:":2" %}
 					<div class="grid-50__item">

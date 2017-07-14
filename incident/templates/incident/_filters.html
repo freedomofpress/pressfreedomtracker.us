@@ -6,6 +6,11 @@
 				window.React.createElement(
 					window.IncidentFiltering,
 					{ availableCategories: {{ category_options|safe }}
+					{% if apply_externally %}
+					, applyExternally: true
+					{% else %}
+					, applyExternally: false
+					{% endif %}
 					}
 				),
 
