@@ -5,6 +5,7 @@ from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, PageChooserPanel, InlinePanel, MultiFieldPanel
 from wagtail.wagtailcore.models import Orderable
+from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
 
 
@@ -38,7 +39,7 @@ class MenuItem(Orderable):
         FieldPanel('text'),
         MultiFieldPanel((
             PageChooserPanel('link_page'),
-            PageChooserPanel('link_document'),
+            DocumentChooserPanel('link_document'),
             FieldPanel('link_url'),
         ), 'Destination'),
         MultiFieldPanel((
