@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends layout_template %}
 
 {% load wagtailcore_tags %}
+{% load common_tags %}
 
 {% block flex_class %}
     flex-container--grow-3
@@ -51,15 +52,26 @@
 {% endblock %}
 
 {% block main %}
-	<div class="grid-50">
-		{% for incident in incidents %}
-			<div class="grid-50__item">
-				{% include "incident/_incident.html" with incident=incident teaser=True %}
-			</div>
-		{% empty %}
-			<p class="grid-50__item">There are no incidents in this category yet.</p>
-		{% endfor %}
-	</div>
+	{% block ajax %}
+		<div class="grid-50 js-infinite-scrolling-parent">
+			{% for incident in entries_page %}
+				<div class="grid-50__item js-infinite-scrolling-item">
+					{% include "incident/_incident.html" with incident=incident teaser=True %}
+				</div>
+			{% empty %}
+				<p class="grid-50__item">There are no incidents in this category yet.</p>
+			{% endfor %}
+		</div>
+
+		{% if entries_page.has_next %}
+			<a
+				href="?{% query_transform request page=entries_page.next_page_number %}"
+				class="button button--outline button--center js-infinite-scrolling-next-link"
+			>
+				More Incidents
+			</a>
+		{% endif %}
+	{% endblock %}
 {% endblock %}
 
 
