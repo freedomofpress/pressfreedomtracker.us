@@ -69,4 +69,3 @@ class Command(BaseCommand):
                 categories=[IncidentCategorization(category=category)],
                 **kinds
             )
-            # index.add_child(instance=page)
