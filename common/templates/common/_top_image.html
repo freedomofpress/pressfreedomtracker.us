@@ -1,0 +1,28 @@
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+{% image page.teaser_image width-1440 as x1 %}
+{% image page.teaser_image width-2880 as x2 %}
+<img
+	class="incident__top-image"
+	alt="{{ x1.alt }}"
+	src="{{ x1.url }}"
+	srcset="{{ x2.url }} 2x"
+/>
+{% if page.image_caption or page.teaser_image.attribution %}
+	<aside
+		class="caption {% if not page.image_caption %} caption--att-only {% endif %}"
+	>
+		{% if page.image_caption %}
+			<div class="caption__text">
+				{{ page.image_caption|richtext }}
+			</div>
+		{% endif %}
+
+		{% if page.teaser_image.attribution %}
+			<div class="caption__attribution {% if not page.image_caption %} caption__attribution--att-only {% endif %}">
+				{{ page.teaser_image.attribution }}
+			</div>
+		{% endif %}
+	</aside>
+{% endif %}

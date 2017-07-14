@@ -11,9 +11,11 @@
 	padding: 0 $simple-page-padding
 	color: $white
 
-.stream-section--white:first-child
-	padding-top: 0
+.stream-section--white
+	color: $gray-mid-text
 
+	&:first-child
+		padding-top: 0
 
 @each $name, $color in $background-colors
 	.stream-section--#{$name}
@@ -21,7 +23,12 @@
 		padding-top: 1rem
 		padding-bottom: 1rem
 		clear: both
+		&:not(last-first)
+			margin-top: 1.5rem
+		&:not(last-child)
+			margin-bottom: 1.5rem
 
-.stream-section--white
-	color: $gray-mid-text
-	clear: none
+.stream-sections
+	blockquote,
+	.rich-text
+		line-height: 1.5
