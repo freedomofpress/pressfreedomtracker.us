@@ -41,10 +41,3 @@ def incidents_in_year_range_by_month(start_year, end_year):
         .annotate(c=Count('*')).order_by('month')
     )
     return [(i['month'].strftime('%B %Y'), i['c']) for i in data]
-
-
-# @register.simple_tag
-# def display_stat(statistic, params):
-#     """Not totally sure this is needed."""
-#     stats = get_stats()
-#     return stats[statistic](*params.split())
