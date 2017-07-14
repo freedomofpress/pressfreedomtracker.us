@@ -1,10 +1,24 @@
 .simple-page
 	background-color: $white
 
-.simple-page__sidebar
-	+blue-link
-	background-color: $gray-very-light
-	padding: 0
-	display: flex
-	flex-direction: column
-	align-items: stretch
+	&__sidebar
+		background-color: $gray-very-light
+		padding: 1rem 0 0 .5rem
+		display: flex
+		flex-direction: column
+		align-items: stretch
+		font-size: 1.1rem
+
+	&__sidebar-menu
+		+list-unstyled
+		+underline-link
+		color: $gray-mid-text
+
+	&__sidebar-item
+		&--active
+			font-weight: $sans-bold
+			color: $black
+
+	&__sidebar-link
+		padding: 0.25em 0
+		display: block
