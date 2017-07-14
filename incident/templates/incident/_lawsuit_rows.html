@@ -9,13 +9,15 @@
 	</tr>
 {% endif %}
 
-{% if page.jurisdiction %}
+{% if page.venue.all %}
 	<tr class='data-table__row'>
 		<th class="data-table__label">
-			Jurisdiction
+			Venue
 		</th>
 		<td class="data-table__value">
-			{{ page.jurisdiction }}
+			{% for venue in page.venue.all %}
+				{{ venue }}
+			{% endfor %}
 		</td>
 	</tr>
 {% endif %}
