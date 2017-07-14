@@ -17,6 +17,7 @@ from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
 from incident.models import choices
+from incident.circuits import CIRCUITS
 
 
 class IncidentPage(Page):
@@ -496,3 +497,11 @@ class IncidentPage(Page):
 
             # Only return two related incidents (Categories have too many incidents)
             return related_incidents[:2]
+
+    def get_court_circuit(self):
+        if self.state:
+            for circuit, states in CIRCUITS.items():
+                for state in states:
+                    if state == self.state.name:
+                        return circuit
+        return None
