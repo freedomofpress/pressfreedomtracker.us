@@ -52,6 +52,8 @@
 {% endblock %}
 
 {% block main %}
+	{% include "incident/_filters.html" %}
+
 	{% block ajax %}
 		<div class="grid-50 js-infinite-scrolling-parent">
 			{% for incident in entries_page %}
