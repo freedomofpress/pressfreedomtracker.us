@@ -386,12 +386,6 @@ class IncidentFilter(object):
 
         return incidents
 
-    def get_category_options(self):
-        return [
-            dict(id=page.id, title=page.title)
-            for page in CategoryPage.objects.live()
-        ]
-
     @classmethod
     def from_request(kls, request):
         return kls(
