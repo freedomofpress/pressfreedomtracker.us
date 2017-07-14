@@ -27,16 +27,18 @@ class InfiniteScroller {
 		this.getNextPage = this.getNextPage.bind(this)
 
 		window.addEventListener('scroll', this.handleScroll)
-	}
-
-	incrementFetches() {
-		if (++this.fetches == InfiniteScroller.NUM_AUTO_FETCHES) {
-			this.shouldAutoFetch = false
+		const elm = document.querySelector('.js-infinite-scrolling-next-link')
+		if (elm) {
+			elm.addEventListener('click', this.getNextPage)
 		}
 	}
 
+	incrementFetches() {
+		++this.fetches
+	}
+
 	handleScroll(event) {
-		if (this.shouldAutoFetch) {
+		if (this.fetches < InfiniteScroller.NUM_AUTO_FETCHES) {
 			const elm = this.parentElm.querySelector('.js-infinite-scrolling-item:last-child')
 			if (isElementVisible(elm)) {
 				this.getNextPage()
@@ -102,7 +104,7 @@ class InfiniteScroller {
 }
 
 
-InfiniteScroller.NUM_AUTO_FETCHES = 1
+InfiniteScroller.NUM_AUTO_FETCHES = 0
 
 
 document.addEventListener('DOMContentLoaded', () => {
