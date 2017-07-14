@@ -46,29 +46,48 @@ function Filters({ children }) {
 }
 
 
+class FilterSummary extends PureComponent {
+	render() {
+		const {
+			filterValues,
+			categoriesEnabled,
+		} = this.props
+
+		const hasAnyFilters = Object.keys(filterValues).length > 0
+
+		if (!hasAnyFilters) {
+			return (
+				<div className="filters__text filters__text--dim">
+					No filters applied.
+				</div>
+			)
+		}
+
+		return (
+			<div className="filters__text">
+				Filters
+			</div>
+		)
+	}
+}
+
+
 class FiltersHeader extends PureComponent {
 	render() {
 		const {
 			filtersExpanded,
 			filterValues,
-			handleToggle
+			handleToggle,
+			categoriesEnabled,
 		} = this.props
 
 
-		const hasAnyFilters = Object.keys(filterValues).length > 0
 		return (
 			<div className="filters__header">
-				{!hasAnyFilters && (
-					<div className="filters__text filters__text--dim">
-						No filters applied.
-					</div>
-				)}
-
-				{hasAnyFilters && (
-					<div className="filters__text">
-						Filters
-					</div>
-				)}
+				<FilterSummary
+					filterValues={filterValues}
+					categoriesEnabled={categoriesEnabled}
+				/>
 
 				<button
 					className="filters__button"
@@ -583,6 +602,7 @@ class IncidentFiltering extends PureComponent {
 				<FiltersHeader
 					filterValues={filterValues}
 					filtersExpanded={filtersExpanded}
+					categoriesEnabled={categoriesEnabled}
 					handleToggle={this.handleToggle}
 				/>
 
