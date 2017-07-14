@@ -23,31 +23,7 @@ It can take the following context variables:
 		{% if teaser %}
 			{% include "common/_teaser_image.html" with page=incident %}
 		{% else %}
-			{% image incident.teaser_image width-1440 as x1 %}
-			{% image incident.teaser_image width-2880 as x2 %}
-			<img
-				class="incident__top-image"
-				alt="{{ x1.alt }}"
-				src="{{ x1.url }}"
-				srcset="{{ x2.url }} 2x"
-			/>
-			{% if incident.image_caption or incident.teaser_image.attribution %}
-				<aside
-					class="caption {% if not incident.image_caption %} caption--att-only {% endif %}"
-				>
-					{% if incident.image_caption %}
-						<div class="caption__text">
-							{{ incident.image_caption|richtext }}
-						</div>
-					{% endif %}
-
-					{% if incident.teaser_image.attribution %}
-						<div class="caption__attribution {% if not incident.image_caption %} caption__attribution--att-only {% endif %}">
-							{{ incident.teaser_image.attribution }}
-						</div>
-					{% endif %}
-				</aside>
-			{% endif %}
+			{% include "common/_top_image.html" with page=incident %}
 		{% endif %}
 	{% endif %}
 	<div class="incident__body">
