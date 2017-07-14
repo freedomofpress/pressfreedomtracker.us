@@ -30,7 +30,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    'home',
     'autocomplete',
     'search',
     'blog',
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
     'menus',
     'styleguide',
     'dashboard',
+    'home',
 
     'wagtail.contrib.settings',
     'wagtail.contrib.wagtailroutablepage',
