@@ -17,8 +17,15 @@
 	<aside class="simple-page__sidebar">
 		<ul class="simple-page__sidebar-menu">
 			{% for item in page.get_sidebar_menu.menu_items.all %}
-				<li class="simple-page__sidebar-item">
-					<a href="{{ item.url }}" class="simple-page__sidebar-link {{ item.html_classes }}" {% if item.title %}title="{{ item.title }}"{% endif %}>
+				<li class="
+					simple-page__sidebar-item
+					{% if page == item.link_page.specific %}simple-page__sidebar-item--active{% endif %}
+				">
+					<a
+						href="{{ item.url }}"
+						class="simple-page__sidebar-link {{ item.html_classes }}"
+						{% if item.title %}title="{{ item.title }}"{% endif %}
+					>
 						{{ item.text }}
 					</a>
 				</li>
