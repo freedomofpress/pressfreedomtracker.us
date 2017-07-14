@@ -67,9 +67,13 @@ class InfiniteScroller {
 		const _elm = tempElm.querySelector('.js-infinite-scrolling-next-link:last-child')
 		if (_elm) {
 			_elm.addEventListener('click', this.getNextPage)
-			this.nextLinkElm.parentNode.replaceChild(_elm, this.nextLinkElm)
+			if (this.nextLinkElm) {
+				this.nextLinkElm.parentNode.replaceChild(_elm, this.nextLinkElm)
+			} else if (replace) {
+				this.parentElm.parentNode.appendChild(_elm)
+			}
 			this.nextLinkElm = _elm
-		} else {
+		} else if (this.nextLinkElm) {
 			this.nextLinkElm.remove()
 			this.nextLinkElm = null
 		}
