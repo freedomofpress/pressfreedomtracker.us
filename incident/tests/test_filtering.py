@@ -9,7 +9,7 @@ from incident.tests.factories import (
     IncidentCategorizationFactory,
 )
 from common.tests.factories import CategoryPageFactory
-from incident.utils import IncidentFilter
+from incident.utils.incident_filter import IncidentFilter
 
 
 class TestFiltering(TestCase):

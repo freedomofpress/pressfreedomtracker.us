@@ -8,7 +8,7 @@ from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
-from incident.utils import IncidentFilter
+from incident.utils.incident_filter import IncidentFilter
 
 
 class IncidentIndexPage(RoutablePageMixin, Page):
