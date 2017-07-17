@@ -47,6 +47,45 @@ function Filters({ children }) {
 
 
 class FilterSummary extends PureComponent {
+	constructText() {
+		const {
+			filterValues,
+			categoriesEnabled,
+		} = this.props
+
+		const categories = categoriesEnabled.filter(({ enabled }) => enabled)
+
+		const categoryList = (
+			<ul className="filters__summary-list">
+				{categories.map(category => (
+					<li key={category.id} className="filters__summary-item">
+						{category.title}
+					</li>
+				))}
+			</ul>
+		)
+
+		const hasFilters = Object.keys(filterValues).length > 0
+
+		const filterList = (
+			<ul className="filters__summary-list">
+				{Object.keys(filterValues).map(label => (
+					<li key={label} className="filters__summary-item">
+						{label} {filterValues[label].toString()}
+					</li>
+				))}
+			</ul>
+		)
+
+		return (
+			<span className="filters__summary">
+				Showing {categoryList}
+				{hasFilters && 'with these filters:'}
+				{hasFilters && filterList}
+			</span>
+		)
+	}
+
 	render() {
 		const {
 			filterValues,
@@ -71,7 +110,7 @@ class FilterSummary extends PureComponent {
 
 		return (
 			<div className="filters__text">
-				Filters
+				{this.constructText()}
 			</div>
 		)
 	}
