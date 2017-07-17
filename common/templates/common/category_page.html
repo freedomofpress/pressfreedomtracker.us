@@ -1,7 +1,6 @@
 {% extends layout_template %}
 
-{% load wagtailcore_tags %}
-{% load common_tags %}
+{% load common_tags wagtailcore_tags %}
 
 {% block flex_class %}
     flex-container--grow-3
@@ -22,27 +21,44 @@
 				<h3 class="category__name">
 					{{ page.title }}
 				</h3>
-				<div class="category__description">
-					{{ page.description|richtext }}
-				</div>
+				{% if page.quick_facts.all %}
+					<ul class="quickfacts">
+						{% for fact in page.quick_facts.all %}
+							{% if fact.link_url %}
+								<li class="quickfacts__item">
+									<a class="quickfacts__link" href="{{ fact.link_url }}">{{ fact.body|richtext_inline }}</a></li>
+								</li>
+							{% else %}
+								<li class="quickfacts__item">
+									{{ fact.body|richtext_inline }}
+								</li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+				{% endif %}
 			</div>
 	</div>
 	<div class="layout-right-sidebar__sidebar
 							layout-right-sidebar__sidebar--dark
 							layout-right-sidebar__sidebar--{{ page.title|slugify }}"
 	>
-			{% if page.quick_facts.all %}
-			<div class="quickfacts">
-					<h4 class="section-heading">Quickfacts</h4>
-					<ul class="quickfacts__list">
-						{% for fact in page.quick_facts.all %}
-							<li class="quickfacts__item">
-								{{ fact.body|richtext }}
-							</li>
-						{% endfor %}
-					</ul>
-			</div>
-			{% endif %}
+		<table class="data-table data-table--category">
+			<h4 class="section-heading section-heading--light section-heading--margin-top">
+			Data Summary
+		</h4>
+			<tr class="data-table__row data-table__row--light">
+				<th class="data-table__label data-table__label--light">
+					Total cases
+				</th>
+				<td class="data-table__value">{{ page.incidents.all.count }}</td>
+			</tr>
+			<tr class="data-table__row data-table__row--light">
+				<th class="data-table__label data-table__label--light">
+					Cases in 2019
+				</th>
+				<td class="data-table__value">33</td>
+			</tr>
+		</table>
 	</div>
 </div>
 {% endblock %}
@@ -83,23 +99,6 @@
 {% endblock %}
 
 {% block sidebar %}
-		<h4 class="section-heading">
-			Data Summary
-		</h4>
-		<table class="data-table">
-			<tr class='data-table__row'>
-				<th class="data-table__label">
-					Total cases
-				</th>
-				<td class="data-table__value">{{ page.incidents.all.count }}</td>
-			</tr>
-			<tr class='data-table__row'>
-				<th class="data-table__label">
-					Cases in 2019
-				</th>
-				<td class="data-table__value">33</td>
-			</tr>
-		</table>
 		{% if page.methodology %}
 			<h4 class="section-heading">
 				How we track
