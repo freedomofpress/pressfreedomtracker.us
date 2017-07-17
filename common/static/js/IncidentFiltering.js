@@ -110,6 +110,7 @@ class FilterSummary extends PureComponent {
 
 	render() {
 		const {
+			filtersExpanded,
 			filterValues,
 			categoriesEnabled,
 		} = this.props
@@ -126,6 +127,14 @@ class FilterSummary extends PureComponent {
 			return (
 				<div className="filters__text filters__text--dim">
 					No filters applied.
+				</div>
+			)
+		}
+
+		if (filtersExpanded) {
+			return (
+				<div className="filters__text">
+					Filters
 				</div>
 			)
 		}
@@ -152,6 +161,7 @@ class FiltersHeader extends PureComponent {
 		return (
 			<div className="filters__header">
 				<FilterSummary
+					filtersExpanded={filtersExpanded}
 					filterValues={filterValues}
 					categoriesEnabled={categoriesEnabled}
 				/>
