@@ -62,7 +62,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     })
     affiliation = factory.Faker('word')
     teaser = factory.LazyAttribute(lambda _: RichText(fake.sentence()))
-    teaser_image = wagtail_factories.ImageFactory()
+    teaser_image = factory.SubFactory(wagtail_factories.ImageFactory)
     image_caption = factory.LazyAttribute(lambda _: RichText(fake.sentence()))
 
     # Detention/arrest
