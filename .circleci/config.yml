@@ -16,3 +16,9 @@ jobs:
       - run:
           name: Run molecule and testinfra tests
           command: make ci-go
+
+      - store_test_results:
+          path: /root/pressfreedom/test-results
+
+      - store_artifacts:
+          path: /root/pressfreedom/test-results
