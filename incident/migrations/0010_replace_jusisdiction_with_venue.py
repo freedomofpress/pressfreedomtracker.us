@@ -6,6 +6,22 @@ from django.db import migrations, models
 import modelcluster.fields
 
 
+def convert_jurisdiction_to_venue(apps, schema_editor):
+        IncidentPage = apps.get_model('incident', 'IncidentPage')
+        Venue = apps.get_model('incident', 'Venue')
+        for incident_page in IncidentPage.objects.all():
+            if incident_page.jurisdiction:
+                new_venue, created = Venue.objects.get_or_create(title=incident_page.jurisdiction)
+
+                if created:
+                    new_venue.save()
+                incident_page.venue.add(new_venue)
+                incident_page.venue.commit()
+
+def convert_venue_to_jurisdiction(apps, schema_editor):
+        pass
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -23,13 +39,14 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
         ),
-        migrations.RemoveField(
-            model_name='incidentpage',
-            name='jurisdiction',
-        ),
         migrations.AddField(
             model_name='incidentpage',
             name='venue',
             field=modelcluster.fields.ParentalManyToManyField(blank=True, help_text='Courts that are hearing or have heard this case.', related_name='venue_incidents', to='incident.Venue', verbose_name='Case Venue'),
+        ),
+        migrations.RunPython(convert_jurisdiction_to_venue, convert_venue_to_jurisdiction),
+        migrations.RemoveField(
+            model_name='incidentpage',
+            name='jurisdiction',
         ),
     ]
