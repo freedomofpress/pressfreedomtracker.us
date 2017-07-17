@@ -356,7 +356,7 @@ class IncidentFilter(object):
                 if field['type'] == 'pk':
                     validated_field = validate_integer_list(getattr(self, field_name).split(','))
                     if not validated_field:
-                        return incidents
+                        continue
 
                     if 'modifier' in field.keys():
                         kw = {
@@ -366,7 +366,7 @@ class IncidentFilter(object):
                         kw = {
                             '{0}__in'.format(field_name): validated_field
                         }
-                    return incidents.filter(**kw)
+                    incidents = incidents.filter(**kw)
 
                 if field['type'] == 'bool' and getattr(self, field_name):
                     category_kw = {
@@ -376,13 +376,13 @@ class IncidentFilter(object):
                         field_name: getattr(self, field_name),
                     }
 
-                    return incidents.filter(**category_kw).filter(**filter_kw)
+                    incidents = incidents.filter(**category_kw).filter(**filter_kw)
 
                 if field['type'] == 'char':
                     kw = {
                         '{0}'.format(field_name): getattr(self, field_name)
                     }
-                    return incidents.filter(**kw)
+                    incidents = incidents.filter(**kw)
 
         return incidents
 
