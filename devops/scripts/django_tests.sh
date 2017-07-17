@@ -1,4 +1,5 @@
 #!/bin/bash
 
 source ~/pressfreedom/bin/activate
-/var/www/django/manage.py test --noinput --keepdb
+cd /var/www/django/
+./manage.py test --noinput --keepdb
