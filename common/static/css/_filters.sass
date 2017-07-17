@@ -81,8 +81,14 @@
 		color: $bg-medium
 
 
-	&__accordion-category:not(:last-child)
-		border-bottom: 1px solid $border-color
+	&__accordion-category
+		border-bottom-width: 1px
+		border-bottom-style: solid
+		border-bottom-color: $border-color
+
+		&--no-divider,
+		&:last-child
+			border-bottom-width: 0
 
 
 	&__accordion

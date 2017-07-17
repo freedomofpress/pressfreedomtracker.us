@@ -188,6 +188,7 @@ function FilterAccordion({
 	handleAccordionSelection,
 	handleFilterChange,
 	filterValues,
+	noCategoryFiltering
 }) {
 	if (!category.enabled) {
 		return null
@@ -195,19 +196,27 @@ function FilterAccordion({
 
 	const FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : () => null
 	const isActive = selectedAccordions.includes(category.id)
+	const collapsible = !noCategoryFiltering
 
 	return (
-		<li className="filters__accordion-category">
-			<button
-				className={classNames(
-					'filters__accordion',
-					{ 'filters__accordion--active': isActive }
-				)}
-				onClick={handleAccordionSelection.bind(null, category.id)}
-			>
-				{isActive ? <CollapseIcon /> : <ExpandIcon />}
-				{category.title}
-			</button>
+		<li
+			className={classNames(
+				'filters__accordion-category',
+				{ 'filters__accordion-category--no-divider': noCategoryFiltering }
+			)}
+		>
+			{collapsible && (
+				<button
+					className={classNames(
+						'filters__accordion',
+						{ 'filters__accordion--active': isActive }
+					)}
+					onClick={handleAccordionSelection.bind(null, category.id)}
+				>
+					{isActive ? <CollapseIcon /> : <ExpandIcon />}
+					{category.title}
+				</button>
+			)}
 
 			{isActive && (
 				<FilterSet
@@ -228,6 +237,7 @@ class FiltersBody extends PureComponent {
 			categoriesEnabled,
 			handleFilterChange,
 			filterValues,
+			noCategoryFiltering,
 		} = this.props
 
 		return (
@@ -242,6 +252,7 @@ class FiltersBody extends PureComponent {
 					handleFilterChange={handleFilterChange}
 					selectedAccordions={selectedAccordions}
 					filterValues={filterValues}
+					noCategoryFiltering={noCategoryFiltering}
 				/>
 
 				{categoriesEnabled.map(category => (
@@ -251,6 +262,7 @@ class FiltersBody extends PureComponent {
 						handleAccordionSelection={handleAccordionSelection}
 						selectedAccordions={selectedAccordions}
 						filterValues={filterValues}
+						noCategoryFiltering={noCategoryFiltering}
 					/>
 				))}
 			</ul>
@@ -316,9 +328,14 @@ class IncidentFiltering extends PureComponent {
 		this.handleFilterChange = this.handleFilterChange.bind(this)
 		this.handlePopState = this.handlePopState.bind(this)
 
+		const selectedAccordions = [-1]
+		if (props.noCategoryFiltering && props.category) {
+			selectedAccordions.push(props.category)
+		}
+
 		this.state = {
 			filtersExpanded: false,
-			selectedAccordions: [-1],
+			selectedAccordions,
 			loading: 0,
 			...this.getStateFromQueryParams(),
 		}
@@ -337,9 +354,13 @@ class IncidentFiltering extends PureComponent {
 
 		const categoriesEnabledById = (params.categories || '').split(',').map(n => parseInt(n))
 		const categoriesEnabled = this.props.availableCategories.map(category => {
+			const enabled = (
+				categoriesEnabledById.includes(category.id) ||
+				this.props.category === category.id
+			)
 			return {
 				...category,
-				enabled: categoriesEnabledById.includes(category.id),
+				enabled,
 			}
 		})
 
@@ -553,6 +574,10 @@ class IncidentFiltering extends PureComponent {
 			selectedAccordions,
 		} = this.state
 
+		const {
+			noCategoryFiltering,
+		} = this.props
+
 		return (
 			<Filters>
 				<FiltersHeader
@@ -562,10 +587,12 @@ class IncidentFiltering extends PureComponent {
 				/>
 
 				<FiltersExpandable filtersExpanded={filtersExpanded}>
-					<FiltersCategorySelection
-						categoriesEnabled={categoriesEnabled}
-						handleSelection={this.handleSelection}
-					/>
+					{!noCategoryFiltering && (
+						<FiltersCategorySelection
+							categoriesEnabled={categoriesEnabled}
+							handleSelection={this.handleSelection}
+						/>
+					)}
 
 					<FiltersBody
 						selectedAccordions={selectedAccordions}
@@ -573,6 +600,7 @@ class IncidentFiltering extends PureComponent {
 						filterValues={filterValues}
 						handleAccordionSelection={this.handleAccordionSelection}
 						handleFilterChange={this.handleFilterChange}
+						noCategoryFiltering={noCategoryFiltering}
 					/>
 
 					<FiltersFooter
