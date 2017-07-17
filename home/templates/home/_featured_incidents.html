@@ -1,0 +1,32 @@
+{% load wagtailcore_tags %}
+
+{% if page.incident_index_page %}
+
+	{% with incidents=page.incidents.all %}
+		{% include "common/_section_heading.html" with label="Recent Incidents" %}
+		{% include "incident/_filters.html" with apply_externally=True external=page.incident_index_page %}
+
+		<div class="grid-50">
+			{% for related in incidents|slice:":2" %}
+				<div class="grid-50__item">
+					{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+				</div>
+			{% endfor %}
+		</div>
+		{% include "home/_intro.html" with text=page.about read_more=page.about_page %}
+		<div class="grid-50">
+			{% for related in incidents|slice:"2:" %}
+				<div class="grid-50__item">
+					{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+				</div>
+			{% endfor %}
+		</div>
+	{% endwith %}
+	<a
+		class="button button--outline button--center"
+		href="{% pageurl page.incident_index_page %}"
+	>
+		More Incidents
+	</a>
+
+{% endif %}
