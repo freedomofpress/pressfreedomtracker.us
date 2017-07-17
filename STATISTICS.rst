@@ -144,6 +144,12 @@ In this case, we see that this visualization is suitable for rendering a map, or
 
 You can create as many visualizations as you desire.  Right now they're all stored in the directory ``statistics/templates``.  In order for the ``StatisticsBlock`` to be aware of them, they must be added (along with a descriptive name) to the ``get_visualization_choices`` function in ``statistics/blocks.py``.  All this bookkeeping is only slightly cumbersome but it does make everything run a lot more smoothly.
 
+Number and Map Types
+~~~~~~~~~~~~~~~~~~~~
+
+I want to emphasize here that numbers and maps are, essentially, functions that can be used by non-programmers, such as authors who will incorporate them into the site content, and designers who will create visualizations for them.  So it is important that they not cause errors (as their users might not be able to debug what is happening), and they their return values match their indicated type of ``number`` or ``map``.  There are examples of testing the return values of these functions in the ``statistics/tests`` folder, and I encourage anyone writing new ones to add similar tests to their own additions.
+
+
 Using StatisticsBlock
 ~~~~~~~~~~~~~~~~~~~~~
 
