@@ -1,3 +1,5 @@
+import csv
+
 from wagtail.wagtailcore.models import Site
 from django.test import TestCase, Client
 
@@ -68,9 +70,9 @@ class TestExportPage(TestCase):
         )
 
         content_lines = list(response.streaming_content)
-        self.assertEqual(
-            ','.join(to_row(inc)) + '\r\n',
-            content_lines[1].decode('utf-8'),
-        )
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+        next(reader)  # skip the header row
+        csv_line = next(reader)
+        self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
             self.assertNotIn('Unpublished incident', line.decode('utf-8'))
