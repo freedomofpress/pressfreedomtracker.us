@@ -31,3 +31,6 @@ src/
 # developer postgres testing
 import.db
 db-snapshots/
+
+# CI XML test results
+test-results/*

@@ -18,6 +18,22 @@
       tags: tests
       become: yes
       become_user: "{{ django_stack_gcorn_user }}"
+      no_log: true
+      register: test_run_results
+      # Need this to keep going and get us test output xml
+      ignore_errors: yes
+
+    - name: Yank out tests for analysis
+      fetch:
+        src: "/home/gcorn/app-tests.xml"
+        dest: ../test-results/
+        flat: yes
+      tags: tests
+
+    - name: Fail if test failed earlier
+      fail:
+      when: test_run_results.failed
+      tags: tests
   vars:
     django_stack_superuser_admin: admin
     django_stack_superuser_email: mike@freedom.press
@@ -36,10 +52,10 @@
       - run build
     django_stack_gunicorn_opt_envs:
       DJANGO_ALLOWED_HOSTS: "'*'"
-      DJANGO_SETTINGS_MODULE: pressfreedom.settings.production
+      DJANGO_SETTINGS_MODULE: pressfreedom.settings.production-ci
       DJANGO_JSON_LOG: True
       DJANGO_DB_NAME: pressfreedom
-    django_stack_gcorn_app_settings: pressfreedom.settings.production
+    django_stack_gcorn_app_settings: pressfreedom.settings.production-ci
     django_stack_force_refresh: true
     django_stack_rsync_opts:
       - "--exclude=.git"
