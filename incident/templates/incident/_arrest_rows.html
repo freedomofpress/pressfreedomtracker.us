@@ -70,6 +70,7 @@
 			Detention Date
 		</th>
 		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?detention_date_lower={{ page.detention_date|date:'Y-m-d' }}&detention_date_upper={{ page.detention_date|date:'Y-m-d' }}">
 			{{ page.detention_date|date:"F j, Y" }}
 		</td>
 	</tr>
@@ -81,7 +82,9 @@
 			Release Date
 		</th>
 		<td class="data-table__value">
-			{{ page.release_date|date:"F j, Y" }}
+			<a href="{% pageurl page.get_parent %}?release_date_lower={{ page.release_date|date:'Y-m-d' }}&release_date_upper={{ page.release_date|date:'Y-m-d' }}">
+				{{ page.release_date|date:"F j, Y" }}
+			</a>
 		</td>
 	</tr>
 {% endif %}

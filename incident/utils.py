@@ -47,6 +47,8 @@ ARREST_FIELDS = [
     dict([('name', 'status_of_charges'), ('type', 'choice'), ('choices', choices.STATUS_OF_CHARGES)]),
     dict([('name', 'current_charges'), ('type', 'pk'), ]),
     dict([('name', 'dropped_charges'), ('type', 'pk'), ]),
+    dict([('name', 'detention_date'), ('type', 'date'), ]),
+    dict([('name', 'release_date'), ('type', 'date'), ]),
 ]
 
 EQUIPMENT_FIELDS = [
@@ -232,6 +234,10 @@ class IncidentFilter(object):
         status_of_charges,
         current_charges,
         dropped_charges,
+        detention_date_upper,
+        detention_date_lower,
+        release_date_upper,
+        release_date_lower,
         # EQUIPMENT
         equipment_seized,
         equipment_broken,
@@ -284,6 +290,10 @@ class IncidentFilter(object):
         self.status_of_charges = status_of_charges
         self.current_charges = current_charges
         self.dropped_charges = dropped_charges
+        self.detention_date_lower = validate_date(detention_date_lower)
+        self.detention_date_upper = validate_date(detention_date_upper)
+        self.release_date_lower = validate_date(release_date_lower)
+        self.release_date_upper = validate_date(release_date_upper)
 
         # EQUIPMENT
         self.equipment_seized = equipment_seized
@@ -334,15 +344,32 @@ class IncidentFilter(object):
         """Creates filters based on dicts for fields
 
         'name' should be the name of the field AS IT APPEARS ON THE MODEL
-        'type' should be 'choice', 'pk', 'bool', or 'char'
+        'type' should be 'choice', 'pk', 'bool', 'date' or 'char'
         'choices' should match the choices on the model, if any
         'modifier' should be a modifier on the lookup field
         'category_slug' should be the slug of the category for the field. For boolean fields, the filter uses the category, to show correctly interperet falses.
         """
+
         for field in fields:
             field_name = field['name']
 
-            if getattr(self, field_name):
+            if field['type'] == 'date':
+                if getattr(self, '{0}_lower'.format(field_name)) or getattr(self, '{0}_upper'.format(field_name)):
+                    lower_date = getattr(self, '{0}_lower'.format(field_name))
+                    upper_date = getattr(self, '{0}_upper'.format(field_name))
+
+                    if lower_date == upper_date:
+                        kw = {
+                            field_name: lower_date
+                        }
+                        incidents = incidents.filter(**kw)
+                    else:
+                        kw = {
+                            '{0}__contained_by'.format(field_name): DateRange(lower_date, upper_date)
+                        }
+                        incidents = incidents.filter(**kw)
+
+            elif getattr(self, field_name):
                 if field['type'] == 'choice':
                     validated_field = validate_choices(getattr(self, field_name).split(','), field['choices'])
                     if not validated_field:
@@ -402,6 +429,10 @@ class IncidentFilter(object):
             status_of_charges=request.GET.get('status_of_charges'),
             current_charges=request.GET.get('current_charges'),
             dropped_charges=request.GET.get('dropped_charges'),
+            detention_date_lower=request.GET.get('detention_date_lower'),
+            detention_date_upper=request.GET.get('detention_date_upper'),
+            release_date_lower=request.GET.get('release_date_lower'),
+            release_date_upper=request.GET.get('release_date_upper'),
             # EQUIPMENT
             equipment_seized=request.GET.get('equipment_seized'),
             equipment_broken=request.GET.get('equipment_broken'),
