@@ -11,3 +11,4 @@ psycopg2
 pyparsing
 wagtail
 wagtail-factories
+unittest-xml-reporting
