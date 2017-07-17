@@ -22,7 +22,7 @@ def validate_date(date):
         valid_date = datetime.strptime(date, '%Y-%m-%d')
     except (ValueError, TypeError):
         return None
-    return str(valid_date)
+    return valid_date.date()
 
 
 def validate_integer_list(lst):
@@ -505,6 +505,9 @@ class IncidentFilter(object):
         return incidents.search(self.search_text, order_by_relevance=False)
 
     def by_date_range(self, incidents):
+        if self.lower_date == self.upper_date:
+            return incidents.filter(date=self.lower_date)
+
         return incidents.filter(date__contained_by=DateRange(
             self.lower_date,
             self.upper_date,

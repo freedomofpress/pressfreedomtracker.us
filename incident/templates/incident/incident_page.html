@@ -28,7 +28,7 @@
 				<th class="data-table__label">
 					Date of Incident
 				</th>
-				<td class="data-table__value">{{page.date|date:"F j, Y" }}</td>
+				<td class="data-table__value"><a href="{% pageurl page.get_parent %}?lower_date={{ page.date|date:'Y-m-d' }}&upper_date={{ page.date|date:'Y-m-d' }}">{{page.date|date:"F j, Y" }}</a></td>
 			</tr>
 
 			{% if page.targets.all %}
