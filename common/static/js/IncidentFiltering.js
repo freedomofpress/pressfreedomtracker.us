@@ -6,6 +6,9 @@ import queryString from 'query-string'
 import moment, { isMoment } from 'moment'
 
 
+const HUMAN_DATE_FORMAT = 'MMM Do YYYY'
+
+
 const DATE_FORMAT = 'YYYY-MM-DD'
 
 
@@ -52,15 +55,15 @@ function Filters({ children }) {
 class FilterSummary extends PureComponent {
 	renderValue(label, value) {
 		if (IncidentFiltering.DATE_FILTERS.includes(label)) {
-			var formattedValue = value.format(DATE_FORMAT)
+			var formattedValue = value.format(HUMAN_DATE_FORMAT)
 		} else {
 			var formattedValue = value
 		}
 
 		if (label === 'lower_date') {
-			return `took place after: ${formattedValue}`
+			return `since ${formattedValue}`
 		} else if (label === 'upper_date') {
-			return `took place before: ${formattedValue}`
+			return `before ${formattedValue}`
 		} else {
 			return null
 		}
@@ -97,9 +100,9 @@ class FilterSummary extends PureComponent {
 		)
 
 		return (
-			<span className="filters__summary filters__text--dim">
+			<span className="filters__summary">
 				Showing {categoryList}
-				{hasFilters && ' with these filters: '}
+				{hasFilters && ' '}
 				{hasFilters && filterList}
 			</span>
 		)
