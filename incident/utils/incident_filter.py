@@ -1,4 +1,5 @@
 from datetime import datetime
+from functools import reduce
 
 from psycopg2.extras import DateRange
 
@@ -55,14 +56,14 @@ def validate_integer_list(lst):
 
 
 def get_kwargs(fields, current_kwargs, request):
-        for field in fields:
-            field_name = field['name']
-            if not field['type'] == 'date':
-                current_kwargs[field_name] = request.GET.get(field_name)
-            else:
-                current_kwargs["{0}_lower".format(field_name)] = request.GET.get("{0}_lower".format(field_name))
-                current_kwargs["{0}_upper".format(field_name)] = request.GET.get("{0}_upper".format(field_name))
-        return current_kwargs
+    for field in fields:
+        field_name = field['name']
+        if not field['type'] == 'date':
+            current_kwargs[field_name] = request.GET.get(field_name)
+        else:
+            current_kwargs["{0}_lower".format(field_name)] = request.GET.get("{0}_lower".format(field_name))
+            current_kwargs["{0}_upper".format(field_name)] = request.GET.get("{0}_upper".format(field_name))
+    return current_kwargs
 
 
 class IncidentFilter(object):
@@ -273,16 +274,22 @@ class IncidentFilter(object):
             'categories': request.GET.get('categories'),
         }
 
-        kwargs = get_kwargs(INCIDENT_PAGE_FIELDS, kwargs, request)
-        kwargs = get_kwargs(ARREST_FIELDS, kwargs, request)
-        kwargs = get_kwargs(EQUIPMENT_FIELDS, kwargs, request)
-        kwargs = get_kwargs(BORDER_STOP_FIELDS, kwargs, request)
-        kwargs = get_kwargs(PHYSICAL_ASSAULT_FIELDS, kwargs, request)
-        kwargs = get_kwargs(LEAK_PROSECUTIONS_FIELDS, kwargs, request)
-        kwargs = get_kwargs(SUBPOENA_FIELDS, kwargs, request)
-        kwargs = get_kwargs(LEGAL_ORDER_FIELDS, kwargs, request)
-        kwargs = get_kwargs(PRIOR_RESTRAINT_FIELDS, kwargs, request)
-        kwargs = get_kwargs(DENIAL_OF_ACCESS_FIELDS, kwargs, request)
+        kwargs = reduce(
+            (lambda obj, fields: get_kwargs(fields, obj, request)),
+            [
+                INCIDENT_PAGE_FIELDS,
+                ARREST_FIELDS,
+                EQUIPMENT_FIELDS,
+                BORDER_STOP_FIELDS,
+                PHYSICAL_ASSAULT_FIELDS,
+                LEAK_PROSECUTIONS_FIELDS,
+                LEGAL_ORDER_FIELDS,
+                PRIOR_RESTRAINT_FIELDS,
+                SUBPOENA_FIELDS,
+                DENIAL_OF_ACCESS_FIELDS,
+            ],
+            kwargs
+        )
 
         return kls(**kwargs)
 
@@ -301,34 +308,22 @@ class IncidentFilter(object):
         if self.categories:
             incidents = self.by_categories(incidents)
 
-        incidents = self.create_filters(INCIDENT_PAGE_FIELDS, incidents)
-
-        # ARREST/DETENTION FILTERS
-        incidents = self.create_filters(ARREST_FIELDS, incidents)
-
-        # EQUIPMENT
-        incidents = self.create_filters(EQUIPMENT_FIELDS, incidents)
-
-        # BORDER STOP
-        incidents = self.create_filters(BORDER_STOP_FIELDS, incidents)
-
-        # PHYSICAL ASSAULT
-        incidents = self.create_filters(PHYSICAL_ASSAULT_FIELDS, incidents)
-
-        # LEAK PROSECUTIONS
-        incidents = self.create_filters(LEAK_PROSECUTIONS_FIELDS, incidents)
-
-        # SUBPOENA
-        incidents = self.create_filters(SUBPOENA_FIELDS, incidents)
-
-        # LEGAL ORDER
-        incidents = self.create_filters(LEGAL_ORDER_FIELDS, incidents)
-
-        # PRIOR RESTRAINT
-        incidents = self.create_filters(PRIOR_RESTRAINT_FIELDS, incidents)
-
-        # DENIAL OF ACCESS
-        incidents = self.create_filters(DENIAL_OF_ACCESS_FIELDS, incidents)
+        incidents = reduce(
+            (lambda obj, filters: self.create_filters(filters, obj)),
+            [
+                INCIDENT_PAGE_FIELDS,
+                ARREST_FIELDS,
+                EQUIPMENT_FIELDS,
+                BORDER_STOP_FIELDS,
+                PHYSICAL_ASSAULT_FIELDS,
+                LEAK_PROSECUTIONS_FIELDS,
+                LEGAL_ORDER_FIELDS,
+                PRIOR_RESTRAINT_FIELDS,
+                SUBPOENA_FIELDS,
+                DENIAL_OF_ACCESS_FIELDS,
+            ],
+            incidents
+        )
 
         incidents = incidents.order_by('-date', 'path')
 
