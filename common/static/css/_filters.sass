@@ -23,6 +23,18 @@
 			padding-left: $padding-x
 			padding-right: $padding-x
 
+	&__summary
+		line-height: 1.3
+
+	&__summary-list
+		+list-unstyled
+		display: inline
+
+	&__summary-item
+		+list-comma-separated
+		display: inline
+		color: $white
+
 
 	&__expandable
 		height: 0
@@ -182,6 +194,9 @@
 		&:hover,
 		&:focus
 			color: $white
+
+	&__button--no-shrink
+		flex-shrink: 0
 
 
 	&__button--bordered

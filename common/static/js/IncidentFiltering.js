@@ -6,6 +6,9 @@ import queryString from 'query-string'
 import moment, { isMoment } from 'moment'
 
 
+const DATE_FORMAT = 'YYYY-MM-DD'
+
+
 function SettingsIcon() {
 	return (
 		<svg
@@ -47,6 +50,22 @@ function Filters({ children }) {
 
 
 class FilterSummary extends PureComponent {
+	renderValue(label, value) {
+		if (IncidentFiltering.DATE_FILTERS.includes(label)) {
+			var formattedValue = value.format(DATE_FORMAT)
+		} else {
+			var formattedValue = value
+		}
+
+		if (label === 'lower_date') {
+			return `took place after: ${formattedValue}`
+		} else if (label === 'upper_date') {
+			return `took place before: ${formattedValue}`
+		} else {
+			return null
+		}
+	}
+
 	constructText() {
 		const {
 			filterValues,
@@ -71,16 +90,16 @@ class FilterSummary extends PureComponent {
 			<ul className="filters__summary-list">
 				{Object.keys(filterValues).map(label => (
 					<li key={label} className="filters__summary-item">
-						{label} {filterValues[label].toString()}
+						{this.renderValue(label, filterValues[label])}
 					</li>
 				))}
 			</ul>
 		)
 
 		return (
-			<span className="filters__summary">
+			<span className="filters__summary filters__text--dim">
 				Showing {categoryList}
-				{hasFilters && 'with these filters:'}
+				{hasFilters && ' with these filters: '}
 				{hasFilters && filterList}
 			</span>
 		)
@@ -135,7 +154,7 @@ class FiltersHeader extends PureComponent {
 				/>
 
 				<button
-					className="filters__button"
+					className="filters__button filters__button--no-shrink"
 					onClick={handleToggle}
 				>
 					<SettingsIcon />
@@ -461,7 +480,7 @@ class IncidentFiltering extends PureComponent {
 				const value = this.state.filterValues[key]
 				return {
 					...values,
-					[key]: isMoment(value) ? value.format('YYYY-MM-DD') : value,
+					[key]: isMoment(value) ? value.format(DATE_FORMAT) : value,
 				}
 			}, {})
 
