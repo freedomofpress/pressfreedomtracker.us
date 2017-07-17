@@ -49,6 +49,7 @@ ARREST_FIELDS = [
     dict([('name', 'dropped_charges'), ('type', 'pk'), ]),
     dict([('name', 'detention_date'), ('type', 'date'), ]),
     dict([('name', 'release_date'), ('type', 'date'), ]),
+    dict([('name', 'unnecessary_use_of_force'), ('type', 'bool'), ('category_slug', 'arrest-detention') ])
 ]
 
 EQUIPMENT_FIELDS = [
@@ -238,6 +239,7 @@ class IncidentFilter(object):
         detention_date_lower,
         release_date_upper,
         release_date_lower,
+        unnecessary_use_of_force,
         # EQUIPMENT
         equipment_seized,
         equipment_broken,
@@ -294,6 +296,7 @@ class IncidentFilter(object):
         self.detention_date_upper = validate_date(detention_date_upper)
         self.release_date_lower = validate_date(release_date_lower)
         self.release_date_upper = validate_date(release_date_upper)
+        self.unnecessary_use_of_force = unnecessary_use_of_force
 
         # EQUIPMENT
         self.equipment_seized = equipment_seized
@@ -433,6 +436,7 @@ class IncidentFilter(object):
             detention_date_upper=request.GET.get('detention_date_upper'),
             release_date_lower=request.GET.get('release_date_lower'),
             release_date_upper=request.GET.get('release_date_upper'),
+            unnecessary_use_of_force=request.GET.get('unnecessary_use_of_force'),
             # EQUIPMENT
             equipment_seized=request.GET.get('equipment_seized'),
             equipment_broken=request.GET.get('equipment_broken'),
