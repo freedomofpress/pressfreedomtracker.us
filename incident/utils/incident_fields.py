@@ -1,5 +1,28 @@
 from incident.models import choices
 
+INCIDENT_PAGE_FIELDS = [
+    {
+        'name': 'affiliation',
+        'type': 'char'
+    },
+    {
+        'name': 'city',
+        'type': 'char'
+    },
+    {
+        'name': 'state',
+        'type': 'pk'
+    },
+    {
+        'name': 'targets',
+        'type': 'pk'
+    },
+    {
+        'name': 'tags',
+        'type': 'pk'
+    },
+]
+
 ARREST_FIELDS = [
     dict([('name', 'arrest_status'), ('type', 'choice'), ('choices', choices.ARREST_STATUS)]),
     dict([('name', 'status_of_charges'), ('type', 'choice'), ('choices', choices.STATUS_OF_CHARGES)]),

@@ -74,7 +74,8 @@ class IncidentFilter(object):
         categories,
         targets,
         affiliation,
-        states,
+        city,
+        state,
         tags,
         # ARREST/DETENTION
         arrest_status,
@@ -130,8 +131,9 @@ class IncidentFilter(object):
         self.categories = categories
         self.targets = targets
         self.affiliation = affiliation
-        self.states = states
+        self.state = state
         self.tags = tags
+        self.city = city
 
         # Arrest/Detention
         self.arrest_status = arrest_status
@@ -269,12 +271,9 @@ class IncidentFilter(object):
             'lower_date': request.GET.get('lower_date'),
             'upper_date': request.GET.get('upper_date'),
             'categories': request.GET.get('categories'),
-            'targets': request.GET.get('targets'),
-            'affiliation': request.GET.get('affiliation'),
-            'states': request.GET.get('states'),
-            'tags': request.GET.get('tags'),
         }
 
+        kwargs = get_kwargs(INCIDENT_PAGE_FIELDS, kwargs, request)
         kwargs = get_kwargs(ARREST_FIELDS, kwargs, request)
         kwargs = get_kwargs(EQUIPMENT_FIELDS, kwargs, request)
         kwargs = get_kwargs(BORDER_STOP_FIELDS, kwargs, request)
@@ -302,17 +301,7 @@ class IncidentFilter(object):
         if self.categories:
             incidents = self.by_categories(incidents)
 
-        if self.targets:
-            incidents = self.by_targets(incidents)
-
-        if self.affiliation:
-            incidents = self.by_affiliation(incidents)
-
-        if self.states:
-            incidents = self.by_states(incidents)
-
-        if self.tags:
-            incidents = self.by_tags(incidents)
+        incidents = self.create_filters(INCIDENT_PAGE_FIELDS, incidents)
 
         # ARREST/DETENTION FILTERS
         incidents = self.create_filters(ARREST_FIELDS, incidents)
@@ -365,24 +354,3 @@ class IncidentFilter(object):
         if not categories:
             return incidents
         return incidents.filter(categories__category__in=categories)
-
-    def by_targets(self, incidents):
-        targets = validate_integer_list(self.targets.split(','))
-        if not targets:
-            return incidents
-        return incidents.filter(targets__in=targets)
-
-    def by_affiliation(self, incidents):
-        return incidents.filter(affiliation__iexact=self.affiliation)
-
-    def by_states(self, incidents):
-        states = validate_integer_list(self.states.split(','))
-        if not states:
-            return incidents
-        return incidents.filter(state__in=states)
-
-    def by_tags(self, incidents):
-        tags = validate_integer_list(self.tags.split(','))
-        if not tags:
-            return incidents
-        return incidents.filter(tags__in=tags)
