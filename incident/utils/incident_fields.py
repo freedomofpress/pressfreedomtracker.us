@@ -24,13 +24,37 @@ INCIDENT_PAGE_FIELDS = [
 ]
 
 ARREST_FIELDS = [
-    dict([('name', 'arrest_status'), ('type', 'choice'), ('choices', choices.ARREST_STATUS)]),
-    dict([('name', 'status_of_charges'), ('type', 'choice'), ('choices', choices.STATUS_OF_CHARGES)]),
-    dict([('name', 'current_charges'), ('type', 'pk'), ]),
-    dict([('name', 'dropped_charges'), ('type', 'pk'), ]),
-    dict([('name', 'detention_date'), ('type', 'date'), ]),
-    dict([('name', 'release_date'), ('type', 'date'), ]),
-    dict([('name', 'unnecessary_use_of_force'), ('type', 'bool'), ('category_slug', 'arrest-detention'), ])
+    {
+        'choices': choices.ARREST_STATUS,
+        'name': 'arrest_status',
+        'type': 'choice'
+    },
+    {
+        'choices': choices.STATUS_OF_CHARGES,
+        'name': 'status_of_charges',
+        'type': 'choice'
+    },
+    {
+        'name': 'current_charges',
+        'type': 'pk'
+    },
+    {
+        'name': 'dropped_charges',
+        'type': 'pk'
+    },
+    {
+        'name': 'detention_date',
+        'type': 'date'
+    },
+    {
+        'name': 'release_date',
+        'type': 'date'
+    },
+    {
+        'name': 'unnecessary_use_of_force',
+        'category_slug': 'arrest-detention',
+        'type': 'bool'
+    }
 ]
 
 EQUIPMENT_FIELDS = [
