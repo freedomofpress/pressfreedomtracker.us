@@ -500,8 +500,7 @@ class IncidentPage(Page):
 
     def get_court_circuit(self):
         if self.state:
-            for circuit, states in CIRCUITS.items():
-                for state in states:
-                    if state == self.state.name:
-                        return circuit
+            for state, circuit in CIRCUITS.items():
+                if state == self.state.name:
+                    return circuit
         return None
