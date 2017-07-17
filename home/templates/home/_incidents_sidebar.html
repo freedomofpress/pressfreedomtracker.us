@@ -1,0 +1,31 @@
+{% load wagtailcore_tags %}
+
+{% if page.incident_index_page %}
+	<section class="incidents-sidebar">
+
+		{% include "common/_section_heading.html" with label="Recent Incidents" %}
+
+		<div class="incidents-sidebar__list">
+			{% with incidents=page.incident_index_page.get_incidents|slice:":5" %}
+				{% for incident in incidents %}
+					<a class="incidents-sidebar__item" href="{% pageurl incident %}">
+						<div class="incidents-sidebar__title">
+							{{ incident.title }}
+						</div>
+						<time class="incidents-sidebar__date" datetime="{{ incident.date }}">
+							{{ incident.date|date:"F j, Y" }}
+						</time>
+					</a>
+				{% endfor %}
+			{% endwith %}
+		</div>
+
+		<a
+			class="button button--outline button--expand-full"
+			href="{% pageurl page.incident_index_page %}"
+		>
+			More Incidents
+		</a>
+
+	</section>
+{% endif %}
