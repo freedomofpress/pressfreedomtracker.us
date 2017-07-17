@@ -2,7 +2,7 @@
 
 {% if page.blog_index_page %}
 <section class="blog-sidebar">
-	{% include "common/_section_heading.html" with label=page.blog_index_page.title %}
+	{% include "common/_section_heading.html" with label=label %}
 	{% for page in page.blog_index_page.get_children.live|slice:":4" %}
 		{% include "blog/_blog_tease.html" with location="homepage" page=page.specific %}
 	{% endfor %}
@@ -11,7 +11,7 @@
 		class="button button--outline button--expand-full"
 		href="{% pageurl page.blog_index_page %}"
 	>
-		More Articles
+		{{ link_label }}
 	</a>
 </section>
 {% endif %}

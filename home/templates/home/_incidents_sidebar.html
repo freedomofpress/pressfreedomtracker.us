@@ -3,7 +3,7 @@
 {% if page.incident_index_page %}
 	<section class="incidents-sidebar">
 
-		{% include "common/_section_heading.html" with label="Recent Incidents" %}
+		{% include "common/_section_heading.html" with label=label %}
 
 		<div class="incidents-sidebar__list">
 			{% with incidents=page.incident_index_page.get_incidents|slice:":5" %}
@@ -24,7 +24,7 @@
 			class="button button--outline button--expand-full"
 			href="{% pageurl page.incident_index_page %}"
 		>
-			More Incidents
+			{{ link_label }}
 		</a>
 
 	</section>

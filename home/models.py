@@ -36,7 +36,8 @@ class HomePage(Page):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name='+',
+        help_text='Recent blog posts will automatically be pulled from this page'
     )
 
     incident_index_page = models.ForeignKey(
@@ -44,18 +45,54 @@ class HomePage(Page):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name='+',
+        help_text='Recent incidents will automatically be pulled from this page'
     )
 
     statboxes_label = models.CharField(
-        blank=True,
-        null=True,
         default='Quick Stats',
         max_length=255,
         help_text='Title displayed above stat boxes'
     )
 
+    featured_incidents_label = models.CharField(
+        default='Featured Incidents',
+        max_length=255,
+        help_text='Title displayed above featured incidents'
+    )
+
+    featured_more_label = models.CharField(
+        default='More Incidents',
+        max_length=255,
+        help_text='Text for button to show more incidents'
+    )
+
+    recent_incidents_label = models.CharField(
+        default='Recent Incidents',
+        max_length=255,
+        help_text='Title displayed above recent incidents'
+    )
+
+    recent_more_label = models.CharField(
+        default='More Incidents',
+        max_length=255,
+        help_text='Text for button to show more incidents'
+    )
+
+    blog_label = models.CharField(
+        default='Partner Articles',
+        max_length=255,
+        help_text='Title displayed above blog posts'
+    )
+
+    blog_more_label = models.CharField(
+        default='More Articles',
+        max_length=255,
+        help_text='Text for button to show more blog posts'
+    )
+
     content_panels = Page.content_panels + [
+
         MultiFieldPanel([
             FieldPanel('statboxes_label'),
             InlinePanel(
@@ -63,22 +100,38 @@ class HomePage(Page):
                 label='Statboxes',
             ),
         ], 'Statboxes'),
-        FieldPanel('about'),
-        PageChooserPanel(
-            'about_page',
-            [
-                'common.SimplePage',
-                'common.SimplePageWithSidebar'
-            ]
-        ),
-        PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
-        PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
-        InlinePanel(
-            'incidents',
-            label='Featured Incidents',
-            min_num=4,
-            max_num=6,
-        ),
+
+        MultiFieldPanel([
+            FieldPanel('featured_incidents_label'),
+            InlinePanel(
+                'incidents',
+                label='Featured Incidents',
+                min_num=4,
+                max_num=6,
+            ),
+        ], 'Featured Incidents')
+
+        MultiFieldPanel([
+            FieldPanel('about'),
+            PageChooserPanel(
+                'about_page',
+                [
+                    'common.SimplePage',
+                    'common.SimplePageWithSidebar'
+                ]
+            ),
+        ], 'About'),
+
+        MultiFieldPanel([
+            FieldPanel('recent_incidents_label'),
+            PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
+        ], 'Recent Incidents'),
+
+        MultiFieldPanel([
+            FieldPanel('blog_label'),
+            PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
+        ], 'Blog'),
+
     ]
 
     def get_context(self, request):

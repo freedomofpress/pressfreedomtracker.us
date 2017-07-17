@@ -3,7 +3,7 @@
 {% if page.incident_index_page %}
 
 	{% with incidents=page.incidents.all %}
-		{% include "common/_section_heading.html" with label="Recent Incidents" %}
+		{% include "common/_section_heading.html" with label=label %}
 		{% include "incident/_filters.html" with apply_externally=True external=page.incident_index_page %}
 
 		<div class="grid-50">
@@ -26,7 +26,7 @@
 		class="button button--outline button--center"
 		href="{% pageurl page.incident_index_page %}"
 	>
-		More Incidents
+		{{ link_label }}
 	</a>
 
 {% endif %}

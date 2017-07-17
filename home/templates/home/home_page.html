@@ -11,10 +11,10 @@
 
 {% block main %}
 	{% include "home/_stats.html" with label=page.statboxes_label stats=page.statboxes.all %}
-	{% include "home/_featured_incidents.html" %}
+	{% include "home/_featured_incidents.html" with label=page.featured_incidents_label link_label=page.featured_more_label %}
 {% endblock %}
 
 {% block sidebar %}
-	{% include "home/_incidents_sidebar.html" %}
-	{% include "home/_blog_sidebar.html" %}
+	{% include "home/_incidents_sidebar.html" with label=page.recent_incidents_label link_label=page.recent_more_label %}
+	{% include "home/_blog_sidebar.html" with label=page.blog_label link_label=page.blog_more_label %}
 {% endblock %}
