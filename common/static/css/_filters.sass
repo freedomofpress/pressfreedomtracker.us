@@ -17,6 +17,7 @@
 
 	&__header
 		+flex-vertically-centered-row
+		align-items: flex-start
 		background-color: $bg-light
 
 		> *
@@ -24,7 +25,9 @@
 			padding-right: $padding-x
 
 	&__summary
-		line-height: 1.3
+		display: block
+		margin: 1em 0
+		color: $fg-dim
 
 	&__summary-list
 		+list-unstyled
@@ -34,6 +37,9 @@
 		+list-comma-separated
 		display: inline
 		color: $white
+
+		&::after
+			color: $fg-dim
 
 
 	&__expandable

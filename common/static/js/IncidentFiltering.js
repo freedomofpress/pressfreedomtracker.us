@@ -61,9 +61,21 @@ class FilterSummary extends PureComponent {
 		}
 
 		if (label === 'lower_date') {
-			return `since ${formattedValue}`
+			return (
+				<span>
+					<span className="filters__text--dim">since</span>
+					{' '}
+					{formattedValue}
+				</span>
+			)
 		} else if (label === 'upper_date') {
-			return `before ${formattedValue}`
+			return (
+				<span>
+					<span className="filters__text--dim">before</span>
+					{' '}
+					{formattedValue}
+				</span>
+			)
 		} else {
 			return null
 		}
@@ -100,7 +112,7 @@ class FilterSummary extends PureComponent {
 		)
 
 		return (
-			<span className="filters__summary">
+			<span>
 				Showing {categoryList}
 				{hasFilters && ' '}
 				{hasFilters && filterList}
@@ -125,7 +137,7 @@ class FilterSummary extends PureComponent {
 
 		if (!hasAnyFilters) {
 			return (
-				<div className="filters__text filters__text--dim">
+				<div className="filters__summary filters__text--dim">
 					No filters applied.
 				</div>
 			)
@@ -133,14 +145,14 @@ class FilterSummary extends PureComponent {
 
 		if (filtersExpanded) {
 			return (
-				<div className="filters__text">
+				<div className="filters__summary">
 					Filters
 				</div>
 			)
 		}
 
 		return (
-			<div className="filters__text">
+			<div className="filters__summary filters__text--dim">
 				{this.constructText()}
 			</div>
 		)
