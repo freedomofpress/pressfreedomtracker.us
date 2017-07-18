@@ -46,6 +46,6 @@ def comma_separated_pks(model_list, modifier):
             for model in model_list
         ]
     else:
-        pks = [model.pk for model in model_list]
+        pks = [str(model.pk) for model in model_list]
 
     return ','.join(pks)
