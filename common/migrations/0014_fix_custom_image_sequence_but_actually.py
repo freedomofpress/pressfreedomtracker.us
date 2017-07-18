@@ -12,7 +12,9 @@ def forward(apps, schema_editor):
         sequence_name = cursor.fetchone()[0]
         cursor.execute("SELECT MAX(id) FROM {}".format(CustomImage._meta.db_table))
         new_value = cursor.fetchone()[0]
-        cursor.execute("ALTER SEQUENCE {} RESTART WITH %s".format(sequence_name), (new_value,))
+        # This might be a totally new database.
+        if new_value:
+            cursor.execute("ALTER SEQUENCE {} RESTART WITH %s".format(sequence_name), (new_value,))
 
 
 def reverse(*args):
