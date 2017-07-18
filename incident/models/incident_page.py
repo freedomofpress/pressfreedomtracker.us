@@ -66,6 +66,7 @@ class IncidentPage(Page):
         max_length=255,
         blank=True,
         null=True,
+        help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
     )
 
     targets = ParentalManyToManyField(
