@@ -17,6 +17,7 @@ from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
 from incident.models import choices
+from incident.circuits import CIRCUITS
 
 
 class IncidentPage(Page):
@@ -122,11 +123,13 @@ class IncidentPage(Page):
         blank=True,
         null=True,
     )
-    jurisdiction = models.CharField(
-        max_length=1024,
+
+    venue = ParentalManyToManyField(
+        'incident.Venue',
         blank=True,
-        null=True,
-        verbose_name='Jurisdiction',
+        verbose_name='Case Venue',
+        related_name='venue_incidents',
+        help_text='Courts that are hearing or have heard this case.'
     )
 
     # Equipment Seizure or Damage
@@ -332,7 +335,7 @@ class IncidentPage(Page):
             classname='collapsible collapsed',
             children=[
                 FieldPanel('lawsuit_name'),
-                FieldPanel('jurisdiction'),
+                AutocompleteFieldPanel('venue', 'incident.Venue'),
             ]
         ),
 
@@ -494,3 +497,10 @@ class IncidentPage(Page):
 
             # Only return two related incidents (Categories have too many incidents)
             return related_incidents[:2]
+
+    def get_court_circuit(self):
+        if self.state:
+            for state, circuit in CIRCUITS.items():
+                if state == self.state.name:
+                    return circuit
+        return None
