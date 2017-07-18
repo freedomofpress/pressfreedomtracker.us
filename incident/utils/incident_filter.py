@@ -348,4 +348,4 @@ class IncidentFilter(object):
         categories = validate_integer_list(self.categories.split(','))
         if not categories:
             return incidents
-        return incidents.filter(categories__category__in=categories)
+        return incidents.filter(categories__category__in=categories).distinct()
