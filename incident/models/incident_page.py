@@ -17,7 +17,7 @@ from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
 from incident.models import choices
-from incident.circuits import CIRCUITS
+from incident.circuits import CIRCUITS_BY_STATE
 
 
 class IncidentPage(Page):
@@ -515,7 +515,7 @@ class IncidentPage(Page):
 
     def get_court_circuit(self):
         if self.state:
-            for state, circuit in CIRCUITS.items():
+            for state, circuit in CIRCUITS_BY_STATE.items():
                 if state == self.state.name:
                     return circuit
         return None

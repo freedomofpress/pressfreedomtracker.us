@@ -5,6 +5,7 @@ from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
 from incident.models.incident_page import IncidentPage
+from incident.circuits import STATES_BY_CIRCUIT
 
 from incident.utils.incident_fields import (
     INCIDENT_PAGE_FIELDS,
@@ -56,6 +57,14 @@ def validate_integer_list(lst):
     return result
 
 
+def validate_circuits(circuits):
+    validated_circuits = []
+    for circuit in circuits:
+        if circuit in STATES_BY_CIRCUIT.keys():
+            validated_circuits.append(circuit)
+    return validated_circuits
+
+
 def get_kwargs(fields, current_kwargs, request):
     for field in fields:
         field_name = field['name']
@@ -69,6 +78,7 @@ def get_kwargs(fields, current_kwargs, request):
 
 class IncidentFilter(object):
     def __init__(
+        # FIELDS
         self,
         search_text,
         lower_date,
@@ -129,6 +139,8 @@ class IncidentFilter(object):
         status_of_prior_restraint,
         # DENIAL OF ACCESS
         politicians_or_public_figures_involved,
+        # OTHER
+        circuits,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -199,6 +211,9 @@ class IncidentFilter(object):
 
         # DENIAL OF ACCESS
         self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
+
+        # OTHER
+        self.circuits = circuits
 
     def create_filters(self, fields, incidents):
         """Creates filters based on dicts for fields
@@ -280,6 +295,7 @@ class IncidentFilter(object):
             'lower_date': request.GET.get('lower_date'),
             'upper_date': request.GET.get('upper_date'),
             'categories': request.GET.get('categories'),
+            'circuits': request.GET.get('circuits'),
         }
 
         kwargs = reduce(
@@ -316,6 +332,9 @@ class IncidentFilter(object):
 
         if self.categories:
             incidents = self.by_categories(incidents)
+
+        if self.circuits:
+            incidents = self.by_circuits(incidents)
 
         incidents = reduce(
             (lambda obj, filters: self.create_filters(filters, obj)),
@@ -358,4 +377,14 @@ class IncidentFilter(object):
         categories = validate_integer_list(self.categories.split(','))
         if not categories:
             return incidents
+
         return incidents.filter(categories__category__in=categories).distinct()
+
+    def by_circuits(self, incidents):
+        validated_circuits = validate_circuits(self.circuits.split(','))
+
+        states = []
+        for circuit in validated_circuits:
+            states += STATES_BY_CIRCUIT[circuit]
+
+        return incidents.filter(state__name__in=states)
