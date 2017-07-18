@@ -6,7 +6,7 @@
 	{% include 'incident/_incident.html' with incident=page only %}
 		<h3 class="section-heading">Related Cases</h3>
 		<div class="grid-50">
-			{% for related_case in page.get_related_incidents|slice:":2" %}
+			{% for related_case in page.get_related_incidents %}
 				<div class="grid-50__item">
 					{% include "incident/_incident.html" with incident=related_case teaser=True only %}
 				</div>

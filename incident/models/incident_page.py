@@ -483,7 +483,7 @@ class IncidentPage(Page):
 
     def get_related_incidents(self):
         """
-        Returns related incidents and other incidents in the same category
+        Returns related incidents and/or up to two other incidents in the same category.
         """
         related_incidents = []
         if self.related_incidents.all():
@@ -492,11 +492,24 @@ class IncidentPage(Page):
 
         main_category = self.get_main_category()
 
-        for incident in IncidentPage.objects.filter(
-            live=True,
-            categories__category=main_category
-        ).exclude(id=self.id):
-            related_incidents.append(incident)
+        # If there are one or fewer related incidents, we will append more incidents from the same category.
+        if len(related_incidents) == 1:
+            # exclude the id of the one incident we have for deduping purposes
+            related_incident = IncidentPage.objects.filter(
+                live=True,
+                categories__category=main_category
+            ).exclude(id=self.id).exclude(id=related_incidents[0].id)
+            # append the incident, not the queryset
+            related_incidents.append(related_incident[0])
+
+        elif len(related_incidents) == 0:
+            filtered_incidents = related_incident = IncidentPage.objects.filter(
+                live=True,
+                categories__category=main_category
+            ).exclude(id=self.id)
+
+            for incident in filtered_incidents[:2]:
+                related_incidents.append(incident)
 
         return related_incidents
 
