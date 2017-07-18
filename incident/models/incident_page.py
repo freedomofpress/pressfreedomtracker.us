@@ -434,7 +434,7 @@ class IncidentPage(Page):
             ]
         ),
 
-        AutocompleteFieldPanel('related_incidents', 'incident.IncidentPage'),
+        AutocompleteFieldPanel('related_incidents', 'incident.IncidentPage',),
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']
@@ -483,33 +483,28 @@ class IncidentPage(Page):
 
     def get_related_incidents(self):
         """
-        Returns related incidents and/or up to two other incidents in the same category.
+        Returns related incidents and/or other incidents in the same category.
         """
-        related_incidents = []
-        if self.related_incidents.all():
-            for incident in self.related_incidents.all():
-                related_incidents.append(incident)
+        MAX = 4
 
+        # If there are one or fewer related incidents, we will append more incidents from the same category, up to a maximum number
+        related_to_incident_qs = self.related_incidents.all()
+        related_incidents = list(related_to_incident_qs)
         main_category = self.get_main_category()
 
-        # If there are one or fewer related incidents, we will append more incidents from the same category.
-        if len(related_incidents) == 1:
-            # exclude the id of the one incident we have for deduping purposes
-            related_incident = IncidentPage.objects.filter(
+        if len(related_incidents) >= 2:
+            return related_incidents
+
+        related_incidents += list(
+            IncidentPage.objects.filter(
                 live=True,
                 categories__category=main_category
-            ).exclude(id=self.id).exclude(id=related_incidents[0].id)
-            # append the incident, not the queryset
-            related_incidents.append(related_incident[0])
-
-        elif len(related_incidents) == 0:
-            filtered_incidents = related_incident = IncidentPage.objects.filter(
-                live=True,
-                categories__category=main_category
-            ).exclude(id=self.id)
-
-            for incident in filtered_incidents[:2]:
-                related_incidents.append(incident)
+            ).exclude(
+                id=self.id
+            ).difference(
+                related_to_incident_qs
+            )[:MAX - len(related_incidents)]
+        )
 
         return related_incidents
 
