@@ -45,9 +45,6 @@
     django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../"
     django_stack_manage_post:
       - createdevdata
-    # Hit some weird bug that only saw in docker
-    # regular install dies without verbose flag :|
-    django_stack_npm_install_cmd: npm install --verbose
     django_stack_npm_commands:
       - run build
     django_stack_gunicorn_opt_envs:
