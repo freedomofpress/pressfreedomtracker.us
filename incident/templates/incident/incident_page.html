@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags render_as_template %}
 
 {% block maincontainer %}
 <main>
@@ -146,7 +146,11 @@
 					{{ main_category|title }}
 				{% endif %}
 			</h3>
-			<p>{{main_category.methodology|richtext}}</p>
+			<p>
+				{% with method=main_category.methodology|richtext %}
+					{% render_as_template method %}
+				{% endwith %}
+			</p>
 		</div>
 		<h3 class="section-heading">
 			<a href="{% pageurl main_category %}" >

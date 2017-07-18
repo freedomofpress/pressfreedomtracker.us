@@ -1,3 +1,5 @@
+from inspect import signature
+from django import forms
 from django.db import models
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
 from wagtail.wagtailcore import blocks
@@ -10,7 +12,6 @@ from wagtail.wagtailsearch import index
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
-
 from common.blocks import (
     Heading1,
     Heading2,
@@ -20,6 +21,7 @@ from common.blocks import (
     AlignedCaptionedEmbedBlock
 )
 from common.utils import DEFAULT_PAGE_KEY, paginate
+from statistics.registry import get_numbers_choices, get_numbers
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -118,6 +120,33 @@ class QuickFact(Orderable):
     link_url = models.URLField(null=True, blank=True)
 
 
+class NumbersIterable(object):
+    def __iter__(self):
+        return get_numbers_choices().__iter__()
+
+
+number_list = NumbersIterable()
+number_select = forms.Select()
+number_select.choices = number_list
+
+
+class DataItem(Orderable):
+    page = ParentalKey('common.CategoryPage', related_name='data_items')
+    label = models.CharField(max_length=255)
+    data_point = models.CharField(max_length=255)
+    params = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        help_text='Whitespace-separated list of arguments to be passed to the data point function',
+    )
+    panels = [
+        FieldPanel('label'),
+        FieldPanel('data_point', widget=number_select),
+        FieldPanel('params'),
+    ]
+
+
 class TaxonomyCategoryPage(Orderable):
     taxonomy_setting = ParentalKey('common.TaxonomySettings', related_name='categories')
     category = ParentalKey('common.CategoryPage', related_name='taxonomy_settings')
@@ -133,7 +162,8 @@ class CategoryPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('methodology'),
-        InlinePanel('quick_facts', label='Quick Facts')
+        InlinePanel('quick_facts', label='Quick Facts'),
+        InlinePanel('data_items', label='Data Items'),
     ]
 
     settings_panels = Page.settings_panels + [
@@ -171,6 +201,25 @@ class CategoryPage(Page):
         else:
             context['layout_template'] = 'base.html'
 
+        def evaluate_statistic(name, params):
+            fn = get_numbers()[name]
+            param_count = len(signature(fn).parameters)
+            if params:
+                args = params.split()[:param_count]
+                return fn(*args)
+            elif param_count == 0:
+                return fn()
+            else:
+                # This means number of parameters given does not match
+                # the number expected by the function.
+                return ''
+
+        context['data_items'] = [
+            {
+                'label': item.label,
+                'value': evaluate_statistic(item.data_point, item.params),
+            } for item in self.data_items.all()
+        ]
         return context
 
 

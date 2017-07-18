@@ -1,27 +1,55 @@
-_stats = {}
+_numbers = {}
+_maps = {}
 
 
-def statistic(name=None, fn=None):
-    """Register a statistics function as usable elsewhere on the site"""
-    if name is None and fn is None:
-        def decorator(fn):
-            statistic(name, fn)
-            return fn
-        return decorator
+class Statistics(object):
+    def statistic(self, store, name=None, fn=None):
+        """Register a statistics function as usable elsewhere on the site"""
+        if name is None and fn is None:
+            def decorator(fn):
+                self.statistic(store, name, fn)
+                return fn
+            return decorator
 
-    if name is not None and fn is None:
-        if callable(name):
-            fn_name = getattr(name, "_decorated_function", name).__name__
-            statistic(name=fn_name, fn=name)
-            return name
+        if name is not None and fn is None:
+            if callable(name):
+                fn_name = getattr(name, "_decorated_function", name).__name__
+                self.statistic(store, name=fn_name, fn=name)
+                return name
 
-    # TODO: potentially add it to template.Library() also.
-    _stats[name] = fn
+        # TODO: potentially add it to template.Library() also.
+        store[name] = fn
+
+    def number(self, name=None, fn=None):
+        return self.statistic(_numbers, name=name, fn=fn)
+
+    def map(self, name=None, fn=None):
+        return self.statistic(_maps, name=name, fn=fn)
+
+
+def get_numbers():
+    """Return registered statstics names and functions with number values"""
+    return _numbers
+
+
+def get_numbers_choices():
+    return [(name, name) for name in get_numbers().keys()]
+
+
+def get_maps():
+    """Return registered statstics names and functions with map values"""
+    return _maps
+
+
+def get_maps_choices():
+    return [(name, name) for name in get_maps().keys()]
 
 
 def get_stats():
-    """Return registered statistics names and functions"""
-    return _stats
+    """Return registered statstics names and functions with any value"""
+    stats = _numbers.copy()
+    stats.update(_maps)
+    return stats
 
 
 def get_stats_choices():

@@ -1,10 +1,14 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags render_as_template %}
 
 <div class="simple-page">
 	<h1 class="heading-block heading-block--1">{{ page.title }}</h1>
 	<section class="stream-sections">
 		{% for block in page.body %}
-			{% include_block block %}
+			{% if block.block_type == 'text' %}
+				<section>{% render_as_template block.value %}</section>
+			{% else %}
+				<section>{% include_block block %}</section>
+			{% endif %}
 		{% endfor %}
 	</section>
 </div>
