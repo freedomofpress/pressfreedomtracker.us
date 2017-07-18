@@ -483,20 +483,22 @@ class IncidentPage(Page):
 
     def get_related_incidents(self):
         """
-        Returns related incidents or other incidents in the same category
+        Returns related incidents and other incidents in the same category
         """
+        related_incidents = []
         if self.related_incidents.all():
-            return self.related_incidents.all()
-        else:
-            main_category = self.get_main_category()
+            for incident in self.related_incidents.all():
+                related_incidents.append(incident)
 
-            related_incidents = IncidentPage.objects.filter(
-                live=True,
-                categories__category=main_category
-            ).exclude(id=self.id)
+        main_category = self.get_main_category()
 
-            # Only return two related incidents (Categories have too many incidents)
-            return related_incidents[:2]
+        for incident in IncidentPage.objects.filter(
+            live=True,
+            categories__category=main_category
+        ).exclude(id=self.id):
+            related_incidents.append(incident)
+
+        return related_incidents
 
     def get_court_circuit(self):
         if self.state:
