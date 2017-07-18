@@ -61,3 +61,5 @@
       - "--exclude=src"
     # The default packages are preinstalled on the base dockerimage
     django_stack_pkgs: []
+    django_stack_global_no_log: yes
+    django_stack_manage_no_log: no

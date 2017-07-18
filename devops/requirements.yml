@@ -10,4 +10,4 @@
 
 - src: https://github.com/freedomofpress/django_stack.git
   name: freedomofpress.django_stack
-  version: 10acb7a7f81f831535ffe610d66b357eff1282dd
+  version: 7d1081f5003d9650ea114c18a17d32530c1b961b
