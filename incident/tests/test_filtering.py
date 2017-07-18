@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 
 from django.test import TestCase
@@ -43,6 +44,9 @@ class TestFiltering(TestCase):
             release_date_upper=None,
             release_date_lower=None,
             unnecessary_use_of_force=None,
+            # LAWSUIT
+            lawsuit_name=None,
+            venue=None,
             # EQUIPMENT
             equipment_seized=None,
             equipment_broken=None,
@@ -80,6 +84,8 @@ class TestFiltering(TestCase):
             status_of_prior_restraint=None,
             # DENIAL OF ACCESS
             politicians_or_public_figures_involved=None,
+            # OTHER
+            circuits=None
         ).fetch()
 
         self.assertEqual({target}, set(incidents))
@@ -110,6 +116,9 @@ class TestFiltering(TestCase):
             release_date_upper=None,
             release_date_lower=None,
             unnecessary_use_of_force=None,
+            # LAWSUIT
+            lawsuit_name=None,
+            venue=None,
             # EQUIPMENT
             equipment_seized=None,
             equipment_broken=None,
@@ -147,6 +156,8 @@ class TestFiltering(TestCase):
             status_of_prior_restraint=None,
             # DENIAL OF ACCESS
             politicians_or_public_figures_involved=None,
+            # OTHER
+            circuits=None
         ).fetch()
 
         self.assertEqual({incident2, incident1}, set(incidents))
@@ -177,6 +188,9 @@ class TestFiltering(TestCase):
             release_date_upper=None,
             release_date_lower=None,
             unnecessary_use_of_force=None,
+            # LAWSUIT
+            lawsuit_name=None,
+            venue=None,
             # EQUIPMENT
             equipment_seized=None,
             equipment_broken=None,
@@ -214,6 +228,8 @@ class TestFiltering(TestCase):
             status_of_prior_restraint=None,
             # DENIAL OF ACCESS
             politicians_or_public_figures_involved=None,
+            # OTHER
+            circuits=None
         ).fetch()
 
         self.assertEqual({incident2, incident1}, set(incidents))
@@ -247,6 +263,9 @@ class TestFiltering(TestCase):
             release_date_upper=None,
             release_date_lower=None,
             unnecessary_use_of_force=None,
+            # LAWSUIT
+            lawsuit_name=None,
+            venue=None,
             # EQUIPMENT
             equipment_seized=None,
             equipment_broken=None,
@@ -284,6 +303,8 @@ class TestFiltering(TestCase):
             status_of_prior_restraint=None,
             # DENIAL OF ACCESS
             politicians_or_public_figures_involved=None,
+            # OTHER
+            circuits=None
         ).fetch()
 
         self.assertEqual({incident1}, set(incidents))
@@ -325,6 +346,9 @@ class TestFiltering(TestCase):
             release_date_upper=None,
             release_date_lower=None,
             unnecessary_use_of_force=None,
+            # LAWSUIT
+            lawsuit_name=None,
+            venue=None,
             # EQUIPMENT
             equipment_seized=None,
             equipment_broken=None,
@@ -362,6 +386,8 @@ class TestFiltering(TestCase):
             status_of_prior_restraint=None,
             # DENIAL OF ACCESS
             politicians_or_public_figures_involved=None,
+            # OTHER
+            circuits=None
         ).fetch()
         self.assertEqual({incident1}, set(incidents))
 
@@ -408,6 +434,9 @@ class TestFiltering(TestCase):
             release_date_upper=None,
             release_date_lower=None,
             unnecessary_use_of_force=None,
+            # LAWSUIT
+            lawsuit_name=None,
+            venue=None,
             # EQUIPMENT
             equipment_seized=None,
             equipment_broken=None,
@@ -445,6 +474,8 @@ class TestFiltering(TestCase):
             status_of_prior_restraint=None,
             # DENIAL OF ACCESS
             politicians_or_public_figures_involved=None,
+            # OTHER
+            circuits=None
         ).fetch()
         self.assertEqual({incident1, incident2}, set(incidents))
 
