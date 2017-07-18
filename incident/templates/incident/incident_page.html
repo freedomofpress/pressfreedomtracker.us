@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags render_as_template %}
+{% load wagtailcore_tags render_as_template common_tags %}
 
 {% block maincontainer %}
 <main>
@@ -13,11 +13,7 @@
 			{% endfor %}
 		</div>
 		<a
-			href="{% pageurl page.get_parent %}?categories=
-				{% for category in page.categories.all %}
-					{{ category.category.id }},
-				{% endfor %}
-				"
+			href="{% pageurl page.get_parent %}?categories={{ page.categories.all|comma_separated_pks:'category' }}"
 			class="button button--outline button--center">
 			More related incidents
 		</a>
