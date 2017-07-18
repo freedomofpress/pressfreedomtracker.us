@@ -9,6 +9,7 @@ from incident.models.incident_page import IncidentPage
 from incident.utils.incident_fields import (
     INCIDENT_PAGE_FIELDS,
     ARREST_FIELDS,
+    LAWSUIT_FIELDS,
     EQUIPMENT_FIELDS,
     BORDER_STOP_FIELDS,
     PHYSICAL_ASSAULT_FIELDS,
@@ -88,6 +89,9 @@ class IncidentFilter(object):
         release_date_upper,
         release_date_lower,
         unnecessary_use_of_force,
+        # LAWSUIT
+        lawsuit_name,
+        venue,
         # EQUIPMENT
         equipment_seized,
         equipment_broken,
@@ -146,6 +150,10 @@ class IncidentFilter(object):
         self.release_date_lower = validate_date(release_date_lower)
         self.release_date_upper = validate_date(release_date_upper)
         self.unnecessary_use_of_force = unnecessary_use_of_force
+
+        # LAWSUIT
+        self.lawsuit_name = lawsuit_name
+        self.venue = venue
 
         # EQUIPMENT
         self.equipment_seized = equipment_seized
@@ -279,6 +287,7 @@ class IncidentFilter(object):
             [
                 INCIDENT_PAGE_FIELDS,
                 ARREST_FIELDS,
+                LAWSUIT_FIELDS,
                 EQUIPMENT_FIELDS,
                 BORDER_STOP_FIELDS,
                 PHYSICAL_ASSAULT_FIELDS,
@@ -313,6 +322,7 @@ class IncidentFilter(object):
             [
                 INCIDENT_PAGE_FIELDS,
                 ARREST_FIELDS,
+                LAWSUIT_FIELDS,
                 EQUIPMENT_FIELDS,
                 BORDER_STOP_FIELDS,
                 PHYSICAL_ASSAULT_FIELDS,
