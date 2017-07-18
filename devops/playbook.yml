@@ -32,7 +32,7 @@
 
     - name: Fail if test failed earlier
       fail:
-      when: test_run_results.failed
+      when: test_run_results|failed
       tags: tests
   vars:
     django_stack_superuser_admin: admin
