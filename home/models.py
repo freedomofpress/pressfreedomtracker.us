@@ -91,6 +91,12 @@ class HomePage(Page):
         help_text='Text for button to show more blog posts'
     )
 
+    change_filters_message = models.CharField(
+        default='Change filters to search the incident database.',
+        max_length=255,
+        help_text='Text for the filter bar when no filters are applied.',
+    )
+
     content_panels = Page.content_panels + [
 
         MultiFieldPanel([
@@ -131,6 +137,10 @@ class HomePage(Page):
             FieldPanel('blog_label'),
             PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
         ], 'Blog'),
+
+        MultiFieldPanel([
+            FieldPanel('change_filters_message'),
+        ], 'Filter Bar'),
 
     ]
 

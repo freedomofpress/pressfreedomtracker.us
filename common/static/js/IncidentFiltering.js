@@ -125,6 +125,7 @@ class FilterSummary extends PureComponent {
 			filtersExpanded,
 			filterValues,
 			categoriesEnabled,
+			changeFiltersMessage,
 		} = this.props
 
 		const hasAnyFilters = (
@@ -138,7 +139,7 @@ class FilterSummary extends PureComponent {
 		if (!hasAnyFilters) {
 			return (
 				<div className="filters__summary filters__text--dim">
-					No filters applied.
+					{changeFiltersMessage || 'No filters applied.'}
 				</div>
 			)
 		}
@@ -167,6 +168,7 @@ class FiltersHeader extends PureComponent {
 			filterValues,
 			handleToggle,
 			categoriesEnabled,
+			changeFiltersMessage,
 		} = this.props
 
 
@@ -176,6 +178,7 @@ class FiltersHeader extends PureComponent {
 					filtersExpanded={filtersExpanded}
 					filterValues={filterValues}
 					categoriesEnabled={categoriesEnabled}
+					changeFiltersMessage={changeFiltersMessage}
 				/>
 
 				<button
@@ -684,6 +687,7 @@ class IncidentFiltering extends PureComponent {
 
 		const {
 			noCategoryFiltering,
+			changeFiltersMessage,
 		} = this.props
 
 		return (
@@ -693,6 +697,7 @@ class IncidentFiltering extends PureComponent {
 					filtersExpanded={filtersExpanded}
 					categoriesEnabled={categoriesEnabled}
 					handleToggle={this.handleToggle}
+					changeFiltersMessage={changeFiltersMessage}
 				/>
 
 				<FiltersExpandable filtersExpanded={filtersExpanded}>
