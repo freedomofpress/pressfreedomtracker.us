@@ -434,7 +434,7 @@ class IncidentPage(Page):
             ]
         ),
 
-        AutocompleteFieldPanel('related_incidents', 'incident.IncidentPage',),
+        AutocompleteFieldPanel('related_incidents', 'incident.IncidentPage'),
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']
@@ -485,15 +485,20 @@ class IncidentPage(Page):
         """
         Returns related incidents and/or other incidents in the same category.
         """
-        MAX = 4
 
         # If there are one or fewer related incidents, we will append more incidents from the same category, up to a maximum number
         related_to_incident_qs = self.related_incidents.all()
         related_incidents = list(related_to_incident_qs)
         main_category = self.get_main_category()
 
+        # Maximum of related incidents to return, minimum of 2
+        maximum = max(2, min(4, len(related_incidents)))
+
         if len(related_incidents) >= 2:
-            return related_incidents
+            return related_incidents[:maximum]
+
+        # only add up to two more incidents from the main category
+        maximum += maximum % 2
 
         related_incidents += list(
             IncidentPage.objects.filter(
@@ -503,7 +508,7 @@ class IncidentPage(Page):
                 id=self.id
             ).difference(
                 related_to_incident_qs
-            )[:MAX - len(related_incidents)]
+            )[:(maximum - len(related_incidents))]
         )
 
         return related_incidents
