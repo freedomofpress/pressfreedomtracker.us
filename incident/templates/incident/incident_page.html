@@ -90,23 +90,6 @@
 				{% endif %}
 			{% endwith %}
 
-			{% if page.get_related_incidents %}
-				<tr class='data-table__row'>
-					<th class="data-table__label">
-						Related cases
-					</th>
-						<td class="data-table__value">
-							<ul class="data-table__list">
-								{% for related_case in page.get_related_incidents %}
-									<li class="data-table__list-item">
-										<a href="{{ related_case.url }}">{{ related_case.title }}</a>
-									</li>
-								{% endfor %}
-							</ul>
-						</td>
-				</tr>
-			{% endif %}
-
 			{% include 'incident/_arrest_rows.html' %}
 			{% include 'incident/_equipment_rows.html' %}
 			{% include 'incident/_lawsuit_rows.html' %}
