@@ -1,0 +1,22 @@
+{% load wagtailimages_tags %}
+
+<ul class="logo-list">
+	{% for item in self %}
+		<li class="logo-list__item">
+			<a
+				class="logo-list__link"
+				href="{{ item.url }}"
+				title="{{ x1.alt }}"
+			>
+				{% image item.logo height-100 as x1 %}
+				{% image item.logo height-200 as x2 %}
+				<img
+					src="{{ x1.url }}"
+					srcset="{{ x1.url }} {{ x1.width }}w, {{ x2.url }} {{ x2.width }}w"
+					alt="{{ x1.alt }}"
+					class="logo-list__image"
+				/>
+			</a>
+		</li>
+	{% endfor %}
+</ul>
