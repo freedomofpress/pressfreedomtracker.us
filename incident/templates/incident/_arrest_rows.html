@@ -70,6 +70,7 @@
 			Detention Date
 		</th>
 		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?detention_date_lower={{ page.detention_date|date:'Y-m-d' }}&detention_date_upper={{ page.detention_date|date:'Y-m-d' }}">
 			{{ page.detention_date|date:"F j, Y" }}
 		</td>
 	</tr>
@@ -81,7 +82,26 @@
 			Release Date
 		</th>
 		<td class="data-table__value">
-			{{ page.release_date|date:"F j, Y" }}
+			<a href="{% pageurl page.get_parent %}?release_date_lower={{ page.release_date|date:'Y-m-d' }}&release_date_upper={{ page.release_date|date:'Y-m-d' }}">
+				{{ page.release_date|date:"F j, Y" }}
+			</a>
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.get_main_category.slug == 'arrest-detention' or page.unnecessary_use_of_force %}
+	<tr class='data-table__row'>
+		<th class="data-table__label">
+			Unnecessary use of force?
+		</th>
+		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?unnecessary_use_of_force={{ page.unnecessary_use_of_force }}&categories={{ page.get_main_category.title }}">
+				{% if page.unnecessary_use_of_force %}
+					Yes
+				{% else %}
+					No
+				{% endif %}
+			</a>
 		</td>
 	</tr>
 {% endif %}

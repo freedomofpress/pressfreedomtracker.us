@@ -146,7 +146,7 @@ class CategoryPage(Page):
 
     def get_context(self, request):
         # placed here to avoid circular dependency
-        from incident.utils import IncidentFilter
+        from incident.utils.incident_filter import IncidentFilter
 
         context = super(CategoryPage, self).get_context(request)
 

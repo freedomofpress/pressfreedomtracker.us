@@ -28,7 +28,7 @@
 				<th class="data-table__label">
 					Date of Incident
 				</th>
-				<td class="data-table__value">{{page.date|date:"F j, Y" }}</td>
+				<td class="data-table__value"><a href="{% pageurl page.get_parent %}?lower_date={{ page.date|date:'Y-m-d' }}&upper_date={{ page.date|date:'Y-m-d' }}">{{page.date|date:"F j, Y" }}</a></td>
 			</tr>
 
 			{% if page.targets.all %}
@@ -69,8 +69,10 @@
 						Location
 					</th>
 					<td class="data-table__value">
-						{{ page.city|default:"" }}
-						<a href="{% pageurl page.get_parent %}?states={{ page.state.pk }}">{{ page.state|default:"" }}</a>
+						<a href="{% pageurl page.get_parent %}?city={{ page.city }}">
+							{{ page.city|default:"" }}
+						</a>
+						<a href="{% pageurl page.get_parent %}?state={{ page.state.pk }}">{{ page.state|default:"" }}</a>
 					</td>
 				</tr>
 			{% endif %}

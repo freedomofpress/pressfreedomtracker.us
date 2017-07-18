@@ -13,7 +13,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 from modelcluster.fields import ParentalKey
 
 from common.choices import COLOR_CHOICES
-from incident.utils import IncidentFilter
+from incident.utils.incident_filter import IncidentFilter
 
 
 class HomePage(Page):

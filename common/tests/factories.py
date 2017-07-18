@@ -14,6 +14,3 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
     methodology = factory.Sequence(
         lambda n: RichText('Category {n}'.format(n=n))
     )
-    description = factory.Sequence(
-        lambda n: RichText('Category {n}'.format(n=n))
-    )
