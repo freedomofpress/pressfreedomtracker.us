@@ -42,7 +42,8 @@ class BlogIndexPage(Page):
     def get_context(self, request):
         context = super(BlogIndexPage, self).get_context(request)
 
-        entry_qs = self.get_children().live()
+        entry_qs = self.get_children().live().order_by(
+            '-blogpage__publication_datetime')
 
         paginator, entries = paginate(
             request,
