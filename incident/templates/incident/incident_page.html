@@ -12,7 +12,13 @@
 				</div>
 			{% endfor %}
 		</div>
-		<a href="#" class="button button--outline button--center">
+		<a
+			href="{% pageurl page.get_parent %}?categories=
+				{% for category in page.categories.all %}
+					{{ category.category.id }},
+				{% endfor %}
+				"
+			class="button button--outline button--center">
 			More related cases
 		</a>
 </main>
