@@ -1,22 +1,22 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags render_as_template %}
+{% load wagtailcore_tags render_as_template common_tags %}
 
 {% block maincontainer %}
 <main>
 	{% include 'incident/_incident.html' with incident=page only %}
-	{% if page.related_incidents.all %}
-		<h3 class="section-heading">Related Cases</h3>
+		<h3 class="section-heading">Related Incidents</h3>
 		<div class="grid-50">
-			{% for related_case in page.related_incidents.all|slice:":2" %}
+			{% for related_case in page.get_related_incidents %}
 				<div class="grid-50__item">
 					{% include "incident/_incident.html" with incident=related_case teaser=True only %}
 				</div>
 			{% endfor %}
 		</div>
-		<a href="#" class="button button--outline button--center">
-			More related cases
+		<a
+			href="{% pageurl page.get_parent %}?categories={{ page.categories.all|comma_separated_pks:'category' }}"
+			class="button button--outline button--center">
+			More related incidents
 		</a>
-	{% endif %}
 </main>
 {% endblock %}
 
@@ -89,23 +89,6 @@
 				</tr>
 				{% endif %}
 			{% endwith %}
-
-			{% if page.get_related_incidents %}
-				<tr class='data-table__row'>
-					<th class="data-table__label">
-						Related cases
-					</th>
-						<td class="data-table__value">
-							<ul class="data-table__list">
-								{% for related_case in page.get_related_incidents %}
-									<li class="data-table__list-item">
-										<a href="{{ related_case.url }}">{{ related_case.title }}</a>
-									</li>
-								{% endfor %}
-							</ul>
-						</td>
-				</tr>
-			{% endif %}
 
 			{% include 'incident/_arrest_rows.html' %}
 			{% include 'incident/_equipment_rows.html' %}

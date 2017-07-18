@@ -483,20 +483,35 @@ class IncidentPage(Page):
 
     def get_related_incidents(self):
         """
-        Returns related incidents or other incidents in the same category
+        Returns related incidents and/or other incidents in the same category.
         """
-        if self.related_incidents.all():
-            return self.related_incidents.all()
-        else:
-            main_category = self.get_main_category()
 
-            related_incidents = IncidentPage.objects.filter(
+        # If there are one or fewer related incidents, we will append more incidents from the same category, up to a maximum number
+        related_to_incident_qs = self.related_incidents.all()
+        related_incidents = list(related_to_incident_qs)
+        main_category = self.get_main_category()
+
+        # Maximum of related incidents to return, minimum of 2
+        maximum = max(2, min(4, len(related_incidents)))
+
+        if len(related_incidents) >= 2:
+            return related_incidents[:maximum]
+
+        # only add up to two more incidents from the main category
+        maximum += maximum % 2
+
+        related_incidents += list(
+            IncidentPage.objects.filter(
                 live=True,
                 categories__category=main_category
-            ).exclude(id=self.id)
+            ).exclude(
+                id=self.id
+            ).difference(
+                related_to_incident_qs
+            )[:(maximum - len(related_incidents))]
+        )
 
-            # Only return two related incidents (Categories have too many incidents)
-            return related_incidents[:2]
+        return related_incidents
 
     def get_court_circuit(self):
         if self.state:

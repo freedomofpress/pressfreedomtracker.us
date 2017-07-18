@@ -32,3 +32,20 @@ def query_transform(request, **kwargs):
     for k, v in kwargs.items():
         updated[k] = v
     return updated.urlencode()
+
+
+@register.filter
+def comma_separated_pks(model_list, modifier):
+    """Takes a model and an optional modifier and returns a list of primary keys.
+
+    Primarily intended for filtering.
+    """
+    if modifier:
+        pks = [
+            str(getattr(model, modifier).pk)
+            for model in model_list
+        ]
+    else:
+        pks = [str(model.pk) for model in model_list]
+
+    return ','.join(pks)
