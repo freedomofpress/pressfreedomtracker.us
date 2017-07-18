@@ -109,7 +109,7 @@ class HomePage(Page):
                 min_num=4,
                 max_num=6,
             ),
-        ], 'Featured Incidents')
+        ], 'Featured Incidents'),
 
         MultiFieldPanel([
             FieldPanel('about'),
