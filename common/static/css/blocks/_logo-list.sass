@@ -9,8 +9,19 @@
 	margin: $simple-page-padding
 
 
+	&__link
+		display: block
+		padding: 1rem 2rem
+
+
+	&__link:hover &__image,
+	&__link:focus &__image,
+	&__link:active &__image
+		opacity: 0.9
+
+
 	&__image,
 	.stream-sections &__image
 		max-height: $max-height
 		max-width: $max-width
-		margin: 1rem 2rem
+		transition: opacity 0.2s linear
