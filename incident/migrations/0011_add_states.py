@@ -69,9 +69,9 @@ def create_states(apps, schema_editor):
     for state in STATES:
         new_state, created = State.objects.get_or_create(
             name=state[1],
+            defaults={'abbreviation': state[0]}
         )
         if created:
-            new_state.abbreviation = state[0]
             new_state.save()
 
 

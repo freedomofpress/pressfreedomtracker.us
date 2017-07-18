@@ -18,6 +18,7 @@ def convert_jurisdiction_to_venue(apps, schema_editor):
                 incident_page.venue.add(new_venue)
                 incident_page.venue.commit()
 
+
 def convert_venue_to_jurisdiction(apps, schema_editor):
         pass
 
