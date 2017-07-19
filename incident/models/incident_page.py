@@ -16,8 +16,10 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
+from common.blocks import RichTextBlockQuoteBlock, AlignedCaptionedEmbedBlock
 from incident.models import choices
 from incident.circuits import CIRCUITS_BY_STATE
+from statistics.blocks import StatisticsBlock
 
 
 class IncidentPage(Page):
@@ -45,6 +47,9 @@ class IncidentPage(Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('blockquote', RichTextBlockQuoteBlock()),
+        ('video', AlignedCaptionedEmbedBlock()),
+        ('statistics', StatisticsBlock()),
     ])
 
     teaser = RichTextField(
