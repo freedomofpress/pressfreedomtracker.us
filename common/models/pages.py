@@ -19,7 +19,8 @@ from common.blocks import (
     LogoListBlock,
     StyledTextBlock,
     AlignedCaptionedImageBlock,
-    AlignedCaptionedEmbedBlock
+    AlignedCaptionedEmbedBlock,
+    RichTextBlockQuoteBlock,
 )
 from common.utils import DEFAULT_PAGE_KEY, paginate
 from statistics.registry import get_numbers_choices, get_numbers
@@ -229,7 +230,7 @@ class SimplePage(Page):
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
-        ('blockquote', blocks.BlockQuoteBlock()),
+        ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),
             template='common/blocks/list_block_columns.html'
@@ -255,7 +256,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
         ('text', StyledTextBlock(label='Text')),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
-        ('blockquote', blocks.BlockQuoteBlock()),
+        ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),
             template='common/blocks/list_block_columns.html'
