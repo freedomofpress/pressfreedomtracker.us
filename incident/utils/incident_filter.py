@@ -240,7 +240,11 @@ class IncidentFilter(object):
                         incidents = incidents.filter(**kw)
                     else:
                         kw = {
-                            '{0}__contained_by'.format(field_name): DateRange(lower_date, upper_date)
+                            '{0}__contained_by'.format(field_name): DateRange(
+                                lower=lower_date,
+                                upper=upper_date,
+                                bounds='[]'
+                            )
                         }
                         incidents = incidents.filter(**kw)
 
@@ -369,8 +373,9 @@ class IncidentFilter(object):
             return incidents.filter(date=self.lower_date)
 
         return incidents.filter(date__contained_by=DateRange(
-            self.lower_date,
-            self.upper_date,
+            lower=self.lower_date,
+            upper=self.upper_date,
+            bounds='[]'
         ))
 
     def by_categories(self, incidents):
