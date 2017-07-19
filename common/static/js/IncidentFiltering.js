@@ -367,6 +367,7 @@ class FiltersBody extends PureComponent {
 						key={category.id}
 						category={category}
 						handleAccordionSelection={handleAccordionSelection}
+						handleFilterChange={handleFilterChange}
 						selectedAccordions={selectedAccordions}
 						filterValues={filterValues}
 						noCategoryFiltering={noCategoryFiltering}
