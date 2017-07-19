@@ -90,6 +90,7 @@ class TestFiltering(TestCase):
         self.assertEqual({target}, set(incidents))
 
     def test_filter_by_date_range_should_be_incluve_on_upper_date(self):
+        """date filter should include incidents that occur on the upper date"""
         target_date = date(2017, 2, 12)
         target = IncidentPageFactory(date=target_date)
         IncidentPageFactory(date=date(2016, 12, 31))
