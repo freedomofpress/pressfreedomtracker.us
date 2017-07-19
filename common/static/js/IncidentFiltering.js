@@ -651,11 +651,17 @@ class IncidentFiltering extends PureComponent {
 			var value = null
 		} else if (isMoment(event)) {
 			var value = event
-		} else {
+		} else if (event.target && event.target.hasOwnProperty('checked')) {
+			var value = event.target.checked
+		} else if (event.target) {
 			var value = event.target.value
 		}
 
-		if (event && !value) {
+		const receivedErroneousValue = (
+			!IncidentFiltering.DATE_FILTERS.includes(label) &&
+			(value === null || value === undefined)
+		)
+		if (receivedErroneousValue) {
 			return
 		}
 
