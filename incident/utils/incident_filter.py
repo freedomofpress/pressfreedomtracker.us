@@ -238,6 +238,8 @@ class IncidentFilter(object):
                             field_name: lower_date
                         }
                         incidents = incidents.filter(**kw)
+                    elif lower_date and upper_date and lower_date > upper_date:
+                        pass
                     else:
                         kw = {
                             '{0}__contained_by'.format(field_name): DateRange(
@@ -371,6 +373,8 @@ class IncidentFilter(object):
     def by_date_range(self, incidents):
         if self.lower_date == self.upper_date:
             return incidents.filter(date=self.lower_date)
+        if self.lower_date and self.upper_date and self.lower_date > self.upper_date:
+            return incidents
 
         return incidents.filter(date__contained_by=DateRange(
             lower=self.lower_date,
