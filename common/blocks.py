@@ -91,3 +91,18 @@ class StyledTextBlock(blocks.StructBlock):
         template = 'common/blocks/styled_text.html'
         icon = 'doc-full'
         label = 'Styled Text Block'
+
+
+class LogoListBlock(blocks.ListBlock):
+    def __init__(self, **kwargs):
+        super(LogoListBlock, self).__init__(
+            blocks.StructBlock([
+                ('logo', ImageChooserBlock(required=True)),
+                ('url', blocks.URLBlock(required=False)),
+            ]),
+            template='common/blocks/logo_list_block.html',
+            **kwargs
+        )
+
+    class Meta:
+        icon = 'list-ul'

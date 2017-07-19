@@ -16,6 +16,7 @@ from common.blocks import (
     Heading1,
     Heading2,
     Heading3,
+    LogoListBlock,
     StyledTextBlock,
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock
@@ -233,6 +234,7 @@ class SimplePage(Page):
             blocks.CharBlock(label="List Item"),
             template='common/blocks/list_block_columns.html'
         )),
+        ('logo_list', LogoListBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
@@ -258,6 +260,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
             blocks.CharBlock(label="List Item"),
             template='common/blocks/list_block_columns.html'
         )),
+        ('logo_list', LogoListBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),

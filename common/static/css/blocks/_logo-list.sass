@@ -1,0 +1,27 @@
+.logo-list
+	$max-height: 100px
+	$max-width: 240px
+
+
+	+list-unstyled
+	+flex-center-center-row
+	flex-wrap: wrap
+	margin: $simple-page-padding
+
+
+	&__link
+		display: block
+		padding: 1rem 2rem
+
+
+	&__link:hover &__image,
+	&__link:focus &__image,
+	&__link:active &__image
+		opacity: 0.8
+
+
+	&__image,
+	.stream-sections &__image
+		max-height: $max-height
+		max-width: $max-width
+		transition: opacity 0.2s linear
