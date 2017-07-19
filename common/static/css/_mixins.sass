@@ -1,44 +1,10 @@
+// UTILITIES
+
 =clearfix
 	&::after
 		content: ""
 		display: table
 		clear: both
-
-=uppercase
-	letter-spacing: 0.05em
-	text-transform: uppercase
-
-=light-gray-text-small
-	color: $gray-light-text
-	font-weight: $sans-regular
-	font-size: 0.83em
-
-=list-unstyled
-	list-style-type: none
-	margin: 0
-	padding: 0
-
-=list-comma-separated
-	&::after
-		content: ', '
-
-	&:last-child::after
-		content: ''
-
-=p-remove-first-and-last-margin
-	p:first-child
-		margin-top: 0
-
-	p:last-child
-		margin-bottom: 0
-
-=section-heading
-	+uppercase
-	margin: 0 0 10px 0
-	font-weight: normal
-	font-size: 0.9rem
-
-// LINKS
 
 =hover
 	&:hover,
@@ -46,39 +12,8 @@
 	&:active
 		@content
 
-=blue-link
-	a,
-		text-decoration-color: $gray-light
-		color: $blue-dark-link
 
-		+hover
-			color: $blue-dark-link-hover
-			text-decoration-color: darken($gray-light, 10%)
-
-
-=underline-link
-	a
-		color: inherit
-		text-decoration: none
-		transition: color ease-in 0.15s
-
-		+hover
-			color: $black
-			text-decoration: underline
-
-=title-link
-	color: $black
-	text-decoration: none
-
-	+hover
-		color: $black
-		text-decoration: underline
-
-=section-heading
-	+uppercase
-	margin: 0 0 10px 0
-	font-weight: normal
-	font-size: 0.9rem
+// FLEX
 
 =flex-vertically-centered-row
 	display: flex
@@ -94,10 +29,86 @@
 	align-items: center
 
 
+// LISTS
+
+=list-unstyled
+	list-style-type: none
+	margin: 0
+	padding: 0
+
+=list-comma-separated
+	&::after
+		content: ', '
+
+	&:last-child::after
+		content: ''
+
+
+// TYPOGRAPHY
+
+=uppercase
+	letter-spacing: 0.05em
+	text-transform: uppercase
+
+=light-gray-text-small
+	color: $gray-light-text
+	font-weight: $sans-regular
+	font-size: 0.83em
+
+=p-remove-first-and-last-margin
+	p:first-child
+		margin-top: 0
+
+	p:last-child
+		margin-bottom: 0
+
+=section-heading
+	+uppercase
+	margin: 0 0 10px 0
+	font-weight: normal
+	font-size: 0.9rem
+
+=section-heading
+	+uppercase
+	margin: 0 0 10px 0
+	font-weight: normal
+	font-size: 0.9rem
+
+
+// LINKS
+
 =link-transition
 	transition-duration: 0.1s
 	transition-timing-function: linear
 	transition-property: color, background-color
+
+// note that this one does goes on a parent of the link
+=title-link
+	color: $black
+	text-decoration: none
+
+	+hover
+		color: $black
+		text-decoration: underline
+
+=underline-link
+	a
+		color: inherit
+		text-decoration: none
+		transition: color ease-in 0.15s
+
+		+hover
+			color: $black
+			text-decoration: underline
+
+=blue-link
+	a,
+		text-decoration-color: $gray-light
+		color: $blue-dark-link
+
+		+hover
+			color: $blue-dark-link-hover
+			text-decoration-color: darken($gray-light, 10%)
 
 =gray-link
 	a,
