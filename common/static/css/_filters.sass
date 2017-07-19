@@ -2,6 +2,7 @@
 	$padding-x: 1em
 	$padding-y: 1em
 	$fg-dim: $white-trans
+	$fg-dim-dim: $white-very-trans
 	$border-color: $white-very-trans
 	$bg-light: $light-violet
 	$bg-medium: $medium-violet
@@ -217,6 +218,10 @@
 		&:hover,
 		&:focus
 			color: $white
+
+		&[disabled]
+			border: 0
+			color: $fg-dim-dim
 
 	&__button--no-shrink
 		flex-shrink: 0

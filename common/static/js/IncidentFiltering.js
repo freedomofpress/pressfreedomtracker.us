@@ -393,6 +393,7 @@ function FiltersFooter({
 	handleApplyFilters,
 	handleClearFilters,
 	loading,
+	filtersTouched,
 }) {
 	return (
 		<div className="filters__footer">
@@ -413,6 +414,7 @@ function FiltersFooter({
 				<button
 					className="filters__button filters__button--bordered filters__button--wide"
 					onClick={handleApplyFilters}
+					disabled={!filtersTouched}
 				>
 					{loading > 0 && <HorizontalLoader />}
 					{loading === 0 && 'Apply Filters'}
@@ -444,6 +446,7 @@ class IncidentFiltering extends PureComponent {
 			filtersExpanded: false,
 			selectedAccordions,
 			loading: 0,
+			filtersTouched: false,
 			...this.getStateFromQueryParams(),
 		}
 	}
@@ -555,6 +558,7 @@ class IncidentFiltering extends PureComponent {
 		this.setState({
 			categoriesEnabled,
 			selectedAccordions,
+			filtersTouched: true,
 		})
 	}
 
@@ -601,6 +605,7 @@ class IncidentFiltering extends PureComponent {
 				}
 			}),
 			filterValues: {},
+			filtersTouched: false,
 		})
 
 		history.pushState(null, null, '?' + queryString.stringify(strippedParams))
@@ -610,6 +615,7 @@ class IncidentFiltering extends PureComponent {
 	fetchPage(params) {
 		this.setState({
 			loading: this.state.loading + 1,
+			filtersTouched: false,
 		})
 
 		axios.get('?' + queryString.stringify(params))
@@ -656,7 +662,8 @@ class IncidentFiltering extends PureComponent {
 			filterValues: {
 				...this.state.filterValues,
 				[label]: value,
-			}
+			},
+			filtersTouched: true,
 		})
 	}
 
@@ -678,6 +685,7 @@ class IncidentFiltering extends PureComponent {
 			categoriesEnabled,
 			filterValues,
 			filtersExpanded,
+			filtersTouched,
 			selectedAccordions,
 		} = this.state
 
@@ -717,6 +725,7 @@ class IncidentFiltering extends PureComponent {
 						handleApplyFilters={this.handleApplyFilters}
 						handleClearFilters={this.handleClearFilters}
 						loading={this.state.loading}
+						filtersTouched={filtersTouched}
 					/>
 				</FiltersExpandable>
 			</Filters>
