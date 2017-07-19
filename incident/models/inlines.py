@@ -9,6 +9,7 @@ from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.models import Orderable
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
+from common.blocks import RichTextBlockQuoteBlock, AlignedCaptionedEmbedBlock
 from autocomplete.edit_handlers import AutocompletePageChooserPanel
 from statistics.blocks import StatisticsBlock
 
@@ -21,6 +22,8 @@ class IncidentPageUpdates(Orderable):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('blockquote', RichTextBlockQuoteBlock()),
+        ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
     ])
 

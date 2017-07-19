@@ -18,7 +18,8 @@ from common.blocks import (
     Heading3,
     StyledTextBlock,
     AlignedCaptionedImageBlock,
-    AlignedCaptionedEmbedBlock
+    AlignedCaptionedEmbedBlock,
+    RichTextBlockQuoteBlock,
 )
 
 
@@ -91,7 +92,7 @@ class BlogPage(Page):
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
-        ('blockquote', blocks.BlockQuoteBlock()),
+        ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),
             template='common/blocks/list_block_columns.html'
