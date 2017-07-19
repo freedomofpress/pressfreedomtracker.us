@@ -7,6 +7,7 @@ class CustomImage(AbstractImage):
         max_length=255,
         blank=True,
         null=True,
+        help_text='Organization/Photographer. Image description can be set via the caption.'
     )
 
     admin_form_fields = Image.admin_form_fields + (

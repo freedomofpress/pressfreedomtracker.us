@@ -16,8 +16,10 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
+from common.blocks import RichTextBlockQuoteBlock, AlignedCaptionedEmbedBlock
 from incident.models import choices
-from incident.circuits import CIRCUITS
+from incident.circuits import CIRCUITS_BY_STATE
+from statistics.blocks import StatisticsBlock
 
 
 class IncidentPage(Page):
@@ -45,6 +47,9 @@ class IncidentPage(Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('blockquote', RichTextBlockQuoteBlock()),
+        ('video', AlignedCaptionedEmbedBlock()),
+        ('statistics', StatisticsBlock()),
     ])
 
     teaser = RichTextField(
@@ -66,6 +71,7 @@ class IncidentPage(Page):
         max_length=255,
         blank=True,
         null=True,
+        help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
     )
 
     targets = ParentalManyToManyField(
@@ -515,7 +521,7 @@ class IncidentPage(Page):
 
     def get_court_circuit(self):
         if self.state:
-            for state, circuit in CIRCUITS.items():
+            for state, circuit in CIRCUITS_BY_STATE.items():
                 if state == self.state.name:
                     return circuit
         return None
