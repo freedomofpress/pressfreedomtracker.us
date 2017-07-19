@@ -13,10 +13,12 @@ from incident.utils.incident_filter import IncidentFilter
 
 
 class TestFiltering(TestCase):
+    """Incident filters"""
     def setUp(self):
         self.index = IncidentIndexPageFactory()
 
     def test_should_filter_by_date_range(self):
+        """should filter by date range."""
         target = IncidentPageFactory(date=date(2017, 1, 15))
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
@@ -83,6 +85,7 @@ class TestFiltering(TestCase):
         self.assertEqual({target}, set(incidents))
 
     def test_should_filter_by_date_range_unbounded_below(self):
+        """should filter by date range - unbounded below."""
         incident1 = IncidentPageFactory(date=date(2017, 1, 15))
         incident2 = IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
@@ -149,6 +152,7 @@ class TestFiltering(TestCase):
         self.assertEqual({incident2, incident1}, set(incidents))
 
     def test_should_filter_by_date_range_unbounded_above(self):
+        """should filter by date range - unbounded above"""
         incident1 = IncidentPageFactory(date=date(2017, 1, 15))
         IncidentPageFactory(date=date(2016, 12, 31))
         incident2 = IncidentPageFactory(date=date(2017, 2, 1))
@@ -215,6 +219,7 @@ class TestFiltering(TestCase):
         self.assertEqual({incident2, incident1}, set(incidents))
 
     def test_should_filter_by_search_text(self):
+        """should filter by search text."""
         incident1 = IncidentPageFactory(
             body__0__rich_text__value=RichText('eggplant'),
         )
@@ -284,6 +289,7 @@ class TestFiltering(TestCase):
         self.assertEqual({incident1}, set(incidents))
 
     def test_should_filter_by_category(self):
+        """should filter by category."""
         category1 = CategoryPageFactory()
         category2 = CategoryPageFactory()
         incident1 = IncidentPageFactory()
@@ -360,6 +366,7 @@ class TestFiltering(TestCase):
         self.assertEqual({incident1}, set(incidents))
 
     def test_should_filter_by_any_category_given(self):
+        """should filter by multiple categories."""
         category1 = CategoryPageFactory()
         category2 = CategoryPageFactory()
         category3 = CategoryPageFactory()

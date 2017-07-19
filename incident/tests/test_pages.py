@@ -9,6 +9,7 @@ from .factories import IncidentIndexPageFactory, IncidentPageFactory
 
 
 class TestPages(TestCase):
+    """Incident Index Page """
     def setUp(self):
         self.client = Client()
 
@@ -17,16 +18,19 @@ class TestPages(TestCase):
             parent=site.root_page, slug='incidents')
 
     def test_get_index_should_succeed(self):
+        """get index should succed."""
         response = self.client.get('/incidents/')
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_filters(self):
+        """get index with filters should succeed."""
         response = self.client.get(
             '/incidents/?search=text&upper_date=2017-01-01&categories=1,2'
         )
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_malformed_filters(self):
+        """get index should succeed with malformed filters."""
         response = self.client.get(
             '/incidents/?upper_date=aaa&lower_date=2011-54-39'
         )
@@ -34,6 +38,7 @@ class TestPages(TestCase):
 
 
 class TestExportPage(TestCase):
+    """CSV Exports"""
     @classmethod
     def setUpTestData(cls):
         cls.client = Client()
@@ -43,12 +48,14 @@ class TestExportPage(TestCase):
             parent=site.root_page, slug='incidents')
 
     def test_export_should_succeed(self):
+        """request should succeed."""
         response = self.client.get(
             '/incidents/export/'
         )
         self.assertEqual(response.status_code, 200)
 
     def test_export_should_include_headers(self):
+        """ should include headers"""
         response = self.client.get(
             '/incidents/export/'
         )
@@ -63,6 +70,7 @@ class TestExportPage(TestCase):
         )
 
     def test_export_should_include_incidents_only_live_incidents(self):
+        """should include only live incidents."""
         inc = IncidentPageFactory(title='Live incident')
         IncidentPageFactory(title='Unpublished incident', live=False)
         response = self.client.get(
