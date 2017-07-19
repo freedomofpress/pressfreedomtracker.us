@@ -12,7 +12,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 
 from modelcluster.fields import ParentalKey
 
-from common.choices import COLOR_CHOICES
+from common.choices import CATEGORY_COLOR_CHOICES
 from incident.utils.incident_filter import IncidentFilter
 
 
@@ -174,7 +174,7 @@ class StatBox(Orderable):
     label = models.CharField(max_length=1000)
     color = models.CharField(
         max_length=7,
-        choices=COLOR_CHOICES,
+        choices=CATEGORY_COLOR_CHOICES,
     )
     link = models.ForeignKey(
         'wagtailcore.Page',
