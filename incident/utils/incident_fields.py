@@ -57,6 +57,17 @@ ARREST_FIELDS = [
     }
 ]
 
+LAWSUIT_FIELDS = [
+    {
+        'name': 'lawsuit_name',
+        'type': 'char'
+    },
+    {
+        'name': 'venue',
+        'type': 'pk'
+    }
+]
+
 EQUIPMENT_FIELDS = [
     {
         'name': 'equipment_seized',

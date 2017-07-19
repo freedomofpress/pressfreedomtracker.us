@@ -5,10 +5,12 @@ from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
 from incident.models.incident_page import IncidentPage
+from incident.circuits import STATES_BY_CIRCUIT
 
 from incident.utils.incident_fields import (
     INCIDENT_PAGE_FIELDS,
     ARREST_FIELDS,
+    LAWSUIT_FIELDS,
     EQUIPMENT_FIELDS,
     BORDER_STOP_FIELDS,
     PHYSICAL_ASSAULT_FIELDS,
@@ -55,6 +57,14 @@ def validate_integer_list(lst):
     return result
 
 
+def validate_circuits(circuits):
+    validated_circuits = []
+    for circuit in circuits:
+        if circuit in STATES_BY_CIRCUIT.keys():
+            validated_circuits.append(circuit)
+    return validated_circuits
+
+
 def get_kwargs(fields, current_kwargs, request):
     for field in fields:
         field_name = field['name']
@@ -68,6 +78,7 @@ def get_kwargs(fields, current_kwargs, request):
 
 class IncidentFilter(object):
     def __init__(
+        # FIELDS
         self,
         search_text,
         lower_date,
@@ -88,6 +99,9 @@ class IncidentFilter(object):
         release_date_upper,
         release_date_lower,
         unnecessary_use_of_force,
+        # LAWSUIT
+        lawsuit_name,
+        venue,
         # EQUIPMENT
         equipment_seized,
         equipment_broken,
@@ -125,6 +139,8 @@ class IncidentFilter(object):
         status_of_prior_restraint,
         # DENIAL OF ACCESS
         politicians_or_public_figures_involved,
+        # OTHER
+        circuits,
     ):
         self.search_text = search_text
         self.lower_date = validate_date(lower_date)
@@ -146,6 +162,10 @@ class IncidentFilter(object):
         self.release_date_lower = validate_date(release_date_lower)
         self.release_date_upper = validate_date(release_date_upper)
         self.unnecessary_use_of_force = unnecessary_use_of_force
+
+        # LAWSUIT
+        self.lawsuit_name = lawsuit_name
+        self.venue = venue
 
         # EQUIPMENT
         self.equipment_seized = equipment_seized
@@ -192,6 +212,9 @@ class IncidentFilter(object):
         # DENIAL OF ACCESS
         self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
 
+        # OTHER
+        self.circuits = circuits
+
     def create_filters(self, fields, incidents):
         """Creates filters based on dicts for fields
 
@@ -217,7 +240,11 @@ class IncidentFilter(object):
                         incidents = incidents.filter(**kw)
                     else:
                         kw = {
-                            '{0}__contained_by'.format(field_name): DateRange(lower_date, upper_date)
+                            '{0}__contained_by'.format(field_name): DateRange(
+                                lower=lower_date,
+                                upper=upper_date,
+                                bounds='[]'
+                            )
                         }
                         incidents = incidents.filter(**kw)
 
@@ -272,6 +299,7 @@ class IncidentFilter(object):
             'lower_date': request.GET.get('lower_date'),
             'upper_date': request.GET.get('upper_date'),
             'categories': request.GET.get('categories'),
+            'circuits': request.GET.get('circuits'),
         }
 
         kwargs = reduce(
@@ -279,6 +307,7 @@ class IncidentFilter(object):
             [
                 INCIDENT_PAGE_FIELDS,
                 ARREST_FIELDS,
+                LAWSUIT_FIELDS,
                 EQUIPMENT_FIELDS,
                 BORDER_STOP_FIELDS,
                 PHYSICAL_ASSAULT_FIELDS,
@@ -308,11 +337,15 @@ class IncidentFilter(object):
         if self.categories:
             incidents = self.by_categories(incidents)
 
+        if self.circuits:
+            incidents = self.by_circuits(incidents)
+
         incidents = reduce(
             (lambda obj, filters: self.create_filters(filters, obj)),
             [
                 INCIDENT_PAGE_FIELDS,
                 ARREST_FIELDS,
+                LAWSUIT_FIELDS,
                 EQUIPMENT_FIELDS,
                 BORDER_STOP_FIELDS,
                 PHYSICAL_ASSAULT_FIELDS,
@@ -340,12 +373,23 @@ class IncidentFilter(object):
             return incidents.filter(date=self.lower_date)
 
         return incidents.filter(date__contained_by=DateRange(
-            self.lower_date,
-            self.upper_date,
+            lower=self.lower_date,
+            upper=self.upper_date,
+            bounds='[]'
         ))
 
     def by_categories(self, incidents):
         categories = validate_integer_list(self.categories.split(','))
         if not categories:
             return incidents
+
         return incidents.filter(categories__category__in=categories).distinct()
+
+    def by_circuits(self, incidents):
+        validated_circuits = validate_circuits(self.circuits.split(','))
+
+        states = []
+        for circuit in validated_circuits:
+            states += STATES_BY_CIRCUIT[circuit]
+
+        return incidents.filter(state__name__in=states)
