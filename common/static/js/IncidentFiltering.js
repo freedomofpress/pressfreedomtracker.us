@@ -52,7 +52,20 @@ function Filters({ children }) {
 }
 
 
-class FilterSummary extends PureComponent {
+function CategoryList({ categories }) {
+	return (
+		<ul className="filters__summary-list">
+			{categories.map(category => (
+				<li key={category.id} className="filters__summary-item">
+					{category.title}
+				</li>
+			))}
+		</ul>
+	)
+}
+
+
+class FiltersList extends PureComponent {
 	renderValue(label, value) {
 		if (IncidentFiltering.DATE_FILTERS.includes(label)) {
 			var formattedValue = value.format(HUMAN_DATE_FORMAT)
@@ -81,27 +94,10 @@ class FilterSummary extends PureComponent {
 		}
 	}
 
-	constructText() {
-		const {
-			filterValues,
-			categoriesEnabled,
-		} = this.props
+	render() {
+		const { filterValues } = this.props
 
-		const categories = categoriesEnabled.filter(({ enabled }) => enabled)
-
-		const categoryList = (
-			<ul className="filters__summary-list">
-				{categories.map(category => (
-					<li key={category.id} className="filters__summary-item">
-						{category.title}
-					</li>
-				))}
-			</ul>
-		)
-
-		const hasFilters = Object.keys(filterValues).length > 0
-
-		const filterList = (
+		return (
 			<ul className="filters__summary-list">
 				{Object.keys(filterValues).map(label => (
 					<li key={label} className="filters__summary-item">
@@ -110,16 +106,11 @@ class FilterSummary extends PureComponent {
 				))}
 			</ul>
 		)
-
-		return (
-			<span>
-				Showing {categoryList}
-				{hasFilters && ' '}
-				{hasFilters && filterList}
-			</span>
-		)
 	}
+}
 
+
+class FilterSummary extends PureComponent {
 	render() {
 		const {
 			filtersExpanded,
@@ -152,9 +143,14 @@ class FilterSummary extends PureComponent {
 			)
 		}
 
+		const categories = categoriesEnabled.filter(({ enabled }) => enabled)
+		const hasFilters = Object.keys(filterValues).length > 0
+
 		return (
 			<div className="filters__summary filters__text--dim">
-				{this.constructText()}
+				Showing <CategoryList categories={categories} />
+				{hasFilters && ' '}
+				{hasFilters && <FiltersList filterValues={filterValues} />}
 			</div>
 		)
 	}
