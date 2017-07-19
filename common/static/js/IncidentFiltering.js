@@ -245,13 +245,40 @@ function FilterSet({ children }) {
 }
 
 
+function TextInput({ handleFilterChange, filterValues, label, filter }) {
+	return (
+		<div>
+			{label}:
+			{' '}
+			<input
+				type="text"
+				onChange={handleFilterChange.bind(null, filter)}
+				value={filterValues[filter] || ''}
+			/>
+		</div>
+	)
+}
+
+
+function BoolInput({ handleFilterChange, filterValues, label, filter }) {
+	return (
+		<div>
+			{label}:
+			{' '}
+			<input
+				type="checkbox"
+				onChange={handleFilterChange.bind(null, filter)}
+				value={filterValues[filter] || false}
+			/>
+		</div>
+	)
+}
+
+
 const FilterSets = {}
 
 
-FilterSets['General'] = function({
-	handleFilterChange,
-	filterValues,
-}) {
+FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 	return (
 		<FilterSet>
 			<div>
@@ -275,15 +302,154 @@ FilterSets['General'] = function({
 					/>
 				</span>
 			</div>
+
+			<TextInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Affiliation"
+				filter="affiliation"
+			/>
+
+			<TextInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="City"
+				filter="city"
+			/>
+
+			<TextInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Lawsuit Name"
+				filter="lawsuit_name"
+			/>
 		</FilterSet>
 	)
 }
 
 
-FilterSets['Equipment Search, Seizure, or Damage'] = function() {
+FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues }) {
 	return (
 		<FilterSet>
-			No filters.
+			<BoolInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Unnecessary use of force?"
+				filter="unnecessary_use_of_force"
+			/>
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Border Stop'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			<TextInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Border Point"
+				filter="border_point"
+			/>
+
+			<BoolInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Stopped at border?"
+				filter="stopped_at_border"
+			/>
+
+			<BoolInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Stopped previously?"
+				filter="stopped_previously"
+			/>
+
+			<BoolInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Denied entry?"
+				filter="denial_of_entry"
+			/>
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Chilling Statements'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			Placeholder
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Denial of Access'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			Placeholder
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			<BoolInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Search warrant obtained?"
+				filter="is_search_warrant_obtained"
+			/>
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Leak Case'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			<BoolInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Charged under espionage act?"
+				filter="charged_under_espionage_act"
+			/>
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Physical Attack'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			Placeholder
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			<TextInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Third party in possession of communications"
+				filter="third_party_in_possession_of_communications"
+			/>
+		</FilterSet>
+	)
+}
+
+
+FilterSets['Other Incidents'] = function({ handleFilterChange, filterValues }) {
+	return (
+		<FilterSet>
+			Placeholder
 		</FilterSet>
 	)
 }
