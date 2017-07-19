@@ -147,7 +147,7 @@ class FilterSummary extends PureComponent {
 		const hasFilters = Object.keys(filterValues).length > 0
 
 		return (
-			<div className="filters__summary filters__text--dim">
+			<div className="filters__summary filters__summary--can-compact filters__text--dim">
 				Showing <CategoryList categories={categories} />
 				{hasFilters && ' '}
 				{hasFilters && <FiltersList filterValues={filterValues} />}

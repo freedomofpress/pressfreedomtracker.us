@@ -6,6 +6,7 @@
 	$bg-light: $light-violet
 	$bg-medium: $medium-violet
 	$bg-dark: $dark-violet
+	$compact-summary-width: $mid-small-screen
 
 
 	margin-bottom: $row-margin-bottom
@@ -24,10 +25,26 @@
 			padding-left: $padding-x
 			padding-right: $padding-x
 
+		@media (max-width: $compact-summary-width)
+			// We only want to let wrapping occur when the Change Filters
+			// button will in fact go to the next line.
+			flex-wrap: wrap
+
+			// This places the Change Filters button on the RHS.
+			> :last-child
+				align-self: flex-end
+				margin-left: auto
+
 	&__summary
 		display: block
 		margin: 1em 0
 		color: $fg-dim
+		flex-shrink: 1
+
+	&__summary--can-compact
+		@media (max-width: $compact-summary-width)
+			flex-shrink: 0
+			width: 100%
 
 	&__summary-list
 		+list-unstyled
