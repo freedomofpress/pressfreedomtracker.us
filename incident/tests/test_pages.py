@@ -36,6 +36,13 @@ class TestPages(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_get_index_should_succeed_with_illegal_date_range(self):
+        """get index should succeed with malformed filters."""
+        response = self.client.get(
+            '/incidents/?upper_date=2011-01-01&lower_date=2012-01-01'
+        )
+        self.assertEqual(response.status_code, 200)
+
 
 class TestExportPage(TestCase):
     """CSV Exports"""
