@@ -394,7 +394,7 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 }
 
 
-FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues }) {
+FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues, choices }) {
 	return (
 		<FilterSet>
 			<BoolInput
@@ -403,12 +403,28 @@ FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues }
 				label="Unnecessary use of force?"
 				filter="unnecessary_use_of_force"
 			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Arrest status"
+				filter="arrest_status"
+				choices={choices.ARREST_STATUS}
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Status of charges"
+				filter="status_of_charges"
+				choices={choices.STATUS_OF_CHARGES}
+			/>
 		</FilterSet>
 	)
 }
 
 
-FilterSets['Border Stop'] = function({ handleFilterChange, filterValues }) {
+FilterSets['Border Stop'] = function({ handleFilterChange, filterValues, choices }) {
 	return (
 		<FilterSet>
 			<TextInput
@@ -437,6 +453,14 @@ FilterSets['Border Stop'] = function({ handleFilterChange, filterValues }) {
 				filterValues={filterValues}
 				label="Denied entry?"
 				filter="denial_of_entry"
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="US Citizenship Status"
+				filter="target_us_citizenship_status"
+				choices={choices.CITIZENSHIP_STATUS_CHOICES}
 			/>
 
 			<RadioPillInput
@@ -496,7 +520,7 @@ FilterSets['Denial of Access'] = function({ handleFilterChange, filterValues }) 
 }
 
 
-FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChange, filterValues }) {
+FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChange, filterValues, choices }) {
 	return (
 		<FilterSet>
 			<BoolInput
@@ -504,6 +528,22 @@ FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChan
 				filterValues={filterValues}
 				label="Search warrant obtained?"
 				filter="is_search_warrant_obtained"
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Status of seized equipment"
+				filter="status_of_seized_equipment"
+				choices={choices.STATUS_OF_SEIZED_EQUIPMENT}
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Actor"
+				filter="actor"
+				choices={choices.ACTORS}
 			/>
 		</FilterSet>
 	)
@@ -524,7 +564,7 @@ FilterSets['Leak Case'] = function({ handleFilterChange, filterValues }) {
 }
 
 
-FilterSets['Physical Attack'] = function({ handleFilterChange, filterValues }) {
+FilterSets['Physical Attack'] = function({ handleFilterChange, filterValues, choices }) {
 	return (
 		<FilterSet>
 			<RadioPillInput
@@ -533,14 +573,54 @@ FilterSets['Physical Attack'] = function({ handleFilterChange, filterValues }) {
 				label="Was journalist targeted?"
 				filter="was_journalist_targeted"
 			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Assailant"
+				filter="assailant"
+				choices={choices.ACTORS}
+			/>
 		</FilterSet>
 	)
 }
 
 
-FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValues }) {
+FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValues, choices }) {
 	return (
 		<FilterSet>
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Subpoena subject"
+				filter="subpoena_subject"
+				choices={choices.SUBPOENA_SUBJECT}
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Subpoena type"
+				filter="subpoena_type"
+				choices={choices.SUBPOENA_TYPE}
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Subpoena status"
+				filter="subpoena_status"
+				choices={choices.SUBPOENA_STATUS}
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Detention status"
+				filter="detention_status"
+				choices={choices.DETENTION_STATUS}
+			/>
+
 			<TextInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
@@ -553,6 +633,30 @@ FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValu
 				filterValues={filterValues}
 				label="Held in contempt?"
 				filter="held_in_contempt"
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Third party business"
+				filter="third_party_business"
+				choices={choices.THIRD_PARTY_BUSINESS}
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Legal order type"
+				filter="legal_order_type"
+				choices={choices.LEGAL_ORDER_TYPES}
+			/>
+
+			<ChoiceInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Status of prior restraint"
+				filter="status_of_prior_restraint"
+				choices={choices.PRIOR_RESTRAINT_STATUS}
 			/>
 		</FilterSet>
 	)
