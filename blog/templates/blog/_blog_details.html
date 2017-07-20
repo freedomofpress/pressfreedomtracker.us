@@ -1,18 +1,22 @@
 {% load wagtailcore_tags %}
 <div class="blog-details">
-	<div class="blog-details__summary">
-		You are reading an article
-		{% if page.author %}
-			by
-			<span class="blog-details__summary-subject">
-				{{ page.author.title }}
-			</span>
-		{% endif %}
-		from
-		<span class="blog-details__summary-subject">
-			{{ page.organization.title }}
-		</span>
-	</div>
+	{% if page.author or page.organization %}
+		<div class="blog-details__summary">
+			You are reading an article
+			{% if page.author %}
+				by
+				<span class="blog-details__summary-subject">
+					<a href="{{ page.get_parent.url }}?author={{ page.author.pk }}">{{ page.author.title }}</a>
+				</span>
+			{% endif %}
+			{% if page.organization %}
+				from
+				<span class="blog-details__summary-subject">
+					<a href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}">{{ page.organization.title }}</a>
+				</span>
+			{% endif %}
+		</div>
+	{% endif %}
 	{% if page.author.specific.bio %}
 		<h2 class="section-heading">
 			About {{ page.author.title }}
