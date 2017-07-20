@@ -10,11 +10,13 @@ CATEGORY_COLOR_CHOICES = [
     ('teal', 'Teal'),
     ('violet', 'Violet'),
     ('yellow', 'Yellow'),
+    ('dark-gray', 'Dark Gray'),
 ]
 
 # Category color choices with too bright colors removed
 # and white added
 BACKGROUND_COLOR_CHOICES = [
+    ('white', 'White'),
     ('eastern-blue', 'Eastern Blue'),
     ('gamboge', 'Gamboge'),
     ('green', 'Green'),
@@ -23,5 +25,5 @@ BACKGROUND_COLOR_CHOICES = [
     ('royal-blue', 'Royal Blue'),
     ('teal', 'Teal'),
     ('violet', 'Violet'),
-    ('white', 'White'),
+    ('dark-gray', 'Dark Gray'),
 ]
