@@ -11,6 +11,7 @@ from wagtail.wagtailsearch import index
 
 from common.utils import DEFAULT_PAGE_KEY, paginate
 
+from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
 from common.blocks import (
     Heading1,
@@ -43,8 +44,10 @@ class BlogIndexPage(Page):
     def get_context(self, request):
         context = super(BlogIndexPage, self).get_context(request)
 
-        entry_qs = self.get_children().live().order_by(
-            '-blogpage__publication_datetime')
+        post_filters = BlogFilter.from_querystring(request.GET)
+        entry_qs = post_filters.filter(
+            BlogPage.objects.child_of(self).live()
+        ).order_by('-publication_datetime')
 
         paginator, entries = paginate(
             request,
