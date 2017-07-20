@@ -25,25 +25,23 @@
 			</div>
 		</div>
 
-		<main>
-			{% block secondary-header %}
-			{% endblock %}
+		{% block secondary-header %}
+		{% endblock %}
 
-			<div class="layout-right-sidebar">
-				<div class="layout-right-sidebar__main {% block main_class %} {% endblock %}">
-					{% block maincontainer %}
-					  <main role="main" class="site-main container">
-						{% block main %}{% endblock %}
-					  </main>{# /.main #}
-					{% endblock %}
-				</div>
-
-				<div class="layout-right-sidebar__sidebar {% block sidebar_class %}{% endblock %}">
-					{% block sidebar %}
-					{% endblock %}
-				</div>
+		<div class="layout-right-sidebar">
+			<div class="layout-right-sidebar__main {% block main_class %} {% endblock %}">
+				{% block maincontainer %}
+				  <main role="main" class="site-main container">
+					{% block main %}{% endblock %}
+				  </main>{# /.main #}
+				{% endblock %}
 			</div>
-		</main>
+
+			<div class="layout-right-sidebar__sidebar {% block sidebar_class %}{% endblock %}">
+				{% block sidebar %}
+				{% endblock %}
+			</div>
+		</div>
 
 		{% block bottom %}
 			<div class="footer">
