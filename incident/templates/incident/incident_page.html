@@ -4,7 +4,7 @@
 {% block maincontainer %}
 <main>
 	{% include 'incident/_incident.html' with incident=page only %}
-		<h3 class="section-heading">Related Incidents</h3>
+		{% include "common/_section_heading.html" with label="Related Incidents" %}
 		<div class="grid-50">
 			{% for related_case in page.get_related_incidents %}
 				<div class="grid-50__item">
