@@ -421,6 +421,34 @@ FilterSets['Border Stop'] = function({ handleFilterChange, filterValues }) {
 				label="Did authorities ask for device access?"
 				filter="did_authorities_ask_for_device_access"
 			/>
+
+			<RadioPillInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Did authorities ask for social media username?"
+				filter="did_authorities_ask_for_social_media_user"
+			/>
+
+			<RadioPillInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Did authorities ask for social media password?"
+				filter="did_authorities_ask_for_social_media_pass"
+			/>
+
+			<RadioPillInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Did authorities ask about work?"
+				filter="did_authorities_ask_about_work"
+			/>
+
+			<RadioPillInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Were devices searched or seized?"
+				filter="were_devices_searched_or_seized"
+			/>
 		</FilterSet>
 	)
 }
@@ -475,7 +503,12 @@ FilterSets['Leak Case'] = function({ handleFilterChange, filterValues }) {
 FilterSets['Physical Attack'] = function({ handleFilterChange, filterValues }) {
 	return (
 		<FilterSet>
-			Placeholder
+			<RadioPillInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Was journalist targeted?"
+				filter="was_journalist_targeted"
+			/>
 		</FilterSet>
 	)
 }
@@ -489,6 +522,13 @@ FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValu
 				filterValues={filterValues}
 				label="Third party in possession of communications"
 				filter="third_party_in_possession_of_communications"
+			/>
+
+			<RadioPillInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Held in contempt?"
+				filter="held_in_contempt"
 			/>
 		</FilterSet>
 	)
