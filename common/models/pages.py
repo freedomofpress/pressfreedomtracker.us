@@ -162,7 +162,7 @@ class TaxonomyCategoryPage(Orderable):
 class CategoryPage(Page):
     methodology = RichTextField(null=True, blank=True)
     plural_name = models.CharField(max_length=255, null=True, blank=True)
-    page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES)
+    page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
 
     content_panels = Page.content_panels + [
         FieldPanel('methodology'),
