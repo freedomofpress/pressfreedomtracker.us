@@ -11,6 +11,7 @@ OLD_TO_NEW = {
     'dark-gray': 'dark-gray',
     'orange': 'gamboge',
     'white': 'white',
+    'green': 'green',
 }
 
 
@@ -18,7 +19,7 @@ NEW_TO_OLD = {
     'eastern-blue': 'blue',
     'gamboge': 'orange',
     'green-apple': 'dark-gray',
-    'green': 'dark-gray',
+    'green': 'green',
     'sunshine': 'dark-gray',
     'pink': 'purple',
     'red': 'dark-gray',
