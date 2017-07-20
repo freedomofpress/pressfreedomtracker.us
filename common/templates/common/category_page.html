@@ -54,12 +54,6 @@
 				</th>
 				<td class="data-table__value">{{ page.incidents.all.count }}</td>
 			</tr>
-			<tr class="data-table__row data-table__row--light">
-				<th class="data-table__label data-table__label--light">
-					Cases in 2019
-				</th>
-				<td class="data-table__value">33</td>
-			</tr>
 		</table>
 	</div>
 </div>
@@ -101,38 +95,19 @@
 {% endblock %}
 
 {% block sidebar %}
-		<h4 class="section-heading">
-			Data Summary
-		</h4>
-		<table class="data-table">
-			<tr class='data-table__row'>
-				<th class="data-table__label">
-					Total cases
-				</th>
-				<td class="data-table__value">{{ page.incidents.all.count }}</td>
-			</tr>
-			{% for item in data_items %}
-				<tr class='data-table__row'>
-					<th class="data-table__label">
-						{{ item.label }}
-					</th>
-					<td class="data-table__value">{{ item.value }}</td>
-				</tr>
-			{% endfor %}
-		</table>
-		{% if page.methodology %}
-			<h4 class="section-heading">
-				How we track
-					{% if page.plural_name %}
-						{{ page.plural_name|title }}
-					{% else %}
-						{{ page.title|title }}
-					{% endif %}
-			</h4>
-			<div>
-				{% with method=page.methodology|richtext %}
-					{% render_as_template method %}
-				{% endwith %}
-			</div>
-		{% endif %}
+	{% if page.methodology %}
+		<h2 class="section-heading">
+			How we track
+				{% if page.plural_name %}
+					{{ page.plural_name|title }}
+				{% else %}
+					{{ page.title|title }}
+				{% endif %}
+		</h2>
+		<div>
+			{% with method=page.methodology|richtext %}
+				{% render_as_template method %}
+			{% endwith %}
+		</div>
+	{% endif %}
 {% endblock %}
