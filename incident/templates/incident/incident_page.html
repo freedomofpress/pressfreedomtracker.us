@@ -22,6 +22,7 @@
 
 {% block sidebar %}
 <aside>
+	<h2 class="sr-only section-heading">Incident Data</h2>
 	<table class='data-table'>
 		<tbody>
 			<tr class='data-table__row'>
@@ -121,14 +122,14 @@
 
 	{% with main_category=page.get_main_category %}
 		<div>
-			<h3 class="section-heading">
+			<h2 class="section-heading">
 				How we track
 				{% if main_category.plural_name %}
 					{{ main_category.plural_name|title }}
 				{% else %}
 					{{ main_category|title }}
 				{% endif %}
-			</h3>
+			</h2>
 			<p>
 				{% with method=main_category.methodology|richtext %}
 					{% render_as_template method %}
