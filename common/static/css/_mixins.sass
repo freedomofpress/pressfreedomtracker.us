@@ -116,13 +116,13 @@
 			text-decoration: underline
 
 =blue-link
-	a,
-		text-decoration-color: $gray-light
+	a
+		text-decoration-color: lighten($gray-mid-text, 10%)
 		color: $blue-dark-link
 
 		+hover
 			color: $blue-dark-link-hover
-			text-decoration-color: darken($gray-light, 10%)
+			text-decoration-color: $gray-mid-text, 10%
 
 =gray-link
 	a,
