@@ -13,7 +13,7 @@ It can take the following context variables:
 {% with main_category=incident.get_main_category %}
 <article class="
 	incident
-	incident--{{ main_category|slugify }}
+	incident--{{ main_category.page_color }}
 	{% if teaser %}
 		incident--teaser
 	{% else %}
@@ -30,9 +30,10 @@ It can take the following context variables:
 	<div class="incident__body">
 			<ul class="category-list">
 				{% for category in incident.categories.all %}
-					<li class="category-list__item
-										 category-list__item--{{ category.category.title|slugify }}"
-					><a
+					<li class="
+						category-list__item
+						category-list__item--{{ category.category.page_color }}
+					"><a
 						href="{% pageurl category.category %}"
 						class="category-list__link"
 					>

@@ -3,20 +3,21 @@
 {% load common_tags wagtailcore_tags render_as_template %}
 
 {% block flex_class %}
-    flex-container--grow-3
+	flex-container--grow-3
 {% endblock %}
 
 {% block top_sidebar_class %}
-    {{ block.super }}
-    layout-right-sidebar__sidebar--light
+{{ block.super }}
+	layout-right-sidebar__sidebar--light
 {% endblock%}
 
 {% block secondary-header %}
 <div class="layout-right-sidebar">
-    <div class="layout-right-sidebar__main
-							layout-right-sidebar__main--dark
-							layout-right-sidebar__main--{{ page.title|slugify }}"
-	>
+	<div class="
+		layout-right-sidebar__main
+		layout-right-sidebar__main--dark
+		layout-right-sidebar__main--{{ page.page_color }}
+	">
 			<div class="category">
 				<h3 class="category__name">
 					{{ page.title }}
@@ -38,10 +39,11 @@
 				{% endif %}
 			</div>
 	</div>
-	<div class="layout-right-sidebar__sidebar
-							layout-right-sidebar__sidebar--dark
-							layout-right-sidebar__sidebar--{{ page.title|slugify }}"
-	>
+	<div class="
+		layout-right-sidebar__sidebar
+		layout-right-sidebar__sidebar--dark
+		layout-right-sidebar__sidebar--{{ page.page_color }}
+	">
 		<table class="data-table data-table--category">
 			<h4 class="section-heading section-heading--light section-heading--margin-top">
 			Data Summary
