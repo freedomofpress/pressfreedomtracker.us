@@ -1,32 +1,32 @@
 {% load wagtailcore_tags render_as_template %}
 
 {% if category.methodology %}
-<div>
-	<h3 class="section-heading">
-		How we track
-		{% if category.plural_name %}
-			{{ category.plural_name|title }}
-		{% else %}
-			{{ category|title }}
-		{% endif %}
-	</h3>
-	<p>
-		{% with method=category.methodology|richtext %}
-			{% render_as_template method %}
-		{% endwith %}
-	</p>
-</div>
-{% endif %}
-{% if preview %}
-	<h3 class="section-heading">
-		<a href="{% pageurl category %}" >
-			More
+	<div class="methodology">
+		<h3 class="methodology__title">
+			How we track
 			{% if category.plural_name %}
 				{{ category.plural_name|title }}
 			{% else %}
 				{{ category|title }}
 			{% endif %}
-			&gt;
-		</a>
-	</h3>
-{% endif %}
+		</h3>
+		<div class="methodology__text">
+			{% with method=category.methodology %}
+				{% render_as_template method %}
+			{% endwith %}
+		</div>
+	{% endif %}
+	{% if preview %}
+		<h3 class="methodology__link">
+			<a href="{% pageurl category %}" >
+				More
+				{% if category.plural_name %}
+					{{ category.plural_name|title }}
+				{% else %}
+					{{ category|title }}
+				{% endif %}
+				&gt;
+			</a>
+		</h3>
+	{% endif %}
+</div>
