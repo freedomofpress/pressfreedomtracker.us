@@ -95,19 +95,19 @@
 {% endblock %}
 
 {% block sidebar %}
-		{% if page.methodology %}
-			<h4 class="section-heading">
-				How we track
-					{% if page.plural_name %}
-						{{ page.plural_name|title }}
-					{% else %}
-						{{ page.title|title }}
-					{% endif %}
-			</h4>
-			<div>
-				{% with method=page.methodology|richtext %}
-					{% render_as_template method %}
-				{% endwith %}
-			</div>
-		{% endif %}
+	{% if page.methodology %}
+		<h2 class="section-heading">
+			How we track
+				{% if page.plural_name %}
+					{{ page.plural_name|title }}
+				{% else %}
+					{{ page.title|title }}
+				{% endif %}
+		</h2>
+		<div>
+			{% with method=page.methodology|richtext %}
+				{% render_as_template method %}
+			{% endwith %}
+		</div>
+	{% endif %}
 {% endblock %}
