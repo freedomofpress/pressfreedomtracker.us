@@ -245,6 +245,48 @@ function FilterSet({ children }) {
 }
 
 
+function RadioPillInput({
+	handleFilterChange,
+	filterValues,
+	label,
+	filter,
+	options,
+}) {
+	return (
+		<div>
+			{label}:
+			{' '}
+
+			<span className="radio-pill">
+				{options.map(option => (
+					<button
+						key={option.value}
+						value={option.value}
+						type="button"
+						onClick={handleFilterChange.bind(null, filter)}
+						className={classNames(
+							'radio-pill__item',
+							{ 'radio-pill__item--selected': filterValues[filter] === option.value }
+						)}
+					>
+						{option.label}
+					</button>
+				))}
+			</span>
+		</div>
+	)
+}
+
+
+RadioPillInput.defaultProps = {
+	options: [
+		{ label: 'Unknown', value: 'unknown' },
+		{ label: 'Yes', value: 'yes' },
+		{ label: 'No', value: 'no' },
+	],
+}
+
+
 function TextInput({ handleFilterChange, filterValues, label, filter }) {
 	return (
 		<div>
@@ -371,6 +413,13 @@ FilterSets['Border Stop'] = function({ handleFilterChange, filterValues }) {
 				filterValues={filterValues}
 				label="Denied entry?"
 				filter="denial_of_entry"
+			/>
+
+			<RadioPillInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Did authorities ask for device access?"
+				filter="did_authorities_ask_for_device_access"
 			/>
 		</FilterSet>
 	)
