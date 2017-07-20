@@ -6,13 +6,13 @@
 			{% if page.author %}
 				by
 				<span class="blog-details__summary-subject">
-					{{ page.author.title }}
+					<a href="{{ page.get_parent.url }}?author={{ page.author.pk }}">{{ page.author.title }}</a>
 				</span>
 			{% endif %}
 			{% if page.organization %}
 				from
 				<span class="blog-details__summary-subject">
-					{{ page.organization.title }}
+					<a href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}">{{ page.organization.title }}</a>
 				</span>
 			{% endif %}
 		</div>
