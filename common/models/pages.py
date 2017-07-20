@@ -22,6 +22,7 @@ from common.blocks import (
     AlignedCaptionedEmbedBlock,
     RichTextBlockQuoteBlock,
 )
+from common.choices import CATEGORY_COLOR_CHOICES
 from common.utils import DEFAULT_PAGE_KEY, paginate
 from statistics.registry import get_numbers_choices, get_numbers
 
@@ -161,6 +162,7 @@ class TaxonomyCategoryPage(Orderable):
 class CategoryPage(Page):
     methodology = RichTextField(null=True, blank=True)
     plural_name = models.CharField(max_length=255, null=True, blank=True)
+    page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
 
     content_panels = Page.content_panels + [
         FieldPanel('methodology'),
@@ -170,6 +172,7 @@ class CategoryPage(Page):
 
     settings_panels = Page.settings_panels + [
         FieldPanel('plural_name'),
+        FieldPanel('page_color'),
     ]
 
     search_fields = Page.search_fields + [

@@ -5,7 +5,7 @@ from wagtail.wagtailcore.blocks import RichTextBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
-from common.choices import COLOR_CHOICES
+from common.choices import BACKGROUND_COLOR_CHOICES
 
 
 class Heading1(blocks.StructBlock):
@@ -95,7 +95,7 @@ class StyledTextBlock(blocks.StructBlock):
     )
 
     text = blocks.RichTextBlock()
-    background_color = blocks.ChoiceBlock(choices=COLOR_CHOICES, default='white')
+    background_color = blocks.ChoiceBlock(choices=BACKGROUND_COLOR_CHOICES, default='white')
     text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default='left')
     font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default='normal')
     font_family = blocks.ChoiceBlock(choices=FONT_FAMILY_CHOICES, default='sans-serif')

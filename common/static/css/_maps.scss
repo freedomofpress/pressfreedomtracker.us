@@ -1,22 +1,35 @@
 // CATEGORY COLORS
 $border-colors: (
-	arrest-detention: $arrest-color,
-	equipment-search-seizure-or-damage: $equipment-seizure-color,
-	border-stop-denial-of-entry: $border-stop-color,
-	subpeonas: $subpeona-color,
-	documented-cases-of-surveillance: $documented-cases-of-surveillance-color,
-	physical-assaults: $physical-assaults-color,
-	leak-prosecutions: $leak-prosecution-color ,
-	us-precident-cited-abroad: $us-precident-cited-abroad-color,
+	eastern-blue: $user-eastern-blue,
+	gamboge: $user-gamboge,
+	gray-dark: $user-gray-dark,
+	green-apple: $user-green-apple,
+	green: $user-green,
+	sunshine: $user-sunshine,
+	pink: $user-pink,
+	red: $user-red,
+	royal-blue: $user-royal-blue,
+	teal: $user-teal,
+	violet: $user-violet,
+	yellow: $user-yellow,
 );
 
-$background-colors: (
-	blue: $blue-klien,
-	green: $green-vida-loca,
-	orange: $gamboge,
-	dark-gray: $gray-dark,
-	purple: $purple-cadillac,
+$text-colors: (
+	eastern-blue: $user-eastern-blue-text,
+	gamboge: $user-gamboge-text,
+	gray-dark: $user-gray-dark-text,
+	green-apple: $user-green-apple-text,
+	green: $user-green-text,
+	sunshine: $user-sunshine-text,
+	pink: $user-pink-text,
+	red: $user-red-text,
+	royal-blue: $user-royal-blue-text,
+	teal: $user-teal-text,
+	violet: $user-violet-text,
+	yellow: $user-yellow-text,
 );
+
+$background-colors: $border-colors;
 
 $text-size-choices: (
 	small: 0.8em,
