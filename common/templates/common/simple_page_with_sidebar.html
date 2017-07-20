@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block sidebar %}
-	<aside class="simple-page__sidebar">
+	<nav class="simple-page__sidebar">
 		<ul class="simple-page__sidebar-menu">
 			{% for item in page.get_sidebar_menu.menu_items.all %}
 				<li class="
@@ -31,5 +31,5 @@
 				</li>
 			{% endfor %}
 		</ul>
-	</aside>
+	</nav>
 {% endblock %}
