@@ -121,7 +121,7 @@
 	</table>
 
 	{% with main_category=page.get_main_category %}
-		{% include 'incident/_category_info.html' with category=main_category %}
+		{% include 'common/_category_methodology.html' with category=main_category preview=True %}
 	{% endwith %}
 </aside>
 {% endblock %}

@@ -54,6 +54,14 @@
 				</th>
 				<td class="data-table__value">{{ page.incidents.all.count }}</td>
 			</tr>
+			{% for item in page.data_items.all %}
+				<tr class='data-table__row'>
+					<th class="data-table__label">
+						{{ item.label }}
+					</th>
+					<td class="data-table__value">{{ item.value }}</td>
+				</tr>
+			{% endfor %}
 		</table>
 	</div>
 </div>
@@ -95,19 +103,5 @@
 {% endblock %}
 
 {% block sidebar %}
-	{% if page.methodology %}
-		<h2 class="section-heading">
-			How we track
-				{% if page.plural_name %}
-					{{ page.plural_name|title }}
-				{% else %}
-					{{ page.title|title }}
-				{% endif %}
-		</h2>
-		<div>
-			{% with method=page.methodology|richtext %}
-				{% render_as_template method %}
-			{% endwith %}
-		</div>
-	{% endif %}
+		{% include 'common/_category_methodology.html' with category=page %}
 {% endblock %}

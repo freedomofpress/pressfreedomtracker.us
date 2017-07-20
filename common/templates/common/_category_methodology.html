@@ -1,5 +1,6 @@
 {% load wagtailcore_tags render_as_template %}
 
+{% if category.methodology %}
 <div>
 	<h3 class="section-heading">
 		How we track
@@ -15,14 +16,17 @@
 		{% endwith %}
 	</p>
 </div>
-<h3 class="section-heading">
-	<a href="{% pageurl category %}" >
-		More
-		{% if category.plural_name %}
-			{{ category.plural_name|title }}
-		{% else %}
-			{{ category|title }}
-		{% endif %}
-		&gt;
-	</a>
-</h3>
+{% endif %}
+{% if preview %}
+	<h3 class="section-heading">
+		<a href="{% pageurl category %}" >
+			More
+			{% if category.plural_name %}
+				{{ category.plural_name|title }}
+			{% else %}
+				{{ category|title }}
+			{% endif %}
+			&gt;
+		</a>
+	</h3>
+{% endif %}
