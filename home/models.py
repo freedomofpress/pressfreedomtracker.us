@@ -173,7 +173,7 @@ class StatBox(Orderable):
     value = models.CharField(max_length=1000)
     label = models.CharField(max_length=1000)
     color = models.CharField(
-        max_length=7,
+        max_length=255,
         choices=CATEGORY_COLOR_CHOICES,
     )
     link = models.ForeignKey(
