@@ -25,7 +25,7 @@
 	<h2 class="sr-only section-heading">Incident Data</h2>
 	<table class='data-table'>
 		<tbody>
-			<tr class='data-table__row'>
+			<tr class="data-table__row">
 				<th class="data-table__label">
 					Date of Incident
 				</th>
@@ -33,7 +33,7 @@
 			</tr>
 
 			{% if page.targets.all %}
-				<tr class='data-table__row'>
+				<tr class="data-table__row">
 					<th class="data-table__label">
 						Targets
 					</th>
@@ -52,7 +52,7 @@
 			{% endif %}
 
 			{% if page.affiliation %}
-				<tr class='data-table__row'>
+				<tr class="data-table__row">
 					<th class="data-table__label">
 						Affiliation
 					</th>
@@ -65,7 +65,7 @@
 			{% endif %}
 
 			{% if page.city or page.state %}
-				<tr class='data-table__row'>
+				<tr class="data-table__row">
 					<th class="data-table__label">
 						Location
 					</th>
@@ -80,7 +80,7 @@
 
 			{% with page.last_updated as last_updated %}
 				{% if last_updated %}
-				<tr class='data-table__row'>
+				<tr class="data-table__row">
 					<th class="data-table__label">
 						Last Updated
 					</th>
@@ -103,7 +103,7 @@
 			{% include 'incident/_denial_of_access_rows.html' %}
 
 			{% if page.tags.all %}
-				<tr class='data-table__row'>
+				<tr class="data-table__row">
 					<th class="data-table__label">
 						Tags
 					</th>
