@@ -6,6 +6,7 @@
 				window.React.createElement(
 					window.IncidentFiltering,
 					{ availableCategories: {{ category_options|safe }}
+					, filterChoices: {{ filter_choices|safe }}
 					{% if apply_externally and external %}
 					, applyExternally: true
 					, external: '{{ external.url }}'

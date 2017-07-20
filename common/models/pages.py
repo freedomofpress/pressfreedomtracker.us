@@ -182,12 +182,14 @@ class CategoryPage(Page):
     def get_context(self, request):
         # placed here to avoid circular dependency
         from incident.utils.incident_filter import IncidentFilter
+        from incident.models.choices import get_filter_choices
 
         context = super(CategoryPage, self).get_context(request)
 
         incident_filter = IncidentFilter.from_request(request)
         incident_filter.categories = str(self.page_ptr_id)
         context['category_options'] = incident_filter.get_category_options()
+        context['filter_choices'] = get_filter_choices()
         entry_qs = incident_filter.fetch()
 
         paginator, entries = paginate(
