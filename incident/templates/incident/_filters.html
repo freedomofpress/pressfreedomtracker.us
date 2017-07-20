@@ -18,6 +18,9 @@
 					{% else %}
 					, noCategoryFiltering: false
 					{% endif %}
+					{% if change_filters_message %}
+					, changeFiltersMessage: '{{ change_filters_message }}'
+					{% endif %}
 					}
 				),
 

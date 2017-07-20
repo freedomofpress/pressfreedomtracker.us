@@ -4,7 +4,7 @@
 
 	{% with incidents=page.incidents.all %}
 		{% include "common/_section_heading.html" with label=label %}
-		{% include "incident/_filters.html" with apply_externally=True external=page.incident_index_page %}
+		{% include "incident/_filters.html" with apply_externally=True external=page.incident_index_page change_filters_message=page.change_filters_message %}
 
 		<div class="grid-50">
 			{% for related in incidents|slice:":2" %}

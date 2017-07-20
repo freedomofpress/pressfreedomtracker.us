@@ -6,6 +6,12 @@ import queryString from 'query-string'
 import moment, { isMoment } from 'moment'
 
 
+const HUMAN_DATE_FORMAT = 'MMM Do YYYY'
+
+
+const DATE_FORMAT = 'YYYY-MM-DD'
+
+
 function SettingsIcon() {
 	return (
 		<svg
@@ -46,32 +52,133 @@ function Filters({ children }) {
 }
 
 
+function CategoryList({ categories }) {
+	return (
+		<ul className="filters__summary-list">
+			{categories.map(category => (
+				<li key={category.id} className="filters__summary-item filters__summary-item--semicolons">
+					{category.title}
+				</li>
+			))}
+		</ul>
+	)
+}
+
+
+class FiltersList extends PureComponent {
+	renderValue(label, value) {
+		if (IncidentFiltering.DATE_FILTERS.includes(label)) {
+			var formattedValue = value.format(HUMAN_DATE_FORMAT)
+		} else {
+			var formattedValue = value
+		}
+
+		if (label === 'lower_date') {
+			return (
+				<span>
+					<span className="filters__text--dim">since</span>
+					{' '}
+					{formattedValue}
+				</span>
+			)
+		} else if (label === 'upper_date') {
+			return (
+				<span>
+					<span className="filters__text--dim">before</span>
+					{' '}
+					{formattedValue}
+				</span>
+			)
+		} else {
+			return null
+		}
+	}
+
+	render() {
+		const { filterValues } = this.props
+
+		return (
+			<ul className="filters__summary-list">
+				{Object.keys(filterValues).map(label => (
+					<li key={label} className="filters__summary-item">
+						{this.renderValue(label, filterValues[label])}
+					</li>
+				))}
+			</ul>
+		)
+	}
+}
+
+
+class FilterSummary extends PureComponent {
+	render() {
+		const {
+			filtersExpanded,
+			filterValues,
+			categoriesEnabled,
+			changeFiltersMessage,
+		} = this.props
+
+		const hasAnyFilters = (
+			Object.keys(filterValues).length > 0 ||
+			categoriesEnabled.some(category => {
+				// Check if a non-General category has been whitelisted.
+				return category.id !== -1 && category.enabled
+			})
+		)
+
+		if (!hasAnyFilters) {
+			return (
+				<div className="filters__summary filters__text--dim">
+					{changeFiltersMessage || 'No filters applied.'}
+				</div>
+			)
+		}
+
+		if (filtersExpanded) {
+			return (
+				<div className="filters__summary">
+					Filters
+				</div>
+			)
+		}
+
+		const categories = categoriesEnabled.filter(({ enabled }) => enabled)
+		const hasFilters = Object.keys(filterValues).length > 0
+
+		return (
+			<div className="filters__summary filters__summary--can-compact filters__text--dim">
+				Showing <CategoryList categories={categories} />
+				{hasFilters && ' '}
+				{hasFilters && <FiltersList filterValues={filterValues} />}
+			</div>
+		)
+	}
+}
+
+
 class FiltersHeader extends PureComponent {
 	render() {
 		const {
 			filtersExpanded,
 			filterValues,
-			handleToggle
+			handleToggle,
+			categoriesEnabled,
+			changeFiltersMessage,
 		} = this.props
 
 
-		const hasAnyFilters = Object.keys(filterValues).length > 0
 		return (
 			<div className="filters__header">
-				{!hasAnyFilters && (
-					<div className="filters__text filters__text--dim">
-						No filters applied.
-					</div>
-				)}
-
-				{hasAnyFilters && (
-					<div className="filters__text">
-						Filters
-					</div>
-				)}
+				<FilterSummary
+					filtersExpanded={filtersExpanded}
+					filterValues={filterValues}
+					categoriesEnabled={categoriesEnabled}
+					changeFiltersMessage={changeFiltersMessage}
+				/>
 
 				<button
-					className="filters__button"
+					className="filters__button filters__button--no-shrink"
 					onClick={handleToggle}
 				>
 					<SettingsIcon />
@@ -286,6 +393,7 @@ function FiltersFooter({
 	handleApplyFilters,
 	handleClearFilters,
 	loading,
+	filtersTouched,
 }) {
 	return (
 		<div className="filters__footer">
@@ -306,6 +414,7 @@ function FiltersFooter({
 				<button
 					className="filters__button filters__button--bordered filters__button--wide"
 					onClick={handleApplyFilters}
+					disabled={!filtersTouched}
 				>
 					{loading > 0 && <HorizontalLoader />}
 					{loading === 0 && 'Apply Filters'}
@@ -337,6 +446,7 @@ class IncidentFiltering extends PureComponent {
 			filtersExpanded: false,
 			selectedAccordions,
 			loading: 0,
+			filtersTouched: false,
 			...this.getStateFromQueryParams(),
 		}
 	}
@@ -397,7 +507,7 @@ class IncidentFiltering extends PureComponent {
 				const value = this.state.filterValues[key]
 				return {
 					...values,
-					[key]: isMoment(value) ? value.format('YYYY-MM-DD') : value,
+					[key]: isMoment(value) ? value.format(DATE_FORMAT) : value,
 				}
 			}, {})
 
@@ -448,6 +558,7 @@ class IncidentFiltering extends PureComponent {
 		this.setState({
 			categoriesEnabled,
 			selectedAccordions,
+			filtersTouched: true,
 		})
 	}
 
@@ -494,6 +605,7 @@ class IncidentFiltering extends PureComponent {
 				}
 			}),
 			filterValues: {},
+			filtersTouched: false,
 		})
 
 		history.pushState(null, null, '?' + queryString.stringify(strippedParams))
@@ -503,6 +615,7 @@ class IncidentFiltering extends PureComponent {
 	fetchPage(params) {
 		this.setState({
 			loading: this.state.loading + 1,
+			filtersTouched: false,
 		})
 
 		axios.get('?' + queryString.stringify(params))
@@ -549,7 +662,8 @@ class IncidentFiltering extends PureComponent {
 			filterValues: {
 				...this.state.filterValues,
 				[label]: value,
-			}
+			},
+			filtersTouched: true,
 		})
 	}
 
@@ -571,11 +685,13 @@ class IncidentFiltering extends PureComponent {
 			categoriesEnabled,
 			filterValues,
 			filtersExpanded,
+			filtersTouched,
 			selectedAccordions,
 		} = this.state
 
 		const {
 			noCategoryFiltering,
+			changeFiltersMessage,
 		} = this.props
 
 		return (
@@ -583,7 +699,9 @@ class IncidentFiltering extends PureComponent {
 				<FiltersHeader
 					filterValues={filterValues}
 					filtersExpanded={filtersExpanded}
+					categoriesEnabled={categoriesEnabled}
 					handleToggle={this.handleToggle}
+					changeFiltersMessage={changeFiltersMessage}
 				/>
 
 				<FiltersExpandable filtersExpanded={filtersExpanded}>
@@ -607,6 +725,7 @@ class IncidentFiltering extends PureComponent {
 						handleApplyFilters={this.handleApplyFilters}
 						handleClearFilters={this.handleClearFilters}
 						loading={this.state.loading}
+						filtersTouched={filtersTouched}
 					/>
 				</FiltersExpandable>
 			</Filters>
