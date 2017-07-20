@@ -317,6 +317,30 @@ function BoolInput({ handleFilterChange, filterValues, label, filter }) {
 }
 
 
+function ChoiceInput({ handleFilterChange, filterValues, label, filter, choices }) {
+	return (
+		<div>
+			{label}:
+			{' '}
+			<select
+				onChange={handleFilterChange.bind(null, filter)}
+				value={filterValues[filter] || ''}
+			>
+				<option value=""></option>
+				{choices.map(choice => (
+					<option
+						key={choice.value}
+						value={choice.value}
+					>
+						{choice.label}
+					</option>
+				))}
+			</select>
+		</div>
+	)
+}
+
+
 const FilterSets = {}
 
 
@@ -550,7 +574,8 @@ function FilterAccordion({
 	handleAccordionSelection,
 	handleFilterChange,
 	filterValues,
-	noCategoryFiltering
+	noCategoryFiltering,
+	choices,
 }) {
 	if (!category.enabled) {
 		return null
@@ -584,6 +609,7 @@ function FilterAccordion({
 				<FilterSet
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
+					choices={choices}
 				/>
 			)}
 		</li>
@@ -600,6 +626,7 @@ class FiltersBody extends PureComponent {
 			handleFilterChange,
 			filterValues,
 			noCategoryFiltering,
+			choices,
 		} = this.props
 
 		return (
@@ -615,6 +642,7 @@ class FiltersBody extends PureComponent {
 					selectedAccordions={selectedAccordions}
 					filterValues={filterValues}
 					noCategoryFiltering={noCategoryFiltering}
+					choices={choices}
 				/>
 
 				{categoriesEnabled.map(category => (
@@ -626,6 +654,7 @@ class FiltersBody extends PureComponent {
 						selectedAccordions={selectedAccordions}
 						filterValues={filterValues}
 						noCategoryFiltering={noCategoryFiltering}
+						choices={choices}
 					/>
 				))}
 			</ul>
@@ -968,6 +997,7 @@ class IncidentFiltering extends PureComponent {
 		const {
 			noCategoryFiltering,
 			changeFiltersMessage,
+			filterChoices,
 		} = this.props
 
 		return (
@@ -995,6 +1025,7 @@ class IncidentFiltering extends PureComponent {
 						handleAccordionSelection={this.handleAccordionSelection}
 						handleFilterChange={this.handleFilterChange}
 						noCategoryFiltering={noCategoryFiltering}
+						choices={filterChoices}
 					/>
 
 					<FiltersFooter
