@@ -280,9 +280,9 @@ function RadioPillInput({
 
 RadioPillInput.defaultProps = {
 	options: [
-		{ label: 'Unknown', value: 'unknown' },
-		{ label: 'Yes', value: 'yes' },
-		{ label: 'No', value: 'no' },
+		{ label: 'Unknown', value: 'NOTHING' },
+		{ label: 'Yes', value: 'JUST_TRUE' },
+		{ label: 'No', value: 'JUST_FALSE' },
 	],
 }
 
