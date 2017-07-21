@@ -81,6 +81,10 @@ class InfiniteScroller {
 		if (replace) {
 			this.parentElm.parentNode.replaceChild(parentElm, this.parentElm)
 			this.parentElm = parentElm
+			// If we're doing a replacement, we also might have a new stats table to replace
+			const summaryTable = document.querySelector('.js-summary-table')
+			const newSummaryTable = tempElm.querySelector('.js-summary-table')
+			summaryTable.innerHTML = newSummaryTable.innerHTML
 		} else {
 			this.parentElm.appendChild(fragment)
 		}
