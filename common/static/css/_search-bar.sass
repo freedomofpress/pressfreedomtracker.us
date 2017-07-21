@@ -3,10 +3,11 @@ $search-bar-line-height: 2
 $search-bar-padding: 4px
 $search-bar-button-width: 70px
 $search-bar-icon-width: 20px
+$search-bar-height: $search-bar-font-size * $search-bar-line-height
 
 .search-bar
 	position: relative
-	height: $search-bar-font-size * $search-bar-line-height
+	height: $search-bar-height
 	width: 100%
 	max-width: 300px
 
@@ -16,6 +17,13 @@ $search-bar-icon-width: 20px
 .search-bar--mobile
 	width: 90%
 	margin: 10px auto
+
+.search-bar--on-page
+	width: 300px
+	max-width: 100%
+	border: 1px solid $header-color
+	height: $search-bar-height + 2px
+	margin-bottom: 2*$column-gutter-width
 
 .search-bar__icon
 	position: absolute
