@@ -86,12 +86,23 @@ class Autocomplete extends PureComponent {
 	}
 
 	fetchInitialValues(value) {
-		if (!value || value.length === 0) {
+		if (!value) {
 			return
 		}
 
+		const isMulti = Array.isArray(value)
+		if (isMulti && value.length === 0) {
+			return
+		}
+
+		if (isMulti) {
+			var ids = value.map(({ id }) => id).join(',')
+		} else {
+			var ids = value.id
+		}
+
 		const params = {
-			ids: value.map(({ id }) => id).join(','),
+			ids,
 			type: this.props.type,
 		}
 		axios.get(this.props.apiBase + 'objects/', { params })
@@ -104,14 +115,18 @@ class Autocomplete extends PureComponent {
 					return
 				}
 
-				const value = this.state.value.map(value => {
-					const page = res.data.pages.find(page => page.id === value.id)
-					if (!page) {
-						return value
-					}
+				if (isMulti) {
+					var value = this.state.value.map(value => {
+						const page = res.data.pages.find(page => page.id === value.id)
+						if (!page) {
+							return value
+						}
 
-					return page
-				})
+						return page
+					})
+				} else {
+					var value = res.data.pages[0]
+				}
 
 				this.setState({ value })
 			})

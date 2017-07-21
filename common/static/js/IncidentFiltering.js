@@ -417,6 +417,15 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 				label="State"
 				filter="state"
 				type="incident.State"
+				isSingle={true}
+			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Targets"
+				filter="targets"
+				type="incident.Target"
 				isSingle={false}
 			/>
 
@@ -907,10 +916,12 @@ class IncidentFiltering extends PureComponent {
 
 			if (IncidentFiltering.DATE_FILTERS.includes(key)) {
 				var value = moment(params[key])
-			} else if (IncidentFiltering.AUTOCOMPLETE_FILTERS.includes(key)) {
+			} else if (IncidentFiltering.AUTOCOMPLETE_MULTI_FILTERS.includes(key)) {
 				var value = params[key]
 					.split(',')
 					.map(n => { return { id: parseInt(n) } })
+			} else if (IncidentFiltering.AUTOCOMPLETE_SINGLE_FILTERS.includes(key)) {
+				var value = { id: parseInt(params[key]) }
 			} else if (params[key] === 'True') {
 				var value = true
 			} else if (params[key] === 'False') {
@@ -936,8 +947,10 @@ class IncidentFiltering extends PureComponent {
 			return value.format(DATE_FORMAT)
 		} else if (typeof value === 'boolean') {
 			return value ? 'True' : 'False'
-		} else if (IncidentFiltering.AUTOCOMPLETE_FILTERS.includes(key)) {
+		} else if (IncidentFiltering.AUTOCOMPLETE_MULTI_FILTERS.includes(key)) {
 			return value.map(({ id }) => id).join(',')
+		} else if (IncidentFiltering.AUTOCOMPLETE_SINGLE_FILTERS.includes(key)) {
+			return value.id
 		} else {
 			return value
 		}
@@ -1243,7 +1256,12 @@ IncidentFiltering.DATE_FILTERS = [
 ]
 
 
-IncidentFiltering.AUTOCOMPLETE_FILTERS = [
+IncidentFiltering.AUTOCOMPLETE_MULTI_FILTERS = [
+	'targets',
+]
+
+
+IncidentFiltering.AUTOCOMPLETE_SINGLE_FILTERS = [
 	'state',
 ]
 
