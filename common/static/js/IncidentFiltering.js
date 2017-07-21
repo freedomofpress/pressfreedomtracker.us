@@ -265,6 +265,7 @@ function AutocompleteInput({
 			canCreate={false}
 			isSingle={isSingle}
 			value={filterValues[filter]}
+			onChange={handleFilterChange.bind(null, filter)}
 		/>
 	)
 }
