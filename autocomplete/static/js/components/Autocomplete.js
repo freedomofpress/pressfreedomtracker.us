@@ -21,6 +21,10 @@ class Autocomplete extends PureComponent {
 			},
 			suggestions: [],
 		}
+
+		if (props.fetchInitialValues) {
+			this.fetchInitialValues(props.value)
+		}
 	}
 
 	componentDidMount() {
@@ -78,6 +82,38 @@ class Autocomplete extends PureComponent {
 				this.setState({
 					suggestions: res.data.pages
 				})
+			})
+	}
+
+	fetchInitialValues(value) {
+		if (value.length === 0) {
+			return
+		}
+
+		const params = {
+			ids: value.map(({ id }) => id).join(','),
+			type: this.props.type,
+		}
+		axios.get('/autocomplete/objects/', { params })
+			.then(res => {
+				if (res.status !== 200) {
+					return
+				}
+
+				if (!Array.isArray(res.data.pages)) {
+					return
+				}
+
+				const value = this.state.value.map(value => {
+					const page = res.data.pages.find(page => page.id === value.id)
+					if (!page) {
+						return value
+					}
+
+					return page
+				})
+
+				this.setState({ value })
 			})
 	}
 
@@ -169,12 +205,18 @@ class Autocomplete extends PureComponent {
 }
 
 
+Autocomplete.defaultProps = {
+	fetchInitialValues: false,
+}
+
+
 Autocomplete.propTypes = {
 	name: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired,
 	canCreate: PropTypes.bool.isRequired,
 	isSingle: PropTypes.bool.isRequired,
 	onChange: PropTypes.func,
+	fetchInitialValues: PropTypes.bool,
 }
 
 

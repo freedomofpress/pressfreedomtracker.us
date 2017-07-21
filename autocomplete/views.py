@@ -18,6 +18,36 @@ def render_page(page):
 
 @require_GET
 @require_admin_access
+def objects(request):
+    ids_param = request.GET.get('ids')
+    if not ids_param:
+        return HttpResponseBadRequest
+    page_type = request.GET.get('type', 'wagtailcore.Page')
+    try:
+        model = apps.get_model(page_type)
+    except:
+        return HttpResponseBadRequest
+
+    try:
+        ids = [
+            int(id)
+            for id in ids_param.split(',')
+        ]
+    except:
+        return HttpResponseBadRequest
+
+    queryset = model.objects.filter(id__in=ids)
+    if getattr(queryset, 'live', None):
+        # Non-Page models like Snippets won't have a live/published status
+        # and thus should not be filtered with a call to `live`.
+        queryset = queryset.live()
+
+    results = map(render_page, queryset)
+    return JsonResponse(dict(pages=list(results)))
+
+
+@require_GET
+@require_admin_access
 def search(request):
     search_query = request.GET.get('query', '')
     page_type = request.GET.get('type', 'wagtailcore.Page')
