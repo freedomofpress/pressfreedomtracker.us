@@ -4,6 +4,11 @@ import classNames from 'classnames'
 import DatePicker from 'react-datepicker'
 import queryString from 'query-string'
 import moment, { isMoment } from 'moment'
+import Autocomplete from 'WagtailAutocomplete/Autocomplete'
+
+
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 
 const HUMAN_DATE_FORMAT = 'MMM Do YYYY'
@@ -245,6 +250,26 @@ function FilterSet({ children }) {
 }
 
 
+function AutocompleteInput({
+	handleFilterChange,
+	filterValues,
+	label,
+	filter,
+	type,
+	isSingle,
+}) {
+	return (
+		<Autocomplete
+			type={type}
+			name={filter}
+			canCreate={false}
+			isSingle={isSingle}
+			value={filterValues[filter]}
+		/>
+	)
+}
+
+
 function RadioPillInput({
 	handleFilterChange,
 	filterValues,
@@ -381,6 +406,15 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 				filterValues={filterValues}
 				label="City"
 				filter="city"
+			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="State"
+				filter="state"
+				type="incident.State"
+				isSingle={false}
 			/>
 
 			<TextInput
