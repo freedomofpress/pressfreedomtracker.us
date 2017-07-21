@@ -1,6 +1,11 @@
 {% extends layout_template %}
 {% load common_tags %}
 
+{% block top_sidebar_class %}
+	{{ block.super }}
+	layout-right-sidebar__sidebar--light
+{% endblock%}
+
 {% block top %}
 	{{ block.super }}
 	<h2 class="page-title">{{ page.title }}</h2>
@@ -38,6 +43,13 @@
 	{% endblock %}
 {% endblock %}
 
+{% block sidebar_class %}
+	layout-right-sidebar__sidebar--light
+	layout-right-sidebar__sidebar--padded
+{% endblock %}
+
 {% block sidebar %}
-	{% include "incident/_summary_table.html" with summary_table=summary_table %}
+	<div class="js-summary-table">
+		{% include "incident/_summary_table.html" with summary_table=summary_table %}
+	</div>
 {% endblock %}
