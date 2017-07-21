@@ -52,15 +52,14 @@
 		display: inline
 
 	&__summary-item
-		+list-comma-separated
 		display: inline
 		color: $white
+		+list-comma-separated--human(';')
 
 		&::after
 			color: $fg-dim
 
-		&--semicolons::after
-			content: '; '
+
 
 
 	&__expandable

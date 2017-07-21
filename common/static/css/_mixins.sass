@@ -44,12 +44,21 @@
 	margin: 0
 	padding: 0
 
-=list-comma-separated
+=list-comma-separated($punct: ',')
 	&::after
-		content: ', '
+		content: '#{$punct} '
 
 	&:last-child::after
 		content: ''
+
+=list-comma-separated--human($punct: ',')
+	+list-comma-separated($punct)
+
+	&:nth-last-child(2)::after
+		content: '#{$punct} and '
+
+	&:first-child:nth-last-child(2)::after
+		content: ' and '
 
 
 // TYPOGRAPHY
