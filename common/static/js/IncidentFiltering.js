@@ -259,17 +259,21 @@ function AutocompleteInput({
 	isSingle,
 }) {
 	return (
-		<Autocomplete
-			type={type}
-			name={filter}
-			canCreate={false}
-			isSingle={isSingle}
-			value={filterValues[filter]}
-			onChange={handleFilterChange.bind(null, filter)}
-			fetchInitialValues={true}
-			apiBase="/autocomplete/"
-			controlled={true}
-		/>
+		<div>
+			{label}:
+			{' '}
+			<Autocomplete
+				type={type}
+				name={filter}
+				canCreate={false}
+				isSingle={isSingle}
+				value={filterValues[filter]}
+				onChange={handleFilterChange.bind(null, filter)}
+				fetchInitialValues={true}
+				apiBase="/autocomplete/"
+				controlled={true}
+			/>
+		</div>
 	)
 }
 
