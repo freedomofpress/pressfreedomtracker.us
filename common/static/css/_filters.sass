@@ -111,13 +111,14 @@
 			width: calc(50% - #{$padding-x})
 
 
-	&__category--active,
-	&__category:active,
-	&__category:hover,
-	&__category:focus
-		background-color: $white
-		color: $bg-medium
+		+hover
+			background-color: lighten($bg-light,8)
 
+		&--active,
+			background-color: $white
+			color: $bg-medium
+			+hover
+				background-color: lighten($bg-light,57)
 
 	&__accordion-category
 		border-bottom-width: 1px
