@@ -36,6 +36,10 @@ class Autocomplete extends PureComponent {
 				value,
 			}
 		})
+
+		if (typeof this.props.onChange === 'function') {
+			this.props.onChange({ target: { value } })
+		}
 	}
 
 	getExclusions() {
@@ -79,6 +83,10 @@ class Autocomplete extends PureComponent {
 
 	handleClick(value) {
 		this.setState({ value })
+
+		if (typeof this.props.onChange === 'function') {
+			this.props.onChange({ target: { value } })
+		}
 	}
 
 	handleCreate() {
@@ -103,23 +111,30 @@ class Autocomplete extends PureComponent {
 					isLoading: false,
 					value,
 				})
+
+				if (typeof this.props.onChange === 'function') {
+					this.props.onChange({ target: { value } })
+				}
 			})
 		this.setState({ isLoading: true })
 	}
 
 	render() {
-		const { name, isSingle } = this.props
+		const { name, isSingle, onChange } = this.props
 		const { value, input, suggestions } = this.state
 
 		const canCreate = this.props.canCreate && input.value.trim() !== ''
+		const useHiddenInput = typeof onChange !== 'function'
 
 		return (
 			<span className="autocomplete">
-				<input
-					type="hidden"
-					value={JSON.stringify(value)}
-					name={name}
-				/>
+				{useHiddenInput && (
+					<input
+						type="hidden"
+						value={JSON.stringify(value)}
+						name={name}
+					/>
+				)}
 
 				{isSingle && (
 					<Single
@@ -159,6 +174,7 @@ Autocomplete.propTypes = {
 	type: PropTypes.string.isRequired,
 	canCreate: PropTypes.bool.isRequired,
 	isSingle: PropTypes.bool.isRequired,
+	onChange: PropTypes.func,
 }
 
 
