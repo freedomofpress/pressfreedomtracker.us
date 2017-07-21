@@ -1,4 +1,5 @@
 $small-screen-side-padding: 13px
+$sidebar-margin: 0.8em
 
 .layout-right-sidebar
 	display: flex
@@ -25,7 +26,7 @@ $small-screen-side-padding: 13px
 	width: $sidebar-width
 	min-width: $sidebar-min-width
 	margin-left: $column-gutter-width
-	padding: 0 $column-gutter-width 1rem 0
+	padding: 0 0.75em 1em 0
 
 	@media(max-width: $small-screen)
 		margin-top: 20px
@@ -46,6 +47,7 @@ $small-screen-side-padding: 13px
 
 .layout-right-sidebar__sidebar--light
 	background-color: $fpf-sidebar
+	padding-left: $column-gutter-width
 
 .layout-right-sidebar__main--dark
 	background-color: $dark-layout-color
@@ -55,6 +57,7 @@ $small-screen-side-padding: 13px
 	background-color: $dark-layout-sidebar
 	margin-left: 0
 	min-height: $category-page-header-min-height
+	padding-left: $column-gutter-width
 
 	@media(max-width: $small-screen)
 		margin-top: 0
@@ -62,7 +65,7 @@ $small-screen-side-padding: 13px
 
 
 .layout-right-sidebar__sidebar--padded
-	padding: $layout-top-padding 1.5em
+	padding: $layout-top-padding 0.75em $layout-top-padding $column-gutter-width
 
 .layout-right-sidebar__sidebar--hide-mobile
 	@media(max-width: $small-screen)
