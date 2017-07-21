@@ -266,6 +266,19 @@ class SimplePage(Page):
         index.SearchField('body'),
     ]
 
+    def get_context(self, request):
+        # Avoid circular import
+        from home.models import HomePage
+
+        context = super(SimplePage, self).get_context(request)
+
+        home = Page.objects.all().live().type(
+            HomePage)[0]
+
+        context['home_page'] = home
+
+        return context
+
 
 class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     body = StreamField([
