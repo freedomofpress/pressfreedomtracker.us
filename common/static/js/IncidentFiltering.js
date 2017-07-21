@@ -434,11 +434,29 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 				isSingle={false}
 			/>
 
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Tags"
+				filter="tags"
+				type="common.CommonTag"
+				isSingle={false}
+			/>
+
 			<TextInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
 				label="Lawsuit Name"
 				filter="lawsuit_name"
+			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Venue"
+				filter="venue"
+				type="incident.Venue"
+				isSingle={true}
 			/>
 		</FilterSet>
 	)
@@ -469,6 +487,24 @@ FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues, 
 				label="Status of charges"
 				filter="status_of_charges"
 				choices={choices.STATUS_OF_CHARGES}
+			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Current charges"
+				filter="current_charges"
+				type="incident.Charge"
+				isSingle={false}
+			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Dropped charges"
+				filter="dropped_charges"
+				type="incident.Charge"
+				isSingle={false}
 			/>
 		</FilterSet>
 	)
@@ -548,6 +584,15 @@ FilterSets['Border Stop'] = function({ handleFilterChange, filterValues, choices
 				label="Were devices searched or seized?"
 				filter="were_devices_searched_or_seized"
 			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Nationality"
+				filter="target_nationality"
+				type="incident.Nationality"
+				isSingle={false}
+			/>
 		</FilterSet>
 	)
 }
@@ -565,7 +610,14 @@ FilterSets['Chilling Statements'] = function({ handleFilterChange, filterValues 
 FilterSets['Denial of Access'] = function({ handleFilterChange, filterValues }) {
 	return (
 		<FilterSet>
-			Placeholder
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Politicians or public figures involved"
+				filter="politicians_or_public_figures_involved"
+				type="incident.PoliticianOrPublic"
+				isSingle={false}
+			/>
 		</FilterSet>
 	)
 }
@@ -595,6 +647,24 @@ FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChan
 				label="Actor"
 				filter="actor"
 				choices={choices.ACTORS}
+			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Equipment seized"
+				filter="equipment_seized"
+				type="incident.Equipment"
+				isSingle={false}
+			/>
+
+			<AutocompleteInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Equipment broken"
+				filter="equipment_broken"
+				type="incident.Equipment"
+				isSingle={false}
 			/>
 		</FilterSet>
 	)
@@ -1263,11 +1333,19 @@ IncidentFiltering.DATE_FILTERS = [
 
 IncidentFiltering.AUTOCOMPLETE_MULTI_FILTERS = [
 	'targets',
+	'tags',
+	'current_charges',
+	'dropped_charges',
+	'equipment_seized',
+	'equipment_broken',
+	'politicians_or_public_figures_involved',
+	'target_nationality',
 ]
 
 
 IncidentFiltering.AUTOCOMPLETE_SINGLE_FILTERS = [
 	'state',
+	'venue',
 ]
 
 
