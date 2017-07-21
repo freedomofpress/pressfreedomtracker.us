@@ -68,9 +68,9 @@
 	text-transform: uppercase
 
 =light-gray-text-small
-	color: $gray-light-text
+	color: lighten($gray-mid-text, 3%)
 	font-weight: $sans-regular
-	font-size: 0.83em
+	font-size: 0.9em
 
 =p-remove-first-and-last-margin
 	p:first-child
@@ -116,7 +116,7 @@
 			text-decoration: underline
 
 =blue-link
-	a,
+	a
 		text-decoration-color: $gray-light
 		color: $blue-dark-link
 
@@ -136,7 +136,8 @@
 
 =white-link
 	a,
-	.rich-text > a
+	.rich-text > a,
+	.rich-text p a
 		text-decoration: none
 		color: $white-link
 		transition: color ease 0.15s

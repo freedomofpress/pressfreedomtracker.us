@@ -1,7 +1,7 @@
 {% load wagtailcore_tags %}
 
 {% if page.arrest_status %}
-	<tr class='data-table__row'>
+	<tr class="data-table__row">
 		<th class="data-table__label">
 			Arrest Status
 		</th>
@@ -14,7 +14,7 @@
 {% endif %}
 
 {% if page.status_of_charges %}
-	<tr class='data-table__row'>
+	<tr class="data-table__row">
 		<th class="data-table__label">
 			Status of Charges
 		</th>
@@ -27,7 +27,7 @@
 {% endif %}
 
 {% if page.current_charges.all %}
-	<tr class='data-table__row'>
+	<tr class="data-table__row">
 		<th class="data-table__label">
 			Current Charges
 		</th>
@@ -46,7 +46,7 @@
 {% endif %}
 
 {% if page.dropped_charges.all %}
-	<tr class='data-table__row'>
+	<tr class="data-table__row">
 		<th class="data-table__label">
 			Dropped charges
 		</th>
@@ -65,7 +65,7 @@
 {% endif %}
 
 {% if page.detention_date %}
-	<tr class='data-table__row'>
+	<tr class="data-table__row">
 		<th class="data-table__label">
 			Detention Date
 		</th>
@@ -77,7 +77,7 @@
 {% endif %}
 
 {% if page.release_date %}
-	<tr class='data-table__row'>
+	<tr class="data-table__row">
 		<th class="data-table__label">
 			Release Date
 		</th>
@@ -90,7 +90,7 @@
 {% endif %}
 
 {% if page.get_main_category.slug == 'arrest-detention' or page.unnecessary_use_of_force %}
-	<tr class='data-table__row'>
+	<tr class="data-table__row">
 		<th class="data-table__label">
 			Unnecessary use of force?
 		</th>
