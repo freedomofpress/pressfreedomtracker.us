@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from functools import reduce
 
 from django.db.models import Count
@@ -387,9 +387,38 @@ class IncidentFilter(object):
 
         """
 
+        TODAY = date.today()
+        THIS_YEAR = TODAY.year
+        THIS_MONTH = TODAY.month
+
         summary = (
             ('Total Incidents', incidents.count),
         )
+
+        # Add counts for this year and this month if non-zero
+        num_this_year = incidents.filter(date__contained_by=DateRange(
+            TODAY.replace(month=1, day=1),
+            TODAY.replace(month=12, day=31),
+            bounds='[]'
+        )).count()
+
+        num_this_month = incidents.filter(date__contained_by=DateRange(
+            TODAY.replace(day=1),
+            TODAY.replace(month=THIS_MONTH + 1, day=1),
+            bounds='[)'
+        )).count()
+
+        if num_this_year > 0:
+            summary = summary + ((
+                'Incidents in {}'.format(THIS_YEAR),
+                num_this_year
+            ),)
+
+        if num_this_month > 0:
+            summary = summary + ((
+                'Incidents in {0:%B}'.format(TODAY),
+                num_this_month
+            ),)
 
         # If more than one category is included in this set, add a summary item
         # for each category of the form ("Total <Category Name>", <Count>)
