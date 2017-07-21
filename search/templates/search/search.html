@@ -4,34 +4,36 @@
 {% block title %}Search{% endblock %}
 
 {% block main %}
-	<h1>Search</h1>
+	<div class="search-page">
+		<h1>Search</h1>
 
-	{% if search_results %}
-		<ul>
-			{% for result in search_results %}
-				<li>
-					<h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-					{% if result.search_description %}
-						{{ result.search_description|safe }}
-					{% elif result.content_type.name in content_types_with_body %}
-						{% with first_text_block=result.specific.body|first_block_of:'rich_text' %}
-							{% if first_text_block %}
-								{% firstof result.search_description|safe first_text_block|truncatewords_html:'40'|striptags %}
-							{% endif %}
-						{% endwith %}
-					{% endif %}
-				</li>
-			{% endfor %}
-		</ul>
+		{% if search_results %}
+			<ul>
+				{% for result in search_results %}
+					<li>
+						<h4><a href="{% pageurl result %}">{{ result }}</a></h4>
+						{% if result.search_description %}
+							{{ result.search_description|safe }}
+						{% elif result.content_type.name in content_types_with_body %}
+							{% with first_text_block=result.specific.body|first_block_of:'rich_text' %}
+								{% if first_text_block %}
+									{% firstof result.search_description|safe first_text_block|truncatewords_html:'40'|striptags %}
+								{% endif %}
+							{% endwith %}
+						{% endif %}
+					</li>
+				{% endfor %}
+			</ul>
 
-		{% if search_results.has_previous %}
-			<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
+			{% if search_results.has_previous %}
+				<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
+			{% endif %}
+
+			{% if search_results.has_next %}
+				<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
+			{% endif %}
+		{% elif search_query %}
+			No results found
 		{% endif %}
-
-		{% if search_results.has_next %}
-			<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
-		{% endif %}
-	{% elif search_query %}
-		No results found
-	{% endif %}
+	</div>
 {% endblock %}
