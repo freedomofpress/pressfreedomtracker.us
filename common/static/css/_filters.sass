@@ -52,15 +52,19 @@
 		display: inline
 
 	&__summary-item
-		+list-comma-separated
 		display: inline
 		color: $white
 
-		&::after
+		&:not(:last-child)::after
+			content: ', '
 			color: $fg-dim
 
-		&--semicolons::after
-			content: '; '
+		&--semicolons
+			&:not(:last-child)::after
+				content: '; '
+			&:first-child:nth-last-child(2)::after
+				content: ' and '
+
 
 
 	&__expandable
