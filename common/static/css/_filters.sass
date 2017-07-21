@@ -54,16 +54,11 @@
 	&__summary-item
 		display: inline
 		color: $white
+		+list-comma-separated--human(';')
 
-		&:not(:last-child)::after
-			content: ', '
+		&::after
 			color: $fg-dim
 
-		&--semicolons
-			&:not(:last-child)::after
-				content: '; '
-			&:first-child:nth-last-child(2)::after
-				content: ' and '
 
 
 
