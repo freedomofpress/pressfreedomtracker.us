@@ -78,6 +78,8 @@ class FiltersList extends PureComponent {
 			var formattedValue = value
 		}
 
+		const underscoreRe = /_/g
+
 		if (label === 'lower_date') {
 			return (
 				<span>
@@ -94,8 +96,52 @@ class FiltersList extends PureComponent {
 					{formattedValue}
 				</span>
 			)
+		} else if (IncidentFiltering.DATE_FILTERS.includes(label)) {
+			const period = label.includes('_lower') ? 'since' : 'before'
+			const description = label.substring(0, label.length - 6).replace(underscoreRe, ' ')
+			return (
+				<span>
+					<span className="filters__text--dim">{description} {period}</span>
+					{' '}
+					{formattedValue}
+				</span>
+			)
+		} else if (IncidentFiltering.AUTOCOMPLETE_MULTI_FILTERS.includes(label)) {
+			const description = label.replace(underscoreRe, ' ')
+			return (
+				<span>
+					<span className="filters__text--dim">{description}:</span>
+					{' '}
+					<ul className="filters__summary-list">
+						{value.map(({ label, id }) => (
+							<li
+								key={id}
+								className="filters__summary-item"
+							>
+								{label}
+							</li>
+						))}
+					</ul>
+				</span>
+			)
+		} else if (IncidentFiltering.AUTOCOMPLETE_SINGLE_FILTERS.includes(label)) {
+			const description = label.replace(underscoreRe, ' ')
+			return (
+				<span>
+					<span className="filters__text--dim">{description}:</span>
+					{' '}
+					{value.label}
+				</span>
+			)
 		} else {
-			return null
+			const description = label.replace(underscoreRe, ' ')
+			return (
+				<span>
+					<span className="filters__text--dim">{description}:</span>
+					{' '}
+					{formattedValue}
+				</span>
+			)
 		}
 	}
 
