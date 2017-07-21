@@ -69,7 +69,7 @@ class Autocomplete extends PureComponent {
 			type: this.props.type,
 			exclude: this.getExclusions(),
 		}
-		axios.get('/autocomplete/search/', { params })
+		axios.get(this.props.apiBase + 'search/', { params })
 			.then(res => {
 				if (res.status !== 200) {
 					return
@@ -94,7 +94,7 @@ class Autocomplete extends PureComponent {
 			ids: value.map(({ id }) => id).join(','),
 			type: this.props.type,
 		}
-		axios.get('/autocomplete/objects/', { params })
+		axios.get(this.props.apiBase + 'objects/', { params })
 			.then(res => {
 				if (res.status !== 200) {
 					return
@@ -134,7 +134,7 @@ class Autocomplete extends PureComponent {
 		const data = new FormData()
 		data.set('type', this.props.type)
 		data.set('value', value)
-		axios.post('/autocomplete/create/', data)
+		axios.post(this.props.apiBase + 'create/', data)
 			.then(res => {
 				if (res.status !== 200) {
 					this.setState({ isLoading: false })
@@ -217,6 +217,7 @@ Autocomplete.propTypes = {
 	isSingle: PropTypes.bool.isRequired,
 	onChange: PropTypes.func,
 	fetchInitialValues: PropTypes.bool,
+	apiBase: PropTypes.string.isRequired,
 }
 
 

@@ -267,6 +267,7 @@ function AutocompleteInput({
 			value={filterValues[filter]}
 			onChange={handleFilterChange.bind(null, filter)}
 			fetchInitialValues={true}
+			apiBase="/autocomplete/"
 		/>
 	)
 }

@@ -17,6 +17,7 @@ window.renderAutocompleteWidget = (id, name, value, type, canCreate, isSingle) =
 			type={type}
 			canCreate={canCreate}
 			isSingle={isSingle}
+			apiBase="/admin/autocomplete/"
 		/>,
 		document.getElementById(id)
 	)
