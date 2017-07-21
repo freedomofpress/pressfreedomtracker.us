@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import datetime
 from functools import reduce
 
@@ -331,6 +332,13 @@ class IncidentFilter(object):
         ]
 
     def fetch(self):
+        """
+        Returns (summary, incidents) where summary is a tuple of (label, value)
+        pairs of interesting stats for these results and incidents is an
+        IncidentPage queryset.
+
+        """
+
         incidents = IncidentPage.objects.live()
 
         if self.lower_date or self.upper_date:
@@ -365,7 +373,36 @@ class IncidentFilter(object):
         if self.search_text:
             incidents = self.by_search_text(incidents)
 
-        return incidents
+        summary = self.summarize(incidents)
+
+        return (summary, incidents)
+
+    def summarize(self, incidents):
+        """
+        Return a tuple of (label, value) pairs with summary data of the
+        incidents.
+
+        The data this chooses to summarize is based on the presence and value
+        of particular filters.
+
+        """
+
+        summary = (
+            ('Total Incidents', incidents.count),
+        )
+
+        # If more than one category is included in this set, add a summary item
+        # for each category of the form ("Total <Category Name>", <Count>)
+        if self.categories is not None:
+            category_pks = [int(pk) for pk in self.categories.split(',')]
+            if len(category_pks) > 1:
+                categories = CategoryPage.objects.filter(pk__in=category_pks)
+                for category in categories:
+                    category_name = category.plural_name if category.plural_name else category.title
+                    count = incidents.filter(categories__category=category).count()
+                    summary = summary + ((category_name, count),)
+
+        return summary
 
     def by_search_text(self, incidents):
         return incidents.search(self.search_text, order_by_relevance=False)

@@ -1,9 +1,12 @@
 {% extends layout_template %}
 {% load common_tags %}
 
-{% block main %}
+{% block top %}
+	{{ block.super }}
 	<h2 class="page-title">{{ page.title }}</h2>
+{% endblock %}
 
+{% block main %}
 	{% include "incident/_filters.html" %}
 
 	{% block ajax %}
@@ -33,4 +36,8 @@
 			</a>
 		{% endif %}
 	{% endblock %}
+{% endblock %}
+
+{% block sidebar %}
+	{% include "incident/_summary_table.html" with summary_table=summary_table %}
 {% endblock %}
