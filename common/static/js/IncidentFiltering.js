@@ -627,15 +627,6 @@ FilterSets['Border Stop'] = function({ handleFilterChange, filterValues, choices
 }
 
 
-FilterSets['Chilling Statements'] = function({ handleFilterChange, filterValues }) {
-	return (
-		<FilterSet>
-			Placeholder
-		</FilterSet>
-	)
-}
-
-
 FilterSets['Denial of Access'] = function({ handleFilterChange, filterValues }) {
 	return (
 		<FilterSet>
@@ -813,15 +804,6 @@ FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValu
 }
 
 
-FilterSets['Other Incidents'] = function({ handleFilterChange, filterValues }) {
-	return (
-		<FilterSet>
-			Placeholder
-		</FilterSet>
-	)
-}
-
-
 function FilterAccordion({
 	category,
 	selectedAccordions,
@@ -835,7 +817,12 @@ function FilterAccordion({
 		return null
 	}
 
-	const FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : () => null
+	const FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : null
+	if (!FilterSet) {
+		// Don't bother rendering an accordion with no filters
+		return null
+	}
+
 	const isActive = selectedAccordions.includes(category.id)
 	const collapsible = !noCategoryFiltering
 
