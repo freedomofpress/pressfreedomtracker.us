@@ -51,6 +51,19 @@
 	&:last-child::after
 		content: ''
 
+=list-comma-separated--human
+	&::after
+		content: ', '
+
+	&:last-child::after,
+		content: ''
+
+	&:nth-last-child(2)::after
+		content: ', and '
+
+	&:first-child:nth-last-child(2)::after
+		content: ' and '
+
 
 // TYPOGRAPHY
 
