@@ -29,6 +29,7 @@ var common = {
 	resolve: {
 		alias: {
 			'~': __dirname + '/common/static/js',
+			WagtailAutocomplete: path.resolve(__dirname, 'autocomplete/static/js/components'),
 			modernizr$: path.resolve(__dirname, '.modernizrrc')
 		},
 		extensions: ['.js', '.jsx'],
