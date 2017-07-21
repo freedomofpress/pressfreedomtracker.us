@@ -5,6 +5,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import axios from 'axios'
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 import '../css/common.sass'
 import '~/slidingnav'
@@ -12,4 +14,4 @@ import '~/infinitescrolling'
 
 window.React = require('react')
 window.ReactDOM = require('react-dom')
-window.IncidentFiltering = require('~/IncidentFiltering')
+window.IncidentFiltering = require('~/filtering/IncidentFiltering')
