@@ -1,0 +1,30 @@
+{% load wagtailcore_tags render_as_template %}
+
+<div class="methodology">
+	{% if category.methodology %}
+		<h3 class="methodology__title">
+			How we track
+			{% if category.plural_name %}
+				{{ category.plural_name|title }}
+			{% else %}
+				{{ category|title }}
+			{% endif %}
+		</h3>
+		<div class="methodology__text">
+			{% with method=category.methodology %}
+				{% render_as_template method %}
+			{% endwith %}
+		</div>
+	{% endif %}
+	{% if preview %}
+		<a class="methodology__link" href="{% pageurl category %}" >
+			More
+			{% if category.plural_name %}
+				{{ category.plural_name|title }}
+			{% else %}
+				{{ category|title }}
+			{% endif %}
+			&gt;
+		</a>
+	{% endif %}
+</div>

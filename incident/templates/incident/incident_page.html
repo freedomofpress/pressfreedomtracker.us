@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags render_as_template common_tags %}
+{% load wagtailcore_tags common_tags %}
 
 {% block maincontainer %}
 <main>
@@ -119,34 +119,10 @@
 			{% endif %}
 		</tbody>
 	</table>
-
-	{% with main_category=page.get_main_category %}
-		<div>
-			<h2 class="section-heading">
-				How we track
-				{% if main_category.plural_name %}
-					{{ main_category.plural_name|title }}
-				{% else %}
-					{{ main_category|title }}
-				{% endif %}
-			</h2>
-			<p>
-				{% with method=main_category.methodology|richtext %}
-					{% render_as_template method %}
-				{% endwith %}
-			</p>
-		</div>
-		<h3 class="section-heading">
-			<a href="{% pageurl main_category %}" >
-				More
-				{% if main_category.plural_name %}
-					{{ main_category.plural_name|title }}
-				{% else %}
-					{{ main_category|title }}
-				{% endif %}
-				&gt;
-			</a>
-		</h3>
-	{% endwith %}
+	<div class="methodology__wrapper">
+		{% for category in page.categories.all %}
+			{% include 'common/_category_methodology.html' with category=category.category preview=True %}
+		{% endfor %}
+	</div>
 </aside>
 {% endblock %}
