@@ -31,6 +31,14 @@ class Autocomplete extends PureComponent {
 		this.checkNewSuggestions('', false)
 	}
 
+	get value() {
+		if (this.props.controlled) {
+			return this.props.value
+		} else {
+			return this.state.value
+		}
+	}
+
 	handleChange(event) {
 		const { value } = event.target
 		this.checkNewSuggestions(value)
@@ -129,6 +137,10 @@ class Autocomplete extends PureComponent {
 				}
 
 				this.setState({ value })
+
+				if (typeof this.props.onChange === 'function') {
+					this.props.onChange({ target: { value } })
+				}
 			})
 	}
 
@@ -172,7 +184,7 @@ class Autocomplete extends PureComponent {
 
 	render() {
 		const { name, isSingle, onChange } = this.props
-		const { value, input, suggestions } = this.state
+		const { input, suggestions } = this.state
 
 		const canCreate = this.props.canCreate && input.value.trim() !== ''
 		const useHiddenInput = typeof onChange !== 'function'
@@ -182,7 +194,7 @@ class Autocomplete extends PureComponent {
 				{useHiddenInput && (
 					<input
 						type="hidden"
-						value={JSON.stringify(value)}
+						value={JSON.stringify(this.value)}
 						name={name}
 					/>
 				)}
@@ -191,7 +203,7 @@ class Autocomplete extends PureComponent {
 					<Single
 						input={input}
 						suggestions={suggestions}
-						selected={value}
+						selected={this.value}
 
 						canCreate={canCreate}
 
@@ -205,7 +217,7 @@ class Autocomplete extends PureComponent {
 					<Multi
 						input={input}
 						suggestions={suggestions}
-						selections={value || Multi.defaultProps.selections}
+						selections={this.value || Multi.defaultProps.selections}
 
 						canCreate={canCreate}
 
@@ -222,6 +234,7 @@ class Autocomplete extends PureComponent {
 
 Autocomplete.defaultProps = {
 	fetchInitialValues: false,
+	controlled: false,
 }
 
 
@@ -233,6 +246,7 @@ Autocomplete.propTypes = {
 	onChange: PropTypes.func,
 	fetchInitialValues: PropTypes.bool,
 	apiBase: PropTypes.string.isRequired,
+	controlled: PropTypes.bool.isRequired,
 }
 
 

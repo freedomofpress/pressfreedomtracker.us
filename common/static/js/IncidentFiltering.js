@@ -268,6 +268,7 @@ function AutocompleteInput({
 			onChange={handleFilterChange.bind(null, filter)}
 			fetchInitialValues={true}
 			apiBase="/autocomplete/"
+			controlled={true}
 		/>
 	)
 }
