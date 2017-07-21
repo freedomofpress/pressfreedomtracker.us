@@ -1,7 +1,7 @@
-from collections import OrderedDict
 from datetime import datetime
 from functools import reduce
 
+from django.db.models import Count
 from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
@@ -396,11 +396,14 @@ class IncidentFilter(object):
         if self.categories is not None:
             category_pks = [int(pk) for pk in self.categories.split(',')]
             if len(category_pks) > 1:
-                categories = CategoryPage.objects.filter(pk__in=category_pks)
+                categories = CategoryPage.objects.filter(
+                    pk__in=category_pks
+                ).annotate(num_incidents=Count('incidents'))
                 for category in categories:
-                    category_name = category.plural_name if category.plural_name else category.title
-                    count = incidents.filter(categories__category=category).count()
-                    summary = summary + ((category_name, count),)
+                    summary = summary + ((
+                        category.plural_name if category.plural_name else category.title,
+                        category.num_incidents,
+                    ),)
 
         return summary
 
