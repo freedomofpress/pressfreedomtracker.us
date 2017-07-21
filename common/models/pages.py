@@ -222,6 +222,14 @@ class CategoryPage(Page):
                 # the number expected by the function.
                 return ''
 
+        # Check for the presence of non-'page' querystring values
+        filters = dict(request.GET)
+        try:
+            filters.pop('page')
+        except KeyError:
+            pass
+        context['filtered'] = bool(filters)
+
         context['data_items'] = [
             {
                 'label': item.label,
