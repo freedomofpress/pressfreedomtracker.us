@@ -370,10 +370,10 @@ class IncidentFilter(object):
 
         incidents = incidents.order_by('-date', 'path')
 
+        summary = self.summarize(incidents)
+
         if self.search_text:
             incidents = self.by_search_text(incidents)
-
-        summary = self.summarize(incidents)
 
         return (summary, incidents)
 
@@ -396,17 +396,28 @@ class IncidentFilter(object):
         )
 
         # Add counts for this year and this month if non-zero
-        num_this_year = incidents.filter(date__contained_by=DateRange(
+        incidents_this_year = incidents.filter(date__contained_by=DateRange(
             TODAY.replace(month=1, day=1),
             TODAY.replace(month=12, day=31),
             bounds='[]'
-        )).count()
+        ))
 
-        num_this_month = incidents.filter(date__contained_by=DateRange(
+        incidents_this_month = incidents.filter(date__contained_by=DateRange(
             TODAY.replace(day=1),
             TODAY.replace(month=THIS_MONTH + 1, day=1),
             bounds='[)'
-        )).count()
+        ))
+
+        if self.search_text:
+            num_this_year = incidents_this_year.search(
+                self.search_text, order_by_relevance=False
+            ).count()
+            num_this_month = incidents_this_month.search(
+                self.search_text, order_by_relevance=False
+            ).count()
+        else:
+            num_this_year = incidents_this_year.count()
+            num_this_month = incidents_this_month.count()
 
         if num_this_year > 0:
             summary = summary + ((
