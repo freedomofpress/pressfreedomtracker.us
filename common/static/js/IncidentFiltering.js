@@ -374,33 +374,46 @@ function ChoiceInput({ handleFilterChange, filterValues, label, filter, choices 
 }
 
 
+function DateRangeInput({ handleFilterChange, filterValues, label, filter_lower, filter_upper }) {
+	return (
+		<div>
+			{label}
+			{' '}
+			<span className="filters__date-picker">
+				<DatePicker
+					onChange={handleFilterChange.bind(null, filter_lower)}
+					selected={filterValues[filter_lower] || ''}
+					isClearable={true}
+				/>
+			</span>
+			{' '}
+			and
+			{' '}
+			<span className="filters__date-picker">
+				<DatePicker
+					onChange={handleFilterChange.bind(null, filter_upper)}
+					selected={filterValues[filter_upper] || ''}
+					isClearable={true}
+				/>
+			</span>
+		</div>
+	)
+}
+
+
 const FilterSets = {}
 
 
 FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 	return (
 		<FilterSet>
-			<div>
-				Took place between
-				{' '}
-				<span className="filters__date-picker">
-					<DatePicker
-						onChange={handleFilterChange.bind(null, 'lower_date')}
-						selected={filterValues.lower_date || ''}
-						isClearable={true}
-					/>
-				</span>
-				{' '}
-				and
-				{' '}
-				<span className="filters__date-picker">
-					<DatePicker
-						onChange={handleFilterChange.bind(null, 'upper_date')}
-						selected={filterValues.upper_date || ''}
-						isClearable={true}
-					/>
-				</span>
-			</div>
+			<DateRangeInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Took place between"
+				filter_lower="lower_date"
+				filter_upper="upper_date"
+			/>
 
 			<TextInput
 				handleFilterChange={handleFilterChange}
@@ -505,6 +518,22 @@ FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues, 
 				filter="dropped_charges"
 				type="incident.Charge"
 				isSingle={false}
+			/>
+
+			<DateRangeInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Detention date between"
+				filter_lower="detention_date_lower"
+				filter_upper="detention_date_upper"
+			/>
+
+			<DateRangeInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Release date between"
+				filter_lower="release_date_lower"
+				filter_upper="release_date_upper"
 			/>
 		</FilterSet>
 	)
@@ -1283,8 +1312,10 @@ IncidentFiltering.ALL_FILTERS = [
 	'status_of_charges',
 	'current_charges',
 	'dropped_charges',
-	'detention_date',
-	'release_date',
+	'detention_date_lower',
+	'detention_date_upper',
+	'release_date_lower',
+	'release_date_upper',
 	'unnecessary_use_of_force',
 	'border_point',
 	'stopped_at_border',
@@ -1328,6 +1359,10 @@ IncidentFiltering.ALL_FILTERS = [
 IncidentFiltering.DATE_FILTERS = [
 	'lower_date',
 	'upper_date',
+	'detention_date_lower',
+	'detention_date_upper',
+	'release_date_lower',
+	'release_date_upper',
 ]
 
 
