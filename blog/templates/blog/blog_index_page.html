@@ -13,17 +13,20 @@
 
 	{% block ajax %}
 		{% if author_filter %}
-			<div>
-				<p>You are looking at articles written by <a href="{{ author_filter.url }}">{{ author_filter.title }}</a>
-				</p>
-				<a href="{{ page.url }}" class="pull-sm-right">&times; See All Articles</a>
+			<div class="blog-filter">
+				You are looking at articles written by <a href="{{ author_filter.url }}">{{ author_filter.title }}</a>
+				<div class="blog-filter__clear">
+					<a href="{{ page.url }}">&times; See All Articles</a>
+				</div>
 			</div>
 		{% endif %}
 		{% if organization_filter %}
-			<div>
-				<p>You are looking at articles from <a href="{{ organization_filter.url }}">{{ organization_filter.title }}</a>
-				</p>
-				<a href="{{ page.url }}" class="pull-sm-right">&times; See All Articles</a>
+			<div class="blog-filter">
+				You are looking at articles from <a href="{{ organization_filter.url }}">{{ organization_filter.title }}</a>
+
+				<div class="blog-filter__clear">
+					<a href="{{ page.url }}">&times; See All Articles</a>
+				</div>
 			</div>
 		{% endif %}
 
