@@ -54,14 +54,16 @@
 				</th>
 				<td class="data-table__value">{{ page.incidents.all.count }}</td>
 			</tr>
-			{% for item in page.data_items.all %}
-				<tr class='data-table__row'>
-					<th class="data-table__label">
-						{{ item.label }}
-					</th>
-					<td class="data-table__value">{{ item.value }}</td>
-				</tr>
-			{% endfor %}
+			{% if data_items %}
+				{% for item in data_items %}
+					<tr class='data-table__row'>
+						<th class="data-table__label">
+							{{ item.label }}
+						</th>
+						<td class="data-table__value">{{ item.value }}</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
 		</table>
 	</div>
 </div>
