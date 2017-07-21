@@ -13,6 +13,7 @@ from common.utils import DEFAULT_PAGE_KEY, paginate
 
 from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
+from common.models import PersonPage, OrganizationPage
 from common.blocks import (
     Heading1,
     Heading2,
@@ -48,6 +49,11 @@ class BlogIndexPage(Page):
         entry_qs = post_filters.filter(
             BlogPage.objects.child_of(self).live()
         ).order_by('-publication_datetime')
+
+        if post_filters.author:
+            context['author_filter'] = PersonPage.objects.get(pk=post_filters.author)
+        if post_filters.organization:
+            context['organization_filter'] = OrganizationPage.objects.get(pk=post_filters.organization)
 
         paginator, entries = paginate(
             request,

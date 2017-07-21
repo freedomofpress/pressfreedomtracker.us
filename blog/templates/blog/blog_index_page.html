@@ -12,6 +12,21 @@
 	{% endfor %}
 
 	{% block ajax %}
+		{% if author_filter %}
+			<div>
+				<p>You are looking at articles written by <a href="{{ author_filter.url }}">{{ author_filter.title }}</a>
+				</p>
+				<a href="{{ page.url }}" class="pull-sm-right">&times; See All Articles</a>
+			</div>
+		{% endif %}
+		{% if organization_filter %}
+			<div>
+				<p>You are looking at articles from <a href="{{ organization_filter.url }}">{{ organization_filter.title }}</a>
+				</p>
+				<a href="{{ page.url }}" class="pull-sm-right">&times; See All Articles</a>
+			</div>
+		{% endif %}
+
 		<div class="grid-50 js-infinite-scrolling-parent">
 			{% for post in entries_page %}
 				<div class="grid-50__item js-infinite-scrolling-item">
