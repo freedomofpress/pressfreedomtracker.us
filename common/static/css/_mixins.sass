@@ -88,6 +88,24 @@
 		font-size: 1rem
 
 
+// BUTTONS
+
+=button
+	+uppercase
+	padding: 15px 25px
+	font-family: $sans-serif
+	text-align: center
+	display: inline-block
+	text-decoration: none
+
+=button--outline
+	border: 1px solid $gray-mid-dark-text
+	color: $gray-mid-dark-text
+	background-color: $gray-very-light
+
+	&:hover
+		background-color: darken($gray-very-light, 10%)
+
 
 // LINKS
 
