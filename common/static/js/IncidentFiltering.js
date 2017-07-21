@@ -266,6 +266,7 @@ function AutocompleteInput({
 			isSingle={isSingle}
 			value={filterValues[filter]}
 			onChange={handleFilterChange.bind(null, filter)}
+			fetchInitialValues={true}
 		/>
 	)
 }
@@ -905,6 +906,10 @@ class IncidentFiltering extends PureComponent {
 
 			if (IncidentFiltering.DATE_FILTERS.includes(key)) {
 				var value = moment(params[key])
+			} else if (IncidentFiltering.AUTOCOMPLETE_FILTERS.includes(key)) {
+				var value = params[key]
+					.split(',')
+					.map(n => { return { id: parseInt(n) } })
 			} else if (params[key] === 'True') {
 				var value = true
 			} else if (params[key] === 'False') {
@@ -925,11 +930,13 @@ class IncidentFiltering extends PureComponent {
 		}
 	}
 
-	formatValue(value) {
+	formatValue(value, key) {
 		if (isMoment(value)) {
 			return value.format(DATE_FORMAT)
 		} else if (typeof value === 'boolean') {
 			return value ? 'True' : 'False'
+		} else if (IncidentFiltering.AUTOCOMPLETE_FILTERS.includes(key)) {
+			return value.map(({ id }) => id).join(',')
 		} else {
 			return value
 		}
@@ -945,7 +952,7 @@ class IncidentFiltering extends PureComponent {
 				const value = this.state.filterValues[key]
 				return {
 					...values,
-					[key]: this.formatValue(value),
+					[key]: this.formatValue(value, key),
 				}
 			}, {})
 
@@ -1232,6 +1239,11 @@ IncidentFiltering.ALL_FILTERS = [
 IncidentFiltering.DATE_FILTERS = [
 	'lower_date',
 	'upper_date',
+]
+
+
+IncidentFiltering.AUTOCOMPLETE_FILTERS = [
+	'state',
 ]
 
 
