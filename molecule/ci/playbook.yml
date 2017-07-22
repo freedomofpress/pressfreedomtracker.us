@@ -14,7 +14,7 @@
       tags: django
   post_tasks:
     - name: Run tests
-      script: scripts/django_tests.sh
+      script: django_tests.sh
       tags: tests
       become: yes
       become_user: "{{ django_stack_gcorn_user }}"
@@ -26,7 +26,7 @@
     - name: Yank out tests for analysis
       fetch:
         src: "/home/gcorn/app-tests.xml"
-        dest: ../test-results/
+        dest: ../../test-results/
         flat: yes
       tags: tests
 
@@ -42,7 +42,7 @@
     django_stack_app_name: pressfreedom
     django_secret_key: f1822d2fe58daeadc88e0e4eef2f155fc3edd3713ff9a5d1e27696afd9231d905db51c98dc
     django_stack_es_host_url: disable
-    django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../"
+    django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../../"
     django_stack_manage_post:
       - createdevdata
     django_stack_npm_commands:

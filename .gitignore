@@ -32,4 +32,4 @@ import.db
 db-snapshots/
 
 # CI XML test results
-test-results/*
+test-results
