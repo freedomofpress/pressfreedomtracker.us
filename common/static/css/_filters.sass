@@ -171,11 +171,23 @@
 
 		color: $white
 
-	&__set > div
+	&__input-row
+		display: flex
+		flex-direction: row
+		flex-wrap: nowrap
 		margin: $padding-y 0
 
-	&__set > div:first-child
-		margin-top: 0
+		&:first-child
+			margin-top: 0
+
+		> :last-child
+			flex-basis: 75%
+
+	&__input-label
+		flex-basis: 20%
+		flex-shrink: 0
+		text-align: right
+		padding-right: 1em
 
 	&__footer
 		+flex-vertically-centered-row

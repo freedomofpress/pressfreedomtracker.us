@@ -13,9 +13,8 @@ export function AutocompleteInput({
 	isSingle,
 }) {
 	return (
-		<div>
-			{label}
-			{' '}
+		<div className="filters__input-row">
+			<span className="filters__input-label">{label}</span>
 			<Autocomplete
 				type={type}
 				name={filter}
@@ -40,9 +39,8 @@ export function RadioPillInput({
 	options,
 }) {
 	return (
-		<div>
-			{label}
-			{' '}
+		<div className="filters__input-row">
+			<span className="filters__input-label">{label}</span>
 
 			<span className="radio-pill">
 				{options.map(option => (
@@ -77,9 +75,8 @@ RadioPillInput.defaultProps = {
 export function TextInput({ handleFilterChange, filterValues, label, filter }) {
 	const value = filterValues[filter] || ''
 	return (
-		<div>
-			{label}
-			{' '}
+		<div className="filters__input-row">
+			<span className="filters__input-label">{label}</span>
 			<input
 				type="text"
 				onChange={handleFilterChange.bind(null, filter)}
@@ -96,9 +93,8 @@ export function TextInput({ handleFilterChange, filterValues, label, filter }) {
 
 export function BoolInput({ handleFilterChange, filterValues, label, filter }) {
 	return (
-		<div>
-			{label}:
-			{' '}
+		<div className="filters__input-row">
+			<span className="filters__input-label">{label}</span>
 			<input
 				type="checkbox"
 				onChange={handleFilterChange.bind(null, filter)}
@@ -111,9 +107,8 @@ export function BoolInput({ handleFilterChange, filterValues, label, filter }) {
 
 export function ChoiceInput({ handleFilterChange, filterValues, label, filter, choices }) {
 	return (
-		<div>
-			{label}:
-			{' '}
+		<div className="filters__input-row">
+			<span className="filters__input-label">{label}</span>
 			<select
 				onChange={handleFilterChange.bind(null, filter)}
 				value={filterValues[filter] || ''}
@@ -135,9 +130,8 @@ export function ChoiceInput({ handleFilterChange, filterValues, label, filter, c
 
 export function DateRangeInput({ handleFilterChange, filterValues, label, filter_lower, filter_upper }) {
 	return (
-		<div>
-			{label}
-			{' '}
+		<div className="filters__input-row">
+			<span className="filters__input-label">{label}</span>
 			<span className="filters__date-picker">
 				<DatePicker
 					onChange={handleFilterChange.bind(null, filter_lower)}
