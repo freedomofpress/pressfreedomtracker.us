@@ -10,6 +10,11 @@
 	layout-right-sidebar__sidebar--hide-mobile
 {% endblock %}
 
+{% block sidebar %}
+	{% include "home/_incidents_sidebar.html" with label=home_page.specific.recent_incidents_label link_label=home_page.specific.recent_more_label page=home_page.specific %}
+	{% include "home/_blog_sidebar.html" with label=home_page.specific.blog_label link_label=home_page.specific.blog_more_label page=home_page.specific %}
+{% endblock %}
+
 {% block main %}
     {% include 'common/_simple_page_body.html' %}
 {% endblock %}
