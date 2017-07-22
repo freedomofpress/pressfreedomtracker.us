@@ -150,7 +150,7 @@ export function DateRangeInput({ handleFilterChange, filterValues, label, filter
 				/>
 			</span>
 			{' '}
-			and
+			<span className="filters__space">and</span>
 			{' '}
 			<span className="filters__date-picker">
 				<DatePicker
