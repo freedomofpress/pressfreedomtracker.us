@@ -48,10 +48,6 @@ class Autocomplete extends PureComponent {
 				value,
 			}
 		})
-
-		if (typeof this.props.onChange === 'function') {
-			this.props.onChange({ target: { value } })
-		}
 	}
 
 	getExclusions() {
