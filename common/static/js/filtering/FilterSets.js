@@ -58,7 +58,7 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 			<AutocompleteInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
-				label="Targets"
+				label="Targetted any of these journalists"
 				filter="targets"
 				type="incident.Target"
 				isSingle={false}
@@ -67,7 +67,7 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 			<AutocompleteInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
-				label="Tags"
+				label="Has any of these tags"
 				filter="tags"
 				type="common.CommonTag"
 				isSingle={false}
@@ -289,7 +289,7 @@ FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChan
 			<AutocompleteInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
-				label="Equipment seized"
+				label="Equipment seized includes any of"
 				filter="equipment_seized"
 				type="incident.Equipment"
 				isSingle={false}
@@ -298,7 +298,7 @@ FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChan
 			<AutocompleteInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
-				label="Equipment broken"
+				label="Equipment broken includes any of"
 				filter="equipment_broken"
 				type="incident.Equipment"
 				isSingle={false}
