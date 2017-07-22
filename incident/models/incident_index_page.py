@@ -20,7 +20,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
     @route('export/')
     def export_view(self, request):
         incident_filter = IncidentFilter.from_request(request)
-        incidents = incident_filter.fetch()
+        summary, incidents = incident_filter.fetch()
 
         incident_fields = IncidentPage._meta.get_fields()
         headers = [field.name for field in incident_fields
