@@ -14,7 +14,7 @@
 								{{ incident.title }}
 							</div>
 							<time class="incidents-sidebar__date" datetime="{{ incident.date }}">
-								{{ incident.date|date:"F j, Y" }}
+								{% include "incident/_incident_date.html" %}
 							</time>
 						</a>
 					</li>

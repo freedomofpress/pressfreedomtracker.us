@@ -53,8 +53,8 @@ It can take the following context variables:
 			</h2>
 		{% endif %}
 		<div class='incident__date'>
-			{{ incident.date|date:"F j, Y" }}
-			{% if teaser and incident.recently_updated %}
+				{% include "incident/_incident_date.html" %}
+				{% if teaser and incident.recently_updated %}
 				<span
 					class="alert alert--green"
 					title="Updated {{ incident.last_updated|date:'F j, Y'}}"

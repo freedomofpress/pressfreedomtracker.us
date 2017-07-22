@@ -24,6 +24,12 @@ from statistics.blocks import StatisticsBlock
 
 class IncidentPage(Page):
     date = models.DateField()
+
+    exact_date_unknown = models.BooleanField(
+        default=False,
+        help_text='If checked, only the month and year of the incident will be displayed. The date above will be used in filtering by date.'
+    )
+
     affiliation = models.CharField(
         max_length=255,
         default='Independent',
@@ -313,6 +319,7 @@ class IncidentPage(Page):
             heading='Details',
             children=[
                     FieldPanel('date'),
+                    FieldPanel('exact_date_unknown'),
                     FieldPanel('affiliation'),
                     FieldPanel('city'),
                     AutocompletePageChooserPanel('state', page_type='incident.State'),
