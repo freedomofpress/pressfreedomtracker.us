@@ -77,15 +77,17 @@ export function TextInput({ handleFilterChange, filterValues, label, filter }) {
 	return (
 		<div className="filters__input-row">
 			<span className="filters__input-label">{label}</span>
-			<input
-				type="text"
-				onChange={handleFilterChange.bind(null, filter)}
-				value={value}
-				className={classNames(
-					'filter-text-input',
-					{ 'filter-text-input--has-input': value.length > 0 }
-				)}
-			/>
+			<span>
+				<input
+					type="text"
+					onChange={handleFilterChange.bind(null, filter)}
+					value={value}
+					className={classNames(
+						'filter-text-input',
+						{ 'filter-text-input--has-input': value.length > 0 }
+					)}
+				/>
+			</span>
 		</div>
 	)
 }
@@ -109,20 +111,26 @@ export function ChoiceInput({ handleFilterChange, filterValues, label, filter, c
 	return (
 		<div className="filters__input-row">
 			<span className="filters__input-label">{label}</span>
-			<select
-				onChange={handleFilterChange.bind(null, filter)}
-				value={filterValues[filter] || ''}
-			>
-				<option value=""></option>
-				{choices.map(choice => (
-					<option
-						key={choice.value}
-						value={choice.value}
-					>
-						{choice.label}
-					</option>
-				))}
-			</select>
+			<span>
+				<select
+					onChange={handleFilterChange.bind(null, filter)}
+					value={filterValues[filter] || ''}
+					className={classNames(
+						'choice-input',
+						{ 'choice-input--no-input': !filterValues[filter] }
+					)}
+				>
+					<option value=""></option>
+					{choices.map(choice => (
+						<option
+							key={choice.value}
+							value={choice.value}
+						>
+							{choice.label}
+						</option>
+					))}
+				</select>
+			</span>
 		</div>
 	)
 }
