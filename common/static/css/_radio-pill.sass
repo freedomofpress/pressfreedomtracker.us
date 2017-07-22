@@ -1,14 +1,14 @@
 .radio-pill
-	$bg: $light-violet
-	$bg-selected: $medium-violet
+	$bg: $lighter-violet
+	$bg-selected: $white
 	$fg: $white
-	$radius: 5px
+	$fg-selected: $black
 	$border-color: $black
 
 
 	&__item
 		transition: all 0.15s linear
-		padding: 0.5em 0.8em
+		padding: 0.3em 0.8em
 		border: 0
 		border-style: solid
 		border-color: $border-color
@@ -18,12 +18,12 @@
 		font-weight: 300
 
 	&__item:first-child
-		border-top-left-radius: $radius
-		border-bottom-left-radius: $radius
+		border-top-left-radius: $border-radius
+		border-bottom-left-radius: $border-radius
 
 	&__item:last-child
-		border-top-right-radius: $radius
-		border-bottom-right-radius: $radius
+		border-top-right-radius: $border-radius
+		border-bottom-right-radius: $border-radius
 		border-right-width: 0
 
 	&__item:hover,
@@ -31,3 +31,4 @@
 	&__item:active,
 	&__item--selected
 		background-color: $bg-selected
+		color: $fg-selected
