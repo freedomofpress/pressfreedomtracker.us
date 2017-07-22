@@ -21,10 +21,22 @@ class Autocomplete extends PureComponent {
 			},
 			suggestions: [],
 		}
+
+		if (props.fetchInitialValues) {
+			this.fetchInitialValues(props.value)
+		}
 	}
 
 	componentDidMount() {
 		this.checkNewSuggestions('', false)
+	}
+
+	get value() {
+		if (this.props.controlled) {
+			return this.props.value
+		} else {
+			return this.state.value
+		}
 	}
 
 	handleChange(event) {
@@ -61,7 +73,7 @@ class Autocomplete extends PureComponent {
 			type: this.props.type,
 			exclude: this.getExclusions(),
 		}
-		axios.get('/autocomplete/search/', { params })
+		axios.get(this.props.apiBase + 'search/', { params })
 			.then(res => {
 				if (res.status !== 200) {
 					return
@@ -77,8 +89,63 @@ class Autocomplete extends PureComponent {
 			})
 	}
 
+	fetchInitialValues(value) {
+		if (!value) {
+			return
+		}
+
+		const isMulti = Array.isArray(value)
+		if (isMulti && value.length === 0) {
+			return
+		}
+
+		if (isMulti) {
+			var ids = value.map(({ id }) => id).join(',')
+		} else {
+			var ids = value.id
+		}
+
+		const params = {
+			ids,
+			type: this.props.type,
+		}
+		axios.get(this.props.apiBase + 'objects/', { params })
+			.then(res => {
+				if (res.status !== 200) {
+					return
+				}
+
+				if (!Array.isArray(res.data.pages)) {
+					return
+				}
+
+				if (isMulti) {
+					var value = this.state.value.map(value => {
+						const page = res.data.pages.find(page => page.id === value.id)
+						if (!page) {
+							return value
+						}
+
+						return page
+					})
+				} else {
+					var value = res.data.pages[0]
+				}
+
+				this.setState({ value })
+
+				if (typeof this.props.onChange === 'function') {
+					this.props.onChange({ target: { value } })
+				}
+			})
+	}
+
 	handleClick(value) {
 		this.setState({ value })
+
+		if (typeof this.props.onChange === 'function') {
+			this.props.onChange({ target: { value, _autocomplete: true } })
+		}
 	}
 
 	handleCreate() {
@@ -90,7 +157,7 @@ class Autocomplete extends PureComponent {
 		const data = new FormData()
 		data.set('type', this.props.type)
 		data.set('value', value)
-		axios.post('/autocomplete/create/', data)
+		axios.post(this.props.apiBase + 'create/', data)
 			.then(res => {
 				if (res.status !== 200) {
 					this.setState({ isLoading: false })
@@ -103,29 +170,36 @@ class Autocomplete extends PureComponent {
 					isLoading: false,
 					value,
 				})
+
+				if (typeof this.props.onChange === 'function') {
+					this.props.onChange({ target: { value } })
+				}
 			})
 		this.setState({ isLoading: true })
 	}
 
 	render() {
-		const { name, isSingle } = this.props
-		const { value, input, suggestions } = this.state
+		const { name, isSingle, onChange } = this.props
+		const { input, suggestions } = this.state
 
 		const canCreate = this.props.canCreate && input.value.trim() !== ''
+		const useHiddenInput = typeof onChange !== 'function'
 
 		return (
 			<span className="autocomplete">
-				<input
-					type="hidden"
-					value={JSON.stringify(value)}
-					name={name}
-				/>
+				{useHiddenInput && (
+					<input
+						type="hidden"
+						value={JSON.stringify(this.value)}
+						name={name}
+					/>
+				)}
 
 				{isSingle && (
 					<Single
 						input={input}
 						suggestions={suggestions}
-						selected={value}
+						selected={this.value}
 
 						canCreate={canCreate}
 
@@ -139,7 +213,7 @@ class Autocomplete extends PureComponent {
 					<Multi
 						input={input}
 						suggestions={suggestions}
-						selections={value || Multi.defaultProps.selections}
+						selections={this.value || Multi.defaultProps.selections}
 
 						canCreate={canCreate}
 
@@ -154,11 +228,21 @@ class Autocomplete extends PureComponent {
 }
 
 
+Autocomplete.defaultProps = {
+	fetchInitialValues: false,
+	controlled: false,
+}
+
+
 Autocomplete.propTypes = {
 	name: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired,
 	canCreate: PropTypes.bool.isRequired,
 	isSingle: PropTypes.bool.isRequired,
+	onChange: PropTypes.func,
+	fetchInitialValues: PropTypes.bool,
+	apiBase: PropTypes.string.isRequired,
+	controlled: PropTypes.bool.isRequired,
 }
 
 

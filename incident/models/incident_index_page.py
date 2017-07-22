@@ -6,6 +6,7 @@ from wagtail.wagtailcore.models import Page
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
+from incident.models.choices import get_filter_choices
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
 from incident.utils.incident_filter import IncidentFilter
@@ -52,6 +53,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
 
         incident_filter = IncidentFilter.from_request(request)
         context['category_options'] = incident_filter.get_category_options()
+        context['filter_choices'] = get_filter_choices()
         entry_qs = incident_filter.fetch()
 
         paginator, entries = paginate(

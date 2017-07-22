@@ -1,3 +1,29 @@
+def _get_filter_choices(choices):
+    return [
+        dict(value=value, label=label)
+        for value, label in choices
+    ]
+
+
+def get_filter_choices():
+    return dict(
+        ARREST_STATUS=_get_filter_choices(ARREST_STATUS),
+        STATUS_OF_CHARGES=_get_filter_choices(STATUS_OF_CHARGES),
+        STATUS_OF_SEIZED_EQUIPMENT=_get_filter_choices(STATUS_OF_SEIZED_EQUIPMENT),
+        ACTORS=_get_filter_choices(ACTORS),
+        CITIZENSHIP_STATUS_CHOICES=_get_filter_choices(CITIZENSHIP_STATUS_CHOICES),
+        INJURY_SEVERITY=_get_filter_choices(INJURY_SEVERITY),
+        SUBPOENA_SUBJECT=_get_filter_choices(SUBPOENA_SUBJECT),
+        SUBPOENA_TYPE=_get_filter_choices(SUBPOENA_TYPE),
+        SUBPOENA_STATUS=_get_filter_choices(SUBPOENA_STATUS),
+        EQUIPMENT=_get_filter_choices(EQUIPMENT),
+        DETENTION_STATUS=_get_filter_choices(DETENTION_STATUS),
+        THIRD_PARTY_BUSINESS=_get_filter_choices(THIRD_PARTY_BUSINESS),
+        LEGAL_ORDER_TYPES=_get_filter_choices(LEGAL_ORDER_TYPES),
+        PRIOR_RESTRAINT_STATUS=_get_filter_choices(PRIOR_RESTRAINT_STATUS),
+    )
+
+
 MAYBE_BOOLEAN = [
     ('NOTHING', 'unknown'),
     ('JUST_TRUE', 'yes'),
