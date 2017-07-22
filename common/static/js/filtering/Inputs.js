@@ -75,6 +75,7 @@ RadioPillInput.defaultProps = {
 
 
 export function TextInput({ handleFilterChange, filterValues, label, filter }) {
+	const value = filterValues[filter] || ''
 	return (
 		<div>
 			{label}:
@@ -82,7 +83,11 @@ export function TextInput({ handleFilterChange, filterValues, label, filter }) {
 			<input
 				type="text"
 				onChange={handleFilterChange.bind(null, filter)}
-				value={filterValues[filter] || ''}
+				value={value}
+				className={classNames(
+					'filter-text-input',
+					{ 'filter-text-input--has-input': value.length > 0 }
+				)}
 			/>
 		</div>
 	)
@@ -138,6 +143,10 @@ export function DateRangeInput({ handleFilterChange, filterValues, label, filter
 					onChange={handleFilterChange.bind(null, filter_lower)}
 					selected={filterValues[filter_lower] || ''}
 					isClearable={true}
+					className={classNames(
+						'filter-date-picker',
+						{ 'filter-date-picker--has-input': !!filterValues[filter_lower] }
+					)}
 				/>
 			</span>
 			{' '}
@@ -148,6 +157,10 @@ export function DateRangeInput({ handleFilterChange, filterValues, label, filter
 					onChange={handleFilterChange.bind(null, filter_upper)}
 					selected={filterValues[filter_upper] || ''}
 					isClearable={true}
+					className={classNames(
+						'filter-date-picker',
+						{ 'filter-date-picker--has-input': !!filterValues[filter_upper] }
+					)}
 				/>
 			</span>
 		</div>
