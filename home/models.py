@@ -150,6 +150,7 @@ class HomePage(Page):
 
         incident_filter = IncidentFilter.from_request(request)
         context['category_options'] = incident_filter.get_category_options()
+        context['export_path'] = self.incident_index_page.url
         context['filter_choices'] = get_filter_choices()
 
         return context
