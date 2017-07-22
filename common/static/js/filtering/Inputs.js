@@ -14,7 +14,7 @@ export function AutocompleteInput({
 }) {
 	return (
 		<div>
-			{label}:
+			{label}
 			{' '}
 			<Autocomplete
 				type={type}
@@ -41,7 +41,7 @@ export function RadioPillInput({
 }) {
 	return (
 		<div>
-			{label}:
+			{label}
 			{' '}
 
 			<span className="radio-pill">
@@ -78,7 +78,7 @@ export function TextInput({ handleFilterChange, filterValues, label, filter }) {
 	const value = filterValues[filter] || ''
 	return (
 		<div>
-			{label}:
+			{label}
 			{' '}
 			<input
 				type="text"
