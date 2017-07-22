@@ -1,34 +1,11 @@
 ---
-
-- name: Fire-up base container
-  hosts: localhost
-  tasks:
-    - name: First establish proper sysctl settings
-      command: "sysctl -w {{ item }}"
-      become: yes
-      with_items:
-        - kernel.grsecurity.chroot_deny_chmod=0
-      when: "'grsec' in ansible_kernel"
-
-    - name: Ensure base container fired-up
-      docker_container:
-        name: ci-django-ansible
-        image: quay.io/freedomofpress/debian-jessie-systemd:latest
-        command: /lib/systemd/systemd
-        volumes:
-          - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-
-- name: Gather facts from all hosts
+- name: Establish certs
   hosts: all
-  tasks:
+  gather_facts: true
+  pre_tasks:
     - name: Set django root
       set_fact:
         django_root: /var/www/django
-  tags: always
-
-- name: Establish certs
-  hosts: all
-  gather_facts: false
   roles:
     - role: freedomofpress.openssl_node
       tags: ssl-node
@@ -147,5 +124,5 @@
   tasks:
     - name: Ensure base container stopped
       docker_container:
-        name: ci-django-ansible
+        name: debian_jessie_pftracker_ci_base
         state: stopped
