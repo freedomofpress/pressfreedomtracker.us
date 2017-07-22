@@ -174,7 +174,7 @@
 	&__input-row
 		display: flex
 		flex-direction: row
-		flex-wrap: nowrap
+		flex-wrap: wrap
 		margin: $padding-y 0
 
 		&:first-child
@@ -183,11 +183,18 @@
 		> :last-child
 			flex-basis: 75%
 
+			@media (max-width: $mid-small-screen)
+				flex-basis: 100%
+
 	&__input-label
 		flex-basis: 20%
 		flex-shrink: 0
 		text-align: right
 		padding-right: 1em
+
+		@media (max-width: $mid-small-screen)
+			flex-basis: 100%
+			text-align: left
 
 	&__footer
 		+flex-vertically-centered-row

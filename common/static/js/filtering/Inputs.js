@@ -132,30 +132,32 @@ export function DateRangeInput({ handleFilterChange, filterValues, label, filter
 	return (
 		<div className="filters__input-row">
 			<span className="filters__input-label">{label}</span>
-			<span className="filters__date-picker">
-				<DatePicker
-					onChange={handleFilterChange.bind(null, filter_lower)}
-					selected={filterValues[filter_lower] || ''}
-					isClearable={true}
-					className={classNames(
-						'filter-date-picker',
-						{ 'filter-date-picker--has-input': !!filterValues[filter_lower] }
-					)}
-				/>
-			</span>
-			{' '}
-			<span className="filters__space">and</span>
-			{' '}
-			<span className="filters__date-picker">
-				<DatePicker
-					onChange={handleFilterChange.bind(null, filter_upper)}
-					selected={filterValues[filter_upper] || ''}
-					isClearable={true}
-					className={classNames(
-						'filter-date-picker',
-						{ 'filter-date-picker--has-input': !!filterValues[filter_upper] }
-					)}
-				/>
+			<span>
+				<span className="filters__date-picker">
+					<DatePicker
+						onChange={handleFilterChange.bind(null, filter_lower)}
+						selected={filterValues[filter_lower] || ''}
+						isClearable={true}
+						className={classNames(
+							'filter-date-picker',
+							{ 'filter-date-picker--has-input': !!filterValues[filter_lower] }
+						)}
+					/>
+				</span>
+				{' '}
+				<span className="filters__space">and</span>
+				{' '}
+				<span className="filters__date-picker">
+					<DatePicker
+						onChange={handleFilterChange.bind(null, filter_upper)}
+						selected={filterValues[filter_upper] || ''}
+						isClearable={true}
+						className={classNames(
+							'filter-date-picker',
+							{ 'filter-date-picker--has-input': !!filterValues[filter_upper] }
+						)}
+					/>
+				</span>
 			</span>
 		</div>
 	)
