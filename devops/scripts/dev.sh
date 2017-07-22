@@ -5,6 +5,6 @@
 if [ ! -f devops/.venv/bin/activate ]; then virtualenv --no-site-packages devops/.venv; fi
 source devops/.venv/bin/activate
 
-pip install -U -r devops/requirements.txt
+pip install -U -r devops/requirements.txt > /dev/null
 
-./devops/localdev/docker-config.yml
+molecule converge -s dev

@@ -17,8 +17,7 @@ logs/
 # devops virtualenv
 devops/.venv
 devops/.vagrant
-devops/.molecule
-devops/roles
+.molecule
 .cache
 *.retry
 
