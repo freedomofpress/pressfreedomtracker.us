@@ -19,7 +19,9 @@ class IncidentIndexPage(RoutablePageMixin, Page):
 
     @route('export/')
     def export_view(self, request):
-        incidents = self.get_incidents()
+        incident_filter = IncidentFilter.from_request(request)
+        incidents = incident_filter.fetch()
+
         incident_fields = IncidentPage._meta.get_fields()
         headers = [field.name for field in incident_fields
                    if is_exportable(field)]
@@ -36,7 +38,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
         response = StreamingHttpResponse(
             (writer.writerow(row) for row in stream(headers, incidents)),
             content_type="text/csv")
-        response['Content-Disposition'] = 'attachment; filename="all_incidents.csv"'
+        response['Content-Disposition'] = 'attachment; filename="incidents.csv"'
         return response
 
     def get_incidents(self):
