@@ -279,6 +279,7 @@ class IncidentFiltering extends PureComponent {
 
 		const receivedErroneousValue = (
 			!DATE_FILTERS.includes(label) &&
+			!(event.target && event.target._autocomplete) &&
 			(value === null || value === undefined)
 		)
 		if (receivedErroneousValue) {

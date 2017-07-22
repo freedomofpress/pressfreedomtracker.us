@@ -148,7 +148,7 @@ class Autocomplete extends PureComponent {
 		this.setState({ value })
 
 		if (typeof this.props.onChange === 'function') {
-			this.props.onChange({ target: { value } })
+			this.props.onChange({ target: { value, _autocomplete: true } })
 		}
 	}
 
