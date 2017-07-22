@@ -23,7 +23,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        incidents = IncidentFilter(
+        summary, incidents = IncidentFilter(
             search_text=None,
             categories=None,
             upper_date='2017-01-31',
@@ -96,7 +96,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 4, 1))
 
-        incidents = IncidentFilter(
+        summary, incidents = IncidentFilter(
             search_text=None,
             categories=None,
             upper_date=target_date.isoformat(),
@@ -168,7 +168,7 @@ class TestFiltering(TestCase):
         incident2 = IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        incidents = IncidentFilter(
+        summary, incidents = IncidentFilter(
             search_text=None,
             categories=None,
             upper_date='2017-01-31',
@@ -240,7 +240,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         incident2 = IncidentPageFactory(date=date(2017, 2, 1))
 
-        incidents = IncidentFilter(
+        summary, incidents = IncidentFilter(
             search_text=None,
             categories=None,
             upper_date=None,
@@ -315,7 +315,7 @@ class TestFiltering(TestCase):
             body__0__rich_text__value=RichText('science fiction'),
         )
 
-        incidents = IncidentFilter(
+        summary, incidents = IncidentFilter(
             search_text='eggplant',
             categories=None,
             upper_date=None,
@@ -398,7 +398,7 @@ class TestFiltering(TestCase):
             incident_page=not_relevant,
         )
         ic2.save()
-        incidents = IncidentFilter(
+        summary, incidents = IncidentFilter(
             search_text=None,
             categories=str(category1.id),
             upper_date=None,
@@ -486,7 +486,7 @@ class TestFiltering(TestCase):
             incident_page=incident1,
         )
         ic3.save()
-        incidents = IncidentFilter(
+        summary, incidents = IncidentFilter(
             search_text=None,
             categories='{0},{1}'.format(str(category2.id), str(category3.id)),
             upper_date=None,

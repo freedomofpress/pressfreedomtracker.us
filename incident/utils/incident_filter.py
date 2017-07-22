@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, date
 from functools import reduce
 
+from django.db.models import Count
 from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
@@ -331,6 +332,13 @@ class IncidentFilter(object):
         ]
 
     def fetch(self):
+        """
+        Returns (summary, incidents) where summary is a tuple of (label, value)
+        pairs of interesting stats for these results and incidents is an
+        IncidentPage queryset.
+
+        """
+
         incidents = IncidentPage.objects.live()
 
         if self.lower_date or self.upper_date:
@@ -362,10 +370,82 @@ class IncidentFilter(object):
 
         incidents = incidents.order_by('-date', 'path')
 
+        summary = self.summarize(incidents)
+
         if self.search_text:
             incidents = self.by_search_text(incidents)
 
-        return incidents
+        return (summary, incidents)
+
+    def summarize(self, incidents):
+        """
+        Return a tuple of (label, value) pairs with summary data of the
+        incidents.
+
+        The data this chooses to summarize is based on the presence and value
+        of particular filters.
+
+        """
+
+        TODAY = date.today()
+        THIS_YEAR = TODAY.year
+        THIS_MONTH = TODAY.month
+
+        summary = (
+            ('Total Incidents', incidents.count),
+        )
+
+        # Add counts for this year and this month if non-zero
+        incidents_this_year = incidents.filter(date__contained_by=DateRange(
+            TODAY.replace(month=1, day=1),
+            TODAY.replace(month=12, day=31),
+            bounds='[]'
+        ))
+
+        incidents_this_month = incidents.filter(date__contained_by=DateRange(
+            TODAY.replace(day=1),
+            TODAY.replace(month=THIS_MONTH + 1, day=1),
+            bounds='[)'
+        ))
+
+        if self.search_text:
+            num_this_year = incidents_this_year.search(
+                self.search_text, order_by_relevance=False
+            ).count()
+            num_this_month = incidents_this_month.search(
+                self.search_text, order_by_relevance=False
+            ).count()
+        else:
+            num_this_year = incidents_this_year.count()
+            num_this_month = incidents_this_month.count()
+
+        if num_this_year > 0:
+            summary = summary + ((
+                'Incidents in {}'.format(THIS_YEAR),
+                num_this_year
+            ),)
+
+        if num_this_month > 0:
+            summary = summary + ((
+                'Incidents in {0:%B}'.format(TODAY),
+                num_this_month
+            ),)
+
+        # If more than one category is included in this set, add a summary item
+        # for each category of the form ("Total <Category Name>", <Count>)
+        if self.categories is not None:
+            category_pks = [int(pk) for pk in self.categories.split(',')]
+            if len(category_pks) > 1:
+                categories = CategoryPage.objects.filter(
+                    pk__in=category_pks
+                ).annotate(num_incidents=Count('incidents'))
+                for category in categories:
+                    summary = summary + ((
+                        category.plural_name if category.plural_name else category.title,
+                        category.num_incidents,
+                    ),)
+
+        return summary
 
     def by_search_text(self, incidents):
         return incidents.search(self.search_text, order_by_relevance=False)

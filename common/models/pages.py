@@ -190,7 +190,7 @@ class CategoryPage(Page):
         incident_filter.categories = str(self.page_ptr_id)
         context['category_options'] = incident_filter.get_category_options()
         context['filter_choices'] = get_filter_choices()
-        entry_qs = incident_filter.fetch()
+        summary, entry_qs = incident_filter.fetch()
 
         paginator, entries = paginate(
             request,
@@ -202,6 +202,7 @@ class CategoryPage(Page):
 
         context['entries_page'] = entries
         context['paginator'] = paginator
+        context['summary_table'] = summary
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
@@ -220,6 +221,14 @@ class CategoryPage(Page):
                 # This means number of parameters given does not match
                 # the number expected by the function.
                 return ''
+
+        # Check for the presence of non-'page' querystring values
+        filters = dict(request.GET)
+        try:
+            filters.pop('page')
+        except KeyError:
+            pass
+        context['filtered'] = bool(filters)
 
         context['data_items'] = [
             {

@@ -13,7 +13,7 @@ class InfiniteScroller {
 
 		// We're going to keep track of the next link element so we can
 		// replace it on load and use it for the next XHR URL.
-		this.nextLinkElm = document.querySelector('.js-infinite-scrolling-next-link:last-child')
+		this.nextLinkElm = document.querySelector('.js-infinite-scrolling-next-link')
 
 		// This is going to be our insertion parent for new items.
 		this.parentElm = document.querySelector('.js-infinite-scrolling-parent')
@@ -64,7 +64,7 @@ class InfiniteScroller {
 		}
 
 		// Swap the old next page link with the new
-		const _elm = tempElm.querySelector('.js-infinite-scrolling-next-link:last-child')
+		const _elm = tempElm.querySelector('.js-infinite-scrolling-next-link')
 		if (_elm) {
 			_elm.addEventListener('click', this.getNextPage)
 			if (this.nextLinkElm) {
@@ -81,6 +81,10 @@ class InfiniteScroller {
 		if (replace) {
 			this.parentElm.parentNode.replaceChild(parentElm, this.parentElm)
 			this.parentElm = parentElm
+			// If we're doing a replacement, we also might have a new stats table to replace
+			const summaryTable = document.querySelector('.js-summary-table')
+			const newSummaryTable = tempElm.querySelector('.js-summary-table')
+			summaryTable.innerHTML = newSummaryTable.innerHTML
 		} else {
 			this.parentElm.appendChild(fragment)
 		}

@@ -54,7 +54,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
         incident_filter = IncidentFilter.from_request(request)
         context['category_options'] = incident_filter.get_category_options()
         context['filter_choices'] = get_filter_choices()
-        entry_qs = incident_filter.fetch()
+        summary, entry_qs = incident_filter.fetch()
 
         paginator, entries = paginate(
             request,
@@ -66,6 +66,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
 
         context['entries_page'] = entries
         context['paginator'] = paginator
+        context['summary_table'] = summary
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
