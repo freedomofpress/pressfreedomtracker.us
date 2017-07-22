@@ -321,6 +321,7 @@ class IncidentFiltering extends PureComponent {
 			noCategoryFiltering,
 			changeFiltersMessage,
 			filterChoices,
+			exportPath,
 		} = this.props
 
 		return (
@@ -354,8 +355,10 @@ class IncidentFiltering extends PureComponent {
 					<FiltersFooter
 						handleApplyFilters={this.handleApplyFilters}
 						handleClearFilters={this.handleClearFilters}
+						pageFetchParams={this.getPageFetchParams()}
 						loading={this.state.loading}
 						filtersTouched={filtersTouched}
+						exportPath={exportPath}
 					/>
 				</FiltersExpandable>
 			</Filters>

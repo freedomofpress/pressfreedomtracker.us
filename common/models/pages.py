@@ -183,12 +183,14 @@ class CategoryPage(Page):
         # placed here to avoid circular dependency
         from incident.utils.incident_filter import IncidentFilter
         from incident.models.choices import get_filter_choices
+        from home.models import HomePage
 
         context = super(CategoryPage, self).get_context(request)
 
         incident_filter = IncidentFilter.from_request(request)
         incident_filter.categories = str(self.page_ptr_id)
         context['category_options'] = incident_filter.get_category_options()
+        context['export_path'] = HomePage.objects.live()[0].incident_index_page.url
         context['filter_choices'] = get_filter_choices()
         summary, entry_qs = incident_filter.fetch()
 

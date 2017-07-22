@@ -1,4 +1,5 @@
 import React from 'react'
+import queryString from 'query-string'
 import { HorizontalLoader } from '~/filtering/Loader'
 
 
@@ -6,14 +7,19 @@ function FiltersFooter({
 	handleApplyFilters,
 	handleClearFilters,
 	loading,
+	pageFetchParams,
 	filtersTouched,
+	exportPath,
 }) {
+	const params = pageFetchParams
+	const qs = queryString.stringify(params)
+	const exportUrl = `${exportPath}export/?${qs}`
 	return (
 		<div className="filters__footer">
 			<div className="filters__text filters__text--dim filters__text--meta">
 				Need to do more complex filtering?
 				{' '}
-				<a href="#" className="filters__link">Download the Data.</a>
+				<a href={exportUrl} className="filters__link">Download the Data.</a>
 			</div>
 
 			<span className="filters__button-toolbar">

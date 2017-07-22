@@ -56,6 +56,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
         incident_filter = IncidentFilter.from_request(request)
         context['category_options'] = incident_filter.get_category_options()
         context['filter_choices'] = get_filter_choices()
+        context['export_path'] = self.url
         summary, entry_qs = incident_filter.fetch()
 
         paginator, entries = paginate(
