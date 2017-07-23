@@ -3,7 +3,23 @@
   connection: local
   vars:
     molecule_scenario_directory: "{{ lookup('env', 'MOLECULE_SCENARIO_DIRECTORY') }}"
+    root_dir: "{{ molecule_scenario_directory }}/../../"
   tasks:
+    # Trying to avoid `find` b/c not certain about OSX compatibility
+    - name: Check for root owned files
+      command: find ./ -user root
+      args:
+        chdir: "{{ root_dir }}"
+      ignore_errors: true
+      changed_when: false
+      register: root_check_result
+
+    - fail:
+        msg: |
+          Please chown root owned files to continue.
+          `make dev-chownroot`
+      when: root_check_result.stdout_lines
+
     - name: Get hashes from our requirements file
       stat:
         path: "../../requirements.txt"

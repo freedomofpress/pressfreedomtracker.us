@@ -1,4 +1,6 @@
 .DEFAULT_GOAL := help
+DIR := ${CURDIR}
+WHOAMI := ${USER}
 
 .PHONY: ci-go
 ci-go:
@@ -11,6 +13,10 @@ ci-tests:
 .PHONY: dev-go
 dev-go:
 	./devops/scripts/dev.sh
+
+.PHONY: dev-chownroot
+dev-chownroot:
+	sudo find $(DIR) -user root -exec chown -Rv $(WHOAMI):$(WHOAMI) '{}' \;
 
 .PHONY: dev-killapp
 dev-killapp:
