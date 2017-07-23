@@ -1,8 +1,10 @@
 ---
 - hosts: localhost
   connection: local
+  become: no
   vars:
     molecule_scenario_directory: "{{ lookup('env', 'MOLECULE_SCENARIO_DIRECTORY') }}"
+    node_tag: 6.11.0-alpine
     root_dir: "{{ molecule_scenario_directory }}/../../"
   tasks:
     # Trying to avoid `find` b/c not certain about OSX compatibility
@@ -33,7 +35,7 @@
     - name: Create Django docker image (should be everytime requirements change)
       docker_image:
         name: pf_tracker_django
-        dockerfile: "{{ molecule_scenario_directory }}/Dockerfile"
+        dockerfile: "{{ molecule_scenario_directory }}/DjangoDockerfile"
         path: ../../
         tag: "{{ requirements_hash }}"
 
@@ -50,23 +52,32 @@
           POSTGRES_PASSWORD: trackerpassword
           POSTGRES_USER: tracker
           POSTGRES_DB: trackerdb
+        user: postgres
       register: pg_container_results
 
     - name: If grsec, add paxflags cmd to node
       set_fact:
-        node_grsec_start: "apk add paxctl --no-cache; paxctl -cm /usr/local/bin/node;"
+        node_grsec_image: "node_grsec"
+      when: ansible_kernel.endswith('grsec')
+
+    - name: Build node image with pax flags
+      docker_image:
+        name: "node_grsec:{{ node_tag }}"
+        dockerfile: "{{ molecule_scenario_directory }}/NodeDockerfile"
+        path: ../../
+        tag: "{{ node_tag }}"
       when: ansible_kernel.endswith('grsec')
 
     - name: Start node
       docker_container:
         name: pf_tracker_node
-        image: node:6.11.0-alpine
+        image: "{{ node_grsec_image|default('node') }}:{{ node_tag }}"
         volumes:
           - ../../:/var/www/django
         state: started
         working_dir: /var/www/django
-        command: |
-          /bin/ash -c "{{node_grsec_start|default('')}} npm install; npm run start"
+        command: /bin/ash -c "npm install; npm run start"
+        user: node
         recreate: yes
 
     - name: Establish postgres port
@@ -108,7 +119,7 @@
       register: uri_scrape_result
       until: uri_scrape_result.status == 200
       retries: 5
-      delay: 5
+      delay: 20
 
     - debug:
         msg: |
