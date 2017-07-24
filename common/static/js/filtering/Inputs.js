@@ -127,11 +127,13 @@ export function BoolInput({ handleFilterChange, filterValues, label, filter }) {
 	return (
 		<div className="filters__input-row">
 			<span className="filters__input-label">{label}</span>
-			<input
-				type="checkbox"
-				onChange={handleFilterChange.bind(null, filter)}
-				value={filterValues[filter] || false}
-			/>
+			<span>
+				<input
+					type="checkbox"
+					onChange={handleFilterChange.bind(null, filter)}
+					value={filterValues[filter] || false}
+				/>
+			</span>
 		</div>
 	)
 }
