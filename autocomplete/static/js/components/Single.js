@@ -46,6 +46,7 @@ class Single extends PureComponent {
 				onChange={onChange}
 				canCreate={canCreate}
 				input={input}
+				isSingle={true}
 			/>
 		)
 	}

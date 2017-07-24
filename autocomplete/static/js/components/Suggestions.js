@@ -145,6 +145,7 @@ class Suggestions extends PureComponent {
 			onCreate,
 			onChange,
 			input,
+			isSingle,
 		} = this.props
 
 		const { visible } = this.state
@@ -152,7 +153,13 @@ class Suggestions extends PureComponent {
 		const display = this.state.visible ? 'block' : 'none'
 
 		return (
-			<span ref={ref => this.containerElm = ref}>
+			<span
+				ref={ref => this.containerElm = ref}
+				className={classNames(
+					'suggestions__sub',
+					{ 'suggestions__sub--single': isSingle }
+				)}
+			>
 				<div className="autocomplete__search-input-container">
 					<input
 						type="text"
