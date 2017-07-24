@@ -2,7 +2,7 @@
 
 {% load wagtailcore_tags %}
 
-<div class="blog-tease blog-tease--{{ location }}">
+<div class="blog-tease blog-tease--{{ location }}{% if single_column %} blog-tease--horizontal{% endif %}">
 	{% if page.teaser_image and location == "blog-index" %}
 		{% include "common/_teaser_image.html" %}
 	{% endif %}
