@@ -50,7 +50,7 @@ class Multi extends PureComponent {
 					/>
 				</span>
 
-				<span className="autocomplete-layout__item">
+				<span className="autocomplete-layout__item autocomplete-layout__item--padded">
 					{selections.length === 0 && (
 						<span>Nothing selected.</span>
 					)}
