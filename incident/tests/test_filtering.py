@@ -104,7 +104,8 @@ class TestFiltering(TestCase):
             lower_date='2017-01-01',
         ).fetch()
 
-        self.assertEqual({target}, set(incidents))
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
 
     def test_filter_by_date_range_should_be_incluve_on_upper_date(self):
         """date filter should include incidents that occur on the upper date"""
@@ -118,7 +119,8 @@ class TestFiltering(TestCase):
             lower_date='2017-01-01',
         ).fetch()
 
-        self.assertEqual({target}, set(incidents))
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
 
     def test_should_filter_by_date_range_unbounded_below(self):
         """should filter by date range - unbounded below."""
