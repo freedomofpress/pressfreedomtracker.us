@@ -33,6 +33,7 @@ export const DATE_FILTERS = [
 
 
 export const ALL_FILTERS = [
+	'search',
 	'lower_date',
 	'upper_date',
 	'arrest_status',

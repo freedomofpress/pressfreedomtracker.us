@@ -24,6 +24,13 @@ const FilterSets = {}
 FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 	return (
 		<FilterSet>
+			<TextInput
+				handleFilterChange={handleFilterChange}
+				filterValues={filterValues}
+				label="Search Terms"
+				filter="search"
+			/>
+
 			<DateRangeInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
