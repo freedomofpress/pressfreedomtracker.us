@@ -65,7 +65,7 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 			<AutocompleteInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
-				label="Targetted any of these journalists"
+				label="Targeted any of these journalists"
 				filter="targets"
 				type="incident.Target"
 				isSingle={false}
