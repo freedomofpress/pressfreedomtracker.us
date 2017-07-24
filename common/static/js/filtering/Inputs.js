@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import Autocomplete from 'WagtailAutocomplete/Autocomplete'
 import classNames from 'classnames'
 import DatePicker from 'react-datepicker'
@@ -31,35 +31,65 @@ export function AutocompleteInput({
 }
 
 
-export function RadioPillInput({
-	handleFilterChange,
-	filterValues,
-	label,
-	filter,
-	options,
-}) {
-	return (
-		<div className="filters__input-row">
-			<span className="filters__input-label">{label}</span>
+export class RadioPillInput extends PureComponent {
+	constructor(...args) {
+		super(...args)
 
-			<span className="radio-pill">
-				{options.map(option => (
-					<button
-						key={option.value}
-						value={option.value}
-						type="button"
-						onClick={handleFilterChange.bind(null, filter)}
-						className={classNames(
-							'radio-pill__item',
-							{ 'radio-pill__item--selected': filterValues[filter] === option.value }
-						)}
-					>
-						{option.label}
-					</button>
-				))}
-			</span>
-		</div>
-	)
+		this.handleClick = this.handleClick.bind(this)
+	}
+
+	handleClick(event) {
+		debugger
+		const {
+			handleFilterChange,
+			filterValues,
+			filter,
+		} = this.props
+
+		const { value } = event.target
+		if (!value) {
+			return
+		}
+
+		if (value === filterValues[filter]) {
+			handleFilterChange(filter, { target: { value: '' } })
+		} else {
+			handleFilterChange(filter, event)
+		}
+	}
+
+	render() {
+		const {
+			handleFilterChange,
+			filterValues,
+			label,
+			filter,
+			options,
+		} = this.props
+
+		return (
+			<div className="filters__input-row">
+				<span className="filters__input-label">{label}</span>
+
+				<span className="radio-pill">
+					{options.map(option => (
+						<button
+							key={option.value}
+							value={option.value}
+							type="button"
+							onClick={this.handleClick}
+							className={classNames(
+								'radio-pill__item',
+								{ 'radio-pill__item--selected': filterValues[filter] === option.value }
+							)}
+						>
+							{option.label}
+						</button>
+					))}
+				</span>
+			</div>
+		)
+	}
 }
 
 
