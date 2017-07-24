@@ -20,6 +20,10 @@
 	&__date-picker > div
 		display: inline-block
 
+	&__date-picker .popper
+		// Unfortunately, this is declared with a value of 1 on an inline style
+		// that is difficult to change in JS.
+		z-index: 10 !important
 
 	&__header
 		+flex-vertically-centered-row
