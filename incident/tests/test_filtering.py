@@ -266,3 +266,56 @@ class TestFiltering(TestCase):
         ).fetch()
 
         self.assertEqual(len(incidents), 3)
+
+
+class TestBooleanFiltering(TestCase):
+    """Boolean filters"""
+    def setUp(self):
+        category = CategoryPageFactory()
+        category.slug = 'leak-prosecutions'
+        category.save()
+
+        self.true_bool = IncidentPageFactory(
+            charged_under_espionage_act=True
+        )
+        self.false_bool = IncidentPageFactory(
+            charged_under_espionage_act=False
+        )
+
+        tc = IncidentCategorizationFactory.create(
+            category=category,
+            incident_page=self.true_bool,
+        )
+        tc.save()
+
+        oc = IncidentCategorizationFactory.create(
+            category=category,
+            incident_page=self.false_bool,
+        )
+        oc.save()
+
+    def test_should_filter_by_true_boolean_field(self):
+        """should filter by boolean when true"""
+        incidents = CreateIncidentFilter(
+            charged_under_espionage_act='True'
+        ).fetch()
+
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(self.true_bool in incidents)
+
+    def test_should_filter_by_false_boolean_field(self):
+        """should filter by boolean when false"""
+        incidents = CreateIncidentFilter(
+            charged_under_espionage_act='False'
+        ).fetch()
+
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(self.false_bool in incidents)
+
+    def test_should_return_all_with_invalid_bool(self):
+        """Should return all incidents when filter is invalid"""
+        incidents = CreateIncidentFilter(
+            charged_under_espionage_act='Hello'
+        ).fetch()
+
+        self.assertEqual(len(incidents), 2)
