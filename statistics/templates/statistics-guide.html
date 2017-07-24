@@ -4,32 +4,6 @@
 	<div style="padding:0.5em 1em; max-width: 600px">
 		<h1>Statistics Guide</h1>
 
-		<h2>Maps</h2>
-		{% for item in maps %}
-			<section style="border-bottom: solid 1px #aaa">
-				<dl>
-					<dt>Name</dt>
-					<dd>{{ item.name }}</dd>
-
-					<dt>Info</dt>
-					<dd>{{ item.docstring }}</dd>
-
-					<dt>Arguments</dt>
-					<dd>
-						{% if item.arguments %}
-							<ul>
-								{% for arg in item.arguments %}
-									<li><pre>{{ arg }}</pre></li>
-								{% endfor %}
-							</ul>
-						{% else %}
-							No arguments
-						{% endif %}
-					</dd>
-				</dl>
-			</section>
-		{% endfor %}
-
 		<h2>Numbers</h2>
 		{% for item in numbers %}
 			<section style="border-bottom: solid 1px #aaa">
@@ -47,6 +21,32 @@
 							{% for arg in item.arguments %}
 								<li><pre>{{ arg }}</pre></li>
 							{% endfor %}
+							</ul>
+						{% else %}
+							No arguments
+						{% endif %}
+					</dd>
+				</dl>
+			</section>
+		{% endfor %}
+
+		<h2>Maps</h2>
+		{% for item in maps %}
+			<section style="border-bottom: solid 1px #aaa">
+				<dl>
+					<dt>Name</dt>
+					<dd>{{ item.name }}</dd>
+
+					<dt>Info</dt>
+					<dd>{{ item.docstring }}</dd>
+
+					<dt>Arguments</dt>
+					<dd>
+						{% if item.arguments %}
+							<ul>
+								{% for arg in item.arguments %}
+									<li><pre>{{ arg }}</pre></li>
+								{% endfor %}
 							</ul>
 						{% else %}
 							No arguments
