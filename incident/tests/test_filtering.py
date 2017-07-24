@@ -114,7 +114,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 4, 1))
 
-        summary, incidents =  CreateIncidentFilter(
+        summary, incidents = CreateIncidentFilter(
             upper_date=target_date.isoformat(),
             lower_date='2017-01-01',
         ).fetch()
@@ -327,15 +327,9 @@ class TestDateFilters(TestCase):
         self.lower_date = date(2017, 2, 12)
         self.upper_date = date(2017, 2, 13)
 
-
-        # self.upper_inc = IncidentPageFactory(
-        #     release_date_upper=self.upper_date
-        # )
-
-
     def test_should_filter_by_lower_date_inclusive(self):
         """should filter by lower date"""
-        target =  IncidentPageFactory(
+        target = IncidentPageFactory(
             release_date=self.lower_date
         )
 
@@ -353,7 +347,7 @@ class TestDateFilters(TestCase):
 
     def test_should_filter_by_upper_date_inclusive(self):
         """should filter by upper date"""
-        target =  IncidentPageFactory(
+        target = IncidentPageFactory(
             release_date=self.upper_date
         )
 
@@ -371,7 +365,7 @@ class TestDateFilters(TestCase):
 
     def test_should_filter_by_date_range_inclusive(self):
         """should filter by date range"""
-        target1 =  IncidentPageFactory(
+        target1 = IncidentPageFactory(
             release_date=self.upper_date
         )
 
@@ -398,7 +392,7 @@ class TestDateFilters(TestCase):
 
     def test_should_filter_correctly_with_equal_dates(self):
         """should filter correctly if upper and lower dates are equal"""
-        target =  IncidentPageFactory(
+        target = IncidentPageFactory(
             release_date=self.lower_date
         )
 
