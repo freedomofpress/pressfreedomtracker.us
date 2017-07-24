@@ -47,6 +47,8 @@
           - 5432
         published_ports:
           - 5432
+        volumes:
+          - ../../:/django
         state: started
         env:
           POSTGRES_PASSWORD: trackerpassword
