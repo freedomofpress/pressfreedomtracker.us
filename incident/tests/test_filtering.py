@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django.test import TestCase
 from wagtail.wagtailcore.rich_text import RichText
@@ -319,3 +319,101 @@ class TestBooleanFiltering(TestCase):
         ).fetch()
 
         self.assertEqual(len(incidents), 2)
+
+
+class TestDateFilters(TestCase):
+    """Date filters"""
+    def setUp(self):
+        self.lower_date = date(2017, 2, 12)
+        self.upper_date = date(2017, 2, 13)
+
+
+        # self.upper_inc = IncidentPageFactory(
+        #     release_date_upper=self.upper_date
+        # )
+
+
+    def test_should_filter_by_lower_date_inclusive(self):
+        """should filter by lower date"""
+        target =  IncidentPageFactory(
+            release_date=self.lower_date
+        )
+
+        # This incident should not be included in the filer, because it is before the lower date
+        IncidentPageFactory(
+            release_date=(self.lower_date - timedelta(days=1))
+        )
+
+        summary, incidents = CreateIncidentFilter(
+            release_date_lower=self.lower_date.isoformat()
+        ).fetch()
+
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
+
+    def test_should_filter_by_upper_date_inclusive(self):
+        """should filter by upper date"""
+        target =  IncidentPageFactory(
+            release_date=self.upper_date
+        )
+
+        # This incident should not be included in the filer, because it is after the upper date
+        IncidentPageFactory(
+            release_date=(self.upper_date + timedelta(days=1))
+        )
+
+        summary, incidents = CreateIncidentFilter(
+            release_date_upper=self.upper_date.isoformat()
+        ).fetch()
+
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
+
+    def test_should_filter_by_date_range_inclusive(self):
+        """should filter by date range"""
+        target1 =  IncidentPageFactory(
+            release_date=self.upper_date
+        )
+
+        target2 = IncidentPageFactory(
+            release_date=(self.upper_date)
+        )
+
+        # Incidents below and above the filters
+        IncidentPageFactory(
+            release_date=(self.lower_date - timedelta(days=1))
+        )
+        IncidentPageFactory(
+            release_date=(self.upper_date + timedelta(days=1))
+        )
+
+        summary, incidents = CreateIncidentFilter(
+            release_date_lower=self.lower_date.isoformat(),
+            release_date_upper=self.upper_date.isoformat()
+        ).fetch()
+
+        self.assertEqual(len(incidents), 2)
+        self.assertTrue(target1 in incidents)
+        self.assertTrue(target2 in incidents)
+
+    def test_should_filter_correctly_with_equal_dates(self):
+        """should filter correctly if upper and lower dates are equal"""
+        target =  IncidentPageFactory(
+            release_date=self.lower_date
+        )
+
+        # This incident should not be included in the filer, because it is before the lower date
+        IncidentPageFactory(
+            release_date=(self.lower_date - timedelta(days=1))
+        )
+        IncidentPageFactory(
+            release_date=(self.lower_date + timedelta(days=1))
+        )
+
+        summary, incidents = CreateIncidentFilter(
+            release_date_lower=self.lower_date.isoformat(),
+            release_date_upper=self.lower_date.isoformat()
+        ).fetch()
+
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
