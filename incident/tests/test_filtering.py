@@ -229,19 +229,24 @@ class TestFiltering(TestCase):
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
 
+
+class ChoiceFilters(TestCase):
+    def setUp(self):
+        self.custody = 'CUSTODY'
+        self.returned_full = 'RETURNED_FULL'
+        self.unknown = 'UNKNOWN'
+
     def test_should_filter_by_choice_field(self):
         """should filter via a field that is a choice field"""
-        target_status_of_seized_equipment = 'CUSTODY'
-        other_status_of_seized_equipment = 'RETURNED_FULL'
 
         target = IncidentPageFactory(
-            status_of_seized_equipment=target_status_of_seized_equipment
+            status_of_seized_equipment=self.custody
         )
         IncidentPageFactory(
-            status_of_seized_equipment=other_status_of_seized_equipment
+            status_of_seized_equipment=self.returned_full
         )
         summary, incidents = CreateIncidentFilter(
-            status_of_seized_equipment=target_status_of_seized_equipment
+            status_of_seized_equipment=self.custody
         ).fetch()
 
         self.assertEqual(len(incidents), 1)
@@ -249,14 +254,12 @@ class TestFiltering(TestCase):
 
     def test_filter_should_return_all_if_choice_field_invalid(self):
         """should not filter if choice is invalid"""
-        inc1_status_of_seized_equipment = 'CUSTODY'
-        inc2_status_of_seized_equipment = 'RETURNED_FULL'
 
         IncidentPageFactory(
-            status_of_seized_equipment=inc1_status_of_seized_equipment
+            status_of_seized_equipment=self.custody
         )
         IncidentPageFactory(
-            status_of_seized_equipment=inc2_status_of_seized_equipment
+            status_of_seized_equipment=self.returned_full
         )
         IncidentPageFactory(
             affiliation='other'
@@ -266,6 +269,26 @@ class TestFiltering(TestCase):
         ).fetch()
 
         self.assertEqual(len(incidents), 3)
+
+    def test_filter_should_handle_multiple_choices(self):
+        """should handle multiple choices"""
+        target1 = IncidentPageFactory(
+            status_of_seized_equipment=self.custody
+        )
+        target2 = IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.unknown
+        )
+
+        summary, incidents = CreateIncidentFilter(
+            status_of_seized_equipment='{0},{1}'.format(self.custody, self.returned_full)
+        ).fetch()
+
+        self.assertEqual(len(incidents), 2)
+        self.assertTrue(target1 in incidents)
+        self.assertTrue(target2 in incidents)
 
 
 class TestBooleanFiltering(TestCase):
