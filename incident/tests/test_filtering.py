@@ -222,7 +222,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(
             affiliation='other'
         )
-        incidents = CreateIncidentFilter(
+        summary, incidents = CreateIncidentFilter(
             affiliation=affiliation
         ).fetch()
 
@@ -240,7 +240,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(
             status_of_seized_equipment=other_status_of_seized_equipment
         )
-        incidents = CreateIncidentFilter(
+        summary, incidents = CreateIncidentFilter(
             status_of_seized_equipment=target_status_of_seized_equipment
         ).fetch()
 
@@ -261,7 +261,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(
             affiliation='other'
         )
-        incidents = CreateIncidentFilter(
+        summary, incidents = CreateIncidentFilter(
             status_of_seized_equipment="hello"
         ).fetch()
 
@@ -296,7 +296,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_filter_by_true_boolean_field(self):
         """should filter by boolean when true"""
-        incidents = CreateIncidentFilter(
+        summary, incidents = CreateIncidentFilter(
             charged_under_espionage_act='True'
         ).fetch()
 
@@ -305,7 +305,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_filter_by_false_boolean_field(self):
         """should filter by boolean when false"""
-        incidents = CreateIncidentFilter(
+        summary, incidents = CreateIncidentFilter(
             charged_under_espionage_act='False'
         ).fetch()
 
@@ -314,7 +314,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_return_all_with_invalid_bool(self):
         """Should return all incidents when filter is invalid"""
-        incidents = CreateIncidentFilter(
+        summary, incidents = CreateIncidentFilter(
             charged_under_espionage_act='Hello'
         ).fetch()
 
