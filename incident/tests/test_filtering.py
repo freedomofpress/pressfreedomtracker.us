@@ -212,3 +212,57 @@ class TestFiltering(TestCase):
             categories='{0},{1}'.format(str(category2.id), str(category3.id)),
         ).fetch()
         self.assertEqual({incident1, incident2}, set(incidents))
+
+    def test_should_filter_by_char_field(self):
+        """should filter via a field that is a char field"""
+        affiliation = 'cauliflower'
+        target = IncidentPageFactory(
+            affiliation=affiliation,
+        )
+        IncidentPageFactory(
+            affiliation='other'
+        )
+        incidents = CreateIncidentFilter(
+            affiliation=affiliation
+        ).fetch()
+
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
+
+    def test_should_filter_by_choice_field(self):
+        """should filter via a field that is a choice field"""
+        target_status_of_seized_equipment = 'CUSTODY'
+        other_status_of_seized_equipment = 'RETURNED_FULL'
+
+        target = IncidentPageFactory(
+            status_of_seized_equipment=target_status_of_seized_equipment
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=other_status_of_seized_equipment
+        )
+        incidents = CreateIncidentFilter(
+            status_of_seized_equipment=target_status_of_seized_equipment
+        ).fetch()
+
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
+
+    def test_filter_should_return_all_if_choice_field_invalid(self):
+        """should not filter if choice is invalid"""
+        inc1_status_of_seized_equipment = 'CUSTODY'
+        inc2_status_of_seized_equipment = 'RETURNED_FULL'
+
+        IncidentPageFactory(
+            status_of_seized_equipment=inc1_status_of_seized_equipment
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=inc2_status_of_seized_equipment
+        )
+        IncidentPageFactory(
+            affiliation='other'
+        )
+        incidents = CreateIncidentFilter(
+            status_of_seized_equipment="hello"
+        ).fetch()
+
+        self.assertEqual(len(incidents), 3)
