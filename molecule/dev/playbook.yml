@@ -24,7 +24,7 @@
 
     - name: Get hashes from our requirements file
       stat:
-        path: "../../requirements.txt"
+        path: "../../dev-requirements.txt"
         get_md5: false
         checksum_algorithm: sha256
       register: requirements_stat_result
