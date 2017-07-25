@@ -70,6 +70,56 @@
 		{% endfor %}
 
 		<h2>Maps</h2>
+
+		<h3>Usage</h3>
+		<p>
+			Maps are data queries that result in more complex values
+			than numbers.  They have been designed to return sequences
+			of value-pairs that "map" a text label to a number (though
+			they can be adapted for other uses).  An example given
+			below is the number of incidents by month in a given year
+			range.
+		</p>
+
+		<p>
+			This is rich and flexible data, but it is not optimized
+			for embedding into page content the way that simple
+			numbers are.  So, to use maps, we must use a
+			StatisticsBlock.  This is a type of wagtail block that can
+			be added to StreamField areas (alongside RichTextBlocks,
+			HeaderBlocks, Blockquotes, etc.)  around the site.  This
+			allows you to pick what map you want and also how you wish
+			that map to be visualized on the site.
+		</p>
+
+		<p>
+			When using a StreamField, will be presented with two
+			dropdown menus.  The first is where you select a
+			statistic.  This is the data you want to display.  The
+			second is where you select a visualization.
+		</p>
+
+		<p>
+			Each StatisticsBlock has a "params" field which is how you
+			input what arguments should be passed to the underlying
+			function.  This is similar to how arguments are passed to
+			numbers.  These must be entered as space-separated values.
+			For example, the function <span style="font-family:monospace">incidents_in_year_range_by_month</span>
+			specifies two arguments, a start year and an end year.  To
+			query data beginning in the year 2015 and ending in the
+			year 2017, you would enter the following into the params
+			field:
+		</p>
+
+		<pre>2015 2017</pre>
+
+		<p>
+			In the list of functions below, the arguments are shown in
+			the order they should be input into the params field.
+		</p>
+
+		<h3>Available Functions</h3>
+
 		{% for item in maps %}
 			<section style="border-bottom: solid 1px #aaa">
 				<dl>
