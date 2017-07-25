@@ -1,6 +1,6 @@
 {% extends layout_template %}
 
-{% load common_tags wagtailcore_tags render_as_template %}
+{% load common_tags wagtailcore_tags render_as_template static %}
 
 {% block flex_class %}
 	flex-container--grow-3
@@ -52,7 +52,7 @@
 	">
 		<table class="data-table data-table--category">
 			<h4 class="section-heading section-heading--light section-heading--margin-top">
-			Data Summary
+			Data Summary {% include 'common/_info_icon.html' %}
 		</h4>
 			<tr class="data-table__row data-table__row--light">
 				<th class="data-table__label data-table__label--light">
