@@ -6,114 +6,118 @@ It can take the following context variables:
 	teaser -- whether this is a short teaser of an incident (default: False)
 {% endcomment %}
 
+{% load cache %}
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
 {% load render_as_template %}
 
-{% with main_category=incident.get_main_category %}
-<article class="
-	incident
-	incident--{{ main_category.page_color }}
-	{% if teaser %}
-		incident--teaser
-	{% else %}
-		incident--full
-	{% endif %}
-">
-	{% if incident.teaser_image %}
-		{% if teaser %}
-			{% include "common/_teaser_image.html" with page=incident %}
-		{% else %}
-			{% include "common/_top_image.html" with page=incident %}
-		{% endif %}
-	{% endif %}
-	<div class="incident__body">
-			<ul class="category-list">
-				{% for category in incident.categories.all %}
-					<li class="
-						category-list__item
-						category-list__item--{{ category.category.page_color }}
-					"><a
-						href="{% pageurl category.category %}"
-						class="category-list__link"
-					>
-						{{ category.category.title }}
-					</a></li>
-				{% endfor %}
-			</ul>
-		{% if teaser %}
-			<h3 class='incident__title'>
-				<a class="incident__title-link" href="{% pageurl incident %}">
-					{{ incident.title }}
-				</a>
-			</h3>
-		{% else %}
-			<h2 class="incident__title">
-				{{ incident.title }}
-			</h2>
-		{% endif %}
-		<div class='incident__date'>
-				{% include "incident/_incident_date.html" %}
-				{% if teaser and incident.recently_updated %}
-				<span
-					class="alert alert--green"
-					title="Updated {{ incident.last_updated|date:'F j, Y'}}"
-				>
-					Recently Updated
-				</span>
-			{% endif %}
-		</div>
-		<div class="incident__description">
+{# This cache is explicitly invalidated in incident.signals.purge_incident_caches #}
+{% cache 3600 incident teaser incident.pk %}
+	{% with main_category=incident.get_main_category %}
+		<article class="
+			incident
+			incident--{{ main_category.page_color }}
 			{% if teaser %}
-				<section>
-					{% if incident.teaser %}
-					{{ incident.teaser|richtext }}
-					{% else %}
-					{% include_block incident.body.0|truncatewords_html:20 %}
-					{% endif %}
-				</section>
+				incident--teaser
 			{% else %}
-				{% for block in incident.body %}
-					{% if block.block_type == 'rich_text' %}
-						<section>{% render_as_template block.value %}</section>
-					{% else %}
-						<section>{% include_block block %}</section>
-					{% endif %}
-				{% endfor %}
+				incident--full
 			{% endif %}
-		</div>
-		{% if not teaser %}
-			{% for update in incident.updates.all %}
-				<div class="incident__update-item">
-					<div class='incident__date'>
-						{{update.date|date:"F j, Y"}} Update
-					</div>
-					<div class="incident__description">
-						{% for block in update.body %}
+		">
+			{% if incident.teaser_image %}
+				{% if teaser %}
+					{% include "common/_teaser_image.html" with page=incident %}
+				{% else %}
+					{% include "common/_top_image.html" with page=incident %}
+				{% endif %}
+			{% endif %}
+			<div class="incident__body">
+					<ul class="category-list">
+						{% for category in incident.categories.all %}
+							<li class="
+								category-list__item
+								category-list__item--{{ category.category.page_color }}
+							"><a
+								href="{% pageurl category.category %}"
+								class="category-list__link"
+							>
+								{{ category.category.title }}
+							</a></li>
+						{% endfor %}
+					</ul>
+				{% if teaser %}
+					<h3 class='incident__title'>
+						<a class="incident__title-link" href="{% pageurl incident %}">
+							{{ incident.title }}
+						</a>
+					</h3>
+				{% else %}
+					<h2 class="incident__title">
+						{{ incident.title }}
+					</h2>
+				{% endif %}
+				<div class='incident__date'>
+						{% include "incident/_incident_date.html" %}
+						{% if teaser and incident.recently_updated %}
+						<span
+							class="alert alert--green"
+							title="Updated {{ incident.last_updated|date:'F j, Y'}}"
+						>
+							Recently Updated
+						</span>
+					{% endif %}
+				</div>
+				<div class="incident__description">
+					{% if teaser %}
+						<section>
+							{% if incident.teaser %}
+							{{ incident.teaser|richtext }}
+							{% else %}
+							{% include_block incident.body.0|truncatewords_html:20 %}
+							{% endif %}
+						</section>
+					{% else %}
+						{% for block in incident.body %}
 							{% if block.block_type == 'rich_text' %}
 								<section>{% render_as_template block.value %}</section>
 							{% else %}
 								<section>{% include_block block %}</section>
 							{% endif %}
 						{% endfor %}
-					</div>
+					{% endif %}
 				</div>
-			{% endfor %}
-			{% if incident.links.exists %}
-				<div class="related-links">
-					<h4 class="related-links__header">
-						Sources
-					</h4>
-					<ol class="related-links__list">
-						{% for link in incident.links.all %}
-							<li class="related-links__item">
-								<a href="{{ link.url }}">{{link.title}}</a>
-							</li>
-						{% endfor %}
-					</ol>
-				</div>
-			{% endif %}{# incident.links.exists #}
-		{% endif %}{# not teaser #}
-	</div>
-</article>
-{% endwith %}
+				{% if not teaser %}
+					{% for update in incident.updates.all %}
+						<div class="incident__update-item">
+							<div class='incident__date'>
+								{{update.date|date:"F j, Y"}} Update
+							</div>
+							<div class="incident__description">
+								{% for block in update.body %}
+									{% if block.block_type == 'rich_text' %}
+										<section>{% render_as_template block.value %}</section>
+									{% else %}
+										<section>{% include_block block %}</section>
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+					{% endfor %}
+					{% if incident.links.exists %}
+						<div class="related-links">
+							<h4 class="related-links__header">
+								Sources
+							</h4>
+							<ol class="related-links__list">
+								{% for link in incident.links.all %}
+									<li class="related-links__item">
+										<a href="{{ link.url }}">{{link.title}}</a>
+									</li>
+								{% endfor %}
+							</ol>
+						</div>
+					{% endif %}{# incident.links.exists #}
+				{% endif %}{# not teaser #}
+			</div>
+		</article>
+	{% endwith %}
+{% endcache %}
