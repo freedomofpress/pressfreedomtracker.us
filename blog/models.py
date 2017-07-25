@@ -142,6 +142,7 @@ class BlogPage(Page):
     )
 
     author = models.ForeignKey(
+        # Likely a PersonPage
         'wagtailcore.Page',
         null=True,
         blank=True,
