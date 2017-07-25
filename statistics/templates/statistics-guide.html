@@ -4,33 +4,46 @@
 	<div style="padding:0.5em 1em; max-width: 600px">
 		<h1>Statistics Guide</h1>
 
-		<h2>Maps</h2>
-		{% for item in maps %}
-			<section style="border-bottom: solid 1px #aaa">
-				<dl>
-					<dt>Name</dt>
-					<dd>{{ item.name }}</dd>
-
-					<dt>Info</dt>
-					<dd>{{ item.docstring }}</dd>
-
-					<dt>Arguments</dt>
-					<dd>
-						{% if item.arguments %}
-							<ul>
-								{% for arg in item.arguments %}
-									<li><pre>{{ arg }}</pre></li>
-								{% endfor %}
-							</ul>
-						{% else %}
-							No arguments
-						{% endif %}
-					</dd>
-				</dl>
-			</section>
-		{% endfor %}
+		<h2>Overview</h2>
+		<p>
+			The Statistics feature allows administrators and authors
+			to embed the output of statistics functions into posts and
+			other site content.  They are divided into two kinds.
+			Numbers are actual numbers (e.g. 1392, 72, 4) that can be
+			placed inline into text content. Maps are data series that
+			can be represented by a choice of visualization options.
+		</p>
 
 		<h2>Numbers</h2>
+
+		<h3>Usage</h3>
+		<p>
+			Numbers must be embedded in using special tags which are enclosed in brackets as follows:</p>
+		<pre>{% verbatim %}
+			{% tag %}{% endverbatim %}</pre>
+		<p>
+			Tags are identified by a name, and some of them take
+			arguments that change their output.  Embedding a tag into
+			your post content means putting the tag name and any
+			arguments it requires into the brackets and writing that
+			text directly into the post in the place where you want
+			the number to appear.  The brackets, the tag name, and the
+			arguments must be separated by spaces.  For example, a
+			number with two arguments would be used as follows:
+		</p>
+
+		<pre>{% verbatim %}
+			{% name argument1 argument2 %}{% endverbatim %}</pre>
+		<p>
+			So, when reading the entry for <span style="font-family:monospace">num_incidents</span>, we see it has one argument named <span style="font-family:monospace">year</span>.  If you want to display the number of incidents that occurred in the year 2017 in a post, you would put the following text into the body text where you want the number to appear.
+		</p>
+		<pre>{% verbatim %}
+			{% num_incidents 2017 %}{% endverbatim %}</pre>
+		<p>
+			The argument can be changed to a different year as desired.
+		</p>
+
+		<h3>Available Functions</h3>
 		{% for item in numbers %}
 			<section style="border-bottom: solid 1px #aaa">
 				<dl>
@@ -47,6 +60,82 @@
 							{% for arg in item.arguments %}
 								<li><pre>{{ arg }}</pre></li>
 							{% endfor %}
+							</ul>
+						{% else %}
+							No arguments
+						{% endif %}
+					</dd>
+				</dl>
+			</section>
+		{% endfor %}
+
+		<h2>Maps</h2>
+
+		<h3>Usage</h3>
+		<p>
+			Maps are data queries that result in more complex values
+			than numbers.  They have been designed to return sequences
+			of value-pairs that "map" a text label to a number (though
+			they can be adapted for other uses).  An example given
+			below is the number of incidents by month in a given year
+			range.
+		</p>
+
+		<p>
+			This is rich and flexible data, but it is not optimized
+			for embedding into page content the way that simple
+			numbers are.  So, to use maps, we must use a
+			StatisticsBlock.  This is a type of wagtail block that can
+			be added to StreamField areas (alongside RichTextBlocks,
+			HeaderBlocks, Blockquotes, etc.)  around the site.  This
+			allows you to pick what map you want and also how you wish
+			that map to be visualized on the site.
+		</p>
+
+		<p>
+			When using a StreamField, will be presented with two
+			dropdown menus.  The first is where you select a
+			statistic.  This is the data you want to display.  The
+			second is where you select a visualization.
+		</p>
+
+		<p>
+			Each StatisticsBlock has a "params" field which is how you
+			input what arguments should be passed to the underlying
+			function.  This is similar to how arguments are passed to
+			numbers.  These must be entered as space-separated values.
+			For example, the function <span style="font-family:monospace">incidents_in_year_range_by_month</span>
+			specifies two arguments, a start year and an end year.  To
+			query data beginning in the year 2015 and ending in the
+			year 2017, you would enter the following into the params
+			field:
+		</p>
+
+		<pre>2015 2017</pre>
+
+		<p>
+			In the list of functions below, the arguments are shown in
+			the order they should be input into the params field.
+		</p>
+
+		<h3>Available Functions</h3>
+
+		{% for item in maps %}
+			<section style="border-bottom: solid 1px #aaa">
+				<dl>
+					<dt>Name</dt>
+					<dd>{{ item.name }}</dd>
+
+					<dt>Info</dt>
+					<dd>{{ item.docstring }}</dd>
+
+					<dt>Arguments</dt>
+					<dd>
+						{% if item.arguments %}
+							<ul>
+								{% for arg in item.arguments %}
+									<li><pre>{{ arg }}</pre></li>
+								{% endfor %}
 							</ul>
 						{% else %}
 							No arguments
