@@ -98,6 +98,8 @@
         published_ports:
           - 8000
         working_dir: /var/www/django
+        interactive: true
+        tty: true
         command: |
           /bin/bash -c "./manage.py migrate; ./manage.py runserver 0.0.0.0:8000"
         user: gcorn
