@@ -21,9 +21,9 @@ if settings.DEBUG:
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
     docker_gw = subprocess.check_output('ip r | head -n 1', shell=True)
-    INSTALLED_APPS.append('debug_toolbar')
+    INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
     # Needs to be injected relatively early in the MIDDLEWARE list
-    MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
     INTERNAL_IPS = [docker_gw.split()[2].decode("utf-8")]
 
 DATABASES = {
