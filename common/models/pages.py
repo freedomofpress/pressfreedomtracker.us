@@ -204,6 +204,7 @@ class CategoryPage(MetadataPageMixin, Page):
     methodology = RichTextField(null=True, blank=True)
     plural_name = models.CharField(max_length=255, null=True, blank=True)
     page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
+    data_table_info = RichTextField(null=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('methodology'),
@@ -214,6 +215,7 @@ class CategoryPage(MetadataPageMixin, Page):
     settings_panels = Page.settings_panels + [
         FieldPanel('plural_name'),
         FieldPanel('page_color'),
+        FieldPanel('data_table_info')
     ]
 
     search_fields = Page.search_fields + [
