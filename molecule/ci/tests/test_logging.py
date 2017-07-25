@@ -1,22 +1,16 @@
 import json
 
-import testinfra.utils.ansible_runner
-
-testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    '.molecule/ansible_inventory').get_hosts('all')
-
-
-def request_and_scrape(url, filter_key, Command):
+def request_and_scrape(url, filter_key, host):
     """ Take in URL, grab the relevant log line,
         return dict for comparison """
 
     JSON_LOG_FILE = "/var/www/django/logs/app.log"
     # Generate log event via http requests
-    Command.run("curl --user-agent testinfra http://localhost:8000" + url)
+    host.run("curl --user-agent testinfra http://localhost:8000" + url)
     # Pick out the last log line from django logs
     # This is obviously only reliable test on a test instance with no
     # other incoming traffic.
-    grab_log = Command.check_output("grep {0} {1} | tail -n 1".format(
+    grab_log = host.check_output("grep {0} {1} | tail -n 1".format(
                                     filter_key,
                                     JSON_LOG_FILE
                                     ))
@@ -29,7 +23,7 @@ def request_and_scrape(url, filter_key, Command):
     return filtered_json
 
 
-def test_json_log_exception(Command):
+def test_json_log_exception(host):
     """
     Ensure json logging is working for exception
     """
@@ -50,12 +44,12 @@ def test_json_log_exception(Command):
                 "user": "AnonymousUser"
                }
 
-    error_line = request_and_scrape(url, 'ERROR', Command)
+    error_line = request_and_scrape(url, 'ERROR', host)
     assert 'exception' in error_line
     assert error_line['request'] == request
 
 
-def test_json_log_200(Command):
+def test_json_log_200(host):
     """
     Ensure json logging is working for requests
     """
@@ -78,4 +72,4 @@ def test_json_log_200(Command):
                             "reason": "OK",
                             "status": 200}}
 
-    assert request_and_scrape('/','INFO', Command) == should_return
+    assert request_and_scrape('/','INFO', host) == should_return

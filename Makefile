@@ -1,40 +1,46 @@
 .DEFAULT_GOAL := help
+DIR := ${CURDIR}
+WHOAMI := ${USER}
 
 .PHONY: ci-go
 ci-go:
-	./devops/scripts/go.sh
+	@molecule test -s ci
 
 .PHONY: ci-tests
 ci-tests:
-	./devops/scripts/go.sh only_tests
+	@molecule verify -s ci
 
 .PHONY: dev-go
 dev-go:
 	./devops/scripts/dev.sh
 
+.PHONY: dev-chownroot
+dev-chownroot:
+	sudo find $(DIR) -user root -exec chown -Rv $(WHOAMI):$(WHOAMI) '{}' \;
+
 .PHONY: dev-killapp
 dev-killapp:
-	docker kill node postgresql django
+	docker kill pf_tracker_node pf_tracker_postgresql pf_tracker_django
 
 .PHONY: dev-resetapp
 dev-resetapp:
-	docker rm -f node django; ./devops/scripts/dev.sh
+	molecule converge -s dev
 
 .PHONY: dev-attach-node
 dev-attach-node:
-	docker attach --sig-proxy=false node
+	docker attach --sig-proxy=false pf_tracker_node
 
 .PHONY: dev-attach-django
 dev-attach-django:
-	docker attach --sig-proxy=false django
+	docker attach --sig-proxy=false pf_tracker_django
 
 .PHONY: dev-attach-postgresql
 dev-attach-postgresql:
-	docker attach --sig-proxy=false postgresql
+	docker attach --sig-proxy=false pf_tracker_postgresql
 
 .PHONY: dev-createdevdata
 dev-createdevdata:
-	docker exec -it django bash -c "./manage.py createdevdata"
+	docker exec -it pf_tracker_django bash -c "./manage.py createdevdata"
 
 .PHONY: dev-sass-lint
 dev-sass-lint:
@@ -42,7 +48,7 @@ dev-sass-lint:
 
 .PHONY: dev-import-db
 dev-import-db:
-	docker exec -it postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ tracker/g' | psql trackerdb -U tracker &> /dev/null"
+	docker exec -it pf_tracker_postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ tracker/g' | psql trackerdb -U tracker &> /dev/null"
 
 .PHONY: ci-devops-builder
 ci-devops-builder:

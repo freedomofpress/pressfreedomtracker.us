@@ -17,8 +17,7 @@ logs/
 # devops virtualenv
 devops/.venv
 devops/.vagrant
-devops/.molecule
-devops/roles
+.molecule
 .cache
 *.retry
 
@@ -33,4 +32,4 @@ import.db
 db-snapshots/
 
 # CI XML test results
-test-results/*
+test-results

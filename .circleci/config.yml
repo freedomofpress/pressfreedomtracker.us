@@ -14,7 +14,11 @@ jobs:
       - setup_remote_docker
 
       - run:
-          name: Run molecule and testinfra tests
+          name: Install dependencies
+          command: pip install -r devops/requirements.txt
+
+      - run:
+          name: CI runner
           command: make ci-go
 
       - store_test_results:

@@ -1,2 +1,0 @@
-[all]
-ci-django-ansible ansible_connection=docker

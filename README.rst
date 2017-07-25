@@ -115,7 +115,9 @@ reverse nginx proxy, and debug mode off using the following command:
 
 This is the same command that is run during CI. It is not run using live-code
 refresh so it's not a great dev environment but is good for replicating issues
-that would come up in production.
+that would come up in production. Note that you'll have to ensure you have the
+requirements installed that are in `devops/requirements.txt` or source
+`devops/.venv` (if you've already run `make dev-go` at least once).
 
 Database snapshots
 ------------------
