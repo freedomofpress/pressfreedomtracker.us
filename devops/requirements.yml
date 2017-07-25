@@ -1,13 +1,3 @@
 ---
-- src: https://github.com/freedomofpress/ansible-role-openssl-node.git
-  name: freedomofpress.openssl_node
-
-- name: jdauphant.nginx
-
-- name: ANXS.postgresql
-
-- name: geerlingguy.nodejs
-
 - src: https://github.com/freedomofpress/django_stack.git
   name: freedomofpress.django_stack
-  version: 7d1081f5003d9650ea114c18a17d32530c1b961b
