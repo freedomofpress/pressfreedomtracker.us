@@ -12,8 +12,8 @@
 		{% include "common/_search_bar.html" with class="search-bar--mobile-hidden" %}
 
 		<ul class='header__nav-list header__nav-list--mobile-hidden'>
-			{% get_menu 'main' as menu %}
-			{% for item in menu.menu_items.all %}
+			{% get_menu 'main' as items %}
+			{% for item in items %}
 			<li class="header__nav-item">
 				<a class="header__nav-link {{ item.html_classes }}" href="{{ item.url }}">
 					{{ item.text }}
