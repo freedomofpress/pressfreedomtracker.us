@@ -120,7 +120,7 @@
         status_code: 200
       register: uri_scrape_result
       until: uri_scrape_result.status == 200
-      retries: 5
+      retries: 10
       delay: 20
 
     - debug:
