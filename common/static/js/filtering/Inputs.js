@@ -39,7 +39,6 @@ export class RadioPillInput extends PureComponent {
 	}
 
 	handleClick(event) {
-		debugger
 		const {
 			handleFilterChange,
 			filterValues,
