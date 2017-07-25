@@ -61,7 +61,7 @@ class IncidentIndexPage(RoutablePageMixin, Page):
 
         paginator, entries = paginate(
             request,
-            entry_qs.prefetch_related('categories__category'),
+            entry_qs,
             page_key=DEFAULT_PAGE_KEY,
             per_page=8,
             orphans=5
