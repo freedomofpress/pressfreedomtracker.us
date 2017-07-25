@@ -8,7 +8,12 @@
 		<form class="form-page__form" action="{% pageurl page %}" method="POST">
 			{% csrf_token %}
 			{{ form.as_p }}
-			<input type="submit">
+			<button
+				type="submit"
+				class="button button--outline"
+			>
+				{{ page.button_text|default:"Submit" }}
+			</button>
 		</form>
 	</div>
 {% endblock %}
