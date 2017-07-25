@@ -31,7 +31,14 @@ Run the following commands to get up and running:
 
 .. code:: bash
 
-    make dev-go #to launch containers
+    make dev-go
+
+or if you want to randomize the django port (to avoid potential port conflict on
+your host):
+
+.. code:: bash
+
+    RAND_PORT=yes make dev-go
 
 Whoa? That's it!? Not so fast. It takes a few minutes to kick off (which happens
 in the background); in order to monitor progress use the following two commands
