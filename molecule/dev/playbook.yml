@@ -20,7 +20,9 @@
         msg: |
           Please chown root owned files to continue.
           `make dev-chownroot`
-      when: root_check_result.stdout_lines
+      when:
+        - root_check_result.stdout_lines
+        - not ansible_kernel.endswith('Microsoft')
 
     - name: Get hashes from our requirements file
       stat:
