@@ -58,6 +58,13 @@ def validate_integer_list(lst):
     return result
 
 
+def validate_bool(string):
+    if string.title() in ('True', 'False'):
+        return string.title()
+
+    return None
+
+
 def validate_circuits(circuits):
     validated_circuits = []
     for circuit in circuits:
@@ -278,14 +285,16 @@ class IncidentFilter(object):
                     incidents = incidents.filter(**kw)
 
                 if field['type'] == 'bool' and getattr(self, field_name):
-                    category_kw = {
-                        'categories__category__slug__iexact': field['category_slug'],
-                    }
-                    filter_kw = {
-                        field_name: getattr(self, field_name),
-                    }
+                    valid_bool = validate_bool(getattr(self, field_name))
+                    if valid_bool:
+                        category_kw = {
+                            'categories__category__slug__iexact': field['category_slug'],
+                        }
+                        filter_kw = {
+                            field_name: valid_bool,
+                        }
 
-                    incidents = incidents.filter(**category_kw).filter(**filter_kw)
+                        incidents = incidents.filter(**category_kw).filter(**filter_kw)
 
                 if field['type'] == 'char':
                     kw = {
