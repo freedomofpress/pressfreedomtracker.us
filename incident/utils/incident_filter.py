@@ -59,12 +59,8 @@ def validate_integer_list(lst):
 
 
 def validate_bool(string):
-    true_list = ['True', 'TRUE', 'true']
-    false_list = ['False', 'FALSE', 'false']
-    if string in true_list:
-        return 'True'
-    if string in false_list:
-        return 'False'
+    if string.title() in ('True', 'False'):
+        return string.title()
 
     return None
 
