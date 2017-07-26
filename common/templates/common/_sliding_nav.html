@@ -3,8 +3,7 @@
 <nav class="sliding-nav js-sliding-nav">
   {% include "common/_search_bar.html" with class="search-bar--mobile" %}
   <ul class='sliding-nav__list'>
-      {% get_menu 'main' as items %}
-      {% for item in items %}
+      {% for item in menu_items %}
       <li class="sliding-nav__item">
         <a class='sliding-nav__link {{ item.html_classes }}' href="{{ item.url }}">
           {{ item.text }}
