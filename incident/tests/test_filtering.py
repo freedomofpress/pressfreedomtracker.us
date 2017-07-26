@@ -294,8 +294,7 @@ class ChoiceFilters(TestCase):
 class TestBooleanFiltering(TestCase):
     """Boolean filters"""
     def setUp(self):
-        category = CategoryPageFactory()
-        category.slug = 'leak-prosecutions'
+        category = CategoryPageFactory(slug='leak-prosecutions')
         category.save()
 
         self.true_bool = IncidentPageFactory(
