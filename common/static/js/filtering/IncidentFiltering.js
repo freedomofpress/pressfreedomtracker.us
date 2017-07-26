@@ -245,17 +245,22 @@ class IncidentFiltering extends PureComponent {
 			}
 		}, {})
 
-		this.setState({
-			categoriesEnabled: this.state.categoriesEnabled.map(category => {
+
+		const nextState = {
+			filterValues: {},
+			filtersTouched: false,
+		}
+
+		if (!this.props.noCategoryFiltering) {
+			nextState.categoriesEnabled = this.state.categoriesEnabled.map(category => {
 				return {
 					...category,
 					enabled: false,
 				}
-			}),
-			filterValues: {},
-			filtersTouched: false,
-		})
+			})
+		}
 
+		this.setState(nextState)
 		history.pushState(null, null, '?' + queryString.stringify(strippedParams))
 		this.fetchPage(strippedParams)
 	}
