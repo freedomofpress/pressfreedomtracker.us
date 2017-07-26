@@ -152,6 +152,7 @@ class HomePage(Page):
         context['category_options'] = incident_filter.get_category_options()
         context['export_path'] = self.incident_index_page.url
         context['filter_choices'] = get_filter_choices()
+        context['incidents'] = self.incidents.all().prefetch_related('incident__categories__category')
 
         return context
 
