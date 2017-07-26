@@ -42,3 +42,9 @@ class FormPage(AbstractEmailForm):
         else:
             context['template_name'] = 'base.html'
         return context
+
+    def serve(self, request, *args, **kwargs):
+        response = super(FormPage, self).serve(request, *args, **kwargs)
+        if 'embed' in request.GET:
+            response.xframe_options_exempt = True
+        return response
