@@ -178,6 +178,17 @@ class IncidentFiltering extends PureComponent {
 		}, {})
 	}
 
+	getExternalUrl() {
+		const categoriesEnabled = this.state.categoriesEnabled
+			.filter(({ enabled }) => enabled)
+
+		if (categoriesEnabled.length === 1) {
+			return categoriesEnabled[0].url
+		}
+
+		return this.props.external
+	}
+
 	handleToggle() {
 		this.setState({
 			filtersExpanded: !this.state.filtersExpanded,
@@ -221,7 +232,7 @@ class IncidentFiltering extends PureComponent {
 		const params = this.getPageFetchParams()
 		const qs = '?' + queryString.stringify(params)
 		if (this.props.applyExternally) {
-			window.location = this.props.external + qs
+			window.location = this.getExternalUrl() + qs
 		} else {
 			history.pushState(null, null, qs)
 			this.fetchPage(params)
