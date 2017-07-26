@@ -23,7 +23,8 @@ if settings.DEBUG:
         'SKIP_TEMPLATE_PREFIXES': (
             'django/forms/widgets/',
             'admin/widgets/',
-            'common/blocks/'
+            'common/blocks/',
+            'statistics/'
         ),
         'DISABLE_PANELS': {
             'debug_toolbar.panels.redirects.RedirectsPanel',
