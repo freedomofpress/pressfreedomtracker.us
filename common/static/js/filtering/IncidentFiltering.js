@@ -112,6 +112,9 @@ class IncidentFiltering extends PureComponent {
 		} else if (AUTOCOMPLETE_MULTI_FILTERS.includes(key)) {
 			return value.map(({ id }) => id).join(',')
 		} else if (AUTOCOMPLETE_SINGLE_FILTERS.includes(key)) {
+			if (!value) {
+				return null
+			}
 			return value.id
 		} else {
 			return value
