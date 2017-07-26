@@ -6,6 +6,8 @@ from django.shortcuts import render
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailsearch.models import Query
 
+from common.models.pages import OrganizationPage, PersonPage
+
 
 def search(request):
     search_query = request.GET.get('query', None)
@@ -13,7 +15,7 @@ def search(request):
 
     # Search
     if search_query:
-        search_results = Page.objects.live().search(search_query)
+        search_results = Page.objects.live().not_type(OrganizationPage).not_type(PersonPage).search(search_query)
         query = Query.get(search_query)
 
         # Record hit
