@@ -107,6 +107,11 @@ It can take the following context variables:
 						{% for link in incident.links.all %}
 							<li class="related-links__item">
 								<a href="{{ link.url }}">{{link.title}}</a>
+								{% if link.publication %}
+									<span class="related-links__text">
+										({{ link.publication }})
+									</span>
+								{% endif %}
 							</li>
 						{% endfor %}
 					</ol>
