@@ -12,7 +12,7 @@ from common.tests.factories import CategoryPageFactory
 from incident.utils.incident_filter import IncidentFilter
 
 
-def CreateIncidentFilter(**kwargs):
+def create_incident_filter(**kwargs):
     return IncidentFilter(
         search_text=kwargs.get('search_text', None),
         lower_date=kwargs.get('lower_date', None),
@@ -99,7 +99,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             upper_date='2017-01-31',
             lower_date='2017-01-01',
         ).fetch()
@@ -114,7 +114,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 4, 1))
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             upper_date=target_date.isoformat(),
             lower_date='2017-01-01',
         ).fetch()
@@ -128,7 +128,7 @@ class TestFiltering(TestCase):
         incident2 = IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             upper_date='2017-01-31',
         ).fetch()
 
@@ -140,7 +140,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         incident2 = IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             lower_date='2017-01-01',
         ).fetch()
 
@@ -155,7 +155,7 @@ class TestFiltering(TestCase):
             body__0__rich_text__value=RichText('science fiction'),
         )
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             search_text='eggplant',
         ).fetch()
 
@@ -179,7 +179,7 @@ class TestFiltering(TestCase):
         )
         ic2.save()
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             categories=str(category1.id),
         ).fetch()
         self.assertEqual({incident1}, set(incidents))
@@ -208,7 +208,7 @@ class TestFiltering(TestCase):
         )
         ic3.save()
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             categories='{0},{1}'.format(str(category2.id), str(category3.id)),
         ).fetch()
         self.assertEqual({incident1, incident2}, set(incidents))
@@ -222,7 +222,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(
             affiliation='other'
         )
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             affiliation=affiliation
         ).fetch()
 
@@ -245,7 +245,7 @@ class ChoiceFilters(TestCase):
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full
         )
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             status_of_seized_equipment=self.custody
         ).fetch()
 
@@ -264,7 +264,7 @@ class ChoiceFilters(TestCase):
         IncidentPageFactory(
             affiliation='other'
         )
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             status_of_seized_equipment="hello"
         ).fetch()
 
@@ -282,7 +282,7 @@ class ChoiceFilters(TestCase):
             status_of_seized_equipment=self.unknown
         )
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             status_of_seized_equipment='{0},{1}'.format(self.custody, self.returned_full)
         ).fetch()
 
@@ -319,7 +319,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_filter_by_true_boolean_field(self):
         """should filter by boolean when true"""
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             charged_under_espionage_act='True'
         ).fetch()
 
@@ -328,7 +328,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_filter_by_false_boolean_field(self):
         """should filter by boolean when false"""
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             charged_under_espionage_act='False'
         ).fetch()
 
@@ -337,7 +337,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_return_all_with_invalid_bool(self):
         """Should return all incidents when filter is invalid"""
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             charged_under_espionage_act='Hello'
         ).fetch()
 
@@ -361,7 +361,7 @@ class TestDateFilters(TestCase):
             release_date=(self.lower_date - timedelta(days=1))
         )
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             release_date_lower=self.lower_date.isoformat()
         ).fetch()
 
@@ -379,7 +379,7 @@ class TestDateFilters(TestCase):
             release_date=(self.upper_date + timedelta(days=1))
         )
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             release_date_upper=self.upper_date.isoformat()
         ).fetch()
 
@@ -404,7 +404,7 @@ class TestDateFilters(TestCase):
             release_date=(self.upper_date + timedelta(days=1))
         )
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             release_date_lower=self.lower_date.isoformat(),
             release_date_upper=self.upper_date.isoformat()
         ).fetch()
@@ -427,7 +427,7 @@ class TestDateFilters(TestCase):
             release_date=(self.lower_date + timedelta(days=1))
         )
 
-        summary, incidents = CreateIncidentFilter(
+        summary, incidents = create_incident_filter(
             release_date_lower=self.lower_date.isoformat(),
             release_date_upper=self.lower_date.isoformat()
         ).fetch()
