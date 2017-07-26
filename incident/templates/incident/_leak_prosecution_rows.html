@@ -16,7 +16,7 @@
 		</td>
 	</tr>
 {% endif %}
-{% if page.get_main_category.title == 'Leak Prosecutions' or page.charged_under_espionage_act %}
+{% if main_category.title == 'Leak Prosecutions' or page.charged_under_espionage_act %}
 	<tr class="data-table__row">
 		<th class="data-table__label">
 			Charged under Espionage Act
@@ -27,7 +27,7 @@
 					Yes
 				</a>
 			{% else %}
-				<a href="{% pageurl page.get_parent %}?charged_under_espionage_act={{page.charged_under_espionage_act}}&categories={{ page.get_main_category.title }}">
+				<a href="{% pageurl page.get_parent %}?charged_under_espionage_act={{page.charged_under_espionage_act}}&categories={{ main_category.title }}">
 					No
 				</a>
 			{% endif %}

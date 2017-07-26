@@ -10,7 +10,6 @@ It can take the following context variables:
 {% load wagtailimages_tags %}
 {% load render_as_template %}
 
-{% with main_category=incident.get_main_category %}
 <article class="
 	incident
 	incident--{{ main_category.page_color }}
@@ -116,4 +115,3 @@ It can take the following context variables:
 		{% endif %}{# not teaser #}
 	</div>
 </article>
-{% endwith %}
