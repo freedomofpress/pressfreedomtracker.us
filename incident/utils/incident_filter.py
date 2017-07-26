@@ -293,7 +293,7 @@ class IncidentFilter(object):
                     }
                     incidents = incidents.filter(**kw)
 
-        return incidents
+        return incidents.prefetch_related('categories__category')
 
     @classmethod
     def from_request(kls, request):

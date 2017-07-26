@@ -1,10 +1,12 @@
 {% extends "super.html" %}
+{% load get_menu %}
 {% load static wagtailuserbar %}
 {% load render_bundle from webpack_loader %}
 
 {% block body %}
 	{% wagtailuserbar %}
 
+	{% get_menu 'main' as menu_items %}
 	<div class="flex-container {% block flex_class %} flex-container--grow-2 {% endblock %}">
 		<div class="layout-right-sidebar">
 			<div class="layout-right-sidebar__main layout-right-sidebar__main--header">
