@@ -12,7 +12,7 @@ It can take the following context variables:
 
 <article class="
 	incident
-	incident--{{ main_category.page_color }}
+	incident--{{ incident.get_main_category.page_color }}
 	{% if teaser %}
 		incident--teaser
 	{% else %}
