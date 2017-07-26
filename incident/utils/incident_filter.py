@@ -1,7 +1,9 @@
 from datetime import datetime, date
 from functools import reduce
 
-from django.db.models import Count
+from django.db.models import Count, Q, F, Func, Value, DateField, DurationField
+from django.db.models.functions import Trunc, Cast
+from django.contrib.postgres.fields import DateRangeField
 from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
@@ -465,11 +467,33 @@ class IncidentFilter(object):
         if self.lower_date and self.upper_date and self.lower_date > self.upper_date:
             return incidents
 
-        return incidents.filter(date__contained_by=DateRange(
+        incidents = incidents.annotate(
+            fuzzy_date=Cast(
+                Func(
+                    Cast(Trunc('date', 'month'), DateField()),
+                    Cast(
+                        F('date') + Cast(Value('1 month'), DurationField()),
+                        DateField()),
+                    function='daterange'
+                ),
+            DateRangeField()),
+        )
+        target_range = DateRange(
             lower=self.lower_date,
             upper=self.upper_date,
             bounds='[]'
-        ))
+        )
+        exact_date_match = Q(
+            date__contained_by=target_range,
+            exact_date_unknown=False,
+        )
+
+        inexact_date_match_lower = Q(
+            exact_date_unknown=True,
+            fuzzy_date__overlap=target_range,
+        )
+
+        return incidents.filter(exact_date_match | inexact_date_match_lower)
 
     def by_categories(self, incidents):
         categories = validate_integer_list(self.categories.split(','))

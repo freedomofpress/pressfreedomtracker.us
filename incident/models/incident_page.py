@@ -456,6 +456,7 @@ class IncidentPage(Page):
         index.SearchField('body'),
         index.FilterField('date'),
         index.FilterField('category_id'),
+        index.FilterField('fuzzy_date'),
     ]
 
     def detention_duration(self):
