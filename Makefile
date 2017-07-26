@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := help
 DIR := ${CURDIR}
 WHOAMI := ${USER}
+RAND_PORT := ${RAND_PORT}
 
 .PHONY: ci-go
 ci-go:

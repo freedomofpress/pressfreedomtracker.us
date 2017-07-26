@@ -11,7 +11,7 @@ FILE=$(find $FOLDER -iname "$PREFIX*.dump" | sort -r | head -n 1)
 
 OWNER="postgres"
 DBNAME="trackerdb"
-CONTAINER="postgresql"
+CONTAINER="pf_tracker_postgresql"
 
 # Terminate all other connections
 docker exec $CONTAINER psql -o /dev/null -h localhost $OWNER postgres -c "ALTER DATABASE $DBNAME CONNECTION LIMIT 1;"

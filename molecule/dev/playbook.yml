@@ -20,7 +20,9 @@
         msg: |
           Please chown root owned files to continue.
           `make dev-chownroot`
-      when: root_check_result.stdout_lines
+      when:
+        - root_check_result.stdout_lines
+        - not ansible_kernel.endswith('Microsoft')
 
     - name: Get hashes from our requirements file
       stat:
@@ -86,6 +88,11 @@
       set_fact:
         pg_port: "{{ lookup('pipe', 'docker port pf_tracker_postgresql 5432').split(':')[1] }}"
 
+    - name: Map Django port to static host port
+      set_fact:
+        django_port_publish: "8000"
+      when: "lookup('env', 'RAND_PORT') | bool"
+
     - name: Start Django server
       docker_container:
         name: pf_tracker_django
@@ -96,7 +103,7 @@
         exposed_ports:
           - 8000
         published_ports:
-          - 8000
+          - "{{ django_port_publish | default('8000:8000') }}"
         working_dir: /var/www/django
         interactive: true
         tty: true

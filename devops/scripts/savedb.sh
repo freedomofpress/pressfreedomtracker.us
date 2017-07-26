@@ -13,4 +13,4 @@ if [ ! -d "$FOLDER" ]; then
   mkdir $FOLDER
 fi
 
-docker exec postgresql pg_dump -U $OWNER --format=custom $DBNAME > $FOLDER/$DUMPFILE
+docker exec pf_tracker_postgresql pg_dump -U $OWNER --format=custom $DBNAME > $FOLDER/$DUMPFILE
