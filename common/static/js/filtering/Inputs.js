@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import Autocomplete from 'WagtailAutocomplete/Autocomplete'
 import classNames from 'classnames'
 import DatePicker from 'react-datepicker'
+import Moment from 'moment'
 
 
 export function AutocompleteInput({
@@ -167,40 +168,63 @@ export function ChoiceInput({ handleFilterChange, filterValues, label, filter, c
 }
 
 
-export function DateRangeInput({ handleFilterChange, filterValues, label, filter }) {
-	const filter_upper = `${filter}_upper`
-	const filter_lower = `${filter}_lower`
+export class DateRangeInput extends PureComponent {
+	handleChangeRaw(filter_key, evt) {
+		if (!evt.target || !evt.target.value) {
+			return
+		}
+		const value = evt.target.value
+		const DATE_TYPES = [
+			'MM/DD/YYYY',
+			'MM-DD-YYYY',
+			'MM/DD/YY',
+			'MM-DD-YY',
+			'YYYY-MM-DD'
+		]
+		const moment = Moment(value, DATE_TYPES, true)
 
-	return (
-		<div className="filters__input-row">
-			<span className="filters__input-label">{label}</span>
-			<span>
-				<span className="filters__date-picker">
-					<DatePicker
-						onChange={handleFilterChange.bind(null, filter_lower)}
-						selected={filterValues[filter_lower] || ''}
-						isClearable={true}
-						className={classNames(
-							'filter-date-picker',
-							{ 'filter-date-picker--has-input': !!filterValues[filter_lower] }
-						)}
-					/>
+		if (moment.isValid()) {
+			this.props.handleFilterChange(filter_key, moment)
+		}
+	}
+
+	render() {
+		const { handleFilterChange, filterValues, label, filter } = this.props
+		const filter_upper = `${filter}_upper`
+		const filter_lower = `${filter}_lower`
+
+		return (
+			<div className="filters__input-row">
+				<span className="filters__input-label">{label}</span>
+				<span>
+					<span className="filters__date-picker">
+						<DatePicker
+							onChange={handleFilterChange.bind(null, filter_lower)}
+							onChangeRaw={this.handleChangeRaw.bind(this, filter_lower)}
+							selected={filterValues[filter_lower] || ''}
+							isClearable={true}
+							className={classNames(
+								'filter-date-picker',
+								{ 'filter-date-picker--has-input': !!filterValues[filter_lower] }
+							)}
+						/>
+					</span>
+					{' '}
+					<span className="filters__space">and</span>
+					{' '}
+					<span className="filters__date-picker">
+						<DatePicker
+							onChange={handleFilterChange.bind(null, filter_upper)}
+							selected={filterValues[filter_upper] || ''}
+							isClearable={true}
+							className={classNames(
+								'filter-date-picker',
+								{ 'filter-date-picker--has-input': !!filterValues[filter_upper] }
+							)}
+						/>
+					</span>
 				</span>
-				{' '}
-				<span className="filters__space">and</span>
-				{' '}
-				<span className="filters__date-picker">
-					<DatePicker
-						onChange={handleFilterChange.bind(null, filter_upper)}
-						selected={filterValues[filter_upper] || ''}
-						isClearable={true}
-						className={classNames(
-							'filter-date-picker',
-							{ 'filter-date-picker--has-input': !!filterValues[filter_upper] }
-						)}
-					/>
-				</span>
-			</span>
-		</div>
-	)
+			</div>
+		)
+	}
 }
