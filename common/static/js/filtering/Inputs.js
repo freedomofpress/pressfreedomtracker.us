@@ -171,6 +171,7 @@ export function ChoiceInput({ handleFilterChange, filterValues, label, filter, c
 export class DateRangeInput extends PureComponent {
 	handleChangeRaw(filter_key, evt) {
 		if (!evt.target || !evt.target.value) {
+			this.props.handleFilterChange(filter_key, null)
 			return
 		}
 		const value = evt.target.value
