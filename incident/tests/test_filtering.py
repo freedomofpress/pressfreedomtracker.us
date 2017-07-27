@@ -439,7 +439,7 @@ class TestAllFiltersAtOnce(TestCase):
             lower_date='2011-01-01',
             upper_date='2012-01-01',
             categories='1',
-            circuits='1',
+            circuits='first',
             release_date_upper='2011-01-01',
             release_date_lower='2012-01-01',
             detention_date_upper='2011-01-01',
