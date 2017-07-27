@@ -126,9 +126,32 @@ class IncidentFiltering extends PureComponent {
 			.filter(({ enabled }) => enabled)
 			.map(({ id }) => id)
 
-		const filterValues = Object.keys(this.state.filterValues)
+
+		const filterValues = DATE_FILTERS.reduce((filters, date_field) => {
+			const upper_date = date_field.replace('_lower', '_upper')
+			const hasCompleteRange = (
+				filters.hasOwnProperty(date_field) &&
+				filters.hasOwnProperty(upper_date) &&
+				upper_date !== date_field
+			)
+			const shouldSwap = (
+				hasCompleteRange &&
+				filters[date_field].isAfter(filters[upper_date])
+			)
+			if (shouldSwap) {
+				return {
+					...filters,
+					[date_field]: filters[upper_date],
+					[upper_date]: filters[date_field],
+				}
+			}
+
+			return filters
+		}, {...this.state.filterValues})
+
+		const formattedFilterValues = Object.keys(filterValues)
 			.reduce((values, key) => {
-				const value = this.state.filterValues[key]
+				const value = filterValues[key]
 				return {
 					...values,
 					[key]: this.formatValue(value, key),
@@ -138,8 +161,9 @@ class IncidentFiltering extends PureComponent {
 		const params = {
 			...queryString.parse(window.location.search),
 			categories: categoriesEnabledById.join(','),
-			...filterValues,
+			...formattedFilterValues,
 		}
+
 
 		return Object.keys(params).reduce((obj, key) => {
 			// Remove blank values from the query string.
