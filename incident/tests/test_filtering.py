@@ -8,6 +8,7 @@ from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
     IncidentCategorizationFactory,
+    InexactDateIncidentPageFactory,
 )
 from common.tests.factories import CategoryPageFactory
 from incident.utils.incident_filter import IncidentFilter
@@ -147,60 +148,49 @@ class TestFiltering(TestCase):
 
         self.assertEqual({incident2, incident1}, set(incidents))
 
-    def test_should_find_inexactly_dated_incidents(self):
+    def test_should_find_inexactly_dated_incidents_2(self):
         """should locate inexactly dated incidents if filter date range
 begins in the same month"""
-        incident1 = IncidentPageFactory(
-            date=date(2017, 3, 1),
-            exact_date_unknown=True,
-        )
-
+        targets = InexactDateIncidentPageFactory.create_batch(15)
         _, incidents = create_incident_filter(
             lower_date='2017-03-15',
             upper_date='2017-04-15',
         ).fetch()
-
-        self.assertIn(incident1, incidents)
-        self.assertEqual(len(incidents), 1)
+        for target in targets:
+            self.assertIn(target, incidents)
+        self.assertEqual(len(incidents), 15)
 
     def test_should_find_inexactly_dated_incidents_from_below(self):
         """should locate inexactly dated incidents if filter date range ends anytime in the same month"""
-        incident1 = IncidentPageFactory(
-            date=date(2017, 3, 1),
-            exact_date_unknown=True,
-        )
+        targets = InexactDateIncidentPageFactory.create_batch(15)
 
         _, incidents = create_incident_filter(
             lower_date='2017-02-20',
             upper_date='2017-03-03',
         ).fetch()
 
-        self.assertIn(incident1, incidents)
-        self.assertEqual(len(incidents), 1)
+        for target in targets:
+            self.assertIn(target, incidents)
+        self.assertEqual(len(incidents), 15)
 
     def test_should_find_inexactly_dated_incidents_from_above(self):
         """should locate inexactly dated incidents if filter date range
 includes any dates from the same month"""
-        incident1 = IncidentPageFactory(
-            date=date(2017, 3, 1),
-            exact_date_unknown=True,
-        )
+        targets = InexactDateIncidentPageFactory.create_batch(15)
 
         _, incidents = create_incident_filter(
             lower_date='2017-02-20',
             upper_date='2017-03-03',
         ).fetch()
 
-        self.assertIn(incident1, incidents)
-        self.assertEqual(len(incidents), 1)
+        for target in targets:
+            self.assertIn(target, incidents)
+        self.assertEqual(len(incidents), 15)
 
     def test_should_not_include_inexactly_dated_incidents_from_other_months(self):
         """should not include inexactly dated incidents if filter date range
 excludes all dates from the same month"""
-        IncidentPageFactory(
-            date=date(2017, 3, 1),
-            exact_date_unknown=True,
-        )
+        InexactDateIncidentPageFactory.create_batch(15)
 
         _, incidents = create_incident_filter(
             lower_date='2017-02-02',
