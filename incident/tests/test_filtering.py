@@ -178,7 +178,7 @@ begins in the same month"""
         self.assertIn(incident1, incidents)
         self.assertEqual(len(incidents), 1)
 
-    def test_should_find_inexactly_dated_incidents_from_below(self):
+    def test_should_find_inexactly_dated_incidents_from_above(self):
         """should locate inexactly dated incidents if filter date range
 includes any dates from the same month"""
         incident1 = IncidentPageFactory(
@@ -197,7 +197,7 @@ includes any dates from the same month"""
     def test_should_not_include_inexactly_dated_incidents_from_other_months(self):
         """should not include inexactly dated incidents if filter date range
 excludes all dates from the same month"""
-        incident1 = IncidentPageFactory(
+        IncidentPageFactory(
             date=date(2017, 3, 1),
             exact_date_unknown=True,
         )

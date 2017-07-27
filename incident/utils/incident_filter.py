@@ -1,9 +1,8 @@
 from datetime import datetime, date
 from functools import reduce
 
-from django.db.models import Count, Q, F, Func, Value, DateField, DurationField
+from django.db.models import Count, Q, F, Value, DateField, DurationField
 from django.db.models.functions import Trunc, Cast
-from django.contrib.postgres.fields import DateRangeField
 from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
@@ -468,11 +467,9 @@ class IncidentFilter(object):
 
         incidents = incidents.annotate(
             fuzzy_date=MakeDateRange(
-                    Cast(Trunc('date', 'month'), DateField()),
-                    Cast(
-                        F('date') + Cast(Value('1 month'), DurationField()),
-                        DateField()),
-                ),
+                Cast(Trunc('date', 'month'), DateField()),
+                Cast(F('date') + Cast(Value('1 month'), DurationField()), DateField()),
+            ),
         )
         target_range = DateRange(
             lower=self.lower_date,
