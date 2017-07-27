@@ -30,8 +30,8 @@ from incident.utils.incident_fields import (
 def create_incident_filter(**kwargs):
     return IncidentFilter(
         search_text=kwargs.get('search_text', None),
-        lower_date=kwargs.get('lower_date', None),
-        upper_date=kwargs.get('upper_date', None),
+        date_lower=kwargs.get('date_lower', None),
+        date_upper=kwargs.get('date_upper', None),
         categories=kwargs.get('categories', None),
         targets=kwargs.get('targets', None),
         affiliation=kwargs.get('affiliation', None),
@@ -114,8 +114,8 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2017, 2, 1))
 
         summary, incidents = create_incident_filter(
-            upper_date='2017-01-31',
-            lower_date='2017-01-01',
+            date_upper='2017-01-31',
+            date_lower='2017-01-01',
         ).fetch()
 
         self.assertEqual(len(incidents), 1)
@@ -129,8 +129,8 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2017, 4, 1))
 
         summary, incidents = create_incident_filter(
-            upper_date=target_date.isoformat(),
-            lower_date='2017-01-01',
+            date_upper=target_date.isoformat(),
+            date_lower='2017-01-01',
         ).fetch()
 
         self.assertEqual(len(incidents), 1)
@@ -143,7 +143,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2017, 2, 1))
 
         summary, incidents = create_incident_filter(
-            upper_date='2017-01-31',
+            date_upper='2017-01-31',
         ).fetch()
 
         self.assertEqual({incident2, incident1}, set(incidents))
@@ -193,8 +193,8 @@ excludes all dates from the same month"""
         InexactDateIncidentPageFactory.create_batch(15)
 
         _, incidents = create_incident_filter(
-            lower_date='2017-02-02',
-            upper_date='2017-02-28',
+            date_lower='2017-02-02',
+            date_upper='2017-02-28',
         ).fetch()
         self.assertEqual(len(incidents), 0)
 
@@ -205,7 +205,7 @@ excludes all dates from the same month"""
         incident2 = IncidentPageFactory(date=date(2017, 2, 1))
 
         summary, incidents = create_incident_filter(
-            lower_date='2017-01-01',
+            date_lower='2017-01-01',
         ).fetch()
 
         self.assertEqual({incident2, incident1}, set(incidents))
@@ -418,7 +418,7 @@ class TestAllFiltersAtOnce(TestCase):
         """
         # skip these fields directly because they are split into
         # upper_date and lower_date fields
-        fields_to_skip = {'detention_date', 'release_date'}
+        fields_to_skip = {'date', 'detention_date', 'release_date'}
 
         # get a valid value for a given field
         def value_for_field(field):
@@ -436,8 +436,8 @@ class TestAllFiltersAtOnce(TestCase):
 
         filters = IncidentFilter(
             search_text='search text',
-            lower_date='2011-01-01',
-            upper_date='2012-01-01',
+            date_lower='2011-01-01',
+            date_upper='2012-01-01',
             categories='1',
             circuits='first',
             release_date_upper='2011-01-01',
@@ -466,40 +466,40 @@ class TestAllFiltersAtOnce(TestCase):
 class TestDateFilters(TestCase):
     """Date filters"""
     def setUp(self):
-        self.lower_date = date(2017, 2, 12)
-        self.upper_date = date(2017, 2, 13)
+        self.date_lower = date(2017, 2, 12)
+        self.date_upper = date(2017, 2, 13)
 
-    def test_should_filter_by_lower_date_inclusive(self):
+    def test_should_filter_by_date_lower_inclusive(self):
         """should filter by lower date"""
         target = IncidentPageFactory(
-            release_date=self.lower_date
+            release_date=self.date_lower
         )
 
         # This incident should not be included in the filer, because it is before the lower date
         IncidentPageFactory(
-            release_date=(self.lower_date - timedelta(days=1))
+            release_date=(self.date_lower - timedelta(days=1))
         )
 
         summary, incidents = create_incident_filter(
-            release_date_lower=self.lower_date.isoformat()
+            release_date_lower=self.date_lower.isoformat()
         ).fetch()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
 
-    def test_should_filter_by_upper_date_inclusive(self):
+    def test_should_filter_by_date_upper_inclusive(self):
         """should filter by upper date"""
         target = IncidentPageFactory(
-            release_date=self.upper_date
+            release_date=self.date_upper
         )
 
         # This incident should not be included in the filer, because it is after the upper date
         IncidentPageFactory(
-            release_date=(self.upper_date + timedelta(days=1))
+            release_date=(self.date_upper + timedelta(days=1))
         )
 
         summary, incidents = create_incident_filter(
-            release_date_upper=self.upper_date.isoformat()
+            release_date_upper=self.date_upper.isoformat()
         ).fetch()
 
         self.assertEqual(len(incidents), 1)
@@ -508,24 +508,24 @@ class TestDateFilters(TestCase):
     def test_should_filter_by_date_range_inclusive(self):
         """should filter by date range"""
         target1 = IncidentPageFactory(
-            release_date=self.upper_date
+            release_date=self.date_upper
         )
 
         target2 = IncidentPageFactory(
-            release_date=(self.upper_date)
+            release_date=(self.date_upper)
         )
 
         # Incidents below and above the filters
         IncidentPageFactory(
-            release_date=(self.lower_date - timedelta(days=1))
+            release_date=(self.date_lower - timedelta(days=1))
         )
         IncidentPageFactory(
-            release_date=(self.upper_date + timedelta(days=1))
+            release_date=(self.date_upper + timedelta(days=1))
         )
 
         summary, incidents = create_incident_filter(
-            release_date_lower=self.lower_date.isoformat(),
-            release_date_upper=self.upper_date.isoformat()
+            release_date_lower=self.date_lower.isoformat(),
+            release_date_upper=self.date_upper.isoformat()
         ).fetch()
 
         self.assertEqual(len(incidents), 2)
@@ -535,20 +535,20 @@ class TestDateFilters(TestCase):
     def test_should_filter_correctly_with_equal_dates(self):
         """should filter correctly if upper and lower dates are equal"""
         target = IncidentPageFactory(
-            release_date=self.lower_date
+            release_date=self.date_lower
         )
 
         # This incident should not be included in the filer, because it is before the lower date
         IncidentPageFactory(
-            release_date=(self.lower_date - timedelta(days=1))
+            release_date=(self.date_lower - timedelta(days=1))
         )
         IncidentPageFactory(
-            release_date=(self.lower_date + timedelta(days=1))
+            release_date=(self.date_lower + timedelta(days=1))
         )
 
         summary, incidents = create_incident_filter(
-            release_date_lower=self.lower_date.isoformat(),
-            release_date_upper=self.lower_date.isoformat()
+            release_date_lower=self.date_lower.isoformat(),
+            release_date_upper=self.date_lower.isoformat()
         ).fetch()
 
         self.assertEqual(len(incidents), 1)

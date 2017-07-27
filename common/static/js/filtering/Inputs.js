@@ -167,7 +167,10 @@ export function ChoiceInput({ handleFilterChange, filterValues, label, filter, c
 }
 
 
-export function DateRangeInput({ handleFilterChange, filterValues, label, filter_lower, filter_upper }) {
+export function DateRangeInput({ handleFilterChange, filterValues, label, filter }) {
+	const filter_upper = `${filter}_upper`
+	const filter_lower = `${filter}_lower`
+
 	return (
 		<div className="filters__input-row">
 			<span className="filters__input-label">{label}</span>

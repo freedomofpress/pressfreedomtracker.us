@@ -23,8 +23,8 @@ export const AUTOCOMPLETE_SINGLE_FILTERS = [
 
 
 export const DATE_FILTERS = [
-	'lower_date',
-	'upper_date',
+	'date_lower',
+	'date_upper',
 	'detention_date_lower',
 	'detention_date_upper',
 	'release_date_lower',
@@ -34,8 +34,8 @@ export const DATE_FILTERS = [
 
 export const ALL_FILTERS = [
 	'search',
-	'lower_date',
-	'upper_date',
+	'date_lower',
+	'date_upper',
 	'arrest_status',
 	'status_of_charges',
 	'current_charges',

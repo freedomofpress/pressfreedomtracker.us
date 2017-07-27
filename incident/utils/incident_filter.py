@@ -91,8 +91,8 @@ class IncidentFilter(object):
         # FIELDS
         self,
         search_text,
-        lower_date,
-        upper_date,
+        date_lower,
+        date_upper,
         categories,
         targets,
         affiliation,
@@ -152,8 +152,8 @@ class IncidentFilter(object):
         circuits,
     ):
         self.search_text = search_text
-        self.lower_date = validate_date(lower_date)
-        self.upper_date = validate_date(upper_date)
+        self.date_lower = validate_date(date_lower)
+        self.date_upper = validate_date(date_upper)
         self.categories = categories
         self.targets = targets
         self.affiliation = affiliation
@@ -248,6 +248,30 @@ class IncidentFilter(object):
                         incidents = incidents.filter(**kw)
                     elif lower_date and upper_date and lower_date > upper_date:
                         pass
+                    elif field_name == 'date':
+                        # Special case for date field, which can be an inexact date
+                        incidents = incidents.annotate(
+                            fuzzy_date=MakeDateRange(
+                                Cast(Trunc('date', 'month'), DateField()),
+                                Cast(F('date') + Cast(Value('1 month'), DurationField()), DateField()),
+                            ),
+                        )
+                        target_range = DateRange(
+                            lower=self.date_lower,
+                            upper=self.date_upper,
+                            bounds='[]'
+                        )
+                        exact_date_match = Q(
+                            date__contained_by=target_range,
+                            exact_date_unknown=False,
+                        )
+
+                        inexact_date_match_lower = Q(
+                            exact_date_unknown=True,
+                            fuzzy_date__overlap=target_range,
+                        )
+
+                        incidents = incidents.filter(exact_date_match | inexact_date_match_lower)
                     else:
                         kw = {
                             '{0}__contained_by'.format(field_name): DateRange(
@@ -308,8 +332,8 @@ class IncidentFilter(object):
     def from_request(kls, request):
         kwargs = {
             'search_text': request.GET.get('search'),
-            'lower_date': request.GET.get('lower_date'),
-            'upper_date': request.GET.get('upper_date'),
+            'date_lower': request.GET.get('date_lower'),
+            'date_upper': request.GET.get('date_upper'),
             'categories': request.GET.get('categories'),
             'circuits': request.GET.get('circuits'),
         }
@@ -349,9 +373,6 @@ class IncidentFilter(object):
         """
 
         incidents = IncidentPage.objects.live()
-
-        if self.lower_date or self.upper_date:
-            incidents = self.by_date_range(incidents)
 
         if self.categories:
             incidents = self.by_categories(incidents)
@@ -458,35 +479,6 @@ class IncidentFilter(object):
 
     def by_search_text(self, incidents):
         return incidents.search(self.search_text, order_by_relevance=False)
-
-    def by_date_range(self, incidents):
-        if self.lower_date == self.upper_date:
-            return incidents.filter(date=self.lower_date)
-        if self.lower_date and self.upper_date and self.lower_date > self.upper_date:
-            return incidents
-
-        incidents = incidents.annotate(
-            fuzzy_date=MakeDateRange(
-                Cast(Trunc('date', 'month'), DateField()),
-                Cast(F('date') + Cast(Value('1 month'), DurationField()), DateField()),
-            ),
-        )
-        target_range = DateRange(
-            lower=self.lower_date,
-            upper=self.upper_date,
-            bounds='[]'
-        )
-        exact_date_match = Q(
-            date__contained_by=target_range,
-            exact_date_unknown=False,
-        )
-
-        inexact_date_match_lower = Q(
-            exact_date_unknown=True,
-            fuzzy_date__overlap=target_range,
-        )
-
-        return incidents.filter(exact_date_match | inexact_date_match_lower)
 
     def by_categories(self, incidents):
         categories = validate_integer_list(self.categories.split(','))

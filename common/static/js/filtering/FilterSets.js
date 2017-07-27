@@ -35,8 +35,7 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
 				label="Took place between"
-				filter_lower="lower_date"
-				filter_upper="upper_date"
+				filter="date"
 			/>
 
 			<TextInput
@@ -148,16 +147,14 @@ FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues, 
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
 				label="Detention date between"
-				filter_lower="detention_date_lower"
-				filter_upper="detention_date_upper"
+				filter="detention_date"
 			/>
 
 			<DateRangeInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
 				label="Release date between"
-				filter_lower="release_date_lower"
-				filter_upper="release_date_upper"
+				filter="release_date"
 			/>
 		</FilterSet>
 	)

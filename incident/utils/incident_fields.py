@@ -2,6 +2,10 @@ from incident.models import choices
 
 INCIDENT_PAGE_FIELDS = [
     {
+        'name': 'date',
+        'type': 'date'
+    },
+    {
         'name': 'affiliation',
         'type': 'char'
     },
