@@ -47,6 +47,7 @@ class IncidentPageLinks(Orderable):
     page = ParentalKey('incident.IncidentPage', related_name='links')
     title = models.CharField(max_length=255, null=False, blank=False)
     url = models.URLField(null=False, blank=False)
+    publication = models.CharField(max_length=255, null=True, blank=True)
 
 
 class EquipmentSeized(models.Model):
