@@ -6,21 +6,38 @@
 <div class="info-footer">
 	<div class="info-footer__body">
 		{{ footer.body|richtext }}
+	</div>
+
+	<div class="partner-logos">
+		<img
+			src="{% static 'logos/cpj-logo-on-black.jpg' %}"
+			class="partner-logos__logo"
+		/>
+		<img
+			src="{% static 'logos/fpf.svg' %}"
+			class="partner-logos__logo"
+		/>
+		<img
+			src="{% static 'logos/Index_logo_large.png' %}"
+			class="partner-logos__logo"
+		/>
+		<img
+			src="{% static 'logos/KFAI_Logo.png' %}"
+			class="partner-logos__logo"
+		/>
+		<img
+			src="{% static 'logos/logo-2012_anglais_RVB_C.jpg' %}"
+			class="partner-logos__logo"
+		/>
+		<img
+			src="{% static 'logos/RCFP_logo.png' %}"
+			class="partner-logos__logo"
+		/>
 		{% if footer.partner_logo_text %}
-			<h2 class="partner-logos__header">
-				<a class="partner-logos__link" href="{% if footer.partner_logo_link %}{% pageurl footer.partner_logo_link %}{% endif %}">
-					{{ footer.partner_logo_text }}
-				</a>
-			</h2>
+			<a class="partner-logos__button" href="{% if footer.partner_logo_link %}{% pageurl footer.partner_logo_link %}{% endif %}">
+				{{ footer.partner_logo_text }}
+			</a>
 		{% endif %}
-		<div class="partner-logos">
-			<img src="{% static 'logos/cpj-logo-on-black.jpg' %}" class="partner-logos__logo" />
-			<img src="{% static 'logos/fpf.svg' %}" class="partner-logos__logo" />
-			<img src="{% static 'logos/Index_logo_large.png' %}" class="partner-logos__logo" />
-			<img src="{% static 'logos/KFAI_Logo.png' %}" class="partner-logos__logo" />
-			<img src="{% static 'logos/logo-2012_anglais_RVB_C.jpg' %}" class="partner-logos__logo" />
-			<img src="{% static 'logos/RCFP_logo.png' %}" class="partner-logos__logo" />
-		</div>
 	</div>
 
 	<nav class="info-footer__nav">

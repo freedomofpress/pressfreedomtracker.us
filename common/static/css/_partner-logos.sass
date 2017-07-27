@@ -1,17 +1,34 @@
 .partner-logos
-	margin-top: 1rem
+	margin-top: 1em
 	display: flex
 	flex-wrap: wrap
 	justify-content: space-between
 	align-items: flex-start
 
-
 .partner-logos__logo
-	max-width: 100px
-	height: auto
-	margin-left: 0.5rem
+	height: 4vw
+	margin-bottom: 0.5em
+	width: auto
+	background-color: white
 
-.partner-logos__header
-	+section-heading
-	+white-link
-	font-weight: $serif-regular
+	@media(max-width: $medium-screen)
+		height: 50px
+
+.partner-logos__button
+	line-height: 4vw
+	padding: 0 2em
+	display: inline-block
+	+uppercase
+	font-family: $sans-serif
+	text-align: center
+	text-decoration: none
+	box-shadow: 0 0 0 1px $white inset
+	color: $white
+	background-color: $gray-dark
+
+	+hover
+		background-color: $gray-mid-dark
+
+	@media(max-width: $medium-screen)
+		line-height: 50px
+		padding: 0 1em
