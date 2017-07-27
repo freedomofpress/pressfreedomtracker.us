@@ -26,8 +26,7 @@ class FormPage(AbstractEmailForm):
     content_panels = [
         HelpPanel('Forms can be embedded in an iframe by a third-party website. '
                   'Append <code>?embed=t</code> to any FormPage URL to request the embeddable version. '
-                  'That query string should be included in the <code>src</code> attribute of your iframe.'
-        ),
+                  'That query string should be included in the <code>src</code> attribute of your iframe.'),
     ] + AbstractEmailForm.content_panels + [
         FieldPanel('intro', classname="full"),
         InlinePanel('form_fields', label="Form fields"),
