@@ -2,7 +2,6 @@
 	margin-top: 1em
 	margin-right: 0.5em
 	color: $gray-mid-text
-	+blue-link
 
 	@media (max-width: $small-screen)
 		margin: 0 1em
@@ -13,5 +12,12 @@
 		border-bottom: 1px solid $gray-light
 
 	&__summary-subject
+		+link-transition
 		font-weight: $sans-bold
 		color: $gray-mid-dark-text
+		text-decoration: none
+
+		&:hover
+			color: $black
+			text-decoration: underline
+			text-decoration-color: $black

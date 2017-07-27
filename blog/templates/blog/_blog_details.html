@@ -5,30 +5,45 @@
 			You are reading an article
 			{% if page.author %}
 				by
-				<span class="blog-details__summary-subject">
-					<a href="{{ page.get_parent.url }}?author={{ page.author.pk }}">{{ page.author.title }}</a>
-				</span>
+				<a
+					class="blog-details__summary-subject"
+					href="{{ page.get_parent.url }}?author={{ page.author.pk }}"
+				>
+					{{ page.author.title }}
+				</a>
 			{% endif %}
 			{% if page.organization %}
 				from
-				<span class="blog-details__summary-subject">
-					<a href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}">{{ page.organization.title }}</a>
-				</span>
+				<a
+					class="blog-details__summary-subject"
+					href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}"
+				>
+					{{ page.organization.title }}
+				</a>
 			{% endif %}
 		</div>
 	{% endif %}
 	{% if page.author.specific.bio %}
 		<h2 class="section-heading">
-			About {{ page.author.title }}
+			About
+			<a
+				class="section-heading__subject section-heading__subject--link"
+				href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}"
+			>
+				{{ page.author.title }}
+			</a>
 		</h2>
 		{{ page.author.specific.bio|richtext }}
 	{% endif %}
 	{% if page.organization.specific.description %}
 		<h2 class="section-heading">
 			About
-			<span class="section-heading__subject">
+			<a
+				class="section-heading__subject section-heading__subject--link"
+				href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}"
+			>
 				{{ page.organization.title }}
-			</span>
+			</a>
 		</h2>
 		{{ page.organization.specific.description|richtext }}
 	{% endif %}

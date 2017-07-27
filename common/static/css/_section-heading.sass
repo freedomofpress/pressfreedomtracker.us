@@ -1,11 +1,20 @@
 .section-heading
 	+section-heading
-	+blue-link
 	color: $gray-mid-text
 
-	.section-heading__subject
+	&__subject
 		color: $gray-mid-dark-text
 		font-weight: $sans-bold
+
+		&--link
+			+link-transition
+			color: $gray-mid-dark-text
+			text-decoration: none
+
+		&--link:hover
+			text-decoration: underline
+			text-decoration-color: $black
+			color: $black
 
 
 	&--light
