@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'styleguide',
     'dashboard',
     'home',
+    'emails',
 
     'analytical',
 
