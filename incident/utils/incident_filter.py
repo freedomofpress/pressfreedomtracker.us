@@ -10,6 +10,7 @@ from common.models import CategoryPage
 from incident.models.incident_page import IncidentPage
 from incident.circuits import STATES_BY_CIRCUIT
 
+from incident.utils.db import MakeDateRange
 from incident.utils.incident_fields import (
     INCIDENT_PAGE_FIELDS,
     ARREST_FIELDS,
@@ -466,15 +467,12 @@ class IncidentFilter(object):
             return incidents
 
         incidents = incidents.annotate(
-            fuzzy_date=Cast(
-                Func(
+            fuzzy_date=MakeDateRange(
                     Cast(Trunc('date', 'month'), DateField()),
                     Cast(
                         F('date') + Cast(Value('1 month'), DurationField()),
                         DateField()),
-                    function='daterange'
                 ),
-            DateRangeField()),
         )
         target_range = DateRange(
             lower=self.lower_date,
