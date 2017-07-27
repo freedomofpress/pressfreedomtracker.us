@@ -1,5 +1,3 @@
-from django.utils.html import format_html
-
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
