@@ -67,7 +67,6 @@ def create_incident_filter(**kwargs):
         charged_under_espionage_act=kwargs.get('charged_under_espionage_act', None),
 
         # SUBPOENA
-        subpoena_subject=kwargs.get('subpoena_subject', None),
         subpoena_type=kwargs.get('subpoena_type', None),
         subpoena_status=kwargs.get('subpoena_status', None),
         held_in_contempt=kwargs.get('held_in_contempt', None),

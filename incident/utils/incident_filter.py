@@ -136,7 +136,6 @@ class IncidentFilter(object):
         # LEAK PROSECUTION
         charged_under_espionage_act,
         # SUBPOENA
-        subpoena_subject,
         subpoena_type,
         subpoena_status,
         held_in_contempt,
@@ -205,7 +204,6 @@ class IncidentFilter(object):
         self.charged_under_espionage_act = charged_under_espionage_act
 
         # SUBPOENA
-        self.subpoena_subject = subpoena_subject
         self.subpoena_type = subpoena_type
         self.subpoena_status = subpoena_status
         self.held_in_contempt = held_in_contempt

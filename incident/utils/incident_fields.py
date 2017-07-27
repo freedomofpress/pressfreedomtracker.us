@@ -182,11 +182,6 @@ PHYSICAL_ASSAULT_FIELDS = [
 
 SUBPOENA_FIELDS = [
     {
-        'name': 'subpoena_subject',
-        'type': 'choice',
-        'choices': choices.SUBPOENA_SUBJECT,
-    },
-    {
         'name': 'subpoena_type',
         'type': 'choice',
         'choices': choices.SUBPOENA_TYPE,
