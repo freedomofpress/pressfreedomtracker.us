@@ -458,6 +458,8 @@ class TestAllFiltersAtOnce(TestCase):
                 DENIAL_OF_ACCESS_FIELDS
             ) if f['name'] not in fields_to_skip
             })
+        # This test passes if the following function completes with no
+        # errors.
         filters.fetch()
 
 
