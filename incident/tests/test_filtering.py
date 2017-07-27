@@ -1,3 +1,4 @@
+from itertools import chain
 from datetime import date, timedelta
 
 from django.test import TestCase
@@ -10,6 +11,19 @@ from incident.tests.factories import (
 )
 from common.tests.factories import CategoryPageFactory
 from incident.utils.incident_filter import IncidentFilter
+from incident.utils.incident_fields import (
+    INCIDENT_PAGE_FIELDS,
+    ARREST_FIELDS,
+    LAWSUIT_FIELDS,
+    EQUIPMENT_FIELDS,
+    BORDER_STOP_FIELDS,
+    PHYSICAL_ASSAULT_FIELDS,
+    SUBPOENA_FIELDS,
+    LEAK_PROSECUTIONS_FIELDS,
+    LEGAL_ORDER_FIELDS,
+    PRIOR_RESTRAINT_FIELDS,
+    DENIAL_OF_ACCESS_FIELDS
+)
 
 
 def create_incident_filter(**kwargs):
@@ -401,6 +415,60 @@ class TestBooleanFiltering(TestCase):
         ).fetch()
 
         self.assertEqual(len(incidents), 2)
+
+
+class TestAllFiltersAtOnce(TestCase):
+    def test_all_filters_combined_with_search(self):
+        """filters should be searchable
+
+        This tests will raise an error if any fields given to
+        IncidentFilter are not configured as `search_fields` on
+        IncidentPage.
+
+        """
+        # skip these fields directly because they are split into
+        # upper_date and lower_date fields
+        fields_to_skip = {'detention_date', 'release_date'}
+
+        # get a valid value for a given field
+        def value_for_field(field):
+            t = field['type']
+            if t == 'char':
+                return 'value'
+            elif t == 'pk':
+                return '1'
+            elif t == 'choice':
+                return field['choices'][0][0]
+            elif t == 'bool':
+                return 'True'
+            else:
+                raise ValueError('Could not determine value for field of type %s' % t)
+
+        filters = IncidentFilter(
+            search_text='search text',
+            lower_date='2011-01-01',
+            upper_date='2012-01-01',
+            categories='1',
+            circuits='1',
+            release_date_upper='2011-01-01',
+            release_date_lower='2012-01-01',
+            detention_date_upper='2011-01-01',
+            detention_date_lower='2012-01-01',
+            **{f['name']: value_for_field(f) for f in chain(
+                INCIDENT_PAGE_FIELDS,
+                ARREST_FIELDS,
+                LAWSUIT_FIELDS,
+                EQUIPMENT_FIELDS,
+                BORDER_STOP_FIELDS,
+                PHYSICAL_ASSAULT_FIELDS,
+                SUBPOENA_FIELDS,
+                LEAK_PROSECUTIONS_FIELDS,
+                LEGAL_ORDER_FIELDS,
+                PRIOR_RESTRAINT_FIELDS,
+                DENIAL_OF_ACCESS_FIELDS
+            ) if f['name'] not in fields_to_skip
+            })
+        filters.fetch()
 
 
 class TestDateFilters(TestCase):
