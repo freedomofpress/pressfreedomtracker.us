@@ -30,10 +30,10 @@
 			</div>
 		{% endif %}
 
-		<div class="grid-50 js-infinite-scrolling-parent">
+		<div class="js-infinite-scrolling-parent">
 			{% for post in entries_page %}
-				<div class="grid-50__item js-infinite-scrolling-item">
-					{% include "blog/_blog_tease.html" with page=post.specific location="blog-index" %}
+				<div class="js-infinite-scrolling-item">
+					{% include "blog/_blog_tease.html" with page=post.specific location="blog-index" single_column=True %}
 				</div>
 			{% endfor %}
 		</div>

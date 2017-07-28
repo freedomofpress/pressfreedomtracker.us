@@ -51,3 +51,16 @@
 		& > li
 			+list-comma-separated()
 			display: inline
+
+	@media (min-width: $medium-screen-min)
+		&--horizontal
+			display: flex
+			flex-direction: row-reverse
+			align-items: top
+
+			> :not(:last-child)
+				width: 25vw
+				flex-shrink: 0
+				height: auto
+				padding: 1em
+				padding-right: 0
