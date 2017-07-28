@@ -2,6 +2,7 @@
 {% load get_menu %}
 {% load static wagtailuserbar %}
 {% load render_bundle from webpack_loader %}
+{% load piwik %}
 
 {% block body %}
 	{% wagtailuserbar %}
@@ -61,4 +62,7 @@
 	{% block js %}
 	  {% render_bundle 'common' 'js' %}
 	{% endblock %}
+	{% if settings.PIWIK_SITE_ID != '0' %}
+		{% piwik %}
+	{% endif %}
 {% endblock %}
