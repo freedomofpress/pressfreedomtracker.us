@@ -30,7 +30,7 @@
 					Date of Incident
 				</th>
 				<td class="data-table__value">
-					<a href="{% pageurl page.get_parent %}?lower_date={{ page.date|date:'Y-m-d' }}&upper_date={{ page.date|date:'Y-m-d' }}">
+					<a href="{% pageurl page.get_parent %}?date_lower={{ page.date|date:'Y-m-d' }}&date_upper={{ page.date|date:'Y-m-d' }}">
 						{% include "incident/_incident_date.html" with incident=page %}
 					</a>
 				</td>

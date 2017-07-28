@@ -25,21 +25,21 @@ class TestPages(TestCase):
     def test_get_index_should_succeed_with_filters(self):
         """get index with filters should succeed."""
         response = self.client.get(
-            '/incidents/?search=text&upper_date=2017-01-01&categories=1,2'
+            '/incidents/?search=text&date_upper=2017-01-01&categories=1,2'
         )
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_malformed_filters(self):
         """get index should succeed with malformed filters."""
         response = self.client.get(
-            '/incidents/?upper_date=aaa&lower_date=2011-54-39'
+            '/incidents/?date_upper=aaa&date_lower=2011-54-39'
         )
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_illegal_date_range(self):
         """get index should succeed with malformed filters."""
         response = self.client.get(
-            '/incidents/?upper_date=2011-01-01&lower_date=2012-01-01'
+            '/incidents/?date_upper=2011-01-01&date_lower=2012-01-01'
         )
         self.assertEqual(response.status_code, 200)
 

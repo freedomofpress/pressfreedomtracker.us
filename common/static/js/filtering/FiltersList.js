@@ -17,23 +17,7 @@ class FiltersList extends PureComponent {
 
 		const underscoreRe = /_/g
 
-		if (label === 'lower_date') {
-			return (
-				<span>
-					<span className="filters__text--dim">since</span>
-					{' '}
-					{formattedValue}
-				</span>
-			)
-		} else if (label === 'upper_date') {
-			return (
-				<span>
-					<span className="filters__text--dim">before</span>
-					{' '}
-					{formattedValue}
-				</span>
-			)
-		} else if (DATE_FILTERS.includes(label)) {
+		if (DATE_FILTERS.includes(label)) {
 			const period = label.includes('_lower') ? 'since' : 'before'
 			const description = label.substring(0, label.length - 6).replace(underscoreRe, ' ')
 			return (
