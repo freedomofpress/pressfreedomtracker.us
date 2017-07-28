@@ -178,6 +178,13 @@ class IncidentFiltering extends PureComponent {
 		}, {})
 	}
 
+	/**
+	 * We want to redirect to a CategoryPage or IncidentIndexPage when the Apply
+	 * Filters button is hit on a page that isn't of those types. This function
+	 * determines which page should be redirected to based on the number of
+	 * categories. If only one category is whitelisted, just redirect to that
+	 * CategoryPage.
+	 */
 	getExternalUrl() {
 		const categoriesEnabled = this.state.categoriesEnabled
 			.filter(({ enabled }) => enabled)
