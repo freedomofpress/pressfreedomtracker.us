@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
-{% block body_class %}template-404{% endblock %}
+{% block title %}404 - Press Freedom Tracker{% endblock %}
 
-{% block content %}
-    <h1>Page not found</h1>
+{% block main %}
+	<div class="error">
+    <h2 class="page-title page-title--less-margin">Page not found</h2>
 
-    <h2>Sorry, this page could not be found.</h2>
+    <p class="error__text">Sorry, this page could not be found.</p>
+  </div>
 {% endblock %}
