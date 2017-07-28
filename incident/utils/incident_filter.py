@@ -1,13 +1,15 @@
 from datetime import datetime, date
 from functools import reduce
 
-from django.db.models import Count
+from django.db.models import Count, Q, F, Value, DateField, DurationField
+from django.db.models.functions import Trunc, Cast
 from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
 from incident.models.incident_page import IncidentPage
 from incident.circuits import STATES_BY_CIRCUIT
 
+from incident.utils.db import MakeDateRange
 from incident.utils.incident_fields import (
     INCIDENT_PAGE_FIELDS,
     ARREST_FIELDS,
@@ -134,7 +136,6 @@ class IncidentFilter(object):
         # LEAK PROSECUTION
         charged_under_espionage_act,
         # SUBPOENA
-        subpoena_subject,
         subpoena_type,
         subpoena_status,
         held_in_contempt,
@@ -203,7 +204,6 @@ class IncidentFilter(object):
         self.charged_under_espionage_act = charged_under_espionage_act
 
         # SUBPOENA
-        self.subpoena_subject = subpoena_subject
         self.subpoena_type = subpoena_type
         self.subpoena_status = subpoena_status
         self.held_in_contempt = held_in_contempt
@@ -465,11 +465,28 @@ class IncidentFilter(object):
         if self.lower_date and self.upper_date and self.lower_date > self.upper_date:
             return incidents
 
-        return incidents.filter(date__contained_by=DateRange(
+        incidents = incidents.annotate(
+            fuzzy_date=MakeDateRange(
+                Cast(Trunc('date', 'month'), DateField()),
+                Cast(F('date') + Cast(Value('1 month'), DurationField()), DateField()),
+            ),
+        )
+        target_range = DateRange(
             lower=self.lower_date,
             upper=self.upper_date,
             bounds='[]'
-        ))
+        )
+        exact_date_match = Q(
+            date__contained_by=target_range,
+            exact_date_unknown=False,
+        )
+
+        inexact_date_match_lower = Q(
+            exact_date_unknown=True,
+            fuzzy_date__overlap=target_range,
+        )
+
+        return incidents.filter(exact_date_match | inexact_date_match_lower)
 
     def by_categories(self, incidents):
         categories = validate_integer_list(self.categories.split(','))

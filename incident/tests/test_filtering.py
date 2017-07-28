@@ -1,3 +1,4 @@
+from itertools import chain
 from datetime import date, timedelta
 
 from django.test import TestCase
@@ -7,9 +8,23 @@ from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
     IncidentCategorizationFactory,
+    InexactDateIncidentPageFactory,
 )
 from common.tests.factories import CategoryPageFactory
 from incident.utils.incident_filter import IncidentFilter
+from incident.utils.incident_fields import (
+    INCIDENT_PAGE_FIELDS,
+    ARREST_FIELDS,
+    LAWSUIT_FIELDS,
+    EQUIPMENT_FIELDS,
+    BORDER_STOP_FIELDS,
+    PHYSICAL_ASSAULT_FIELDS,
+    SUBPOENA_FIELDS,
+    LEAK_PROSECUTIONS_FIELDS,
+    LEGAL_ORDER_FIELDS,
+    PRIOR_RESTRAINT_FIELDS,
+    DENIAL_OF_ACCESS_FIELDS
+)
 
 
 def create_incident_filter(**kwargs):
@@ -67,7 +82,6 @@ def create_incident_filter(**kwargs):
         charged_under_espionage_act=kwargs.get('charged_under_espionage_act', None),
 
         # SUBPOENA
-        subpoena_subject=kwargs.get('subpoena_subject', None),
         subpoena_type=kwargs.get('subpoena_type', None),
         subpoena_status=kwargs.get('subpoena_status', None),
         held_in_contempt=kwargs.get('held_in_contempt', None),
@@ -133,6 +147,56 @@ class TestFiltering(TestCase):
         ).fetch()
 
         self.assertEqual({incident2, incident1}, set(incidents))
+
+    def test_should_find_inexactly_dated_incidents_2(self):
+        """should locate inexactly dated incidents if filter date range
+begins in the same month"""
+        targets = InexactDateIncidentPageFactory.create_batch(15)
+        _, incidents = create_incident_filter(
+            lower_date='2017-03-15',
+            upper_date='2017-04-15',
+        ).fetch()
+        for target in targets:
+            self.assertIn(target, incidents)
+        self.assertEqual(len(incidents), 15)
+
+    def test_should_find_inexactly_dated_incidents_from_below(self):
+        """should locate inexactly dated incidents if filter date range ends anytime in the same month"""
+        targets = InexactDateIncidentPageFactory.create_batch(15)
+
+        _, incidents = create_incident_filter(
+            lower_date='2017-02-20',
+            upper_date='2017-03-03',
+        ).fetch()
+
+        for target in targets:
+            self.assertIn(target, incidents)
+        self.assertEqual(len(incidents), 15)
+
+    def test_should_find_inexactly_dated_incidents_from_above(self):
+        """should locate inexactly dated incidents if filter date range
+includes any dates from the same month"""
+        targets = InexactDateIncidentPageFactory.create_batch(15)
+
+        _, incidents = create_incident_filter(
+            lower_date='2017-02-20',
+            upper_date='2017-03-03',
+        ).fetch()
+
+        for target in targets:
+            self.assertIn(target, incidents)
+        self.assertEqual(len(incidents), 15)
+
+    def test_should_not_include_inexactly_dated_incidents_from_other_months(self):
+        """should not include inexactly dated incidents if filter date range
+excludes all dates from the same month"""
+        InexactDateIncidentPageFactory.create_batch(15)
+
+        _, incidents = create_incident_filter(
+            lower_date='2017-02-02',
+            upper_date='2017-02-28',
+        ).fetch()
+        self.assertEqual(len(incidents), 0)
 
     def test_should_filter_by_date_range_unbounded_above(self):
         """should filter by date range - unbounded above"""
@@ -341,6 +405,62 @@ class TestBooleanFiltering(TestCase):
         ).fetch()
 
         self.assertEqual(len(incidents), 2)
+
+
+class TestAllFiltersAtOnce(TestCase):
+    def test_all_filters_combined_with_search(self):
+        """filters should be searchable
+
+        This tests will raise an error if any fields given to
+        IncidentFilter are not configured as `search_fields` on
+        IncidentPage.
+
+        """
+        # skip these fields directly because they are split into
+        # upper_date and lower_date fields
+        fields_to_skip = {'detention_date', 'release_date'}
+
+        # get a valid value for a given field
+        def value_for_field(field):
+            t = field['type']
+            if t == 'char':
+                return 'value'
+            elif t == 'pk':
+                return '1'
+            elif t == 'choice':
+                return field['choices'][0][0]
+            elif t == 'bool':
+                return 'True'
+            else:
+                raise ValueError('Could not determine value for field of type %s' % t)
+
+        filters = IncidentFilter(
+            search_text='search text',
+            lower_date='2011-01-01',
+            upper_date='2012-01-01',
+            categories='1',
+            circuits='first',
+            release_date_upper='2011-01-01',
+            release_date_lower='2012-01-01',
+            detention_date_upper='2011-01-01',
+            detention_date_lower='2012-01-01',
+            **{f['name']: value_for_field(f) for f in chain(
+                INCIDENT_PAGE_FIELDS,
+                ARREST_FIELDS,
+                LAWSUIT_FIELDS,
+                EQUIPMENT_FIELDS,
+                BORDER_STOP_FIELDS,
+                PHYSICAL_ASSAULT_FIELDS,
+                SUBPOENA_FIELDS,
+                LEAK_PROSECUTIONS_FIELDS,
+                LEGAL_ORDER_FIELDS,
+                PRIOR_RESTRAINT_FIELDS,
+                DENIAL_OF_ACCESS_FIELDS
+            ) if f['name'] not in fields_to_skip
+            })
+        # This test passes if the following function completes with no
+        # errors.
+        filters.fetch()
 
 
 class TestDateFilters(TestCase):
