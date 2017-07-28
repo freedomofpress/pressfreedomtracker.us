@@ -111,8 +111,9 @@ if os.environ.get('CLOUDFLARE_TOKEN') and os.environ.get('CLOUDFLARE_EMAIL'):
 # Piwik integration for analytics
 #
 if os.environ.get('PIWIK_DOMAIN_PATH'):
+    INSTALLED_APPS.append('analytical')  # noqa: F405
     PIWIK_DOMAIN_PATH = os.environ.get('PIWIK_DOMAIN_PATH')
-    PIWIK_SITE_ID = os.environ.get('PIWIK_SITE_ID', '1')
+    PIWIK_SITE_ID = os.environ.get('PIWIK_SITE_ID', '5')
 
 # Ensure Django knows its being served over https
 SECURE_PROXY_SSL_HEADER = ('X-Forwarded-Proto', 'https')
