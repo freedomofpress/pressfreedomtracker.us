@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
@@ -14,10 +15,18 @@ def email_signup_create(request):
     email_address = request.POST.get('email_address')
 
     try:
-        EmailSignup.objects.create(email_address=email_address)
-    except IntegrityError:
-        return HttpResponseBadRequest('already_signed_up')
-    except:
+        email = EmailSignup(email_address=email_address)
+        email.full_clean()
+        email.save()
+    except ValidationError as error:
+        message = error.message_dict.get('email_address')
+        if len(message) > 0:
+            message = message[0]
+        if 'already exists' in message:
+            return HttpResponseBadRequest('already_signed_up')
+        else:
+            return HttpResponseBadRequest(message)
+    except Exception as error:
         return HttpResponseBadRequest()
 
     return HttpResponse('success')

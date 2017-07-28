@@ -9,7 +9,8 @@ class EmailSignup extends PureComponent {
 		this.handleSubmit = this.handleSubmit.bind(this)
 
 		this.state = {
-			email_address: '',
+			emailAddress: '',
+			errorMessage: '',
 			state: EmailSignup.INPUT,
 		}
 	}
@@ -46,12 +47,15 @@ class EmailSignup extends PureComponent {
 			} else {
 				var state = INPUT
 			}
-			this.setState({ state })
+			this.setState({
+				state,
+				errorMessage: error.response.data,
+			})
 		}
 
 		axios.post(
 			'/emails/create/',
-			`email_address=${this.state.email_address}`
+			`email_address=${this.state.emailAddress}`
 		).then(handleResolve, handleReject)
 	}
 
@@ -65,7 +69,8 @@ class EmailSignup extends PureComponent {
 
 		const {
 			state,
-			email_address,
+			emailAddress,
+			errorMessage,
 		} = this.state
 
 		if (state === ALREADY_SIGNED_UP) {
@@ -84,14 +89,22 @@ class EmailSignup extends PureComponent {
 			)
 		}
 
+		const hasError = errorMessage !== ''
+
 		return (
 			<form onSubmit={this.handleSubmit}>
-				<input
-					type="text"
-					value={email_address}
-					onChange={this.handleChange.bind(this, 'email_address')}
-					disabled={state !== INPUT}
-				/>
+				<span>
+					<input
+						type="text"
+						value={emailAddress}
+						onChange={this.handleChange.bind(this, 'emailAddress')}
+						disabled={state !== INPUT}
+					/>
+
+					{hasError && (
+						<span>{errorMessage}</span>
+					)}
+				</span>
 
 				<button
 					type="submit"
