@@ -1,0 +1,58 @@
+.partner-logos
+	margin-top: 1em
+
+	// If you change the flexbox, double check the styles for the children.
+	display: flex
+	align-items: center
+	justify-content: space-between
+	@media(max-width: $medium-screen)
+		flex-wrap: wrap
+		justify-content: space-around
+
+	&__link
+		opacity: 0.8
+		margin-bottom: 0.5em
+
+		+hover
+			opacity: 1
+
+		&--button
+			+uppercase
+			padding: 15px 25px
+			display: inline-block
+			font-family: $sans-serif
+			text-align: center
+			text-decoration: none
+			border: 1px solid white
+			color: $white
+			background-color: $gray-dark
+
+			// Don't get narrow enough to wrap
+			flex-shrink: 0
+
+			// Look like the other links with some around the link,
+			// but still align on the right for space-between.
+			margin-left: 1em
+
+			// Line up better with the other logos for space-around
+			@media(max-width: $medium-screen)
+				margin-left: 2em
+				margin-right: 2em
+
+			// A little more space above
+			// No side margins since it's centered on its own line
+			// A bunch more space below
+			@media(max-width: $small-screen)
+				margin: 0.5em 0 2em
+
+		&--logo
+			// These don't need a width when not wrapping the flexbox,
+			// but do need one for wrapping.
+			@media(max-width: $medium-screen)
+				width: 25%
+			@media(max-width: $small-screen)
+				width: 33%
+
+	&__logo
+		height: auto
+		width: 100%
