@@ -26,10 +26,9 @@ class FormPage(AbstractEmailForm):
     content_panels = [
         HelpPanel('Forms can be embedded in an iframe by a third-party website. '
                   'Append <code>?embed=t</code> to any FormPage URL to request the embeddable version. '
-                  'You can copy the code below and replace <code>website.tld</code> with your domain and '
-                  '<code>FORM_PAGE_SLUG_REPLACE_ME</code> with the slug of this page. '
+                  'You can copy the code below and replace <code>[[URL TO FORM]]</code> with the full link to this form page.'
                   '<textarea style="font-size: 1em; color: black; font-family: monospace; border: 0; padding: 0.5em">'
-                  '<iframe src="https://website.tld/FORM_PAGE_SLUG_REPLACE_ME/?embed=t" width="100%" height="60vh"></iframe>'
+                  '<iframe src="[[URL TO FORM]]?embed=t" width="100%" height="60vh"></iframe>'
                   '</textarea>'),
     ] + AbstractEmailForm.content_panels + [
         FieldPanel('intro', classname="full"),
