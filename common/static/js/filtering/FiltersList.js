@@ -28,6 +28,7 @@ class FiltersList extends PureComponent {
 				</span>
 			)
 		} else if (AUTOCOMPLETE_MULTI_FILTERS.includes(label)) {
+			// TODO: deal with charges
 			const description = label.replace(underscoreRe, ' ')
 			return (
 				<span>
