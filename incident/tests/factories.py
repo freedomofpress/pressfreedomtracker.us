@@ -14,8 +14,10 @@ from incident.models import (
     Nationality,
     PoliticianOrPublic,
     Target,
+    State,
     choices,
 )
+
 from common.tests.factories import CategoryPageFactory
 
 
@@ -299,3 +301,10 @@ class PoliticianOrPublicFactory(factory.DjangoModelFactory):
         model = PoliticianOrPublic
         django_get_or_create = ('title',)
     title = factory.Faker('name')
+
+
+class StateFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = State
+        django_get_or_create = ('name',)
+    name = factory.Faker('state')

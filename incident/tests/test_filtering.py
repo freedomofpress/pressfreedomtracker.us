@@ -9,6 +9,7 @@ from incident.tests.factories import (
     IncidentIndexPageFactory,
     IncidentCategorizationFactory,
     InexactDateIncidentPageFactory,
+    StateFactory,
 )
 from common.tests.factories import CategoryPageFactory
 from incident.utils.incident_filter import IncidentFilter
@@ -26,6 +27,7 @@ from incident.utils.incident_fields import (
     DENIAL_OF_ACCESS_FIELDS
 )
 
+from incident.circuits import CIRCUITS_BY_STATE
 from incident.tests.utils import create_incident_filter
 
 
@@ -219,6 +221,18 @@ excludes all dates from the same month"""
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
+
+    def test_should_filter_by_circuit(self):
+        state = StateFactory()
+        circuit = CIRCUITS_BY_STATE[state.name]
+        target = IncidentPageFactory(state=state)
+
+        summary, incidents = create_incident_filter(
+            circuit=circuit
+        ).fetch()
+
+        self.assertTrue(target in incidents)
+        self.assertEqual(len(incidents), 1)
 
 
 class TestBooleanFiltering(TestCase):
