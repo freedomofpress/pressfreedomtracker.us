@@ -1,7 +1,4 @@
-from django.utils.html import format_html
-
 from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.blocks import RichTextBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
@@ -121,13 +118,11 @@ class LogoListBlock(blocks.ListBlock):
         icon = 'list-ul'
 
 
-class RichTextBlockQuoteBlock(RichTextBlock):
-
-    def render_basic(self, value, context=None):
-        if value:
-            return format_html('<blockquote>{0}</blockquote>', value)
-        else:
-            return ''
+class RichTextBlockQuoteBlock(blocks.StructBlock):
+    text = blocks.RichTextBlock()
+    source_text = blocks.RichTextBlock(required=False)
+    source_url = blocks.URLBlock(required=False, help_text="Source text will link to this url.")
 
     class Meta:
+        template = 'common/blocks/blockquote.html'
         icon = "openquote"
