@@ -1,0 +1,19 @@
+<div class="emails-block" id="js-emails-block-target">
+</div>
+<script type="text/javascript">
+	;(function() {
+		function handleLoad() {
+			window.ReactDOM.render(
+				window.React.createElement(
+					window.EmailSignup,
+					{}
+				),
+
+				document.getElementById('js-emails-block-target')
+			);
+
+		}
+
+		document.addEventListener('DOMContentLoaded', handleLoad);
+	})();
+</script>
