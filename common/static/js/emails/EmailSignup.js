@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import axios from 'axios'
 import classNames from 'classnames'
+import { HorizontalLoader } from '~/filtering/Loader'
 
 
 class EmailSignup extends PureComponent {
@@ -117,10 +118,13 @@ class EmailSignup extends PureComponent {
 
 				<button
 					type="submit"
-					className="emails-signup__button"
+					className={classNames(
+						'emails-signup__button',
+						{ 'emails-signup__button--loading': state === LOADING }
+					)}
 					disabled={state !== INPUT}
 				>
-					Signup
+					{state === LOADING ? <HorizontalLoader /> : 'Signup'}
 				</button>
 			</form>
 		)

@@ -35,13 +35,15 @@
 		color: $form-fg
 
 	&__title
-		margin: 0 10%
+		margin: 0 10% 5%
 
 		font-size: 1.7em
 		font-weight: 300
 
 	&__button
-		padding: 0.6em 3em
+		+flex-center-center-column
+		width: 40%
+		height: 3em
 		border-width: 1px
 		border-style: solid
 		border-color: white
@@ -50,12 +52,21 @@
 		color: white
 		letter-spacing: 1px
 		font-weight: 300
+		text-align: center
+		line-height: 1
 
 		&:hover,
 		&:active,
 		&:focus
 			background-color: white
 			color: $purple
+
+		&--loading,
+		&--loading:hover,
+		&--loading:active,
+		&--loading:focus
+			background-color: transparent
+			color: $white
 
 	&__input-container
 		display: block
