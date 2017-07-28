@@ -258,8 +258,14 @@ class SimplePage(Page):
         ('heading_3', Heading3()),
     ])
 
+    sidebar_content = StreamField([
+        ('heading', Heading2()),
+        ('rich_text', blocks.RichTextBlock()),
+    ], default=None)
+
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
+        StreamFieldPanel('sidebar_content')
     ]
 
     search_fields = Page.search_fields + [
