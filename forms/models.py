@@ -7,6 +7,8 @@ from wagtail.wagtailadmin.edit_handlers import (
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField
 
+from common.edit_handlers import HelpPanel
+
 
 class FormField(AbstractFormField):
     page = ParentalKey('FormPage', related_name='form_fields')
@@ -21,7 +23,14 @@ class FormPage(AbstractEmailForm):
         null=True,
     )
 
-    content_panels = AbstractEmailForm.content_panels + [
+    content_panels = [
+        HelpPanel('Forms can be embedded in an iframe by a third-party website. '
+                  'Append <code>?embed=t</code> to any FormPage URL to request the embeddable version. '
+                  'You can copy the code below and replace <code>[[URL TO FORM]]</code> with the full link to this form page.'
+                  '<textarea style="font-size: 1em; color: black; font-family: monospace; border: 0; padding: 0.5em">'
+                  '<iframe src="[[URL TO FORM]]?embed=t" width="100%" height="60vh"></iframe>'
+                  '</textarea>'),
+    ] + AbstractEmailForm.content_panels + [
         FieldPanel('intro', classname="full"),
         InlinePanel('form_fields', label="Form fields"),
         FieldPanel('thank_you_text', classname="full"),
