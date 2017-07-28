@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import axios from 'axios'
+import classNames from 'classnames'
 
 
 class EmailSignup extends PureComponent {
@@ -75,16 +76,16 @@ class EmailSignup extends PureComponent {
 
 		if (state === ALREADY_SIGNED_UP) {
 			return (
-				<div className="email-signup email-signup--already-signed-up">
-					<p>This email address is already signed up.</p>
+				<div className="emails-signup__message emails-signup__message--already-signed-up">
+					<p className="emails-signup__text">This email address is already signed up.</p>
 				</div>
 			)
 		}
 
 		if (state === SUCCESS) {
 			return (
-				<div className="email-signup email-signup--success">
-					<p>Success!</p>
+				<div className="emails-signup__message emails-signup__message--success">
+					<p className="emails-signup__text">Success!</p>
 				</div>
 			)
 		}
@@ -92,22 +93,31 @@ class EmailSignup extends PureComponent {
 		const hasError = errorMessage !== ''
 
 		return (
-			<form onSubmit={this.handleSubmit}>
-				<span>
+			<form
+				onSubmit={this.handleSubmit}
+				className="emails-signup__form"
+			>
+				<h2 className="emails-signup__title">Email Alerts</h2>
+
+				<span className="emails-signup__input-container">
 					<input
 						type="text"
 						value={emailAddress}
 						onChange={this.handleChange.bind(this, 'emailAddress')}
 						disabled={state !== INPUT}
+						className={classNames(
+							'emails-signup__input',
+							{ 'emails-signup__input--error': hasError }
+						)}
+						placeholder="alice@freedom.press"
 					/>
 
-					{hasError && (
-						<span>{errorMessage}</span>
-					)}
+					<span className="emails-signup__error">{errorMessage}</span>
 				</span>
 
 				<button
 					type="submit"
+					className="emails-signup__button"
 					disabled={state !== INPUT}
 				>
 					Signup
