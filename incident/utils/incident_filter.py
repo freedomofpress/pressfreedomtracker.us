@@ -360,7 +360,7 @@ class IncidentFilter(object):
 
     def get_category_options(self):
         return [
-            dict(id=page.id, title=page.title)
+            dict(id=page.id, title=page.title, url=page.url)
             for page in CategoryPage.objects.live()
         ]
 

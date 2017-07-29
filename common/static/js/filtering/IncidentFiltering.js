@@ -178,6 +178,24 @@ class IncidentFiltering extends PureComponent {
 		}, {})
 	}
 
+	/**
+	 * We want to redirect to a CategoryPage or IncidentIndexPage when the Apply
+	 * Filters button is hit on a page that isn't of those types. This function
+	 * determines which page should be redirected to based on the number of
+	 * categories. If only one category is whitelisted, just redirect to that
+	 * CategoryPage.
+	 */
+	getExternalUrl() {
+		const categoriesEnabled = this.state.categoriesEnabled
+			.filter(({ enabled }) => enabled)
+
+		if (categoriesEnabled.length === 1) {
+			return categoriesEnabled[0].url
+		}
+
+		return this.props.external
+	}
+
 	handleToggle() {
 		this.setState({
 			filtersExpanded: !this.state.filtersExpanded,
@@ -221,7 +239,7 @@ class IncidentFiltering extends PureComponent {
 		const params = this.getPageFetchParams()
 		const qs = '?' + queryString.stringify(params)
 		if (this.props.applyExternally) {
-			window.location = this.props.external + qs
+			window.location = this.getExternalUrl() + qs
 		} else {
 			history.pushState(null, null, qs)
 			this.fetchPage(params)
@@ -245,17 +263,22 @@ class IncidentFiltering extends PureComponent {
 			}
 		}, {})
 
-		this.setState({
-			categoriesEnabled: this.state.categoriesEnabled.map(category => {
+
+		const nextState = {
+			filterValues: {},
+			filtersTouched: false,
+		}
+
+		if (!this.props.noCategoryFiltering) {
+			nextState.categoriesEnabled = this.state.categoriesEnabled.map(category => {
 				return {
 					...category,
 					enabled: false,
 				}
-			}),
-			filterValues: {},
-			filtersTouched: false,
-		})
+			})
+		}
 
+		this.setState(nextState)
 		history.pushState(null, null, '?' + queryString.stringify(strippedParams))
 		this.fetchPage(strippedParams)
 	}
