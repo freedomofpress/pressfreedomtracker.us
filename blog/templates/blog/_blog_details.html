@@ -1,10 +1,7 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags %}
 <aside class="blog-details">
 	{% if page.author or page.organization %}
 		<div class="blog-details__summary">
-			{% if page.author.specific.photo %}
-				{% image page.author.specific.photo fill-600x600-c100 class="blog-details__photo" %}
-			{% endif %}
 			<div class="blog-details__author">
 				You are reading an article
 				{% if page.author %}
@@ -28,28 +25,8 @@
 			{% endif %}
 		</div>
 	{% endif %}
-	{% if page.author.specific.bio %}
-		<h2 class="section-heading">
-			About
-			<a
-				class="section-heading__subject section-heading__subject--link"
-				href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}"
-			>
-				{{ page.author.title }}
-			</a>
-		</h2>
-		{{ page.author.specific.bio|richtext }}
-	{% endif %}
-	{% if page.organization.specific.description %}
-		<h2 class="section-heading">
-			About
-			<a
-				class="section-heading__subject section-heading__subject--link"
-				href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}"
-			>
-				{{ page.organization.title }}
-			</a>
-		</h2>
-		{{ page.organization.specific.description|richtext }}
-	{% endif %}
+
+	{% include "blog/_about_author.html" with author=page.author.specific parent_url=page.get_parent.url %}
+
+	{% include "blog/_about_org.html" with organization=page.organization.specific parent_url=page.get_parent.url %}
 </aside>
