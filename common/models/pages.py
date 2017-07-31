@@ -106,9 +106,11 @@ class PersonPage(Page):
     )
 
     bio = RichTextField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('bio'),
+        FieldPanel('website'),
         ImageChooserPanel('photo'),
     ]
 
