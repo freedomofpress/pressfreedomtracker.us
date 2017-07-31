@@ -35,7 +35,7 @@
 			<ul class="data-table__list">
 				{% for charge in page.current_charges.all %}
 					<li class="data-table__list-item">
-						<a href="{% pageurl page.get_parent %}?current_charges={{ charge.pk }}">
+						<a href="{% pageurl page.get_parent %}?charges={{ charge.pk }}">
 							{{ charge.title|capfirst }}
 						</a>
 					</li>
@@ -54,7 +54,7 @@
 			<ul class="data-table__list">
 				{% for charge in page.dropped_charges.all %}
 					<li class="data-table__list-item">
-						<a href="{% pageurl page.get_parent %}?dropped_charges={{ charge.pk }}">
+						<a href="{% pageurl page.get_parent %}?charges={{ charge.pk }}">
 							{{ charge.title|capfirst }}
 						</a>
 					</li>
