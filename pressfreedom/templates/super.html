@@ -29,6 +29,13 @@
 			{% render_bundle 'common' 'css' %}
 			{% endblock %}
 
+			{% block meta %}
+				<meta property="og:url" content="{{ self.full_url }}" />
+
+				<meta property="og:title" content="{% firstof self.seo_title self.title %}" />
+				<meta name="twitter:title" content="{% firstof self.seo_title self.title %}" />
+			{% endblock %}
+
 			<!--[if lte IE 11]>
 			<script type="text/javascript" src="{% static 'js/picturefill.3.0.2.min.js' %}"></script>
 			<![endif]-->
