@@ -10,6 +10,7 @@ from incident.tests.factories import (
     IncidentIndexPageFactory,
     IncidentCategorizationFactory,
     InexactDateIncidentPageFactory,
+    IncidentChargeFactory,
     StateFactory,
 )
 from common.tests.factories import CategoryPageFactory
@@ -238,10 +239,10 @@ excludes all dates from the same month"""
     def test_should_filter_charges_as_one_field(self):
         """Filter should filter charges as if current and dropped charges are a single field"""
         charge = ChargeFactory()
-        target1 = IncidentPageFactory(
+        target1 = IncidentChargeFactory(
             current_charges=charge
         )
-        target2 = IncidentPageFactory(
+        target2 = IncidentChargeFactory(
             dropped_charges=charge
         )
         summary, incidents = create_incident_filter(
@@ -339,6 +340,7 @@ class TestAllFiltersAtOnce(TestCase):
             date_upper='2012-01-01',
             categories='1',
             circuits='first',
+            charges='Resisting arrest',
             release_date_upper='2011-01-01',
             release_date_lower='2012-01-01',
             detention_date_upper='2011-01-01',

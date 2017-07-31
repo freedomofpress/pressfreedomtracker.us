@@ -289,6 +289,11 @@ class ChargeFactory(factory.DjangoModelFactory):
     title = factory.Faker('sentence', nb_words=3)
 
 
+class IncidentChargeFactory(IncidentPageFactory):
+    dropped_charges = factory.SubFactory(ChargeFactory)
+    current_charges = factory.SubFactory(ChargeFactory)
+
+
 class NationalityFactory(factory.DjangoModelFactory):
     class Meta:
         model = Nationality

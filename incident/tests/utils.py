@@ -16,8 +16,6 @@ def create_incident_filter(**kwargs):
         # Arrest/Detention
         arrest_status=kwargs.get('arrest_status', None),
         status_of_charges=kwargs.get('status_of_charges', None),
-        current_charges=kwargs.get('current_charges', None),
-        dropped_charges=kwargs.get('dropped_charges', None),
         detention_date_lower=kwargs.get('detention_date_lower', None),
         detention_date_upper=kwargs.get('detention_date_upper', None),
         release_date_lower=kwargs.get('release_date_lower', None),
@@ -72,5 +70,6 @@ def create_incident_filter(**kwargs):
         politicians_or_public_figures_involved=kwargs.get('politicians_or_public_figures_involved', None),
 
         # OTHER
-        circuits=kwargs.get('circuits', None)
+        circuits=kwargs.get('circuits', None),
+        charges=kwargs.get('charges', None)
     )
