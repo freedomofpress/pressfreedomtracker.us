@@ -26,7 +26,7 @@
 		</div>
 	{% endif %}
 
-	{% include "blog/_about_author.html" with author=page.author.specific parent_url=page.get_parent.url %}
+	{% include "blog/_about_author.html" with author=page.author.specific %}
 
-	{% include "blog/_about_org.html" with organization=page.organization.specific parent_url=page.get_parent.url %}
+	{% include "blog/_about_org.html" with organization=page.organization.specific %}
 </aside>

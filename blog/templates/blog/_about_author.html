@@ -4,13 +4,7 @@
 		<h2 class="section-heading">
 			<a
 				class="section-heading__subject section-heading__subject--link"
-				href="
-					{% if parent_url %}
-						{{ parent_url }}?author={{ author.pk }}
-					{% else %}
-						{{ author.website }}
-					{% endif %}
-				"
+				href="{{ author.website }}"
 			>
 				{{ author.title }}
 			</a>
