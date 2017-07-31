@@ -14,7 +14,12 @@
 	{% block ajax %}
 		{% if author_filter %}
 			<div class="blog-filter">
-				You are looking at articles written by <a href="{{ author_filter.url }}">{{ author_filter.title }}</a>
+				You are looking at articles written by
+				{% if author_filter.website %}
+					<a href="{{ author_filter.website }}">{{ author_filter.title }}</a>
+				{% else %}
+					{{ author_filter.title }}
+				{% endif %}
 				<div class="blog-filter__clear">
 					<a href="{{ page.url }}">&times; See All Articles</a>
 				</div>
@@ -22,8 +27,12 @@
 		{% endif %}
 		{% if organization_filter %}
 			<div class="blog-filter">
-				You are looking at articles from <a href="{{ organization_filter.url }}">{{ organization_filter.title }}</a>
-
+				You are looking at articles from
+				{% if organization_filter.website %}
+					<a href="{{ organization_filter.website }}">{{ organization_filter.title }}</a>
+				{% else %}
+					{{ organization_filter.title }}
+				{% endif %}
 				<div class="blog-filter__clear">
 					<a href="{{ page.url }}">&times; See All Articles</a>
 				</div>
