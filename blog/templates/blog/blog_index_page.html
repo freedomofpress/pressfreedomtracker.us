@@ -65,6 +65,28 @@
 			</a>
 		{% endif %}
 	{% endblock %}
-
-
 {% endblock %}
+
+{% block top_sidebar_class %}
+	{% if author_filter or organization_filter %}
+		{{block.super}} layout-right-sidebar__sidebar--light
+	{% endif %}
+{% endblock %}
+
+{% block sidebar_class %}
+	{% if author_filter or organization_filter %}
+		layout-right-sidebar__sidebar--light
+	{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+	{% if author_filter %}
+		{% include "blog/_about_author.html" with author=author_filter %}
+	{% endif %}
+
+	{% if organization_filter %}
+		{% include "blog/_about_org.html" with organization=organization_filter %}
+	{% endif %}
+{% endblock %}
+
+

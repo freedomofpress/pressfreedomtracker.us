@@ -4,7 +4,13 @@
 	<h2 class="section-heading">
 		<a
 			class="section-heading__subject section-heading__subject--link"
-			href="{{ page.get_parent.url }}?organization={{ organization.pk }}"
+			href="
+				{% if parent_url %}
+					{{ parent_url }}?organization={{ organization.pk }}
+				{% else %}
+					{{ organization.website }}
+				{% endif %}
+			"
 		>
 			{{ organization.title }}
 		</a>
