@@ -8,7 +8,7 @@
 	<h2 class="page-title">{{ page.title }}</h2>
 
 	{% for block in page.body %}
-		<section>{% include_block block %}</section>
+		<section class="blog-index">{% include_block block %}</section>
 	{% endfor %}
 
 	{% block ajax %}
