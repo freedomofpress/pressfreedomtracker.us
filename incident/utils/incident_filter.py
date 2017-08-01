@@ -424,7 +424,7 @@ class IncidentFilter(object):
         THIS_MONTH = TODAY.month
 
         summary = (
-            ('Total Incidents', incidents.count),
+            ('Total Results', incidents.count),
         )
 
         # Add counts for this year and this month if non-zero
@@ -453,13 +453,13 @@ class IncidentFilter(object):
 
         if num_this_year > 0:
             summary = summary + ((
-                'Incidents in {}'.format(THIS_YEAR),
+                'Results in {}'.format(THIS_YEAR),
                 num_this_year
             ),)
 
         if num_this_month > 0:
             summary = summary + ((
-                'Incidents in {0:%B}'.format(TODAY),
+                'Results in {0:%B}'.format(TODAY),
                 num_this_month
             ),)
 
