@@ -1,18 +1,25 @@
-<div class="emails-signup" id="js-emails-signup-target"></div>
-<script type="text/javascript">
-	;(function() {
-		function handleLoad() {
-			window.ReactDOM.render(
-				window.React.createElement(
-					window.EmailSignup,
-					{}
-				),
+{% load wagtailsettings_tags %}
+{% get_settings %}
 
-				document.getElementById('js-emails-signup-target')
-			);
+{% with email_settings=settings.emails.EmailSettings %}
+	<div class="emails-signup" id="js-emails-signup-target"></div>
+	<script type="text/javascript">
+		;(function() {
+			function handleLoad() {
+				window.ReactDOM.render(
+					window.React.createElement(
+						window.EmailSignup,
+						{ signupPrompt: '{{ email_settings.signup_prompt|default:"" }}'
+						, successText: '{{ email_settings.success_text|default:"" }}'
+						}
+					),
 
-		}
+					document.getElementById('js-emails-signup-target')
+				);
 
-		document.addEventListener('DOMContentLoaded', handleLoad);
-	})();
-</script>
+			}
+
+			document.addEventListener('DOMContentLoaded', handleLoad);
+		})();
+	</script>
+{% endwith %}

@@ -75,6 +75,11 @@ class EmailSignup extends PureComponent {
 			errorMessage,
 		} = this.state
 
+		const {
+			signupPrompt,
+			successText,
+		} = this.props
+
 		if (state === ALREADY_SIGNED_UP) {
 			return (
 				<div className="emails-signup__message emails-signup__message--already-signed-up">
@@ -86,7 +91,7 @@ class EmailSignup extends PureComponent {
 		if (state === SUCCESS) {
 			return (
 				<div className="emails-signup__message emails-signup__message--success">
-					<p className="emails-signup__text">Success!</p>
+					<p className="emails-signup__text">{successText}</p>
 				</div>
 			)
 		}
@@ -98,7 +103,7 @@ class EmailSignup extends PureComponent {
 				onSubmit={this.handleSubmit}
 				className="emails-signup__form"
 			>
-				<h2 className="emails-signup__title">Email Alerts</h2>
+				<h2 className="emails-signup__title">{signupPrompt}</h2>
 
 				<span className="emails-signup__input-container">
 					<input
