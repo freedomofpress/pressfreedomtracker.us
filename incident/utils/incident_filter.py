@@ -102,8 +102,6 @@ class IncidentFilter(object):
         # ARREST/DETENTION
         arrest_status,
         status_of_charges,
-        current_charges,
-        dropped_charges,
         detention_date_upper,
         detention_date_lower,
         release_date_upper,
@@ -150,6 +148,7 @@ class IncidentFilter(object):
         politicians_or_public_figures_involved,
         # OTHER
         circuits,
+        charges
     ):
         self.search_text = search_text
         self.date_lower = validate_date(date_lower)
@@ -164,8 +163,6 @@ class IncidentFilter(object):
         # Arrest/Detention
         self.arrest_status = arrest_status
         self.status_of_charges = status_of_charges
-        self.current_charges = current_charges
-        self.dropped_charges = dropped_charges
         self.detention_date_lower = validate_date(detention_date_lower)
         self.detention_date_upper = validate_date(detention_date_upper)
         self.release_date_lower = validate_date(release_date_lower)
@@ -222,6 +219,7 @@ class IncidentFilter(object):
 
         # OTHER
         self.circuits = circuits
+        self.charges = charges
 
     def create_filters(self, fields, incidents):
         """Creates filters based on dicts for fields
@@ -336,6 +334,7 @@ class IncidentFilter(object):
             'date_upper': request.GET.get('date_upper'),
             'categories': request.GET.get('categories'),
             'circuits': request.GET.get('circuits'),
+            'charges': request.GET.get('charges'),
         }
 
         kwargs = reduce(
@@ -379,6 +378,9 @@ class IncidentFilter(object):
 
         if self.circuits:
             incidents = self.by_circuits(incidents)
+
+        if self.charges:
+            incidents = self.by_charges(incidents)
 
         incidents = reduce(
             (lambda obj, filters: self.create_filters(filters, obj)),
@@ -495,3 +497,10 @@ class IncidentFilter(object):
             states += STATES_BY_CIRCUIT[circuit]
 
         return incidents.filter(state__name__in=states)
+
+    def by_charges(self, incidents):
+        validated_charges = validate_integer_list(self.charges.split(','))
+        dropped_charges_match = Q(dropped_charges__in=validated_charges)
+        current_charges_match = Q(current_charges__in=validated_charges)
+
+        return incidents.filter(current_charges_match | dropped_charges_match).distinct()

@@ -39,14 +39,6 @@ ARREST_FIELDS = [
         'type': 'choice'
     },
     {
-        'name': 'current_charges',
-        'type': 'pk'
-    },
-    {
-        'name': 'dropped_charges',
-        'type': 'pk'
-    },
-    {
         'name': 'detention_date',
         'type': 'date'
     },

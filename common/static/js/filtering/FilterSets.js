@@ -128,17 +128,8 @@ FilterSets['Arrest / Detention'] = FilterSets['Arrest/Criminal Charge'] = Filter
 			<AutocompleteInput
 				handleFilterChange={handleFilterChange}
 				filterValues={filterValues}
-				label="Current charges"
-				filter="current_charges"
-				type="incident.Charge"
-				isSingle={false}
-			/>
-
-			<AutocompleteInput
-				handleFilterChange={handleFilterChange}
-				filterValues={filterValues}
-				label="Dropped charges"
-				filter="dropped_charges"
+				label="Charges"
+				filter="charges"
 				type="incident.Charge"
 				isSingle={false}
 			/>

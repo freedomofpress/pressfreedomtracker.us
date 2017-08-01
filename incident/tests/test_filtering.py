@@ -5,6 +5,7 @@ from django.test import TestCase
 from wagtail.wagtailcore.rich_text import RichText
 
 from incident.tests.factories import (
+    ChargeFactory,
     IncidentPageFactory,
     IncidentIndexPageFactory,
     IncidentCategorizationFactory,
@@ -234,6 +235,26 @@ excludes all dates from the same month"""
         self.assertTrue(target in incidents)
         self.assertEqual(len(incidents), 1)
 
+    def test_should_filter_charges_as_one_field(self):
+        """Filter should filter charges as if current and dropped charges are a single field"""
+        charge = ChargeFactory()
+        target1 = IncidentPageFactory()
+        target2 = IncidentPageFactory()
+
+        target1.current_charges.add(charge)
+        target2.dropped_charges.add(charge)
+        target1.current_charges.commit()
+        target2.dropped_charges.commit()
+
+        summary, incidents = create_incident_filter(
+            charges=str(charge.pk)
+        ).fetch()
+
+        for target in [target1, target2]:
+            self.assertIn(target, incidents)
+
+        self.assertEqual(len(incidents), 2)
+
 
 class TestBooleanFiltering(TestCase):
     """Boolean filters"""
@@ -320,6 +341,7 @@ class TestAllFiltersAtOnce(TestCase):
             date_upper='2012-01-01',
             categories='1',
             circuits='first',
+            charges='Resisting arrest',
             release_date_upper='2011-01-01',
             release_date_lower='2012-01-01',
             detention_date_upper='2011-01-01',
