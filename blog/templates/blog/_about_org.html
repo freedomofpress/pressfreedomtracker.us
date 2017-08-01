@@ -10,9 +10,6 @@
 				{{ organization.title }}
 			</a>
 		</h2>
-		{% if organization.logo %}
-			{% image organization.logo fill-600x600-c100 class="blog-details__logo" %}
-		{% endif %}
 		{% if organization.description %}
 			{{ organization.description|richtext }}
 		{% endif %}

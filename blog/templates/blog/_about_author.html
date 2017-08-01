@@ -10,9 +10,6 @@
 				{{ author.title }}
 			</a>
 		</h2>
-		{% if author.photo %}
-			{% image author.photo fill-600x600-c100 class="blog-details__photo" %}
-		{% endif %}
 		{% if author.bio %}
 			{{ author.bio|richtext }}
 		{% endif %}
