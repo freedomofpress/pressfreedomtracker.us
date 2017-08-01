@@ -52,4 +52,11 @@
 	<div class="js-summary-table">
 		{% include "incident/_summary_table.html" with summary_table=summary_table %}
 	</div>
+	<div class="js-methodology">
+		{% if categories %}
+			{% for category in categories.all %}
+				{% include "common/_category_methodology.html" with category=category %}
+			{% endfor %}
+		{% endif %}
+	</div>
 {% endblock %}

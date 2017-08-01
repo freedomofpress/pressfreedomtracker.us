@@ -5,12 +5,14 @@ from django.utils.cache import patch_cache_control
 from wagtail.wagtailcore.models import Page
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
+from common.models.pages import CategoryPage
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin
 from incident.models.choices import get_filter_choices
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
 from incident.utils.incident_filter import IncidentFilter
+from incident.utils.validators import validate_integer_list
 
 
 class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
@@ -58,6 +60,11 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['category_options'] = incident_filter.get_category_options()
         context['filter_choices'] = get_filter_choices()
         context['export_path'] = self.url
+
+        category_ids = validate_integer_list(request.GET.get('categories').split(','))
+
+        context['categories'] = CategoryPage.objects.filter(pk__in=category_ids)
+
         summary, entry_qs = incident_filter.fetch()
 
         paginator, entries = paginate(
