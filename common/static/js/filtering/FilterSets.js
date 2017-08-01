@@ -99,7 +99,7 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 }
 
 
-FilterSets['Arrest / Detention'] = function({ handleFilterChange, filterValues, choices }) {
+FilterSets['Arrest / Detention'] = FilterSets['Arrest/Criminal Charge'] = FilterSets['Arrest / Criminal Charge'] = function({ handleFilterChange, filterValues, choices }) {
 	return (
 		<FilterSet>
 			<BoolInput
