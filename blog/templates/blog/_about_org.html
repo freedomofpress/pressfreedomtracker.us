@@ -1,16 +1,20 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-{% if organization.description %}
-	<h2 class="section-heading">
-		<a
-			class="section-heading__subject section-heading__subject--link"
-			href="{{ organization.website }}"
-		>
-			{{ organization.title }}
-		</a>
-	</h2>
-	{% if organization.logo %}
-		{% image organization.logo fill-600x600-c100 class="blog-details__logo" %}
-	{% endif %}
-	{{ organization.description|richtext }}
+{% if organization.description or organization.logo %}
+	<div class="blog-about">
+		<h2 class="section-heading">
+			<a
+				class="section-heading__subject section-heading__subject--link"
+				href="{{ organization.website }}"
+			>
+				{{ organization.title }}
+			</a>
+		</h2>
+		{% if organization.logo %}
+			{% image organization.logo fill-600x600-c100 class="blog-details__logo" %}
+		{% endif %}
+		{% if organization.description %}
+			{{ organization.description|richtext }}
+		{% endif %}
+	</div>
 {% endif %}
