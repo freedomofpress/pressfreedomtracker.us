@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'dashboard',
     'home',
 
+    'analytical',
+
     'wagtail.contrib.settings',
     'wagtail.contrib.wagtailroutablepage',
     'wagtail.wagtailforms',
@@ -97,6 +99,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
             ],
             'builtins': ['statistics.templatetags.statistics_tags'],
         },
@@ -187,6 +190,18 @@ WEBPACK_LOADER = {
     }
 }
 
+# Sadly, we have to set these to real-looking (but invalid) values, or
+# django-analytical will raise AnalyticalException. It would be preferable to be
+# able to set these to None (or not be required to set them at all, which the
+# django-analytical docs incorrectly suggest is possible).
+PIWIK_DOMAIN_PATH = 'analytics.example.com'
+# Piwik Site ID's start at 1, so 0 is an invalid ID which can be used to
+# indicate to the template that the Piwik tracking code should not be rendered.
+PIWIK_SITE_ID = '0'
+
+SETTINGS_EXPORT = [
+    'PIWIK_SITE_ID',
+]
 
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True

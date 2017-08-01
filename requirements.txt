@@ -11,7 +11,9 @@ certifi==2017.4.17        # via requests
 chardet==3.0.4            # via requests
 click==6.7                # via pip-tools
 dj-database-url==0.4.2
+django-analytical==2.2.2
 django-modelcluster==3.1
+django-settings-export==1.2.1
 django-taggit==0.22.1     # via wagtail
 django-treebeard==4.1.2   # via wagtail
 django-webpack-loader==0.5.0
