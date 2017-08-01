@@ -3,18 +3,29 @@
 {% load common_tags %}
 {% load wagtailcore_tags %}
 
+{% block secondary-header %}
+	<div class="layout-right-sidebar">
+		<div class="layout-right-sidebar__main">
+			<div class="blog-index">
+				<h2 class="page-title">{{ page.title }}</h2>
+			</div>
+		</div> {# /.layout-right-sidebar__main #}
+
+		<div class="layout-right-sidebar__sidebar layout-right-sidebar__sidebar--light">
+		</div>
+	</div>
+{% endblock %}
+
 {% block main %}
-
-	<h2 class="page-title">{{ page.title }}</h2>
-
-	{% for block in page.body %}
-		<section>{% include_block block %}</section>
-	{% endfor %}
-
 	{% block ajax %}
 		{% if author_filter %}
 			<div class="blog-filter">
-				You are looking at articles written by <a href="{{ author_filter.url }}">{{ author_filter.title }}</a>
+				You are looking at articles written by
+				{% if author_filter.website %}
+					<a href="{{ author_filter.website }}">{{ author_filter.title }}</a>
+				{% else %}
+					{{ author_filter.title }}
+				{% endif %}
 				<div class="blog-filter__clear">
 					<a href="{{ page.url }}">&times; See All Articles</a>
 				</div>
@@ -22,14 +33,17 @@
 		{% endif %}
 		{% if organization_filter %}
 			<div class="blog-filter">
-				You are looking at articles from <a href="{{ organization_filter.url }}">{{ organization_filter.title }}</a>
-
+				You are looking at articles from
+				{% if organization_filter.website %}
+					<a href="{{ organization_filter.website }}">{{ organization_filter.title }}</a>
+				{% else %}
+					{{ organization_filter.title }}
+				{% endif %}
 				<div class="blog-filter__clear">
 					<a href="{{ page.url }}">&times; See All Articles</a>
 				</div>
 			</div>
 		{% endif %}
-
 		<div class="js-infinite-scrolling-parent">
 			{% for post in entries_page %}
 				<div class="js-infinite-scrolling-item">
@@ -55,7 +69,38 @@
 				More Posts
 			</a>
 		{% endif %}
-	{% endblock %}
+	{% endblock ajax %}
+{% endblock main %}
 
-
+{% block top_sidebar_class %}
+	layout-right-sidebar__sidebar--light
 {% endblock %}
+
+{% block sidebar_class %}
+		{{ block.super }} layout-right-sidebar__sidebar--light
+{% endblock %}
+
+{% block sidebar %}
+	{% for block in page.body %}
+		<div class="blog-index__description
+			{% if author_filter or organization_filter %}
+				blog-index__description--filtered
+			{% endif %}
+		">
+			<h2 class="section-heading">About {{ page.title }}</h2>
+			<section class="blog-index__text">
+				{% include_block block %}
+			</section>
+		</div>
+	{% endfor %}
+
+	{% if author_filter %}
+		{% include "blog/_about_author.html" with author=author_filter %}
+	{% endif %}
+
+	{% if organization_filter %}
+		{% include "blog/_about_org.html" with organization=organization_filter %}
+	{% endif %}
+{% endblock %}
+
+

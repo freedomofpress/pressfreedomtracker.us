@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if author.bio or author.photo %}
+	<div class="blog-about">
+		<h2 class="section-heading">
+			About
+			<a
+				class="section-heading__subject section-heading__subject--link"
+				href="{{ author.website }}"
+			>
+				{{ author.title }}
+			</a>
+		</h2>
+		{% if author.bio %}
+			{{ author.bio|richtext }}
+		{% endif %}
+	</div>
+{% endif %}

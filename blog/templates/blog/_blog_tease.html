@@ -19,10 +19,10 @@
 
 		<ul class="blog-tease__organization">
 			{% if page.author and location == "blog-index" %}
-				<li>{{ page.author }}</li>
+				<li><a href="?author={{ page.author.pk }}">{{ page.author }}</a></li>
 			{% endif %}
 			{% if page.organization %}
-				<li>{{ page.organization.title }}</li>
+				<li><a href="?organization={{ page.organization.pk }}">{{ page.organization.title }}</a></li>
 			{% endif %}
 		</ul>
 	</div>

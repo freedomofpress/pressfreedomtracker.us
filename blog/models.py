@@ -113,6 +113,8 @@ class BlogPage(Page):
         ('statistics', StatisticsBlock()),
     ])
 
+    link_to_original_post = models.URLField(blank=True, null=True)
+
     teaser_image = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -153,6 +155,7 @@ class BlogPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('publication_datetime'),
         StreamFieldPanel('body'),
+        FieldPanel('link_to_original_post'),
         MultiFieldPanel(
             heading='Teaser',
             children=[

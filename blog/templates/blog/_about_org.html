@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if organization.description or organization.logo %}
+	<div class="blog-about">
+		<h2 class="section-heading">
+			About
+			<a
+				class="section-heading__subject section-heading__subject--link"
+				href="{{ organization.website }}"
+			>
+				{{ organization.title }}
+			</a>
+		</h2>
+		{% if organization.description %}
+			{{ organization.description|richtext }}
+		{% endif %}
+	</div>
+{% endif %}
