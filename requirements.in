@@ -15,4 +15,5 @@ pyparsing
 wagtail
 wagtail-factories
 wagtail-django-recaptcha
+wagtail-metadata
 unittest-xml-reporting
