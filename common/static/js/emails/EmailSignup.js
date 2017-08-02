@@ -129,7 +129,7 @@ class EmailSignup extends PureComponent {
 					)}
 					disabled={state !== INPUT}
 				>
-					{state === LOADING ? <HorizontalLoader /> : 'Signup'}
+					{state === LOADING ? <HorizontalLoader /> : 'Sign Up'}
 				</button>
 			</form>
 		)
