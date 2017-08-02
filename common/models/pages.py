@@ -82,7 +82,7 @@ class MetadataPageMixin(OriginalMetadataPageMixin):
         """
 
         if self.search_description:
-            return search_description
+            return self.search_description
 
         ssssettings = self._get_ssssettings()
         return ssssettings.default_description
@@ -101,7 +101,6 @@ class MetadataPageMixin(OriginalMetadataPageMixin):
 
     class Meta:
         abstract = True
-
 
 
 class OrganizationIndexPage(Page):
@@ -363,6 +362,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
             strip_tags(self.body.render_as_block()),
             20
         )
+
 
 class CommonTag(ClusterableModel):
     @classmethod
