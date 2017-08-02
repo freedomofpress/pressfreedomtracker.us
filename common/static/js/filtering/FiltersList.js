@@ -11,6 +11,8 @@ class FiltersList extends PureComponent {
 	renderValue(label, value) {
 		if (DATE_FILTERS.includes(label)) {
 			var formattedValue = value.format(HUMAN_DATE_FORMAT)
+		} else if (typeof value === 'boolean') {
+			var formattedValue = value ? 'yes' : ' no'
 		} else {
 			var formattedValue = value
 		}
