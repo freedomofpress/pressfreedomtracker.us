@@ -5,7 +5,8 @@ from wagtail.wagtailadmin.edit_handlers import (
     InlinePanel, MultiFieldPanel
 )
 from wagtail.wagtailcore.fields import RichTextField
-from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField
+from wagtail.wagtailforms.models import AbstractFormField
+from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 from common.edit_handlers import HelpPanel
 
@@ -14,7 +15,7 @@ class FormField(AbstractFormField):
     page = ParentalKey('FormPage', related_name='form_fields')
 
 
-class FormPage(AbstractEmailForm):
+class FormPage(WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
     button_text = models.CharField(
@@ -30,7 +31,7 @@ class FormPage(AbstractEmailForm):
                   '<textarea style="font-size: 1em; color: black; font-family: monospace; border: 0; padding: 0.5em">'
                   '<iframe src="[[URL TO FORM]]?embed=t" width="100%" height="60vh"></iframe>'
                   '</textarea>'),
-    ] + AbstractEmailForm.content_panels + [
+    ] + WagtailCaptchaEmailForm.content_panels + [
         FieldPanel('intro', classname="full"),
         InlinePanel('form_fields', label="Form fields"),
         FieldPanel('thank_you_text', classname="full"),

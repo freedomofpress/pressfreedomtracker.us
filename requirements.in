@@ -4,6 +4,7 @@ Django<1.12
 -e git+https://github.com/freedomofpress/django-logging.git@dfd8904#egg=django-logging-json
 django-analytical
 django-modelcluster
+django-recaptcha
 django-settings-export
 django-webpack-loader
 factory_boy
@@ -13,4 +14,5 @@ psycopg2
 pyparsing
 wagtail
 wagtail-factories
+wagtail-django-recaptcha
 unittest-xml-reporting

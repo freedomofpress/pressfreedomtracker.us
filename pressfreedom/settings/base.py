@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'emails',
 
     'analytical',
+    'captcha',
+    'wagtailcaptcha',
 
     'wagtail.contrib.settings',
     'wagtail.contrib.wagtailroutablepage',
@@ -204,6 +206,10 @@ PIWIK_SITE_ID = '0'
 SETTINGS_EXPORT = [
     'PIWIK_SITE_ID',
 ]
+
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
+NOCAPTCHA = True
 
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True
