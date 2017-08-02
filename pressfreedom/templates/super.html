@@ -30,7 +30,9 @@
 			{% endblock %}
 
 			{% block meta %}
-				{% meta_tags %}
+				{% if self %}
+					{% meta_tags %}
+				{% endif %}
 				{% get_settings %}
 				{% with seo_settings=settings.common.SocialSharingSEOSettings %}
 					{% if seo_settings.twitter %}
