@@ -59,8 +59,9 @@ class SocialSharingSEOSettings(BaseSetting):
         help_text='Default text description for pages that don\'t have another '
                   'logical field for text descirptions'
     )
+
     default_image = models.ForeignKey(
-        'wagtailimages.Image',
+        'common.CustomImage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
