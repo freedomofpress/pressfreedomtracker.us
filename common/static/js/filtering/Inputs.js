@@ -131,7 +131,7 @@ export function BoolInput({ handleFilterChange, filterValues, label, filter }) {
 				<input
 					type="checkbox"
 					onChange={handleFilterChange.bind(null, filter)}
-					value={filterValues[filter] || false}
+					checked={filterValues[filter] || false}
 				/>
 			</span>
 		</div>
