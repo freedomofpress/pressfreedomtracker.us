@@ -1,3 +1,7 @@
+/**
+ * NOTE:
+ * Read incident/Filters.md when changing filters for further instructions.
+ */
 import React, { PureComponent } from 'react'
 import axios from 'axios'
 import queryString from 'query-string'

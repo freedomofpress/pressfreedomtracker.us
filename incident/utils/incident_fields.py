@@ -1,3 +1,8 @@
+#
+# NOTE:
+# Read incident/Filters.md when changing filters for further instructions.
+#
+
 from incident.models import choices
 
 INCIDENT_PAGE_FIELDS = [
