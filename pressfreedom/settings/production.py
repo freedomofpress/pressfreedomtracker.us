@@ -116,8 +116,15 @@ if os.environ.get('PIWIK_DOMAIN_PATH'):
 
 # Mailgun integration
 #
-# Temporarily disabling email pending full Mailgun support
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.dummy.EmailBackend')
+if os.environ.get('MAILGUN_API_KEY'):
+    INSTALLED_APPS.append('anymail')  # noqa: F405
+    EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
+    ANYMAIL = {
+        'MAILGUN_API_KEY': os.environ['MAILGUN_API_KEY'],
+        'MAILGUN_SENDER_DOMAIN': os.environ['MAILGUN_SENDER_DOMAIN'],
+    }
+    DEFAULT_FROM_EMAIL = os.environ.get('MAILGUN_FROM_ADDR',
+                                        'webmaster@mg.pressfreedomtracker.us')
 
 # Ensure Django knows its being served over https
 SECURE_PROXY_SSL_HEADER = ('X-Forwarded-Proto', 'https')
