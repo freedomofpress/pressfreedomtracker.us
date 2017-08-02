@@ -129,7 +129,8 @@ class EmailSignup extends PureComponent {
 					)}
 					disabled={state !== INPUT}
 				>
-					{state === LOADING ? <HorizontalLoader /> : 'Sign Up'}
+					{/* extra span below necessary for some weird Safari flexbox behavior */}
+					{state === LOADING ? <HorizontalLoader className="horizontal-loader--centered" /> : <span>Sign Up</span>}
 				</button>
 			</form>
 		)
