@@ -114,5 +114,10 @@ if os.environ.get('PIWIK_DOMAIN_PATH'):
     PIWIK_DOMAIN_PATH = os.environ.get('PIWIK_DOMAIN_PATH')
     PIWIK_SITE_ID = os.environ.get('PIWIK_SITE_ID', '5')
 
+# Mailgun integration
+#
+# Temporarily disabling email pending full Mailgun support
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.dummy.EmailBackend')
+
 # Ensure Django knows its being served over https
 SECURE_PROXY_SSL_HEADER = ('X-Forwarded-Proto', 'https')
