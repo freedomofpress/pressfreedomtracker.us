@@ -24,7 +24,7 @@ class FiltersHeader extends PureComponent {
 				/>
 
 				<button
-					className="filters__button filters__button--no-shrink"
+					className="filters__button filters__button--summary-toggle"
 					onClick={handleToggle}
 				>
 					<SettingsIcon />
