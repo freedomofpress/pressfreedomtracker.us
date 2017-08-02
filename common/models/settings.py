@@ -77,10 +77,18 @@ class SocialSharingSEOSettings(BaseSetting):
                   'scrolling to the bottom'
     )
 
+    twitter = models.CharField(
+        blank=True,
+        null=True,
+        max_length=255,
+        help_text='Your Twitter username'
+    )
+
     panels = [
         FieldPanel('default_description'),
         ImageChooserPanel('default_image'),
         FieldPanel('facebook_page_id'),
+        FieldPanel('twitter'),
     ]
 
     class Meta:

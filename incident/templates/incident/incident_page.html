@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags common_tags %}
 
+{% block meta %}
+	{{ block.super }}
+	<meta property="og:type" content="article" />
+{% endblock %}
+
 {% block maincontainer %}
 <main>
 	{% include 'incident/_incident.html' with incident=page only %}

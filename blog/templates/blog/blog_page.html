@@ -2,6 +2,11 @@
 
 {% load wagtailcore_tags render_as_template %}
 
+{% block meta %}
+	{{ block.super }}
+	<meta property="og:type" content="article" />
+{% endblock %}
+
 {% block main %}
 	<div class="blog-page">
 		{% if page.teaser_image %}
