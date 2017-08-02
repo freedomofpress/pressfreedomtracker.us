@@ -63,8 +63,16 @@ def to_row(obj):
     model = type(obj)
     model_fields = model._meta.get_fields()
 
+    site = obj.get_site()
+
     for field in filter(is_exportable, model_fields):
-        if type(field) == models.ForeignKey:
+        if field.name == 'teaser_image':
+            val = getattr(obj, field.name)
+            if val:
+                val = site.root_url + val.get_rendition('fill-1330x880').url
+        elif field.name == 'slug':
+            val = obj.get_full_url()
+        elif type(field) == models.ForeignKey:
             val = getattr(obj, field.name)
             if val:
                 val = str(val)
