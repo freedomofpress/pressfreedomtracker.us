@@ -99,7 +99,20 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 }
 
 
-FilterSets['Arrest / Detention'] = FilterSets['Arrest/Criminal Charge'] = FilterSets['Arrest / Criminal Charge'] = function({ handleFilterChange, filterValues, choices }) {
+FilterSets['General'].fields = [
+	'search',
+	'date',
+	'affiliation',
+	'city',
+	'state',
+	'targets',
+	'tags',
+	'lawsuit_name',
+	'venue',
+]
+
+
+const arrestSets = function({ handleFilterChange, filterValues, choices }) {
 	return (
 		<FilterSet>
 			<BoolInput
@@ -150,6 +163,18 @@ FilterSets['Arrest / Detention'] = FilterSets['Arrest/Criminal Charge'] = Filter
 		</FilterSet>
 	)
 }
+
+FilterSets['Arrest / Detention'] = FilterSets['Arrest/Criminal Charge'] = FilterSets['Arrest / Criminal Charge'] = arrestSets
+
+arrestSets.fields = [
+	'unnecessary_use_of_force',
+	'arrest_status',
+	'status_of_charges',
+	'charges',
+	'detention_status',
+	'detention_date',
+	'release_date'
+]
 
 
 FilterSets['Border Stop'] = function({ handleFilterChange, filterValues, choices }) {
@@ -238,6 +263,20 @@ FilterSets['Border Stop'] = function({ handleFilterChange, filterValues, choices
 	)
 }
 
+FilterSets['Border Stop'].fields = [
+	'border_point',
+	'stopped_at_border',
+	'stopped_previously',
+	'target_us_citizenship_status',
+	'denial_of_entry',
+	'target_nationality',
+	'did_authorities_ask_for_device_access',
+	'did_authorities_ask_for_social_media_user',
+	'did_authorities_ask_for_social_media_pass',
+	'did_authorities_ask_about_work',
+	'were_devices_searched_or_seized',
+]
+
 
 FilterSets['Denial of Access'] = function({ handleFilterChange, filterValues }) {
 	return (
@@ -253,6 +292,10 @@ FilterSets['Denial of Access'] = function({ handleFilterChange, filterValues }) 
 		</FilterSet>
 	)
 }
+
+FilterSets['Denial of Access'].fields = [
+	'politicians_or_public_figures_involved'
+]
 
 
 FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChange, filterValues, choices }) {
@@ -302,6 +345,13 @@ FilterSets['Equipment Search, Seizure, or Damage'] = function({ handleFilterChan
 	)
 }
 
+FilterSets['Equipment Search, Seizure, or Damage'].fields = [
+	'equipment_seized',
+	'equipment_broken',
+	'status_of_seized_equipment',
+	'is_search_warrant_obtained',
+	'actor',
+]
 
 FilterSets['Leak Case'] = function({ handleFilterChange, filterValues }) {
 	return (
@@ -315,6 +365,10 @@ FilterSets['Leak Case'] = function({ handleFilterChange, filterValues }) {
 		</FilterSet>
 	)
 }
+
+FilterSets['Leak Case'].fields = [
+	"charged_under_espionage_act"
+]
 
 
 FilterSets['Physical Attack'] = function({ handleFilterChange, filterValues, choices }) {
@@ -337,6 +391,11 @@ FilterSets['Physical Attack'] = function({ handleFilterChange, filterValues, cho
 		</FilterSet>
 	)
 }
+
+FilterSets['Physical Attack'].fields = [
+	'assailant',
+	'was_journalist_targeted',
+]
 
 
 FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValues, choices }) {
@@ -414,6 +473,18 @@ FilterSets['Subpoena / Legal Order'] = function({ handleFilterChange, filterValu
 		</FilterSet>
 	)
 }
+
+FilterSets['Subpoena / Legal Order'].fields = [
+		'third_party_in_possession_of_communications',
+		'third_party_business',
+		'legal_order_type',
+		'status_of_prior_restraint',
+		'subpoena_subject',
+		'subpoena_type',
+		'subpoena_status',
+		'held_in_contempt',
+		'detention_status',
+	]
 
 
 export default FilterSets
