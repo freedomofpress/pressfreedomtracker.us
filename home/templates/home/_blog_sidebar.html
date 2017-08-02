@@ -3,7 +3,7 @@
 {% if page.blog_index_page %}
 <section class="blog-sidebar">
 	{% include "common/_section_heading.html" with label=label %}
-	{% for page in page.blog_index_page.get_children.live.reverse|slice:":4" %}
+	{% for page in page.blog_index_page.get_posts|slice:":4" %}
 		{% include "blog/_blog_tease.html" with location="homepage" page=page.specific %}
 	{% endfor %}
 

@@ -42,13 +42,16 @@ class BlogIndexPage(Page):
         index.SearchField('body'),
     ]
 
+    def get_posts(self):
+        return BlogPage.objects.child_of(self)\
+                       .live()\
+                       .order_by('-publication_datetime')
+
     def get_context(self, request):
         context = super(BlogIndexPage, self).get_context(request)
 
         post_filters = BlogFilter.from_querystring(request.GET)
-        entry_qs = post_filters.filter(
-            BlogPage.objects.child_of(self).live()
-        ).order_by('-publication_datetime')
+        entry_qs = post_filters.filter(self.get_posts())
 
         if post_filters.author:
             context['author_filter'] = PersonPage.objects.get(pk=post_filters.author)
