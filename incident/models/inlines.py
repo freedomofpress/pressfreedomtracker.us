@@ -33,6 +33,9 @@ class IncidentPageUpdates(Orderable):
         StreamFieldPanel('body'),
     ]
 
+    def __str__(self):
+        return '({}) {}'.format(self.date, self.title)
+
 
 class IncidentCategorization(Orderable):
     incident_page = ParentalKey('incident.IncidentPage', related_name='categories')
