@@ -27,11 +27,17 @@
 						{% for fact in page.quick_facts.all %}
 							{% if fact.link_url %}
 								<li class="quickfacts__item">
-									<a class="quickfacts__link" href="{{ fact.link_url }}">{{ fact.body|richtext_inline }}</a></li>
+									<a class="quickfacts__link" href="{{ fact.link_url }}">
+										{% filter richtext_inline %}
+											{% render_as_template fact.body %}
+										{% endfilter %}
+									</a>
 								</li>
 							{% else %}
 								<li class="quickfacts__item">
-									{{ fact.body|richtext_inline }}
+									{% filter richtext_inline %}
+										{% render_as_template fact.body %}
+									{% endfilter %}
 								</li>
 							{% endif %}
 						{% endfor %}

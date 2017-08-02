@@ -6,6 +6,7 @@ from common.models.pages import CategoryPage
 from incident.models.incident_page import IncidentPage
 from incident.tests.test_filtering import create_incident_filter
 from statistics.registry import Statistics
+from statistics.utils import ARREST_ID
 
 
 register = template.Library()
@@ -99,13 +100,9 @@ def num_arrests(year=None, pending_charges=False, dropped_charges=False):
     charges (default False)
 
     """
-    print('pend', pending_charges, type(pending_charges))
-    print('year', year)
     incidents = IncidentPage.objects.filter(
         live=True,
-        # This is merely one way of determining if an incident is of
-        # type "arrest" and there may be other, more accurate ways.
-        arrest_status__isnull=False,
+        categories__category=ARREST_ID
     )
     if year:
         incidents = incidents.filter(date__year=year)
