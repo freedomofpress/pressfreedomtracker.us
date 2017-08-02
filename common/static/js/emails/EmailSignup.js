@@ -57,7 +57,7 @@ class EmailSignup extends PureComponent {
 
 		axios.post(
 			'/emails/create/',
-			`email_address=${this.state.emailAddress}`
+			`email_address=${encodeURIComponent(this.state.emailAddress)}`
 		).then(handleResolve, handleReject)
 	}
 
