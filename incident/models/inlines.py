@@ -49,6 +49,12 @@ class IncidentPageLinks(Orderable):
     url = models.URLField(null=False, blank=False)
     publication = models.CharField(max_length=255, null=True, blank=True)
 
+    def __str__(self):
+        value = '{} ({})'.format(self.title, self.url)
+        if self.publication:
+            value += ' via {}'.format(self.publication)
+        return value
+
 
 class EquipmentSeized(models.Model):
     incident = ParentalKey(
