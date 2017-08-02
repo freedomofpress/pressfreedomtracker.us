@@ -1,6 +1,6 @@
-from inspect import signature
 from django import forms
 from django.db import models
+from django.template import Template, Context
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page, Orderable
@@ -24,7 +24,7 @@ from common.blocks import (
 )
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.utils import DEFAULT_PAGE_KEY, paginate
-from statistics.registry import get_numbers_choices, get_numbers
+from statistics.registry import get_numbers_choices
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -213,18 +213,9 @@ class CategoryPage(Page):
         else:
             context['layout_template'] = 'base.html'
 
-        def evaluate_statistic(name, params):
-            fn = get_numbers()[name]
-            param_count = len(signature(fn).parameters)
-            if params:
-                args = params.split()[:param_count]
-                return fn(*args)
-            elif param_count == 0:
-                return fn()
-            else:
-                # This means number of parameters given does not match
-                # the number expected by the function.
-                return ''
+        def evaluate_number_statistic(name, params):
+            ttag = '{{% {name} {params} %}}'.format(name=name, params=params)
+            return Template(ttag).render(Context())
 
         # Check for the presence of non-'page' querystring values
         filters = dict(request.GET)
@@ -237,7 +228,7 @@ class CategoryPage(Page):
         context['data_items'] = [
             {
                 'label': item.label,
-                'value': evaluate_statistic(item.data_point, item.params),
+                'value': evaluate_number_statistic(item.data_point, item.params),
             } for item in self.data_items.all()
         ]
         return context
