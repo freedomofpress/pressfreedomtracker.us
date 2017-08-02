@@ -1,6 +1,7 @@
 from django.db import models
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalManyToManyField
 
 
 EXCLUDED_FIELDS = (
@@ -59,7 +60,7 @@ def to_row(obj):
             val = getattr(obj, field.name)
             if val:
                 val = str(val)
-        elif type(field) in (models.ManyToManyField, models.ManyToOneRel, ClusterTaggableManager):
+        elif type(field) in (models.ManyToManyField, models.ManyToOneRel, ClusterTaggableManager, ParentalManyToManyField):
             val = u', '.join(
                 [humanize(item) for item in getattr(obj, field.name).all()]
             )
