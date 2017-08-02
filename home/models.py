@@ -13,11 +13,12 @@ from wagtail.wagtailcore.models import Page, Orderable
 from modelcluster.fields import ParentalKey
 
 from common.choices import CATEGORY_COLOR_CHOICES
+from common.models import MetadataPageMixin
 from incident.models.choices import get_filter_choices
 from incident.utils.incident_filter import IncidentFilter
 
 
-class HomePage(Page):
+class HomePage(MetadataPageMixin, Page):
     about = RichTextField(
         blank=True,
         null=True,

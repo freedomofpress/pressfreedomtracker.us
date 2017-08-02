@@ -6,13 +6,14 @@ from wagtail.wagtailcore.models import Page
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
+from common.models import MetadataPageMixin
 from incident.models.choices import get_filter_choices
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
 from incident.utils.incident_filter import IncidentFilter
 
 
-class IncidentIndexPage(RoutablePageMixin, Page):
+class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     content_panels = Page.content_panels
 
     subpage_types = ['incident.IncidentPage']

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'wagtailmetadata',
     'webpack_loader',
 
     'django.contrib.admin',

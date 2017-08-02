@@ -1,6 +1,8 @@
 from django import forms
 from django.db import models
 from django.template import Template, Context
+from django.utils.html import strip_tags
+from django.template.defaultfilters import truncatewords
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page, Orderable
@@ -9,6 +11,7 @@ from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
+from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
@@ -59,6 +62,42 @@ class BaseSidebarPageMixin(models.Model):
             return self.get_parent().specific.get_sidebar_menu()
         except AttributeError:
             return None
+
+    class Meta:
+        abstract = True
+
+
+class MetadataPageMixin(OriginalMetadataPageMixin):
+    "Provide defaults for metadate for pages in this application"
+
+    def _get_ssssettings(self):
+        # Imported here to avoid circular dependency
+        from common.models.settings import SocialSharingSEOSettings
+        return SocialSharingSEOSettings.for_site(self.get_site())
+
+    def get_meta_description(self):
+        """
+        Return either the search_description set on the page or the
+        default description set for the site
+        """
+
+        if self.search_description:
+            return self.search_description
+
+        ssssettings = self._get_ssssettings()
+        return ssssettings.default_description
+
+    def get_meta_image(self):
+        """
+        Return either the search_image set on the page or the
+        default image set for the site
+        """
+
+        if self.search_image:
+            return self.search_image
+
+        ssssettings = self._get_ssssettings()
+        return ssssettings.default_image
 
     class Meta:
         abstract = True
@@ -161,7 +200,7 @@ class TaxonomyCategoryPage(Orderable):
     ]
 
 
-class CategoryPage(Page):
+class CategoryPage(MetadataPageMixin, Page):
     methodology = RichTextField(null=True, blank=True)
     plural_name = models.CharField(max_length=255, null=True, blank=True)
     page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
@@ -234,7 +273,7 @@ class CategoryPage(Page):
         return context
 
 
-class SimplePage(Page):
+class SimplePage(MetadataPageMixin, Page):
     body = StreamField([
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', AlignedCaptionedImageBlock()),
@@ -278,8 +317,17 @@ class SimplePage(Page):
 
         return context
 
+    def get_meta_description(self):
+        if self.search_description:
+            return self.search_description
 
-class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
+        return truncatewords(
+            strip_tags(self.body.render_as_block()),
+            20
+        )
+
+
+class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
     body = StreamField([
         ('text', StyledTextBlock(label='Text')),
         ('image', AlignedCaptionedImageBlock()),
@@ -305,6 +353,15 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
     search_fields = Page.search_fields + [
         index.SearchField('body'),
     ]
+
+    def get_meta_description(self):
+        if self.search_description:
+            return self.search_description
+
+        return truncatewords(
+            strip_tags(self.body.render_as_block()),
+            20
+        )
 
 
 class CommonTag(ClusterableModel):

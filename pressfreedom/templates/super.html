@@ -1,4 +1,4 @@
-{% load static %}
+{% load static wagtailmetadata_tags wagtailsettings_tags %}
 {% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
@@ -27,6 +27,19 @@
 
 			{% block css %}
 			{% render_bundle 'common' 'css' %}
+			{% endblock %}
+
+			{% block meta %}
+				{% meta_tags %}
+				{% get_settings %}
+				{% with seo_settings=settings.common.SocialSharingSEOSettings %}
+					{% if seo_settings.twitter %}
+						<meta name="twitter:site" content="@{{ seo_settings.twitter }}">
+					{% endif %}
+					{% if seo_settings.facebook_page_id %}
+						<meta property="fb:pages" content="{{ seo_settings.facebook_page_id }}">
+					{% endif %}
+				{% endwith %}
 			{% endblock %}
 
 			<!--[if lte IE 11]>
