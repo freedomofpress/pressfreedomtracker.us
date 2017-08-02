@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.cache import patch_cache_control
+from django.utils.html import strip_tags
+from django.template.defaultfilters import truncatewords
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel, StreamFieldPanel
 from wagtail.wagtailcore import blocks
@@ -13,7 +15,7 @@ from common.utils import DEFAULT_PAGE_KEY, paginate
 
 from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
-from common.models import PersonPage, OrganizationPage
+from common.models import PersonPage, OrganizationPage, MetadataPageMixin
 from common.blocks import (
     Heading1,
     Heading2,
@@ -25,7 +27,7 @@ from common.blocks import (
 )
 
 
-class BlogIndexPage(Page):
+class BlogIndexPage(MetadataPageMixin, Page):
     body = StreamField([
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
@@ -95,7 +97,7 @@ class BlogIndexPage(Page):
         return response
 
 
-class BlogPage(Page):
+class BlogPage(MetadataPageMixin, Page):
     publication_datetime = models.DateTimeField(
         help_text='Past or future date of publication'
     )
@@ -178,3 +180,18 @@ class BlogPage(Page):
         index.SearchField('teaser_text'),
         index.FilterField('publication_datetime'),
     ]
+
+    def get_meta_image(self):
+        return self.teaser_image or super(BlogPage, self).get_meta_image()
+
+    def get_meta_description(self):
+        if self.teaser:
+            return strip_tags(self.teaser)
+
+        if self.search_description:
+            return self.search_description
+
+        return truncatewords(
+            strip_tags(self.body.render_as_block()),
+            20
+        )

@@ -8,6 +8,7 @@ from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailforms.models import AbstractFormField
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
+from common.models import MetadataPageMixin
 from common.edit_handlers import HelpPanel
 
 
@@ -15,7 +16,7 @@ class FormField(AbstractFormField):
     page = ParentalKey('FormPage', related_name='form_fields')
 
 
-class FormPage(WagtailCaptchaEmailForm):
+class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
     button_text = models.CharField(

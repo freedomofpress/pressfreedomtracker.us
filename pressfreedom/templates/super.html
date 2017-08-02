@@ -1,4 +1,4 @@
-{% load static %}
+{% load static wagtailmetadata_tags %}
 {% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
@@ -30,10 +30,7 @@
 			{% endblock %}
 
 			{% block meta %}
-				<meta property="og:url" content="{{ self.full_url }}" />
-
-				<meta property="og:title" content="{% firstof self.seo_title self.title %}" />
-				<meta name="twitter:title" content="{% firstof self.seo_title self.title %}" />
+				{% meta_tags %}
 			{% endblock %}
 
 			<!--[if lte IE 11]>

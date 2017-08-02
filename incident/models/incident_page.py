@@ -1,6 +1,8 @@
 import datetime
 
 from django.db import models
+from django.utils.html import strip_tags
+from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel,
@@ -17,12 +19,13 @@ from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
 from common.blocks import RichTextBlockQuoteBlock, AlignedCaptionedEmbedBlock
+from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.circuits import CIRCUITS_BY_STATE
 from statistics.blocks import StatisticsBlock
 
 
-class IncidentPage(Page):
+class IncidentPage(MetadataPageMixin, Page):
     date = models.DateField()
 
     exact_date_unknown = models.BooleanField(
@@ -574,3 +577,18 @@ class IncidentPage(Page):
                 if state == self.state.name:
                     return circuit
         return None
+
+    def get_meta_image(self):
+        return self.teaser_image or super(IncidentPage, self).get_meta_image()
+
+    def get_meta_description(self):
+        if self.teaser:
+            return strip_tags(self.teaser)
+
+        if self.search_description:
+            return self.search_description
+
+        return truncatewords(
+            strip_tags(self.body.render_as_block()),
+            20
+        )
