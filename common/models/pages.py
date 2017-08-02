@@ -1,6 +1,8 @@
 from django import forms
 from django.db import models
 from django.template import Template, Context
+from django.utils.html import strip_tags
+from django.template.defaultfilters import truncatewords
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page, Orderable
@@ -199,7 +201,7 @@ class TaxonomyCategoryPage(Orderable):
     ]
 
 
-class CategoryPage(Page):
+class CategoryPage(MetadataPageMixin, Page):
     methodology = RichTextField(null=True, blank=True)
     plural_name = models.CharField(max_length=255, null=True, blank=True)
     page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
@@ -272,7 +274,7 @@ class CategoryPage(Page):
         return context
 
 
-class SimplePage(Page):
+class SimplePage(MetadataPageMixin, Page):
     body = StreamField([
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', AlignedCaptionedImageBlock()),
@@ -316,8 +318,17 @@ class SimplePage(Page):
 
         return context
 
+    def get_meta_description(self):
+        if self.search_description:
+            return self.search_description
 
-class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
+        return truncatewords(
+            strip_tags(self.body.render_as_block()),
+            20
+        )
+
+
+class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
     body = StreamField([
         ('text', StyledTextBlock(label='Text')),
         ('image', AlignedCaptionedImageBlock()),
@@ -344,6 +355,14 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, Page):
         index.SearchField('body'),
     ]
 
+    def get_meta_description(self):
+        if self.search_description:
+            return self.search_description
+
+        return truncatewords(
+            strip_tags(self.body.render_as_block()),
+            20
+        )
 
 class CommonTag(ClusterableModel):
     @classmethod

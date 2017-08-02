@@ -96,6 +96,12 @@ class BlogIndexPage(MetadataPageMixin, Page):
             )
         return response
 
+    def get_meta_description(self):
+        return truncatewords(
+            strip_tags(self.body.render_as_block()),
+            20
+        )
+
 
 class BlogPage(MetadataPageMixin, Page):
     publication_datetime = models.DateTimeField(
@@ -185,8 +191,8 @@ class BlogPage(MetadataPageMixin, Page):
         return self.teaser_image or super(BlogPage, self).get_meta_image()
 
     def get_meta_description(self):
-        if self.teaser:
-            return strip_tags(self.teaser)
+        if self.teaser_text:
+            return strip_tags(self.teaser_text)
 
         if self.search_description:
             return self.search_description
