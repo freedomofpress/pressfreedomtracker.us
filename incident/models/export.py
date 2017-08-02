@@ -23,6 +23,14 @@ EXCLUDED_FIELDS = (
     'view_restrictions',
     'redirect',
     'sites_rooted_here',
+    'owner',
+    'seo_title',
+    'show_in_menus',
+    'search_description',
+    'expire_at',
+    'expired',
+    'live_revision',
+    'search_image',
 )
 
 
