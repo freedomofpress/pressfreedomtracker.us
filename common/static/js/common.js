@@ -15,3 +15,4 @@ import '~/infinitescrolling'
 window.React = require('react')
 window.ReactDOM = require('react-dom')
 window.IncidentFiltering = require('~/filtering/IncidentFiltering')
+window.EmailSignup = require('~/emails/EmailSignup')

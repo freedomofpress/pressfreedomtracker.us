@@ -1,0 +1,98 @@
+.emails-signup
+	$input-font-size: 1.9em
+	$error-color: lighten($user-red, 10%)
+	$form-bg: $purple
+	$form-fg: $white
+	$message-bg: $user-teal
+	$message-fg: $white
+
+	+flex-stretch
+	min-height: 18.5em
+	width: 50%
+
+	@media (max-width: $small-screen)
+		width: 100%
+
+	&__message
+		+flex-center-center-column
+		padding: 0 20%
+
+		background-color: $message-bg
+		color: $message-fg
+
+		text-align: center
+		font-size: 1.5em
+
+	&__text
+		margin: 0
+
+	&__form
+		+flex-vertically-centered-column
+		padding: 1.9em
+
+		background-color: $form-bg
+		color: $form-fg
+
+	&__title
+		margin: 0 10% 5%
+
+		font-size: 1.7em
+		font-weight: 300
+		text-align: center
+
+	&__button
+		+uppercase
+		width: 40%
+		height: 3em
+		border-width: 1px
+		border-style: solid
+		border-color: white
+
+		background-color: transparent
+		color: white
+		letter-spacing: 1px
+		font-weight: 300
+		text-align: center
+		line-height: 1
+
+		&:hover,
+		&:active,
+		&:focus
+			background-color: white
+			color: $purple
+
+		&--loading,
+		&--loading:hover,
+		&--loading:active,
+		&--loading:focus
+			background-color: transparent
+			color: $white
+
+	&__input-container
+		display: block
+		width: 100%
+		padding: 0 1em
+
+	&__input
+		width: 100%
+		border-width: 0
+		border-bottom-width: 1px
+
+		background-color: transparent
+		color: white
+		font-size: $input-font-size
+		font-weight: 300
+		text-align: center
+
+		&::placeholder
+			color: rgba(255, 255, 255, 0.6)
+
+		&--error
+			border-color: $error-color
+
+	&__error
+		display: block
+		height: $input-font-size * 1.6
+
+		color: $error-color
+		line-height: 1.6

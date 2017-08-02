@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'styleguide',
     'dashboard',
     'home',
+    'emails',
 
     'analytical',
 
     'wagtail.contrib.settings',
     'wagtail.contrib.wagtailroutablepage',
+    'wagtail.contrib.modeladmin',
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
     'wagtail.wagtailembeds',
