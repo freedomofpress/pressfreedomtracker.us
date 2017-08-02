@@ -77,7 +77,7 @@ class EquipmentSeized(models.Model):
 
     @property
     def summary(self):
-        return '{0.equipment}: count of {0.quantity}'
+        return '{0.equipment}: count of {0.quantity}'.format(self)
 
 
 class EquipmentBroken(models.Model):
@@ -98,4 +98,4 @@ class EquipmentBroken(models.Model):
 
     @property
     def summary(self):
-        return '{0.equipment}: count of {0.quantity}'
+        return '{0.equipment}: count of {0.quantity}'.format(self)
