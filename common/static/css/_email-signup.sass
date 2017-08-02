@@ -6,6 +6,7 @@
 	$message-bg: $user-teal
 	$message-fg: $white
 
+	+flex-stretch
 	min-height: 18.5em
 	width: 50%
 
@@ -14,7 +15,6 @@
 
 	&__message
 		+flex-center-center-column
-		height: 100%
 		padding: 0 20%
 
 		background-color: $message-bg
@@ -28,7 +28,6 @@
 
 	&__form
 		+flex-vertically-centered-column
-		height: 100%
 		padding: 1.9em
 
 		background-color: $form-bg
