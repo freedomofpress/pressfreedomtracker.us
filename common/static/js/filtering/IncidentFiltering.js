@@ -84,10 +84,6 @@ class IncidentFiltering extends PureComponent {
 					.map(n => { return { id: parseInt(n) } })
 			} else if (AUTOCOMPLETE_SINGLE_FILTERS.includes(key)) {
 				var value = { id: parseInt(params[key]) }
-			} else if (params[key] === 'True') {
-				var value = true
-			} else if (params[key] === 'False') {
-				var value = false
 			} else {
 				var value = params[key]
 			}
@@ -107,8 +103,6 @@ class IncidentFiltering extends PureComponent {
 	formatValue(value, key) {
 		if (isMoment(value)) {
 			return value.format(DATE_FORMAT)
-		} else if (typeof value === 'boolean') {
-			return value ? 'True' : 'False'
 		} else if (AUTOCOMPLETE_MULTI_FILTERS.includes(key)) {
 			return value.map(({ id }) => id).join(',')
 		} else if (AUTOCOMPLETE_SINGLE_FILTERS.includes(key)) {
