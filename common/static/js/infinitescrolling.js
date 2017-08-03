@@ -81,10 +81,14 @@ class InfiniteScroller {
 		if (replace) {
 			this.parentElm.parentNode.replaceChild(parentElm, this.parentElm)
 			this.parentElm = parentElm
-			// If we're doing a replacement, we also might have a new stats table to replace
+			// If we're doing a replacement, we also might have a new stats table and methodologies to replace
 			const summaryTable = document.querySelector('.js-summary-table')
 			const newSummaryTable = tempElm.querySelector('.js-summary-table')
 			summaryTable.innerHTML = newSummaryTable.innerHTML
+
+			const methodologies = document.querySelector('.js-methodologies')
+			const newMethodologies = tempElm.querySelector('.js-methodologies')
+			methodologies.innerHTML = newMethodologies.innerHTML
 		} else {
 			this.parentElm.appendChild(fragment)
 		}
