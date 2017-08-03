@@ -48,7 +48,7 @@ ARREST_FIELDS = [
     },
     {
         'name': 'unnecessary_use_of_force',
-        'category_slug': 'arrest-detention',
+        'category_slug': 'arrest-criminal-charge',
         'type': 'bool'
     }
 ]
@@ -96,7 +96,7 @@ LEAK_PROSECUTIONS_FIELDS = [
     {
         'name': 'charged_under_espionage_act',
         'type': 'bool',
-        'category_slug': 'leak-prosecutions',
+        'category_slug': 'leak-case',
     }
 ]
 
@@ -115,12 +115,12 @@ BORDER_STOP_FIELDS = [
     {
         'name': 'stopped_at_border',
         'type': 'bool',
-        'category_slug': 'border-stop-denial-of-entry',
+        'category_slug': 'border-stop',
     },
     {
         'name': 'stopped_previously',
         'type': 'bool',
-        'category_slug': 'border-stop-denial-of-entry',
+        'category_slug': 'border-stop',
     },
     {
         'name': 'target_us_citizenship_status',
@@ -130,7 +130,7 @@ BORDER_STOP_FIELDS = [
     {
         'name': 'denial_of_entry',
         'type': 'bool',
-        'category_slug': 'border-stop-denial-of-entry',
+        'category_slug': 'border-stop',
     },
     {
         'name': 'target_nationality',
