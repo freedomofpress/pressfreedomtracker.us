@@ -1,6 +1,7 @@
 from django.db import models
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalManyToManyField
 
 
 EXCLUDED_FIELDS = (
@@ -22,6 +23,14 @@ EXCLUDED_FIELDS = (
     'view_restrictions',
     'redirect',
     'sites_rooted_here',
+    'owner',
+    'seo_title',
+    'show_in_menus',
+    'search_description',
+    'expire_at',
+    'expired',
+    'live_revision',
+    'search_image',
 )
 
 
@@ -54,12 +63,20 @@ def to_row(obj):
     model = type(obj)
     model_fields = model._meta.get_fields()
 
+    site = obj.get_site()
+
     for field in filter(is_exportable, model_fields):
-        if type(field) == models.ForeignKey:
+        if field.name == 'teaser_image':
+            val = getattr(obj, field.name)
+            if val:
+                val = site.root_url + val.get_rendition('fill-1330x880').url
+        elif field.name == 'slug':
+            val = obj.get_full_url()
+        elif type(field) == models.ForeignKey:
             val = getattr(obj, field.name)
             if val:
                 val = str(val)
-        elif type(field) in (models.ManyToManyField, models.ManyToOneRel, ClusterTaggableManager):
+        elif type(field) in (models.ManyToManyField, models.ManyToOneRel, ClusterTaggableManager, ParentalManyToManyField):
             val = u', '.join(
                 [humanize(item) for item in getattr(obj, field.name).all()]
             )

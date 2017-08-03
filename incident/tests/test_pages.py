@@ -78,8 +78,12 @@ class TestExportPage(TestCase):
 
     def test_export_should_include_incidents_only_live_incidents(self):
         """should include only live incidents."""
-        inc = IncidentPageFactory(title='Live incident')
-        IncidentPageFactory(title='Unpublished incident', live=False)
+        inc = IncidentPageFactory(parent=self.index, title='Live incident')
+        IncidentPageFactory(
+            parent=self.index,
+            title='Unpublished incident',
+            live=False
+        )
         response = self.client.get(
             '/incidents/export/'
         )

@@ -33,6 +33,9 @@ class IncidentPageUpdates(Orderable):
         StreamFieldPanel('body'),
     ]
 
+    def __str__(self):
+        return '({}) {}'.format(self.date, self.title)
+
 
 class IncidentCategorization(Orderable):
     incident_page = ParentalKey('incident.IncidentPage', related_name='categories')
@@ -48,6 +51,12 @@ class IncidentPageLinks(Orderable):
     title = models.CharField(max_length=255, null=False, blank=False)
     url = models.URLField(null=False, blank=False)
     publication = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        value = '{} ({})'.format(self.title, self.url)
+        if self.publication:
+            value += ' via {}'.format(self.publication)
+        return value
 
 
 class EquipmentSeized(models.Model):
@@ -68,7 +77,7 @@ class EquipmentSeized(models.Model):
 
     @property
     def summary(self):
-        return '{0.equipment}: count of {0.quantity}'
+        return '{0.equipment}: count of {0.quantity}'.format(self)
 
 
 class EquipmentBroken(models.Model):
@@ -89,4 +98,4 @@ class EquipmentBroken(models.Model):
 
     @property
     def summary(self):
-        return '{0.equipment}: count of {0.quantity}'
+        return '{0.equipment}: count of {0.quantity}'.format(self)
