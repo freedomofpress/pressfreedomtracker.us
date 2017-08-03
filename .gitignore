@@ -11,6 +11,7 @@ webpack-stats.json
 # Do not make a bundles/ ignore line ;-)
 /common/static/js/bundles/
 /common/static/bundles/
+/build/static/bundles/
 .manage_cmds_ran/
 logs/
 

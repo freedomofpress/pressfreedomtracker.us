@@ -1,3 +1,3 @@
 import classlist from 'classlist-polyfill'
-import '../css/base.sass'
+import '../sass/base.sass'
 import './autocomplete'
