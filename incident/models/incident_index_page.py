@@ -61,9 +61,12 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['filter_choices'] = get_filter_choices()
         context['export_path'] = self.url
 
-        category_ids = validate_integer_list(request.GET.get('categories').split(','))
+        category_ids = validate_integer_list(request.GET.get('categories', '').split(','))
 
-        context['categories'] = CategoryPage.objects.filter(pk__in=category_ids)
+        if len(category_ids) == 0:
+            context['categories'] = CategoryPage.objects.live()
+        else:
+            context['categories'] = CategoryPage.objects.filter(live=True, pk__in=category_ids)
 
         summary, entry_qs = incident_filter.fetch()
 
