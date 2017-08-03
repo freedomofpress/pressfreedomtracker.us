@@ -123,18 +123,15 @@ export function TextInput({ handleFilterChange, filterValues, label, filter }) {
 }
 
 
-export function BoolInput({ handleFilterChange, filterValues, label, filter }) {
+export function BoolInput(props) {
 	return (
-		<div className="filters__input-row">
-			<span className="filters__input-label">{label}</span>
-			<span>
-				<input
-					type="checkbox"
-					onChange={handleFilterChange.bind(null, filter)}
-					checked={filterValues[filter] || false}
-				/>
-			</span>
-		</div>
+		<RadioPillInput
+			options={[
+				{ label: 'Yes', value: 'True' },
+				{ label: 'No', value: 'False' },
+			]}
+			{...props}
+		/>
 	)
 }
 
