@@ -1,8 +1,8 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from wagtail.contrib.wagtailfrontendcache.utils import purge_page_from_cache
 
 from common.models import CategoryPage
-from incident.models import IncidentPage
+from incident.models import IncidentPage, IncidentIndexPage
 
 
 def purge_incident_from_frontend_cache_for_category(
@@ -37,11 +37,31 @@ def purge_incident_from_frontend_cache_for_incident(
         )
 
 
+def purge_incident_index_from_frontend_cache(**kwargs):
+    for incident_index_page in IncidentIndexPage.objects.live():
+        purge_page_from_cache(incident_index_page)
+
+
+# IncidentPage cache
 post_save.connect(
     purge_incident_from_frontend_cache_for_category,
     sender=CategoryPage
 )
 post_save.connect(
     purge_incident_from_frontend_cache_for_incident,
+    sender=IncidentPage
+)
+
+# IncidentIndexPage cache
+post_save.connect(
+    purge_incident_index_from_frontend_cache,
+    sender=CategoryPage
+)
+post_save.connect(
+    purge_incident_index_from_frontend_cache,
+    sender=IncidentPage
+)
+post_delete.connect(
+    purge_incident_index_from_frontend_cache,
     sender=IncidentPage
 )
