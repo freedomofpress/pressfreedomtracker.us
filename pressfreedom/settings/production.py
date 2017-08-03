@@ -99,6 +99,7 @@ else:
 # Cloudflare caching
 #
 if os.environ.get('CLOUDFLARE_TOKEN') and os.environ.get('CLOUDFLARE_EMAIL'):
+    INSTALLED_APPS.append('wagtail.contrib.wagtailfrontendcache')  # noqa: F405
     WAGTAILFRONTENDCACHE = {
         'cloudflare': {
             'BACKEND': 'wagtail.contrib.wagtailfrontendcache.backends.CloudflareBackend',
