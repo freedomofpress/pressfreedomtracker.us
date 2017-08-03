@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from wagtail.contrib.wagtailfrontendcache.utils import purge_page_from_cache
 
 from common.models import CategoryPage
@@ -21,3 +21,8 @@ post_save.connect(purge_homepage_from_frontend_cache, sender=IncidentPage)
 post_save.connect(purge_homepage_from_frontend_cache, sender=IncidentIndexPage)
 post_save.connect(purge_homepage_from_frontend_cache, sender=BlogPage)
 post_save.connect(purge_homepage_from_frontend_cache, sender=BlogIndexPage)
+post_delete.connect(purge_homepage_from_frontend_cache, sender=CategoryPage)
+post_delete.connect(purge_homepage_from_frontend_cache, sender=IncidentPage)
+post_delete.connect(purge_homepage_from_frontend_cache, sender=IncidentIndexPage)
+post_delete.connect(purge_homepage_from_frontend_cache, sender=BlogPage)
+post_delete.connect(purge_homepage_from_frontend_cache, sender=BlogIndexPage)

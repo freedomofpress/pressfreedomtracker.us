@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from wagtail.contrib.wagtailfrontendcache.utils import purge_page_from_cache
 
 from common.models import CategoryPage, SimplePage
@@ -23,9 +23,13 @@ def purge_simple_page_from_frontend_cache(**kwargs):
 
 
 post_save.connect(purge_category_from_frontend_cache, sender=IncidentPage)
+post_delete.connect(purge_category_from_frontend_cache, sender=IncidentPage)
 
 # Some simple pages have sidebar content from incidents,
 # blogs, and the homepage
 post_save.connect(purge_simple_page_from_frontend_cache, sender=IncidentPage)
 post_save.connect(purge_simple_page_from_frontend_cache, sender=BlogPage)
 post_save.connect(purge_simple_page_from_frontend_cache, sender=HomePage)
+post_delete.connect(purge_simple_page_from_frontend_cache, sender=IncidentPage)
+post_delete.connect(purge_simple_page_from_frontend_cache, sender=BlogPage)
+post_delete.connect(purge_simple_page_from_frontend_cache, sender=HomePage)
