@@ -1,7 +1,9 @@
 import csv
 
+from django.db import models
 from django.http import StreamingHttpResponse
 from django.utils.cache import patch_cache_control
+from wagtail.wagtailadmin.edit_handlers import FieldPanel
 from wagtail.wagtailcore.models import Page
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
@@ -13,10 +15,21 @@ from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
 from incident.utils.incident_filter import IncidentFilter
 from incident.utils.validators import validate_integer_list
+from incident.feeds import IncidentIndexPageFeed
 
 
 class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
+
+    feed_limit = models.PositiveIntegerField(
+        default=1000,
+        help_text='Maximum number of incidents to be included in the'
+                  'syndication feed. 0 for unlimited.'
+    )
+
     content_panels = Page.content_panels
+    settings_panels = Page.settings_panels + [
+        FieldPanel('feed_limit')
+    ]
 
     subpage_types = ['incident.IncidentPage']
 
@@ -43,6 +56,10 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename="incidents.csv"'
         return response
+
+    @route(r'^feed/$')
+    def feed(self, request):
+        return IncidentIndexPageFeed(self)(request)
 
     def get_incidents(self):
         """Returns all published incident pages"""
