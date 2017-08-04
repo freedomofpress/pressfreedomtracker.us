@@ -188,9 +188,12 @@ class StatBox(Orderable):
         on_delete=models.SET_NULL,
         related_name='+',
     )
+    external_link = models.URLField(null=True, blank=True, help_text="This link will not be used if there is an internal link set.")
+
     panels = [
         FieldPanel('value'),
         FieldPanel('label'),
         FieldPanel('color'),
-        PageChooserPanel('internal_link')
+        PageChooserPanel('internal_link'),
+        FieldPanel('external_link'),
     ]
