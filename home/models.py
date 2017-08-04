@@ -181,7 +181,7 @@ class StatBox(Orderable):
         max_length=255,
         choices=CATEGORY_COLOR_CHOICES,
     )
-    link = models.ForeignKey(
+    internal_link = models.ForeignKey(
         'wagtailcore.Page',
         blank=True,
         null=True,
@@ -192,5 +192,5 @@ class StatBox(Orderable):
         FieldPanel('value'),
         FieldPanel('label'),
         FieldPanel('color'),
-        PageChooserPanel('link')
+        PageChooserPanel('internal_link')
     ]
