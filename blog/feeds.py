@@ -1,16 +1,15 @@
-from mimetypes import guess_type
 from django.contrib.syndication.views import Feed
 from common.feeds import MRSSFeed
 
 
-class IncidentIndexPageFeed(Feed):
-    "A feed for IncidentPages that are children of an IncidentIndexPage"
+class BlogIndexPageFeed(Feed):
+    "A feed for BlogPages that are children of a BlogIndexPage"
 
     feed_type = MRSSFeed
 
-    def __init__(self, incident_index_page, *args, **kwargs):
-        self.incident_index_page = incident_index_page
-        super(IncidentIndexPageFeed, self).__init__(*args, **kwargs)
+    def __init__(self, blog_index_page, *args, **kwargs):
+        self.blog_index_page = blog_index_page
+        super(BlogIndexPageFeed, self).__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
         if obj.teaser_image:
@@ -22,37 +21,37 @@ class IncidentIndexPageFeed(Feed):
 
     def _get_complete_url(self, path):
         return ''.join([
-            self.incident_index_page.get_site().root_url,
+            self.blog_index_page.get_site().root_url,
             path
         ])
 
     def title(self):
         return '{}: {}'.format(
-            self.incident_index_page.get_site().site_name,
-            self.incident_index_page.title
+            self.blog_index_page.get_site().site_name,
+            self.blog_index_page.title
         )
 
     def link(self):
-        return self._get_complete_url(self.incident_index_page.url)
+        return self._get_complete_url(self.blog_index_page.url)
 
     def description(self):
-        return self.incident_index_page.search_description
+        return self.blog_index_page.search_description
 
     def feed_url(self):
         return self._get_complete_url(
-            self.incident_index_page.reverse_subpage('feed')
+            self.blog_index_page.reverse_subpage('feed')
         )
 
     def feed_guid(self):
         return self.feed_url()
 
     def items(self):
-        incidents = self.incident_index_page.get_incidents()
+        posts = self.blog_index_page.get_posts()
 
-        if self.incident_index_page.feed_limit != 0:
-            return incidents[:self.incident_index_page.feed_limit]
+        if self.blog_index_page.feed_limit != 0:
+            return posts[:self.blog_index_page.feed_limit]
 
-        return incidents
+        return posts
 
     def item_title(self, obj):
         return obj.title
@@ -73,10 +72,6 @@ class IncidentIndexPageFeed(Feed):
 
     def item_updatedate(self, obj):
         return obj.last_published_at
-
-    def item_categories(self, obj):
-        categories = self._get_categories(obj)
-        return (category.title for category in categories)
 
     def item_extra_kwargs(self, obj):
         image = self._get_teaser_image(obj)
