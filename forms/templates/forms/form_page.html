@@ -3,7 +3,7 @@
 
 {% block main %}
 	<div class="form-page">
-		<h2 class="page-title">{{ page.title }}</h2>
+		<h2 class="page-title page-title--less-margin">{{ page.title }}</h2>
 		{{ page.intro|richtext|typogrify }}
 		<form class="form-page__form" action="{% pageurl page %}" method="POST">
 			{% csrf_token %}
