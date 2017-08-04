@@ -1,35 +1,73 @@
 from mimetypes import guess_type
 from django.contrib.syndication.views import Feed
+from django.utils.feedgenerator import Rss201rev2Feed
+
+
+class MRSSFeed(Rss201rev2Feed):
+    "Use Yahoo!'s MRSS spec to add thumbnail images to posts"
+
+    def rss_attributes(self):
+        attrs = super(MRSSFeed, self).rss_attributes()
+        attrs['xmlns:dc'] = "http://purl.org/dc/elements/1.1/"
+        attrs['xmlns:media'] = 'http://search.yahoo.com/mrss/'
+        return attrs
+
+    def add_item_elements(self, handler, item):
+        super(MRSSFeed, self).add_item_elements(handler, item)
+        if 'teaser_image' in item:
+            handler.addQuickElement(
+                'media:thumbnail',
+                '',
+                {
+                    'url': item['teaser_image']['url'],
+                    'width': str(item['teaser_image']['width']),
+                    'height': str(item['teaser_image']['height']),
+                }
+            )
 
 
 class IncidentIndexPageFeed(Feed):
     "A feed for IncidentPages that are children of an IncidentIndexPage"
 
+    feed_type = MRSSFeed
+
     def __init__(self, incident_index_page, *args, **kwargs):
         self.incident_index_page = incident_index_page
         super(IncidentIndexPageFeed, self).__init__(*args, **kwargs)
-
-    def _get_categories(self, obj):
-        return [inline.category for inline in obj.categories.all().select_related('category')]
 
     def _get_teaser_image(self, obj):
         if obj.teaser_image:
             return obj.teaser_image.get_rendition('original')
 
-    def _get_complete_url(self, obj, path):
-        return '{}{}'.format(
-            obj.get_site().root_url,
+    def _get_categories(self, obj):
+        categories = obj.categories.all().select_related('category')
+        return [inline.category for inline in categories]
+
+    def _get_complete_url(self, path):
+        return ''.join([
+            self.incident_index_page.get_site().root_url,
             path
-        )
+        ])
 
     def title(self):
-        return self.title
+        return '{}: {}'.format(
+            self.incident_index_page.get_site().site_name,
+            self.incident_index_page.title
+        )
 
     def link(self):
-        return self.incident_index_page.url
+        return self._get_complete_url(self.incident_index_page.url)
 
     def description(self):
         return self.incident_index_page.search_description
+
+    def feed_url(self):
+        return self._get_complete_url(
+            self.incident_index_page.reverse_subpage('feed')
+        )
+
+    def feed_guid(self):
+        return self.feed_url()
 
     def items(self):
         incidents = self.incident_index_page.get_incidents()
@@ -46,7 +84,7 @@ class IncidentIndexPageFeed(Feed):
         return obj.body.render_as_block()
 
     def item_link(self, obj):
-        return self._get_complete_url(obj, obj.url)
+        return self._get_complete_url(obj.url)
 
     def item_guid(self, obj):
         return self.item_link(obj)
@@ -63,14 +101,14 @@ class IncidentIndexPageFeed(Feed):
         categories = self._get_categories(obj)
         return (category.title for category in categories)
 
-    def item_enclosure_url(self, obj):
+    def item_extra_kwargs(self, obj):
         image = self._get_teaser_image(obj)
-        return self._get_complete_url(obj, image.url) if image else None
-
-    def item_enclosure_length(self, obj):
-        image = self._get_teaser_image(obj)
-        return image.file.size
-
-    def item_enclosure_mime_type(self, obj):
-        image = self._get_teaser_image(obj)
-        return guess_type(image.url)[0]
+        if image:
+            return {
+                'teaser_image': {
+                    'url': self._get_complete_url(image.url),
+                    'width': image.width,
+                    'height': image.height,
+                }
+            }
+        return {}
