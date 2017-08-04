@@ -12,7 +12,7 @@
 			</a>
 		</h2>
 		{% if organization.description %}
-			{{ organization.description|richtext }}
+			{{ organization.description|richtext|typogrify }}
 		{% endif %}
 	</div>
 {% endif %}

@@ -1,6 +1,6 @@
-{% load common_tags wagtailcore_tags %}
+{% load common_tags wagtailcore_tags typogrify_tags %}
 <div class="intro">
-	{{ text|richtext_inline }}
+	{{ text|richtext_inline|typogrify }}
 
 	{% if read_more %}
 		<a
