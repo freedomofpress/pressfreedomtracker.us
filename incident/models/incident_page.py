@@ -569,6 +569,9 @@ class IncidentPage(MetadataPageMixin, Page):
             )[:(maximum - len(related_incidents))]
         )
 
+        if len(related_incidents) == 0:
+            related_incidents = IncidentPage.objects.filter(live=True).order_by('-date')[:2]
+
         return related_incidents
 
     def get_court_circuit(self):
