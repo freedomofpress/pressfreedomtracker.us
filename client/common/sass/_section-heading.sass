@@ -17,6 +17,22 @@
 			color: $black
 
 
+	&__icon
+		display: inline-block
+		vertical-align: -0.15em
+		height: 1em
+
+		> svg
+			display: block
+			height: 1em
+
+		> svg path
+			fill: $gray-mid-text
+
+		+hover
+			> svg path
+				fill: $gray-mid-dark-text
+
 	&--light
 		color: $gray-very-light
 
