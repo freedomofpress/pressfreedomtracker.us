@@ -10,7 +10,7 @@
 						class="stats__item stats__item--link stats__item--{{ stat.color }}" 
 						href="
 							{% if stat.internal_link %}
-								{% pageurl stat.internal_link %}
+								{% pageurl stat.internal_link %}{% if stat.querystring %}{{ stat.querystring }}{% endif %}
 							{% else %}
 								{{ stat.external_link }}
 							{% endif %}
