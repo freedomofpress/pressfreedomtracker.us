@@ -239,7 +239,6 @@
 
 	&__button
 		+link-transition
-		+flex-vertically-centered-row
 		+uppercase
 		padding: $padding-y $padding-x
 		border: 0
@@ -256,12 +255,14 @@
 			color: $fg-dim-dim
 
 	&__button--summary-toggle
+		+flex-vertically-centered-row
 		flex-shrink: 0
 		line-height: 1.25
 
 
 	&__button--bordered
 		border: 1px solid $white-trans
+		margin: 0 auto
 
 
 	&__button--wide
