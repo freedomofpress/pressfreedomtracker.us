@@ -1,6 +1,11 @@
 {% extends layout_template %}
 {% load common_tags %}
 
+{% block head %}
+	{{ block.super }}
+	{% include "common/_rss_autodiscovery.html" %}
+{% endblock %}
+
 {% block top_sidebar_class %}
 	{{ block.super }}
 	layout-right-sidebar__sidebar--light

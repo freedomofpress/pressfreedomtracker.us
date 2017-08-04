@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block head %}
+	{{ block.super }}
+	{% if page.incident_index_page %}
+		{% include "common/_rss_autodiscovery.html" with page=page.incident_index_page %}
+	{% endif %}
+{% endblock %}
+
 {% block body_class %}template-homepage{% endblock %}
 
 {% block top_sidebar_class %}
