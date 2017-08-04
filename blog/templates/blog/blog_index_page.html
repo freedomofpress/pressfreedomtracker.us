@@ -5,13 +5,13 @@
 
 {% block secondary-header %}
 	<div class="layout-right-sidebar">
-		<div class="layout-right-sidebar__main">
+		<div class="layout-right-sidebar__main layout-right-sidebar__main--no-vertical-padding">
 			<div class="blog-index">
 				<h2 class="page-title">{{ page.title }}</h2>
 			</div>
 		</div> {# /.layout-right-sidebar__main #}
 
-		<div class="layout-right-sidebar__sidebar layout-right-sidebar__sidebar--light">
+		<div class="layout-right-sidebar__sidebar layout-right-sidebar__sidebar--light layout-right-sidebar__sidebar--hide-mobile">
 		</div>
 	</div>
 {% endblock %}
@@ -74,6 +74,7 @@
 
 {% block top_sidebar_class %}
 	layout-right-sidebar__sidebar--light
+	layout-right-sidebar__sidebar--hide-mobile
 {% endblock %}
 
 {% block sidebar_class %}
