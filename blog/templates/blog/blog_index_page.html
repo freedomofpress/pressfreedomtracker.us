@@ -88,7 +88,13 @@
 				blog-index__description--filtered
 			{% endif %}
 		">
-			<h2 class="section-heading">About {{ page.title }}</h2>
+			<h2 class="section-heading">
+				{% if page.about_blog_title %}
+					{{ page.about_blog_title }}
+				{% else %}
+					About {{ page.title }}
+				{% endif %}
+			</h2>
 			<section class="blog-index__text">
 				{% include_block block %}
 			</section>
