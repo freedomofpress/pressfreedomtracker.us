@@ -29,6 +29,7 @@ gunicorn==19.7.1
 html5lib==0.999999999     # via bleach, wagtail
 idna==2.5                 # via requests
 ipaddress==1.0.18         # via faker
+Jinja2==2.9.6
 olefile==0.44             # via pillow
 pillow==4.2.1             # via wagtail
 pip-tools==1.9.0
@@ -38,6 +39,7 @@ python-dateutil==2.6.1    # via faker
 pytz==2017.2              # via django, django-modelcluster
 requests==2.18.1          # via wagtail
 six==1.10.0               # via bleach, faker, html5lib, pip-tools, python-dateutil, unittest-xml-reporting
+typogrify==2.0.7
 unidecode==0.4.21         # via wagtail
 unittest-xml-reporting==2.1.0
 urllib3==1.21.1           # via elasticsearch, requests

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'typogrify',
     'wagtailmetadata',
     'webpack_loader',
 
