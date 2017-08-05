@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags typogrify_tags %}
 
 {% if page.incident_index_page %}
 	<section class="incidents-sidebar">
@@ -11,7 +11,7 @@
 					<li class="incidents-sidebar__item">
 						<a class="incidents-sidebar__link" href="{% pageurl incident %}">
 							<div class="incidents-sidebar__title">
-								{{ incident.title }}
+								{{ incident.title|typogrify }}
 							</div>
 							<time class="incidents-sidebar__date" datetime="{{ incident.date }}">
 								{% include "incident/_incident_date.html" %}

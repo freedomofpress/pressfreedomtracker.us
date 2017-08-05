@@ -42,12 +42,12 @@ It can take the following context variables:
 		{% if teaser %}
 			<h3 class='incident__title'>
 				<a class="incident__title-link" href="{% pageurl incident %}">
-					{{ incident.title }}
+					{{ incident.title|typogrify }}
 				</a>
 			</h3>
 		{% else %}
 			<h2 class="incident__title">
-				{{ incident.title }}
+				{{ incident.title|typogrify }}
 			</h2>
 		{% endif %}
 		<div class='incident__date'>
@@ -107,7 +107,7 @@ It can take the following context variables:
 					<ol class="related-links__list">
 						{% for link in incident.links.all %}
 							<li class="related-links__item">
-								<a href="{{ link.url }}">{{link.title}}</a>
+								<a href="{{ link.url }}">{{ link.title|typogrify }}</a>
 								{% if link.publication %}
 									<span class="related-links__text">
 										({{ link.publication }})
