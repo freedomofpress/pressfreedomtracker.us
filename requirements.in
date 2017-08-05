@@ -13,6 +13,7 @@ gunicorn
 pip-tools
 psycopg2
 pyparsing
+typogrify
 wagtail
 wagtail-factories
 wagtail-django-recaptcha

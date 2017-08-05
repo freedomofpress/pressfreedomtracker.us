@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags typogrify_tags %}
 
 {% block main %}
-  {{ page.thank_you_text|richtext }}
+  {{ page.thank_you_text|richtext|typogrify }}
 {% endblock %}

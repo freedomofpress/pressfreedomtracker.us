@@ -30,6 +30,7 @@ gunicorn==19.7.1
 html5lib==0.999999999
 idna==2.5
 ipaddress==1.0.18
+Jinja2==2.9.6
 olefile==0.44
 pillow==4.2.1
 pip-tools==1.9.0
@@ -40,6 +41,7 @@ pytz==2017.2
 requests==2.18.1
 six==1.10.0
 sqlparse==0.2.3           # via django-debug-toolbar
+typogrify==2.0.7
 unidecode==0.4.21
 unittest-xml-reporting==2.1.0
 urllib3==1.21.1

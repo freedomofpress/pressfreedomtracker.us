@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags typogrify_tags %}
 
 {% if author.bio or author.photo %}
 	<div class="blog-about">
@@ -12,7 +12,7 @@
 			</a>
 		</h2>
 		{% if author.bio %}
-			{{ author.bio|richtext }}
+			{{ author.bio|richtext|typogrify }}
 		{% endif %}
 	</div>
 {% endif %}

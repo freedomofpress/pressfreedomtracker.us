@@ -1,4 +1,4 @@
-{% load wagtailcore_tags render_as_template %}
+{% load wagtailcore_tags render_as_template typogrify_tags %}
 
 <div class="methodology">
 	{% if category.methodology %}
@@ -12,7 +12,7 @@
 		</h3>
 		<div class="methodology__text">
 			{% with method=category.methodology %}
-				{% render_as_template method %}
+				{% filter typogrify %}{% render_as_template method %}{% endfilter %}
 			{% endwith %}
 		</div>
 	{% endif %}

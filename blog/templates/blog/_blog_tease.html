@@ -1,6 +1,6 @@
 {# This is used both on the blog index and the homepage sidebar. #}
 
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags typogrify_tags %}
 
 <div class="blog-tease blog-tease--{{ location }}{% if single_column %} blog-tease--horizontal{% endif %}">
 	{% if page.teaser_image and location == "blog-index" %}
@@ -9,12 +9,12 @@
 	<div class="blog-tease__body--{{ location }}">
 		<h3 class="blog-tease__title blog-tease__title--{{ location }}">
 			<a class="blog-tease__title-link" href="{% pageurl page %}">
-				{{ page.title }}
+				{{ page.title|typogrify }}
 			</a>
 		</h3>
 
 		<div class="blog-tease__tease blog-tease__tease--{{ location }}">
-			{{ page.teaser_text|richtext }}
+			{{ page.teaser_text|richtext|typogrify }}
 		</div>
 
 		<ul class="blog-tease__organization">

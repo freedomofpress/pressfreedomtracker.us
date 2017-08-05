@@ -6,8 +6,7 @@ It can take the following context variables:
 	teaser -- whether this is a short teaser of an incident (default: False)
 {% endcomment %}
 
-{% load wagtailcore_tags %}
-{% load wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags typogrify_tags %}
 {% load render_as_template %}
 
 <article class="
@@ -43,12 +42,12 @@ It can take the following context variables:
 		{% if teaser %}
 			<h3 class='incident__title'>
 				<a class="incident__title-link" href="{% pageurl incident %}">
-					{{ incident.title }}
+					{{ incident.title|typogrify }}
 				</a>
 			</h3>
 		{% else %}
 			<h2 class="incident__title">
-				{{ incident.title }}
+				{{ incident.title|typogrify }}
 			</h2>
 		{% endif %}
 		<div class='incident__date'>
@@ -66,15 +65,15 @@ It can take the following context variables:
 			{% if teaser %}
 				<section>
 					{% if incident.teaser %}
-					{{ incident.teaser|richtext }}
+						{{ incident.teaser|richtext|typogrify }}
 					{% else %}
-					{% include_block incident.body.0|truncatewords_html:20 %}
+						{% include_block incident.body.0|truncatewords_html:20|typogrify %}
 					{% endif %}
 				</section>
 			{% else %}
 				{% for block in incident.body %}
 					{% if block.block_type == 'rich_text' %}
-						<section>{% render_as_template block.value %}</section>
+						<section>{% filter typogrify %}{% render_as_template block.value %}{% endfilter %}</section>
 					{% else %}
 						<section>{% include_block block %}</section>
 					{% endif %}
@@ -90,7 +89,9 @@ It can take the following context variables:
 					<div class="incident__description">
 						{% for block in update.body %}
 							{% if block.block_type == 'rich_text' %}
-								<section>{% render_as_template block.value %}</section>
+								<section>
+									{% filter typogrify %}{% render_as_template block.value %}{% endfilter %}
+								</section>
 							{% else %}
 								<section>{% include_block block %}</section>
 							{% endif %}
@@ -106,7 +107,7 @@ It can take the following context variables:
 					<ol class="related-links__list">
 						{% for link in incident.links.all %}
 							<li class="related-links__item">
-								<a href="{{ link.url }}">{{link.title}}</a>
+								<a href="{{ link.url }}">{{ link.title|typogrify }}</a>
 								{% if link.publication %}
 									<span class="related-links__text">
 										({{ link.publication }})
