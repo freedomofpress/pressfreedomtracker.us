@@ -181,16 +181,26 @@ class StatBox(Orderable):
         max_length=255,
         choices=CATEGORY_COLOR_CHOICES,
     )
-    link = models.ForeignKey(
+    internal_link = models.ForeignKey(
         'wagtailcore.Page',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
         related_name='+',
     )
+    querystring = models.CharField(
+        max_length=1000,
+        null=True,
+        blank=True,
+        help_text="Append a querystring to the internal link. Should start with '?'"
+    )
+    external_link = models.URLField(null=True, blank=True, help_text="This link will not be used if there is an internal link set.")
+
     panels = [
         FieldPanel('value'),
         FieldPanel('label'),
         FieldPanel('color'),
-        PageChooserPanel('link')
+        PageChooserPanel('internal_link'),
+        FieldPanel('querystring'),
+        FieldPanel('external_link'),
     ]
