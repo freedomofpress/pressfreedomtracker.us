@@ -34,8 +34,14 @@ class BlogIndexPage(MetadataPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
     ])
 
+    about_blog_title = models.CharField(max_length=255, blank=True, null=True)
+
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel('about_blog_title')
     ]
 
     subpage_types = ['blog.BlogPage']
