@@ -421,7 +421,7 @@ class IncidentFilter(object):
         # If more than one category is included in this set, add a summary item
         # for each category of the form ("Total <Category Name>", <Count>)
         if self.categories is not None:
-            category_pks = [int(pk) for pk in self.categories.split(',')]
+            category_pks = validate_integer_list(self.categories.split(','))
             if len(category_pks) > 1:
                 categories = CategoryPage.objects.filter(
                     pk__in=category_pks
