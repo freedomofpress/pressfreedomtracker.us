@@ -36,6 +36,11 @@ class TestPages(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_get_index_should_succeed_with_blank_category_filters(self):
+        """get index should succeed blank with a category filter."""
+        response = self.client.get('/incidents/?categories=')
+        self.assertEqual(response.status_code, 200)
+
     def test_get_index_should_succeed_with_illegal_date_range(self):
         """get index should succeed with malformed filters."""
         response = self.client.get(
