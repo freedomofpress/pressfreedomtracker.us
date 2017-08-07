@@ -1,4 +1,3 @@
-from mimetypes import guess_type
 from django.contrib.syndication.views import Feed
 from common.feeds import MRSSFeed
 
