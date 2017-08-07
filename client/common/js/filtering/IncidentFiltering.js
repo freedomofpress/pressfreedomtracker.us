@@ -176,7 +176,7 @@ class IncidentFiltering extends PureComponent {
 				return obj
 			}
 			// Remove fields of categories that are not enabled
-			if (!whitelistedFields.includes(key)) {
+			if (ALL_FILTERS.includes(key) && !whitelistedFields.includes(key)) {
 				return obj
 			}
 
