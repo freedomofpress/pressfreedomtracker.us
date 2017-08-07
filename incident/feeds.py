@@ -1,4 +1,7 @@
+from urllib.parse import urljoin
+
 from django.contrib.syndication.views import Feed
+
 from common.feeds import MRSSFeed
 
 
@@ -20,10 +23,10 @@ class IncidentIndexPageFeed(Feed):
         return [inline.category for inline in categories]
 
     def _get_complete_url(self, path):
-        return ''.join([
+        return urljoin(
             self.incident_index_page.get_site().root_url,
             path
-        ])
+        )
 
     def title(self):
         return '{}: {}'.format(
@@ -39,7 +42,7 @@ class IncidentIndexPageFeed(Feed):
 
     def feed_url(self):
         return self._get_complete_url(
-            self.incident_index_page.reverse_subpage('feed')
+            self.incident_index_page.url + self.incident_index_page.reverse_subpage('feed')
         )
 
     def feed_guid(self):
