@@ -8,7 +8,7 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-import '../css/common.sass'
+import '../sass/common.sass'
 import '~/slidingnav'
 import '~/infinitescrolling'
 
