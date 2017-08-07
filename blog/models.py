@@ -40,7 +40,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
     feed_limit = models.PositiveIntegerField(
         default=20,
-        help_text='Maximum number of posts to be included in the'
+        help_text='Maximum number of posts to be included in the '
                   'syndication feed. 0 for unlimited.'
     )
 
@@ -49,8 +49,8 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     ]
 
     settings_panels = Page.settings_panels + [
-        FieldPanel('about_blog_title')
-        FieldPanel('feed_limit')
+        FieldPanel('about_blog_title'),
+        FieldPanel('feed_limit'),
     ]
 
     subpage_types = ['blog.BlogPage']

@@ -22,7 +22,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     feed_limit = models.PositiveIntegerField(
         default=1000,
-        help_text='Maximum number of incidents to be included in the'
+        help_text='Maximum number of incidents to be included in the '
                   'syndication feed. 0 for unlimited.'
     )
 
