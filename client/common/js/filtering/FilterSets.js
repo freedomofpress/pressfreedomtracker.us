@@ -101,7 +101,8 @@ FilterSets['General'] = function({ handleFilterChange, filterValues }) {
 
 FilterSets['General'].fields = [
 	'search',
-	'date',
+	'date_lower',
+	'date_upper',
 	'affiliation',
 	'city',
 	'state',
@@ -172,8 +173,10 @@ arrestSets.fields = [
 	'status_of_charges',
 	'charges',
 	'detention_status',
-	'detention_date',
-	'release_date'
+	'detention_date_lower',
+	'detention_date_upper',
+	'release_date_lower',
+	'release_date_upper',
 ]
 
 
