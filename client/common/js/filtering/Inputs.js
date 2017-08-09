@@ -213,6 +213,7 @@ export class DateRangeInput extends PureComponent {
 					<span className="filters__date-picker">
 						<DatePicker
 							onChange={handleFilterChange.bind(null, filter_upper)}
+							onChangeRaw={this.handleChangeRaw.bind(this, filter_upper)}
 							selected={filterValues[filter_upper] || ''}
 							isClearable={true}
 							className={classNames(

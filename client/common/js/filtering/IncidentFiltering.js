@@ -15,6 +15,7 @@ import FiltersHeader from '~/filtering/FiltersHeader'
 import FiltersExpandable from '~/filtering/FiltersExpandable'
 import FiltersBody from '~/filtering/FiltersBody'
 import FiltersFooter from '~/filtering/FiltersFooter'
+import FilterSets from '~/filtering/FilterSets'
 
 
 function Filters({ children }) {
@@ -120,6 +121,16 @@ class IncidentFiltering extends PureComponent {
 			.filter(({ enabled }) => enabled)
 			.map(({ id }) => id)
 
+		const whitelistedFields = this.state.categoriesEnabled
+			.filter(({ enabled }) => enabled)
+			.reduce((list, category) => {
+				if (!FilterSets.hasOwnProperty(category.title)) {
+					return list
+				}
+
+				return list.concat(FilterSets[category.title].fields)
+			}, FilterSets['General'].fields)
+
 
 		const filterValues = DATE_FILTERS.reduce((filters, date_field) => {
 			const upper_date = date_field.replace('_lower', '_upper')
@@ -162,6 +173,10 @@ class IncidentFiltering extends PureComponent {
 		return Object.keys(params).reduce((obj, key) => {
 			// Remove blank values from the query string.
 			if (!params[key]) {
+				return obj
+			}
+			// Remove fields of categories that are not enabled
+			if (ALL_FILTERS.includes(key) && !whitelistedFields.includes(key)) {
 				return obj
 			}
 
@@ -231,6 +246,7 @@ class IncidentFiltering extends PureComponent {
 
 	handleApplyFilters() {
 		const params = this.getPageFetchParams()
+
 		const qs = '?' + queryString.stringify(params)
 		if (this.props.applyExternally) {
 			window.location = this.getExternalUrl() + qs
