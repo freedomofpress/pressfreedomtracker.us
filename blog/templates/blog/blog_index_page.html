@@ -3,6 +3,11 @@
 {% load common_tags %}
 {% load wagtailcore_tags %}
 
+{% block head %}
+	{{ block.super }}
+	{% include "common/_rss_autodiscovery.html" %}
+{% endblock %}
+
 {% block secondary-header %}
 	<div class="layout-right-sidebar">
 		<div class="layout-right-sidebar__main layout-right-sidebar__main--no-vertical-padding">
@@ -109,5 +114,3 @@
 		{% include "blog/_about_org.html" with organization=organization_filter %}
 	{% endif %}
 {% endblock %}
-
-

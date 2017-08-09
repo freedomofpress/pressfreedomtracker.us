@@ -1,9 +1,15 @@
-{% load wagtailcore_tags typogrify_tags %}
+{% load wagtailcore_tags wagtailroutablepage_tags typogrify_tags %}
 
 {% if page.incident_index_page %}
 	<section class="incidents-sidebar">
 
-		{% include "common/_section_heading.html" with label=label %}
+		<h2 class="section-heading">
+			{{ label }}
+			<a class="section-heading__icon" href="{% routablepageurl page.incident_index_page "feed" %}" title="RSS Feed">
+				{% include "common/_rss_icon.svg" %}
+				<span class="sr-only">RSS feed</span>
+			</a>
+		</h2>
 
 		<ul class="incidents-sidebar__list">
 			{% with incidents=page.incident_index_page.get_incidents|slice:":5" %}
