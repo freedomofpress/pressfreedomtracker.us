@@ -1,8 +1,37 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from unittest.mock import patch
+from wagtail.wagtailcore.models import Site
 
 from common.tests.factories import CategoryPageFactory
-from incident.tests.factories import IncidentPageFactory, IncidentCategorizationFactory
+from incident.tests.factories import (
+    IncidentPageFactory,
+    IncidentCategorizationFactory,
+    IncidentIndexPageFactory,
+)
+
+
+class TestIncidentIndexPageCachePurge(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+        site = Site.objects.get()
+        self.index = IncidentIndexPageFactory(
+            parent=site.root_page, slug='incidents')
+
+    def test_cache_tag_index(self):
+        "Response from IncidentIndexPage should include Cache-Tag header"
+        response = self.client.get('/incidents/')
+        self.assertIn('Cache-Tag', response)
+
+    def test_cache_tag_subpath(self):
+        """
+        Response from IncidentIndexPage with subpath should include
+        Cache-Tag header
+
+        """
+
+        response = self.client.get('/incidents/?search=test')
+        self.assertIn('Cache-Tag', response)
 
 
 @patch('incident.signals.purge_page_from_cache')
