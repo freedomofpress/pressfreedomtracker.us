@@ -2,6 +2,7 @@ from django.db.models.signals import post_save, post_delete
 from wagtail.contrib.wagtailfrontendcache.utils import purge_page_from_cache
 
 from common.models import CategoryPage
+from cloudflare.utils import purge_tags_from_cache
 from incident.models import IncidentPage, IncidentIndexPage
 
 
@@ -38,8 +39,11 @@ def purge_incident_from_frontend_cache_for_incident(
 
 
 def purge_incident_index_from_frontend_cache(**kwargs):
+    tags = []
     for incident_index_page in IncidentIndexPage.objects.live():
         purge_page_from_cache(incident_index_page)
+        tags.append(incident_index_page.get_cache_tag())
+    purge_tags_from_cache(tags)
 
 
 # IncidentPage cache

@@ -1,7 +1,7 @@
 import logging
 import requests
 
-from wagtail.contrib.wagtailfrontendcache import get_backends
+from wagtail.contrib.wagtailfrontendcache.utils import get_backends
 from wagtail.contrib.wagtailfrontendcache.backends import CloudflareBackend
 
 

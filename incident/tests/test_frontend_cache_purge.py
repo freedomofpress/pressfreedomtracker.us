@@ -10,6 +10,13 @@ from incident.tests.factories import (
 )
 
 
+def assert_never_called_with(magic_mock, argument):
+    if argument in magic_mock.call_args_list:
+        raise AssertionError(
+            'Expected {} not called with {}'.format(magic_mock, argument)
+        )
+
+
 class TestIncidentIndexPageCachePurge(TestCase):
     def setUp(self):
         self.client = Client()
@@ -17,6 +24,9 @@ class TestIncidentIndexPageCachePurge(TestCase):
         site = Site.objects.get()
         self.index = IncidentIndexPageFactory(
             parent=site.root_page, slug='incidents')
+
+    def tearDown(self):
+        self.index.delete()
 
     def test_cache_tag_index(self):
         "Response from IncidentIndexPage should include Cache-Tag header"
@@ -32,6 +42,23 @@ class TestIncidentIndexPageCachePurge(TestCase):
 
         response = self.client.get('/incidents/?search=test')
         self.assertIn('Cache-Tag', response)
+
+    @patch('incident.signals.purge_page_from_cache')
+    def test_cache_purge_on_new_incident(self, purge_page_from_cache):
+        "Should purge page cache for incident index page on incident creation"
+        assert_never_called_with(purge_page_from_cache, self.index)
+        IncidentPageFactory(parent=self.index)  # should trigger a cache purge on index page
+        purge_page_from_cache.assert_any_call(self.index)
+
+    @patch('incident.signals.purge_tags_from_cache')
+    def test_cache_tag_purge_on_new_incident(self, purge_tags_from_cache):
+        "Should purge cache tag for incident index page on incident creation"
+        assert_never_called_with(
+            purge_tags_from_cache,
+            [self.index.get_cache_tag()]
+        )
+        IncidentPageFactory(parent=self.index)  # should trigger a cache purge on index page
+        purge_tags_from_cache.assert_any_call([self.index.get_cache_tag()])
 
 
 @patch('incident.signals.purge_page_from_cache')
@@ -49,12 +76,12 @@ class TestIncidentPageCachePurge(TestCase):
         categorization.save()
 
         # Cache purging should not have occurred yet
-        self.assertFalse(purge_page_from_cache.called)
+        assert_never_called_with(purge_page_from_cache, incident)
 
         category.title = "New Category Name"
         category.save()  # Should trigger purge on incident page
 
-        purge_page_from_cache.assert_called_with(incident)
+        purge_page_from_cache.assert_any_call(incident)
 
     def test_cache_not_purged_on_wrong_category_change(
         self,
@@ -71,7 +98,7 @@ class TestIncidentPageCachePurge(TestCase):
         category.title = "New Category Name"
         category.save()  # Should NOT trigger purge on incident page
 
-        self.assertFalse(purge_page_from_cache.called)
+        assert_never_called_with(purge_page_from_cache, incident)
 
     def test_cache_purged_on_related_incident(self, purge_page_from_cache):
         "Should purge cache for an incident when a related incident changes"
@@ -81,7 +108,7 @@ class TestIncidentPageCachePurge(TestCase):
         incident1.title = 'New Incident Name'
         incident1.save()  # Should trigger purge on incident2
 
-        purge_page_from_cache.assert_called_with(incident2)
+        purge_page_from_cache.assert_any_call(incident2)
 
     def test_cache_not_purged_on_unrelated_incident(
         self,
@@ -95,9 +122,9 @@ class TestIncidentPageCachePurge(TestCase):
         incident2 = IncidentPageFactory()
 
         incident1.title = 'New Incident Name'
-        incident1.save()  # Should trigger purge on incident2
+        incident1.save()  # Should not trigger purge on incident2
 
-        self.assertFalse(purge_page_from_cache.called)
+        assert_never_called_with(purge_page_from_cache, incident2)
 
     def test_cache_purged_on_same_cat_incident(
         self,
@@ -126,4 +153,4 @@ class TestIncidentPageCachePurge(TestCase):
         incident1.title = 'New Incident Title'
         incident1.save()
 
-        purge_page_from_cache.assert_called_with(incident2)
+        purge_page_from_cache.assert_any_call(incident2)

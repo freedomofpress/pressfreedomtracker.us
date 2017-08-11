@@ -1,7 +1,9 @@
+from unittest.mock import patch
+
 from django.test import TestCase, Client
 from wagtail.wagtailcore.models import Site
 
-from blog.tests.factories import BlogIndexPageFactory
+from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import PersonPageFactory
 
 
@@ -28,3 +30,10 @@ class TestBlogIndexPageCachePurge(TestCase):
 
         response = self.client.get('/blog/?author={}'.format(self.author.pk))
         self.assertIn('Cache-Tag', response)
+
+    @patch('blog.signals.purge_tags_from_cache')
+    def test_cache_tag_purge_on_new_blog(self, purge_tags_from_cache):
+        self.assertFalse(purge_tags_from_cache.called)
+        # Should trigger a purge of the blog index cache tag
+        BlogPageFactory(parent=self.index)
+        purge_tags_from_cache.assert_called_with([self.index.get_cache_tag()])
