@@ -51,6 +51,10 @@ post_save.connect(
     purge_incident_from_frontend_cache_for_category,
     sender=CategoryPage
 )
+post_delete.connect(
+    purge_incident_from_frontend_cache_for_category,
+    sender=CategoryPage
+)
 post_save.connect(
     purge_incident_from_frontend_cache_for_incident,
     sender=IncidentPage
