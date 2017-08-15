@@ -31,6 +31,15 @@ class TestBlogIndexPageCachePurge(TestCase):
         response = self.client.get('/blog/?author={}'.format(self.author.pk))
         self.assertEqual(response['Cache-Tag'], 'blog-index-{}'.format(self.index.pk))
 
+    @patch('blog.signals.purge_page_from_cache')
+    def test_cache_invalidated_on_new_incident(self, purge_page_from_cache):
+        """
+        BlogIndexPage should be purged from cache upon new BlogPage creation
+        """
+        self.assertFalse(purge_page_from_cache.called)
+        BlogPageFactory(parent=self.index)  # should trigger a cache purge on category page
+        purge_page_from_cache.assert_called_with(self.index)
+
     @patch('blog.signals.purge_tags_from_cache')
     def test_cache_tag_purge_on_new_blog(self, purge_tags_from_cache):
         self.assertFalse(purge_tags_from_cache.called)
