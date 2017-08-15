@@ -17,7 +17,7 @@ class TestCategoryPageCacheInvalidation(TestCase):
     def test_cache_tag_index(self):
         "Response from CategoryPage should include Cache-Tag header"
         response = self.client.get('/category/')
-        self.assertIn('Cache-Tag', response)
+        self.assertEqual(response['Cache-Tag'], 'category-page-{}'.format(self.categorypage.pk))
 
     def test_cache_tag_subpath(self):
         """
@@ -27,7 +27,7 @@ class TestCategoryPageCacheInvalidation(TestCase):
         """
 
         response = self.client.get('/category/?search=test')
-        self.assertIn('Cache-Tag', response)
+        self.assertEqual(response['Cache-Tag'], 'category-page-{}'.format(self.categorypage.pk))
 
     @patch('common.signals.purge_page_from_cache')
     def test_cache_invalidated_on_new_incident(self, purge_page_from_cache):

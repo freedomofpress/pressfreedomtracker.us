@@ -31,7 +31,7 @@ class TestIncidentIndexPageCachePurge(TestCase):
     def test_cache_tag_index(self):
         "Response from IncidentIndexPage should include Cache-Tag header"
         response = self.client.get('/incidents/')
-        self.assertIn('Cache-Tag', response)
+        self.assertEqual(response['Cache-Tag'], 'incident-index-{}'.format(self.index.pk))
 
     def test_cache_tag_subpath(self):
         """
@@ -41,7 +41,7 @@ class TestIncidentIndexPageCachePurge(TestCase):
         """
 
         response = self.client.get('/incidents/?search=test')
-        self.assertIn('Cache-Tag', response)
+        self.assertEqual(response['Cache-Tag'], 'incident-index-{}'.format(self.index.pk))
 
     @patch('incident.signals.purge_page_from_cache')
     def test_cache_purge_on_new_incident(self, purge_page_from_cache):

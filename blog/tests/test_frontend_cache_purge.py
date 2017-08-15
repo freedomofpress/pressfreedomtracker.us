@@ -19,7 +19,7 @@ class TestBlogIndexPageCachePurge(TestCase):
     def test_cache_tag_index(self):
         "Response from BlogIndexPage should include Cache-Tag header"
         response = self.client.get('/blog/')
-        self.assertIn('Cache-Tag', response)
+        self.assertEqual(response['Cache-Tag'], 'blog-index-{}'.format(self.index.pk))
 
     def test_cache_tag_subpath(self):
         """
@@ -29,7 +29,7 @@ class TestBlogIndexPageCachePurge(TestCase):
         """
 
         response = self.client.get('/blog/?author={}'.format(self.author.pk))
-        self.assertIn('Cache-Tag', response)
+        self.assertEqual(response['Cache-Tag'], 'blog-index-{}'.format(self.index.pk))
 
     @patch('blog.signals.purge_tags_from_cache')
     def test_cache_tag_purge_on_new_blog(self, purge_tags_from_cache):
