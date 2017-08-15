@@ -9,4 +9,4 @@ class HomePageFactory(wagtail_factories.PageFactory):
         model = HomePage
 
     parent = factory.SubFactory(wagtail_factories.PageFactory, parent=None)
-    title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
+    title = factory.Sequence(lambda n: 'Home {n}'.format(n=n))
