@@ -233,7 +233,7 @@ class CategoryPage(MetadataPageMixin, Page):
         context['category_options'] = incident_filter.get_category_options()
         try:
             context['export_path'] = HomePage.objects.live()[0].incident_index_page.url
-        except:
+        except Exception:
             context['export_path'] = None
         context['filter_choices'] = get_filter_choices()
         summary, entry_qs = incident_filter.fetch()
