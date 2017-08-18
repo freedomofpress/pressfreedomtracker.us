@@ -231,7 +231,10 @@ class CategoryPage(MetadataPageMixin, Page):
         incident_filter = IncidentFilter.from_request(request)
         incident_filter.categories = str(self.page_ptr_id)
         context['category_options'] = incident_filter.get_category_options()
-        context['export_path'] = HomePage.objects.live()[0].incident_index_page.url
+        try:
+            context['export_path'] = HomePage.objects.live()[0].incident_index_page.url
+        except Exception:
+            context['export_path'] = None
         context['filter_choices'] = get_filter_choices()
         summary, entry_qs = incident_filter.fetch()
 
@@ -271,6 +274,21 @@ class CategoryPage(MetadataPageMixin, Page):
             } for item in self.data_items.all()
         ]
         return context
+
+    def get_cache_tag(self):
+        return 'category-page-{}'.format(self.pk)
+
+    def serve(self, request, *args, **kwargs):
+        """
+        We set a cache tag here so that elsewhere we can purge all subroutes
+        of the category page (including paginated and filtered URLs)
+        simultaneously
+
+        """
+
+        response = super(CategoryPage, self).serve(request, *args, **kwargs)
+        response['Cache-Tag'] = self.get_cache_tag()
+        return response
 
 
 class SimplePage(MetadataPageMixin, Page):

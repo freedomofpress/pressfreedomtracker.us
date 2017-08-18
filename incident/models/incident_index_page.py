@@ -106,8 +106,17 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         return context
 
+    def get_cache_tag(self):
+        return 'incident-index-{}'.format(self.pk)
+
     def serve(self, request, *args, **kwargs):
         response = super(IncidentIndexPage, self).serve(request, *args, **kwargs)
+
+        # We set a cache tag here so that elsewhere we can purge all subroutes
+        # of the incident index page (including paginated and filtered URLs)
+        # simultaneously
+        response['Cache-Tag'] = self.get_cache_tag()
+
         if request.is_ajax():
             # We don't want the browser to cache the response to an XHR because
             # it gets served with a different layout template. This becomes

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'home',
     'emails',
 
+    'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
 
     'analytical',
