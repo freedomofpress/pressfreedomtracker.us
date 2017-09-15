@@ -31,7 +31,7 @@ scenario:
     - create
     - converge
     - verify
-    - side-effect
+    - side_effect
 verifier:
   name: testinfra
   lint:

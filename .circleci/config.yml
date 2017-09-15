@@ -2,24 +2,24 @@ version: 2
 jobs:
   build:
     machine: true
-    working_directory: /root/pressfreedom
+    working_directory: ~/pressfreedom
     steps:
       - checkout
-
-      - run:
-          name: Run flake8 tests
-          command: flake8
 
       - run:
           name: Install dependencies
           command: pip install -r devops/requirements.txt
 
       - run:
+          name: Run flake8 tests
+          command: flake8
+
+      - run:
           name: CI runner
           command: make ci-go
 
       - store_test_results:
-          path: /root/pressfreedom/test-results
+          path: ~/pressfreedom/test-results
 
       - store_artifacts:
-          path: /root/pressfreedom/test-results
+          path: ~/pressfreedom/test-results
