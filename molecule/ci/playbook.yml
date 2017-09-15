@@ -10,7 +10,7 @@
         state: started
       when: ansible_kernel.endswith('grsec')
   roles:
-    - role: freedomofpress.django_stack
+    - role: freedomofpress.django
       tags: django
   vars:
     django_stack_superuser_admin: admin
@@ -23,8 +23,7 @@
     django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../../"
     django_stack_manage_post:
       - createdevdata
-    django_stack_npm_commands:
-      - run build
+    django_stack_npm_install_cmd: "npm install; npm run build"
     django_stack_gunicorn_opt_envs:
       DJANGO_ALLOWED_HOSTS: "'*'"
       DJANGO_SETTINGS_MODULE: pressfreedom.settings.production-ci
@@ -33,7 +32,6 @@
     django_stack_gcorn_app_settings: pressfreedom.settings.production-ci
     django_stack_force_refresh: true
     django_stack_rsync_opts:
-      - "--exclude=.git"
       - "--exclude=devops"
       - "--exclude=node_modules"
       - "--exclude=src"
