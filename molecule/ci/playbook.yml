@@ -12,28 +12,6 @@
   roles:
     - role: freedomofpress.django_stack
       tags: django
-  post_tasks:
-    - name: Run tests
-      script: django_tests.sh
-      tags: tests
-      become: yes
-      become_user: "{{ django_stack_gcorn_user }}"
-      no_log: true
-      register: test_run_results
-      # Need this to keep going and get us test output xml
-      ignore_errors: yes
-
-    - name: Yank out tests for analysis
-      fetch:
-        src: "/home/gcorn/app-tests.xml"
-        dest: ../../test-results/
-        flat: yes
-      tags: tests
-
-    - name: Fail if test failed earlier
-      fail:
-      when: test_run_results|failed
-      tags: tests
   vars:
     django_stack_superuser_admin: admin
     django_stack_superuser_email: mike@freedom.press

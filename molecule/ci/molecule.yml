@@ -19,6 +19,8 @@ platforms:
       - django
 provisioner:
   name: ansible
+  playbooks:
+    side_effect: side_effect.yml
   lint:
     name: ansible-lint
 scenario:
@@ -29,6 +31,7 @@ scenario:
     - create
     - converge
     - verify
+    - side-effect
 verifier:
   name: testinfra
   lint:
