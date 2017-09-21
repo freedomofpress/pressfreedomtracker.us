@@ -1,28 +1,25 @@
 version: 2
 jobs:
   build:
-    working_directory: /root/pressfreedom
-    docker:
-      - image: msheiny/pressfreedomci:latest
+    machine: true
+    working_directory: ~/pressfreedom
     steps:
       - checkout
-
-      - run:
-          name: Run flake8 tests
-          command: flake8
-
-      - setup_remote_docker
 
       - run:
           name: Install dependencies
           command: pip install -r devops/requirements.txt
 
       - run:
+          name: Run flake8 tests
+          command: flake8
+
+      - run:
           name: CI runner
           command: make ci-go
 
       - store_test_results:
-          path: /root/pressfreedom/test-results
+          path: ~/pressfreedom/test-results
 
       - store_artifacts:
-          path: /root/pressfreedom/test-results
+          path: ~/pressfreedom/test-results

@@ -1,19 +1,19 @@
 import json
 
+
 def request_and_scrape(url, filter_key, host):
     """ Take in URL, grab the relevant log line,
         return dict for comparison """
 
-    JSON_LOG_FILE = "/var/www/django/logs/app.log"
+    JSON_LOG_FILE = "/var/www/django-alpha/logs/app.log"
     # Generate log event via http requests
     host.run("curl --user-agent testinfra http://localhost:8000" + url)
     # Pick out the last log line from django logs
     # This is obviously only reliable test on a test instance with no
     # other incoming traffic.
     grab_log = host.check_output("grep {0} {1} | tail -n 1".format(
-                                    filter_key,
-                                    JSON_LOG_FILE
-                                    ))
+        filter_key,
+        JSON_LOG_FILE))
     # Process JSON
     raw_json = json.loads(grab_log)[filter_key]
     # The current json structure uses the time as the key
@@ -55,7 +55,7 @@ def test_json_log_200(host):
     """
 
     should_return = {"request":
-                        {"data": {}, 
+                        {"data": {},
                              "meta": {"http_host": "localhost:8000",
                                       "http_user_agent": "testinfra",
                                       "path_info": "/",
@@ -72,4 +72,4 @@ def test_json_log_200(host):
                             "reason": "OK",
                             "status": 200}}
 
-    assert request_and_scrape('/','INFO', host) == should_return
+    assert request_and_scrape('/', 'INFO', host) == should_return
