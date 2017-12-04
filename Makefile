@@ -43,6 +43,10 @@ dev-attach-postgresql:
 dev-createdevdata:
 	docker exec -it pf_tracker_django bash -c "./manage.py createdevdata"
 
+.PHONY: dev-test
+dev-test:
+	docker exec -it pf_tracker_django bash -c "./manage.py test --noinput --keepdb"
+
 .PHONY: dev-sass-lint
 dev-sass-lint:
 	./devops/scripts/dev-sasslint.sh
