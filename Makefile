@@ -21,7 +21,7 @@ dev-chownroot: ## Chown root owned files caused from previous root-run container
 
 .PHONY: dev-killapp
 dev-killapp: ## Kills all developer containers.
-	docker kill pf_tracker_node pf_tracker_postgresql pf_tracker_django
+	molecule destroy -s dev
 
 .PHONY: dev-resetapp
 dev-resetapp: ## Purges django/node and starts them up (ignores postgres)
