@@ -21,7 +21,9 @@
     django_secret_key: f1822d2fe58daeadc88e0e4eef2f155fc3edd3713ff9a5d1e27696afd9231d905db51c98dc
     django_stack_es_host_url: disable
     django_stack_deploy_src: "{{ lookup('pipe', 'pwd') }}/../../"
-    django_stack_manage_post:
+    django_stack_db_tasks:
+      - migrate
+      - collectstatic
       - createdevdata
     django_stack_npm_install_cmd: "npm install; npm run build"
     django_stack_gunicorn_opt_envs:
