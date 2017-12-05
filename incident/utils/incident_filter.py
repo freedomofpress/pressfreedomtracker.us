@@ -389,9 +389,15 @@ class IncidentFilter(object):
             bounds='[]'
         ))
 
+        # Only increment month if there's another month in the year.
+        if THIS_MONTH < 12:
+            next_month = THIS_MONTH + 1
+        else:
+            next_month = THIS_MONTH
+
         incidents_this_month = incidents.filter(date__contained_by=DateRange(
             TODAY.replace(day=1),
-            TODAY.replace(month=THIS_MONTH + 1, day=1),
+            TODAY.replace(month=next_month, day=1),
             bounds='[)'
         ))
 

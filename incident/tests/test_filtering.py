@@ -455,3 +455,32 @@ class TestDateFilters(TestCase):
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
+
+    def test_end_of_year_queries_succeed(self):
+        """
+        Queries made at the end of the year should not look up nonexistent
+        month 13.
+        """
+        incident1 = IncidentPageFactory(date=date(2017, 12, 1))
+        incident2 = IncidentPageFactory(date=date(2017, 12, 2))
+
+        summary, incidents = create_incident_filter(
+            date_upper='2017-12-31',
+        ).fetch()
+
+        self.assertEqual({incident1, incident2}, set(incidents))
+
+    def test_nearly_end_of_year_queries_succeed(self):
+        """
+        Queries made at near the end of year should not fail. This test complements
+        the `end_of_year_queries_succeed` test, to provide additional debugging data
+        if one succeeds and the other does not.
+        """
+        incident1 = IncidentPageFactory(date=date(2017, 11, 1))
+        incident2 = IncidentPageFactory(date=date(2017, 11, 2))
+
+        summary, incidents = create_incident_filter(
+            date_upper='2017-11-31',
+        ).fetch()
+
+        self.assertEqual({incident1, incident2}, set(incidents))
