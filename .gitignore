@@ -34,3 +34,4 @@ db-snapshots/
 
 # CI XML test results
 test-results
+.node_complete
