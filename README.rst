@@ -25,7 +25,7 @@ the following env vars in your shell profile (see this `GitHub comment <https://
 Local Development instructions
 ------------------------------
 
-Clone the Git repository from ``git@github.com:littleweaver/pressfreedom.git``.
+Clone the Git repository from ``git@github.com:freedomofpress/pressfreedom.git``.
 
 Run the following commands to get up and running:
 
@@ -46,8 +46,8 @@ in the background); in order to monitor progress use the following two commands
 
 .. code:: bash
 
-    make dev-attach-node #attach a shell to the node process
-    make dev-attach-django #attach a shell to the python process
+    make dev-attach-node # attach a shell to the node process
+    make dev-attach-django # attach a shell to the python process
 
 Finally, if you want to inject the development data into the database hit the
 following command:
@@ -67,7 +67,7 @@ the containers and build them back up.
 
 .. code:: bash
 
-    docker rm -f node postgresql django
+    molecule destroy -s dev
     make dev-go
 
 If you want to just burn and restart node/django WHILE keeping the postgresql db
@@ -88,7 +88,7 @@ and get a bash shell (for example the postgresql container):
 
 .. code:: bash
 
-    docker exec -it postgresql bash
+    docker exec -it pf_tracker_postgresql bash
 
 Advanced actions against the database
 +++++++++++++++++++++++++++++++++++++
