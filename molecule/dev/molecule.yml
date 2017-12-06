@@ -11,6 +11,8 @@ provisioner:
   name: ansible
   lint:
     name: ansible-lint
+  playbooks:
+    side_effect: side_effect.yml
 scenario:
   name: dev
   converge_sequence:

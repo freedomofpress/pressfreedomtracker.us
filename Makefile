@@ -19,13 +19,13 @@ dev-go: ## Spin-up developer environment with three docker containers
 dev-chownroot: ## Chown root owned files caused from previous root-run containers
 	sudo find $(DIR) -user root -exec chown -Rv $(WHOAMI):$(WHOAMI) '{}' \;
 
-.PHONY: dev-killapp
-dev-killapp: ## Kills all developer containers.
-	docker kill pf_tracker_node pf_tracker_postgresql pf_tracker_django
+.PHONY: dev-clean
+dev-clean: ## Completely wipes all developer containers
+	./devops/scripts/dev.sh destroy && rm -rf node_modules
 
-.PHONY: dev-resetapp
-dev-resetapp: ## Purges django/node and starts them up (ignores postgres)
-	molecule converge -s dev
+.PHONY: dev-stop
+dev-stop: ## Stops all running developer containers.
+	./devops/scripts/dev.sh side-effect
 
 .PHONY: dev-attach-node
 dev-attach-node: ## Provide a read-only terminal to attach to node spin-up

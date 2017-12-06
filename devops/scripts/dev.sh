@@ -12,4 +12,4 @@ source devops/.venv/bin/activate
 
 pip install -U -r devops/requirements.txt > /dev/null
 
-molecule converge -s dev
+molecule $1 -s dev
