@@ -2,3 +2,4 @@ ansible
 docker
 molecule>=2.*
 pip-tools
+safety

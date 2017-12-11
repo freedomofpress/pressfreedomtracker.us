@@ -10,6 +10,7 @@ bleach==2.0.0
 certifi==2017.4.17
 chardet==3.0.4
 click==6.7
+decorator==4.1.2          # via ipython, traitlets
 dj-database-url==0.4.2
 django-analytical==2.2.2
 django-anymail==0.11.1
@@ -22,26 +23,43 @@ django-treebeard==4.1.2
 django-webpack-loader==0.5.0
 django==1.11.3
 djangorestframework==3.6.3
+dparse==0.2.1             # via safety
 elasticsearch==2.4.1
 factory-boy==2.8.1
 faker==0.7.17
 first==2.0.1
 gunicorn==19.7.1
 html5lib==0.999999999
-ipdb==0.10.3
 idna==2.5
 ipaddress==1.0.18
-Jinja2==2.9.6
+ipdb==0.10.3
+ipython-genutils==0.2.0   # via traitlets
+ipython==6.2.1            # via ipdb
+jedi==0.11.0              # via ipython
+jinja2==2.9.6
+markupsafe==1.0           # via jinja2
 olefile==0.44
+packaging==16.8           # via dparse, safety
+parso==0.1.0              # via jedi
+pexpect==4.3.0            # via ipython
+pickleshare==0.7.4        # via ipython
 pillow==4.2.1
 pip-tools==1.9.0
+prompt-toolkit==1.0.15    # via ipython
 psycopg2==2.7.1
+ptyprocess==0.5.2         # via pexpect
+pygments==2.2.0           # via ipython
 pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2017.2
+pyyaml==3.12              # via dparse
 requests==2.18.1
+safety==1.6.1
+simplegeneric==0.8.1      # via ipython
 six==1.10.0
+smartypants==2.0.0        # via typogrify
 sqlparse==0.2.3           # via django-debug-toolbar
+traitlets==4.3.2          # via ipython
 typogrify==2.0.7
 unidecode==0.4.21
 unittest-xml-reporting==2.1.0
@@ -50,5 +68,6 @@ wagtail-django-recaptcha==0.2
 wagtail-factories==0.3.0
 wagtail-metadata==0.3.1
 wagtail==1.11.1
+wcwidth==0.1.7            # via prompt-toolkit
 webencodings==0.5.1
 willow==0.4

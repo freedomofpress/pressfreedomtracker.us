@@ -78,6 +78,15 @@ help: ## Prints this message and exits
 dev-save-db: ## Save a snapshot of the database for the current git branch
 	./devops/scripts/savedb.sh
 
+.PHONY: safety
+safety: ## Runs `safety check` to check python dependencies for vulnerabilities
+	@for req_file in `find . -type f -name '*requirements.txt'`; do \
+		echo "Checking file $$req_file" \
+		&& safety check --full-report -r $$req_file \
+		&& echo -e '\n' \
+		|| exit 1; \
+	done
+
 .PHONY: dev-restore-db
 dev-restore-db: ## Restore the most recent database snapshot for the current git branch
 	./devops/scripts/restoredb.sh
