@@ -1,5 +1,5 @@
-ansible
+ansible>=2.3.2
 docker
-molecule>=2.*
+molecule>=2.4
 pip-tools
 safety

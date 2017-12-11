@@ -1,4 +1,2 @@
 django-debug-toolbar
 ipdb
-safety
--r requirements.txt
