@@ -60,6 +60,19 @@ dev-import-db: ## Imports a database dump from file named ./import.db
 ci-devops-builder: ## Creates a container base for CI (not normally needed)
 	./devops/scripts/ci-django-build.sh
 
+.PHONY: update-pip-dependencies
+update-pip-dependencies: ## Uses pip-compile to update requirements.txt
+# It is critical that we run pip-compile via the same Python version
+# that we're generating requirements for, otherwise the versions may
+# be resolved differently.
+	docker run -v "$(DIR):/code" -it quay.io/freedomofpress/ci-python \
+		bash -c 'pip install pip-tools && \
+		pip-compile --no-header --output-file /code/requirements.txt /code/requirements.in && \
+		pip-compile --no-header --output-file /code/dev-requirements.txt /code/requirements.in /code/dev-requirements.in'
+
+# Update the developer-focused reqs for local dev, testing, and CI.
+	pip-compile --no-header --output-file devops/requirements.txt devops/requirements.in
+
 # Explanation of the below shell command should it ever break.
 # 1. Set the field separator to ": ##" to parse lines for make targets.
 # 2. Check for second field matching, skip otherwise.
@@ -77,6 +90,15 @@ help: ## Prints this message and exits
 .PHONY: dev-save-db
 dev-save-db: ## Save a snapshot of the database for the current git branch
 	./devops/scripts/savedb.sh
+
+.PHONY: safety
+safety: ## Runs `safety check` to check python dependencies for vulnerabilities
+	@for req_file in `find . -type f -name '*requirements.txt'`; do \
+		echo "Checking file $$req_file" \
+		&& safety check --full-report -r $$req_file \
+		&& echo -e '\n' \
+		|| exit 1; \
+	done
 
 .PHONY: dev-restore-db
 dev-restore-db: ## Restore the most recent database snapshot for the current git branch
