@@ -28,6 +28,8 @@ first==2.0.1              # via pip-tools
 gunicorn==19.7.1
 html5lib==0.999999999     # via bleach, wagtail
 idna==2.5                 # via requests
+jinja2==2.10
+markupsafe==1.0           # via jinja2
 olefile==0.44             # via pillow
 pillow==4.2.1             # via wagtail
 pip-tools==1.9.0
