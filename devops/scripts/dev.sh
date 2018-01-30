@@ -2,6 +2,8 @@
 #
 #
 
+if [ $# -eq 0 ]; then echo "ERR - Missing positional molecule action argument"; exit 1; fi
+
 # Allow setting Django port to random values by env variable
 if [ "${RAND_PORT-false}" != "false" ]; then
     export RAND_PORT=true
