@@ -19,6 +19,10 @@ jobs:
           command: flake8
 
       - run:
+          name: Ensure developer env working
+          command: make dev-go
+
+      - run:
           name: CI runner
           command: make ci-go
 
