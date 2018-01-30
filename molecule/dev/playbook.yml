@@ -64,18 +64,14 @@
         path: /proc/sys/kernel/grsecurity/
       register: check_grsec_kernel_results
 
-    - name: If grsec, add paxflags cmd to node
-      set_fact:
-        node_grsec_image: "node_grsec"
-      when: check_grsec_kernel_results.stat.exists
-
     - name: Build node image with pax flags
       docker_image:
-        name: "node_grsec:{{ node_tag }}"
+        name: "fpf.local/node:{{ node_tag }}"
         dockerfile: "{{ molecule_scenario_directory }}/NodeDockerfile"
         path: ../../
         tag: "{{ node_tag }}"
-      when: check_grsec_kernel_results.stat.exists
+        buildargs:
+          UID: "{{ 1001 if ansible_effective_user_id == 1000 else ansible_effective_user_id }}"
 
     - name: Purge existing node container wait flag
       file:
@@ -85,13 +81,13 @@
     - name: Start node
       docker_container:
         name: pf_tracker_node
-        image: "{{ node_grsec_image|default('node') }}:{{ node_tag }}"
+        image: "fpf.local/node:{{ node_tag }}"
         volumes:
           - ../../:/var/www/django
         state: started
         working_dir: /var/www/django
         command: /bin/ash -c "npm install && touch .node_complete && npm run start"
-        user: node
+        user: "{{ 'node1' if ansible_effective_user_id != 1000 else 'node' }}"
         recreate: yes
 
     - name: Wait for node to finish installing deps

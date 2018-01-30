@@ -1,3 +1,5 @@
 FROM node:6.11.0-alpine
+ARG UID
 
+RUN adduser -u $UID -D node1
 RUN apk add paxctl --no-cache; paxctl -cm /usr/local/bin/node

@@ -13,7 +13,7 @@ ci-tests: ## Runs testinfra against a pre-running CI container (useful for debug
 
 .PHONY: dev-go
 dev-go: ## Spin-up developer environment with three docker containers
-	./devops/scripts/dev.sh
+	./devops/scripts/dev.sh converge
 
 .PHONY: dev-chownroot
 dev-chownroot: ## Chown root owned files caused from previous root-run containers
