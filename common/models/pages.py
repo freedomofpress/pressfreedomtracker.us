@@ -111,7 +111,7 @@ class OrganizationIndexPage(Page):
 
 
 class OrganizationPage(Page):
-    website = models.URLField(blank=True, null=True)
+    website = models.URLField(blank=True)
     logo = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -145,7 +145,7 @@ class PersonPage(Page):
     )
 
     bio = RichTextField(blank=True, null=True)
-    website = models.URLField(blank=True, null=True)
+    website = models.URLField(blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('bio'),
@@ -161,7 +161,7 @@ class PersonPage(Page):
 class QuickFact(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='quick_facts')
     body = RichTextField()
-    link_url = models.URLField(null=True, blank=True)
+    link_url = models.URLField(blank=True)
 
 
 class NumbersIterable(object):
