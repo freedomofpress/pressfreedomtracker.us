@@ -1,15 +1,19 @@
 {% load wagtailcore_tags wagtailimages_tags typogrify_tags %}
 
-{% if organization.description or organization.logo %}
+{% if organization.description %}
 	<div class="blog-about">
 		<h2 class="section-heading">
 			About
-			<a
-				class="section-heading__subject section-heading__subject--link"
-				href="{{ organization.website }}"
-			>
+			{% if organization.website %}
+				<a
+					class="section-heading__subject section-heading__subject--link"
+					href="{{ organization.website }}"
+				>
+					{{ organization.title }}
+				</a>
+			{% else %}
 				{{ organization.title }}
-			</a>
+			{% endif %}
 		</h2>
 		{% if organization.description %}
 			{{ organization.description|richtext|typogrify }}
