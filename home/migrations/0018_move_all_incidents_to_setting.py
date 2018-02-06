@@ -12,9 +12,13 @@ def move_all_incidents_to_setting(apps, schema_editor):
     HomePage = apps.get_model('home', 'HomePage')
     site = Site.objects.get(is_default_site=True)
     search_settings = SearchSettings.for_site(site)
-    homepage = HomePage.objects.get()
-    search_settings.search_page_id = homepage.incident_index_page_id
-    search_settings.save()
+    try:
+        homepage = HomePage.objects.get()
+    except HomePage.DoesNotExist:
+        pass
+    else:
+        search_settings.search_page_id = homepage.incident_index_page_id
+        search_settings.save()
 
 
 class Migration(migrations.Migration):
