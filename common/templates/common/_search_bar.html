@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailsettings_tags %}{% get_settings %}
+{% load wagtailcore_tags %}
 
 {% if settings.common.SearchSettings.search_page %}
 <form action="{% pageurl settings.common.SearchSettings.search_page %}" class="search-bar {{ class|default:'' }}" method="get">
