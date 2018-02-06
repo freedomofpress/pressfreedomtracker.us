@@ -7,6 +7,24 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from modelcluster.models import ClusterableModel
 
 
+@register_setting(icon='search')
+class SearchSettings(BaseSetting):
+    search_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
+    panels = [
+        PageChooserPanel('search_page'),
+    ]
+
+    class Meta:
+        verbose_name = 'Search'
+
+
 @register_setting
 class FooterSettings(BaseSetting):
     body = RichTextField(blank=True, null=True)

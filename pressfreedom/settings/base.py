@@ -31,7 +31,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'autocomplete',
-    'search',
     'blog',
     'common',
     'forms',
