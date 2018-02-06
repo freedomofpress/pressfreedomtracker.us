@@ -43,15 +43,6 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Recent blog posts will automatically be pulled from this page'
     )
 
-    incident_index_page = models.ForeignKey(
-        'incident.IncidentIndexPage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        help_text='Recent incidents will automatically be pulled from this page'
-    )
-
     statboxes_label = models.CharField(
         default='Quick Stats',
         max_length=255,
@@ -133,7 +124,6 @@ class HomePage(MetadataPageMixin, Page):
 
         MultiFieldPanel([
             FieldPanel('recent_incidents_label'),
-            PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
         ], 'Recent Incidents'),
 
         MultiFieldPanel([
