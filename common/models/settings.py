@@ -15,6 +15,8 @@ class SearchSettings(BaseSetting):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
+        help_text='Incident index page to use for search and for "Recent incidents" feeds',
+        verbose_name='Incident search page',
     )
 
     panels = [
