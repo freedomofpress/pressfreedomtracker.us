@@ -1,7 +1,8 @@
 {% load wagtailcore_tags %}
 
-{% if settings.common.SearchSettings.search_page %}
-<form action="{% pageurl settings.common.SearchSettings.search_page %}" class="search-bar {{ class|default:'' }}" method="get">
+{% with search_page=settings.common.SearchSettings.search_page %}
+{% if search_page %}
+<form action="{% pageurl search_page %}" class="search-bar {{ class|default:'' }}" method="get">
 	{% include "common/_search_icon.html" with class="search-bar__icon" %}
 
 	<input
@@ -20,3 +21,4 @@
 	</button>
 </form>
 {% endif %}
+{% endwith %}

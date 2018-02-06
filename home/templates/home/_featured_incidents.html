@@ -1,10 +1,11 @@
 {% load wagtailcore_tags typogrify_tags %}
 
-{% if page.incident_index_page %}
+{% with search_page=settings.common.SearchSettings.search_page %}
+{% if search_page %}
 
 	{% with incidents=incidents %}
 		{% include "common/_section_heading.html" with label=label %}
-		{% include "incident/_filters.html" with apply_externally=True external=page.incident_index_page change_filters_message=page.change_filters_message %}
+		{% include "incident/_filters.html" with apply_externally=True external=search_page change_filters_message=page.change_filters_message %}
 
 		<div class="grid-50">
 			{% for related in incidents|slice:":2" %}
@@ -24,9 +25,10 @@
 	{% endwith %}
 	<a
 		class="button button--outline button--center"
-		href="{% pageurl page.incident_index_page %}"
+		href="{% pageurl search_page %}"
 	>
 		{{ link_label }}
 	</a>
 
 {% endif %}
+{% endwith %}

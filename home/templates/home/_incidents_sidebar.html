@@ -1,18 +1,20 @@
 {% load wagtailcore_tags wagtailroutablepage_tags typogrify_tags %}
 
-{% if page.incident_index_page %}
+
+{% with search_page=settings.common.SearchSettings.search_page %}
+{% if search_page %}
 	<section class="incidents-sidebar">
 
 		<h2 class="section-heading">
 			{{ label }}
-			<a class="section-heading__icon" href="{% routablepageurl page.incident_index_page "feed" %}" title="RSS Feed">
+			<a class="section-heading__icon" href="{% routablepageurl search_page "feed" %}" title="RSS Feed">
 				{% include "common/_rss_icon.svg" %}
 				<span class="sr-only">RSS feed</span>
 			</a>
 		</h2>
 
 		<ul class="incidents-sidebar__list">
-			{% with incidents=page.incident_index_page.get_incidents|slice:":5" %}
+			{% with incidents=search_page.get_incidents|slice:":5" %}
 				{% for incident in incidents %}
 					<li class="incidents-sidebar__item">
 						<a class="incidents-sidebar__link" href="{% pageurl incident %}">
@@ -30,10 +32,11 @@
 
 		<a
 			class="button button--outline button--expand-full"
-			href="{% pageurl page.incident_index_page %}"
+			href="{% pageurl search_page %}"
 		>
 			{{ link_label }}
 		</a>
 
 	</section>
 {% endif %}
+{% endwith %}
