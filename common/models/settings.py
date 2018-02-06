@@ -10,7 +10,7 @@ from modelcluster.models import ClusterableModel
 @register_setting(icon='search')
 class SearchSettings(BaseSetting):
     search_page = models.ForeignKey(
-        'wagtailcore.Page',
+        'incident.IncidentIndexPage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -22,7 +22,7 @@ class SearchSettings(BaseSetting):
     ]
 
     class Meta:
-        verbose_name = 'Search'
+        verbose_name = 'Incident search'
 
 
 @register_setting

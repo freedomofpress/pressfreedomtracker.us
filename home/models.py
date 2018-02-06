@@ -14,6 +14,7 @@ from modelcluster.fields import ParentalKey
 
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
+from common.models.settings import SearchSettings
 from incident.models.choices import get_filter_choices
 from incident.utils.incident_filter import IncidentFilter
 
@@ -151,7 +152,10 @@ class HomePage(MetadataPageMixin, Page):
 
         incident_filter = IncidentFilter.from_request(request)
         context['category_options'] = incident_filter.get_category_options()
-        context['export_path'] = self.incident_index_page.url
+
+        search_page = SearchSettings.for_site(request.site).search_page
+        context['export_path'] = getattr(search_page, 'url', None)
+
         context['filter_choices'] = get_filter_choices()
         context['incidents'] = self.incidents.all().prefetch_related('incident__categories__category')
 
