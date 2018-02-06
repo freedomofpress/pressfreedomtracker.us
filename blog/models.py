@@ -168,7 +168,7 @@ class BlogPage(MetadataPageMixin, Page):
         help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
     )
 
-    teaser_text = RichTextField(
+    teaser_text = models.TextField(
         null=True,
         blank=True
     )
@@ -219,7 +219,7 @@ class BlogPage(MetadataPageMixin, Page):
 
     def get_meta_description(self):
         if self.teaser_text:
-            return strip_tags(self.teaser_text)
+            return self.teaser_text
 
         if self.search_description:
             return self.search_description
