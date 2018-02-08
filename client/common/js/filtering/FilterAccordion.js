@@ -40,6 +40,7 @@ function FilterAccordion({
 						{ 'filters__accordion--active': isActive }
 					)}
 					onClick={handleAccordionSelection.bind(null, category.id)}
+					type="button"
 				>
 					{isActive ? <CollapseIcon /> : <ExpandIcon />}
 					{category.title}

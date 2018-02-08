@@ -18,11 +18,6 @@ import FiltersFooter from '~/filtering/FiltersFooter'
 import FilterSets from '~/filtering/FilterSets'
 
 
-function Filters({ children }) {
-	return <div className="filters">{children}</div>
-}
-
-
 class IncidentFiltering extends PureComponent {
 	constructor(props, ...args) {
 		super(props, ...args)
@@ -244,7 +239,9 @@ class IncidentFiltering extends PureComponent {
 		)
 	}
 
-	handleApplyFilters() {
+	handleApplyFilters(e) {
+		e.preventDefault()
+
 		const params = this.getPageFetchParams()
 
 		const qs = '?' + queryString.stringify(params)
@@ -385,43 +382,44 @@ class IncidentFiltering extends PureComponent {
 		} = this.props
 
 		return (
-			<Filters>
-				<FiltersHeader
-					filterValues={filterValues}
-					filtersExpanded={filtersExpanded}
-					categoriesEnabled={categoriesEnabled}
-					handleToggle={this.handleToggle}
-					changeFiltersMessage={changeFiltersMessage}
-				/>
-
-				<FiltersExpandable filtersExpanded={filtersExpanded}>
-					{!noCategoryFiltering && (
-						<FiltersCategorySelection
-							categoriesEnabled={categoriesEnabled}
-							handleSelection={this.handleSelection}
-						/>
-					)}
-
-					<FiltersBody
-						selectedAccordions={selectedAccordions}
-						categoriesEnabled={categoriesEnabled}
+			<div className="filters">
+				<form onSubmit={this.handleApplyFilters}>
+					<FiltersHeader
 						filterValues={filterValues}
-						handleAccordionSelection={this.handleAccordionSelection}
-						handleFilterChange={this.handleFilterChange}
-						noCategoryFiltering={noCategoryFiltering}
-						choices={filterChoices}
+						filtersExpanded={filtersExpanded}
+						categoriesEnabled={categoriesEnabled}
+						handleToggle={this.handleToggle}
+						changeFiltersMessage={changeFiltersMessage}
 					/>
 
-					<FiltersFooter
-						handleApplyFilters={this.handleApplyFilters}
-						handleClearFilters={this.handleClearFilters}
-						pageFetchParams={this.getPageFetchParams()}
-						loading={this.state.loading}
-						filtersTouched={filtersTouched}
-						exportPath={exportPath}
-					/>
-				</FiltersExpandable>
-			</Filters>
+					<FiltersExpandable filtersExpanded={filtersExpanded}>
+						{!noCategoryFiltering && (
+							<FiltersCategorySelection
+								categoriesEnabled={categoriesEnabled}
+								handleSelection={this.handleSelection}
+							/>
+						)}
+
+						<FiltersBody
+							selectedAccordions={selectedAccordions}
+							categoriesEnabled={categoriesEnabled}
+							filterValues={filterValues}
+							handleAccordionSelection={this.handleAccordionSelection}
+							handleFilterChange={this.handleFilterChange}
+							noCategoryFiltering={noCategoryFiltering}
+							choices={filterChoices}
+						/>
+
+						<FiltersFooter
+							handleClearFilters={this.handleClearFilters}
+							pageFetchParams={this.getPageFetchParams()}
+							loading={this.state.loading}
+							filtersTouched={filtersTouched}
+							exportPath={exportPath}
+						/>
+					</FiltersExpandable>
+				</form>
+			</div>
 		)
 	}
 }

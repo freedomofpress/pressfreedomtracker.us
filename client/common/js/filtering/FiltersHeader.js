@@ -26,6 +26,7 @@ class FiltersHeader extends PureComponent {
 				<button
 					className="filters__button filters__button--summary-toggle"
 					onClick={handleToggle}
+					type="button"
 				>
 					<SettingsIcon />
 
