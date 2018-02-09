@@ -194,7 +194,7 @@ class StatBox(Orderable):
         blank=True,
         help_text="Append a querystring to the internal link. Should start with '?'"
     )
-    external_link = models.URLField(null=True, blank=True, help_text="This link will not be used if there is an internal link set.")
+    external_link = models.URLField(blank=True, help_text="This link will not be used if there is an internal link set.")
 
     panels = [
         FieldPanel('value'),

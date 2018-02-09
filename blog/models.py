@@ -151,7 +151,7 @@ class BlogPage(MetadataPageMixin, Page):
         ('statistics', StatisticsBlock()),
     ])
 
-    link_to_original_post = models.URLField(blank=True, null=True)
+    link_to_original_post = models.URLField(blank=True)
 
     teaser_image = models.ForeignKey(
         'common.CustomImage',
