@@ -61,7 +61,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ('statistics', StatisticsBlock()),
     ])
 
-    teaser = RichTextField(
+    teaser = models.TextField(
         help_text="This field is optional and overrides the default teaser text.",
         blank=True,
         null=True,
@@ -586,7 +586,7 @@ class IncidentPage(MetadataPageMixin, Page):
 
     def get_meta_description(self):
         if self.teaser:
-            return strip_tags(self.teaser)
+            return self.teaser
 
         if self.search_description:
             return self.search_description
