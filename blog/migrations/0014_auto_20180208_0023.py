@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0012_blogindexpage_feed_limit'),
+        ('blog', '0013_auto_20180205_2333'),
     ]
 
     operations = [

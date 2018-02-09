@@ -16,7 +16,7 @@ def strip_teaser_richtext(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0013_auto_20180208_0023'),
+        ('blog', '0014_auto_20180208_0023'),
     ]
 
     operations = [
