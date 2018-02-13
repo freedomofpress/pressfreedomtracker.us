@@ -207,6 +207,7 @@ class BlogPage(MetadataPageMixin, Page):
     ]
 
     parent_page_types = ['blog.BlogIndexPage']
+    subpage_types = []
 
     search_fields = Page.search_fields + [
         index.SearchField('body', partial=True),
