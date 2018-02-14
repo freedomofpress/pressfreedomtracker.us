@@ -241,3 +241,35 @@ class CleanTest(TestCase):
             })
 
         self.assertEqual(cm.exception.params, {'params': ['At most 2 parameters may be supplied for this dataset']})
+
+
+@mock.patch('statistics.registry._numbers', NUMBERS_MOCK)
+@mock.patch('statistics.registry._maps', MAPS_MOCK)
+class GetContextTest(TestCase):
+    def test_should_have_params__gets_none(self):
+        block = StatisticsBlock()
+        value = {
+            'dataset': 'one_param',
+            'params': '',
+        }
+        context = block.get_context(value)
+
+        self.assertEqual(context, {
+            'data': None,
+            'self': value,
+            'value': value,
+        })
+
+    def test_should_not_have_params__gets_some(self):
+        block = StatisticsBlock()
+        value = {
+            'dataset': 'no_params',
+            'params': '100',
+        }
+        context = block.get_context(value)
+
+        self.assertEqual(context, {
+            'data': None,
+            'self': value,
+            'value': value,
+        })

@@ -65,10 +65,11 @@ class StatisticsBlock(blocks.StructBlock):
         context = super(StatisticsBlock, self).get_context(value, parent_context=parent_context)
         fn = get_stats()[value['dataset']]
 
-        if value.get('params'):
+        try:
             result = fn(*value['params'].split())
-        else:
-            result = fn()
+        except TypeError:
+            result = None
+
         context['data'] = result
         return context
 
