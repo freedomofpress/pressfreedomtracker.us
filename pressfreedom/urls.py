@@ -6,6 +6,7 @@ from django.contrib import admin
 
 from autocomplete.urls.public import urlpatterns as autocomplete_public_urls
 from autocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
+from common import views as common_views
 from emails import urls as emails_urls
 from search import views as search_views
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
@@ -19,8 +20,10 @@ urlpatterns = [
     url(r'^autocomplete/', include(autocomplete_public_urls)),
     url(r'^admin/autocomplete/', include(autocomplete_admin_urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
-    url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^emails/', include(emails_urls)),
+
+    url(r'^documents/(\d+)/(.*)$', common_views.serve),
+    url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
 
