@@ -238,6 +238,7 @@ class CategoryPage(MetadataPageMixin, Page):
         FieldPanel('methodology'),
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('data_items', label='Data Items'),
+        InlinePanel('incident_fields', label='Fields to include in filters'),
     ]
 
     settings_panels = Page.settings_panels + [
