@@ -199,6 +199,35 @@ class TaxonomyCategoryPage(Orderable):
         PageChooserPanel('category', 'common.CategoryPage'),
     ]
 
+def remove_unwanted_fields(field):
+    if isinstance(field, RichTextField) or isinstance(field, StreamField) \
+     or isinstance(field, models.TextField) or field.name == 'page_ptr':
+        return False
+    return True
+
+def get_field_tuple(field):
+    if hasattr(field, 'verbose_name'):
+        return (field.name, field.verbose_name)
+    elif field.is_relation and hasattr(field, 'related_name'):
+        return (field.name, field.related_name)
+    else:
+        return (field.name, field.name)
+
+
+class IncidentPageFieldIterator():
+    def __iter__(field):
+        # prevents circular import
+        from incident.models import IncidentPage
+        fields = IncidentPage._meta.get_fields(include_parents=False)
+        non_text_fields = list(filter(remove_unwanted_fields, fields))
+        for field in non_text_fields:
+            yield get_field_tuple(field)
+
+
+class IncidentFieldCategoryPage(Orderable):
+    category = ParentalKey('common.CategoryPage', related_name='incident_fields')
+    incident_field = models.CharField(max_length=255, choices=IncidentPageFieldIterator())
+
 
 class CategoryPage(MetadataPageMixin, Page):
     methodology = RichTextField(null=True, blank=True)
