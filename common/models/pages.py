@@ -13,7 +13,7 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
-from modelcluster.fields import ParentalManyToManyField
+
 from modelcluster.models import ClusterableModel
 
 from common.blocks import (
@@ -27,7 +27,12 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
 )
 from common.choices import CATEGORY_COLOR_CHOICES
-from common.utils import DEFAULT_PAGE_KEY, paginate
+from common.utils import (
+    DEFAULT_PAGE_KEY,
+    paginate,
+    get_incident_field_dict,
+    IncidentPageFieldIterator
+)
 from statistics.registry import get_numbers_choices
 
 
@@ -200,77 +205,6 @@ class TaxonomyCategoryPage(Orderable):
         PageChooserPanel('category', 'common.CategoryPage'),
     ]
 
-def remove_unwanted_fields(field):
-    if isinstance(field, RichTextField) or isinstance(field, StreamField) \
-     or isinstance(field, models.TextField) or field.name == 'page_ptr':
-        return False
-    return True
-
-def get_field_tuple(field):
-    if hasattr(field, 'verbose_name'):
-        return (field.name, field.verbose_name)
-    elif field.is_relation and hasattr(field, 'related_name'):
-        return (field.name, field.related_name)
-    else:
-        return (field.name, field.name)
-
-
-class IncidentPageFieldIterator():
-    def __iter__(field):
-        # prevents circular import
-        from incident.models import IncidentPage
-        fields = IncidentPage._meta.get_fields(include_parents=False)
-        non_text_fields = list(filter(remove_unwanted_fields, fields))
-        for field in non_text_fields:
-            yield get_field_tuple(field)
-
-def get_incident_field_dict(field_name):
-    # prevents circular import
-    from incident.models import IncidentPage
-    fields = IncidentPage._meta.get_fields(include_parents=False)
-    field_names = [ field.name for field in fields ]
-    if field_name in field_names:
-        field = next((field for field in fields if field_name == field.name), None)
-        if hasattr(field, 'verbose_name'):
-            title = field.verbose_name
-        elif field.is_relation and hasattr(field, 'related_name'):
-            title = field.related_name
-        else:
-            title = field.name
-
-        if type(field) == ParentalManyToManyField:
-            field_type = 'autocomplete'
-            autocomplete_type = 'incident.{}'.format(field.remote_field.model.__name__)
-        elif type(field) == models.fields.related.ManyToOneRel:
-            field_type = 'autocomplete'
-            autocomplete_type = field.remote_field.model._autocomplete_model
-        elif len(field.choices) > 0:
-            # It's a maybe boolean, which we use radio buttons for
-            if field.choices[1] == ('JUST_TRUE', 'yes'):
-                field_type = 'radio'
-            else:
-                field_type = 'choice'
-
-        elif type(field) == models.DateField:
-            field_type = 'date'
-        elif type(field) == models.CharField:
-            field_type = 'text'
-        elif type(field) == models.BooleanField:
-            field_type = 'bool'
-        else:
-            field_type = str(type(field))
-
-        field_dict = dict(
-            name=field_name,
-            type=field_type,
-            title=title
-        )
-        if field_type == 'autocomplete':
-            field_dict['autocomplete_type'] = autocomplete_type
-
-        return field_dict
-    return None
-
 
 class IncidentFieldCategoryPage(Orderable):
     category = ParentalKey('common.CategoryPage', related_name='incident_fields')
@@ -369,8 +303,8 @@ class CategoryPage(MetadataPageMixin, Page):
         return response
 
     def get_incident_fields_dict(self):
-        category_fields = [ obj.incident_field for obj in self.incident_fields.all() ]
-        return [ get_incident_field_dict(field) for field in category_fields ]
+        category_fields = [obj.incident_field for obj in self.incident_fields.all()]
+        return [get_incident_field_dict(field) for field in category_fields]
 
 
 class SimplePage(MetadataPageMixin, Page):
