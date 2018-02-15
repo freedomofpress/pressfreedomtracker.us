@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0018_auto_20180205_2333'),
+        ('home', '0020_remove_homepage_incident_index_page'),
     ]
 
     operations = [

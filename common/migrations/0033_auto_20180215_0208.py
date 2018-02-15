@@ -14,7 +14,7 @@ import wagtail.wagtailimages.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0029_auto_20180205_2333'),
+        ('common', '0032_auto_20180206_0048'),
     ]
 
     operations = [
