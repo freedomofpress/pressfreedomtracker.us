@@ -117,5 +117,7 @@
 			{% include 'incident/_summary_table.html' with label="Results Summary" summary_table=summary_table %}
 		{% endif %}
 	</div>
-	{% include 'common/_category_methodology.html' with category=page %}
+	<div class="js-methodologies">
+		{% include 'common/_category_methodology.html' with category=page %}
+	</div>
 {% endblock %}
