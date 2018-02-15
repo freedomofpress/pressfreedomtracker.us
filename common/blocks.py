@@ -3,6 +3,7 @@ from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
+from common.validators import TemplateValidator
 
 
 class Heading1(blocks.StructBlock):
@@ -126,3 +127,12 @@ class RichTextBlockQuoteBlock(blocks.StructBlock):
     class Meta:
         template = 'common/blocks/blockquote.html'
         icon = "openquote"
+
+
+class RichTextTemplateBlock(blocks.RichTextBlock):
+    def clean(self, value):
+        cleaned_value = super(RichTextTemplateBlock, self).clean(value)
+
+        TemplateValidator()(cleaned_value.source)
+
+        return cleaned_value
