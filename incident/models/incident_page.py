@@ -196,8 +196,14 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name="US Citizenship Status"
     )
-    denial_of_entry = models.BooleanField(default=False)
-    stopped_previously = models.BooleanField(default=False)
+    denial_of_entry = models.BooleanField(
+        default=False,
+        verbose_name='Denied entry?'
+    )
+    stopped_previously = models.BooleanField(
+        default=False,
+        verbose_name='Stopped previously?'
+    )
     target_nationality = ParentalManyToManyField(
         'incident.Nationality',
         blank=True,
