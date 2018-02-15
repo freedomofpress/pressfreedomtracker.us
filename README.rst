@@ -183,3 +183,14 @@ Licenses for `Source Serif Pro <https://github.com/adobe-fonts/source-serif-pro>
 
 - `common/static/fonts/LICENSE.SourceSansPro.txt`
 - `common/static/fonts/LICENSE.SourceSerifPro.txt`
+
+Design decision notes
++++++++++++++++++++++
+
+Search
+------
+
+The search bar on the site is a shortcut to using incident search.
+This is because the site is primarily incident-related, and using incident search provides more powerful filtering as well as enhanced previews.
+As a result, there is no generic wagtail search view which includes other content such as blog posts.
+See https://github.com/freedomofpress/pressfreedom/pull/592.
