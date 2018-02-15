@@ -32,11 +32,7 @@ class TemplateValidator(object):
         for tag in self.disallowed_tags:
             parser.tags[tag] = self._disallowed_tag
 
-        error = None
         try:
             parser.parse()
         except TemplateSyntaxError as exc:
-            error = str(exc)
-
-        if error:
-            raise ValidationError(error)
+            raise ValidationError(str(exc))
