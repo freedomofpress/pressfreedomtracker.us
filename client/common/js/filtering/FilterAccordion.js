@@ -2,6 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import { CollapseIcon, ExpandIcon } from '~/filtering/Icons'
 import FilterSets from '~/filtering/FilterSets'
+import NewFilterSet from '~/filtering/NewFilterSet'
 
 
 function FilterAccordion({
@@ -16,7 +17,7 @@ function FilterAccordion({
 	if (!category.enabled) {
 		return null
 	}
-
+	console.log(category)
 	const FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : null
 	if (!FilterSet) {
 		// Don't bother rendering an accordion with no filters
@@ -25,7 +26,7 @@ function FilterAccordion({
 
 	const isActive = selectedAccordions.includes(category.id)
 	const collapsible = !noCategoryFiltering
-
+	console.log(filterValues)
 	return (
 		<li
 			className={classNames(
@@ -47,12 +48,14 @@ function FilterAccordion({
 				</button>
 			)}
 
-			{isActive && (
-				<FilterSet
-					handleFilterChange={handleFilterChange}
-					filterValues={filterValues}
-					choices={choices}
-				/>
+			{isActive && category.related_fields && (
+					<NewFilterSet
+						title={category.title}
+						fields={category.related_fields}
+						handleFilterChange={handleFilterChange}
+						filterValues={filterValues}
+						choices={choices}
+					/>
 			)}
 		</li>
 	)
