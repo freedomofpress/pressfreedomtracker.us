@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0029_searchsettings'),
+        ('common', '0030_searchsettings'),
     ]
 
     operations = [

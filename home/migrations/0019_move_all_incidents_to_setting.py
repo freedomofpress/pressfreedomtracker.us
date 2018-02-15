@@ -24,8 +24,8 @@ def move_all_incidents_to_setting(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0017_statbox_querystring'),
-        ('common', '0029_searchsettings'),
+        ('home', '0018_auto_20180205_2333'),
+        ('common', '0030_searchsettings'),
     ]
 
     operations = [

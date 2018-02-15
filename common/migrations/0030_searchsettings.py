@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailcore', '0039_collectionviewrestriction'),
-        ('common', '0028_auto_20170802_1308'),
+        ('common', '0029_auto_20180205_2333'),
     ]
 
     operations = [

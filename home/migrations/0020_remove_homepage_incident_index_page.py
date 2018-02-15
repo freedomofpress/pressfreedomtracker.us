@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0018_move_all_incidents_to_setting'),
+        ('home', '0019_move_all_incidents_to_setting'),
     ]
 
     operations = [
