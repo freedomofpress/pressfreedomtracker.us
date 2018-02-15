@@ -57,6 +57,13 @@ function FilterAccordion({
 						choices={choices}
 					/>
 			)}
+			{isActive && (
+				<FilterSet
+					handleFilterChange={handleFilterChange}
+					filterValues={filterValues}
+					choices={choices}
+				/>
+			)}
 		</li>
 	)
 }
