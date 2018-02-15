@@ -3,8 +3,10 @@ from django.template.base import Parser, Lexer
 from django.template.engine import Engine
 from django.template.exceptions import TemplateSyntaxError
 from django.template.library import import_library
+from django.utils.deconstruct import deconstructible
 
 
+@deconstructible
 class TemplateValidator(object):
     disallowed_tags = [
         'load',
@@ -36,3 +38,9 @@ class TemplateValidator(object):
             parser.parse()
         except TemplateSyntaxError as exc:
             raise ValidationError(str(exc))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__)
+
+
+validate_template = TemplateValidator()
