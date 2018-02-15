@@ -4,7 +4,7 @@ from incident.tests.factories import (
     IncidentPageFactory,
 )
 
-from incident.tests.utils import create_incident_filter
+from incident.utils.incident_filter import IncidentFilter
 
 
 class ChoiceFilters(TestCase):
@@ -22,7 +22,7 @@ class ChoiceFilters(TestCase):
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full
         )
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             status_of_seized_equipment=self.custody
         ).fetch()
 
@@ -41,7 +41,7 @@ class ChoiceFilters(TestCase):
         IncidentPageFactory(
             affiliation='other'
         )
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             status_of_seized_equipment="hello"
         ).fetch()
 
@@ -59,7 +59,7 @@ class ChoiceFilters(TestCase):
             status_of_seized_equipment=self.unknown
         )
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             status_of_seized_equipment='{0},{1}'.format(self.custody, self.returned_full)
         ).fetch()
 

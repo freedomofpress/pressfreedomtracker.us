@@ -13,7 +13,7 @@ from incident.tests.factories import (
     StateFactory,
 )
 from common.tests.factories import CategoryPageFactory
-from incident.utils.incident_filter import IncidentFilter
+from incident.circuits import CIRCUITS_BY_STATE
 from incident.utils.incident_fields import (
     INCIDENT_PAGE_FIELDS,
     ARREST_FIELDS,
@@ -27,9 +27,7 @@ from incident.utils.incident_fields import (
     PRIOR_RESTRAINT_FIELDS,
     DENIAL_OF_ACCESS_FIELDS
 )
-
-from incident.circuits import CIRCUITS_BY_STATE
-from incident.tests.utils import create_incident_filter
+from incident.utils.incident_filter import IncidentFilter
 
 
 class TestFiltering(TestCase):
@@ -43,7 +41,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             date_upper='2017-01-31',
             date_lower='2017-01-01',
         ).fetch()
@@ -58,7 +56,7 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 4, 1))
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             date_upper=target_date.isoformat(),
             date_lower='2017-01-01',
         ).fetch()
@@ -72,7 +70,7 @@ class TestFiltering(TestCase):
         incident2 = IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             date_upper='2017-01-31',
         ).fetch()
 
@@ -82,7 +80,7 @@ class TestFiltering(TestCase):
         """should locate inexactly dated incidents if filter date range
 begins in the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
-        _, incidents = create_incident_filter(
+        _, incidents = IncidentFilter(
             lower_date='2017-03-15',
             upper_date='2017-04-15',
         ).fetch()
@@ -94,7 +92,7 @@ begins in the same month"""
         """should locate inexactly dated incidents if filter date range ends anytime in the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
 
-        _, incidents = create_incident_filter(
+        _, incidents = IncidentFilter(
             lower_date='2017-02-20',
             upper_date='2017-03-03',
         ).fetch()
@@ -108,7 +106,7 @@ begins in the same month"""
 includes any dates from the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
 
-        _, incidents = create_incident_filter(
+        _, incidents = IncidentFilter(
             lower_date='2017-02-20',
             upper_date='2017-03-03',
         ).fetch()
@@ -122,7 +120,7 @@ includes any dates from the same month"""
 excludes all dates from the same month"""
         InexactDateIncidentPageFactory.create_batch(15)
 
-        _, incidents = create_incident_filter(
+        _, incidents = IncidentFilter(
             date_lower='2017-02-02',
             date_upper='2017-02-28',
         ).fetch()
@@ -134,7 +132,7 @@ excludes all dates from the same month"""
         IncidentPageFactory(date=date(2016, 12, 31))
         incident2 = IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             date_lower='2017-01-01',
         ).fetch()
 
@@ -149,7 +147,7 @@ excludes all dates from the same month"""
             body__0__rich_text__value=RichText('science fiction'),
         )
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             search_text='eggplant',
         ).fetch()
 
@@ -173,7 +171,7 @@ excludes all dates from the same month"""
         )
         ic2.save()
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             categories=str(category1.id),
         ).fetch()
         self.assertEqual({incident1}, set(incidents))
@@ -202,7 +200,7 @@ excludes all dates from the same month"""
         )
         ic3.save()
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             categories='{0},{1}'.format(str(category2.id), str(category3.id)),
         ).fetch()
         self.assertEqual({incident1, incident2}, set(incidents))
@@ -216,7 +214,7 @@ excludes all dates from the same month"""
         IncidentPageFactory(
             affiliation='other'
         )
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             affiliation=affiliation
         ).fetch()
 
@@ -228,7 +226,7 @@ excludes all dates from the same month"""
         circuit = CIRCUITS_BY_STATE[state.name]
         target = IncidentPageFactory(state=state)
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             circuit=circuit
         ).fetch()
 
@@ -246,7 +244,7 @@ excludes all dates from the same month"""
         target1.current_charges.commit()
         target2.dropped_charges.commit()
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             charges=str(charge.pk)
         ).fetch()
 
@@ -283,7 +281,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_filter_by_true_boolean_field(self):
         """should filter by boolean when true"""
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             charged_under_espionage_act='True'
         ).fetch()
 
@@ -292,7 +290,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_filter_by_false_boolean_field(self):
         """should filter by boolean when false"""
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             charged_under_espionage_act='False'
         ).fetch()
 
@@ -301,7 +299,7 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_return_all_with_invalid_bool(self):
         """Should return all incidents when filter is invalid"""
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             charged_under_espionage_act='Hello'
         ).fetch()
 
@@ -382,7 +380,7 @@ class TestDateFilters(TestCase):
             release_date=(self.date_lower - timedelta(days=1))
         )
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             release_date_lower=self.date_lower.isoformat()
         ).fetch()
 
@@ -400,7 +398,7 @@ class TestDateFilters(TestCase):
             release_date=(self.date_upper + timedelta(days=1))
         )
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             release_date_upper=self.date_upper.isoformat()
         ).fetch()
 
@@ -425,7 +423,7 @@ class TestDateFilters(TestCase):
             release_date=(self.date_upper + timedelta(days=1))
         )
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             release_date_lower=self.date_lower.isoformat(),
             release_date_upper=self.date_upper.isoformat()
         ).fetch()
@@ -448,7 +446,7 @@ class TestDateFilters(TestCase):
             release_date=(self.date_lower + timedelta(days=1))
         )
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             release_date_lower=self.date_lower.isoformat(),
             release_date_upper=self.date_lower.isoformat()
         ).fetch()
@@ -464,7 +462,7 @@ class TestDateFilters(TestCase):
         incident1 = IncidentPageFactory(date=date(2017, 12, 1))
         incident2 = IncidentPageFactory(date=date(2017, 12, 2))
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             date_upper='2017-12-31',
         ).fetch()
 
@@ -479,7 +477,7 @@ class TestDateFilters(TestCase):
         incident1 = IncidentPageFactory(date=date(2017, 11, 1))
         incident2 = IncidentPageFactory(date=date(2017, 11, 2))
 
-        summary, incidents = create_incident_filter(
+        summary, incidents = IncidentFilter(
             date_upper='2017-11-31',
         ).fetch()
 

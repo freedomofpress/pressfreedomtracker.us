@@ -4,7 +4,7 @@ from django.db.models.functions import TruncMonth
 
 from common.models.pages import CategoryPage
 from incident.models.incident_page import IncidentPage
-from incident.tests.test_filtering import create_incident_filter
+from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import Statistics
 from statistics.utils import ARREST_ID
 
@@ -27,8 +27,11 @@ def num_by_category(category_name, lower_date=None, upper_date=None):
     upper_date -- upper end of the date range (default None)
     """
     category_page = CategoryPage.objects.get(slug=category_name)
-    f = create_incident_filter(lower_date=lower_date, upper_date=upper_date,
-                               category=category_page)
+    f = IncidentFilter(
+        date_lower=lower_date,
+        date_upper=upper_date,
+        category=category_page,
+    )
     _, incidents = f.fetch()
     return incidents.count()
 
@@ -72,7 +75,7 @@ def arrests_by_status(
     unnecessary_use_of_force -- True/False if unecessary force was used (default both)
 
     """
-    f = create_incident_filter(
+    f = IncidentFilter(
         lower_date=lower_date,
         upper_date=upper_date,
         arrest_status=arrest_status,
