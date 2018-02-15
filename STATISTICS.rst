@@ -73,6 +73,8 @@ And when rendering the field that will contain the template tags:
 
 I am including the full context for clarity, but the main action happens when we call ``render_as_template``.
 
+Note: If adding new usage of render_as_template, be sure to add template validation to the relevant field(s), either by using ``common.validators.validate_template`` directly or using one of the Template blocks provided in ``common.blocks``.
+
 StatisticsBlock: Maps, Numbers, and Visualizations
 --------------------------------------------------
 
