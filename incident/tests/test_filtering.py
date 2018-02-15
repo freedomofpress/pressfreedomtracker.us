@@ -81,8 +81,8 @@ class TestFiltering(TestCase):
 begins in the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
         _, incidents = IncidentFilter(
-            lower_date='2017-03-15',
-            upper_date='2017-04-15',
+            date_lower='2017-03-15',
+            date_upper='2017-04-15',
         ).fetch()
         for target in targets:
             self.assertIn(target, incidents)
@@ -93,8 +93,8 @@ begins in the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
 
         _, incidents = IncidentFilter(
-            lower_date='2017-02-20',
-            upper_date='2017-03-03',
+            date_lower='2017-02-20',
+            date_upper='2017-03-03',
         ).fetch()
 
         for target in targets:
@@ -107,8 +107,8 @@ includes any dates from the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
 
         _, incidents = IncidentFilter(
-            lower_date='2017-02-20',
-            upper_date='2017-03-03',
+            date_lower='2017-02-20',
+            date_upper='2017-03-03',
         ).fetch()
 
         for target in targets:
@@ -227,7 +227,7 @@ excludes all dates from the same month"""
         target = IncidentPageFactory(state=state)
 
         summary, incidents = IncidentFilter(
-            circuit=circuit
+            circuits=circuit,
         ).fetch()
 
         self.assertTrue(target in incidents)

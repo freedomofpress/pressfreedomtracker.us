@@ -76,8 +76,8 @@ def arrests_by_status(
 
     """
     f = IncidentFilter(
-        lower_date=lower_date,
-        upper_date=upper_date,
+        date_lower=lower_date,
+        date_upper=upper_date,
         arrest_status=arrest_status,
         status_of_charges=status_of_charges,
         detention_date_lower=detention_date_lower,
