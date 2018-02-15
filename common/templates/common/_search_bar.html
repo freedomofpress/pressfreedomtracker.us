@@ -1,11 +1,15 @@
-<form action="{% url 'search' %}" class="search-bar {{ class|default:'' }}" method="get">
+{% load wagtailcore_tags %}
+
+{% with search_page=settings.common.SearchSettings.search_page %}
+{% if search_page %}
+<form action="{% pageurl search_page %}" class="search-bar {{ class|default:'' }}" method="get">
 	{% include "common/_search_icon.html" with class="search-bar__icon" %}
 
 	<input
 		type="text"
 		class="search-bar__input"
 		{% if search_query %} value="{{ search_query }}"{% endif %}
-		name="query"
+		name="search"
 	/>
 
 	<button
@@ -16,3 +20,5 @@
 		<span class="sr-only">Search</span>
 	</button>
 </form>
+{% endif %}
+{% endwith %}

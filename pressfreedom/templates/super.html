@@ -1,4 +1,4 @@
-{% load static wagtailmetadata_tags wagtailsettings_tags %}
+{% load static wagtailmetadata_tags %}
 {% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
@@ -33,7 +33,6 @@
 				{% if self %}
 					{% meta_tags %}
 				{% endif %}
-				{% get_settings %}
 				{% with seo_settings=settings.common.SocialSharingSEOSettings %}
 					{% if seo_settings.twitter %}
 						<meta name="twitter:site" content="@{{ seo_settings.twitter }}">

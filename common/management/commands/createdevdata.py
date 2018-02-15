@@ -13,7 +13,7 @@ from blog.models import BlogIndexPage, BlogPage
 from common.models import (
     CategoryPage, TaxonomyCategoryPage, TaxonomySettings,
     PersonPage, SimplePage, SimplePageWithSidebar,
-    FooterSettings, CustomImage,
+    FooterSettings, CustomImage, SearchSettings,
 )
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
@@ -249,12 +249,14 @@ class Command(BaseCommand):
             blog_index_page.add_child(instance=page)
 
         # INCIDENT RELATED PAGES
+        search_settings = SearchSettings.for_site(site)
         incident_index_page = IncidentIndexPage(
             title='All Incidents',
             slug='all-incidents'
         )
         home_page.add_child(instance=incident_index_page)
-        home_page.incident_index_page = incident_index_page
+        search_settings.search_page = incident_index_page
+        search_settings.save()
 
         for x in range(0, 100):
             page = IncidentPage(

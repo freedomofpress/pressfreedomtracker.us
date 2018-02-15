@@ -14,6 +14,7 @@ from modelcluster.fields import ParentalKey
 
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
+from common.models.settings import SearchSettings
 from incident.models.choices import get_filter_choices
 from incident.utils.incident_filter import IncidentFilter
 
@@ -40,15 +41,6 @@ class HomePage(MetadataPageMixin, Page):
         on_delete=models.SET_NULL,
         related_name='+',
         help_text='Recent blog posts will automatically be pulled from this page'
-    )
-
-    incident_index_page = models.ForeignKey(
-        'incident.IncidentIndexPage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        help_text='Recent incidents will automatically be pulled from this page'
     )
 
     statboxes_label = models.CharField(
@@ -132,7 +124,6 @@ class HomePage(MetadataPageMixin, Page):
 
         MultiFieldPanel([
             FieldPanel('recent_incidents_label'),
-            PageChooserPanel('incident_index_page', 'incident.IncidentIndexPage'),
         ], 'Recent Incidents'),
 
         MultiFieldPanel([
@@ -151,7 +142,10 @@ class HomePage(MetadataPageMixin, Page):
 
         incident_filter = IncidentFilter.from_request(request)
         context['category_options'] = incident_filter.get_category_options()
-        context['export_path'] = self.incident_index_page.url
+
+        search_page = SearchSettings.for_site(request.site).search_page
+        context['export_path'] = getattr(search_page, 'url', None)
+
         context['filter_choices'] = get_filter_choices()
         context['incidents'] = self.incidents.all().prefetch_related('incident__categories__category')
 

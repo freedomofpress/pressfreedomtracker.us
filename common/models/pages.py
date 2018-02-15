@@ -224,17 +224,17 @@ class CategoryPage(MetadataPageMixin, Page):
         # placed here to avoid circular dependency
         from incident.utils.incident_filter import IncidentFilter
         from incident.models.choices import get_filter_choices
-        from home.models import HomePage
+        from common.models.settings import SearchSettings
 
         context = super(CategoryPage, self).get_context(request)
 
         incident_filter = IncidentFilter.from_request(request)
         incident_filter.categories = str(self.page_ptr_id)
         context['category_options'] = incident_filter.get_category_options()
-        try:
-            context['export_path'] = HomePage.objects.live()[0].incident_index_page.url
-        except Exception:
-            context['export_path'] = None
+
+        search_page = SearchSettings.for_site(request.site).search_page
+        context['export_path'] = getattr(search_page, 'url', None)
+
         context['filter_choices'] = get_filter_choices()
         summary, entry_qs = incident_filter.fetch()
 

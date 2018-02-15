@@ -8,7 +8,6 @@ from autocomplete.urls.public import urlpatterns as autocomplete_public_urls
 from autocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from common import views as common_views
 from emails import urls as emails_urls
-from search import views as search_views
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
@@ -24,8 +23,6 @@ urlpatterns = [
 
     url(r'^documents/(\d+)/(.*)$', common_views.serve),
     url(r'^documents/', include(wagtaildocs_urls)),
-
-    url(r'^search/$', search_views.search, name='search'),
 
     url(r'', include(wagtail_urls)),
 ]

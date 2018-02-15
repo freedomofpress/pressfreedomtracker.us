@@ -7,6 +7,26 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from modelcluster.models import ClusterableModel
 
 
+@register_setting(icon='search')
+class SearchSettings(BaseSetting):
+    search_page = models.ForeignKey(
+        'incident.IncidentIndexPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Incident index page to use for search and for "Recent incidents" feeds',
+        verbose_name='Incident search page',
+    )
+
+    panels = [
+        PageChooserPanel('search_page'),
+    ]
+
+    class Meta:
+        verbose_name = 'Incident search'
+
+
 @register_setting
 class FooterSettings(BaseSetting):
     body = RichTextField(blank=True, null=True)

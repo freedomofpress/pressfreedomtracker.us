@@ -10,6 +10,7 @@
 			</a>
 		</li>
 
+		{% if incident_page %}
 		<li>
 			<a
 				href="{% url 'wagtailadmin_pages:add_subpage' incident_page.pk %}"
@@ -19,5 +20,6 @@
 				Add a new incident
 			</a>
 		</li>
+		{% endif %}
 	</ul>
 </section>
