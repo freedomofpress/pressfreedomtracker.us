@@ -18,6 +18,10 @@ import FiltersFooter from '~/filtering/FiltersFooter'
 import FilterSets from '~/filtering/FilterSets'
 
 
+function Filters({ children }) {
+	return <div className="filters">{children}</div>
+}
+
 class IncidentFiltering extends PureComponent {
 	constructor(props, ...args) {
 		super(props, ...args)
