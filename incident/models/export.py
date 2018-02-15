@@ -4,7 +4,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
 
 
-EXCLUDED_FIELDS = (
+EXCLUDED_FIELDS = {
     'id',
     'has_unpublished_changes',
     'live',
@@ -31,7 +31,7 @@ EXCLUDED_FIELDS = (
     'expired',
     'live_revision',
     'search_image',
-)
+}
 
 
 def humanize(obj):
