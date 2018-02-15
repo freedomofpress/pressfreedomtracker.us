@@ -119,11 +119,8 @@ class IncidentFiltering extends PureComponent {
 		const whitelistedFields = this.state.categoriesEnabled
 			.filter(({ enabled }) => enabled)
 			.reduce((list, category) => {
-				if (!FilterSets.hasOwnProperty(category.title)) {
-					return list
-				}
-
-				return list.concat(FilterSets[category.title].fields)
+				const related_field_names = category.related_fields.map((field) => field.name)
+				return list.concat(related_field_names)
 			}, FilterSets['General'].fields)
 
 
@@ -324,14 +321,17 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleFilterChange(label, event) {
+		console.log('label', label)
+		console.log('event', event)
+		let value
 		if (!event) {
-			var value = null
+			value = null
 		} else if (isMoment(event)) {
-			var value = event
+			value = event
 		} else if (event.target && event.target.hasOwnProperty('checked')) {
-			var value = event.target.checked
+			value = event.target.checked
 		} else if (event.target) {
-			var value = event.target.value
+			value = event.target.value
 		}
 
 		const receivedErroneousValue = (
@@ -340,6 +340,7 @@ class IncidentFiltering extends PureComponent {
 			(value === null || value === undefined)
 		)
 		if (receivedErroneousValue) {
+			console.error("Erroneous Value", value)
 			return
 		}
 
