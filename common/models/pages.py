@@ -22,6 +22,7 @@ from common.blocks import (
     Heading3,
     LogoListBlock,
     StyledTextBlock,
+    StyledTextTemplateBlock,
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock,
     RichTextBlockQuoteBlock,
@@ -33,6 +34,7 @@ from common.utils import (
     get_incident_field_dict,
     IncidentPageFieldIterator
 )
+from common.validators import validate_template
 from statistics.registry import get_numbers_choices
 
 
@@ -166,7 +168,7 @@ class PersonPage(Page):
 
 class QuickFact(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='quick_facts')
-    body = RichTextField()
+    body = RichTextField(validators=[validate_template])
     link_url = models.URLField(blank=True)
 
 
@@ -212,7 +214,7 @@ class IncidentFieldCategoryPage(Orderable):
 
 
 class CategoryPage(MetadataPageMixin, Page):
-    methodology = RichTextField(null=True, blank=True)
+    methodology = RichTextField(blank=True, validators=[validate_template])
     plural_name = models.CharField(max_length=255, null=True, blank=True)
     page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
 
@@ -309,7 +311,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
 class SimplePage(MetadataPageMixin, Page):
     body = StreamField([
-        ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
+        ('text', StyledTextTemplateBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),

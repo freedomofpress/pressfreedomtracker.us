@@ -15,6 +15,7 @@ from modelcluster.fields import ParentalKey
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
+from common.validators import validate_template
 from incident.models.choices import get_filter_choices
 from incident.utils.incident_filter import IncidentFilter
 
@@ -169,7 +170,7 @@ class HomePageIncidents(Orderable):
 
 class StatBox(Orderable):
     page = ParentalKey('home.HomePage', related_name='statboxes')
-    value = models.CharField(max_length=1000)
+    value = models.CharField(max_length=1000, validators=[validate_template])
     label = models.CharField(max_length=1000)
     color = models.CharField(
         max_length=255,
