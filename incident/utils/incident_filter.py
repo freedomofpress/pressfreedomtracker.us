@@ -227,13 +227,13 @@ class IncidentFilter(object):
         self.search_filter = SearchFilter()
         self.filters = self._get_filters(self.base_filters)
 
-        self.cleaned_data['search'] = self.search_filter.clean(self.search_filter.get_value(self.data))
-
-        for f in self.filters:
+        for f in [self.search_filter] + self.filters:
             try:
-                self.cleaned_data[f.name] = f.clean(f.get_value(self.data))
+                cleaned_value = f.clean(f.get_value(self.data))
+                if cleaned_value is not None:
+                    self.cleaned_data[f.name] = cleaned_value
             except ValidationError:
-                self.cleaned_data[f.name] = None
+                pass
 
     def get_category_options(self):
         return [
