@@ -253,6 +253,11 @@ class Migration(migrations.Migration):
     dependencies = [
         ('common', '0035_auto_20180215_2149'),
         ('home', '0020_remove_homepage_incident_index_page'),
+        ('forms', '0003_formpage_search_image'),
+        ('blog', '0015_auto_20180208_0024'),
+        ('incident', '0023_auto_20180215_2149'),
+        ('menus', '0001_initial'),
+        ('wagtailforms', '0001_initial')
     ]
 
     operations = [
