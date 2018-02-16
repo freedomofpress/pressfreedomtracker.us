@@ -23,6 +23,12 @@ provisioner:
     side_effect: side_effect.yml
   lint:
     name: ansible-lint
+  config_options:
+    defaults:
+      callback_whitelist: junit
+      stdout_callback: unixy
+  env:
+    JUNIT_OUTPUT_DIR: ../../test-results
 scenario:
   name: ci
   test_sequence:

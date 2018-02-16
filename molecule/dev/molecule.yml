@@ -13,6 +13,12 @@ provisioner:
     name: ansible-lint
   playbooks:
     side_effect: side_effect.yml
+  config_options:
+    defaults:
+      callback_whitelist: junit
+      stdout_callback: unixy
+  env:
+    JUNIT_OUTPUT_DIR: ../../test-results
 scenario:
   name: dev
   converge_sequence:
