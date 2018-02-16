@@ -3,8 +3,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
+from wagtail.wagtailcore.models import Page, Site
+from wagtail.wagtailcore.rich_text import RichText
 
-from common.models import CategoryPage, IncidentFieldCategoryPage
+from common.models import (CategoryPage, IncidentFieldCategoryPage, TaxonomyCategoryPage, TaxonomySettings
+)
 from home.models import HomePage
 
 
@@ -193,8 +196,35 @@ CATEGORIES = {
 
 
 def create_initial_category_fields(apps, schema_editor):
-    home_page = HomePage.objects.first()
+    if not HomePage.objects.filter(slug='home'):
+        root_page = Page.objects.get(title='Root')
+        # Delete the default home page
+        Page.objects.get(slug='home').delete()
+        home_page = HomePage(
+            title='Home',
+            slug='home',
+            about=RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'),
+        )
+        root_page.add_child(instance=home_page)
+    else:
+        home_page = HomePage.objects.get(slug='home')
 
+    if not Site.objects.filter(is_default_site=True):
+        site = Site.objects.create(
+            site_name='Press Freedom Incidents (Dev)',
+            hostname='localhost',
+            port='8000',
+            root_page=home_page,
+            is_default_site=True
+        )
+    else:
+        site = Site.objects.get(
+            is_default_site=True,
+        )
+
+    taxonomy_settings = TaxonomySettings.for_site(site)
+
+    counter = 1
     for title, fields in CATEGORIES.items():
         category = CategoryPage.objects.filter(title=title).first()
         if not category:
@@ -206,6 +236,12 @@ def create_initial_category_fields(apps, schema_editor):
                 category=category,
                 incident_field=field['name']
             )
+        TaxonomyCategoryPage.objects.create(
+            sort_order=counter,
+            taxonomy_setting=taxonomy_settings,
+            category=category,
+        )
+        counter += 1
 
 
 class Migration(migrations.Migration):
