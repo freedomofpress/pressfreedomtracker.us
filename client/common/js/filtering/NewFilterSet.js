@@ -49,7 +49,7 @@ function NewFilterSet({ title, fields, choices, handleFilterChange, filterValues
         return <BoolInput
           handleFilterChange={handleFilterChange}
           filterValues={filterValues}
-          label={`${field.title}?`}
+          label={`${field.title}`}
           filter={field.name}
           key={index}
         />
