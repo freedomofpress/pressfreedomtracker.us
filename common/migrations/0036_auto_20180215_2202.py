@@ -257,7 +257,9 @@ class Migration(migrations.Migration):
         ('blog', '0015_auto_20180208_0024'),
         ('incident', '0023_auto_20180215_2149'),
         ('menus', '0001_initial'),
-        ('wagtailforms', '0001_initial')
+        ('wagtailforms', '0001_initial'),
+        ('wagtailredirects', '0001_initial'),
+        ('wagtailcore', '0039_collectionviewrestriction'),
     ]
 
     operations = [
