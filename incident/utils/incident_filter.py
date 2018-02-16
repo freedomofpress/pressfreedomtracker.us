@@ -1,8 +1,18 @@
 from datetime import date
-from functools import reduce
 
-from django.db.models import Count, Q, F, Value, DateField, DurationField
+from django.core.exceptions import ValidationError
+from django.db.models import (
+    CharField,
+    Count,
+    DateField,
+    DurationField,
+    F,
+    ManyToManyField,
+    Q,
+    Value,
+)
 from django.db.models.functions import Trunc, Cast
+from django.db.models.fields.related import ManyToOneRel
 from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
@@ -10,307 +20,220 @@ from incident.models.incident_page import IncidentPage
 from incident.circuits import STATES_BY_CIRCUIT
 
 from incident.utils.db import MakeDateRange
-from incident.utils.incident_fields import (
-    INCIDENT_PAGE_FIELDS,
-    ARREST_FIELDS,
-    LAWSUIT_FIELDS,
-    EQUIPMENT_FIELDS,
-    BORDER_STOP_FIELDS,
-    PHYSICAL_ASSAULT_FIELDS,
-    SUBPOENA_FIELDS,
-    LEAK_PROSECUTIONS_FIELDS,
-    LEGAL_ORDER_FIELDS,
-    PRIOR_RESTRAINT_FIELDS,
-    DENIAL_OF_ACCESS_FIELDS
-)
-
-from incident.utils.validators import (
-    validate_choices,
-    validate_date,
-    validate_integer_list,
-    validate_bool,
-    validate_circuits,
-)
 
 
-def get_kwargs(fields, current_kwargs, request):
-    for field in fields:
-        field_name = field['name']
-        if not field['type'] == 'date':
-            current_kwargs[field_name] = request.GET.get(field_name)
+class Filter(object):
+    def __init__(self, name, model_field, lookup=None):
+        self.name = name
+        self.model_field = model_field
+        self.lookup = lookup or name
+
+    def get_value(self, data):
+        return data.get(self.name) or None
+
+    def clean(self, value):
+        return self.model_field.to_python(value)
+
+    def filter(self, queryset, value):
+        """
+        Filter the queryset according to the given (cleaned) value.
+
+        This will only get called if value is not None.
+        """
+        return queryset.filter(**{self.lookup: value})
+
+
+class DateFilter(Filter):
+    def __init__(self, *args, fuzzy=False, **kwargs):
+        self.fuzzy = fuzzy
+        super(DateFilter, self).__init__(*args, **kwargs)
+
+    def get_value(self, data):
+        start = data.get('{}_lower'.format(self.name)) or None
+        end = data.get('{}_upper'.format(self.name)) or None
+        return start, end
+
+    def clean(self, value):
+        start, end = value
+
+        start = self.model_field.to_python(start)
+        end = self.model_field.to_python(end)
+
+        if start and end and start > end:
+            value = None
+        elif start or end:
+            value = (start, end)
         else:
-            current_kwargs["{0}_lower".format(field_name)] = request.GET.get("{0}_lower".format(field_name))
-            current_kwargs["{0}_upper".format(field_name)] = request.GET.get("{0}_upper".format(field_name))
-    return current_kwargs
+            value = None
+
+        return value
+
+    def filter(self, queryset, value):
+        lower_date, upper_date = value
+
+        if lower_date == upper_date:
+            return queryset.filter(**{self.lookup: lower_date})
+
+        if self.fuzzy:
+            queryset = queryset.annotate(
+                fuzzy_date=MakeDateRange(
+                    Cast(Trunc('date', 'month'), DateField()),
+                    Cast(F('date') + Cast(Value('1 month'), DurationField()), DateField()),
+                ),
+            )
+            target_range = DateRange(
+                lower=lower_date,
+                upper=upper_date,
+                bounds='[]'
+            )
+            exact_date_match = Q(
+                date__contained_by=target_range,
+                exact_date_unknown=False,
+            )
+
+            inexact_date_match_lower = Q(
+                exact_date_unknown=True,
+                fuzzy_date__overlap=target_range,
+            )
+
+            return queryset.filter(exact_date_match | inexact_date_match_lower)
+
+        return queryset.filter(**{
+            '{0}__contained_by'.format(self.lookup): DateRange(
+                lower=lower_date,
+                upper=upper_date,
+                bounds='[]'
+            )
+        })
+
+
+class ChoiceFilter(Filter):
+    def get_choices(self):
+        return {choice[0] for choice in self.model_field.choices}
+
+    def clean(self, value):
+        if not value:
+            return None
+        values = value.split(',')
+        return [v for v in values if v in self.get_choices()]
+
+    def filter(self, queryset, value):
+        return queryset.filter(**{'{}__in'.format(self.lookup): value})
+
+
+class ManyRelationFilter(Filter):
+    def clean(self, value):
+        if not value:
+            return None
+        values = value.split(',')
+
+        value = []
+        for v in values:
+            try:
+                value.append(int(v))
+            except ValueError:
+                continue
+        return value
+
+    def filter(self, queryset, value):
+        return queryset.filter(**{'{}__in'.format(self.lookup): value})
+
+
+class SearchFilter(Filter):
+    def __init__(self):
+        super(SearchFilter, self).__init__('search', CharField())
+
+    def filter(self, queryset, value):
+        return queryset.search(value, order_by_relevance=False)
+
+
+class ChargesFilter(ManyRelationFilter):
+    def filter(self, queryset, value):
+        dropped_charges_match = Q(dropped_charges__in=value)
+        current_charges_match = Q(current_charges__in=value)
+        return queryset.filter(current_charges_match | dropped_charges_match)
+
+
+class CircuitsFilter(ChoiceFilter):
+    def get_choices(self):
+        return set(STATES_BY_CIRCUIT)
+
+    def filter(self, queryset, value):
+        states = set()
+        for circuit in value:
+            states |= STATES_BY_CIRCUIT[circuit]
+
+        return queryset.filter(state__name__in=states)
 
 
 class IncidentFilter(object):
-    def __init__(
-        self,
-        # FIELDS
-        search_text=None,
-        date_lower=None,
-        date_upper=None,
-        categories=None,
-        targets=None,
-        affiliation=None,
-        city=None,
-        state=None,
-        tags=None,
-        # ARREST/DETENTION
-        arrest_status=None,
-        status_of_charges=None,
-        detention_date_upper=None,
-        detention_date_lower=None,
-        release_date_upper=None,
-        release_date_lower=None,
-        unnecessary_use_of_force=None,
-        # LAWSUIT
-        lawsuit_name=None,
-        venue=None,
-        # EQUIPMENT
-        equipment_seized=None,
-        equipment_broken=None,
-        status_of_seized_equipment=None,
-        is_search_warrant_obtained=None,
-        actor=None,
-        # BORDER STOP
-        border_point=None,
-        stopped_at_border=None,
-        stopped_previously=None,
-        target_us_citizenship_status=None,
-        denial_of_entry=None,
-        target_nationality=None,
-        did_authorities_ask_for_device_access=None,
-        did_authorities_ask_for_social_media_user=None,
-        did_authorities_ask_for_social_media_pass=None,
-        did_authorities_ask_about_work=None,
-        were_devices_searched_or_seized=None,
-        # PHYSICAL ASSAULT
-        assailant=None,
-        was_journalist_targeted=None,
-        # LEAK PROSECUTION
-        charged_under_espionage_act=None,
-        # SUBPOENA
-        subpoena_type=None,
-        subpoena_status=None,
-        held_in_contempt=None,
-        detention_status=None,
-        # LEGAL ORDER
-        third_party_in_possession_of_communications=None,
-        third_party_business=None,
-        legal_order_type=None,
-        # PRIOR RESTRAINT
-        status_of_prior_restraint=None,
-        # DENIAL OF ACCESS
-        politicians_or_public_figures_involved=None,
-        # OTHER
-        circuits=None,
-        charges=None,
-    ):
-        self.search_text = search_text
-        self.date_lower = validate_date(date_lower)
-        self.date_upper = validate_date(date_upper)
-        self.categories = categories
-        self.targets = targets
-        self.affiliation = affiliation
-        self.state = state
-        self.tags = tags
-        self.city = city
+    base_filters = (
+        'affiliation',
+        'categories',
+        'city',
+        'date',
+        'state',
+        'tags',
+        'targets',
+    )
 
-        # Arrest/Detention
-        self.arrest_status = arrest_status
-        self.status_of_charges = status_of_charges
-        self.detention_date_lower = validate_date(detention_date_lower)
-        self.detention_date_upper = validate_date(detention_date_upper)
-        self.release_date_lower = validate_date(release_date_lower)
-        self.release_date_upper = validate_date(release_date_upper)
-        self.unnecessary_use_of_force = unnecessary_use_of_force
+    filter_overrides = {
+        'circuits': {'filter_cls': CircuitsFilter},
+        'charges': {'filter_cls': ChargesFilter},
+        'date': {'fuzzy': True},
+        'equipment_seized': {'lookup': 'equipment_seized__equipment'},
+        'equipment_broken': {'lookup': 'equipment_broken__equipment'},
+        'categories': {'lookup': 'categories__category'},
+    }
 
-        # LAWSUIT
-        self.lawsuit_name = lawsuit_name
-        self.venue = venue
-
-        # EQUIPMENT
-        self.equipment_seized = equipment_seized
-        self.equipment_broken = equipment_broken
-        self.status_of_seized_equipment = status_of_seized_equipment
-        self.is_search_warrant_obtained = is_search_warrant_obtained
-        self.actor = actor
-
-        # BORDER STOP
-        self.border_point = border_point
-        self.stopped_at_border = stopped_at_border
-        self.target_us_citizenship_status = target_us_citizenship_status
-        self.denial_of_entry = denial_of_entry
-        self.stopped_previously = stopped_previously
-        self.target_nationality = target_nationality
-        self.did_authorities_ask_for_device_access = did_authorities_ask_for_device_access
-        self.did_authorities_ask_for_social_media_user = did_authorities_ask_for_social_media_user
-        self.did_authorities_ask_for_social_media_pass = did_authorities_ask_for_social_media_pass
-        self.did_authorities_ask_about_work = did_authorities_ask_about_work
-        self.were_devices_searched_or_seized = were_devices_searched_or_seized
-
-        # PHYSICAL ASSAULT
-        self.assailant = assailant
-        self.was_journalist_targeted = was_journalist_targeted
-
-        # LEAK PROSECUTION
-        self.charged_under_espionage_act = charged_under_espionage_act
-
-        # SUBPOENA
-        self.subpoena_type = subpoena_type
-        self.subpoena_status = subpoena_status
-        self.held_in_contempt = held_in_contempt
-        self.detention_status = detention_status
-
-        # LEGAL ORDER
-        self.third_party_in_possession_of_communications = third_party_in_possession_of_communications
-        self.third_party_business = third_party_business
-        self.legal_order_type = legal_order_type
-
-        # PRIOR RESTRAINT
-        self.status_of_prior_restraint = status_of_prior_restraint
-
-        # DENIAL OF ACCESS
-        self.politicians_or_public_figures_involved = politicians_or_public_figures_involved
-
-        # OTHER
-        self.circuits = circuits
-        self.charges = charges
-
-    def create_filters(self, fields, incidents):
-        """Creates filters based on dicts for fields
-
-        'name' should be the name of the field AS IT APPEARS ON THE MODEL
-        'type' should be 'choice', 'pk', 'bool', 'date' or 'char'
-        'choices' should match the choices on the model, if any
-        'modifier' should be a modifier on the lookup field
-        'category_slug' should be the slug of the category for the field. For boolean fields, the filter uses the category, to show correctly interperet falses.
-        """
-
-        for field in fields:
-            field_name = field['name']
-
-            if field['type'] == 'date':
-                if getattr(self, '{0}_lower'.format(field_name)) or getattr(self, '{0}_upper'.format(field_name)):
-                    lower_date = getattr(self, '{0}_lower'.format(field_name))
-                    upper_date = getattr(self, '{0}_upper'.format(field_name))
-
-                    if lower_date == upper_date:
-                        kw = {
-                            field_name: lower_date
-                        }
-                        incidents = incidents.filter(**kw)
-                    elif lower_date and upper_date and lower_date > upper_date:
-                        pass
-                    elif field_name == 'date':
-                        # Special case for date field, which can be an inexact date
-                        incidents = incidents.annotate(
-                            fuzzy_date=MakeDateRange(
-                                Cast(Trunc('date', 'month'), DateField()),
-                                Cast(F('date') + Cast(Value('1 month'), DurationField()), DateField()),
-                            ),
-                        )
-                        target_range = DateRange(
-                            lower=self.date_lower,
-                            upper=self.date_upper,
-                            bounds='[]'
-                        )
-                        exact_date_match = Q(
-                            date__contained_by=target_range,
-                            exact_date_unknown=False,
-                        )
-
-                        inexact_date_match_lower = Q(
-                            exact_date_unknown=True,
-                            fuzzy_date__overlap=target_range,
-                        )
-
-                        incidents = incidents.filter(exact_date_match | inexact_date_match_lower)
-                    else:
-                        kw = {
-                            '{0}__contained_by'.format(field_name): DateRange(
-                                lower=lower_date,
-                                upper=upper_date,
-                                bounds='[]'
-                            )
-                        }
-                        incidents = incidents.filter(**kw)
-
-            elif getattr(self, field_name):
-                if field['type'] == 'choice':
-                    validated_field = validate_choices(getattr(self, field_name).split(','), field['choices'])
-                    if not validated_field:
-                        return incidents
-
-                    kw = {
-                        '{0}__in'.format(field_name): validated_field
-                    }
-                    incidents = incidents.filter(**kw)
-
-                if field['type'] == 'pk':
-                    validated_field = validate_integer_list(getattr(self, field_name).split(','))
-                    if not validated_field:
-                        continue
-
-                    if 'modifier' in field.keys():
-                        kw = {
-                            '{0}__{1}__in'.format(field_name, field['modifier']): validated_field
-                        }
-                    else:
-                        kw = {
-                            '{0}__in'.format(field_name): validated_field
-                        }
-                    incidents = incidents.filter(**kw)
-
-                if field['type'] == 'bool' and getattr(self, field_name):
-                    valid_bool = validate_bool(getattr(self, field_name))
-                    if valid_bool:
-                        filter_kw = {
-                            field_name: valid_bool,
-                        }
-
-                        incidents = incidents.filter(**filter_kw)
-
-                if field['type'] == 'char':
-                    kw = {
-                        '{0}'.format(field_name): getattr(self, field_name)
-                    }
-                    incidents = incidents.filter(**kw)
-
-        return incidents.prefetch_related('categories__category')
+    def __init__(self, data):
+        self.data = data
+        self.cleaned_data = None
+        self.search_filter = None
+        self.filters = None
 
     @classmethod
-    def from_request(kls, request):
-        kwargs = {
-            'search_text': request.GET.get('search'),
-            'date_lower': request.GET.get('date_lower'),
-            'date_upper': request.GET.get('date_upper'),
-            'categories': request.GET.get('categories'),
-            'circuits': request.GET.get('circuits'),
-            'charges': request.GET.get('charges'),
-        }
+    def from_request(cls, request):
+        return cls(request.GET)
 
-        kwargs = reduce(
-            (lambda obj, fields: get_kwargs(fields, obj, request)),
-            [
-                INCIDENT_PAGE_FIELDS,
-                ARREST_FIELDS,
-                LAWSUIT_FIELDS,
-                EQUIPMENT_FIELDS,
-                BORDER_STOP_FIELDS,
-                PHYSICAL_ASSAULT_FIELDS,
-                LEAK_PROSECUTIONS_FIELDS,
-                LEGAL_ORDER_FIELDS,
-                PRIOR_RESTRAINT_FIELDS,
-                SUBPOENA_FIELDS,
-                DENIAL_OF_ACCESS_FIELDS,
-            ],
-            kwargs
-        )
+    def _get_filters(self, field_names):
+        filters = []
+        for name in field_names:
+            model_field = IncidentPage._meta.get_field(name)
 
-        return kls(**kwargs)
+            kwargs = {
+                'filter_cls': Filter,
+                'name': name,
+                'model_field': model_field,
+            }
+
+            if isinstance(model_field, (ManyToManyField, ManyToOneRel)):
+                kwargs['filter_cls'] = ManyRelationFilter
+            elif isinstance(model_field, DateField):
+                kwargs['filter_cls'] = DateFilter
+            elif model_field.choices:
+                kwargs['filter_cls'] = ChoiceFilter
+
+            if name in self.filter_overrides:
+                kwargs.update(self.filter_overrides[name])
+
+            filter_cls = kwargs.pop('filter_cls')
+            filters.append(filter_cls(**kwargs))
+        return filters
+
+    def clean(self):
+        self.cleaned_data = {}
+
+        self.search_filter = SearchFilter()
+        self.filters = self._get_filters(self.base_filters)
+
+        self.cleaned_data['search'] = self.search_filter.clean(self.search_filter.get_value(self.data))
+
+        for f in self.filters:
+            try:
+                self.cleaned_data[f.name] = f.clean(f.get_value(self.data))
+            except ValidationError:
+                self.cleaned_data[f.name] = None
 
     def get_category_options(self):
         return [
@@ -318,53 +241,29 @@ class IncidentFilter(object):
             for page in CategoryPage.objects.live()
         ]
 
-    def fetch(self):
-        """
-        Returns (summary, incidents) where summary is a tuple of (label, value)
-        pairs of interesting stats for these results and incidents is an
-        IncidentPage queryset.
+    def _get_queryset(self):
+        if self.cleaned_data is None:
+            self.clean()
 
-        """
+        queryset = IncidentPage.objects.live()
 
-        incidents = IncidentPage.objects.live()
+        for f in self.filters:
+            cleaned_value = self.cleaned_data.get(f.name)
+            if cleaned_value is not None:
+                queryset = f.filter(queryset, cleaned_value)
 
-        if self.categories:
-            incidents = self.by_categories(incidents)
+        return queryset.distinct()
 
-        if self.circuits:
-            incidents = self.by_circuits(incidents)
+    def get_queryset(self):
+        queryset = self._get_queryset().order_by('-date', 'path').distinct()
 
-        if self.charges:
-            incidents = self.by_charges(incidents)
+        search = self.cleaned_data.get('search')
+        if search:
+            queryset = self.search_filter.filter(queryset, search)
 
-        incidents = reduce(
-            (lambda obj, filters: self.create_filters(filters, obj)),
-            [
-                INCIDENT_PAGE_FIELDS,
-                ARREST_FIELDS,
-                LAWSUIT_FIELDS,
-                EQUIPMENT_FIELDS,
-                BORDER_STOP_FIELDS,
-                PHYSICAL_ASSAULT_FIELDS,
-                LEAK_PROSECUTIONS_FIELDS,
-                LEGAL_ORDER_FIELDS,
-                PRIOR_RESTRAINT_FIELDS,
-                SUBPOENA_FIELDS,
-                DENIAL_OF_ACCESS_FIELDS,
-            ],
-            incidents
-        )
+        return queryset
 
-        incidents = incidents.order_by('-date', 'path')
-
-        summary = self.summarize(incidents)
-
-        if self.search_text:
-            incidents = self.by_search_text(incidents)
-
-        return (summary, incidents)
-
-    def summarize(self, incidents):
+    def get_summary(self):
         """
         Return a tuple of (label, value) pairs with summary data of the
         incidents.
@@ -373,17 +272,18 @@ class IncidentFilter(object):
         of particular filters.
 
         """
+        queryset = self._get_queryset()
 
         TODAY = date.today()
         THIS_YEAR = TODAY.year
         THIS_MONTH = TODAY.month
 
         summary = (
-            ('Total Results', incidents.count),
+            ('Total Results', queryset.count()),
         )
 
         # Add counts for this year and this month if non-zero
-        incidents_this_year = incidents.filter(date__contained_by=DateRange(
+        incidents_this_year = queryset.filter(date__contained_by=DateRange(
             TODAY.replace(month=1, day=1),
             TODAY.replace(month=12, day=31),
             bounds='[]'
@@ -395,22 +295,18 @@ class IncidentFilter(object):
         else:
             next_month = THIS_MONTH
 
-        incidents_this_month = incidents.filter(date__contained_by=DateRange(
+        incidents_this_month = queryset.filter(date__contained_by=DateRange(
             TODAY.replace(day=1),
             TODAY.replace(month=next_month, day=1),
             bounds='[)'
         ))
 
-        if self.search_text:
-            num_this_year = incidents_this_year.search(
-                self.search_text, order_by_relevance=False
-            ).count()
-            num_this_month = incidents_this_month.search(
-                self.search_text, order_by_relevance=False
-            ).count()
-        else:
-            num_this_year = incidents_this_year.count()
-            num_this_month = incidents_this_month.count()
+        search = self.cleaned_data.get('search')
+        if search:
+            incidents_this_year = self.search_filter.filter(incidents_this_year, search)
+            incidents_this_month = self.search_filter.filter(incidents_this_month, search)
+        num_this_year = incidents_this_year.count()
+        num_this_month = incidents_this_month.count()
 
         if num_this_year > 0:
             summary = summary + ((
@@ -426,42 +322,15 @@ class IncidentFilter(object):
 
         # If more than one category is included in this set, add a summary item
         # for each category of the form ("Total <Category Name>", <Count>)
-        if self.categories is not None:
-            category_pks = validate_integer_list(self.categories.split(','))
-            if len(category_pks) > 1:
-                categories = CategoryPage.objects.filter(
-                    pk__in=category_pks
-                ).annotate(num_incidents=Count('incidents'))
-                for category in categories:
-                    summary = summary + ((
-                        category.plural_name if category.plural_name else category.title,
-                        category.num_incidents,
-                    ),)
+        category_pks = self.cleaned_data.get('categories')
+        if category_pks:
+            categories = CategoryPage.objects.filter(
+                pk__in=category_pks
+            ).annotate(num_incidents=Count('incidents'))
+            for category in categories:
+                summary = summary + ((
+                    category.plural_name if category.plural_name else category.title,
+                    category.num_incidents,
+                ),)
 
         return summary
-
-    def by_search_text(self, incidents):
-        return incidents.search(self.search_text, order_by_relevance=False)
-
-    def by_categories(self, incidents):
-        categories = validate_integer_list(self.categories.split(','))
-        if not categories:
-            return incidents
-
-        return incidents.filter(categories__category__in=categories).distinct()
-
-    def by_circuits(self, incidents):
-        validated_circuits = validate_circuits(self.circuits.split(','))
-
-        states = []
-        for circuit in validated_circuits:
-            states += STATES_BY_CIRCUIT[circuit]
-
-        return incidents.filter(state__name__in=states)
-
-    def by_charges(self, incidents):
-        validated_charges = validate_integer_list(self.charges.split(','))
-        dropped_charges_match = Q(dropped_charges__in=validated_charges)
-        current_charges_match = Q(current_charges__in=validated_charges)
-
-        return incidents.filter(current_charges_match | dropped_charges_match).distinct()

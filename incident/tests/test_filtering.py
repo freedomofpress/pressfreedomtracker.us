@@ -41,10 +41,10 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_upper='2017-01-31',
             date_lower='2017-01-01',
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
@@ -56,10 +56,10 @@ class TestFiltering(TestCase):
         IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 4, 1))
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_upper=target_date.isoformat(),
             date_lower='2017-01-01',
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
@@ -70,9 +70,9 @@ class TestFiltering(TestCase):
         incident2 = IncidentPageFactory(date=date(2016, 12, 31))
         IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_upper='2017-01-31',
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual({incident2, incident1}, set(incidents))
 
@@ -80,10 +80,10 @@ class TestFiltering(TestCase):
         """should locate inexactly dated incidents if filter date range
 begins in the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
-        _, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_lower='2017-03-15',
             date_upper='2017-04-15',
-        ).fetch()
+        )).get_queryset()
         for target in targets:
             self.assertIn(target, incidents)
         self.assertEqual(len(incidents), 15)
@@ -92,10 +92,10 @@ begins in the same month"""
         """should locate inexactly dated incidents if filter date range ends anytime in the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
 
-        _, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_lower='2017-02-20',
             date_upper='2017-03-03',
-        ).fetch()
+        )).get_queryset()
 
         for target in targets:
             self.assertIn(target, incidents)
@@ -106,10 +106,10 @@ begins in the same month"""
 includes any dates from the same month"""
         targets = InexactDateIncidentPageFactory.create_batch(15)
 
-        _, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_lower='2017-02-20',
             date_upper='2017-03-03',
-        ).fetch()
+        )).get_queryset()
 
         for target in targets:
             self.assertIn(target, incidents)
@@ -120,10 +120,10 @@ includes any dates from the same month"""
 excludes all dates from the same month"""
         InexactDateIncidentPageFactory.create_batch(15)
 
-        _, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_lower='2017-02-02',
             date_upper='2017-02-28',
-        ).fetch()
+        )).get_queryset()
         self.assertEqual(len(incidents), 0)
 
     def test_should_filter_by_date_range_unbounded_above(self):
@@ -132,9 +132,9 @@ excludes all dates from the same month"""
         IncidentPageFactory(date=date(2016, 12, 31))
         incident2 = IncidentPageFactory(date=date(2017, 2, 1))
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_lower='2017-01-01',
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual({incident2, incident1}, set(incidents))
 
@@ -147,9 +147,9 @@ excludes all dates from the same month"""
             body__0__rich_text__value=RichText('science fiction'),
         )
 
-        summary, incidents = IncidentFilter(
-            search_text='eggplant',
-        ).fetch()
+        incidents = IncidentFilter(dict(
+            search='eggplant',
+        )).get_queryset()
 
         self.assertEqual({incident1}, set(incidents))
 
@@ -171,9 +171,9 @@ excludes all dates from the same month"""
         )
         ic2.save()
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             categories=str(category1.id),
-        ).fetch()
+        )).get_queryset()
         self.assertEqual({incident1}, set(incidents))
 
     def test_should_filter_by_any_category_given(self):
@@ -200,9 +200,9 @@ excludes all dates from the same month"""
         )
         ic3.save()
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             categories='{0},{1}'.format(str(category2.id), str(category3.id)),
-        ).fetch()
+        )).get_queryset()
         self.assertEqual({incident1, incident2}, set(incidents))
 
     def test_should_filter_by_char_field(self):
@@ -214,9 +214,9 @@ excludes all dates from the same month"""
         IncidentPageFactory(
             affiliation='other'
         )
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             affiliation=affiliation
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
@@ -226,9 +226,9 @@ excludes all dates from the same month"""
         circuit = CIRCUITS_BY_STATE[state.name]
         target = IncidentPageFactory(state=state)
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             circuits=circuit,
-        ).fetch()
+        )).get_queryset()
 
         self.assertTrue(target in incidents)
         self.assertEqual(len(incidents), 1)
@@ -244,9 +244,9 @@ excludes all dates from the same month"""
         target1.current_charges.commit()
         target2.dropped_charges.commit()
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             charges=str(charge.pk)
-        ).fetch()
+        )).get_queryset()
 
         for target in [target1, target2]:
             self.assertIn(target, incidents)
@@ -281,27 +281,27 @@ class TestBooleanFiltering(TestCase):
 
     def test_should_filter_by_true_boolean_field(self):
         """should filter by boolean when true"""
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             charged_under_espionage_act='True'
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(self.true_bool in incidents)
 
     def test_should_filter_by_false_boolean_field(self):
         """should filter by boolean when false"""
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             charged_under_espionage_act='False'
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(self.false_bool in incidents)
 
     def test_should_return_all_with_invalid_bool(self):
         """Should return all incidents when filter is invalid"""
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             charged_under_espionage_act='Hello'
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 2)
 
@@ -333,8 +333,8 @@ class TestAllFiltersAtOnce(TestCase):
             else:
                 raise ValueError('Could not determine value for field of type %s' % t)
 
-        filters = IncidentFilter(
-            search_text='search text',
+        filters = IncidentFilter(dict(
+            search='search text',
             date_lower='2011-01-01',
             date_upper='2012-01-01',
             categories='1',
@@ -357,10 +357,12 @@ class TestAllFiltersAtOnce(TestCase):
                 PRIOR_RESTRAINT_FIELDS,
                 DENIAL_OF_ACCESS_FIELDS
             ) if f['name'] not in fields_to_skip
-            })
-        # This test passes if the following function completes with no
+            }
+        ))
+        # This test passes if the following functions complete with no
         # errors.
-        filters.fetch()
+        filters.get_queryset()
+        filters.get_summary()
 
 
 class TestDateFilters(TestCase):
@@ -380,9 +382,9 @@ class TestDateFilters(TestCase):
             release_date=(self.date_lower - timedelta(days=1))
         )
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             release_date_lower=self.date_lower.isoformat()
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
@@ -398,9 +400,9 @@ class TestDateFilters(TestCase):
             release_date=(self.date_upper + timedelta(days=1))
         )
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             release_date_upper=self.date_upper.isoformat()
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
@@ -423,10 +425,10 @@ class TestDateFilters(TestCase):
             release_date=(self.date_upper + timedelta(days=1))
         )
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             release_date_lower=self.date_lower.isoformat(),
             release_date_upper=self.date_upper.isoformat()
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 2)
         self.assertTrue(target1 in incidents)
@@ -446,10 +448,10 @@ class TestDateFilters(TestCase):
             release_date=(self.date_lower + timedelta(days=1))
         )
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             release_date_lower=self.date_lower.isoformat(),
             release_date_upper=self.date_lower.isoformat()
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
@@ -462,9 +464,9 @@ class TestDateFilters(TestCase):
         incident1 = IncidentPageFactory(date=date(2017, 12, 1))
         incident2 = IncidentPageFactory(date=date(2017, 12, 2))
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_upper='2017-12-31',
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual({incident1, incident2}, set(incidents))
 
@@ -477,8 +479,8 @@ class TestDateFilters(TestCase):
         incident1 = IncidentPageFactory(date=date(2017, 11, 1))
         incident2 = IncidentPageFactory(date=date(2017, 11, 2))
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             date_upper='2017-11-31',
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual({incident1, incident2}, set(incidents))

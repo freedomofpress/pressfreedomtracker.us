@@ -27,13 +27,12 @@ def num_by_category(category_name, lower_date=None, upper_date=None):
     upper_date -- upper end of the date range (default None)
     """
     category_page = CategoryPage.objects.get(slug=category_name)
-    f = IncidentFilter(
+    incident_filter = IncidentFilter(
         date_lower=lower_date,
         date_upper=upper_date,
         category=category_page,
     )
-    _, incidents = f.fetch()
-    return incidents.count()
+    return incident_filter.get_queryset().count()
 
 
 @statistics.number
@@ -75,7 +74,7 @@ def arrests_by_status(
     unnecessary_use_of_force -- True/False if unecessary force was used (default both)
 
     """
-    f = IncidentFilter(
+    incident_filter = IncidentFilter(
         date_lower=lower_date,
         date_upper=upper_date,
         arrest_status=arrest_status,
@@ -86,8 +85,7 @@ def arrests_by_status(
         release_date_upper=release_date_upper,
         unnecessary_use_of_force=unnecessary_use_of_force,
     )
-    _, incidents = f.fetch()
-    return incidents.count()
+    return incident_filter.get_queryset().count()
 
 
 @statistics.number

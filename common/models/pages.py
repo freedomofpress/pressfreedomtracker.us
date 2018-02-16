@@ -250,11 +250,11 @@ class CategoryPage(MetadataPageMixin, Page):
         context['export_path'] = getattr(search_page, 'url', None)
 
         context['filter_choices'] = get_filter_choices()
-        summary, entry_qs = incident_filter.fetch()
+        incident_qs = incident_filter.get_queryset()
 
         paginator, entries = paginate(
             request,
-            entry_qs,
+            incident_qs,
             page_key=DEFAULT_PAGE_KEY,
             per_page=8,
             orphans=5
@@ -262,7 +262,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
         context['entries_page'] = entries
         context['paginator'] = paginator
-        context['summary_table'] = summary
+        context['summary_table'] = incident_filter.get_summary()
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'

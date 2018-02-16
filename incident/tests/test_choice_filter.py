@@ -22,9 +22,9 @@ class ChoiceFilters(TestCase):
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full
         )
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             status_of_seized_equipment=self.custody
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
@@ -41,9 +41,9 @@ class ChoiceFilters(TestCase):
         IncidentPageFactory(
             affiliation='other'
         )
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             status_of_seized_equipment="hello"
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 3)
 
@@ -59,9 +59,9 @@ class ChoiceFilters(TestCase):
             status_of_seized_equipment=self.unknown
         )
 
-        summary, incidents = IncidentFilter(
+        incidents = IncidentFilter(dict(
             status_of_seized_equipment='{0},{1}'.format(self.custody, self.returned_full)
-        ).fetch()
+        )).get_queryset()
 
         self.assertEqual(len(incidents), 2)
         self.assertTrue(target1 in incidents)
