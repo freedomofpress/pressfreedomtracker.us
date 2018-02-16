@@ -6,7 +6,11 @@ from django.db import migrations
 from wagtail.wagtailcore.models import Page, Site
 from wagtail.wagtailcore.rich_text import RichText
 
-from common.models import (CategoryPage, IncidentFieldCategoryPage, TaxonomyCategoryPage, TaxonomySettings
+from common.models import (
+    CategoryPage,
+    IncidentFieldCategoryPage,
+    TaxonomyCategoryPage,
+    TaxonomySettings
 )
 from home.models import HomePage
 
