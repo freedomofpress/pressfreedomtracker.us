@@ -8,7 +8,6 @@ from common.models import CategoryPage, IncidentFieldCategoryPage
 from home.models import HomePage
 
 
-
 ARREST_FIELDS = [
     {
         'name': 'arrest_status',
@@ -191,6 +190,7 @@ CATEGORIES = {
     'Physical Attack': PHYSICAL_ASSAULT_FIELDS,
     'Subpoena / Legal Order': SUBPOENA_FIELDS,
 }
+
 
 def create_initial_category_fields(apps, schema_editor):
     home_page = HomePage.objects.first()
