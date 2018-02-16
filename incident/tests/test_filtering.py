@@ -484,3 +484,70 @@ class TestDateFilters(TestCase):
         )).get_queryset()
 
         self.assertEqual({incident1, incident2}, set(incidents))
+
+
+class ChoiceFilterTest(TestCase):
+    def setUp(self):
+        self.custody = 'CUSTODY'
+        self.returned_full = 'RETURNED_FULL'
+        self.unknown = 'UNKNOWN'
+
+    def test_should_filter_by_choice_field(self):
+        """should filter via a field that is a choice field"""
+
+        target = IncidentPageFactory(
+            status_of_seized_equipment=self.custody
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full
+        )
+        incident_filter = IncidentFilter(dict(
+            status_of_seized_equipment=self.custody
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 1)
+        self.assertIn(target, incidents)
+        self.assertEqual(incident_filter.cleaned_data, {'status_of_seized_equipment': self.custody})
+
+    def test_filter_should_return_all_if_choice_field_invalid(self):
+        """should not filter if choice is invalid"""
+
+        IncidentPageFactory(
+            status_of_seized_equipment=self.custody
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full
+        )
+        IncidentPageFactory(
+            affiliation='other'
+        )
+        incident_filter = IncidentFilter(dict(
+            status_of_seized_equipment="hello"
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 3)
+        self.assertEqual(incident_filter.cleaned_data, {})
+
+    def test_filter_should_handle_multiple_choices(self):
+        """should handle multiple choices"""
+        target1 = IncidentPageFactory(
+            status_of_seized_equipment=self.custody
+        )
+        target2 = IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.unknown
+        )
+
+        incident_filter = IncidentFilter(dict(
+            status_of_seized_equipment='{0},{1}'.format(self.custody, self.returned_full)
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 2)
+        self.assertIn(target1, incidents)
+        self.assertIn(target2, incidents)
+        self.assertEqual(incident_filter.cleaned_data, {'status_of_seized_equipment': self.custody})
