@@ -62,7 +62,7 @@ def get_incident_field_dict(field_name):
     fields = IncidentPage._meta.get_fields(include_parents=False)
     field_names = [field.name for field in fields]
     if field_name in field_names:
-        field = next((field for field in fields if field_name == field.name), None)
+        field = IncidentPage._meta.get_field(field_name)
         if hasattr(field, 'verbose_name'):
             title = field.verbose_name
         elif field.is_relation and hasattr(field, 'related_name'):
