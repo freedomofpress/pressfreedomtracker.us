@@ -127,7 +127,7 @@ class IncidentPage(MetadataPageMixin, Page):
         verbose_name='Dropped Charges',
     )
     release_date = models.DateField(
-        blank=True, 
+        blank=True,
         null=True,
         verbose_name='Release date'
     )

@@ -312,7 +312,6 @@ class IncidentFilter(object):
 
         return kls(**kwargs)
 
-
     def get_category_options(self):
         return [
             dict(id=page.id, title=page.title, url=page.url, related_fields=page.get_incident_fields_dict())
