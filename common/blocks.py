@@ -3,6 +3,14 @@ from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
+from common.validators import validate_template
+
+
+class RichTextTemplateBlock(blocks.RichTextBlock):
+    def clean(self, value):
+        cleaned_value = super(RichTextTemplateBlock, self).clean(value)
+        validate_template(cleaned_value.source)
+        return cleaned_value
 
 
 class Heading1(blocks.StructBlock):
@@ -101,6 +109,10 @@ class StyledTextBlock(blocks.StructBlock):
         template = 'common/blocks/styled_text.html'
         icon = 'doc-full'
         label = 'Styled Text Block'
+
+
+class StyledTextTemplateBlock(StyledTextBlock):
+    text = RichTextTemplateBlock()
 
 
 class LogoListBlock(blocks.ListBlock):
