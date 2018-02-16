@@ -13,7 +13,6 @@ export function AutocompleteInput({
 	type,
 	isSingle,
 }) {
-	console.log("TYPE", type)
 	return (
 		<div className="filters__input-row">
 			<span className="filters__input-label">{label}</span>
