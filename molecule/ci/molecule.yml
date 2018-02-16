@@ -26,6 +26,7 @@ provisioner:
   config_options:
     defaults:
       callback_whitelist: junit
+      stdout_callback: unixy
   env:
     JUNIT_OUTPUT_DIR: ../../test-results
 scenario:
