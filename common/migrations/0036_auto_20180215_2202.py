@@ -252,6 +252,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('common', '0035_auto_20180215_2149'),
+        ('home', '0020_remove_homepage_incident_index_page'),
     ]
 
     operations = [
