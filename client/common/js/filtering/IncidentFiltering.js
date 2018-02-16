@@ -325,8 +325,6 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleFilterChange(label, event) {
-		console.log('label', label)
-		console.log('event', event)
 		let value
 		if (!event) {
 			value = null

@@ -11,7 +11,6 @@ import {
 import { AUTOCOMPLETE_SINGLE_FILTERS, AUTOCOMPLETE_MULTI_FILTERS } from '~/filtering/constants'
 
 function NewFilterSet({ title, fields, choices, handleFilterChange, filterValues }) {
-    console.log("Fields", fields)
     const components = fields.map((field, index) => {
       if(field.type === 'choice' ) {
         return <ChoiceInput
@@ -55,9 +54,7 @@ function NewFilterSet({ title, fields, choices, handleFilterChange, filterValues
           key={index}
         />
       } else if (field.type === 'autocomplete'){
-        console.log("IN AUTOCOMPLETE")
         if(AUTOCOMPLETE_MULTI_FILTERS.includes(field.name)) {
-          console.log("MULTI")
           return <AutocompleteInput
             handleFilterChange={handleFilterChange}
             filterValues={filterValues}
@@ -68,7 +65,6 @@ function NewFilterSet({ title, fields, choices, handleFilterChange, filterValues
             key={index}
           />
         } else if(AUTOCOMPLETE_SINGLE_FILTERS.includes(field.name)) {
-          console.log("SINGLE")
           return <AutocompleteInput
             handleFilterChange={handleFilterChange}
             filterValues={filterValues}
