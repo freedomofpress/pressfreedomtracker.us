@@ -580,7 +580,9 @@ class IncidentPage(MetadataPageMixin, Page):
         """
         Returns the first category in the list of categories
         """
-        return self.categories.all().first().category
+        if self.categories.all().first():
+            return self.categories.all().first().category
+        return None
 
     def get_related_incidents(self):
         """
