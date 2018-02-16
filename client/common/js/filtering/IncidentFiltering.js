@@ -15,7 +15,7 @@ import FiltersHeader from '~/filtering/FiltersHeader'
 import FiltersExpandable from '~/filtering/FiltersExpandable'
 import FiltersBody from '~/filtering/FiltersBody'
 import FiltersFooter from '~/filtering/FiltersFooter'
-import FilterSets from '~/filtering/FilterSets'
+import GeneralFilterSet from '~/filtering/GeneralFilterSet'
 
 
 function Filters({ children }) {
@@ -125,7 +125,7 @@ class IncidentFiltering extends PureComponent {
 			.reduce((list, category) => {
 				const related_field_names = category.related_fields.map((field) => field.name)
 				return list.concat(related_field_names)
-			}, FilterSets['General'].fields)
+			}, GeneralFilterSet.fields)
 
 
 		const filterValues = DATE_FILTERS.reduce((filters, date_field) => {

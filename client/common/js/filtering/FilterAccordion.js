@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import { CollapseIcon, ExpandIcon } from '~/filtering/Icons'
-import FilterSets from '~/filtering/FilterSets'
+import GeneralFilterSet from '~/filtering/GeneralFilterSet'
 import NewFilterSet from '~/filtering/NewFilterSet'
 
 
@@ -20,7 +20,7 @@ function FilterAccordion({
 	let FilterSet
 	if(category.id === -1) {
 		// General is a special category with id -1 that should be rendered
-		FilterSet = typeof FilterSets[category.title] === 'function' ? FilterSets[category.title] : null
+		FilterSet = GeneralFilterSet
 	} else if (!category.related_fields || !(category.related_fields.length > 0)) {
 		// Don't bother rendering an accordion with no filters
 		return null
