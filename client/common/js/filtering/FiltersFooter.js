@@ -4,7 +4,6 @@ import { HorizontalLoader } from '~/filtering/Loader'
 
 
 function FiltersFooter({
-	handleApplyFilters,
 	handleClearFilters,
 	loading,
 	pageFetchParams,
@@ -26,14 +25,15 @@ function FiltersFooter({
 				<button
 					className="filters__button"
 					onClick={handleClearFilters}
+					type="button"
 				>
 					Clear Filters
 				</button>
 
 				<button
 					className="filters__button filters__button--bordered filters__button--wide"
-					onClick={handleApplyFilters}
 					disabled={!filtersTouched}
+					type="submit"
 				>
 					{loading > 0 && <HorizontalLoader />}
 					{loading === 0 && 'Apply Filters'}
