@@ -1,5 +1,6 @@
 ansible
 docker
+junit_xml
 molecule>=2.4
 pip-tools
 safety
