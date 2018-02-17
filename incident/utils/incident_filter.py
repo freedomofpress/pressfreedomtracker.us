@@ -1,7 +1,6 @@
 from datetime import date
-from itertools import chain
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import FieldDoesNotExist, ValidationError
 from django.db.models import (
     CharField,
     Count,
@@ -27,6 +26,7 @@ CATEGORIES = {
     'Arrest / Criminal Charge': [
         'arrest_status',
         'status_of_charges',
+        'charges',
         'detention_date',
         'release_date',
         'unnecessary_use_of_force',
@@ -256,7 +256,10 @@ class IncidentFilter(object):
     def _get_filters(self, field_names):
         filters = []
         for name in field_names:
-            model_field = IncidentPage._meta.get_field(name)
+            try:
+                model_field = IncidentPage._meta.get_field(name)
+            except FieldDoesNotExist:
+                model_field = CharField()
 
             kwargs = {
                 'filter_cls': Filter,
