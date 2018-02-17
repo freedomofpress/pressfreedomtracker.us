@@ -1,4 +1,5 @@
 from datetime import date
+from itertools import chain
 
 from django.core.exceptions import ValidationError
 from django.db.models import (
@@ -22,6 +23,53 @@ from incident.circuits import STATES_BY_CIRCUIT
 from incident.utils.db import MakeDateRange
 
 
+CATEGORIES = {
+    'Arrest / Criminal Charge': [
+        'arrest_status',
+        'status_of_charges',
+        'detention_date',
+        'release_date',
+        'unnecessary_use_of_force',
+    ],
+    'Border Stop': [
+        'border_point',
+        'stopped_at_border',
+        'stopped_previously',
+        'target_us_citizenship_status',
+        'denial_of_entry',
+        'target_nationality',
+        'did_authorities_ask_for_device_access',
+        'did_authorities_ask_for_social_media_user',
+        'did_authorities_ask_for_social_media_pass',
+        'did_authorities_ask_about_work',
+        'were_devices_searched_or_seized',
+    ],
+    'Denial of Access': [
+        'politicians_or_public_figures_involved',
+    ],
+    'Equipment Search or Seizure': [
+        'equipment_seized',
+        'equipment_broken',
+        'status_of_seized_equipment',
+        'is_search_warrant_obtained',
+        'actor',
+    ],
+    'Leak Case': [
+        'charged_under_espionage_act',
+    ],
+    'Physical Attack': [
+        'assailant',
+        'was_journalist_targeted',
+    ],
+    'Subpoena / Legal Order': [
+        'subpoena_type',
+        'subpoena_status',
+        'held_in_contempt',
+        'detention_status',
+    ],
+}
+
+
 class Filter(object):
     def __init__(self, name, model_field, lookup=None):
         self.name = name
@@ -41,6 +89,12 @@ class Filter(object):
         This will only get called if value is not None.
         """
         return queryset.filter(**{self.lookup: value})
+
+    def __repr__(self):
+        return '<{}: {}>'.format(
+            self.__class__.__name__,
+            self.name,
+        )
 
 
 class DateFilter(Filter):
@@ -115,7 +169,8 @@ class ChoiceFilter(Filter):
         if not value:
             return None
         values = value.split(',')
-        return [v for v in values if v in self.get_choices()]
+        value = [v for v in values if v in self.get_choices()]
+        return value or None
 
     def filter(self, queryset, value):
         return queryset.filter(**{'{}__in'.format(self.lookup): value})
@@ -175,6 +230,8 @@ class IncidentFilter(object):
         'state',
         'tags',
         'targets',
+        'lawsuit_name',
+        'venue',
     )
 
     filter_overrides = {
@@ -234,6 +291,23 @@ class IncidentFilter(object):
                     self.cleaned_data[f.name] = cleaned_value
             except ValidationError:
                 pass
+
+        category_ids = self.cleaned_data.get('categories')
+        if category_ids:
+            categories = CategoryPage.objects.live().filter(id__in=category_ids)
+            category_filters = self._get_filters((
+                f
+                for category in categories
+                for f in CATEGORIES.get(category.title, [])
+            ))
+            self.filters += category_filters
+            for f in category_filters:
+                try:
+                    cleaned_value = f.clean(f.get_value(self.data))
+                    if cleaned_value is not None:
+                        self.cleaned_data[f.name] = cleaned_value
+                except ValidationError:
+                    pass
 
     def get_category_options(self):
         return [

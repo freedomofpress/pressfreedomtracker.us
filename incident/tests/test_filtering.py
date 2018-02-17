@@ -491,63 +491,83 @@ class ChoiceFilterTest(TestCase):
         self.custody = 'CUSTODY'
         self.returned_full = 'RETURNED_FULL'
         self.unknown = 'UNKNOWN'
+        self.category = CategoryPageFactory(title='Equipment Search or Seizure')
 
     def test_should_filter_by_choice_field(self):
         """should filter via a field that is a choice field"""
 
         target = IncidentPageFactory(
-            status_of_seized_equipment=self.custody
+            status_of_seized_equipment=self.custody,
+            categories=[self.category],
         )
         IncidentPageFactory(
-            status_of_seized_equipment=self.returned_full
+            status_of_seized_equipment=self.returned_full,
+            categories=[self.category],
         )
         incident_filter = IncidentFilter(dict(
-            status_of_seized_equipment=self.custody
+            categories=str(self.category.id),
+            status_of_seized_equipment=self.custody,
         ))
 
         incidents = incident_filter.get_queryset()
         self.assertEqual(incidents.count(), 1)
         self.assertIn(target, incidents)
-        self.assertEqual(incident_filter.cleaned_data, {'status_of_seized_equipment': self.custody})
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'status_of_seized_equipment': [self.custody],
+        })
 
     def test_filter_should_return_all_if_choice_field_invalid(self):
         """should not filter if choice is invalid"""
 
         IncidentPageFactory(
-            status_of_seized_equipment=self.custody
+            status_of_seized_equipment=self.custody,
+            categories=[self.category],
         )
         IncidentPageFactory(
-            status_of_seized_equipment=self.returned_full
+            status_of_seized_equipment=self.returned_full,
+            categories=[self.category],
         )
         IncidentPageFactory(
-            affiliation='other'
+            affiliation='other',
+            categories=[self.category],
         )
         incident_filter = IncidentFilter(dict(
-            status_of_seized_equipment="hello"
+            categories=str(self.category.id),
+            status_of_seized_equipment="hello",
         ))
 
         incidents = incident_filter.get_queryset()
         self.assertEqual(incidents.count(), 3)
-        self.assertEqual(incident_filter.cleaned_data, {})
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+        })
 
     def test_filter_should_handle_multiple_choices(self):
         """should handle multiple choices"""
         target1 = IncidentPageFactory(
-            status_of_seized_equipment=self.custody
+            status_of_seized_equipment=self.custody,
+            categories=[self.category],
         )
         target2 = IncidentPageFactory(
-            status_of_seized_equipment=self.returned_full
+            status_of_seized_equipment=self.returned_full,
+            categories=[self.category],
         )
         IncidentPageFactory(
-            status_of_seized_equipment=self.unknown
+            status_of_seized_equipment=self.unknown,
+            categories=[self.category],
         )
 
         incident_filter = IncidentFilter(dict(
-            status_of_seized_equipment='{0},{1}'.format(self.custody, self.returned_full)
+            categories=str(self.category.id),
+            status_of_seized_equipment='{0},{1}'.format(self.custody, self.returned_full),
         ))
 
         incidents = incident_filter.get_queryset()
         self.assertEqual(incidents.count(), 2)
         self.assertIn(target1, incidents)
         self.assertIn(target2, incidents)
-        self.assertEqual(incident_filter.cleaned_data, {'status_of_seized_equipment': self.custody})
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'status_of_seized_equipment': [self.custody, self.returned_full],
+        })

@@ -259,6 +259,18 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 'politicians_or_public_figures_involved': pols
             }
 
+    @factory.post_generation
+    def categories(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for category in extracted:
+                IncidentCategorizationFactory(
+                    incident_page=self,
+                    category=category,
+                )
+
 
 class InexactDateIncidentPageFactory(IncidentPageFactory):
     exact_date_unknown = True
@@ -267,7 +279,7 @@ class InexactDateIncidentPageFactory(IncidentPageFactory):
         datetime_end=datetime.date(2017, 3, 31), tzinfo=datetime.timezone.utc)
 
 
-class IncidentCategorizationFactory(factory.Factory):
+class IncidentCategorizationFactory(factory.DjangoModelFactory):
     class Meta:
         model = IncidentCategorization
     sort_order = factory.Sequence(lambda n: n)
