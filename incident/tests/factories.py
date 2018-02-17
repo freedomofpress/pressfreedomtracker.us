@@ -275,8 +275,10 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 class InexactDateIncidentPageFactory(IncidentPageFactory):
     exact_date_unknown = True
     date = factory.Faker(
-        'date_time_between_dates', datetime_start=datetime.date(2017, 3, 1),
-        datetime_end=datetime.date(2017, 3, 31), tzinfo=datetime.timezone.utc)
+        'date_between',
+        start_date=datetime.date(2017, 3, 1),
+        end_date=datetime.date(2017, 3, 31),
+    )
 
 
 class IncidentCategorizationFactory(factory.DjangoModelFactory):

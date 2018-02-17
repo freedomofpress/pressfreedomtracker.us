@@ -315,10 +315,12 @@ excludes all dates from the same month"""
         # InexactDateIncidentPageFactory creates pages in 2017-03
         InexactDateIncidentPageFactory.create_batch(15)
 
-        incidents = IncidentFilter(dict(
+        incident_filter = IncidentFilter(dict(
             date_lower='2017-04-01',
             date_upper='2017-04-15',
-        )).get_queryset()
+        ))
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incident_filter.cleaned_data, {'date': (date(2017, 4, 1), date(2017, 4, 15))})
         self.assertEqual(len(incidents), 0)
 
     def test_should_filter_by_date_range_unbounded_above(self):
