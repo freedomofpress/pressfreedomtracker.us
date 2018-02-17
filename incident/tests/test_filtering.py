@@ -8,12 +8,10 @@ from incident.tests.factories import (
     ChargeFactory,
     IncidentPageFactory,
     IncidentIndexPageFactory,
-    IncidentCategorizationFactory,
     InexactDateIncidentPageFactory,
     StateFactory,
 )
 from common.tests.factories import CategoryPageFactory
-from incident.circuits import STATES_BY_CIRCUIT
 from incident.utils.incident_fields import (
     INCIDENT_PAGE_FIELDS,
     ARREST_FIELDS,
@@ -130,54 +128,45 @@ class TestFiltering(TestCase):
 
 class TestBooleanFiltering(TestCase):
     """Boolean filters"""
-    def setUp(self):
-        category = CategoryPageFactory(slug='leak-prosecutions')
-        category.save()
+    @classmethod
+    def setUpTestData(cls):
+        cls.category = CategoryPageFactory(title='Leak Case')
 
-        self.true_bool = IncidentPageFactory(
+        cls.true_bool = IncidentPageFactory(
+            categories=[cls.category],
             charged_under_espionage_act=True
         )
-        self.false_bool = IncidentPageFactory(
+        cls.false_bool = IncidentPageFactory(
+            categories=[cls.category],
             charged_under_espionage_act=False
         )
-
-        tc = IncidentCategorizationFactory.create(
-            category=category,
-            incident_page=self.true_bool,
-        )
-        tc.save()
-
-        oc = IncidentCategorizationFactory.create(
-            category=category,
-            incident_page=self.false_bool,
-        )
-        oc.save()
 
     def test_should_filter_by_true_boolean_field(self):
         """should filter by boolean when true"""
         incidents = IncidentFilter(dict(
-            charged_under_espionage_act='True'
+            charged_under_espionage_act='True',
+            categories=str(self.category.id),
         )).get_queryset()
 
-        self.assertEqual(len(incidents), 1)
-        self.assertTrue(self.true_bool in incidents)
+        self.assertEqual(set(incidents), {self.true_bool})
 
     def test_should_filter_by_false_boolean_field(self):
         """should filter by boolean when false"""
         incidents = IncidentFilter(dict(
-            charged_under_espionage_act='False'
+            charged_under_espionage_act='False',
+            categories=str(self.category.id),
         )).get_queryset()
 
-        self.assertEqual(len(incidents), 1)
-        self.assertTrue(self.false_bool in incidents)
+        self.assertEqual(set(incidents), {self.false_bool})
 
     def test_should_return_all_with_invalid_bool(self):
         """Should return all incidents when filter is invalid"""
         incidents = IncidentFilter(dict(
-            charged_under_espionage_act='Hello'
+            charged_under_espionage_act='Hello',
+            categories=str(self.category.id),
         )).get_queryset()
 
-        self.assertEqual(len(incidents), 2)
+        self.assertEqual(set(incidents), {self.true_bool, self.false_bool})
 
 
 class TestAllFiltersAtOnce(TestCase):
