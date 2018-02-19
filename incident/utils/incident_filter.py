@@ -249,10 +249,6 @@ class IncidentFilter(object):
         self.search_filter = None
         self.filters = None
 
-    @classmethod
-    def from_request(cls, request):
-        return cls(request.GET)
-
     def _get_filters(self, field_names):
         filters = []
         for name in field_names:
