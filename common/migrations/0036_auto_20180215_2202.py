@@ -163,9 +163,6 @@ SUBPOENA_FIELDS = [
         'name': 'detention_status',
         'type': 'choice',
     },
-]
-
-LEGAL_ORDER_FIELDS = [
     {
         'name': 'third_party_in_possession_of_communications',
         'type': 'char',
@@ -181,13 +178,6 @@ LEGAL_ORDER_FIELDS = [
 
 ]
 
-PRIOR_RESTRAINT_FIELDS = [
-    {
-        'name': 'status_of_prior_restraint',
-        'type': 'choice',
-    },
-]
-
 CATEGORIES = {
     'Arrest / Criminal Charge': ARREST_FIELDS,
     'Border Stop': BORDER_STOP_FIELDS,
@@ -201,7 +191,6 @@ CATEGORIES = {
 
 def create_initial_category_fields(apps, schema_editor):
     if not HomePage.objects.filter(slug='home'):
-        root_page = Page.objects.get(title='Root')
         # Delete the default home page
         Page.objects.get(slug='home').delete()
         home_page = HomePage(
@@ -209,6 +198,7 @@ def create_initial_category_fields(apps, schema_editor):
             slug='home',
             about=RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'),
         )
+        root_page = Page.objects.get(title='Root')
         root_page.add_child(instance=home_page)
     else:
         home_page = HomePage.objects.get(slug='home')
@@ -257,6 +247,7 @@ class Migration(migrations.Migration):
         ('blog', '0015_auto_20180208_0024'),
         ('incident', '0023_auto_20180215_2149'),
         ('menus', '0001_initial'),
+        ('emails', '0002_emailsettings'),
         ('wagtailforms', '0001_initial'),
         ('wagtailredirects', '0001_initial'),
         ('wagtailcore', '0039_collectionviewrestriction'),
