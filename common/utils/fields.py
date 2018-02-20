@@ -14,7 +14,7 @@ UNWANTED_FIELDS = [
     'tags',
     'lawsuit_name',
     'venue',
-    'page_ptr'
+    'page_ptr',
     'date',
     'exact_date_unknown',
     'body',
