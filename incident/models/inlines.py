@@ -69,6 +69,7 @@ class EquipmentSeized(models.Model):
         verbose_name='Equipment Seized',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
+    _autocomplete_model = 'incident.Equipment'
 
     panels = [
         AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
@@ -90,6 +91,7 @@ class EquipmentBroken(models.Model):
         verbose_name='Equipment Broken',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
+    _autocomplete_model = 'incident.Equipment'
 
     panels = [
         AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),

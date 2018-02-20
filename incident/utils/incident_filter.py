@@ -314,7 +314,7 @@ class IncidentFilter(object):
 
     def get_category_options(self):
         return [
-            dict(id=page.id, title=page.title, url=page.url)
+            dict(id=page.id, title=page.title, url=page.url, related_fields=page.get_incident_fields_dict())
             for page in CategoryPage.objects.live()
         ]
 

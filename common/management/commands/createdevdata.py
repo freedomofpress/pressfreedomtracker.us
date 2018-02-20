@@ -7,11 +7,10 @@ from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
-from django.utils.text import slugify
 
 from blog.models import BlogIndexPage, BlogPage
 from common.models import (
-    CategoryPage, TaxonomyCategoryPage, TaxonomySettings,
+    CategoryPage,
     PersonPage, SimplePage, SimplePageWithSidebar,
     FooterSettings, CustomImage, SearchSettings,
 )
@@ -35,74 +34,56 @@ class Command(BaseCommand):
         self.stdout.write('Creating development data... ', '')
         self.stdout.flush()
 
-        # Delete the default home page
-        Page.objects.get(slug='home').delete()
-
         # Basic setup
         root_page = Page.objects.get(title='Root')
 
-        home_page = HomePage(
-            title='Home',
-            slug='home',
-            about=RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'),
-        )
-        root_page.add_child(instance=home_page)
-
-        site = Site.objects.create(
-            site_name='Press Freedom Incidents (Dev)',
-            hostname='localhost',
-            port='8000',
-            root_page=home_page,
-            is_default_site=True
-        )
-
-        taxonomy_settings = TaxonomySettings.for_site(site)
-
-        # CREATE CATEGORIES
-
-        CATEGORIES = [
-            'Arrest / Detention',
-            'Border Stop / Denial of Entry',
-            'Subpeonas',
-            'Leak Prosecutions',
-            'Documented Cases of Surveillance',
-            'Equipment Search, Seizure, or Damage',
-            'Physical Assaults',
-            'US Precident Cited Abroad'
-        ]
-
-        for index, category_name in enumerate(CATEGORIES):
-            category_page = CategoryPage(
-                title=category_name,
-                slug=slugify(category_name),
-                methodology=RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
+        if not HomePage.objects.filter(slug='home'):
+            # Delete the default home page
+            Page.objects.get(slug='home').delete()
+            home_page = HomePage(
+                title='Home',
+                slug='home',
+                about=RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'),
             )
-            home_page.add_child(instance=category_page)
-            TaxonomyCategoryPage.objects.create(
-                sort_order=index + 1,
-                taxonomy_setting=taxonomy_settings,
-                category=category_page,
+            root_page.add_child(instance=home_page)
+        else:
+            home_page = HomePage.objects.get(slug='home')
+
+        if not Site.objects.filter(is_default_site=True):
+            site = Site.objects.create(
+                site_name='Press Freedom Incidents (Dev)',
+                hostname='localhost',
+                port='8000',
+                root_page=home_page,
+                is_default_site=True
+            )
+        else:
+            site = Site.objects.get(
+                is_default_site=True,
             )
 
         # ABOUT PAGE
-        about_page = SimplePage(
-            title='About',
-            slug='about',
-            body=json.dumps([
-                dict(
-                    type='text',
-                    value=dict(
-                        text=LIPSUM,
-                        background_color='white',
-                        text_align='left',
-                        font_size='large',
-                        font_family='sans-serif',
+        if not SimplePage.objects.filter(slug='about').exists():
+            about_page = SimplePage(
+                title='About',
+                slug='about',
+                body=json.dumps([
+                    dict(
+                        type='text',
+                        value=dict(
+                            text=LIPSUM,
+                            background_color='white',
+                            text_align='left',
+                            font_size='large',
+                            font_family='sans-serif',
+                        ),
                     ),
-                ),
-            ])
-        )
-        home_page.add_child(instance=about_page)
-        home_page.about_page = about_page
+                ])
+            )
+            home_page.add_child(instance=about_page)
+            home_page.about_page = about_page
+        else:
+            about_page = SimplePage.objects.get(slug='about')
 
         # RESOURCES PAGE
         if not Menu.objects.filter(slug='resources').exists():
@@ -142,8 +123,11 @@ class Command(BaseCommand):
             home_page.add_child(instance=resources_page)
 
         # SUBMIT INCIDENT FORM
-        incident_form = FormPage(title='Submit an incident', slug='submit-incident')
-        home_page.add_child(instance=incident_form)
+        if not FormPage.objects.filter(slug='submit-incident'):
+            incident_form = FormPage(title='Submit an incident', slug='submit-incident')
+            home_page.add_child(instance=incident_form)
+        else:
+            FormPage.objects.get(slug='submit-incident')
 
         # CREATE MENUS
         # delete any the existing main menu
@@ -215,70 +199,76 @@ class Command(BaseCommand):
         footer_settings.save()
 
         # BLOG RELATED PAGES
-        blog_index_page = BlogIndexPage(
-            title='FPF Blog',
-            slug='fpf-blog'
-        )
-        home_page.add_child(instance=blog_index_page)
-        home_page.blog_index_page = blog_index_page
-
-        author_page = PersonPage(title='Rachel S')
-        home_page.add_child(instance=author_page)
-
-        for x in range(0, 10):
-            page = BlogPage(
-                title='Nisl placerat volutpat{}'.format(x),
-                slug='nisl-placerat-{}'.format(x),
-                publication_datetime=timezone.now(),
-                body=json.dumps([
-                    dict(
-                        type='text',
-                        value=dict(
-                            text=LIPSUM,
-                            background_color='white',
-                            text_align='left',
-                            font_size='large',
-                            font_family='sans-serif',
-                        ),
-                    ),
-                ]),
-                author=author_page,
-                teaser_text=RichText('<p>Our neural pathways have become accustomed to your sensory input patterns. Ensign Babyface! I\'ll be sure to note that in my log. Could someone survive inside a transporter buffer for 75 years? and attack the Romulans.</p>'),
+        if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
+            blog_index_page = BlogIndexPage(
+                title='FPF Blog',
+                slug='fpf-blog'
             )
+            home_page.add_child(instance=blog_index_page)
+            home_page.blog_index_page = blog_index_page
 
-            blog_index_page.add_child(instance=page)
+            author_page = PersonPage(title='Rachel S')
+            home_page.add_child(instance=author_page)
+
+            for x in range(0, 10):
+                page = BlogPage(
+                    title='Nisl placerat volutpat{}'.format(x),
+                    slug='nisl-placerat-{}'.format(x),
+                    publication_datetime=timezone.now(),
+                    body=json.dumps([
+                        dict(
+                            type='text',
+                            value=dict(
+                                text=LIPSUM,
+                                background_color='white',
+                                text_align='left',
+                                font_size='large',
+                                font_family='sans-serif',
+                            ),
+                        ),
+                    ]),
+                    author=author_page,
+                    teaser_text=RichText('<p>Our neural pathways have become accustomed to your sensory input patterns. Ensign Babyface! I\'ll be sure to note that in my log. Could someone survive inside a transporter buffer for 75 years? and attack the Romulans.</p>'),
+                )
+                blog_index_page.add_child(instance=page)
+        else:
+            blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')
 
         # INCIDENT RELATED PAGES
         search_settings = SearchSettings.for_site(site)
-        incident_index_page = IncidentIndexPage(
-            title='All Incidents',
-            slug='all-incidents'
-        )
-        home_page.add_child(instance=incident_index_page)
+        if not IncidentIndexPage.objects.get(slug='all-incidents'):
+            incident_index_page = IncidentIndexPage(
+                title='All Incidents',
+                slug='all-incidents'
+            )
+            home_page.add_child(instance=incident_index_page)
+
+            for x in range(0, 100):
+                page = IncidentPage(
+                    title='Maecenas convallis sem malesuada nisl placerat volutpat{}'.format(x),
+                    slug='maecenas-convallis-{}'.format(x),
+                    date=timezone.now() - timedelta(x),
+                    body=[(
+                        'rich_text',
+                        RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
+                    )],
+                )
+                random_idx = random.randint(0, CategoryPage.objects.count() - 1)
+                page.categories = [
+                    IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
+                ]
+                incident_index_page.add_child(instance=page)
+                if x == 0:
+                    HomePageIncidents.objects.create(
+                        sort_order=4,
+                        page=home_page,
+                        incident=page,
+                    )
+        else:
+            incident_index_page = IncidentIndexPage.objects.get(slug='all-incidents')
+
         search_settings.search_page = incident_index_page
         search_settings.save()
-
-        for x in range(0, 100):
-            page = IncidentPage(
-                title='Maecenas convallis sem malesuada nisl placerat volutpat{}'.format(x),
-                slug='maecenas-convallis-{}'.format(x),
-                date=timezone.now() - timedelta(x),
-                body=[(
-                    'rich_text',
-                    RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
-                )],
-            )
-            random_idx = random.randint(0, CategoryPage.objects.count() - 1)
-            page.categories = [
-                IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
-            ]
-            incident_index_page.add_child(instance=page)
-            if x == 0:
-                HomePageIncidents.objects.create(
-                    sort_order=4,
-                    page=home_page,
-                    incident=page,
-                )
 
         incident_data = [
             dict(
