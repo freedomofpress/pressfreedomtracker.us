@@ -2,6 +2,7 @@ from inspect import Parameter
 import inspect
 
 from django.core.exceptions import ValidationError
+from django.utils.text import smart_split
 from wagtail.wagtailcore import blocks
 
 from incident.utils.incident_filter import IncidentFilter
@@ -37,7 +38,7 @@ class StatisticsBlock(blocks.StructBlock):
         errors = {}
 
         fn = get_stats()[cleaned_value['dataset']]
-        params = cleaned_value['params'].split()
+        params = list(smart_split(cleaned_value['params']))
 
         signature = inspect.signature(fn)
         required_params = [param for param in signature.parameters.values() if param.default == Parameter.empty]

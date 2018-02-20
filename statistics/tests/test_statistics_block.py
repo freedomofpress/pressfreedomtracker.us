@@ -286,7 +286,7 @@ class CleanTest(TestCase):
             block.clean({
                 'visualization': 'big-number.html',
                 'dataset': 'kwargs',
-                'params': 'date_lower=2018-01-01 date_upper=2017-01-01',
+                'params': 'date_lower="2018-01-01" date_upper="2017-01-01"',
             })
 
         self.assertEqual(cm.exception.params, {'params': ['date_lower must be less than or equal to date_upper']})
@@ -298,10 +298,22 @@ class CleanTest(TestCase):
             block.clean({
                 'visualization': 'big-number.html',
                 'dataset': 'kwargs',
-                'params': 'venue=hello',
+                'params': 'venue="hello"',
             })
 
         self.assertEqual(cm.exception.params, {'params': ['Invalid value for venue: hello']})
+
+    def test_clean__kwargs__cleans_with_incident_filter__variable_param_value(self):
+        block = StatisticsBlock()
+
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'big-number.html',
+                'dataset': 'kwargs',
+                'params': 'venue=hello',
+            })
+
+        self.assertEqual(cm.exception.params, {'params': ['Value for venue should be wrapped in quotation marks']})
 
     def test_clean__kwargs__cleans_with_incident_filter__search_param(self):
         block = StatisticsBlock()
@@ -310,7 +322,7 @@ class CleanTest(TestCase):
         block.clean({
             'visualization': 'big-number.html',
             'dataset': 'kwargs',
-            'params': 'search=hello',
+            'params': 'search="hello"',
         })
 
 
