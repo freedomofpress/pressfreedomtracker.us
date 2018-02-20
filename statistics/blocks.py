@@ -4,7 +4,9 @@ import inspect
 from django.core.exceptions import ValidationError
 from wagtail.wagtailcore import blocks
 
+from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_stats, get_stats_choices
+from statistics.utils import parse_kwargs
 
 
 def get_visualization_choices():
@@ -39,6 +41,7 @@ class StatisticsBlock(blocks.StructBlock):
 
         signature = inspect.signature(fn)
         required_params = [param for param in signature.parameters.values() if param.default == Parameter.empty]
+        has_kwargs = any(param.kind == Parameter.VAR_KEYWORD for param in signature.parameters.values())
 
         param_count = len(params)
         min_param_count = len(required_params)
@@ -52,6 +55,18 @@ class StatisticsBlock(blocks.StructBlock):
                 errors['params'] = ['No parameters may be supplied for this dataset']
             else:
                 errors['params'] = ['At most {} parameter{} may be supplied for this dataset'.format(max_param_count, 's' if max_param_count != 1 else '')]
+
+        if has_kwargs:
+            try:
+                data = parse_kwargs(params)
+            except ValueError as exc:
+                errors['params'] = [str(exc)]
+            else:
+                incident_filter = IncidentFilter(data)
+                try:
+                    incident_filter.clean(strict=True)
+                except ValidationError as exc:
+                    errors['params'] = [str(error) for error in exc]
 
         if errors:
             # The message here is arbitrary - StructBlock.render_form will suppress it

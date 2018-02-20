@@ -11,6 +11,7 @@ NUMBERS_MOCK = {
     'two_params': lambda x, y: None,
     'one_optional_param': lambda x=1: None,
     'mixed_params': lambda x, y=1: None,
+    'kwargs': lambda **kwargs: None,
 }
 MAPS_MOCK = {}
 
@@ -241,6 +242,76 @@ class CleanTest(TestCase):
             })
 
         self.assertEqual(cm.exception.params, {'params': ['At most 2 parameters may be supplied for this dataset']})
+
+    def test_clean__kwargs__requires_kwargs(self):
+        block = StatisticsBlock()
+
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'big-number.html',
+                'dataset': 'kwargs',
+                'params': '200',
+            })
+
+        self.assertEqual(cm.exception.params, {'params': ["Invalid param formatting: '200'"]})
+
+    def test_clean__kwargs__multiple_values(self):
+        block = StatisticsBlock()
+
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'big-number.html',
+                'dataset': 'kwargs',
+                'params': 'value=200 value=100',
+            })
+
+        self.assertEqual(cm.exception.params, {'params': ["Received multiple values for param 'value'"]})
+
+    def test_clean__kwargs__cleans_with_incident_filter__invalid_param(self):
+        block = StatisticsBlock()
+
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'big-number.html',
+                'dataset': 'kwargs',
+                'params': 'value=200',
+            })
+
+        self.assertEqual(cm.exception.params, {'params': ['Invalid parameter provided: value']})
+
+    def test_clean__kwargs__cleans_with_incident_filter__invalid_date_param_value(self):
+        block = StatisticsBlock()
+
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'big-number.html',
+                'dataset': 'kwargs',
+                'params': 'date_lower=2018-01-01 date_upper=2017-01-01',
+            })
+
+        self.assertEqual(cm.exception.params, {'params': ['date_lower must be less than or equal to date_upper']})
+
+    def test_clean__kwargs__cleans_with_incident_filter__invalid_param_value(self):
+        block = StatisticsBlock()
+
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'big-number.html',
+                'dataset': 'kwargs',
+                'params': 'venue=hello',
+            })
+
+        self.assertEqual(cm.exception.params, {'params': ['Invalid value for venue: hello']})
+
+    def test_clean__kwargs__cleans_with_incident_filter__search_param(self):
+        block = StatisticsBlock()
+
+        # Should succeed with no errors.
+        block.clean({
+            'visualization': 'big-number.html',
+            'dataset': 'kwargs',
+            'params': 'search=hello',
+        })
 
 
 @mock.patch('statistics.registry._numbers', NUMBERS_MOCK)

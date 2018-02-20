@@ -1,9 +1,24 @@
 from django.core.exceptions import ValidationError
-from django.template.base import Parser, Lexer
+from django.template.base import Parser, Lexer, Node
 from django.template.engine import Engine
 from django.template.exceptions import TemplateSyntaxError
 from django.template.library import import_library
 from django.utils.deconstruct import deconstructible
+
+
+def tag_validator(library, tag_name):
+    def dec(func):
+        tag = library.tags[tag_name]
+
+        # Wrap the validate function so that authors don't
+        # have to return a fake node.
+        def validate(parser, token):
+            func(parser, token)
+            return Node()
+
+        tag._validate = validate
+        return func
+    return dec
 
 
 @deconstructible
@@ -33,6 +48,14 @@ class TemplateValidator(object):
 
         for tag in self.disallowed_tags:
             parser.tags[tag] = self._disallowed_tag
+
+        # Allow tags to define a substitue function to validate the tag
+        # more precisely than we normally would (because statistics tags
+        # should only raise template syntax errors for syntax errors,
+        # not incorrect params - but here we want to catch both.)
+        for tag, compile_func in parser.tags.items():
+            if hasattr(compile_func, '_validate'):
+                parser.tags[tag] = compile_func._validate
 
         try:
             parser.parse()

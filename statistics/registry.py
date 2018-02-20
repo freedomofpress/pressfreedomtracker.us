@@ -1,7 +1,3 @@
-from inspect import Parameter
-import inspect
-
-
 _numbers = {}
 _maps = {}
 
@@ -20,12 +16,6 @@ class Statistics(object):
                 fn_name = getattr(name, "_decorated_function", name).__name__
                 self.statistic(store, name=fn_name, fn=name)
                 return name
-
-        # We don't handle *args or **kwargs yet. If support for these is added,
-        # also update statistics cleaning.
-        signature = inspect.signature(fn)
-        if any(param.kind != Parameter.POSITIONAL_OR_KEYWORD for param in signature.parameters.values()):
-            raise TypeError('Statistics functions must have only positional or keyword arguments')
 
         # TODO: potentially add it to template.Library() also.
         store[name] = fn

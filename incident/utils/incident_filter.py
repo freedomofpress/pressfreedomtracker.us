@@ -16,7 +16,6 @@ from django.db.models.fields.related import ManyToOneRel
 from psycopg2.extras import DateRange
 
 from common.models import CategoryPage
-from incident.models.incident_page import IncidentPage
 from incident.circuits import STATES_BY_CIRCUIT
 
 from incident.utils.db import MakeDateRange
@@ -79,8 +78,11 @@ class Filter(object):
     def get_value(self, data):
         return data.get(self.name) or None
 
-    def clean(self, value):
+    def clean(self, value, strict=False):
         return self.model_field.to_python(value)
+
+    def get_allowed_parameters(self):
+        return {self.name}
 
     def filter(self, queryset, value):
         """
@@ -107,7 +109,7 @@ class DateFilter(Filter):
         end = data.get('{}_upper'.format(self.name)) or None
         return start, end
 
-    def clean(self, value):
+    def clean(self, value, strict=False):
         start, end = value
 
         start = self.model_field.to_python(start)
@@ -115,12 +117,21 @@ class DateFilter(Filter):
 
         if start and end and start > end:
             value = None
+            if strict:
+                raise ValidationError('{}_lower must be less than or equal to {}_upper'.format(
+                    self.name,
+                    self.name,
+                ))
         elif start or end:
             value = (start, end)
         else:
+            # No error raised here because 'no value' is okay.
             value = None
 
         return value
+
+    def get_allowed_parameters(self):
+        return {'{}_lower'.format(self.name), '{}_upper'.format(self.name)}
 
     def filter(self, queryset, value):
         lower_date, upper_date = value
@@ -165,11 +176,26 @@ class ChoiceFilter(Filter):
     def get_choices(self):
         return {choice[0] for choice in self.model_field.choices}
 
-    def clean(self, value):
+    def clean(self, value, strict=False):
         if not value:
             return None
         values = value.split(',')
-        value = [v for v in values if v in self.get_choices()]
+        value = []
+        invalid_values = []
+        choices = self.get_choices()
+
+        for v in values:
+            if v in choices:
+                value.append(v)
+            else:
+                invalid_values.append(v)
+
+        if invalid_values and strict:
+            raise ValidationError('Invalid value{} for {}: {}'.format(
+                's' if len(invalid_values) != 1 else '',
+                self.name,
+                ','.join(invalid_values),
+            ))
         return value or None
 
     def filter(self, queryset, value):
@@ -177,17 +203,25 @@ class ChoiceFilter(Filter):
 
 
 class ManyRelationFilter(Filter):
-    def clean(self, value):
+    def clean(self, value, strict=False):
         if not value:
             return None
         values = value.split(',')
+        invalid_values = []
 
         value = []
         for v in values:
             try:
                 value.append(int(v))
             except ValueError:
-                continue
+                invalid_values.append(v)
+
+        if invalid_values and strict:
+            raise ValidationError('Invalid value{} for {}: {}'.format(
+                's' if len(invalid_values) != 1 else '',
+                self.name,
+                ','.join(invalid_values),
+            ))
         return value
 
     def filter(self, queryset, value):
@@ -246,10 +280,13 @@ class IncidentFilter(object):
     def __init__(self, data):
         self.data = data
         self.cleaned_data = None
+        self.errors = None
         self.search_filter = None
         self.filters = None
 
     def _get_filters(self, field_names):
+        # Prevent circular imports
+        from incident.models.incident_page import IncidentPage
         filters = []
         for name in field_names:
             try:
@@ -277,19 +314,20 @@ class IncidentFilter(object):
             filters.append(filter_cls(**kwargs))
         return filters
 
-    def clean(self):
+    def clean(self, strict=False):
         self.cleaned_data = {}
+        errors = []
 
         self.search_filter = SearchFilter()
         self.filters = self._get_filters(self.base_filters)
 
         for f in [self.search_filter] + self.filters:
             try:
-                cleaned_value = f.clean(f.get_value(self.data))
+                cleaned_value = f.clean(f.get_value(self.data), strict=strict)
                 if cleaned_value is not None:
                     self.cleaned_data[f.name] = cleaned_value
-            except ValidationError:
-                pass
+            except ValidationError as exc:
+                errors.extend(exc.error_list)
 
         category_ids = self.cleaned_data.get('categories')
         if category_ids:
@@ -302,11 +340,25 @@ class IncidentFilter(object):
             self.filters += category_filters
             for f in category_filters:
                 try:
-                    cleaned_value = f.clean(f.get_value(self.data))
+                    cleaned_value = f.clean(f.get_value(self.data), strict=strict)
                     if cleaned_value is not None:
                         self.cleaned_data[f.name] = cleaned_value
-                except ValidationError:
-                    pass
+                except ValidationError as exc:
+                    errors.append(str(exc))
+
+        if strict:
+            allowed_parameters = self.search_filter.get_allowed_parameters()
+            for f in self.filters:
+                allowed_parameters |= f.get_allowed_parameters()
+            invalid_parameters = set(self.data) - allowed_parameters
+            if invalid_parameters:
+                errors.append(['Invalid parameter{} provided: {}'.format(
+                    's' if len(invalid_parameters) != 1 else '',
+                    ','.join(invalid_parameters),
+                )])
+
+            if errors:
+                raise ValidationError(errors)
 
     def get_category_options(self):
         return [
@@ -315,6 +367,8 @@ class IncidentFilter(object):
         ]
 
     def _get_queryset(self):
+        # Prevent circular imports
+        from incident.models.incident_page import IncidentPage
         if self.cleaned_data is None:
             self.clean()
 
