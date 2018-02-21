@@ -236,7 +236,7 @@ class Command(BaseCommand):
 
         # INCIDENT RELATED PAGES
         search_settings = SearchSettings.for_site(site)
-        if not IncidentIndexPage.objects.get(slug='all-incidents'):
+        if not IncidentIndexPage.objects.filter(slug='all-incidents'):
             incident_index_page = IncidentIndexPage(
                 title='All Incidents',
                 slug='all-incidents'
