@@ -20,7 +20,7 @@ jobs:
 
       - run:
           name: Ensure developer env working
-          command: make dev-go
+          command: make dev-go && make dev-test
 
   prod:
     machine: true
