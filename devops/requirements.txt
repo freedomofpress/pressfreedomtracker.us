@@ -18,7 +18,7 @@ configparser==3.5.0       # via flake8
 cookiecutter==1.5.1       # via molecule
 cryptography==2.1.4       # via ansible, paramiko
 docker-pycreds==0.2.2     # via docker
-docker==3.0.1
+docker==2.7.0
 dparse==0.2.1             # via safety
 enum34==1.1.6             # via cryptography, flake8
 fasteners==0.14.1         # via python-gilt
