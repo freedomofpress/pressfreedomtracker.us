@@ -250,7 +250,7 @@ class Migration(migrations.Migration):
         ('emails', '0002_emailsettings'),
         ('wagtailforms', '0001_initial'),
         ('wagtailredirects', '0001_initial'),
-        ('wagtailcore', '0039_collectionviewrestriction'),
+        ('wagtailcore', '0040_page_draft_title'),
     ]
 
     operations = [
