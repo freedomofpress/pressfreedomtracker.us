@@ -1,5 +1,7 @@
 ansible
-docker
+# Bug with ansible and docker 3.0+
+# https://github.com/ansible/ansible/issues/35612
+docker<3.0
 junit_xml
 molecule>=2.4
 pip-tools
