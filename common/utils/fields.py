@@ -58,7 +58,6 @@ class IncidentPageFieldIterator():
         from incident.models import IncidentPage
         fields = IncidentPage._meta.get_fields(include_parents=False)
         non_text_fields = list(filter(remove_unwanted_fields, fields))
-        print(non_text_fields)
         for field in non_text_fields:
             yield get_field_tuple(field)
 
