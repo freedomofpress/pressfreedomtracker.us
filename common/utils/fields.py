@@ -91,7 +91,6 @@ def get_incident_field_dict(field_name):
     fields = IncidentPage._meta.get_fields(include_parents=False)
     field_names = [field.name for field in fields]
     if field_name in field_names:
-        from incident.models import IncidentPage
         field = IncidentPage._meta.get_field(field_name)
         field_dict['title'] = get_field_title(field)
         field_dict['type'] = get_field_type(field)
