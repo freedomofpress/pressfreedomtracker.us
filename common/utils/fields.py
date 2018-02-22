@@ -40,16 +40,19 @@ def remove_unwanted_fields(field):
     return True
 
 
-def get_field_tuple(field):
+def get_field_title(field):
     if hasattr(field, 'verbose_name'):
-        return (field.name, field.verbose_name)
-    # This must come before the following elif
+        return field.verbose_name
     elif field.is_relation and hasattr(field.related_model._meta, 'verbose_name'):
-        return (field.name, field.related_model._meta.verbose_name)
+        return field.related_model._meta.verbose_name
     elif field.is_relation and hasattr(field, 'related_name'):
-        return (field.name, field.related_name)
+        return field.related_name
     else:
-        return (field.name, field.name)
+        return field.name
+
+
+def get_field_tuple(field):
+    return (field.name, get_field_title(field))
 
 
 class IncidentPageFieldIterator():
@@ -62,48 +65,46 @@ class IncidentPageFieldIterator():
             yield get_field_tuple(field)
 
 
+def get_field_type(field):
+    if type(field) == ParentalManyToManyField or type(field) == models.fields.related.ManyToOneRel:
+        return 'autocomplete'
+    elif field.choices:
+        # It's a maybe boolean, which we use radio buttons for
+        if field.choices[1] == ('JUST_TRUE', 'yes'):
+            return 'radio'
+        else:
+            return 'choice'
+    elif type(field) == models.DateField:
+        return 'date'
+    elif type(field) == models.CharField:
+        return 'text'
+    elif type(field) == models.BooleanField:
+        return 'bool'
+    else:
+        return str(type(field))
+
+
 def get_incident_field_dict(field_name):
     # prevents circular import
     from incident.models import IncidentPage
+    field_dict = dict()
     fields = IncidentPage._meta.get_fields(include_parents=False)
     field_names = [field.name for field in fields]
     if field_name in field_names:
+        from incident.models import IncidentPage
         field = IncidentPage._meta.get_field(field_name)
-        if hasattr(field, 'verbose_name'):
-            title = field.verbose_name
-        elif field.is_relation and hasattr(field, 'related_name'):
-            title = field.related_name
-        else:
-            title = field.name
+        field_dict['title'] = get_field_title(field)
+        field_dict['type'] = get_field_type(field)
+        field_dict['name'] = field_name
 
-        if type(field) == ParentalManyToManyField:
-            field_type = 'autocomplete'
-            autocomplete_type = 'incident.{}'.format(field.remote_field.model.__name__)
-        elif type(field) == models.fields.related.ManyToOneRel:
-            field_type = 'autocomplete'
-            autocomplete_type = field.remote_field.model._autocomplete_model
-        elif len(field.choices) > 0:
-            # It's a maybe boolean, which we use radio buttons for
-            if field.choices[1] == ('JUST_TRUE', 'yes'):
-                field_type = 'radio'
+        if field_dict['type'] == 'autocomplete':
+            if type(field) == ParentalManyToManyField:
+                autocomplete_type = 'incident.{}'.format(field.remote_field.model.__name__)
+            elif type(field) == models.fields.related.ManyToOneRel:
+                autocomplete_type = field.remote_field.model._autocomplete_model
             else:
-                field_type = 'choice'
+                autocomplete_type = None
 
-        elif type(field) == models.DateField:
-            field_type = 'date'
-        elif type(field) == models.CharField:
-            field_type = 'text'
-        elif type(field) == models.BooleanField:
-            field_type = 'bool'
-        else:
-            field_type = str(type(field))
-
-        field_dict = dict(
-            name=field_name,
-            type=field_type,
-            title=title
-        )
-        if field_type == 'autocomplete':
             field_dict['autocomplete_type'] = autocomplete_type
 
         return field_dict
