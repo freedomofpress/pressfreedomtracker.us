@@ -34,7 +34,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     @route('export/')
     def export_view(self, request):
-        incident_filter = IncidentFilter(request)
+        incident_filter = IncidentFilter(request.GET)
         incidents = incident_filter.get_queryset()
 
         incident_fields = IncidentPage._meta.get_fields()
@@ -72,7 +72,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def get_context(self, request):
         context = super(IncidentIndexPage, self).get_context(request)
 
-        incident_filter = IncidentFilter(request)
+        incident_filter = IncidentFilter(request.GET)
         context['category_options'] = incident_filter.get_category_options()
         context['filter_choices'] = get_filter_choices()
         context['export_path'] = self.url

@@ -43,5 +43,5 @@ class TemplateValidatorTest(TestCase):
 
     def test_allows_statistics_tag(self):
         validator = TemplateValidator()
-        value = '{% num_arrests %}'
+        value = '{% num_incidents %}'
         validator(value)

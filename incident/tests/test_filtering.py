@@ -95,9 +95,9 @@ class TestFiltering(TestCase):
         alabama = StateFactory(name='Alabama')
         florida = StateFactory(name='Florida')
         alaska = StateFactory(name='Alaska')
-        target1 = IncidentPageFactory(state=alabama)
-        target2 = IncidentPageFactory(state=florida)
-        IncidentPageFactory(state=alaska)
+        target1 = IncidentPageFactory(state=alabama, title='Alabama')
+        target2 = IncidentPageFactory(state=florida, title='Florida')
+        IncidentPageFactory(state=alaska, title='Alaska')
 
         incidents = IncidentFilter(dict(
             circuits=circuit,

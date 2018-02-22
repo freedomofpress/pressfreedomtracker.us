@@ -242,7 +242,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
         context = super(CategoryPage, self).get_context(request)
 
-        incident_filter = IncidentFilter(request)
+        incident_filter = IncidentFilter(request.GET)
         incident_filter.categories = str(self.page_ptr_id)
         context['category_options'] = incident_filter.get_category_options()
 

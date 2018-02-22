@@ -22,13 +22,13 @@ class CleanTest(TestCase):
     def test_clean__no_params__gets_none(self):
         block = StatisticsBlock()
         cleaned_value = block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'no_params',
             'params': '',
         })
 
         self.assertEqual(cleaned_value, {
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'no_params',
             'params': '',
         })
@@ -38,7 +38,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'no_params',
                 'params': '200',
             })
@@ -50,7 +50,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'no_params',
                 'params': '200 300',
             })
@@ -62,7 +62,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'one_param',
                 'params': '',
             })
@@ -73,13 +73,13 @@ class CleanTest(TestCase):
         block = StatisticsBlock()
 
         cleaned_value = block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'one_param',
             'params': '200',
         })
 
         self.assertEqual(cleaned_value, {
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'one_param',
             'params': '200',
         })
@@ -89,7 +89,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'one_param',
                 'params': '200 300',
             })
@@ -101,7 +101,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'two_params',
                 'params': '',
             })
@@ -113,7 +113,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'two_params',
                 'params': '200',
             })
@@ -124,13 +124,13 @@ class CleanTest(TestCase):
         block = StatisticsBlock()
 
         cleaned_data = block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'two_params',
             'params': '200 300',
         })
 
         self.assertEqual(cleaned_data, {
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'two_params',
             'params': '200 300',
         })
@@ -140,7 +140,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'two_params',
                 'params': '200 300 400',
             })
@@ -151,13 +151,13 @@ class CleanTest(TestCase):
         block = StatisticsBlock()
 
         cleaned_value = block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'one_optional_param',
             'params': '',
         })
 
         self.assertEqual(cleaned_value, {
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'one_optional_param',
             'params': '',
         })
@@ -166,13 +166,13 @@ class CleanTest(TestCase):
         block = StatisticsBlock()
 
         cleaned_value = block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'one_optional_param',
             'params': '200',
         })
 
         self.assertEqual(cleaned_value, {
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'one_optional_param',
             'params': '200',
         })
@@ -182,7 +182,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'one_optional_param',
                 'params': '200 300',
             })
@@ -194,7 +194,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'mixed_params',
                 'params': '',
             })
@@ -205,13 +205,13 @@ class CleanTest(TestCase):
         block = StatisticsBlock()
 
         cleaned_data = block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'mixed_params',
             'params': '200',
         })
 
         self.assertEqual(cleaned_data, {
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'mixed_params',
             'params': '200',
         })
@@ -220,13 +220,13 @@ class CleanTest(TestCase):
         block = StatisticsBlock()
 
         cleaned_data = block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'mixed_params',
             'params': '200 300',
         })
 
         self.assertEqual(cleaned_data, {
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'mixed_params',
             'params': '200 300',
         })
@@ -236,7 +236,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'mixed_params',
                 'params': '200 300 400',
             })
@@ -248,7 +248,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'kwargs',
                 'params': '200',
             })
@@ -260,7 +260,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'kwargs',
                 'params': 'value=200 value=100',
             })
@@ -272,7 +272,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'kwargs',
                 'params': 'value=200',
             })
@@ -284,7 +284,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'kwargs',
                 'params': 'date_lower="2018-01-01" date_upper="2017-01-01"',
             })
@@ -296,7 +296,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'kwargs',
                 'params': 'venue="hello"',
             })
@@ -308,7 +308,7 @@ class CleanTest(TestCase):
 
         with self.assertRaises(ValidationError) as cm:
             block.clean({
-                'visualization': 'big-number.html',
+                'visualization': 'statistics/visualizations/big-number.html',
                 'dataset': 'kwargs',
                 'params': 'venue=hello',
             })
@@ -320,7 +320,7 @@ class CleanTest(TestCase):
 
         # Should succeed with no errors.
         block.clean({
-            'visualization': 'big-number.html',
+            'visualization': 'statistics/visualizations/big-number.html',
             'dataset': 'kwargs',
             'params': 'search="hello"',
         })

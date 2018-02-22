@@ -139,7 +139,7 @@ class HomePage(MetadataPageMixin, Page):
     ]
 
     def get_context(self, request):
-        context = super(HomePage, self).get_context(request)
+        context = super(HomePage, self).get_context(request.GET)
 
         incident_filter = IncidentFilter(request)
         context['category_options'] = incident_filter.get_category_options()

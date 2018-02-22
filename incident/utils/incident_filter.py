@@ -250,7 +250,7 @@ class CircuitsFilter(ChoiceFilter):
     def filter(self, queryset, value):
         states = set()
         for circuit in value:
-            states |= STATES_BY_CIRCUIT[circuit]
+            states |= set(STATES_BY_CIRCUIT[circuit])
 
         return queryset.filter(state__name__in=states)
 
@@ -259,6 +259,7 @@ class IncidentFilter(object):
     base_filters = (
         'affiliation',
         'categories',
+        'circuits',
         'city',
         'date',
         'state',
