@@ -6,9 +6,10 @@ Statistics are described as consisting of a desired dataset and one or more spac
 
 On statistics blocks, dataset and params are separate fields. For example, you might enter:
 
-..
-    Dataset: num_incidents
-    Params: date_lower="2017-01-01"
+    Dataset
+        num_incidents
+    Params
+        date_lower="2017-01-01"
 
 
 In a template, the dataset is the first item in the template tag, and the remaining items are the params. For example:
@@ -40,6 +41,7 @@ Text filters check whether an incident has an exact value for a given field.
     {% num_incidents affiliation="Independent" %}
 
 Available filters:
+
 - affiliation
 - border_point
 - city
@@ -60,6 +62,7 @@ For example, to add lower and upper bounds to the ``date`` filter:
     {% num_incidents date_lower="2017-01-01" date_upper="2017-12-31" %}
 
 Available filters:
+
 - date
 - detention_date
 - release_date
@@ -76,6 +79,7 @@ Boolean values can be filtered using 'True' or 'False':
     {% num_incidents unnecessary_use_of_force="True" %}
 
 Available filters:
+
 - charged_under_espionage_act
 - denial_of_entry
 - is_search_warrant_obtained
@@ -88,13 +92,14 @@ Choice filters
 
 Choice fields can be filtered by providing one or more choice options.
 Choice options will vary from filter to filter.
-Valid choices can be found in [incident/models/choices.py](https://github.com/freedomofpress/pressfreedom/blob/master/incident/models/choices.py).
+Valid choices can be found in `incident/models/choices.py <https://github.com/freedomofpress/pressfreedom/blob/master/incident/models/choices.py>`_.
 
 .. code:: jinja
 
     {% num_incidents third_party_business="ISP,TRAVEL" %}
 
 Available filter:
+
 - actor
 - arrest_status
 - assailant
@@ -187,6 +192,7 @@ It returns incident count data by month.
 The year range includes the start and end years.
 
 Parameters:
+
 - start_year
 - end_year
 
