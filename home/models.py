@@ -139,9 +139,9 @@ class HomePage(MetadataPageMixin, Page):
     ]
 
     def get_context(self, request):
-        context = super(HomePage, self).get_context(request.GET)
+        context = super(HomePage, self).get_context(request)
 
-        incident_filter = IncidentFilter(request)
+        incident_filter = IncidentFilter(request.GET)
         context['category_options'] = incident_filter.get_category_options()
 
         search_page = SearchSettings.for_site(request.site).search_page
