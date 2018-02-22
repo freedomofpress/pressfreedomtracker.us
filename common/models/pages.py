@@ -13,6 +13,7 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
+
 from modelcluster.models import ClusterableModel
 
 from common.blocks import (
@@ -26,7 +27,12 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
 )
 from common.choices import CATEGORY_COLOR_CHOICES
-from common.utils import DEFAULT_PAGE_KEY, paginate
+from common.utils import (
+    DEFAULT_PAGE_KEY,
+    paginate,
+    get_incident_field_dict,
+    IncidentPageFieldIterator
+)
 from statistics.registry import get_numbers_choices
 
 
@@ -200,6 +206,11 @@ class TaxonomyCategoryPage(Orderable):
     ]
 
 
+class IncidentFieldCategoryPage(Orderable):
+    category = ParentalKey('common.CategoryPage', related_name='incident_fields')
+    incident_field = models.CharField(max_length=255, choices=IncidentPageFieldIterator())
+
+
 class CategoryPage(MetadataPageMixin, Page):
     methodology = RichTextField(null=True, blank=True)
     plural_name = models.CharField(max_length=255, null=True, blank=True)
@@ -209,6 +220,7 @@ class CategoryPage(MetadataPageMixin, Page):
         FieldPanel('methodology'),
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('data_items', label='Data Items'),
+        InlinePanel('incident_fields', label='Fields to include in filters'),
     ]
 
     settings_panels = Page.settings_panels + [
@@ -289,6 +301,10 @@ class CategoryPage(MetadataPageMixin, Page):
         response = super(CategoryPage, self).serve(request, *args, **kwargs)
         response['Cache-Tag'] = self.get_cache_tag()
         return response
+
+    def get_incident_fields_dict(self):
+        category_fields = [obj.incident_field for obj in self.incident_fields.all()]
+        return [get_incident_field_dict(field) for field in category_fields]
 
 
 class SimplePage(MetadataPageMixin, Page):

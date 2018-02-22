@@ -17,12 +17,3 @@ def paginate(request, items, page_key=DEFAULT_PAGE_KEY, per_page=20, orphans=10)
         page = paginator.page(paginator.num_pages)
 
     return paginator, page
-
-
-class Echo(object):
-    """
-    An object that implements just the write method of the file-like interface.
-    """
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value

@@ -105,12 +105,14 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         null=True,
         blank=True,
+        verbose_name='Arrest status'
     )
     status_of_charges = models.CharField(
         choices=choices.STATUS_OF_CHARGES,
         max_length=255,
         null=True,
         blank=True,
+        verbose_name='Status of charges'
     )
     current_charges = ParentalManyToManyField(
         'incident.Charge',
@@ -124,19 +126,28 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='dropped_charge_incidents',
         verbose_name='Dropped Charges',
     )
-    release_date = models.DateField(blank=True, null=True)
+    release_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Release date'
+    )
     detention_date = models.DateField(
         blank=True,
         null=True,
         help_text='This field will default to the date field if not specified.',
+        verbose_name="Detention date"
     )
-    unnecessary_use_of_force = models.BooleanField(default=False)
+    unnecessary_use_of_force = models.BooleanField(
+        default=False,
+        verbose_name='Unnecessary use of force?'
+    )
 
     # Legal Case
     lawsuit_name = models.CharField(
         max_length=1024,
         blank=True,
         null=True,
+        verbose_name='Lawsuit name'
     )
 
     venue = ParentalManyToManyField(
@@ -153,13 +164,18 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         null=True,
         blank=True,
+        verbose_name="Status of seized equipment"
     )
-    is_search_warrant_obtained = models.BooleanField(default=False)
+    is_search_warrant_obtained = models.BooleanField(
+        default=False,
+        verbose_name="Search warrant obtained?"
+    )
     actor = models.CharField(
         choices=choices.ACTORS,
         max_length=255,
         null=True,
         blank=True,
+        verbose_name="Actor"
     )
 
     # Border Stop/Denial of Entry
@@ -167,16 +183,27 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=500,
         blank=True,
         null=True,
+        verbose_name='Border point'
     )
-    stopped_at_border = models.BooleanField(default=False)
+    stopped_at_border = models.BooleanField(
+        default=False,
+        verbose_name="Stopped at border?"
+    )
     target_us_citizenship_status = models.CharField(
         choices=choices.CITIZENSHIP_STATUS_CHOICES,
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="US Citizenship Status"
     )
-    denial_of_entry = models.BooleanField(default=False)
-    stopped_previously = models.BooleanField(default=False)
+    denial_of_entry = models.BooleanField(
+        default=False,
+        verbose_name='Denied entry?'
+    )
+    stopped_previously = models.BooleanField(
+        default=False,
+        verbose_name='Stopped previously?'
+    )
     target_nationality = ParentalManyToManyField(
         'incident.Nationality',
         blank=True,
@@ -188,18 +215,21 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Did authorities ask for device access?"
     )
     did_authorities_ask_for_social_media_user = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Did authorities ask for social media username?"
     )
     did_authorities_ask_for_social_media_pass = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Did authorities ask for social media password?"
     )
     did_authorities_ask_about_work = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
@@ -213,6 +243,7 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
+        verbose_name='Were devices searched or seized?'
     )
 
     # Physical Assault
@@ -221,12 +252,14 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Assailant"
     )
     was_journalist_targeted = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Was journalist targeted?"
     )
 
     # Leak Prosecution
@@ -236,7 +269,10 @@ class IncidentPage(MetadataPageMixin, Page):
         verbose_name='Journalists/Organizations whose communications were obtained in leak investigation',
         related_name='targets_communications_obtained_incidents',
     )
-    charged_under_espionage_act = models.BooleanField(default=False)
+    charged_under_espionage_act = models.BooleanField(
+        default=False,
+        verbose_name="Charged under espionage act?"
+    )
 
     # Subpoena of Journalism
     subpoena_type = models.CharField(
@@ -244,12 +280,14 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Subpoena type"
     )
     subpoena_status = models.CharField(
         choices=choices.SUBPOENA_STATUS,
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Subpoena status"
     )
     held_in_contempt = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
@@ -263,6 +301,7 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Detention status"
     )
 
     # Legal Order for Journalist's Records
@@ -270,18 +309,21 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=512,
         blank=True,
         null=True,
+        verbose_name='Third party in possession of communications'
     )
     third_party_business = models.CharField(
         choices=choices.THIRD_PARTY_BUSINESS,
         max_length=255,
         blank=True,
         null=True,
+        verbose_name='Third party business'
     )
     legal_order_type = models.CharField(
         choices=choices.LEGAL_ORDER_TYPES,
         max_length=255,
         blank=True,
         null=True,
+        verbose_name='Legal order type'
     )
 
     # Prior Restraint
@@ -290,6 +332,7 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
+        verbose_name='Status of prior restraint'
     )
 
     # Denial of Access
@@ -537,7 +580,10 @@ class IncidentPage(MetadataPageMixin, Page):
         """
         Returns the first category in the list of categories
         """
-        return self.categories.all().first().category
+        first_category = self.categories.all().first()
+        if first_category:
+            return first_category.category
+        return None
 
     def get_related_incidents(self):
         """

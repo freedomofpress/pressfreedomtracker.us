@@ -13,7 +13,6 @@ class FiltersBody extends PureComponent {
 			noCategoryFiltering,
 			choices,
 		} = this.props
-
 		return (
 			<ul className="filters__body">
 				<FilterAccordion
