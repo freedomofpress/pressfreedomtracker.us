@@ -23,6 +23,9 @@ UNWANTED_FIELDS = [
     'image_caption',
     'related_incidents',
     'updates',
+    'categories',
+    'links',
+    'search_image'
 ]
 
 
@@ -40,6 +43,9 @@ def remove_unwanted_fields(field):
 def get_field_tuple(field):
     if hasattr(field, 'verbose_name'):
         return (field.name, field.verbose_name)
+    # This must come before the following elif
+    elif field.is_relation and hasattr(field.related_model._meta, 'verbose_name'):
+        return (field.name, field.related_model._meta.verbose_name)
     elif field.is_relation and hasattr(field, 'related_name'):
         return (field.name, field.related_name)
     else:
@@ -52,6 +58,7 @@ class IncidentPageFieldIterator():
         from incident.models import IncidentPage
         fields = IncidentPage._meta.get_fields(include_parents=False)
         non_text_fields = list(filter(remove_unwanted_fields, fields))
+        print(non_text_fields)
         for field in non_text_fields:
             yield get_field_tuple(field)
 

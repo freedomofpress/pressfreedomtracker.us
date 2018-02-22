@@ -12,6 +12,10 @@ class TestRemoveUnwantedFields(TestCase):
         blacklisted_field = IncidentPage._meta.get_field('page_ptr')
         self.assertFalse(remove_unwanted_fields(blacklisted_field))
 
+    def test_returns_false_if_inline_field_is_invalid(self):
+        blacklisted_field = IncidentPage._meta.get_field('categories')
+        self.assertFalse(remove_unwanted_fields(blacklisted_field))
+
 
 class TestGetFieldTuple(TestCase):
     def test_field_with_verbose_name(self):
@@ -23,16 +27,16 @@ class TestGetFieldTuple(TestCase):
         )
 
     def test_field_without_verbose_name(self):
-        field = IncidentPage._meta.get_field('body')
-        expected = (field.name, field.verbose_name)
+        field = IncidentPage._meta.get_field('city')
+        expected = (field.name, field.name)
         self.assertEqual(
             get_field_tuple(field),
             expected
         )
 
-    def test_field_with_related_name(self):
-        field = IncidentPage._meta.get_field('updates')
-        expected = (field.name, field.related_name)
+    def test_inline_field(self):
+        field = IncidentPage._meta.get_field('equipment_seized')
+        expected = (field.name, field.related_model._meta.verbose_name)
         self.assertEqual(
             get_field_tuple(field),
             expected

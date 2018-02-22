@@ -76,6 +76,9 @@ class EquipmentSeized(models.Model):
         FieldPanel('quantity'),
     ]
 
+    class Meta:
+        verbose_name = "Equipment Seized"
+
     @property
     def summary(self):
         return '{0.equipment}: count of {0.quantity}'.format(self)
@@ -97,6 +100,9 @@ class EquipmentBroken(models.Model):
         AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
         FieldPanel('quantity'),
     ]
+
+    class Meta:
+        verbose_name = 'Equipment Broken'
 
     @property
     def summary(self):
