@@ -1,5 +1,5 @@
 from django.test import TestCase
-from common.utils.fields import remove_unwanted_fields, get_field_tuple
+from common.utils.fields import remove_unwanted_fields, get_field_tuple, get_field_type
 from incident.models import IncidentPage
 
 
@@ -41,3 +41,29 @@ class TestGetFieldTuple(TestCase):
             get_field_tuple(field),
             expected
         )
+
+
+class TestGetFieldType(TestCase):
+    def test_radio_field(self):
+        field = IncidentPage._meta.get_field('was_journalist_targeted')
+        self.assertEqual(get_field_type(field), 'radio')
+
+    def test_choice_field(self):
+        field = IncidentPage._meta.get_field('status_of_charges')
+        self.assertEqual(get_field_type(field), 'choice')
+
+    def test_date_field(self):
+        field = IncidentPage._meta.get_field('release_date')
+        self.assertEqual(get_field_type(field), 'date')
+
+    def test_bool_field(self):
+        field = IncidentPage._meta.get_field('is_search_warrant_obtained')
+        self.assertEqual(get_field_type(field), 'bool')
+
+    def test_autocomplete_field(self):
+        field = IncidentPage._meta.get_field('politicians_or_public_figures_involved')
+        self.assertEqual(get_field_type(field), 'autocomplete')
+
+    def test_invalid_field(self):
+        field = IncidentPage._meta.get_field('body')
+        self.assertEqual(get_field_type(field), "<class 'wagtail.wagtailcore.fields.StreamField'>")
