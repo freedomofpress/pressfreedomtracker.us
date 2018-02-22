@@ -10,6 +10,8 @@ from common.validators import validate_template
 class RichTextTemplateBlock(blocks.RichTextBlock):
     def clean(self, value):
         cleaned_value = super(RichTextTemplateBlock, self).clean(value)
+        # cleaned_value is a wagtail.wagtailcore.rich_text.RichText instance.
+        # RichText.source is the raw HTML value.
         validate_template(cleaned_value.source)
         return cleaned_value
 
