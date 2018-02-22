@@ -3,6 +3,7 @@ from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
+from common.templatetags.render_as_template import render_as_template
 from common.validators import validate_template
 
 
@@ -11,6 +12,9 @@ class RichTextTemplateBlock(blocks.RichTextBlock):
         cleaned_value = super(RichTextTemplateBlock, self).clean(value)
         validate_template(cleaned_value.source)
         return cleaned_value
+
+    def render_basic(self, value, context=None):
+        return render_as_template(value)
 
 
 class Heading1(blocks.StructBlock):
@@ -113,6 +117,11 @@ class StyledTextBlock(blocks.StructBlock):
 
 class StyledTextTemplateBlock(StyledTextBlock):
     text = RichTextTemplateBlock()
+
+    def get_context(self, *args, **kwargs):
+        context = super(StyledTextTemplateBlock, self).get_context(*args, **kwargs)
+        context['render_as_template'] = True
+        return context
 
 
 class LogoListBlock(blocks.ListBlock):

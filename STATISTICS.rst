@@ -270,6 +270,8 @@ This has two parts:
    Validation will also disallow tags that shouldn't be used in a dynamic content context.
 2. Use the ``{% render_as_template %}`` tag to render the content as a template when rendering the page as a whole.
    This will not give the dynamic content access to outside context.
+   The template blocks will already handle rendering template content by default.
+   This tag should only be necessary when building new block templates or enabling template content on basic rich text fields.
 
 For the latter part, it might look something like this:
 
@@ -277,13 +279,7 @@ For the latter part, it might look something like this:
 
     {% load render_as_template %}
 
-    {% for block in page.body %}
-        {% if block.block_type == 'rich_text' %}
-            <section>{% render_as_template block.value %}</section>
-        {% else %}
-            <section>{% include_block block %}</section>
-        {% endif %}
-    {% endfor %}
+    {% render_as_template rich_text_value %}
 
 Visualizations
 --------------
