@@ -5,6 +5,8 @@ import json
 from django.contrib.auth.models import User
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
+from django.core import management
+
 from django.db import transaction
 from django.utils import timezone
 
@@ -62,6 +64,7 @@ class Command(BaseCommand):
                 is_default_site=True,
             )
 
+        management.call_command('createcategories')
         # ABOUT PAGE
         if not SimplePage.objects.filter(slug='about').exists():
             about_page = SimplePage(
