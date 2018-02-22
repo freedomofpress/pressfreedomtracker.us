@@ -11,13 +11,12 @@ from statistics.utils import parse_kwargs
 
 
 def get_visualization_choices():
-    # The first value of each of these pairs must be a file in the
-    # statistics/templates folder.  The second value is a descriptive
-    # name for the visualization.
+    # The first value of each of these pairs must be a path to a template.
+    # The second value is a descriptive name for the visualization.
     return [
-        ('big-number.html', 'Big Number Box'),
-        ('blue-table.html', 'Big Blue Table'),
-        ('orange-table.html', 'Orange Table'),
+        ('statistics/visualizations/big-number.html', 'Big Number Box'),
+        ('statistics/visualizations/blue-table.html', 'Big Blue Table'),
+        ('statistics/visualizations/orange-table.html', 'Orange Table'),
     ]
 
 
@@ -90,6 +89,6 @@ class StatisticsBlock(blocks.StructBlock):
         return context
 
     class Meta:
-        template = 'stats.html'
+        template = 'statistics/blocks/stats.html'
         icon = 'cogs'
         label = 'Statistics'
