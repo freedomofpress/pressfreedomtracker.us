@@ -8,6 +8,7 @@ django-modelcluster
 django-recaptcha
 django-settings-export
 django-webpack-loader
+docutils
 # Our tests break past 2.10, needs to be looked into
 factory_boy<2.9
 gunicorn
