@@ -100,9 +100,9 @@ class Filter(object):
 
 
 class DateFilter(Filter):
-    def __init__(self, *args, fuzzy=False, **kwargs):
+    def __init__(self, name, model_field, lookup=None, fuzzy=False):
         self.fuzzy = fuzzy
-        super(DateFilter, self).__init__(*args, **kwargs)
+        super(DateFilter, self).__init__(name, model_field, lookup=lookup)
 
     def get_value(self, data):
         start = data.get('{}_lower'.format(self.name)) or None
