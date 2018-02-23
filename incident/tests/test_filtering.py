@@ -161,6 +161,13 @@ class TestBooleanFiltering(TestCase):
 
         self.assertEqual(set(incidents), {self.true_bool, self.false_bool})
 
+    def test_should_return_all_with_none_bool(self):
+        incidents = IncidentFilter({
+            'categories': str(self.category.id),
+        }).get_queryset()
+
+        self.assertEqual(set(incidents), {self.true_bool, self.false_bool})
+
 
 class TestAllFiltersAtOnce(TestCase):
     def test_all_filters_combined_with_search(self):

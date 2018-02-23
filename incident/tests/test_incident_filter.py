@@ -117,3 +117,16 @@ class CategoryFiltersTest(TestCase):
             {f.name for f in incident_filter.filters},
             set(IncidentFilter.base_filters) | {'politicians_or_public_figures_involved'},
         )
+
+
+class CleanTest(TestCase):
+    def test_only_clean_provided_data(self):
+        category = CategoryPageFactory(incident_filters=['is_search_warrant_obtained'])
+        incident_filter = IncidentFilter({
+            'categories': str(category.id),
+        })
+        incident_filter.clean(strict=True)
+
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [category.id],
+        })

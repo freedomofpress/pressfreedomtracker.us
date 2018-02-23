@@ -407,9 +407,11 @@ class IncidentFilter(object):
             self.filters += category_filters
             for f in category_filters:
                 try:
-                    cleaned_value = f.clean(f.get_value(self.data), strict=strict)
-                    if cleaned_value is not None:
-                        self.cleaned_data[f.name] = cleaned_value
+                    value = f.get_value(self.data)
+                    if value is not None:
+                        cleaned_value = f.clean(value, strict=strict)
+                        if cleaned_value is not None:
+                            self.cleaned_data[f.name] = cleaned_value
                 except ValidationError as exc:
                     errors.append(str(exc))
 
