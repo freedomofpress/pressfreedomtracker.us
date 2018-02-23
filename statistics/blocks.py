@@ -40,21 +40,7 @@ class StatisticsBlock(blocks.StructBlock):
         params = list(smart_split(cleaned_value['params']))
 
         signature = inspect.signature(fn)
-        required_params = [param for param in signature.parameters.values() if param.default == Parameter.empty]
         has_kwargs = any(param.kind == Parameter.VAR_KEYWORD for param in signature.parameters.values())
-
-        param_count = len(params)
-        min_param_count = len(required_params)
-        max_param_count = len(signature.parameters)
-
-        if param_count < min_param_count:
-            errors['params'] = ['At least {} parameter{} must be supplied for this dataset'.format(min_param_count, 's' if min_param_count != 1 else '')]
-
-        if param_count > max_param_count:
-            if max_param_count == 0:
-                errors['params'] = ['No parameters may be supplied for this dataset']
-            else:
-                errors['params'] = ['At most {} parameter{} may be supplied for this dataset'.format(max_param_count, 's' if max_param_count != 1 else '')]
 
         if has_kwargs:
             try:
@@ -67,6 +53,29 @@ class StatisticsBlock(blocks.StructBlock):
                     incident_filter.clean(strict=True)
                 except ValidationError as exc:
                     errors['params'] = [str(error) for error in exc]
+        else:
+            positional_keyword_params = [
+                param
+                for param in signature.parameters.values()
+                if param.kind == Parameter.POSITIONAL_OR_KEYWORD
+            ]
+            required_params = [
+                param
+                for param in positional_keyword_params
+                if param.default == Parameter.empty
+            ]
+            param_count = len(params)
+            min_param_count = len(required_params)
+            max_param_count = len(positional_keyword_params)
+
+            if param_count < min_param_count:
+                errors['params'] = ['At least {} parameter{} must be supplied for this dataset'.format(min_param_count, 's' if min_param_count != 1 else '')]
+
+            if param_count > max_param_count:
+                if max_param_count == 0:
+                    errors['params'] = ['No parameters may be supplied for this dataset']
+                else:
+                    errors['params'] = ['At most {} parameter{} may be supplied for this dataset'.format(max_param_count, 's' if max_param_count != 1 else '')]
 
         if errors:
             # The message here is arbitrary - StructBlock.render_form will suppress it

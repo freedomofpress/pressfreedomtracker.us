@@ -325,6 +325,20 @@ class CleanTest(TestCase):
             'params': 'search="hello"',
         })
 
+    def test_clean__kwargs__multiple_valid_params(self):
+        block = StatisticsBlock()
+
+        # Should succeed with no errors.
+        try:
+            block.clean({
+                'visualization': 'statistics/visualizations/big-number.html',
+                'dataset': 'kwargs',
+                'params': 'search="hello" date_lower="2017-01-01"',
+            })
+        except ValidationError as exc:
+            # unwrap structblock validation magic
+            raise ValidationError(exc.params)
+
 
 @mock.patch('statistics.registry._numbers', NUMBERS_MOCK)
 @mock.patch('statistics.registry._maps', MAPS_MOCK)
