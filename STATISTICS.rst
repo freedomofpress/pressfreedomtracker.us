@@ -28,8 +28,12 @@ num_incidents
 -------------
 Count of all incidents matching the given filter parameters.
 All filter parameters are optional.
-Some filter parameters are only available if their category is also being filtered on.
 The options in this section correspond exactly to the options in the incident filtering interface on the website.
+
+.. note::
+
+    Some filter parameters are only available if a category that lists the parameter as one of its incident filters is also being filtered on.
+    To filter on a category, use the ``categories`` filter as described in `Many relation filters`_.
 
 Text filters
 ++++++++++++
@@ -125,11 +129,14 @@ Boolean "maybe" filters are a special case of choice filters that accept the val
 Relation filters
 ++++++++++++++++
 
-Relation filters represent a database connection to another data model. Params should use the id of the related object to refer to it.
+Relation filters represent a database connection to another data model.
+Params should use the id of the related object to refer to it.
 
 .. code:: jinja
 
     {% num_incidents state=1 %}
+
+You can get an object's id by opening it for editing in the admin and looking at the URL bar.
 
 - state
 
@@ -138,11 +145,13 @@ Many relation filters
 
 Many relation filters represent a database connection to multiple instances of a model.
 Params should use a comma-separated list of ids for the desired objects.
-The incidents list will all incidents related to `any` of the given objects.
 
 .. code:: jinja
 
     {% num_incidents categories="1,2,3,4" %}
+
+All incidents related to `any` of the given objects will be included in this filter.
+You can get an object's id by opening it for editing in the admin and looking at the URL bar.
 
 - categories
 - equipment_broken
