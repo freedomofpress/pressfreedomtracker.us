@@ -551,6 +551,8 @@ class IncidentPage(MetadataPageMixin, Page):
         index.FilterField('held_in_contempt'),
         index.FilterField('detention_status'),
         index.FilterField('politicianorpublic_id'),
+        index.FilterField('release_date'),
+        index.FilterField('detention_date'),
     ]
 
     def detention_duration(self):

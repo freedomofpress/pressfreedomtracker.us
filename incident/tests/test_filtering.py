@@ -1,29 +1,17 @@
-from itertools import chain
 from datetime import date, timedelta
 
 from django.test import TestCase
 from wagtail.wagtailcore.rich_text import RichText
 
+from common.models.pages import CategoryIncidentFilter
+from common.tests.factories import CategoryPageFactory
+from incident.models import IncidentPage
 from incident.tests.factories import (
     ChargeFactory,
     IncidentPageFactory,
     IncidentIndexPageFactory,
     InexactDateIncidentPageFactory,
     StateFactory,
-)
-from common.tests.factories import CategoryPageFactory
-from incident.utils.incident_fields import (
-    INCIDENT_PAGE_FIELDS,
-    ARREST_FIELDS,
-    LAWSUIT_FIELDS,
-    EQUIPMENT_FIELDS,
-    BORDER_STOP_FIELDS,
-    PHYSICAL_ASSAULT_FIELDS,
-    SUBPOENA_FIELDS,
-    LEAK_PROSECUTIONS_FIELDS,
-    LEGAL_ORDER_FIELDS,
-    PRIOR_RESTRAINT_FIELDS,
-    DENIAL_OF_ACCESS_FIELDS
 )
 from incident.utils.incident_filter import IncidentFilter
 
@@ -178,54 +166,72 @@ class TestAllFiltersAtOnce(TestCase):
         IncidentPage.
 
         """
-        # skip these fields directly because they are split into
-        # upper_date and lower_date fields
-        fields_to_skip = {'date', 'detention_date', 'release_date'}
+        available_filters = IncidentFilter.get_available_filters()
 
         # get a valid value for a given field
         def value_for_field(field):
             t = field['type']
-            if t == 'char':
+            if t == 'text':
                 return 'value'
-            elif t == 'pk':
+            elif t == 'pk' or t == 'autocomplete':
                 return '1'
-            elif t == 'choice':
-                return field['choices'][0][0]
+            elif t == 'choice' or t == 'radio':
+                filter_ = available_filters[field['name']]
+                return list(filter_.get_choices())[0]
             elif t == 'bool':
                 return 'True'
             else:
                 raise ValueError('Could not determine value for field of type %s' % t)
 
-        filters = IncidentFilter(dict(
+        category = CategoryPageFactory()
+
+        CategoryIncidentFilter.objects.bulk_create([
+            CategoryIncidentFilter(
+                category=category,
+                incident_filter=filter_name,
+            )
+            for filter_name in available_filters
+        ])
+
+        # skip these fields directly because they are split into
+        # upper_date and lower_date fields, and because we pass
+        # an explicit categories value
+        filters_to_skip = {'date', 'detention_date', 'release_date', 'categories'}
+        incident_filter = IncidentFilter(dict(
             search='search text',
             date_lower='2011-01-01',
             date_upper='2012-01-01',
-            categories='1',
-            circuits='first',
-            charges='Resisting arrest',
-            release_date_upper='2011-01-01',
-            release_date_lower='2012-01-01',
-            detention_date_upper='2011-01-01',
-            detention_date_lower='2012-01-01',
-            **{f['name']: value_for_field(f) for f in chain(
-                INCIDENT_PAGE_FIELDS,
-                ARREST_FIELDS,
-                LAWSUIT_FIELDS,
-                EQUIPMENT_FIELDS,
-                BORDER_STOP_FIELDS,
-                PHYSICAL_ASSAULT_FIELDS,
-                SUBPOENA_FIELDS,
-                LEAK_PROSECUTIONS_FIELDS,
-                LEGAL_ORDER_FIELDS,
-                PRIOR_RESTRAINT_FIELDS,
-                DENIAL_OF_ACCESS_FIELDS
-            ) if f['name'] not in fields_to_skip
+            categories=str(category.id),
+            release_date_lower='2011-01-01',
+            release_date_upper='2012-01-01',
+            detention_date_lower='2011-01-01',
+            detention_date_upper='2012-01-01',
+            **{
+                available_filters[obj.incident_filter].name: value_for_field(available_filters[obj.incident_filter].serialize())
+                for obj in category.incident_filters.all()
+                if available_filters[obj.incident_filter].name not in filters_to_skip
             }
         ))
         # This test passes if the following functions complete with no
         # errors.
-        filters.get_queryset()
-        filters.get_summary()
+        incident_filter.clean(strict=True)
+        incident_filter.get_queryset()
+        incident_filter.get_summary()
+
+        self.assertEqual(
+            set(incident_filter.cleaned_data),
+            {
+                filter_name
+                for filter_name in IncidentFilter.get_available_filters()
+                if filter_name not in filters_to_skip
+            } | {
+                'date',
+                'detention_date',
+                'release_date',
+                'search',
+                'categories',
+            }
+        )
 
 
 class FuzzyDateFilterTest(TestCase):

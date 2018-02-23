@@ -7,7 +7,7 @@ from wagtail.wagtailcore.rich_text import RichText
 
 from common.models import (
     CategoryPage,
-    IncidentFieldCategoryPage,
+    CategoryIncidentFilter,
     TaxonomyCategoryPage,
     TaxonomySettings
 )
@@ -229,9 +229,9 @@ class Command(BaseCommand):
                 home_page.add_child(instance=category)
 
             for field in fields:
-                IncidentFieldCategoryPage.objects.get_or_create(
+                CategoryIncidentFilter.objects.get_or_create(
                     category=category,
-                    incident_field=field['name']
+                    incident_filter=field['name'],
                 )
             TaxonomyCategoryPage.objects.create(
                 sort_order=counter,

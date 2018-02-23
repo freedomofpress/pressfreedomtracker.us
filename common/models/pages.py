@@ -31,10 +31,9 @@ from common.choices import CATEGORY_COLOR_CHOICES
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
-    get_incident_field_dict,
-    IncidentPageFieldIterator
 )
 from common.validators import validate_template
+from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_numbers_choices
 
 
@@ -208,9 +207,9 @@ class TaxonomyCategoryPage(Orderable):
     ]
 
 
-class IncidentFieldCategoryPage(Orderable):
-    category = ParentalKey('common.CategoryPage', related_name='incident_fields')
-    incident_field = models.CharField(max_length=255, choices=IncidentPageFieldIterator())
+class CategoryIncidentFilter(Orderable):
+    category = ParentalKey('common.CategoryPage', related_name='incident_filters')
+    incident_filter = models.CharField(max_length=255, choices=IncidentFilter.get_filter_choices())
 
 
 class CategoryPage(MetadataPageMixin, Page):
@@ -222,7 +221,7 @@ class CategoryPage(MetadataPageMixin, Page):
         FieldPanel('methodology'),
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('data_items', label='Data Items'),
-        InlinePanel('incident_fields', label='Fields to include in filters'),
+        InlinePanel('incident_filters', label='Fields to include in filters'),
     ]
 
     settings_panels = Page.settings_panels + [
@@ -236,7 +235,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
     def get_context(self, request):
         # placed here to avoid circular dependency
-        from incident.utils.incident_filter import IncidentFilter
+        from incident.utils.incident_filter import IncidentFilter, get_category_options
         from incident.models.choices import get_filter_choices
         from common.models.settings import SearchSettings
 
@@ -244,7 +243,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
         incident_filter = IncidentFilter(request.GET)
         incident_filter.categories = str(self.page_ptr_id)
-        context['category_options'] = incident_filter.get_category_options()
+        context['category_options'] = get_category_options()
 
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
@@ -303,10 +302,6 @@ class CategoryPage(MetadataPageMixin, Page):
         response = super(CategoryPage, self).serve(request, *args, **kwargs)
         response['Cache-Tag'] = self.get_cache_tag()
         return response
-
-    def get_incident_fields_dict(self):
-        category_fields = [obj.incident_field for obj in self.incident_fields.all()]
-        return [get_incident_field_dict(field) for field in category_fields]
 
 
 class SimplePage(MetadataPageMixin, Page):

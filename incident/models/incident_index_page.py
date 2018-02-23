@@ -7,13 +7,12 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel
 from wagtail.wagtailcore.models import Page
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
-from common.models.pages import CategoryPage
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin
 from incident.models.choices import get_filter_choices
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
-from incident.utils.incident_filter import IncidentFilter
+from incident.utils.incident_filter import IncidentFilter, get_category_options
 from incident.feeds import IncidentIndexPageFeed
 
 
@@ -70,10 +69,11 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         )
 
     def get_context(self, request):
+        from common.models import CategoryPage
         context = super(IncidentIndexPage, self).get_context(request)
 
         incident_filter = IncidentFilter(request.GET)
-        context['category_options'] = incident_filter.get_category_options()
+        context['category_options'] = get_category_options()
         context['filter_choices'] = get_filter_choices()
         context['export_path'] = self.url
 

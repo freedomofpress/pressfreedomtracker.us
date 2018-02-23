@@ -17,7 +17,7 @@ from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
 from common.validators import validate_template
 from incident.models.choices import get_filter_choices
-from incident.utils.incident_filter import IncidentFilter
+from incident.utils.incident_filter import get_category_options
 
 
 class HomePage(MetadataPageMixin, Page):
@@ -141,8 +141,7 @@ class HomePage(MetadataPageMixin, Page):
     def get_context(self, request):
         context = super(HomePage, self).get_context(request)
 
-        incident_filter = IncidentFilter(request.GET)
-        context['category_options'] = incident_filter.get_category_options()
+        context['category_options'] = get_category_options()
 
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
