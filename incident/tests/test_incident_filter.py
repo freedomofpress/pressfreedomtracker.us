@@ -2,7 +2,6 @@ from django.db.models import TextField
 from django.test import TestCase
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 
-from common.models.pages import CategoryIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from incident.models import IncidentPage
 from incident.utils.incident_filter import (
@@ -96,10 +95,9 @@ class AvailableFiltersTest(TestCase):
 
 class CategoryFiltersTest(TestCase):
     def setUp(self):
-        self.category = CategoryPageFactory(title='Denial of Access')
-        CategoryIncidentFilter.objects.create(
-            category=self.category,
-            incident_filter='politicians_or_public_figures_involved',
+        self.category = CategoryPageFactory(
+            title='Denial of Access',
+            incident_filters=['politicians_or_public_figures_involved'],
         )
 
     def test_base_filters_only(self):

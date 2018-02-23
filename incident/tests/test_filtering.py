@@ -3,9 +3,7 @@ from datetime import date, timedelta
 from django.test import TestCase
 from wagtail.wagtailcore.rich_text import RichText
 
-from common.models.pages import CategoryIncidentFilter
 from common.tests.factories import CategoryPageFactory
-from incident.models import IncidentPage
 from incident.tests.factories import (
     ChargeFactory,
     IncidentPageFactory,
@@ -95,7 +93,10 @@ class TestFiltering(TestCase):
 
     def test_should_filter_charges_as_one_field(self):
         """Filter should filter charges as if current and dropped charges are a single field"""
-        category = CategoryPageFactory(title='Arrest / Criminal Charge')
+        category = CategoryPageFactory(
+            title='Arrest / Criminal Charge',
+            incident_filters=['charges'],
+        )
         charge = ChargeFactory()
         target1 = IncidentPageFactory(categories=[category])
         target2 = IncidentPageFactory(categories=[category])
@@ -118,7 +119,10 @@ class TestBooleanFiltering(TestCase):
     """Boolean filters"""
     @classmethod
     def setUpTestData(cls):
-        cls.category = CategoryPageFactory(title='Leak Case')
+        cls.category = CategoryPageFactory(
+            title='Leak Case',
+            incident_filters=['charged_under_espionage_act'],
+        )
 
         cls.true_bool = IncidentPageFactory(
             categories=[cls.category],
@@ -183,15 +187,7 @@ class TestAllFiltersAtOnce(TestCase):
             else:
                 raise ValueError('Could not determine value for field of type %s' % t)
 
-        category = CategoryPageFactory()
-
-        CategoryIncidentFilter.objects.bulk_create([
-            CategoryIncidentFilter(
-                category=category,
-                incident_filter=filter_name,
-            )
-            for filter_name in available_filters
-        ])
+        category = CategoryPageFactory(incident_filters=available_filters)
 
         # skip these fields directly because they are split into
         # upper_date and lower_date fields, and because we pass
@@ -346,7 +342,10 @@ class DateFilterTest(TestCase):
     """Date filters"""
     @classmethod
     def setUpTestData(cls):
-        cls.category = CategoryPageFactory(title='Arrest / Criminal Charge')
+        cls.category = CategoryPageFactory(
+            title='Arrest / Criminal Charge',
+            incident_filters=['release_date'],
+        )
 
     def setUp(self):
         self.date_lower = date(2017, 2, 12)
@@ -501,7 +500,10 @@ class ChoiceFilterTest(TestCase):
         self.custody = 'CUSTODY'
         self.returned_full = 'RETURNED_FULL'
         self.unknown = 'UNKNOWN'
-        self.category = CategoryPageFactory(title='Equipment Search or Seizure')
+        self.category = CategoryPageFactory(
+            title='Equipment Search or Seizure',
+            incident_filters=['status_of_seized_equipment'],
+        )
 
     def test_should_filter_by_choice_field(self):
         """should filter via a field that is a choice field"""
