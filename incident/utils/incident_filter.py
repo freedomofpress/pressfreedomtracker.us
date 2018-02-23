@@ -389,7 +389,7 @@ class IncidentFilter(object):
                 if cleaned_value is not None:
                     self.cleaned_data[f.name] = cleaned_value
             except ValidationError as exc:
-                errors.extend(exc.error_list)
+                errors.append(exc)
 
         category_ids = self.cleaned_data.get('categories')
         if category_ids:
@@ -413,7 +413,7 @@ class IncidentFilter(object):
                         if cleaned_value is not None:
                             self.cleaned_data[f.name] = cleaned_value
                 except ValidationError as exc:
-                    errors.append(str(exc))
+                    errors.append(exc)
 
         if strict:
             allowed_parameters = self.search_filter.get_allowed_parameters()

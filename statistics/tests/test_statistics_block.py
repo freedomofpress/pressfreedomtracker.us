@@ -2,6 +2,7 @@ from unittest import TestCase, mock
 
 from django.core.exceptions import ValidationError
 
+from common.tests.factories import CategoryPageFactory
 from statistics.blocks import StatisticsBlock
 
 
@@ -338,6 +339,26 @@ class CleanTest(TestCase):
         except ValidationError as exc:
             # unwrap structblock validation magic
             raise ValidationError(exc.params)
+
+    def test_clean_kwargs__combine_multiple_errors(self):
+        block = StatisticsBlock()
+        category = CategoryPageFactory(incident_filters=['arrest_status'])
+
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'statistics/visualizations/big-number.html',
+                'dataset': 'kwargs',
+                'params': 'categories="{}" arrest_status="hello" circuits="fifty"'.format(
+                    category.id,
+                ),
+            })
+
+        self.assertEqual(cm.exception.params, {
+            'params': [
+                'Invalid value for circuits: fifty',
+                'Invalid value for arrest_status: hello',
+            ],
+        })
 
 
 @mock.patch('statistics.registry._numbers', NUMBERS_MOCK)
