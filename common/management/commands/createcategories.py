@@ -195,7 +195,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if not HomePage.objects.filter(slug='home'):
             # Delete the default home page
-            Page.objects.get(slug='home').delete()
+            Page.objects.filter(slug='home').delete()
             home_page = HomePage(
                 title='Home',
                 slug='home',
@@ -233,9 +233,9 @@ class Command(BaseCommand):
                     category=category,
                     incident_filter=field['name'],
                 )
-            TaxonomyCategoryPage.objects.create(
-                sort_order=counter,
+            TaxonomyCategoryPage.objects.get_or_create(
                 taxonomy_setting=taxonomy_settings,
                 category=category,
+                defaults={'sort_order': counter},
             )
             counter += 1
