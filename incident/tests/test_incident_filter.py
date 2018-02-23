@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
 from wagtail.wagtailcore.fields import RichTextField, StreamField
