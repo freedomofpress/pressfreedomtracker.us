@@ -326,7 +326,7 @@ class IncidentPage(MetadataPageMixin, Page):
         verbose_name='Third party business'
     )
     legal_order_type = models.CharField(
-        choices=choices.LEGAL_ORDER_TYPES,
+        choices=choices.LEGAL_ORDER_TYPE,
         max_length=255,
         blank=True,
         null=True,

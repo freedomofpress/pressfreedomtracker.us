@@ -20,7 +20,7 @@ def get_filter_choices():
         EQUIPMENT=_get_filter_choices(EQUIPMENT),
         DETENTION_STATUS=_get_filter_choices(DETENTION_STATUS),
         THIRD_PARTY_BUSINESS=_get_filter_choices(THIRD_PARTY_BUSINESS),
-        LEGAL_ORDER_TYPES=_get_filter_choices(LEGAL_ORDER_TYPES),
+        LEGAL_ORDER_TYPE=_get_filter_choices(LEGAL_ORDER_TYPE),
         PRIOR_RESTRAINT_STATUS=_get_filter_choices(PRIOR_RESTRAINT_STATUS),
         ASSAILANT=_get_filter_choices(ACTORS)
     )
@@ -136,7 +136,7 @@ THIRD_PARTY_BUSINESS = [
 ]
 
 
-LEGAL_ORDER_TYPES = [
+LEGAL_ORDER_TYPE = [
     ('SUBPOENA', 'subpoena'),
     ('2703', '2703(d) court order'),
     ('WARRANT', 'warrant'),
