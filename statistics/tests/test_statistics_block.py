@@ -361,33 +361,33 @@ class CleanTest(TestCase):
         })
 
 
-@mock.patch('statistics.registry._numbers', NUMBERS_MOCK)
-@mock.patch('statistics.registry._maps', MAPS_MOCK)
 class GetContextTest(TestCase):
-    def test_should_have_params__gets_none(self):
+    def test_renders_statistics__no_params(self):
         block = StatisticsBlock()
         value = {
-            'dataset': 'one_param',
+            'dataset': 'data_tag',
             'params': '',
+            'visualization': 'template.html',
         }
         context = block.get_context(value)
 
         self.assertEqual(context, {
-            'data': None,
+            'template_string': '{% data_tag as data %}{% include "template.html" %}',
             'self': value,
             'value': value,
         })
 
-    def test_should_not_have_params__gets_some(self):
+    def test_renders_statistics__params(self):
         block = StatisticsBlock()
         value = {
-            'dataset': 'no_params',
-            'params': '100',
+            'dataset': 'data_tag',
+            'params': 'these are some params',
+            'visualization': 'template.html',
         }
         context = block.get_context(value)
 
         self.assertEqual(context, {
-            'data': None,
+            'template_string': '{% data_tag these are some params as data %}{% include "template.html" %}',
             'self': value,
             'value': value,
         })

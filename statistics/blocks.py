@@ -87,14 +87,13 @@ class StatisticsBlock(blocks.StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super(StatisticsBlock, self).get_context(value, parent_context=parent_context)
-        fn = get_stats()[value['dataset']]
 
-        try:
-            result = fn(*value['params'].split())
-        except TypeError:
-            result = None
-
-        context['data'] = result
+        template_string = '{{% {tag_name}{params} as data %}}{{% include "{visualization}" %}}'.format(
+            tag_name=value['dataset'],
+            params=' ' + value['params'] if value['params'] else '',
+            visualization=value['visualization'],
+        )
+        context['template_string'] = template_string
         return context
 
     class Meta:
