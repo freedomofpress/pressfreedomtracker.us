@@ -267,7 +267,7 @@ The second, ``@register.simple_tag``, marks the function as usable inside Django
 .. code:: jinja
 
     {% load statistics_tags %}
-    The number of incidents in 2017 was {% num_incidents date_lower=2017-01-01 date_upper=2017-12-31 %}, compared with the number in 2016: {% num_incidents date_lower=2016-01-01 date_upper=2017-12-31 %}.
+    The number of incidents in 2017 was {% num_incidents date_lower="2017-01-01" date_upper="2017-12-31" %}, compared with the number in 2016: {% num_incidents date_lower="2016-01-01" date_upper="2017-12-31" %}.
 
 We also expose the statistics_tags library automatically to content editors in certain StreamFields, for example in SimplePage.body.
 This has two parts:
