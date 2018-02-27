@@ -193,7 +193,10 @@ class ManyRelationFilter(Filter):
     def clean(self, value, strict=False):
         if not value:
             return None
-        values = value.split(',')
+        if isinstance(value, int):
+            values = [value]
+        else:
+            values = value.split(',')
         invalid_values = []
 
         value = []

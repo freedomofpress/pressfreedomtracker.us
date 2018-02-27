@@ -8,6 +8,7 @@ from django.template import (
 )
 from django.test import TestCase
 
+from common.tests.factories import CategoryPageFactory
 from common.validators import TemplateValidator
 from incident.tests.factories import IncidentPageFactory
 from statistics.templatetags.statistics_tags import (
@@ -19,9 +20,11 @@ class NumIncidentsTest(TestCase):
     """Test that num_incidents tag """
     @classmethod
     def setUpTestData(cls):
+        cls.category = CategoryPageFactory()
         cls.incident = IncidentPageFactory(
             title='hello',
             date=datetime.date(2017, 1, 1),
+            categories=[cls.category],
         )
         cls.old_incident = IncidentPageFactory(
             title='goodbye',
@@ -65,6 +68,20 @@ class NumIncidentsTest(TestCase):
             self.validator(template_string)
         result = self._render(template_string)
         self.assertEqual(result, '2')
+
+    def test_manyrelationfilter_gets_integer_id(self):
+        """Valid template tag with integer id instead of string"""
+        template_string = '{{% num_incidents categories={} %}}'.format(self.category.id)
+        self.validator(template_string)
+        result = self._render(template_string)
+        self.assertEqual(result, '1')
+
+    def test_relationfilter_gets_integer_id(self):
+        """Valid template tag with integer id instead of string"""
+        template_string = '{% num_incidents state=1 %}'
+        self.validator(template_string)
+        result = self._render(template_string)
+        self.assertEqual(result, '0')
 
     def test_gets_invalid_dates(self):
         """Valid tag but not valid params"""
