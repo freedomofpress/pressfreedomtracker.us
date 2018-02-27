@@ -1,5 +1,6 @@
-_numbers = {}
-_maps = {}
+NUMBERS = {}
+MAPS = {}
+VISUALIZATIONS = {}
 
 
 class Statistics(object):
@@ -21,15 +22,18 @@ class Statistics(object):
         store[name] = fn
 
     def number(self, name=None, fn=None):
-        return self.statistic(_numbers, name=name, fn=fn)
+        return self.statistic(NUMBERS, name=name, fn=fn)
 
     def map(self, name=None, fn=None):
-        return self.statistic(_maps, name=name, fn=fn)
+        return self.statistic(MAPS, name=name, fn=fn)
+
+    def visualization(self, cls):
+        VISUALIZATIONS[cls.template_name] = cls
 
 
 def get_numbers():
     """Return registered statstics names and functions with number values"""
-    return _numbers
+    return NUMBERS
 
 
 def get_numbers_choices():
@@ -38,7 +42,7 @@ def get_numbers_choices():
 
 def get_maps():
     """Return registered statstics names and functions with map values"""
-    return _maps
+    return MAPS
 
 
 def get_maps_choices():
@@ -47,10 +51,17 @@ def get_maps_choices():
 
 def get_stats():
     """Return registered statstics names and functions with any value"""
-    stats = _numbers.copy()
-    stats.update(_maps)
+    stats = NUMBERS.copy()
+    stats.update(MAPS)
     return stats
 
 
 def get_stats_choices():
     return [(name, name) for name in get_stats().keys()]
+
+
+def get_visualization_choices():
+    return [
+        (visualization.template_name, visualization.verbose_name)
+        for visualization in VISUALIZATIONS.values()
+    ]

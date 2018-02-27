@@ -6,18 +6,15 @@ from django.utils.text import smart_split
 from wagtail.wagtailcore import blocks
 
 from incident.utils.incident_filter import IncidentFilter
-from statistics.registry import get_stats, get_stats_choices
+from statistics.registry import (
+    get_stats_choices,
+    get_visualization_choices,
+    MAPS,
+    NUMBERS,
+    VISUALIZATIONS,
+)
 from statistics.utils import parse_kwargs
-
-
-def get_visualization_choices():
-    # The first value of each of these pairs must be a path to a template.
-    # The second value is a descriptive name for the visualization.
-    return [
-        ('statistics/visualizations/big-number.html', 'Big Number Box'),
-        ('statistics/visualizations/blue-table.html', 'Big Blue Table'),
-        ('statistics/visualizations/orange-table.html', 'Orange Table'),
-    ]
+from statistics.visualizations import MAP, NUMBER
 
 
 class StatisticsBlock(blocks.StructBlock):
@@ -36,7 +33,18 @@ class StatisticsBlock(blocks.StructBlock):
         cleaned_value = super(StatisticsBlock, self).clean(value)
         errors = {}
 
-        fn = get_stats()[cleaned_value['dataset']]
+        visualization = VISUALIZATIONS[cleaned_value['visualization']]
+        dataset = cleaned_value['dataset']
+
+        if dataset in MAPS:
+            fn = MAPS[dataset]
+            if visualization.statistics_type == NUMBER:
+                errors['dataset'] = ['A map dataset cannot be used with a number visualization']
+        else:
+            fn = NUMBERS[dataset]
+            if visualization.statistics_type == MAP:
+                errors['dataset'] = ['A number dataset cannot be used with a map visualization']
+
         params = list(smart_split(cleaned_value['params']))
 
         signature = inspect.signature(fn)

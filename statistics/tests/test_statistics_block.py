@@ -14,12 +14,66 @@ NUMBERS_MOCK = {
     'mixed_params': lambda x, y=1: None,
     'kwargs': lambda **kwargs: None,
 }
-MAPS_MOCK = {}
+MAPS_MOCK = {
+    'maps_func': lambda: None,
+}
 
 
-@mock.patch('statistics.registry._numbers', NUMBERS_MOCK)
-@mock.patch('statistics.registry._maps', MAPS_MOCK)
+@mock.patch('statistics.registry.NUMBERS', NUMBERS_MOCK)
+@mock.patch('statistics.registry.MAPS', MAPS_MOCK)
+@mock.patch('statistics.blocks.NUMBERS', NUMBERS_MOCK)
+@mock.patch('statistics.blocks.MAPS', MAPS_MOCK)
 class CleanTest(TestCase):
+    def test_clean_number_stats__number_visualization(self):
+        block = StatisticsBlock()
+        cleaned_value = block.clean({
+            'visualization': 'statistics/visualizations/big-number.html',
+            'dataset': 'no_params',
+            'params': '',
+        })
+
+        self.assertEqual(cleaned_value, {
+            'visualization': 'statistics/visualizations/big-number.html',
+            'dataset': 'no_params',
+            'params': '',
+        })
+
+    def test_clean_number_stats__map_visualization(self):
+        block = StatisticsBlock()
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'statistics/visualizations/blue-table.html',
+                'dataset': 'no_params',
+                'params': '',
+            })
+
+        self.assertEqual(cm.exception.params, {'dataset': ['A number dataset cannot be used with a map visualization']})
+
+    def test_clean_map_stats__map_visualization(self):
+        block = StatisticsBlock()
+        cleaned_value = block.clean({
+            'visualization': 'statistics/visualizations/blue-table.html',
+            'dataset': 'maps_func',
+            'params': '',
+        })
+
+        self.assertEqual(cleaned_value, {
+            'visualization': 'statistics/visualizations/blue-table.html',
+            'dataset': 'maps_func',
+            'params': '',
+        })
+
+    def test_clean_map_stats__number_visualization(self):
+        block = StatisticsBlock()
+        with self.assertRaises(ValidationError) as cm:
+            block.clean({
+                'visualization': 'statistics/visualizations/big-number.html',
+                'dataset': 'maps_func',
+                'params': '',
+            })
+
+        self.assertEqual(cm.exception.params, {'dataset': ['A map dataset cannot be used with a number visualization']})
+
     def test_clean__no_params__gets_none(self):
         block = StatisticsBlock()
         cleaned_value = block.clean({
