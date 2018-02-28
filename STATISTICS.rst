@@ -80,7 +80,7 @@ Boolean values can be filtered using 'True' or 'False':
 
 .. code:: jinja
 
-    {% num_incidents unnecessary_use_of_force="True" %}
+    {% num_incidents categories="4" unnecessary_use_of_force="True" %}
 
 Available filters:
 
@@ -100,7 +100,7 @@ Valid choices can be found in `incident/models/choices.py <https://github.com/fr
 
 .. code:: jinja
 
-    {% num_incidents third_party_business="ISP,TRAVEL" %}
+    {% num_incidents categories="6" third_party_business="ISP,TRAVEL" %}
 
 Available filter:
 
