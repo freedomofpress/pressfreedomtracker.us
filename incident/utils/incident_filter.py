@@ -422,12 +422,37 @@ class IncidentFilter(object):
             allowed_parameters = self.search_filter.get_allowed_parameters()
             for f in self.filters:
                 allowed_parameters |= f.get_allowed_parameters()
-            invalid_parameters = set(self.data) - allowed_parameters
+
+            disallowed_parameters = set()
+            for f in available_filters.values():
+                disallowed_parameters |= f.get_allowed_parameters()
+            disallowed_parameters -= allowed_parameters
+
+            params_requiring_category = set(self.data) & disallowed_parameters
+            if params_requiring_category:
+                filters_requiring_category = {
+                    f for f in available_filters.values()
+                    if f.get_allowed_parameters() & params_requiring_category
+                }
+
+                for f in filters_requiring_category:
+                    categories = CategoryPage.objects.live().filter(
+                        incident_filters__incident_filter=f.name,
+                    ).order_by('title')
+                    if categories:
+                        errors.append('{} filter only available when filtering on one of the following categories: {}'.format(
+                            f.name,
+                            ', '.join(['{} ({})'.format(c.title, c.id) for c in categories]),
+                        ))
+                    else:
+                        errors.append('{} filter only available when filtering on a category which provides it (but no category currently does)'.format(f.name))
+
+            invalid_parameters = set(self.data) - allowed_parameters - params_requiring_category
             if invalid_parameters:
-                errors.append(['Invalid parameter{} provided: {}'.format(
+                errors.append('Invalid parameter{} provided: {}'.format(
                     's' if len(invalid_parameters) != 1 else '',
                     ','.join(invalid_parameters),
-                )])
+                ))
 
             if errors:
                 raise ValidationError(errors)

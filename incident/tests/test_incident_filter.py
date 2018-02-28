@@ -1,7 +1,9 @@
+from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 
+from common.models import CategoryPage
 from common.tests.factories import CategoryPageFactory
 from incident.models import IncidentPage
 from incident.utils.incident_filter import (
@@ -130,3 +132,53 @@ class CleanTest(TestCase):
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [category.id],
         })
+
+    def test_param_requires_category(self):
+        CategoryPage.objects.all().delete()
+        category1 = CategoryPageFactory(
+            title='Category A',
+            incident_filters=['release_date'],
+        )
+        category2 = CategoryPageFactory(
+            title='Category B',
+            incident_filters=['release_date'],
+        )
+        CategoryPageFactory()
+
+        incident_filter = IncidentFilter({
+            'release_date_lower': '2017-01-01',
+        })
+        with self.assertRaises(ValidationError) as cm:
+            incident_filter.clean(strict=True)
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['release_date filter only available when filtering on one of the following categories: {} ({}), {} ({})'.format(
+                category1.title,
+                category1.id,
+                category2.title,
+                category2.id,
+            )],
+        )
+
+    def test_param_requires_category__none_found(self):
+        CategoryPage.objects.all().delete()
+        incident_filter = IncidentFilter({
+            'release_date_lower': '2017-01-01',
+        })
+        with self.assertRaises(ValidationError) as cm:
+            incident_filter.clean(strict=True)
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['release_date filter only available when filtering on a category which provides it (but no category currently does)'],
+        )
+
+    def test_invalid_param(self):
+        incident_filter = IncidentFilter({
+            'not_a_parameter': 'False',
+        })
+        with self.assertRaises(ValidationError) as cm:
+            incident_filter.clean(strict=True)
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['Invalid parameter provided: not_a_parameter'],
+        )
