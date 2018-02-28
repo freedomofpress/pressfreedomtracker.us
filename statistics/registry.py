@@ -57,7 +57,10 @@ def get_stats():
 
 
 def get_stats_choices():
-    return [(name, name) for name in get_stats().keys()]
+    return [
+        (name, '{} ({})'.format(name, 'Map' if name in MAPS else 'Number'))
+        for name in get_stats().keys()
+    ]
 
 
 def get_visualization_choices():
