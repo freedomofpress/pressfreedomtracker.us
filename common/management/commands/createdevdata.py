@@ -21,7 +21,7 @@ from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
-from wagtail.wagtailcore.models import Page, Site
+from wagtail.wagtailcore.models import Site
 from wagtail.wagtailcore.rich_text import RichText
 
 
@@ -36,20 +36,9 @@ class Command(BaseCommand):
         self.stdout.write('Creating development data... ', '')
         self.stdout.flush()
 
-        # Basic setup
-        root_page = Page.objects.get(title='Root')
-
-        if not HomePage.objects.filter(slug='home'):
-            # Delete the default home page
-            Page.objects.get(slug='home').delete()
-            home_page = HomePage(
-                title='Home',
-                slug='home',
-                about=RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'),
-            )
-            root_page.add_child(instance=home_page)
-        else:
-            home_page = HomePage.objects.get(slug='home')
+        # createcategories will handle creating homepage.
+        management.call_command('createcategories')
+        home_page = HomePage.objects.get(slug='home')
 
         if not Site.objects.filter(is_default_site=True):
             site = Site.objects.create(
@@ -63,8 +52,6 @@ class Command(BaseCommand):
             site = Site.objects.get(
                 is_default_site=True,
             )
-
-        management.call_command('createcategories')
         # ABOUT PAGE
         if not SimplePage.objects.filter(slug='about').exists():
             about_page = SimplePage(
