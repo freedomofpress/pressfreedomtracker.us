@@ -545,11 +545,11 @@ class IncidentFilter(object):
         if category_pks:
             categories = CategoryPage.objects.filter(
                 pk__in=category_pks
-            ).annotate(num_incidents=Count('incidents'))
+            )
             for category in categories:
                 summary = summary + ((
                     category.plural_name if category.plural_name else category.title,
-                    category.num_incidents,
+                    queryset.filter(categories__category=category).count(),
                 ),)
 
         return summary

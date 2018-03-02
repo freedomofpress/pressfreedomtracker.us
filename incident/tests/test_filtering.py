@@ -2,6 +2,7 @@ from datetime import date, timedelta
 import unittest
 
 from django.test import TestCase
+from django.utils import timezone
 from wagtail.wagtailcore.rich_text import RichText
 
 from common.tests.factories import CategoryPageFactory
@@ -591,4 +592,42 @@ class ChoiceFilterTest(TestCase):
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
             'status_of_seized_equipment': [self.custody, self.returned_full],
+        })
+
+
+class GetSummaryTest(TestCase):
+    def setUp(self):
+        self.custody = 'CUSTODY'
+        self.returned_full = 'RETURNED_FULL'
+        self.category = CategoryPageFactory(
+            title='Equipment Search or Seizure',
+            incident_filters=['status_of_seized_equipment'],
+        )
+
+    def test_category_incident_count_filtered(self):
+        IncidentPageFactory(
+            status_of_seized_equipment=self.custody,
+            categories=[self.category],
+            date=timezone.now().date(),
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full,
+            categories=[self.category],
+            date=timezone.now().date(),
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            status_of_seized_equipment=self.custody,
+        ))
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 1),
+            ('Results in {}'.format(timezone.now().year), 1),
+            ('Results in {0:%B}'.format(timezone.now().date()), 1),
+            (self.category.title, 1),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'status_of_seized_equipment': [self.custody],
         })
