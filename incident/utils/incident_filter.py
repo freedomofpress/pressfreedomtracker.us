@@ -491,6 +491,7 @@ class IncidentFilter(object):
 
         """
         from common.models import CategoryPage
+        from incident.models.items import Target
         queryset = self._get_queryset()
 
         TODAY = date.today()
@@ -499,6 +500,7 @@ class IncidentFilter(object):
 
         summary = (
             ('Total Results', queryset.count()),
+            ('Journalists affected', Target.objects.filter(targets_incidents__in=queryset).distinct().count()),
         )
 
         # Add counts for this year and this month if non-zero

@@ -12,6 +12,7 @@ from incident.tests.factories import (
     IncidentIndexPageFactory,
     InexactDateIncidentPageFactory,
     StateFactory,
+    TargetFactory,
 )
 from incident.utils.incident_filter import IncidentFilter
 
@@ -609,11 +610,13 @@ class GetSummaryTest(TestCase):
             status_of_seized_equipment=self.custody,
             categories=[self.category],
             date=timezone.now().date(),
+            targets=0,
         )
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full,
             categories=[self.category],
             date=timezone.now().date(),
+            targets=0,
         )
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -623,6 +626,7 @@ class GetSummaryTest(TestCase):
         summary = incident_filter.get_summary()
         self.assertEqual(summary, (
             ('Total Results', 1),
+            ('Journalists affected', 0),
             ('Results in {}'.format(timezone.now().year), 1),
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
             (self.category.title, 1),
@@ -630,4 +634,98 @@ class GetSummaryTest(TestCase):
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
             'status_of_seized_equipment': [self.custody],
+        })
+
+    def test_target_count__filtered(self):
+        # Matched incident page
+        IncidentPageFactory(
+            status_of_seized_equipment=self.custody,
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=3,
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full,
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=5,
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            status_of_seized_equipment=self.custody,
+        ))
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 1),
+            ('Journalists affected', 3),
+            ('Results in {}'.format(timezone.now().year), 1),
+            ('Results in {0:%B}'.format(timezone.now().date()), 1),
+            (self.category.title, 1),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'status_of_seized_equipment': [self.custody],
+        })
+
+    def test_target_count__combined(self):
+        IncidentPageFactory(
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=3,
+        )
+        IncidentPageFactory(
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=5,
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+        ))
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 2),
+            ('Journalists affected', 8),
+            ('Results in {}'.format(timezone.now().year), 2),
+            ('Results in {0:%B}'.format(timezone.now().date()), 2),
+            (self.category.title, 2),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+        })
+
+    def test_target_count__deduped(self):
+        target1 = TargetFactory()
+        target2 = TargetFactory()
+        incident1 = IncidentPageFactory(
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=0,
+        )
+        incident1.targets = [target1, target2]
+        incident1.save()
+
+        incident2 = IncidentPageFactory(
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=0,
+        )
+        incident2.targets = [target1]
+        incident2.save()
+
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+        ))
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 2),
+            ('Journalists affected', 2),
+            ('Results in {}'.format(timezone.now().year), 2),
+            ('Results in {0:%B}'.format(timezone.now().date()), 2),
+            (self.category.title, 2),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
         })
