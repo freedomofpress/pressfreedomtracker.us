@@ -271,6 +271,14 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                     category=category,
                 )
 
+    @factory.post_generation
+    def related_incidents(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            self.related_incidents.set(extracted)
+
 
 class InexactDateIncidentPageFactory(IncidentPageFactory):
     exact_date_unknown = True

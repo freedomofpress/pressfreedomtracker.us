@@ -598,10 +598,8 @@ class IncidentPage(MetadataPageMixin, Page):
         """
         Returns related incidents and/or other incidents in the same category.
         """
-
         # If there are one or fewer related incidents, we will append more incidents from the same category, up to a maximum number
-        related_to_incident_qs = self.related_incidents.all()
-        related_incidents = list(related_to_incident_qs)
+        related_incidents = list(self.related_incidents.all())
         main_category = self.get_main_category()
 
         # Maximum of related incidents to return, minimum of 2
@@ -613,14 +611,15 @@ class IncidentPage(MetadataPageMixin, Page):
         # only add up to two more incidents from the main category
         maximum += maximum % 2
 
+        exclude_ids = {incident.id for incident in related_incidents}
+        if self.id:
+            exclude_ids.add(self.id)
         related_incidents += list(
             IncidentPage.objects.filter(
                 live=True,
                 categories__category=main_category
             ).exclude(
-                id=self.id
-            ).difference(
-                related_to_incident_qs
+                id__in=exclude_ids
             )[:(maximum - len(related_incidents))]
         )
 
