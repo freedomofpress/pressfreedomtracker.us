@@ -1,12 +1,13 @@
 from django import template
+from django.core.exceptions import ValidationError
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
-from common.models.pages import CategoryPage
+from common.validators import tag_validator
 from incident.models.incident_page import IncidentPage
-from incident.tests.test_filtering import create_incident_filter
+from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import Statistics
-from statistics.utils import ARREST_ID
+from statistics.utils import parse_kwargs
 
 
 register = template.Library()
@@ -15,115 +16,35 @@ statistics = Statistics()
 
 @statistics.number
 @register.simple_tag
-def num_by_category(category_name, lower_date=None, upper_date=None):
-    """Count of all incidents in a particular category in an arbitrary
-    date range
-
-    Note: date arguments should be of the form 'YYYY-MM-DD'
-
-    Keyword arguments:
-    category_name -- the unique slug corresponding to a CategoryPage
-    lower_date -- lower end of the date range (default None)
-    upper_date -- upper end of the date range (default None)
-    """
-    category_page = CategoryPage.objects.get(slug=category_name)
-    f = create_incident_filter(lower_date=lower_date, upper_date=upper_date,
-                               category=category_page)
-    _, incidents = f.fetch()
-    return incidents.count()
+def num_incidents(**kwargs):
+    """Return the count of incidents matching the given filter parameters"""
+    incident_filter = IncidentFilter(kwargs)
+    try:
+        incident_filter.clean(strict=True)
+    except ValidationError:
+        # Don't return an incorrect number if params are invalid.
+        return ''
+    return incident_filter.get_queryset().count()
 
 
-@statistics.number
-@register.simple_tag
-def arrests_by_status(
-        lower_date=None,
-        upper_date=None,
-        arrest_status=None,
-        status_of_charges=None,
-        detention_date_lower=None,
-        detention_date_upper=None,
-        release_date_lower=None,
-        release_date_upper=None,
-        unnecessary_use_of_force=None,
-):
-    """Count of arrests by various metrics
+@tag_validator(register, 'num_incidents')
+def validate_num_incidents(parser, token):
+    """Return the count of incidents matching the given filter parameters"""
+    bits = token.split_contents()
+    tag_name, bits = bits[0], bits[1:]
 
-    Notes: date arguments should be of the form 'YYYY-MM-DD'
+    if len(bits) >= 2 and bits[-2] == 'as':
+        bits = bits[:-2]
 
-    Choice arguments must exactly match the case shown, and can be
-    combined with commas, e.g. status_of_charges='CONVICTED,ACQUITTED'
-    returns the count for both statuses.
-
-    Keyword arguments:
-    lower_date -- lower end of the incident date range (default None)
-    upper_date -- upper end of the incident date range (default None)
-
-    arrest_status -- choice of UNKNOWN, DETAINED_NO_PROCESSING,
-    DETAINED_CUSTODY, ARRESTED_CUSTODY, ARRESTED_RELEASED.
-
-    status_of_charges -- choice of UNKNOWN, NOT_CHARGED,
-    CHARGES_PENDING, CHARGES_DROPPED, CONVICTED, ACQUITTED,
-    PENDING_APPEAL
-
-    detention_date_lower -- lower end of the detention date range (default None)
-    detention_date_upper -- upper end of the detention date range (default None)
-    release_date_lower -- lower end of the release date range (default None)
-    release_date_upper -- upper end of the release date range (default None)
-    unnecessary_use_of_force -- True/False if unecessary force was used (default both)
-
-    """
-    f = create_incident_filter(
-        lower_date=lower_date,
-        upper_date=upper_date,
-        arrest_status=arrest_status,
-        status_of_charges=status_of_charges,
-        detention_date_lower=detention_date_lower,
-        detention_date_upper=detention_date_upper,
-        release_date_lower=release_date_lower,
-        release_date_upper=release_date_upper,
-        unnecessary_use_of_force=unnecessary_use_of_force,
-    )
-    _, incidents = f.fetch()
-    return incidents.count()
-
-
-@statistics.number
-@register.simple_tag
-def num_arrests(year=None, pending_charges=False, dropped_charges=False):
-    """Count of all arrests
-
-    Keyword arguments
-    year -- a year in which the incident occurred (default: all years)
-    pending_charges -- True/False, include only incidents with pending
-    charges (default False)
-    dropped_charges -- True/False, include only incidents with dropped
-    charges (default False)
-
-    """
-    incidents = IncidentPage.objects.filter(
-        live=True,
-        categories__category=ARREST_ID
-    )
-    if year:
-        incidents = incidents.filter(date__year=year)
-    if pending_charges:
-        incidents = incidents.filter(
-            status_of_charges='CHARGES_PENDING',
-            current_charges__isnull=False,
+    try:
+        kwargs = parse_kwargs(bits)
+    except ValueError as exc:
+        raise template.TemplateSyntaxError(
+            '{}: {}'.format(tag_name, str(exc))
         )
-    if dropped_charges:
-        incidents = incidents.filter(dropped_charges__isnull=False)
-    return incidents.count()
 
-
-@statistics.number
-@register.simple_tag
-def num_incidents(year):
-    """Return the count of incidents occurring in the given year"""
-    return IncidentPage.objects.filter(
-        live=True,
-        date__year=year,
-    ).count()
+    incident_filter = IncidentFilter(kwargs)
+    incident_filter.clean(strict=True)
 
 
 @statistics.map

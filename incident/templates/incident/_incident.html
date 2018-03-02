@@ -73,7 +73,7 @@ It can take the following context variables:
 			{% else %}
 				{% for block in incident.body %}
 					{% if block.block_type == 'rich_text' %}
-						<section>{% filter typogrify %}{% render_as_template block.value %}{% endfilter %}</section>
+						<section>{% filter typogrify %}{% include_block block %}{% endfilter %}</section>
 					{% else %}
 						<section>{% include_block block %}</section>
 					{% endif %}

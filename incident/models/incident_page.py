@@ -18,7 +18,11 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
 from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
-from common.blocks import RichTextBlockQuoteBlock, AlignedCaptionedEmbedBlock
+from common.blocks import (
+    RichTextBlockQuoteBlock,
+    AlignedCaptionedEmbedBlock,
+    RichTextTemplateBlock,
+)
 from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.circuits import CIRCUITS_BY_STATE
@@ -53,7 +57,10 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     body = StreamField([
-        ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
+        ('rich_text', RichTextTemplateBlock(
+            icon='doc-full',
+            label='Rich Text',
+        )),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
@@ -319,7 +326,7 @@ class IncidentPage(MetadataPageMixin, Page):
         verbose_name='Third party business'
     )
     legal_order_type = models.CharField(
-        choices=choices.LEGAL_ORDER_TYPES,
+        choices=choices.LEGAL_ORDER_TYPE,
         max_length=255,
         blank=True,
         null=True,
@@ -544,6 +551,8 @@ class IncidentPage(MetadataPageMixin, Page):
         index.FilterField('held_in_contempt'),
         index.FilterField('detention_status'),
         index.FilterField('politicianorpublic_id'),
+        index.FilterField('release_date'),
+        index.FilterField('detention_date'),
     ]
 
     def detention_duration(self):

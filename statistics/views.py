@@ -1,8 +1,12 @@
 import inspect
+import os
 
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
+from docutils.core import publish_parts
 
-from statistics.registry import get_maps, get_numbers
+
+STATISTICS_DOCS_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'STATISTICS.rst')
 
 
 def introspect_func(name, f):
@@ -14,8 +18,9 @@ def introspect_func(name, f):
 
 
 def stats_guide_view(request):
-    context = {
-        'maps': [introspect_func(name, f) for name, f in get_maps().items()],
-        'numbers': [introspect_func(name, f) for name, f in get_numbers().items()],
-    }
-    return render(request, 'statistics-guide.html', context)
+    with open(STATISTICS_DOCS_PATH, 'r') as fp:
+        parts = publish_parts(fp.read(), writer_name='html')
+        rendered_content = parts['body']
+    return render(request, 'statistics/statistics-guide.html', {
+        'rendered_content': mark_safe(rendered_content)
+    })

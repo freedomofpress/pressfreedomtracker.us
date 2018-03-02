@@ -1,14 +1,33 @@
-# IDs of CategoryPage objects
-# These IDs are tied to the database. It's not ideal, but some of the marriage
-# of function and content on this site requires that categories be represented
-# in the code. If the categories ever change in the database, they will also
-# need to be updated here.
-ARREST_ID = 4
-BORDER_STOP_ID = 5
-SUBPOENA_ID = 6
-LEAK_ID = 7
-EQUIPMENT_SEARCH_ID = 9
-PHYSICAL_ATTACK_ID = 10
-DENIAL_OF_ACCESS_ID = 52
-CHILLING_STATEMENT_ID = 62
-OTHER_ID = 63
+import re
+from django.template import Variable, VariableDoesNotExist
+
+
+kwarg_re = re.compile(r"^(\w+)=(.+)$")
+
+
+def parse_kwargs(bits):
+    """
+    Given a list of k=v strings, parses them into keyword arguments.
+    """
+    kwargs = {}
+
+    for bit in bits:
+        match = kwarg_re.match(bit)
+        if not match:
+            raise ValueError("Invalid param formatting: '{}'".format(bit))
+
+        key, value = match.groups()
+        if key in kwargs:
+            # The keyword argument has already been supplied once
+            raise ValueError(
+                "Received multiple values for param '{}'".format(key)
+            )
+
+        try:
+            kwargs[key] = Variable(value).resolve({})
+        except VariableDoesNotExist:
+            raise ValueError("Value for {} should be wrapped in quotation marks".format(
+                key,
+            ))
+
+    return kwargs

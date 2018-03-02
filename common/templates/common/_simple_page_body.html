@@ -1,14 +1,10 @@
-{% load wagtailcore_tags render_as_template typogrify_tags %}
+{% load wagtailcore_tags %}
 
 <div class="simple-page">
 	<h1 class="heading-block heading-block--1">{{ page.title }}</h1>
 	<section class="stream-sections">
 		{% for block in page.body %}
-			{% if block.block_type == 'text' %}
-				<section>{% filter typogrify %}{% render_as_template block.value %}{% endfilter %}</section>
-			{% else %}
-				<section>{% include_block block %}</section>
-			{% endif %}
+			<section>{% include_block block %}</section>
 		{% endfor %}
 	</section>
 </div>

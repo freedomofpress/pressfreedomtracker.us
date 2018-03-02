@@ -3,28 +3,15 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from django.core import management
-
-
-def create_initial_category_fields(apps, schema_editor):
-    management.call_command('createcategories')
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('common', '0035_auto_20180215_2149'),
-        ('home', '0020_remove_homepage_incident_index_page'),
-        ('forms', '0003_formpage_search_image'),
-        ('blog', '0015_auto_20180208_0024'),
-        ('incident', '0023_auto_20180215_2149'),
-        ('menus', '0001_initial'),
-        ('emails', '0002_emailsettings'),
-        ('wagtailforms', '0001_initial'),
-        ('wagtailredirects', '0001_initial'),
-        ('wagtailcore', '0040_page_draft_title'),
     ]
 
     operations = [
-        migrations.RunPython(create_initial_category_fields)
+        # This migration used to create initial category fields but that got
+        # moved to a later migration. This file exists to maintain history.
     ]

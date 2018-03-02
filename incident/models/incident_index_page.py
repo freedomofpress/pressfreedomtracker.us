@@ -7,14 +7,12 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel
 from wagtail.wagtailcore.models import Page
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
-from common.models.pages import CategoryPage
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin
 from incident.models.choices import get_filter_choices
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
-from incident.utils.incident_filter import IncidentFilter
-from incident.utils.validators import validate_integer_list
+from incident.utils.incident_filter import IncidentFilter, get_category_options
 from incident.feeds import IncidentIndexPageFeed
 
 
@@ -35,8 +33,8 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     @route('export/')
     def export_view(self, request):
-        incident_filter = IncidentFilter.from_request(request)
-        summary, incidents = incident_filter.fetch()
+        incident_filter = IncidentFilter(request.GET)
+        incidents = incident_filter.get_queryset()
 
         incident_fields = IncidentPage._meta.get_fields()
         headers = [field.name for field in incident_fields
@@ -71,25 +69,27 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         )
 
     def get_context(self, request):
+        from common.models import CategoryPage
         context = super(IncidentIndexPage, self).get_context(request)
 
-        incident_filter = IncidentFilter.from_request(request)
-        context['category_options'] = incident_filter.get_category_options()
+        incident_filter = IncidentFilter(request.GET)
+        context['category_options'] = get_category_options()
         context['filter_choices'] = get_filter_choices()
         context['export_path'] = self.url
 
-        category_ids = validate_integer_list(request.GET.get('categories', '').split(','))
+        incident_filter.clean()
+        category_ids = incident_filter.cleaned_data.get('categories')
 
-        if len(category_ids) == 0:
+        if not category_ids:
             context['categories'] = CategoryPage.objects.live()
         else:
             context['categories'] = CategoryPage.objects.filter(live=True, pk__in=category_ids)
 
-        summary, entry_qs = incident_filter.fetch()
+        incident_qs = incident_filter.get_queryset()
 
         paginator, entries = paginate(
             request,
-            entry_qs,
+            incident_qs,
             page_key=DEFAULT_PAGE_KEY,
             per_page=8,
             orphans=5
@@ -97,7 +97,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         context['entries_page'] = entries
         context['paginator'] = paginator
-        context['summary_table'] = summary
+        context['summary_table'] = incident_filter.get_summary()
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
