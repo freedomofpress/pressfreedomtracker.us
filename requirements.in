@@ -15,11 +15,13 @@ gunicorn
 Jinja2
 pip-tools
 psycopg2
+Pygments
 pyparsing
 typogrify
 # 1.12 is the current LTS
 wagtail<1.13
 wagtail-factories
 wagtail-django-recaptcha
-wagtail-metadata
+# Had to peg because latest version wants wagtail >=2.0
+wagtail-metadata==0.4.1
 unittest-xml-reporting

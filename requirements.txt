@@ -28,6 +28,7 @@ markupsafe==1.0           # via jinja2
 pillow==5.0.0             # via wagtail
 pip-tools==1.11.0
 psycopg2==2.7.4
+pygments==2.2.0
 pyparsing==2.2.0
 python-dateutil==2.6.1    # via faker
 pytz==2018.3              # via django, django-modelcluster

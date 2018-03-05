@@ -39,7 +39,7 @@ pip-tools==1.11.0
 prompt-toolkit==1.0.15    # via ipython
 psycopg2==2.7.4
 ptyprocess==0.5.2         # via pexpect
-pygments==2.2.0           # via ipython
+pygments==2.2.0
 pyparsing==2.2.0
 python-dateutil==2.6.1    # via faker
 pytz==2018.3              # via django, django-modelcluster
