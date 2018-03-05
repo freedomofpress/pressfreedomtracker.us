@@ -3,6 +3,7 @@ import csv
 from wagtail.wagtailcore.models import Site
 from django.test import TestCase, Client
 
+from common.tests.factories import CategoryPageFactory
 from incident.models.incident_page import IncidentPage
 from incident.models.export import is_exportable, to_row
 from .factories import IncidentIndexPageFactory, IncidentPageFactory
@@ -100,3 +101,56 @@ class TestExportPage(TestCase):
         self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
             self.assertNotIn('Unpublished incident', line.decode('utf-8'))
+
+
+class GetRelatedIncidentsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+        site = Site.objects.get()
+        self.index = IncidentIndexPageFactory(
+            parent=site.root_page,
+            slug='incidents',
+        )
+        self.category = CategoryPageFactory()
+
+    def test_get_related_incidents__saved(self):
+        IncidentPageFactory(parent=self.index)
+        related_incident = IncidentPageFactory(parent=self.index)
+        category_incident = IncidentPageFactory(parent=self.index, categories=[self.category])
+        incident = IncidentPageFactory(
+            parent=self.index,
+            categories=[self.category],
+            related_incidents=[related_incident],
+        )
+
+        related_incidents = incident.get_related_incidents()
+        self.assertEqual(related_incidents, [related_incident, category_incident])
+
+    def test_get_related_incidents__unsaved(self):
+        IncidentPageFactory(parent=self.index)
+        related_incident = IncidentPageFactory(parent=self.index)
+        category_incident = IncidentPageFactory(parent=self.index, categories=[self.category])
+        incident = IncidentPageFactory(
+            parent=self.index,
+            categories=[self.category]
+        )
+
+        incident.related_incidents = [related_incident]
+
+        related_incidents = incident.get_related_incidents()
+        self.assertEqual(related_incidents, [related_incident, category_incident])
+
+    def test_get_related_incidents__include_related_once_only(self):
+        # Related incidents should only be included once, for being related
+        # and not a second time for being in the same category.
+        IncidentPageFactory(parent=self.index)
+        related_incident = IncidentPageFactory(parent=self.index, categories=[self.category])
+        incident = IncidentPageFactory(
+            parent=self.index,
+            categories=[self.category],
+            related_incidents=[related_incident],
+        )
+
+        related_incidents = incident.get_related_incidents()
+        self.assertEqual(related_incidents, [related_incident])
