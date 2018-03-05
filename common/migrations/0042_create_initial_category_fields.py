@@ -3,11 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from django.core import management
-
-
-def create_initial_category_fields(apps, schema_editor):
-    management.call_command('createcategories')
 
 
 class Migration(migrations.Migration):
@@ -26,9 +21,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(
-            create_initial_category_fields,
-            migrations.RunPython.noop,
-            elidable=True,
-        )
+        # Removed runpython migration that relied on particular database state.
     ]
