@@ -605,7 +605,7 @@ class GetSummaryTest(TestCase):
             incident_filters=['status_of_seized_equipment'],
         )
 
-    def test_category_incident_count_filtered(self):
+    def test_single_category_excludes_category_count(self):
         IncidentPageFactory(
             status_of_seized_equipment=self.custody,
             categories=[self.category],
@@ -629,11 +629,51 @@ class GetSummaryTest(TestCase):
             ('Journalists affected', 0),
             ('Results in {}'.format(timezone.now().year), 1),
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
-            (self.category.title, 1),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
             'status_of_seized_equipment': [self.custody],
+        })
+
+    def test_category_incident_count_filtered(self):
+        category2 = CategoryPageFactory(
+            title='Other category',
+        )
+        IncidentPageFactory(
+            lawsuit_name='Lawsuit One',
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=0,
+        )
+        IncidentPageFactory(
+            lawsuit_name='Lawsuit Two',
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=0,
+        )
+        IncidentPageFactory(
+            lawsuit_name='Lawsuit One',
+            categories=[category2],
+            date=timezone.now().date(),
+            targets=0,
+        )
+        incident_filter = IncidentFilter(dict(
+            categories='{},{}'.format(self.category.id, category2.id),
+            lawsuit_name='Lawsuit One',
+        ))
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 2),
+            ('Journalists affected', 0),
+            ('Results in {}'.format(timezone.now().year), 2),
+            ('Results in {0:%B}'.format(timezone.now().date()), 2),
+            (self.category.title, 1),
+            (category2.title, 1),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id, category2.id],
+            'lawsuit_name': 'Lawsuit One',
         })
 
     def test_target_count__filtered(self):
@@ -661,7 +701,6 @@ class GetSummaryTest(TestCase):
             ('Journalists affected', 3),
             ('Results in {}'.format(timezone.now().year), 1),
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
-            (self.category.title, 1),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
@@ -689,7 +728,6 @@ class GetSummaryTest(TestCase):
             ('Journalists affected', 8),
             ('Results in {}'.format(timezone.now().year), 2),
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
-            (self.category.title, 2),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
@@ -724,7 +762,6 @@ class GetSummaryTest(TestCase):
             ('Journalists affected', 2),
             ('Results in {}'.format(timezone.now().year), 2),
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
-            (self.category.title, 2),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
