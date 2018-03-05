@@ -5,7 +5,7 @@ certifi==2018.1.18        # via requests
 chardet==3.0.4            # via requests
 click==6.7                # via pip-tools
 decorator==4.2.1          # via ipython, traitlets
-dj-database-url==0.4.2
+dj-database-url==0.5.0
 django-analytical==2.4.0
 django-anymail==1.4
 django-debug-toolbar==1.9.1
@@ -14,7 +14,7 @@ django-recaptcha==1.4.0
 django-settings-export==1.2.1
 django-taggit==0.22.2     # via wagtail
 django-treebeard==4.2.0   # via wagtail
-django-webpack-loader==0.5.0
+django-webpack-loader==0.6.0
 django==1.11.10
 djangorestframework==3.6.4  # via wagtail
 docutils==0.14
@@ -39,7 +39,7 @@ pip-tools==1.11.0
 prompt-toolkit==1.0.15    # via ipython
 psycopg2==2.7.4
 ptyprocess==0.5.2         # via pexpect
-pygments==2.2.0           # via ipython
+pygments==2.2.0
 pyparsing==2.2.0
 python-dateutil==2.6.1    # via faker
 pytz==2018.3              # via django, django-modelcluster
@@ -48,7 +48,7 @@ simplegeneric==0.8.1      # via ipython
 six==1.11.0               # via bleach, django-anymail, faker, html5lib, pip-tools, prompt-toolkit, python-dateutil, traitlets, unittest-xml-reporting
 smartypants==2.0.1        # via typogrify
 sqlparse==0.2.4           # via django-debug-toolbar
-text-unidecode==1.1       # via faker
+text-unidecode==1.2       # via faker
 traitlets==4.3.2          # via ipython
 typing==3.6.4             # via ipython
 typogrify==2.0.7
