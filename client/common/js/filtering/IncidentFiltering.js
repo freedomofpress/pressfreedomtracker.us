@@ -131,8 +131,8 @@ class IncidentFiltering extends PureComponent {
 		const filterValues = DATE_FILTERS.reduce((filters, date_field) => {
 			const upper_date = date_field.replace('_lower', '_upper')
 			const hasCompleteRange = (
-				filters.hasOwnProperty(date_field) &&
-				filters.hasOwnProperty(upper_date) &&
+				filters[date_field] &&
+				filters[upper_date] &&
 				upper_date !== date_field
 			)
 			const shouldSwap = (
