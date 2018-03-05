@@ -273,14 +273,6 @@ class CategoryPage(MetadataPageMixin, Page):
             ttag = '{{% {name} {params} %}}'.format(name=name, params=params)
             return Template(ttag).render(Context())
 
-        # Check for the presence of non-'page' querystring values
-        filters = dict(request.GET)
-        try:
-            filters.pop('page')
-        except KeyError:
-            pass
-        context['filtered'] = bool(filters)
-
         context['data_items'] = [
             {
                 'label': item.label,
