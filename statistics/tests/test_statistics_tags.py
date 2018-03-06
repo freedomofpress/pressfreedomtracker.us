@@ -2,15 +2,17 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from django.template import (
-    Context,
-    Template,
     TemplateSyntaxError,
 )
 from django.test import TestCase
 
 from common.tests.factories import CategoryPageFactory
 from common.validators import TemplateValidator
-from incident.tests.factories import IncidentPageFactory
+from common.templatetags.render_as_template import render_as_template
+from incident.tests.factories import (
+    IncidentPageFactory,
+    TargetFactory,
+)
 from statistics.templatetags.statistics_tags import (
     incidents_in_year_range_by_month,
 )
@@ -34,16 +36,11 @@ class NumIncidentsTest(TestCase):
     def setUp(self):
         self.validator = TemplateValidator()
 
-    def _render(self, template_string):
-        return Template(
-            '{{% load statistics_tags %}}{}'.format(template_string)
-        ).render(Context())
-
     def test_gets_no_kwargs(self):
         """Not valid template tag"""
         template_string = '{% num_incidents 200 %}'
         with self.assertRaises(TemplateSyntaxError):
-            self._render(template_string)
+            render_as_template(template_string)
         with self.assertRaises(ValidationError):
             self.validator(template_string)
 
@@ -51,14 +48,14 @@ class NumIncidentsTest(TestCase):
         """Not valid template tag"""
         template_string = '{% num_incidents %}'
         self.validator(template_string)
-        result = self._render(template_string)
+        result = render_as_template(template_string)
         self.assertEqual(result, '2')
 
     def test_gets_valid_search(self):
         """Valid template tag with constant search param"""
         template_string = '{% num_incidents search="hello" %}'
         self.validator(template_string)
-        result = self._render(template_string)
+        result = render_as_template(template_string)
         self.assertEqual(result, '1')
 
     def test_gets_variable_param(self):
@@ -66,27 +63,27 @@ class NumIncidentsTest(TestCase):
         template_string = '{% num_incidents search=hello %}'
         with self.assertRaises(ValidationError):
             self.validator(template_string)
-        result = self._render(template_string)
+        result = render_as_template(template_string)
         self.assertEqual(result, '2')
 
     def test_manyrelationfilter_gets_integer_id(self):
         """Valid template tag with integer id instead of string"""
         template_string = '{{% num_incidents categories={} %}}'.format(self.category.id)
         self.validator(template_string)
-        result = self._render(template_string)
+        result = render_as_template(template_string)
         self.assertEqual(result, '1')
 
     def test_relationfilter_gets_integer_id(self):
         """Valid template tag with integer id instead of string"""
         template_string = '{% num_incidents state=1 %}'
         self.validator(template_string)
-        result = self._render(template_string)
+        result = render_as_template(template_string)
         self.assertEqual(result, '0')
 
     def test_gets_invalid_dates(self):
         """Valid tag but not valid params"""
         template_string = '{% num_incidents date_lower="2018-01-01" date_upper="2017-01-01" %}'
-        result = self._render(template_string)
+        result = render_as_template(template_string)
         self.assertEqual(result, '')
         with self.assertRaises(ValidationError):
             self.validator(template_string)
@@ -95,8 +92,88 @@ class NumIncidentsTest(TestCase):
         """Valid tag but not valid params"""
         template_string = '{% num_incidents date_lower="2015-06-01" date_upper="2016-06-01" %}'
         self.validator(template_string)
-        result = self._render(template_string)
+        result = render_as_template(template_string)
         self.assertEqual(result, '1')
+
+
+class NumTargetsTest(TestCase):
+    def setUp(self):
+        self.custody = 'CUSTODY'
+        self.returned_full = 'RETURNED_FULL'
+        self.category = CategoryPageFactory(
+            title='Equipment Search or Seizure',
+            incident_filters=['status_of_seized_equipment'],
+        )
+        self.validator = TemplateValidator()
+
+    def test_invalid_args_validated(self):
+        # Matched incident page
+        template_string = '{{% num_targets categories={} status_of_seized_equipment={} %}}'.format(
+            str(self.category.id),
+            self.custody,
+        )
+        with self.assertRaises(ValidationError):
+            self.validator(template_string)
+
+    def test_target_count__filtered(self):
+        # Matched incident page
+        IncidentPageFactory(
+            status_of_seized_equipment=self.custody,
+            categories=[self.category],
+            targets=3,
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full,
+            categories=[self.category],
+            targets=5,
+        )
+        template_string = '{{% num_targets categories={} status_of_seized_equipment="{}" %}}'.format(
+            str(self.category.id),
+            self.custody,
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '3')
+
+    def test_target_count__combined(self):
+        IncidentPageFactory(
+            categories=[self.category],
+            targets=3,
+        )
+        IncidentPageFactory(
+            categories=[self.category],
+            targets=5,
+        )
+        template_string = '{{% num_targets categories={} %}}'.format(
+            str(self.category.id),
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '8')
+
+    def test_target_count__deduped(self):
+        target1 = TargetFactory()
+        target2 = TargetFactory()
+        incident1 = IncidentPageFactory(
+            categories=[self.category],
+            targets=0,
+        )
+        incident1.targets = [target1, target2]
+        incident1.save()
+
+        incident2 = IncidentPageFactory(
+            categories=[self.category],
+            targets=0,
+        )
+        incident2.targets = [target1]
+        incident2.save()
+
+        template_string = '{{% num_targets categories={} %}}'.format(
+            str(self.category.id),
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '2')
 
 
 class TestIncidentsInYearRangeByMonth(TestCase):
