@@ -113,9 +113,7 @@
 {% block sidebar %}
 	{# This outer div should be here even if it is empty to provide ajax loading with a container #}
 	<div class="js-summary-table">
-		{% if filtered %}
-			{% include 'incident/_summary_table.html' with label="Results Summary" summary_table=summary_table %}
-		{% endif %}
+		{% include 'incident/_summary_table.html' with label="Results Summary" summary_table=summary_table %}
 	</div>
 	<div class="js-methodologies">
 		{% include 'common/_category_methodology.html' with category=page %}

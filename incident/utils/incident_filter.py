@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from django.db.models import (
     BooleanField,
     CharField,
-    Count,
     DateField,
     DurationField,
     F,
@@ -491,6 +490,7 @@ class IncidentFilter(object):
 
         """
         from common.models import CategoryPage
+        from incident.models.items import Target
         queryset = self._get_queryset()
 
         TODAY = date.today()
@@ -499,6 +499,7 @@ class IncidentFilter(object):
 
         summary = (
             ('Total Results', queryset.count()),
+            ('Journalists affected', Target.objects.filter(targets_incidents__in=queryset).distinct().count()),
         )
 
         # Add counts for this year and this month if non-zero
@@ -542,14 +543,14 @@ class IncidentFilter(object):
         # If more than one category is included in this set, add a summary item
         # for each category of the form ("Total <Category Name>", <Count>)
         category_pks = self.cleaned_data.get('categories')
-        if category_pks:
+        if category_pks and len(category_pks) > 1:
             categories = CategoryPage.objects.filter(
                 pk__in=category_pks
-            ).annotate(num_incidents=Count('incidents'))
+            )
             for category in categories:
                 summary = summary + ((
                     category.plural_name if category.plural_name else category.title,
-                    category.num_incidents,
+                    queryset.filter(categories__category=category).count(),
                 ),)
 
         return summary
