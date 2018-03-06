@@ -1,9 +1,44 @@
+from django.conf.urls import url
+from django.core.urlresolvers import reverse
 from wagtail.contrib.modeladmin.options import (
-    ModelAdminGroup, modeladmin_register)
+    ModelAdminGroup,
+    modeladmin_register,
+)
+from wagtail.wagtailadmin.search import SearchArea
+from wagtail.wagtailcore import hooks
 
-from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
 from common.wagtail_hooks import MergeAdmin
-from incident.views import TargetMergeView, ChargeMergeView, NationalityMergeView, VenueMergeView, PoliticianOrPublicMergeView
+from incident.models import (
+    Target,
+    Charge,
+    Nationality,
+    PoliticianOrPublic,
+    Venue,
+)
+from incident.views import (
+    ChargeMergeView,
+    incident_admin_search_view,
+    NationalityMergeView,
+    PoliticianOrPublicMergeView,
+    TargetMergeView,
+    VenueMergeView,
+)
+
+
+@hooks.register('register_admin_urls')
+def incident_admin_search_url():
+    return [
+        url(r'^incident-search/$', incident_admin_search_view, name='incident-admin-search'),
+    ]
+
+
+@hooks.register('register_admin_search_area')
+def incident_admin_search_area():
+    return SearchArea(
+        label='Incidents',
+        url=reverse('incident-admin-search'),
+        order=0,
+    )
 
 
 class TargetAdmin(MergeAdmin):
