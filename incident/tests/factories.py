@@ -169,7 +169,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         )
         prior_restraint = factory.Trait(
             status_of_prior_restraint=factory.Iterator(
-                choices.PRIOR_RESTRAINT_STATUS, getter=lambda c: c[0]),
+                choices.STATUS_OF_PRIOR_RESTRAINT, getter=lambda c: c[0]),
         )
         denial_of_access = factory.Trait(
             politicians_or_public_figures_involved=random.randint(1, 4),

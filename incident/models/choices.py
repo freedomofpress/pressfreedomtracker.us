@@ -21,7 +21,7 @@ def get_filter_choices():
         DETENTION_STATUS=_get_filter_choices(DETENTION_STATUS),
         THIRD_PARTY_BUSINESS=_get_filter_choices(THIRD_PARTY_BUSINESS),
         LEGAL_ORDER_TYPE=_get_filter_choices(LEGAL_ORDER_TYPE),
-        PRIOR_RESTRAINT_STATUS=_get_filter_choices(PRIOR_RESTRAINT_STATUS),
+        STATUS_OF_PRIOR_RESTRAINT=_get_filter_choices(STATUS_OF_PRIOR_RESTRAINT),
         ASSAILANT=_get_filter_choices(ACTORS)
     )
 
@@ -146,7 +146,7 @@ LEGAL_ORDER_TYPE = [
 ]
 
 
-PRIOR_RESTRAINT_STATUS = [
+STATUS_OF_PRIOR_RESTRAINT = [
     ('PENDING', 'pending'),
     ('DROPPED', 'dropped'),
     ('STRUCK_DOWN', 'struck down'),

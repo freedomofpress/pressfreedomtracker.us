@@ -335,7 +335,7 @@ class IncidentPage(MetadataPageMixin, Page):
 
     # Prior Restraint
     status_of_prior_restraint = models.CharField(
-        choices=choices.PRIOR_RESTRAINT_STATUS,
+        choices=choices.STATUS_OF_PRIOR_RESTRAINT,
         max_length=255,
         blank=True,
         null=True,
