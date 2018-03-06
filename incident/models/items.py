@@ -15,6 +15,9 @@ class Target(ClusterableModel):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['title']
+
 
 class Charge(ClusterableModel):
     @classmethod
@@ -28,6 +31,9 @@ class Charge(ClusterableModel):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['title']
 
 
 class Nationality(ClusterableModel):
@@ -43,6 +49,9 @@ class Nationality(ClusterableModel):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['title']
+
 
 class PoliticianOrPublic(ClusterableModel):
     @classmethod
@@ -57,6 +66,9 @@ class PoliticianOrPublic(ClusterableModel):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['title']
+
 
 class Venue(ClusterableModel):
     @classmethod
@@ -70,3 +82,6 @@ class Venue(ClusterableModel):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['title']
