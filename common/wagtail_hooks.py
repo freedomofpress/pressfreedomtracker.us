@@ -1,8 +1,23 @@
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin, modeladmin_register)
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
+from django.conf.urls import url
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.utils.functional import cached_property
 from .models import CommonTag
+from .views import MergeView
+
+class URLHelperWithMerge(AdminURLHelper):
+    @cached_property
+    def merge_url(self):
+        return self.get_action_url('merge')
+
+    def get_action_url_pattern(self, action):
+        if action in ('create', 'choose_parent', 'index', 'merge'):
+            return self._get_action_url_pattern(action)
+        return self._get_object_specific_action_url_pattern(action)
+
 
 class ButtonHelperWithMerge(ButtonHelper):
     merge_button_classnames = []
@@ -15,7 +30,7 @@ class ButtonHelperWithMerge(ButtonHelper):
         classnames = self.add_button_classnames + classnames_add
         cn = self.finalise_classname(classnames, classnames_exclude)
         return {
-            'url': self.url_helper.create_url,
+            'url': self.url_helper.merge_url,
             'label': _('Merge %s') % self.verbose_name,
             'classname': cn,
             'title': _('Merge %s') % self.verbose_name,
@@ -25,6 +40,8 @@ class ButtonHelperWithMerge(ButtonHelper):
 class CommonTagAdmin(ModelAdmin):
     model = CommonTag
     button_helper_class = ButtonHelperWithMerge
+    url_helper_class = URLHelperWithMerge
+    merge_view_class = MergeView
     index_template_name = 'modeladmin/index_with_merge.html'
     menu_label = 'Tags'
     menu_icon = 'tag'
@@ -33,6 +50,25 @@ class CommonTagAdmin(ModelAdmin):
     exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
+
+    def merge_view(self, request):
+        """
+        Instantiates a class-based view to provide 'merge' functionality for
+        the assigned model, or redirect to Wagtail's create view if the
+        assigned model extends 'Page'. The view class used can be overridden by
+        changing the 'create_view_class' attribute.
+        """
+        kwargs = {'model_admin': self}
+        view_class = self.merge_view_class
+        return view_class.as_view(**kwargs)(request)
+
+    def get_admin_urls_for_registration(self):
+        urls = super(CommonTagAdmin, self).get_admin_urls_for_registration()
+        return urls + (
+                url(self.url_helper.get_action_url_pattern('merge'),
+                    self.merge_view,
+                    name=self.url_helper.get_action_url_name('merge')),
+            )
 
 modeladmin_register(CommonTagAdmin)
 
