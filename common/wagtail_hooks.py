@@ -37,19 +37,11 @@ class ButtonHelperWithMerge(ButtonHelper):
         }
 
 
-class CommonTagAdmin(ModelAdmin):
-    model = CommonTag
+class MergeAdmin(ModelAdmin):
     button_helper_class = ButtonHelperWithMerge
     url_helper_class = URLHelperWithMerge
     merge_view_class = MergeView
     index_template_name = 'modeladmin/index_with_merge.html'
-    menu_label = 'Tags'
-    menu_icon = 'tag'
-    menu_order = 500  # will put in 4th place (000 being 1st, 100 2nd)
-    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
 
     def merge_view(self, request):
         """
@@ -63,12 +55,26 @@ class CommonTagAdmin(ModelAdmin):
         return view_class.as_view(**kwargs)(request)
 
     def get_admin_urls_for_registration(self):
-        urls = super(CommonTagAdmin, self).get_admin_urls_for_registration()
+        urls = super().get_admin_urls_for_registration()
         return urls + (
                 url(self.url_helper.get_action_url_pattern('merge'),
                     self.merge_view,
                     name=self.url_helper.get_action_url_name('merge')),
             )
+
+    class Meta:
+        abstract = True
+
+
+class CommonTagAdmin(MergeAdmin):
+    model = CommonTag
+    menu_label = 'Tags'
+    menu_icon = 'tag'
+    menu_order = 500  # will put in 4th place (000 being 1st, 100 2nd)
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
+    list_display = ('title',)
+    search_fields = ('title',)
 
 modeladmin_register(CommonTagAdmin)
 
