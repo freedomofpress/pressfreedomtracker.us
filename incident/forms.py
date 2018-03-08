@@ -1,5 +1,5 @@
 from django import forms
-from incident.models import Target, Nationality, Venue
+from incident.models import Target, Nationality, Venue, PoliticianOrPublic
 from autocomplete.widgets import Autocomplete
 
 
@@ -39,6 +39,22 @@ class VenueMergeForm(forms.Form):
     merge_model = Venue
     merge_model_type = 'incident.Venue'
     merge_model_name = 'venues'
+    models_to_merge = forms.models.ModelMultipleChoiceField(
+        queryset=merge_model.objects.all(),
+        widget=type(
+            '_Autocomplete',
+            (Autocomplete,),
+            dict(page_type=merge_model_type, can_create=False, is_single=False)
+        ),
+        label='Fields to merge'
+    )
+    title_for_merged_models = forms.CharField(max_length=255, label='Title for merged {}'.format(merge_model_name))
+
+
+class PoliticianOrPublicMergeForm(forms.Form):
+    merge_model = PoliticianOrPublic
+    merge_model_type = 'incident.PoliticianOrPublic'
+    merge_model_name = 'politician or public figure'
     models_to_merge = forms.models.ModelMultipleChoiceField(
         queryset=merge_model.objects.all(),
         widget=type(

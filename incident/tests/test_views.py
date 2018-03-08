@@ -1,19 +1,25 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from incident.models import Target, Nationality, Venue
-from incident.wagtail_hooks import TargetAdmin, NationalityAdmin, VenueAdmin
+from incident.models import Target, Nationality, PoliticianOrPublic, Venue
+from incident.wagtail_hooks import TargetAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin
 from incident.tests.factories import IncidentPageFactory
 import json
+from datetime import datetime
 
 User = get_user_model()
 
 class TargetMergeViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.target1 = Target.objects.create(title='Rachel')
-        cls.target2 = Target.objects.create(title='Stephen')
-        cls.inc1 = IncidentPageFactory(targets=cls.target1.id)
-        cls.inc2 = IncidentPageFactory(targets=cls.target2.id)
+        cls.inc1 = IncidentPageFactory(targets=1, targets_whose_communications_were_obtained=1)
+        cls.inc2 = IncidentPageFactory(targets=1, targets_whose_communications_were_obtained=1)
+        cls.inc3 = IncidentPageFactory(targets=1, targets_whose_communications_were_obtained=1)
+        cls.target1 = cls.inc1.targets.all()[0]
+        cls.target2 = cls.inc2.targets.all()[0]
+        cls.target3 = cls.inc1.targets_whose_communications_were_obtained.all()[0]
+        cls.target4 = cls.inc2.targets_whose_communications_were_obtained.all()[0]
+        cls.unincluded_target1 = cls.inc3.targets.all()[0]
+        cls.unincluded_target2 = cls.inc3.targets_whose_communications_were_obtained.all()[0]
         cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
 
     def setUp(self):
@@ -28,14 +34,16 @@ class TargetMergeViewTest(TestCase):
                 }, {
                     'label': self.target2.title,
                     'id': self.target2.id
+                }, {
+                    'label': self.target3.title,
+                    'id': self.target3.id
+                }, {
+                    'label': self.target4.title,
+                    'id': self.target4.id
                 }]),
                 'title_for_merged_models': self.new_target_title
             }
         )
-
-    def test_targets_only_have_one_m2m(self):
-        """If Targets have more than one related_object, data will be lost on merge"""
-        self.assertEqual(len(Target._meta.related_objects), 1)
 
     def test_successful_request_redirects(self):
         self.assertEqual(self.response.status_code, 302)
@@ -49,7 +57,11 @@ class TargetMergeViewTest(TestCase):
 
     def test_new_target_has_old_target_relationships(self):
         new_target = Target.objects.get(title=self.new_target_title)
-        self.assertEqual(set(new_target.targetged_items.all()), {self.inc1, self.inc2})
+        self.assertEqual(set(new_target.targets_incidents.all()), {self.inc1, self.inc2})
+
+    def test_new_target_has_old_target_relationships2(self):
+        new_target = Target.objects.get(title=self.new_target_title)
+        self.assertEqual(set(new_target.targets_communications_obtained_incidents.all()), {self.inc1, self.inc2})
 
     def test_merged_targets_are_deleted(self):
         with self.assertRaises(Target.DoesNotExist):
@@ -61,10 +73,10 @@ class TargetMergeViewTest(TestCase):
 class NationalityMergeViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.nation1 = Nationality.objects.create(title='Canada')
-        cls.nation2 = Nationality.objects.create(title='Iran')
-        cls.inc1 = IncidentPageFactory(target_nationality=cls.nation1.id)
-        cls.inc2 = IncidentPageFactory(target_nationality=cls.nation2.id)
+        cls.inc1 = IncidentPageFactory(target_nationality=1)
+        cls.inc2 = IncidentPageFactory(target_nationality=1)
+        cls.nation1 = cls.inc1.target_nationality.all()[0]
+        cls.nation2 = cls.inc2.target_nationality.all()[0]
         cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
 
     def setUp(self):
@@ -83,10 +95,6 @@ class NationalityMergeViewTest(TestCase):
                 'title_for_merged_models': self.new_nation_title
             }
         )
-
-    def test_nations_only_have_one_m2m(self):
-        """If Nationalitys have more than one related_object, data will be lost on merge"""
-        self.assertEqual(len(Nationality._meta.related_objects), 1)
 
     def test_successful_request_redirects(self):
         self.assertEqual(self.response.status_code, 302)
@@ -135,10 +143,6 @@ class VenueMergeViewTest(TestCase):
             }
         )
 
-    def test_venues_only_have_one_m2m(self):
-        """If Venues have more than one related_object, data will be lost on merge"""
-        self.assertEqual(len(Venue._meta.related_objects), 1)
-
     def test_successful_request_redirects(self):
         self.assertEqual(self.response.status_code, 302)
 
@@ -158,3 +162,56 @@ class VenueMergeViewTest(TestCase):
             Venue.objects.get(id=self.venue1.id)
         with self.assertRaises(Venue.DoesNotExist):
             Venue.objects.get(id=self.venue2.id)
+
+
+class PoliticianOrPublicMergeViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.inc1 = IncidentPageFactory(politicians_or_public_figures_involved=1)
+        cls.inc2 = IncidentPageFactory(politicians_or_public_figures_involved=1)
+        # Ensures that unintended incidents are not included
+        IncidentPageFactory(politicians_or_public_figures_involved=1)
+        cls.pop1 = cls.inc1.politicians_or_public_figures_involved.all()[0]
+        cls.pop2 = cls.inc2.politicians_or_public_figures_involved.all()[0]
+        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.new_pop_title = 'LittleWeaver'
+        self.response = self.client.post(
+            PoliticianOrPublicAdmin().url_helper.merge_url,
+            {
+                'models_to_merge': json.dumps([{
+                    'label': self.pop1.title,
+                    'id': self.pop1.id
+                }, {
+                    'label': self.pop2.title,
+                    'id': self.pop2.id
+                }]),
+                'title_for_merged_models': self.new_pop_title
+            }
+        )
+
+    def test_pops_only_have_one_m2m(self):
+        """If PoliticianOrPublics have more than one related_object, data will be lost on merge"""
+        self.assertEqual(len(PoliticianOrPublic._meta.related_objects), 1)
+
+    def test_successful_request_redirects(self):
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_correct_redirect_url(self):
+        """Should redirect to the modelAdmin's index page"""
+        self.assertEqual(self.response['location'], PoliticianOrPublicAdmin().url_helper.index_url)
+
+    def test_new_pop_created(self):
+        PoliticianOrPublic.objects.get(title=self.new_pop_title)
+
+    def test_new_pop_has_old_pop_relationships(self):
+        new_pop = PoliticianOrPublic.objects.get(title=self.new_pop_title)
+        self.assertEqual(set(new_pop.politicians_or_public_incidents.all()), {self.inc1, self.inc2})
+
+    def test_merged_pops_are_deleted(self):
+        with self.assertRaises(PoliticianOrPublic.DoesNotExist):
+            PoliticianOrPublic.objects.get(id=self.pop1.id)
+        with self.assertRaises(PoliticianOrPublic.DoesNotExist):
+            PoliticianOrPublic.objects.get(id=self.pop2.id)

@@ -56,10 +56,6 @@ class MergeViewTest(TestCase):
             }
         )
 
-    def test_tags_only_have_one_m2m(self):
-        """If CommonTags have more than one related_object, data will be lost on merge"""
-        self.assertEqual(len(CommonTag._meta.related_objects), 1)
-
     def test_successful_request_redirects(self):
         self.assertEqual(self.response.status_code, 302)
 

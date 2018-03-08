@@ -25,10 +25,18 @@ class MergeView(FormView):
         new_model = form.cleaned_data['title_for_merged_models']
 
         new_model, _ = self.model_admin.model.objects.get_or_create(title=new_model)
-        pages = list(IncidentPage.objects.filter(
-            **{'{}__in'.format(self.filter_name): models_to_merge}
-        ))
-        getattr(new_model, self.related_name).add(*pages)
+
+        fields = [
+            {
+                'accessor': relationship.get_accessor_name(),
+                'remote_field': relationship.remote_field.name
+            } for relationship in self.model_admin.model._meta.related_objects
+        ]
+        for field in fields:
+            pages = list(IncidentPage.objects.filter(
+                **{'{}__in'.format(field['remote_field']): models_to_merge}
+            ))
+            getattr(new_model, field['accessor']).add(*pages)
         new_model.save()
         models_to_merge.delete()
 
@@ -40,5 +48,3 @@ class MergeView(FormView):
 
 class TagMergeView(MergeView):
     form_class = TagMergeForm
-    filter_name = 'tags'
-    related_name = 'tagged_items'

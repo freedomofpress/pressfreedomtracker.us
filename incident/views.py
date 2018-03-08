@@ -1,5 +1,5 @@
 from common.views import MergeView
-from incident.forms import TargetMergeForm, VenueMergeForm, NationalityMergeForm
+from incident.forms import TargetMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm
 
 class TargetMergeView(MergeView):
     form_class = TargetMergeForm
@@ -8,11 +8,11 @@ class TargetMergeView(MergeView):
 
 class NationalityMergeView(MergeView):
     form_class = NationalityMergeForm
-    filter_name = 'target_nationality'
-    related_name = 'nationality_incidents'
 
 
 class VenueMergeView(MergeView):
     form_class = VenueMergeForm
-    filter_name = 'venue'
-    related_name = 'venue_incidents'
+
+
+class PoliticianOrPublicMergeView(MergeView):
+    form_class = PoliticianOrPublicMergeForm
