@@ -2,11 +2,11 @@ from wagtail.contrib.modeladmin.options import (
     ModelAdmin, modeladmin_register)
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
 from django.conf.urls import url
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.utils.functional import cached_property
 from .models import CommonTag
-from .views import MergeView
+from .views import TagMergeView
+
 
 class URLHelperWithMerge(AdminURLHelper):
     @cached_property
@@ -40,7 +40,7 @@ class ButtonHelperWithMerge(ButtonHelper):
 class MergeAdmin(ModelAdmin):
     button_helper_class = ButtonHelperWithMerge
     url_helper_class = URLHelperWithMerge
-    merge_view_class = MergeView
+
     index_template_name = 'modeladmin/index_with_merge.html'
 
     def merge_view(self, request):
@@ -57,10 +57,12 @@ class MergeAdmin(ModelAdmin):
     def get_admin_urls_for_registration(self):
         urls = super().get_admin_urls_for_registration()
         return urls + (
-                url(self.url_helper.get_action_url_pattern('merge'),
-                    self.merge_view,
-                    name=self.url_helper.get_action_url_name('merge')),
-            )
+            url(
+                self.url_helper.get_action_url_pattern('merge'),
+                self.merge_view,
+                name=self.url_helper.get_action_url_name('merge')
+            ),
+        )
 
     class Meta:
         abstract = True
@@ -68,13 +70,14 @@ class MergeAdmin(ModelAdmin):
 
 class CommonTagAdmin(MergeAdmin):
     model = CommonTag
+    merge_view_class = TagMergeView
     menu_label = 'Tags'
     menu_icon = 'tag'
     menu_order = 500  # will put in 4th place (000 being 1st, 100 2nd)
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
 
-modeladmin_register(CommonTagAdmin)
 
+modeladmin_register(CommonTagAdmin)
