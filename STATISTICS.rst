@@ -48,6 +48,7 @@ Filter parameters
 Incident filter datasets accept the following parameters to filter the incidents used to calculate their values.
 The options in this section correspond exactly to the options in the incident filtering interface on the website.
 All filter parameters are optional.
+If no filter parameters are provided, a dataset will calculate its value based on all the incidents in the database.
 
 .. note::
 
