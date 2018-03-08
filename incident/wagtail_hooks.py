@@ -2,6 +2,8 @@ from wagtail.contrib.modeladmin.options import (
     ModelAdmin, ModelAdminGroup, modeladmin_register)
 
 from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
+from common.wagtail_hooks import MergeAdmin
+from incident.views import TargetMergeView, NationalityMergeView, VenueMergeView
 
 class TargetAdmin(ModelAdmin):
     model = Target
@@ -12,6 +14,7 @@ class TargetAdmin(ModelAdmin):
     list_display = ('title',)
     search_fields = ('title',)
 
+
 class ChargeAdmin(ModelAdmin):
     model = Charge
     menu_label = 'Charges'
@@ -21,8 +24,10 @@ class ChargeAdmin(ModelAdmin):
     list_display = ('title',)
     search_fields = ('title',)
 
-class NationalityAdmin(ModelAdmin):
+
+class NationalityAdmin(MergeAdmin):
     model = Nationality
+    merge_view_class = NationalityMergeView
     menu_label = 'Nationalities'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
