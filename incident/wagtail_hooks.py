@@ -44,8 +44,9 @@ class PoliticianOrPublicAdmin(ModelAdmin):
     list_display = ('title',)
     search_fields = ('title',)
 
-class VenueAdmin(ModelAdmin):
+class VenueAdmin(MergeAdmin):
     model = Venue
+    merge_view_class = VenueMergeView
     menu_label = 'Venues'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu

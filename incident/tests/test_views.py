@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from incident.models import Target, Nationality
-from incident.wagtail_hooks import TargetAdmin, NationalityAdmin
+from incident.models import Target, Nationality, Venue
+from incident.wagtail_hooks import TargetAdmin, NationalityAdmin, VenueAdmin
 from incident.tests.factories import IncidentPageFactory
 import json
 
@@ -57,6 +57,7 @@ class TargetMergeViewTest(TestCase):
         with self.assertRaises(Target.DoesNotExist):
             Target.objects.get(id=self.target2.id)
 
+
 class NationalityMergeViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -106,3 +107,54 @@ class NationalityMergeViewTest(TestCase):
             Nationality.objects.get(id=self.nation1.id)
         with self.assertRaises(Nationality.DoesNotExist):
             Nationality.objects.get(id=self.nation2.id)
+
+
+class VenueMergeViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.venue1 = Venue.objects.create(title='Canada')
+        cls.venue2 = Venue.objects.create(title='Iran')
+        cls.inc1 = IncidentPageFactory(venue=[cls.venue1.id])
+        cls.inc2 = IncidentPageFactory(venue=[cls.venue2.id])
+        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.new_venue_title = 'Canadiran'
+        self.response = self.client.post(
+            VenueAdmin().url_helper.merge_url,
+            {
+                'models_to_merge': json.dumps([{
+                    'label': self.venue1.title,
+                    'id': self.venue1.id
+                }, {
+                    'label': self.venue2.title,
+                    'id': self.venue2.id
+                }]),
+                'title_for_merged_models': self.new_venue_title
+            }
+        )
+
+    def test_venues_only_have_one_m2m(self):
+        """If Venues have more than one related_object, data will be lost on merge"""
+        self.assertEqual(len(Venue._meta.related_objects), 1)
+
+    def test_successful_request_redirects(self):
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_correct_redirect_url(self):
+        """Should redirect to the modelAdmin's index page"""
+        self.assertEqual(self.response['location'], VenueAdmin().url_helper.index_url)
+
+    def test_new_venue_created(self):
+        Venue.objects.get(title=self.new_venue_title)
+
+    def test_new_venue_has_old_venue_relationships(self):
+        new_venue = Venue.objects.get(title=self.new_venue_title)
+        self.assertEqual(set(new_venue.venue_incidents.all()), {self.inc1, self.inc2})
+
+    def test_merged_venues_are_deleted(self):
+        with self.assertRaises(Venue.DoesNotExist):
+            Venue.objects.get(id=self.venue1.id)
+        with self.assertRaises(Venue.DoesNotExist):
+            Venue.objects.get(id=self.venue2.id)

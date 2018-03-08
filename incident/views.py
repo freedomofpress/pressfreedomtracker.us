@@ -14,4 +14,5 @@ class NationalityMergeView(MergeView):
 
 class VenueMergeView(MergeView):
     form_class = VenueMergeForm
-    filter_name = 'venues'
+    filter_name = 'venue'
+    related_name = 'venue_incidents'
