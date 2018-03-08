@@ -66,8 +66,10 @@ It can take the following context variables:
 				<section>
 					{% if incident.teaser %}
 						{{ incident.teaser|typogrify }}
-					{% else %}
+					{% elif incident.teaser_image %}
 						{% include_block incident.body.0|striptags|truncatewords:20|typogrify %}
+					{% else %}
+						{% include_block incident.body.0|striptags|truncatewords:80|typogrify %}
 					{% endif %}
 				</section>
 			{% else %}
