@@ -5,6 +5,7 @@ from django.db.models.functions import TruncMonth
 
 from common.validators import tag_validator
 from incident.models.incident_page import IncidentPage
+from incident.models.items import Target
 from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import Statistics
 from statistics.utils import parse_kwargs
@@ -27,8 +28,23 @@ def num_incidents(**kwargs):
     return incident_filter.get_queryset().count()
 
 
+@statistics.number
+@register.simple_tag
+def num_targets(**kwargs):
+    """Return the count of incidents matching the given filter parameters"""
+    incident_filter = IncidentFilter(kwargs)
+    try:
+        incident_filter.clean(strict=True)
+    except ValidationError:
+        # Don't return an incorrect number if params are invalid.
+        return ''
+    queryset = incident_filter.get_queryset()
+    return Target.objects.filter(targets_incidents__in=queryset).distinct().count()
+
+
+@tag_validator(register, 'num_targets')
 @tag_validator(register, 'num_incidents')
-def validate_num_incidents(parser, token):
+def validate_filter_kwargs(parser, token):
     """Return the count of incidents matching the given filter parameters"""
     bits = token.split_contents()
     tag_name, bits = bits[0], bits[1:]

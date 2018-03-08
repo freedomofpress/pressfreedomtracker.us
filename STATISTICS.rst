@@ -20,20 +20,41 @@ In a template, the dataset is the first item in the template tag, and the remain
 
 The params will have the same format whether you are using statistics blocks or template tags.
 
+Incident filter datasets
+========================
 
-Available Datasets
-==================
+Available datasets
+------------------
 
 num_incidents
--------------
++++++++++++++
 Count of all incidents matching the given filter parameters.
-All filter parameters are optional.
+
+.. code:: jinja
+
+    {% num_incidents date_lower="2017-01-01" date_upper="2017-12-31" %}
+
+num_targets
++++++++++++
+Count of all unique targets affected by incidents matching the given filter parameters.
+
+.. code:: jinja
+
+    {% num_targets date_lower="2017-01-01" date_upper="2017-12-31" %}
+
+Filter parameters
+-----------------
+
+Incident filter datasets accept the following parameters to filter the incidents used to calculate their values.
 The options in this section correspond exactly to the options in the incident filtering interface on the website.
+All filter parameters are optional.
+If no filter parameters are provided, a dataset will calculate its value based on all the incidents in the database.
 
 .. note::
 
     Some filter parameters are only available if a category that lists the parameter as one of its incident filters is also being filtered on.
     To filter on a category, use the ``categories`` filter as described in `Many relation filters`_.
+
 
 Text filters
 ++++++++++++
@@ -192,6 +213,9 @@ The search filter takes a string value and performs a search of the items in the
 
     {% num_incidents search="lorem ipsum" %}
 
+
+Other Datasets
+==============
 
 incidents_in_year_range_by_month
 --------------------------------
