@@ -3,17 +3,15 @@
 
 {% block header_extra %}
     <div class="right">
-        <div class="mergebutton">
-            {% include 'modeladmin/includes/button.html' with button=view.button_helper.merge_button %}
-         </div>
-     </div>
+            <span class="mergebutton">
+                {% include 'modeladmin/includes/button.html' with button=view.button_helper.merge_button %}
+             </span>
 
-    {% if user_can_create %}
-        <div class="right">
-            <div class="addbutton">
-                {% include 'modeladmin/includes/button.html' with button=view.button_helper.add_button %}
-             </div>
-         </div>
-     {% endif %}
+        {% if user_can_create %}
+                <span class="addbutton">
+                    {% include 'modeladmin/includes/button.html' with button=view.button_helper.add_button %}
+                 </span>
+         {% endif %}
+    </div>
 {% endblock %}
 
