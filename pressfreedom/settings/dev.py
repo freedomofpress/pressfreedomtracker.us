@@ -39,6 +39,8 @@ if settings.DEBUG:
     # Needs to be injected relatively early in the MIDDLEWARE list
     MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
     INTERNAL_IPS = [docker_gw.split()[2].decode("utf-8")]
+    # Include the wagtail styleguide
+    INSTALLED_APPS.append('wagtail.contrib.wagtailstyleguide')
 
 DATABASES = {
     'default': {
