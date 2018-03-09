@@ -149,3 +149,12 @@ class RichTextBlockQuoteBlock(blocks.StructBlock):
     class Meta:
         template = 'common/blocks/blockquote.html'
         icon = "openquote"
+
+
+class EmailSignupBlock(blocks.StructBlock):
+    text = blocks.CharBlock(label="Newsletter call to action text")
+
+    class Meta:
+        template = 'common/blocks/emails_signup.html'
+        icon = 'form'
+        label = 'Newsletter Signup'

@@ -13,6 +13,13 @@
 	@media (max-width: $small-screen)
 		width: 100%
 
+	&--as-page-block
+		margin: 1.5em auto
+		// Stream sections CSS doesn't respect BEM, so we need a descendent selector
+		// here until that's resolved.
+		.emails-signup__title
+			color: $form-fg
+
 	&__message
 		+flex-center-center-column
 		width: 100%
@@ -36,6 +43,8 @@
 		color: $form-fg
 
 	&__title
+		color: $form-fg
+
 		margin: 0 10% 5%
 
 		font-size: 1.7em
