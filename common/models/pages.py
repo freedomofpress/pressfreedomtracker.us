@@ -314,10 +314,15 @@ class SimplePage(MetadataPageMixin, Page):
         ('heading_3', Heading3()),
     ])
 
-    sidebar_content = StreamField([
-        ('heading', Heading2()),
-        ('rich_text', blocks.RichTextBlock()),
-    ], default=None)
+    sidebar_content = StreamField(
+        [
+            ('heading', Heading2()),
+            ('rich_text', blocks.RichTextBlock()),
+        ],
+        default=None,
+        blank=True,
+        null=True
+    )
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
