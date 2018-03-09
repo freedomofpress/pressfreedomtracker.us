@@ -152,7 +152,16 @@ class RichTextBlockQuoteBlock(blocks.StructBlock):
 
 
 class EmailSignupBlock(blocks.StructBlock):
-    text = blocks.CharBlock(label="Newsletter call to action text")
+    text = blocks.CharBlock(
+        label='Call to action text',
+        help_text='Defaults to sitewide setting',
+        required=False
+    )
+    success_text = blocks.CharBlock(
+        label='Success text',
+        help_text='To be displayed after a successful signup. Defaults to sitewide setting',
+        required=False
+    )
 
     class Meta:
         template = 'common/blocks/emails_signup.html'

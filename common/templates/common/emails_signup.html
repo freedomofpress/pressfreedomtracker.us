@@ -2,6 +2,7 @@
 	When including this template, you can add the following variables:
 
 	prompt -- override the sitewide email signup prompt
+	success -- override the sidewide success message
 	class -- add an additional class name to the html div
 {% endcomment %}
 
@@ -9,6 +10,6 @@
 	<div
 		class="js-emails-signup emails-signup {{ class }}"
 		data-signup-prompt="{% filter force_escape %}{% firstof prompt email_settings.signup_prompt "" %}{% endfilter %}"
-		data-success-text="{{ email_settings.success_text|default:"" }}"
+		data-success-text="{% filter force_escape %}{% firstof success email_settings.success_text "" %}{% endfilter %}"
 	></div>
 {% endwith %}
