@@ -13,6 +13,8 @@ class BaseMergeForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.merge_model_name = self.merge_model._meta.verbose_name_plural
+
         self.fields['models_to_merge'] = forms.models.ModelMultipleChoiceField(
             queryset=self.merge_model.objects.all(),
             widget=type(
@@ -22,10 +24,10 @@ class BaseMergeForm(forms.Form):
             ),
             label='{} to merge'.format(capfirst(self.merge_model_name))
         )
+
         self.fields['title_for_merged_models'].label = 'Title for merged {}'.format(self.merge_model_name)
 
 
 class TagMergeForm(BaseMergeForm):
     merge_model = CommonTag
     merge_model_type = 'common.CommonTag'
-    merge_model_name = 'tags'

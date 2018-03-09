@@ -1,7 +1,10 @@
+from wagtail.wagtailadmin import messages
 from wagtail.wagtaildocs.views.serve import serve as wagtail_serve
 from django.views.generic.edit import FormView
 from .forms import TagMergeForm
 from incident.models import IncidentPage
+from django.utils.translation import gettext_lazy as _
+from django.utils.text import capfirst
 
 
 # Wrap the wagtail document serving view to serve docs as inline rather
@@ -23,7 +26,7 @@ class MergeView(FormView):
         models_to_merge = form.cleaned_data['models_to_merge']
         new_model = form.cleaned_data['title_for_merged_models']
 
-        new_model, _ = self.model_admin.model.objects.get_or_create(title=new_model)
+        new_model, created = self.model_admin.model.objects.get_or_create(title=new_model)
 
         fields = [
             {
@@ -38,6 +41,12 @@ class MergeView(FormView):
             getattr(new_model, field['accessor']).add(*pages)
         new_model.save()
         models_to_merge.delete()
+        messages.success(
+            self.request,
+            _("{0} successfully merged").format(
+                capfirst(self.model_admin.model._meta.verbose_name_plural)
+            )
+        )
 
         return super().form_valid(form)
 

@@ -51,6 +51,7 @@ class Nationality(ClusterableModel):
 
     class Meta:
         ordering = ['title']
+        verbose_name_plural = 'nationalities'
 
 
 class PoliticianOrPublic(ClusterableModel):
@@ -68,6 +69,8 @@ class PoliticianOrPublic(ClusterableModel):
 
     class Meta:
         ordering = ['title']
+        verbose_name = 'Politician or public figure'
+        verbose_name_plural = 'politicians or public figures'
 
 
 class Venue(ClusterableModel):
