@@ -32,4 +32,4 @@ class VenueMergeForm(BaseMergeForm):
 class PoliticianOrPublicMergeForm(BaseMergeForm):
     merge_model = PoliticianOrPublic
     merge_model_type = 'incident.PoliticianOrPublic'
-    merge_model_name = 'politician or public figure'
+    merge_model_name = 'politician or public figures'
