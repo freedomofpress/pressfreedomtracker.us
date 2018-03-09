@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from incident.models import Target, Nationality, PoliticianOrPublic, Venue
-from incident.wagtail_hooks import TargetAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin
+from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
+from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin
 from incident.tests.factories import IncidentPageFactory
 import json
 from datetime import datetime
@@ -68,6 +68,66 @@ class TargetMergeViewTest(TestCase):
             Target.objects.get(id=self.target1.id)
         with self.assertRaises(Target.DoesNotExist):
             Target.objects.get(id=self.target2.id)
+
+
+class ChargeMergeViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.inc1 = IncidentPageFactory(current_charges=1, dropped_charges=1)
+        cls.inc2 = IncidentPageFactory(current_charges=1, dropped_charges=1)
+        IncidentPageFactory(current_charges=1, dropped_charges=1)
+        cls.charge1 = cls.inc1.current_charges.all()[0]
+        cls.charge2 = cls.inc2.current_charges.all()[0]
+        cls.charge3 = cls.inc1.dropped_charges.all()[0]
+        cls.charge4 = cls.inc2.dropped_charges.all()[0]
+        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.new_charge_title = 'Breaking and entering'
+        self.response = self.client.post(
+            ChargeAdmin().url_helper.merge_url,
+            {
+                'models_to_merge': json.dumps([{
+                    'label': self.charge1.title,
+                    'id': self.charge1.id
+                }, {
+                    'label': self.charge2.title,
+                    'id': self.charge2.id
+                }, {
+                    'label': self.charge3.title,
+                    'id': self.charge3.id
+                }, {
+                    'label': self.charge4.title,
+                    'id': self.charge4.id
+                }]),
+                'title_for_merged_models': self.new_charge_title
+            }
+        )
+
+    def test_successful_request_redirects(self):
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_correct_redirect_url(self):
+        """Should redirect to the modelAdmin's index page"""
+        self.assertEqual(self.response['location'], ChargeAdmin().url_helper.index_url)
+
+    def test_new_charge_created(self):
+        Charge.objects.get(title=self.new_charge_title)
+
+    def test_new_charge_has_old_charge_relationships(self):
+        new_charge = Charge.objects.get(title=self.new_charge_title)
+        self.assertEqual(set(new_charge.current_charge_incidents.all()), {self.inc1, self.inc2})
+
+    def test_new_charge_has_old_charge_relationships2(self):
+        new_charge = Charge.objects.get(title=self.new_charge_title)
+        self.assertEqual(set(new_charge.dropped_charge_incidents.all()), {self.inc1, self.inc2})
+
+    def test_merged_charges_are_deleted(self):
+        with self.assertRaises(Charge.DoesNotExist):
+            Charge.objects.get(id=self.charge1.id)
+        with self.assertRaises(Charge.DoesNotExist):
+            Charge.objects.get(id=self.charge2.id)
 
 
 class NationalityMergeViewTest(TestCase):
