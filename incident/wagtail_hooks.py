@@ -1,5 +1,5 @@
 from wagtail.contrib.modeladmin.options import (
-    ModelAdmin, ModelAdminGroup, modeladmin_register)
+    ModelAdminGroup, modeladmin_register)
 
 from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
 from common.wagtail_hooks import MergeAdmin
@@ -12,7 +12,7 @@ class TargetAdmin(MergeAdmin):
     menu_label = 'Targets'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
 
@@ -23,7 +23,7 @@ class ChargeAdmin(MergeAdmin):
     menu_label = 'Charges'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
 
@@ -34,9 +34,10 @@ class NationalityAdmin(MergeAdmin):
     menu_label = 'Nationalities'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
+
 
 class PoliticianOrPublicAdmin(MergeAdmin):
     model = PoliticianOrPublic
@@ -44,9 +45,10 @@ class PoliticianOrPublicAdmin(MergeAdmin):
     menu_label = 'Politicians / Public Figures'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
+
 
 class VenueAdmin(MergeAdmin):
     model = Venue
@@ -54,14 +56,16 @@ class VenueAdmin(MergeAdmin):
     menu_label = 'Venues'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False # or True to exclude pages of this type from Wagtail's explorer view
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
+
 
 class IncidentGroup(ModelAdminGroup):
     menu_label = 'Incident M2Ms'
     menu_icon = 'folder-open-inverse'  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
     items = (TargetAdmin, ChargeAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin)
+
 
 modeladmin_register(IncidentGroup)

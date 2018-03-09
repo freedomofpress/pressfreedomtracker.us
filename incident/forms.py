@@ -1,8 +1,5 @@
-from django import forms
-
 from common.forms import BaseMergeForm
 from incident.models import Target, Charge, Nationality, Venue, PoliticianOrPublic
-from autocomplete.widgets import Autocomplete
 
 
 class TargetMergeForm(BaseMergeForm):

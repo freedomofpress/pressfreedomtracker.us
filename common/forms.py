@@ -14,14 +14,14 @@ class BaseMergeForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['models_to_merge'] = forms.models.ModelMultipleChoiceField(
-                queryset=self.merge_model.objects.all(),
-                widget=type(
-                    '_Autocomplete',
-                    (Autocomplete,),
-                    dict(page_type=self.merge_model_type, can_create=False, is_single=False)
-                ),
-                label='{} to merge'.format(capfirst(self.merge_model_name))
-            )
+            queryset=self.merge_model.objects.all(),
+            widget=type(
+                '_Autocomplete',
+                (Autocomplete,),
+                dict(page_type=self.merge_model_type, can_create=False, is_single=False)
+            ),
+            label='{} to merge'.format(capfirst(self.merge_model_name))
+        )
         self.fields['title_for_merged_models'].label = 'Title for merged {}'.format(self.merge_model_name)
 
 

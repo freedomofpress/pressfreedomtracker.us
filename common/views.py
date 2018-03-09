@@ -2,7 +2,6 @@ from wagtail.wagtaildocs.views.serve import serve as wagtail_serve
 from django.views.generic.edit import FormView
 from .forms import TagMergeForm
 from incident.models import IncidentPage
-from common.models import CommonTag
 
 
 # Wrap the wagtail document serving view to serve docs as inline rather

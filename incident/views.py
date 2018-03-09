@@ -1,6 +1,7 @@
 from common.views import MergeView
 from incident.forms import TargetMergeForm, ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm
 
+
 class TargetMergeView(MergeView):
     form_class = TargetMergeForm
 

@@ -4,9 +4,9 @@ from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Ven
 from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin
 from incident.tests.factories import IncidentPageFactory
 import json
-from datetime import datetime
 
 User = get_user_model()
+
 
 class TargetMergeViewTest(TestCase):
     @classmethod
