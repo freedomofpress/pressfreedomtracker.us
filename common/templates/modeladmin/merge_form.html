@@ -15,16 +15,28 @@
     {% endblock %}
 
     {% block content_main %}
-      <div class="row">
-        <div class="left">
-          <div class="col">
-            <form action="" method="post">{% csrf_token %}
-              {{ form.as_p }}
-              <input type="submit" value="Merge" />
-            </form>
-          </div>
-        </div>
-      </div>
+      <section class="nice-padding">
+        <h2>Merge {{ form.merge_model_name }}</h2>
+        <form action="" method="post">{% csrf_token %}
+          <ul class="fields">
+            {% for field in form %}
+              <li{% if field.field.required %} class="required"{% endif %}>
+                <div class="field char_field">
+                  <label for="{{ field.html_id }}">
+                    {{ field.label }}:
+                  </label>
+                  <div class="field-content">
+                    <div class="input">
+                      {{ field }}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+          <input type="submit" value="Merge" class="button" />
+        </form>
+      </section>
     {% endblock content_main %}
 
 {% endblock content %}
