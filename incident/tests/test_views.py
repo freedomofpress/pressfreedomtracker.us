@@ -1,11 +1,57 @@
-from django.test import TestCase
-from django.contrib.auth import get_user_model
-from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
-from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin
-from incident.tests.factories import IncidentPageFactory
 import json
 
+from django.test import TestCase
+from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from wagtail.wagtailcore.models import Site
+from wagtail.wagtailcore.rich_text import RichText
+
+from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
+from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin
+from incident.tests.factories import IncidentPageFactory, IncidentIndexPageFactory
+
+
 User = get_user_model()
+
+
+class IncidentAdminSearch(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+
+        incident_index_page = IncidentIndexPageFactory(
+            parent=site.root_page,
+        )
+
+        cls.incident_page1 = IncidentPageFactory(
+            parent=incident_index_page,
+            title='asdf',
+        )
+        cls.incident_page2 = IncidentPageFactory(
+            parent=incident_index_page,
+            title='zxcv',
+        )
+        cls.incident_page3 = IncidentPageFactory(
+            parent=incident_index_page,
+            title='qwerty',
+            body__0__rich_text__value=RichText('<p>asdf</p>'),
+        )
+        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.url = reverse('incident-admin-search')
+
+    def test_search_title(self):
+        response = self.client.get(self.url, {'q': 'zxcv'})
+        self.assertEqual(set(response.context['pages']), {self.incident_page2})
+
+    def test_search_title_and_body(self):
+        response = self.client.get(self.url, {'q': 'asdf'})
+        self.assertEqual(
+            set(response.context['pages']),
+            {self.incident_page1, self.incident_page3},
+        )
 
 
 class TargetMergeViewTest(TestCase):
