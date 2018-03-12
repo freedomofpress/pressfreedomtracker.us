@@ -245,7 +245,10 @@ class Command(BaseCommand):
                 )
                 random_idx = random.randint(0, CategoryPage.objects.count() - 1)
                 page.categories = [
-                    IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
+                    IncidentCategorization(
+                        category=CategoryPage.objects.all()[random_idx],
+                        sort_order=0,
+                    )
                 ]
                 incident_index_page.add_child(instance=page)
                 if x == 0:
@@ -290,7 +293,10 @@ class Command(BaseCommand):
             )
             random_idx = random.randint(0, CategoryPage.objects.count() - 1)
             page.categories = [
-                IncidentCategorization(category=CategoryPage.objects.all()[random_idx])
+                IncidentCategorization(
+                    category=CategoryPage.objects.all()[random_idx],
+                    sort_order=0,
+                )
             ]
             incident_index_page.add_child(instance=page)
             HomePageIncidents.objects.create(
