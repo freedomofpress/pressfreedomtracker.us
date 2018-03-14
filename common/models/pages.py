@@ -1,5 +1,4 @@
 from django.db import models
-from django.template import Template, Context
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
@@ -35,6 +34,7 @@ from common.templatetags.render_as_template import render_as_template
 from common.validators import validate_template
 from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_numbers_choices
+from statistics.validators import validate_dataset_params
 # Import statistics tags so that statistics dataset choices are populated
 import statistics.templatetags.statistics_tags  # noqa: F401
 
@@ -188,6 +188,9 @@ class StatisticsItem(Orderable):
         FieldPanel('dataset'),
         FieldPanel('params'),
     ]
+
+    def clean(self):
+        validate_dataset_params(self.dataset, self.params)
 
 
 class TaxonomyCategoryPage(Orderable):
