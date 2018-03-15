@@ -1,6 +1,4 @@
-from django import forms
 from django.db import models
-from django.template import Template, Context
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
@@ -32,9 +30,13 @@ from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
 )
+from common.templatetags.render_as_template import render_as_template
 from common.validators import validate_template
 from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_numbers_choices
+from statistics.validators import validate_dataset_params
+# Import statistics tags so that statistics dataset choices are populated
+import statistics.templatetags.statistics_tags  # noqa: F401
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -171,31 +173,24 @@ class QuickFact(Orderable):
     link_url = models.URLField(blank=True)
 
 
-class NumbersIterable(object):
-    def __iter__(self):
-        return get_numbers_choices().__iter__()
-
-
-number_list = NumbersIterable()
-number_select = forms.Select()
-number_select.choices = number_list
-
-
-class DataItem(Orderable):
-    page = ParentalKey('common.CategoryPage', related_name='data_items')
+class StatisticsItem(Orderable):
+    page = ParentalKey('common.CategoryPage', related_name='statistics_items')
     label = models.CharField(max_length=255)
-    data_point = models.CharField(max_length=255)
+    dataset = models.CharField(max_length=255, choices=get_numbers_choices())
     params = models.CharField(
         max_length=255,
         null=True,
         blank=True,
-        help_text='Whitespace-separated list of arguments to be passed to the data point function',
+        help_text='Whitespace-separated list of arguments to be passed to the statistics function',
     )
     panels = [
         FieldPanel('label'),
-        FieldPanel('data_point', widget=number_select),
+        FieldPanel('dataset'),
         FieldPanel('params'),
     ]
+
+    def clean(self):
+        validate_dataset_params(self.dataset, self.params)
 
 
 class TaxonomyCategoryPage(Orderable):
@@ -220,7 +215,7 @@ class CategoryPage(MetadataPageMixin, Page):
     content_panels = Page.content_panels + [
         FieldPanel('methodology'),
         InlinePanel('quick_facts', label='Quick Facts'),
-        InlinePanel('data_items', label='Data Items'),
+        InlinePanel('statistics_items', label='Statistics'),
         InlinePanel('incident_filters', label='Fields to include in filters'),
     ]
 
@@ -269,15 +264,14 @@ class CategoryPage(MetadataPageMixin, Page):
         else:
             context['layout_template'] = 'base.html'
 
-        def evaluate_number_statistic(name, params):
-            ttag = '{{% {name} {params} %}}'.format(name=name, params=params)
-            return Template(ttag).render(Context())
-
         context['data_items'] = [
             {
                 'label': item.label,
-                'value': evaluate_number_statistic(item.data_point, item.params),
-            } for item in self.data_items.all()
+                'value': render_as_template('{{% {tag_name}{params} %}}'.format(
+                    tag_name=item.dataset,
+                    params=' ' + item.params if item.params else '',
+                )),
+            } for item in self.statistics_items.all()
         ]
         return context
 

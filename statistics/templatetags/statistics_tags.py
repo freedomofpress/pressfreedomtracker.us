@@ -4,8 +4,6 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
 from common.validators import tag_validator
-from incident.models.incident_page import IncidentPage
-from incident.models.items import Target
 from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import Statistics
 from statistics.utils import parse_kwargs
@@ -32,6 +30,7 @@ def num_incidents(**kwargs):
 @register.simple_tag
 def num_targets(**kwargs):
     """Return the count of incidents matching the given filter parameters"""
+    from incident.models.items import Target
     incident_filter = IncidentFilter(kwargs)
     try:
         incident_filter.clean(strict=True)
@@ -72,6 +71,7 @@ def incidents_in_year_range_by_month(start_year, end_year):
     template.
 
     """
+    from incident.models.incident_page import IncidentPage
     data = (
         IncidentPage.objects
         .filter(

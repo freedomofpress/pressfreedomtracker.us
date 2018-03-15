@@ -37,7 +37,8 @@ def get_numbers():
 
 
 def get_numbers_choices():
-    return [(name, name) for name in get_numbers().keys()]
+    for name in get_numbers().keys():
+        yield (name, name)
 
 
 def get_maps():
