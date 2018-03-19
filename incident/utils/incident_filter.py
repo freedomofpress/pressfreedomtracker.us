@@ -562,6 +562,4 @@ class FilterChoicesIterator(object):
     """
     def __iter__(self):
         for name, filter_ in IncidentFilter.get_available_filters().items():
-            if name == 'search' or name in IncidentFilter.base_filters:
-                continue
             yield (name, filter_.get_verbose_name())
