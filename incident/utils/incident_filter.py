@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import date
 import copy
 
@@ -344,7 +345,13 @@ class IncidentFilter(object):
                 continue
             filters[field.name] = cls._get_filter(field)
 
-        return filters
+        # Return an OrderedDict sorted alphabetically for consistency
+        # As of Python 3.7 dict order is guaranteed. Once upgraded to 3.7 we
+        # could remove the use of OrderedDict here and revisit whether we want
+        # filters sorted alphabetically
+        return OrderedDict(
+            sorted(filters.items(), key=lambda t: t[0])
+        )
 
     @classmethod
     def get_filter_choices(cls):
