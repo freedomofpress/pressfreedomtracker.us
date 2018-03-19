@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
@@ -205,7 +206,20 @@ class TaxonomyCategoryPage(Orderable):
 
 class CategoryIncidentFilter(Orderable):
     category = ParentalKey('common.CategoryPage', related_name='incident_filters')
-    incident_filter = models.CharField(max_length=255, choices=IncidentFilter.get_filter_choices())
+    incident_filter = models.CharField(
+        choices=IncidentFilter.get_filter_choices(),
+        max_length=255,
+        unique=True,
+    )
+
+    def clean(self):
+        from common.models.settings import GeneralIncidentFilter
+        if GeneralIncidentFilter.objects.filter(incident_filter=self.incident_filter).exists():
+            raise ValidationError({
+                'incident_filter': '"{}" is already in use in general filters'.format(
+                    self.get_incident_filter_display(),
+                ),
+            })
 
 
 class CategoryPage(MetadataPageMixin, Page):

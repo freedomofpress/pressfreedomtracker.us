@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -136,4 +137,18 @@ class IncidentFilterSettings(BaseSetting, ClusterableModel):
 
 class GeneralIncidentFilter(Orderable):
     incident_filter_settings = ParentalKey(IncidentFilterSettings, related_name='general_incident_filters')
-    incident_filter = models.CharField(max_length=255, choices=IncidentFilter.get_filter_choices())
+    incident_filter = models.CharField(max_length=255, choices=IncidentFilter.get_filter_choices(), unique=True)
+
+    def clean(self):
+        from common.models.pages import CategoryIncidentFilter
+        try:
+            category_incident_filter = CategoryIncidentFilter.objects.get(incident_filter=self.incident_filter)
+        except CategoryIncidentFilter.DoesNotExist:
+            pass
+        else:
+            raise ValidationError({
+                'incident_filter': '"{}" is already in use by the "{}" category'.format(
+                    self.get_incident_filter_display(),
+                    category_incident_filter.category.title,
+                ),
+            })
