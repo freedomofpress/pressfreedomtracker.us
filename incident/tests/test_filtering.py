@@ -766,3 +766,17 @@ class GetSummaryTest(TestCase):
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
         })
+
+
+class FilterChoicesTest(TestCase):
+    def test_filter_choices_alphabetical(self):
+        """
+        To ensure that choices are ordered deterministically they should be
+        sorted alphabetically
+        """
+        choices_iterator = IncidentFilter.get_filter_choices()
+        choices = [x for x in choices_iterator]
+        self.assertSequenceEqual(
+            choices,
+            sorted(choices, key=lambda t: t[1])
+        )

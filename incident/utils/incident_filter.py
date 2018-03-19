@@ -16,6 +16,7 @@ from django.db.models import (
 )
 from django.db.models.functions import Trunc, Cast
 from django.db.models.fields.related import ManyToOneRel
+from django.utils.text import capfirst
 from psycopg2.extras import DateRange
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 
@@ -303,8 +304,8 @@ class IncidentFilter(object):
     }
 
     _extra_filters = {
-        'circuits': CircuitsFilter(name='circuits', model_field=CharField()),
-        'charges': ChargesFilter(name='charges', model_field=CharField()),
+        'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
+        'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges')),
     }
 
     # IncidentPage fields that cannot be filtered on.
@@ -561,5 +562,10 @@ class FilterChoicesIterator(object):
     Helper class to get around circular imports.
     """
     def __iter__(self):
-        for name, filter_ in IncidentFilter.get_available_filters().items():
-            yield (name, filter_.get_verbose_name())
+        filter_choices = [
+            (name, capfirst(filter_.get_verbose_name()))
+            for name, filter_ in IncidentFilter.get_available_filters().items()
+        ]
+        filter_choices.sort(key=lambda item: item[1])
+        for field, verbose_name in filter_choices:
+            yield field, verbose_name
