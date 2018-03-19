@@ -24,6 +24,7 @@ from common.blocks import (
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock,
     RichTextBlockQuoteBlock,
+    EmailSignupBlock,
 )
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.utils import (
@@ -306,6 +307,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
+        ('email_signup', EmailSignupBlock()),
     ])
 
     sidebar_content = StreamField([
@@ -360,6 +362,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
+        ('email_signup', EmailSignupBlock()),
     ])
 
     content_panels = Page.content_panels + [

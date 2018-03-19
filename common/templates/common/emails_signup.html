@@ -1,22 +1,15 @@
+{% comment %}
+	When including this template, you can add the following variables:
+
+	prompt -- override the sitewide email signup prompt
+	success -- override the sidewide success message
+	class -- add an additional class name to the html div
+{% endcomment %}
+
 {% with email_settings=settings.emails.EmailSettings %}
-	<div class="emails-signup" id="js-emails-signup-target"></div>
-	<script type="text/javascript">
-		;(function() {
-			function handleLoad() {
-				window.ReactDOM.render(
-					window.React.createElement(
-						window.EmailSignup,
-						{ signupPrompt: '{{ email_settings.signup_prompt|default:"" }}'
-						, successText: '{{ email_settings.success_text|default:"" }}'
-						}
-					),
-
-					document.getElementById('js-emails-signup-target')
-				);
-
-			}
-
-			document.addEventListener('DOMContentLoaded', handleLoad);
-		})();
-	</script>
+	<div
+		class="js-emails-signup emails-signup {{ class }}"
+		data-signup-prompt="{% filter force_escape %}{% firstof prompt email_settings.signup_prompt "" %}{% endfilter %}"
+		data-success-text="{% filter force_escape %}{% firstof success email_settings.success_text "" %}{% endfilter %}"
+	></div>
 {% endwith %}
