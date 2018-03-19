@@ -310,10 +310,15 @@ class SimplePage(MetadataPageMixin, Page):
         ('email_signup', EmailSignupBlock()),
     ])
 
-    sidebar_content = StreamField([
-        ('heading', Heading2()),
-        ('rich_text', blocks.RichTextBlock()),
-    ], default=None)
+    sidebar_content = StreamField(
+        [
+            ('heading', Heading2()),
+            ('rich_text', blocks.RichTextBlock()),
+        ],
+        default=None,
+        blank=True,
+        null=True
+    )
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
