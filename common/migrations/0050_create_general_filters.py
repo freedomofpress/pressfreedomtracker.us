@@ -19,13 +19,15 @@ def create_general_filters(apps, schema_migration):
             incident_filter=incident_filter,
         )
         for incident_filter in [
-            'date',
             'affiliation',
+            # `categories` is not a "general filter"; it's sort of above that.
+            'circuits',
             'city',
-            'state',
-            'targets',
-            'tags',
+            'date',
             'lawsuit_name',
+            'state',
+            'tags',
+            'targets',
             'venue',
         ]
     ])
