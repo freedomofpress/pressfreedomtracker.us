@@ -6,11 +6,12 @@ import { SettingsIcon } from '~/filtering/Icons'
 class FiltersHeader extends PureComponent {
 	render() {
 		const {
+			categories,
+			categoriesEnabled,
+			changeFiltersMessage,
 			filtersExpanded,
 			filterValues,
 			handleToggle,
-			categoriesEnabled,
-			changeFiltersMessage,
 		} = this.props
 
 
@@ -19,6 +20,7 @@ class FiltersHeader extends PureComponent {
 				<FilterSummary
 					filtersExpanded={filtersExpanded}
 					filterValues={filterValues}
+					categories={categories}
 					categoriesEnabled={categoriesEnabled}
 					changeFiltersMessage={changeFiltersMessage}
 				/>

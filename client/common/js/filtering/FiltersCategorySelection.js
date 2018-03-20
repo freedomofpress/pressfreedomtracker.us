@@ -5,6 +5,7 @@ import classNames from 'classnames'
 class FiltersCategorySelection extends PureComponent {
 	render() {
 		const {
+			categories,
 			categoriesEnabled,
 			handleSelection,
 		} = this.props
@@ -16,12 +17,12 @@ class FiltersCategorySelection extends PureComponent {
 				</div>
 
 				<ul className="filters__categories">
-					{categoriesEnabled.map(category => (
+					{categories.map(category => (
 						<li
 							key={category.id}
 							className={classNames(
 								'filters__category',
-								{ 'filters__category--active': category.enabled }
+								{ 'filters__category--active': categoriesEnabled[category.id] }
 							)}
 							onClick={handleSelection.bind(null, category.id)}
 						>

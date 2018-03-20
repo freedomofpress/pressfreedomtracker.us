@@ -96,6 +96,9 @@ class DateFilter(Filter):
         end = data.get('{}_upper'.format(self.name)) or None
         return start, end
 
+    def get_verbose_name(self):
+        return '{} between'.format(super(DateFilter, self).get_verbose_name())
+
     def clean(self, value, strict=False):
         start, end = value
 

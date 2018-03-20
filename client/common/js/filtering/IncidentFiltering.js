@@ -4,23 +4,15 @@ import queryString from 'query-string'
 import moment, { isMoment } from 'moment'
 
 import {
-	ALL_FILTERS,
-	AUTOCOMPLETE_SINGLE_FILTERS,
-	AUTOCOMPLETE_MULTI_FILTERS,
-	DATE_FILTERS,
 	DATE_FORMAT,
+	GENERAL_ID,
 } from '~/filtering/constants'
+import FilterAccordion from '~/filtering/FilterAccordion'
 import FiltersCategorySelection from '~/filtering/FiltersCategorySelection'
 import FiltersHeader from '~/filtering/FiltersHeader'
 import FiltersExpandable from '~/filtering/FiltersExpandable'
-import FiltersBody from '~/filtering/FiltersBody'
 import FiltersFooter from '~/filtering/FiltersFooter'
-import GeneralFilterSet from '~/filtering/GeneralFilterSet'
 
-
-function Filters({ children }) {
-	return <div className="filters">{children}</div>
-}
 
 class IncidentFiltering extends PureComponent {
 	constructor(props, ...args) {
@@ -30,20 +22,21 @@ class IncidentFiltering extends PureComponent {
 		this.handleSelection = this.handleSelection.bind(this)
 		this.handleApplyFilters = this.handleApplyFilters.bind(this)
 		this.handleClearFilters = this.handleClearFilters.bind(this)
-		this.handleAccordionSelection = this.handleAccordionSelection.bind(this)
 		this.handleFilterChange = this.handleFilterChange.bind(this)
 		this.handlePopState = this.handlePopState.bind(this)
 
-		const selectedAccordions = [-1]
+		const startExpanded = {
+			[GENERAL_ID]: true,
+		}
 		if (props.noCategoryFiltering && props.category) {
-			selectedAccordions.push(props.category)
+			startExpanded[props.category.id] = true
 		}
 
 		this.state = {
 			filtersExpanded: false,
-			selectedAccordions,
 			loading: 0,
 			filtersTouched: false,
+			startExpanded,
 			...this.getStateFromQueryParams(),
 		}
 	}
@@ -59,40 +52,37 @@ class IncidentFiltering extends PureComponent {
 	getStateFromQueryParams() {
 		const params = queryString.parse(location.search)
 
-		const categoriesEnabledById = (params.categories || '').split(',').map(n => parseInt(n))
-		const categoriesEnabled = this.props.serializedFilters.map(category => {
-			const enabled = (
-				categoriesEnabledById.includes(category.id) ||
-				this.props.category === category.id
+		const categoriesEnabled = {
+			[GENERAL_ID]: true,
+		}
+		if (params.categories) {
+			params.categories.split(',').forEach(
+				id => { categoriesEnabled[id] = true }
 			)
-			return {
-				...category,
-				enabled,
-			}
-		})
+		}
 
-		const filterValues = Object.keys(params).reduce((values, key) => {
-			if (!ALL_FILTERS.includes(key)) {
-				return values
-			}
+		const filterValues = this.props.categories.reduce((acc, category) => {
+			if (!categoriesEnabled[category.id]) return acc
 
-			if (DATE_FILTERS.includes(key)) {
-				var value = moment(params[key])
-			} else if (AUTOCOMPLETE_MULTI_FILTERS.includes(key)) {
-				var value = params[key]
-					.split(',')
-					.map(n => { return { id: parseInt(n) } })
-			} else if (AUTOCOMPLETE_SINGLE_FILTERS.includes(key)) {
-				var value = { id: parseInt(params[key]) }
-			} else {
-				var value = params[key]
-			}
+			const newAcc = { ...acc }
 
-			return {
-				...values,
-				[key]: value,
-			}
+			category.filters.forEach(filter => {
+				if (filter.type === 'date') {
+					const lowerDate = `${filter.name}_lower`
+					const upperDate = `${filter.name}_upper`
+					if (params[lowerDate]) newAcc[lowerDate] = params[lowerDate]
+					if (params[upperDate]) newAcc[upperDate] = params[upperDate]
+				} else if (params[filter.name]) {
+					newAcc[filter.name] = params[filter.name]
+				}
+			})
+
+			return newAcc
 		}, {})
+
+		if (this.props.noCategoryFiltering && this.props.category) {
+			filterValues.categories = [this.props.category]
+		}
 
 		return {
 			categoriesEnabled,
@@ -100,87 +90,84 @@ class IncidentFiltering extends PureComponent {
 		}
 	}
 
-	formatValue(value, key) {
-		if (isMoment(value)) {
-			return value.format(DATE_FORMAT)
-		} else if (AUTOCOMPLETE_MULTI_FILTERS.includes(key)) {
-			return value.map(({ id }) => id).join(',')
-		} else if (AUTOCOMPLETE_SINGLE_FILTERS.includes(key)) {
-			if (!value) {
-				return null
-			}
-			return value.id
-		} else {
-			return value
-		}
-	}
-
 	getPageFetchParams() {
-		const categoriesEnabledById = this.state.categoriesEnabled
-			.filter(({ enabled }) => enabled)
-			.map(({ id }) => id)
+		const {
+			categories,
+		} = this.props
+		const {
+			categoriesEnabled,
+			category,
+			filterValues,
+			noCategoryFiltering,
+		} = this.state
 
-		const whitelistedFields = this.state.categoriesEnabled
-			.filter(({ enabled }) => enabled)
-			.reduce((list, category) => {
-				const related_field_names = category.related_fields.map((field) => field.name)
-				return list.concat(related_field_names)
-			}, GeneralFilterSet.fields)
-
-
-		const filterValues = DATE_FILTERS.reduce((filters, date_field) => {
-			const upper_date = date_field.replace('_lower', '_upper')
-			const hasCompleteRange = (
-				filters[date_field] &&
-				filters[upper_date] &&
-				upper_date !== date_field
-			)
-			const shouldSwap = (
-				hasCompleteRange &&
-				filters[date_field].isAfter(filters[upper_date])
-			)
-			if (shouldSwap) {
-				return {
-					...filters,
-					[date_field]: filters[upper_date],
-					[upper_date]: filters[date_field],
-				}
-			}
-
-			return filters
-		}, {...this.state.filterValues})
-
-		const formattedFilterValues = Object.keys(filterValues)
-			.reduce((values, key) => {
-				const value = filterValues[key]
-				return {
-					...values,
-					[key]: this.formatValue(value, key),
-				}
-			}, {})
-
-		const params = {
-			...queryString.parse(window.location.search),
-			categories: categoriesEnabledById.join(','),
-			...formattedFilterValues,
+		let categoriesParam
+		if (noCategoryFiltering && category) {
+			categoriesParam = null
+		} else {
+			categoriesParam = Object.keys(categoriesEnabled).filter(
+				// Convert GENERAL_ID to string because object keys are
+				// always strings.
+				id => id !== `${GENERAL_ID}` && categoriesEnabled[id]
+			).join(',')
 		}
 
+		const params = {}
+		const dateFilters = {}
 
-		return Object.keys(params).reduce((obj, key) => {
-			// Remove blank values from the query string.
-			if (!params[key]) {
-				return obj
-			}
-			// Remove fields of categories that are not enabled
-			if (ALL_FILTERS.includes(key) && !whitelistedFields.includes(key)) {
-				return obj
-			}
+		categories.forEach(cat => {
+			if (!categoriesEnabled[cat.id]) return
 
-			return {
-				...obj,
-				[key]: params[key]
-			}
-		}, {})
+			cat.filters.forEach(filter => {
+				if (filter.type === 'date') {
+					const lowerDate = `${filter.name}_lower`
+					const upperDate = `${filter.name}_upper`
+					if (filterValues[lowerDate]) {
+						params[lowerDate] = moment(filterValues[lowerDate]).format(DATE_FORMAT)
+					}
+					if (filterValues[upperDate]) {
+						params[upperDate] = moment(filterValues[upperDate]).format(DATE_FORMAT)
+					}
+
+					// If date filter values were entered backwards, swap them.
+					const hasCompleteRange = (
+						params[lowerDate] &&
+						params[upperDate] &&
+						params[upperDate] !== params[lowerDate]
+					)
+					const shouldSwap = (
+						hasCompleteRange &&
+						params[lowerDate] > params[upperDate]
+					)
+					if (shouldSwap) {
+						[params[lowerDate], params[upperDate]] = [params[upperDate], params[lowerDate]]
+					}
+
+					return
+				}
+
+				const value = filterValues[filter.name]
+				if (!value) return
+
+				if (filter.type === 'autocomplete') {
+					if (Array.isArray(value)) {
+						params[filter.name] = value.map(({ id }) => id).join(',')
+					} else {
+						params[filter.name] = value.id
+					}
+				} else {
+					params[filter.name] = value
+				}
+			})
+		})
+
+		if (categoriesParam) {
+			params.categories = categoriesParam
+		} else if (params.hasOwnProperty('categories')) {
+			delete params.categories
+		}
+
+		return params
 	}
 
 	/**
@@ -191,11 +178,13 @@ class IncidentFiltering extends PureComponent {
 	 * CategoryPage.
 	 */
 	getExternalUrl() {
-		const categoriesEnabled = this.state.categoriesEnabled
-			.filter(({ enabled }) => enabled)
+		const { categoriesEnabled } = this.state
+		const selectedCategories = this.props.categories.filter(
+			({ id }) => categoriesEnabled[id] && id !== GENERAL_ID
+		)
 
-		if (categoriesEnabled.length === 1) {
-			return categoriesEnabled[0].url
+		if (selectedCategories.length === 1) {
+			return selectedCategories[0].url
 		}
 
 		return this.props.external
@@ -208,28 +197,15 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleSelection(id) {
-		const categoriesEnabled = this.state.categoriesEnabled.map(category => {
-			if (category.id !== id) {
-				return category
-			}
-
+		this.setState(previousState => {
 			return {
-				...category,
-				enabled: !category.enabled,
+				...previousState,
+				categoriesEnabled: {
+					...previousState.categoriesEnabled,
+					[id]: !previousState.categoriesEnabled[id],
+				},
+				filtersTouched: true,
 			}
-		})
-
-		const selectedAccordions = this.state.selectedAccordions.filter(_id => {
-			if (_id === -1) {
-				return true
-			}
-			return categoriesEnabled.some(category => category.enabled && category.id === _id)
-		})
-
-		this.setState({
-			categoriesEnabled,
-			selectedAccordions,
-			filtersTouched: true,
 		})
 	}
 
@@ -255,40 +231,13 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	handleClearFilters() {
-		const currentParams = queryString.parse(window.location.search)
-		const strippedParams = Object.keys(currentParams).reduce((params, key) => {
-			if (ALL_FILTERS.includes(key)) {
-				return params
-			}
-
-			if (key === 'categories') {
-				return params
-			}
-
-			return {
-				...params,
-				[key]: currentParams[key],
-			}
-		}, {})
-
-
-		const nextState = {
+		this.setState({
 			filterValues: {},
 			filtersTouched: false,
-		}
-
-		if (!this.props.noCategoryFiltering) {
-			nextState.categoriesEnabled = this.state.categoriesEnabled.map(category => {
-				return {
-					...category,
-					enabled: false,
-				}
-			})
-		}
-
-		this.setState(nextState)
-		history.pushState(null, null, '?' + queryString.stringify(strippedParams))
-		this.fetchPage(strippedParams)
+			categoriesEnabled: { [GENERAL_ID]: true },
+		})
+		history.pushState(null, null, '?')
+		this.fetchPage({})
 	}
 
 	fetchPage(params) {
@@ -336,16 +285,6 @@ class IncidentFiltering extends PureComponent {
 			value = event.target.value
 		}
 
-		const receivedErroneousValue = (
-			!DATE_FILTERS.includes(label) &&
-			!(event.target && event.target._autocomplete) &&
-			(value === null || value === undefined)
-		)
-		if (receivedErroneousValue) {
-			console.error("Erroneous Value", value)
-			return
-		}
-
 		this.setState({
 			filterValues: {
 				...this.state.filterValues,
@@ -355,32 +294,19 @@ class IncidentFiltering extends PureComponent {
 		})
 	}
 
-	handleAccordionSelection(id) {
-		const { selectedAccordions } = this.state
-		if (selectedAccordions.includes(id)) {
-			this.setState({
-				selectedAccordions: selectedAccordions.filter(_id => _id !== id)
-			})
-		} else {
-			this.setState({
-				selectedAccordions: this.state.selectedAccordions.concat(id)
-			})
-		}
-	}
-
 	render() {
 		const {
 			categoriesEnabled,
 			filterValues,
 			filtersExpanded,
 			filtersTouched,
-			selectedAccordions,
+			startExpanded,
 		} = this.state
 
 		const {
+			categories,
 			noCategoryFiltering,
 			changeFiltersMessage,
-			filterChoices,
 			exportPath,
 		} = this.props
 
@@ -388,30 +314,39 @@ class IncidentFiltering extends PureComponent {
 			<div className="filters">
 				<form onSubmit={this.handleApplyFilters}>
 					<FiltersHeader
+						categories={categories}
+						categoriesEnabled={categoriesEnabled}
+						changeFiltersMessage={changeFiltersMessage}
 						filterValues={filterValues}
 						filtersExpanded={filtersExpanded}
-						categoriesEnabled={categoriesEnabled}
 						handleToggle={this.handleToggle}
-						changeFiltersMessage={changeFiltersMessage}
 					/>
 
 					<FiltersExpandable filtersExpanded={filtersExpanded}>
 						{!noCategoryFiltering && (
 							<FiltersCategorySelection
+								categories={categories.filter(({ id }) => id !== GENERAL_ID)}
 								categoriesEnabled={categoriesEnabled}
 								handleSelection={this.handleSelection}
 							/>
 						)}
 
-						<FiltersBody
-							selectedAccordions={selectedAccordions}
-							categoriesEnabled={categoriesEnabled}
-							filterValues={filterValues}
-							handleAccordionSelection={this.handleAccordionSelection}
-							handleFilterChange={this.handleFilterChange}
-							noCategoryFiltering={noCategoryFiltering}
-							choices={filterChoices}
-						/>
+						<ul className="filters__body">
+							{categories.map(category => {
+								if (!categoriesEnabled[category.id]) return null
+
+								return (
+									<FilterAccordion
+										key={category.id}
+										category={category}
+										collapsible={noCategoryFiltering ? false : category.id !== GENERAL_ID}
+										handleFilterChange={this.handleFilterChange}
+										filterValues={filterValues}
+										startExpanded={!!startExpanded[category.id]}
+									/>
+								)
+							})}
+						</ul>
 
 						<FiltersFooter
 							handleClearFilters={this.handleClearFilters}
