@@ -21,7 +21,7 @@ function FilterAccordion({
 	if(category.id === -1) {
 		// General is a special category with id -1 that should be rendered
 		FilterSet = GeneralFilterSet
-	} else if (!category.related_fields || !(category.related_fields.length > 0)) {
+	} else if (!category.fields || !(category.fields.length > 0)) {
 		// Don't bother rendering an accordion with no filters
 		return null
 	}
@@ -31,10 +31,10 @@ function FilterAccordion({
 	const collapsible = !noCategoryFiltering
 
 	let renderedFilterset
-	if(isActive && category.related_fields) {
+	if(isActive && category.fields) {
 		renderedFilterset = (<NewFilterSet
 			title={category.title}
-			fields={category.related_fields}
+			fields={category.fields}
 			handleFilterChange={handleFilterChange}
 			filterValues={filterValues}
 			choices={choices}

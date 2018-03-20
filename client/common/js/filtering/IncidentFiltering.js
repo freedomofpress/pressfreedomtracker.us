@@ -60,7 +60,7 @@ class IncidentFiltering extends PureComponent {
 		const params = queryString.parse(location.search)
 
 		const categoriesEnabledById = (params.categories || '').split(',').map(n => parseInt(n))
-		const categoriesEnabled = this.props.availableCategories.map(category => {
+		const categoriesEnabled = this.props.serializedFilters.map(category => {
 			const enabled = (
 				categoriesEnabledById.includes(category.id) ||
 				this.props.category === category.id

@@ -9,10 +9,9 @@ from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin
-from incident.models.choices import get_filter_choices
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
-from incident.utils.incident_filter import IncidentFilter, get_category_options
+from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
 from incident.feeds import IncidentIndexPageFeed
 
 
@@ -73,8 +72,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context = super(IncidentIndexPage, self).get_context(request)
 
         incident_filter = IncidentFilter(request.GET)
-        context['category_options'] = get_category_options()
-        context['filter_choices'] = get_filter_choices()
+        context['serialized_filters'] = get_serialized_filters()
         context['export_path'] = self.url
 
         incident_filter.clean()

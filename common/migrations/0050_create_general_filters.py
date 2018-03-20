@@ -20,7 +20,7 @@ def create_general_filters(apps, schema_migration):
         )
         for incident_filter in [
             'affiliation',
-            # `categories` is not a "general filter"; it's sort of above that.
+            'categories',
             'circuits',
             'city',
             'date',

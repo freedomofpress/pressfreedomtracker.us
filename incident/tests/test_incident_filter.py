@@ -2,10 +2,17 @@ from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
 from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.wagtailcore.models import Site
 
-from common.models import CategoryPage
+from common.models import (
+    CategoryPage,
+    CategoryIncidentFilter,
+    GeneralIncidentFilter,
+    IncidentFilterSettings,
+)
 from common.tests.factories import CategoryPageFactory
 from incident.models import IncidentPage
+from incident.models.choices import ARREST_STATUS, STATUS_OF_CHARGES
 from incident.utils.incident_filter import (
     IncidentFilter,
 )
@@ -19,13 +26,14 @@ class SerializeFilterTest(TestCase):
             'title': 'Arrest status',
             'type': 'choice',
             'name': 'arrest_status',
+            'choices': ARREST_STATUS,
         })
 
     def test_field_without_verbose_name(self):
         field = IncidentPage._meta.get_field('city')
         filter_ = IncidentFilter._get_filter(field)
         self.assertEqual(filter_.serialize(), {
-            'title': 'city',
+            'title': 'City',
             'type': 'text',
             'name': 'city',
         })
@@ -56,6 +64,7 @@ class SerializeFilterTest(TestCase):
             'title': 'Status of charges',
             'type': 'choice',
             'name': 'status_of_charges',
+            'choices': STATUS_OF_CHARGES,
         })
 
     def test_date_field(self):
@@ -96,18 +105,27 @@ class AvailableFiltersTest(TestCase):
 
 
 class CategoryFiltersTest(TestCase):
-    def setUp(self):
-        self.category = CategoryPageFactory(
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        CategoryIncidentFilter.objects.all().delete()
+        cls.category = CategoryPageFactory(
             title='Denial of Access',
             incident_filters=['politicians_or_public_figures_involved'],
         )
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=settings,
+            incident_filter='affiliation',
+        )
 
-    def test_base_filters_only(self):
+    def test_general_filters_only(self):
         incident_filter = IncidentFilter({})
         incident_filter.clean()
         self.assertEqual(
             {f.name for f in incident_filter.filters},
-            set(IncidentFilter.base_filters),
+            {'affiliation', 'categories'},
         )
 
     def test_includes_category_filters(self):
@@ -117,11 +135,16 @@ class CategoryFiltersTest(TestCase):
         incident_filter.clean()
         self.assertEqual(
             {f.name for f in incident_filter.filters},
-            set(IncidentFilter.base_filters) | {'politicians_or_public_figures_involved'},
+            {'affiliation', 'categories'} | {'politicians_or_public_figures_involved'},
         )
 
 
 class CleanTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        CategoryIncidentFilter.objects.all().delete()
+
     def test_only_clean_provided_data(self):
         category = CategoryPageFactory(incident_filters=['is_search_warrant_obtained'])
         incident_filter = IncidentFilter({
@@ -139,11 +162,6 @@ class CleanTest(TestCase):
             title='Category A',
             incident_filters=['release_date'],
         )
-        category2 = CategoryPageFactory(
-            title='Category B',
-            incident_filters=['release_date'],
-        )
-        CategoryPageFactory()
 
         incident_filter = IncidentFilter({
             'release_date_lower': '2017-01-01',
@@ -152,11 +170,9 @@ class CleanTest(TestCase):
             incident_filter.clean(strict=True)
         self.assertEqual(
             [str(error) for error in cm.exception],
-            ['release_date filter only available when filtering on one of the following categories: {} ({}), {} ({})'.format(
+            ['release_date filter only available when filtering on the following category: {} ({})'.format(
                 category1.title,
                 category1.id,
-                category2.title,
-                category2.id,
             )],
         )
 

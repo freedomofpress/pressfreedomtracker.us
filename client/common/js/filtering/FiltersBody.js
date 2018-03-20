@@ -7,7 +7,7 @@ class FiltersBody extends PureComponent {
 		const {
 			selectedAccordions,
 			handleAccordionSelection,
-			categoriesEnabled,
+			filtersByCategory,
 			handleFilterChange,
 			filterValues,
 			noCategoryFiltering,
@@ -15,21 +15,7 @@ class FiltersBody extends PureComponent {
 		} = this.props
 		return (
 			<ul className="filters__body">
-				<FilterAccordion
-					category={{
-						id: -1,
-						title: 'General',
-						enabled: true,
-					}}
-					handleAccordionSelection={handleAccordionSelection}
-					handleFilterChange={handleFilterChange}
-					selectedAccordions={selectedAccordions}
-					filterValues={filterValues}
-					noCategoryFiltering={noCategoryFiltering}
-					choices={choices}
-				/>
-
-				{categoriesEnabled.map(category => (
+				{filtersByCategory.map(category => (
 					<FilterAccordion
 						key={category.id}
 						category={category}

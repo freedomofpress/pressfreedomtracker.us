@@ -16,8 +16,7 @@ from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
 from common.validators import validate_template
-from incident.models.choices import get_filter_choices
-from incident.utils.incident_filter import get_category_options
+from incident.utils.incident_filter import get_serialized_filters
 
 
 class HomePage(MetadataPageMixin, Page):
@@ -141,12 +140,11 @@ class HomePage(MetadataPageMixin, Page):
     def get_context(self, request):
         context = super(HomePage, self).get_context(request)
 
-        context['category_options'] = get_category_options()
+        context['serialized_filters'] = get_serialized_filters()
 
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        context['filter_choices'] = get_filter_choices()
         context['incidents'] = self.incidents.all().prefetch_related('incident__categories__category')
 
         return context

@@ -245,8 +245,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
     def get_context(self, request):
         # placed here to avoid circular dependency
-        from incident.utils.incident_filter import IncidentFilter, get_category_options
-        from incident.models.choices import get_filter_choices
+        from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
         from common.models.settings import SearchSettings
 
         context = super(CategoryPage, self).get_context(request)
@@ -254,12 +253,11 @@ class CategoryPage(MetadataPageMixin, Page):
         data = request.GET.copy()
         data['categories'] = str(self.id)
         incident_filter = IncidentFilter(data)
-        context['category_options'] = get_category_options()
+        context['serialized_filters'] = get_serialized_filters()
 
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        context['filter_choices'] = get_filter_choices()
         incident_qs = incident_filter.get_queryset()
 
         paginator, entries = paginate(
