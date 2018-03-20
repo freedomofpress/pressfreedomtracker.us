@@ -5,7 +5,7 @@
 			window.ReactDOM.render(
 				window.React.createElement(
 					window.IncidentFiltering,
-					{ serializedFilters: {{ serialized_filters|safe }}
+					{ categories: {{ serialized_filters|safe }}
 					{% if apply_externally and external %}
 					, applyExternally: true
 					, external: '{{ external.url }}'

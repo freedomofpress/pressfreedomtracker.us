@@ -1,4 +1,5 @@
 import csv
+import json
 
 from django.db import models
 from django.http import StreamingHttpResponse
@@ -72,7 +73,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context = super(IncidentIndexPage, self).get_context(request)
 
         incident_filter = IncidentFilter(request.GET)
-        context['serialized_filters'] = get_serialized_filters()
+        context['serialized_filters'] = json.dumps(get_serialized_filters())
         context['export_path'] = self.url
 
         incident_filter.clean()

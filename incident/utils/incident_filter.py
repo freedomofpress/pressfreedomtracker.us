@@ -74,6 +74,15 @@ class BooleanFilter(Filter):
 class RelationFilter(Filter):
     serialized_type = 'autocomplete'
 
+    def serialize(self):
+        serialized = super(RelationFilter, self).serialize()
+        related_model = self.model_field.remote_field.model
+        serialized['autocomplete_type'] = '{}.{}'.format(
+            related_model._meta.app_label,
+            related_model.__name__,
+        )
+        return serialized
+
 
 class DateFilter(Filter):
     serialized_type = 'date'
@@ -234,7 +243,10 @@ class ManyRelationFilter(Filter):
         if isinstance(self.model_field, ManyToOneRel) and hasattr(related_model, '_autocomplete_model'):
             serialized['autocomplete_type'] = related_model._autocomplete_model
         else:
-            serialized['autocomplete_type'] = 'incident.{}'.format(related_model.__name__)
+            serialized['autocomplete_type'] = '{}.{}'.format(
+                related_model._meta.app_label,
+                related_model.__name__,
+            )
         return serialized
 
 
@@ -281,7 +293,6 @@ def get_serialized_filters():
         {
             'id': -1,
             'title': 'General',
-            'enabled': True,
             'filters': [
                 SearchFilter().serialize()
             ] + [

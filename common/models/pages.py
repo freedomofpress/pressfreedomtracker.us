@@ -1,3 +1,5 @@
+import json
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import strip_tags
@@ -12,7 +14,6 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
-
 from modelcluster.models import ClusterableModel
 
 from common.blocks import (
@@ -253,7 +254,7 @@ class CategoryPage(MetadataPageMixin, Page):
         data = request.GET.copy()
         data['categories'] = str(self.id)
         incident_filter = IncidentFilter(data)
-        context['serialized_filters'] = get_serialized_filters()
+        context['serialized_filters'] = json.dumps(get_serialized_filters())
 
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
