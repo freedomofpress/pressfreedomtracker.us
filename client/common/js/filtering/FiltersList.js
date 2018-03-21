@@ -29,6 +29,9 @@ class FiltersList extends PureComponent {
 			}
 		} else if (filter.type === 'boolean') {
 			renderedValue = filterValues[filter.name] ? 'yes' : 'no'
+		} else if (filter.type === 'choice') {
+			const selected = filter.choices.find(choice => choice[0] === filterValues[filter.name])
+			if (selected) renderedValue = selected[1]
 		} else if (filter.type === 'autocomplete') {
 			if (Array.isArray(filterValues[filter.name])) {
 				renderedValue = (
