@@ -17,19 +17,18 @@ def create_general_filters(apps, schema_migration):
         GeneralIncidentFilter(
             incident_filter_settings=settings,
             incident_filter=incident_filter,
+            sort_order=index,
         )
-        for incident_filter in [
-            'affiliation',
-            'categories',
-            'circuits',
-            'city',
+        for index, incident_filter in enumerate([
             'date',
-            'lawsuit_name',
+            'affiliation',
+            'city',
             'state',
-            'tags',
             'targets',
+            'tags',
+            'lawsuit_name',
             'venue',
-        ]
+        ])
     ])
 
 
