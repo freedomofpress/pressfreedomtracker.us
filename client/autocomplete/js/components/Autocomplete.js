@@ -119,23 +119,26 @@ class Autocomplete extends PureComponent {
 					return
 				}
 
+				let newValue
 				if (isMulti) {
-					var value = this.state.value.map(value => {
-						const page = res.data.pages.find(page => page.id === value.id)
+					newValue = this.state.value.map(v => {
+						// "Pages" is actually items, not paginated groups. This is probably a
+						// remnant of this being built specifically for wagtail pages.
+						const page = res.data.pages.find(page => page.id === v.id)
 						if (!page) {
-							return value
+							return v
 						}
 
 						return page
 					})
 				} else {
-					var value = res.data.pages[0]
+					newValue = res.data.pages[0]
 				}
 
-				this.setState({ value })
+				this.setState({ value: newValue })
 
 				if (typeof this.props.onChange === 'function') {
-					this.props.onChange({ target: { value } })
+					this.props.onChange({ target: { value: newValue } })
 				}
 			})
 	}

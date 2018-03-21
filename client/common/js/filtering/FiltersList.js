@@ -10,7 +10,6 @@ import {
 
 class FiltersList extends PureComponent {
 	renderFilterValue(filter, filterValues) {
-		console.log(filter, filterValues[filter.name])
 		let title = filter.title
 		let renderedValue = filterValues[filter.name]
 		if (filter.type === 'date') {
@@ -66,7 +65,6 @@ class FiltersList extends PureComponent {
 		} = this.props
 
 		const filters = categories.filter(({ id }) => categoriesEnabled[id]).reduce((acc, category) => {
-
 			return [
 				...acc,
 				...category.filters.filter(filter => {
@@ -75,10 +73,9 @@ class FiltersList extends PureComponent {
 					} else {
 						return filterValues[filter.name]
 					}
-				})
+				}),
 			]
 		}, [])
-		console.log(filters)
 
 		return (
 			<ul className="filters__summary-list">

@@ -73,7 +73,13 @@ class IncidentFiltering extends PureComponent {
 					if (params[lowerDate]) newAcc[lowerDate] = params[lowerDate]
 					if (params[upperDate]) newAcc[upperDate] = params[upperDate]
 				} else if (params[filter.name]) {
-					newAcc[filter.name] = params[filter.name]
+					if (filter.type === 'autocomplete' && filter.many) {
+						newAcc[filter.name] = params[filter.name]
+							.split(',')
+							.map(id => ({ id: parseInt(id) }))
+					} else {
+						newAcc[filter.name] = params[filter.name]
+					}
 				}
 			})
 
@@ -113,7 +119,6 @@ class IncidentFiltering extends PureComponent {
 		}
 
 		const params = {}
-		const dateFilters = {}
 
 		categories.forEach(cat => {
 			if (!categoriesEnabled[cat.id]) return

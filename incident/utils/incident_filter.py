@@ -81,6 +81,7 @@ class RelationFilter(Filter):
             related_model._meta.app_label,
             related_model.__name__,
         )
+        serialized['many'] = False
         return serialized
 
 
@@ -250,6 +251,7 @@ class ManyRelationFilter(Filter):
                 related_model._meta.app_label,
                 related_model.__name__,
             )
+        serialized['many'] = True
         return serialized
 
 
