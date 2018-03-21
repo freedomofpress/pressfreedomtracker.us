@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0050_create_general_filters'),
+        ('common', '0051_create_general_filters'),
     ]
 
     operations = [

@@ -36,7 +36,7 @@ def create_general_filters(apps, schema_migration):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0049_auto_20180319_1805'),
+        ('common', '0050_auto_20180319_1805'),
     ]
 
     operations = [
