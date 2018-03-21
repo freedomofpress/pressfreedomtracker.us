@@ -532,11 +532,6 @@ class IncidentFilter(object):
         THIS_YEAR = TODAY.year
         THIS_MONTH = TODAY.month
 
-        summary = (
-            ('Total Results', queryset.count()),
-            ('Journalists affected', Target.objects.filter(targets_incidents__in=queryset).distinct().count()),
-        )
-
         # Add counts for this year and this month if non-zero
         incidents_this_year = queryset.filter(date__contained_by=DateRange(
             TODAY.replace(month=1, day=1),
@@ -556,12 +551,19 @@ class IncidentFilter(object):
             bounds='[)'
         ))
 
+        total_queryset = queryset
         search = self.cleaned_data.get('search')
         if search:
             incidents_this_year = self.search_filter.filter(incidents_this_year, search)
             incidents_this_month = self.search_filter.filter(incidents_this_month, search)
+            total_queryset = self.search_filter.filter(queryset, search)
         num_this_year = incidents_this_year.count()
         num_this_month = incidents_this_month.count()
+
+        summary = (
+            ('Total Results', total_queryset.count()),
+            ('Journalists affected', Target.objects.filter(targets_incidents__in=total_queryset).distinct().count()),
+        )
 
         if num_this_year > 0:
             summary = summary + ((
@@ -583,9 +585,12 @@ class IncidentFilter(object):
                 pk__in=category_pks
             )
             for category in categories:
+                category_queryset = queryset.filter(categories__category=category)
+                if search:
+                    category_queryset = self.search_filter.filter(category_queryset, search)
                 summary = summary + ((
                     category.plural_name if category.plural_name else category.title,
-                    queryset.filter(categories__category=category).count(),
+                    category_queryset.count(),
                 ),)
 
         return summary
