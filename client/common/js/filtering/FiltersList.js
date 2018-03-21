@@ -27,8 +27,14 @@ class FiltersList extends PureComponent {
 				title = `${title} since`
 				renderedValue = moment(lowerDate).format(HUMAN_DATE_FORMAT)
 			}
-		} else if (filter.type === 'boolean') {
-			renderedValue = filterValues[filter.name] ? 'yes' : 'no'
+		} else if (filter.type === 'bool') {
+			if (filterValues[filter.name] === 'True') {
+				renderedValue = 'Yes'
+			} else if (filterValues[filter.name] === 'False') {
+				renderedValue = 'No'
+			} else {
+				renderedValue = filterValues[filter.name]
+			}
 		} else if (filter.type === 'choice') {
 			const selected = filter.choices.find(choice => choice[0] === filterValues[filter.name])
 			if (selected) renderedValue = selected[1]
