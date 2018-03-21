@@ -25,18 +25,10 @@ class IncidentFiltering extends PureComponent {
 		this.handleFilterChange = this.handleFilterChange.bind(this)
 		this.handlePopState = this.handlePopState.bind(this)
 
-		const startExpanded = {
-			[GENERAL_ID]: true,
-		}
-		if (props.noCategoryFiltering && props.category) {
-			startExpanded[props.category.id] = true
-		}
-
 		this.state = {
 			filtersExpanded: false,
 			loading: 0,
 			filtersTouched: false,
-			startExpanded,
 			...this.getStateFromQueryParams(),
 		}
 	}
@@ -92,9 +84,31 @@ class IncidentFiltering extends PureComponent {
 			filterValues.categories = [this.props.category]
 		}
 
+		// Expand initially if it's the general category, if it's the
+		// category page, or if at least one filter has a value.
+		const startExpanded = {
+			[GENERAL_ID]: true,
+		}
+
+		if (this.props.noCategoryFiltering && this.props.category) {
+			startExpanded[this.props.category] = true
+		} else {
+			this.props.categories.forEach(category => {
+				if (category.id === GENERAL_ID) return
+
+				startExpanded[category.id] = category.filters.some(filter => {
+					if (filter.type === 'date') {
+						return filterValues[`${filter.name}_lower`] || filterValues[`${filter.name}`]
+					}
+					return filterValues[filter.name]
+				})
+			})
+		}
+
 		return {
 			categoriesEnabled,
 			filterValues,
+			startExpanded,
 		}
 	}
 
@@ -349,7 +363,7 @@ class IncidentFiltering extends PureComponent {
 										collapsible={noCategoryFiltering ? false : category.id !== GENERAL_ID}
 										handleFilterChange={this.handleFilterChange}
 										filterValues={filterValues}
-										startExpanded={!!startExpanded[category.id]}
+										startExpanded={startExpanded[category.id]}
 									/>
 								)
 							})}
