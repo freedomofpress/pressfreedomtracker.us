@@ -2,6 +2,7 @@ from unittest import TestCase, mock
 
 from django.core.exceptions import ValidationError
 
+from common.models import CategoryPage
 from common.tests.factories import CategoryPageFactory
 from statistics.validators import validate_dataset_params
 
@@ -137,10 +138,10 @@ class CleanTest(TestCase):
         with self.assertRaises(ValidationError) as cm:
             validate_dataset_params(
                 dataset='kwargs',
-                params='venue="hello"',
+                params='tags="hello"',
             )
 
-        self.assertEqual(dict(cm.exception), {'params': ['Invalid value for venue: hello']})
+        self.assertEqual(dict(cm.exception), {'params': ['Invalid value for tags: hello']})
 
     def test_clean__kwargs__cleans_with_incident_filter__variable_param_value(self):
         with self.assertRaises(ValidationError) as cm:
@@ -164,19 +165,20 @@ class CleanTest(TestCase):
         )
 
     def test_clean_kwargs__combine_multiple_errors(self):
+        CategoryPage.objects.all().delete()
         category = CategoryPageFactory(incident_filters=['arrest_status'])
 
         with self.assertRaises(ValidationError) as cm:
             validate_dataset_params(
                 dataset='kwargs',
-                params='categories="{}" arrest_status="hello" circuits="fifty"'.format(
+                params='categories="{}" arrest_status="hello" tags="puppy"'.format(
                     category.id,
                 ),
             )
 
         self.assertEqual(dict(cm.exception), {
             'params': [
-                'Invalid value for circuits: fifty',
+                'Invalid value for tags: puppy',
                 'Invalid value for arrest_status: hello',
             ],
         })

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from wagtail.wagtailcore.models import Site
 
-from common.models.pages import CategoryIncidentFilter
+from common.models.pages import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from incident.models.choices import ARREST_STATUS
@@ -12,7 +12,7 @@ class GetSerializedFiltersTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         GeneralIncidentFilter.objects.all().delete()
-        CategoryIncidentFilter.objects.all().delete()
+        CategoryPage.objects.all().delete()
 
     def setUp(self):
         self.site = Site.objects.get(is_default_site=True)
@@ -24,7 +24,6 @@ class GetSerializedFiltersTest(TestCase):
             {
                 'id': -1,
                 'title': 'General',
-                'enabled': True,
                 'filters': [
                     {
                         'title': 'Search',
@@ -47,7 +46,6 @@ class GetSerializedFiltersTest(TestCase):
             {
                 'id': -1,
                 'title': 'General',
-                'enabled': True,
                 'filters': [
                     {
                         'title': 'Search',

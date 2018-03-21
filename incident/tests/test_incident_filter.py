@@ -46,6 +46,7 @@ class SerializeFilterTest(TestCase):
             'type': 'autocomplete',
             'autocomplete_type': 'incident.Equipment',
             'name': 'equipment_seized',
+            'many': True,
         })
 
     def test_radio_field(self):
@@ -71,7 +72,7 @@ class SerializeFilterTest(TestCase):
         field = IncidentPage._meta.get_field('release_date')
         filter_ = IncidentFilter._get_filter(field)
         self.assertEqual(filter_.serialize(), {
-            'title': 'Release date',
+            'title': 'Release date between',
             'type': 'date',
             'name': 'release_date',
         })
@@ -91,6 +92,7 @@ class SerializeFilterTest(TestCase):
         self.assertEqual(filter_.serialize(), {
             'title': 'Politicians or public officials involved',
             'type': 'autocomplete',
+            'many': True,
             'autocomplete_type': 'incident.PoliticianOrPublic',
             'name': 'politicians_or_public_figures_involved',
         })

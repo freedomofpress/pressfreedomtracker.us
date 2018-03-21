@@ -3,8 +3,10 @@ import unittest
 
 from django.test import TestCase
 from django.utils import timezone
+from wagtail.wagtailcore.models import Site
 from wagtail.wagtailcore.rich_text import RichText
 
+from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from incident.tests.factories import (
     ChargeFactory,
@@ -80,6 +82,13 @@ class TestFiltering(TestCase):
 
     def test_should_filter_by_circuit(self):
         # See incident/circuits.py
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=settings,
+            incident_filter='circuits',
+        )
         circuit = 'eleventh'
         alabama = StateFactory(name='Alabama')
         florida = StateFactory(name='Florida')
