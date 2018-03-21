@@ -327,6 +327,7 @@ class IncidentFilter(object):
         'equipment_seized': {'lookup': 'equipment_seized__equipment'},
         'equipment_broken': {'lookup': 'equipment_broken__equipment'},
         'categories': {'lookup': 'categories__category'},
+        'venue': {'filter_cls': RelationFilter},
     }
 
     _extra_filters = {
