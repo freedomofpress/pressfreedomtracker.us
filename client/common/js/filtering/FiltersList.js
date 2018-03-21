@@ -50,7 +50,7 @@ class FiltersList extends PureComponent {
 
 		return (
 			<span>
-				<span className="filters__text--dim">{filter.title}:</span>
+				<span className="filters__text--dim">{title}:</span>
 				{' '}
 				{renderedValue}
 			</span>
