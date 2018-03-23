@@ -124,12 +124,13 @@ class SocialSharingSEOSettings(BaseSetting):
 @register_setting
 class IncidentFilterSettings(BaseSetting, ClusterableModel):
     class Meta:
-        verbose_name = 'Incident Filters'
+        verbose_name = 'general incident filters'
 
     panels = [
         InlinePanel(
             'general_incident_filters',
-            label='Fields to include in filters',
+            label='Filters',
+            help_text='Selected filters will always be displayed, as part of the "General" filters section',
             min_num=1,
         ),
     ]
