@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack -p",
     "start": "webpack -w -d --display-error-details",
-    "js-lint": "eslint app/**/*.jsx",
+    "js-lint": "eslint client/**/*.js",
     "sass-lint": "sass-lint -v"
   },
   "author": "Harris Lapiroff <harris@littleweaverweb.com>",
