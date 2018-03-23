@@ -42,6 +42,14 @@ class IncidentFiltering extends PureComponent {
 	}
 
 	getStateFromQueryParams() {
+		// Initializes the state on page load. Returns three variables:
+		// - categoriesEnabled: object that contains `true` values
+		//   for selected category ids
+		// - filterValues: object mapping filter names to filter value
+		// - startExpanded: object that contains `true` values for ids of
+		//   categories that should be expanded when the page loads. This will
+		//   be the general category plus either the category for the current page
+		//   or categories that contain filter values.
 		const params = queryString.parse(location.search)
 
 		const categoriesEnabled = {
