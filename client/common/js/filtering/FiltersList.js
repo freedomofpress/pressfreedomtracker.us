@@ -1,9 +1,6 @@
 import React, { PureComponent } from 'react'
 import moment from 'moment'
 import {
-	AUTOCOMPLETE_SINGLE_FILTERS,
-	AUTOCOMPLETE_MULTI_FILTERS,
-	DATE_FILTERS,
 	HUMAN_DATE_FORMAT,
 } from '~/filtering/constants'
 

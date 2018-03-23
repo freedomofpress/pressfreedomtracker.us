@@ -8,8 +8,6 @@ import {
 	RadioPillInput,
 } from '~/filtering/Inputs'
 
-import { AUTOCOMPLETE_SINGLE_FILTERS, AUTOCOMPLETE_MULTI_FILTERS } from '~/filtering/constants'
-
 function FilterSet({ title, filters, handleFilterChange, filterValues }) {
 		const components = filters.map((filter, index) => {
 			if(filter.type === 'choice' ) {
@@ -54,30 +52,15 @@ function FilterSet({ title, filters, handleFilterChange, filterValues }) {
 					key={index}
 				/>
 			} else if (filter.type === 'autocomplete'){
-				if(AUTOCOMPLETE_MULTI_FILTERS.includes(filter.name)) {
-					return <AutocompleteInput
-						handleFilterChange={handleFilterChange}
-						filterValues={filterValues}
-						label={filter.title}
-						filter={filter.name}
-						type={filter.autocomplete_type}
-						isSingle={false}
-						key={index}
-					/>
-				} else if(AUTOCOMPLETE_SINGLE_FILTERS.includes(filter.name)) {
-					return <AutocompleteInput
-						handleFilterChange={handleFilterChange}
-						filterValues={filterValues}
-						label={filter.title}
-						filter={filter.name}
-						type={filter.autocomplete_type}
-						isSingle={true}
-						key={index}
-					/>
-				} else {
-					console.error('This filter has not been assigned to single or multi autocomplete.')
-					return null
-				}
+				return <AutocompleteInput
+					handleFilterChange={handleFilterChange}
+					filterValues={filterValues}
+					label={filter.title}
+					filter={filter.name}
+					type={filter.autocomplete_type}
+					isSingle={!filter.many}
+					key={index}
+				/>
 			} else {
 				console.error('Unknown filter type.')
 				return null
