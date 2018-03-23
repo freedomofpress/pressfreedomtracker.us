@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PropTypes } from 'react'
 import {
 	AutocompleteInput,
 	BoolInput,
@@ -8,10 +8,11 @@ import {
 	RadioPillInput,
 } from '~/filtering/Inputs'
 
-function FilterSet({ title, filters, handleFilterChange, filterValues }) {
-		const components = filters.map((filter, index) => {
-			if(filter.type === 'choice' ) {
-				return <ChoiceInput
+function FilterSet({ filters, handleFilterChange, filterValues }) {
+	const components = filters.map((filter, index) => {
+		if (filter.type === 'choice') {
+			return (
+				<ChoiceInput
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
 					label={filter.title}
@@ -19,40 +20,50 @@ function FilterSet({ title, filters, handleFilterChange, filterValues }) {
 					choices={filter.choices}
 					key={index}
 				/>
-			} else if (filter.type === 'date') {
-				return <DateRangeInput
+			)
+		} else if (filter.type === 'date') {
+			return (
+				<DateRangeInput
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
 					label={filter.title}
 					filter={filter.name}
 					key={index}
 				/>
-			} else if (filter.type === 'text') {
-				return <TextInput
+			)
+		} else if (filter.type === 'text') {
+			return (
+				<TextInput
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
 					label={filter.title}
 					filter={filter.name}
 					key={index}
 				/>
-			} else if (filter.type === 'radio') {
-				return <RadioPillInput
+			)
+		} else if (filter.type === 'radio') {
+			return (
+				<RadioPillInput
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
 					label={filter.title}
 					filter={filter.name}
 					key={index}
 				/>
-			} else if (filter.type === 'bool') {
-				return <BoolInput
+			)
+		} else if (filter.type === 'bool') {
+			return (
+				<BoolInput
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
 					label={`${filter.title}`}
 					filter={filter.name}
 					key={index}
 				/>
-			} else if (filter.type === 'autocomplete'){
-				return <AutocompleteInput
+			)
+		} else if (filter.type === 'autocomplete') {
+			return (
+				<AutocompleteInput
 					handleFilterChange={handleFilterChange}
 					filterValues={filterValues}
 					label={filter.title}
@@ -61,17 +72,23 @@ function FilterSet({ title, filters, handleFilterChange, filterValues }) {
 					isSingle={!filter.many}
 					key={index}
 				/>
-			} else {
-				console.error('Unknown filter type.')
-				return null
-			}
+			)
+		}
+		console.error('Unknown filter type.')
+		return null
+	})
+	return (
+		<div className="filters__set">
+			{components}
+		</div>
+	)
+}
 
-		})
-		return (
-			<div className="filters__set">
-				{components}
-			</div>
-		)
+
+FilterSet.propTypes = {
+	filters: PropTypes.array.isRequired,
+	handleFilterChange: PropTypes.func.isRequired,
+	filterValues: PropTypes.object.isRequired,
 }
 
 

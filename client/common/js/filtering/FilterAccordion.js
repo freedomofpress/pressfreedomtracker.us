@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, PropTypes } from 'react'
 import classNames from 'classnames'
 import { CollapseIcon, ExpandIcon } from '~/filtering/Icons'
 import FilterSet from '~/filtering/FilterSet'
@@ -61,7 +61,6 @@ class FilterAccordion extends PureComponent {
 
 				{expanded && (
 					<FilterSet
-						title={category.title}
 						filters={category.filters}
 						handleFilterChange={handleFilterChange}
 						filterValues={filterValues}
@@ -70,6 +69,15 @@ class FilterAccordion extends PureComponent {
 			</li>
 		)
 	}
+}
+
+
+FilterAccordion.propTypes = {
+	category: PropTypes.object.isRequired,
+	collapsible: PropTypes.bool.isRequired,
+	handleFilterChange: PropTypes.func.isRequired,
+	filterValues: PropTypes.object.isRequired,
+	startExpanded: PropTypes.bool.isRequired,
 }
 
 
