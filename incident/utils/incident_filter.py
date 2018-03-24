@@ -27,10 +27,11 @@ from incident.utils.db import MakeDateRange
 class Filter(object):
     serialized_type = 'text'
 
-    def __init__(self, name, model_field, lookup=None):
+    def __init__(self, name, model_field, lookup=None, verbose_name=None):
         self.name = name
         self.model_field = model_field
         self.lookup = lookup or name
+        self.verbose_name = verbose_name
 
     def __repr__(self):
         return '<{}: {}>'.format(
@@ -56,7 +57,7 @@ class Filter(object):
         return queryset.filter(**{self.lookup: value})
 
     def get_verbose_name(self):
-        return self.model_field.verbose_name
+        return self.verbose_name or self.model_field.verbose_name
 
     def serialize(self):
         serialized = {
@@ -88,9 +89,9 @@ class RelationFilter(Filter):
 class DateFilter(Filter):
     serialized_type = 'date'
 
-    def __init__(self, name, model_field, lookup=None, fuzzy=False):
+    def __init__(self, name, model_field, lookup=None, verbose_name=None, fuzzy=False):
         self.fuzzy = fuzzy
-        super(DateFilter, self).__init__(name, model_field, lookup=lookup)
+        super(DateFilter, self).__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
     def get_value(self, data):
         start = data.get('{}_lower'.format(self.name)) or None
@@ -98,6 +99,8 @@ class DateFilter(Filter):
         return start, end
 
     def get_verbose_name(self):
+        if self.verbose_name:
+            return self.verbose_name
         return '{} between'.format(super(DateFilter, self).get_verbose_name())
 
     def clean(self, value, strict=False):
@@ -237,6 +240,8 @@ class ManyRelationFilter(Filter):
         return queryset.filter(**{'{}__in'.format(self.lookup): value})
 
     def get_verbose_name(self):
+        if self.verbose_name:
+            return self.verbose_name
         if hasattr(self.model_field, 'verbose_name'):
             return self.model_field.verbose_name
         return self.model_field.related_model._meta.verbose_name
@@ -257,7 +262,7 @@ class ManyRelationFilter(Filter):
 
 class SearchFilter(Filter):
     def __init__(self):
-        super(SearchFilter, self).__init__('search', CharField(verbose_name='search'))
+        super(SearchFilter, self).__init__('search', CharField(verbose_name='search terms'))
 
     def filter(self, queryset, value):
         return queryset.search(value, order_by_relevance=False)
@@ -323,11 +328,13 @@ def get_serialized_filters():
 
 class IncidentFilter(object):
     filter_overrides = {
-        'date': {'fuzzy': True},
+        'categories': {'lookup': 'categories__category'},
+        'date': {'fuzzy': True, 'verbose_name': 'took place between'},
         'equipment_seized': {'lookup': 'equipment_seized__equipment'},
         'equipment_broken': {'lookup': 'equipment_broken__equipment'},
-        'categories': {'lookup': 'categories__category'},
-        'venue': {'filter_cls': RelationFilter},
+        'tags': {'verbose_name': 'Has any of these tags'},
+        'targets': {'verbose_name': 'Targeted any of these journalists'},
+        'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
     }
 
     _extra_filters = {
