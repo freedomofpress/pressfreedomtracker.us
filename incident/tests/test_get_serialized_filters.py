@@ -26,7 +26,7 @@ class GetSerializedFiltersTest(TestCase):
                 'title': 'General',
                 'filters': [
                     {
-                        'title': 'Search',
+                        'title': 'Search terms',
                         'type': 'text',
                         'name': 'search',
                     }
@@ -48,7 +48,7 @@ class GetSerializedFiltersTest(TestCase):
                 'title': 'General',
                 'filters': [
                     {
-                        'title': 'Search',
+                        'title': 'Search terms',
                         'type': 'text',
                         'name': 'search',
                     },
