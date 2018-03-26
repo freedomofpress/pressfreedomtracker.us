@@ -6,8 +6,17 @@ from django.utils import timezone
 from wagtail.wagtailcore.models import Site
 from wagtail.wagtailcore.rich_text import RichText
 
+from common.models import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
+from incident.models.choices import (
+    ARREST_STATUS,
+    DETENTION_STATUS,
+    STATUS_OF_CHARGES,
+    STATUS_OF_PRIOR_RESTRAINT,
+    STATUS_OF_SEIZED_EQUIPMENT,
+    SUBPOENA_STATUS,
+)
 from incident.tests.factories import (
     ChargeFactory,
     IncidentPageFactory,
@@ -83,6 +92,7 @@ class TestFiltering(TestCase):
     def test_should_filter_by_circuit(self):
         # See incident/circuits.py
         GeneralIncidentFilter.objects.all().delete()
+        CategoryPage.objects.all().delete()
         site = Site.objects.get(is_default_site=True)
         settings = IncidentFilterSettings.for_site(site)
         GeneralIncidentFilter.objects.create(
@@ -858,3 +868,79 @@ class FilterChoicesTest(TestCase):
             choices,
             sorted(choices, key=lambda t: t[1])
         )
+
+
+class PendingFilterTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        CategoryPage.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='pending_cases',
+            incident_filter_settings=settings,
+        )
+
+        cls.all_incidents = set()
+
+        for value, _ in ARREST_STATUS:
+            cls.all_incidents.add(IncidentPageFactory(arrest_status=value))
+        for value, _ in STATUS_OF_CHARGES:
+            cls.all_incidents.add(IncidentPageFactory(status_of_charges=value))
+        for value, _ in STATUS_OF_SEIZED_EQUIPMENT:
+            cls.all_incidents.add(IncidentPageFactory(status_of_seized_equipment=value))
+        for value, _ in SUBPOENA_STATUS:
+            cls.all_incidents.add(IncidentPageFactory(subpoena_status=value))
+        for value, _ in DETENTION_STATUS:
+            cls.all_incidents.add(IncidentPageFactory(detention_status=value))
+        for value, _ in STATUS_OF_PRIOR_RESTRAINT:
+            cls.all_incidents.add(IncidentPageFactory(status_of_prior_restraint=value))
+
+    def test_filter__true(self):
+        incidents = IncidentFilter({
+            'pending_cases': 'True',
+        }).get_queryset()
+
+        values = {
+            (
+                incident.arrest_status or
+                incident.status_of_charges or
+                incident.status_of_seized_equipment or
+                incident.subpoena_status or
+                incident.detention_status or
+                incident.status_of_prior_restraint
+            )
+            for incident in incidents
+        }
+
+        self.assertEqual(values, {
+            'DETAINED_CUSTODY',
+            'ARRESTED_CUSTODY',
+            'CHARGES_PENDING',
+            'PENDING_APPEAL',
+            'CUSTODY',
+            'RETURNED_PART',
+            'PENDING',
+            'IN_JAIL',
+            'PENDING',
+        })
+
+    def test_filter__false(self):
+        incidents = IncidentFilter({
+            'pending_cases': 'False',
+        }).get_queryset()
+
+        self.assertEqual(set(incidents), self.all_incidents)
+
+    def test_filter__invalid(self):
+        incidents = IncidentFilter({
+            'pending_cases': 'Hello',
+        }).get_queryset()
+
+        self.assertEqual(set(incidents), self.all_incidents)
+
+    def test_filter__none(self):
+        incidents = IncidentFilter({}).get_queryset()
+
+        self.assertEqual(set(incidents), self.all_incidents)
