@@ -16,6 +16,7 @@ from django.db.models import (
 )
 from django.db.models.functions import Trunc, Cast
 from django.db.models.fields.related import ManyToOneRel
+from django.utils.text import capfirst
 from psycopg2.extras import DateRange
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 
@@ -26,10 +27,11 @@ from incident.utils.db import MakeDateRange
 class Filter(object):
     serialized_type = 'text'
 
-    def __init__(self, name, model_field, lookup=None):
+    def __init__(self, name, model_field, lookup=None, verbose_name=None):
         self.name = name
         self.model_field = model_field
         self.lookup = lookup or name
+        self.verbose_name = verbose_name
 
     def __repr__(self):
         return '<{}: {}>'.format(
@@ -55,11 +57,11 @@ class Filter(object):
         return queryset.filter(**{self.lookup: value})
 
     def get_verbose_name(self):
-        return self.model_field.verbose_name
+        return self.verbose_name or self.model_field.verbose_name
 
     def serialize(self):
         serialized = {
-            'title': self.get_verbose_name(),
+            'title': capfirst(self.get_verbose_name()),
             'type': self.serialized_type,
             'name': self.name,
         }
@@ -73,18 +75,33 @@ class BooleanFilter(Filter):
 class RelationFilter(Filter):
     serialized_type = 'autocomplete'
 
+    def serialize(self):
+        serialized = super(RelationFilter, self).serialize()
+        related_model = self.model_field.remote_field.model
+        serialized['autocomplete_type'] = '{}.{}'.format(
+            related_model._meta.app_label,
+            related_model.__name__,
+        )
+        serialized['many'] = False
+        return serialized
+
 
 class DateFilter(Filter):
     serialized_type = 'date'
 
-    def __init__(self, name, model_field, lookup=None, fuzzy=False):
+    def __init__(self, name, model_field, lookup=None, verbose_name=None, fuzzy=False):
         self.fuzzy = fuzzy
-        super(DateFilter, self).__init__(name, model_field, lookup=lookup)
+        super(DateFilter, self).__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
     def get_value(self, data):
         start = data.get('{}_lower'.format(self.name)) or None
         end = data.get('{}_upper'.format(self.name)) or None
         return start, end
+
+    def get_verbose_name(self):
+        if self.verbose_name:
+            return self.verbose_name
+        return '{} between'.format(super(DateFilter, self).get_verbose_name())
 
     def clean(self, value, strict=False):
         start, end = value
@@ -185,6 +202,12 @@ class ChoiceFilter(Filter):
     def filter(self, queryset, value):
         return queryset.filter(**{'{}__in'.format(self.lookup): value})
 
+    def serialize(self):
+        serialized = super(ChoiceFilter, self).serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = self.model_field.choices
+        return serialized
+
 
 class ManyRelationFilter(Filter):
     serialized_type = 'autocomplete'
@@ -217,6 +240,8 @@ class ManyRelationFilter(Filter):
         return queryset.filter(**{'{}__in'.format(self.lookup): value})
 
     def get_verbose_name(self):
+        if self.verbose_name:
+            return self.verbose_name
         if hasattr(self.model_field, 'verbose_name'):
             return self.model_field.verbose_name
         return self.model_field.related_model._meta.verbose_name
@@ -227,13 +252,17 @@ class ManyRelationFilter(Filter):
         if isinstance(self.model_field, ManyToOneRel) and hasattr(related_model, '_autocomplete_model'):
             serialized['autocomplete_type'] = related_model._autocomplete_model
         else:
-            serialized['autocomplete_type'] = 'incident.{}'.format(related_model.__name__)
+            serialized['autocomplete_type'] = '{}.{}'.format(
+                related_model._meta.app_label,
+                related_model.__name__,
+            )
+        serialized['many'] = True
         return serialized
 
 
 class SearchFilter(Filter):
     def __init__(self):
-        super(SearchFilter, self).__init__('search', CharField())
+        super(SearchFilter, self).__init__('search', CharField(verbose_name='search terms'))
 
     def filter(self, queryset, value):
         return queryset.search(value, order_by_relevance=False)
@@ -263,15 +292,31 @@ class CircuitsFilter(ChoiceFilter):
         return queryset.filter(state__name__in=states)
 
 
-def get_category_options():
-    from common.models import CategoryPage
+def get_serialized_filters():
+    """
+    Returns filters serialized to be passed as JSON to the front-end.
+    """
+    from common.models import CategoryPage, GeneralIncidentFilter
     available_filters = IncidentFilter.get_available_filters()
+    general_incident_filters = GeneralIncidentFilter.objects.all()
     return [
+        {
+            'id': -1,
+            'title': 'General',
+            'filters': [
+                SearchFilter().serialize()
+            ] + [
+                available_filters[obj.incident_filter].serialize()
+                for obj in general_incident_filters
+                if obj.incident_filter in available_filters
+            ],
+        },
+    ] + [
         {
             'id': page.id,
             'title': page.title,
             'url': page.url,
-            'related_fields': [
+            'filters': [
                 available_filters[obj.incident_filter].serialize()
                 for obj in page.incident_filters.all()
                 if obj.incident_filter in available_filters
@@ -282,29 +327,19 @@ def get_category_options():
 
 
 class IncidentFilter(object):
-    base_filters = {
-        'affiliation',
-        'categories',
-        'circuits',
-        'city',
-        'date',
-        'state',
-        'tags',
-        'targets',
-        'lawsuit_name',
-        'venue',
-    }
-
     filter_overrides = {
-        'date': {'fuzzy': True},
+        'categories': {'lookup': 'categories__category'},
+        'date': {'fuzzy': True, 'verbose_name': 'took place between'},
         'equipment_seized': {'lookup': 'equipment_seized__equipment'},
         'equipment_broken': {'lookup': 'equipment_broken__equipment'},
-        'categories': {'lookup': 'categories__category'},
+        'tags': {'verbose_name': 'Has any of these tags'},
+        'targets': {'verbose_name': 'Targeted any of these journalists'},
+        'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
     }
 
     _extra_filters = {
-        'circuits': CircuitsFilter(name='circuits', model_field=CharField()),
-        'charges': ChargesFilter(name='charges', model_field=CharField()),
+        'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
+        'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges')),
     }
 
     # IncidentPage fields that cannot be filtered on.
@@ -376,14 +411,21 @@ class IncidentFilter(object):
         return filter_cls(**kwargs)
 
     def clean(self, strict=False):
-        from common.models import CategoryPage
+        from common.models import CategoryPage, GeneralIncidentFilter
         self.cleaned_data = {}
         errors = []
 
         self.search_filter = SearchFilter()
 
         available_filters = IncidentFilter.get_available_filters()
-        self.filters = [available_filters[name] for name in self.base_filters]
+        self.categories_filter = available_filters.pop('categories')
+
+        general_incident_filters = GeneralIncidentFilter.objects.all()
+        self.filters = [self.categories_filter] + [
+            available_filters[gif.incident_filter]
+            for gif in general_incident_filters
+            if gif.incident_filter in available_filters
+        ]
 
         for f in [self.search_filter] + self.filters:
             try:
@@ -435,13 +477,14 @@ class IncidentFilter(object):
                 }
 
                 for f in filters_requiring_category:
-                    categories = CategoryPage.objects.live().filter(
+                    category = CategoryPage.objects.live().filter(
                         incident_filters__incident_filter=f.name,
-                    ).order_by('title')
-                    if categories:
-                        errors.append('{} filter only available when filtering on one of the following categories: {}'.format(
+                    ).first()
+                    if category:
+                        errors.append('{} filter only available when filtering on the following category: {} ({})'.format(
                             f.name,
-                            ', '.join(['{} ({})'.format(c.title, c.id) for c in categories]),
+                            category.title,
+                            category.id,
                         ))
                     else:
                         errors.append('{} filter only available when filtering on a category which provides it (but no category currently does)'.format(f.name))
@@ -464,7 +507,7 @@ class IncidentFilter(object):
 
         queryset = IncidentPage.objects.live()
 
-        for f in self.filters:
+        for f in [self.categories_filter] + self.filters:
             cleaned_value = self.cleaned_data.get(f.name)
             if cleaned_value is not None:
                 queryset = f.filter(queryset, cleaned_value)
@@ -497,11 +540,6 @@ class IncidentFilter(object):
         THIS_YEAR = TODAY.year
         THIS_MONTH = TODAY.month
 
-        summary = (
-            ('Total Results', queryset.count()),
-            ('Journalists affected', Target.objects.filter(targets_incidents__in=queryset).distinct().count()),
-        )
-
         # Add counts for this year and this month if non-zero
         incidents_this_year = queryset.filter(date__contained_by=DateRange(
             TODAY.replace(month=1, day=1),
@@ -521,12 +559,19 @@ class IncidentFilter(object):
             bounds='[)'
         ))
 
+        total_queryset = queryset
         search = self.cleaned_data.get('search')
         if search:
             incidents_this_year = self.search_filter.filter(incidents_this_year, search)
             incidents_this_month = self.search_filter.filter(incidents_this_month, search)
+            total_queryset = self.search_filter.filter(queryset, search)
         num_this_year = incidents_this_year.count()
         num_this_month = incidents_this_month.count()
+
+        summary = (
+            ('Total Results', total_queryset.count()),
+            ('Journalists affected', Target.objects.filter(targets_incidents__in=total_queryset).distinct().count()),
+        )
 
         if num_this_year > 0:
             summary = summary + ((
@@ -548,9 +593,12 @@ class IncidentFilter(object):
                 pk__in=category_pks
             )
             for category in categories:
+                category_queryset = queryset.filter(categories__category=category)
+                if search:
+                    category_queryset = self.search_filter.filter(category_queryset, search)
                 summary = summary + ((
                     category.plural_name if category.plural_name else category.title,
-                    queryset.filter(categories__category=category).count(),
+                    category_queryset.count(),
                 ),)
 
         return summary
@@ -561,7 +609,12 @@ class FilterChoicesIterator(object):
     Helper class to get around circular imports.
     """
     def __iter__(self):
-        for name, filter_ in IncidentFilter.get_available_filters().items():
-            if name == 'search' or name in IncidentFilter.base_filters:
+        filter_choices = [
+            (name, capfirst(filter_.get_verbose_name()))
+            for name, filter_ in IncidentFilter.get_available_filters().items()
+        ]
+        filter_choices.sort(key=lambda item: item[1])
+        for field, verbose_name in filter_choices:
+            if field == 'categories':
                 continue
-            yield (name, filter_.get_verbose_name())
+            yield field, verbose_name

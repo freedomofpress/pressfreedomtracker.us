@@ -1,80 +1,83 @@
-import React from 'react'
+import React, { PureComponent, PropTypes } from 'react'
 import classNames from 'classnames'
 import { CollapseIcon, ExpandIcon } from '~/filtering/Icons'
-import GeneralFilterSet from '~/filtering/GeneralFilterSet'
-import NewFilterSet from '~/filtering/NewFilterSet'
+import FilterSet from '~/filtering/FilterSet'
 
 
-function FilterAccordion({
-	category,
-	selectedAccordions,
-	handleAccordionSelection,
-	handleFilterChange,
-	filterValues,
-	noCategoryFiltering,
-	choices,
-}) {
-	if (!category.enabled) {
-		return null
-	}
-	let FilterSet
-	if(category.id === -1) {
-		// General is a special category with id -1 that should be rendered
-		FilterSet = GeneralFilterSet
-	} else if (!category.related_fields || !(category.related_fields.length > 0)) {
-		// Don't bother rendering an accordion with no filters
-		return null
+class FilterAccordion extends PureComponent {
+	constructor(props) {
+		super(props)
+
+		this.toggleAccordion = this.toggleAccordion.bind(this)
+
+		this.state = {
+			expanded: props.startExpanded,
+		}
 	}
 
+	toggleAccordion() {
+		this.setState({
+			expanded: !this.state.expanded,
+		})
+	}
 
-	const isActive = selectedAccordions.includes(category.id)
-	const collapsible = !noCategoryFiltering
+	render() {
+		const {
+			expanded,
+		} = this.state
 
-	let renderedFilterset
-	if(isActive && category.related_fields) {
-		renderedFilterset = (<NewFilterSet
-			title={category.title}
-			fields={category.related_fields}
-			handleFilterChange={handleFilterChange}
-			filterValues={filterValues}
-			choices={choices}
-			key={category.id}
-		/>)
-	} else if(isActive && FilterSet) {
-		renderedFilterset = (
-			<FilterSet
-				handleFilterChange={handleFilterChange}
-				filterValues={filterValues}
-			/>
+		const {
+			category,
+			collapsible,
+			handleFilterChange,
+			filterValues,
+		} = this.props
+
+		if (!category.filters || !(category.filters.length > 0)) {
+			// Don't bother rendering an accordion with no filters
+			return null
+		}
+
+		return (
+			<li
+				className={classNames(
+					'filters__accordion-category',
+					{ 'filters__accordion-category--no-divider': !collapsible }
+				)}
+			>
+				{collapsible && (
+					<button
+						className={classNames(
+							'filters__accordion',
+							{ 'filters__accordion--active': expanded }
+						)}
+						onClick={this.toggleAccordion}
+						type="button"
+					>
+						{expanded ? <CollapseIcon /> : <ExpandIcon />}
+						{category.title}
+					</button>
+				)}
+
+				{expanded && (
+					<FilterSet
+						filters={category.filters}
+						handleFilterChange={handleFilterChange}
+						filterValues={filterValues}
+					/>
+				)}
+			</li>
 		)
-	} else {
-		renderedFilterset = null
 	}
+}
 
-	return (
-		<li
-			className={classNames(
-				'filters__accordion-category',
-				{ 'filters__accordion-category--no-divider': noCategoryFiltering }
-			)}
-		>
-			{collapsible && (
-				<button
-					className={classNames(
-						'filters__accordion',
-						{ 'filters__accordion--active': isActive }
-					)}
-					onClick={handleAccordionSelection.bind(null, category.id)}
-					type="button"
-				>
-					{isActive ? <CollapseIcon /> : <ExpandIcon />}
-					{category.title}
-				</button>
-			)}
 
-			{renderedFilterset}
-		</li>
-	)
+FilterAccordion.propTypes = {
+	category: PropTypes.object.isRequired,
+	collapsible: PropTypes.bool.isRequired,
+	handleFilterChange: PropTypes.func.isRequired,
+	filterValues: PropTypes.object.isRequired,
+	startExpanded: PropTypes.bool.isRequired,
 }
 
 

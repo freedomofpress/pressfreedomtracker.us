@@ -1,42 +1,45 @@
 import React, { PureComponent } from 'react'
+import moment from 'moment'
 import {
-	AUTOCOMPLETE_SINGLE_FILTERS,
-	AUTOCOMPLETE_MULTI_FILTERS,
-	DATE_FILTERS,
 	HUMAN_DATE_FORMAT,
 } from '~/filtering/constants'
 
 
 class FiltersList extends PureComponent {
-	renderValue(label, value) {
-		if (DATE_FILTERS.includes(label)) {
-			var formattedValue = value.format(HUMAN_DATE_FORMAT)
-		} else if (typeof value === 'boolean') {
-			var formattedValue = value ? 'yes' : ' no'
-		} else {
-			var formattedValue = value
-		}
+	renderFilterValue(filter, filterValues) {
+		let title = filter.title
+		let renderedValue = filterValues[filter.name]
+		if (filter.type === 'date') {
+			title = title.slice(0, -8)
+			const lowerDate = filterValues[`${filter.name}_lower`]
+			const upperDate = filterValues[`${filter.name}_upper`]
 
-		const underscoreRe = /_/g
-
-		if (DATE_FILTERS.includes(label)) {
-			const period = label.includes('_lower') ? 'since' : 'before'
-			const description = label.substring(0, label.length - 6).replace(underscoreRe, ' ')
-			return (
-				<span>
-					<span className="filters__text--dim">{description} {period}</span>
-					{' '}
-					{formattedValue}
-				</span>
-			)
-		} else if (AUTOCOMPLETE_MULTI_FILTERS.includes(label)) {
-			const description = label.replace(underscoreRe, ' ')
-			return (
-				<span>
-					<span className="filters__text--dim">{description}:</span>
-					{' '}
+			if (upperDate && lowerDate) {
+				title = `${title} between`
+				renderedValue = `${moment(lowerDate).format(HUMAN_DATE_FORMAT)} – ${moment(upperDate).format(HUMAN_DATE_FORMAT)}`
+			} else if (upperDate) {
+				title = `${title} before`
+				renderedValue = moment(upperDate).format(HUMAN_DATE_FORMAT)
+			} else {
+				title = `${title} since`
+				renderedValue = moment(lowerDate).format(HUMAN_DATE_FORMAT)
+			}
+		} else if (filter.type === 'bool') {
+			if (filterValues[filter.name] === 'True') {
+				renderedValue = 'Yes'
+			} else if (filterValues[filter.name] === 'False') {
+				renderedValue = 'No'
+			} else {
+				renderedValue = filterValues[filter.name]
+			}
+		} else if (filter.type === 'choice') {
+			const selected = filter.choices.find(choice => choice[0] === filterValues[filter.name])
+			if (selected) renderedValue = selected[1]
+		} else if (filter.type === 'autocomplete') {
+			if (Array.isArray(filterValues[filter.name])) {
+				renderedValue = (
 					<ul className="filters__summary-list">
-						{value.map(({ label, id }) => (
+						{filterValues[filter.name].map(({ label, id }) => (
 							<li
 								key={id}
 								className="filters__summary-item"
@@ -45,37 +48,46 @@ class FiltersList extends PureComponent {
 							</li>
 						))}
 					</ul>
-				</span>
-			)
-		} else if (AUTOCOMPLETE_SINGLE_FILTERS.includes(label)) {
-			const description = label.replace(underscoreRe, ' ')
-			return (
-				<span>
-					<span className="filters__text--dim">{description}:</span>
-					{' '}
-					{value.label}
-				</span>
-			)
-		} else {
-			const description = label.replace(underscoreRe, ' ')
-			return (
-				<span>
-					<span className="filters__text--dim">{description}:</span>
-					{' '}
-					{formattedValue}
-				</span>
-			)
+				)
+			} else {
+				renderedValue = filterValues[filter.name].label
+			}
 		}
+
+		return (
+			<span>
+				<span className="filters__text--dim">{title}:</span>
+				{' '}
+				{renderedValue}
+			</span>
+		)
 	}
 
 	render() {
-		const { filterValues } = this.props
+		const {
+			categories,
+			categoriesEnabled,
+			filterValues,
+		} = this.props
+
+		const filters = categories.filter(({ id }) => categoriesEnabled[id]).reduce((acc, category) => {
+			return [
+				...acc,
+				...category.filters.filter(filter => {
+					if (filter.type === 'date') {
+						return filterValues[`${filter.name}_lower`] || filterValues[`${filter.name}_upper`]
+					} else {
+						return filterValues[filter.name]
+					}
+				}),
+			]
+		}, [])
 
 		return (
 			<ul className="filters__summary-list">
-				{Object.keys(filterValues).map(label => (
-					<li key={label} className="filters__summary-item">
-						{this.renderValue(label, filterValues[label])}
+				{filters.map(filter => (
+					<li key={filter.name} className="filters__summary-item">
+						{this.renderFilterValue(filter, filterValues)}
 					</li>
 				))}
 			</ul>

@@ -1,10 +1,15 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
+from wagtail.wagtailcore.models import Orderable
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
-from modelcluster.models import ClusterableModel
+
+from incident.utils.incident_filter import IncidentFilter
 
 
 @register_setting(icon='search')
@@ -114,3 +119,37 @@ class SocialSharingSEOSettings(BaseSetting):
 
     class Meta:
         verbose_name = 'Social Sharing/SEO'
+
+
+@register_setting
+class IncidentFilterSettings(BaseSetting, ClusterableModel):
+    class Meta:
+        verbose_name = 'general incident filters'
+
+    panels = [
+        InlinePanel(
+            'general_incident_filters',
+            label='Filters',
+            help_text='Selected filters will always be displayed, as part of the "General" filters section',
+            min_num=1,
+        ),
+    ]
+
+
+class GeneralIncidentFilter(Orderable):
+    incident_filter_settings = ParentalKey(IncidentFilterSettings, related_name='general_incident_filters')
+    incident_filter = models.CharField(max_length=255, choices=IncidentFilter.get_filter_choices(), unique=True)
+
+    def clean(self):
+        from common.models.pages import CategoryIncidentFilter
+        try:
+            category_incident_filter = CategoryIncidentFilter.objects.get(incident_filter=self.incident_filter)
+        except CategoryIncidentFilter.DoesNotExist:
+            pass
+        else:
+            raise ValidationError({
+                'incident_filter': '"{}" is already in use by the "{}" category'.format(
+                    self.get_incident_filter_display(),
+                    category_incident_filter.category.title,
+                ),
+            })

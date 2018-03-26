@@ -37,7 +37,7 @@ def get_numbers():
 
 
 def get_numbers_choices():
-    for name in get_numbers().keys():
+    for name in sorted(get_numbers().keys()):
         yield (name, name)
 
 

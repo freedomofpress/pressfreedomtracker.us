@@ -19,7 +19,7 @@ def render_page(page):
 def objects(request):
     ids_param = request.GET.get('ids')
     if not ids_param:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest('ids must be provided')
     page_type = request.GET.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(page_type)

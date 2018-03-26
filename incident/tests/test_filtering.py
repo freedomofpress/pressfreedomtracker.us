@@ -3,8 +3,10 @@ import unittest
 
 from django.test import TestCase
 from django.utils import timezone
+from wagtail.wagtailcore.models import Site
 from wagtail.wagtailcore.rich_text import RichText
 
+from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from incident.tests.factories import (
     ChargeFactory,
@@ -80,6 +82,13 @@ class TestFiltering(TestCase):
 
     def test_should_filter_by_circuit(self):
         # See incident/circuits.py
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=settings,
+            incident_filter='circuits',
+        )
         circuit = 'eleventh'
         alabama = StateFactory(name='Alabama')
         florida = StateFactory(name='Florida')
@@ -766,3 +775,86 @@ class GetSummaryTest(TestCase):
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
         })
+
+    def test_search__no_categories(self):
+        # Matched incident page
+        IncidentPageFactory(
+            title='asdf',
+            date=timezone.now().date(),
+            targets=3,
+        )
+        IncidentPageFactory(
+            title='zxcv',
+            date=timezone.now().date(),
+            targets=5,
+        )
+        incident_filter = IncidentFilter({
+            'search': 'asdf',
+        })
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 1),
+            ('Journalists affected', 3),
+            ('Results in {}'.format(timezone.now().year), 1),
+            ('Results in {0:%B}'.format(timezone.now().date()), 1),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'search': 'asdf',
+        })
+
+    def test_search__filters_categories(self):
+        category2 = CategoryPageFactory(
+            title='Other category',
+        )
+        # Matched incident page
+        IncidentPageFactory(
+            title='asdf 1',
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=3,
+        )
+        IncidentPageFactory(
+            title='zxcv',
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=5,
+        )
+        IncidentPageFactory(
+            title='asdf 2',
+            categories=[category2],
+            date=timezone.now().date(),
+            targets=7,
+        )
+        incident_filter = IncidentFilter({
+            'categories': '{},{}'.format(self.category.id, category2.id),
+            'search': 'asdf',
+        })
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 2),
+            ('Journalists affected', 10),
+            ('Results in {}'.format(timezone.now().year), 2),
+            ('Results in {0:%B}'.format(timezone.now().date()), 2),
+            (self.category.title, 1),
+            (category2.title, 1),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id, category2.id],
+            'search': 'asdf',
+        })
+
+
+class FilterChoicesTest(TestCase):
+    def test_filter_choices_alphabetical(self):
+        """
+        To ensure that choices are ordered deterministically they should be
+        sorted alphabetically
+        """
+        choices_iterator = IncidentFilter.get_filter_choices()
+        choices = [x for x in choices_iterator]
+        self.assertSequenceEqual(
+            choices,
+            sorted(choices, key=lambda t: t[1])
+        )

@@ -150,12 +150,12 @@ export function ChoiceInput({ handleFilterChange, filterValues, label, filter, c
 					)}
 				>
 					<option value=""></option>
-					{choices.map(choice => (
+					{choices.map(([value, choice]) => (
 						<option
-							key={choice.value}
-							value={choice.value}
+							key={value}
+							value={value}
 						>
-							{choice.label}
+							{choice}
 						</option>
 					))}
 				</select>

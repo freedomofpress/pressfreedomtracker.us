@@ -1,3 +1,6 @@
+import json
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
@@ -11,7 +14,6 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsearch import index
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
-
 from modelcluster.models import ClusterableModel
 
 from common.blocks import (
@@ -205,7 +207,20 @@ class TaxonomyCategoryPage(Orderable):
 
 class CategoryIncidentFilter(Orderable):
     category = ParentalKey('common.CategoryPage', related_name='incident_filters')
-    incident_filter = models.CharField(max_length=255, choices=IncidentFilter.get_filter_choices())
+    incident_filter = models.CharField(
+        choices=IncidentFilter.get_filter_choices(),
+        max_length=255,
+        unique=True,
+    )
+
+    def clean(self):
+        from common.models.settings import GeneralIncidentFilter
+        if GeneralIncidentFilter.objects.filter(incident_filter=self.incident_filter).exists():
+            raise ValidationError({
+                'incident_filter': '"{}" is already in use in general filters'.format(
+                    self.get_incident_filter_display(),
+                ),
+            })
 
 
 class CategoryPage(MetadataPageMixin, Page):
@@ -231,8 +246,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
     def get_context(self, request):
         # placed here to avoid circular dependency
-        from incident.utils.incident_filter import IncidentFilter, get_category_options
-        from incident.models.choices import get_filter_choices
+        from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
         from common.models.settings import SearchSettings
 
         context = super(CategoryPage, self).get_context(request)
@@ -240,12 +254,11 @@ class CategoryPage(MetadataPageMixin, Page):
         data = request.GET.copy()
         data['categories'] = str(self.id)
         incident_filter = IncidentFilter(data)
-        context['category_options'] = get_category_options()
+        context['serialized_filters'] = json.dumps(get_serialized_filters())
 
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        context['filter_choices'] = get_filter_choices()
         incident_qs = incident_filter.get_queryset()
 
         paginator, entries = paginate(
