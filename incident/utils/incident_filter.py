@@ -448,6 +448,13 @@ class IncidentFilter(object):
         filter_cls = kwargs.pop('filter_cls')
         return filter_cls(**kwargs)
 
+    def _clean_filter(self, filter_, strict):
+        value = filter_.get_value(self.data)
+        if value is not None:
+            cleaned_value = filter_.clean(value, strict=strict)
+            if cleaned_value is not None:
+                self.cleaned_data[filter_.name] = cleaned_value
+
     def clean(self, strict=False):
         from common.models import CategoryPage, GeneralIncidentFilter
         self.cleaned_data = {}
@@ -456,49 +463,50 @@ class IncidentFilter(object):
         self.search_filter = SearchFilter()
 
         available_filters = IncidentFilter.get_available_filters()
-        self.categories_filter = available_filters.pop('categories')
+        categories_filter = available_filters.pop('categories')
 
-        general_incident_filters = GeneralIncidentFilter.objects.all()
-        self.filters = [self.categories_filter] + [
-            available_filters[gif.incident_filter]
-            for gif in general_incident_filters
-            if gif.incident_filter in available_filters
+        self.filters = [
+            categories_filter,
+            self.search_filter,
         ]
 
-        for f in [self.search_filter] + self.filters:
+        # Clean categories separately so that we can check for category ids.
+        try:
+            self._clean_filter(categories_filter, strict=strict)
+        except ValidationError as exc:
+            errors.append(exc)
+
+        categories = CategoryPage.objects.live().prefetch_related(
+            'incident_filters',
+        )
+        category_ids = self.cleaned_data.get('categories')
+        if category_ids:
+            categories = categories.filter(
+                id__in=category_ids,
+            )
+
+        general_incident_filters = GeneralIncidentFilter.objects.all()
+        selected_filters = [
+            gif.incident_filter
+            for gif in general_incident_filters
+        ] + [
+            obj.incident_filter
+            for category in categories
+            for obj in category.incident_filters.all()
+        ]
+
+        for filter_name in selected_filters:
+            if filter_name in available_filters:
+                self.filters.append(available_filters[filter_name])
+
+        for f in self.filters:
             try:
-                cleaned_value = f.clean(f.get_value(self.data), strict=strict)
-                if cleaned_value is not None:
-                    self.cleaned_data[f.name] = cleaned_value
+                self._clean_filter(f, strict=strict)
             except ValidationError as exc:
                 errors.append(exc)
 
-        category_ids = self.cleaned_data.get('categories')
-        if category_ids:
-            categories = CategoryPage.objects.live().filter(
-                id__in=category_ids,
-            ).prefetch_related(
-                'incident_filters',
-            )
-            category_filters = [
-                available_filters[obj.incident_filter]
-                for category in categories
-                for obj in category.incident_filters.all()
-                if obj.incident_filter in available_filters
-            ]
-            self.filters += category_filters
-            for f in category_filters:
-                try:
-                    value = f.get_value(self.data)
-                    if value is not None:
-                        cleaned_value = f.clean(value, strict=strict)
-                        if cleaned_value is not None:
-                            self.cleaned_data[f.name] = cleaned_value
-                except ValidationError as exc:
-                    errors.append(exc)
-
         if strict:
-            allowed_parameters = self.search_filter.get_allowed_parameters()
+            allowed_parameters = set()
             for f in self.filters:
                 allowed_parameters |= f.get_allowed_parameters()
 
@@ -545,7 +553,10 @@ class IncidentFilter(object):
 
         queryset = IncidentPage.objects.live()
 
-        for f in [self.categories_filter] + self.filters:
+        for f in self.filters:
+            # Wait until later for search
+            if f is self.search_filter:
+                continue
             cleaned_value = self.cleaned_data.get(f.name)
             if cleaned_value is not None:
                 queryset = f.filter(queryset, cleaned_value)
