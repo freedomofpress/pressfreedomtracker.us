@@ -122,7 +122,6 @@
         tty: true
         command: |
           /bin/bash -c "./manage.py migrate; ./manage.py runserver 0.0.0.0:8000"
-        user: gcorn
         env:
           DJANGO_DB_PASSWORD: trackerpassword
           DJANGO_DB_USER: tracker
