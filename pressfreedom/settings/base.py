@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'dashboard',
     'home',
     'emails',
+    'django_logging',  # used for json logging of requests/exceptions
 
     'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
@@ -87,6 +88,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django_logging.middleware.DjangoLoggingMiddleware',
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
@@ -220,9 +222,6 @@ NOCAPTCHA = True
 TAGGIT_CASE_INSENSITIVE = True
 
 # Logging
-INSTALLED_APPS.append('django_logging')  # noqa: F405
-MIDDLEWARE.append(  # noqa: F405
-    'django_logging.middleware.DjangoLoggingMiddleware')
 DJANGO_LOGGING = {
     "CONSOLE_LOG": False,
     "SQL_LOG": False,
