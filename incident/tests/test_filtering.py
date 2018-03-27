@@ -882,7 +882,10 @@ class PendingFilterTest(TestCase):
             incident_filter_settings=settings,
         )
 
-        cls.all_incidents = set()
+        cls.all_incidents = {
+            # Incident not associated with any pending statuses.
+            IncidentPageFactory(),
+        }
 
         for value, _ in ARREST_STATUS:
             cls.all_incidents.add(IncidentPageFactory(arrest_status=value))
@@ -898,49 +901,67 @@ class PendingFilterTest(TestCase):
             cls.all_incidents.add(IncidentPageFactory(status_of_prior_restraint=value))
 
     def test_filter__true(self):
+        """
+        If the pending cases filter is on, only incidents with "pending"
+        values should be included. The rest should be excluded.
+        """
         incidents = IncidentFilter({
             'pending_cases': 'True',
         }).get_queryset()
 
-        values = {
-            (
-                incident.arrest_status or
-                incident.status_of_charges or
-                incident.status_of_seized_equipment or
-                incident.subpoena_status or
-                incident.detention_status or
-                incident.status_of_prior_restraint
-            )
-            for incident in incidents
-        }
+        values = []
+        fields = [
+            'arrest_status',
+            'status_of_charges',
+            'status_of_seized_equipment',
+            'subpoena_status',
+            'detention_status',
+            'status_of_prior_restraint',
+        ]
 
-        self.assertEqual(values, {
-            'DETAINED_CUSTODY',
-            'ARRESTED_CUSTODY',
-            'CHARGES_PENDING',
-            'PENDING_APPEAL',
-            'CUSTODY',
-            'RETURNED_PART',
-            'PENDING',
-            'IN_JAIL',
-            'PENDING',
-        })
+        for incident in incidents:
+            for field in fields:
+                value = getattr(incident, field)
+                if value:
+                    values.append((field, value))
+                    break
+
+        self.assertCountEqual(values, [
+            ('arrest_status', 'DETAINED_CUSTODY'),
+            ('arrest_status', 'ARRESTED_CUSTODY'),
+            ('status_of_charges', 'CHARGES_PENDING'),
+            ('status_of_charges', 'PENDING_APPEAL'),
+            ('status_of_seized_equipment', 'CUSTODY'),
+            ('status_of_seized_equipment', 'RETURNED_PART'),
+            ('subpoena_status', 'PENDING'),
+            ('detention_status', 'IN_JAIL'),
+            ('status_of_prior_restraint', 'PENDING'),
+        ])
 
     def test_filter__false(self):
+        """
+        If the pending cases filter is off, it should have no effect.
+        """
         incidents = IncidentFilter({
             'pending_cases': 'False',
         }).get_queryset()
 
-        self.assertEqual(set(incidents), self.all_incidents)
+        self.assertCountEqual(incidents, self.all_incidents)
 
     def test_filter__invalid(self):
+        """
+        If the pending cases filter is invalid, it should have no effect.
+        """
         incidents = IncidentFilter({
             'pending_cases': 'Hello',
         }).get_queryset()
 
-        self.assertEqual(set(incidents), self.all_incidents)
+        self.assertCountEqual(incidents, self.all_incidents)
 
     def test_filter__none(self):
+        """
+        If the pending cases filter is not supplied, it should have no effect.
+        """
         incidents = IncidentFilter({}).get_queryset()
 
-        self.assertEqual(set(incidents), self.all_incidents)
+        self.assertCountEqual(incidents, self.all_incidents)
