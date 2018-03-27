@@ -40,7 +40,7 @@ class MergeView(FormView):
             ))
             getattr(new_model, field['accessor']).add(*pages)
         new_model.save()
-        models_to_merge.delete()
+        models_to_merge.exclude(id=new_model.id).delete()
         messages.success(
             self.request,
             _("{0} successfully merged").format(
