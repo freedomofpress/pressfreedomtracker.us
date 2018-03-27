@@ -292,6 +292,43 @@ class CircuitsFilter(ChoiceFilter):
         return queryset.filter(state__name__in=states)
 
 
+class PendingCasesFilter(BooleanFilter):
+    """
+    Multi-field filter. Finds incidents with any of the following:
+    - arrest_status: DETAINED_CUSTODY
+    - arrest_status: ARRESTED_CUSTODY
+    - status_of_charges: CHARGES_PENDING
+    - status_of_charges: PENDING_APPEAL
+    - status_of_seized_equipment: CUSTODY
+    - status_of_seized_equipment: RETURNED_PART
+    - subpoena_status: PENDING
+    - detention_status: IN_JAIL
+    - status_of_prior_restraint: PENDING
+    """
+    def __init__(self, name, verbose_name=None):
+        super(PendingCasesFilter, self).__init__(
+            name=name,
+            model_field=BooleanField(),
+            verbose_name=verbose_name,
+        )
+
+    def filter(self, queryset, value):
+        if not value:
+            return queryset
+
+        return queryset.filter(
+            Q(arrest_status='DETAINED_CUSTODY') |
+            Q(arrest_status='ARRESTED_CUSTODY') |
+            Q(status_of_charges='CHARGES_PENDING') |
+            Q(status_of_charges='PENDING_APPEAL') |
+            Q(status_of_seized_equipment='CUSTODY') |
+            Q(status_of_seized_equipment='RETURNED_PART') |
+            Q(subpoena_status='PENDING') |
+            Q(detention_status='IN_JAIL') |
+            Q(status_of_prior_restraint='PENDING')
+        )
+
+
 def get_serialized_filters():
     """
     Returns filters serialized to be passed as JSON to the front-end.
@@ -340,6 +377,7 @@ class IncidentFilter(object):
     _extra_filters = {
         'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
         'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges')),
+        'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
     }
 
     # IncidentPage fields that cannot be filtered on.

@@ -6,8 +6,17 @@ from django.utils import timezone
 from wagtail.wagtailcore.models import Site
 from wagtail.wagtailcore.rich_text import RichText
 
+from common.models import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
+from incident.models.choices import (
+    ARREST_STATUS,
+    DETENTION_STATUS,
+    STATUS_OF_CHARGES,
+    STATUS_OF_PRIOR_RESTRAINT,
+    STATUS_OF_SEIZED_EQUIPMENT,
+    SUBPOENA_STATUS,
+)
 from incident.tests.factories import (
     ChargeFactory,
     IncidentPageFactory,
@@ -83,6 +92,7 @@ class TestFiltering(TestCase):
     def test_should_filter_by_circuit(self):
         # See incident/circuits.py
         GeneralIncidentFilter.objects.all().delete()
+        CategoryPage.objects.all().delete()
         site = Site.objects.get(is_default_site=True)
         settings = IncidentFilterSettings.for_site(site)
         GeneralIncidentFilter.objects.create(
@@ -858,3 +868,100 @@ class FilterChoicesTest(TestCase):
             choices,
             sorted(choices, key=lambda t: t[1])
         )
+
+
+class PendingFilterTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        CategoryPage.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='pending_cases',
+            incident_filter_settings=settings,
+        )
+
+        cls.all_incidents = {
+            # Incident not associated with any pending statuses.
+            IncidentPageFactory(),
+        }
+
+        for value, _ in ARREST_STATUS:
+            cls.all_incidents.add(IncidentPageFactory(arrest_status=value))
+        for value, _ in STATUS_OF_CHARGES:
+            cls.all_incidents.add(IncidentPageFactory(status_of_charges=value))
+        for value, _ in STATUS_OF_SEIZED_EQUIPMENT:
+            cls.all_incidents.add(IncidentPageFactory(status_of_seized_equipment=value))
+        for value, _ in SUBPOENA_STATUS:
+            cls.all_incidents.add(IncidentPageFactory(subpoena_status=value))
+        for value, _ in DETENTION_STATUS:
+            cls.all_incidents.add(IncidentPageFactory(detention_status=value))
+        for value, _ in STATUS_OF_PRIOR_RESTRAINT:
+            cls.all_incidents.add(IncidentPageFactory(status_of_prior_restraint=value))
+
+    def test_filter__true(self):
+        """
+        If the pending cases filter is on, only incidents with "pending"
+        values should be included. The rest should be excluded.
+        """
+        incidents = IncidentFilter({
+            'pending_cases': 'True',
+        }).get_queryset()
+
+        values = []
+        fields = [
+            'arrest_status',
+            'status_of_charges',
+            'status_of_seized_equipment',
+            'subpoena_status',
+            'detention_status',
+            'status_of_prior_restraint',
+        ]
+
+        for incident in incidents:
+            for field in fields:
+                value = getattr(incident, field)
+                if value:
+                    values.append((field, value))
+                    break
+
+        self.assertCountEqual(values, [
+            ('arrest_status', 'DETAINED_CUSTODY'),
+            ('arrest_status', 'ARRESTED_CUSTODY'),
+            ('status_of_charges', 'CHARGES_PENDING'),
+            ('status_of_charges', 'PENDING_APPEAL'),
+            ('status_of_seized_equipment', 'CUSTODY'),
+            ('status_of_seized_equipment', 'RETURNED_PART'),
+            ('subpoena_status', 'PENDING'),
+            ('detention_status', 'IN_JAIL'),
+            ('status_of_prior_restraint', 'PENDING'),
+        ])
+
+    def test_filter__false(self):
+        """
+        If the pending cases filter is off, it should have no effect.
+        """
+        incidents = IncidentFilter({
+            'pending_cases': 'False',
+        }).get_queryset()
+
+        self.assertCountEqual(incidents, self.all_incidents)
+
+    def test_filter__invalid(self):
+        """
+        If the pending cases filter is invalid, it should have no effect.
+        """
+        incidents = IncidentFilter({
+            'pending_cases': 'Hello',
+        }).get_queryset()
+
+        self.assertCountEqual(incidents, self.all_incidents)
+
+    def test_filter__none(self):
+        """
+        If the pending cases filter is not supplied, it should have no effect.
+        """
+        incidents = IncidentFilter({}).get_queryset()
+
+        self.assertCountEqual(incidents, self.all_incidents)
