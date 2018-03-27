@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'dashboard',
     'home',
     'emails',
+    'django_logging',  # used for json logging of requests/exceptions
 
     'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
@@ -87,6 +88,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django_logging.middleware.DjangoLoggingMiddleware',
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
@@ -218,3 +220,48 @@ NOCAPTCHA = True
 
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True
+
+# Logging
+DJANGO_LOGGING = {
+    "CONSOLE_LOG": False,
+    "SQL_LOG": False,
+    "DISABLE_EXISTING_LOGGERS": False,
+    "PROPOGATE": False,
+    "LOG_LEVEL": os.environ.get('DJANGO_LOG_LEVEL', 'info')
+}
+
+## Ensure base log directory exists
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+DJANGO_OTHER_LOG = os.path.join(LOG_DIR, 'django-other.log')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'rotate': {
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'info').upper(),
+            'class': 'logging.handlers.RotatingFileHandler',
+            'backupCount': 5,
+            'maxBytes': 10000000,
+            'filename': os.environ.get('DJANGO_LOGFILE', DJANGO_OTHER_LOG),
+            'formatter': 'django_builtin'
+        },
+        'null': {
+            'class': 'logging.NullHandler',
+        }
+    },
+    'formatters': {
+        'django_builtin': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s %(levelname)s %(name)s %(module)s %(message)s'
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['rotate'],
+            'propagate': False,
+        },
+    },
+}
