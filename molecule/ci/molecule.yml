@@ -40,5 +40,7 @@ scenario:
     - side_effect
 verifier:
   name: testinfra
+  additional_files_or_dirs:
+    - ../shared_tests
   lint:
     name: flake8

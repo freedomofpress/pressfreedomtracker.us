@@ -6,7 +6,7 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: local_dev
+  - name: pf_tracker_django
 provisioner:
   name: ansible
   lint:
@@ -25,5 +25,9 @@ scenario:
     - converge
 verifier:
   name: testinfra
+  directory: ../shared_tests
+  options:
+    connection: docker
+    hosts: pf_tracker_django
   lint:
     name: flake8
