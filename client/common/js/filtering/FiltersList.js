@@ -66,19 +66,17 @@ class FiltersList extends PureComponent {
 	render() {
 		const {
 			categories,
-			categoriesEnabled,
 			filterValues,
 		} = this.props
 
-		const filters = categories.filter(({ id }) => categoriesEnabled[id]).reduce((acc, category) => {
+		const filters = categories.reduce((acc, category) => {
 			return [
 				...acc,
 				...category.filters.filter(filter => {
 					if (filter.type === 'date') {
 						return filterValues[`${filter.name}_lower`] || filterValues[`${filter.name}_upper`]
-					} else {
-						return filterValues[filter.name]
 					}
+					return filterValues[filter.name]
 				}),
 			]
 		}, [])
