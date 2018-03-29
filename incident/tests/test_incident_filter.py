@@ -111,9 +111,13 @@ class CategoryFiltersTest(TestCase):
     def setUpTestData(cls):
         GeneralIncidentFilter.objects.all().delete()
         CategoryIncidentFilter.objects.all().delete()
-        cls.category = CategoryPageFactory(
+        cls.category1 = CategoryPageFactory(
             title='Denial of Access',
             incident_filters=['politicians_or_public_figures_involved'],
+        )
+        cls.category2 = CategoryPageFactory(
+            title='Other category',
+            incident_filters=['equipment_seized'],
         )
         site = Site.objects.get(is_default_site=True)
         settings = IncidentFilterSettings.for_site(site)
@@ -122,22 +126,39 @@ class CategoryFiltersTest(TestCase):
             incident_filter='affiliation',
         )
 
-    def test_general_filters_only(self):
+    def test_no_category_filter__includes_all(self):
+        """
+        If no categories are selected, allow filters from any category.
+        """
         incident_filter = IncidentFilter({})
         incident_filter.clean()
         self.assertEqual(
             {f.name for f in incident_filter.filters},
-            {'affiliation', 'categories'},
+            {
+                'affiliation',
+                'categories',
+                'politicians_or_public_figures_involved',
+                'equipment_seized',
+                'search',
+            },
         )
 
     def test_includes_category_filters(self):
+        """
+        If a category is selected, only allow filters from that category.
+        """
         incident_filter = IncidentFilter({
-            'categories': str(self.category.id),
+            'categories': str(self.category1.id),
         })
         incident_filter.clean()
         self.assertEqual(
             {f.name for f in incident_filter.filters},
-            {'affiliation', 'categories'} | {'politicians_or_public_figures_involved'},
+            {
+                'affiliation',
+                'categories',
+                'politicians_or_public_figures_involved',
+                'search',
+            },
         )
 
 
@@ -158,15 +179,23 @@ class CleanTest(TestCase):
             'categories': [category.id],
         })
 
-    def test_param_requires_category(self):
+    def test_param_requires_correct_category(self):
+        """
+        If a category is selected that doesn't provide the filter, raise
+        a validation error.
+        """
         CategoryPage.objects.all().delete()
         category1 = CategoryPageFactory(
             title='Category A',
             incident_filters=['release_date'],
         )
+        category2 = CategoryPageFactory(
+            title='Category B',
+        )
 
         incident_filter = IncidentFilter({
             'release_date_lower': '2017-01-01',
+            'categories': str(category2.id),
         })
         with self.assertRaises(ValidationError) as cm:
             incident_filter.clean(strict=True)

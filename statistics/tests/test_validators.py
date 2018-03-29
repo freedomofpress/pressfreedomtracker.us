@@ -178,7 +178,7 @@ class CleanTest(TestCase):
 
         self.assertEqual(dict(cm.exception), {
             'params': [
-                'Invalid value for tags: puppy',
                 'Invalid value for arrest_status: hello',
+                'Invalid value for tags: puppy',
             ],
         })

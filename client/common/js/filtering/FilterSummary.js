@@ -41,7 +41,6 @@ class FilterSummary extends PureComponent {
 				{' '}
 				<FiltersList
 					categories={categories}
-					categoriesEnabled={categoriesEnabled}
 					filterValues={filterValues}
 				/>
 			</div>

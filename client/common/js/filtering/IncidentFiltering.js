@@ -61,9 +61,9 @@ class IncidentFiltering extends PureComponent {
 			)
 		}
 
+		// Include filterValues for non-enabled categories as well,
+		// so that filter summary can show they're enabled.
 		const filterValues = this.props.categories.reduce((acc, category) => {
-			if (!categoriesEnabled[category.id]) return acc
-
 			const newAcc = { ...acc }
 
 			category.filters.forEach(filter => {
@@ -257,6 +257,12 @@ class IncidentFiltering extends PureComponent {
 			history.pushState(null, null, qs)
 			this.fetchPage(params)
 		}
+
+		// Once filters are set in page params, make sure the
+		// state reflects that. These could get out of sync, for example,
+		// if a filter for a non-selected category has a value in state
+		// (because that value would not get sent to the server.)
+		this.setState(this.getStateFromQueryParams())
 	}
 
 	handleClearFilters() {
