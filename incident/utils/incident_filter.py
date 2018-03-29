@@ -456,10 +456,17 @@ class IncidentFilter(object):
                 self.cleaned_data[filter_.name] = cleaned_value
 
     def clean(self, strict=False):
+        """
+        Validates data and convert it to a useable python format. If strict is True,
+        raises a ValidationError for errors; otherwise the fields with errors
+        are simply ignored.
+        """
         from common.models import CategoryPage, GeneralIncidentFilter
         self.cleaned_data = {}
         errors = []
 
+        # Keep track of search filter so that we can handle search separately later.
+        # This is necessary because search has to happen after _all_ filtering.
         self.search_filter = SearchFilter()
 
         available_filters = IncidentFilter.get_available_filters()
@@ -470,7 +477,9 @@ class IncidentFilter(object):
             self.search_filter,
         ]
 
-        # Clean categories separately so that we can check for category ids.
+        # Collect filters for categories. If categories are selected,
+        # use their filters; otherwise use filters for all categories.
+        # Clean categories first so that we can check for category ids.
         try:
             self._clean_filter(categories_filter, strict=strict)
         except ValidationError as exc:
@@ -484,27 +493,28 @@ class IncidentFilter(object):
             categories = categories.filter(
                 id__in=category_ids,
             )
+        for category in categories:
+            for category_incident_filter in category.incident_filters.all():
+                incident_filter = category_incident_filter.incident_filter
+                if incident_filter in available_filters:
+                    self.filters.append(available_filters[incident_filter])
 
+        # Collect filters from general settings.
         general_incident_filters = GeneralIncidentFilter.objects.all()
-        selected_filters = [
-            gif.incident_filter
-            for gif in general_incident_filters
-        ] + [
-            obj.incident_filter
-            for category in categories
-            for obj in category.incident_filters.all()
-        ]
+        for general_incident_filter in general_incident_filters:
+            incident_filter = general_incident_filter.incident_filter
+            if incident_filter in available_filters:
+                self.filters.append(available_filters[incident_filter])
 
-        for filter_name in selected_filters:
-            if filter_name in available_filters:
-                self.filters.append(available_filters[filter_name])
-
+        # Clean collected filters.
         for f in self.filters:
             try:
                 self._clean_filter(f, strict=strict)
             except ValidationError as exc:
                 errors.append(exc)
 
+        # If strict is true, validate that all given filters are valid
+        # and raise ValidationError if there are any errors.
         if strict:
             allowed_parameters = set()
             for f in self.filters:
