@@ -75,3 +75,54 @@ class MergeViewTest(TestCase):
             CommonTag.objects.get(id=self.tag1.id)
         with self.assertRaises(CommonTag.DoesNotExist):
             CommonTag.objects.get(id=self.tag2.id)
+
+
+class MergeViewSameNameTest(TestCase):
+    """
+    If one of the merged tags has the same name as the post-merge version,
+    the post-merge version should not be deleted.
+    """
+    @classmethod
+    def setUpTestData(cls):
+        cls.tag1 = CommonTag.objects.create(title='Rachel')
+        cls.tag2 = CommonTag.objects.create(title='tags')
+        cls.inc1 = IncidentPageFactory(tags=[cls.tag1])
+        cls.inc2 = IncidentPageFactory(tags=[cls.tag2])
+        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.new_tag_title = self.tag1.title
+        self.response = self.client.post(
+            CommonTagAdmin().url_helper.merge_url,
+            {
+                'models_to_merge': json.dumps([{
+                    'label': self.tag1.title,
+                    'id': self.tag1.id
+                }, {
+                    'label': self.tag2.title,
+                    'id': self.tag2.id
+                }]),
+                'title_for_merged_models': self.new_tag_title
+            }
+        )
+
+    def test_successful_request_redirects(self):
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_correct_redirect_url(self):
+        """Should redirect to the modelAdmin's index page"""
+        self.assertEqual(self.response['location'], CommonTagAdmin().url_helper.index_url)
+
+    def test_merged_tag_exists(self):
+        CommonTag.objects.get(title=self.new_tag_title)
+
+    def test_new_tag_has_old_tag_relationships(self):
+        new_tag = CommonTag.objects.get(title=self.new_tag_title)
+        self.assertEqual(set(new_tag.tagged_items.all()), {self.inc1, self.inc2})
+
+    def test_merged_tags_are_deleted(self):
+        # tag1 shouldn't be deleted because it's being merged into.
+        CommonTag.objects.get(id=self.tag1.id)
+        with self.assertRaises(CommonTag.DoesNotExist):
+            CommonTag.objects.get(id=self.tag2.id)
