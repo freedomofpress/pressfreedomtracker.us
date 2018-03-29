@@ -146,7 +146,10 @@ class HomePage(MetadataPageMixin, Page):
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        context['incidents'] = self.incidents.all().prefetch_related('incident__categories__category')
+        incidents = self.incidents.all()
+        if hasattr(incidents, 'prefetch_related'):
+            incidents = incidents.prefetch_related('incident__categories__category')
+        context['incidents'] = incidents
 
         return context
 
