@@ -1,3 +1,6 @@
+$min-image-height: 400px
+$max-image-vh-ratio: 0.75
+
 .incident
 	font-family: $sans-serif
 	background: #fff
@@ -10,9 +13,26 @@
 .incident__body
 	padding: $incident-body-top-padding $incident-body-side-padding 5px
 
+.incident__top-image-container
+	background: #f5f5f5
+	position: relative
+	min-height: 400px
+	display: flex
+	align-items: center
+	justify-content: space-around
+
 .incident__top-image
+	max-width: 100%
+	// Before the min-image-height threshold is passed the image should be allowed
+	// to grow to that size (this will *not* scale up low resolution images, however)
+	max-height: $min-image-height
+	margin: 0 auto
 	display: block
-	width: 100%
+
+	// Make sure (once the min-image-height threshold is passed) that the image
+	// is never taller than a certain percentage of the window height
+	@media(min-height: ceil($min-image-height * 1/$max-image-vh-ratio))
+		max-height: $max-image-vh-ratio * 100vh
 
 .incident__category-name
 	+uppercase
