@@ -16,7 +16,7 @@ jobs:
 
       - run:
           name: Run flake8 tests
-          command: flake8
+          command: make flake8
 
       - run:
           name: Ensure developer env working
