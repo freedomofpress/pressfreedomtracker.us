@@ -18,6 +18,7 @@ psycopg2
 Pygments
 python-json-logger
 pyparsing
+typing
 typogrify
 # 1.12 is the current LTS
 wagtail<1.13
