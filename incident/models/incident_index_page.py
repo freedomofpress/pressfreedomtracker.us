@@ -1,9 +1,12 @@
 import csv
 import json
+from typing import TYPE_CHECKING
 
 from django.db import models
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, HttpResponse
 from django.utils.cache import patch_cache_control
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_http_methods
 from wagtail.wagtailadmin.edit_handlers import FieldPanel
 from wagtail.wagtailcore.models import Page
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
@@ -14,6 +17,9 @@ from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
 from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
 from incident.feeds import IncidentIndexPageFeed
+
+if TYPE_CHECKING:
+    from django.http import HttpRequest  # noqa: F401
 
 
 class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
@@ -32,7 +38,20 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     subpage_types = ['incident.IncidentPage']
 
     @route('export/')
-    def export_view(self, request):
+    @method_decorator(require_http_methods(['HEAD', 'GET', 'OPTIONS']))
+    def export_view(self, request: 'HttpRequest') -> HttpResponse:
+        if request.method == 'GET':
+            response = self.export_view_GET(request)
+        else:  # Method is HEAD or OPTIONS
+            response = self.export_view_OPTIONS(request)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
+
+    def export_view_GET(self, request: 'HttpRequest') -> HttpResponse:
         incident_filter = IncidentFilter(request.GET)
         incidents = incident_filter.get_queryset()
 
@@ -52,8 +71,13 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         response = StreamingHttpResponse(
             (writer.writerow(row) for row in stream(headers, incidents)),
             content_type="text/csv")
+
         response['Content-Disposition'] = 'attachment; filename="incidents.csv"'
+
         return response
+
+    def export_view_OPTIONS(self, request: 'HttpRequest') -> HttpResponse:
+        return HttpResponse()
 
     @route(r'^feed/$')
     def feed(self, request):
