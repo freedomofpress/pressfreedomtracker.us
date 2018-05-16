@@ -32,6 +32,7 @@ EXCLUDED_FIELDS = {
     'expired',
     'live_revision',
     'search_image',
+    'blog_posts',
 }
 
 
