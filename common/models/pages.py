@@ -2,6 +2,8 @@ import json
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
@@ -121,6 +123,9 @@ class OrganizationIndexPage(Page):
 
     subpage_types = ['common.OrganizationPage']
 
+    def serve(self, request):
+        raise Http404()
+
 
 class OrganizationPage(Page):
     website = models.URLField(blank=True)
@@ -145,6 +150,23 @@ class OrganizationPage(Page):
         index.SearchField('website', partial_match=True),
         index.SearchField('description'),
     ]
+
+    def serve(self, request):
+        """
+        Find a sample from this organization and deduce a URL for the
+        BlogIndexPage for the BlogPage and filter by this organization.
+
+        Note: this is not very robust. If this site ever grow to have multiple
+        blog indexes, we will probably want to add a field to this page to
+        explicitly specify which blog index to use
+        """
+
+        try:
+            blog_index = self.blog_posts.all()[0].get_parent()
+        except IndexError:
+            # This organization has no blog posts. Fall back to 404
+            raise Http404()
+        return redirect('{}?organization={}'.format(blog_index.url, self.pk))
 
 
 class PersonPage(Page):
