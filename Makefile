@@ -87,6 +87,12 @@ help: ## Prints this message and exits
 		| sort \
 		| column -s ':' -t
 
+.PHONY: flake8
+flake8: ## Runs flake8 linting in Python3 container.
+	@docker run -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
+			quay.io/freedomofpress/ci-python \
+			bash -c "pip install -q flake8 && flake8"
+
 .PHONY: dev-save-db
 dev-save-db: ## Save a snapshot of the database for the current git branch
 	./devops/scripts/savedb.sh

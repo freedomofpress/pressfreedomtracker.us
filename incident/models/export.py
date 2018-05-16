@@ -6,6 +6,7 @@ from modelcluster.fields import ParentalManyToManyField
 
 EXCLUDED_FIELDS = {
     'id',
+    'draft_title',
     'has_unpublished_changes',
     'live',
     'locked',
@@ -31,6 +32,7 @@ EXCLUDED_FIELDS = {
     'expired',
     'live_revision',
     'search_image',
+    'blog_posts',
 }
 
 

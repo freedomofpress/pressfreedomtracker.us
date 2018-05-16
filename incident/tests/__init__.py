@@ -1,1 +1,1 @@
-from incident.tests.test_views import * # noqa: F403, F401
+from incident.tests.test_views import *  # noqa: F403, F401

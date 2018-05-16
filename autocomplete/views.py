@@ -23,7 +23,7 @@ def objects(request):
     page_type = request.GET.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(page_type)
-    except:
+    except:  # noqa: #E722
         return HttpResponseBadRequest()
 
     try:
@@ -31,7 +31,7 @@ def objects(request):
             int(id)
             for id in ids_param.split(',')
         ]
-    except:
+    except:  # noqa: #E722
         return HttpResponseBadRequest()
 
     queryset = model.objects.filter(id__in=ids)
@@ -50,7 +50,7 @@ def search(request):
     page_type = request.GET.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(page_type)
-    except:
+    except:  # noqa: #E722
         return HttpResponseBadRequest('Not a valid model.')
 
     field_name = getattr(model, 'autocomplete_search_field', 'title')
@@ -66,7 +66,7 @@ def search(request):
     try:
         exclusions = [int(item) for item in exclude.split(',')]
         queryset = queryset.exclude(pk__in=exclusions)
-    except:
+    except:  # noqa: #E722
         pass
 
     results = map(render_page, queryset[:20])
@@ -82,7 +82,7 @@ def create(request, *args, **kwargs):
     page_type = request.POST.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(page_type)
-    except:
+    except:  # noqa: #E722
         return HttpResponseBadRequest('Not a valid model', content_type='text/plain')
 
     content_type = ContentType.objects.get_for_model(model)
