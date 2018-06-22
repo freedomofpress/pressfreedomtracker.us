@@ -53,7 +53,7 @@ class IncidentCategorization(Orderable):
 class IncidentPageLinks(Orderable):
     page = ParentalKey('incident.IncidentPage', related_name='links')
     title = models.CharField(max_length=255, null=False, blank=False)
-    url = models.URLField(blank=False)
+    url = models.URLField(max_length=1024, blank=False)
     publication = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
