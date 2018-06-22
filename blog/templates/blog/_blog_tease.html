@@ -22,7 +22,7 @@
 				<li><a href="?author={{ page.author.pk }}">{{ page.author }}</a></li>
 			{% endif %}
 			{% if page.organization %}
-				<li><a href="?organization={{ page.organization.pk }}">{{ page.organization.title }}</a></li>
+				<li><a href="{% pageurl page.get_parent %}?organization={{ page.organization.pk }}">{{ page.organization.title }}</a></li>
 			{% endif %}
 		</ul>
 	</div>
