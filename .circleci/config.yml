@@ -14,6 +14,10 @@ jobs:
           name: Check Python dependencies for CVEs
           command: make safety
 
+      - run:
+          name: Static code analysis for vulnerabilities
+          command: make bandit
+
   dev:
     machine: true
     working_directory: ~/pressfreedom
