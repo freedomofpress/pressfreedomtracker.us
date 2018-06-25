@@ -1,3 +1,6 @@
+.. image:: https://circleci.com/gh/freedomofpress/pressfreedom/tree/master.svg?style=svg&circle-token=e04b02d815f80dcf1194d55659573122ea7994f4
+    :target: https://circleci.com/gh/freedomofpress/pressfreedom/tree/master
+    
 Development
 =============
 
