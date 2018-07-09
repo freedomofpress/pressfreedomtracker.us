@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  dev:
+  safety_check:
     machine: true
     working_directory: ~/pressfreedom
     steps:
@@ -13,6 +13,16 @@ jobs:
       - run:
           name: Check Python dependencies for CVEs
           command: make safety
+
+      - run:
+          name: Static code analysis for vulnerabilities
+          command: make bandit
+
+  dev:
+    machine: true
+    working_directory: ~/pressfreedom
+    steps:
+      - checkout
 
       - run:
           name: Run flake8 tests
@@ -46,5 +56,16 @@ workflows:
   version: 2
   tracker_ci:
     jobs:
+      - safety_check
       - dev
       - prod
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - safety_check

@@ -14,7 +14,7 @@ class BaseHelpPanel(EditHandler):
         ]
 
     def render(self, *args, **kwargs):
-        return mark_safe(render_to_string(self.template, dict(self=self)))
+        return mark_safe(render_to_string(self.template, dict(self=self)))  # nosec
 
 
 class HelpPanel(object):
