@@ -99,7 +99,7 @@ dev-save-db: ## Save a snapshot of the database for the current git branch
 
 .PHONY: bandit
 bandit: ## Runs bandit static code analysis in Python3 container.
-	@docker run -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
+	@docker run -it -v $(PWD):/code -w /code --name fpf_www_bandit --rm \
 		quay.io/freedomofpress/ci-python \
 		bash -c "pip install -q --upgrade bandit && bandit --recursive . -ll --exclude devops,node_modules,molecule,.venv"
 
