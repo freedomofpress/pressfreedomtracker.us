@@ -10,11 +10,11 @@ def forward(apps, schema_editor):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM pg_get_serial_sequence(%s, 'id')", (CustomImage._meta.db_table,))
         sequence_name = cursor.fetchone()[0]
-        cursor.execute("SELECT MAX(id) FROM {}".format(CustomImage._meta.db_table))
+        cursor.execute("SELECT MAX(id) FROM {}".format(CustomImage._meta.db_table))  # nosec
         new_value = cursor.fetchone()[0]
         # This might be a totally new database.
         if new_value:
-            cursor.execute("ALTER SEQUENCE {} RESTART WITH %s".format(sequence_name), (new_value,))
+            cursor.execute("ALTER SEQUENCE {} RESTART WITH %s".format(sequence_name), (new_value,))  # nosec
 
 
 def reverse(*args):
