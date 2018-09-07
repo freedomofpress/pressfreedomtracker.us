@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
             unique_together=set([('image', 'filter_spec', 'focal_point_key')]),
         ),
 
-        migrations.RunPython(migrate_images),
+        migrations.RunPython(migrate_images, elidable=True),
 
         migrations.AlterField(
             model_name='organizationpage',
