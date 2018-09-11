@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             name='venue',
             field=modelcluster.fields.ParentalManyToManyField(blank=True, help_text='Courts that are hearing or have heard this case.', related_name='venue_incidents', to='incident.Venue', verbose_name='Case Venue'),
         ),
-        migrations.RunPython(convert_jurisdiction_to_venue, convert_venue_to_jurisdiction),
+        migrations.RunPython(convert_jurisdiction_to_venue, convert_venue_to_jurisdiction, elidable=True),
         migrations.RemoveField(
             model_name='incidentpage',
             name='jurisdiction',

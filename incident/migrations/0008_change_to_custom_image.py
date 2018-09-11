@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
         ),
 
-        migrations.RunPython(migrate_image_attribution),
+        migrations.RunPython(migrate_image_attribution, elidable=True),
 
         migrations.RemoveField(
             model_name='incidentpage',

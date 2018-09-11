@@ -53,5 +53,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(update_statbox_colors, undo_update_statbox_colors)
+        migrations.RunPython(update_statbox_colors, undo_update_statbox_colors, elidable=True)
     ]

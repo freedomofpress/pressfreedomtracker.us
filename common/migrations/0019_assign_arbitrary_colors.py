@@ -39,5 +39,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(assign_arbitrary_colors, noop)
+        migrations.RunPython(assign_arbitrary_colors, noop, elidable=True)
     ]

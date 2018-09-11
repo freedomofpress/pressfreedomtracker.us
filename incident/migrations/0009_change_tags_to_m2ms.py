@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             name='tags',
             field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='tagged_items', to='common.CommonTag', verbose_name='Tags'),
         ),
-        migrations.RunPython(migrate_tags),
+        migrations.RunPython(migrate_tags, elidable=True),
         migrations.RemoveField(
             model_name='incidentpage',
             name='_tmp_tags'
@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
             name='targets_whose_communications_were_obtained',
             field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='targets_communications_obtained_incidents', to='incident.Target', verbose_name='Journalists/Organizations whose communications were obtained in leak investigation'),
         ),
-        migrations.RunPython(migrate_targets),
+        migrations.RunPython(migrate_targets, elidable=True),
         migrations.RemoveField(
             model_name='incidentpage',
             name='_tmp_targets'
@@ -146,7 +146,7 @@ class Migration(migrations.Migration):
             name='dropped_charges',
             field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='dropped_charge_incidents', to='incident.Charge', verbose_name='Dropped Charges'),
         ),
-        migrations.RunPython(migrate_charges),
+        migrations.RunPython(migrate_charges, elidable=True),
         migrations.RemoveField(
             model_name='incidentpage',
             name='_tmp_current_charges'
@@ -178,7 +178,7 @@ class Migration(migrations.Migration):
             name='target_nationality',
             field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='nationality_incidents', to='incident.Nationality', verbose_name='Target Nationality'),
         ),
-        migrations.RunPython(migrate_nationalities),
+        migrations.RunPython(migrate_nationalities, elidable=True),
         migrations.RemoveField(
             model_name='incidentpage',
             name='_tmp_target_nationality'
@@ -205,7 +205,7 @@ class Migration(migrations.Migration):
             name='politicians_or_public_figures_involved',
             field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='politicians_or_public_incidents', to='incident.PoliticianOrPublic', verbose_name='Politicians or public officials involved'),
         ),
-        migrations.RunPython(migrate_politicians_or_public),
+        migrations.RunPython(migrate_politicians_or_public, elidable=True),
         migrations.RemoveField(
             model_name='incidentpage',
             name='_tmp_politicians_or_public_figures_involved'

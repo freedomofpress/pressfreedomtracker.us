@@ -85,5 +85,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_states, uncreate_states)
+        # This operation is *not* elidable. It creates data a new database needs
+        migrations.RunPython(create_states, uncreate_states, elidable=False)
     ]
