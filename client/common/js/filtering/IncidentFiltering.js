@@ -31,6 +31,9 @@ class IncidentFiltering extends PureComponent {
 			filtersTouched: false,
 			...this.getStateFromQueryParams(),
 		}
+		if (props.category) {
+			this.state.categoriesEnabled[props.category] = true
+		}
 	}
 
 	componentDidMount() {
@@ -271,6 +274,12 @@ class IncidentFiltering extends PureComponent {
 			filtersTouched: false,
 			categoriesEnabled: { [GENERAL_ID]: true },
 		})
+		if (this.props.category) {
+			this.setState({
+				categoriesEnabled: { [this.props.category]: true }
+			})
+		}
+
 		history.pushState(null, null, '?')
 		this.fetchPage({})
 	}
