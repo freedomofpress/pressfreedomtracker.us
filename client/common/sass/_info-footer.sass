@@ -16,7 +16,7 @@ $white-link: rgba($white, 0.85)
 		padding: 0
 
 .info-footer__nav
-	max-width: 400px
+	max-width: 1024px
 
 
 /**
@@ -32,6 +32,9 @@ $white-link: rgba($white, 0.85)
 	flex-direction: row
 	justify-content: space-between
 
+@media(max-width: $mid-small-screen)
+	.info-footer__nav-list
+		flex-direction: column
 
 .info-footer__nav-item
 	flex-grow: 1
