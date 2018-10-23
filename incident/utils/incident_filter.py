@@ -7,14 +7,13 @@ from django.db.models import (
     CharField,
     DateField,
     DurationField,
-    F,
     ForeignKey,
     ManyToManyField,
     Q,
     TextField,
     Value,
 )
-from django.db.models.functions import Trunc, Cast
+from django.db.models.functions import Trunc, TruncMonth, Cast
 from django.db.models.fields.related import ManyToOneRel
 from django.utils.text import capfirst
 from psycopg2.extras import DateRange
@@ -137,7 +136,7 @@ class DateFilter(Filter):
             queryset = queryset.annotate(
                 fuzzy_date=MakeDateRange(
                     Cast(Trunc('date', 'month'), DateField()),
-                    Cast(F('date') + Cast(Value('1 month'), DurationField()), DateField()),
+                    Cast(TruncMonth('date') + Cast(Value('1 month'), DurationField()), DateField()),
                 ),
             )
             target_range = DateRange(
