@@ -190,7 +190,7 @@ BASE_URL = 'http://example.com'
 DEBUG = True
 
 # Django-webpack configuration
-WEBPACK_LOADER = {
+WEBPACK_LOADER = {  # noqa: W605
     'DEFAULT': {
         'CACHE': not DEBUG,
         'BUNDLE_DIR_NAME': 'bundles/',  # must end with slash
