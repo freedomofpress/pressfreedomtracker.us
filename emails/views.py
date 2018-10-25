@@ -25,7 +25,7 @@ def email_signup_create(request):
             return HttpResponseBadRequest('already_signed_up')
         else:
             return HttpResponseBadRequest(message)
-    except Exception as error:
+    except Exception:
         return HttpResponseBadRequest()
 
     return HttpResponse('success')
