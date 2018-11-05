@@ -14,7 +14,7 @@ def email_signup_create(request):
     email_address = request.POST.get('email_address')
 
     try:
-        email = EmailSignup(email_address=email_address)
+        email = EmailSignup(email_address=email_address.strip())
         email.full_clean()
         email.save()
     except ValidationError as error:
