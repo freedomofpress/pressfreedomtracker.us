@@ -12,6 +12,19 @@ class Target(ClusterableModel):
         unique=True,
     )
 
+    JOURNALIST = 'Journalist'
+    INSTITUTION = 'Institution'
+    TYPE_TARGET = [
+        ('JOURNALIST', 'Journalist'),
+        ('INSTITUTION', 'Institution')]
+
+    kind = models.CharField(
+        choices=TYPE_TARGET,
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+
     def __str__(self):
         return self.title
 

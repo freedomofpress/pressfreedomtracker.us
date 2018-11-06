@@ -48,7 +48,7 @@ class TargetAdmin(MergeAdmin):
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
+    list_display = ('title', 'kind')
     search_fields = ('title',)
 
 
