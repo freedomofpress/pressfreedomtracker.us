@@ -1,55 +1,53 @@
 -e git+https://github.com/freedomofpress/django-logging.git@b7d0b7b542db6ac088dbf3d2e7b249df333d3082#egg=django-logging-json
 backcall==0.1.0           # via ipython
 beautifulsoup4==4.6.0
-bleach==2.1.4
-certifi==2018.8.24
+bleach==3.0.2
+certifi==2018.10.15
 chardet==3.0.4
-click==6.7
+click==7.0
 decorator==4.3.0          # via ipython, traitlets
 dj-database-url==0.5.0
 django-analytical==2.4.0
-django-anymail==4.1
-django-debug-toolbar==1.9.1
+django-anymail==5.0
+django-debug-toolbar==1.10.1
 django-modelcluster==3.1
 django-recaptcha==1.4.0
 django-settings-export==1.2.1
 django-taggit==0.22.2
 django-treebeard==4.3
 django-webpack-loader==0.6.0
-django==1.11.15
+django==1.11.16
 djangorestframework==3.6.4
 docutils==0.14
-factory-boy==2.7.0
-fake-factory==0.7.4
-faker==0.9.0
-first==2.0.1
-flake8==3.5.0
+factory-boy==2.11.1
+faker==1.0.0
+flake8==3.6.0
 gunicorn==19.9.0
 html5lib==0.999999999
 idna==2.7
 ipdb==0.11
 ipython-genutils==0.2.0   # via traitlets
 ipython==6.5.0            # via ipdb
-jedi==0.12.1              # via ipython
+jedi==0.13.1              # via ipython
 jinja2==2.10
-markupsafe==1.0
+markupsafe==1.1.0
 mccabe==0.6.1             # via flake8
 parso==0.3.1              # via jedi
 pexpect==4.6.0            # via ipython
-pickleshare==0.7.4        # via ipython
-pillow==5.2.0
-pip-tools==2.0.2
+pickleshare==0.7.5        # via ipython
+pillow==5.3.0
+pip-tools==3.1.0
 prompt-toolkit==1.0.15    # via ipython
-psycopg2==2.7.5
+psycopg2==2.7.6.1
 ptyprocess==0.6.0         # via pexpect
-pycodestyle==2.3.1        # via flake8
-pyflakes==1.6.0           # via flake8
+pycodestyle==2.4.0        # via flake8
+pyflakes==2.0.0           # via flake8
 pygments==2.2.0
-pyparsing==2.2.0
-python-dateutil==2.7.3
-python-json-logger==0.1.9
-pytz==2018.5
-requests==2.19.1
+pyparsing==2.3.0
+python-dateutil==2.7.5
+python-json-logger==0.1.10
+pytz==2018.7
+requests==2.20.1
 simplegeneric==0.8.1      # via ipython
 six==1.11.0
 smartypants==2.0.1
@@ -60,9 +58,9 @@ typing==3.6.6
 typogrify==2.0.7
 unidecode==1.0.22
 unittest-xml-reporting==2.2.0
-urllib3==1.23
+urllib3==1.24.1
 wagtail-django-recaptcha==1.0
-wagtail-factories==1.0.0
+wagtail-factories==1.1.0
 wagtail-metadata==0.4.1
 wagtail==1.12.6
 wcwidth==0.1.7            # via prompt-toolkit
