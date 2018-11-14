@@ -46,14 +46,11 @@ class IncidentIndexPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentIndexPage
 
-    parent = factory.SubFactory(wagtail_factories.PageFactory, parent=None)
-
 
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
 
-    parent = factory.SubFactory(IncidentIndexPageFactory)
     title = factory.Faker('sentence')
     date = factory.Faker('date')
     city = factory.Faker('city')
