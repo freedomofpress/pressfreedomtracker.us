@@ -1,4 +1,5 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete
+from wagtail.wagtailcore.signals import page_published
 from wagtail.contrib.wagtailfrontendcache.utils import purge_page_from_cache
 
 from blog.models import BlogIndexPage, BlogPage
@@ -20,5 +21,5 @@ def purge_blog_index_page_frontend_cache(**kwargs):
     purge_tags_from_cache(tags)
 
 
-post_save.connect(purge_blog_index_page_frontend_cache, sender=BlogPage)
+page_published.connect(purge_blog_index_page_frontend_cache, sender=BlogPage)
 post_delete.connect(purge_blog_index_page_frontend_cache, sender=BlogPage)
