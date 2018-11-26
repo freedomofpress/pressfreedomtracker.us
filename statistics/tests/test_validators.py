@@ -3,7 +3,6 @@ from unittest import mock
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from common.models import CategoryPage
 from common.tests.factories import CategoryPageFactory
 from statistics.validators import validate_dataset_params
 
@@ -166,7 +165,6 @@ class CleanTest(TestCase):
         )
 
     def test_clean_kwargs__combine_multiple_errors(self):
-        CategoryPage.objects.all().delete()
         category = CategoryPageFactory(incident_filters=['arrest_status'])
 
         with self.assertRaises(ValidationError) as cm:
