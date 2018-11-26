@@ -1,5 +1,6 @@
-from unittest import TestCase, mock
+from unittest import mock
 
+from django.test import TestCase
 from django.core.exceptions import ValidationError
 
 from common.models import CategoryPage
