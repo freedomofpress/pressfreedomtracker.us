@@ -52,7 +52,7 @@
 	">
 		<table class="data-table data-table--category">
 			<h4 class="section-heading section-heading--light section-heading--margin-top">
-			Data Summary
+			Category Summary
 		</h4>
 			<tr class="data-table__row data-table__row--light">
 				<th class="data-table__label data-table__label--light">
@@ -111,7 +111,7 @@
 {% block sidebar %}
 	{# This outer div should be here even if it is empty to provide ajax loading with a container #}
 	<div class="js-summary-table">
-		{% include 'incident/_summary_table.html' with label="Results Summary" summary_table=summary_table %}
+		{% include 'incident/_summary_table.html' with label="Search Results Summary" summary_table=summary_table %}
 	</div>
 	<div class="js-methodologies">
 		{% include 'common/_category_methodology.html' with category=page %}
