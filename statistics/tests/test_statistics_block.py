@@ -1,6 +1,7 @@
-from unittest import TestCase, mock
+from unittest import mock
 
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from statistics.blocks import StatisticsBlock
 

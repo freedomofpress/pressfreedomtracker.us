@@ -1,6 +1,5 @@
-from unittest import TestCase
-
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from common.validators import TemplateValidator
 
