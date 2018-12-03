@@ -25,5 +25,8 @@ class TestHomePageCacheInvalidation(TestCase):
 
     def test_cache_invalidated_on_new_incident(self, purge_page_from_cache):
         self.assertFalse(purge_page_from_cache.called)
-        IncidentPageFactory()  # should trigger a cache purge on homepage
+
+        # should trigger a cache purge on homepage
+        IncidentPageFactory().save_revision().publish()
+
         purge_page_from_cache.assert_called_with(self.homepage)
