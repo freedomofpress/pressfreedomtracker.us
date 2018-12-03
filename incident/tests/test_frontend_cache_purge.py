@@ -3,9 +3,9 @@ from unittest.mock import patch
 from wagtail.wagtailcore.models import Site
 
 from common.tests.factories import CategoryPageFactory
+from incident.models import IncidentCategorization
 from incident.tests.factories import (
     IncidentPageFactory,
-    IncidentCategorizationFactory,
     IncidentIndexPageFactory,
 )
 
@@ -47,7 +47,10 @@ class TestIncidentIndexPageCachePurge(TestCase):
     def test_cache_purge_on_new_incident(self, purge_page_from_cache):
         "Should purge page cache for incident index page on incident creation"
         assert_never_called_with(purge_page_from_cache, self.index)
-        IncidentPageFactory(parent=self.index)  # should trigger a cache purge on index page
+
+        # should trigger a cache purge on index page
+        IncidentPageFactory(parent=self.index).save_revision().publish()
+
         purge_page_from_cache.assert_any_call(self.index)
 
     @patch('incident.signals.purge_tags_from_cache')
@@ -57,7 +60,9 @@ class TestIncidentIndexPageCachePurge(TestCase):
             purge_tags_from_cache,
             [self.index.get_cache_tag()]
         )
-        IncidentPageFactory(parent=self.index)  # should trigger a cache purge on index page
+        # should trigger a cache purge on index page
+        IncidentPageFactory(parent=self.index).save_revision().publish()
+
         purge_tags_from_cache.assert_any_call([self.index.get_cache_tag()])
 
 
@@ -65,21 +70,17 @@ class TestIncidentIndexPageCachePurge(TestCase):
 class TestIncidentPageCachePurge(TestCase):
     def test_cache_purged_on_category_change(self, purge_page_from_cache):
         "Should purge cache for an incident in a category when category changes"
-        category = CategoryPageFactory()
-        incident = IncidentPageFactory()
-        categorization = IncidentCategorizationFactory(
-            incident_page=incident,
-            category=category
-        )
-        # Not sure why, but the above doesn't commit this to the db
-        # without the next line:
-        categorization.save()
+        category = CategoryPageFactory.create()
+        incident = IncidentPageFactory.create()
+        incident.categories = [IncidentCategorization(category=category)]
+        incident.save()
 
         # Cache purging should not have occurred yet
         assert_never_called_with(purge_page_from_cache, incident)
 
+        # Should trigger purge on incident page
         category.title = "New Category Name"
-        category.save()  # Should trigger purge on incident page
+        category.save_revision().publish()
 
         purge_page_from_cache.assert_any_call(incident)
 
@@ -96,7 +97,9 @@ class TestIncidentPageCachePurge(TestCase):
         incident = IncidentPageFactory()
 
         category.title = "New Category Name"
-        category.save()  # Should NOT trigger purge on incident page
+
+        # Should NOT trigger purge on incident page
+        category.save_revision().publish()
 
         assert_never_called_with(purge_page_from_cache, incident)
 
@@ -105,8 +108,9 @@ class TestIncidentPageCachePurge(TestCase):
         incident1 = IncidentPageFactory()
         incident2 = IncidentPageFactory(related_incidents=[incident1])
 
+        # Should trigger purge on incident2
         incident1.title = 'New Incident Name'
-        incident1.save()  # Should trigger purge on incident2
+        incident1.save_revision().publish()
 
         purge_page_from_cache.assert_any_call(incident2)
 
@@ -122,7 +126,7 @@ class TestIncidentPageCachePurge(TestCase):
         incident2 = IncidentPageFactory()
 
         incident1.title = 'New Incident Name'
-        incident1.save()  # Should not trigger purge on incident2
+        incident1.save_revision().publish()  # Should not trigger purge on incident2
 
         assert_never_called_with(purge_page_from_cache, incident2)
 
@@ -137,20 +141,12 @@ class TestIncidentPageCachePurge(TestCase):
         category = CategoryPageFactory()
         incident1 = IncidentPageFactory()
         incident2 = IncidentPageFactory()
-        categorization1 = IncidentCategorizationFactory(
-            incident_page=incident1,
-            category=category
-        )
-        categorization2 = IncidentCategorizationFactory(
-            incident_page=incident2,
-            category=category
-        )
-        # Not sure why, but the above doesn't commit this to the db
-        # without the next lines:
-        categorization1.save()
-        categorization2.save()
+        incident1.categories = [IncidentCategorization(category=category)]
+        incident2.categories = [IncidentCategorization(category=category)]
+        incident1.save()
+        incident2.save()
 
         incident1.title = 'New Incident Title'
-        incident1.save()
+        incident1.save_revision().publish()
 
         purge_page_from_cache.assert_any_call(incident2)
