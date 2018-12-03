@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from unittest.mock import patch
 
 from django.test import TestCase
 from django.utils import timezone
@@ -621,6 +622,46 @@ class GetSummaryTest(TestCase):
             title='Equipment Search or Seizure',
             incident_filters=['status_of_seized_equipment'],
         )
+
+    def test_summary__january(self):
+        "Summary should correctly count incidents in january"
+
+        # Two incidents in January 2018, two not
+        IncidentPageFactory(date=date(2018, 1, 15), targets=2)
+        IncidentPageFactory(date=date(2018, 1, 16), targets=2)
+        IncidentPageFactory(date=date(2017, 1, 15), targets=2)
+        IncidentPageFactory(date=date(2018, 2, 15), targets=2)
+
+        with patch('incident.utils.incident_filter.date') as date_:
+            date_.today = lambda: date(2018, 1, 20)
+            summary = IncidentFilter({}).get_summary()
+
+        self.assertCountEqual(summary, (
+            ('Total Results', 4),
+            ('Journalists affected', 8),
+            ('Results in 2018', 3),
+            ('Results in January', 2)
+        ))
+
+    def test_summary__december(self):
+        "Summary should correctly count incidents in january"
+
+        # Two incidents in December 2018, two not
+        IncidentPageFactory(date=date(2018, 12, 15), targets=2)
+        IncidentPageFactory(date=date(2018, 12, 16), targets=2)
+        IncidentPageFactory(date=date(2019, 1, 1), targets=2)
+        IncidentPageFactory(date=date(2018, 2, 15), targets=2)
+
+        with patch('incident.utils.incident_filter.date') as date_:
+            date_.today = lambda: date(2018, 12, 20)
+            summary = IncidentFilter({}).get_summary()
+
+        self.assertCountEqual(summary, (
+            ('Total Results', 4),
+            ('Journalists affected', 8),
+            ('Results in 2018', 3),
+            ('Results in December', 2)
+        ))
 
     def test_single_category_excludes_category_count(self):
         IncidentPageFactory(
