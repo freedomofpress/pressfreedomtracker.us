@@ -1,3 +1,4 @@
+from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.shortcuts import render
 from django.views.decorators.vary import vary_on_headers
 from wagtail.utils.pagination import paginate
@@ -23,7 +24,9 @@ def incident_admin_search_view(request):
         if form.is_valid():
             q = form.cleaned_data['q']
 
-            pages = IncidentPage.objects.all().search(q)
+            query = SearchQuery(q)
+            vector = SearchVector('title', 'body')
+            pages = IncidentPage.objects.annotate(search=vector).filter(search=query)
             paginator, pages = paginate(request, pages)
     else:
         form = SearchForm()

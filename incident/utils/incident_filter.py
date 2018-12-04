@@ -2,6 +2,7 @@ from datetime import date
 import copy
 
 from django.core.exceptions import ValidationError
+from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import (
     BooleanField,
     CharField,
@@ -264,7 +265,9 @@ class SearchFilter(Filter):
         super(SearchFilter, self).__init__('search', CharField(verbose_name='search terms'))
 
     def filter(self, queryset, value):
-        return queryset.search(value, order_by_relevance=False)
+        query = SearchQuery(value)
+        vector = SearchVector('title', 'body')
+        return queryset.annotate(search=vector).filter(search=query)
 
 
 class ChargesFilter(ManyRelationFilter):
