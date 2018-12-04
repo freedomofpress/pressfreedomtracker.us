@@ -624,7 +624,7 @@ class GetSummaryTest(TestCase):
         )
 
     def test_summary__january(self):
-        "Summary should correctly count incidents in january"
+        "Summary should correctly count incidents in January"
 
         # Two incidents in January 2018, two not
         IncidentPageFactory(date=date(2018, 1, 15), targets=2)
@@ -644,7 +644,7 @@ class GetSummaryTest(TestCase):
         ))
 
     def test_summary__december(self):
-        "Summary should correctly count incidents in january"
+        "Summary should correctly count incidents in December"
 
         # Two incidents in December 2018, two not
         IncidentPageFactory(date=date(2018, 12, 15), targets=2)
