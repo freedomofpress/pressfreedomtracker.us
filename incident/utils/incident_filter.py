@@ -566,9 +566,6 @@ class IncidentFilter(object):
         queryset = IncidentPage.objects.live()
 
         for f in self.filters:
-            # Wait until later for search
-            if f is self.search_filter:
-                continue
             cleaned_value = self.cleaned_data.get(f.name)
             if cleaned_value is not None:
                 queryset = f.filter(queryset, cleaned_value)
@@ -576,13 +573,7 @@ class IncidentFilter(object):
         return queryset.distinct()
 
     def get_queryset(self):
-        queryset = self._get_queryset().order_by('-date', 'path').distinct()
-
-        search = self.cleaned_data.get('search')
-        if search:
-            queryset = self.search_filter.filter(queryset, search)
-
-        return queryset
+        return self._get_queryset().order_by('-date', 'path').distinct()
 
     def get_summary(self):
         """
@@ -632,11 +623,6 @@ class IncidentFilter(object):
         # )
 
         total_queryset = queryset
-        search = self.cleaned_data.get('search')
-        if search:
-            incidents_this_year = self.search_filter.filter(incidents_this_year, search)
-            incidents_this_month = self.search_filter.filter(incidents_this_month, search)
-            total_queryset = self.search_filter.filter(queryset, search)
         num_this_year = incidents_this_year.count()
         num_this_month = incidents_this_month.count()
 
@@ -666,8 +652,6 @@ class IncidentFilter(object):
             )
             for category in categories:
                 category_queryset = queryset.filter(categories__category=category)
-                if search:
-                    category_queryset = self.search_filter.filter(category_queryset, search)
                 summary = summary + ((
                     category.plural_name if category.plural_name else category.title,
                     category_queryset.count(),
