@@ -39,12 +39,18 @@ class TestCategoryPageCacheInvalidation(TestCase):
         instance.
         """
         self.assertFalse(purge_page_from_cache.called)
-        IncidentPageFactory()  # should trigger a cache purge on category page
+
+        # should trigger a cache purge on category page
+        IncidentPageFactory().save_revision().publish()
+
         purge_page_from_cache.assert_called_with(self.categorypage)
 
     @patch('common.signals.purge_tags_from_cache')
     def test_cache_tag_purge_on_new_incident(self, purge_tags_from_cache):
         self.assertFalse(purge_tags_from_cache.called)
-        IncidentPageFactory()  # should trigger a cache purge on category page
+
+        # should trigger a cache purge on category page
+        IncidentPageFactory().save_revision().publish()
+
         list_of_arguments = purge_tags_from_cache.call_args[0][0]
         self.assertIn(self.categorypage.get_cache_tag(), list_of_arguments)
