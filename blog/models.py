@@ -9,7 +9,6 @@ from wagtail.wagtailcore.fields import StreamField, RichTextField
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailsearch import index
 from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 
 
@@ -54,10 +53,6 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     ]
 
     subpage_types = ['blog.BlogPage']
-
-    search_fields = Page.search_fields + [
-        index.SearchField('body'),
-    ]
 
     @route(r'^feed/$')
     def feed(self, request):
@@ -208,12 +203,6 @@ class BlogPage(MetadataPageMixin, Page):
 
     parent_page_types = ['blog.BlogIndexPage']
     subpage_types = []
-
-    search_fields = Page.search_fields + [
-        index.SearchField('body', partial=True),
-        index.SearchField('teaser_text'),
-        index.FilterField('publication_datetime'),
-    ]
 
     def get_meta_image(self):
         return self.teaser_image or super(BlogPage, self).get_meta_image()

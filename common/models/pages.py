@@ -13,7 +13,6 @@ from wagtail.wagtailcore.fields import RichTextField, StreamField
 
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
-from wagtail.wagtailsearch import index
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -146,11 +145,6 @@ class OrganizationPage(Page):
 
     parent_page_types = ['common.OrganizationIndexPage']
 
-    search_fields = Page.search_fields + [
-        index.SearchField('website', partial_match=True),
-        index.SearchField('description'),
-    ]
-
     def serve(self, request):
         """
         Find a sample from this organization and deduce a URL for the
@@ -185,10 +179,6 @@ class PersonPage(Page):
         FieldPanel('bio'),
         FieldPanel('website'),
         ImageChooserPanel('photo'),
-    ]
-
-    search_fields = Page.search_fields + [
-        index.SearchField('bio'),
     ]
 
 
@@ -260,10 +250,6 @@ class CategoryPage(MetadataPageMixin, Page):
     settings_panels = Page.settings_panels + [
         FieldPanel('plural_name'),
         FieldPanel('page_color'),
-    ]
-
-    search_fields = Page.search_fields + [
-        index.SearchField('methodology'),
     ]
 
     def get_context(self, request):
@@ -360,10 +346,6 @@ class SimplePage(MetadataPageMixin, Page):
         StreamFieldPanel('sidebar_content')
     ]
 
-    search_fields = Page.search_fields + [
-        index.SearchField('body'),
-    ]
-
     def get_context(self, request):
         # Avoid circular import
         from home.models import HomePage
@@ -410,10 +392,6 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
     ]
 
     settings_panels = Page.settings_panels + BaseSidebarPageMixin.settings_panels
-
-    search_fields = Page.search_fields + [
-        index.SearchField('body'),
-    ]
 
     def get_meta_description(self):
         if self.search_description:
