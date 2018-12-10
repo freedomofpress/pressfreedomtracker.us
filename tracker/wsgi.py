@@ -1,5 +1,5 @@
 """
-WSGI config for pressfreedom project.
+WSGI config for press freedom tracker project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -13,6 +13,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pressfreedom.settings.dev")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tracker.settings.dev")
 
 application = get_wsgi_application()
