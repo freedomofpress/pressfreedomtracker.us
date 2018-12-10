@@ -590,7 +590,6 @@ class IncidentFilter(object):
 
         TODAY = date.today()
         THIS_YEAR = TODAY.year
-        THIS_MONTH = TODAY.month
 
         # Add counts for this year and this month if non-zero
         incidents_this_year = queryset.filter(date__contained_by=DateRange(
@@ -599,28 +598,10 @@ class IncidentFilter(object):
             bounds='[]'
         ))
 
-        incidents_this_month = queryset.filter(date__contained_by=DateRange(
-            TODAY.replace(day=1),
-            TODAY.replace(
-                # If it's December, the end date is going to be in next year
-                year=THIS_YEAR if THIS_MONTH != 12 else THIS_YEAR + 1,
-                # Increment the date by 1. When reviewing this math, recall
-                # that Date.month is 1-based and modular arithmetic is 0-based
-                month=THIS_MONTH % 12 + 1,
-                day=1
-            ),
-            bounds='[)'
-        ))
-
-        # This code can replace the block of code above. Unfortunately
-        # it doesn't play nice with Wagtail search. When we rewrite
-        # IncidentFilter to use __search lookups instead we can replace that
-        # code with this.
-        #
-        # incidents_this_month = queryset.filter(
-        #     date__month=TODAY.month,
-        #     date__year=TODAY.year,
-        # )
+        incidents_this_month = queryset.filter(
+            date__month=TODAY.month,
+            date__year=TODAY.year,
+        )
 
         total_queryset = queryset
         num_this_year = incidents_this_year.count()
