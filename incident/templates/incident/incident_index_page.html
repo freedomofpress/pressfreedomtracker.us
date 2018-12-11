@@ -19,33 +19,31 @@
 {% block main %}
 	{% include "incident/_filters.html" %}
 
-	{% block ajax %}
-		<div class="grid-50 js-infinite-scrolling-parent">
-			{% for incident in entries_page %}
-				<div class="grid-50__item js-infinite-scrolling-item">
-					{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
-				</div>
-			{% endfor %}
-		</div>
+	<div class="grid-50 js-infinite-scrolling-parent">
+		{% for incident in entries_page %}
+			<div class="grid-50__item js-infinite-scrolling-item">
+				{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
+			</div>
+		{% endfor %}
+	</div>
 
-		{% if entries_page.has_previous %}
-			<a
-				href="?{% query_transform request page=entries_page.previous_page_number %}"
-				class="js-infinite-scrolling-prev-link"
-			>
-				Previous Page
-			</a>
-		{% endif %}
+	{% if entries_page.has_previous %}
+		<a
+			href="?{% query_transform request page=entries_page.previous_page_number %}"
+				  class="js-infinite-scrolling-prev-link"
+		>
+			Previous Page
+		</a>
+	{% endif %}
 
-		{% if entries_page.has_next %}
-			<a
-				href="?{% query_transform request page=entries_page.next_page_number %}"
-				class="button button--outline button--center js-infinite-scrolling-next-link"
-			>
-				More Incidents
-			</a>
-		{% endif %}
-	{% endblock %}
+	{% if entries_page.has_next %}
+		<a
+			href="?{% query_transform request page=entries_page.next_page_number %}"
+				  class="button button--outline button--center js-infinite-scrolling-next-link"
+		>
+			More Incidents
+		</a>
+	{% endif %}
 {% endblock %}
 
 {% block sidebar_class %}

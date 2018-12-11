@@ -82,26 +82,24 @@
 {% block main %}
 	{% include "incident/_filters.html" with no_category_filtering=True category=page.id %}
 
-	{% block ajax %}
-		<div class="grid-50 js-infinite-scrolling-parent">
-			{% for incident in entries_page %}
-				<div class="grid-50__item js-infinite-scrolling-item">
-					{% include "incident/_incident.html" with incident=incident teaser=True %}
-				</div>
-			{% empty %}
-				<p class="grid-50__item">There are no results for those filters.</p>
-			{% endfor %}
-		</div>
+	<div class="grid-50 js-infinite-scrolling-parent">
+		{% for incident in entries_page %}
+			<div class="grid-50__item js-infinite-scrolling-item">
+				{% include "incident/_incident.html" with incident=incident teaser=True %}
+			</div>
+		{% empty %}
+			<p class="grid-50__item">There are no results for those filters.</p>
+		{% endfor %}
+	</div>
 
-		{% if entries_page.has_next %}
-			<a
-				href="?{% query_transform request page=entries_page.next_page_number %}"
-				class="button button--outline button--center js-infinite-scrolling-next-link"
-			>
-				More Incidents
-			</a>
-		{% endif %}
-	{% endblock %}
+	{% if entries_page.has_next %}
+		<a
+			href="?{% query_transform request page=entries_page.next_page_number %}"
+				  class="button button--outline button--center js-infinite-scrolling-next-link"
+		>
+			More Incidents
+		</a>
+	{% endif %}
 {% endblock %}
 
 
