@@ -2,9 +2,9 @@ import axios from 'axios'
 import { throttle, isElementVisible } from '~/utils'
 
 
-class InfiniteScroller {
+class IncidentLoader {
 	constructor() {
-		// InfiniteScroller is a go! We can remove the Previous link
+		// IncidentLoader is a go! We can remove the Previous link
 		// since we don't need it in the context of infinite scrolling.
 		const prevLinkElm = document.querySelector('.js-infinite-scrolling-prev-link')
 		if (prevLinkElm) {
@@ -38,7 +38,7 @@ class InfiniteScroller {
 	}
 
 	handleScroll(event) {
-		if (this.fetches < InfiniteScroller.NUM_AUTO_FETCHES) {
+		if (this.fetches < IncidentLoader.NUM_AUTO_FETCHES) {
 			const elm = this.parentElm.querySelector('.js-infinite-scrolling-item:last-child')
 			if (isElementVisible(elm)) {
 				this.getNextPage()
@@ -124,16 +124,16 @@ class InfiniteScroller {
 }
 
 
-InfiniteScroller.NUM_AUTO_FETCHES = 0
+IncidentLoader.NUM_AUTO_FETCHES = 0
 
 
 document.addEventListener('DOMContentLoaded', () => {
-	if (window._infiniteScroller) {
-		console.warn('An InfiniteScroller instance already exists.')
+	if (window._incidentLoader) {
+		console.warn('An IncidentLoader instance already exists.')
 		return
 	}
 
 	if (document.querySelector('.js-infinite-scrolling-parent')) {
-		window._infiniteScroller = new InfiniteScroller()
+		window._incidentLoader = new IncidentLoader()
 	}
 })

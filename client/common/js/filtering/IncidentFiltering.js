@@ -298,8 +298,8 @@ class IncidentFiltering extends PureComponent {
 					})
 
 					if (response.status === 200) {
-						if (!window._infiniteScroller) {
-							console.warn('No InfiniteScroller instance found.')
+						if (!window._incidentLoader) {
+							console.warn('No IncidentLoader instance found.')
 							return
 						}
 						window._infiniteScroller.insertPageFromBody(
