@@ -46,8 +46,43 @@ class IncidentLoader {
 		}
 	}
 
-	insertPageFromBody(ajaxBodyHtml, options = {}) {
-		const { replace } = options
+	replaceIncidents(ajaxBodyHtml) {
+		const fragment = document.createDocumentFragment()
+		const tempElm = document.createElement('span')
+		tempElm.innerHTML = ajaxBodyHtml
+
+		const newItemList = tempElm.querySelector('.js-infinite-scrolling-parent')
+
+		const fadeIn = (item, i) => {
+			item.classList.add('animation-fade-in')
+			item.classList.add(`animation-fade-in--${i + 1}`)
+		}
+		tempElm.querySelectorAll('.js-infinite-scrolling-item').forEach(fadeIn)
+
+		const newNextLink = tempElm.querySelector('.js-infinite-scrolling-next-link')
+		if (newNextLink) {
+			newNextLink.addEventListener('click', this.getNextPage)
+			if (!this.nextLinkElm) {
+				this.parentElm.parentNode.appendChild(newNextLink)
+			}
+			this.nextLinkElm = newNextLink
+		} else if (this.nextLinkElm) {
+			this.nextLinkElm.remove()
+			this.nextLinkElm = null
+		}
+
+		this.parentElm.parentNode.replaceChild(newItemList, this.parentElm)
+		this.parentElm = newItemList
+		const summaryTable = document.querySelector('.js-summary-table')
+		const newSummaryTable = tempElm.querySelector('.js-summary-table')
+		summaryTable.innerHTML = newSummaryTable.innerHTML
+
+		const methodologies = document.querySelector('.js-methodologies')
+		const newMethodologies = tempElm.querySelector('.js-methodologies')
+		methodologies.innerHTML = newMethodologies.innerHTML
+	}
+
+	appendIncidents(ajaxBodyHtml) {
 		const fragment = document.createDocumentFragment()
 		const tempElm = document.createElement('span')
 		tempElm.innerHTML = ajaxBodyHtml
@@ -58,9 +93,7 @@ class IncidentLoader {
 		for (var i = 0; i < items.length; i++) {
 			items[i].classList.add('animation-fade-in')
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
-			if (!replace) {
-				fragment.appendChild(items[i])
-			}
+			fragment.appendChild(items[i])
 		}
 
 		// Swap the old next page link with the new
@@ -69,8 +102,6 @@ class IncidentLoader {
 			_elm.addEventListener('click', this.getNextPage)
 			if (this.nextLinkElm) {
 				this.nextLinkElm.parentNode.replaceChild(_elm, this.nextLinkElm)
-			} else if (replace) {
-				this.parentElm.parentNode.appendChild(_elm)
 			}
 			this.nextLinkElm = _elm
 		} else if (this.nextLinkElm) {
@@ -78,20 +109,7 @@ class IncidentLoader {
 			this.nextLinkElm = null
 		}
 
-		if (replace) {
-			this.parentElm.parentNode.replaceChild(parentElm, this.parentElm)
-			this.parentElm = parentElm
-			// If we're doing a replacement, we also might have a new stats table and methodologies to replace
-			const summaryTable = document.querySelector('.js-summary-table')
-			const newSummaryTable = tempElm.querySelector('.js-summary-table')
-			summaryTable.innerHTML = newSummaryTable.innerHTML
-
-			const methodologies = document.querySelector('.js-methodologies')
-			const newMethodologies = tempElm.querySelector('.js-methodologies')
-			methodologies.innerHTML = newMethodologies.innerHTML
-		} else {
-			this.parentElm.appendChild(fragment)
-		}
+		this.parentElm.appendChild(fragment)
 	}
 
 	getNextPage(event) {
@@ -117,7 +135,7 @@ class IncidentLoader {
 				this.incrementFetches()
 
 				if (response.status === 200) {
-					this.insertPageFromBody(response.data)
+					this.appendIncidents(response.data)
 				}
 			})
 	}
