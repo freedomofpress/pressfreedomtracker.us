@@ -6,17 +6,17 @@ class IncidentLoader {
 	constructor() {
 		// IncidentLoader is a go! We can remove the Previous link
 		// since we don't need it in the context of infinite scrolling.
-		const prevLinkElm = document.querySelector('.js-infinite-scrolling-prev-link')
+		const prevLinkElm = document.querySelector('.js-incident-loading-prev-link')
 		if (prevLinkElm) {
 			prevLinkElm.remove()
 		}
 
 		// We're going to keep track of the next link element so we can
 		// replace it on load and use it for the next XHR URL.
-		this.nextLinkElm = document.querySelector('.js-infinite-scrolling-next-link')
+		this.nextLinkElm = document.querySelector('.js-incident-loading-next-link')
 
 		// This is going to be our insertion parent for new items.
-		this.parentElm = document.querySelector('.js-infinite-scrolling-parent')
+		this.parentElm = document.querySelector('.js-incident-loading-parent')
 
 		// We're going to keep track of the number of fetches we've made
 		// because only a certain number are going to occur automatically.
@@ -27,7 +27,7 @@ class IncidentLoader {
 		this.getNextPage = this.getNextPage.bind(this)
 
 		window.addEventListener('scroll', this.handleScroll)
-		const elm = document.querySelector('.js-infinite-scrolling-next-link')
+		const elm = document.querySelector('.js-incident-loading-next-link')
 		if (elm) {
 			elm.addEventListener('click', this.getNextPage)
 		}
@@ -39,7 +39,7 @@ class IncidentLoader {
 
 	handleScroll(event) {
 		if (this.fetches < IncidentLoader.NUM_AUTO_FETCHES) {
-			const elm = this.parentElm.querySelector('.js-infinite-scrolling-item:last-child')
+			const elm = this.parentElm.querySelector('.js-incident-loading-item:last-child')
 			if (isElementVisible(elm)) {
 				this.getNextPage()
 			}
@@ -51,15 +51,15 @@ class IncidentLoader {
 		const tempElm = document.createElement('span')
 		tempElm.innerHTML = ajaxBodyHtml
 
-		const newItemList = tempElm.querySelector('.js-infinite-scrolling-parent')
+		const newItemList = tempElm.querySelector('.js-incident-loading-parent')
 
 		const fadeIn = (item, i) => {
 			item.classList.add('animation-fade-in')
 			item.classList.add(`animation-fade-in--${i + 1}`)
 		}
-		tempElm.querySelectorAll('.js-infinite-scrolling-item').forEach(fadeIn)
+		tempElm.querySelectorAll('.js-incident-loading-item').forEach(fadeIn)
 
-		const newNextLink = tempElm.querySelector('.js-infinite-scrolling-next-link')
+		const newNextLink = tempElm.querySelector('.js-incident-loading-next-link')
 		if (newNextLink) {
 			newNextLink.addEventListener('click', this.getNextPage)
 			if (!this.nextLinkElm) {
@@ -87,9 +87,9 @@ class IncidentLoader {
 		const tempElm = document.createElement('span')
 		tempElm.innerHTML = ajaxBodyHtml
 
-		const parentElm = tempElm.querySelector('.js-infinite-scrolling-parent')
+		const parentElm = tempElm.querySelector('.js-incident-loading-parent')
 
-		const items = tempElm.querySelectorAll('.js-infinite-scrolling-item')
+		const items = tempElm.querySelectorAll('.js-incident-loading-item')
 		for (var i = 0; i < items.length; i++) {
 			items[i].classList.add('animation-fade-in')
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
@@ -97,7 +97,7 @@ class IncidentLoader {
 		}
 
 		// Swap the old next page link with the new
-		const _elm = tempElm.querySelector('.js-infinite-scrolling-next-link')
+		const _elm = tempElm.querySelector('.js-incident-loading-next-link')
 		if (_elm) {
 			_elm.addEventListener('click', this.getNextPage)
 			if (this.nextLinkElm) {
@@ -121,7 +121,7 @@ class IncidentLoader {
 			return
 		}
 
-		const cameFromClick = event && event.target.className.indexOf('js-infinite-scrolling-next-link') !== -1
+		const cameFromClick = event && event.target.className.indexOf('js-incident-loading-next-link') !== -1
 		if (!cameFromClick && !this.nextLinkElm) {
 			return null
 		}
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		return
 	}
 
-	if (document.querySelector('.js-infinite-scrolling-parent')) {
+	if (document.querySelector('.js-incident-loading-parent')) {
 		window._incidentLoader = new IncidentLoader()
 	}
 })

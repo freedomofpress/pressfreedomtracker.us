@@ -82,9 +82,9 @@
 {% block main %}
 	{% include "incident/_filters.html" with no_category_filtering=True category=page.id %}
 
-	<div class="grid-50 js-infinite-scrolling-parent">
+	<div class="grid-50 js-incident-loading-parent">
 		{% for incident in entries_page %}
-			<div class="grid-50__item js-infinite-scrolling-item">
+			<div class="grid-50__item js-incident-loading-item">
 				{% include "incident/_incident.html" with incident=incident teaser=True %}
 			</div>
 		{% empty %}
@@ -95,7 +95,7 @@
 	{% if entries_page.has_next %}
 		<a
 			href="?{% query_transform request page=entries_page.next_page_number %}"
-				  class="button button--outline button--center js-infinite-scrolling-next-link"
+				  class="button button--outline button--center js-incident-loading-next-link"
 		>
 			More Incidents
 		</a>
