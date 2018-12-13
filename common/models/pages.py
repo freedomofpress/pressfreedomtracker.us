@@ -280,6 +280,13 @@ class CategoryPage(MetadataPageMixin, Page):
         context['entries_page'] = entries
         context['paginator'] = paginator
         context['summary_table'] = incident_filter.get_summary()
+        context['test'] = 'test'
+
+        #  check if filters other than category are applied
+        filters = dict(request.GET)
+        filters.pop('page', None)
+        filters.pop('categories', None)
+        context['filtered'] = bool(filters)
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
