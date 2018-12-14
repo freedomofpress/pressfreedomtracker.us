@@ -39,6 +39,58 @@ class ContextTest(TestCase):
 
         self.assertEqual(set(context['entries_page']), {incident1})
 
+    def test_filtered__has_filter(self):
+        """
+        CategoryPage context method should correctly detect if any filters
+        are present
+        """
+        category_page = CategoryPageFactory()
+        request = RequestFactory().get(
+            '/',
+            {'arrest_status': 'DETAINED_NO_PROCESSING'}
+        )
+        # Attach wagtail site.
+        SiteMiddleware().process_request(request)
+        context = category_page.get_context(request)
+        self.assertTrue(context['filtered'])
+
+    def test_filtered__no_filter(self):
+        """
+        CategoryPage context method should correctly detect if no filters
+        are present
+        """
+        category_page = CategoryPageFactory()
+        request = RequestFactory().get('/')
+        # Attach wagtail site.
+        SiteMiddleware().process_request(request)
+        context = category_page.get_context(request)
+        self.assertFalse(context['filtered'])
+
+    def test_filtered__ignore_page(self):
+        """
+        CategoryPage context method should not count `page` in `request.GET` as
+        a filter, since it is just a pagination implementation detail
+        """
+        category_page = CategoryPageFactory()
+        request = RequestFactory().get('/', {'page': '2'})
+        # Attach wagtail site.
+        SiteMiddleware().process_request(request)
+        context = category_page.get_context(request)
+        self.assertFalse(context['filtered'])
+
+    def test_filtered__ignore_categories(self):
+        """
+        CategoryPage context method should not count `category` in
+        `request.GET` as a filter since the page is limited by category
+        already and the `category` querystring entry is redundant
+        """
+        category_page = CategoryPageFactory()
+        request = RequestFactory().get('/', {'categories': '1'})
+        # Attach wagtail site.
+        SiteMiddleware().process_request(request)
+        context = category_page.get_context(request)
+        self.assertFalse(context['filtered'])
+
 
 class IncidentFilterTest(TestCase):
     @classmethod
