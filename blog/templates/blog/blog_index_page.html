@@ -46,15 +46,16 @@
 			<div class="blog-filter__clear">
 				<a href="{{ page.url }}">&times; See All Articles</a>
 			</div>
-		{% endif %}
-		<div class="js-incident-loading-parent">
-			{% for post in entries_page %}
-				<div class="js-incident-loading-item">
-					{% include "blog/_blog_tease.html" with page=post.specific location="blog-index" single_column=True %}
-				</div>
-			{% endfor %}
 		</div>
 	{% endif %}
+	<div class="js-incident-loading-parent">
+		{% for post in entries_page %}
+			<div class="js-incident-loading-item">
+				{% include "blog/_blog_tease.html" with page=post.specific location="blog-index" single_column=True %}
+			</div>
+		{% endfor %}
+	</div>
+
 	<div class="js-infinite-scrolling-parent">
 		{% for post in entries_page %}
 			<div class="js-infinite-scrolling-item">
