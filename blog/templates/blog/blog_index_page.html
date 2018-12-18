@@ -56,14 +56,6 @@
 		{% endfor %}
 	</div>
 
-	<div class="js-infinite-scrolling-parent">
-		{% for post in entries_page %}
-			<div class="js-infinite-scrolling-item">
-				{% include "blog/_blog_tease.html" with page=post.specific location="blog-index" single_column=True %}
-			</div>
-		{% endfor %}
-	</div>
-
 	{% if entries_page.has_previous %}
 		<a
 			href="?{% query_transform request page=entries_page.previous_page_number %}"
