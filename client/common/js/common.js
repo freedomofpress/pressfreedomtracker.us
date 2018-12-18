@@ -10,7 +10,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 import '../sass/common.sass'
 import '~/slidingnav'
-import '~/infinitescrolling'
+import '~/IncidentLoader'
 import '~/emails'
 
 window.React = require('react')
