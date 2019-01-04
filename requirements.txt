@@ -1,11 +1,11 @@
 -e git+https://github.com/freedomofpress/django-logging.git@b7d0b7b542db6ac088dbf3d2e7b249df333d3082#egg=django-logging-json
 beautifulsoup4==4.6.0     # via wagtail
 bleach==3.0.2
-certifi==2018.10.15       # via requests
+certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
 click==7.0                # via pip-tools
 dj-database-url==0.5.0
-django-analytical==2.4.0
+django-analytical==2.5.0
 django-anymail==5.0
 django-modelcluster==3.1
 django-recaptcha==1.4.0
@@ -13,31 +13,31 @@ django-settings-export==1.2.1
 django-taggit==0.22.2     # via wagtail
 django-treebeard==4.3     # via wagtail
 django-webpack-loader==0.6.0
-django==1.11.16
+django==1.11.18
 djangorestframework==3.6.4  # via wagtail
 docutils==0.14
 factory-boy==2.11.1
-faker==1.0.0              # via factory-boy
+faker==1.0.1              # via factory-boy
 gunicorn==19.9.0
 html5lib==0.999999999     # via wagtail
-idna==2.7                 # via requests
+idna==2.8                 # via requests
 jinja2==2.10
 markupsafe==1.1.0         # via jinja2
-pillow==5.3.0             # via wagtail
-pip-tools==3.1.0
+pillow==5.4.0             # via wagtail
+pip-tools==3.2.0
 psycopg2==2.7.6.1
-pygments==2.2.0
+pygments==2.3.1
 pyparsing==2.3.0
 python-dateutil==2.7.5    # via faker
 python-json-logger==0.1.10
 pytz==2018.7              # via django, django-modelcluster
-requests==2.20.1          # via django-anymail, wagtail
-six==1.11.0               # via bleach, django-anymail, faker, html5lib, pip-tools, python-dateutil, unittest-xml-reporting
+requests==2.21.0          # via django-anymail, wagtail
+six==1.12.0               # via bleach, django-anymail, faker, html5lib, pip-tools, python-dateutil, unittest-xml-reporting
 smartypants==2.0.1        # via typogrify
 text-unidecode==1.2       # via faker
 typing==3.6.6
 typogrify==2.0.7
-unidecode==1.0.22         # via wagtail
+unidecode==1.0.23         # via wagtail
 unittest-xml-reporting==2.2.0
 urllib3==1.24.1           # via requests
 wagtail-django-recaptcha==1.0
