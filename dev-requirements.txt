@@ -2,61 +2,61 @@
 backcall==0.1.0           # via ipython
 beautifulsoup4==4.6.0
 bleach==3.0.2
-certifi==2018.10.15
+certifi==2018.11.29
 chardet==3.0.4
 click==7.0
 decorator==4.3.0          # via ipython, traitlets
 dj-database-url==0.5.0
-django-analytical==2.4.0
+django-analytical==2.5.0
 django-anymail==5.0
-django-debug-toolbar==1.10.1
+django-debug-toolbar==1.11
 django-modelcluster==3.1
 django-recaptcha==1.4.0
 django-settings-export==1.2.1
 django-taggit==0.22.2
 django-treebeard==4.3
 django-webpack-loader==0.6.0
-django==1.11.16
+django==1.11.18
 djangorestframework==3.6.4
 docutils==0.14
 factory-boy==2.11.1
-faker==1.0.0
+faker==1.0.1
 flake8==3.6.0
 gunicorn==19.9.0
 html5lib==0.999999999
-idna==2.7
+idna==2.8
 ipdb==0.11
 ipython-genutils==0.2.0   # via traitlets
 ipython==6.5.0            # via ipdb
-jedi==0.13.1              # via ipython
+jedi==0.13.2              # via ipython
 jinja2==2.10
 markupsafe==1.1.0
 mccabe==0.6.1             # via flake8
 parso==0.3.1              # via jedi
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
-pillow==5.3.0
-pip-tools==3.1.0
+pillow==5.4.0
+pip-tools==3.2.0
 prompt-toolkit==1.0.15    # via ipython
 psycopg2==2.7.6.1
 ptyprocess==0.6.0         # via pexpect
 pycodestyle==2.4.0        # via flake8
 pyflakes==2.0.0           # via flake8
-pygments==2.2.0
+pygments==2.3.1
 pyparsing==2.3.0
 python-dateutil==2.7.5
 python-json-logger==0.1.10
 pytz==2018.7
-requests==2.20.1
+requests==2.21.0
 simplegeneric==0.8.1      # via ipython
-six==1.11.0
+six==1.12.0
 smartypants==2.0.1
 sqlparse==0.2.4           # via django-debug-toolbar
 text-unidecode==1.2
 traitlets==4.3.2          # via ipython
 typing==3.6.6
 typogrify==2.0.7
-unidecode==1.0.22
+unidecode==1.0.23
 unittest-xml-reporting==2.2.0
 urllib3==1.24.1
 wagtail-django-recaptcha==1.0
