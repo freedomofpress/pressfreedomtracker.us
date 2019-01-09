@@ -1,4 +1,4 @@
-FROM quay.io/freedomofpress/ci-python
+FROM python:3.4-slim
 ARG USER_ID
 
 RUN apt-get update && apt-get install -y gcc curl \
