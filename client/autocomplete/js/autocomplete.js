@@ -9,7 +9,7 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 
-window.renderAutocompleteWidget = (id, name, value, type, canCreate, isSingle) => {
+window.renderAutocompleteWidget = (id, name, value, type, canCreate, isSingle, limit) => {
 	render(
 		<Autocomplete
 			name={name}
@@ -18,6 +18,7 @@ window.renderAutocompleteWidget = (id, name, value, type, canCreate, isSingle) =
 			canCreate={canCreate}
 			isSingle={isSingle}
 			apiBase="/admin/autocomplete/"
+			limit={limit}
 		/>,
 		document.getElementById(id)
 	)

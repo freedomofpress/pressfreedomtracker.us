@@ -63,13 +63,14 @@ def search(request):
         queryset = queryset.live()
 
     exclude = request.GET.get('exclude', '')
+    limit = int(request.GET.get('limit', 20))
     try:
         exclusions = [int(item) for item in exclude.split(',')]
         queryset = queryset.exclude(pk__in=exclusions)
     except:  # noqa: #E722
         pass
 
-    results = map(render_page, queryset[:20])
+    results = map(render_page, queryset[:limit])
     return JsonResponse(dict(pages=list(results)))
 
 

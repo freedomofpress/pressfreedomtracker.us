@@ -20,9 +20,10 @@ def _can_create(page_type):
 
 
 class AutocompleteFieldPanel:
-    def __init__(self, field_name, page_type='wagtailcore.Page'):
+    def __init__(self, field_name, page_type='wagtailcore.Page', limit=20):
         self.field_name = field_name
         self.page_type = page_type
+        self.limit = limit
 
     def bind_to_model(self, model):
         can_create = _can_create(self.page_type)
@@ -32,16 +33,17 @@ class AutocompleteFieldPanel:
             widget=type(
                 '_Autocomplete',
                 (Autocomplete,),
-                dict(page_type=self.page_type, can_create=can_create, is_single=False),
+                dict(page_type=self.page_type, can_create=can_create, is_single=False, limit=self.limit),
             ),
         )
         return type('_AutocompleteFieldPanel', (BaseFieldPanel,), base)
 
 
 class AutocompletePageChooserPanel:
-    def __init__(self, field_name, page_type='wagtailcore.Page'):
+    def __init__(self, field_name, page_type='wagtailcore.Page', limit=20):
         self.field_name = field_name
         self.page_type = page_type
+        self.limit = limit
 
     def bind_to_model(self, model):
         # TODO: support list of page types
@@ -56,7 +58,7 @@ class AutocompletePageChooserPanel:
             widget=type(
                 '_Autocomplete',
                 (Autocomplete,),
-                dict(page_type=self.page_type, can_create=can_create, is_single=True)
+                dict(page_type=self.page_type, can_create=can_create, is_single=True, limit=self.limit)
             )
         )
         return type('_AutocompletePageChooserPanel', (BaseChooserPanel,), base)

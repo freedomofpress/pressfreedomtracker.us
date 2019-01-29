@@ -71,6 +71,7 @@ class Autocomplete extends PureComponent {
 		const params = {
 			query: value,
 			type: this.props.type,
+			limit: this.props.limit,
 			exclude: this.getExclusions(),
 		}
 		axios.get(this.props.apiBase + 'search/', { params })
@@ -108,6 +109,7 @@ class Autocomplete extends PureComponent {
 		const params = {
 			ids,
 			type: this.props.type,
+			limit: this.props.limit,
 		}
 		axios.get(this.props.apiBase + 'objects/', { params })
 			.then(res => {
