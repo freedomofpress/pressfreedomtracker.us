@@ -16,7 +16,7 @@ from wagtail.wagtailcore.models import Page
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
-from autocomplete.edit_handlers import AutocompleteFieldPanel, AutocompletePageChooserPanel
+from wagtailautocomplete.edit_handlers import AutocompletePanel
 from common.blocks import (
     RichTextBlockQuoteBlock,
     AlignedCaptionedEmbedBlock,
@@ -374,9 +374,9 @@ class IncidentPage(MetadataPageMixin, Page):
                     FieldPanel('exact_date_unknown'),
                     FieldPanel('affiliation'),
                     FieldPanel('city'),
-                    AutocompletePageChooserPanel('state', page_type='incident.State'),
-                    AutocompleteFieldPanel('targets', 'incident.Target'),
-                    AutocompleteFieldPanel('tags', 'common.CommonTag'),
+                    AutocompletePanel('state', page_type='incident.State'),
+                    AutocompletePanel('targets', 'incident.Target', is_single=False),
+                    AutocompletePanel('tags', 'common.CommonTag', is_single=False),
                     InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
@@ -387,8 +387,8 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('arrest_status'),
                 FieldPanel('status_of_charges'),
-                AutocompleteFieldPanel('current_charges', 'incident.Charge'),
-                AutocompleteFieldPanel('dropped_charges', 'incident.Charge'),
+                AutocompletePanel('current_charges', 'incident.Charge', is_single=False),
+                AutocompletePanel('dropped_charges', 'incident.Charge', is_single=False),
                 FieldPanel('detention_date'),
                 FieldPanel('release_date'),
                 FieldPanel('unnecessary_use_of_force'),
@@ -400,7 +400,7 @@ class IncidentPage(MetadataPageMixin, Page):
             classname='collapsible collapsed',
             children=[
                 FieldPanel('lawsuit_name'),
-                AutocompleteFieldPanel('venue', 'incident.Venue'),
+                AutocompletePanel('venue', 'incident.Venue', is_single=False),
             ]
         ),
 
@@ -435,7 +435,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel('target_us_citizenship_status'),
                 FieldPanel('denial_of_entry'),
                 FieldPanel('stopped_previously'),
-                AutocompleteFieldPanel('target_nationality', 'incident.Nationality'),
+                AutocompletePanel('target_nationality', 'incident.Nationality', is_single=False),
                 FieldPanel('did_authorities_ask_for_device_access'),
                 FieldPanel('did_authorities_ask_for_social_media_user'),
                 FieldPanel('did_authorities_ask_for_social_media_pass'),
@@ -457,7 +457,7 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
             classname='collapsible collapsed',
             children=[
-                AutocompleteFieldPanel('targets_whose_communications_were_obtained', 'incident.Target'),
+                AutocompletePanel('targets_whose_communications_were_obtained', 'incident.Target', is_single=False),
                 FieldPanel('charged_under_espionage_act'),
             ]
         ),
@@ -495,11 +495,11 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Denial of Access',
             classname='collapsible collapsed',
             children=[
-                AutocompleteFieldPanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
+                AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic', is_single=False),
             ]
         ),
 
-        AutocompleteFieldPanel('related_incidents', 'incident.IncidentPage'),
+        AutocompletePanel('related_incidents', 'incident.IncidentPage', is_single=False),
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']
