@@ -21,6 +21,7 @@ typing
 typogrify
 # 1.12 is the current LTS
 wagtail<1.13
+wagtail-autocomplete
 wagtail-factories
 wagtail-django-recaptcha
 # Had to peg because latest version wants wagtail >=2.0
