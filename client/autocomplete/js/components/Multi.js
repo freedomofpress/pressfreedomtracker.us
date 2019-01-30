@@ -59,7 +59,7 @@ class Multi extends PureComponent {
 							key={selection.id}
 							className="selection"
 						>
-							<span className="selection__label">{selection.label}</span>
+							<span className="selection__label">{selection.title}</span>
 
 							<button
 								type="button"
