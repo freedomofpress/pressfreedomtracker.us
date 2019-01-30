@@ -7,47 +7,58 @@ import modelcluster.fields
 
 
 def convert_jurisdiction_to_venue(apps, schema_editor):
-        IncidentPage = apps.get_model('incident', 'IncidentPage')
-        Venue = apps.get_model('incident', 'Venue')
-        for incident_page in IncidentPage.objects.all():
-            if incident_page.jurisdiction:
-                new_venue, created = Venue.objects.get_or_create(title=incident_page.jurisdiction)
+    IncidentPage = apps.get_model("incident", "IncidentPage")
+    Venue = apps.get_model("incident", "Venue")
+    for incident_page in IncidentPage.objects.all():
+        if incident_page.jurisdiction:
+            new_venue, created = Venue.objects.get_or_create(
+                title=incident_page.jurisdiction
+            )
 
-                if created:
-                    new_venue.save()
-                incident_page.venue.add(new_venue)
-                incident_page.venue.commit()
+            if created:
+                new_venue.save()
+            incident_page.venue.add(new_venue)
+            incident_page.venue.commit()
 
 
 def convert_venue_to_jurisdiction(apps, schema_editor):
-        pass
+    pass
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('incident', '0009_change_tags_to_m2ms'),
-    ]
+    dependencies = [("incident", "0009_change_tags_to_m2ms")]
 
     operations = [
         migrations.CreateModel(
-            name='Venue',
+            name="Venue",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255, unique=True)),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False},
         ),
         migrations.AddField(
-            model_name='incidentpage',
-            name='venue',
-            field=modelcluster.fields.ParentalManyToManyField(blank=True, help_text='Courts that are hearing or have heard this case.', related_name='venue_incidents', to='incident.Venue', verbose_name='Case Venue'),
+            model_name="incidentpage",
+            name="venue",
+            field=modelcluster.fields.ParentalManyToManyField(
+                blank=True,
+                help_text="Courts that are hearing or have heard this case.",
+                related_name="venue_incidents",
+                to="incident.Venue",
+                verbose_name="Case Venue",
+            ),
         ),
-        migrations.RunPython(convert_jurisdiction_to_venue, convert_venue_to_jurisdiction, elidable=True),
-        migrations.RemoveField(
-            model_name='incidentpage',
-            name='jurisdiction',
+        migrations.RunPython(
+            convert_jurisdiction_to_venue, convert_venue_to_jurisdiction, elidable=True
         ),
+        migrations.RemoveField(model_name="incidentpage", name="jurisdiction"),
     ]
