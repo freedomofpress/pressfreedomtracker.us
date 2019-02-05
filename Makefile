@@ -108,7 +108,9 @@ safety: ## Runs `safety check` to check python dependencies for vulnerabilities
 	pip install --upgrade safety && \
 		for req_file in `find . -type f -name '*requirements.txt'`; do \
 			echo "Checking file $$req_file" \
-			&& safety check --full-report -r $$req_file \
+			&& safety check \
+				-i 36783 \
+				--full-report --stdin < $$req_file \
 			&& echo -e '\n' \
 			|| exit 1; \
 		done
