@@ -17,7 +17,7 @@ class Single extends PureComponent {
 		if (selected) {
 			return (
 				<div className="selection selection--single">
-					<span className="selection__label">{selected.label}</span>
+					<span className="selection__label">{selected.title}</span>
 
 					<button
 						type="button"

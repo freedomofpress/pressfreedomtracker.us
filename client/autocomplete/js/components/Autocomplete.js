@@ -79,12 +79,12 @@ class Autocomplete extends PureComponent {
 					return
 				}
 
-				if (!Array.isArray(res.data.pages)) {
+				if (!Array.isArray(res.data.items)) {
 					return
 				}
 
 				this.setState({
-					suggestions: res.data.pages
+					suggestions: res.data.items
 				})
 			})
 	}
@@ -115,7 +115,7 @@ class Autocomplete extends PureComponent {
 					return
 				}
 
-				if (!Array.isArray(res.data.pages)) {
+				if (!Array.isArray(res.data.items)) {
 					return
 				}
 
@@ -124,7 +124,7 @@ class Autocomplete extends PureComponent {
 					newValue = this.state.value.map(v => {
 						// "Pages" is actually items, not paginated groups. This is probably a
 						// remnant of this being built specifically for wagtail pages.
-						const page = res.data.pages.find(page => page.id === v.id)
+						const page = res.data.items.find(page => page.id === v.id)
 						if (!page) {
 							return v
 						}
@@ -132,7 +132,7 @@ class Autocomplete extends PureComponent {
 						return page
 					})
 				} else {
-					newValue = res.data.pages[0]
+					newValue = res.data.items[0]
 				}
 
 				this.setState({ value: newValue })

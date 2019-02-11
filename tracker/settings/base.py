@@ -30,7 +30,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    'autocomplete',
     'blog',
     'common',
     'forms',
@@ -70,6 +69,7 @@ INSTALLED_APPS = [
     'typogrify',
     'wagtailmetadata',
     'webpack_loader',
+    'wagtailautocomplete',
 
     'django.contrib.admin',
     'django.contrib.auth',

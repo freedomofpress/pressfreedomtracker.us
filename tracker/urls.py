@@ -3,15 +3,20 @@ from __future__ import absolute_import, unicode_literals
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
+from wagtailautocomplete.views import objects, search
 
-from autocomplete.urls.public import urlpatterns as autocomplete_public_urls
-from autocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from common import views as common_views
 from emails import urls as emails_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 
+
+autocomplete_public_urls = [
+    url(r'^objects/', objects),
+    url(r'^search/', search),
+]
 
 urlpatterns = [
     url(r'^django-admin/', include(admin.site.urls)),

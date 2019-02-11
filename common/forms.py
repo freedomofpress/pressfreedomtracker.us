@@ -1,8 +1,9 @@
 from django import forms
 from django.utils.text import capfirst
-from common.models import CommonTag
 
-from autocomplete.widgets import Autocomplete
+from wagtailautocomplete.widgets import Autocomplete
+
+from common.models import CommonTag
 
 
 class BaseMergeForm(forms.Form):

@@ -14,7 +14,7 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
     RichTextTemplateBlock,
 )
-from autocomplete.edit_handlers import AutocompletePageChooserPanel
+from wagtailautocomplete.edit_handlers import AutocompletePanel
 from statistics.blocks import StatisticsBlock
 
 
@@ -76,7 +76,7 @@ class EquipmentSeized(models.Model):
     _autocomplete_model = 'incident.Equipment'
 
     panels = [
-        AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
+        AutocompletePanel('equipment', page_type='incident.Equipment'),
         FieldPanel('quantity'),
     ]
 
@@ -101,7 +101,7 @@ class EquipmentBroken(models.Model):
     _autocomplete_model = 'incident.Equipment'
 
     panels = [
-        AutocompletePageChooserPanel('equipment', page_type='incident.Equipment'),
+        AutocompletePanel('equipment', page_type='incident.Equipment'),
         FieldPanel('quantity'),
     ]
 

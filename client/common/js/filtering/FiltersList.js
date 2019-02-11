@@ -39,12 +39,12 @@ class FiltersList extends PureComponent {
 			if (Array.isArray(filterValues[filter.name])) {
 				renderedValue = (
 					<ul className="filters__summary-list">
-						{filterValues[filter.name].map(({ label, id }) => (
+						{filterValues[filter.name].map(({ title, id }) => (
 							<li
 								key={id}
 								className="filters__summary-item"
 							>
-								{label}
+								{title}
 							</li>
 						))}
 					</ul>
