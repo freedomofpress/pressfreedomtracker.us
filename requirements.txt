@@ -13,7 +13,7 @@ django-settings-export==1.2.1
 django-taggit==0.22.2     # via wagtail
 django-treebeard==4.3     # via wagtail
 django-webpack-loader==0.6.0
-django==1.11.18
+django==1.11.20
 djangorestframework==3.6.4  # via wagtail
 docutils==0.14
 factory-boy==2.11.1
@@ -28,7 +28,7 @@ pip-tools==3.3.2
 psycopg2==2.7.7
 pygments==2.3.1
 pyparsing==2.3.1
-python-dateutil==2.7.5    # via faker
+python-dateutil==2.8.0    # via faker
 python-json-logger==0.1.10
 pytz==2018.9              # via django, django-modelcluster
 requests==2.21.0          # via django-anymail, wagtail

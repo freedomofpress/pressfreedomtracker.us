@@ -16,13 +16,13 @@ django-settings-export==1.2.1
 django-taggit==0.22.2
 django-treebeard==4.3
 django-webpack-loader==0.6.0
-django==1.11.18
+django==1.11.20
 djangorestframework==3.6.4
 docutils==0.14
 entrypoints==0.3          # via flake8
 factory-boy==2.11.1
 faker==1.0.2
-flake8==3.7.1
+flake8==3.7.5
 gunicorn==19.9.0
 html5lib==0.999999999
 idna==2.8
@@ -33,7 +33,7 @@ jedi==0.13.2              # via ipython
 jinja2==2.10
 markupsafe==1.1.0
 mccabe==0.6.1             # via flake8
-parso==0.3.2              # via jedi
+parso==0.3.3              # via jedi
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
 pillow==5.4.1
@@ -45,7 +45,7 @@ pycodestyle==2.5.0        # via flake8
 pyflakes==2.1.0           # via flake8
 pygments==2.3.1
 pyparsing==2.3.1
-python-dateutil==2.7.5
+python-dateutil==2.8.0
 python-json-logger==0.1.10
 pytz==2018.9
 requests==2.21.0
