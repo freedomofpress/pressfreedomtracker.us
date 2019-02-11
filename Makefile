@@ -40,7 +40,7 @@ update-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -it python:3.4-slim  \
+	docker run -v "$(DIR):/code" -it python:3.4  \
 		bash -c 'pip install pip-tools && \
 		pip-compile -U --no-header --output-file /code/requirements.txt /code/requirements.in && \
 		pip-compile -U --no-header --output-file /code/dev-requirements.txt /code/dev-requirements.in'
