@@ -32,6 +32,7 @@
       DJANGO_JSON_LOG: True
       DJANGO_DB_NAME: pressfreedom
     django_stack_gcorn_app_settings: tracker.settings.production-ci
+    django_stack_node_ver: 10.15.1-alpine
     django_stack_force_refresh: true
     django_stack_rsync_opts:
       - "--exclude=devops"
