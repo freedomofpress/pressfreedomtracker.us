@@ -19,4 +19,4 @@
 
     - name: Fail if test failed earlier
       fail:
-      when: test_run_results|failed
+      when: test_run_results is failed
