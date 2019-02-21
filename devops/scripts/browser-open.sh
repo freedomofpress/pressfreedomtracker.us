@@ -10,7 +10,7 @@ PLATFORM="$(uname -o)"
 COMPOSE_ENV=dev
 # If nginx is running, we are surely in prod-land, this obviously
 # is not error free logic. Its possible for a user to clone this repo
-# into a folder not called freedompress which would cause a full grep
+# into a folder with a unique name which would cause a full grep
 # to fail. :shrug:
 ( docker ps | grep -q _nginx_1 ) && export COMPOSE_ENV=prod
 

@@ -12,10 +12,6 @@ dev-init: ## Initialize docker environment for developer workflow
 open-browser: ## Opens a web-browser pointing to the compose env
 	@./devops/scripts/browser-open.sh
 
-.PHONY: dev-createdevdata
-dev-createdevdata: ## Inject development data into the postgresql database
-	docker-compose exec django /bin/bash -c "./manage.py createdevdata"
-
 .PHONY: dev-import-db
 dev-import-db: ## Import a postgres export file located at import.db
 	docker-compose exec -it postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ postgres/g' | psql securedropdb -U postgres &> /dev/null"

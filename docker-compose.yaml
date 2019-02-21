@@ -44,6 +44,7 @@ services:
       - node
       - postgresql
     environment:
+      DJANGO_CREATEDEVDATA: "${DJANGO_CREATEDEVDATA:-no}"
       DJANGO_DB_PASSWORD: trackerpassword
       DJANGO_DB_USER: tracker
       DJANGO_DB_NAME: trackerdb

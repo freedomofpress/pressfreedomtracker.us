@@ -36,11 +36,9 @@ environment, run the following your first run:
     # One-time command to run and forget
     make dev-init
 
-    # Starts up the environment
-    docker-compose up
-
-    # Inject development data (also only needs to be run once)
-    make dev-createdevdata
+    # Starts up the environment WITH devdata injected
+    # leave off the environment variable to skip this step
+    DJANGO_CREATEDEVDATA=yes docker-compose up
 
 You should be able to hit the web server interface by running ``make open-browser``
 

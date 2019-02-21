@@ -27,6 +27,9 @@ django_start() {
     if [ "${DJANGO_COLLECT_STATIC}" == "yes" ]; then
         ./manage.py collectstatic -c --noinput
     fi
+    if [ "${DJANGO_CREATEDEVDATA:-no}" == "yes" ]; then
+        ./manage.py createdevdata
+    fi
     if [ "${DEPLOY_ENV}" == "dev" ]; then
         ./manage.py runserver 0.0.0.0:8000
     else
