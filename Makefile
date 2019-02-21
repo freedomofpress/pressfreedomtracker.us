@@ -1,7 +1,28 @@
 .DEFAULT_GOAL := help
 DIR := ${CURDIR}
 WHOAMI := ${USER}
+UID := $(shell id -u)
 RAND_PORT := ${RAND_PORT}
+
+.PHONY: dev-init
+dev-init: ## Initialize docker environment for developer workflow
+	echo UID=$(UID) > .env
+
+.PHONY: open-browser
+open-browser: ## Opens a web-browser pointing to the compose env
+	@./devops/scripts/browser-open.sh
+
+.PHONY: dev-createdevdata
+dev-createdevdata: ## Inject development data into the postgresql database
+	docker-compose exec django /bin/bash -c "./manage.py createdevdata"
+
+.PHONY: dev-import-db
+dev-import-db: ## Import a postgres export file located at import.db
+	docker-compose exec -it postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ postgres/g' | psql securedropdb -U postgres &> /dev/null"
+
+.PHONY: save-db
+dev-save-db: ## Export developer db to file
+	./devops/scripts/savedb.sh
 
 .PHONY: ci-go
 ci-go: ## Stands up a prod like environment under one docker container
@@ -11,54 +32,9 @@ ci-go: ## Stands up a prod like environment under one docker container
 ci-tests: ## Runs testinfra against a pre-running CI container (useful for debugging)
 	@molecule verify -s ci
 
-.PHONY: dev-go
-dev-go: ## Spin-up developer environment with three docker containers
-	./devops/scripts/dev.sh converge
-
-.PHONY: dev-chownroot
-dev-chownroot: ## Chown root owned files caused from previous root-run containers
-	sudo find $(DIR) -user root -exec chown -Rv $(WHOAMI):$(WHOAMI) '{}' \;
-
-.PHONY: dev-clean
-dev-clean: ## Completely wipes all developer containers
-	./devops/scripts/dev.sh destroy && rm -rf node_modules
-
-.PHONY: dev-stop
-dev-stop: ## Stops all running developer containers.
-	./devops/scripts/dev.sh side-effect
-
-.PHONY: dev-attach-node
-dev-attach-node: ## Provide a read-only terminal to attach to node spin-up
-	docker attach --sig-proxy=false pf_tracker_node
-
-.PHONY: dev-attach-django
-dev-attach-django: ## Provide a read-only terminal to attach to django spin-up
-	docker attach --sig-proxy=false pf_tracker_django
-
-.PHONY: dev-attach-postgresql
-dev-attach-postgresql: ## Provide a read-only terminal to attach to django spin-up
-	docker attach --sig-proxy=false pf_tracker_postgresql
-
-.PHONY: dev-createdevdata
-dev-createdevdata: ## Inject development data into the postgresql database
-	docker exec -it pf_tracker_django bash -c "./manage.py createdevdata"
-
-.PHONY: dev-test
-dev-test: ## Run application tests inside container
-	docker exec -it pf_tracker_django bash -c "./manage.py test --noinput --keepdb"
-
-.PHONY: dev-sass-lint
-dev-sass-lint: ## Runs sass-lint utility over the code-base
-	./devops/scripts/dev-sasslint.sh
-
-.PHONY: dev-import-db
-dev-import-db: ## Imports a database dump from file named ./import.db
-	docker exec -it pf_tracker_postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ tracker/g' | psql trackerdb -U tracker &> /dev/null"
-
-.PHONY: ci-devops-builder
-
-ci-devops-builder: ## Creates a container base for CI (not normally needed)
-	./devops/scripts/ci-django-build.sh
+.PHONY: dev-tests
+dev-tests: ## Run django tests against developer environment
+	docker-compose exec django /bin/bash -c "./manage.py test --noinput --keepdb"
 
 .PHONY: update-pip-dependencies
 update-pip-dependencies: ## Uses pip-compile to update requirements.txt
@@ -93,10 +69,6 @@ flake8: ## Runs flake8 linting in Python3 container.
 			python:3.4-slim \
 			bash -c "pip install -q flake8 && flake8"
 
-.PHONY: dev-save-db
-dev-save-db: ## Save a snapshot of the database for the current git branch
-	./devops/scripts/savedb.sh
-
 .PHONY: bandit
 bandit: ## Runs bandit static code analysis in Python3 container.
 	@docker run -it -v $(PWD):/code -w /code --name fpf_www_bandit --rm \
@@ -112,7 +84,3 @@ safety: ## Runs `safety check` to check python dependencies for vulnerabilities
 			&& echo -e '\n' \
 			|| exit 1; \
 		done
-
-.PHONY: dev-restore-db
-dev-restore-db: ## Restore the most recent database snapshot for the current git branch
-	./devops/scripts/restoredb.sh
