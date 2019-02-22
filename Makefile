@@ -3,6 +3,9 @@ DIR := ${CURDIR}
 WHOAMI := ${USER}
 UID := $(shell id -u)
 RAND_PORT := ${RAND_PORT}
+GIT_REV := $(shell git rev-parse HEAD | cut -c1-10)
+GIT_BR := $(shell git rev-parse --abbrev-ref HEAD)
+REMOTE_IMAGE := quay.io/freedomofpress/tracker.us
 
 .PHONY: dev-init
 dev-init: ## Initialize docker environment for developer workflow
@@ -80,3 +83,9 @@ safety: ## Runs `safety check` to check python dependencies for vulnerabilities
 			&& echo -e '\n' \
 			|| exit 1; \
 		done
+
+.PHONY: prod-push
+prod-push: ## Publishes prod container image to registry
+	docker tag $(REMOTE_IMAGE):latest $(REMOTE_IMAGE):$(GIT_REV)-$(GIT_BR)
+	docker push $(REMOTE_IMAGE):latest
+	docker push $(REMOTE_IMAGE):$(GIT_REV)-$(GIT_BR)
