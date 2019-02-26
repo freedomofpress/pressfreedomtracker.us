@@ -2,13 +2,18 @@ version: 2
 jobs:
   safety_check:
     machine: true
-    working_directory: ~/pressfreedom
+    working_directory: ~/tracker
     steps:
       - checkout
 
       - run:
           name: Install dependencies
-          command: pip install -r devops/requirements.txt
+          command: |
+            # Set to native py3 on circleci image
+            pyenv global 3.5.2
+            pip install -U pip
+            pip install pipenv
+            pipenv install
 
       - run:
           name: Check Python dependencies for CVEs
@@ -18,19 +23,32 @@ jobs:
           name: Static code analysis for vulnerabilities
           command: make bandit
 
-  dev:
-    machine: true
-    working_directory: ~/pressfreedom
-    steps:
-      - checkout
-
       - run:
           name: Run flake8 tests
           command: make flake8
 
+  dev:
+    machine: true
+    working_directory: ~/tracker
+    steps:
+      - checkout
+
       - run:
-          name: Ensure developer env working
-          command: make dev-go
+          name: Install dependencies
+          command: |
+            # Set to native py3 on circleci image
+            pyenv global 3.5.2
+            pip install -U pip
+            pip install pipenv
+            pipenv install
+
+      - run:
+          name: Ensure we can run dev-env
+          command: |
+            make dev-init
+            pipenv run docker-compose up -d
+            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 1 && echo -n .; done;
+            pipenv run make dev-tests
 
   prod:
     machine: true
@@ -40,17 +58,27 @@ jobs:
 
       - run:
           name: Install dependencies
-          command: pip install -r devops/requirements.txt
+          command: |
+            # Set to native py3 on circleci image
+            pyenv global 3.5.2
+            pip install -U pip
+            pip install pipenv
+            pipenv install
 
       - run:
-          name: CI runner
-          command: make ci-go
+          name: Ensure we can run prod-env
+          command: |
+            pipenv run docker-compose -f prod-docker-compose.yaml build
+            pipenv run docker-compose -f prod-docker-compose.yaml up -d
+            while ! curl --output /dev/null --silent --head --fail http://$(docker-compose -f prod-docker-compose.yaml port nginx 8080); do sleep 1 && echo -n .; done;
+            pipenv run docker-compose -f prod-docker-compose.yaml exec django /bin/bash -c "./manage.py createdevdata"
+            pipenv run pytest devops/tests/test_basic.py
 
-      - store_test_results:
-          path: ~/pressfreedom/test-results
-
-      - store_artifacts:
-          path: ~/pressfreedom/test-results
+      - run:
+          name: Push prod containers
+          command: |
+            docker login -u "${QUAY_USER}" -p "${QUAY_PASS}" quay.io || true
+            make prod-push || true
 
 workflows:
   version: 2
@@ -58,7 +86,9 @@ workflows:
     jobs:
       - safety_check
       - dev
-      - prod
+      - prod:
+          requires:
+            - dev
   nightly:
     triggers:
       - schedule:

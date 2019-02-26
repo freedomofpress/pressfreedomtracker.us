@@ -1,6 +1,6 @@
 .. image:: https://circleci.com/gh/freedomofpress/pressfreedom/tree/master.svg?style=svg&circle-token=e04b02d815f80dcf1194d55659573122ea7994f4
     :target: https://circleci.com/gh/freedomofpress/pressfreedom/tree/master
-    
+
 Development
 =============
 
@@ -9,73 +9,38 @@ Prerequisites
 
 The installation instructions below assume you have the following software on your machine:
 
-* `virtualenv <http://www.virtualenv.org/en/latest/virtualenv.html#installation>`_
 * `docker <https://docs.docker.com/engine/installation/>`_
-* `openssl <https://www.openssl.org/>`_ (required for ``cryptography``)*
+* `docker-compose <https://docs.docker.com/compose/install/>`_ OR
+* `pipenv <https://docs.pipenv.org/#install-pipenv-today>`_
 
-OpenSSL Installation Note
--------------------------
-
-If installing OpenSSL with Homebrew on macOS 10.7+, you will want to set
-the following env vars in your shell profile (see this `GitHub comment <https://github.com/pyca/cryptography/issues/2692#issuecomment-272773481>`_):
+Note that you can either install docker-compose natively or via `pipenv`.
+If you choose the pipenv route you'll need to run these commands:
 
 .. code:: bash
 
-    export LDFLAGS="-L/usr/local/opt/openssl/lib"
-    export CPPFLAGS="-I/usr/local/opt/openssl/include"
-    export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
+    # Run this the first time you enter the directory
+    pipenv install
+    # Run this every other time
+    pipenv shell
 
 Local Development instructions
 ------------------------------
 
-Clone the Git repository from ``git@github.com:freedomofpress/pressfreedom.git``.
-
-Run the following commands to get up and running:
-
-.. code:: bash
-
-    make dev-go
-
-or if you want to randomize the django port (to avoid potential port conflict on
-your host):
+When you want to play with the environment, you will be using
+``docker-compose``. Your guide to understand all the nuances of ``docker-compose``
+can be found in the `official docs <https://docs.docker.com/compose/reference/>`_. To start the
+environment, run the following your first run:
 
 .. code:: bash
 
-    RAND_PORT=yes make dev-go
+    # One-time command to run and forget
+    make dev-init
 
-Whoa? That's it!? Not so fast. It takes a few minutes to kick off (which happens
-in the background); in order to monitor progress use the following two commands
-(ctrl-c will exit each without killing the container):
+    # Starts up the environment WITH devdata injected
+    # leave off the environment variable to skip this step
+    DJANGO_CREATEDEVDATA=yes docker-compose up
 
-.. code:: bash
-
-    make dev-attach-node # attach a shell to the node process
-    make dev-attach-django # attach a shell to the python process
-
-Finally, if you want to inject the development data into the database hit the
-following command:
-
-.. code:: bash
-
-    make dev-createdevdata
-
-You should be able to hit the web server interface at http://localhost:8000.
-You can directly access the database on port `15432` (see further below)
-
-Resetting database
-++++++++++++++++++
-
-The container workflow is designed to be ephemeral except for the postgres
-container. If you want to clear the app container WHILE keeping the postgresql
-db intact, you can simply run `make dev-go` again.
-
-If you need to explicitly destroy the entire environment (including postgres)
-you run:
-
-.. code:: bash
-
-    make dev-clean
-
+You should be able to hit the web server interface by running ``make open-browser``
 
 Updating Requirements
 +++++++++++++++++++++
@@ -97,19 +62,6 @@ All requirements files will be regenerated based on compatible versions. Multipl
 files can be merged into a single ``.txt`` file, for use with ``pip``. The Makefile
 target handles the merging of multiple files.
 
-Attaching to running containers
-+++++++++++++++++++++++++++++++
-
-So there are two ways to attach, the first is to attach to an actual running
-process using the ``make`` commands listed under installation. The second, is to
-connect to a container but land in a shell to run arbitrary commands. The
-available containers are - ``django``, ``node``, and ``postgresql``. To connect to one
-and get a bash shell (for example the postgresql container):
-
-.. code:: bash
-
-    docker exec -it pf_tracker_postgresql bash
-
 Advanced actions against the database
 +++++++++++++++++++++++++++++++++++++
 
@@ -126,9 +78,12 @@ Connect to postgresql service from host
 ---------------------------------------
 
 The postgresql service is exposed to your host on port ``15432``. If you have a GUI
-database manipulation application you'd like to utilize point it to ``localhost``,
-port ``15432``, username ``tracker``, password ``trackerpassword``, dbname ``trackerdb``
+database manipulation application you'd like to utilize, your settings will be:
 
+* username - ``tracker``
+* password - ``trackerpassword``
+* dbname - ``trackerdb``
+* the host/port can be determined by running ``docker-compose port postgresql 5432``
 
 Mimic CI and production environment
 -----------------------------------
@@ -138,13 +93,10 @@ reverse nginx proxy, and debug mode off using the following command:
 
 .. code:: bash
 
-    make ci-go
+    docker-compose -f prod-docker-compose.yaml up
 
-This is the same command that is run during CI. It is not run using live-code
-refresh so it's not a great dev environment but is good for replicating issues
-that would come up in production. Note that you'll have to ensure you have the
-requirements installed that are in `devops/requirements.txt` or source
-`devops/.venv` (if you've already run `make dev-go` at least once).
+All subsequent docker-compose files will need that explicit ``-f`` flag pointing
+to the production-like compose file.
 
 Database snapshots
 ------------------

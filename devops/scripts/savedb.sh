@@ -7,10 +7,10 @@ DATE=`date +%Y-%m-%d-%H-%M-%S`
 DUMPFILE="pfi-$BRANCH.$DATE.dump"
 DBNAME="trackerdb"
 FOLDER="db-snapshots"
-OWNER="postgres"
+OWNER="tracker"
 
 if [ ! -d "$FOLDER" ]; then
   mkdir $FOLDER
 fi
 
-docker exec pf_tracker_postgresql pg_dump -U $OWNER --format=custom $DBNAME > $FOLDER/$DUMPFILE
+docker-compose exec postgresql pg_dump -U $OWNER --format=custom $DBNAME > $FOLDER/$DUMPFILE

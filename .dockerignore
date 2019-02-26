@@ -1,0 +1,10 @@
+**/*.pyc
+.env
+.git
+client/build/
+db-snapshots
+logs
+media/
+node_modules
+npm-debug.log
+tracker/settings/local.py

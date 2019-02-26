@@ -17,8 +17,6 @@ webpack-stats.json
 logs/
 
 # devops virtualenv
-devops/.venv
-devops/.vagrant
 .molecule
 .cache
 *.retry
@@ -37,3 +35,6 @@ db-snapshots/
 test-results
 .node_complete
 .vscode
+
+# docker-compose
+.env
