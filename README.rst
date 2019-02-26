@@ -50,7 +50,7 @@ There are three Python requirements files:
 
 * ``requirements.in`` production application dependencies
 * ``dev-requirements.in`` development container additions (e.g. debug toolbar)
-* ``deveops/requirements.in`` local testing and CI requirements (e.g. molecule, safety)
+* ``devops/requirements.in`` local testing and CI requirements (e.g. molecule, safety)
 
 Add the desired dependency to the appropriate ``.in`` file, then run:
 
