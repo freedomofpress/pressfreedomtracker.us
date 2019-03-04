@@ -76,16 +76,16 @@ class TargetMergeViewTest(TestCase):
             {
                 'models_to_merge': json.dumps([{
                     'label': self.target1.title,
-                    'id': self.target1.id
+                    'pk': self.target1.pk
                 }, {
                     'label': self.target2.title,
-                    'id': self.target2.id
+                    'pk': self.target2.pk
                 }, {
                     'label': self.target3.title,
-                    'id': self.target3.id
+                    'pk': self.target3.pk
                 }, {
                     'label': self.target4.title,
-                    'id': self.target4.id
+                    'pk': self.target4.pk
                 }]),
                 'title_for_merged_models': self.new_target_title
             }
@@ -111,9 +111,9 @@ class TargetMergeViewTest(TestCase):
 
     def test_merged_targets_are_deleted(self):
         with self.assertRaises(Target.DoesNotExist):
-            Target.objects.get(id=self.target1.id)
+            Target.objects.get(pk=self.target1.pk)
         with self.assertRaises(Target.DoesNotExist):
-            Target.objects.get(id=self.target2.id)
+            Target.objects.get(pk=self.target2.pk)
 
 
 class ChargeMergeViewTest(TestCase):
@@ -136,16 +136,16 @@ class ChargeMergeViewTest(TestCase):
             {
                 'models_to_merge': json.dumps([{
                     'label': self.charge1.title,
-                    'id': self.charge1.id
+                    'pk': self.charge1.pk
                 }, {
                     'label': self.charge2.title,
-                    'id': self.charge2.id
+                    'pk': self.charge2.pk
                 }, {
                     'label': self.charge3.title,
-                    'id': self.charge3.id
+                    'pk': self.charge3.pk
                 }, {
                     'label': self.charge4.title,
-                    'id': self.charge4.id
+                    'pk': self.charge4.pk
                 }]),
                 'title_for_merged_models': self.new_charge_title
             }
@@ -171,9 +171,9 @@ class ChargeMergeViewTest(TestCase):
 
     def test_merged_charges_are_deleted(self):
         with self.assertRaises(Charge.DoesNotExist):
-            Charge.objects.get(id=self.charge1.id)
+            Charge.objects.get(pk=self.charge1.pk)
         with self.assertRaises(Charge.DoesNotExist):
-            Charge.objects.get(id=self.charge2.id)
+            Charge.objects.get(pk=self.charge2.pk)
 
 
 class NationalityMergeViewTest(TestCase):
@@ -193,10 +193,10 @@ class NationalityMergeViewTest(TestCase):
             {
                 'models_to_merge': json.dumps([{
                     'label': self.nation1.title,
-                    'id': self.nation1.id
+                    'pk': self.nation1.pk
                 }, {
                     'label': self.nation2.title,
-                    'id': self.nation2.id
+                    'pk': self.nation2.pk
                 }]),
                 'title_for_merged_models': self.new_nation_title
             }
@@ -218,9 +218,9 @@ class NationalityMergeViewTest(TestCase):
 
     def test_merged_nations_are_deleted(self):
         with self.assertRaises(Nationality.DoesNotExist):
-            Nationality.objects.get(id=self.nation1.id)
+            Nationality.objects.get(pk=self.nation1.pk)
         with self.assertRaises(Nationality.DoesNotExist):
-            Nationality.objects.get(id=self.nation2.id)
+            Nationality.objects.get(pk=self.nation2.pk)
 
 
 class VenueMergeViewTest(TestCase):
@@ -228,8 +228,8 @@ class VenueMergeViewTest(TestCase):
     def setUpTestData(cls):
         cls.venue1 = Venue.objects.create(title='Canada')
         cls.venue2 = Venue.objects.create(title='Iran')
-        cls.inc1 = IncidentPageFactory(venue=[cls.venue1.id])
-        cls.inc2 = IncidentPageFactory(venue=[cls.venue2.id])
+        cls.inc1 = IncidentPageFactory(venue=[cls.venue1.pk])
+        cls.inc2 = IncidentPageFactory(venue=[cls.venue2.pk])
         cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
 
     def setUp(self):
@@ -240,10 +240,10 @@ class VenueMergeViewTest(TestCase):
             {
                 'models_to_merge': json.dumps([{
                     'label': self.venue1.title,
-                    'id': self.venue1.id
+                    'pk': self.venue1.pk
                 }, {
                     'label': self.venue2.title,
-                    'id': self.venue2.id
+                    'pk': self.venue2.pk
                 }]),
                 'title_for_merged_models': self.new_venue_title
             }
@@ -265,9 +265,9 @@ class VenueMergeViewTest(TestCase):
 
     def test_merged_venues_are_deleted(self):
         with self.assertRaises(Venue.DoesNotExist):
-            Venue.objects.get(id=self.venue1.id)
+            Venue.objects.get(pk=self.venue1.pk)
         with self.assertRaises(Venue.DoesNotExist):
-            Venue.objects.get(id=self.venue2.id)
+            Venue.objects.get(pk=self.venue2.pk)
 
 
 class PoliticianOrPublicMergeViewTest(TestCase):
@@ -289,10 +289,10 @@ class PoliticianOrPublicMergeViewTest(TestCase):
             {
                 'models_to_merge': json.dumps([{
                     'label': self.pop1.title,
-                    'id': self.pop1.id
+                    'pk': self.pop1.pk
                 }, {
                     'label': self.pop2.title,
-                    'id': self.pop2.id
+                    'pk': self.pop2.pk
                 }]),
                 'title_for_merged_models': self.new_pop_title
             }
@@ -318,6 +318,6 @@ class PoliticianOrPublicMergeViewTest(TestCase):
 
     def test_merged_pops_are_deleted(self):
         with self.assertRaises(PoliticianOrPublic.DoesNotExist):
-            PoliticianOrPublic.objects.get(id=self.pop1.id)
+            PoliticianOrPublic.objects.get(pk=self.pop1.pk)
         with self.assertRaises(PoliticianOrPublic.DoesNotExist):
-            PoliticianOrPublic.objects.get(id=self.pop2.id)
+            PoliticianOrPublic.objects.get(pk=self.pop2.pk)
