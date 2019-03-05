@@ -82,6 +82,7 @@ class Autocomplete extends PureComponent {
 				if (!Array.isArray(res.data.items)) {
 					return
 				}
+				res.data.items.map(item => item.id = item.pk)
 
 				this.setState({
 					suggestions: res.data.items
@@ -100,13 +101,13 @@ class Autocomplete extends PureComponent {
 		}
 
 		if (isMulti) {
-			var ids = value.map(({ id }) => id).join(',')
+			var pks = value.map(({ id }) => id).join(',')
 		} else {
-			var ids = value.id
+			var pks = value.id
 		}
 
 		const params = {
-			ids,
+			pks,
 			type: this.props.type,
 		}
 		axios.get(this.props.apiBase + 'objects/', { params })
@@ -118,6 +119,7 @@ class Autocomplete extends PureComponent {
 				if (!Array.isArray(res.data.items)) {
 					return
 				}
+				res.data.items.map(item => item.id = item.pk)
 
 				let newValue
 				if (isMulti) {

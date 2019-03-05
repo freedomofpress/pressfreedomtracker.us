@@ -23,7 +23,7 @@ class DocumentDownloadTest(TestCase):
         response = self.client.get(
             reverse(
                 'wagtaildocs_serve',
-                args=(document.id, document.filename),
+                args=(document.pk, document.filename),
             )
         )
 
@@ -47,10 +47,10 @@ class MergeViewTest(TestCase):
             {
                 'models_to_merge': json.dumps([{
                     'label': self.tag1.title,
-                    'id': self.tag1.id
+                    'pk': self.tag1.pk
                 }, {
                     'label': self.tag2.title,
-                    'id': self.tag2.id
+                    'pk': self.tag2.pk
                 }]),
                 'title_for_merged_models': self.new_tag_title
             }
@@ -72,9 +72,9 @@ class MergeViewTest(TestCase):
 
     def test_merged_tags_are_deleted(self):
         with self.assertRaises(CommonTag.DoesNotExist):
-            CommonTag.objects.get(id=self.tag1.id)
+            CommonTag.objects.get(pk=self.tag1.pk)
         with self.assertRaises(CommonTag.DoesNotExist):
-            CommonTag.objects.get(id=self.tag2.id)
+            CommonTag.objects.get(pk=self.tag2.pk)
 
 
 class MergeViewSameNameTest(TestCase):
@@ -98,10 +98,10 @@ class MergeViewSameNameTest(TestCase):
             {
                 'models_to_merge': json.dumps([{
                     'label': self.tag1.title,
-                    'id': self.tag1.id
+                    'pk': self.tag1.pk
                 }, {
                     'label': self.tag2.title,
-                    'id': self.tag2.id
+                    'pk': self.tag2.pk
                 }]),
                 'title_for_merged_models': self.new_tag_title
             }
@@ -123,6 +123,6 @@ class MergeViewSameNameTest(TestCase):
 
     def test_merged_tags_are_deleted(self):
         # tag1 shouldn't be deleted because it's being merged into.
-        CommonTag.objects.get(id=self.tag1.id)
+        CommonTag.objects.get(pk=self.tag1.pk)
         with self.assertRaises(CommonTag.DoesNotExist):
-            CommonTag.objects.get(id=self.tag2.id)
+            CommonTag.objects.get(pk=self.tag2.pk)
