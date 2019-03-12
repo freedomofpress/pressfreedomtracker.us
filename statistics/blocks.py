@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from wagtail.wagtailcore import blocks
+from wagtail.core import blocks
 
 from statistics.registry import (
     get_stats_choices,

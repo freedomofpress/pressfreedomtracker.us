@@ -1,6 +1,6 @@
 from django.db import models
 from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.wagtailadmin.edit_handlers import FieldPanel
+from wagtail.admin.edit_handlers import FieldPanel
 
 
 class EmailSignup(models.Model):

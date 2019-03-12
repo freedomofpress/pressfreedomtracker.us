@@ -56,7 +56,7 @@ if settings.DEBUG:
     # Needs to be injected relatively early in the MIDDLEWARE list
     MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
     # Include the wagtail styleguide
-    INSTALLED_APPS.append('wagtail.contrib.wagtailstyleguide')  # noqa: F405
+    INSTALLED_APPS.append('wagtail.contrib.styleguide')  # noqa: F405
 
 DATABASES = {
     'default': {

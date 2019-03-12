@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.management import call_command
-from wagtail.wagtailcore.models import Site
+from wagtail.core.models import Site
 
 from common.models import (
     CategoryPage,

@@ -6,13 +6,13 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.models import Page, Orderable
-from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
+from wagtail.core import blocks
+from wagtail.core.models import Page, Orderable
+from wagtail.core.fields import RichTextField, StreamField
 
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel

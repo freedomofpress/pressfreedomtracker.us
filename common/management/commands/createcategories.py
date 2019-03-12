@@ -2,8 +2,8 @@ from django.core.management.base import BaseCommand
 
 from django.db import transaction
 
-from wagtail.wagtailcore.models import Page, Site
-from wagtail.wagtailcore.rich_text import RichText
+from wagtail.core.models import Page, Site
+from wagtail.core.rich_text import RichText
 
 from common.models import (
     CategoryPage,

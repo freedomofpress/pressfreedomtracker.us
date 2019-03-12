@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import wagtail.wagtailcore.fields
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='homepage',
             name='about',
-            field=wagtail.wagtailcore.fields.RichTextField(blank=True, help_text='Headings and line breaks will be stripped', null=True),
+            field=wagtail.core.fields.RichTextField(blank=True, help_text='Headings and line breaks will be stripped', null=True),
         ),
     ]
