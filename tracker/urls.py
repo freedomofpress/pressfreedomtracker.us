@@ -8,9 +8,9 @@ from wagtailautocomplete.views import objects, search
 
 from common import views as common_views
 from emails import urls as emails_urls
-from wagtail.wagtailadmin import urls as wagtailadmin_urls
-from wagtail.wagtailcore import urls as wagtail_urls
-from wagtail.wagtaildocs import urls as wagtaildocs_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.core import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
 
 
 autocomplete_public_urls = [

@@ -18,7 +18,7 @@ from django.db.models.functions import Trunc, TruncMonth, Cast
 from django.db.models.fields.related import ManyToOneRel
 from django.utils.text import capfirst
 from psycopg2.extras import DateRange
-from wagtail.wagtailcore.fields import RichTextField, StreamField
+from wagtail.core.fields import RichTextField, StreamField
 
 from incident.circuits import STATES_BY_CIRCUIT
 from incident.utils.db import MakeDateRange

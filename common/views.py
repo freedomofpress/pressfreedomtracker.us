@@ -1,5 +1,5 @@
-from wagtail.wagtailadmin import messages
-from wagtail.wagtaildocs.views.serve import serve as wagtail_serve
+from wagtail.admin import messages
+from wagtail.documents.views.serve import serve as wagtail_serve
 from django.views.generic.edit import FormView
 from .forms import TagMergeForm
 from incident.models import IncidentPage

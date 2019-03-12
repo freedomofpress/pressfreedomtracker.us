@@ -1,6 +1,6 @@
 import csv
 
-from wagtail.wagtailcore.models import Site
+from wagtail.core.models import Site
 from django.test import TestCase, Client
 
 from common.tests.factories import CategoryPageFactory

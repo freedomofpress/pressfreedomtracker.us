@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from wagtail.wagtailcore.models import Site
+from wagtail.core.models import Site
 
 from common.models.pages import CategoryIncidentFilter
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
