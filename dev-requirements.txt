@@ -2,47 +2,48 @@
 backcall==0.1.0           # via ipython
 beautifulsoup4==4.6.0
 bleach==3.1.0
-certifi==2018.11.29
+certifi==2019.3.9
 chardet==3.0.4
 click==7.0
 decorator==4.3.2          # via ipython, traitlets
 dj-database-url==0.5.0
 django-analytical==2.5.0
-django-anymail==5.0
+django-anymail==6.0
 django-debug-toolbar==1.11
-django-modelcluster==3.1
+django-modelcluster==4.3
 django-recaptcha==2.0.2
 django-settings-export==1.2.1
-django-taggit==0.22.2
+django-taggit==0.24.0
 django-treebeard==4.3
 django-webpack-loader==0.6.0
 django==1.11.20
-djangorestframework==3.6.4
+djangorestframework==3.9.2
 docutils==0.14
+draftjs-exporter==2.0.0
 entrypoints==0.3          # via flake8
 factory-boy==2.11.1
-faker==1.0.2
-flake8==3.7.5
+faker==1.0.4
+flake8==3.7.7
 gunicorn==19.9.0
 html5lib==0.999999999
 idna==2.8
 ipdb==0.11
 ipython-genutils==0.2.0   # via traitlets
 ipython==6.5.0            # via ipdb
-jedi==0.13.2              # via ipython
+jedi==0.13.3              # via ipython
 jinja2==2.10
-markupsafe==1.1.0
+markupsafe==1.1.1
 mccabe==0.6.1             # via flake8
-parso==0.3.3              # via jedi
+parso==0.3.4              # via jedi
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
 pillow==5.4.1
-pip-tools==3.3.2
+pip-tools==3.4.0
 prompt-toolkit==1.0.15    # via ipython
 psycopg2==2.7.7
 ptyprocess==0.6.0         # via pexpect
 pycodestyle==2.5.0        # via flake8
-pyflakes==2.1.0           # via flake8
+pyflakes==2.1.1           # via flake8
 pygments==2.3.1
 pyparsing==2.3.1
 python-dateutil==2.8.0
@@ -52,19 +53,19 @@ requests==2.21.0
 simplegeneric==0.8.1      # via ipython
 six==1.12.0
 smartypants==2.0.1
-sqlparse==0.2.4           # via django-debug-toolbar
+sqlparse==0.3.0           # via django-debug-toolbar
 text-unidecode==1.2
 traitlets==4.3.2          # via ipython
 typing==3.6.6
 typogrify==2.0.7
-unidecode==1.0.23
+unidecode==0.4.21
 unittest-xml-reporting==2.2.1
 urllib3==1.24.1
-wagtail-autocomplete==0.3
+wagtail-autocomplete==0.3.1
 wagtail-django-recaptcha==1.0
 wagtail-factories==1.1.0
-wagtail-metadata==0.4.1
-wagtail==1.12.6
+wagtail-metadata==2.0.1
+wagtail==2.0.2
 wcwidth==0.1.7            # via prompt-toolkit
 webencodings==0.5.1
-willow==0.4
+willow==1.1
