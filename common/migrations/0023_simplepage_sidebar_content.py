@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
+import wagtail.core.blocks
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='simplepage',
             name='sidebar_content',
-            field=wagtail.wagtailcore.fields.StreamField((('heading', wagtail.wagtailcore.blocks.StructBlock((('content', wagtail.wagtailcore.blocks.CharBlock()),))), ('rich_text', wagtail.wagtailcore.blocks.RichTextBlock())), default=None),
+            field=wagtail.core.fields.StreamField((('heading', wagtail.core.blocks.StructBlock((('content', wagtail.core.blocks.CharBlock()),))), ('rich_text', wagtail.core.blocks.RichTextBlock())), default=None),
         ),
     ]

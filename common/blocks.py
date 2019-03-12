@@ -1,6 +1,6 @@
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailembeds.blocks import EmbedBlock
-from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.core import blocks
+from wagtail.embeds.blocks import EmbedBlock
+from wagtail.images.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.templatetags.render_as_template import render_as_template
@@ -10,7 +10,7 @@ from common.validators import validate_template
 class RichTextTemplateBlock(blocks.RichTextBlock):
     def clean(self, value):
         cleaned_value = super(RichTextTemplateBlock, self).clean(value)
-        # cleaned_value is a wagtail.wagtailcore.rich_text.RichText instance.
+        # cleaned_value is a wagtail.core.rich_text.RichText instance.
         # RichText.source is the raw HTML value.
         validate_template(cleaned_value.source)
         return cleaned_value

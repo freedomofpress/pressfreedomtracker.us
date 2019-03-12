@@ -6,9 +6,9 @@ from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.contrib.taggit
 import modelcluster.fields
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
-import wagtail.wagtailimages.blocks
+import wagtail.core.blocks
+import wagtail.core.fields
+import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('affiliation', models.CharField(blank=True, default='Independent', max_length=255, null=True)),
                 ('city', models.CharField(blank=True, max_length=255, null=True)),
                 ('state', models.CharField(blank=True, help_text='Two character state abbreviation', max_length=2, null=True)),
-                ('body', wagtail.wagtailcore.fields.StreamField((('rich_text', wagtail.wagtailcore.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('raw_html', wagtail.wagtailcore.blocks.RawHTMLBlock())))),
+                ('body', wagtail.core.fields.StreamField((('rich_text', wagtail.core.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.core.blocks.RawHTMLBlock())))),
                 ('arrest_status', models.CharField(blank=True, choices=[('UNKNOWN', 'unknown'), ('DETAINED_NO_PROCESSING', 'detained and released without being processed'), ('DETAINED_CUSTODY', 'detained and still in custody'), ('ARRESTED_CUSTODY', 'arrested and still in custody'), ('ARRESTED_RELEASED', 'arrested and released')], max_length=255, null=True)),
                 ('status_of_charges', models.CharField(blank=True, choices=[('UNKNOWN', 'unknown'), ('NOT_CHARGED', 'not charged'), ('CHARGES_PENDING', 'charges pending'), ('CHARGES_DROPPED', 'charges dropped'), ('CONVICTED', 'convicted'), ('ACQUITTED', 'acquitted'), ('PENDING_APPEAL', 'pending appeal')], max_length=255, null=True)),
                 ('release_date', models.DateTimeField(blank=True, null=True)),
@@ -144,7 +144,7 @@ class Migration(migrations.Migration):
                 ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
                 ('title', models.CharField(max_length=255)),
                 ('date', models.DateTimeField()),
-                ('body', wagtail.wagtailcore.fields.StreamField((('rich_text', wagtail.wagtailcore.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('raw_html', wagtail.wagtailcore.blocks.RawHTMLBlock())))),
+                ('body', wagtail.core.fields.StreamField((('rich_text', wagtail.core.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.core.blocks.RawHTMLBlock())))),
                 ('page', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='updates', to='incident.IncidentPage')),
             ],
             options={

@@ -1,7 +1,7 @@
 import factory
 from faker import Faker
 import wagtail_factories
-from wagtail.wagtailcore.rich_text import RichText
+from wagtail.core.rich_text import RichText
 
 from common.models import (
     CategoryPage,
