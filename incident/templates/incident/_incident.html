@@ -8,6 +8,7 @@ It can take the following context variables:
 
 {% load wagtailcore_tags wagtailimages_tags typogrify_tags %}
 {% load render_as_template %}
+{% load wagtailembeds_tags %}
 
 <article class="
 	incident
@@ -18,13 +19,15 @@ It can take the following context variables:
 		incident--full
 	{% endif %}
 ">
-	{% if incident.teaser_image %}
-		{% if teaser %}
+
+	{% if incident.primary_video %}
+		{% embed incident.primary_video %}
+		{% elif incident.teaser_image %}
 			{% include "common/_teaser_image.html" with page=incident %}
 		{% else %}
 			{% include "common/_top_image.html" with page=incident %}
-		{% endif %}
 	{% endif %}
+	
 	<div class="incident__body">
 			<ul class="category-list">
 				{% for category in incident.categories.all %}
