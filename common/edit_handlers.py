@@ -18,6 +18,6 @@ class HelpPanel(EditHandler):
         )
 
     def render(self):
-        return mark_safe(render_to_string(self.template, {
+        return mark_safe(render_to_string(self.template, {  # nosec
             'self': self
-}))
+        }))
