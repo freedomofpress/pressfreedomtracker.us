@@ -5,7 +5,7 @@ bleach==3.1.0
 certifi==2019.3.9
 chardet==3.0.4
 click==7.0
-decorator==4.3.2          # via ipython, traitlets
+decorator==4.4.0          # via ipython, traitlets
 dj-database-url==0.5.0
 django-analytical==2.5.0
 django-anymail==6.0
@@ -16,7 +16,7 @@ django-settings-export==1.2.1
 django-taggit==0.24.0
 django-treebeard==4.3
 django-webpack-loader==0.6.0
-django==1.11.20
+django==2.0.13
 djangorestframework==3.9.2
 docutils==0.14
 draftjs-exporter==2.0.0
@@ -38,7 +38,7 @@ parso==0.3.4              # via jedi
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
 pillow==5.4.1
-pip-tools==3.4.0
+pip-tools==3.5.0
 prompt-toolkit==1.0.15    # via ipython
 psycopg2==2.7.7
 ptyprocess==0.6.0         # via pexpect
@@ -59,7 +59,7 @@ traitlets==4.3.2          # via ipython
 typing==3.6.6
 typogrify==2.0.7
 unidecode==0.4.21
-unittest-xml-reporting==2.2.1
+unittest-xml-reporting==2.4.0
 urllib3==1.24.1
 wagtail-autocomplete==0.3.1
 wagtail-django-recaptcha==1.0
