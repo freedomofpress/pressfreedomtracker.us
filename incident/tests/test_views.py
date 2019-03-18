@@ -2,7 +2,7 @@ import json
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
 

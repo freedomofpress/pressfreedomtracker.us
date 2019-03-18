@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from wagtail.contrib.modeladmin.options import (
     ModelAdminGroup,
     modeladmin_register,
