@@ -82,6 +82,7 @@ SUBPOENA_STATUS = [
     ('QUASHED', 'quashed'),
     ('UPHELD', 'upheld'),
     ('CARRIED_OUT', 'carried out'),
+    ('IGNORED', 'ignored'),
 ]
 
 
@@ -123,4 +124,5 @@ STATUS_OF_PRIOR_RESTRAINT = [
     ('DROPPED', 'dropped'),
     ('STRUCK_DOWN', 'struck down'),
     ('UPHELD', 'upheld'),
+    ('IGNORED', 'ignored'),
 ]
