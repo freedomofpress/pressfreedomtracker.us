@@ -1,11 +1,14 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from wagtail.wagtailcore.middleware import SiteMiddleware
-from wagtail.wagtailcore.models import Site
+from wagtail.wagtailcore.models import Site, Page
 
 from common.models.pages import CategoryIncidentFilter
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
+from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory
 
 
@@ -17,6 +20,8 @@ class ContextTest(TestCase):
         IncidentPageFactory(title='Not relevant', categories=[category2])
 
         request = RequestFactory().get('/')
+        # Set wagtail preview attribute (not done by middleware).
+        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
 
@@ -32,6 +37,8 @@ class ContextTest(TestCase):
         IncidentPageFactory(title='Not category', categories=[category2])
 
         request = RequestFactory().get('/', {'arrest_status': 'DETAINED_NO_PROCESSING'})
+        # Set wagtail preview attribute (not done by middleware).
+        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
 
@@ -49,6 +56,8 @@ class ContextTest(TestCase):
             '/',
             {'arrest_status': 'DETAINED_NO_PROCESSING'}
         )
+        # Set wagtail preview attribute (not done by middleware).
+        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
@@ -61,6 +70,8 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/')
+        # Set wagtail preview attribute (not done by middleware).
+        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
@@ -73,6 +84,8 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/', {'page': '2'})
+        # Set wagtail preview attribute (not done by middleware).
+        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
@@ -86,6 +99,8 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/', {'categories': '1'})
+        # Set wagtail preview attribute (not done by middleware).
+        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
@@ -136,3 +151,87 @@ class IncidentFilterTest(TestCase):
 
         with self.assertRaises(ValidationError):
             incident_filter.clean()
+
+
+class CategoryPageTest(TestCase):
+    def setUp(self):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=self.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': self.home_page,
+            }
+        )
+        if not created:
+            site.root_page = self.home_page
+            site.save()
+
+        self.category_page = CategoryPageFactory(
+            parent=self.home_page,
+            incident_filters=['arrest_status'],
+        )
+
+    def test_get_page_should_succeed(self):
+        response = self.client.get(self.category_page.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_draft_should_succeed(self):
+        self.category_page.save_revision().publish()
+        self.category_page.methodology = 'XYZ'
+        self.category_page.save_revision()
+
+        user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+        self.client.force_login(user)
+        draft_url = reverse('wagtailadmin_pages:view_draft', args=(self.category_page.pk,))
+        response = self.client.get(draft_url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_preview_page_should_succeed(self):
+        self.category_page.save_revision().publish()
+        self.category_page.methodology = 'XYZ'
+        self.category_page.save_revision()
+
+        user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+        self.client.force_login(user)
+        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(self.category_page.pk,))
+
+        post_data = {
+            'slug': self.category_page.slug,
+            'title': self.category_page.title,
+            'methodology': self.category_page.methodology,
+            'quick_facts-TOTAL_FORMS': 0,
+            'quick_facts-INITIAL_FORMS': 0,
+            'quick_facts-MIN_NUM_FORMS': 0,
+            'quick_facts-MAX_NUM_FORMS': 1000,
+            'statistics_items-TOTAL_FORMS': 0,
+            'statistics_items-INITIAL_FORMS': 0,
+            'statistics_items-MIN_NUM_FORMS': 0,
+            'statistics_items-MAX_NUM_FORMS': 1000,
+            'incident_filters-TOTAL_FORMS': 0,
+            'incident_filters-INITIAL_FORMS': 0,
+            'incident_filters-MIN_NUM_FORMS': 0,
+            'incident_filters-MAX_NUM_FORMS': 1000,
+            'incident_filters-MAX_NUM_FORMS': 1000,
+            'incident_filters-0-incident_filter': 'arrest_status',
+            'incident_filters-0-id': 1,
+            'incident_filters-0-ORDER': 1,
+            'page_color': 'red'
+        }
+
+        response = self.client.post(
+            preview_url,
+            post_data,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+
+        response = self.client.get(preview_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], self.category_page)
