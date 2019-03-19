@@ -1,6 +1,6 @@
 bleach>=2.1
 dj-database-url
-Django>=1.11.18,<2
+Django>=2.0.13,<2.1
 -e git+https://github.com/freedomofpress/django-logging.git@b7d0b7b542db6ac088dbf3d2e7b249df333d3082#egg=django-logging-json
 django-analytical
 django-anymail
