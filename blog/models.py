@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.http import Http404
 from django.utils.cache import patch_cache_control
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
@@ -72,7 +74,10 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         if post_filters.author:
             context['author_filter'] = PersonPage.objects.get(pk=post_filters.author)
         if post_filters.organization:
-            context['organization_filter'] = OrganizationPage.objects.get(pk=post_filters.organization)
+            try:
+                context['organization_filter'] = OrganizationPage.objects.get(pk=post_filters.organization)
+            except OrganizationPage.DoesNotExist:
+                raise Http404()
 
         paginator, entries = paginate(
             request,
