@@ -7,9 +7,9 @@ from django.http import StreamingHttpResponse, HttpResponse
 from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
-from wagtail.wagtailadmin.edit_handlers import FieldPanel
-from wagtail.wagtailcore.models import Page
-from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
+from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.core.models import Page
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin

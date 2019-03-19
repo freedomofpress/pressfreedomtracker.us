@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 from common.models.settings import SearchSettings
-from wagtail.wagtailcore.models import Site
+from wagtail.core.models import Site
 
 
 def move_all_incidents_to_setting(apps, schema_editor):

@@ -41,12 +41,9 @@ update-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
 	docker run -v "$(DIR):/code" -it python:3.4-slim  \
-		bash -c 'pip install pip-tools && \
+		bash -c 'pip install pip-tools && apt-get update && apt-get install git -y && \
 		pip-compile -U --no-header --output-file /code/requirements.txt /code/requirements.in && \
 		pip-compile -U --no-header --output-file /code/dev-requirements.txt /code/dev-requirements.in'
-
-# Update the developer-focused reqs for local dev, testing, and CI.
-	pip-compile -U --no-header --output-file devops/requirements.txt devops/requirements.in
 
 # Explanation of the below shell command should it ever break.
 # 1. Set the field separator to ": ##" to parse lines for make targets.

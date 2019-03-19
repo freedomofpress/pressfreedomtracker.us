@@ -1,13 +1,13 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.wagtailadmin.edit_handlers import (
+from wagtail.admin.edit_handlers import (
     FieldPanel,
     StreamFieldPanel,
 )
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailcore.models import Orderable
-from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.core import blocks
+from wagtail.core.fields import StreamField
+from wagtail.core.models import Orderable
+from wagtail.images.blocks import ImageChooserBlock
 
 from common.blocks import (
     AlignedCaptionedEmbedBlock,

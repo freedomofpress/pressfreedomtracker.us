@@ -3,8 +3,8 @@ from unittest.mock import patch
 
 from django.test import TestCase
 from django.utils import timezone
-from wagtail.wagtailcore.models import Site
-from wagtail.wagtailcore.rich_text import RichText
+from wagtail.core.models import Site
+from wagtail.core.rich_text import RichText
 
 from common.models import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter

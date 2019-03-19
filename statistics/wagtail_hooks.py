@@ -1,8 +1,8 @@
 from django.conf.urls import url
 from django.core.urlresolvers import reverse
 
-from wagtail.wagtailcore import hooks
-from wagtail.wagtailadmin.menu import MenuItem
+from wagtail.core import hooks
+from wagtail.admin.menu import MenuItem
 
 from statistics.views import stats_guide_view
 

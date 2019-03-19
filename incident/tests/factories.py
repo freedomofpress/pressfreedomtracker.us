@@ -3,8 +3,8 @@ import factory
 import random
 import wagtail_factories
 from faker import Faker
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailcore.rich_text import RichText
+from wagtail.core import blocks
+from wagtail.core.rich_text import RichText
 
 from incident.models import (
     Charge,

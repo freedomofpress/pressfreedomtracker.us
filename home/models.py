@@ -4,14 +4,14 @@ import json
 
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.wagtailadmin.edit_handlers import (
+from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
     PageChooserPanel,
     MultiFieldPanel,
 )
-from wagtail.wagtailcore.fields import RichTextField
-from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.core.fields import RichTextField
+from wagtail.core.models import Page, Orderable
 
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin

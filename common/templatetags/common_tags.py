@@ -1,7 +1,7 @@
 import bleach
 from django import template
 from django.utils.html import mark_safe
-from wagtail.wagtailcore.templatetags.wagtailcore_tags import richtext
+from wagtail.core.templatetags.wagtailcore_tags import richtext
 
 register = template.Library()
 

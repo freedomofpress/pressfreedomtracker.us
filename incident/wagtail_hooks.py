@@ -4,8 +4,8 @@ from wagtail.contrib.modeladmin.options import (
     ModelAdminGroup,
     modeladmin_register,
 )
-from wagtail.wagtailadmin.search import SearchArea
-from wagtail.wagtailcore import hooks
+from wagtail.admin.search import SearchArea
+from wagtail.core import hooks
 
 from common.wagtail_hooks import MergeAdmin
 from incident.models import (

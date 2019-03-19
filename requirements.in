@@ -1,6 +1,6 @@
 bleach>=2.1
 dj-database-url
-Django>=1.11.18<2
+Django>=1.11.18,<2
 -e git+https://github.com/freedomofpress/django-logging.git@b7d0b7b542db6ac088dbf3d2e7b249df333d3082#egg=django-logging-json
 django-analytical
 django-anymail
@@ -19,11 +19,9 @@ python-json-logger
 pyparsing
 typing
 typogrify
-# 1.12 is the current LTS
-wagtail<1.13
+wagtail>2.0,<2.1
 wagtail-autocomplete
 wagtail-factories
 wagtail-django-recaptcha
-# Had to peg because latest version wants wagtail >=2.0
-wagtail-metadata==0.4.1
+wagtail-metadata
 unittest-xml-reporting

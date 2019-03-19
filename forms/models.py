@@ -1,11 +1,11 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.wagtailadmin.edit_handlers import (
+from wagtail.admin.edit_handlers import (
     FieldPanel, FieldRowPanel,
     InlinePanel, MultiFieldPanel
 )
-from wagtail.wagtailcore.fields import RichTextField
-from wagtail.wagtailforms.models import AbstractFormField
+from wagtail.core.fields import RichTextField
+from wagtail.contrib.forms.models import AbstractFormField
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 from common.models import MetadataPageMixin
@@ -26,7 +26,7 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
     )
 
     content_panels = [
-        HelpPanel('Forms can be embedded in an iframe by a third-party website. '
+        HelpPanel(heading='Note', content='Forms can be embedded in an iframe by a third-party website. '
                   'Append <code>?embed=t</code> to any FormPage URL to request the embeddable version. '
                   'You can copy the code below and replace <code>[[URL TO FORM]]</code> with the full link to this form page.'
                   '<textarea style="font-size: 1em; color: black; font-family: monospace; border: 0; padding: 0.5em">'
