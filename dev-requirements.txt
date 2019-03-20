@@ -16,7 +16,7 @@ django-settings-export==1.2.1
 django-taggit==0.23.0
 django-treebeard==4.3
 django-webpack-loader==0.6.0
-django==2.0.13
+django==2.1.7
 djangorestframework==3.9.2
 docutils==0.14
 draftjs-exporter==2.1.5
@@ -29,7 +29,7 @@ html5lib==1.0.1
 idna==2.8
 ipdb==0.11
 ipython-genutils==0.2.0   # via traitlets
-ipython==6.5.0            # via ipdb
+ipython==7.3.0            # via ipdb
 jedi==0.13.3              # via ipython
 jinja2==2.10
 markupsafe==1.1.1
@@ -39,7 +39,7 @@ pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
 pillow==5.4.1
 pip-tools==3.5.0
-prompt-toolkit==1.0.15    # via ipython
+prompt-toolkit==2.0.9     # via ipython
 psycopg2==2.7.7
 ptyprocess==0.6.0         # via pexpect
 pycodestyle==2.5.0        # via flake8
@@ -50,7 +50,6 @@ python-dateutil==2.8.0
 python-json-logger==0.1.10
 pytz==2018.9
 requests==2.21.0
-simplegeneric==0.8.1      # via ipython
 six==1.12.0
 smartypants==2.0.1
 sqlparse==0.3.0           # via django-debug-toolbar
