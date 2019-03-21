@@ -259,7 +259,8 @@ class CategoryPage(MetadataPageMixin, Page):
 
         context = super(CategoryPage, self).get_context(request)
 
-        if request.is_preview:
+        # request.is_preview is not necessarily set
+        if getattr(request, 'is_preview', False):
             context['total_incidents'] = 'NOT AVAILABLE IN PREVIEW'
         else:
             context['total_incidents'] = self.incidents.filter(

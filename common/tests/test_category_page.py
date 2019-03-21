@@ -20,8 +20,6 @@ class ContextTest(TestCase):
         IncidentPageFactory(title='Not relevant', categories=[category2])
 
         request = RequestFactory().get('/')
-        # Set wagtail preview attribute (not done by middleware).
-        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
 
@@ -37,8 +35,6 @@ class ContextTest(TestCase):
         IncidentPageFactory(title='Not category', categories=[category2])
 
         request = RequestFactory().get('/', {'arrest_status': 'DETAINED_NO_PROCESSING'})
-        # Set wagtail preview attribute (not done by middleware).
-        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
 
@@ -56,8 +52,6 @@ class ContextTest(TestCase):
             '/',
             {'arrest_status': 'DETAINED_NO_PROCESSING'}
         )
-        # Set wagtail preview attribute (not done by middleware).
-        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
@@ -70,8 +64,6 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/')
-        # Set wagtail preview attribute (not done by middleware).
-        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
@@ -84,8 +76,6 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/', {'page': '2'})
-        # Set wagtail preview attribute (not done by middleware).
-        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
@@ -99,8 +89,6 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/', {'categories': '1'})
-        # Set wagtail preview attribute (not done by middleware).
-        request.is_preview = False
         # Attach wagtail site.
         SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
