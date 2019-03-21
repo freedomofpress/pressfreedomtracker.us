@@ -259,9 +259,13 @@ class CategoryPage(MetadataPageMixin, Page):
 
         context = super(CategoryPage, self).get_context(request)
 
-        context['total_incidents'] = self.incidents.filter(
-            incident_page__live=True,
-        ).count()
+        # request.is_preview is not necessarily set
+        if getattr(request, 'is_preview', False):
+            context['total_incidents'] = 'NOT AVAILABLE IN PREVIEW'
+        else:
+            context['total_incidents'] = self.incidents.filter(
+                incident_page__live=True,
+            ).count()
 
         data = request.GET.copy()
         data['categories'] = str(self.id)
