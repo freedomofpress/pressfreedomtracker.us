@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 from django.utils.cache import patch_cache_control
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
@@ -70,9 +71,9 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         entry_qs = post_filters.filter(self.get_posts())
 
         if post_filters.author:
-            context['author_filter'] = PersonPage.objects.get(pk=post_filters.author)
+            context['author_filter'] = get_object_or_404(PersonPage, pk=post_filters.author)
         if post_filters.organization:
-            context['organization_filter'] = OrganizationPage.objects.get(pk=post_filters.organization)
+            context['organization_filter'] = get_object_or_404(OrganizationPage, pk=post_filters.organization)
 
         paginator, entries = paginate(
             request,
