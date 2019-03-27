@@ -420,14 +420,14 @@ class IncidentPage(MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Details',
             children=[
-                    FieldPanel('date'),
-                    FieldPanel('exact_date_unknown'),
-                    FieldPanel('affiliation'),
-                    FieldPanel('city'),
-                    AutocompletePanel('state', page_type='incident.State'),
-                    AutocompletePanel('targets', 'incident.Target', is_single=False),
-                    AutocompletePanel('tags', 'common.CommonTag', is_single=False),
-                    InlinePanel('categories', label='Incident categories', min_num=1),
+                FieldPanel('date'),
+                FieldPanel('exact_date_unknown'),
+                FieldPanel('affiliation'),
+                FieldPanel('city'),
+                AutocompletePanel('state', page_type='incident.State'),
+                AutocompletePanel('targets', 'incident.Target', is_single=False),
+                AutocompletePanel('tags', 'common.CommonTag', is_single=False),
+                InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
         InlinePanel(
