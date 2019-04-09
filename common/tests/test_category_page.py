@@ -172,7 +172,7 @@ class CategoryPageTest(TestCase):
 
     def test_view_draft_should_succeed(self):
         self.category_page.save_revision().publish()
-        self.category_page.methodology = 'XYZ'
+        self.category_page.title = 'XYZ'
         self.category_page.save_revision()
 
         user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
@@ -183,7 +183,7 @@ class CategoryPageTest(TestCase):
 
     def test_preview_page_should_succeed(self):
         self.category_page.save_revision().publish()
-        self.category_page.methodology = 'XYZ'
+        self.category_page.title = 'XYZ'
         self.category_page.save_revision()
 
         user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
@@ -192,8 +192,7 @@ class CategoryPageTest(TestCase):
 
         post_data = {
             'slug': self.category_page.slug,
-            'title': self.category_page.title,
-            'methodology': self.category_page.methodology,
+            'title': 'ABC',
             'quick_facts-TOTAL_FORMS': 0,
             'quick_facts-INITIAL_FORMS': 0,
             'quick_facts-MIN_NUM_FORMS': 0,
@@ -205,7 +204,6 @@ class CategoryPageTest(TestCase):
             'incident_filters-TOTAL_FORMS': 0,
             'incident_filters-INITIAL_FORMS': 0,
             'incident_filters-MIN_NUM_FORMS': 0,
-            'incident_filters-MAX_NUM_FORMS': 1000,
             'incident_filters-MAX_NUM_FORMS': 1000,
             'incident_filters-0-incident_filter': 'arrest_status',
             'incident_filters-0-id': 1,
