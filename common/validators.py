@@ -1,5 +1,7 @@
+import html
+
 from django.core.exceptions import ValidationError
-from django.template.base import Parser, Lexer, Node
+from django.template.base import Parser, Lexer, Node, TokenType
 from django.template.engine import Engine
 from django.template.exceptions import TemplateSyntaxError
 from django.template.library import import_library
@@ -41,6 +43,9 @@ class TemplateValidator(object):
         # Try to parse the template looking for syntax errors.
         lexer = Lexer(value)
         tokens = lexer.tokenize()
+        for token in tokens:
+            if token.token_type == TokenType.BLOCK:
+                token.contents = html.unescape(token.contents)
         parser = Parser(
             tokens,
             builtins=[import_library(path) for path in self.libraries],
