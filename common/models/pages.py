@@ -1,4 +1,6 @@
+import html
 import json
+import re
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -186,6 +188,18 @@ class QuickFact(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='quick_facts')
     body = RichTextField(validators=[validate_template])
     link_url = models.URLField(blank=True)
+
+    def clean(self):
+        tag_re = re.compile('({%.*?%})')
+        body = ''
+        position = 0
+        for match in tag_re.finditer(self.body):
+            start, end = match.span()
+            body += self.body[position:start]
+            body += html.unescape(self.body[start:end])
+            position = end
+        body += self.body[position:len(self.body)]
+        self.body = body
 
 
 class StatisticsItem(Orderable):
