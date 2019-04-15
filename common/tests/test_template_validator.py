@@ -44,3 +44,8 @@ class TemplateValidatorTest(TestCase):
         validator = TemplateValidator()
         value = '{% num_incidents %}'
         validator(value)
+
+    def test_should_unescape_html_quotations(self):
+        validator = TemplateValidator()
+        value = "<p>{% num_targets categories=10 date_lower=&quot;2019-01-01&quot; %} journalists have faced physical attacks in 2019</p>"
+        validator(value)
