@@ -1,9 +1,18 @@
 import csv
 
-from wagtail.core.models import Site
+from wagtail.core.models import Site, Page
+from wagtail.tests.utils import WagtailPageTests
+from wagtail.tests.utils.form_data import (
+    nested_form_data,
+    streamfield,
+    inline_formset,
+    rich_text,
+)
 from django.test import TestCase, Client
+from django.urls import reverse
 
 from common.tests.factories import CategoryPageFactory
+from home.tests.factories import HomePageFactory
 from incident.models.incident_page import IncidentPage
 from incident.models.export import is_exportable, to_row
 from .factories import IncidentIndexPageFactory, IncidentPageFactory
@@ -61,7 +70,24 @@ class TestExportPage(TestCase):
     def setUpTestData(cls):
         cls.client = Client()
 
-        site = Site.objects.get()
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+
         cls.index = IncidentIndexPageFactory(
             parent=site.root_page, slug='incidents')
 
@@ -159,3 +185,104 @@ class GetRelatedIncidentsTest(TestCase):
 
         related_incidents = incident.get_related_incidents()
         self.assertEqual(related_incidents, [related_incident])
+
+
+class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
+    @classmethod
+    def setUpTestData(cls):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+
+        cls.site = site
+        cls.category = CategoryPageFactory(parent=cls.home_page)
+        cls.index_page = IncidentIndexPageFactory(
+            parent=cls.home_page,
+        )
+
+    def test_can_preview_incident_page(self):
+        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        incident_page = IncidentPageFactory(parent=self.category)
+
+        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(incident_page.pk,))
+        response = self.client.post(
+            preview_url,
+            nested_form_data({
+                'title': 'The Incident',
+                'slug': 'the-incident',
+                'date': '2019-04-16',
+                'body': streamfield([
+                    ('raw_html', '<p>Lorem ipsum dolor sit amet</p>'),
+                    ('rich_text', rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag))),
+                ]),
+                'state': 'null',
+                'targets': 'null',
+                'tags': 'null',
+                'current_charges': 'null',
+                'dropped_charges': 'null',
+                'venue': 'null',
+                'target_nationality': 'null',
+                'targets_whose_communications_were_obtained': 'null',
+                'politicians_or_public_figures_involved': 'null',
+                'related_incidents': 'null',
+                'updates': inline_formset([]),
+                'links': inline_formset([]),
+                'categories': inline_formset([
+                    {'category': str(self.category.pk)},
+                ]),
+                'equipment_seized': inline_formset([]),
+                'equipment_broken': inline_formset([]),
+            })
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        response = self.client.get(preview_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], incident_page)
+
+    def test_can_create_incident_page(self):
+        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        self.assertCanCreate(self.index_page, IncidentPage, nested_form_data({
+            'title': 'The Incident',
+            'slug': 'the-incident',
+            'date': '2019-04-16',
+            'body': streamfield([
+                ('raw_html', '<p>Lorem ipsum dolor sit amet</p>'),
+                ('rich_text', rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag))),
+            ]),
+            'state': 'null',
+            'targets': 'null',
+            'tags': 'null',
+            'current_charges': 'null',
+            'dropped_charges': 'null',
+            'venue': 'null',
+            'target_nationality': 'null',
+            'targets_whose_communications_were_obtained': 'null',
+            'politicians_or_public_figures_involved': 'null',
+            'related_incidents': 'null',
+            'updates': inline_formset([]),
+            'links': inline_formset([]),
+            'categories': inline_formset([
+                {'category': str(self.category.pk)},
+            ]),
+            'equipment_seized': inline_formset([]),
+            'equipment_broken': inline_formset([]),
+        }))
+
+        incident_page = IncidentPage.objects.get(slug='the-incident')
+        response = self.client.get(incident_page.url)
+        self.assertEqual(response.status_code, 200)
