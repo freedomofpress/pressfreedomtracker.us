@@ -256,6 +256,9 @@ class CategoryPage(MetadataPageMixin, Page):
         FieldPanel('page_color'),
     ]
 
+    def clean(self):
+        self.methodology = unescape(self.methodology)
+
     def get_context(self, request):
         # placed here to avoid circular dependency
         from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
