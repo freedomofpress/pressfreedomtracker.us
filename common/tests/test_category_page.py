@@ -4,8 +4,14 @@ from django.urls import reverse
 from django.test import TestCase, RequestFactory
 from wagtail.core.middleware import SiteMiddleware
 from wagtail.core.models import Site, Page
+from wagtail.tests.utils import WagtailPageTests
+from wagtail.tests.utils.form_data import (
+    inline_formset,
+    nested_form_data,
+    rich_text,
+)
 
-from common.models.pages import CategoryIncidentFilter
+from common.models.pages import CategoryIncidentFilter, CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from home.tests.factories import HomePageFactory
@@ -221,3 +227,64 @@ class CategoryPageTest(TestCase):
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], self.category_page)
+
+
+class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
+    @classmethod
+    def setUpTestData(cls):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+        CategoryPageFactory(
+            parent=cls.home_page,
+            # Needed to apply an "affiliation" filter below
+            incident_filters=['affiliation'],
+        )
+        stats_tag = '{% num_incidents affiliation="Independent" %}'
+        cls.page_data = {
+            'title': 'Test Category',
+            'slug': 'test-category',
+            'methodology': rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag)),
+            'page_color': 'red',
+            'quick_facts': inline_formset([]),
+            'statistics_items': inline_formset([]),
+            'incident_filters': inline_formset([]),
+        }
+
+    def test_can_create_category_page(self):
+        self.assertCanCreate(
+            self.home_page,
+            CategoryPage,
+            nested_form_data(self.page_data),
+        )
+        category = CategoryPage.objects.get(slug='test-category')
+        response = self.client.get(category.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_can_preview_category_page(self):
+        category = CategoryPageFactory(parent=self.home_page)
+        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(category.pk,))
+        response = self.client.post(
+            preview_url,
+            nested_form_data(self.page_data)
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+
+        response = self.client.get(preview_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], category)
