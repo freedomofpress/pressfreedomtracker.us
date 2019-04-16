@@ -1,10 +1,12 @@
 from wagtail.core import blocks
+from wagtail.core.rich_text import RichText
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.templatetags.render_as_template import render_as_template
 from common.validators import validate_template
+from statistics.utils import unescape
 
 
 class RichTextTemplateBlock(blocks.RichTextBlock):
@@ -13,7 +15,7 @@ class RichTextTemplateBlock(blocks.RichTextBlock):
         # cleaned_value is a wagtail.core.rich_text.RichText instance.
         # RichText.source is the raw HTML value.
         validate_template(cleaned_value.source)
-        return cleaned_value
+        return RichText(unescape(cleaned_value.source))
 
     def render_basic(self, value, context=None):
         return render_as_template(value)

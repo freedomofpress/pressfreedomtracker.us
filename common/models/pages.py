@@ -1,6 +1,4 @@
-import html
 import json
-import re
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -40,6 +38,7 @@ from common.templatetags.render_as_template import render_as_template
 from common.validators import validate_template
 from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_numbers_choices
+from statistics.utils import unescape
 from statistics.validators import validate_dataset_params
 # Import statistics tags so that statistics dataset choices are populated
 import statistics.templatetags.statistics_tags  # noqa: F401
@@ -190,16 +189,7 @@ class QuickFact(Orderable):
     link_url = models.URLField(blank=True)
 
     def clean(self):
-        tag_re = re.compile('({%.*?%})')
-        body = ''
-        position = 0
-        for match in tag_re.finditer(self.body):
-            start, end = match.span()
-            body += self.body[position:start]
-            body += html.unescape(self.body[start:end])
-            position = end
-        body += self.body[position:len(self.body)]
-        self.body = body
+        self.body = unescape(self.body)
 
 
 class StatisticsItem(Orderable):
