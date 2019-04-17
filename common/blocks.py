@@ -5,8 +5,8 @@ from wagtail.images.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.templatetags.render_as_template import render_as_template
+from common.utils import unescape
 from common.validators import validate_template
-from statistics.utils import unescape
 
 
 class RichTextTemplateBlock(blocks.RichTextBlock):

@@ -35,10 +35,10 @@ from common.utils import (
     paginate,
 )
 from common.templatetags.render_as_template import render_as_template
+from common.utils import unescape
 from common.validators import validate_template
 from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_numbers_choices
-from statistics.utils import unescape
 from statistics.validators import validate_dataset_params
 # Import statistics tags so that statistics dataset choices are populated
 import statistics.templatetags.statistics_tags  # noqa: F401
