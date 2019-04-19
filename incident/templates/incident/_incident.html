@@ -20,12 +20,12 @@ It can take the following context variables:
 	{% endif %}
 ">
 
-	{% if incident.primary_video %}
+	{% if teaser and incident.teaser_image %}
+		{% include "common/_teaser_image.html" with page=incident %}
+	{% elif incident.primary_video %}
 		{% embed incident.primary_video %}
 	{% elif incident.teaser_image %}
 		{% include "common/_teaser_image.html" with page=incident %}
-	{% else %}
-		{% include "common/_top_image.html" with page=incident %}
 	{% endif %}
 
 	<div class="incident__body">
