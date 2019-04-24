@@ -13,6 +13,10 @@ import '~/slidingnav'
 import '~/IncidentLoader'
 import '~/emails'
 
-window.React = require('react')
-window.ReactDOM = require('react-dom')
-window.IncidentFiltering = require('~/filtering/IncidentFiltering')
+import React from 'react'
+import ReactDOM from 'react-dom'
+import IncidentFiltering from '~/filtering/IncidentFiltering'
+
+window.React = React
+window.ReactDOM = ReactDOM
+window.IncidentFiltering = IncidentFiltering

@@ -27,6 +27,28 @@ jobs:
           name: Run flake8 tests
           command: make flake8
 
+  npm_audit:
+    machine: true
+    working_directory: ~/tracker
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            # Set to native py3 on circleci image
+            pyenv global 3.5.2
+            pip install -U pip
+            pip install pipenv
+            pipenv install
+      - run:
+          name: Check node dependencies for vulnerabilities
+          command: |
+            pipenv run make dev-init
+            pipenv run make ci-npm-audit
+      - store_test_results:
+          path: ~/tracker/test-results/
+
   dev:
     machine: true
     working_directory: ~/tracker
@@ -85,6 +107,7 @@ workflows:
   tracker_ci:
     jobs:
       - safety_check
+      - npm_audit
       - dev
       - prod:
           requires:

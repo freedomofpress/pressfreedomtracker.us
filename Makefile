@@ -74,6 +74,15 @@ bandit: ## Runs bandit static code analysis in Python3 container.
 		python:3.4-slim \
 		bash -c "pip install -q --upgrade bandit && bandit --recursive . -ll --exclude devops,node_modules,molecule,.venv"
 
+.PHONY: npm-audit
+npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities
+	@docker-compose run --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus --ignore 803'
+
+.PHONY: ci-npm-audit
+ci-npm-audit:
+	@mkdir -p test-results # Creates necessary test-results folder
+	@docker-compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --xml --ignore 803 > test-results/audit.xml'
+
 .PHONY: safety
 safety: ## Runs `safety check` to check python dependencies for vulnerabilities
 	pip install --upgrade safety && \
