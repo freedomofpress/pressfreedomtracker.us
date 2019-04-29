@@ -1,5 +1,9 @@
 from django.db import models
+
 from modelcluster.models import ClusterableModel
+from modelcluster.fields import ParentalKey
+from wagtail.wagtailcore.models import Orderable
+from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 
 class Target(ClusterableModel):
@@ -30,6 +34,35 @@ class Target(ClusterableModel):
 
     class Meta:
         ordering = ['title']
+
+
+class Journalist(ClusterableModel):
+    @classmethod
+    def autocomplete_create(kls, value):
+        return kls.objects.create(title=value)
+
+    title = models.CharField(max_length=255)
+
+
+class Institution(ClusterableModel):
+    @classmethod
+    def autocomplete_create(kls, value):
+        return kls.objects.create(title=value)
+
+    title = models.CharField(max_length=255, unique=True)
+
+
+class TargetedJournalist(Orderable):
+    incident = ParentalKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='targeted_journalists')
+
+    journalist = models.ForeignKey(Journalist, on_delete=models.CASCADE, related_name='+')
+
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True)
+
+    panels = [
+        AutocompletePanel('journalist', 'incident.Journalist'),
+        AutocompletePanel('institution', 'incident.Institution'),
+    ]
 
 
 class Charge(ClusterableModel):

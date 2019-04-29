@@ -108,6 +108,8 @@ class IncidentExportTestCase(TestCase):
             'legal_order_type',
             'status_of_prior_restraint',
             'targets',
+            'targeted_journalists',
+            'targeted_institutions',
             'tags',
             'current_charges',
             'dropped_charges',
