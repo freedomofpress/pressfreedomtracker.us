@@ -57,7 +57,7 @@ class TargetedJournalist(Orderable):
 
     journalist = models.ForeignKey(Journalist, on_delete=models.CASCADE, related_name='+')
 
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True)
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True, blank=True)
 
     panels = [
         AutocompletePanel('journalist', 'incident.Journalist'),
