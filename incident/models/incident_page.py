@@ -134,7 +134,7 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='targets_incidents',
     )
 
-    targeted_institutions = models.ManyToManyField(
+    targeted_institutions = ParentalManyToManyField(
         'incident.Institution',
         blank=True,
         verbose_name='Targeted Institutions',
