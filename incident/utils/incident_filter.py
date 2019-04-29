@@ -340,6 +340,28 @@ class ChargesFilter(ManyRelationFilter):
         return serialized
 
 
+class RelationThroughFilter(ManyRelationFilter):
+    def __init__(self, name, model_field, relation, lookup=None, verbose_name=None):
+        lookup = model_field.name + '__' + relation
+        super(RelationThroughFilter, self).__init__(name, model_field, lookup, verbose_name)
+        self.relation = relation
+
+    def serialize(self):
+        serialized = super(ManyRelationFilter, self).serialize()
+
+        related_model = self.model_field.remote_field.model._meta.get_field(self.relation).target_field.model
+
+        if isinstance(self.model_field, ManyToOneRel) and hasattr(related_model, '_autocomplete_model'):
+            serialized['autocomplete_type'] = related_model._autocomplete_model
+        else:
+            serialized['autocomplete_type'] = '{}.{}'.format(
+                related_model._meta.app_label,
+                related_model.__name__,
+            )
+        serialized['many'] = True
+        return serialized
+
+
 class CircuitsFilter(ChoiceFilter):
     def get_choices(self):
         return set(STATES_BY_CIRCUIT)
@@ -431,7 +453,7 @@ class IncidentFilter(object):
         'equipment_broken': {'lookup': 'equipment_broken__equipment'},
         'tags': {'verbose_name': 'Has any of these tags'},
         'subpoena_statuses': {'verbose_name': 'Subpoena status'},
-        'targets': {'verbose_name': 'Targeted any of these journalists'},
+        'targeted_journalists': {'verbose_name': 'Targeted any of these journalists', 'filter_cls': RelationThroughFilter, 'relation': 'journalist'},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
     }
 
