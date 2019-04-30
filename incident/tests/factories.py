@@ -20,6 +20,9 @@ from incident.models import (
     Target,
     State,
     choices,
+    Journalist,
+    Institution,
+    TargetedJournalist,
 )
 from common.models import CustomImage
 from common.tests.factories import CategoryPageFactory
@@ -397,3 +400,33 @@ class StateFactory(SnippetFactory):
         model = State
         django_get_or_create = ('name',)
     name = factory.Faker('state')
+
+
+class JournalistFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Journalist
+        django_get_or_create = ('title',)
+
+    title = factory.Faker('name')
+
+
+class InstitutionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Institution
+        django_get_or_create = ('title',)
+
+    title = factory.LazyAttribute(
+        lambda p: 'The {} {}'.format(
+            fake.city(),
+            random.choice(['Tribune', 'Herald', 'Sun', 'Daily News', 'Post'])
+        )
+    )
+
+
+class TargetedJournalistFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = TargetedJournalist
+
+    journalist = factory.SubFactory(JournalistFactory)
+    incident = factory.SubFactory(IncidentPageFactory)
+    institution = factory.SubFactory(InstitutionFactory)
