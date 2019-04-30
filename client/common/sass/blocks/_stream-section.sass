@@ -24,8 +24,22 @@
 		padding-top: 1.5rem
 		padding-bottom: 1.5rem
 		clear: both
-		color: $white
+		color: rgba($white, 0.8)
 		&:not(last-first)
 			margin-top: 1.5rem
 		&:not(last-child)
 			margin-bottom: 1.5rem
+
+		.rich-text
+			h1, h2, h3, h4, h5, h6
+				color: $white
+				&:first-child
+					margin-top: 0
+
+			a
+				color: $white
+				text-decoration-color: rgba($white, 0.35)
+				font-weight: 600
+				&:hover, &:active
+					color: #FFF
+					text-decoration-color: #FFF
