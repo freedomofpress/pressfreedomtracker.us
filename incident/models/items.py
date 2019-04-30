@@ -55,7 +55,7 @@ class Institution(ClusterableModel):
 class TargetedJournalist(Orderable):
     incident = ParentalKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='targeted_journalists')
 
-    journalist = models.ForeignKey(Journalist, on_delete=models.CASCADE, related_name='+')
+    journalist = models.ForeignKey(Journalist, on_delete=models.CASCADE, related_name='targeted_incidents')
 
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True, blank=True)
 
