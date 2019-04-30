@@ -229,6 +229,19 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             self._prefetched_objects_cache = {'targets': targets}
 
     @factory.post_generation
+    def institution_targets(self, create, count):
+        if count is None:
+            count = 2
+        make_target = getattr(InstitutionFactory, 'create' if create else 'build')
+        targets = []
+        for i in range(count):
+            t = make_target()
+            self.targeted_institutions.add(t)
+            targets.append(t)
+        if not create:
+            self._prefetched_objects_cache = {'targets': targets}
+
+    @factory.post_generation
     def targets_whose_communications_were_obtained(self, create, count):
         if count is None:
             return

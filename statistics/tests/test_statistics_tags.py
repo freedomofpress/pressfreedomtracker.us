@@ -12,6 +12,8 @@ from common.templatetags.render_as_template import render_as_template
 from incident.tests.factories import (
     IncidentPageFactory,
     TargetFactory,
+    InstitutionFactory,
+    TargetedJournalistFactory,
 )
 from statistics.templatetags.statistics_tags import (
     incidents_in_year_range_by_month,
@@ -235,6 +237,155 @@ class TestIncidentsInMultiValue(TestCase):
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, '8')
+
+
+class NumInstitutionTargetsTest(TestCase):
+    def setUp(self):
+        self.custody = 'CUSTODY'
+        self.returned_full = 'RETURNED_FULL'
+        self.category = CategoryPageFactory(
+            title='Equipment Search or Seizure',
+            incident_filters=['status_of_seized_equipment'],
+        )
+        self.validator = TemplateValidator()
+
+    def test_invalid_args_should_raise_validation_error(self):
+        template_string = '{{% num_institution_targets categories={} status_of_seized_equipment={} %}}'.format(
+            str(self.category.pk),
+            self.custody,
+        )
+        with self.assertRaises(ValidationError):
+            self.validator(template_string)
+
+    def test_target_count__filtered(self):
+        # Matched incident page
+        IncidentPageFactory(
+            status_of_seized_equipment=self.custody,
+            categories=[self.category],
+            institution_targets=3,
+        )
+        IncidentPageFactory(
+            status_of_seized_equipment=self.returned_full,
+            categories=[self.category],
+            institution_targets=5,
+        )
+        template_string = '{{% num_institution_targets categories={} status_of_seized_equipment="{}" %}}'.format(
+            str(self.category.id),
+            self.custody,
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '3')
+
+    def test_target_count__combined(self):
+        IncidentPageFactory(
+            categories=[self.category],
+            institution_targets=3,
+        )
+        IncidentPageFactory(
+            categories=[self.category],
+            institution_targets=5,
+        )
+        template_string = '{{% num_institution_targets categories={} %}}'.format(
+            str(self.category.id),
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '8')
+
+    def test_target_count__deduped(self):
+        inst1 = InstitutionFactory()
+        inst2 = InstitutionFactory()
+        incident1 = IncidentPageFactory(
+            categories=[self.category],
+            institution_targets=0,
+        )
+        incident1.targeted_institutions.set([inst1, inst2])
+        incident1.save()
+
+        incident2 = IncidentPageFactory(
+            categories=[self.category],
+            institution_targets=0,
+        )
+        incident2.targeted_institutions = [inst1]
+        incident2.save()
+
+        template_string = '{{% num_institution_targets categories={} %}}'.format(
+            str(self.category.id),
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '2')
+
+
+class NumJournalistTargetsTest(TestCase):
+    def setUp(self):
+        self.custody = 'CUSTODY'
+        self.returned_full = 'RETURNED_FULL'
+        self.category = CategoryPageFactory(
+            title='Equipment Search or Seizure',
+            incident_filters=['status_of_seized_equipment'],
+        )
+        self.validator = TemplateValidator()
+
+    def test_invalid_args_should_raise_validation_error(self):
+        template_string = '{{% num_journalist_targets categories={} status_of_seized_equipment={} %}}'.format(
+            str(self.category.pk),
+            self.custody,
+        )
+        with self.assertRaises(ValidationError):
+            self.validator(template_string)
+
+    def test_target_count__filtered(self):
+        TargetedJournalistFactory(
+            incident__categories=[self.category],
+            incident__status_of_seized_equipment=self.returned_full,
+        )
+        TargetedJournalistFactory(
+            incident__categories=[self.category],
+            incident__status_of_seized_equipment=self.custody,
+        )
+
+        template_string = '{{% num_journalist_targets categories={} status_of_seized_equipment="{}" %}}'.format(
+            str(self.category.id),
+            self.custody,
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '1')
+
+    def test_target_count__combined(self):
+        TargetedJournalistFactory.create_batch(
+            5,
+            incident__categories=[self.category],
+            incident__status_of_seized_equipment=self.returned_full,
+        )
+
+        template_string = '{{% num_journalist_targets categories={} %}}'.format(
+            str(self.category.id),
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '5')
+
+    def test_target_count__deduped(self):
+        tj = TargetedJournalistFactory(
+            incident__categories=[self.category],
+        )
+        TargetedJournalistFactory(
+            incident__categories=[self.category],
+        )
+        TargetedJournalistFactory(
+            incident__categories=[self.category],
+            journalist=tj.journalist,
+        )
+
+        template_string = '{{% num_journalist_targets categories={} %}}'.format(
+            str(self.category.id),
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '2')
 
 
 class TestIncidentsInYearRangeByMonth(TestCase):
