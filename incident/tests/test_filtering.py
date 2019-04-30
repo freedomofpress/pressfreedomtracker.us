@@ -24,6 +24,7 @@ from incident.tests.factories import (
     InexactDateIncidentPageFactory,
     StateFactory,
     TargetFactory,
+    TargetedJournalistFactory
 )
 from incident.utils.incident_filter import IncidentFilter
 
@@ -1163,3 +1164,37 @@ class RelationFilterTest(TestCase):
         incidents = incident_filter.get_queryset()
 
         self.assertEqual(set(incidents), {incident1})
+
+
+class RelationThroughTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        CategoryPage.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='targeted_journalists',
+            incident_filter_settings=settings,
+        )
+
+        cls.tj1 = TargetedJournalistFactory()
+        cls.tj2 = TargetedJournalistFactory()
+        cls.tj3 = TargetedJournalistFactory()
+
+    def test_filter_should_filter_by_single_journalist(self):
+        incidents = IncidentFilter({
+            'targeted_journalists': self.tj1.journalist.pk,
+        }).get_queryset()
+
+        self.assertEqual(incidents.count(), 1)
+        self.assertIn(self.tj1.incident, incidents)
+
+    def test_filter_should_filter_by_multiple_journalists(self):
+        incidents = IncidentFilter({
+            'targeted_journalists': '{},{}'.format(self.tj1.journalist.pk, self.tj3.journalist.pk),
+        }).get_queryset()
+
+        self.assertEqual(incidents.count(), 2)
+        self.assertIn(self.tj1.incident, incidents)
+        self.assertIn(self.tj3.incident, incidents)
