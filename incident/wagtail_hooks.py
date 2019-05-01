@@ -10,6 +10,7 @@ from wagtail.core import hooks
 from common.wagtail_hooks import MergeAdmin
 from incident.models import (
     Target,
+    Journalist,
     Charge,
     Nationality,
     PoliticianOrPublic,
@@ -22,6 +23,7 @@ from incident.views import (
     PoliticianOrPublicMergeView,
     TargetMergeView,
     VenueMergeView,
+    JournalistMergeView,
 )
 
 
@@ -49,6 +51,17 @@ class TargetAdmin(MergeAdmin):
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title', 'kind')
+    search_fields = ('title',)
+
+
+class JournalistAdmin(MergeAdmin):
+    model = Journalist
+    merge_view_class = JournalistMergeView
+    menu_label = 'Journalist'
+    menu_icon = 'edit'
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
+    list_display = ('title',)
     search_fields = ('title',)
 
 
@@ -100,7 +113,7 @@ class IncidentGroup(ModelAdminGroup):
     menu_label = 'Incident M2Ms'
     menu_icon = 'folder-open-inverse'  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
-    items = (TargetAdmin, ChargeAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin)
+    items = (TargetAdmin, ChargeAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin, JournalistAdmin)
 
 
 modeladmin_register(IncidentGroup)
