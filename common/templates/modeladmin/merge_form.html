@@ -43,8 +43,10 @@
 
 {% block extra_js %}
 	{% render_bundle 'editor' 'js' %}
+	<script type="text/javascript" src="/static/wagtailautocomplete/dist.js"></script>
 {% endblock %}
 
 {% block extra_css %}
 	{% render_bundle 'editor' 'css' %}
+	<link rel="stylesheet" type="text/css" href="/static/wagtailautocomplete/dist.css" />
 {% endblock %}
