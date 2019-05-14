@@ -1,3 +1,6 @@
+import os
+
+from django.http import HttpResponse
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
 from django.views.generic.edit import FormView
@@ -5,6 +8,9 @@ from .forms import TagMergeForm
 from incident.models import IncidentPage
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import capfirst
+
+
+GITINFO_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'gitinfo')
 
 
 # Wrap the wagtail document serving view to serve docs as inline rather
@@ -56,3 +62,9 @@ class MergeView(FormView):
 
 class TagMergeView(MergeView):
     form_class = TagMergeForm
+
+
+def gitinfo_view(request):
+    with open(GITINFO_PATH, 'r') as f:
+        contents = f.read()
+    return HttpResponse(contents, content_type='text/plain; charset=us-ascii')
