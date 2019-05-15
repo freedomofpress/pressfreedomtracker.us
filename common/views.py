@@ -65,6 +65,9 @@ class TagMergeView(MergeView):
 
 
 def gitinfo_view(request):
-    with open(GITINFO_PATH, 'r') as f:
-        contents = f.read()
+    try:
+        with open(GITINFO_PATH, 'r') as f:
+            contents = f.read()
+    except FileNotFoundError:
+        contents = "<file not found at {}>".format(GITINFO_PATH)
     return HttpResponse(contents, content_type='text/plain; charset=us-ascii')
