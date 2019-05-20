@@ -229,3 +229,16 @@ class CleanTest(TestCase):
             [str(error) for error in cm.exception],
             ['Invalid parameter provided: not_a_parameter'],
         )
+
+    def test_invalid_data(self):
+        CategoryPage.objects.all().delete()
+        CategoryPageFactory(title='Category A', incident_filters=['state'])
+        incident_filter = IncidentFilter({'state': '???'})
+
+        with self.assertRaises(ValidationError) as cm:
+            incident_filter.clean(strict=True)
+
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['Expected integer for relationship "state", received "???"'],
+        )

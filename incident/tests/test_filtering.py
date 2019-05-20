@@ -1004,3 +1004,39 @@ class PendingFilterTest(TestCase):
         incidents = IncidentFilter({}).get_queryset()
 
         self.assertCountEqual(incidents, self.all_incidents)
+
+
+class RelationFilterTest(TestCase):
+    def setUp(self):
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='state',
+            incident_filter_settings=settings,
+        )
+
+    def test_ignores_noninteger_parameters(self):
+        state1, state2 = StateFactory.create_batch(2)
+        incident1 = IncidentPageFactory(state=state1)
+        incident2 = IncidentPageFactory(state=state2)
+
+        incident_filter = IncidentFilter({
+            'state': 'xyz',
+        })
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1, incident2})
+
+    def test_filters_foreign_key_relationships_by_id(self):
+        state1, state2 = StateFactory.create_batch(2)
+        incident1 = IncidentPageFactory(state=state1)
+        IncidentPageFactory(state=state2)
+
+        incident_filter = IncidentFilter({'state': str(state1.pk)})
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1})

@@ -49,6 +49,11 @@ class TestPages(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_get_index_should_succeed_with_invalid_foreign_key(self):
+        """get index should succeed with a noninteger foreign key reference."""
+        response = self.client.get('/incidents/?state=NONINTEGER_VALUE')
+        self.assertEqual(response.status_code, 200)
+
 
 class TestExportPage(TestCase):
     """CSV Exports"""
