@@ -75,6 +75,19 @@ class BooleanFilter(Filter):
 class RelationFilter(Filter):
     serialized_type = 'autocomplete'
 
+    def clean(self, value, strict=False):
+        try:
+            return int(value)
+        except ValueError:
+            if strict:
+                raise ValidationError(
+                    'Expected integer for relationship "{}", received "{}"'.format(
+                        self.name,
+                        value,
+                    )
+                )
+            return None
+
     def serialize(self):
         serialized = super(RelationFilter, self).serialize()
         related_model = self.model_field.remote_field.model
