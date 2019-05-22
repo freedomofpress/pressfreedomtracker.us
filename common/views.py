@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.text import capfirst
 
 
-GITINFO_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'gitinfo')
+DEPLOYINFO_PATH = os.environ.get('DJANGO_VERSION_FILE', '/deploy/version')
 
 
 # Wrap the wagtail document serving view to serve docs as inline rather
@@ -64,10 +64,10 @@ class TagMergeView(MergeView):
     form_class = TagMergeForm
 
 
-def gitinfo_view(request):
+def deploy_info_view(request):
     try:
-        with open(GITINFO_PATH, 'r') as f:
+        with open(DEPLOYINFO_PATH, 'r') as f:
             contents = f.read()
     except FileNotFoundError:
-        contents = "<file not found at {}>".format(GITINFO_PATH)
+        contents = "<file not found at {}>".format(DEPLOYINFO_PATH)
     return HttpResponse(contents, content_type='text/plain; charset=us-ascii')
