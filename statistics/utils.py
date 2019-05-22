@@ -1,4 +1,5 @@
 import re
+
 from django.template import Variable, VariableDoesNotExist
 
 

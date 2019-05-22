@@ -1,11 +1,17 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase, RequestFactory
-from wagtail.wagtailcore.middleware import SiteMiddleware
-from wagtail.wagtailcore.models import Site, Page
+from wagtail.core.middleware import SiteMiddleware
+from wagtail.core.models import Site, Page
+from wagtail.tests.utils import WagtailPageTests
+from wagtail.tests.utils.form_data import (
+    inline_formset,
+    nested_form_data,
+    rich_text,
+)
 
-from common.models.pages import CategoryIncidentFilter
+from common.models.pages import CategoryIncidentFilter, CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from home.tests.factories import HomePageFactory
@@ -172,7 +178,7 @@ class CategoryPageTest(TestCase):
 
     def test_view_draft_should_succeed(self):
         self.category_page.save_revision().publish()
-        self.category_page.methodology = 'XYZ'
+        self.category_page.title = 'XYZ'
         self.category_page.save_revision()
 
         user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
@@ -183,7 +189,7 @@ class CategoryPageTest(TestCase):
 
     def test_preview_page_should_succeed(self):
         self.category_page.save_revision().publish()
-        self.category_page.methodology = 'XYZ'
+        self.category_page.title = 'XYZ'
         self.category_page.save_revision()
 
         user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
@@ -192,8 +198,7 @@ class CategoryPageTest(TestCase):
 
         post_data = {
             'slug': self.category_page.slug,
-            'title': self.category_page.title,
-            'methodology': self.category_page.methodology,
+            'title': 'ABC',
             'quick_facts-TOTAL_FORMS': 0,
             'quick_facts-INITIAL_FORMS': 0,
             'quick_facts-MIN_NUM_FORMS': 0,
@@ -205,7 +210,6 @@ class CategoryPageTest(TestCase):
             'incident_filters-TOTAL_FORMS': 0,
             'incident_filters-INITIAL_FORMS': 0,
             'incident_filters-MIN_NUM_FORMS': 0,
-            'incident_filters-MAX_NUM_FORMS': 1000,
             'incident_filters-MAX_NUM_FORMS': 1000,
             'incident_filters-0-incident_filter': 'arrest_status',
             'incident_filters-0-id': 1,
@@ -223,3 +227,64 @@ class CategoryPageTest(TestCase):
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], self.category_page)
+
+
+class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
+    @classmethod
+    def setUpTestData(cls):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+        CategoryPageFactory(
+            parent=cls.home_page,
+            # Needed to apply an "affiliation" filter below
+            incident_filters=['affiliation'],
+        )
+        stats_tag = '{% num_incidents affiliation="Independent" %}'
+        cls.page_data = {
+            'title': 'Test Category',
+            'slug': 'test-category',
+            'methodology': rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag)),
+            'page_color': 'red',
+            'quick_facts': inline_formset([]),
+            'statistics_items': inline_formset([]),
+            'incident_filters': inline_formset([]),
+        }
+
+    def test_can_create_category_page(self):
+        self.assertCanCreate(
+            self.home_page,
+            CategoryPage,
+            nested_form_data(self.page_data),
+        )
+        category = CategoryPage.objects.get(slug='test-category')
+        response = self.client.get(category.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_can_preview_category_page(self):
+        category = CategoryPageFactory(parent=self.home_page)
+        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(category.pk,))
+        response = self.client.post(
+            preview_url,
+            nested_form_data(self.page_data)
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+
+        response = self.client.get(preview_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], category)

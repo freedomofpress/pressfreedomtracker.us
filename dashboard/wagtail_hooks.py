@@ -1,5 +1,5 @@
 from django.template.loader import render_to_string
-from wagtail.wagtailcore import hooks
+from wagtail.core import hooks
 
 from common.models.settings import SearchSettings
 

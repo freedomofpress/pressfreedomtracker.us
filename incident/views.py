@@ -2,8 +2,8 @@ from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.shortcuts import render
 from django.views.decorators.vary import vary_on_headers
 from wagtail.utils.pagination import paginate
-from wagtail.wagtailadmin.forms import SearchForm
-from wagtail.wagtailadmin.utils import (
+from wagtail.admin.forms import SearchForm
+from wagtail.admin.utils import (
     user_has_any_page_permission,
     user_passes_test,
 )

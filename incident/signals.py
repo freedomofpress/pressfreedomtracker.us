@@ -1,6 +1,6 @@
 from django.db.models.signals import post_delete
-from wagtail.contrib.wagtailfrontendcache.utils import purge_page_from_cache
-from wagtail.wagtailcore.signals import page_published
+from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
+from wagtail.core.signals import page_published
 
 from common.models import CategoryPage
 from cloudflare.utils import purge_tags_from_cache

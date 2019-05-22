@@ -1,27 +1,23 @@
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from wagtail.wagtailadmin.edit_handlers import EditHandler
+from wagtail.admin.edit_handlers import EditHandler
 
 
-class BaseHelpPanel(EditHandler):
+class HelpPanel(EditHandler):
     template = "common/edit_handlers/help_panel.html"
 
-    def classes(self):
-        classes = super(BaseHelpPanel, self).classes()
-        return classes + [
-            "full",
-            "title",
-        ]
+    def __init__(self, content='', heading='', classname=''):
+        super().__init__(heading=heading, classname=classname)
+        self.content = content
 
-    def render(self, *args, **kwargs):
-        return mark_safe(render_to_string(self.template, dict(self=self)))  # nosec
+    def clone(self):
+        return self.__class__(
+            content=self.content,
+            heading=self.heading,
+            classname=self.classname,
+        )
 
-
-class HelpPanel(object):
-    def __init__(self, text, *args, **kwargs):
-        self.text = text
-
-    def bind_to_model(self, *args, **kwargs):
-        return type(str('_HelpPanel'), (BaseHelpPanel,), {
-            'text': self.text,
-        })
+    def render(self):
+        return mark_safe(render_to_string(self.template, {  # nosec
+            'self': self
+        }))

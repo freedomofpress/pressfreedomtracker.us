@@ -1,35 +1,35 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.conf import settings
-from django.conf.urls import include, url
+from django.urls import include, path, re_path
 from django.contrib import admin
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from wagtailautocomplete.views import objects, search
 
 from common import views as common_views
 from emails import urls as emails_urls
-from wagtail.wagtailadmin import urls as wagtailadmin_urls
-from wagtail.wagtailcore import urls as wagtail_urls
-from wagtail.wagtaildocs import urls as wagtaildocs_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.core import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
 
 
 autocomplete_public_urls = [
-    url(r'^objects/', objects),
-    url(r'^search/', search),
+    path('objects/', objects),
+    path('search/', search),
 ]
 
 urlpatterns = [
-    url(r'^django-admin/', include(admin.site.urls)),
+    path('django-admin/', admin.site.urls),
 
-    url(r'^autocomplete/', include(autocomplete_public_urls)),
-    url(r'^admin/autocomplete/', include(autocomplete_admin_urls)),
-    url(r'^admin/', include(wagtailadmin_urls)),
-    url(r'^emails/', include(emails_urls)),
+    path('autocomplete/', include(autocomplete_public_urls)),
+    path('admin/autocomplete/', include(autocomplete_admin_urls)),
+    path('admin/', include(wagtailadmin_urls)),
+    path('emails/', include(emails_urls)),
 
-    url(r'^documents/(\d+)/(.*)$', common_views.serve),
-    url(r'^documents/', include(wagtaildocs_urls)),
+    re_path(r'^documents/(\d+)/(.*)$', common_views.serve),
+    path('documents/', include(wagtaildocs_urls)),
 
-    url(r'', include(wagtail_urls)),
+    path(r'', include(wagtail_urls)),
 ]
 
 
@@ -45,8 +45,8 @@ if settings.DEBUG:
     # toggle debug mode there.
     try:
         import debug_toolbar
-        urlpatterns = [url(r'^styleguide/', include('styleguide.urls')),
-                       url(r'^__debug__/', include(debug_toolbar.urls))
+        urlpatterns = [path('styleguide/', include('styleguide.urls')),
+                       path('__debug__/', include(debug_toolbar.urls))
                        ] + urlpatterns
     except ImportError:
         pass

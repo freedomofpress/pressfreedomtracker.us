@@ -5,9 +5,9 @@ from __future__ import unicode_literals
 from django.db import migrations
 import statistics.blocks
 import statistics.registry
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
-import wagtail.wagtailimages.blocks
+import wagtail.core.blocks
+import wagtail.core.fields
+import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
@@ -20,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blogpage',
             name='body',
-            field=wagtail.wagtailcore.fields.StreamField((('rich_text', wagtail.wagtailcore.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('raw_html', wagtail.wagtailcore.blocks.RawHTMLBlock()), ('statistics', wagtail.wagtailcore.blocks.StructBlock((('visualization', wagtail.wagtailcore.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.wagtailcore.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.wagtailcore.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            field=wagtail.core.fields.StreamField((('rich_text', wagtail.core.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.core.blocks.RawHTMLBlock()), ('statistics', wagtail.core.blocks.StructBlock((('visualization', wagtail.core.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.core.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.core.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
         ),
     ]

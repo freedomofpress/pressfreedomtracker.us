@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
-from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailcore.models import Site
+from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.models import Site
 
 from common.models import (
     CategoryPage,

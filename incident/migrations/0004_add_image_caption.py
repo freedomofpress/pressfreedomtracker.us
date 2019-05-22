@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import wagtail.wagtailcore.fields
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='incidentpage',
             name='image_caption',
-            field=wagtail.wagtailcore.fields.RichTextField(blank=True, max_length=255, null=True),
+            field=wagtail.core.fields.RichTextField(blank=True, max_length=255, null=True),
         ),
     ]

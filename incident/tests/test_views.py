@@ -2,9 +2,9 @@ import json
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
-from wagtail.wagtailcore.models import Site
-from wagtail.wagtailcore.rich_text import RichText
+from django.urls import reverse
+from wagtail.core.models import Site
+from wagtail.core.rich_text import RichText
 
 from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
 from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin

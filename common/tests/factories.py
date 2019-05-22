@@ -1,11 +1,12 @@
 import factory
 from faker import Faker
 import wagtail_factories
-from wagtail.wagtailcore.rich_text import RichText
+from wagtail.core.rich_text import RichText
 
 from common.models import (
     CategoryPage,
     CategoryIncidentFilter,
+    SimplePage,
     PersonPage,
     OrganizationPage,
     OrganizationIndexPage,
@@ -57,3 +58,8 @@ class OrganizationPageFactory(wagtail_factories.PageFactory):
 
     website = factory.Faker('uri')
     description = factory.LazyAttribute(lambda _: RichText(fake.sentence()))
+
+
+class SimplePageFactory(wagtail_factories.PageFactory):
+    class Meta:
+        model = SimplePage

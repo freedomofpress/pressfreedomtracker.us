@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from django.test import TestCase, Client
-from wagtail.wagtailcore.models import Site
+from wagtail.core.models import Site
 
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import PersonPageFactory
