@@ -31,6 +31,7 @@ django_start() {
         ./manage.py createdevdata
     fi
     if [ "${DEPLOY_ENV}" == "dev" ]; then
+        ./devops/scripts/version-file.sh
         ./manage.py runserver 0.0.0.0:8000
     else
         gunicorn -c /etc/gunicorn/gunicorn.py "${DJANGO_APP_NAME}.wsgi"

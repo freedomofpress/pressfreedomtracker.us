@@ -1,3 +1,6 @@
+import os
+
+from django.http import HttpResponse
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
 from django.views.generic.edit import FormView
@@ -5,6 +8,9 @@ from .forms import TagMergeForm
 from incident.models import IncidentPage
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import capfirst
+
+
+DEPLOYINFO_PATH = os.environ.get('DJANGO_VERSION_FILE', '/deploy/version')
 
 
 # Wrap the wagtail document serving view to serve docs as inline rather
@@ -56,3 +62,12 @@ class MergeView(FormView):
 
 class TagMergeView(MergeView):
     form_class = TagMergeForm
+
+
+def deploy_info_view(request):
+    try:
+        with open(DEPLOYINFO_PATH, 'r') as f:
+            contents = f.read()
+    except FileNotFoundError:
+        contents = "<file not found at {}>".format(DEPLOYINFO_PATH)
+    return HttpResponse(contents, content_type='text/plain; charset=us-ascii')

@@ -1,11 +1,12 @@
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin, modeladmin_register)
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
+from wagtail.core import hooks
 from django.conf.urls import url
 from django.utils.translation import ugettext as _
 from django.utils.functional import cached_property
 from .models import CommonTag
-from .views import TagMergeView
+from .views import TagMergeView, deploy_info_view
 
 
 class URLHelperWithMerge(AdminURLHelper):
@@ -81,3 +82,10 @@ class CommonTagAdmin(MergeAdmin):
 
 
 modeladmin_register(CommonTagAdmin)
+
+
+@hooks.register('register_admin_urls')
+def urlconf_time():
+    return [
+        url(r'^version/?$', deploy_info_view, name='deployinfo'),
+    ]
