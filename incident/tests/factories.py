@@ -3,7 +3,6 @@ import factory
 import random
 import wagtail_factories
 from faker import Faker
-from wagtail.core import blocks
 from wagtail.core.rich_text import RichText
 
 from incident.models import (
@@ -18,28 +17,10 @@ from incident.models import (
     choices,
 )
 
-from common.tests.factories import CategoryPageFactory
+from common.tests.factories import CategoryPageFactory, RichTextBlockFactory
 
 
 fake = Faker()
-
-
-class BlockFactory(factory.Factory):
-    class Meta:
-        abstract = True
-
-    @classmethod
-    def _build(cls, model_class, value):
-        return model_class().clean(value)
-
-    @classmethod
-    def _create(cls, model_class, value):
-        return model_class().clean(value)
-
-
-class RichTextBlockFactory(BlockFactory):
-    class Meta:
-        model = blocks.RichTextBlock
 
 
 class IncidentIndexPageFactory(wagtail_factories.PageFactory):
