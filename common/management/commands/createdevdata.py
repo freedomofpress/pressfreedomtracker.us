@@ -1,29 +1,28 @@
+import json
 import random
 from datetime import timedelta
-import json
 
 from django.contrib.auth.models import User
+from django.core import management
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
-from django.core import management
-
 from django.db import transaction
 from django.utils import timezone
+from wagtail.core.models import Site
+from wagtail.core.rich_text import RichText
 
-from blog.models import BlogIndexPage, BlogPage
+from blog.models import BlogIndexPage
+from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
     CategoryPage,
-    PersonPage, SimplePage, SimplePageWithSidebar,
+    SimplePage, SimplePageWithSidebar,
     FooterSettings, CustomImage, SearchSettings,
 )
+from common.tests.factories import PersonPageFactory
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
-
-from wagtail.core.models import Site
-from wagtail.core.rich_text import RichText
-
 
 LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
 
@@ -190,37 +189,41 @@ class Command(BaseCommand):
 
         # BLOG RELATED PAGES
         if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
-            blog_index_page = BlogIndexPage(
-                title='FPF Blog',
-                slug='fpf-blog'
-            )
-            home_page.add_child(instance=blog_index_page)
+            blog_index_page = BlogIndexPageFactory(parent=home_page)
             home_page.blog_index_page = blog_index_page
 
-            author_page = PersonPage(title='Rachel S')
-            home_page.add_child(instance=author_page)
+            author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
 
-            for x in range(0, 10):
-                page = BlogPage(
-                    title='Nisl placerat volutpat{}'.format(x),
-                    slug='nisl-placerat-{}'.format(x),
-                    publication_datetime=timezone.now(),
-                    body=json.dumps([
-                        dict(
-                            type='text',
-                            value=dict(
-                                text=LIPSUM,
-                                background_color='white',
-                                text_align='left',
-                                font_size='large',
-                                font_family='sans-serif',
-                            ),
-                        ),
-                    ]),
-                    author=author_page,
-                    teaser_text=RichText('<p>Our neural pathways have become accustomed to your sensory input patterns. Ensign Babyface! I\'ll be sure to note that in my log. Could someone survive inside a transporter buffer for 75 years? and attack the Romulans.</p>'),
-                )
-                blog_index_page.add_child(instance=page)
+            blog_text = dict(
+                body__0__heading_1__content='Pizza',
+                body__1__heading_2__content='Terminology',
+                body__2__text__text=RichText('Pizza: noun, so good.'),
+                body__2__text__background_color='white',
+                body__2__text__text_align='left',
+                body__2__text__font_size='large',
+                body__2__text__font_family='sans-serif',
+                body__3__heading_2__content='History',
+                body__4__heading_3__content='Antiquity',
+                body__5__heading_3__content='Medieval',
+            )
+            BlogPageFactory.create_batch(
+                10,
+                parent=blog_index_page,
+                author=author1,
+                **blog_text,
+            )
+            BlogPageFactory.create_batch(
+                10,
+                parent=blog_index_page,
+                author=author2,
+                **blog_text,
+            )
+            BlogPageFactory.create_batch(
+                10,
+                parent=blog_index_page,
+                author=author3,
+                **blog_text,
+            )
         else:
             blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')
 
