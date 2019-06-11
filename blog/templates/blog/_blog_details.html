@@ -8,7 +8,7 @@
 					by
 					<a
 						class="blog-details__link"
-						href="{{ page.get_parent.url }}?author={{ page.author.pk }}"
+						href="{% pageurl page.get_parent %}?author={{ page.author.pk }}"
 					>
 						{{ page.author.title }}
 					</a>
@@ -17,7 +17,7 @@
 					from
 					<a
 						class="blog-details__link"
-						href="{{ page.get_parent.url }}?organization={{ page.organization.pk }}"
+						href="{% pageurl page.get_parent %}?organization={{ page.organization.pk }}"
 					>
 						{{ page.organization.title }}
 					</a>

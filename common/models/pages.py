@@ -161,7 +161,7 @@ class OrganizationPage(Page):
         except IndexError:
             # This organization has no blog posts. Fall back to 404
             raise Http404()
-        return redirect('{}?organization={}'.format(blog_index.url, self.pk))
+        return redirect('{}?organization={}'.format(blog_index.get_url(request=request), self.pk))
 
 
 class PersonPage(Page):

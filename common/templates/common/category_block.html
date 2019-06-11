@@ -1,3 +1,4 @@
+{% load wagtailcore_tags %}
 <div class="category-block">
 	<h2 class="category-block__header">
 		All Categories
@@ -8,7 +9,7 @@
 			<li class="category-block__list-item">
 				<a
 					class="category-block__link"
-					href="{{ category_relation.category.url }}"
+					href="{% pageurl category_relation.category %}"
 				>
 					{{ category_relation.category.title }}
 				</a>
