@@ -1,11 +1,15 @@
 import json
 import random
+import requests
+import time
 from datetime import timedelta
+import wagtail_factories
 
 from django.contrib.auth.models import User
 from django.core import management
 from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
+from django.core.files.base import ContentFile
 from django.db import transaction
 from django.utils import timezone
 from wagtail.core.models import Site
@@ -18,7 +22,9 @@ from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, CustomImage, SearchSettings,
 )
-from common.tests.factories import PersonPageFactory
+from common.tests.factories import (
+    PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
+)
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
@@ -32,7 +38,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
-        self.stdout.write('Creating development data... ', '')
+        self.stdout.write('Creating development data')
         self.stdout.flush()
 
         # createcategories will handle creating homepage.
@@ -51,6 +57,33 @@ class Command(BaseCommand):
             site = Site.objects.get(
                 is_default_site=True,
             )
+
+        # IMAGES
+        self.stdout.write('Fetching images')
+        self.stdout.flush()
+        banner_collection = wagtail_factories.CollectionFactory(name='Banners')
+        num_images = 12
+        image_fail = False
+        for i in range(num_images):
+            url = 'https://picsum.photos/1400/400'
+            response = requests.get(url)
+            if response.content:
+                CustomImageFactory(
+                    file__filename='business{}.jpg'.format(i),
+                    file__from_file=ContentFile(response.content),
+                    collection=banner_collection,
+                )
+            else:
+                image_fail = True
+            self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
+            time.sleep(0.2)
+
+        self.stdout.write('')
+        if image_fail:
+            self.stdout.write(self.style.NOTICE('NOTICE: Some images failed to save'))
+        else:
+            self.stdout.write(self.style.SUCCESS('OK'))
+
         # ABOUT PAGE
         if not SimplePage.objects.filter(slug='about').exists():
             about_page = SimplePage(
@@ -190,6 +223,7 @@ class Command(BaseCommand):
         # BLOG RELATED PAGES
         if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
             blog_index_page = BlogIndexPageFactory(parent=home_page)
+            org_index_page = OrganizationIndexPageFactory(parent=home_page)
             home_page.blog_index_page = blog_index_page
 
             author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
@@ -209,19 +243,25 @@ class Command(BaseCommand):
             BlogPageFactory.create_batch(
                 10,
                 parent=blog_index_page,
+                organization__parent=org_index_page,
                 author=author1,
+                with_image=True,
                 **blog_text,
             )
             BlogPageFactory.create_batch(
                 10,
                 parent=blog_index_page,
+                organization__parent=org_index_page,
                 author=author2,
+                with_image=True,
                 **blog_text,
             )
             BlogPageFactory.create_batch(
                 10,
                 parent=blog_index_page,
+                organization__parent=org_index_page,
                 author=author3,
+                with_image=True,
                 **blog_text,
             )
         else:

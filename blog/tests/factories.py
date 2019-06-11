@@ -6,6 +6,7 @@ import factory
 import wagtail_factories
 
 from blog.models import BlogPage, BlogIndexPage
+from common.models import CustomImage
 from common.tests.factories import (
     PersonPageFactory,
     OrganizationPageFactory,
@@ -36,6 +37,14 @@ class BlogIndexPageFactory(wagtail_factories.PageFactory):
 class BlogPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = BlogPage
+
+    class Params:
+        # for use with the createdevdata command
+        with_image = factory.Trait(
+            teaser_image=factory.Iterator(CustomImage.objects.filter(
+                collection__name='Banners',
+            ))
+        )
 
     title = factory.Sequence(
         lambda n: fake.text(random.randint(5, 58))[:-1] + ' ({})'.format(n)
