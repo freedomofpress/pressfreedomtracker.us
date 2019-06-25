@@ -14,6 +14,8 @@ from django.db import transaction
 from django.utils import timezone
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
+import factory
+from faker import Faker
 
 from blog.models import BlogIndexPage
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
@@ -31,6 +33,9 @@ from incident.models import IncidentCategorization, IncidentIndexPage, IncidentP
 from menus.models import Menu, MenuItem
 
 LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
+
+
+fake = Faker()
 
 
 class Command(BaseCommand):
@@ -289,85 +294,26 @@ class Command(BaseCommand):
 
         # INCIDENT RELATED PAGES
         search_settings = SearchSettings.for_site(site)
+
         if not IncidentIndexPage.objects.filter(slug='all-incidents'):
             incident_index_page = IncidentIndexPage(
                 title='All Incidents',
                 slug='all-incidents'
             )
             home_page.add_child(instance=incident_index_page)
-
-            for x in range(0, 100):
-                page = IncidentPage(
-                    title='Maecenas convallis sem malesuada nisl placerat volutpat{}'.format(x),
-                    slug='maecenas-convallis-{}'.format(x),
-                    date=timezone.now() - timedelta(x),
-                    body=[(
-                        'rich_text',
-                        RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
-                    )],
-                )
-                random_idx = random.randint(0, CategoryPage.objects.count() - 1)
-                page.categories = [
-                    IncidentCategorization(
-                        category=CategoryPage.objects.all()[random_idx],
-                        sort_order=0,
-                    )
-                ]
-                incident_index_page.add_child(instance=page)
-                if x == 0:
-                    HomePageIncidents.objects.create(
-                        sort_order=4,
-                        page=home_page,
-                        incident=page,
-                    )
+            management.call_command('createincidents')
         else:
             incident_index_page = IncidentIndexPage.objects.get(slug='all-incidents')
 
         search_settings.search_page = incident_index_page
         search_settings.save()
 
-        incident_data = [
-            dict(
-                title="BBC journalist questioned by US border agents, devices searched",
-                body="Ali Hamedani, a reporter for BBC World Service, was detained at Chicago O'Hare airport for over two hours.",
-            ),
-            dict(
-                title="Vocativ journalist charged with rioting in Washington",
-                body="Police arrested Evan Engel, a senior producer at the news website Vocativ.",
-            ),
-            dict(
-                title="Media outlets excluded from gaggle",
-                body="At least nine news outlets were excluded from an informal briefing known as 'a gaggle' by President Donald Trump's White House Press Secretary Sean Spicer.",
-            ),
-        ]
-        image = CustomImage.objects.filter(title='Sample Image').first()
-        if not image:
-            image = CustomImage.objects.create(
-                title='Sample Image',
-                file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
-                attribution='createdevdata'
-            )
-        for index, data in enumerate(incident_data):
-            page = IncidentPage(
-                title=data['title'],
-                body=[('rich_text', RichText('<p>{}</p>'.format(data['body'])))],
-                date=timezone.now() + timedelta(index + 1),
-                teaser_image=image,
-            )
-            random_idx = random.randint(0, CategoryPage.objects.count() - 1)
-            page.categories = [
-                IncidentCategorization(
-                    category=CategoryPage.objects.all()[random_idx],
-                    sort_order=0,
-                )
-            ]
-            incident_index_page.add_child(instance=page)
+        for i, incident in enumerate(random.sample(list(IncidentPage.objects.all()), 3)):
             HomePageIncidents.objects.create(
-                sort_order=index + 1,
+                sort_order=i,
                 page=home_page,
-                incident=page,
+                incident=incident,
             )
-
         home_page.save()
 
         # Create superuser
