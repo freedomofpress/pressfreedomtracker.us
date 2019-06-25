@@ -1,5 +1,6 @@
-from django.core.management.base import BaseCommand
+import random
 
+from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from wagtail.core.models import Page
@@ -13,12 +14,15 @@ from home.tests.factories import StatBoxFactory, HomePageFactory
 
 
 CATEGORIES = {
+    # Note: the keys in this dictionary must match the parameter names
+    # on the CategoryPageFactory class.
     'arrest': [
         'arrest_status',
         'status_of_charges',
         'detention_date',
         'release_date',
-        'unnecessary_use_of_force'
+        'unnecessary_use_of_force',
+        'charges',
     ],
     'border_stop': [
         'border_point',
@@ -33,12 +37,11 @@ CATEGORIES = {
         'did_authorities_ask_about_work',
         'were_devices_searched_or_seized',
     ],
-    'denied_access': [
+    'denial_of_access': [
         'politicians_or_public_figures_involved',
     ],
     'equipment_search': [
         'equipment_seized',
-        'equipment_broken',
         'status_of_seized_equipment',
         'is_search_warrant_obtained',
         'actor',
@@ -47,7 +50,7 @@ CATEGORIES = {
         'assailant',
         'was_journalist_targeted',
     ],
-    'leak': [
+    'leak_case': [
         'charged_under_espionage_act',
     ],
     'subpoena': [
@@ -59,6 +62,14 @@ CATEGORIES = {
         'third_party_business',
         'legal_order_type',
     ],
+    'equipment_damage': [
+        'equipment_broken',
+    ],
+    'prior_restraint': [
+        'status_of_prior_restraint',
+    ],
+    'chilling_statement': [],
+    'other_incident': [],
 }
 
 
@@ -84,5 +95,5 @@ class Command(BaseCommand):
             self.stdout.write('.', ending='')
 
         self.stdout.write('')
-        for category in CategoryPage.objects.all()[:4]:
+        for category in random.sample(list(CategoryPage.objects.all()), 4):
             StatBoxFactory(page=home_page, category=category)

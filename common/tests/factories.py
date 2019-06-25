@@ -10,6 +10,7 @@ from common.blocks import (
     Heading3,
     StyledTextBlock,
 )
+from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import (
     CategoryPage,
     CategoryIncidentFilter,
@@ -66,35 +67,63 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         arrest = factory.Trait(
             title='Arrest / Criminal Charge',
             plural_name='Arrests and Criminal Charges',
+            slug='arrest'
         )
         border_stop = factory.Trait(
             title='Border Stop',
             plural_name='Border Stops',
+            slug='border_stop'
         )
-        denied_access = factory.Trait(
+        denial_of_access = factory.Trait(
             title='Denial of Access',
             plural_name='Denials of Access',
+            slug='denial_of_access',
         )
         equipment_search = factory.Trait(
             title='Equipment Search or Seizure',
             plural_name='Equipment Searches, Seizures and Damage',
+            slug='equipment_search',
         )
         physical_attack = factory.Trait(
             title='Physical Attack',
             plural_name='Physical Attacks',
+            slug='physical_attack',
         )
-        leak = factory.Trait(
+        leak_case = factory.Trait(
             title='Leak Case',
             plural_name='Leak Cases',
+            slug='leak_case'
         )
         subpoena = factory.Trait(
             title='Subpoena / Legal Order',
             plural_name='Subpoenas and Legal Orders',
+            slug='subpoena'
+        )
+        equipment_damage = factory.Trait(
+            title='Equipment Damage',
+            plural_name='Equipment Damages',
+            slug='equipment_damage',
+        )
+        other_incident = factory.Trait(
+            title='Other Incident',
+            plural_name='Other Incidents',
+            slug='other_incident',
+        )
+        chilling_statement = factory.Trait(
+            title='Chilling Statement',
+            plural_name='Chilling Statements',
+            slug='chilling_statement',
+        )
+        prior_restraint = factory.Trait(
+            title='Prior Restraint',
+            plural_name='Prior Restraints',
+            slug='prior_restraint',
         )
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
     methodology = factory.LazyAttribute(lambda _: RichText(fake.paragraph(nb_sentences=5)))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
+    page_color = factory.Iterator(CATEGORY_COLOR_CHOICES, getter=lambda c: c[0])
 
     @factory.post_generation
     def incident_filters(self, create, extracted, **kwargs):
