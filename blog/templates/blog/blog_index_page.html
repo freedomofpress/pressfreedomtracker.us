@@ -31,7 +31,7 @@
 				{{ author_filter.title }}
 			{% endif %}
 			<div class="blog-filter__clear">
-				<a href="{{ page.url }}">&times; See All Articles</a>
+				<a href="{% pageurl page %}">&times; See All Articles</a>
 			</div>
 		</div>
 	{% endif %}
@@ -44,7 +44,7 @@
 				{{ organization_filter.title }}
 			{% endif %}
 			<div class="blog-filter__clear">
-				<a href="{{ page.url }}">&times; See All Articles</a>
+				<a href="{% pageurl page %}">&times; See All Articles</a>
 			</div>
 		</div>
 	{% endif %}
