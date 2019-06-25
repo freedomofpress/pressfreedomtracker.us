@@ -36,6 +36,14 @@ LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat or
 class Command(BaseCommand):
     help = 'Creates data appropriate for development'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--no-download',
+            action='store_false',
+            dest='download_images',
+            help='Download external images',
+        )
+
     @transaction.atomic
     def handle(self, *args, **options):
         self.stdout.write('Creating development data')
@@ -59,30 +67,42 @@ class Command(BaseCommand):
             )
 
         # IMAGES
-        self.stdout.write('Fetching images')
-        self.stdout.flush()
         banner_collection = wagtail_factories.CollectionFactory(name='Banners')
-        num_images = 12
-        image_fail = False
-        for i in range(num_images):
-            url = 'https://picsum.photos/1400/400'
-            response = requests.get(url)
-            if response.content:
-                CustomImageFactory(
-                    file__filename='business{}.jpg'.format(i),
-                    file__from_file=ContentFile(response.content),
+
+        if options.get('download_images', True):
+            self.stdout.write('Fetching images')
+            self.stdout.flush()
+
+            num_images = 6
+            image_fail = False
+            for i in range(num_images):
+                url = 'https://picsum.photos/2880/800'
+                response = requests.get(url)
+                if response.content:
+                    CustomImageFactory(
+                        file__filename='Banners{}.jpg'.format(i),
+                        file__from_file=ContentFile(response.content),
+                        collection=banner_collection,
+                    )
+                else:
+                    image_fail = True
+                self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
+                time.sleep(0.2)
+
+            self.stdout.write('')
+            if image_fail:
+                self.stdout.write(self.style.NOTICE('NOTICE: Some images failed to save'))
+            else:
+                self.stdout.write(self.style.SUCCESS('OK'))
+        else:
+            faker = factory.faker.Faker._get_faker(locale='en-US')
+            for i in range(20):
+                CustomImageFactory.create(
+                    file__width=800,
+                    file__height=500,
+                    file__color=faker.safe_color_name(),
                     collection=banner_collection,
                 )
-            else:
-                image_fail = True
-            self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
-            time.sleep(0.2)
-
-        self.stdout.write('')
-        if image_fail:
-            self.stdout.write(self.style.NOTICE('NOTICE: Some images failed to save'))
-        else:
-            self.stdout.write(self.style.SUCCESS('OK'))
 
         # ABOUT PAGE
         if not SimplePage.objects.filter(slug='about').exists():
