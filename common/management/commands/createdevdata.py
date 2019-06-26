@@ -269,31 +269,18 @@ class Command(BaseCommand):
 
         # BLOG RELATED PAGES
         if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
-            blog_index_page = BlogIndexPageFactory(parent=home_page)
+            blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True)
             org_index_page = OrganizationIndexPageFactory(parent=home_page)
             home_page.blog_index_page = blog_index_page
 
             author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
 
-            blog_text = dict(
-                body__0__heading_1__content='Pizza',
-                body__1__heading_2__content='Terminology',
-                body__2__text__text=RichText('Pizza: noun, so good.'),
-                body__2__text__background_color='white',
-                body__2__text__text_align='left',
-                body__2__text__font_size='large',
-                body__2__text__font_family='sans-serif',
-                body__3__heading_2__content='History',
-                body__4__heading_3__content='Antiquity',
-                body__5__heading_3__content='Medieval',
-            )
             BlogPageFactory.create_batch(
                 10,
                 parent=blog_index_page,
                 organization__parent=org_index_page,
                 author=author1,
                 with_image=True,
-                **blog_text,
             )
             BlogPageFactory.create_batch(
                 10,
@@ -301,7 +288,6 @@ class Command(BaseCommand):
                 organization__parent=org_index_page,
                 author=author2,
                 with_image=True,
-                **blog_text,
             )
             BlogPageFactory.create_batch(
                 10,
@@ -309,7 +295,6 @@ class Command(BaseCommand):
                 organization__parent=org_index_page,
                 author=author3,
                 with_image=True,
-                **blog_text,
             )
         else:
             blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')

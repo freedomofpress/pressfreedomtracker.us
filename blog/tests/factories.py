@@ -17,21 +17,25 @@ from common.tests.factories import (
     Heading3Factory,
     StyledTextBlockFactory,
 )
-
+from common.tests.utils import StreamfieldProvider
+from menus.factories import MainMenuItemFactory
 
 fake = Faker()
+factory.Faker.add_provider(StreamfieldProvider)
 
 
 class BlogIndexPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = BlogIndexPage
+
     title = 'PFT Blog'
     about_blog_title = 'The blog of the press freedom tracker'
-    body = wagtail_factories.StreamFieldFactory({
-        'image': wagtail_factories.ImageChooserBlockFactory,
-        'raw_html': RawHTMLBlockFactory,
-        'rich_text': RichTextBlockFactory,
-    })
+    body = factory.Faker('streamfield', fields=['bare_image', 'raw_html', 'rich_text'])
+
+    class Params:
+        main_menu = factory.Trait(
+            menu=factory.RelatedFactory(MainMenuItemFactory, 'link_page', for_page=True)
+        )
 
 
 class BlogPageFactory(wagtail_factories.PageFactory):
@@ -42,23 +46,31 @@ class BlogPageFactory(wagtail_factories.PageFactory):
     class Params:
         # for use with the createdevdata command
         with_image = factory.Trait(
-            teaser_image=factory.Iterator(CustomImage.objects.filter(
-                collection__name='Banners',
-            ))
+            teaser_image=factory.Iterator(
+                CustomImage.objects.filter(collection__name='Banners')
+            )
         )
 
     title = factory.Sequence(
         lambda n: fake.text(random.randint(5, 58))[:-1] + ' ({})'.format(n)
     )
-    body = wagtail_factories.StreamFieldFactory({
-        'heading_1': Heading1Factory,
-        'heading_2': Heading2Factory,
-        'heading_3': Heading3Factory,
-        'text': StyledTextBlockFactory,
-    })
+    body = factory.Faker(
+        'streamfield',
+        fields=[
+            'heading1',
+            'heading2',
+            'heading3',
+            'raw_html',
+            'styled_text',
+            'blockquote',
+            'styled_text',
+            'list',
+            'styled_text',
+        ],
+    )
     teaser_text = factory.Faker('sentence')
     publication_datetime = factory.Faker(
-        'date_time_this_month', after_now=False, before_now=True,
-        tzinfo=timezone.utc)
+        'date_time_this_month', after_now=False, before_now=True, tzinfo=timezone.utc
+    )
     author = factory.SubFactory(PersonPageFactory)
     organization = factory.SubFactory(OrganizationPageFactory)
