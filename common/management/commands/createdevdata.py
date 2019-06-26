@@ -30,7 +30,7 @@ from common.tests.factories import (
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
-from incident.tests.factories import IncidentIndexPageFactory
+from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, IncidentUpdateFactory
 from menus.models import Menu, MenuItem
 
 LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
@@ -322,6 +322,8 @@ class Command(BaseCommand):
                 page=home_page,
                 incident=incident,
             )
+            IncidentUpdateFactory(page=incident)
+            IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
 
         # Create superuser

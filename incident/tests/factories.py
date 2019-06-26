@@ -1,5 +1,5 @@
 import datetime
-from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, RelatedFactory
+from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, RelatedFactory, Sequence
 import factory
 import random
 import wagtail_factories
@@ -10,6 +10,8 @@ from incident.models import (
     IncidentCategorization,
     IncidentIndexPage,
     IncidentPage,
+    IncidentPageUpdates,
+    IncidentPageLinks,
     Nationality,
     PoliticianOrPublic,
     EquipmentBroken,
@@ -59,6 +61,26 @@ class EquipmentBrokenFactory(factory.DjangoModelFactory):
     quantity = LazyAttribute(lambda _: random.randint(1, 5))
 
 
+class IncidentUpdateFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = IncidentPageUpdates
+
+    sort_order = Sequence(int)
+    title = Faker('sentence')
+    date = Faker('past_datetime', start_date='-15d', tzinfo=datetime.timezone.utc)
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'bare_image', 'raw_html', 'blockquote'])
+
+
+class IncidentLinkFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = IncidentPageLinks
+
+    sort_order = Sequence(int)
+    title = Faker('sentence')
+    url = Faker('url', schemes=['https'])
+    publication = Faker('company')
+
+
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
@@ -67,7 +89,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     image_caption_text = Faker('sentence')
     teaser_image_text = Faker('sentence')
     title = factory.Faker('sentence')
-    date = factory.Faker('date')
+    date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
     body = Faker('streamfield', fields=['rich_text', 'bare_image', 'blockquote', 'raw_html'])
     affiliation = factory.Faker('word')
