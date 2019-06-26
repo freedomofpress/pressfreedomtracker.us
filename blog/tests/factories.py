@@ -10,12 +10,6 @@ from common.models import CustomImage
 from common.tests.factories import (
     PersonPageFactory,
     OrganizationPageFactory,
-    RawHTMLBlockFactory,
-    RichTextBlockFactory,
-    Heading1Factory,
-    Heading2Factory,
-    Heading3Factory,
-    StyledTextBlockFactory,
 )
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory

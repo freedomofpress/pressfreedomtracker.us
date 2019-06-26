@@ -1,15 +1,10 @@
 from itertools import combinations, chain
-import random
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from common.models import CategoryPage
-from incident.models import (
-    IncidentIndexPage,
-    IncidentPage,
-    IncidentCategorization,
-)
+from incident.models import IncidentIndexPage
 from incident.tests.factories import MultimediaIncidentPageFactory
 
 
@@ -33,7 +28,6 @@ def generate_variations():
     """
     for variation in three_combinations(MultimediaIncidentPageFactory._meta.parameters.keys()):
         yield {k: True for k in variation}
-
 
 
 class Command(BaseCommand):

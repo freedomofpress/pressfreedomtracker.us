@@ -1,5 +1,4 @@
-from functools import partial
-from random import choice, randrange
+from random import choice
 import json
 
 from faker import Faker
@@ -7,7 +6,7 @@ from faker.providers import BaseProvider
 from common.models import CustomImage
 from common.choices import BACKGROUND_COLOR_CHOICES
 
-from common.blocks import StyledTextBlock
+from common.blocks import StyledTextBlock, ALIGNMENT_CHOICES
 
 fake = Faker()
 

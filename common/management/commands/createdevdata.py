@@ -2,16 +2,13 @@ import json
 import random
 import requests
 import time
-from datetime import timedelta
 import wagtail_factories
 
 from django.contrib.auth.models import User
 from django.core import management
-from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from django.db import transaction
-from django.utils import timezone
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
 import factory
@@ -20,16 +17,15 @@ from faker import Faker
 from blog.models import BlogIndexPage
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
-    CategoryPage,
     SimplePage, SimplePageWithSidebar,
-    FooterSettings, CustomImage, SearchSettings,
+    FooterSettings, SearchSettings,
 )
 from common.tests.factories import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
 )
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
-from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
+from incident.models import IncidentIndexPage, IncidentPage
 from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, IncidentUpdateFactory
 from menus.models import Menu, MenuItem
 
@@ -123,7 +119,7 @@ class Command(BaseCommand):
                     file__width=600,
                     file__height=600,
                     file__color=faker.safe_color_name(),
-                    collection=squares_collection,
+                    collection=square_collection,
                 )
                 CustomImageFactory.create(
                     file__width=2880,

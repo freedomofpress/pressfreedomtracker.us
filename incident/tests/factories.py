@@ -1,5 +1,5 @@
 import datetime
-from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, RelatedFactory, Sequence
+from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, Sequence
 import factory
 import random
 import wagtail_factories
@@ -22,7 +22,7 @@ from incident.models import (
     choices,
 )
 from common.models import CustomImage
-from common.tests.factories import CategoryPageFactory, RichTextBlockFactory
+from common.tests.factories import CategoryPageFactory
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
 
@@ -146,7 +146,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             detention_date=datetime.date.today() - datetime.timedelta(days=3),
             unnecessary_use_of_force=factory.Faker('boolean'),
         )
-        equipment_search= factory.Trait(
+        equipment_search = factory.Trait(
             status_of_seized_equipment=factory.Iterator(
                 choices.STATUS_OF_SEIZED_EQUIPMENT, getter=lambda c: c[0]),
             is_search_warrant_obtained=factory.Faker('boolean'),
@@ -160,7 +160,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.CITIZENSHIP_STATUS_CHOICES, getter=lambda c: c[0]),
             denial_of_entry=factory.Faker('boolean'),
             stopped_previously=factory.Faker('boolean'),
-            target_nationality=1, #TODO: make into factory
+            target_nationality=1,
             did_authorities_ask_for_device_access=factory.Iterator(
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
             did_authorities_ask_for_social_media_user=factory.Iterator(
