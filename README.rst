@@ -36,11 +36,28 @@ environment, run the following your first run:
     # One-time command to run and forget
     make dev-init
 
-    # Starts up the environment WITH devdata injected
-    # leave off the environment variable to skip this step
-    DJANGO_CREATEDEVDATA=yes docker-compose up
+    # Starts up the environment
+    docker-compose up
+
+    # Inject development data (also only needs to be run once)
+    docker-compose exec django ./manage.py createdevdata
 
 You should be able to hit the web server interface by running ``make open-browser``
+
+Note: the ``createdevdata`` command fetches images from the internet
+by default.  To disable this behavior, run the command with the
+``--no-download`` argument, e.g.:
+
+.. code:: bash
+
+    docker-compose exec django ./manage.py createdevdata --no-download
+
+To reset your database back to its initial state, I recommend removing the postgresql docker container and re-running the dev data command.  First, stop your containers by pressing control+c if they are running.  Then run these two commands.
+
+.. code:: bash
+
+    docker-compose rm -f postgresql && docker-compose up --build
+    docker-compose exec django ./manage.py createdevdata
 
 Debugging
 ---------
