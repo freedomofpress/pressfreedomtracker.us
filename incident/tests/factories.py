@@ -1,5 +1,5 @@
 import datetime
-from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator
+from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, RelatedFactory
 import factory
 import random
 import wagtail_factories
@@ -21,6 +21,11 @@ from incident.models import (
 )
 from common.models import CustomImage
 from common.tests.factories import CategoryPageFactory, RichTextBlockFactory
+from common.tests.utils import StreamfieldProvider
+from menus.factories import MainMenuItemFactory
+
+
+Faker.add_provider(StreamfieldProvider)
 
 
 class IncidentIndexPageFactory(wagtail_factories.PageFactory):
@@ -64,11 +69,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     title = factory.Faker('sentence')
     date = factory.Faker('date')
     city = factory.Faker('city')
-    body = wagtail_factories.StreamFieldFactory({
-        'rich_text': RichTextBlockFactory,
-        'image': wagtail_factories.ImageChooserBlockFactory,
-        'raw_html': wagtail_factories.CharBlockFactory,
-    })
+    body = Faker('streamfield', fields=['rich_text', 'bare_image', 'blockquote', 'raw_html'])
     affiliation = factory.Faker('word')
     teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
     teaser_image = Iterator(
