@@ -27,6 +27,11 @@ class IncidentIndexPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentIndexPage
 
+    class Params:
+        main_menu = Trait(
+            menu=RelatedFactory(MainMenuItemFactory, 'link_page', for_page=True)
+        )
+
 
 class EquipmentFactory(factory.DjangoModelFactory):
     class Meta:

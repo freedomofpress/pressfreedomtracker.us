@@ -30,6 +30,7 @@ from common.tests.factories import (
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
 from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
+from incident.tests.factories import IncidentIndexPageFactory
 from menus.models import Menu, MenuItem
 
 LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
@@ -303,11 +304,11 @@ class Command(BaseCommand):
         search_settings = SearchSettings.for_site(site)
 
         if not IncidentIndexPage.objects.filter(slug='all-incidents'):
-            incident_index_page = IncidentIndexPage(
+            incident_index_page = IncidentIndexPageFactory(
+                parent=home_page,
+                main_menu=True,
                 title='All Incidents',
-                slug='all-incidents'
             )
-            home_page.add_child(instance=incident_index_page)
             management.call_command('createincidents')
         else:
             incident_index_page = IncidentIndexPage.objects.get(slug='all-incidents')
