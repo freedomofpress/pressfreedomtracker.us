@@ -225,7 +225,7 @@ class Command(BaseCommand):
                     text='Submit an Incident',
                     link_page=incident_form,
                     menu=main,
-                    sort_order=4,
+                    sort_order=99,
                     html_classes='header__nav-link--highlighted'
                 ),
             ])
