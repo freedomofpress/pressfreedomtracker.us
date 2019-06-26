@@ -73,12 +73,13 @@ class Command(BaseCommand):
 
         # IMAGES
         banner_collection = wagtail_factories.CollectionFactory(name='Banners')
+        square_collection = wagtail_factories.CollectionFactory(name='Squares')
 
         if options.get('download_images', True):
             self.stdout.write('Fetching images')
             self.stdout.flush()
 
-            num_images = 6
+            num_images = 2
             image_fail = False
             for i in range(num_images):
                 url = 'https://picsum.photos/2880/800'
@@ -92,7 +93,22 @@ class Command(BaseCommand):
                 else:
                     image_fail = True
                 self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
-                time.sleep(0.2)
+                time.sleep(0.5)
+
+            num_images = 5
+            for i in range(num_images):
+                url = 'https://picsum.photos/600/600'
+                response = requests.get(url)
+                if response.content:
+                    CustomImageFactory(
+                        file__filename='Squares{}.jpg'.format(i),
+                        file__from_file=ContentFile(response.content),
+                        collection=square_collection,
+                    )
+                else:
+                    image_fail = True
+                self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
+                time.sleep(0.5)
 
             self.stdout.write('')
             if image_fail:
@@ -103,8 +119,14 @@ class Command(BaseCommand):
             faker = factory.faker.Faker._get_faker(locale='en-US')
             for i in range(20):
                 CustomImageFactory.create(
-                    file__width=800,
-                    file__height=500,
+                    file__width=600,
+                    file__height=600,
+                    file__color=faker.safe_color_name(),
+                    collection=squares_collection,
+                )
+                CustomImageFactory.create(
+                    file__width=2880,
+                    file__height=800,
                     file__color=faker.safe_color_name(),
                     collection=banner_collection,
                 )
