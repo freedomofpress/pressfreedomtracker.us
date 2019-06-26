@@ -270,7 +270,7 @@ class Command(BaseCommand):
 
         # BLOG RELATED PAGES
         if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
-            blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True)
+            blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
             org_index_page = OrganizationIndexPageFactory(parent=home_page)
             home_page.blog_index_page = blog_index_page
 

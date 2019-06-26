@@ -10,7 +10,7 @@ from incident.models import (
     IncidentPage,
     IncidentCategorization,
 )
-from incident.tests.factories import IncidentPageFactory
+from incident.tests.factories import MultimediaIncidentPageFactory
 
 
 def lookup_category(key):
@@ -31,7 +31,7 @@ def generate_variations():
     [{'arrest': True}, {'arrest': True, 'border_stop': True}, ...]
 
     """
-    for variation in three_combinations(IncidentPageFactory._meta.parameters.keys()):
+    for variation in three_combinations(MultimediaIncidentPageFactory._meta.parameters.keys()):
         yield {k: True for k in variation}
 
 
@@ -46,7 +46,7 @@ class Command(BaseCommand):
 
         for kwargs in generate_variations():
             for i in range(2):
-                IncidentPageFactory(
+                MultimediaIncidentPageFactory(
                     parent=index,
                     categories=[lookup_category(key) for key in kwargs.keys()],
                     **kwargs,

@@ -30,11 +30,14 @@ class BlogIndexPageFactory(wagtail_factories.PageFactory):
 
     title = 'PFT Blog'
     about_blog_title = 'The blog of the press freedom tracker'
-    body = factory.Faker('streamfield', fields=['bare_image', 'raw_html', 'rich_text'])
+    body = factory.Faker('streamfield', fields=['raw_html', 'rich_text'])
 
     class Params:
         main_menu = factory.Trait(
             menu=factory.RelatedFactory(MainMenuItemFactory, 'link_page', for_page=True)
+        )
+        with_image = factory.Trait(
+            body=factory.Faker('streamfield', fields=['bare_image', 'raw_html', 'rich_text'])
         )
 
 
@@ -48,6 +51,20 @@ class BlogPageFactory(wagtail_factories.PageFactory):
         with_image = factory.Trait(
             teaser_image=factory.Iterator(
                 CustomImage.objects.filter(collection__name='Banners')
+            ),
+            body=factory.Faker(
+                'streamfield',
+                fields=[
+                    'heading1',
+                    'heading2',
+                    'heading3',
+                    'raw_html',
+                    'styled_text',
+                    'blockquote',
+                    'styled_text',
+                    'list',
+                    'styled_text',
+                ],
             )
         )
 

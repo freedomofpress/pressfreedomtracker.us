@@ -91,12 +91,10 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     title = factory.Faker('sentence')
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
-    body = Faker('streamfield', fields=['rich_text', 'bare_image', 'blockquote', 'raw_html'])
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
     affiliation = factory.Faker('word')
     teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
-    teaser_image = Iterator(
-        CustomImage.objects.filter(collection__name='Banners')
-    )  # for use with the createincidents command
+    teaser_image = None
     image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))
 
     # Detention/arrest
@@ -314,6 +312,13 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
         if extracted:
             self.related_incidents.set(extracted)
+
+
+class MultimediaIncidentPageFactory(IncidentPageFactory):
+    body = Faker('streamfield', fields=['rich_text', 'bare_image', 'blockquote', 'raw_html'])
+    teaser_image = Iterator(
+        CustomImage.objects.filter(collection__name='Banners')
+    )
 
 
 class InexactDateIncidentPageFactory(IncidentPageFactory):
