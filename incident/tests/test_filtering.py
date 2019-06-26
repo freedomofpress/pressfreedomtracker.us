@@ -36,10 +36,10 @@ class TestFiltering(TestCase):
     def test_should_filter_by_search_text(self):
         """should filter by search text."""
         incident1 = IncidentPageFactory(
-            body__0__rich_text__value=RichText('eggplant'),
+            body=[('rich_text', RichText('eggplant'))],
         )
         IncidentPageFactory(
-            body__0__rich_text__value=RichText('science fiction'),
+            body=[('rich_text', RichText('science fiction'))],
         )
 
         incidents = IncidentFilter(dict(
