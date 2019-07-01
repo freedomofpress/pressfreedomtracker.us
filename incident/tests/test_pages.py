@@ -1,5 +1,6 @@
 import csv
 
+import wagtail_factories
 from wagtail.core.models import Site, Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import (
@@ -132,6 +133,70 @@ class TestExportPage(TestCase):
         self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
             self.assertNotIn('Unpublished incident', line.decode('utf-8'))
+
+
+class TestFeedsPage(WagtailPageTests):
+    """RSS Feeds Page"""
+    @classmethod
+    def setUpTestData(cls):
+        cls.client = Client()
+
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+
+        cls.category = CategoryPageFactory(parent=cls.home_page)
+        cls.index = IncidentIndexPageFactory(
+            parent=site.root_page, slug='incidents')
+        IncidentPageFactory(parent=cls.index)
+
+    def test_feed_should_succeed(self):
+        """request should succeed."""
+        response = self.client.get(
+            '/incidents/feed/'
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_feed_should_have_content(self):
+        """request should succeed."""
+        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        IncidentPageFactory(parent=self.index, title='The Incident')
+        response = self.client.get(
+            '/incidents/feed/'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'The Incident')
+
+    def test_feed_should_strip_unserializable_character(self):
+        """request should succeed."""
+        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        IncidentPageFactory(
+            parent=self.index,
+            title='The Unserializable Character Incident',
+            body=wagtail_factories.StreamFieldFactory({
+                'rich_text': rich_text('<p>Lorem \x00 dolor sit amet</p>'),
+                'raw_html': '<p>Lorem \x00 ipsum dolor sit amet</p>',
+            })
+        )
+        response = self.client.get(
+            '/incidents/feed/'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "The Unserializable Character Incident")
 
 
 class GetRelatedIncidentsTest(TestCase):
