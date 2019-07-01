@@ -24,13 +24,13 @@ class IncidentIndexPageFeed(Feed):
         return [inline.category for inline in categories]
 
     def _get_complete_url(self, path):
-        # Strip control characters that return error from Django
         return urljoin(
             self.incident_index_page.get_site().root_url,
             path
         )
-    
+
     def _get_cleaned_feed(self, text):
+        # Strip control characters that return error from Django
         return re.sub(
             r'[\x00-\x08\x0B-\x0C\x0E-\x1F]',
             '',
