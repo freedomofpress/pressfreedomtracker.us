@@ -50,6 +50,27 @@ It can take the following context variables:
 				{{ incident.title|typogrify }}
 			</h2>
 		{% endif %}
+		{% if incident.author %}
+			{% if teaser %}
+				<div class="incident__author incident__author-tease-link">
+					<a
+						href="{% pageurl incident.get_parent %}?author={{ incident.author.pk }}"
+					>
+						{{ incident.author.title }}
+					</a>
+				</div>
+			{% else %}
+				<div class="incident__author">
+					This incident is authored by
+					<a
+						class="incident__author-link"
+						href="{% pageurl incident.get_parent %}?author={{ incident.author.pk }}"
+					>
+						{{ incident.author.title }}
+					</a>
+				</div>
+			{% endif %}
+		{% endif %}
 		<div class='incident__date'>
 			{{ incident.first_published_at|date:"F j, Y" }}
 				{% if teaser and incident.recently_updated %}

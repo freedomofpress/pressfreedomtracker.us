@@ -8,6 +8,7 @@ from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
+    PageChooserPanel,
     StreamFieldPanel,
 )
 from wagtail.core import blocks
@@ -68,6 +69,15 @@ class IncidentPage(MetadataPageMixin, Page):
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
     ])
+
+    author = models.ForeignKey(
+        # Likely a PersonPage
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
 
     teaser = models.TextField(
         help_text="This field is optional and overrides the default teaser text.",
@@ -382,6 +392,7 @@ class IncidentPage(MetadataPageMixin, Page):
                     InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
+        PageChooserPanel('author', 'common.PersonPage'),
 
         MultiFieldPanel(
             heading='Detention/Arrest',
