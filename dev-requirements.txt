@@ -16,7 +16,7 @@ django-settings-export==1.2.1
 django-taggit==0.23.0
 django-treebeard==4.3
 django-webpack-loader==0.6.0
-django==2.1.7
+django==2.1.10
 djangorestframework==3.9.2
 docutils==0.14
 draftjs-exporter==2.1.5
@@ -68,3 +68,6 @@ wagtail==2.3
 wcwidth==0.1.7            # via prompt-toolkit
 webencodings==0.5.1
 willow==1.1
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools==41.0.1        # via ipdb, ipython
