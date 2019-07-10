@@ -69,7 +69,7 @@ def generate_styled_text_paragraphs(as_type='text'):
 
 
 def generate_bare_image():
-    image = choice(CustomImage.objects.filter(collection__name='Squares')).pk
+    image = choice(CustomImage.objects.filter(collection__name='Photos')).pk
     return generate_field('image', image)
 
 
@@ -130,7 +130,7 @@ def generate_raw_html():
 
 
 def generate_aligned_captioned_image():
-    image = choice(CustomImage.objects.filter(collection__name='Squares')).pk
+    image = choice(CustomImage.objects.filter(collection__name='Photos')).pk
     caption = '<p>{}</p>'.format(' '.join(fake.words(nb=5)))
     alignment = choice(ALIGNMENT_CHOICES)
     return generate_field(

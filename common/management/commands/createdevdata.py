@@ -46,6 +46,21 @@ class Command(BaseCommand):
             help='Download external images',
         )
 
+    def fetch_image(self, width, height, collection):
+        url = 'https://picsum.photos/{width}/{height}'.format(
+            width=width, height=height,
+        )
+        response = requests.get(url)
+        if response.content:
+            CustomImageFactory(
+                file__from_file=ContentFile(response.content),
+                collection=collection,
+            )
+        else:
+            return False
+        time.sleep(0.2)
+        return True
+
     @transaction.atomic
     def handle(self, *args, **options):
         self.stdout.write('Creating development data')
@@ -70,7 +85,7 @@ class Command(BaseCommand):
 
         # IMAGES
         banner_collection = wagtail_factories.CollectionFactory(name='Banners')
-        square_collection = wagtail_factories.CollectionFactory(name='Squares')
+        photo_collection = wagtail_factories.CollectionFactory(name='Photos')
 
         if options.get('download_images', True):
             self.stdout.write('Fetching images')
@@ -78,34 +93,18 @@ class Command(BaseCommand):
 
             num_images = 2
             image_fail = False
-            for i in range(num_images):
-                url = 'https://picsum.photos/2880/800'
-                response = requests.get(url)
-                if response.content:
-                    CustomImageFactory(
-                        file__filename='Banners{}.jpg'.format(i),
-                        file__from_file=ContentFile(response.content),
-                        collection=banner_collection,
-                    )
-                else:
+            for i in range(2):
+                if not self.fetch_image(2880, 800, banner_collection):
                     image_fail = True
-                self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
-                time.sleep(0.5)
-
-            num_images = 5
-            for i in range(num_images):
-                url = 'https://picsum.photos/600/600'
-                response = requests.get(url)
-                if response.content:
-                    CustomImageFactory(
-                        file__filename='Squares{}.jpg'.format(i),
-                        file__from_file=ContentFile(response.content),
-                        collection=square_collection,
-                    )
-                else:
+            for i in range(5):
+                if not self.fetch_image(800, 600, photo_collection):
                     image_fail = True
-                self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
-                time.sleep(0.5)
+            for i in range(5):
+                if not self.fetch_image(1280, 720, photo_collection):
+                    image_fail = True
+            for i in range(5):
+                if not self.fetch_image(600, 800, photo_collection):
+                    image_fail = True
 
             self.stdout.write('')
             if image_fail:
@@ -116,10 +115,22 @@ class Command(BaseCommand):
             faker = factory.faker.Faker._get_faker(locale='en-US')
             for i in range(20):
                 CustomImageFactory.create(
-                    file__width=600,
+                    file__width=800,
                     file__height=600,
                     file__color=faker.safe_color_name(),
-                    collection=square_collection,
+                    collection=photo_collection,
+                )
+                CustomImageFactory.create(
+                    file__width=1280,
+                    file__height=720,
+                    file__color=faker.safe_color_name(),
+                    collection=photo_collection,
+                )
+                CustomImageFactory.create(
+                    file__width=600,
+                    file__height=800,
+                    file__color=faker.safe_color_name(),
+                    collection=photo_collection,
                 )
                 CustomImageFactory.create(
                     file__width=2880,
