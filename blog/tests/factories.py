@@ -52,6 +52,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
                     'heading1',
                     'heading2',
                     'heading3',
+                    'styled_text_paragraphs',
                     'raw_html',
                     'styled_text',
                     'blockquote',

@@ -33,6 +33,41 @@ def generate_styled_text(as_type='text'):
     )
 
 
+def generate_styled_text_paragraphs(as_type='text'):
+    background = 'white'
+    text_align = 'left'
+    font_size = 'normal'
+    font_family = choice([c[0] for c in StyledTextBlock.FONT_FAMILY_CHOICES])
+    paragraphs = (
+        '<h3>{}</h3>'.format(fake.sentence()),
+        '<p>{} <b>This sentence is in bold text.</b> {} '.format(
+            fake.text(max_nb_chars=200), fake.text(max_nb_chars=200)
+        ),
+        '<a href="{}">This is a link to a fake url!</a> '.format(
+            fake.url(schemes=['https'])
+        ),
+        '{}</p>'.format(fake.paragraph(nb_sentences=20, variable_nb_sentences=True)),
+        '<p>{}</p>'.format(fake.paragraph(nb_sentences=20, variable_nb_sentences=True)),
+        '<ul>',
+        ''.join(['<li>{}</li>'.format(fake.word()) for i in range(10)]),
+        '</ul><br />',
+        '<p><a href="{}">This is a link to a fake url!</a></p>'.format(
+            fake.url(schemes=['https'])
+        ),
+    )
+    text = ''.join(paragraphs)
+    return generate_field(
+        as_type,
+        {
+            'text': text,
+            'background_color': background,
+            'text_align': text_align,
+            'font_size': font_size,
+            'font_family': font_family,
+        },
+    )
+
+
 def generate_bare_image():
     image = choice(CustomImage.objects.filter(collection__name='Squares')).pk
     return generate_field('image', image)
@@ -130,6 +165,7 @@ class StreamfieldProvider(BaseProvider):
             'aligned_captioned_image': generate_aligned_captioned_image,
             'raw_html': generate_raw_html,
             'styled_text': generate_styled_text,
+            'styled_text_paragraphs': generate_styled_text_paragraphs,
             'blockquote': generate_block_quote,
             'list': generate_list,
         }
