@@ -1,3 +1,4 @@
+import re
 from urllib.parse import urljoin
 
 from django.contrib.syndication.views import Feed
@@ -26,6 +27,14 @@ class IncidentIndexPageFeed(Feed):
         return urljoin(
             self.incident_index_page.get_site().root_url,
             path
+        )
+
+    def _get_cleaned_feed(self, text):
+        # Strip control characters that return error from Django
+        return re.sub(
+            r'[\x00-\x08\x0B-\x0C\x0E-\x1F]',
+            '',
+            text
         )
 
     def title(self):
@@ -57,10 +66,10 @@ class IncidentIndexPageFeed(Feed):
         return incidents
 
     def item_title(self, obj):
-        return obj.title
+        return self._get_cleaned_feed(obj.title)
 
     def item_description(self, obj):
-        return obj.body.render_as_block()
+        return self._get_cleaned_feed(obj.body.render_as_block())
 
     def item_link(self, obj):
         return self._get_complete_url(obj.url)
