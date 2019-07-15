@@ -44,7 +44,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
         # for use with the createdevdata command
         with_image = factory.Trait(
             teaser_image=factory.Iterator(
-                CustomImage.objects.filter(collection__name='Banners')
+                CustomImage.objects.filter(collection__name='Photos')
             ),
             body=factory.Faker(
                 'streamfield',

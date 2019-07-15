@@ -317,7 +317,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 class MultimediaIncidentPageFactory(IncidentPageFactory):
     body = Faker('streamfield', fields=['rich_text', 'bare_image', 'blockquote', 'raw_html'])
     teaser_image = Iterator(
-        CustomImage.objects.filter(collection__name='Banners')
+        CustomImage.objects.filter(collection__name='Photos')
     )
 
 

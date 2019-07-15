@@ -84,18 +84,13 @@ class Command(BaseCommand):
             )
 
         # IMAGES
-        banner_collection = wagtail_factories.CollectionFactory(name='Banners')
         photo_collection = wagtail_factories.CollectionFactory(name='Photos')
 
         if options.get('download_images', True):
             self.stdout.write('Fetching images')
             self.stdout.flush()
 
-            num_images = 2
             image_fail = False
-            for i in range(2):
-                if not self.fetch_image(2880, 800, banner_collection):
-                    image_fail = True
             for i in range(5):
                 if not self.fetch_image(800, 600, photo_collection):
                     image_fail = True
@@ -131,12 +126,6 @@ class Command(BaseCommand):
                     file__height=800,
                     file__color=faker.safe_color_name(),
                     collection=photo_collection,
-                )
-                CustomImageFactory.create(
-                    file__width=2880,
-                    file__height=800,
-                    file__color=faker.safe_color_name(),
-                    collection=banner_collection,
                 )
 
         # ABOUT PAGE
