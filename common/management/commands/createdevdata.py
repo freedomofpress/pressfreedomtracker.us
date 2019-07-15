@@ -51,9 +51,12 @@ class Command(BaseCommand):
             width=width, height=height,
         )
         response = requests.get(url)
-        if response.content:
+        if response and response.content:
             CustomImageFactory(
                 file__from_file=ContentFile(response.content),
+                file_size=len(response.content),
+                width=width,
+                height=height,
                 collection=collection,
             )
         else:
