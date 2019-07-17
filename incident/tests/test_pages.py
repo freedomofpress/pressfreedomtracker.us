@@ -12,7 +12,7 @@ from wagtail.tests.utils.form_data import (
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from common.tests.factories import CategoryPageFactory
+from common.tests.factories import CategoryPageFactory, PersonPageFactory
 from home.tests.factories import HomePageFactory
 from incident.models.incident_page import IncidentPage
 from incident.models.export import is_exportable, to_row
@@ -273,6 +273,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
 
         cls.site = site
         cls.category = CategoryPageFactory(parent=cls.home_page)
+        cls.author = PersonPageFactory(parent=cls.home_page)
         cls.index_page = IncidentIndexPageFactory(
             parent=cls.home_page,
         )
@@ -306,6 +307,9 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
                 'links': inline_formset([]),
                 'categories': inline_formset([
                     {'category': str(self.category.pk)},
+                ]),
+                'authors': inline_formset([
+                    {'author': str(self.author.pk)},
                 ]),
                 'equipment_seized': inline_formset([]),
                 'equipment_broken': inline_formset([]),
@@ -341,6 +345,9 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
             'links': inline_formset([]),
             'categories': inline_formset([
                 {'category': str(self.category.pk)},
+            ]),
+            'authors': inline_formset([
+                {'author': str(self.author.pk)},
             ]),
             'equipment_seized': inline_formset([]),
             'equipment_broken': inline_formset([]),
