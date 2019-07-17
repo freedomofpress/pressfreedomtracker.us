@@ -3,7 +3,7 @@ import datetime
 from django.db import models
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -13,7 +13,7 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -28,6 +28,15 @@ from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.circuits import CIRCUITS_BY_STATE
 from statistics.blocks import StatisticsBlock
+
+
+class IncidentAuthor(Orderable):
+    parent_page = ParentalKey('IncidentPage', related_name='authors')
+    author = models.ForeignKey('common.PersonPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('author')
+    ]
 
 
 class IncidentPage(MetadataPageMixin, Page):
@@ -69,15 +78,6 @@ class IncidentPage(MetadataPageMixin, Page):
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
     ])
-
-    author = models.ForeignKey(
-        # Likely a PersonPage
-        'wagtailcore.Page',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
 
     teaser = models.TextField(
         help_text="This field is optional and overrides the default teaser text.",
@@ -392,7 +392,11 @@ class IncidentPage(MetadataPageMixin, Page):
                     InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
-        PageChooserPanel('author', 'common.PersonPage'),
+        InlinePanel(
+            'authors',
+            label='Authors',
+            help_text='Author pages must already exist.'
+        ),
 
         MultiFieldPanel(
             heading='Detention/Arrest',
