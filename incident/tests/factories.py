@@ -1,8 +1,8 @@
 import datetime
+from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, Sequence
 import factory
 import random
 import wagtail_factories
-from faker import Faker
 from wagtail.core.rich_text import RichText
 
 from incident.models import (
@@ -10,40 +10,92 @@ from incident.models import (
     IncidentCategorization,
     IncidentIndexPage,
     IncidentPage,
+    IncidentPageUpdates,
+    IncidentPageLinks,
     Nationality,
     PoliticianOrPublic,
+    EquipmentBroken,
+    Equipment,
+    EquipmentSeized,
     Target,
     State,
     choices,
 )
+from common.models import CustomImage
+from common.tests.factories import CategoryPageFactory
+from common.tests.utils import StreamfieldProvider
+from menus.factories import MainMenuItemFactory
 
-from common.tests.factories import CategoryPageFactory, RichTextBlockFactory
 
-
-fake = Faker()
+Faker.add_provider(StreamfieldProvider)
 
 
 class IncidentIndexPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentIndexPage
 
+    class Params:
+        main_menu = Trait(
+            menu=RelatedFactory(MainMenuItemFactory, 'link_page', for_page=True)
+        )
+
+
+class EquipmentFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Equipment
+        django_get_or_create = ('name',)
+    name = Faker('word', ext_word_list=['abacus', 'calculator', 'ruler', 'compass', 'graph paper', 'protractor', 'planimeter', 'multimeter', 'photometer', 'diffuser', 'hygrometer', 'timer', 'microscope'])
+
+
+class EquipmentSeizedFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = EquipmentSeized
+    equipment = SubFactory(EquipmentFactory)
+    quantity = LazyAttribute(lambda _: random.randint(1, 5))
+
+
+class EquipmentBrokenFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = EquipmentBroken
+    equipment = SubFactory(EquipmentFactory)
+    quantity = LazyAttribute(lambda _: random.randint(1, 5))
+
+
+class IncidentUpdateFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = IncidentPageUpdates
+
+    sort_order = Sequence(int)
+    title = Faker('sentence')
+    date = Faker('past_datetime', start_date='-15d', tzinfo=datetime.timezone.utc)
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'bare_image', 'raw_html', 'blockquote'])
+
+
+class IncidentLinkFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = IncidentPageLinks
+
+    sort_order = Sequence(int)
+    title = Faker('sentence')
+    url = Faker('url', schemes=['https'])
+    publication = Faker('company')
+
 
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
+        exclude = ('teaser_image_text', 'image_caption_text')
 
+    image_caption_text = Faker('sentence')
+    teaser_image_text = Faker('sentence')
     title = factory.Faker('sentence')
-    date = factory.Faker('date')
+    date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
-    body = wagtail_factories.StreamFieldFactory({
-        'rich_text': RichTextBlockFactory,
-        'image': wagtail_factories.ImageChooserBlockFactory,
-        'raw_html': wagtail_factories.CharBlockFactory,
-    })
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
     affiliation = factory.Faker('word')
-    teaser = factory.LazyAttribute(lambda _: RichText(fake.sentence()))
-    teaser_image = factory.SubFactory(wagtail_factories.ImageFactory)
-    image_caption = factory.LazyAttribute(lambda _: RichText(fake.sentence()))
+    teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
+    teaser_image = None
+    image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))
 
     # Detention/arrest
     arrest_status = None
@@ -94,11 +146,12 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             detention_date=datetime.date.today() - datetime.timedelta(days=3),
             unnecessary_use_of_force=factory.Faker('boolean'),
         )
-        equipment_seizure = factory.Trait(
+        equipment_search = factory.Trait(
             status_of_seized_equipment=factory.Iterator(
                 choices.STATUS_OF_SEIZED_EQUIPMENT, getter=lambda c: c[0]),
             is_search_warrant_obtained=factory.Faker('boolean'),
             actor=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
+            equip_search=RelatedFactory(EquipmentSeizedFactory, 'incident'),
         )
         border_stop = factory.Trait(
             border_point=factory.Faker('city'),
@@ -119,13 +172,13 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             were_devices_searched_or_seized=factory.Iterator(
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
         )
-        physical_assault = factory.Trait(
+        physical_attack = factory.Trait(
             assailant=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
             was_journalist_targeted=factory.Iterator(
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
         )
-        leak_prosecution = factory.Trait(
-            targets_whose_communications_were_obtained=2,
+        leak_case = factory.Trait(
+            # targets_whose_communications_were_obtained=2,
             charged_under_espionage_act=factory.Faker('boolean'),
         )
         subpoena = factory.Trait(
@@ -137,8 +190,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
             detention_status=factory.Iterator(
                 choices.DETENTION_STATUS, getter=lambda c: c[0]),
-        )
-        legal_order_for_records = factory.Trait(
             third_party_in_possession_of_communications=factory.Faker('company'),
             third_party_business=factory.Iterator(
                 choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
@@ -152,6 +203,11 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         denial_of_access = factory.Trait(
             politicians_or_public_figures_involved=random.randint(1, 4),
         )
+        equipment_damage = Trait(
+            equip_damage=RelatedFactory(EquipmentBrokenFactory, 'incident'),
+        )
+        chilling_statement = Trait()
+        other_incident = Trait()
 
     # https://adamj.eu/tech/2014/09/03/factory-boy-fun/
     @factory.post_generation
@@ -256,6 +312,13 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
         if extracted:
             self.related_incidents.set(extracted)
+
+
+class MultimediaIncidentPageFactory(IncidentPageFactory):
+    body = Faker('streamfield', fields=['rich_text', 'bare_image', 'blockquote', 'raw_html'])
+    teaser_image = Iterator(
+        CustomImage.objects.filter(collection__name='Photos')
+    )
 
 
 class InexactDateIncidentPageFactory(IncidentPageFactory):

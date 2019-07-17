@@ -34,7 +34,7 @@ class IncidentAdminSearch(TestCase):
         cls.incident_page3 = IncidentPageFactory(
             parent=incident_index_page,
             title='qwerty',
-            body__0__rich_text__value=RichText('<p>asdf</p>'),
+            body=[('rich_text', RichText('<p>asdf</p>'))],
         )
         cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
 

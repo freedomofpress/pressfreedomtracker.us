@@ -1,18 +1,33 @@
-import random
+from itertools import combinations, chain
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from common.models import CategoryPage
-from incident.models import (
-    IncidentIndexPage,
-    IncidentCategorization,
-)
-from incident.tests.factories import IncidentPageFactory
+from incident.models import IncidentIndexPage
+from incident.tests.factories import MultimediaIncidentPageFactory
 
 
-def lookup_category(name):
-    return CategoryPage.objects.get(title=name)
+def lookup_category(key):
+    return CategoryPage.objects.get(slug=key)
+
+
+def three_combinations(iterable):
+    "generate all combinations of 1, 2, or 3 elements of an iterable"
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in [1, 2, 3])
+
+
+def generate_variations():
+    """Generate a list of many possible combinations of factory parameters
+
+    Iterates over all Traits declared on IncidentPageFactory and
+    returns a list of dicts suitable for keyword arguments, e.g.:
+    [{'arrest': True}, {'arrest': True, 'border_stop': True}, ...]
+
+    """
+    for variation in three_combinations(MultimediaIncidentPageFactory._meta.parameters.keys()):
+        yield {k: True for k in variation}
 
 
 class Command(BaseCommand):
@@ -20,52 +35,13 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
+        self.stdout.write('Creating incidents')
         index = IncidentIndexPage.objects.first()
 
-        incident_kinds = [
-            ('arrest', True),
-            ('equipment_seizure', True),
-            ('border_stop', True),
-            ('physical_assault', True),
-            ('leak_prosecution', True),
-            ('subpoena', True),
-            ('legal_order_for_records', True),
-            ('prior_restraint', True),
-            ('denial_of_access', True),
-        ]
-        for i in range(50):
-            k = random.random()
-            if k < 0.6:
-                num_kinds = 1
-            elif k < 0.9:
-                num_kinds = 2
-            else:
-                num_kinds = 3
-            kinds = dict(random.sample(incident_kinds, num_kinds))
-
-            for key, _ in kinds.items():
-                if key == 'arrest':
-                    category = lookup_category('Arrest / Detention')
-                elif key == 'equipment_seizure':
-                    category = lookup_category('Equipment Search, Seizure, or Damage')
-                elif key == 'border_stop':
-                    category = lookup_category('Border Stop / Denial of Entry')
-                elif key == 'physical_assault':
-                    category = lookup_category('Physical Assaults')
-                elif key == 'leak_prosecution':
-                    category = lookup_category('Leak Prosecutions')
-                elif key == 'subpoena':
-                    category = lookup_category('Subpeonas')
-                elif key == 'legal_order_for_records':
-                    category = lookup_category('US Precident Cited Abroad')
-                elif key == 'prior_restraint':
-                    category = lookup_category('Subpeonas')
-                elif key == 'denial_of_access':
-                    category = lookup_category('US Precident Cited Abroad')
-                else:
-                    category = lookup_category('Documented Cases of Surveillance')
-            IncidentPageFactory(
-                parent=index,
-                categories=[IncidentCategorization(category=category)],
-                **kinds
-            )
+        for kwargs in generate_variations():
+            for i in range(2):
+                MultimediaIncidentPageFactory(
+                    parent=index,
+                    categories=[lookup_category(key) for key in kwargs.keys()],
+                    **kwargs,
+                )

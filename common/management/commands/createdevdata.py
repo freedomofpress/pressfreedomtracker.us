@@ -2,39 +2,67 @@ import json
 import random
 import requests
 import time
-from datetime import timedelta
 import wagtail_factories
 
 from django.contrib.auth.models import User
 from django.core import management
-from django.core.files.images import ImageFile
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from django.db import transaction
-from django.utils import timezone
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
+import factory
+from faker import Faker
 
 from blog.models import BlogIndexPage
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
-    CategoryPage,
     SimplePage, SimplePageWithSidebar,
-    FooterSettings, CustomImage, SearchSettings,
+    FooterSettings, SearchSettings,
 )
 from common.tests.factories import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
 )
 from forms.models import FormPage
 from home.models import HomePage, HomePageIncidents
-from incident.models import IncidentCategorization, IncidentIndexPage, IncidentPage
+from incident.models import IncidentIndexPage, IncidentPage
+from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, IncidentUpdateFactory
 from menus.models import Menu, MenuItem
 
 LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
 
 
+fake = Faker()
+
+
 class Command(BaseCommand):
     help = 'Creates data appropriate for development'
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--no-download',
+            action='store_false',
+            dest='download_images',
+            help='Download external images',
+        )
+
+    def fetch_image(self, width, height, collection):
+        url = 'https://picsum.photos/{width}/{height}'.format(
+            width=width, height=height,
+        )
+        response = requests.get(url)
+        if response and response.content:
+            CustomImageFactory(
+                file__from_file=ContentFile(response.content),
+                file_size=len(response.content),
+                width=width,
+                height=height,
+                collection=collection,
+            )
+        else:
+            return False
+        time.sleep(0.2)
+        return True
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -59,30 +87,49 @@ class Command(BaseCommand):
             )
 
         # IMAGES
-        self.stdout.write('Fetching images')
-        self.stdout.flush()
-        banner_collection = wagtail_factories.CollectionFactory(name='Banners')
-        num_images = 12
-        image_fail = False
-        for i in range(num_images):
-            url = 'https://picsum.photos/1400/400'
-            response = requests.get(url)
-            if response.content:
-                CustomImageFactory(
-                    file__filename='business{}.jpg'.format(i),
-                    file__from_file=ContentFile(response.content),
-                    collection=banner_collection,
-                )
-            else:
-                image_fail = True
-            self.stdout.write('{:02d}/{}'.format(i + 1, num_images), ending='\r')
-            time.sleep(0.2)
+        photo_collection = wagtail_factories.CollectionFactory(name='Photos')
 
-        self.stdout.write('')
-        if image_fail:
-            self.stdout.write(self.style.NOTICE('NOTICE: Some images failed to save'))
+        if options.get('download_images', True):
+            self.stdout.write('Fetching images')
+            self.stdout.flush()
+
+            image_fail = False
+            for i in range(5):
+                if not self.fetch_image(800, 600, photo_collection):
+                    image_fail = True
+            for i in range(5):
+                if not self.fetch_image(1280, 720, photo_collection):
+                    image_fail = True
+            for i in range(5):
+                if not self.fetch_image(600, 800, photo_collection):
+                    image_fail = True
+
+            self.stdout.write('')
+            if image_fail:
+                self.stdout.write(self.style.NOTICE('NOTICE: Some images failed to save'))
+            else:
+                self.stdout.write(self.style.SUCCESS('OK'))
         else:
-            self.stdout.write(self.style.SUCCESS('OK'))
+            faker = factory.faker.Faker._get_faker(locale='en-US')
+            for i in range(20):
+                CustomImageFactory.create(
+                    file__width=800,
+                    file__height=600,
+                    file__color=faker.safe_color_name(),
+                    collection=photo_collection,
+                )
+                CustomImageFactory.create(
+                    file__width=1280,
+                    file__height=720,
+                    file__color=faker.safe_color_name(),
+                    collection=photo_collection,
+                )
+                CustomImageFactory.create(
+                    file__width=600,
+                    file__height=800,
+                    file__color=faker.safe_color_name(),
+                    collection=photo_collection,
+                )
 
         # ABOUT PAGE
         if not SimplePage.objects.filter(slug='about').exists():
@@ -178,7 +225,7 @@ class Command(BaseCommand):
                     text='Submit an Incident',
                     link_page=incident_form,
                     menu=main,
-                    sort_order=4,
+                    sort_order=99,
                     html_classes='header__nav-link--highlighted'
                 ),
             ])
@@ -222,31 +269,18 @@ class Command(BaseCommand):
 
         # BLOG RELATED PAGES
         if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
-            blog_index_page = BlogIndexPageFactory(parent=home_page)
+            blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
             org_index_page = OrganizationIndexPageFactory(parent=home_page)
             home_page.blog_index_page = blog_index_page
 
             author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
 
-            blog_text = dict(
-                body__0__heading_1__content='Pizza',
-                body__1__heading_2__content='Terminology',
-                body__2__text__text=RichText('Pizza: noun, so good.'),
-                body__2__text__background_color='white',
-                body__2__text__text_align='left',
-                body__2__text__font_size='large',
-                body__2__text__font_family='sans-serif',
-                body__3__heading_2__content='History',
-                body__4__heading_3__content='Antiquity',
-                body__5__heading_3__content='Medieval',
-            )
             BlogPageFactory.create_batch(
                 10,
                 parent=blog_index_page,
                 organization__parent=org_index_page,
                 author=author1,
                 with_image=True,
-                **blog_text,
             )
             BlogPageFactory.create_batch(
                 10,
@@ -254,7 +288,6 @@ class Command(BaseCommand):
                 organization__parent=org_index_page,
                 author=author2,
                 with_image=True,
-                **blog_text,
             )
             BlogPageFactory.create_batch(
                 10,
@@ -262,92 +295,34 @@ class Command(BaseCommand):
                 organization__parent=org_index_page,
                 author=author3,
                 with_image=True,
-                **blog_text,
             )
         else:
             blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')
 
         # INCIDENT RELATED PAGES
         search_settings = SearchSettings.for_site(site)
-        if not IncidentIndexPage.objects.filter(slug='all-incidents'):
-            incident_index_page = IncidentIndexPage(
-                title='All Incidents',
-                slug='all-incidents'
-            )
-            home_page.add_child(instance=incident_index_page)
 
-            for x in range(0, 100):
-                page = IncidentPage(
-                    title='Maecenas convallis sem malesuada nisl placerat volutpat{}'.format(x),
-                    slug='maecenas-convallis-{}'.format(x),
-                    date=timezone.now() - timedelta(x),
-                    body=[(
-                        'rich_text',
-                        RichText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.')
-                    )],
-                )
-                random_idx = random.randint(0, CategoryPage.objects.count() - 1)
-                page.categories = [
-                    IncidentCategorization(
-                        category=CategoryPage.objects.all()[random_idx],
-                        sort_order=0,
-                    )
-                ]
-                incident_index_page.add_child(instance=page)
-                if x == 0:
-                    HomePageIncidents.objects.create(
-                        sort_order=4,
-                        page=home_page,
-                        incident=page,
-                    )
+        if not IncidentIndexPage.objects.filter(slug='all-incidents'):
+            incident_index_page = IncidentIndexPageFactory(
+                parent=home_page,
+                main_menu=True,
+                title='All Incidents',
+            )
+            management.call_command('createincidents')
         else:
             incident_index_page = IncidentIndexPage.objects.get(slug='all-incidents')
 
         search_settings.search_page = incident_index_page
         search_settings.save()
 
-        incident_data = [
-            dict(
-                title="BBC journalist questioned by US border agents, devices searched",
-                body="Ali Hamedani, a reporter for BBC World Service, was detained at Chicago O'Hare airport for over two hours.",
-            ),
-            dict(
-                title="Vocativ journalist charged with rioting in Washington",
-                body="Police arrested Evan Engel, a senior producer at the news website Vocativ.",
-            ),
-            dict(
-                title="Media outlets excluded from gaggle",
-                body="At least nine news outlets were excluded from an informal briefing known as 'a gaggle' by President Donald Trump's White House Press Secretary Sean Spicer.",
-            ),
-        ]
-        image = CustomImage.objects.filter(title='Sample Image').first()
-        if not image:
-            image = CustomImage.objects.create(
-                title='Sample Image',
-                file=ImageFile(open('styleguide/static/styleguide/voactiv.jpg', 'rb'), name='voactiv.jpg'),
-                attribution='createdevdata'
-            )
-        for index, data in enumerate(incident_data):
-            page = IncidentPage(
-                title=data['title'],
-                body=[('rich_text', RichText('<p>{}</p>'.format(data['body'])))],
-                date=timezone.now() + timedelta(index + 1),
-                teaser_image=image,
-            )
-            random_idx = random.randint(0, CategoryPage.objects.count() - 1)
-            page.categories = [
-                IncidentCategorization(
-                    category=CategoryPage.objects.all()[random_idx],
-                    sort_order=0,
-                )
-            ]
-            incident_index_page.add_child(instance=page)
+        for i, incident in enumerate(random.sample(list(IncidentPage.objects.all()), 3)):
             HomePageIncidents.objects.create(
-                sort_order=index + 1,
+                sort_order=i,
                 page=home_page,
-                incident=page,
+                incident=incident,
             )
-
+            IncidentUpdateFactory(page=incident)
+            IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
 
         # Create superuser
