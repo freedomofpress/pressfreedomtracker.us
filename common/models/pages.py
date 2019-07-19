@@ -26,6 +26,7 @@ from common.blocks import (
     StyledTextTemplateBlock,
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock,
+    TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     EmailSignupBlock,
 )
@@ -339,6 +340,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('text', StyledTextTemplateBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('tweet', TweetEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),
@@ -395,6 +397,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         ('text', StyledTextBlock(label='Text')),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('tweet', TweetEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),

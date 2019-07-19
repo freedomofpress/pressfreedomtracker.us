@@ -26,6 +26,7 @@ from common.blocks import (
     StyledTextBlock,
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock,
+    TweetEmbedBlock,
     RichTextBlockQuoteBlock,
 )
 
@@ -35,6 +36,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('tweet', TweetEmbedBlock())
     ])
 
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
@@ -135,6 +137,7 @@ class BlogPage(MetadataPageMixin, Page):
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('tweet', TweetEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),

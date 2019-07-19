@@ -20,6 +20,7 @@ from wagtailautocomplete.edit_handlers import AutocompletePanel
 from common.blocks import (
     RichTextBlockQuoteBlock,
     AlignedCaptionedEmbedBlock,
+    TweetEmbedBlock,
     RichTextTemplateBlock,
 )
 from common.models import MetadataPageMixin
@@ -62,6 +63,7 @@ class IncidentPage(MetadataPageMixin, Page):
         )),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('tweet', TweetEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),

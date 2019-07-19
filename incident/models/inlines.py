@@ -11,6 +11,7 @@ from wagtail.images.blocks import ImageChooserBlock
 
 from common.blocks import (
     AlignedCaptionedEmbedBlock,
+    TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     RichTextTemplateBlock,
 )
@@ -26,6 +27,7 @@ class IncidentPageUpdates(Orderable):
         ('rich_text', RichTextTemplateBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
+        ('tweet', TweetEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),

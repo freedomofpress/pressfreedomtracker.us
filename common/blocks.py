@@ -88,6 +88,15 @@ class AlignedCaptionedEmbedBlock(blocks.StructBlock):
         label = 'Video'
 
 
+class TweetEmbedBlock(blocks.StructBlock):
+    tweet = EmbedBlock()
+
+    class Meta:
+        template = 'common/blocks/tweet_embed.html'
+        icon = 'pick'
+        label = 'Tweet'
+
+
 class StyledTextBlock(blocks.StructBlock):
     TEXT_ALIGN_CHOICES = (
         ('left', 'Left'),
