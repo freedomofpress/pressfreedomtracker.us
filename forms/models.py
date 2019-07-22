@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import (
     FieldPanel, FieldRowPanel,
@@ -16,6 +18,7 @@ class FormField(AbstractFormField):
     page = ParentalKey('FormPage', related_name='form_fields')
 
 
+@method_decorator(cache_control(private=True), name='serve')
 class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
