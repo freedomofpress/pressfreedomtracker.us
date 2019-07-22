@@ -169,6 +169,7 @@ class OrganizationPageFactory(wagtail_factories.PageFactory):
         model = OrganizationPage
 
     title = factory.Faker('company')
+    slug = factory.Sequence(lambda n: 'organization-{n}'.format(n=n))
     website = factory.Faker('uri')
     description = factory.Faker('catch_phrase')
 
