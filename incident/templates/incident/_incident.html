@@ -71,11 +71,11 @@ It can take the following context variables:
 					Recently Updated
 				</span>
 			{% endif %}
-			{% if incident.authors %}
-				<div class="incident__author">
+			{% if incident.authors.exists and not teaser %}
+				<div class="incident--author">
 					-
 					{% for author in incident.authors.all %}
-						{% if author.website %}
+						{% if author.author.website %}
 							<a
 								class="incident__author-link"
 								href="{{ author.author.website }}"
