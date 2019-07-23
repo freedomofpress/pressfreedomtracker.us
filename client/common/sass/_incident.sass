@@ -62,6 +62,22 @@ $max-image-vh-ratio: 0.75
 	&:hover
 		text-decoration: underline
 
+.incident__author
+	+light-gray-text-small
+	margin: $incident-attr-margin
+	display: inline
+	font-size: 1em
+
+.incident__author-link
+	+link-transition
+	color: $gray-mid-dark-text
+	text-decoration: none
+
+	+hover
+		color: $black
+		text-decoration: underline
+		text-decoration-color: $black
+
 .incident__description
 	line-height: 1.4
 	margin: $incident-attr-margin

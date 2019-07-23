@@ -3,16 +3,17 @@ import datetime
 from django.db import models
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
-from modelcluster.fields import ParentalManyToManyField
+from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
+    PageChooserPanel,
     StreamFieldPanel,
 )
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -27,6 +28,15 @@ from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.circuits import CIRCUITS_BY_STATE
 from statistics.blocks import StatisticsBlock
+
+
+class IncidentAuthor(Orderable):
+    parent_page = ParentalKey('IncidentPage', related_name='authors')
+    author = models.ForeignKey('common.PersonPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('author')
+    ]
 
 
 class IncidentPage(MetadataPageMixin, Page):
@@ -381,6 +391,11 @@ class IncidentPage(MetadataPageMixin, Page):
                     AutocompletePanel('tags', 'common.CommonTag', is_single=False),
                     InlinePanel('categories', label='Incident categories', min_num=1),
             ]
+        ),
+        InlinePanel(
+            'authors',
+            label='Authors',
+            help_text='Author pages must already exist.'
         ),
 
         MultiFieldPanel(

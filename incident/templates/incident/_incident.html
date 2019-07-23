@@ -60,6 +60,24 @@ It can take the following context variables:
 					Recently Updated
 				</span>
 			{% endif %}
+			{% if incident.authors.exists and not teaser %}
+				<div class="incident__author">
+					—
+					{% for author in incident.authors.all %}
+						{% if author.author.website %}
+							<a
+								class="incident__author-link"
+								href="{{ author.author.website }}"
+							>
+								{{ author.author.title }}
+							</a>
+						{% else %}
+							{{ author.author.title }}
+						{% endif %}
+						{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+				</div>
+			{% endif %}
 		</div>
 		<div class="incident__description">
 			{% if teaser %}
