@@ -438,13 +438,18 @@ class InstitutionFactory(factory.DjangoModelFactory):
     class Meta:
         model = Institution
         django_get_or_create = ('title',)
+        exclude = ('city',)
 
-    title = factory.LazyAttribute(
-        lambda p: 'The {} {}'.format(
-            fake.city(),
-            random.choice(['Tribune', 'Herald', 'Sun', 'Daily News', 'Post'])
+    title = factory.LazyAttributeSequence(
+        lambda o, n: 'The {city} {paper} {n}'.format(
+            city=o.city,
+            paper=random.choice(['Tribune', 'Herald', 'Sun', 'Daily News', 'Post']),
+            n=n,
         )
     )
+
+    # Lazy values
+    city = factory.Faker('city')
 
 
 class TargetedJournalistFactory(factory.DjangoModelFactory):
