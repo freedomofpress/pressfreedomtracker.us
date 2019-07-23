@@ -217,7 +217,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_target = getattr(TargetFactory, 'create' if create else 'build')
         targets = []
         for i in range(count):
-            t = make_target()
+            t = make_target(unique_title=True)
             t.targets_incidents.add(self)
             targets.append(t)
         if not create:
@@ -230,7 +230,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_target = getattr(TargetFactory, 'create' if create else 'build')
         targets = []
         for i in range(count):
-            t = make_target()
+            t = make_target(unique_title=True)
             t.targets_communications_obtained_incidents.add(self)
             targets.append(t)
         if not create:
@@ -245,7 +245,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_charge = getattr(ChargeFactory, 'create' if create else 'build')
         charges = []
         for i in range(count):
-            t = make_charge()
+            t = make_charge(unique_title=True)
             t.current_charge_incidents.add(self)
             charges.append(t)
         if not create:
@@ -258,7 +258,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_charge = getattr(ChargeFactory, 'create' if create else 'build')
         charges = []
         for i in range(count):
-            t = make_charge()
+            t = make_charge(unique_title=True)
             t.dropped_charge_incidents.add(self)
             charges.append(t)
         if not create:
@@ -271,7 +271,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_nat = getattr(NationalityFactory, 'create' if create else 'build')
         nats = []
         for i in range(count):
-            t = make_nat()
+            t = make_nat(unique_title=True)
             t.nationality_incidents.add(self)
             nats.append(t)
         if not create:
@@ -285,7 +285,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                            'create' if create else 'build')
         pols = []
         for i in range(count):
-            t = make_pol()
+            t = make_pol(unique_title=True)
             t.politicians_or_public_incidents.add(self)
             pols.append(t)
         if not create:
@@ -338,35 +338,59 @@ class IncidentCategorizationFactory(factory.DjangoModelFactory):
     category = factory.SubFactory(CategoryPageFactory)
 
 
-class TargetFactory(factory.DjangoModelFactory):
+class ItemFactory(factory.DjangoModelFactory):
+    class Meta:
+        abstract = True
+
+    class Params:
+        unique_title = factory.Trait(
+            title=factory.Sequence(
+                lambda n: 'Title {n}'.format(n=n)
+            )
+        )
+
+
+class SnippetFactory(factory.DjangoModelFactory):
+    class Meta:
+        abstract = True
+
+    class Params:
+        unique_name = factory.Trait(
+            name=factory.Sequence(
+                lambda n: 'Name {n}'.format(n=n)
+            )
+        )
+
+
+class TargetFactory(ItemFactory):
     class Meta:
         model = Target
         django_get_or_create = ('title',)
     title = factory.Faker('name')
 
 
-class ChargeFactory(factory.DjangoModelFactory):
+class ChargeFactory(ItemFactory):
     class Meta:
         model = Charge
         django_get_or_create = ('title',)
     title = factory.Faker('sentence', nb_words=3)
 
 
-class NationalityFactory(factory.DjangoModelFactory):
+class NationalityFactory(ItemFactory):
     class Meta:
         model = Nationality
         django_get_or_create = ('title',)
     title = factory.Faker('country')
 
 
-class PoliticianOrPublicFactory(factory.DjangoModelFactory):
+class PoliticianOrPublicFactory(ItemFactory):
     class Meta:
         model = PoliticianOrPublic
         django_get_or_create = ('title',)
     title = factory.Faker('name')
 
 
-class StateFactory(factory.DjangoModelFactory):
+class StateFactory(SnippetFactory):
     class Meta:
         model = State
         django_get_or_create = ('name',)
