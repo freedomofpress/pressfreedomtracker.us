@@ -72,9 +72,9 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         post_filters = BlogFilter.from_querystring(request.GET)
         entry_qs = post_filters.filter(self.get_posts())
 
-        if post_filters.author:
+        if request.GET.get('author'):
             context['author_filter'] = get_object_or_404(PersonPage, pk=post_filters.author)
-        if post_filters.organization:
+        if request.GET.get('organization'):
             context['organization_filter'] = get_object_or_404(OrganizationPage, pk=post_filters.organization)
 
         paginator, entries = paginate(
