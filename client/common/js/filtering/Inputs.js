@@ -200,6 +200,9 @@ export class DateRangeInput extends PureComponent {
 							onChange={handleFilterChange.bind(null, filter_lower)}
 							onChangeRaw={this.handleChangeRaw.bind(this, filter_lower)}
 							selected={filterValues[filter_lower] || ''}
+							showMonthDropdown
+							showYearDropdown
+							dropdownMode="select"
 							isClearable={true}
 							className={classNames(
 								'filter-date-picker',
@@ -215,6 +218,9 @@ export class DateRangeInput extends PureComponent {
 							onChange={handleFilterChange.bind(null, filter_upper)}
 							onChangeRaw={this.handleChangeRaw.bind(this, filter_upper)}
 							selected={filterValues[filter_upper] || ''}
+							showMonthDropdown
+							showYearDropdown
+							dropdownMode="select"
 							isClearable={true}
 							className={classNames(
 								'filter-date-picker',

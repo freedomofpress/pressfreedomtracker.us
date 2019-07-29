@@ -19,6 +19,7 @@ from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, SearchSettings,
+    GeneralIncidentFilter, IncidentFilterSettings
 )
 from common.tests.factories import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
@@ -301,6 +302,11 @@ class Command(BaseCommand):
 
         # INCIDENT RELATED PAGES
         search_settings = SearchSettings.for_site(site)
+        incident_filter_settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=incident_filter_settings,
+            incident_filter='date',
+        )
 
         if not IncidentIndexPage.objects.filter(slug='all-incidents'):
             incident_index_page = IncidentIndexPageFactory(
