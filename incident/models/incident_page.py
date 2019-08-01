@@ -121,6 +121,14 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='tagged_items',
     )
 
+    # This field can be used to suppress the default CTA text, in case the body already
+    # contains the CTA text. One can just check this, to suppress the text.
+    suppress_footer = models.BooleanField(
+        default=False,
+        verbose_name='Suppress Footer Call to Action',
+        help_text='This field will suppress call to action text. If body already contains cta, can check this field.'
+    )
+
     related_incidents = ParentalManyToManyField('self', blank=True)
 
     # Detention/Arrest
@@ -525,6 +533,9 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         AutocompletePanel('related_incidents', 'incident.IncidentPage', is_single=False),
+    ]
+    settings_panels = Page.settings_panels + [
+        FieldPanel('suppress_footer')
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']

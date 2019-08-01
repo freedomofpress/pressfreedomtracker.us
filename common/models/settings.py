@@ -63,6 +63,18 @@ class FooterSettings(BaseSetting):
 
 
 @register_setting
+class IncidentFooterSettings(BaseSetting):
+    incident_footer = RichTextField(blank=True, null=True)
+
+    panels = [
+        FieldPanel('incident_footer')
+    ]
+
+    class Meta:
+        verbose_name = 'Incident Footer Call to Action'
+
+
+@register_setting
 class TaxonomySettings(BaseSetting, ClusterableModel):
     panels = [
         InlinePanel(
