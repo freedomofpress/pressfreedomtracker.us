@@ -94,6 +94,12 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='+',
     )
 
+    primary_video = models.URLField(
+        blank=True,
+        null=True,
+        help_text='YouTube or Vimeo URL'
+    )
+
     image_caption = RichTextField(
         max_length=255,
         blank=True,
@@ -370,6 +376,8 @@ class IncidentPage(MetadataPageMixin, Page):
             help_text="Links to resources and news articles related to this"
                       "incident. Displayed as footnotes."
         ),
+
+        FieldPanel('primary_video'),
 
         MultiFieldPanel(
             heading='Teaser',
