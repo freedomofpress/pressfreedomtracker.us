@@ -24,6 +24,7 @@ wait_for_postgres() {
 
 django_start() {
     ./manage.py migrate
+    ./manage.py block_inventory
     if [ "${DJANGO_COLLECT_STATIC}" == "yes" ]; then
         ./manage.py collectstatic -c --noinput
     fi

@@ -34,6 +34,7 @@ EXCLUDED_FIELDS = {
     'live_revision',
     'search_image',
     'blog_posts',
+    'page_blocks',
 }
 
 

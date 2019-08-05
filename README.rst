@@ -42,6 +42,9 @@ environment, run the following your first run:
     # Inject development data (also only needs to be run once)
     docker-compose exec django ./manage.py createdevdata
 
+    # Add wagtail inventory to search wagtail pages by block type
+    docker-compose exec django ./manage.py block_inventory
+
 You should be able to hit the web server interface by running ``make open-browser``
 
 Note: the ``createdevdata`` command fetches images from the internet
