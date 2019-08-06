@@ -16,7 +16,7 @@ def migrate_suppress_incident_footer(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0034_incidentauthor'),
+        ('incident', '0035_incidentpage_primary_video'),
     ]
 
     operations = [
