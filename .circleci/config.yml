@@ -13,7 +13,8 @@ reuse-blerbs:
 version: 2
 jobs:
   safety_check:
-    machine: true
+    machine:
+      image: ubuntu-1604:201903-01
     working_directory: ~/tracker
     steps:
       - checkout
@@ -33,7 +34,8 @@ jobs:
           command: make flake8
 
   npm_audit:
-    machine: true
+    machine:
+      image: ubuntu-1604:201903-01
     working_directory: ~/tracker
     steps:
       - checkout
@@ -49,7 +51,8 @@ jobs:
           path: ~/tracker/test-results/
 
   dev:
-    machine: true
+    machine:
+      image: ubuntu-1604:201903-01
     working_directory: ~/tracker
     steps:
       - checkout
@@ -66,7 +69,8 @@ jobs:
             pipenv run make check-migrations
 
   prod:
-    machine: true
+    machine:
+      image: ubuntu-1604:201903-01
     working_directory: ~/pressfreedom
     steps:
       - checkout
