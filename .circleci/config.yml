@@ -99,9 +99,8 @@ workflows:
       - safety_check
       - npm_audit
       - dev
-      - prod:
-          requires:
-            - dev
+      - prod
+
   nightly:
     triggers:
       - schedule:
