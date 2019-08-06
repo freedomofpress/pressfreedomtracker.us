@@ -1,3 +1,15 @@
+---
+reuse-blerbs:
+  - &python_prereqs
+    run:
+      name: Install testing pre-reqs
+      command: |
+        # Set python to 3.5.2
+        pyenv global 3.5.2
+        pip install -U pip
+        pip install pipenv
+        pipenv install
+
 version: 2
 jobs:
   safety_check:
@@ -6,14 +18,7 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install dependencies
-          command: |
-            # Set to native py3 on circleci image
-            pyenv global 3.5.2
-            pip install -U pip
-            pip install pipenv
-            pipenv install
+      - *python_prereqs
 
       - run:
           name: Check Python dependencies for CVEs
@@ -33,14 +38,8 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install dependencies
-          command: |
-            # Set to native py3 on circleci image
-            pyenv global 3.5.2
-            pip install -U pip
-            pip install pipenv
-            pipenv install
+      - *python_prereqs
+
       - run:
           name: Check node dependencies for vulnerabilities
           command: |
@@ -55,14 +54,7 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install dependencies
-          command: |
-            # Set to native py3 on circleci image
-            pyenv global 3.5.2
-            pip install -U pip
-            pip install pipenv
-            pipenv install
+      - *python_prereqs
 
       - run:
           name: Ensure we can run dev-env
@@ -79,14 +71,7 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install dependencies
-          command: |
-            # Set to native py3 on circleci image
-            pyenv global 3.5.2
-            pip install -U pip
-            pip install pipenv
-            pipenv install
+      - *python_prereqs
 
       - run:
           name: Ensure we can run prod-env
