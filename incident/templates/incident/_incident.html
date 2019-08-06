@@ -142,10 +142,10 @@ It can take the following context variables:
 				</div>
 			{% endif %}{# incident.links.exists #}
 		{% endif %}{# not teaser #}
-		{% if not incident.suppress_footer and not teaser %}
+		{% if not incident.suppress_footer and not teaser and settings.common.SiteSettings.incident_footer %}
 			<div class=incident__call-to-action>
-				{% filter typogrify %}
-					{% render_as_template settings.common.IncidentFooterSettings.incident_footer %}
+				{% filter typogrify|richtext %}
+					{% render_as_template settings.common.SiteSettings.incident_footer %}
 				{% endfilter %}
 			</div>
 		{% endif %}
