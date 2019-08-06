@@ -64,9 +64,20 @@ jobs:
           command: |
             make dev-init
             pipenv run docker-compose up -d
-            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 1 && echo -n .; done;
+            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 1; done;
             pipenv run make dev-tests
             pipenv run make check-migrations
+          no_output_timeout: 5m
+
+      - run:
+          name: Yank docker logs
+          command: |
+            mkdir -p ~/dockercomposelogs || true
+            pipenv run docker-compose logs > ~/dockercomposelogs/dev.log
+          when: always
+
+      - store_artifacts:
+          path: ~/dockercomposelogs
 
   prod:
     machine:
@@ -82,15 +93,20 @@ jobs:
           command: |
             pipenv run docker-compose -f prod-docker-compose.yaml build
             pipenv run docker-compose -f prod-docker-compose.yaml up -d
-            while ! curl --output /dev/null --silent --head --fail http://$(docker-compose -f prod-docker-compose.yaml port nginx 8080); do sleep 1 && echo -n .; done;
+            while ! curl --output /dev/null --silent --head --fail http://$(docker-compose -f prod-docker-compose.yaml port nginx 8080); do sleep 1; done;
             pipenv run docker-compose -f prod-docker-compose.yaml exec django /bin/bash -c "./manage.py createdevdata"
             pipenv run pytest devops/tests/test_basic.py
+          no_output_timeout: 5m
 
       - run:
-          name: Push prod containers
+          name: Yank docker logs
           command: |
-            docker login -u "${QUAY_USER}" -p "${QUAY_PASS}" quay.io || true
-            make prod-push || true
+            mkdir -p ~/dockercomposelogs || true
+            pipenv run docker-compose -f prod-docker-compose.yaml logs > ~/dockercomposelogs/prod.log
+          when: always
+
+      - store_artifacts:
+          path: ~/dockercomposelogs
 
 workflows:
   version: 2
