@@ -7,6 +7,7 @@ __pycache__
 .pytest_cache
 
 node_modules
+__snapshots__
 npm-debug.log
 webpack-stats.json
 # Do not make a bundles/ ignore line ;-)
