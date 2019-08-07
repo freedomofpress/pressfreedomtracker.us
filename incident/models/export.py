@@ -15,6 +15,7 @@ EXCLUDED_FIELDS = {
     'page_ptr',
     'url_path',
     'revisions',
+    'suppress_footer',  # not needed in the export
     'related_incidents',  # not sure how to represent this in export
     'group_permissions',
     'depth',

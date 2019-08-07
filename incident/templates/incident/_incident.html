@@ -6,8 +6,9 @@ It can take the following context variables:
 	teaser -- whether this is a short teaser of an incident (default: False)
 {% endcomment %}
 
-{% load wagtailcore_tags wagtailimages_tags typogrify_tags %}
+{% load wagtailcore_tags wagtailsettings_tags wagtailimages_tags typogrify_tags %}
 {% load render_as_template %}
+{% get_settings use_default_site=True %}
 
 <article class="
 	incident
@@ -102,6 +103,13 @@ It can take the following context variables:
 				{% endfor %}
 			{% endif %}
 		</div>
+		{% if not incident.suppress_footer and not teaser and settings.common.SiteSettings.incident_footer %}
+			<div class="incident__call-to-action">
+				{% filter typogrify|richtext %}
+					{% render_as_template settings.common.SiteSettings.incident_footer %}
+				{% endfilter %}
+			</div>
+		{% endif %}
 		{% if not teaser %}
 			{% for update in incident.updates.all %}
 				<div class="incident__update-item">

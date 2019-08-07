@@ -63,6 +63,23 @@ class FooterSettings(BaseSetting):
 
 
 @register_setting
+class SiteSettings(BaseSetting):
+    incident_footer = RichTextField(
+        blank=True,
+        null=True,
+        default='<p>The <a href="https://pressfreedomtracker.us/">U.S. Press Freedom Tracker</a> catalogues press freedom violations in the United States. Email tips to tips@pressfreedomtracker.us.</p>',
+        verbose_name='Incident Footer Call to Action'
+    )
+
+    panels = [
+        FieldPanel('incident_footer')
+    ]
+
+    class Meta:
+        verbose_name = 'Site Settings'
+
+
+@register_setting
 class TaxonomySettings(BaseSetting, ClusterableModel):
     panels = [
         InlinePanel(
