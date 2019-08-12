@@ -1,29 +1,95 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import IncidentFiltering from './IncidentFiltering';
+import { directive } from '@babel/types';
 
 describe('IncidentFiltering', () => {
-  it('should render correctly in "debug" mode', () => {
-    const categories = [
+  let categories;
+
+  beforeEach(() => {
+    categories = [
       {
         'id': -1,
         'title': 'General',
         'filters': [],
       }
     ]
+  });
+
+  afterEach(() => {
+    categories = []
+  });
+
+  it('should render correctly in "debug" mode', () => {
     const component = shallow(
       <IncidentFiltering
         categories={categories}
-        debug 
+        debug
       />
     );
-  
-    expect(component).toMatchSnapshot();
-  });
-});
 
-describe('Addition', () => {
-  it('knows that 2 and 2 make 4', () => {
-    expect(2 + 2).toBe(4);
+    expect(component).toMatchSnapshot();
+	});
+
+	it('should render FiltersHeader properly with button toggle', () => {
+		const component = mount(
+      <IncidentFiltering
+        categories={categories}
+      />
+    );
+    const filterButton = component.find('button.filters__button--summary-toggle');
+    expect(filterButton.text()).toEqual('Change Filters');
+    filterButton.simulate('click');
+    expect(filterButton.text()).toEqual('Collapse Filters');
+	});
+
+  it('should expand modal when the expand button is clicked', () => {
+    const component = mount(
+      <IncidentFiltering
+        categories={categories}
+      />
+    );
+    const filterButton = component.find('button.filters__button--summary-toggle');
+    expect(component.find('div.filters__expandable--expanded').length).toEqual(0);
+    filterButton.simulate('click');
+    expect(component.find('div.filters__expandable--expanded').length).toEqual(1);
+  });
+
+  it('should render filter footer properly in filter modal', () => {
+    const component = mount(
+      <IncidentFiltering
+				categories={categories}
+				exportPath={'test-path/'}
+      />
+		);
+    const filterButton = component.find('button.filters__button--summary-toggle');
+		filterButton.simulate('click');
+		const filterFooter = component.find('div.filters__footer');
+
+		// Check the download link is rendered properly
+		expect(filterFooter.find('a.filters__link').length).toEqual(1);
+		expect(filterFooter.find('a.filters__link').text()).toEqual('Download the Data.');
+		expect(filterFooter.find('a.filters__link').filterWhere((item) => {
+			return item.prop('href') === 'test-path/export/?'
+		}).length).toEqual(1);
+
+		//Check 2 filter buttons exist
+		expect(filterFooter.find('button.filters__button').length).toEqual(2);
+
+		// Check the clear button exists and it's type is button
+		expect(filterFooter.find('button.filters__button').filterWhere((item) => {
+			return item.prop('type') === 'button'
+		}).length).toEqual(1);
+		expect(filterFooter.find('button.filters__button').filterWhere((item) => {
+			return item.prop('type') === 'button'
+		}).text()).toEqual('Clear Filters');
+
+		// Check the apply button exists and it's type is submit and it is bordered
+		expect(filterFooter.find('button.filters__button--bordered').filterWhere((item) => {
+			return item.prop('type') === 'submit'
+		}).length).toEqual(1);
+		expect(filterFooter.find('button.filters__button--bordered').filterWhere((item) => {
+			return item.prop('type') === 'submit'
+		}).text()).toEqual('Apply Filters');
   });
 });

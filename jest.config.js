@@ -7,4 +7,3 @@ module.exports = {
   },
   setupFiles: ["<rootDir>/client/common/js/setupTests.js"],
 }
-  
