@@ -1,23 +1,17 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import IncidentFiltering from './IncidentFiltering';
-import { directive } from '@babel/types';
+import IncidentFiltering from '~/filtering/IncidentFiltering';
+import { CATEGORIES_FILTER } from '~/tests/factories/CategoriesFilterFactory';
 
 describe('IncidentFiltering', () => {
   let categories;
 
   beforeEach(() => {
-    categories = [
-      {
-        'id': -1,
-        'title': 'General',
-        'filters': [],
-      }
-    ]
+    categories = CATEGORIES_FILTER;
   });
 
   afterEach(() => {
-    categories = []
+    categories = null;
   });
 
   it('should render correctly in "debug" mode', () => {
