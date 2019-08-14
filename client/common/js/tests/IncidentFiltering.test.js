@@ -4,59 +4,59 @@ import IncidentFiltering from '~/filtering/IncidentFiltering';
 import { CATEGORIES_FILTER } from '~/tests/factories/CategoriesFilterFactory';
 
 describe('IncidentFiltering', () => {
-  let categories;
+	let categories;
 
-  beforeEach(() => {
-    categories = CATEGORIES_FILTER;
-  });
+	beforeEach(() => {
+		categories = CATEGORIES_FILTER;
+	});
 
-  afterEach(() => {
-    categories = null;
-  });
+	afterEach(() => {
+		categories = null;
+	});
 
-  it('should render correctly in "debug" mode', () => {
-    const component = shallow(
-      <IncidentFiltering
-        categories={categories}
-        debug
-      />
-    );
+	it('should render correctly in "debug" mode', () => {
+		const component = shallow(
+			<IncidentFiltering
+				categories={categories}
+				debug
+			/>
+		);
 
-    expect(component).toMatchSnapshot();
+		expect(component).toMatchSnapshot();
 	});
 
 	it('should render FiltersHeader properly with button toggle', () => {
 		const component = mount(
-      <IncidentFiltering
-        categories={categories}
-      />
-    );
-    const filterButton = component.find('button.filters__button--summary-toggle');
-    expect(filterButton.text()).toEqual('Change Filters');
-    filterButton.simulate('click');
-    expect(filterButton.text()).toEqual('Collapse Filters');
+			<IncidentFiltering
+				categories={categories}
+			/>
+		);
+		const filterButton = component.find('button.filters__button--summary-toggle');
+		expect(filterButton.text()).toEqual('Change Filters');
+		filterButton.simulate('click');
+		expect(filterButton.text()).toEqual('Collapse Filters');
 	});
 
-  it('should expand modal when the expand button is clicked', () => {
-    const component = mount(
-      <IncidentFiltering
-        categories={categories}
-      />
-    );
-    const filterButton = component.find('button.filters__button--summary-toggle');
-    expect(component.find('div.filters__expandable--expanded').length).toEqual(0);
-    filterButton.simulate('click');
-    expect(component.find('div.filters__expandable--expanded').length).toEqual(1);
-  });
+	it('should expand modal when the expand button is clicked', () => {
+		const component = mount(
+			<IncidentFiltering
+				categories={categories}
+			/>
+		);
+		const filterButton = component.find('button.filters__button--summary-toggle');
+		expect(component.find('div.filters__expandable--expanded').length).toEqual(0);
+		filterButton.simulate('click');
+		expect(component.find('div.filters__expandable--expanded').length).toEqual(1);
+	});
 
-  it('should render filter footer properly in filter modal', () => {
-    const component = mount(
-      <IncidentFiltering
+  	it('should render filter footer properly in filter modal', () => {
+    	const component = mount(
+			<IncidentFiltering
 				categories={categories}
 				exportPath={'test-path/'}
-      />
+			/>
 		);
-    const filterButton = component.find('button.filters__button--summary-toggle');
+    	const filterButton = component.find('button.filters__button--summary-toggle');
 		filterButton.simulate('click');
 		const filterFooter = component.find('div.filters__footer');
 
@@ -85,5 +85,5 @@ describe('IncidentFiltering', () => {
 		expect(filterFooter.find('button.filters__button--bordered').filterWhere((item) => {
 			return item.prop('type') === 'submit'
 		}).text()).toEqual('Apply Filters');
-  });
+	});
 });

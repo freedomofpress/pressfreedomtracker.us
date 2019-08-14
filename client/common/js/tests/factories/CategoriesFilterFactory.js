@@ -120,3 +120,14 @@ export const CATEGORIES_FILTER = [
     'url': '/physical_attack/'
   }
 ]
+export const CATEGORIES_ENABLED = {
+	'-1': true,
+	'5': true
+}
+export const FILTER_VALUES = {
+	'charged_under_espionage_act': 'True'
+}
+export const PAGE_FETCH_PARAMS = {
+	'categories': '5',
+	'charged_under_espionage_act': 'True'
+}
