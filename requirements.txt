@@ -13,7 +13,7 @@ django-settings-export==1.2.1
 django-taggit==0.23.0     # via wagtail
 django-treebeard==4.3     # via wagtail
 django-webpack-loader==0.6.0
-django==2.1.10
+django==2.1.11
 djangorestframework==3.9.2  # via wagtail
 docutils==0.14
 draftjs-exporter==2.1.5   # via wagtail
