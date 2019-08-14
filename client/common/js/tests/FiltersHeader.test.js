@@ -24,7 +24,7 @@ describe('FiltersHeader', () => {
         filterValues = null;
     });
 
-    it('should render correctly in "debug" mode', () => {
+    it('should render without error in "debug" mode', () => {
         const component = shallow(
         <FiltersHeader
             categories={categories}

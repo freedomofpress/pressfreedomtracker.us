@@ -14,7 +14,7 @@ describe('IncidentFiltering', () => {
 		categories = null;
 	});
 
-	it('should render correctly in "debug" mode', () => {
+	it('should render without error in "debug" mode', () => {
 		const component = shallow(
 			<IncidentFiltering
 				categories={categories}
