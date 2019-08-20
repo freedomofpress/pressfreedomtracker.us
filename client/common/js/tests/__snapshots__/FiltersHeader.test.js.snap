@@ -1,3 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FiltersHeader should render without error in "debug" mode 1`] = `ShallowWrapper {}`;
+exports[`FiltersHeader should render without error in "debug" mode 1`] = `
+"<div className=\\"filters__header\\">
+  <FilterSummary filtersExpanded={[undefined]} filterValues={[undefined]} categories={{...}} categoriesEnabled={[undefined]} changeFiltersMessage={[undefined]} />
+  <button className=\\"filters__button filters__button--summary-toggle\\" onClick={[undefined]} type=\\"button\\">
+    <SettingsIcon />
+    Change Filters
+  </button>
+</div>"
+`;

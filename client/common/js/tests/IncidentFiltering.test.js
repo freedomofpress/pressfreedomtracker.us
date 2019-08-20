@@ -18,11 +18,10 @@ describe('IncidentFiltering', () => {
 		const component = shallow(
 			<IncidentFiltering
 				categories={categories}
-				debug
 			/>
 		);
 
-		expect(component).toMatchSnapshot();
+		expect(component.debug()).toMatchSnapshot();
 	});
 
 	it('should render FiltersHeader properly with button toggle', () => {

@@ -24,11 +24,10 @@ describe('FiltersFooter', () => {
 		const component = shallow(
 		<FiltersFooter
 			categories={categories}
-			debug
 		/>
 		);
 
-		expect(component).toMatchSnapshot();
+		expect(component.debug()).toMatchSnapshot();
 	});
 
 	it('should render the correct export link without param', () => {

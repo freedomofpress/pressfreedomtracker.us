@@ -28,11 +28,10 @@ describe('FiltersHeader', () => {
         const component = shallow(
         <FiltersHeader
             categories={categories}
-            debug
         />
         );
 
-        expect(component).toMatchSnapshot();
+        expect(component.debug()).toMatchSnapshot();
 	});
 
 	it('should render FiltersHeader properly with button toggle', () => {
