@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IncidentFiltering should render without error in "debug" mode 1`] = `
+"<div className=\\"filters\\">
+  <form onSubmit={[Function: bound handleApplyFilters]}>
+    <FiltersHeader categories={{...}} categoriesEnabled={{...}} changeFiltersMessage={[undefined]} filterValues={{...}} filtersExpanded={false} handleToggle={[Function: bound handleToggle]} />
+    <FiltersExpandable filtersExpanded={false}>
+      <FiltersCategorySelection categories={{...}} categoriesEnabled={{...}} handleSelection={[Function: bound handleSelection]} />
+      <ul className=\\"filters__body\\">
+        <FilterAccordion category={{...}} collapsible={false} handleFilterChange={[Function: bound handleFilterChange]} filterValues={{...}} startExpanded={true} />
+      </ul>
+      <FiltersFooter handleClearFilters={[Function: bound handleClearFilters]} pageFetchParams={{...}} loading={0} filtersTouched={false} exportPath={[undefined]} />
+    </FiltersExpandable>
+  </form>
+</div>"
+`;

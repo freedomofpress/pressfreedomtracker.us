@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FiltersFooter should render without error in "debug" mode 1`] = `
+"<div className=\\"filters__footer\\">
+  <div className=\\"filters__text filters__text--dim filters__text--meta\\">
+    Need to do more complex filtering?
+     
+    <a href=\\"undefinedexport/?\\" className=\\"filters__link\\">
+      Download the Data.
+    </a>
+  </div>
+  <span className=\\"filters__button-toolbar\\">
+    <button className=\\"filters__button\\" onClick={[undefined]} type=\\"button\\">
+      Clear Filters
+    </button>
+    <button className=\\"filters__button filters__button--bordered filters__button--wide\\" disabled={true} type=\\"submit\\" />
+  </span>
+</div>"
+`;

@@ -35,6 +35,10 @@ ci-tests: ## Runs testinfra against a pre-running CI container (useful for debug
 dev-tests: ## Run django tests against developer environment
 	docker-compose exec django /bin/bash -c "./manage.py test --noinput --keepdb"
 
+.PHONY: dev-jest-tests
+dev-jest-tests: ## Run django tests against developer environment
+	docker-compose exec node npm test
+
 .PHONY: update-pip-dependencies
 update-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # It is critical that we run pip-compile via the same Python version
