@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilterAccordion should render without error in "debug" mode 1`] = `
+"<li className=\\"filters__accordion-category\\">
+  <button className=\\"filters__accordion filters__accordion--active\\" onClick={[Function: bound toggleAccordion]} type=\\"button\\">
+    <CollapseIcon />
+    General
+  </button>
+  <FilterSet filters={{...}} handleFilterChange={[Function: mockConstructor]} filterValues={{...}} />
+</li>"
+`;

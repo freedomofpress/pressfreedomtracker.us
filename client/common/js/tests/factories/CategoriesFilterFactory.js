@@ -1,3 +1,13 @@
+import Moment from 'moment'
+
+
+const DATE_TYPES = [
+  'MM/DD/YYYY',
+  'MM-DD-YYYY',
+  'MM/DD/YY',
+  'MM-DD-YY',
+  'YYYY-MM-DD'
+]
 export const CATEGORIES_FILTER = [
   {
     'filters': [
@@ -23,11 +33,11 @@ export const CATEGORIES_FILTER = [
     'filters': [
       {
         'choices': [
-          ('PENDING', 'pending'),
-          ('DROPPED', 'dropped'),
-          ('STRUCK_DOWN', 'struck down'),
-          ('UPHELD', 'upheld'),
-          ('IGNORED', 'ignored')
+          ['PENDING', 'pending'],
+          ['DROPPED', 'dropped'],
+          ['STRUCK_DOWN', 'struck down'],
+          ['UPHELD', 'upheld'],
+          ['IGNORED', 'ignored']
         ],
         'name': 'status_of_prior_restraint',
         'title': 'Status of prior restraint',
@@ -48,14 +58,14 @@ export const CATEGORIES_FILTER = [
     'filters': [
       {
         'choices': [
-          ('UNKNOWN', 'unknown'),
-          ('DETAINED_NO_PROCESSING',
-            'detained and released without being processed'),
-          ('DETAINED_CUSTODY',
-            'detained and still in custody'),
-          ('ARRESTED_CUSTODY',
-            'arrested and still in custody'),
-          ('ARRESTED_RELEASED', 'arrested and released')
+          ['UNKNOWN', 'unknown'],
+          ['DETAINED_NO_PROCESSING',
+            'detained and released without being processed'],
+          ['DETAINED_CUSTODY',
+            'detained and still in custody'],
+          ['ARRESTED_CUSTODY',
+            'arrested and still in custody'],
+          ['ARRESTED_RELEASED', 'arrested and released']
         ],
         'name': 'arrest_status',
         'title': 'Arrest status',
@@ -63,13 +73,13 @@ export const CATEGORIES_FILTER = [
       },
       {
         'choices': [
-          ('UNKNOWN', 'unknown'),
-          ('NOT_CHARGED', 'not charged'),
-          ('CHARGES_PENDING', 'charges pending'),
-          ('CHARGES_DROPPED', 'charges dropped'),
-          ('CONVICTED', 'convicted'),
-          ('ACQUITTED', 'acquitted'),
-          ('PENDING_APPEAL', 'pending appeal')
+          ['UNKNOWN', 'unknown'],
+          ['NOT_CHARGED', 'not charged'],
+          ['CHARGES_PENDING', 'charges pending'],
+          ['CHARGES_DROPPED', 'charges dropped'],
+          ['CONVICTED', 'convicted'],
+          ['ACQUITTED', 'acquitted'],
+          ['PENDING_APPEAL', 'pending appeal']
         ],
         'name': 'status_of_charges',
         'title': 'Status of charges',
@@ -98,12 +108,12 @@ export const CATEGORIES_FILTER = [
     'filters': [
       {
         'choices': [
-          ('UNKNOWN', 'unknown'),
-          ('LAW_ENFORCEMENT', 'law enforcement'),
-          ('PRIVATE_SECURITY', 'private security'),
-          ('POLITICIAN', 'politician'),
-          ('PUBLIC_FIGURE', 'public figure'),
-          ('PRIVATE_INDIVIDUAL', 'private individual')
+          ['UNKNOWN', 'unknown'],
+          ['LAW_ENFORCEMENT', 'law enforcement'],
+          ['PRIVATE_SECURITY', 'private security'],
+          ['POLITICIAN', 'politician'],
+          ['PUBLIC_FIGURE', 'public figure'],
+          ['PRIVATE_INDIVIDUAL', 'private individual']
         ],
         'name': 'assailant',
         'title': 'Assailant',
@@ -124,10 +134,29 @@ export const CATEGORIES_ENABLED = {
 	'-1': true,
 	'5': true
 }
+export const EMPTY_CATEGORIES_ENABLED = {
+	'-1': true,
+}
 export const FILTER_VALUES = {
 	'charged_under_espionage_act': 'True'
+}
+export const DATE_FILTER_VALUES = {
+  'date_lower': Moment('09/25/2019', DATE_TYPES, true),
+  'date_upper': Moment('09/26/2019', DATE_TYPES, true) 
+}
+export const BOOL_FILTER_VALUES = {
+  'charged_under_espionage_act': 'True'
+}
+export const CHOICE_FILTER_VALUES = {
+  'status_of_prior_restraint': 'PENDING'
+}
+export const AUTOCOMPLETE_FILTER_VALUES = {
+  
+}
+export const EMPTY_FILTER_VALUES = {
 }
 export const PAGE_FETCH_PARAMS = {
 	'categories': '5',
 	'charged_under_espionage_act': 'True'
 }
+export const FILTERS_EXPANDED = true

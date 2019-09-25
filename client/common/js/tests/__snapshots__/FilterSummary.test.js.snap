@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilterSummary should render without error in "debug" mode 1`] = `
+"<div className=\\"filters__summary filters__summary--can-compact filters__text--dim\\">
+  Showing 
+  <CategoryList categories={{...}} />
+   
+  <FiltersList categories={{...}} filterValues={{...}} />
+</div>"
+`;

@@ -64,7 +64,7 @@ To reset your database back to its initial state, I recommend removing the postg
 
 To test your frontend code with jest, you can run the following command:
 
-..code:: bash
+.. code:: bash
 
     docker-compose exec node npm test
 
