@@ -146,26 +146,17 @@ class HomePage(MetadataPageMixin, Page):
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        incidents = self.incidents.all()
-        if hasattr(incidents, 'prefetch_related'):
-            incidents = incidents.prefetch_related('page__categories__category')
-        context['incidents'] = incidents
+        context['incidents'] = self.incidents.all().select_related('page')
 
         return context
 
 
 class HomePageFeature(Orderable):
     home_page = ParentalKey('home.HomePage', related_name='incidents')
-    page = models.ForeignKey(
-        'incident.IncidentPage',
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
 
     panels = [
-        PageChooserPanel('page', 'incident.IncidentPage'),
+        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage')),
     ]
 
 
