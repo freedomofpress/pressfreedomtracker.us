@@ -155,7 +155,7 @@ class HomePage(MetadataPageMixin, Page):
 
 
 class HomePageFeature(Orderable):
-    page = ParentalKey('home.HomePage', related_name='incidents')
+    home_page = ParentalKey('home.HomePage', related_name='incidents')
     incident = models.ForeignKey(
         'incident.IncidentPage',
         blank=True,
