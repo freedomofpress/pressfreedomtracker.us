@@ -50,10 +50,10 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Title displayed above stat boxes'
     )
 
-    featured_incidents_label = models.CharField(
-        default='Featured Incidents',
+    featured_pages_label = models.CharField(
+        default='Featured Articles',
         max_length=255,
-        help_text='Title displayed above featured incidents'
+        help_text='Title displayed above featured pages'
     )
 
     featured_more_label = models.CharField(
@@ -103,14 +103,14 @@ class HomePage(MetadataPageMixin, Page):
         ], 'Statboxes'),
 
         MultiFieldPanel([
-            FieldPanel('featured_incidents_label'),
+            FieldPanel('featured_pages_label'),
             InlinePanel(
-                'incidents',
-                label='Featured Incidents',
+                'features',
+                label='Featured Pages',
                 min_num=4,
                 max_num=6,
             ),
-        ], 'Featured Incidents'),
+        ], 'Featured Pages'),
 
         MultiFieldPanel([
             FieldPanel('about'),
@@ -146,13 +146,13 @@ class HomePage(MetadataPageMixin, Page):
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        context['incidents'] = self.incidents.all().select_related('page')
+        context['features'] = self.features.all().select_related('page')
 
         return context
 
 
 class HomePageFeature(Orderable):
-    home_page = ParentalKey('home.HomePage', related_name='incidents')
+    home_page = ParentalKey('home.HomePage', related_name='features')
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
 
     panels = [
