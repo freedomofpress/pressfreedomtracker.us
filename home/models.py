@@ -154,7 +154,7 @@ class HomePage(MetadataPageMixin, Page):
         return context
 
 
-class HomePageIncidents(Orderable):
+class HomePageFeature(Orderable):
     page = ParentalKey('home.HomePage', related_name='incidents')
     incident = models.ForeignKey(
         'incident.IncidentPage',

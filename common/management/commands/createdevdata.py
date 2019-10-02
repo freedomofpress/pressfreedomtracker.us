@@ -25,7 +25,7 @@ from common.tests.factories import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
 )
 from forms.models import FormPage
-from home.models import HomePage, HomePageIncidents
+from home.models import HomePage, HomePageFeature
 from incident.models import IncidentIndexPage, IncidentPage
 from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, IncidentUpdateFactory
 from menus.models import Menu, MenuItem
@@ -322,7 +322,7 @@ class Command(BaseCommand):
         search_settings.save()
 
         for i, incident in enumerate(random.sample(list(IncidentPage.objects.all()), 3)):
-            HomePageIncidents.objects.create(
+            HomePageFeature.objects.create(
                 sort_order=i,
                 page=home_page,
                 incident=incident,
