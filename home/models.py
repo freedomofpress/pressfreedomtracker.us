@@ -148,7 +148,7 @@ class HomePage(MetadataPageMixin, Page):
 
         incidents = self.incidents.all()
         if hasattr(incidents, 'prefetch_related'):
-            incidents = incidents.prefetch_related('incident__categories__category')
+            incidents = incidents.prefetch_related('page__categories__category')
         context['incidents'] = incidents
 
         return context
@@ -156,7 +156,7 @@ class HomePage(MetadataPageMixin, Page):
 
 class HomePageFeature(Orderable):
     home_page = ParentalKey('home.HomePage', related_name='incidents')
-    incident = models.ForeignKey(
+    page = models.ForeignKey(
         'incident.IncidentPage',
         blank=True,
         null=True,
@@ -165,7 +165,7 @@ class HomePageFeature(Orderable):
     )
 
     panels = [
-        PageChooserPanel('incident', 'incident.IncidentPage'),
+        PageChooserPanel('page', 'incident.IncidentPage'),
     ]
 
 

@@ -10,7 +10,7 @@
 		<div class="grid-50">
 			{% for related in incidents|slice:":2" %}
 				<div class="grid-50__item">
-					{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+					{% include "incident/_incident.html" with incident=related.page teaser=True %}
 				</div>
 			{% endfor %}
 		</div>
@@ -18,7 +18,7 @@
 		<div class="grid-50">
 			{% for related in incidents|slice:"2:" %}
 				<div class="grid-50__item">
-					{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+					{% include "incident/_incident.html" with incident=related.page teaser=True %}
 				</div>
 			{% endfor %}
 		</div>
