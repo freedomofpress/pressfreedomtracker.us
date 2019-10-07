@@ -35,6 +35,7 @@ EXCLUDED_FIELDS = {
     'search_image',
     'blog_posts',
     'page_blocks',
+    'homepagefeature',
 }
 
 
