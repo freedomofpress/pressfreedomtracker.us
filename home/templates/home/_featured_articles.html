@@ -10,7 +10,11 @@
 		<div class="grid-50">
 			{% for related in features|slice:":2" %}
 				<div class="grid-50__item">
-					{% include "incident/_incident.html" with incident=related.page.specific teaser=True %}
+					{% if related.content_type.model == 'blogpage' %}
+						{% include "blog/_blog_grid.html" with location="homepage" page=related %}
+					{% else %}
+						{% include "incident/_incident.html" with incident=related teaser=True %}
+					{% endif %}
 				</div>
 			{% endfor %}
 		</div>
@@ -18,7 +22,11 @@
 		<div class="grid-50">
 			{% for related in features|slice:"2:" %}
 				<div class="grid-50__item">
-					{% include "incident/_incident.html" with incident=related.page.specific teaser=True %}
+					{% if related.content_type.model == 'blogpage' %}
+						{% include "blog/_blog_grid.html" with location="homepage" page=related %}
+					{% else %}
+						{% include "incident/_incident.html" with incident=related teaser=True %}
+					{% endif %}
 				</div>
 			{% endfor %}
 		</div>
