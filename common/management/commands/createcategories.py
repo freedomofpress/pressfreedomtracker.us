@@ -55,7 +55,7 @@ CATEGORIES = {
     ],
     'subpoena': [
         'subpoena_type',
-        'subpoena_status',
+        'subpoena_statuses',
         'held_in_contempt',
         'detention_status',
         'third_party_in_possession_of_communication',

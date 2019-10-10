@@ -130,7 +130,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Subpoena of journalism
     subpoena_type = None
-    subpoena_status = None
+    subpoena_statuses = None
     held_in_contempt = None
     detention_status = None
 
@@ -181,11 +181,15 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             # targets_whose_communications_were_obtained=2,
             charged_under_espionage_act=factory.Faker('boolean'),
         )
+        print(factory.Iterator(
+                choices.SUBPOENA_STATUS, getter=lambda c: c[0]))
         subpoena = factory.Trait(
             subpoena_type=factory.Iterator(
                 choices.SUBPOENA_TYPE, getter=lambda c: c[0]),
-            subpoena_status=factory.Iterator(
-                choices.SUBPOENA_STATUS, getter=lambda c: c[0]),
+            subpoena_statuses=factory.List(
+                [factory.Iterator(
+                    choices.SUBPOENA_STATUS, getter=lambda c: c[0])]
+            ),
             held_in_contempt=factory.Iterator(
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
             detention_status=factory.Iterator(

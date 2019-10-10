@@ -933,7 +933,7 @@ class PendingFilterTest(TestCase):
         for value, _ in STATUS_OF_SEIZED_EQUIPMENT:
             cls.all_incidents.add(IncidentPageFactory(status_of_seized_equipment=value))
         for value, _ in SUBPOENA_STATUS:
-            cls.all_incidents.add(IncidentPageFactory(subpoena_status=value))
+            cls.all_incidents.add(IncidentPageFactory(subpoena_statuses__contains=[value]))
         for value, _ in DETENTION_STATUS:
             cls.all_incidents.add(IncidentPageFactory(detention_status=value))
         for value, _ in STATUS_OF_PRIOR_RESTRAINT:
@@ -953,7 +953,7 @@ class PendingFilterTest(TestCase):
             'arrest_status',
             'status_of_charges',
             'status_of_seized_equipment',
-            'subpoena_status',
+            'subpoena_statuses',
             'detention_status',
             'status_of_prior_restraint',
         ]
@@ -972,7 +972,7 @@ class PendingFilterTest(TestCase):
             ('status_of_charges', 'PENDING_APPEAL'),
             ('status_of_seized_equipment', 'CUSTODY'),
             ('status_of_seized_equipment', 'RETURNED_PART'),
-            ('subpoena_status', 'PENDING'),
+            ('subpoena_statuses', ['PENDING']),
             ('detention_status', 'IN_JAIL'),
             ('status_of_prior_restraint', 'PENDING'),
         ])

@@ -338,7 +338,7 @@ class PendingCasesFilter(BooleanFilter):
             Q(status_of_charges='PENDING_APPEAL') |
             Q(status_of_seized_equipment='CUSTODY') |
             Q(status_of_seized_equipment='RETURNED_PART') |
-            Q(subpoena_status='PENDING') |
+            Q(subpoena_statuses__contains=['PENDING']) |
             Q(detention_status='IN_JAIL') |
             Q(status_of_prior_restraint='PENDING')
         )

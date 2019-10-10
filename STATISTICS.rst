@@ -133,7 +133,7 @@ Available filter:
 - status_of_charges
 - status_of_prior_restraint
 - status_of_seized_equipment
-- subpoena_status
+- subpoena_statuses
 - subpoena_type
 - third_party_business
 

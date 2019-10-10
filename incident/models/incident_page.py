@@ -1,9 +1,11 @@
 import datetime
 
+from django import forms
 from django.db import models
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
+from django.contrib.postgres.fields import ArrayField
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -37,6 +39,24 @@ class IncidentAuthor(Orderable):
     panels = [
         PageChooserPanel('author')
     ]
+
+
+class CheckboxMultipleChoice(forms.MultipleChoiceField):
+    widget = forms.CheckboxSelectMultiple
+
+
+class ChoiceArrayField(ArrayField):
+    """
+    A field that allows us to store an array of choices.
+    """
+
+    def formfield(self, **kwargs):
+        defaults = {
+            'form_class': CheckboxMultipleChoice,
+            'choices': self.base_field.choices,
+        }
+        defaults.update(kwargs)
+        return super(ArrayField, self).formfield(**defaults)
 
 
 class IncidentPage(MetadataPageMixin, Page):
@@ -314,12 +334,14 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name="Subpoena type"
     )
-    subpoena_status = models.CharField(
-        choices=choices.SUBPOENA_STATUS,
-        max_length=255,
+    subpoena_statuses = ChoiceArrayField(
+        models.CharField(
+            max_length=255,
+            choices=choices.SUBPOENA_STATUS,
+        ),
         blank=True,
         null=True,
-        verbose_name="Subpoena status"
+        verbose_name="Subpoena statuses"
     )
     held_in_contempt = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
@@ -500,7 +522,7 @@ class IncidentPage(MetadataPageMixin, Page):
             classname='collapsible collapsed',
             children=[
                 FieldPanel('subpoena_type'),
-                FieldPanel('subpoena_status'),
+                FieldPanel('subpoena_statuses'),
                 FieldPanel('held_in_contempt'),
                 FieldPanel('detention_status'),
             ]
