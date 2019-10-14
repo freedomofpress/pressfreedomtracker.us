@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icons should render HorizontalLoader without error in "debug" mode 1`] = `
+"<div className=\\"horizontal-loader \\">
+  <span className=\\"horizontal-loader__circle\\" />
+  <span className=\\"horizontal-loader__circle\\" />
+  <span className=\\"horizontal-loader__circle\\" />
+</div>"
+`;

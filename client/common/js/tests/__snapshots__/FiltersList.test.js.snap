@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FiltersList should render without error in "debug" mode 1`] = `
+"<ul className=\\"filters__summary-list\\">
+  <li className=\\"filters__summary-item\\">
+    <span>
+      <span className=\\"filters__text--dim\\">
+        Charged under espionage act?
+        :
+      </span>
+       
+      Yes
+    </span>
+  </li>
+</ul>"
+`;

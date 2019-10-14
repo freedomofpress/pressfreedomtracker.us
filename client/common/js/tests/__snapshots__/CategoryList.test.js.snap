@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CategoryList should render without error in "debug" mode 1`] = `
+"<ul className=\\"filters__summary-list\\">
+  <li className=\\"filters__summary-item filters__summary-item--semicolons\\">
+    Leak Case
+  </li>
+</ul>"
+`;
