@@ -222,6 +222,16 @@ class ChoiceFilter(Filter):
         return serialized
 
 
+class MultiChoiceFilter(Filter):
+    def clean(self, value, strict=False):
+        if not value:
+            return None
+        return [value] or None
+
+    def filter(self, queryset, value):
+        return queryset.filter(**{'{}__contains'.format(self.lookup): value})
+
+
 class ManyRelationFilter(Filter):
     serialized_type = 'autocomplete'
 
@@ -454,6 +464,8 @@ class IncidentFilter(object):
             kwargs['filter_cls'] = DateFilter
         elif model_field.choices:
             kwargs['filter_cls'] = ChoiceFilter
+        elif model_field.name == 'subpoena_statuses':
+            kwargs['filter_cls'] = MultiChoiceFilter
         elif isinstance(model_field, BooleanField):
             kwargs['filter_cls'] = BooleanFilter
 

@@ -181,8 +181,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             # targets_whose_communications_were_obtained=2,
             charged_under_espionage_act=factory.Faker('boolean'),
         )
-        print(factory.Iterator(
-                choices.SUBPOENA_STATUS, getter=lambda c: c[0]))
         subpoena = factory.Trait(
             subpoena_type=factory.Iterator(
                 choices.SUBPOENA_TYPE, getter=lambda c: c[0]),

@@ -933,7 +933,7 @@ class PendingFilterTest(TestCase):
         for value, _ in STATUS_OF_SEIZED_EQUIPMENT:
             cls.all_incidents.add(IncidentPageFactory(status_of_seized_equipment=value))
         for value, _ in SUBPOENA_STATUS:
-            cls.all_incidents.add(IncidentPageFactory(subpoena_statuses__contains=[value]))
+            cls.all_incidents.add(IncidentPageFactory(subpoena_statuses=[value]))
         for value, _ in DETENTION_STATUS:
             cls.all_incidents.add(IncidentPageFactory(detention_status=value))
         for value, _ in STATUS_OF_PRIOR_RESTRAINT:

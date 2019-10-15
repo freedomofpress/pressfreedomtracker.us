@@ -34,7 +34,7 @@
 		</th>
 		<td class="data-table__value">
 			{% for subpoena_status in page.subpoena_statuses %}
-			<a href="{% pageurl page.get_parent %}?subpoena_status={{ subpoena_status }}">
+			<a href="{% pageurl page.get_parent %}?subpoena_statuses={{ subpoena_status }}">
 				{% get_subpoena_status_display subpoena_status as subpoena_status_display_name %}
 				{{ subpoena_status_display_name|capfirst }}
 			</a>
