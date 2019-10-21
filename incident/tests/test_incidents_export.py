@@ -50,8 +50,70 @@ class IncidentExportTestCase(TestCase):
             response['Access-Control-ALlow-Methods'], 'GET,OPTIONS,HEAD'
         )
 
-        content = b''.join(list(response.streaming_content))
+        content = b''.join(list(response.streaming_content)).strip().decode('utf-8')
 
         # Since we have no incidents in the db right now, this should just be
         # a CSV header row
-        self.assertEqual(content, b'title,slug,first_published_at,last_published_at,latest_revision_created_at,authors,updates,categories,links,equipment_seized,equipment_broken,date,exact_date_unknown,affiliation,city,state,body,teaser,teaser_image,primary_video,image_caption,arrest_status,status_of_charges,release_date,detention_date,unnecessary_use_of_force,lawsuit_name,status_of_seized_equipment,is_search_warrant_obtained,actor,border_point,stopped_at_border,target_us_citizenship_status,denial_of_entry,stopped_previously,did_authorities_ask_for_device_access,did_authorities_ask_for_social_media_user,did_authorities_ask_for_social_media_pass,did_authorities_ask_about_work,were_devices_searched_or_seized,assailant,was_journalist_targeted,charged_under_espionage_act,subpoena_type,subpoena_status,held_in_contempt,detention_status,third_party_in_possession_of_communications,third_party_business,legal_order_type,status_of_prior_restraint,targets,tags,current_charges,dropped_charges,venue,target_nationality,targets_whose_communications_were_obtained,politicians_or_public_figures_involved\r\n')
+        headers = set(content.split(','))
+        expected_headers = {
+            'title',
+            'slug',
+            'first_published_at',
+            'last_published_at',
+            'latest_revision_created_at',
+            'authors',
+            'updates',
+            'categories',
+            'links',
+            'equipment_seized',
+            'equipment_broken',
+            'date',
+            'exact_date_unknown',
+            'affiliation',
+            'city',
+            'state',
+            'body',
+            'teaser',
+            'teaser_image',
+            'primary_video',
+            'image_caption',
+            'arrest_status',
+            'status_of_charges',
+            'release_date',
+            'detention_date',
+            'unnecessary_use_of_force',
+            'lawsuit_name',
+            'status_of_seized_equipment',
+            'is_search_warrant_obtained',
+            'actor',
+            'border_point',
+            'stopped_at_border',
+            'target_us_citizenship_status',
+            'denial_of_entry',
+            'stopped_previously',
+            'did_authorities_ask_for_device_access',
+            'did_authorities_ask_for_social_media_user',
+            'did_authorities_ask_for_social_media_pass',
+            'did_authorities_ask_about_work',
+            'were_devices_searched_or_seized',
+            'assailant',
+            'was_journalist_targeted',
+            'charged_under_espionage_act',
+            'subpoena_type',
+            'subpoena_status',
+            'held_in_contempt',
+            'detention_status',
+            'third_party_in_possession_of_communications',
+            'third_party_business',
+            'legal_order_type',
+            'status_of_prior_restraint',
+            'targets',
+            'tags',
+            'current_charges',
+            'dropped_charges',
+            'venue',
+            'target_nationality',
+            'targets_whose_communications_were_obtained',
+            'politicians_or_public_figures_involved',
+        }
+        self.assertEqual(headers, expected_headers)
