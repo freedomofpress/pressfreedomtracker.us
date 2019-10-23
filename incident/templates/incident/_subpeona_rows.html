@@ -1,4 +1,5 @@
 {% load wagtailcore_tags %}
+{% load subpoena_tags %}
 
 {% if page.subpoena_subject %}
 	<tr class="data-table__row">
@@ -26,15 +27,19 @@
 	</tr>
 {% endif %}
 
-{% if page.subpoena_status %}
+{% if page.subpoena_statuses|length > 0 %}
 	<tr class="data-table__row">
 		<th class="data-table__label">
 			Subpoena Status
 		</th>
 		<td class="data-table__value">
-			<a href="{% pageurl page.get_parent %}?subpoena_status={{ page.subpoena_status }}">
-				{{ page.get_subpoena_status_display|capfirst }}
+			{% for subpoena_status in page.subpoena_statuses %}
+			<a href="{% pageurl page.get_parent %}?subpoena_statuses={{ subpoena_status }}">
+				{% get_subpoena_status_display subpoena_status as subpoena_status_display_name %}
+				{{ subpoena_status_display_name|capfirst }}
 			</a>
+			{% if not forloop.last %}, {% endif %}
+			{% endfor %}
 		</td>
 	</tr>
 {% endif %}

@@ -222,6 +222,36 @@ class ChoiceFilter(Filter):
         return serialized
 
 
+class MultiChoiceFilter(Filter):
+    serialized_type = 'choice'
+
+    def clean(self, value, strict=False):
+        choices = self.get_choices()
+        if not value:
+            return None
+        if value in choices:
+            return [value]
+        elif strict:
+            raise ValidationError('Invalid value for {}: {}'.format(
+                self.name,
+                value,
+            ))
+        else:
+            return None
+
+    def get_choices(self):
+        return {choice[0] for choice in self.model_field.base_field.choices}
+
+    def filter(self, queryset, value):
+        return queryset.filter(**{'{}__contains'.format(self.lookup): value})
+
+    def serialize(self):
+        serialized = super(MultiChoiceFilter, self).serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = self.model_field.base_field.choices
+        return serialized
+
+
 class ManyRelationFilter(Filter):
     serialized_type = 'autocomplete'
 
@@ -338,7 +368,7 @@ class PendingCasesFilter(BooleanFilter):
             Q(status_of_charges='PENDING_APPEAL') |
             Q(status_of_seized_equipment='CUSTODY') |
             Q(status_of_seized_equipment='RETURNED_PART') |
-            Q(subpoena_status='PENDING') |
+            Q(subpoena_statuses__contains=['PENDING']) |
             Q(detention_status='IN_JAIL') |
             Q(status_of_prior_restraint='PENDING')
         )
@@ -385,6 +415,7 @@ class IncidentFilter(object):
         'equipment_seized': {'lookup': 'equipment_seized__equipment'},
         'equipment_broken': {'lookup': 'equipment_broken__equipment'},
         'tags': {'verbose_name': 'Has any of these tags'},
+        'subpoena_statuses': {'verbose_name': 'Subpoena status'},
         'targets': {'verbose_name': 'Targeted any of these journalists'},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
     }
@@ -446,6 +477,8 @@ class IncidentFilter(object):
             'model_field': model_field,
         }
 
+        from incident.models import ChoiceArrayField
+
         if isinstance(model_field, (ManyToManyField, ManyToOneRel)):
             kwargs['filter_cls'] = ManyRelationFilter
         elif isinstance(model_field, ForeignKey):
@@ -454,6 +487,8 @@ class IncidentFilter(object):
             kwargs['filter_cls'] = DateFilter
         elif model_field.choices:
             kwargs['filter_cls'] = ChoiceFilter
+        elif isinstance(model_field, ChoiceArrayField):
+            kwargs['filter_cls'] = MultiChoiceFilter
         elif isinstance(model_field, BooleanField):
             kwargs['filter_cls'] = BooleanFilter
 

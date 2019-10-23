@@ -614,6 +614,95 @@ class ChoiceFilterTest(TestCase):
         })
 
 
+class MultiChoiceFilterTest(TestCase):
+    def setUp(self):
+        self.pending = 'PENDING'
+        self.dropped = 'DROPPED'
+        self.unknown = 'UNKNOWN'
+        self.category = CategoryPageFactory(
+            title='Subpoena / Legal Order',
+            incident_filters=['subpoena_statuses'],
+        )
+
+    def test_should_filter_by_choice_field(self):
+        """should filter via a field that is a choice field"""
+
+        target = IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            subpoena_statuses=self.pending,
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 1)
+        self.assertIn(target, incidents)
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'subpoena_statuses': [self.pending],
+        })
+
+    def test_filter_should_return_all_if_choice_field_invalid(self):
+        """should not filter if choice is invalid"""
+
+        IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            affiliation='other',
+            categories=[self.category],
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            subpoena_statuses="hello",
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 3)
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+        })
+
+    def test_filter_should_handle_field_with_multiple_values(self):
+        """should handle multiple choices"""
+        target = IncidentPageFactory(
+            subpoena_statuses=[self.pending, self.dropped],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+        )
+
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            subpoena_statuses=self.pending,
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 2)
+        self.assertIn(target, incidents)
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'subpoena_statuses': [self.pending],
+        })
+
+
 class GetSummaryTest(TestCase):
     def setUp(self):
         self.custody = 'CUSTODY'
@@ -933,7 +1022,7 @@ class PendingFilterTest(TestCase):
         for value, _ in STATUS_OF_SEIZED_EQUIPMENT:
             cls.all_incidents.add(IncidentPageFactory(status_of_seized_equipment=value))
         for value, _ in SUBPOENA_STATUS:
-            cls.all_incidents.add(IncidentPageFactory(subpoena_status=value))
+            cls.all_incidents.add(IncidentPageFactory(subpoena_statuses=[value]))
         for value, _ in DETENTION_STATUS:
             cls.all_incidents.add(IncidentPageFactory(detention_status=value))
         for value, _ in STATUS_OF_PRIOR_RESTRAINT:
@@ -953,7 +1042,7 @@ class PendingFilterTest(TestCase):
             'arrest_status',
             'status_of_charges',
             'status_of_seized_equipment',
-            'subpoena_status',
+            'subpoena_statuses',
             'detention_status',
             'status_of_prior_restraint',
         ]
@@ -972,7 +1061,7 @@ class PendingFilterTest(TestCase):
             ('status_of_charges', 'PENDING_APPEAL'),
             ('status_of_seized_equipment', 'CUSTODY'),
             ('status_of_seized_equipment', 'RETURNED_PART'),
-            ('subpoena_status', 'PENDING'),
+            ('subpoena_statuses', ['PENDING']),
             ('detention_status', 'IN_JAIL'),
             ('status_of_prior_restraint', 'PENDING'),
         ])
