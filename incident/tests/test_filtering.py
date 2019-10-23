@@ -614,6 +614,95 @@ class ChoiceFilterTest(TestCase):
         })
 
 
+class MultiChoiceFilterTest(TestCase):
+    def setUp(self):
+        self.pending = 'PENDING'
+        self.dropped = 'DROPPED'
+        self.unknown = 'UNKNOWN'
+        self.category = CategoryPageFactory(
+            title='Subpoena / Legal Order',
+            incident_filters=['subpoena_statuses'],
+        )
+
+    def test_should_filter_by_choice_field(self):
+        """should filter via a field that is a choice field"""
+
+        target = IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            subpoena_statuses=self.pending,
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 1)
+        self.assertIn(target, incidents)
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'subpoena_statuses': [self.pending],
+        })
+
+    def test_filter_should_return_all_if_choice_field_invalid(self):
+        """should not filter if choice is invalid"""
+
+        IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            affiliation='other',
+            categories=[self.category],
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            subpoena_statuses="hello",
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 3)
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+        })
+
+    def test_filter_should_handle_field_with_multiple_values(self):
+        """should handle multiple choices"""
+        target = IncidentPageFactory(
+            subpoena_statuses=[self.pending, self.dropped],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+        )
+
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            subpoena_statuses=self.pending,
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 2)
+        self.assertIn(target, incidents)
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'subpoena_statuses': [self.pending],
+        })
+
+
 class GetSummaryTest(TestCase):
     def setUp(self):
         self.custody = 'CUSTODY'

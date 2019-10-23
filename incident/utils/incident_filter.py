@@ -223,13 +223,33 @@ class ChoiceFilter(Filter):
 
 
 class MultiChoiceFilter(Filter):
+    serialized_type = 'choice'
+
     def clean(self, value, strict=False):
+        choices = self.get_choices()
         if not value:
             return None
-        return [value] or None
+        if value in choices:
+            return [value]
+        elif strict:
+            raise ValidationError('Invalid value for {}: {}'.format(
+                self.name,
+                value,
+            ))
+        else:
+            return None
+
+    def get_choices(self):
+        return {choice[0] for choice in self.model_field.base_field.choices}
 
     def filter(self, queryset, value):
         return queryset.filter(**{'{}__contains'.format(self.lookup): value})
+
+    def serialize(self):
+        serialized = super(MultiChoiceFilter, self).serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = self.model_field.base_field.choices
+        return serialized
 
 
 class ManyRelationFilter(Filter):
@@ -456,6 +476,8 @@ class IncidentFilter(object):
             'model_field': model_field,
         }
 
+        from incident.models import ChoiceArrayField
+
         if isinstance(model_field, (ManyToManyField, ManyToOneRel)):
             kwargs['filter_cls'] = ManyRelationFilter
         elif isinstance(model_field, ForeignKey):
@@ -464,7 +486,7 @@ class IncidentFilter(object):
             kwargs['filter_cls'] = DateFilter
         elif model_field.choices:
             kwargs['filter_cls'] = ChoiceFilter
-        elif model_field.name == 'subpoena_statuses':
+        elif isinstance(model_field, ChoiceArrayField):
             kwargs['filter_cls'] = MultiChoiceFilter
         elif isinstance(model_field, BooleanField):
             kwargs['filter_cls'] = BooleanFilter
