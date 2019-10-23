@@ -415,6 +415,7 @@ class IncidentFilter(object):
         'equipment_seized': {'lookup': 'equipment_seized__equipment'},
         'equipment_broken': {'lookup': 'equipment_broken__equipment'},
         'tags': {'verbose_name': 'Has any of these tags'},
+        'subpoena_statuses': {'verbose_name': 'Subpoena status'},
         'targets': {'verbose_name': 'Targeted any of these journalists'},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
     }
