@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailsettings_tags wagtailimages_tags typogrify_tags %}
 {% get_settings use_default_site=True %}
 
-<article class="blog-grid blog-grid--teaser">
+<article class="blog-grid">
 	<div class="blog-grid__body">
 		<div class="blog-grid__subtitle">Featured Article</div>
 		<h3 class='blog-grid__title'>
@@ -9,26 +9,6 @@
 				{{ page.title|typogrify }}
 			</a>
 		</h3>
-
-		<div class='blog-grid__date'>
-			{{ page.first_published_at|date:"F j, Y" }}
-
-			{% if page.author %}
-				<div class="blog-grid__author">
-					—
-					{% if page.author.website %}
-						<a
-							class="blog-grid__author-link"
-							href="{{ author.author.website }}"
-						>
-							{{ author.author.title }}
-						</a>
-					{% else %}
-						{{ page.author.title }}
-					{% endif %}
-				</div>
-			{% endif %}
-		</div>
 		<div class="blog-grid__description">
 			<section>
 				{% if page.teaser_text %}
@@ -40,8 +20,8 @@
 				{% endif %}
 			</section>
 		</div>
-		{% if page.teaser_image %}
-			{% include "common/_teaser_image.html" with page=page %}
-		{% endif %}
 	</div>
+	{% if page.teaser_image %}
+		{% include "common/_teaser_image.html" with page=page %}
+	{% endif %}
 </article>
