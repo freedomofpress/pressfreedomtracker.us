@@ -50,10 +50,10 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Title displayed above stat boxes'
     )
 
-    featured_incidents_label = models.CharField(
-        default='Featured Incidents',
+    featured_pages_label = models.CharField(
+        default='Featured Articles',
         max_length=255,
-        help_text='Title displayed above featured incidents'
+        help_text='Title displayed above featured pages'
     )
 
     featured_more_label = models.CharField(
@@ -103,14 +103,14 @@ class HomePage(MetadataPageMixin, Page):
         ], 'Statboxes'),
 
         MultiFieldPanel([
-            FieldPanel('featured_incidents_label'),
+            FieldPanel('featured_pages_label'),
             InlinePanel(
-                'incidents',
-                label='Featured Incidents',
+                'features',
+                label='Featured Pages',
                 min_num=4,
                 max_num=6,
             ),
-        ], 'Featured Incidents'),
+        ], 'Featured Pages'),
 
         MultiFieldPanel([
             FieldPanel('about'),
@@ -146,26 +146,18 @@ class HomePage(MetadataPageMixin, Page):
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        incidents = self.incidents.all()
-        if hasattr(incidents, 'prefetch_related'):
-            incidents = incidents.prefetch_related('incident__categories__category')
-        context['incidents'] = incidents
-
+        context['features'] = Page.objects.filter(
+            homepagefeature__home_page=self
+        ).live().order_by('homepagefeature__sort_order').specific()
         return context
 
 
-class HomePageIncidents(Orderable):
-    page = ParentalKey('home.HomePage', related_name='incidents')
-    incident = models.ForeignKey(
-        'incident.IncidentPage',
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
+class HomePageFeature(Orderable):
+    home_page = ParentalKey('home.HomePage', related_name='features')
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
 
     panels = [
-        PageChooserPanel('incident', 'incident.IncidentPage'),
+        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage')),
     ]
 
 

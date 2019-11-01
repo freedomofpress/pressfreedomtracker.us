@@ -1,8 +1,10 @@
 from wagtail.core.models import Site, Page
+from wagtail.tests.utils.form_data import nested_form_data, inline_formset
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase
 
+from blog.tests.factories import BlogPageFactory
 from incident.tests.factories import IncidentPageFactory
 from .factories import HomePageFactory
 
@@ -37,35 +39,31 @@ class HomePageTest(TestCase):
         user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
         self.client.force_login(user)
         preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(self.home_page.id,))
-        incident_page = IncidentPageFactory(parent=self.home_page)
-        post_data = {
-            'slug': self.home_page.slug,
-            'title': self.home_page.title,
-            'recent_incidents_label': self.home_page.recent_incidents_label,
-            'featured_incidents_label': self.home_page.featured_incidents_label,
-            'statboxes_label': self.home_page.statboxes_label,
-            'change_filters_message': self.home_page.change_filters_message,
-            'blog_label': self.home_page.blog_label,
-            'incidents-TOTAL_FORMS': 4,
-            'incidents-INITIAL_FORMS': 4,
-            'incidents-MIN_NUM_FORMS': 4,
-            'incidents-MAX_NUM_FORMS': 0,
-            'incidents-0-incident': incident_page.id,
-            'incidents-0-id': '',
-            'incidents-1-incident': incident_page.id,
-            'incidents-1-id': '',
-            'incidents-2-incident': incident_page.id,
-            'incidents-2-id': '',
-            'incidents-3-incident': incident_page.id,
-            'incidents-3-id': '',
-            'statboxes-TOTAL_FORMS': 0,
-            'statboxes-INITIAL_FORMS': 0,
-            'statboxes-MIN_NUM_FORMS': 0,
-            'statboxes-MAX_NUM_FORMS': 0,
-        }
+        incident1, incident2 = IncidentPageFactory.create_batch(2, parent=self.home_page)
+        post1, post2 = BlogPageFactory.create_batch(2, parent=self.home_page)
+
         response = self.client.post(
             preview_url,
-            post_data,
+            nested_form_data({
+                'slug': self.home_page.slug,
+                'title': self.home_page.title,
+                'recent_incidents_label': self.home_page.recent_incidents_label,
+                'featured_pages_label': self.home_page.featured_pages_label,
+                'statboxes_label': self.home_page.statboxes_label,
+                'change_filters_message': self.home_page.change_filters_message,
+                'blog_label': self.home_page.blog_label,
+                'features': inline_formset([
+                    {'page': str(incident1.pk)},
+                    {'page': str(post1.pk)},
+                    {'page': str(incident2.pk)},
+                    {'page': str(post2.pk)},
+                ]),
+                'statboxes': inline_formset([
+                    {'value': '{% num_incidents categories=9 %}',
+                     'label': 'Hello world',
+                     'color': 'gamboge'}
+                ]),
+            })
         )
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content.decode(), {'is_valid': True})

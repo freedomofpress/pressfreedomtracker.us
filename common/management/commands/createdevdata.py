@@ -14,7 +14,7 @@ from wagtail.core.rich_text import RichText
 import factory
 from faker import Faker
 
-from blog.models import BlogIndexPage
+from blog.models import BlogIndexPage, BlogPage
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
     SimplePage, SimplePageWithSidebar,
@@ -25,7 +25,7 @@ from common.tests.factories import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
 )
 from forms.models import FormPage
-from home.models import HomePage, HomePageIncidents
+from home.models import HomePage, HomePageFeature
 from incident.models import IncidentIndexPage, IncidentPage
 from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, IncidentUpdateFactory
 from menus.models import Menu, MenuItem
@@ -297,6 +297,13 @@ class Command(BaseCommand):
                 author=author3,
                 with_image=True,
             )
+
+            for i, page in zip((2, 4, 6), random.sample(list(BlogPage.objects.all()), 3)):
+                HomePageFeature.objects.create(
+                    sort_order=i,
+                    home_page=home_page,
+                    page=page,
+                )
         else:
             blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')
 
@@ -321,11 +328,11 @@ class Command(BaseCommand):
         search_settings.search_page = incident_index_page
         search_settings.save()
 
-        for i, incident in enumerate(random.sample(list(IncidentPage.objects.all()), 3)):
-            HomePageIncidents.objects.create(
+        for i, incident in zip((1, 3, 5), random.sample(list(IncidentPage.objects.all()), 3)):
+            HomePageFeature.objects.create(
                 sort_order=i,
-                page=home_page,
-                incident=incident,
+                home_page=home_page,
+                page=incident,
             )
             IncidentUpdateFactory(page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)

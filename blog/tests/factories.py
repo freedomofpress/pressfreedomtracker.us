@@ -80,9 +80,14 @@ class BlogPageFactory(wagtail_factories.PageFactory):
             'styled_text',
         ],
     )
-    teaser_text = factory.Faker('sentence')
+    teaser_text = factory.Faker(
+        'paragraph',
+        nb_sentences=3,
+        variable_nb_sentences=True,
+    )
     publication_datetime = factory.Faker(
         'date_time_this_month', after_now=False, before_now=True, tzinfo=timezone.utc
     )
+    first_published_at = factory.LazyAttribute(lambda o: o.publication_datetime)
     author = factory.SubFactory(PersonPageFactory)
     organization = factory.SubFactory(OrganizationPageFactory)

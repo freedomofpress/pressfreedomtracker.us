@@ -3,22 +3,30 @@
 {% with search_page=settings.common.SearchSettings.search_page %}
 {% if search_page %}
 
-	{% with incidents=incidents %}
+	{% with features=features %}
 		{% include "common/_section_heading.html" with label=label %}
 		{% include "incident/_filters.html" with apply_externally=True external=search_page change_filters_message=page.change_filters_message %}
 
 		<div class="grid-50">
-			{% for related in incidents|slice:":2" %}
+			{% for related in features|slice:":2" %}
 				<div class="grid-50__item">
-					{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+					{% if related.content_type.model == 'blogpage' %}
+						{% include "blog/_blog_grid.html" with location="homepage" page=related %}
+					{% else %}
+						{% include "incident/_incident.html" with incident=related teaser=True %}
+					{% endif %}
 				</div>
 			{% endfor %}
 		</div>
 		{% include "home/_intro.html" with text=page.about read_more=page.about_page %}
 		<div class="grid-50">
-			{% for related in incidents|slice:"2:" %}
+			{% for related in features|slice:"2:" %}
 				<div class="grid-50__item">
-					{% include "incident/_incident.html" with incident=related.incident teaser=True %}
+					{% if related.content_type.model == 'blogpage' %}
+						{% include "blog/_blog_grid.html" with location="homepage" page=related %}
+					{% else %}
+						{% include "incident/_incident.html" with incident=related teaser=True %}
+					{% endif %}
 				</div>
 			{% endfor %}
 		</div>
