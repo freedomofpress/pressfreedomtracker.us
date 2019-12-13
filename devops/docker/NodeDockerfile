@@ -1,11 +1,16 @@
 ARG NODE_VER
+ARG NPM_VER
 FROM node:${NODE_VER}
 
 # Make npm output less verbose
 ENV NPM_CONFIG_LOGLEVEL warn
+
+# Upgrade npm to speicifed version
+RUN npm install npm@${NPM_VER} -g
+
 COPY devops/docker/node-start.sh /usr/bin/node-start.sh
 
 ARG USERID
 RUN adduser -D -g "" -u "${USERID}" docker_user || true
 USER ${USERID}
-ENTRYPOINT [ "/usr/bin/node-start.sh" ]
+CMD [ "/usr/bin/node-start.sh" ]
