@@ -229,21 +229,36 @@ class MultiChoiceFilter(Filter):
         choices = self.get_choices()
         if not value:
             return None
-        if value in choices:
-            return [value]
-        elif strict:
-            raise ValidationError('Invalid value for {}: {}'.format(
+        values = value.split(',')
+        value = []
+        invalid_values = []
+        choices = self.get_choices()
+
+        for v in values:
+            if v in choices:
+                value.append(v)
+            else:
+                invalid_values.append(v)
+
+        if invalid_values and strict:
+            raise ValidationError('Invalid value{} for {}: {}'.format(
+                's' if len(invalid_values) != 1 else '',
                 self.name,
-                value,
+                ','.join(invalid_values),
             ))
-        else:
-            return None
+        return value or None
 
     def get_choices(self):
         return {choice[0] for choice in self.model_field.base_field.choices}
 
-    def filter(self, queryset, value):
-        return queryset.filter(**{'{}__contains'.format(self.lookup): value})
+    def filter(self, queryset, values):
+        queryset_initial = queryset
+        for key, value in enumerate(values):
+            if key == 0:
+                queryset = queryset_initial.filter(**{'{}__contains'.format(self.lookup): [value]})
+            else:
+                queryset |= queryset_initial.filter(**{'{}__contains'.format(self.lookup): [value]})
+        return queryset.distinct()
 
     def serialize(self):
         serialized = super(MultiChoiceFilter, self).serialize()
