@@ -89,7 +89,7 @@ Dependency Management
 ---------------------
 
 Adding new requirements
-~~~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++++
 
 New requirements should be added to ``*requirements.in`` files, for use with ``pip-compile``.
 There are two Python requirements files:
@@ -111,7 +111,7 @@ target handles the merging of multiple files.
 This process is the same if a requirement needs to be changed (i.e. its version number restricted) or removed.  Make the appropriate change in the correct ``requirements.in`` file, then run the above command to compile the dependencies.
 
 Upgrading existing requirements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++++++++++++
 
 There are separate commands to upgrade a package without changing the ``requirements.in`` files.  The command
 
@@ -131,10 +131,10 @@ which will update the package named ``package-name`` to the latest version allow
 
 
 Advanced actions against the database
-+++++++++++++++++++++++++++++++++++++
+-------------------------------------
 
 Database import
----------------
++++++++++++++++
 
 Drop a postgres database dump into the root of the repo and rename it to
 ``import.db``. To import it into a running dev session (ensure ``make dev-go`` has
@@ -143,7 +143,7 @@ images that are referenced from an external site backup.
 
 
 Connect to postgresql service from host
----------------------------------------
++++++++++++++++++++++++++++++++++++++++
 
 The postgresql service is exposed to your host on port ``15432``. If you have a GUI
 database manipulation application you'd like to utilize, your settings will be:
@@ -154,7 +154,7 @@ database manipulation application you'd like to utilize, your settings will be:
 * the host/port can be determined by running ``docker-compose port postgresql 5432``
 
 Mimic CI and production environment
------------------------------------
++++++++++++++++++++++++++++++++++++
 
 You can mimic a production environment where django is deployment with gunicorn,
 reverse nginx proxy, and debug mode off using the following command:
@@ -167,7 +167,7 @@ All subsequent docker-compose files will need that explicit ``-f`` flag pointing
 to the production-like compose file.
 
 Database snapshots
-------------------
+++++++++++++++++++
 
 When developing, it is often required to switch branches.  These
 different branches can have mutually incompatible changes to the
@@ -200,7 +200,7 @@ for the new branch, which were presumably based off of master, will
 have a clean starting point.
 
 Adobe Font Licenses
-+++++++++++++++++++
+===================
 
 Licenses for `Source Serif Pro <https://github.com/adobe-fonts/source-serif-pro>`_ and `Source Sans Pro <https://github.com/adobe-fonts/source-sans-pro>`_ are available at the paths below.
 
@@ -208,7 +208,7 @@ Licenses for `Source Serif Pro <https://github.com/adobe-fonts/source-serif-pro>
 - `common/static/fonts/LICENSE.SourceSerifPro.txt`
 
 Design decision notes
-+++++++++++++++++++++
+=====================
 
 Search
 ------
