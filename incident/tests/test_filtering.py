@@ -618,7 +618,7 @@ class MultiChoiceFilterTest(TestCase):
     def setUp(self):
         self.pending = 'PENDING'
         self.dropped = 'DROPPED'
-        self.unknown = 'UNKNOWN'
+        self.quashed = 'QUASHED'
         self.category = CategoryPageFactory(
             title='Subpoena / Legal Order',
             incident_filters=['subpoena_statuses'],
@@ -700,6 +700,40 @@ class MultiChoiceFilterTest(TestCase):
         self.assertEqual(incident_filter.cleaned_data, {
             'categories': [self.category.id],
             'subpoena_statuses': [self.pending],
+        })
+
+    def test_filter_should_handle_multiple_choices(self):
+        """should handle multiple choices"""
+        target1 = IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+        )
+        target2 = IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+        )
+        target3 = IncidentPageFactory(
+            subpoena_statuses=[self.pending, self.dropped],
+            categories=[self.category],
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.quashed],
+            categories=[self.category],
+        )
+
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+            subpoena_statuses='{0},{1}'.format(self.pending, self.dropped),
+        ))
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(incidents.count(), 3)
+        self.assertIn(target1, incidents)
+        self.assertIn(target2, incidents)
+        self.assertIn(target3, incidents)
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+            'subpoena_statuses': [self.pending, self.dropped],
         })
 
 

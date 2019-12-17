@@ -176,6 +176,67 @@ class NumTargetsTest(TestCase):
         self.assertEqual(rendered, '2')
 
 
+class TestIncidentsInMultiValue(TestCase):
+    """ Test that incidents with MultiValueFilter work """
+    def setUp(self):
+        self.pending = 'PENDING'
+        self.dropped = 'DROPPED'
+        self.category = CategoryPageFactory(
+            title='Subpoena / Legal Order',
+            incident_filters=['subpoena_statuses'],
+        )
+        self.validator = TemplateValidator()
+
+    def test_invalid_args_validated(self):
+        # Matched incident page
+        template_string = '{{% num_targets categories={} subpoena_statuses={} %}}'.format(
+            str(self.category.id),
+            self.pending,
+        )
+        with self.assertRaises(ValidationError):
+            self.validator(template_string)
+
+    def test_target_count__filtered(self):
+        # Matched incident page
+        IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+            targets=3,
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+            targets=5,
+        )
+        template_string = '{{% num_targets categories={} subpoena_statuses="{}" %}}'.format(
+            str(self.category.id),
+            self.pending,
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '3')
+
+    def test_target_multiple_choice(self):
+        IncidentPageFactory(
+            subpoena_statuses=[self.pending],
+            categories=[self.category],
+            targets=3,
+        )
+        IncidentPageFactory(
+            subpoena_statuses=[self.dropped],
+            categories=[self.category],
+            targets=5,
+        )
+        template_string = '{{% num_targets categories={} subpoena_statuses="{},{}" %}}'.format(
+            str(self.category.id),
+            self.pending,
+            self.dropped,
+        )
+        self.validator(template_string)
+        rendered = render_as_template(template_string)
+        self.assertEqual(rendered, '8')
+
+
 class TestIncidentsInYearRangeByMonth(TestCase):
     """Test that incidents_in_year_range_by_month tag """
     @classmethod
