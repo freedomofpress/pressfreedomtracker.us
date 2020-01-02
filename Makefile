@@ -39,15 +39,38 @@ dev-tests: ## Run django tests against developer environment
 dev-jest-tests: ## Run django tests against developer environment
 	docker-compose exec node npm test
 
-.PHONY: update-pip-dependencies
-update-pip-dependencies: ## Uses pip-compile to update requirements.txt
+.PHONY: compile-pip-dependencies
+compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -it python:3.5-slim  \
-		bash -c 'pip install pip-tools && apt-get update && apt-get install git -y && \
-		pip-compile -U --no-header --output-file /code/requirements.txt /code/requirements.in && \
-		pip-compile -U --no-header --output-file /code/dev-requirements.txt /code/dev-requirements.in'
+	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
+		bash -c 'apt-get update && apt-get install gcc -y && \
+    pip install --require-hashes -r dev-requirements.txt && \
+		pip-compile --generate-hashes --no-header --output-file requirements.txt requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --output-file dev-requirements.txt dev-requirements.in'
+
+.PHONY: pip-update
+upgrade-pip: ## Uses pip-compile to update requirements.txt for upgrading a specific package
+# It is critical that we run pip-compile via the same Python version
+# that we're generating requirements for, otherwise the versions may
+# be resolved differently.
+	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
+		bash -c 'apt-get update && apt-get install git gcc -y && \
+    pip install --require-hashes -r dev-requirements.txt && \
+		pip-compile --generate-hashes --no-header --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
+
+
+.PHONY: pip-dev-update
+update-pip-dev: ## Uses pip-compile to update dev-requirements.txt for upgrading a specific package
+# It is critical that we run pip-compile via the same Python version
+# that we're generating requirements for, otherwise the versions may
+# be resolved differently.
+	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
+		bash -c 'apt-get update && apt-get install git gcc -y && \
+    pip install --require-hashes -r dev-requirements.txt && \
+		pip-compile --require-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
 # Explanation of the below shell command should it ever break.
 # 1. Set the field separator to ": ##" to parse lines for make targets.
