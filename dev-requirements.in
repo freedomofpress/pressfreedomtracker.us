@@ -2,4 +2,3 @@
 django-debug-toolbar
 flake8
 ipdb
-pip-tools
