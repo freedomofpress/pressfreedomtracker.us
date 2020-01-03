@@ -17,7 +17,7 @@ python-json-logger
 pyparsing
 typing
 typogrify
-wagtail>=2.4,<2.5
+wagtail>=2.5,<2.6
 wagtail-autocomplete
 wagtail-factories
 wagtail-django-recaptcha
