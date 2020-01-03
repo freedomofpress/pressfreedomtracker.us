@@ -1,6 +1,6 @@
 bleach>=2.1
 dj-database-url
-Django>=2.1.11,<2.2
+Django>=2.2,<2.3
 django-analytical
 django-anymail
 django-modelcluster
