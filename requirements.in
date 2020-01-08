@@ -22,5 +22,4 @@ wagtail-autocomplete
 wagtail-factories
 wagtail-django-recaptcha
 wagtail-metadata
-wagtail-inventory>=0.8
 unittest-xml-reporting

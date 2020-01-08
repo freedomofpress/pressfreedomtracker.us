@@ -205,10 +205,6 @@ text-unidecode==1.2 \
     --hash=sha256:5a1375bb2ba7968740508ae38d92e1f889a0832913cb1c447d5e2046061a396d \
     --hash=sha256:801e38bd550b943563660a91de8d4b6fa5df60a542be9093f7abf819f86050cc \
     # via faker
-tqdm==4.15.0 \
-    --hash=sha256:6ec1dc74efacf2cda936b4a6cf4082ce224c76763bdec9f17e437c8cfcaa9953 \
-    --hash=sha256:9f019dcbec25b5b4cb1bbf43e5c346e0d6a001fe4f598d70283d379e5314e202 \
-    # via wagtail-inventory
 typing==3.6.6 \
     --hash=sha256:4027c5f6127a6267a435201981ba156de91ad0d1d98e9ddc2aa173453453492d \
     --hash=sha256:57dcf675a99b74d64dacf6fba08fb17cf7e3d5fdff53d4a30ea2a5e7e52543d4 \
@@ -233,9 +229,6 @@ wagtail-django-recaptcha==1.0 \
 wagtail-factories==1.1.0 \
     --hash=sha256:141cdb65ef0c292d2220a11976311af21d92f4445f2293a8a27ee6e89c96a779 \
     --hash=sha256:3dd25ae90024e6aaf8e714473545dfa3af14e701835652d112f22d3d228b7fc7
-wagtail-inventory==0.8 \
-    --hash=sha256:1a47680b42f2c742124599950d39d4140eac242a4e262177a917bdae965a0585 \
-    --hash=sha256:ca1f9efe2fac168bc090559433589ed4b575c7e317be112d930fde6a6b7cbb25
 wagtail-metadata==2.0.1 \
     --hash=sha256:1b710fcd6c96f2405db0d9f12ea3055a4532f3e4a43bcb2793700cde714841f1 \
     --hash=sha256:e3ef0776d3a429239dce4d164ac40c779f5d8ac958c630e0ab7442c25c54692e

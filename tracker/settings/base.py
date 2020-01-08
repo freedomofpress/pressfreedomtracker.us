@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     'wagtailmetadata',
     'webpack_loader',
     'wagtailautocomplete',
-    'wagtailinventory',
 
     'django.contrib.admin',
     'django.contrib.auth',

@@ -42,6 +42,7 @@ environment, run the following your first run:
     # Inject development data (also only needs to be run once)
     docker-compose exec django ./manage.py createdevdata
 
+    # NOTE: temporarily not available due to incompatibility with wagtail 2.7
     # Add wagtail inventory to search wagtail pages by block type
     docker-compose exec django ./manage.py block_inventory
 
