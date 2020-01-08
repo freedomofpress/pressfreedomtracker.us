@@ -228,8 +228,12 @@ class VenueMergeViewTest(TestCase):
     def setUpTestData(cls):
         cls.venue1 = Venue.objects.create(title='Canada')
         cls.venue2 = Venue.objects.create(title='Iran')
-        cls.inc1 = IncidentPageFactory(venue=[cls.venue1.pk])
-        cls.inc2 = IncidentPageFactory(venue=[cls.venue2.pk])
+        cls.inc1 = IncidentPageFactory()
+        cls.inc1.venue.add(cls.venue1)
+        cls.inc1.save()
+        cls.inc2 = IncidentPageFactory()
+        cls.inc2.venue.add(cls.venue2)
+        cls.inc2.save()
         cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
 
     def setUp(self):
