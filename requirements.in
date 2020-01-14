@@ -1,6 +1,6 @@
 bleach>=2.1
 dj-database-url
-Django>=2.1.11,<2.2
+Django>=2.2,<2.3
 django-analytical
 django-anymail
 django-modelcluster
@@ -11,17 +11,15 @@ docutils
 factory_boy
 gunicorn
 Jinja2
-pip-tools
 psycopg2
 Pygments
 python-json-logger
 pyparsing
 typing
 typogrify
-wagtail>=2.3,<2.4
+wagtail>=2.7,<2.8
 wagtail-autocomplete
 wagtail-factories
 wagtail-django-recaptcha
 wagtail-metadata
-wagtail-inventory
 unittest-xml-reporting
