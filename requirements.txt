@@ -24,6 +24,8 @@ django-analytical==2.5.0 \
 django-anymail==6.0 \
     --hash=sha256:ab5cbfb280492c9cb2ef0497f8ebda4dcb3f99603dcf63c88ae623a66cad71f4 \
     --hash=sha256:f872089943f30283d485d121924598f4156f5bfa76a0885fd66df5205102be0b
+https://github.com/freedomofpress/django-logging/zipball/b7d0b7b542db6ac088dbf3d2e7b249df333d3082 \
+    --hash=sha256:7a9857fff2988572ee03ae0ea2dc17e389095663ff72e2ea3fad904a4023b0f4
 django-modelcluster==5.0.1 \
     --hash=sha256:09e4242119f04e81bfab25c77b09cb6e9d469dc14b14e71f04cd358c7256bc2a \
     --hash=sha256:6f857bb0251c0982afeb35474aeedb3ec72260df81a0262188df8108067467ba
