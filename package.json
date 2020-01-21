@@ -34,7 +34,7 @@
     "mini-css-extract-plugin": "^0.6.0",
     "modernizr": "^3.7.1",
     "modernizr-loader": "^1.0.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "npm-audit-plus": "^0.1.5",
     "postcss-loader": "^3.0.0",
     "react-test-renderer": "^15.6.2",
