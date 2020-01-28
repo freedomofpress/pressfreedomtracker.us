@@ -136,6 +136,12 @@ class IncidentLoader {
 
 				if (response.status === 200) {
 					this.appendIncidents(response.data)
+					const urlParams = new URLSearchParams(window.location.search);
+					urlParams.set(
+						'endpage',
+						urlParams.has('endpage') ? parseInt(urlParams.get('endpage')) + 1 : 2
+					)
+					history.replaceState(null, null, '?' + urlParams.toString())
 				}
 			})
 	}
