@@ -116,7 +116,23 @@ class StyledTextBlock(blocks.StructBlock):
         ('serif', 'Serif'),
     )
 
-    text = blocks.RichTextBlock()
+    text = blocks.RichTextBlock(
+        features=[
+            'bold',
+            'italic',
+            'h2',
+            'h3',
+            'h4',
+            'ol',
+            'ul',
+            'hr',
+            'embed',
+            'link',
+            'document-link',
+            'image',
+            'code',
+        ],
+    )
     background_color = blocks.ChoiceBlock(choices=BACKGROUND_COLOR_CHOICES, default='white')
     text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default='left')
     font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default='normal')
@@ -129,7 +145,23 @@ class StyledTextBlock(blocks.StructBlock):
 
 
 class StyledTextTemplateBlock(StyledTextBlock):
-    text = RichTextTemplateBlock()
+    text = RichTextTemplateBlock(
+        features=[
+            'bold',
+            'italic',
+            'h2',
+            'h3',
+            'h4',
+            'ol',
+            'ul',
+            'hr',
+            'embed',
+            'link',
+            'document-link',
+            'image',
+            'code',
+        ],
+    )
 
     def get_context(self, *args, **kwargs):
         context = super(StyledTextTemplateBlock, self).get_context(*args, **kwargs)
