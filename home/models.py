@@ -146,9 +146,9 @@ class HomePage(MetadataPageMixin, Page):
         search_page = SearchSettings.for_site(request.site).search_page
         context['export_path'] = getattr(search_page, 'url', None)
 
-        context['features'] = Page.objects.filter(
-            homepagefeature__home_page=self
-        ).live().order_by('homepagefeature__sort_order').specific()
+        context['features'] = [
+            f.page.specific for f in self.features.all().select_related('page')
+        ]
         return context
 
 
