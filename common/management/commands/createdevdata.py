@@ -20,10 +20,12 @@ from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, SearchSettings,
-    GeneralIncidentFilter, IncidentFilterSettings, CategoryPage,
+    GeneralIncidentFilter, IncidentFilterSettings,
+    CategoryPage,
+    CategoryPageFeature,
 )
 from common.tests.factories import (
-    PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
+    PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory, CategoryPageFeatureFactory
 )
 from forms.models import FormPage
 from home.models import HomePage, HomePageFeature
@@ -331,6 +333,12 @@ class Command(BaseCommand):
                     home_page=home_page,
                     page=page,
                 )
+            for category, blog_page in zip(
+                    random.sample(list(CategoryPage.objects.all()), 4),
+                    random.sample(list(BlogPage.objects.all()), 4),
+            ):
+                CategoryPageFeatureFactory(category=category, page=blog_page)
+
         else:
             blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')
 
@@ -369,6 +377,11 @@ class Command(BaseCommand):
             )
             MultimediaIncidentUpdateFactory(page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
+        for category, incident in zip(
+            [page.category for page in CategoryPageFeature.objects.all()],
+            random.sample(list(IncidentPage.objects.all()), 4),
+        ):
+            CategoryPageFeatureFactory(category=category, page=incident)
         home_page.save()
 
         # Create superuser
