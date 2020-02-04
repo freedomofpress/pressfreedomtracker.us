@@ -80,6 +80,22 @@
 {% endblock %}
 
 {% block main %}
+	{% if features %}
+		{% include "common/_section_heading.html" with label="Editor's Features" %}
+
+		<div class="grid-50">
+			{% for feature in features %}
+				<div class="grid-50__item">
+					{% if feature.content_type.model == 'blogpage' %}
+						{% include "blog/_blog_grid.html" with page=feature %}
+					{% else %}
+						{% include "incident/_incident.html" with incident=feature teaser=True %}
+					{% endif %}
+				</div>
+			{% endfor  %}
+		</div>
+	{% endif %}
+
 	{% include "incident/_filters.html" with no_category_filtering=True category=page.id %}
 
 	<div class="grid-50 js-incident-loading-parent">

@@ -313,6 +313,10 @@ class CategoryPage(MetadataPageMixin, Page):
 
         context = super(CategoryPage, self).get_context(request, *args, **kwargs)
 
+        context['features'] = [
+            f.page.specific for f in self.features.all().select_related('page')
+        ]
+
         # request.is_preview is not necessarily set
         if getattr(request, 'is_preview', False):
             context['total_incidents'] = 'NOT AVAILABLE IN PREVIEW'
