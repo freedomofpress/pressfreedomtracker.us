@@ -293,6 +293,7 @@ class CategoryPage(MetadataPageMixin, Page):
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('statistics_items', label='Statistics'),
         InlinePanel('incident_filters', label='Fields to include in filters'),
+        InlinePanel('features', label='Featured Pages', max_num=2)
     ]
 
     settings_panels = Page.settings_panels + [
@@ -403,6 +404,22 @@ class CategoryPage(MetadataPageMixin, Page):
         response = super(CategoryPage, self).serve(request, *args, **kwargs)
         response['Cache-Tag'] = self.get_cache_tag()
         return response
+
+
+class CategoryPageFeature(Orderable):
+    category = ParentalKey(CategoryPage, related_name='features')
+    page = models.ForeignKey(
+        Page,
+        on_delete=models.CASCADE,
+        related_name='+',
+    )
+
+    panels = [
+        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage')),
+    ]
+
+    def __str__(self):
+        return self.category.title + '-->' + self.page.title
 
 
 class SimplePage(MetadataPageMixin, Page):

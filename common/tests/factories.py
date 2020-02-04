@@ -13,6 +13,7 @@ from common.blocks import (
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import (
     CategoryPage,
+    CategoryPageFeature,
     CategoryIncidentFilter,
     CommonTag,
     CustomImage,
@@ -233,3 +234,10 @@ class CommonTagFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('title',)
 
     title = factory.Faker('word')
+
+
+class CategoryPageFeatureFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = CategoryPageFeature
+
+    sort_order = factory.Sequence(int)
