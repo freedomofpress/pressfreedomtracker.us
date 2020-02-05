@@ -1,4 +1,4 @@
-from django.db.models import Func
+from django.db.models import Func, DateField
 from django.contrib.postgres import fields
 
 
@@ -15,3 +15,11 @@ class MakeDateRange(Func):
     target = type('DateRangeFieldKludge',
                   (fields.DateRangeField,),
                   {'attname': 'fuzzy_date'})()
+
+
+class CurrentDate(Func):
+    """
+    SQL function that returns the current date
+    """
+    template = 'CURRENT_DATE'
+    output_field = DateField()

@@ -21,6 +21,7 @@ from incident.tests.factories import (
     ChargeFactory,
     IncidentPageFactory,
     IncidentIndexPageFactory,
+    IncidentUpdateFactory,
     InexactDateIncidentPageFactory,
     StateFactory,
     InstitutionFactory,
@@ -215,6 +216,8 @@ class TestAllFiltersAtOnce(TestCase):
                 return list(filter_.get_choices())[0]
             elif t == 'bool':
                 return 'True'
+            elif t == 'int':
+                return '1'
             else:
                 raise ValueError('Could not determine value for field of type %s' % t)
 
@@ -1252,3 +1255,101 @@ class RelationThroughTest(TestCase):
         self.assertEqual(incidents.count(), 2)
         self.assertIn(self.tj1.incident, incidents)
         self.assertIn(self.tj3.incident, incidents)
+
+
+class RecentlyUpdatedFilterTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='recently_updated',
+            incident_filter_settings=settings,
+        )
+
+    def test_ignores_noninteger_parameters(self):
+        incident_old = IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=90),
+        )
+        incident_filter = IncidentFilter(
+            {'recently_updated': 'xyz'}
+        )
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(set(incidents), {incident_old})
+
+    def test_filters_incidents_with_recent_updates(self):
+        IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=90),
+        )
+
+        incident_with_new_update = IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=90),
+        )
+        IncidentUpdateFactory(
+            page=incident_with_new_update,
+            date=timezone.now() - timedelta(days=3),
+        )
+
+        incident_filter = IncidentFilter(
+            {'recently_updated': 10}
+        )
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(set(incidents), {incident_with_new_update})
+
+    def test_filters_recently_published_incidents(self):
+        IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=90),
+        )
+
+        incident_new = IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=3),
+        )
+
+        incident_filter = IncidentFilter(
+            {'recently_updated': 10}
+        )
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(set(incidents), {incident_new})
+
+    def test_filters_recently_published_or_updated_incidents(self):
+        IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=90),
+        )
+        incident_with_old_update = IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=90),
+        )
+        IncidentUpdateFactory(
+            page=incident_with_old_update,
+            date=timezone.now() - timedelta(days=60),
+        )
+
+        incident_with_new_update = IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=90),
+        )
+        IncidentUpdateFactory(
+            page=incident_with_new_update,
+            date=timezone.now() - timedelta(days=60),
+        )
+        IncidentUpdateFactory(
+            page=incident_with_new_update,
+            date=timezone.now() - timedelta(days=12),
+        )
+
+        incident_new = IncidentPageFactory(
+            first_published_at=timezone.now() - timedelta(days=3),
+        )
+
+        incident_filter = IncidentFilter(
+            {'recently_updated': 15}
+        )
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(set(incidents), {incident_new, incident_with_new_update})

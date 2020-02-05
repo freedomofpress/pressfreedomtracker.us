@@ -4,24 +4,30 @@ import copy
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import (
+    OuterRef,
+    Subquery,
+    Max,
+    F,
+    ExpressionWrapper,
     BooleanField,
     CharField,
     DateField,
     DurationField,
     ForeignKey,
     ManyToManyField,
+    PositiveSmallIntegerField,
     Q,
     TextField,
     Value,
 )
-from django.db.models.functions import Trunc, TruncMonth, Cast
+from django.db.models.functions import Trunc, TruncMonth, Cast, ExtractDay
 from django.db.models.fields.related import ManyToOneRel
 from django.utils.text import capfirst
 from psycopg2.extras import DateRange
 from wagtail.core.fields import RichTextField, StreamField
 
 from incident.circuits import STATES_BY_CIRCUIT
-from incident.utils.db import MakeDateRange
+from incident.utils.db import MakeDateRange, CurrentDate
 
 
 class Filter(object):
@@ -70,6 +76,10 @@ class Filter(object):
 
 class BooleanFilter(Filter):
     serialized_type = 'bool'
+
+
+class IntegerFilter(Filter):
+    serialized_type = 'int'
 
 
 class RelationFilter(Filter):
@@ -411,6 +421,40 @@ class PendingCasesFilter(BooleanFilter):
         )
 
 
+class RecentlyUpdatedFilter(IntegerFilter):
+    def __init__(self, name, verbose_name=None):
+        super(RecentlyUpdatedFilter, self).__init__(
+            name=name,
+            model_field=PositiveSmallIntegerField(),
+            verbose_name=verbose_name,
+        )
+
+    def serialize(self):
+        serialized = super(RecentlyUpdatedFilter, self).serialize()
+        serialized['units'] = 'days'
+        return serialized
+
+    def filter(self, queryset, value):
+        # Prevent circular imports
+        from incident.models.inlines import IncidentPageUpdates
+
+        updates = IncidentPageUpdates.objects.filter(
+            page=OuterRef('pk')
+        ).order_by().values('page').annotate(
+            most_recent_update=Max('date')
+        ).values('most_recent_update')
+        return queryset.annotate(
+            updated_days_ago=ExtractDay(ExpressionWrapper(
+                CurrentDate() - Subquery(updates), output_field=DateField())
+            ),
+            published_days_ago=ExtractDay(ExpressionWrapper(
+                CurrentDate() - F('first_published_at'), output_field=DateField())
+            ),
+        ).filter(
+            Q(updated_days_ago__lte=value) | Q(published_days_ago__lte=value)
+        )
+
+
 def get_serialized_filters():
     """
     Returns filters serialized to be passed as JSON to the front-end.
@@ -461,6 +505,7 @@ class IncidentFilter(object):
         'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
         'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges')),
         'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
+        'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last')
     }
 
     # IncidentPage fields that cannot be filtered on.
