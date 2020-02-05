@@ -12,7 +12,8 @@ export const CATEGORIES_FILTER = [
   {
     'filters': [
       {'name': 'search', 'title': 'Search terms', 'type': 'text'},
-      {'name': 'date', 'title': 'Took place between', 'type': 'date'}
+      {'name': 'date', 'title': 'Took place between', 'type': 'date'},
+      {'name': 'recently_updated', 'title': 'Updated in the last', 'type': 'int', 'units': 'days'}
     ],
     'id': -1,
     'title': 'General'
@@ -139,6 +140,9 @@ export const EMPTY_CATEGORIES_ENABLED = {
 }
 export const FILTER_VALUES = {
 	'charged_under_espionage_act': 'True'
+}
+export const INT_FILTER_VALUES = {
+  'recently_updated': 5
 }
 export const DATE_FILTER_VALUES = {
   'date_lower': Moment('09/25/2019', DATE_TYPES, true),

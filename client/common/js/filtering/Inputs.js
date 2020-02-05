@@ -123,6 +123,30 @@ export function TextInput({ handleFilterChange, filterValues, label, filter }) {
 }
 
 
+export function IntInput({ handleFilterChange, filterValues, label, filter, units }) {
+	const value = filterValues[filter] || ''
+	return (
+		<div className="filters__input-row">
+			<span className="filters__input-label">{label}</span>
+			<span>
+				<input
+					type="number"
+					onChange={handleFilterChange.bind(null, filter)}
+					value={value}
+					className={classNames(
+						'filter-text-input',
+						{ 'filter-text-input--has-input': value.length > 0 }
+					)}
+				/>
+				{units && (
+					<span className="filters__space">{units}</span>
+				)}
+			</span>
+		</div>
+	)
+}
+
+
 export function BoolInput(props) {
 	return (
 		<RadioPillInput
