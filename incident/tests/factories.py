@@ -89,6 +89,12 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         model = IncidentPage
         exclude = ('teaser_image_text', 'image_caption_text')
 
+    first_published_at = Faker(
+        'past_datetime',
+        start_date='-90d',
+        tzinfo=datetime.timezone.utc,
+    )
+
     image_caption_text = Faker('sentence')
     teaser_image_text = Faker('sentence')
     title = factory.Faker('sentence')
