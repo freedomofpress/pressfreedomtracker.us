@@ -11,9 +11,11 @@ def paginate(request, items, page_key=DEFAULT_PAGE_KEY, per_page=20, orphans=10)
     paginator = Paginator(items, per_page)
     try:
         page = paginator.page(page_number)
-        if endpage > page_number:
+        if endpage > page_number and page_number == 1:
             per_page = endpage * per_page
             page = Paginator(items, per_page).page(1)
+        elif endpage >= page_number and endpage != 1:
+            page = paginator.page(endpage + 1)
     except PageNotAnInteger:
         page = paginator.page(1)
     except EmptyPage:
