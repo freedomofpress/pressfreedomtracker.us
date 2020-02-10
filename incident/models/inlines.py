@@ -42,6 +42,11 @@ class IncidentPageUpdates(Orderable):
     def __str__(self):
         return '({}) {}'.format(self.date, self.title)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['page', '-date']),
+        ]
+
 
 class IncidentCategorization(Orderable):
     incident_page = ParentalKey('incident.IncidentPage', related_name='categories')
