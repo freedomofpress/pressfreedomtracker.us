@@ -4,11 +4,6 @@ import copy
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import (
-    OuterRef,
-    Subquery,
-    Max,
-    F,
-    ExpressionWrapper,
     BooleanField,
     CharField,
     DateField,
@@ -20,14 +15,14 @@ from django.db.models import (
     TextField,
     Value,
 )
-from django.db.models.functions import Trunc, TruncMonth, Cast, ExtractDay
+from django.db.models.functions import Trunc, TruncMonth, Cast
 from django.db.models.fields.related import ManyToOneRel
 from django.utils.text import capfirst
 from psycopg2.extras import DateRange
 from wagtail.core.fields import RichTextField, StreamField
 
 from incident.circuits import STATES_BY_CIRCUIT
-from incident.utils.db import MakeDateRange, CurrentDate
+from incident.utils.db import MakeDateRange
 
 
 class Filter(object):
@@ -435,24 +430,7 @@ class RecentlyUpdatedFilter(IntegerFilter):
         return serialized
 
     def filter(self, queryset, value):
-        # Prevent circular imports
-        from incident.models.inlines import IncidentPageUpdates
-
-        updates = IncidentPageUpdates.objects.filter(
-            page=OuterRef('pk')
-        ).order_by().values('page').annotate(
-            most_recent_update=Max('date')
-        ).values('most_recent_update')
-        return queryset.annotate(
-            updated_days_ago=ExtractDay(ExpressionWrapper(
-                CurrentDate() - Subquery(updates), output_field=DateField())
-            ),
-            published_days_ago=ExtractDay(ExpressionWrapper(
-                CurrentDate() - F('first_published_at'), output_field=DateField())
-            ),
-        ).filter(
-            Q(updated_days_ago__lte=value) | Q(published_days_ago__lte=value)
-        )
+        return queryset.with_most_recent_update().updated_within_days(value)
 
 
 def get_serialized_filters():
