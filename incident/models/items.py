@@ -43,6 +43,9 @@ class Journalist(ClusterableModel):
 
     title = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.title
+
 
 class Institution(ClusterableModel):
     @classmethod
@@ -50,6 +53,9 @@ class Institution(ClusterableModel):
         return kls.objects.create(title=value)
 
     title = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.title
 
 
 class TargetedJournalist(Orderable):
