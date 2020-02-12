@@ -10,7 +10,7 @@ from wagtail.admin.utils import (
 )
 
 from common.views import MergeView
-from incident.forms import TargetMergeForm, ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm
+from incident.forms import TargetMergeForm, ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm, GovernmentWorkerMergeForm
 from incident.models import IncidentPage, Journalist, TargetedJournalist, Institution
 
 
@@ -112,3 +112,7 @@ class InstitutionMergeView(FormView):
         models_to_merge.delete()
 
         return super().form_valid(form)
+
+
+class GovernmentWorkerMergeView(MergeView):
+    form_class = GovernmentWorkerMergeForm

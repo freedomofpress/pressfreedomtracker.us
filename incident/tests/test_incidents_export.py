@@ -116,6 +116,7 @@ class IncidentExportTestCase(TestCase):
             'venue',
             'target_nationality',
             'targets_whose_communications_were_obtained',
+            'workers_whose_communications_were_obtained',
             'politicians_or_public_figures_involved',
         }
         self.assertEqual(headers, expected_headers)

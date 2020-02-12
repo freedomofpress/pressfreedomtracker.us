@@ -58,6 +58,21 @@ class Institution(ClusterableModel):
         return self.title
 
 
+class GovernmentWorker(ClusterableModel):
+    @classmethod
+    def autocomplete_create(kls, value):
+        return kls.objects.create(title=value)
+
+    title = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Government employee or contractor'
+        verbose_name_plural = 'Government employees or contractors'
+
+
 class TargetedJournalist(Orderable):
     incident = ParentalKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='targeted_journalists')
 

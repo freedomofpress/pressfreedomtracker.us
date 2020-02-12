@@ -322,6 +322,12 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     # Leak Prosecution
+    workers_whose_communications_were_obtained = ParentalManyToManyField(
+        'incident.GovernmentWorker',
+        verbose_name='Targets whose communications were obtained in leak investigation',
+        related_name='incidents',
+        blank=True,
+    )
     targets_whose_communications_were_obtained = ParentalManyToManyField(
         'incident.Target',
         blank=True,
@@ -521,7 +527,7 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
             classname='collapsible collapsed',
             children=[
-                AutocompletePanel('targets_whose_communications_were_obtained', 'incident.Target', is_single=False),
+                AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker', is_single=False),
                 FieldPanel('charged_under_espionage_act'),
             ]
         ),
