@@ -1,15 +1,15 @@
 {% load wagtailcore_tags %}
 
-{% if page.targets_whose_communications_were_obtained.all %}
+{% if page.workers_whose_communications_were_obtained.all %}
 	<tr class="data-table__row">
 		<th class="data-table__label">
 			Targets whose Communications Were Obtained
 		</th>
 		<td class="data-table__value">
 			<ul class="data-table__list">
-				{% for target in page.targets_whose_communications_were_obtained.all %}
+				{% for target in page.workers_whose_communications_were_obtained.all %}
 					<li class="data-table__list-item">
-						<a href="{% pageurl page.get_parent %}?targets={{ target.pk }}">{{ target.title }}</a>
+						<a href="{% pageurl page.get_parent %}?workers_whose_communications_were_obtained={{ target.pk }}">{{ target.title }}</a>
 					</li>
 				{% endfor %}
 			</ul>
