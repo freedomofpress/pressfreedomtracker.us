@@ -44,5 +44,6 @@ class Migration(migrations.Migration):
         migrations.RunPython(
             copy_targets,
             reverse_code=migrations.RunPython.noop,
+            elidable=True,
         ),
     ]
