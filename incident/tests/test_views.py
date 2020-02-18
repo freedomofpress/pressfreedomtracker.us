@@ -6,9 +6,13 @@ from django.urls import reverse
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
 
-from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue
-from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin
-from incident.tests.factories import IncidentPageFactory, IncidentIndexPageFactory
+from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist
+from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin
+from incident.tests.factories import (
+    IncidentPageFactory,
+    IncidentIndexPageFactory,
+    TargetedJournalistFactory,
+)
 
 
 User = get_user_model()
@@ -51,6 +55,113 @@ class IncidentAdminSearch(TestCase):
         self.assertEqual(
             set(response.context['pages']),
             {self.incident_page1, self.incident_page3},
+        )
+
+
+class InstitutionMergeViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.inc1 = IncidentPageFactory(institution_targets=1)
+        cls.inc2 = IncidentPageFactory(institution_targets=2)
+        cls.inc3 = IncidentPageFactory(institution_targets=3)
+
+        cls.tj = TargetedJournalistFactory(institution=cls.inc1.targeted_institutions.first())
+
+        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.new_institution_title = 'Insitution XIII'
+
+        inst1 = self.inc1.targeted_institutions.first()
+        inst2, inst3 = self.inc2.targeted_institutions.all()
+        inst4 = self.inc3.targeted_institutions.first()
+
+        self.response = self.client.post(
+            InstitutionAdmin().url_helper.merge_url,
+            {
+                'models_to_merge': json.dumps([{
+                    'label': inst1.title,
+                    'pk': inst1.pk,
+                }, {
+                    'label': inst2.title,
+                    'pk': inst2.pk,
+                }, {
+                    'label': inst3.title,
+                    'pk': inst3.pk,
+                }, {
+                    'label': inst4.title,
+                    'pk': inst4.pk,
+                },
+                ]),
+                'title_for_merged_models': self.new_institution_title
+            }
+        )
+
+    def test_successful_request_redirects(self):
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_correct_redirect_url(self):
+        """Should redirect to the modelAdmin's index page"""
+        self.assertEqual(self.response['location'], InstitutionAdmin().url_helper.index_url)
+
+    def test_new_institution_should_be_created(self):
+        institution = Institution.objects.get(title=self.new_institution_title)
+
+        self.assertEqual(
+            set(institution.institutions_incidents.all()),
+            {self.inc1, self.inc2, self.inc3}
+        )
+
+    def test_targeted_journalists_at_institutions_should_be_updated(self):
+        self.assertEqual(
+            TargetedJournalist.objects.get(pk=self.tj.pk).institution,
+            Institution.objects.get(title=self.new_institution_title)
+        )
+
+
+class JournalistMergeViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.tj1 = TargetedJournalistFactory()
+        cls.tj2 = TargetedJournalistFactory()
+        cls.tj3 = TargetedJournalistFactory()
+        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+
+    def setUp(self):
+        self.client.force_login(self.user)
+        self.new_journalist_title = 'Person One'
+        self.response = self.client.post(
+            JournalistAdmin().url_helper.merge_url,
+            {
+                'models_to_merge': json.dumps([{
+                    'label': self.tj1.journalist.title,
+                    'pk': self.tj1.journalist.pk
+                }, {
+                    'label': self.tj2.journalist.title,
+                    'pk': self.tj2.journalist.pk
+                }, {
+                    'label': self.tj3.journalist.title,
+                    'pk': self.tj3.journalist.pk
+                },
+                ]),
+                'title_for_merged_models': self.new_journalist_title
+            }
+        )
+
+    def test_successful_request_redirects(self):
+        self.assertEqual(self.response.status_code, 302)
+
+    def test_correct_redirect_url(self):
+        """Should redirect to the modelAdmin's index page"""
+        self.assertEqual(self.response['location'], JournalistAdmin().url_helper.index_url)
+
+    def test_new_journalist_should_be_created(self):
+        journalist = Journalist.objects.get(title=self.new_journalist_title)
+
+        self.assertEqual(
+            set(journalist.targeted_incidents.all()),
+            {self.tj1, self.tj2, self.tj3}
         )
 
 

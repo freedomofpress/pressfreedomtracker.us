@@ -2,6 +2,7 @@ from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.views.decorators.vary import vary_on_headers
+from django.views.generic.edit import FormView
 from wagtail.admin.forms.search import SearchForm
 from wagtail.admin.utils import (
     user_has_any_page_permission,
@@ -9,8 +10,8 @@ from wagtail.admin.utils import (
 )
 
 from common.views import MergeView
-from incident.forms import TargetMergeForm, ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm
-from incident.models.incident_page import IncidentPage
+from incident.forms import TargetMergeForm, ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm, GovernmentWorkerMergeForm
+from incident.models import IncidentPage, Journalist, TargetedJournalist, Institution
 
 
 @vary_on_headers('X-Requested-With')
@@ -65,3 +66,53 @@ class VenueMergeView(MergeView):
 
 class PoliticianOrPublicMergeView(MergeView):
     form_class = PoliticianOrPublicMergeForm
+
+
+class JournalistMergeView(FormView):
+    form_class = JournalistMergeForm
+    template_name = 'modeladmin/merge_form.html'
+    model_admin = None
+
+    def get_success_url(self):
+        return self.model_admin.url_helper.index_url
+
+    def form_valid(self, form):
+        models_to_merge = form.cleaned_data['models_to_merge']
+        new_journalist_title = form.cleaned_data['title_for_merged_models']
+
+        journalist, _ = Journalist.objects.get_or_create(title=new_journalist_title)
+        TargetedJournalist.objects.filter(journalist__in=models_to_merge).update(journalist=journalist)
+
+        models_to_merge.delete()
+        return super().form_valid(form)
+
+
+class InstitutionMergeView(FormView):
+    form_class = InstitutionMergeForm
+    template_name = 'modeladmin/merge_form.html'
+    model_admin = None
+
+    def get_success_url(self):
+        return self.model_admin.url_helper.index_url
+
+    def form_valid(self, form):
+        models_to_merge = form.cleaned_data['models_to_merge']
+        new_inst_title = form.cleaned_data['title_for_merged_models']
+
+        new_institution, _ = Institution.objects.get_or_create(title=new_inst_title)
+
+        TargetedJournalist.objects.filter(
+            institution__in=models_to_merge
+        ).update(institution=new_institution)
+
+        for incident in IncidentPage.objects.filter(targeted_institutions__in=models_to_merge):
+            incident.targeted_institutions.add(new_institution)
+            incident.save()
+
+        models_to_merge.delete()
+
+        return super().form_valid(form)
+
+
+class GovernmentWorkerMergeView(MergeView):
+    form_class = GovernmentWorkerMergeForm

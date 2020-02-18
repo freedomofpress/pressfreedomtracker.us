@@ -108,12 +108,15 @@ class IncidentExportTestCase(TestCase):
             'legal_order_type',
             'status_of_prior_restraint',
             'targets',
+            'targeted_journalists',
+            'targeted_institutions',
             'tags',
             'current_charges',
             'dropped_charges',
             'venue',
             'target_nationality',
             'targets_whose_communications_were_obtained',
+            'workers_whose_communications_were_obtained',
             'politicians_or_public_figures_involved',
         }
         self.assertEqual(headers, expected_headers)

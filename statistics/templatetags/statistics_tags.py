@@ -28,6 +28,35 @@ def num_incidents(**kwargs):
 
 @statistics.number
 @register.simple_tag
+def num_institution_targets(**kwargs):
+    from incident.models.items import Institution
+    incident_filter = IncidentFilter(kwargs)
+    try:
+        incident_filter.clean(strict=True)
+    except ValidationError:
+        return ''
+    queryset = incident_filter.get_queryset()
+    return Institution.objects.filter(institutions_incidents__in=queryset).distinct().count()
+
+
+@statistics.number
+@register.simple_tag
+def num_journalist_targets(**kwargs):
+    from incident.models.items import Journalist, TargetedJournalist
+    incident_filter = IncidentFilter(kwargs)
+    try:
+        incident_filter.clean(strict=True)
+    except ValidationError:
+        return ''
+    queryset = incident_filter.get_queryset()
+    tj_queryset = TargetedJournalist.objects.filter(incident__in=queryset)
+    return Journalist.objects.filter(
+        targeted_incidents__in=tj_queryset,
+    ).distinct().count()
+
+
+@statistics.number
+@register.simple_tag
 def num_targets(**kwargs):
     """Return the count of incidents matching the given filter parameters"""
     from incident.models.items import Target
@@ -42,6 +71,8 @@ def num_targets(**kwargs):
 
 
 @tag_validator(register, 'num_targets')
+@tag_validator(register, 'num_institution_targets')
+@tag_validator(register, 'num_journalist_targets')
 @tag_validator(register, 'num_incidents')
 def validate_filter_kwargs(parser, token):
     """Return the count of incidents matching the given filter parameters"""

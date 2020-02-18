@@ -50,7 +50,7 @@ class FiltersList extends PureComponent {
 					</ul>
 				)
 			} else {
-				renderedValue = filterValues[filter.name].label
+				renderedValue = filterValues[filter.name].title
 			}
 		}
 

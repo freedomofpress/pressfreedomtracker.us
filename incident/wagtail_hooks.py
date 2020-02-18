@@ -10,10 +10,13 @@ from wagtail.core import hooks
 from common.wagtail_hooks import MergeAdmin
 from incident.models import (
     Target,
+    Journalist,
     Charge,
     Nationality,
     PoliticianOrPublic,
     Venue,
+    Institution,
+    GovernmentWorker,
 )
 from incident.views import (
     ChargeMergeView,
@@ -22,6 +25,9 @@ from incident.views import (
     PoliticianOrPublicMergeView,
     TargetMergeView,
     VenueMergeView,
+    JournalistMergeView,
+    InstitutionMergeView,
+    GovernmentWorkerMergeView,
 )
 
 
@@ -49,6 +55,39 @@ class TargetAdmin(MergeAdmin):
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title', 'kind')
+    search_fields = ('title',)
+
+
+class GovernmentWorkerAdmin(MergeAdmin):
+    model = GovernmentWorker
+    merge_view_class = GovernmentWorkerMergeView
+    menu_label = 'Government Workers'
+    menu_icon = 'edit'
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
+    list_display = ('title',)
+    search_fields = ('title',)
+
+
+class JournalistAdmin(MergeAdmin):
+    model = Journalist
+    merge_view_class = JournalistMergeView
+    menu_label = 'Journalist'
+    menu_icon = 'edit'
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
+    list_display = ('title',)
+    search_fields = ('title',)
+
+
+class InstitutionAdmin(MergeAdmin):
+    model = Institution
+    merge_view_class = InstitutionMergeView
+    menu_label = 'Institution'
+    menu_icon = 'edit'
+    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
+    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
+    list_display = ('title',)
     search_fields = ('title',)
 
 
@@ -100,7 +139,7 @@ class IncidentGroup(ModelAdminGroup):
     menu_label = 'Incident M2Ms'
     menu_icon = 'folder-open-inverse'  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
-    items = (TargetAdmin, ChargeAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin)
+    items = (TargetAdmin, ChargeAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin)
 
 
 modeladmin_register(IncidentGroup)

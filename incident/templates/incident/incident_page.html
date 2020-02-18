@@ -41,18 +41,41 @@
 				</td>
 			</tr>
 
-			{% if page.targets.all %}
+			{% if page.targeted_institutions.all %}
 				<tr class="data-table__row">
 					<th class="data-table__label">
-						Targets
+						Targeted Institutions
 					</th>
 					<td class="data-table__value">
-						{% with page.targets.all as journalists %}
+						{% with page.targeted_institutions.all as institutions %}
+							<ul class="data-table__list">
+								{% for institution in institutions %}
+									<li class="data-table__list-item data-table__list-item--inline">
+										<a href="{% pageurl page.get_parent %}?targeted_institutions={{ institution.pk }}">
+											{{ institution.title }}
+										</a>
+									</li>
+								{% endfor %}
+							</ul>
+						{% endwith %}
+					</td>
+				</tr>
+			{% endif %}
+
+			{% if page.targeted_journalists.all %}
+				<tr class="data-table__row">
+					<th class="data-table__label">
+						Targeted Journalists
+					</th>
+					<td class="data-table__value">
+						{% with page.targeted_journalists.all as journalists %}
 							<ul class="data-table__list">
 								{% for journalist in journalists %}
 									<li class="data-table__list-item data-table__list-item--inline">
-										<a href="{% pageurl page.get_parent %}?targets={{ journalist.id }}">
-										{{ journalist.title }}</a></li>
+										<a href="{% pageurl page.get_parent %}?targeted_journalists={{ journalist.journalist.pk }}">
+											{{ journalist.journalist.title }}
+										</a>
+									</li>
 								{% endfor %}
 							</ul>
 						{% endwith %}

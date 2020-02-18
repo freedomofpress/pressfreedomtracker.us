@@ -20,6 +20,9 @@ from incident.models import (
     Target,
     State,
     choices,
+    Journalist,
+    Institution,
+    TargetedJournalist,
 )
 from common.models import CustomImage
 from common.tests.factories import CategoryPageFactory
@@ -226,6 +229,30 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             self._prefetched_objects_cache = {'targets': targets}
 
     @factory.post_generation
+    def institution_targets(self, create, count):
+        if count is None:
+            count = 2
+        make_target = getattr(InstitutionFactory, 'create' if create else 'build')
+        targets = []
+        for i in range(count):
+            t = make_target()
+            self.targeted_institutions.add(t)
+            targets.append(t)
+        if not create:
+            self._prefetched_objects_cache = {'targeted_institutions': targets}
+
+    @factory.post_generation
+    def journalist_targets(self, create, count):
+        if count is None:
+            count = 0
+        make_targeted_journalist = getattr(TargetedJournalistFactory, 'create' if create else 'build')
+        targets = []
+        for i in range(count):
+            make_targeted_journalist(incident=self)
+        if not create:
+            self._prefetched_objects_cache = {'targeted_institutions': targets}
+
+    @factory.post_generation
     def targets_whose_communications_were_obtained(self, create, count):
         if count is None:
             return
@@ -397,3 +424,38 @@ class StateFactory(SnippetFactory):
         model = State
         django_get_or_create = ('name',)
     name = factory.Faker('state')
+
+
+class JournalistFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Journalist
+        django_get_or_create = ('title',)
+
+    title = factory.Faker('name')
+
+
+class InstitutionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Institution
+        django_get_or_create = ('title',)
+        exclude = ('city',)
+
+    title = factory.LazyAttributeSequence(
+        lambda o, n: 'The {city} {paper} {n}'.format(
+            city=o.city,
+            paper=random.choice(['Tribune', 'Herald', 'Sun', 'Daily News', 'Post']),
+            n=n,
+        )
+    )
+
+    # Lazy values
+    city = factory.Faker('city')
+
+
+class TargetedJournalistFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = TargetedJournalist
+
+    journalist = factory.SubFactory(JournalistFactory)
+    incident = factory.SubFactory(IncidentPageFactory)
+    institution = factory.SubFactory(InstitutionFactory)

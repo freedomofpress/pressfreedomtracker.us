@@ -23,7 +23,9 @@ from incident.tests.factories import (
     IncidentIndexPageFactory,
     InexactDateIncidentPageFactory,
     StateFactory,
-    TargetFactory,
+    InstitutionFactory,
+    JournalistFactory,
+    TargetedJournalistFactory
 )
 from incident.utils.incident_filter import IncidentFilter
 
@@ -750,10 +752,10 @@ class GetSummaryTest(TestCase):
         "Summary should correctly count incidents in January"
 
         # Two incidents in January 2018, two not
-        IncidentPageFactory(date=date(2018, 1, 15), targets=2)
-        IncidentPageFactory(date=date(2018, 1, 16), targets=2)
-        IncidentPageFactory(date=date(2017, 1, 15), targets=2)
-        IncidentPageFactory(date=date(2018, 2, 15), targets=2)
+        IncidentPageFactory(date=date(2018, 1, 15), journalist_targets=1, institution_targets=1)
+        IncidentPageFactory(date=date(2018, 1, 16), journalist_targets=1, institution_targets=1)
+        IncidentPageFactory(date=date(2017, 1, 15), journalist_targets=1, institution_targets=1)
+        IncidentPageFactory(date=date(2018, 2, 15), journalist_targets=1, institution_targets=1)
 
         with patch('incident.utils.incident_filter.date') as date_:
             date_.today = lambda: date(2018, 1, 20)
@@ -761,7 +763,8 @@ class GetSummaryTest(TestCase):
 
         self.assertCountEqual(summary, (
             ('Total Results', 4),
-            ('Journalists affected', 8),
+            ('Journalists affected', 4),
+            ('Institutions affected', 4),
             ('Results in 2018', 3),
             ('Results in January', 2)
         ))
@@ -770,10 +773,10 @@ class GetSummaryTest(TestCase):
         "Summary should correctly count incidents in December"
 
         # Two incidents in December 2018, two not
-        IncidentPageFactory(date=date(2018, 12, 15), targets=2)
-        IncidentPageFactory(date=date(2018, 12, 16), targets=2)
-        IncidentPageFactory(date=date(2019, 1, 1), targets=2)
-        IncidentPageFactory(date=date(2018, 2, 15), targets=2)
+        IncidentPageFactory(date=date(2018, 12, 15), journalist_targets=2)
+        IncidentPageFactory(date=date(2018, 12, 16), journalist_targets=2)
+        IncidentPageFactory(date=date(2019, 1, 1), journalist_targets=2)
+        IncidentPageFactory(date=date(2018, 2, 15), journalist_targets=2)
 
         with patch('incident.utils.incident_filter.date') as date_:
             date_.today = lambda: date(2018, 12, 20)
@@ -782,6 +785,7 @@ class GetSummaryTest(TestCase):
         self.assertCountEqual(summary, (
             ('Total Results', 4),
             ('Journalists affected', 8),
+            ('Institutions affected', 8),
             ('Results in 2018', 3),
             ('Results in December', 2)
         ))
@@ -791,13 +795,15 @@ class GetSummaryTest(TestCase):
             status_of_seized_equipment=self.custody,
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
+            journalist_targets=0,
+            institution_targets=0,
         )
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full,
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
+            journalist_targets=0,
+            institution_targets=0,
         )
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -808,6 +814,7 @@ class GetSummaryTest(TestCase):
         self.assertEqual(summary, (
             ('Total Results', 1),
             ('Journalists affected', 0),
+            ('Institutions affected', 0),
             ('Results in {}'.format(timezone.now().year), 1),
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
         ))
@@ -847,6 +854,7 @@ class GetSummaryTest(TestCase):
         self.assertEqual(summary, (
             ('Total Results', 2),
             ('Journalists affected', 0),
+            ('Institutions affected', 4),
             ('Results in {}'.format(timezone.now().year), 2),
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
             (self.category.title, 1),
@@ -863,13 +871,15 @@ class GetSummaryTest(TestCase):
             status_of_seized_equipment=self.custody,
             categories=[self.category],
             date=timezone.now().date(),
-            targets=3,
+            journalist_targets=3,
+            institution_targets=3,
         )
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full,
             categories=[self.category],
             date=timezone.now().date(),
-            targets=5,
+            journalist_targets=5,
+            institution_targets=5,
         )
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -880,6 +890,7 @@ class GetSummaryTest(TestCase):
         self.assertEqual(summary, (
             ('Total Results', 1),
             ('Journalists affected', 3),
+            ('Institutions affected', 3),
             ('Results in {}'.format(timezone.now().year), 1),
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
         ))
@@ -888,16 +899,18 @@ class GetSummaryTest(TestCase):
             'status_of_seized_equipment': [self.custody],
         })
 
-    def test_target_count__combined(self):
+    def test_target_journalist_count__combined(self):
         IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=3,
+            journalist_targets=3,
+            institution_targets=0,
         )
         IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=5,
+            journalist_targets=5,
+            institution_targets=0,
         )
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -907,6 +920,7 @@ class GetSummaryTest(TestCase):
         self.assertEqual(summary, (
             ('Total Results', 2),
             ('Journalists affected', 8),
+            ('Institutions affected', 0),
             ('Results in {}'.format(timezone.now().year), 2),
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
         ))
@@ -914,24 +928,25 @@ class GetSummaryTest(TestCase):
             'categories': [self.category.id],
         })
 
-    def test_target_count__deduped(self):
-        target1 = TargetFactory()
-        target2 = TargetFactory()
+    def test_journalist_count__deduped(self):
+        journalist1 = JournalistFactory()
+        journalist2 = JournalistFactory()
         incident1 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
             targets=0,
+            institution_targets=0,
         )
-        incident1.targets = [target1, target2]
-        incident1.save()
+        TargetedJournalistFactory(incident=incident1, journalist=journalist1)
+        TargetedJournalistFactory(incident=incident1, journalist=journalist2)
 
         incident2 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
             targets=0,
+            institution_targets=0,
         )
-        incident2.targets = [target1]
-        incident2.save()
+        TargetedJournalistFactory(incident=incident2, journalist=journalist1)
 
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -941,6 +956,44 @@ class GetSummaryTest(TestCase):
         self.assertEqual(summary, (
             ('Total Results', 2),
             ('Journalists affected', 2),
+            ('Institutions affected', 0),
+            ('Results in {}'.format(timezone.now().year), 2),
+            ('Results in {0:%B}'.format(timezone.now().date()), 2),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': [self.category.id],
+        })
+
+    def test_institution_count__deduped(self):
+        inst1 = InstitutionFactory()
+        inst2 = InstitutionFactory()
+        incident1 = IncidentPageFactory(
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=0,
+            institution_targets=0,
+        )
+        incident1.targeted_institutions.set([inst1, inst2])
+        incident1.save()
+
+        incident2 = IncidentPageFactory(
+            categories=[self.category],
+            date=timezone.now().date(),
+            targets=0,
+            institution_targets=0,
+        )
+        incident2.targeted_institutions.set([inst1])
+        incident2.save()
+
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+        ))
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 2),
+            ('Journalists affected', 0),
+            ('Institutions affected', 2),
             ('Results in {}'.format(timezone.now().year), 2),
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
         ))
@@ -953,12 +1006,12 @@ class GetSummaryTest(TestCase):
         IncidentPageFactory(
             title='asdf',
             date=timezone.now().date(),
-            targets=3,
+            journalist_targets=3,
         )
         IncidentPageFactory(
             title='zxcv',
             date=timezone.now().date(),
-            targets=5,
+            journalist_targets=5,
         )
         incident_filter = IncidentFilter({
             'search': 'asdf',
@@ -968,6 +1021,7 @@ class GetSummaryTest(TestCase):
         self.assertEqual(summary, (
             ('Total Results', 1),
             ('Journalists affected', 3),
+            ('Institutions affected', 2),
             ('Results in {}'.format(timezone.now().year), 1),
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
         ))
@@ -984,19 +1038,19 @@ class GetSummaryTest(TestCase):
             title='asdf 1',
             categories=[self.category],
             date=timezone.now().date(),
-            targets=3,
+            journalist_targets=3,
         )
         IncidentPageFactory(
             title='zxcv',
             categories=[self.category],
             date=timezone.now().date(),
-            targets=5,
+            journalist_targets=5,
         )
         IncidentPageFactory(
             title='asdf 2',
             categories=[category2],
             date=timezone.now().date(),
-            targets=7,
+            journalist_targets=7,
         )
         incident_filter = IncidentFilter({
             'categories': '{},{}'.format(self.category.id, category2.id),
@@ -1007,6 +1061,7 @@ class GetSummaryTest(TestCase):
         self.assertEqual(summary, (
             ('Total Results', 2),
             ('Journalists affected', 10),
+            ('Institutions affected', 4),
             ('Results in {}'.format(timezone.now().year), 2),
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
             (self.category.title, 1),
@@ -1163,3 +1218,37 @@ class RelationFilterTest(TestCase):
         incidents = incident_filter.get_queryset()
 
         self.assertEqual(set(incidents), {incident1})
+
+
+class RelationThroughTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        CategoryPage.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='targeted_journalists',
+            incident_filter_settings=settings,
+        )
+
+        cls.tj1 = TargetedJournalistFactory()
+        cls.tj2 = TargetedJournalistFactory()
+        cls.tj3 = TargetedJournalistFactory()
+
+    def test_filter_should_filter_by_single_journalist(self):
+        incidents = IncidentFilter({
+            'targeted_journalists': self.tj1.journalist.pk,
+        }).get_queryset()
+
+        self.assertEqual(incidents.count(), 1)
+        self.assertIn(self.tj1.incident, incidents)
+
+    def test_filter_should_filter_by_multiple_journalists(self):
+        incidents = IncidentFilter({
+            'targeted_journalists': '{},{}'.format(self.tj1.journalist.pk, self.tj3.journalist.pk),
+        }).get_queryset()
+
+        self.assertEqual(incidents.count(), 2)
+        self.assertIn(self.tj1.incident, incidents)
+        self.assertIn(self.tj3.incident, incidents)

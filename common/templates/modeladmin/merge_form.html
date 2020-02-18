@@ -2,52 +2,51 @@
 {% load render_bundle from webpack_loader %}
 
 {% block content %}
-    {% block header %}
-        <header class="nice-padding hasform">
-            <div class="row">
-                <div class="left">
-                    <div class="col">
-                        {% block h1 %}<h1 {% if view.header_icon %}class="icon icon-{{ view.header_icon }}"{% endif %}>{{ view.get_page_title }}<span></span></h1>{% endblock %}
-                    </div>
-                </div>
-            </div>
-        </header>
-    {% endblock %}
+	{% block header %}
+		<header class="nice-padding hasform">
+			<div class="row">
+				<div class="left">
+					<div class="col">
+						{% block h1 %}<h1 {% if view.header_icon %}class="icon icon-{{ view.header_icon }}"{% endif %}>{{ view.get_page_title }}<span></span></h1>{% endblock %}
+					</div>
+				</div>
+			</div>
+		</header>
+	{% endblock %}
 
-    {% block content_main %}
-      <section class="nice-padding">
-        <h2>Merge {{ form.merge_model_name }}</h2>
-        <form action="" method="post">{% csrf_token %}
-          <ul class="fields">
-            {% for field in form %}
-              <li{% if field.field.required %} class="required"{% endif %}>
-                <div class="field char_field">
-                  <label for="{{ field.html_id }}">
-                    {{ field.label }}:
-                  </label>
-                  <div class="field-content">
-                    <div class="input">
-                      {{ field }}
-                    </div>
-                  </div>
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-          <input type="submit" value="Merge" class="button" />
-        </form>
-      </section>
-    {% endblock content_main %}
+	{% block content_main %}
+		<section class="nice-padding">
+			<h2>Merge {{ form.merge_model_name }}</h2>
+			<form action="" method="post">{% csrf_token %}
+				<ul class="fields">
+					{% for field in form %}
+						<li{% if field.field.required %} class="required"{% endif %}>
+							<div class="field char_field">
+								<label for="{{ field.html_id }}">
+									{{ field.label }}:
+								</label>
+								<div class="field-content">
+									<div class="input">
+										{{ field }}
+									</div>
+								</div>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+				<input type="submit" value="Merge" class="button" />
+			</form>
+		</section>
+	{% endblock content_main %}
 
 {% endblock content %}
 
 {% block extra_js %}
-    {% render_bundle 'editor' 'js' %}
+	{% render_bundle 'editor' 'js' %}
+	<script type="text/javascript" src="/static/wagtailautocomplete/dist.js"></script>
 {% endblock %}
 
 {% block extra_css %}
-  {% render_bundle 'editor' 'css' %}
+	{% render_bundle 'editor' 'css' %}
+	<link rel="stylesheet" type="text/css" href="/static/wagtailautocomplete/dist.css" />
 {% endblock %}
-
-
-

@@ -134,6 +134,13 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='targets_incidents',
     )
 
+    targeted_institutions = ParentalManyToManyField(
+        'incident.Institution',
+        blank=True,
+        verbose_name='Targeted Institutions',
+        related_name='institutions_incidents',
+    )
+
     tags = ParentalManyToManyField(
         'common.CommonTag',
         blank=True,
@@ -315,6 +322,12 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     # Leak Prosecution
+    workers_whose_communications_were_obtained = ParentalManyToManyField(
+        'incident.GovernmentWorker',
+        verbose_name='Targets whose communications were obtained in leak investigation',
+        related_name='incidents',
+        blank=True,
+    )
     targets_whose_communications_were_obtained = ParentalManyToManyField(
         'incident.Target',
         blank=True,
@@ -420,14 +433,16 @@ class IncidentPage(MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Details',
             children=[
-                    FieldPanel('date'),
-                    FieldPanel('exact_date_unknown'),
-                    FieldPanel('affiliation'),
-                    FieldPanel('city'),
-                    AutocompletePanel('state', page_type='incident.State'),
-                    AutocompletePanel('targets', 'incident.Target', is_single=False),
-                    AutocompletePanel('tags', 'common.CommonTag', is_single=False),
-                    InlinePanel('categories', label='Incident categories', min_num=1),
+                FieldPanel('date'),
+                FieldPanel('exact_date_unknown'),
+                FieldPanel('affiliation'),
+                FieldPanel('city'),
+                InlinePanel('targeted_journalists', label='Targeted Journalists'),
+                AutocompletePanel('state', page_type='incident.State'),
+                AutocompletePanel('targets', 'incident.Target', is_single=False),
+                AutocompletePanel('targeted_institutions', 'incident.Institution', is_single=False),
+                AutocompletePanel('tags', 'common.CommonTag', is_single=False),
+                InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
         InlinePanel(
@@ -512,7 +527,7 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
             classname='collapsible collapsed',
             children=[
-                AutocompletePanel('targets_whose_communications_were_obtained', 'incident.Target', is_single=False),
+                AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker', is_single=False),
                 FieldPanel('charged_under_espionage_act'),
             ]
         ),
