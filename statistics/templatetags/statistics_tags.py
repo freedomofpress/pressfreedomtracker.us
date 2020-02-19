@@ -58,8 +58,15 @@ def num_journalist_targets(**kwargs):
 @statistics.number
 @register.simple_tag
 def num_targets(**kwargs):
-    """Return the count of incidents matching the given filter parameters"""
-    from incident.models.items import Target
+    """Return the total count of journalist and institution targets
+
+
+    Using the given filter parameters, sum the number of journalist
+    and institution targets for matching incidents.
+
+    """
+    from incident.models.items import Journalist, TargetedJournalist, Institution
+
     incident_filter = IncidentFilter(kwargs)
     try:
         incident_filter.clean(strict=True)
@@ -67,7 +74,14 @@ def num_targets(**kwargs):
         # Don't return an incorrect number if params are invalid.
         return ''
     queryset = incident_filter.get_queryset()
-    return Target.objects.filter(targets_incidents__in=queryset).distinct().count()
+
+    journalist_queryset = TargetedJournalist.objects.filter(incident__in=queryset)
+    journalist_count = Journalist.objects.filter(
+        targeted_incidents__in=journalist_queryset,
+    ).distinct().count()
+
+    institution_count = Institution.objects.filter(institutions_incidents__in=queryset).distinct().count()
+    return journalist_count + institution_count
 
 
 @tag_validator(register, 'num_targets')

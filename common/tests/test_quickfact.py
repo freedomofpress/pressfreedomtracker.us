@@ -9,10 +9,10 @@ class CleanTest(TestCase):
         category = CategoryPageFactory()
         fact = QuickFact(
             page=category,
-            body='<p>{% num_targets categories=10 date_lower=&quot;2019-01-01&quot; %} journalists ate broccoli in 2019</p>'
+            body='<p>{% num_journalist_targets categories=10 date_lower=&quot;2019-01-01&quot; %} journalists ate broccoli in 2019</p>'
         )
         fact.clean()
         self.assertEqual(
             fact.body,
-            '<p>{% num_targets categories=10 date_lower="2019-01-01" %} journalists ate broccoli in 2019</p>'
+            '<p>{% num_journalist_targets categories=10 date_lower="2019-01-01" %} journalists ate broccoli in 2019</p>'
         )

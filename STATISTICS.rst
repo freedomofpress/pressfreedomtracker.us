@@ -34,9 +34,25 @@ Count of all incidents matching the given filter parameters.
 
     {% num_incidents date_lower="2017-01-01" date_upper="2017-12-31" %}
 
+num_journalist_targets
+++++++++++++++++++++++
+Count of all unique journalist targets affected by incidents matching the given filter parameters.
+
+.. code:: jinja
+
+    {% num_journalist_targets date_lower="2017-01-01" date_upper="2017-12-31" %}
+
+num_institution_targets
+++++++++++++++++++++++
+Count of all unique institution targets affected by incidents matching the given filter parameters.
+
+.. code:: jinja
+
+    {% num_institution_targets date_lower="2017-01-01" date_upper="2017-12-31" %}
+
 num_targets
 +++++++++++
-Count of all unique targets affected by incidents matching the given filter parameters.
+Combined count of num_institution_targets and num_journalist_targets, with the same filter parameters applied to both.
 
 .. code:: jinja
 
@@ -181,8 +197,9 @@ You can get an object's id by opening it for editing in the admin and looking at
 - related_incidents
 - tags
 - target_nationality
-- targets
-- targets_whose_communications_were_obtained
+- targeted_journalists
+- targeted_institutions
+- workers_whose_communications_were_obtained
 - venue
 
 

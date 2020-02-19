@@ -11,7 +11,6 @@ from common.validators import TemplateValidator
 from common.templatetags.render_as_template import render_as_template
 from incident.tests.factories import (
     IncidentPageFactory,
-    TargetFactory,
     InstitutionFactory,
     TargetedJournalistFactory,
 )
@@ -122,12 +121,14 @@ class NumTargetsTest(TestCase):
         IncidentPageFactory(
             status_of_seized_equipment=self.custody,
             categories=[self.category],
-            targets=3,
+            institution_targets=3,
+            journalist_targets=0,
         )
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full,
             categories=[self.category],
-            targets=5,
+            institution_targets=5,
+            journalist_targets=0,
         )
         template_string = '{{% num_targets categories={} status_of_seized_equipment="{}" %}}'.format(
             str(self.category.id),
@@ -140,11 +141,13 @@ class NumTargetsTest(TestCase):
     def test_target_count__combined(self):
         IncidentPageFactory(
             categories=[self.category],
-            targets=3,
+            institution_targets=3,
+            journalist_targets=0,
         )
         IncidentPageFactory(
             categories=[self.category],
-            targets=5,
+            institution_targets=5,
+            journalist_targets=0,
         )
         template_string = '{{% num_targets categories={} %}}'.format(
             str(self.category.id),
@@ -153,29 +156,25 @@ class NumTargetsTest(TestCase):
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, '8')
 
-    def test_target_count__deduped(self):
-        target1 = TargetFactory()
-        target2 = TargetFactory()
-        incident1 = IncidentPageFactory(
+    def test_target_count__combined_kinds(self):
+        IncidentPageFactory(
+            title='x1',
             categories=[self.category],
-            targets=0,
+            institution_targets=2,
+            journalist_targets=0,
         )
-        incident1.targets = [target1, target2]
-        incident1.save()
-
-        incident2 = IncidentPageFactory(
+        IncidentPageFactory(
+            title='x2',
             categories=[self.category],
-            targets=0,
+            institution_targets=0,
+            journalist_targets=2,
         )
-        incident2.targets = [target1]
-        incident2.save()
-
         template_string = '{{% num_targets categories={} %}}'.format(
             str(self.category.id),
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '2')
+        self.assertEqual(rendered, '4')
 
 
 class TestIncidentsInMultiValue(TestCase):
@@ -191,11 +190,11 @@ class TestIncidentsInMultiValue(TestCase):
 
     def test_invalid_args_validated(self):
         # Matched incident page
-        template_string = '{{% num_targets categories={} subpoena_statuses={} %}}'.format(
+        template_string = '{{% num_journalist_targets categories={} subpoena_statuses={} %}}'.format(
             str(self.category.id),
             self.pending,
         )
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError, 'wrapped in quotation marks'):
             self.validator(template_string)
 
     def test_target_count__filtered(self):
@@ -203,14 +202,14 @@ class TestIncidentsInMultiValue(TestCase):
         IncidentPageFactory(
             subpoena_statuses=[self.pending],
             categories=[self.category],
-            targets=3,
+            institution_targets=3,
         )
         IncidentPageFactory(
             subpoena_statuses=[self.dropped],
             categories=[self.category],
-            targets=5,
+            institution_targets=5,
         )
-        template_string = '{{% num_targets categories={} subpoena_statuses="{}" %}}'.format(
+        template_string = '{{% num_institution_targets categories={} subpoena_statuses="{}" %}}'.format(
             str(self.category.id),
             self.pending,
         )
@@ -222,14 +221,14 @@ class TestIncidentsInMultiValue(TestCase):
         IncidentPageFactory(
             subpoena_statuses=[self.pending],
             categories=[self.category],
-            targets=3,
+            institution_targets=3,
         )
         IncidentPageFactory(
             subpoena_statuses=[self.dropped],
             categories=[self.category],
-            targets=5,
+            institution_targets=5,
         )
-        template_string = '{{% num_targets categories={} subpoena_statuses="{},{}" %}}'.format(
+        template_string = '{{% num_institution_targets categories={} subpoena_statuses="{},{}" %}}'.format(
             str(self.category.id),
             self.pending,
             self.dropped,
@@ -254,7 +253,7 @@ class NumInstitutionTargetsTest(TestCase):
             str(self.category.pk),
             self.custody,
         )
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError, 'wrapped in quotation marks'):
             self.validator(template_string)
 
     def test_target_count__filtered(self):
@@ -333,7 +332,7 @@ class NumJournalistTargetsTest(TestCase):
             str(self.category.pk),
             self.custody,
         )
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError, 'wrapped in quotation marks'):
             self.validator(template_string)
 
     def test_target_count__filtered(self):

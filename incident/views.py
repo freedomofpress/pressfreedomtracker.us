@@ -10,7 +10,7 @@ from wagtail.admin.utils import (
 )
 
 from common.views import MergeView
-from incident.forms import TargetMergeForm, ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm, GovernmentWorkerMergeForm
+from incident.forms import ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm, GovernmentWorkerMergeForm
 from incident.models import IncidentPage, Journalist, TargetedJournalist, Institution
 
 
@@ -46,10 +46,6 @@ def incident_admin_search_view(request):
             'query_string': q,
             'pagination_query_params': ('q=%s' % q) if q else ''
         })
-
-
-class TargetMergeView(MergeView):
-    form_class = TargetMergeForm
 
 
 class ChargeMergeView(MergeView):

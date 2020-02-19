@@ -834,19 +834,16 @@ class GetSummaryTest(TestCase):
             lawsuit_name='Lawsuit One',
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
         )
         IncidentPageFactory(
             lawsuit_name='Lawsuit Two',
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
         )
         IncidentPageFactory(
             lawsuit_name='Lawsuit One',
             categories=[category2],
             date=timezone.now().date(),
-            targets=0,
         )
         incident_filter = IncidentFilter(dict(
             categories='{},{}'.format(self.category.id, category2.id),
@@ -937,7 +934,6 @@ class GetSummaryTest(TestCase):
         incident1 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         TargetedJournalistFactory(incident=incident1, journalist=journalist1)
@@ -946,7 +942,6 @@ class GetSummaryTest(TestCase):
         incident2 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         TargetedJournalistFactory(incident=incident2, journalist=journalist1)
@@ -973,7 +968,6 @@ class GetSummaryTest(TestCase):
         incident1 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         incident1.targeted_institutions.set([inst1, inst2])
@@ -982,7 +976,6 @@ class GetSummaryTest(TestCase):
         incident2 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         incident2.targeted_institutions.set([inst1])

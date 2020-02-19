@@ -107,7 +107,6 @@ class IncidentExportTestCase(TestCase):
             'third_party_business',
             'legal_order_type',
             'status_of_prior_restraint',
-            'targets',
             'targeted_journalists',
             'targeted_institutions',
             'tags',
@@ -115,7 +114,6 @@ class IncidentExportTestCase(TestCase):
             'dropped_charges',
             'venue',
             'target_nationality',
-            'targets_whose_communications_were_obtained',
             'workers_whose_communications_were_obtained',
             'politicians_or_public_figures_involved',
         }
