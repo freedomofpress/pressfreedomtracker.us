@@ -7,24 +7,18 @@
 	</div>
 
 	<div class="partner-logos">
-		<a class="partner-logos__link partner-logos__link--logo" href="https://freedom.press/">
-			<img class="partner-logos__logo" src="{% static 'logos/fpf.png' %}" />
-		</a>
-		<a class="partner-logos__link partner-logos__link--logo" href="https://cpj.org/">
-			<img class="partner-logos__logo" src="{% static 'logos/cpj.png' %}" />
-		</a>
-		<a class="partner-logos__link partner-logos__link--logo" href="https://rcfp.org/">
-			<img class="partner-logos__logo" src="{% static 'logos/rcfp.png' %}" />
-		</a>
-		<a class="partner-logos__link partner-logos__link--logo" href="https://knightcolumbia.org/">
-			<img class="partner-logos__logo" src="{% static 'logos/kfai.png' %}" />
-		</a>
-		<a class="partner-logos__link partner-logos__link--logo" href="https://rsf.org/en">
-			<img class="partner-logos__logo" src="{% static 'logos/rsf.png' %}" />
-		</a>
-		<a class="partner-logos__link partner-logos__link--logo" href="https://www.indexoncensorship.org/">
-			<img class="partner-logos__logo" src="{% static 'logos/index.png' %}" />
-		</a>
+		{% for logo in footer.footer_logos.all %}
+			{% image logo.logo_image width-1440 as x1 %}
+			{% image logo.logo_image width-2880 as x2 %}
+			<a class="partner-logos__link partner-logos__link--logo" href="{{ logo.logo_url }}">
+				<img
+					class="partner-logos__logo"
+					alt="{{ x1.alt }}"
+					src="{{ x1.url }}"
+					srcset="{{ x2.url }} 2x"
+				/>
+			</a>
+		{% endfor %}
 		{% if footer.partner_logo_text %}
 			<a class="partner-logos__link partner-logos__link--button" href="{% if footer.partner_logo_link %}{% pageurl footer.partner_logo_link %}{% endif %}">
 				{{ footer.partner_logo_text }}
