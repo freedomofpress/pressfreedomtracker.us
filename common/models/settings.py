@@ -9,6 +9,7 @@ from wagtail.core.models import Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
+from common.validators import validate_image_format
 from incident.utils.incident_filter import IncidentFilter
 
 
@@ -77,7 +78,8 @@ class FooterLogos(Orderable):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='+',
-        help_text='A white logo with a transparent background, ideally PNG format'
+        help_text='A white logo with a transparent background, ideally PNG format',
+        validators=[validate_image_format]
     )
 
     panels = [

@@ -8,8 +8,8 @@
 
 	<div class="partner-logos">
 		{% for logo in footer.footer_logos.all %}
-			{% image logo.logo_image width-1440 as x1 %}
-			{% image logo.logo_image width-2880 as x2 %}
+			{% image logo.logo_image width-375 as x1 %}
+			{% image logo.logo_image width-750 as x2 %}
 			<a class="partner-logos__link partner-logos__link--logo" href="{{ logo.logo_url }}">
 				<img
 					class="partner-logos__logo"
