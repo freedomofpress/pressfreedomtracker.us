@@ -13,6 +13,9 @@ class Journalist(ClusterableModel):
 
     title = models.CharField(max_length=255)
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self):
         return self.title
 
@@ -23,6 +26,9 @@ class Institution(ClusterableModel):
         return kls.objects.create(title=value)
 
     title = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -39,6 +45,7 @@ class GovernmentWorker(ClusterableModel):
         return self.title
 
     class Meta:
+        ordering = ['title']
         verbose_name = 'Government employee or contractor'
         verbose_name_plural = 'Government employees or contractors'
 
