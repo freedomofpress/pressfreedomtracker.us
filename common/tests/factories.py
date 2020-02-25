@@ -14,6 +14,7 @@ from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import (
     CategoryPage,
     CategoryIncidentFilter,
+    CommonTag,
     CustomImage,
     SimplePage,
     PersonPage,
@@ -224,3 +225,11 @@ class StyledTextBlockFactory(wagtail_factories.StructBlockFactory):
     text_align = ChoiceBlockFactory
     font_size = ChoiceBlockFactory
     font_family = ChoiceBlockFactory
+
+
+class CommonTagFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = CommonTag
+        django_get_or_create = ('title',)
+
+    title = factory.Faker('word')
