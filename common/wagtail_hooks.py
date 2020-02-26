@@ -77,8 +77,17 @@ class CommonTagAdmin(MergeAdmin):
     menu_order = 500  # will put in 4th place (000 being 1st, 100 2nd)
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
+    list_display = ('title', 'incident_count')
     search_fields = ('title',)
+    inspect_view_enabled = True
+    inspect_view_fields = ('title',)
+
+    def incident_count(self, tag):
+        return tag.incident_count
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.with_incident_count()
 
 
 modeladmin_register(CommonTagAdmin)
