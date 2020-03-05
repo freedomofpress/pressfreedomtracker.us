@@ -80,6 +80,15 @@ class TargetedJournalist(Orderable):
 
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True, blank=True)
 
+    @property
+    def summary(self):
+        journalist = self.journalist.title
+        if self.institution:
+            return '{journalist} ({institution})'.format(
+                journalist=journalist, institution=self.institution.title,
+            )
+        return journalist
+
     panels = [
         AutocompletePanel('journalist', 'incident.Journalist'),
         AutocompletePanel('institution', 'incident.Institution'),
