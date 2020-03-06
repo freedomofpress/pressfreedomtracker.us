@@ -83,19 +83,6 @@
 				</tr>
 			{% endif %}
 
-			{% if page.affiliation %}
-				<tr class="data-table__row">
-					<th class="data-table__label">
-						Affiliation
-					</th>
-					<td class="data-table__value">
-						<a href="{% pageurl page.get_parent %}?affiliation={{ page.affiliation }}">
-							{{ page.affiliation }}
-						</a>
-					</td>
-				</tr>
-			{% endif %}
-
 			{% if page.city or page.state %}
 				<tr class="data-table__row">
 					<th class="data-table__label">
