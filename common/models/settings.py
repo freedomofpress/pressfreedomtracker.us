@@ -9,6 +9,7 @@ from wagtail.core.models import Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
+from common.validators import validate_image_format
 from incident.utils.incident_filter import IncidentFilter
 
 
@@ -33,7 +34,7 @@ class SearchSettings(BaseSetting):
 
 
 @register_setting
-class FooterSettings(BaseSetting):
+class FooterSettings(BaseSetting, ClusterableModel):
     body = RichTextField(blank=True, null=True)
     menu = models.ForeignKey(
         'menus.Menu',
@@ -55,11 +56,36 @@ class FooterSettings(BaseSetting):
         FieldPanel('body'),
         SnippetChooserPanel('menu'),
         FieldPanel('partner_logo_text'),
-        PageChooserPanel('partner_logo_link')
+        PageChooserPanel('partner_logo_link'),
+        InlinePanel(
+            'footer_logos',
+            label="Footer Logos",
+            min_num=3,
+            max_num=6,
+        ),
     ]
 
     class Meta:
         verbose_name = 'Site Footer'
+
+
+class FooterLogos(Orderable):
+    footer = ParentalKey(FooterSettings, related_name='footer_logos')
+    logo_url = models.URLField(max_length=255, help_text='A URL or path for this logo to link to.')
+    logo_image = models.ForeignKey(
+        'common.CustomImage',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name='+',
+        help_text='A white logo with a transparent background, ideally PNG format',
+        validators=[validate_image_format]
+    )
+
+    panels = [
+        ImageChooserPanel('logo_image'),
+        FieldPanel('logo_url'),
+    ]
 
 
 @register_setting
