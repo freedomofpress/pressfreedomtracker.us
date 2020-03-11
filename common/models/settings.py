@@ -71,12 +71,12 @@ class FooterSettings(BaseSetting, ClusterableModel):
 
 class FooterLogos(Orderable):
     footer = ParentalKey(FooterSettings, related_name='footer_logos')
-    logo_url = models.CharField(blank=True, max_length=255, help_text='A URL or path for this logo to link to.')
+    logo_url = models.URLField(max_length=255, help_text='A URL or path for this logo to link to.')
     logo_image = models.ForeignKey(
         'common.CustomImage',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_name='+',
         help_text='A white logo with a transparent background, ideally PNG format',
         validators=[validate_image_format]
