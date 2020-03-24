@@ -35,8 +35,8 @@ ci-tests: ## Runs testinfra against a pre-running CI container (useful for debug
 dev-tests: ## Run django tests against developer environment
 	docker-compose exec django /bin/bash -c \
 		"coverage run --source='.' ./manage.py test --noinput --keepdb; \
-		coverage html --skip-empty --omit='*/migrations/*.py'; \
-		coverage report -m --fail-under=90 --skip-empty --omit='*/migrations/*.py'"
+		coverage html --skip-empty --omit='*/migrations/*.py,*/tests/*.py'; \
+		coverage report -m --fail-under=85 --skip-empty --omit='*/migrations/*.py,*/tests/*.py'"
 
 .PHONY: dev-jest-tests
 dev-jest-tests: ## Run django tests against developer environment
