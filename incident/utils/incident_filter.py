@@ -10,6 +10,7 @@ from django.db.models import (
     DurationField,
     ForeignKey,
     ManyToManyField,
+    PositiveSmallIntegerField,
     Q,
     TextField,
     Value,
@@ -70,6 +71,10 @@ class Filter(object):
 
 class BooleanFilter(Filter):
     serialized_type = 'bool'
+
+
+class IntegerFilter(Filter):
+    serialized_type = 'int'
 
 
 class RelationFilter(Filter):
@@ -411,6 +416,23 @@ class PendingCasesFilter(BooleanFilter):
         )
 
 
+class RecentlyUpdatedFilter(IntegerFilter):
+    def __init__(self, name, verbose_name=None):
+        super(RecentlyUpdatedFilter, self).__init__(
+            name=name,
+            model_field=PositiveSmallIntegerField(),
+            verbose_name=verbose_name,
+        )
+
+    def serialize(self):
+        serialized = super(RecentlyUpdatedFilter, self).serialize()
+        serialized['units'] = 'days'
+        return serialized
+
+    def filter(self, queryset, value):
+        return queryset.with_most_recent_update().updated_within_days(value)
+
+
 def get_serialized_filters():
     """
     Returns filters serialized to be passed as JSON to the front-end.
@@ -461,6 +483,7 @@ class IncidentFilter(object):
         'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
         'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges')),
         'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
+        'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last')
     }
 
     # IncidentPage fields that cannot be filtered on.

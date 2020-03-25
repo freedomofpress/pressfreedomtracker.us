@@ -71,6 +71,10 @@ class IncidentUpdateFactory(factory.DjangoModelFactory):
     sort_order = Sequence(int)
     title = Faker('sentence')
     date = Faker('past_datetime', start_date='-15d', tzinfo=datetime.timezone.utc)
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
+
+
+class MultimediaIncidentUpdateFactory(IncidentUpdateFactory):
     body = Faker('streamfield', fields=['rich_text_paragraph', 'bare_image', 'raw_html', 'blockquote'])
 
 
@@ -88,6 +92,12 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
         exclude = ('teaser_image_text', 'image_caption_text')
+
+    first_published_at = Faker(
+        'past_datetime',
+        start_date='-90d',
+        tzinfo=datetime.timezone.utc,
+    )
 
     image_caption_text = Faker('sentence')
     teaser_image_text = Faker('sentence')

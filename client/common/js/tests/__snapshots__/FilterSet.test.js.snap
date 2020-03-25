@@ -4,5 +4,6 @@ exports[`FilterSet should render without error in "debug" mode 1`] = `
 "<div className=\\"filters__set\\">
   <TextInput handleFilterChange={[Function: mockConstructor]} filterValues={{...}} label=\\"Search terms\\" filter=\\"search\\" />
   <DateRangeInput handleFilterChange={[Function: mockConstructor]} filterValues={{...}} label=\\"Took place between\\" filter=\\"date\\" />
+  <IntInput handleFilterChange={[Function: mockConstructor]} filterValues={{...}} label=\\"Updated in the last\\" filter=\\"recently_updated\\" units=\\"days\\" />
 </div>"
 `;

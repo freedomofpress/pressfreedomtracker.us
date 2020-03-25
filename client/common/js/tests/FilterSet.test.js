@@ -42,7 +42,7 @@ describe('FilterSet', () => {
             />
         );
         const filterSets = component.find('.filters__set');
-        expect(filterSets.find('.filter-text-input').length).toEqual(1);
+        expect(filterSets.find('.filter-text-input').length).toEqual(2);
         expect(filterSets.find('.filters__date-picker').length).toEqual(2);
     });
 });

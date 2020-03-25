@@ -24,6 +24,10 @@ class FiltersList extends PureComponent {
 				title = `${title} since`
 				renderedValue = moment(lowerDate).format(HUMAN_DATE_FORMAT)
 			}
+		} else if (filter.type === 'int') {
+			if (filter.units) {
+				renderedValue += ` ${filter.units}`
+			}
 		} else if (filter.type === 'bool') {
 			if (filterValues[filter.name] === 'True') {
 				renderedValue = 'Yes'

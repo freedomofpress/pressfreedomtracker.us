@@ -4,6 +4,7 @@ import {
 	BoolInput,
 	ChoiceInput,
 	DateRangeInput,
+	IntInput,
 	TextInput,
 	RadioPillInput,
 } from '~/filtering/Inputs'
@@ -59,6 +60,17 @@ function FilterSet({ filters, handleFilterChange, filterValues }) {
 					label={`${filter.title}`}
 					filter={filter.name}
 					key={index}
+				/>
+			)
+		} else if (filter.type === 'int') {
+			return (
+				<IntInput
+					handleFilterChange={handleFilterChange}
+					filterValues={filterValues}
+					label={`${filter.title}`}
+					filter={filter.name}
+					key={index}
+					units={filter.units}
 				/>
 			)
 		} else if (filter.type === 'autocomplete') {

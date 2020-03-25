@@ -2,6 +2,15 @@ import datetime
 
 from django import forms
 from django.db import models
+from django.db.models import (
+    OuterRef,
+    F,
+    Q,
+    Max,
+    ExpressionWrapper,
+    Subquery,
+)
+from django.db.models.functions import ExtractDay
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
@@ -15,7 +24,7 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page, Orderable
+from wagtail.core.models import Page, Orderable, PageManager, PageQuerySet
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -28,7 +37,9 @@ from common.blocks import (
 )
 from common.models import MetadataPageMixin
 from incident.models import choices
+from incident.models.inlines import IncidentPageUpdates
 from incident.circuits import CIRCUITS_BY_STATE
+from incident.utils.db import CurrentDate
 from statistics.blocks import StatisticsBlock
 
 
@@ -57,6 +68,33 @@ class ChoiceArrayField(ArrayField):
         }
         defaults.update(kwargs)
         return super(ArrayField, self).formfield(**defaults)
+
+
+class IncidentQuerySet(PageQuerySet):
+    """A QuerySet for incident pages that incorporates update data"""
+
+    def with_most_recent_update(self):
+        updates = IncidentPageUpdates.objects.filter(
+            page=OuterRef('pk')
+        ).order_by().values('page').annotate(
+            most_recent_update=Max('date')
+        ).values('most_recent_update')
+        return self.annotate(
+            updated_days_ago=ExtractDay(ExpressionWrapper(
+                CurrentDate() - Subquery(updates), output_field=models.DateField())
+            ),
+            published_days_ago=ExtractDay(ExpressionWrapper(
+                CurrentDate() - F('first_published_at'), output_field=models.DateField())
+            ),
+        )
+
+    def updated_within_days(self, days):
+        return self.with_most_recent_update().filter(
+            Q(updated_days_ago__lte=days) | Q(published_days_ago__lte=days)
+        )
+
+
+IncidentPageManager = PageManager.from_queryset(IncidentQuerySet)
 
 
 class IncidentPage(MetadataPageMixin, Page):
@@ -409,6 +447,8 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='politicians_or_public_incidents',
         verbose_name='Politicians or public officials involved',
     )
+
+    objects = IncidentPageManager()
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
