@@ -26,7 +26,7 @@ def copy_affiliation(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0043_auto_20200306_1646'),
+        ('incident', '0044_auto_20200306_1646'),
     ]
 
     operations = [

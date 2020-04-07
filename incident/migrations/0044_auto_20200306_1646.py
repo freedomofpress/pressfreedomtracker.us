@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0042_copy_uncategorized_targets_to_gov_workers'),
+        ('incident', '0043_auto_20200226_1558'),
     ]
 
     operations = [

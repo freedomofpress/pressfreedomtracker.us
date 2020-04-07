@@ -7,7 +7,7 @@ import modelcluster.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0044_copy_affiliation_to_institutions'),
+        ('incident', '0045_copy_affiliation_to_institutions'),
     ]
 
     operations = [
