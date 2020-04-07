@@ -427,7 +427,19 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         )
 
 
+class TagQuerySet(models.QuerySet):
+    def with_incident_count(self):
+        return self.annotate(
+            incident_count=models.Count('tagged_items')
+        )
+
+    def unused(self):
+        return self.with_incident_count().filter(incident_count__lte=0)
+
+
 class CommonTag(ClusterableModel):
+    objects = TagQuerySet.as_manager()
+
     @classmethod
     def autocomplete_create(kls, value):
         return kls.objects.create(title=value)

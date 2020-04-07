@@ -1,0 +1,23 @@
+{% extends "modeladmin/inspect.html" %}
+
+{% block content_main %}
+	{{ block.super }}
+	<div class="nice-padding">
+		<h2>Tagged Incidents</h2>
+		<ul>
+		{% for incident in instance.tagged_items.all %}
+			<li>
+				<h3><a href="{% url 'wagtailadmin_pages:edit' incident.pk %}">{{ incident.title }}</a></h3>
+				<b>Other tags</b>:
+				{% for tag in incident.tags.all %}
+					{% if tag.pk != instance.pk %}
+						<a href="{% url 'common_commontag_modeladmin_inspect' instance_pk=tag.pk %}">{{ tag.title }}</a>{% if not forloop.last %}, {% endif %}
+					{% endif %}
+				{% endfor %}
+			</li>
+		{% empty %}
+			<p>No incidents with this tag</p>
+		{% endfor %}
+		</ul>
+	</div>
+{% endblock %}
