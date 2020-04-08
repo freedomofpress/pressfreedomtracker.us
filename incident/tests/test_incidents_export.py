@@ -69,7 +69,6 @@ class IncidentExportTestCase(TestCase):
             'equipment_broken',
             'date',
             'exact_date_unknown',
-            'affiliation',
             'city',
             'state',
             'body',

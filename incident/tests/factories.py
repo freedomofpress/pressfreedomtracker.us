@@ -105,7 +105,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
-    affiliation = factory.Faker('word')
     teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
     teaser_image = None
     image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))

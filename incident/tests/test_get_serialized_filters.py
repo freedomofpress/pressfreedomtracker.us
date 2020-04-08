@@ -38,7 +38,7 @@ class GetSerializedFiltersTest(TestCase):
         category = CategoryPageFactory(incident_filters=['arrest_status'])
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=self.settings,
-            incident_filter='affiliation',
+            incident_filter='city',
         )
 
         serialized = get_serialized_filters()
@@ -53,9 +53,9 @@ class GetSerializedFiltersTest(TestCase):
                         'name': 'search',
                     },
                     {
-                        'title': 'Affiliation',
+                        'title': 'City',
                         'type': 'text',
-                        'name': 'affiliation',
+                        'name': 'city',
                     },
                 ]
             },

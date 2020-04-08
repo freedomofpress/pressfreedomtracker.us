@@ -105,12 +105,6 @@ class IncidentPage(MetadataPageMixin, Page):
         help_text='If checked, only the month and year of the incident will be displayed. The date above will be used in filtering by date.'
     )
 
-    affiliation = models.CharField(
-        max_length=255,
-        default='Independent',
-        blank=True,
-        null=True,
-    )
     city = models.CharField(
         max_length=255,
         blank=True,
@@ -462,7 +456,6 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('date'),
                 FieldPanel('exact_date_unknown'),
-                FieldPanel('affiliation'),
                 FieldPanel('city'),
                 InlinePanel('targeted_journalists', label='Targeted Journalists'),
                 AutocompletePanel('state', page_type='incident.State'),

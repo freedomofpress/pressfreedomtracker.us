@@ -79,11 +79,10 @@ Text filters check whether an incident has an exact value for a given field.
 
 .. code:: jinja
 
-    {% num_incidents affiliation="Independent" %}
+    {% num_incidents city="Albuquerque" %}
 
 Available filters:
 
-- affiliation
 - border_point
 - city
 - lawsuit_name

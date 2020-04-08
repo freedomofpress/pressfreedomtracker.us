@@ -78,15 +78,15 @@ class TestFiltering(TestCase):
 
     def test_should_filter_by_char_field(self):
         """should filter via a field that is a char field"""
-        affiliation = 'cauliflower'
+        city = 'albuquerque'
         target = IncidentPageFactory(
-            affiliation=affiliation,
+            city=city,
         )
         IncidentPageFactory(
-            affiliation='other'
+            city='other'
         )
         incidents = IncidentFilter(dict(
-            affiliation=affiliation
+            city=city
         )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
@@ -575,7 +575,7 @@ class ChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         IncidentPageFactory(
-            affiliation='other',
+            city='other',
             categories=[self.category],
         )
         incident_filter = IncidentFilter(dict(
@@ -665,7 +665,7 @@ class MultiChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         IncidentPageFactory(
-            affiliation='other',
+            city='other',
             categories=[self.category],
         )
         incident_filter = IncidentFilter(dict(
