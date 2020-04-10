@@ -134,6 +134,7 @@ export function IntInput({ handleFilterChange, filterValues, label, filter, unit
 					onChange={handleFilterChange.bind(null, filter)}
 					value={value}
 					className={classNames(
+						'filter-int-input',
 						'filter-text-input',
 						{ 'filter-text-input--has-input': value.length > 0 }
 					)}
