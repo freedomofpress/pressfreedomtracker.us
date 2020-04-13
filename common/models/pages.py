@@ -280,8 +280,13 @@ class CategoryPage(MetadataPageMixin, Page):
         incident_filter = IncidentFilter(data)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
 
-        search_page = SearchSettings.for_site(request.site).search_page
-        context['export_path'] = getattr(search_page, 'url', None)
+        search_settings = SearchSettings.for_site(request.site)
+        if search_settings.data_download_page:
+            context['export_path'] = search_settings.data_download_page.get_url()
+        elif search_settings.search_page:
+            context['export_path'] = search_settings.search_page.get_url() + search_settings.search_page.reverse_subpage('export_view')
+        else:
+            context['export_path'] = None
 
         incident_qs = incident_filter.get_queryset()
 

@@ -34,7 +34,7 @@ describe('FiltersFooter', () => {
 		const component = mount(
 			<FiltersFooter
 				categories={categories}
-				exportPath={'test-path/'}
+				exportPath={'test-path/export/'}
 			/>
 		);
 
@@ -50,7 +50,7 @@ describe('FiltersFooter', () => {
 		const component = mount(
 			<FiltersFooter
 				categories={categories}
-				exportPath={'test-path/'}
+				exportPath={'test-path/export/'}
 				pageFetchParams={pageFetchParams}
 			/>
 		);

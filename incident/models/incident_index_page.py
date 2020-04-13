@@ -13,6 +13,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin
+from common.models.settings import SearchSettings
 from incident.models.export import to_row, is_exportable
 from incident.models.incident_page import IncidentPage
 from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
@@ -98,7 +99,12 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         incident_filter = IncidentFilter(request.GET)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
-        context['export_path'] = self.url
+
+        search_settings = SearchSettings.for_site(request.site)
+        if search_settings.data_download_page:
+            context['export_path'] = search_settings.data_download_page.get_url()
+        else:
+            context['export_path'] = self.url + self.reverse_subpage('export_view')
 
         incident_filter.clean()
         category_ids = incident_filter.cleaned_data.get('categories')

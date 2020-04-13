@@ -5,7 +5,7 @@ exports[`FiltersFooter should render without error in "debug" mode 1`] = `
   <div className=\\"filters__text filters__text--dim filters__text--meta\\">
     Need to do more complex filtering?
      
-    <a href=\\"undefinedexport/?\\" className=\\"filters__link\\">
+    <a href=\\"undefined?\\" className=\\"filters__link\\">
       Download the Data.
     </a>
   </div>
