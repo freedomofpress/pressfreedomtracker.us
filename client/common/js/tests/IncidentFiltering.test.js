@@ -52,7 +52,7 @@ describe('IncidentFiltering', () => {
     	const component = mount(
 			<IncidentFiltering
 				categories={categories}
-				exportPath={'test-path/'}
+				exportPath={'test-path/export/'}
 			/>
 		);
     	const filterButton = component.find('button.filters__button--summary-toggle');

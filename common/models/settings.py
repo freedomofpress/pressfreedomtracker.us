@@ -15,6 +15,15 @@ from incident.utils.incident_filter import IncidentFilter
 
 @register_setting(icon='search')
 class SearchSettings(BaseSetting):
+    data_download_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name='+',
+        help_text='Page linked to by the "Download the data" link at the bottom of the search filters. If a page is selected here, then the link will redirect to it with the search querystring intact. If this field is blank, the link will be a direct download of the CSV data requested.',
+    )
+
     search_page = models.ForeignKey(
         'incident.IncidentIndexPage',
         null=True,
@@ -27,6 +36,7 @@ class SearchSettings(BaseSetting):
 
     panels = [
         PageChooserPanel('search_page'),
+        PageChooserPanel('data_download_page'),
     ]
 
     class Meta:

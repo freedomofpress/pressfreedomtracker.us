@@ -12,7 +12,7 @@ function FiltersFooter({
 }) {
 	const params = pageFetchParams
 	const qs = queryString.stringify(params)
-	const exportUrl = `${exportPath}export/?${qs}`
+	const exportUrl = `${exportPath}?${qs}`
 	return (
 		<div className="filters__footer">
 			<div className="filters__text filters__text--dim filters__text--meta">
