@@ -40,6 +40,14 @@
 					</a>
 				</td>
 			</tr>
+			<tr class="data-table__row">
+				<th class="data-table__label">
+					Date Published
+				</th>
+				<td class="data-table__value">
+					{{ page.first_published_at|date:"F j, Y" }}
+				</td>
+			</tr>
 
 			{% if page.targeted_institutions.all %}
 				<tr class="data-table__row">
