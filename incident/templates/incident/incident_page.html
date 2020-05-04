@@ -75,7 +75,7 @@
 										<a href="{% pageurl page.get_parent %}?targeted_journalists={{ journalist.journalist.pk }}">
 											{{ journalist.journalist.title }}
 										</a>
-									</li>
+										{% if journalist.institution %}(<a href="{% pageurl page.get_parent %}?targeted_institutions={{ journalist.institution.pk }}">{{ journalist.institution.title }}</a>){% endif %}</li>
 								{% endfor %}
 							</ul>
 						{% endwith %}
