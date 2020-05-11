@@ -78,15 +78,15 @@ class TestFiltering(TestCase):
 
     def test_should_filter_by_char_field(self):
         """should filter via a field that is a char field"""
-        affiliation = 'cauliflower'
+        city = 'albuquerque'
         target = IncidentPageFactory(
-            affiliation=affiliation,
+            city=city,
         )
         IncidentPageFactory(
-            affiliation='other'
+            city='other'
         )
         incidents = IncidentFilter(dict(
-            affiliation=affiliation
+            city=city
         )).get_queryset()
 
         self.assertEqual(len(incidents), 1)
@@ -575,7 +575,7 @@ class ChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         IncidentPageFactory(
-            affiliation='other',
+            city='other',
             categories=[self.category],
         )
         incident_filter = IncidentFilter(dict(
@@ -665,7 +665,7 @@ class MultiChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         IncidentPageFactory(
-            affiliation='other',
+            city='other',
             categories=[self.category],
         )
         incident_filter = IncidentFilter(dict(
@@ -834,19 +834,16 @@ class GetSummaryTest(TestCase):
             lawsuit_name='Lawsuit One',
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
         )
         IncidentPageFactory(
             lawsuit_name='Lawsuit Two',
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
         )
         IncidentPageFactory(
             lawsuit_name='Lawsuit One',
             categories=[category2],
             date=timezone.now().date(),
-            targets=0,
         )
         incident_filter = IncidentFilter(dict(
             categories='{},{}'.format(self.category.id, category2.id),
@@ -937,7 +934,6 @@ class GetSummaryTest(TestCase):
         incident1 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         TargetedJournalistFactory(incident=incident1, journalist=journalist1)
@@ -946,7 +942,6 @@ class GetSummaryTest(TestCase):
         incident2 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         TargetedJournalistFactory(incident=incident2, journalist=journalist1)
@@ -973,7 +968,6 @@ class GetSummaryTest(TestCase):
         incident1 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         incident1.targeted_institutions.set([inst1, inst2])
@@ -982,7 +976,6 @@ class GetSummaryTest(TestCase):
         incident2 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
-            targets=0,
             institution_targets=0,
         )
         incident2.targeted_institutions.set([inst1])

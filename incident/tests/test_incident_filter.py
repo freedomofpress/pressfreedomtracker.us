@@ -123,7 +123,7 @@ class CategoryFiltersTest(TestCase):
         settings = IncidentFilterSettings.for_site(site)
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=settings,
-            incident_filter='affiliation',
+            incident_filter='city',
         )
 
     def test_no_category_filter__includes_all(self):
@@ -135,7 +135,7 @@ class CategoryFiltersTest(TestCase):
         self.assertEqual(
             {f.name for f in incident_filter.filters},
             {
-                'affiliation',
+                'city',
                 'categories',
                 'politicians_or_public_figures_involved',
                 'equipment_seized',
@@ -154,7 +154,7 @@ class CategoryFiltersTest(TestCase):
         self.assertEqual(
             {f.name for f in incident_filter.filters},
             {
-                'affiliation',
+                'city',
                 'categories',
                 'politicians_or_public_figures_involved',
                 'search',

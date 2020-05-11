@@ -17,12 +17,12 @@ from incident.models import (
     EquipmentBroken,
     Equipment,
     EquipmentSeized,
-    Target,
     State,
     choices,
     Journalist,
     Institution,
     TargetedJournalist,
+    GovernmentWorker,
 )
 from common.models import CustomImage
 from common.tests.factories import CategoryPageFactory
@@ -105,7 +105,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
-    affiliation = factory.Faker('word')
     teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
     teaser_image = None
     image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))
@@ -191,7 +190,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
         )
         leak_case = factory.Trait(
-            # targets_whose_communications_were_obtained=2,
+            workers_whose_communications_were_obtained=2,
             charged_under_espionage_act=factory.Faker('boolean'),
         )
         subpoena = factory.Trait(
@@ -226,19 +225,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # https://adamj.eu/tech/2014/09/03/factory-boy-fun/
     @factory.post_generation
-    def targets(self, create, count):
-        if count is None:
-            count = 2
-        make_target = getattr(TargetFactory, 'create' if create else 'build')
-        targets = []
-        for i in range(count):
-            t = make_target(unique_title=True)
-            t.targets_incidents.add(self)
-            targets.append(t)
-        if not create:
-            self._prefetched_objects_cache = {'targets': targets}
-
-    @factory.post_generation
     def institution_targets(self, create, count):
         if count is None:
             count = 2
@@ -263,18 +249,18 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             self._prefetched_objects_cache = {'targeted_institutions': targets}
 
     @factory.post_generation
-    def targets_whose_communications_were_obtained(self, create, count):
+    def workers_whose_communications_were_obtained(self, create, count):
         if count is None:
             return
-        make_target = getattr(TargetFactory, 'create' if create else 'build')
-        targets = []
+        make_worker = getattr(GovernmentWorkerFactory, 'create' if create else 'build')
+        workers = []
         for i in range(count):
-            t = make_target(unique_title=True)
-            t.targets_communications_obtained_incidents.add(self)
-            targets.append(t)
+            w = make_worker()
+            w.incidents.add(self)
+            workers.append(w)
         if not create:
             self._prefetched_objects_cache = {
-                'targets_whose_communications_were_obtained': targets
+                'workers_whose_communications_were_obtained': workers
             }
 
     @factory.post_generation
@@ -401,11 +387,19 @@ class SnippetFactory(factory.DjangoModelFactory):
         )
 
 
-class TargetFactory(ItemFactory):
+class GovernmentWorkerFactory(factory.DjangoModelFactory):
     class Meta:
-        model = Target
+        model = GovernmentWorker
         django_get_or_create = ('title',)
-    title = factory.Faker('name')
+        exclude = ('first_name', 'last_name')
+
+    title = factory.LazyAttribute(
+        lambda o: '{0} {1}. Worker'.format(o.first_name, o.last_name[0])
+    )
+
+    # Lazy values
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
 
 
 class ChargeFactory(ItemFactory):

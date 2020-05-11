@@ -251,10 +251,10 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
             site.save()
         CategoryPageFactory(
             parent=cls.home_page,
-            # Needed to apply an "affiliation" filter below
-            incident_filters=['affiliation'],
+            # Needed to apply an "city" filter below
+            incident_filters=['city'],
         )
-        stats_tag = '{% num_incidents affiliation="Independent" %}'
+        stats_tag = '{% num_incidents city="Albuquerque" %}'
         cls.page_data = {
             'title': 'Test Category',
             'slug': 'test-category',

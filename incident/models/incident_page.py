@@ -105,12 +105,6 @@ class IncidentPage(MetadataPageMixin, Page):
         help_text='If checked, only the month and year of the incident will be displayed. The date above will be used in filtering by date.'
     )
 
-    affiliation = models.CharField(
-        max_length=255,
-        default='Independent',
-        blank=True,
-        null=True,
-    )
     city = models.CharField(
         max_length=255,
         blank=True,
@@ -163,13 +157,6 @@ class IncidentPage(MetadataPageMixin, Page):
         blank=True,
         null=True,
         help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
-    )
-
-    targets = ParentalManyToManyField(
-        'incident.Target',
-        blank=True,
-        verbose_name='Targets (Journalists/Organizations)',
-        related_name='targets_incidents',
     )
 
     targeted_institutions = ParentalManyToManyField(
@@ -366,12 +353,6 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='incidents',
         blank=True,
     )
-    targets_whose_communications_were_obtained = ParentalManyToManyField(
-        'incident.Target',
-        blank=True,
-        verbose_name='Journalists/Organizations whose communications were obtained in leak investigation',
-        related_name='targets_communications_obtained_incidents',
-    )
     charged_under_espionage_act = models.BooleanField(
         default=False,
         verbose_name="Charged under espionage act?"
@@ -475,11 +456,9 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('date'),
                 FieldPanel('exact_date_unknown'),
-                FieldPanel('affiliation'),
                 FieldPanel('city'),
                 InlinePanel('targeted_journalists', label='Targeted Journalists'),
                 AutocompletePanel('state', page_type='incident.State'),
-                AutocompletePanel('targets', 'incident.Target', is_single=False),
                 AutocompletePanel('targeted_institutions', 'incident.Institution', is_single=False),
                 AutocompletePanel('tags', 'common.CommonTag', is_single=False),
                 InlinePanel('categories', label='Incident categories', min_num=1),

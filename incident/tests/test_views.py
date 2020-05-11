@@ -6,8 +6,8 @@ from django.urls import reverse
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
 
-from incident.models import Target, Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist
-from incident.wagtail_hooks import TargetAdmin, ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin
+from incident.models import Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist, GovernmentWorker
+from incident.wagtail_hooks import ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
@@ -168,35 +168,30 @@ class JournalistMergeViewTestCase(TestCase):
 class TargetMergeViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.inc1 = IncidentPageFactory(targets=1, targets_whose_communications_were_obtained=1)
-        cls.inc2 = IncidentPageFactory(targets=1, targets_whose_communications_were_obtained=1)
-        cls.inc3 = IncidentPageFactory(targets=1, targets_whose_communications_were_obtained=1)
-        cls.target1 = cls.inc1.targets.all()[0]
-        cls.target2 = cls.inc2.targets.all()[0]
-        cls.target3 = cls.inc1.targets_whose_communications_were_obtained.all()[0]
-        cls.target4 = cls.inc2.targets_whose_communications_were_obtained.all()[0]
-        cls.unincluded_target1 = cls.inc3.targets.all()[0]
-        cls.unincluded_target2 = cls.inc3.targets_whose_communications_were_obtained.all()[0]
+        cls.inc1 = IncidentPageFactory(workers_whose_communications_were_obtained=1)
+        cls.inc2 = IncidentPageFactory(workers_whose_communications_were_obtained=1)
+        cls.inc3 = IncidentPageFactory(workers_whose_communications_were_obtained=1)
+        cls.worker1 = cls.inc1.workers_whose_communications_were_obtained.first()
+        cls.worker2 = cls.inc2.workers_whose_communications_were_obtained.first()
+        cls.worker3 = cls.inc3.workers_whose_communications_were_obtained.first()
         cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
 
     def setUp(self):
         self.client.force_login(self.user)
         self.new_target_title = 'LittleWeaver'
+
         self.response = self.client.post(
-            TargetAdmin().url_helper.merge_url,
+            GovernmentWorkerAdmin().url_helper.merge_url,
             {
                 'models_to_merge': json.dumps([{
-                    'label': self.target1.title,
-                    'pk': self.target1.pk
+                    'label': self.worker1.title,
+                    'pk': self.worker1.pk
                 }, {
-                    'label': self.target2.title,
-                    'pk': self.target2.pk
+                    'label': self.worker2.title,
+                    'pk': self.worker2.pk
                 }, {
-                    'label': self.target3.title,
-                    'pk': self.target3.pk
-                }, {
-                    'label': self.target4.title,
-                    'pk': self.target4.pk
+                    'label': self.worker3.title,
+                    'pk': self.worker3.pk
                 }]),
                 'title_for_merged_models': self.new_target_title
             }
@@ -207,24 +202,32 @@ class TargetMergeViewTest(TestCase):
 
     def test_correct_redirect_url(self):
         """Should redirect to the modelAdmin's index page"""
-        self.assertEqual(self.response['location'], TargetAdmin().url_helper.index_url)
+        self.assertEqual(self.response['location'], GovernmentWorkerAdmin().url_helper.index_url)
 
     def test_new_target_created(self):
-        Target.objects.get(title=self.new_target_title)
+        GovernmentWorker.objects.get(title=self.new_target_title)
 
     def test_new_target_has_old_target_relationships(self):
-        new_target = Target.objects.get(title=self.new_target_title)
-        self.assertEqual(set(new_target.targets_incidents.all()), {self.inc1, self.inc2})
+        new_worker = GovernmentWorker.objects.get(title=self.new_target_title)
+        self.assertEqual(
+            set(new_worker.incidents.all()),
+            {self.inc1, self.inc2, self.inc3},
+        )
 
     def test_new_target_has_old_target_relationships2(self):
-        new_target = Target.objects.get(title=self.new_target_title)
-        self.assertEqual(set(new_target.targets_communications_obtained_incidents.all()), {self.inc1, self.inc2})
+        new_worker = GovernmentWorker.objects.get(title=self.new_target_title)
+        self.assertEqual(
+            set(new_worker.incidents.all()),
+            {self.inc1, self.inc2, self.inc3},
+        )
 
     def test_merged_targets_are_deleted(self):
-        with self.assertRaises(Target.DoesNotExist):
-            Target.objects.get(pk=self.target1.pk)
-        with self.assertRaises(Target.DoesNotExist):
-            Target.objects.get(pk=self.target2.pk)
+        with self.assertRaises(GovernmentWorker.DoesNotExist):
+            GovernmentWorker.objects.get(pk=self.worker1.pk)
+        with self.assertRaises(GovernmentWorker.DoesNotExist):
+            GovernmentWorker.objects.get(pk=self.worker2.pk)
+        with self.assertRaises(GovernmentWorker.DoesNotExist):
+            GovernmentWorker.objects.get(pk=self.worker3.pk)
 
 
 class ChargeMergeViewTest(TestCase):

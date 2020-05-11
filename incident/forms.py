@@ -1,10 +1,5 @@
 from common.forms import BaseMergeForm
-from incident.models import Target, Charge, Nationality, Venue, PoliticianOrPublic, Journalist, Institution, GovernmentWorker
-
-
-class TargetMergeForm(BaseMergeForm):
-    merge_model = Target
-    merge_model_type = 'incident.Target'
+from incident.models import Charge, Nationality, Venue, PoliticianOrPublic, Journalist, Institution, GovernmentWorker
 
 
 class JournalistMergeForm(BaseMergeForm):
