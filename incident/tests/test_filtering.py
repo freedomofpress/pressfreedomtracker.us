@@ -1294,12 +1294,12 @@ class RecentlyUpdatedFilterTest(TestCase):
         incidents = incident_filter.get_queryset()
         self.assertEqual(set(incidents), {incident_with_new_update})
 
-    def test_filters_recently_published_incidents(self):
+    def test_filters_recently_updated_excludes_nonupdated_incidents(self):
         IncidentPageFactory(
             first_published_at=timezone.now() - timedelta(days=90),
         )
 
-        incident_new = IncidentPageFactory(
+        IncidentPageFactory(
             first_published_at=timezone.now() - timedelta(days=3),
         )
 
@@ -1309,9 +1309,14 @@ class RecentlyUpdatedFilterTest(TestCase):
 
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
-        self.assertEqual(set(incidents), {incident_new})
+        self.assertEqual(set(incidents), set())
 
     def test_filters_recently_published_or_updated_incidents(self):
+        """The recently_updated filter only includes incidents that have
+        associated updates, no matter how recently they were
+        published.
+
+        """
         IncidentPageFactory(
             first_published_at=timezone.now() - timedelta(days=90),
         )
@@ -1335,7 +1340,7 @@ class RecentlyUpdatedFilterTest(TestCase):
             date=timezone.now() - timedelta(days=12),
         )
 
-        incident_new = IncidentPageFactory(
+        IncidentPageFactory(
             first_published_at=timezone.now() - timedelta(days=3),
         )
 
@@ -1345,4 +1350,4 @@ class RecentlyUpdatedFilterTest(TestCase):
 
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
-        self.assertEqual(set(incidents), {incident_new, incident_with_new_update})
+        self.assertEqual(set(incidents), {incident_with_new_update})
