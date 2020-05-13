@@ -4,8 +4,6 @@ from django import forms
 from django.db import models
 from django.db.models import (
     OuterRef,
-    F,
-    Q,
     Max,
     ExpressionWrapper,
     Subquery,
@@ -83,14 +81,11 @@ class IncidentQuerySet(PageQuerySet):
             updated_days_ago=ExtractDay(ExpressionWrapper(
                 CurrentDate() - Subquery(updates), output_field=models.DateField())
             ),
-            published_days_ago=ExtractDay(ExpressionWrapper(
-                CurrentDate() - F('first_published_at'), output_field=models.DateField())
-            ),
         )
 
     def updated_within_days(self, days):
         return self.with_most_recent_update().filter(
-            Q(updated_days_ago__lte=days) | Q(published_days_ago__lte=days)
+            updated_days_ago__lte=days
         )
 
 
