@@ -3,13 +3,15 @@ from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel
-from wagtail.core.fields import RichTextField
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel, StreamFieldPanel
+from wagtail.core.blocks import RichTextBlock
+from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 from common.validators import validate_image_format
+from common.blocks import Heading2
 from incident.utils.incident_filter import IncidentFilter
 
 
@@ -100,6 +102,17 @@ class FooterLogos(Orderable):
 
 @register_setting
 class SiteSettings(BaseSetting):
+    incident_sidebar_note = StreamField(
+        [
+            ('heading', Heading2()),
+            ('rich_text', RichTextBlock()),
+        ],
+        default=None,
+        blank=True,
+        null=True,
+        help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.'
+    )
+
     incident_footer = RichTextField(
         blank=True,
         null=True,
@@ -108,6 +121,7 @@ class SiteSettings(BaseSetting):
     )
 
     panels = [
+        StreamFieldPanel('incident_sidebar_note'),
         FieldPanel('incident_footer')
     ]
 

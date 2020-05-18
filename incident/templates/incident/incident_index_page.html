@@ -55,6 +55,9 @@
 	<div class="js-summary-table">
 		{% include "incident/_summary_table.html" with summary_table=summary_table %}
 	</div>
+
+	{% include "common/_incident_sidebar_note.html" %}
+
 	<div class="js-methodologies">
 		{% if categories %}
 			{% for category in categories.all %}
