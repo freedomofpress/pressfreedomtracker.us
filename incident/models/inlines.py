@@ -19,7 +19,7 @@ from wagtailautocomplete.edit_handlers import AutocompletePanel
 from statistics.blocks import StatisticsBlock
 
 
-class IncidentPageUpdates(Orderable):
+class IncidentPageUpdates(models.Model):
     page = ParentalKey('incident.IncidentPage', related_name='updates')
     title = models.CharField(max_length=255)
     date = models.DateTimeField()

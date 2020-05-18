@@ -1,4 +1,5 @@
 import csv
+from datetime import timedelta
 
 import wagtail_factories
 from wagtail.core.models import Site, Page
@@ -11,12 +12,17 @@ from wagtail.tests.utils.form_data import (
 )
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.utils import timezone
 
 from common.tests.factories import CategoryPageFactory, PersonPageFactory
 from home.tests.factories import HomePageFactory
 from incident.models.incident_page import IncidentPage
 from incident.models.export import is_exportable, to_row
-from .factories import IncidentIndexPageFactory, IncidentPageFactory
+from .factories import (
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
+    IncidentUpdateFactory
+)
 
 
 class TestPages(TestCase):
@@ -258,6 +264,37 @@ class GetRelatedIncidentsTest(TestCase):
 
         related_incidents = incident.get_related_incidents()
         self.assertEqual(related_incidents, [related_incident])
+
+
+class GetIncidentUpdatesTest(TestCase):
+    def setUp(self):
+        site = Site.objects.get()
+        self.index = IncidentIndexPageFactory(
+            parent=site.root_page,
+            slug='incidents',
+        )
+
+    def test_get_incident_updates_sorted_by_asc_date(self):
+        incident = IncidentPageFactory(parent=self.index)
+        incident_update1 = IncidentUpdateFactory(
+            page=incident,
+            date=timezone.now() - timedelta(days=30),
+        )
+        incident_update2 = IncidentUpdateFactory(
+            page=incident,
+            date=timezone.now() - timedelta(days=3),
+        )
+        incident_update3 = IncidentUpdateFactory(
+            page=incident,
+            date=timezone.now() - timedelta(days=300),
+        )
+
+        incident_updates = incident.get_updates()
+
+        self.assertEqual(
+            list(incident_updates),
+            [incident_update3, incident_update1, incident_update2]
+        )
 
 
 class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
