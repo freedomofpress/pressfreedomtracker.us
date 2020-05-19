@@ -68,9 +68,12 @@ var common = {
 					'postcss-loader',
 					{
 						loader: 'sass-loader',
+
 						options: {
-							includePaths: [path.resolve(__dirname, 'node_modules/')],
-							data: sassData
+							sassOptions: {
+								includePaths: [path.resolve(__dirname, 'node_modules/')],
+							},
+							prependData: sassData,
 						}
 					}
 				]
