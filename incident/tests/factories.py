@@ -68,7 +68,6 @@ class IncidentUpdateFactory(factory.DjangoModelFactory):
     class Meta:
         model = IncidentPageUpdates
 
-    sort_order = Sequence(int)
     title = Faker('sentence')
     date = Faker('past_datetime', start_date='-15d', tzinfo=datetime.timezone.utc)
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])

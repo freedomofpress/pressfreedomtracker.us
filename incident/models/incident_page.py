@@ -621,6 +621,12 @@ class IncidentPage(MetadataPageMixin, Page):
             return delta.days < 7
         return False
 
+    def get_updates_by_asc_date(self):
+        """
+        Returns updates for the incident sorted in ascending order by date of update
+        """
+        return self.updates.order_by('date').all()
+
     def get_main_category(self):
         """
         Returns the first category in the list of categories
