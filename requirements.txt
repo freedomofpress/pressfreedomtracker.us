@@ -55,7 +55,7 @@ django-webpack-loader==0.6.0 \
 django==2.2.12 \
     --hash=sha256:69897097095f336d5aeef45b4103dceae51c00afa6d3ae198a2a18e519791b7a \
     --hash=sha256:6ecd229e1815d4fc5240fc98f1cca78c41e7a8cd3e3f2eefadc4735031077916 \
-    # via -r requirements.in, django-analytical, django-anymail, django-logging-json, django-recaptcha, django-settings-export, django-taggit, django-treebeard, wagtail
+    # via -r requirements.in, django-analytical, django-anymail, django-logging-json, django-recaptcha, django-settings-export, django-taggit, django-treebeard, wagtail, wagtail-inventory
 djangorestframework==3.9.2 \
     --hash=sha256:8a435df9007c8b7d8e69a21ef06650e3c0cbe0d4b09e55dd1bd74c89a75a9fcd \
     --hash=sha256:f7a266260d656e1cf4ca54d7a7349609dc8af4fe2590edd0ecd7d7643ea94a17 \
@@ -225,6 +225,10 @@ text-unidecode==1.3 \
     --hash=sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8 \
     --hash=sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93 \
     # via faker
+tqdm==4.15.0 \
+    --hash=sha256:6ec1dc74efacf2cda936b4a6cf4082ce224c76763bdec9f17e437c8cfcaa9953 \
+    --hash=sha256:9f019dcbec25b5b4cb1bbf43e5c346e0d6a001fe4f598d70283d379e5314e202 \
+    # via wagtail-inventory
 typing==3.6.6 \
     --hash=sha256:4027c5f6127a6267a435201981ba156de91ad0d1d98e9ddc2aa173453453492d \
     --hash=sha256:57dcf675a99b74d64dacf6fba08fb17cf7e3d5fdff53d4a30ea2a5e7e52543d4 \
@@ -255,6 +259,10 @@ wagtail-factories==1.1.0 \
     --hash=sha256:141cdb65ef0c292d2220a11976311af21d92f4445f2293a8a27ee6e89c96a779 \
     --hash=sha256:3dd25ae90024e6aaf8e714473545dfa3af14e701835652d112f22d3d228b7fc7 \
     # via -r requirements.in
+wagtail-inventory==1.0 \
+    --hash=sha256:17ce404d136ae5fb53c00e1010c69cb3881f00e07a64d427c6b2387395e93ed7 \
+    --hash=sha256:6d8f5fc29c40d8559ec339b278ec3f9563ce9b3d570a5edad954cd1d1ae7a460 \
+    # via -r requirements.in
 wagtail-metadata==2.0.1 \
     --hash=sha256:1b710fcd6c96f2405db0d9f12ea3055a4532f3e4a43bcb2793700cde714841f1 \
     --hash=sha256:e3ef0776d3a429239dce4d164ac40c779f5d8ac958c630e0ab7442c25c54692e \
@@ -262,7 +270,7 @@ wagtail-metadata==2.0.1 \
 wagtail==2.7.3 \
     --hash=sha256:0c0bdcf885ffa48bad6c4b2ac375ba63a7745aa4e0c638683eaa92642893da10 \
     --hash=sha256:e4a9aaf0941ecb2ec3264f032b905d803b1c3d69470d7269c7f3743ef6eacea1 \
-    # via -r requirements.in, wagtail-autocomplete, wagtail-factories, wagtail-metadata
+    # via -r requirements.in, wagtail-autocomplete, wagtail-factories, wagtail-inventory, wagtail-metadata
 webencodings==0.5.1 \
     --hash=sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78 \
     --hash=sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923 \
