@@ -151,6 +151,9 @@
 			{% endif %}
 		</tbody>
 	</table>
+
+	{% include "common/_incident_sidebar_note.html" %}
+
 	<div class="methodology__wrapper">
 		{% for category in page.categories.all %}
 			{% include 'common/_category_methodology.html' with category=category.category preview=True %}
