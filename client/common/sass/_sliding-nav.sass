@@ -40,6 +40,11 @@
 		color: $white
 		background-color: $gray-dark
 
+	@each $name, $color in $background-colors
+		&.header__nav-link--#{$name}
+			color: $white
+			background-color: $color
+
 	+hover
 		background-color: $gray-mid-dark
 		color: #fff

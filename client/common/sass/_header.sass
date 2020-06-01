@@ -120,6 +120,20 @@
 			color: $gray-dark
 			border-bottom: 1px solid $gray-dark
 
+		@each $name, $color in $background-colors
+			&--#{$name}
+				padding: $nav-link-padding 2*$nav-link-padding
+				margin-bottom: -0.5*$nav-link-padding
+				background-color: $color
+				transition: 0.15s linear all
+				color: $white
+				border-bottom: 1px solid transparent
+
+				+hover
+					color: $white
+					background-color: $gray-dark
+					border-bottom: 1px solid transparent
+
 		&--highlighted
 			padding: $nav-link-padding 2*$nav-link-padding
 			margin-bottom: -0.5*$nav-link-padding
