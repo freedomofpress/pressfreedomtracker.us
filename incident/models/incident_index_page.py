@@ -3,18 +3,19 @@ import json
 from typing import TYPE_CHECKING
 
 from django.db import models
-from django.http import StreamingHttpResponse, HttpResponse
+from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
 from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from wagtail.admin.edit_handlers import FieldPanel
+from django.core import serializers
 from wagtail.core.models import Page
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
-from incident.models.export import to_row, is_exportable
+from incident.models.export import to_row, is_exportable, to_json
 from incident.models.incident_page import IncidentPage
 from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
 from incident.feeds import IncidentIndexPageFeed
@@ -53,9 +54,15 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         return response
 
     def export_view_GET(self, request: 'HttpRequest') -> HttpResponse:
+        export_format = request.GET.get('format', 'csv')
         incident_filter = IncidentFilter(request.GET)
         incidents = incident_filter.get_queryset()
-
+        if export_format == 'json':
+            return self.export_format_json(incidents)
+        else:
+            return self.export_format_csv(incidents)
+    
+    def export_format_csv(self, incidents):
         incident_fields = IncidentPage._meta.get_fields()
         headers = [field.name for field in incident_fields
                    if is_exportable(field)]
@@ -74,8 +81,16 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             content_type="text/csv")
 
         response['Content-Disposition'] = 'attachment; filename="incidents.csv"'
-
         return response
+    
+    def export_format_json(self, incidents):
+        incident_list = []
+        for incident in incidents:
+            incident_list.append(to_json(incident))
+        return JsonResponse(
+            incident_list,
+            safe=False
+        )
 
     def export_view_OPTIONS(self, request: 'HttpRequest') -> HttpResponse:
         return HttpResponse()
