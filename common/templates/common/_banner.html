@@ -2,7 +2,7 @@
 {% load render_as_template %}
 
 {% if settings.common.SiteSettings.banner_content %}
-    <div class="top-banner">
+    <div class="alert-banner">
         {% filter typogrify|richtext %}
             {% render_as_template settings.common.SiteSettings.banner_content %}
         {% endfilter %}
