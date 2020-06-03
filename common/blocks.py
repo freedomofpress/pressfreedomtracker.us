@@ -199,6 +199,14 @@ class StatTableBlock(blocks.ListBlock):
         icon = 'list-ul'
 
 
+class ButtonBlock(blocks.StructBlock):
+    text = blocks.TextBlock(required=True)
+    url = blocks.URLBlock(required=True)
+
+    class Meta:
+        template = 'common/blocks/button.html'
+
+
 class RichTextBlockQuoteBlock(blocks.StructBlock):
     text = blocks.RichTextBlock()
     source_text = blocks.RichTextBlock(required=False)
