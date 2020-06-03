@@ -10,6 +10,9 @@
 	font-size: 1.1rem
 	display: flex
 
+	@media (max-width: $medium-screen)
+		height: 80vh
+
 .topic-header--align-bottom-center
 	justify-content: center
 	.topic-header__wrapper
@@ -36,6 +39,9 @@
 	width: 100%
 	height: auto
 
+	@media (max-width: $medium-screen)
+		object-fit: cover
+
 .topic-header--white-text
 	color: $white
 
@@ -46,6 +52,10 @@
 	width: 50%
 	position: absolute
 	margin: 1.5rem
+
+	@media (max-width: $medium-screen)
+		margin: 0.75rem
+		width: 75%
 
 .topic-header__superheading
 	+uppercase
