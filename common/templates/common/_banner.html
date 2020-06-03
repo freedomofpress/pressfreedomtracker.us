@@ -1,0 +1,10 @@
+{% load wagtailcore_tags wagtailsettings_tags wagtailimages_tags typogrify_tags %}
+{% load render_as_template %}
+
+{% if settings.common.SiteSettings.banner_content %}
+    <div class="top-banner">
+        {% filter typogrify|richtext %}
+            {% render_as_template settings.common.SiteSettings.banner_content %}
+        {% endfilter %}
+    </div>
+{% endif %}

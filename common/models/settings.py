@@ -112,7 +112,17 @@ class SiteSettings(BaseSetting):
         null=True,
         help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.'
     )
-
+    banner_content = RichTextField(
+        blank=True,
+        null=True,
+        features=['bold', 'italic'],
+        verbose_name='Banner Content'
+    )
+    homepage_only = models.BooleanField(
+        default=True,
+        verbose_name='Homepage Only',
+        help_text='Boolean for whether to show this sitewide or only on the homepage'
+    )
     incident_footer = RichTextField(
         blank=True,
         null=True,
@@ -122,7 +132,9 @@ class SiteSettings(BaseSetting):
 
     panels = [
         StreamFieldPanel('incident_sidebar_note'),
-        FieldPanel('incident_footer')
+        FieldPanel('incident_footer'),
+        FieldPanel('banner_content'),
+        FieldPanel('homepage_only')
     ]
 
     class Meta:

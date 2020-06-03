@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags wagtailsettings_tags wagtailimages_tags typogrify_tags %}
+{% load render_as_template %}
 
 {% block head %}
 	{{ block.super }}
@@ -8,6 +10,13 @@
 {% endblock %}
 
 {% block body_class %}template-homepage{% endblock %}
+
+{% block banner %}
+	{{ block.super }}
+	{% if settings.common.SiteSettings.homepage_only %}
+		{% include "common/_banner.html" %}
+	{% endif %}
+{% endblock %}
 
 {% block top_sidebar_class %}
 	{{ block.super }}
