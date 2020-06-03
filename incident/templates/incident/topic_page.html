@@ -7,7 +7,12 @@
 	{% image page.photo fill-2800x1120 as x2 %}
 
 	<header class="topic-header topic-header--{{ page.text_color }}-text topic-header--align-{{ page.text_align }}">
-		<img src="{{ x2.url }}" class="topic-header__background" alt="{{ page.photo_caption|striptags }}">
+		<img
+			class="topic-header__background"
+			alt="{{ page.photo_caption|striptags }}"
+			src="{{ x1.url }}"
+			srcset="{{ x1.url }} {{ x1.width }}w, {{ x2.url }} {{ x2.width }}w"
+		>
 		<div class="topic-header__wrapper">
 			<h2 class="topic-header__superheading">{{ page.superheading }}</h2>
 			<h1 class="topic-header__heading">{{ page.title }}</h1>
