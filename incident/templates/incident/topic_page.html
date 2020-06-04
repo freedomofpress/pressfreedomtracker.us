@@ -2,21 +2,28 @@
 
 {% load common_tags wagtailcore_tags wagtailimages_tags %}
 
+{% block top_sidebar_class %}
+	{{ block.super }}
+	layout-right-sidebar__sidebar--light
+{% endblock %}
+
+{% block sidebar_class %}layout-right-sidebar__sidebar--light{% endblock %}
+
 {% block secondary-header %}
 	{% image page.photo fill-1400x560 as x1 %}
 	{% image page.photo fill-2800x1120 as x2 %}
 
-	<header class="topic-header topic-header--{{ page.text_color }}-text topic-header--align-{{ page.text_align }}">
+	<header class="topic-header topic-header--{{ page.text_color }}-text">
 		<img
 			class="topic-header__background"
 			alt="{{ page.photo_caption|striptags }}"
 			src="{{ x1.url }}"
 			srcset="{{ x1.url }} {{ x1.width }}w, {{ x2.url }} {{ x2.width }}w"
 		>
-		<div class="topic-header__wrapper">
+		<div class="topic-header__text topic-header__text--align-{{ page.text_align }}">
 			<h2 class="topic-header__superheading">{{ page.superheading }}</h2>
 			<h1 class="topic-header__heading">{{ page.title }}</h1>
-			<div class="topic-header__description">
+			<div class="topic-header__description topic-header__description--align-{{ page.text_align }}">
 				{{ page.description|richtext }}
 			</div>
 		</div>

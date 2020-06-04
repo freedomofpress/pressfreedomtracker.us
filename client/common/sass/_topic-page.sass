@@ -7,32 +7,82 @@
 	background-position: center
 	position: relative
 	max-width: calc(1440px + 25%)
-	font-size: 1.1rem
-	display: flex
 
 	@media (max-width: $medium-screen)
 		height: 80vh
 
-.topic-header--align-bottom-center
-	justify-content: center
-	.topic-header__wrapper
-		align-self: flex-end
+	@media (max-width: $small-screen)
+		margin-top: -$header-margin-top * 2
 
-.topic-header--align-top-center
-	justify-content: center
-	.topic-header__wrapper
-		align-self: flex-start
+.topic-header__text
+	position: absolute
+	left: 0
+	right: 0
+	padding: 30px
+	padding-top: 100px
 
+	&--align-bottom-center
+		bottom: 0
+		text-align: center
+		background-image: linear-gradient(0deg, rgba(#000, 0.15), rgba(#000, 0))
 
-.topic-header--align-bottom-left
-	justify-content: flex-start
-	.topic-header__wrapper
-		align-self: flex-end
+	&--align-top-center
+		top: 0
+		text-align: center
+		background-image: linear-gradient(180deg, rgba(#000, 0.15), rgba(#000, 0))
 
-.topic-header--align-bottom-left
-	justify-content: flex-start
-	.topic-header__wrapper
-		align-self: flex-end
+	&--align-bottom-left
+		bottom: 0
+		text-align: left
+		background-image: linear-gradient(0deg, rgba(#000, 0.15), rgba(#000, 0))
+
+	&--align-top-left
+		top: 0
+		text-align: left
+		background-image: linear-gradient(180deg, rgba(#000, 0.15), rgba(#000, 0))
+
+.topic-header__superheading
+	+uppercase
+	margin: 0
+	padding: 0
+	font-weight: normal
+	font-size: 20px
+
+	@media(max-width: $medium-screen)
+		font-size: 16px
+
+.topic-header__heading
+	margin: 0
+	padding: 0
+	text-align: center
+	font-size: 72px
+	font-family: $serif
+	font-weight: normal
+
+	@media(max-width: $medium-screen)
+		font-size: 60px
+
+.topic-header__description
+	max-width: 800px
+	padding: 0 30px
+	font-size: 22px
+
+	@media(max-width: $medium-screen)
+		font-size: 18px
+
+	&--align-bottom-center, &--align-top-center
+		margin: 0 auto
+
+	&--align-bottom-left, &--align-top-left
+		margin: 0
+
+	// Break the BEM to reach into the rich text and remove margins from first
+	// and last elements
+	> .rich-text > *:first-child
+		margin-top: 0
+
+	> .rich-text > *:last-child
+		margin-bottom: 0
 
 .topic-header__background
 	min-height: 100%
@@ -47,34 +97,6 @@
 
 .topic-header--black-text
 	color: $black
-
-.topic-header__wrapper
-	width: 50%
-	position: absolute
-	margin: 1.5rem
-
-	@media (max-width: $medium-screen)
-		margin: 0.75rem
-		width: 75%
-
-.topic-header__superheading
-	+uppercase
-	margin: 0
-	padding: 0
-	font-weight: normal
-	text-align: center
-	font-size: 1.0rem
-
-.topic-header__heading
-	margin: 0
-	padding: 0
-	text-align: center
-	font-size: 3.0rem
-	font-family: serif
-	font-weight: normal
-
-.topic-header__description
-	text-align: center
 
 .topic-body
 	background: #fff
