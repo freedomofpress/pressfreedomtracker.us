@@ -94,6 +94,7 @@ class TopicPage(MetadataPageMixin, Page):
                 ImageChooserPanel('photo'),
                 FieldPanel('photo_caption'),
                 FieldPanel('photo_credit'),
+                FieldPanel('photo_credit_link'),
             ],
             classname='collapsible'
         ),

@@ -7,6 +7,10 @@
 	background-position: center
 	position: relative
 	max-width: calc(1440px + 25%)
+	// This height should match the width:height ratio of the image
+	// provided in the template. Specifying the height in CSS will prevent
+	// reflow when the image loads
+	height: 40vw
 
 	@media (max-width: $medium-screen)
 		height: 80vh
@@ -20,28 +24,45 @@
 	right: 0
 	padding: 30px
 
+	// This is too complicated to use BEM for
+	&--white
+		color: #FFF
+		&.topic-header__text--align-bottom-center,
+		&.topic-header__text--align-bottom-left
+			background-image: linear-gradient(0deg, rgba(#000, 0.15), rgba(#000, 0))
+
+		&.topic-header__text--align-top-center,
+		&.topic-header__text--align-top-left
+			background-image: linear-gradient(180deg, rgba(#000, 0.15), rgba(#000, 0))
+
+	&--black
+		color: #000
+		&.topic-header__text--align-bottom-center,
+		&.topic-header__text--align-bottom-left
+			background-image: linear-gradient(0deg, rgba(#FFF, 0.15), rgba(#FFF, 0))
+
+		&.topic-header__text--align-top-center,
+		&.topic-header__text--align-top-left
+			background-image: linear-gradient(180deg, rgba(#FFF, 0.15), rgba(#FFF, 0))
+
 	&--align-bottom-center
 		bottom: 0
 		text-align: center
-		background-image: linear-gradient(0deg, rgba(#000, 0.15), rgba(#000, 0))
 		padding-top: 100px
 
 	&--align-top-center
 		top: 0
 		text-align: center
-		background-image: linear-gradient(180deg, rgba(#000, 0.15), rgba(#000, 0))
 		padding-bottom: 100px
 
 	&--align-bottom-left
 		bottom: 0
 		text-align: left
-		background-image: linear-gradient(0deg, rgba(#000, 0.15), rgba(#000, 0))
 		padding-top: 100px
 
 	&--align-top-left
 		top: 0
 		text-align: left
-		background-image: linear-gradient(180deg, rgba(#000, 0.15), rgba(#000, 0))
 		padding-bottom: 100px
 
 .topic-header__superheading
@@ -101,12 +122,63 @@
 
 .topic-body
 	background: #fff
-	margin: 1rem 0
+	margin-bottom: 30px
 	padding: 1rem 1rem
 
-.topic-sidebar__wrapper
+	&__heading
+		font-family: $serif
+		font-weight: $serif-regular
+		color: #000
+		font-size: 36px
+		max-width: 800px
+		margin: 0 auto
+
+		@media (max-width: $medium-screen)
+			font-size: 24px
+
+	&__rich-text
+		font-size: 22px
+		max-width: 800px
+		margin: 0 auto
+
+		@media (max-width: $medium-screen)
+			font-size: 18px
+
+.topic-sidebar
 	padding-top: 1rem
 
-.topic-sidebar__photo-info
-	border-bottom: 1px solid #c2ced6
-	padding-bottom: 1rem
+	&__photo-info
+		border-bottom: 1px solid #c2ced6
+		padding-bottom: 1rem
+		+blue-link
+
+	&__photo-caption
+		margin-right: 0.25em
+
+	&__photo-credit
+		+uppercase
+		font-size: 0.9em
+
+	&__heading
+		font-size: 30px
+		font-weight: $sans-bold
+		color: #000
+		margin-bottom: 10px
+
+	&__rich_text
+		font-size: 18px
+		margin-bottom: 20px
+
+		// Break the BEM for rich text formatting
+		& > .rich-text > *:first-child
+			margin-top: 0
+
+		& > .rich-text > *:last-child
+			margin-bottom: 0
+
+	&__button
+		margin-bottom: 20px
+		text-align: center
+
+	&__stat-table
+		margin-bottom: 20px

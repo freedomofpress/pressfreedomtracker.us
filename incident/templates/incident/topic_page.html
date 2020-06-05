@@ -13,14 +13,14 @@
 	{% image page.photo fill-1400x560 as x1 %}
 	{% image page.photo fill-2800x1120 as x2 %}
 
-	<header class="topic-header topic-header--{{ page.text_color }}-text">
+	<header class="topic-header">
 		<img
 			class="topic-header__background"
 			alt="{{ page.photo_caption|striptags }}"
 			src="{{ x1.url }}"
 			srcset="{{ x1.url }} {{ x1.width }}w, {{ x2.url }} {{ x2.width }}w"
 		>
-		<div class="topic-header__text topic-header__text--align-{{ page.text_align }}">
+		<div class="topic-header__text topic-header__text--{{ page.text_color }} topic-header__text--align-{{ page.text_align }}">
 			{% if page.superheading %}
 				<h2 class="topic-header__superheading">{{ page.superheading }}</h2>
 			{% endif %}
@@ -32,16 +32,21 @@
 			{% endif %}
 		</div>
 	</header>
-
 {% endblock %}
+
+{% block main_class %}layout-right-sidebar__main--padded{% endblock %}
 
 {% block maincontainer %}
 	<main>
 		{% if page.content %}
 			<div class="topic-body">
 				{% for block in page.content %}
-					{% if block.block_type == 'heading' %}
-						{% include_block block with classname='section-heading'%}
+					{% if block.block_type == 'heading_2' %}
+						{% include_block block with classname='topic-body__heading' %}
+					{% elif block.block_type == 'rich_text' %}
+						<section class="topic-body__rich-text">
+							{% include_block block %}
+						</section>
 					{% else %}
 						<section>{% include_block block %}</section>
 					{% endif %}
@@ -79,25 +84,32 @@
 {% endblock %}
 
 {% block sidebar %}
-	<aside class="topic-sidebar__wrapper">
+	<aside class="topic-sidebar">
 		{% if page.photo_caption or page.photo_credit %}
 			<div class="topic-sidebar__photo-info">
-				{{ page.photo_caption|richtext }}
-				{% if page.photo_credit_link %}
-					<a class="topic-sidebar__photo-credit-link" href="{{ page.photo_credit_link }}">
+				<div class="sr-only">Photo:</div>
+				{% if page.photo_caption %}
+					<span class="topic-sidebar__photo-caption">
+						{{ page.photo_caption|richtext_inline }}
+					</span>
+				{% endif %}
+				{% if page.photo_credit and page.photo_credit_link %}
+					<a class="topic-sidebar__photo-credit topic-sidebar__photo-credit--link" href="{{ page.photo_credit_link }}">
 						{{ page.photo_credit }}
 					</a>
-				{% else %}
-					{{ page.photo_credit}}
+				{% elif page.photo_credit %}
+					<span class="topic-sidebar__photo-credit" href="{{ page.photo_credit_link }}">
+						{{ page.photo_credit}}
+					</span>
 				{% endif %}
 			</div>
 		{% endif %}
 
 		{% for block in page.sidebar %}
 			{% if block.block_type == 'heading_2' %}
-				{% include_block block with classname='section-heading'%}
+				{% include_block block with classname='topic-sidebar__heading'%}
 			{% else %}
-				<section>{% include_block block %}</section>
+				<section class="topic-sidebar__{{ block.block_type }}">{% include_block block %}</section>
 			{% endif %}
 		{% endfor %}
 	</aside>
