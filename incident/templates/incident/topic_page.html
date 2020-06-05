@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% load common_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block top_sidebar_class %}
+	{{ block.super }}
+	layout-right-sidebar__sidebar--light
+{% endblock %}
+
+{% block sidebar_class %}layout-right-sidebar__sidebar--light{% endblock %}
+
+{% block secondary-header %}
+	{% image page.photo fill-1400x560 as x1 %}
+	{% image page.photo fill-2800x1120 as x2 %}
+
+	<header class="topic-header">
+		<img
+			class="topic-header__background"
+			alt="{{ page.photo_caption|striptags }}"
+			src="{{ x1.url }}"
+			srcset="{{ x1.url }} {{ x1.width }}w, {{ x2.url }} {{ x2.width }}w"
+		>
+		<div class="topic-header__text topic-header__text--{{ page.text_color }} topic-header__text--align-{{ page.text_align }}">
+			{% if page.superheading %}
+				<h2 class="topic-header__superheading">{{ page.superheading }}</h2>
+			{% endif %}
+			<h1 class="topic-header__heading">{{ page.title }}</h1>
+			{% if page.description|richtext_inline %}{# inline for check to strip lingering blank paragraphs #}
+				<div class="topic-header__description topic-header__description--align-{{ page.text_align }}">
+					{{ page.description|richtext }}
+				</div>
+			{% endif %}
+		</div>
+	</header>
+{% endblock %}
+
+{% block main_class %}layout-right-sidebar__main--padded{% endblock %}
+
+{% block maincontainer %}
+	<main>
+		{% if page.content %}
+			<div class="topic-body">
+				{% for block in page.content %}
+					{% if block.block_type == 'heading_2' %}
+						{% include_block block with classname='topic-body__heading' %}
+					{% elif block.block_type == 'rich_text' %}
+						<section class="topic-body__rich-text">
+							{% include_block block %}
+						</section>
+					{% else %}
+						<section>{% include_block block %}</section>
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		<div class="grid-50 js-incident-loading-parent">
+			{% for incident in entries_page %}
+				<div class="grid-50__item js-incident-loading-item">
+					{% include "incident/_incident.html" with incident=incident teaser=True %}
+				</div>
+			{% empty %}
+				<p class="grid-50__item">There are no incidents in this topic.</p>
+			{% endfor %}
+		</div>
+
+		{% if entries_page.has_next %}
+			<a
+				href="?{% query_transform request page=entries_page.next_page_number %}"
+					  class="button button--outline button--center js-incident-loading-next-link"
+			>
+				More Incidents
+			</a>
+		{% endif %}
+
+		<div class="topic-incidents">
+			{% for incident in tagged_incidents %}
+				<div class="grid-50__item js-incident-loading-item">
+					{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
+				</div>
+			{% endfor %}
+		</div>
+	</main>
+{% endblock %}
+
+{% block sidebar %}
+	<aside class="topic-sidebar">
+		{% if page.photo_caption or page.photo_credit %}
+			<div class="topic-sidebar__photo-info">
+				<div class="sr-only">Photo:</div>
+				{% if page.photo_caption %}
+					<span class="topic-sidebar__photo-caption">
+						{{ page.photo_caption|richtext_inline }}
+					</span>
+				{% endif %}
+				{% if page.photo_credit and page.photo_credit_link %}
+					<a class="topic-sidebar__photo-credit topic-sidebar__photo-credit--link" href="{{ page.photo_credit_link }}">
+						{{ page.photo_credit }}
+					</a>
+				{% elif page.photo_credit %}
+					<span class="topic-sidebar__photo-credit" href="{{ page.photo_credit_link }}">
+						{{ page.photo_credit}}
+					</span>
+				{% endif %}
+			</div>
+		{% endif %}
+
+		{% for block in page.sidebar %}
+			{% if block.block_type == 'heading_2' %}
+				{% include_block block with classname='topic-sidebar__heading'%}
+			{% else %}
+				<section class="topic-sidebar__{{ block.block_type }}">{% include_block block %}</section>
+			{% endif %}
+		{% endfor %}
+	</aside>
+{% endblock %}
