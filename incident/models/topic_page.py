@@ -41,7 +41,7 @@ class TopicPage(MetadataPageMixin, Page):
         null=True
     )
     description = RichTextField(
-        features=['bold', 'italic', 'links'],
+        features=['bold', 'italic', 'link'],
         blank=True
     )
     text_align = models.CharField(
@@ -53,7 +53,7 @@ class TopicPage(MetadataPageMixin, Page):
         help_text='Color of header text, for legibility against the background.'
     )
     photo_caption = RichTextField(
-        features=['bold', 'italic', 'links'],
+        features=['bold', 'italic', 'link'],
         blank=True
     )
     photo_credit = models.TextField(blank=True)
