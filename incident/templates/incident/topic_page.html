@@ -37,15 +37,17 @@
 
 {% block maincontainer %}
 	<main>
-		<div class="topic-body">
-			{% for block in page.content %}
-				{% if block.block_type == 'heading' %}
-					{% include_block block with classname='section-heading'%}
-				{% else %}
-					<section>{% include_block block %}</section>
-				{% endif %}
-			{% endfor %}
-		</div>
+		{% if page.content %}
+			<div class="topic-body">
+				{% for block in page.content %}
+					{% if block.block_type == 'heading' %}
+						{% include_block block with classname='section-heading'%}
+					{% else %}
+						<section>{% include_block block %}</section>
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% endif %}
 
 		<div class="grid-50 js-incident-loading-parent">
 			{% for incident in entries_page %}
