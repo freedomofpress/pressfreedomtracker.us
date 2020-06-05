@@ -36,9 +36,14 @@ class TopicPage(MetadataPageMixin, Page):
     )
 
     superheading = models.TextField(
-        help_text='Text that appears above the title in the heading block'
+        help_text='Text that appears above the title in the heading block',
+        blank=True,
+        null=True
     )
-    description = RichTextField(features=['bold', 'italic'])
+    description = RichTextField(
+        features=['bold', 'italic', 'links'],
+        blank=True
+    )
     text_align = models.CharField(
         max_length=255, choices=TEXT_ALIGN_CHOICES, default=BOTTOM_CENTER,
         help_text='Alignment of the full header text within the header image'
@@ -47,8 +52,12 @@ class TopicPage(MetadataPageMixin, Page):
         max_length=255, choices=TEXT_COLOR_CHOICES, default=WHITE,
         help_text='Color of header text, for legibility against the background.'
     )
-    photo_caption = RichTextField(features=['bold', 'italic'], blank=True)
+    photo_caption = RichTextField(
+        features=['bold', 'italic', 'links'],
+        blank=True
+    )
     photo_credit = models.TextField(blank=True)
+    photo_credit_link = models.URLField(blank=True, null=True)
     photo = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -61,7 +70,7 @@ class TopicPage(MetadataPageMixin, Page):
         ('heading_2', common.blocks.Heading2()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('rich_text', blocks.RichTextBlock()),
-    ])
+    ], blank=True)
     sidebar = StreamField([
         ('heading_2', common.blocks.Heading2()),
         ('rich_text', common.blocks.RichTextTemplateBlock(
@@ -71,7 +80,7 @@ class TopicPage(MetadataPageMixin, Page):
         )),
         ('stat_table', common.blocks.StatTableBlock()),
         ('button', common.blocks.ButtonBlock()),
-    ])
+    ], blank=True)
     incident_tag = models.ForeignKey('common.CommonTag', on_delete=models.PROTECT)
 
     content_panels = Page.content_panels + [
@@ -96,6 +105,9 @@ class TopicPage(MetadataPageMixin, Page):
             ],
             classname='collapsible',
         ),
+    ]
+
+    settings_panels = Page.settings_panels + [
         MultiFieldPanel(
             heading='Incidents',
             children=[

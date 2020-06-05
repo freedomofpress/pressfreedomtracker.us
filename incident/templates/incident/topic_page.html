@@ -21,11 +21,15 @@
 			srcset="{{ x1.url }} {{ x1.width }}w, {{ x2.url }} {{ x2.width }}w"
 		>
 		<div class="topic-header__text topic-header__text--align-{{ page.text_align }}">
-			<h2 class="topic-header__superheading">{{ page.superheading }}</h2>
+			{% if page.superheading %}
+				<h2 class="topic-header__superheading">{{ page.superheading }}</h2>
+			{% endif %}
 			<h1 class="topic-header__heading">{{ page.title }}</h1>
-			<div class="topic-header__description topic-header__description--align-{{ page.text_align }}">
-				{{ page.description|richtext }}
-			</div>
+			{% if page.description|richtext_inline %}{# inline for check to strip lingering blank paragraphs #}
+				<div class="topic-header__description topic-header__description--align-{{ page.text_align }}">
+					{{ page.description|richtext }}
+				</div>
+			{% endif %}
 		</div>
 	</header>
 
@@ -76,7 +80,14 @@
 	<aside class="topic-sidebar__wrapper">
 		{% if page.photo_caption or page.photo_credit %}
 			<div class="topic-sidebar__photo-info">
-				{{ page.photo_caption|richtext }} {{ page.photo_credit }}
+				{{ page.photo_caption|richtext }}
+				{% if page.photo_credit_link %}
+					<a class="topic-sidebar__photo-credit-link" href="{{ page.photo_credit_link }}">
+						{{ page.photo_credit }}
+					</a>
+				{% else %}
+					{{ page.photo_credit}}
+				{% endif %}
 			</div>
 		{% endif %}
 
