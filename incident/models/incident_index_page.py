@@ -8,7 +8,6 @@ from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from wagtail.admin.edit_handlers import FieldPanel
-from django.core import serializers
 from wagtail.core.models import Page
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
@@ -61,7 +60,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             return self.export_format_json(incidents)
         else:
             return self.export_format_csv(incidents)
-    
+
     def export_format_csv(self, incidents):
         incident_fields = IncidentPage._meta.get_fields()
         headers = [field.name for field in incident_fields
@@ -82,7 +81,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         response['Content-Disposition'] = 'attachment; filename="incidents.csv"'
         return response
-    
+
     def export_format_json(self, incidents):
         incident_list = []
         for incident in incidents:

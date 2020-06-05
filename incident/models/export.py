@@ -1,12 +1,7 @@
-import json
-
 from django.db import models
-from django.forms.models import model_to_dict
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalManyToManyField
-
-from wagtail.core.fields import StreamField
 
 
 EXCLUDED_FIELDS = {
@@ -77,6 +72,7 @@ def to_row(obj):
         row.append(_serialize_field(obj, field))
     return row
 
+
 def to_json(obj):
     incident_dict = {}
     model = type(obj)
@@ -84,6 +80,7 @@ def to_json(obj):
     for field in filter(is_exportable, model_fields):
         incident_dict[field.name] = _serialize_field(obj, field)
     return incident_dict
+
 
 def _serialize_field(obj, field):
     site = obj.get_site()

@@ -1,7 +1,9 @@
+import json
+
 from django.test import TestCase
 from wagtail.core.models import Site
 
-from incident.tests.factories import IncidentIndexPageFactory
+from incident.tests.factories import IncidentIndexPageFactory, IncidentPageFactory
 
 
 class IncidentExportTestCase(TestCase):
@@ -117,3 +119,12 @@ class IncidentExportTestCase(TestCase):
             'politicians_or_public_figures_involved',
         }
         self.assertEqual(headers, expected_headers)
+
+        # Create incidents
+        IncidentPageFactory()
+        response = self.client.get(
+            self.incident_index.get_full_url() + 'export/?format=json'
+        )
+        response_data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(len(response_data), 1)
+        self.assertEqual(response_data[0].keys(), expected_headers)
