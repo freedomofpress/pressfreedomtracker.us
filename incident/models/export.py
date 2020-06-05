@@ -68,26 +68,38 @@ def to_row(obj):
     model = type(obj)
     model_fields = model._meta.get_fields()
 
-    site = obj.get_site()
-
     for field in filter(is_exportable, model_fields):
-        if field.name == 'teaser_image':
-            val = getattr(obj, field.name)
-            if val:
-                val = site.root_url + val.get_rendition('fill-1330x880').url
-        elif field.name == 'slug':
-            val = obj.get_full_url()
-        elif type(field) == models.ForeignKey:
-            val = getattr(obj, field.name)
-            if val:
-                val = str(val)
-        elif type(field) in (models.ManyToManyField, models.ManyToOneRel, ClusterTaggableManager, ParentalManyToManyField):
-            val = u', '.join(
-                [humanize(item) for item in getattr(obj, field.name).all()]
-            )
-        elif hasattr(field, 'choices') and field.choices:
-            val = getattr(obj, 'get_%s_display' % field.name)()
-        elif hasattr(obj, field.name):
-            val = getattr(obj, field.name)
-        row.append(str(val))
+        row.append(_serialize_field(obj, field))
     return row
+
+
+def to_json(obj):
+    incident_dict = {}
+    model = type(obj)
+    model_fields = model._meta.get_fields()
+    for field in filter(is_exportable, model_fields):
+        incident_dict[field.name] = _serialize_field(obj, field)
+    return incident_dict
+
+
+def _serialize_field(obj, field):
+    site = obj.get_site()
+    if field.name == 'teaser_image':
+        val = getattr(obj, field.name)
+        if val:
+            val = site.root_url + val.get_rendition('fill-1330x880').url
+    elif field.name == 'slug':
+        val = obj.get_full_url()
+    elif type(field) == models.ForeignKey:
+        val = getattr(obj, field.name)
+        if val:
+            val = str(val)
+    elif type(field) in (models.ManyToManyField, models.ManyToOneRel, ClusterTaggableManager, ParentalManyToManyField):
+        val = u', '.join(
+            [humanize(item) for item in getattr(obj, field.name).all()]
+        )
+    elif hasattr(field, 'choices') and field.choices:
+        val = getattr(obj, 'get_%s_display' % field.name)()
+    elif hasattr(obj, field.name):
+        val = getattr(obj, field.name)
+    return str(val)
