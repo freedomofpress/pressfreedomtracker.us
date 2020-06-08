@@ -1,5 +1,6 @@
 import csv
 from datetime import timedelta
+import json
 
 import wagtail_factories
 from wagtail.core.models import Site, Page
@@ -14,14 +15,20 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
 
-from common.tests.factories import CategoryPageFactory, PersonPageFactory
+from common.tests.factories import (
+    CategoryPageFactory,
+    PersonPageFactory,
+    CommonTagFactory,
+)
 from home.tests.factories import HomePageFactory
 from incident.models.incident_page import IncidentPage
+from incident.models.topic_page import TopicPage
 from incident.models.export import is_exportable, to_row
 from .factories import (
     IncidentIndexPageFactory,
     IncidentPageFactory,
-    IncidentUpdateFactory
+    IncidentUpdateFactory,
+    TopicPageFactory
 )
 
 
@@ -409,3 +416,115 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
         incident_page = IncidentPage.objects.get(slug='the-incident')
         response = self.client.get(incident_page.url)
         self.assertEqual(response.status_code, 200)
+
+
+class TestTopicPage(WagtailPageTests):
+    @classmethod
+    def setUpTestData(cls):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+
+        cls.site = site
+        cls.category = CategoryPageFactory(parent=cls.home_page)
+        cls.tag = CommonTagFactory()
+        cls.index_page = IncidentIndexPageFactory(
+            parent=cls.home_page,
+        )
+
+    def test_can_create_topic_page(self):
+        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+
+        form_data = nested_form_data({
+            'title': 'Vampires',
+            'slug': 'vampires',
+            'superheading': 'The Children of the Night',
+            'description': rich_text('<p>Creatures feeding on vital essence.</p>'),
+            'text_align': 'bottom-center',
+            'text_color': 'black',
+            'photo_caption': rich_text('<p>Possibly some fangs.</p>'),
+            'photo_credit': 'Professor Abraham Van Helsing',
+            'photo_credit_link': 'https://example.com',
+            'content': streamfield([
+                ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
+                ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
+                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
+            ]),
+            'sidebar': streamfield([
+                ('heading_2', nested_form_data({'content': 'Vampire Sightings 2020'})),
+                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
+                ('button', nested_form_data({
+                    'text': 'Donate blood',
+                    'url': 'https://example.com',
+                })),
+                ('stat_table', streamfield([
+                    ('value', nested_form_data({'header': 'Garlic Supplies', 'value': '6 heads'})),
+                    ('value', nested_form_data({'header': 'Recent attacks', 'value': stats_tag})),
+                ])),
+            ]),
+            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk})
+        })
+
+        self.assertCanCreate(self.home_page, TopicPage, form_data)
+        topic_page = TopicPage.objects.get(slug='vampires')
+        response = self.client.get(topic_page.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_can_preview_topic_page(self):
+        topic_page = TopicPageFactory(parent=self.home_page)
+        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(topic_page.pk,))
+
+        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        form_data = nested_form_data({
+            'title': 'Vampires',
+            'slug': 'vampires',
+            'superheading': 'The Children of the Night',
+            'description': rich_text('<p>Creatures feeding on vital essence.</p>'),
+            'text_align': 'bottom-center',
+            'text_color': 'black',
+            'photo_caption': rich_text('<p>Possibly some fangs.</p>'),
+            'photo_credit': 'Professor Abraham Van Helsing',
+            'photo_credit_link': 'https://example.com',
+            'content': streamfield([
+                ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
+                ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
+                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
+            ]),
+            'sidebar': streamfield([
+                ('heading_2', nested_form_data({'content': 'Vampire Sightings 2020'})),
+                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
+                ('button', nested_form_data({
+                    'text': 'Donate blood',
+                    'url': 'https://example.com',
+                })),
+                ('stat_table', streamfield([
+                    ('value', nested_form_data({'header': 'Garlic Supplies', 'value': '6 heads'})),
+                    ('value', nested_form_data({'header': 'Recent attacks', 'value': stats_tag})),
+                ])),
+            ]),
+            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk})
+        })
+
+        response = self.client.post(
+            preview_url,
+            form_data,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        response = self.client.get(preview_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], topic_page)
