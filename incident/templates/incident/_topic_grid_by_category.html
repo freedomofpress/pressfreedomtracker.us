@@ -1,0 +1,9 @@
+{% load routablepageurl from wagtailroutablepage_tags %}
+
+<div
+	class="js-topic-grid-by-category"
+	data-endpoint="{% routablepageurl page.incident_index_page 'export_view' %}"
+	data-endpoint-params="{'tags': {{ page.incident_tag.id }}}"
+>
+	Javascript must be enabled to view this page.
+</div>
