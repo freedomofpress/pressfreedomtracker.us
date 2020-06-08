@@ -123,7 +123,7 @@ class TopicPage(MetadataPageMixin, Page):
 
         incident_qs = IncidentPage.objects.live().filter(
             tags=self.incident_tag
-        )
+        ).order_by('-date')
 
         paginator, entries = paginate(
             request,

@@ -1,6 +1,6 @@
 import csv
-from datetime import timedelta
 import json
+from datetime import timedelta, date
 
 import wagtail_factories
 from wagtail.core.models import Site, Page
@@ -11,7 +11,7 @@ from wagtail.tests.utils.form_data import (
     inline_formset,
     rich_text,
 )
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from django.utils import timezone
 
@@ -528,3 +528,16 @@ class TestTopicPage(WagtailPageTests):
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], topic_page)
+
+    def test_sorts_incidents_by_incident_date_descending(self):
+        topic_page = TopicPageFactory(parent=self.home_page)
+        incident1 = IncidentPageFactory(date=date(2020, 1, 2), tags=[topic_page.incident_tag])
+        incident2 = IncidentPageFactory(date=date(2020, 1, 3), tags=[topic_page.incident_tag])
+        incident3 = IncidentPageFactory(date=date(2020, 1, 1), tags=[topic_page.incident_tag])
+
+        request = RequestFactory().get('/')
+
+        self.assertEqual(
+            list(topic_page.get_context(request)['entries_page']),
+            [incident2, incident1, incident3]
+        )
