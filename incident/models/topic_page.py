@@ -1,8 +1,13 @@
 from django.db import models
 from django.http import JsonResponse
 from marshmallow import Schema, fields
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    StreamFieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+)
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page
@@ -73,6 +78,13 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         (BLACK, 'Black'),
     )
 
+    BY_INCIDENT = 'by_incident'
+    BY_CATEGORY = 'by_category'
+    LAYOUT_CHOICES = (
+        (BY_INCIDENT, 'By Incident'),
+        (BY_CATEGORY, 'By Category'),
+    )
+
     superheading = models.TextField(
         help_text='Text that appears above the title in the heading block',
         blank=True,
@@ -104,6 +116,12 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         related_name='+'
     )
 
+    layout = models.CharField(
+        max_length=255,
+        choices=LAYOUT_CHOICES,
+        default=BY_INCIDENT
+    )
+
     content = StreamField([
         ('heading_2', common.blocks.Heading2()),
         ('raw_html', blocks.RawHTMLBlock()),
@@ -121,6 +139,12 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('stat_table', common.blocks.StatTableBlock()),
         ('button', common.blocks.ButtonBlock()),
     ], blank=True)
+
+    incident_index_page = models.ForeignKey(
+        'incident.IncidentIndexPage',
+        on_delete=models.PROTECT,
+        related_name='+'
+    )
     incident_tag = models.ForeignKey('common.CommonTag', on_delete=models.PROTECT)
 
     content_panels = Page.content_panels + [
@@ -152,16 +176,18 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Incidents',
             children=[
+                PageChooserPanel('incident_index_page'),
                 AutocompletePanel('incident_tag', page_type='common.CommonTag'),
             ],
             classname='collapsible',
         ),
+        FieldPanel('layout'),
     ]
 
     def get_context(self, request):
         context = super(TopicPage, self).get_context(request)
 
-        incident_qs = IncidentPage.objects.live().filter(
+        incident_qs = self.incident_index_page.get_incidents().filter(
             tags=self.incident_tag
         ).order_by('-date')
 
