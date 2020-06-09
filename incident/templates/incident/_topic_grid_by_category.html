@@ -3,7 +3,9 @@
 <div
 	class="js-topic-grid-by-category"
 	data-endpoint="{% routablepageurl page.incident_index_page 'export_view' %}"
-	data-endpoint-params="{'tags': {{ page.incident_tag.id }}}"
+	data-endpoint-params="{% filter force_escape %}
+		{"tags": {{ page.incident_tag.id }}, "format": "json"}
+	{% endfilter %}"
 >
 	Javascript must be enabled to view this page.
 </div>

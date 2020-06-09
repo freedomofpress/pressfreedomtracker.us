@@ -101,3 +101,8 @@
 		{% endfor %}
 	</aside>
 {% endblock %}
+
+{% block js %}
+	{{ block.super }}
+	{% render_bundle 'topic' 'js' %}
+{% endblock %}
