@@ -87,7 +87,7 @@
 	<aside class="topic-sidebar">
 		{% if page.photo_caption or page.photo_credit %}
 			<div class="topic-sidebar__photo-info">
-				<div class="sr-only">Photo:</div>
+				<strong>Photo:</strong>
 				{% if page.photo_caption %}
 					<span class="topic-sidebar__photo-caption">
 						{{ page.photo_caption|richtext_inline }}
