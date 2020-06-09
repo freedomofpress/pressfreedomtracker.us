@@ -23,9 +23,10 @@ from incident.models import (
     Institution,
     TargetedJournalist,
     GovernmentWorker,
+    TopicPage,
 )
 from common.models import CustomImage
-from common.tests.factories import CategoryPageFactory
+from common.tests.factories import CategoryPageFactory, CommonTagFactory
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
 
@@ -360,6 +361,14 @@ class IncidentCategorizationFactory(factory.DjangoModelFactory):
     sort_order = factory.Sequence(lambda n: n)
     incident_page = factory.SubFactory(IncidentPageFactory)
     category = factory.SubFactory(CategoryPageFactory)
+
+
+class TopicPageFactory(wagtail_factories.PageFactory):
+    class Meta:
+        model = TopicPage
+
+    title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
+    incident_tag = factory.SubFactory(CommonTagFactory)
 
 
 class ItemFactory(factory.DjangoModelFactory):
