@@ -12,6 +12,7 @@ docutils
 factory_boy
 gunicorn
 Jinja2
+marshmallow
 psycopg2
 Pygments
 python-json-logger

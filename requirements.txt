@@ -122,6 +122,10 @@ markupsafe==1.1.1 \
     --hash=sha256:cd5df75523866410809ca100dc9681e301e3c27567cf498077e8551b6d20e42f \
     --hash=sha256:e249096428b3ae81b08327a63a485ad0878de3fb939049038579ac0ef61e17e7 \
     # via jinja2
+marshmallow==3.6.1 \
+    --hash=sha256:35ee2fb188f0bd9fc1cf9ac35e45fd394bd1c153cee430745a465ea435514bd5 \
+    --hash=sha256:9aa20f9b71c992b4782dad07c51d92884fd0f7c5cb9d3c737bea17ec1bad765f \
+    # via -r requirements.in
 pillow==6.2.2 \
     --hash=sha256:00e0bbe9923adc5cc38a8da7d87d4ce16cde53b8d3bba8886cb928e84522d963 \
     --hash=sha256:03457e439d073770d88afdd90318382084732a5b98b0eb6f49454746dbaae701 \
