@@ -70,6 +70,7 @@ class TopicPage(MetadataPageMixin, Page):
         ('heading_2', common.blocks.Heading2()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('rich_text', blocks.RichTextBlock()),
+        ('tweet', common.blocks.TweetEmbedBlock()),
     ], blank=True)
     sidebar = StreamField([
         ('heading_2', common.blocks.Heading2()),
@@ -78,6 +79,7 @@ class TopicPage(MetadataPageMixin, Page):
             icon='doc-full',
             label='Rich Text',
         )),
+        ('tweet', common.blocks.TweetEmbedBlock()),
         ('stat_table', common.blocks.StatTableBlock()),
         ('button', common.blocks.ButtonBlock()),
     ], blank=True)
