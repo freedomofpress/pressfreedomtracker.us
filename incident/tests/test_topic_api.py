@@ -62,8 +62,13 @@ class TopicPageApi(TestCase):
             tags=[cls.topic.incident_tag],
             categories=[cls.cat2],
         )
+
+        # Four targeted journalists on incidents within the topic
         TargetedJournalistFactory(incident=cls.inc1)
         TargetedJournalistFactory.create_batch(3, incident=cls.inc2)
+
+        # One targeted journalist on an incident outside of the topic
+        TargetedJournalistFactory(incident=cls.inc4)
 
         cls.url = cls.topic.get_full_url() + 'incidents/'
 
