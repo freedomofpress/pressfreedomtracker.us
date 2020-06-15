@@ -184,7 +184,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             total_journalists=models.Count(
                 'incidents__incident_page__targeted_journalists__journalist',
                 filter=models.Q(
-                    incidents__incident_page__tags=self.incident_tag
+                    incidents__incident_page__tags=self.incident_tag,
+                    incidents__incident_page__live=True,
                 )
             )
         ).filter(

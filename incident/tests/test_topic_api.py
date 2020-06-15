@@ -56,7 +56,7 @@ class TopicPageApi(TestCase):
             tags=[cls.topic.incident_tag],
             categories=[cls.cat2],
         )
-        IncidentPageFactory.create(
+        cls.draft_incident = IncidentPageFactory.create(
             live=False,
             date='2020-01-01',
             tags=[cls.topic.incident_tag],
@@ -111,3 +111,12 @@ class TopicPageApi(TestCase):
         self.assertEqual(inc['title'], self.inc2.title)
         self.assertEqual(inc['date'], str(self.inc2.date))
         self.assertEqual(inc['url'], self.inc2.get_full_url())
+
+    def test_GET_does_not_count_journalists_on_draft_incidents(self):
+        TargetedJournalistFactory(incident=self.draft_incident)
+
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+        cat2 = data[1]
+
+        self.assertEqual(cat2['total_journalists'], 0)
