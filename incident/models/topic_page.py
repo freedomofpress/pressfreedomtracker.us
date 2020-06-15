@@ -181,7 +181,12 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     @route('incidents/')
     def incidents_view(self, request):
         journalist_count = CategoryPage.objects.annotate(
-            total_journalists=models.Count('incidents__incident_page__targeted_journalists__journalist')
+            total_journalists=models.Count(
+                'incidents__incident_page__targeted_journalists__journalist',
+                filter=models.Q(
+                    incidents__incident_page__tags=self.incident_tag
+                )
+            )
         ).filter(
             pk=models.OuterRef('pk')
         ).live()
