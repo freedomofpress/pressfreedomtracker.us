@@ -5,7 +5,7 @@ from wagtail.documents.models import Document
 from common.models import CommonTag
 from common.wagtail_hooks import CommonTagAdmin
 from django.contrib.auth import get_user_model
-from incident.tests.factories import IncidentPageFactory
+from incident.tests.factories import IncidentPageFactory, TopicPageFactory
 import json
 
 User = get_user_model()
@@ -30,7 +30,7 @@ class DocumentDownloadTest(TestCase):
         self.assertEqual(response['content-disposition'], 'inline; filename="{}"'.format(document.filename))
 
 
-class MergeViewTest(TestCase):
+class MergeTagTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.tag1 = CommonTag.objects.create(title='Rachel')
@@ -56,6 +56,8 @@ class MergeViewTest(TestCase):
             }
         )
 
+
+class MergeViewTest(MergeTagTestCase):
     def test_successful_request_redirects(self):
         self.assertEqual(self.response.status_code, 302)
 
@@ -75,6 +77,22 @@ class MergeViewTest(TestCase):
             CommonTag.objects.get(pk=self.tag1.pk)
         with self.assertRaises(CommonTag.DoesNotExist):
             CommonTag.objects.get(pk=self.tag2.pk)
+
+
+class MergeTagWithTopicPageTest(MergeTagTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.topic_page1 = TopicPageFactory(incident_tag=cls.tag1)
+        cls.topic_page2 = TopicPageFactory(incident_tag=cls.tag2)
+
+    def test_topic_page_incident_tag_should_become_new_tag(self):
+        new_tag = CommonTag.objects.get(title=self.new_tag_title)
+        self.topic_page1.refresh_from_db()
+        self.topic_page2.refresh_from_db()
+
+        self.assertEqual(self.topic_page1.incident_tag, new_tag)
+        self.assertEqual(self.topic_page2.incident_tag, new_tag)
 
 
 class MergeViewSameNameTest(TestCase):

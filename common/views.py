@@ -1,13 +1,15 @@
 import os
 
 from django.http import HttpResponse
+from django.utils.text import capfirst
+from django.utils.translation import gettext_lazy as _
+from django.views.generic.edit import FormView
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
-from django.views.generic.edit import FormView
+
+from common.models import CommonTag
+from incident.models import IncidentPage, TopicPage
 from .forms import TagMergeForm
-from incident.models import IncidentPage
-from django.utils.translation import gettext_lazy as _
-from django.utils.text import capfirst
 
 
 DEPLOYINFO_PATH = os.environ.get('DJANGO_VERSION_FILE', '/deploy/version')
@@ -60,8 +62,28 @@ class MergeView(FormView):
         return self.model_admin.url_helper.index_url
 
 
-class TagMergeView(MergeView):
+class TagMergeView(FormView):
     form_class = TagMergeForm
+    template_name = 'modeladmin/merge_form.html'
+    model_admin = None
+
+    def get_success_url(self):
+        return self.model_admin.url_helper.index_url
+
+    def form_valid(self, form):
+        models_to_merge = form.cleaned_data['models_to_merge']
+        new_tag_title = form.cleaned_data['title_for_merged_models']
+
+        tag, _ = CommonTag.objects.get_or_create(title=new_tag_title)
+
+        pages = IncidentPage.objects.filter(tags__in=models_to_merge)
+        tag.tagged_items.add(*list(pages))
+        TopicPage.objects.filter(
+            incident_tag__in=models_to_merge
+        ).update(incident_tag=tag)
+
+        models_to_merge.exclude(pk=tag.pk).delete()
+        return super().form_valid(form)
 
 
 def deploy_info_view(request):
