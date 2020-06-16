@@ -1,5 +1,8 @@
 from django.db import models
+from django.http import JsonResponse
+from marshmallow import Schema, fields
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page
@@ -7,15 +10,50 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 import common.blocks
-from common.models import MetadataPageMixin
+from common.models import MetadataPageMixin, CategoryPage
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
 )
-from incident.models import IncidentPage
+from incident.models import IncidentPage, IncidentCategorization
 
 
-class TopicPage(MetadataPageMixin, Page):
+class IncidentSchema(Schema):
+    title = fields.Str()
+    date = fields.DateTime()
+    url = fields.Function(lambda obj: obj.get_full_url())
+    image = fields.Method('get_image')
+    description = fields.Method('get_description')
+
+    def get_image(self, obj):
+        site = obj.get_site()
+        if obj.teaser_image and site.root_url:
+            return site.root_url + obj.teaser_image.get_rendition('width-720').url
+        else:
+            return ''
+
+    def get_description(self, obj):
+        return obj.body.render_as_block()
+
+
+class CategorySchema(Schema):
+    category = fields.Str(attribute='title')
+    category_plural = fields.Str(attribute='plural_name')
+    color = fields.Str(attribute='page_color')
+    methodology = fields.Str()
+    url = fields.Function(lambda obj: obj.get_full_url())
+    total_incidents = fields.Int()
+    total_journalists = fields.Int()
+    incidents = fields.Method('get_incidents')
+
+    def get_incidents(self, obj):
+        incidents_schema = IncidentSchema(many=True)
+        return incidents_schema.dump(
+            [categorization.incident_page for categorization in obj.categorization_list][:5]
+        )
+
+
+class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     TOP_LEFT = 'top-left'
     BOTTOM_LEFT = 'bottom-left'
     TOP_CENTER = 'top-center'
@@ -139,3 +177,29 @@ class TopicPage(MetadataPageMixin, Page):
         context['paginator'] = paginator
 
         return context
+
+    @route('incidents/')
+    def incidents_view(self, request):
+        journalist_count = CategoryPage.objects.annotate(
+            total_journalists=models.Count(
+                'incidents__incident_page__targeted_journalists__journalist',
+                filter=models.Q(
+                    incidents__incident_page__tags=self.incident_tag,
+                    incidents__incident_page__live=True,
+                )
+            )
+        ).filter(
+            pk=models.OuterRef('pk')
+        ).live()
+
+        with_incident_page = IncidentCategorization.objects.select_related('incident_page').filter(
+            incident_page__tags=self.incident_tag,
+        ).order_by('-incident_page__date')
+
+        cats = CategoryPage.objects.live().prefetch_related(models.Prefetch('incidents', queryset=with_incident_page, to_attr='categorization_list')).annotate(
+            total_journalists=models.Subquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
+            total_incidents=models.Count('incidents__incident_page', filter=models.Q(incidents__incident_page__tags=self.incident_tag, incidents__incident_page__live=True))
+        )
+        categories_schema = CategorySchema(many=True)
+        result = categories_schema.dump(cats)
+        return JsonResponse(data=result, safe=False)
