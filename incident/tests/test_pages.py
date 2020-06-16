@@ -296,7 +296,7 @@ class GetIncidentUpdatesTest(TestCase):
             date=timezone.now() - timedelta(days=300),
         )
 
-        incident_updates = incident.get_updates()
+        incident_updates = incident.get_updates_by_asc_date()
 
         self.assertEqual(
             list(incident_updates),
