@@ -40,7 +40,7 @@ class Suggestions extends PureComponent {
 		if (suggestions.length === 0 || index >= props.suggestions.length || props.suggestions[index].id !== currentId) {
 			return {
 				index: 0,
-				currentId: null
+				currentId: null,
 			}
 
 		}
@@ -86,14 +86,14 @@ class Suggestions extends PureComponent {
 			const target = Math.min(max, index + 1)
 			this.setState({
 				index: target,
-				currentId: suggestions[target].id
+				currentId: suggestions[target].id,
 			})
 			this.scrollToSuggestion(target)
 		} else if (event.key === 'ArrowUp') {
 			const target = Math.max(0, index - 1)
 			this.setState({
 				index: target,
-				currentId: suggestions[target].id
+				currentId: suggestions[target].id,
 			})
 			this.scrollToSuggestion(target)
 		} else if (event.key === 'Enter') {
