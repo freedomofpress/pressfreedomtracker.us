@@ -22,7 +22,7 @@ def forward(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0052_topicpage_additions'),
+        ('incident', '0053_topicpage_additions'),
     ]
 
     operations = [
