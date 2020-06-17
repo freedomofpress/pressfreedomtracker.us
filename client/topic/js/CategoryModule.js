@@ -8,6 +8,7 @@ export default class CategoryModule extends React.PureComponent {
 	render() {
         const {
             category,
+            tag,
             incidentsPerModule,
 			incidents,
         } = this.props
@@ -35,7 +36,7 @@ export default class CategoryModule extends React.PureComponent {
                         ))}
                         {category.total_incidents > incidentsPerModule ? (
                             <a
-                                href={category.url}
+                                href={`${category.url}?tags=${tag}`}
                                 className="button button--outline button--center js-incident-loading-next-link"
                             >
                                 More Incidents

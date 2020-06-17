@@ -36,6 +36,7 @@ export default class CategoryGrid extends React.PureComponent {
 						return (<CategoryModule
 							key={index}
 							category={category}
+							tag={this.props.tag}
 							incidentsPerModule={this.props.incidentsPerModule}
 							incidents={category.incidents} />)
 					}
@@ -47,5 +48,6 @@ export default class CategoryGrid extends React.PureComponent {
 
 CategoryGrid.propTypes = {
 	dataUrl: PropTypes.string.isRequired,
-	incidentsPerModule: PropTypes.number
+	incidentsPerModule: PropTypes.number,
+	tag: PropTypes.number
 }
