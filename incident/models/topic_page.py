@@ -21,7 +21,7 @@ from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
 )
-from incident.models import IncidentPage, IncidentCategorization
+from incident.models import IncidentCategorization
 
 
 class IncidentSchema(Schema):
