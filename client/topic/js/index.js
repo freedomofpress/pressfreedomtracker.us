@@ -10,7 +10,7 @@ const topicGridElements = document.getElementsByClassName('js-topic-grid-by-cate
 Array.from(topicGridElements).forEach(el => {
 	const props = {
 		dataUrl: el.dataset.endpoint,
-		dataUrlParams: JSON.parse(el.dataset.endpointParams),
+		incidentsPerModule: parseInt(el.dataset.incidentsPerModule)
 	}
 	render(<CategoryGrid {...props} />, el)
 })

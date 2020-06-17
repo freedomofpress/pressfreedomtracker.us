@@ -9,8 +9,7 @@ export default class CategoryGrid extends React.PureComponent {
 		super(props)
 		this.state = {
 			incidents: [],
-			loading: true,
-			categories: []
+			loading: true
 		}
 	}
 
@@ -19,15 +18,11 @@ export default class CategoryGrid extends React.PureComponent {
 	}
 
 	async fetchData() {
-		this.setState({ incidents, loading: true, categories })
+		this.setState({ incidents, loading: true })
 		const querystring = new URLSearchParams(this.props.dataUrlParams).toString()
-		const incidents = await (await fetch(`${this.props.dataUrl}?${querystring}`)).json()
-		incidents.forEach(incident => {
-			incident['category'] = incident['categories'].split(',')[0]
-		});
-		const categories = [...new Set(incidents.map(incident => incident.category))];
-		console.log(categories)
-		this.setState({ incidents, loading: false, categories })
+		const incidents = await (await fetch(this.props.dataUrl)).json()
+		console.log(incidents)
+		this.setState({ incidents, loading: false })
 	}
 
 	render() {
@@ -36,14 +31,13 @@ export default class CategoryGrid extends React.PureComponent {
 		}
 		return (
 			<div className="grid-50 js-incident-loading-parent">
-				{this.state.categories.map(category => {
-					const categoryIncidents = this.state.incidents.filter( incident => 
-						incident['category'] == category
-					)
-					console.log(categoryIncidents)
-					return (<CategoryModule
-						category={category}
-						incidents={categoryIncidents} />)
+				{this.state.incidents.map(category => {
+					if (category.incidents.length) {
+						return (<CategoryModule
+							category={category}
+							incidentsPerModule={this.props.incidentsPerModule}
+							incidents={category.incidents} />)
+					}
 				})}
 			</div>
 		)
@@ -52,5 +46,5 @@ export default class CategoryGrid extends React.PureComponent {
 
 CategoryGrid.propTypes = {
 	dataUrl: PropTypes.string.isRequired,
-	dataUrlParams: PropTypes.object.isRequired,
+	incidentsPerModule: PropTypes.number
 }

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.http import JsonResponse
 from marshmallow import Schema, fields
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -120,6 +121,14 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         max_length=255,
         choices=LAYOUT_CHOICES,
         default=BY_INCIDENT
+    )
+    incidents_per_module = models.PositiveIntegerField(
+        default=4,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(3)
+        ],
+        help_text='Maximum incidents per category module in category layout'
     )
 
     content = StreamField([

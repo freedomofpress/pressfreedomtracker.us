@@ -8,9 +8,9 @@ export default class MiniIncident extends React.PureComponent {
 			incident,
 		} = this.props
 		return (
-            <div className="incident__body">
+            <div className="incident__body-excerpt">
 				<h3 className="incident__title">
-					<a href={incident.slug}>{incident.title}</a>
+					<a href={incident.url}>{incident.title}</a>
 				</h3>
 				<div className="incident__date">{incident.date}</div>
 			</div>
