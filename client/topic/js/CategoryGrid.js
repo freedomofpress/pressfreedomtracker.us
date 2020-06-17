@@ -21,8 +21,8 @@ export default class CategoryGrid extends React.PureComponent {
 		this.setState({ incidents, loading: true })
 		const querystring = new URLSearchParams(this.props.dataUrlParams).toString()
 		const incidents = await (await fetch(this.props.dataUrl)).json()
-		console.log(incidents)
 		this.setState({ incidents, loading: false })
+		setInterval(this.fetchData.bind(this), 300000)
 	}
 
 	render() {
@@ -31,9 +31,10 @@ export default class CategoryGrid extends React.PureComponent {
 		}
 		return (
 			<div className="grid-50 js-incident-loading-parent">
-				{this.state.incidents.map(category => {
+				{this.state.incidents.map((category, index) => {
 					if (category.incidents.length) {
 						return (<CategoryModule
+							key={index}
 							category={category}
 							incidentsPerModule={this.props.incidentsPerModule}
 							incidents={category.incidents} />)

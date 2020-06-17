@@ -11,7 +11,6 @@ export default class CategoryModule extends React.PureComponent {
             incidentsPerModule,
 			incidents,
         } = this.props
-        console.log(incidents)
 		return (
             <div className="grid-50__item js-incident-loading-item">
                 <article className={`
@@ -31,8 +30,8 @@ export default class CategoryModule extends React.PureComponent {
                                 { ' Methodology '}
                             </span>
                         </p>
-                        {incidents.slice(0, incidentsPerModule).map(incident => (
-                            <MiniIncident incident={incident} />
+                        {incidents.slice(0, incidentsPerModule).map((incident, key) => (
+                            <MiniIncident key={key} incident={incident} />
                         ))}
                         {category.total_incidents > incidentsPerModule ? (
                             <a
@@ -50,7 +49,7 @@ export default class CategoryModule extends React.PureComponent {
 }
 
 CategoryModule.propTypes = {
-	category: PropTypes.string.isRequired,
+	category: PropTypes.object.isRequired,
     incidents: PropTypes.array.isRequired,
     incidentsPerModule: PropTypes.number
 }
