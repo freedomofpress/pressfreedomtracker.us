@@ -13,10 +13,11 @@ def forward(apps, schema_editor):
 
     IncidentIndexPage = apps.get_model('incident', 'IncidentIndexPage')
     TopicPage = apps.get_model('incident', 'TopicPage')
-
-    default_index_page = IncidentIndexPage.objects.all()[0]
-
-    TopicPage.objects.all().update(incident_index_page=default_index_page)
+    try:
+        default_index_page = IncidentIndexPage.objects.all()[0]
+        TopicPage.objects.all().update(incident_index_page=default_index_page)
+    except IndexError:
+        migrations.RunPython.noop(apps, schema_editor)
 
 
 class Migration(migrations.Migration):
