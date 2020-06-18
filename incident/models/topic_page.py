@@ -213,8 +213,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         return context
 
-    @route('incidents/')
-    def incidents_view(self, request):
+    def get_categories_data(self):
         journalist_count = CategoryPage.objects.annotate(
             total_journalists=models.Count(
                 'incidents__incident_page__targeted_journalists__journalist',
@@ -237,4 +236,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         )
         categories_schema = CategorySchema(many=True)
         result = categories_schema.dump(cats)
-        return JsonResponse(data=result, safe=False)
+        return result
+
+    @route('incidents/')
+    def incidents_view(self, request):
+        return JsonResponse(data=self.get_categories_data(), safe=False)

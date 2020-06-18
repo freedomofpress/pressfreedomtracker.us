@@ -102,6 +102,11 @@
 	</aside>
 {% endblock %}
 
+{% block css %}
+	{{ block.super }}
+	{% render_bundle 'topic' 'css' %}
+{% endblock %}
+
 {% block js %}
 	{{ block.super }}
 	{% render_bundle 'topic' 'js' %}

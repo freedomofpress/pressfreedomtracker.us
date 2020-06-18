@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import MiniIncident from './MiniIncident'
 
+import '../sass/CategoryModule.sass'
 
 export default class CategoryModule extends React.PureComponent {
 	render() {
@@ -13,38 +14,38 @@ export default class CategoryModule extends React.PureComponent {
 			incidents,
 		} = this.props
 		return (
-			<div className="grid-50__item js-incident-loading-item">
-				<article className={`
-					incident
-					incident--${category.color}
-					incident--teaser`}
-				>
-					<div className="incident__body">
-						<p className={`category-list__item category-list__item--${category.color}`}>
-							{category.category}
-						</p>
-						<p className="category__stats">
-							{category.total_incidents} {category.category_plural} affecting {category.total_journalists} journalists.
-							<span
-							 className="methodology"
-							 title={category.methodology}>
-								{ ' Methodology '}
-							</span>
-						</p>
-						{incidents.slice(0, incidentsPerModule).map((incident, key) => (
-							<MiniIncident key={key} incident={incident} />
-						))}
-						{category.total_incidents > incidentsPerModule ? (
-							<a
-								href={`${category.url}?tags=${tag}`}
-								className="button button--outline button--center js-incident-loading-next-link"
-							>
-								More Incidents
-							</a>
-						) : ''}
+			<article className={`category-module category-module--${category.color}`}>
+				<div className="category-module__header">
+					<h1 className={`category-module__title category-module__title--${category.color}`}>
+						{category.category}
+					</h1>
+					<div className="category-module__stats">
+						<strong>{category.total_incidents}</strong>{' '}
+						{category.category_plural}{' '}
+						{category.total_journalists ? (<span>{/* TODO: Make this a fragment when we're on React 16*/}
+							affecting <strong>{category.total_journalists}</strong> journalists.
+						</span>) : ''}
+						<span
+							className="category-module__methodology-link"
+						>
+							Methodology
+						</span>
 					</div>
-				</article>
-			</div>
+				</div>
+				<div className="category-module__items">
+					{incidents.slice(0, incidentsPerModule).map(incident => (
+						<MiniIncident key={incident.url} incident={incident} />
+					))}
+					{category.total_incidents > incidentsPerModule ? (
+						<a
+							href={`${category.url}?tags=${tag}`}
+							className="category-module__action"
+						>
+							More Incidents
+						</a>
+					) : ''}
+				</div>
+			</article>
 		)
 	}
 }

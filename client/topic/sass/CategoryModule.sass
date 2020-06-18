@@ -1,0 +1,54 @@
+@import ../../common/sass/variables
+@import ../../common/sass/maps
+@import ../../common/sass/mixins
+
+.category-module
+	$side-padding: 20px
+
+	background-color: $white
+	width: 100%
+	border-top: 10px solid #EEE
+	margin-bottom: 30px
+
+	@each $name, $color in $border-colors
+		&--#{$name}
+			border-top-color: $color
+
+	&__header
+		padding: 15px $side-padding 5px $side-padding
+
+	&__title
+		+uppercase
+		font-family: $sans-serif
+		font-weight: $sans-regular
+		font-size: 20px
+		margin: 0 0 5px 0
+
+		@each $name, $color in $text-colors
+			&--#{$name}
+				color: $color
+
+	&__stats
+		color: $gray-mid-text
+		font-size: 16px
+
+	&__methodology-link
+		color: $blue-dark-link
+		cursor: pointer
+		padding: 0 0.5em
+		+hover
+			color: $blue-dark-link-hover
+
+	&__action
+		+uppercase
+		display: block
+		text-align: center
+		font-size: 16px
+		color: $gray-mid-text
+		padding: $side-padding
+		text-decoration: none
+		border-top: 1px solid $gray-mid-light
+
+		&:hover
+			background-color: $gray-very-light
+			color: $gray-mid-dark-text
