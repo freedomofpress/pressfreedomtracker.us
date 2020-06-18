@@ -2,10 +2,24 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import MiniIncident from './MiniIncident'
+import Popover from './Popover'
 
 import '../sass/CategoryModule.sass'
 
 export default class CategoryModule extends React.PureComponent {
+	constructor(props) {
+		super(props)
+
+		this.state = { showPopover: false }
+
+		this.showPopover = this.showPopover.bind(this)
+		this.hidePopover = this.hidePopover.bind(this)
+	}
+
+	showPopover() { this.setState({ showPopover: true }) }
+
+	hidePopover() { this.setState({ showPopover: false }) }
+
 	render() {
 		const {
 			category,
@@ -26,9 +40,16 @@ export default class CategoryModule extends React.PureComponent {
 							affecting <strong>{category.total_journalists}</strong> journalists.
 						</span>) : ''}
 						<span
-							className="category-module__methodology-link"
+							className="category-module__methodology-wrapper"
 						>
-							Methodology
+							<span
+								className="category-module__methodology-link"
+								onMouseOver={this.showPopover}
+								onMouseOut={this.hidePopover}
+							>Methodology</span>
+							<Popover show={this.state.showPopover}>
+								<div dangerouslySetInnerHTML={{ __html: category.methodology }} />
+							</Popover>
 						</span>
 					</div>
 				</div>
