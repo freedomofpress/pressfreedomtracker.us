@@ -4,6 +4,9 @@ import PropTypes from 'prop-types'
 import CategoryModule from './CategoryModule'
 
 
+const REFRESH_INTERVAL = 5 * 60 * 1000  // 5 min
+
+
 export default class CategoryGrid extends React.PureComponent {
 	constructor(props) {
 		super(props)
@@ -24,19 +27,18 @@ export default class CategoryGrid extends React.PureComponent {
 		// Kick off asynchronous fetching
 		// If we didn't preseed any data, kick it off immediately. Otherwise wait
 		// five minutes to update
-		if(this.state.incidents.length === 0 && loading === true) {
+		if(this.state.incidents.length === 0 && this.state.incidents.loading === true) {
 			this.fetchData()
 		} else {
-			setTimeout(this.fetchData.bind(this), 5 * 60 * 1000)
+			setTimeout(this.fetchData.bind(this), REFRESH_INTERVAL)
 		}
 	}
 
 	async fetchData() {
-		this.setState({ incidents, loading: true })
 		const querystring = new URLSearchParams(this.props.dataUrlParams).toString()
 		const incidents = await (await fetch(this.props.dataUrl)).json()
 		this.setState({ incidents, loading: false })
-		setTimeout(this.fetchData, 5 * 60 * 1000)
+		setTimeout(this.fetchData, REFRESH_INTERVAL)
 	}
 
 	render() {
