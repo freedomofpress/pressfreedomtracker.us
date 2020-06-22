@@ -1,7 +1,7 @@
 import json
 
 from django.test import TestCase
-from wagtail.core.models import Site
+from wagtail.core.models import Site, Page
 
 from incident.tests.factories import (
     TopicPageFactory,
@@ -10,18 +10,35 @@ from incident.tests.factories import (
     TargetedJournalistFactory,
 )
 from common.tests.factories import CategoryPageFactory
+from home.tests.factories import HomePageFactory
 
 
 class TopicPageApi(TestCase):
     @classmethod
     def setUpTestData(cls):
-        site = Site.objects.get(is_default_site=True)
-        root_page = site.root_page
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+
         cls.index = IncidentIndexPageFactory.create(
-            parent=root_page
+            parent=cls.home_page
         )
         cls.topic = TopicPageFactory(
-            parent=root_page,
+            parent=cls.home_page,
             incident_index_page=cls.index,
             incidents_per_module=3,
         )
