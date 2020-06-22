@@ -478,6 +478,7 @@ class TestTopicPage(WagtailPageTests):
             ]),
             'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk}),
             'incident_index_page': self.index_page.pk,
+            'incidents_per_module': 4,
             'layout': 'by_category',
         })
 
@@ -523,6 +524,7 @@ class TestTopicPage(WagtailPageTests):
             ]),
             'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk}),
             'incident_index_page': self.index_page.pk,
+            'incidents_per_module': 4,
             'layout': 'by_category',
         })
 

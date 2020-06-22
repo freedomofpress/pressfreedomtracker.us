@@ -187,6 +187,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             children=[
                 PageChooserPanel('incident_index_page'),
                 AutocompletePanel('incident_tag', page_type='common.CommonTag'),
+                FieldPanel('incidents_per_module'),
             ],
             classname='collapsible',
         ),
