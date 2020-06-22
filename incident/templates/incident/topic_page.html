@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-{% load common_tags wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load richtext_inline from common_tags %}
+{% load render_bundle from webpack_loader %}
 
 {% block top_sidebar_class %}
 	{{ block.super }}
@@ -58,32 +60,13 @@
 			</div>
 		{% endif %}
 
-		<div class="grid-50 js-incident-loading-parent">
-			{% for incident in entries_page %}
-				<div class="grid-50__item js-incident-loading-item">
-					{% include "incident/_incident.html" with incident=incident teaser=True %}
-				</div>
-			{% empty %}
-				<p class="grid-50__item">There are no incidents in this topic.</p>
-			{% endfor %}
-		</div>
-
-		{% if entries_page.has_next %}
-			<a
-				href="?{% query_transform request page=entries_page.next_page_number %}"
-					  class="button button--outline button--center js-incident-loading-next-link"
-			>
-				More Incidents
-			</a>
+		{% if page.layout == 'by_incident' %}
+			{% include 'incident/_topic_grid_by_incident.html' %}
+		{% elif page.layout == 'by_category' %}
+			{% include 'incident/_topic_grid_by_category.html' %}
+		{% else %}
+			{{ page.layout }}
 		{% endif %}
-
-		<div class="topic-incidents">
-			{% for incident in tagged_incidents %}
-				<div class="grid-50__item js-incident-loading-item">
-					{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
-				</div>
-			{% endfor %}
-		</div>
 	</main>
 {% endblock %}
 
@@ -117,4 +100,14 @@
 			{% endif %}
 		{% endfor %}
 	</aside>
+{% endblock %}
+
+{% block css %}
+	{{ block.super }}
+	{% render_bundle 'topic' 'css' %}
+{% endblock %}
+
+{% block js %}
+	{{ block.super }}
+	{% render_bundle 'topic' 'js' %}
 {% endblock %}

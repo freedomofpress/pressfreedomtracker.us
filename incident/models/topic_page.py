@@ -1,8 +1,14 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.http import JsonResponse
 from marshmallow import Schema, fields
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    StreamFieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+)
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page
@@ -15,7 +21,7 @@ from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
 )
-from incident.models import IncidentPage, IncidentCategorization
+from incident.models import IncidentCategorization
 
 
 class IncidentSchema(Schema):
@@ -49,7 +55,7 @@ class CategorySchema(Schema):
     def get_incidents(self, obj):
         incidents_schema = IncidentSchema(many=True)
         return incidents_schema.dump(
-            [categorization.incident_page for categorization in obj.categorization_list][:5]
+            [categorization.incident_page for categorization in obj.categorization_list]
         )
 
 
@@ -71,6 +77,13 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     TEXT_COLOR_CHOICES = (
         (WHITE, 'White'),
         (BLACK, 'Black'),
+    )
+
+    BY_INCIDENT = 'by_incident'
+    BY_CATEGORY = 'by_category'
+    LAYOUT_CHOICES = (
+        (BY_INCIDENT, 'By Incident'),
+        (BY_CATEGORY, 'By Category'),
     )
 
     superheading = models.TextField(
@@ -104,6 +117,20 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         related_name='+'
     )
 
+    layout = models.CharField(
+        max_length=255,
+        choices=LAYOUT_CHOICES,
+        default=BY_INCIDENT
+    )
+    incidents_per_module = models.PositiveIntegerField(
+        default=4,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(3)
+        ],
+        help_text='Maximum incidents per category module in category layout'
+    )
+
     content = StreamField([
         ('heading_2', common.blocks.Heading2()),
         ('raw_html', blocks.RawHTMLBlock()),
@@ -121,6 +148,12 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('stat_table', common.blocks.StatTableBlock()),
         ('button', common.blocks.ButtonBlock()),
     ], blank=True)
+
+    incident_index_page = models.ForeignKey(
+        'incident.IncidentIndexPage',
+        on_delete=models.PROTECT,
+        related_name='+'
+    )
     incident_tag = models.ForeignKey('common.CommonTag', on_delete=models.PROTECT)
 
     content_panels = Page.content_panels + [
@@ -152,16 +185,19 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Incidents',
             children=[
+                PageChooserPanel('incident_index_page'),
                 AutocompletePanel('incident_tag', page_type='common.CommonTag'),
+                FieldPanel('incidents_per_module'),
             ],
             classname='collapsible',
         ),
+        FieldPanel('layout'),
     ]
 
     def get_context(self, request):
         context = super(TopicPage, self).get_context(request)
 
-        incident_qs = IncidentPage.objects.live().filter(
+        incident_qs = self.incident_index_page.get_incidents().filter(
             tags=self.incident_tag
         ).order_by('-date')
 
@@ -178,8 +214,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         return context
 
-    @route('incidents/')
-    def incidents_view(self, request):
+    def get_categories_data(self):
         journalist_count = CategoryPage.objects.annotate(
             total_journalists=models.Count(
                 'incidents__incident_page__targeted_journalists__journalist',
@@ -193,13 +228,25 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ).live()
 
         with_incident_page = IncidentCategorization.objects.select_related('incident_page').filter(
-            incident_page__tags=self.incident_tag,
+            id__in=models.Subquery(
+                IncidentCategorization.objects.filter(
+                    incident_page__tags=self.incident_tag,
+                    category=models.OuterRef('category_id')
+                ).order_by('-incident_page__date').values_list('id', flat=True)[:self.incidents_per_module]
+            )
         ).order_by('-incident_page__date')
 
-        cats = CategoryPage.objects.live().prefetch_related(models.Prefetch('incidents', queryset=with_incident_page, to_attr='categorization_list')).annotate(
+        cats = CategoryPage.objects.live().prefetch_related(
+            models.Prefetch('incidents', queryset=with_incident_page, to_attr='categorization_list')
+        ).annotate(
             total_journalists=models.Subquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
             total_incidents=models.Count('incidents__incident_page', filter=models.Q(incidents__incident_page__tags=self.incident_tag, incidents__incident_page__live=True))
         )
+
         categories_schema = CategorySchema(many=True)
         result = categories_schema.dump(cats)
-        return JsonResponse(data=result, safe=False)
+        return result
+
+    @route('incidents/')
+    def incidents_view(self, request):
+        return JsonResponse(data=self.get_categories_data(), safe=False)

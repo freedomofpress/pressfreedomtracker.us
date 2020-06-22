@@ -5,7 +5,11 @@ from wagtail.documents.models import Document
 from common.models import CommonTag
 from common.wagtail_hooks import CommonTagAdmin
 from django.contrib.auth import get_user_model
-from incident.tests.factories import IncidentPageFactory, TopicPageFactory
+from incident.tests.factories import (
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
+    TopicPageFactory,
+)
 import json
 
 User = get_user_model()
@@ -83,8 +87,15 @@ class MergeTagWithTopicPageTest(MergeTagTestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.topic_page1 = TopicPageFactory(incident_tag=cls.tag1)
-        cls.topic_page2 = TopicPageFactory(incident_tag=cls.tag2)
+        cls.index = IncidentIndexPageFactory.create()
+        cls.topic_page1 = TopicPageFactory(
+            incident_tag=cls.tag1,
+            incident_index_page=cls.index
+        )
+        cls.topic_page2 = TopicPageFactory(
+            incident_tag=cls.tag2,
+            incident_index_page=cls.index
+        )
 
     def test_topic_page_incident_tag_should_become_new_tag(self):
         new_tag = CommonTag.objects.get(title=self.new_tag_title)

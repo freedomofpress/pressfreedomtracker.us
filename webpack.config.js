@@ -19,6 +19,7 @@ var common = {
 	entry: {
 		common: __dirname + '/client/common/js/common.js',
 		editor: __dirname + '/client/autocomplete/js/editor.js',
+		topic: __dirname + '/client/topic/js/index.js',
 	},
 
 	output: {
@@ -58,6 +59,7 @@ var common = {
 				include: [
 					path.join(__dirname, '/client/common/js'),
 					path.join(__dirname, '/client/autocomplete/js'),
+					path.join(__dirname, '/client/topic/js'),
 				],
 			},
 			{

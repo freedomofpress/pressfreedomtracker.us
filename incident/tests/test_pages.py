@@ -476,7 +476,10 @@ class TestTopicPage(WagtailPageTests):
                     ('value', nested_form_data({'header': 'Recent attacks', 'value': stats_tag})),
                 ])),
             ]),
-            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk})
+            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk}),
+            'incident_index_page': self.index_page.pk,
+            'incidents_per_module': 4,
+            'layout': 'by_category',
         })
 
         self.assertCanCreate(self.home_page, TopicPage, form_data)
@@ -485,7 +488,10 @@ class TestTopicPage(WagtailPageTests):
         self.assertEqual(response.status_code, 200)
 
     def test_can_preview_topic_page(self):
-        topic_page = TopicPageFactory(parent=self.home_page)
+        topic_page = TopicPageFactory(
+            parent=self.home_page,
+            incident_index_page=self.index_page
+        )
         preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(topic_page.pk,))
 
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
@@ -516,7 +522,10 @@ class TestTopicPage(WagtailPageTests):
                     ('value', nested_form_data({'header': 'Recent attacks', 'value': stats_tag})),
                 ])),
             ]),
-            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk})
+            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk}),
+            'incident_index_page': self.index_page.pk,
+            'incidents_per_module': 4,
+            'layout': 'by_category',
         })
 
         response = self.client.post(
@@ -530,7 +539,10 @@ class TestTopicPage(WagtailPageTests):
         self.assertEqual(response.context['page'], topic_page)
 
     def test_sorts_incidents_by_incident_date_descending(self):
-        topic_page = TopicPageFactory(parent=self.home_page)
+        topic_page = TopicPageFactory(
+            parent=self.home_page,
+            incident_index_page=self.index_page
+        )
         incident1 = IncidentPageFactory(date=date(2020, 1, 2), tags=[topic_page.incident_tag])
         incident2 = IncidentPageFactory(date=date(2020, 1, 3), tags=[topic_page.incident_tag])
         incident3 = IncidentPageFactory(date=date(2020, 1, 1), tags=[topic_page.incident_tag])

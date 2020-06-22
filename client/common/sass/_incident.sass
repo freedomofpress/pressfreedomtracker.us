@@ -49,6 +49,11 @@ $max-image-vh-ratio: 0.75
 	line-height: 1.25
 	font-size: 2em
 
+	@at-root .js-topic-grid-by-category #{&}
+		margin: 0
+		font-size: 1.5em
+		line-height: 1
+
 .incident__title-link
 	+title-link
 	display: block
@@ -56,6 +61,14 @@ $max-image-vh-ratio: 0.75
 .incident__date
 	+light-gray-text-small
 	margin: $incident-attr-margin
+
+.js-topic-grid-by-category .category__stats
+	+light-gray-text-small
+	margin: $incident-attr-margin
+
+	.methodology
+		color: $user-teal
+		cursor: default
 
 .incident__date--link
 	text-decoration: none
