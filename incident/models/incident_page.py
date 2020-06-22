@@ -428,15 +428,6 @@ class IncidentPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
-        InlinePanel('updates', label='Updates'),
-        InlinePanel(
-            'links',
-            label='Sources',
-            help_text="Links to resources and news articles related to this"
-                      "incident. Displayed as footnotes."
-        ),
-
-        FieldPanel('primary_video'),
 
         MultiFieldPanel(
             heading='Teaser',
@@ -452,8 +443,8 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel('date'),
                 FieldPanel('exact_date_unknown'),
                 FieldPanel('city'),
-                InlinePanel('targeted_journalists', label='Targeted Journalists'),
                 AutocompletePanel('state', page_type='incident.State'),
+                InlinePanel('targeted_journalists', label='Targeted Journalists'),
                 AutocompletePanel('targeted_institutions', 'incident.Institution', is_single=False),
                 AutocompletePanel('tags', 'common.CommonTag', is_single=False),
                 InlinePanel('categories', label='Incident categories', min_num=1),
@@ -464,6 +455,15 @@ class IncidentPage(MetadataPageMixin, Page):
             label='Authors',
             help_text='Author pages must already exist.'
         ),
+        InlinePanel('updates', label='Updates'),
+        InlinePanel(
+            'links',
+            label='Sources',
+            help_text="Links to resources and news articles related to this"
+                      "incident. Displayed as footnotes."
+        ),
+
+        FieldPanel('primary_video'),
 
         MultiFieldPanel(
             heading='Detention/Arrest',
