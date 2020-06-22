@@ -56,6 +56,9 @@ class IncidentCategorization(Orderable):
     def summary(self):
         return self.category.title
 
+    def __str__(self):
+        return '"{}" in category "{}"'.format(self.incident_page, self.category)
+
 
 class IncidentPageLinks(Orderable):
     page = ParentalKey('incident.IncidentPage', related_name='links')
