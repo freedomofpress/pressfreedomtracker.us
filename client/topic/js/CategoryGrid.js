@@ -42,7 +42,7 @@ export default class CategoryGrid extends React.PureComponent {
 	}
 
 	render() {
-		if (this.state.incidents.length === 0 && loading === true) {
+		if (this.state.incidents.length === 0 && this.state.loading === true) {
 			// This should never really be shown as long as we seed with initial data
 			return <div>Loading...</div>
 		}
