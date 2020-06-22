@@ -22,7 +22,8 @@ class TopicPageApi(TestCase):
         )
         cls.topic = TopicPageFactory(
             parent=root_page,
-            incident_index_page=cls.index
+            incident_index_page=cls.index,
+            incidents_per_module=3,
         )
 
         cls.cat1 = CategoryPageFactory.create(
@@ -108,13 +109,13 @@ class TopicPageApi(TestCase):
         self.assertEqual(len(cat['incidents']), 3)
         self.assertEqual(cat['total_journalists'], 4)
 
-    def test_GET_limits_incidents_to_five(self):
+    def test_GET_limits_incidents_to_incidents_per_module_amount(self):
         response = self.client.get(self.url)
         data = json.loads(response.content.decode('utf-8'))
         cat2 = data[1]
 
         self.assertEqual(cat2['total_incidents'], 6)
-        self.assertEqual(len(cat2['incidents']), 5)
+        self.assertEqual(len(cat2['incidents']), self.topic.incidents_per_module)
 
     def test_GET_returns_correct_incident_json(self):
         response = self.client.get(self.url)

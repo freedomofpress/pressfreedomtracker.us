@@ -55,7 +55,7 @@ class CategorySchema(Schema):
     def get_incidents(self, obj):
         incidents_schema = IncidentSchema(many=True)
         return incidents_schema.dump(
-            [categorization.incident_page for categorization in obj.categorization_list][:5]
+            [categorization.incident_page for categorization in obj.categorization_list]
         )
 
 
@@ -227,13 +227,21 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ).live()
 
         with_incident_page = IncidentCategorization.objects.select_related('incident_page').filter(
-            incident_page__tags=self.incident_tag,
+            id__in=models.Subquery(
+                IncidentCategorization.objects.filter(
+                    incident_page__tags=self.incident_tag,
+                    category=models.OuterRef('category_id')
+                ).order_by('-incident_page__date').values_list('id', flat=True)[:self.incidents_per_module]
+            )
         ).order_by('-incident_page__date')
 
-        cats = CategoryPage.objects.live().prefetch_related(models.Prefetch('incidents', queryset=with_incident_page, to_attr='categorization_list')).annotate(
+        cats = CategoryPage.objects.live().prefetch_related(
+            models.Prefetch('incidents', queryset=with_incident_page, to_attr='categorization_list')
+        ).annotate(
             total_journalists=models.Subquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
             total_incidents=models.Count('incidents__incident_page', filter=models.Q(incidents__incident_page__tags=self.incident_tag, incidents__incident_page__live=True))
         )
+
         categories_schema = CategorySchema(many=True)
         result = categories_schema.dump(cats)
         return result
