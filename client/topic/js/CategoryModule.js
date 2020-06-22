@@ -12,13 +12,10 @@ export default class CategoryModule extends React.PureComponent {
 
 		this.state = { showPopover: false }
 
-		this.showPopover = this.showPopover.bind(this)
-		this.hidePopover = this.hidePopover.bind(this)
+		this.togglePopover = this.togglePopover.bind(this)
 	}
 
-	showPopover() { this.setState({ showPopover: true }) }
-
-	hidePopover() { this.setState({ showPopover: false }) }
+	togglePopover() { this.setState({ showPopover: !this.state.showPopover }) }
 
 	render() {
 		const {
@@ -42,11 +39,10 @@ export default class CategoryModule extends React.PureComponent {
 						<span
 							className="category-module__methodology-wrapper"
 						>
-							<span
+							<button
 								className="category-module__methodology-link"
-								onMouseOver={this.showPopover}
-								onMouseOut={this.hidePopover}
-							>Methodology</span>
+								onClick={this.togglePopover}
+							>Methodology</button>
 							<Popover show={this.state.showPopover}>
 								<div dangerouslySetInnerHTML={{ __html: category.methodology }} />
 							</Popover>
