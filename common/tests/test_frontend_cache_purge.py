@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from unittest.mock import patch
 from wagtail.core.models import Site, Page
 
+from common.models import FooterSettings
 from common.tests.factories import CategoryPageFactory
 from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory
@@ -72,3 +73,17 @@ class TestCategoryPageCacheInvalidation(TestCase):
 
         list_of_arguments = purge_tags_from_cache.call_args[0][0]
         self.assertIn(self.categorypage.get_cache_tag(), list_of_arguments)
+
+    def test_should_purge_all_cache_when_settings_changed(self):
+        """Changing any Setting should purge the entire zone.
+
+        In this case we test with FooterSettings as an example, but it
+        should work for any BaseSetting subclass.
+        """
+
+        site = Site.objects.get(is_default_site=True)
+        footer_settings = FooterSettings.for_site(site)
+        footer_settings.parter_logo_text = 'Completely new text'
+        with patch('common.signals.purge_all_from_cache') as purge_mock:
+            footer_settings.save()
+            purge_mock.assert_called_once_with()
