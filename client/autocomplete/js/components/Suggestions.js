@@ -17,6 +17,7 @@ class Suggestions extends PureComponent {
 		this.state = {
 			index: 0,
 			visible: false,
+			currentId: null
 		}
 	}
 
@@ -28,12 +29,22 @@ class Suggestions extends PureComponent {
 		window.removeEventListener('click', this.handleBlurClick)
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (this.shouldResetIndex(nextProps)) {
-			this.setState({
+	/**
+	 * If the suggestion at the curent index has changed, the index
+	 * needs to be reset.
+	 */
+	static getDerivedStateFromProps(props, state) {
+		const { suggestions } = props
+		const { index, currentId } = state
+
+		if (suggestions.length === 0 || index >= props.suggestions.length || props.suggestions[index].id !== currentId) {
+			return {
 				index: 0,
-			})
+				currentId: null,
+			}
+
 		}
+		return null
 	}
 
 	scrollToSuggestion(index) {
@@ -59,27 +70,8 @@ class Suggestions extends PureComponent {
 		}
 	}
 
-	/**
-	 * If the suggestion at the curent index has changed, the index
-	 * needs to be reset.
-	 */
-	shouldResetIndex(nextProps) {
-		const { suggestions } = this.props
-		if (suggestions.length === 0) {
-			return true
-		}
-
-		const { index } = this.state
-		if (index >= nextProps.suggestions.length) {
-			return true
-		}
-
-		const currentId = suggestions[index].id
-		return nextProps.suggestions[index].id !== currentId
-	}
-
 	handleMouseEnter(index) {
-		this.setState({ index })
+		this.setState({ index, currentId: this.props.suggestions[index].id })
 	}
 
 	handleKeyPress(event) {
@@ -94,12 +86,14 @@ class Suggestions extends PureComponent {
 			const target = Math.min(max, index + 1)
 			this.setState({
 				index: target,
+				currentId: suggestions[target].id,
 			})
 			this.scrollToSuggestion(target)
 		} else if (event.key === 'ArrowUp') {
 			const target = Math.max(0, index - 1)
 			this.setState({
 				index: target,
+				currentId: suggestions[target].id,
 			})
 			this.scrollToSuggestion(target)
 		} else if (event.key === 'Enter') {
