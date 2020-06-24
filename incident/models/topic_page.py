@@ -241,7 +241,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ).annotate(
             total_journalists=models.Subquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
             total_incidents=models.Count('incidents__incident_page', filter=models.Q(incidents__incident_page__tags=self.incident_tag, incidents__incident_page__live=True))
-        )
+        ).order_by('-total_incidents')
 
         categories_schema = CategorySchema(many=True)
         result = categories_schema.dump(cats)
