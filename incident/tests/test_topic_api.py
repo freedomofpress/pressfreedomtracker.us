@@ -112,11 +112,17 @@ class TopicPageApi(TestCase):
         data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(len(data), 2)
 
+    def test_GET_returns_sorted_json(self):
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(data[0]['category'], self.cat2.title)
+        self.assertEqual(data[1]['category'], self.cat1.title)
+
     def test_GET_returns_correct_category_json(self):
         response = self.client.get(self.url)
         data = json.loads(response.content.decode('utf-8'))
 
-        cat = data[0]
+        cat = data[1]
         self.assertEqual(cat['category'], self.cat1.title)
         self.assertEqual(cat['category_plural'], self.cat1.plural_name)
         self.assertEqual(cat['color'], self.cat1.page_color)
@@ -129,7 +135,7 @@ class TopicPageApi(TestCase):
     def test_GET_limits_incidents_to_incidents_per_module_amount(self):
         response = self.client.get(self.url)
         data = json.loads(response.content.decode('utf-8'))
-        cat2 = data[1]
+        cat2 = data[0]
 
         self.assertEqual(cat2['total_incidents'], 6)
         self.assertEqual(len(cat2['incidents']), self.topic.incidents_per_module)
@@ -138,7 +144,7 @@ class TopicPageApi(TestCase):
         response = self.client.get(self.url)
         data = json.loads(response.content.decode('utf-8'))
 
-        inc = data[0]['incidents'][0]
+        inc = data[1]['incidents'][0]
         self.assertEqual(inc['title'], self.inc2.title)
         self.assertEqual(inc['date'], str(self.inc2.date))
         self.assertEqual(inc['url'], self.inc2.get_full_url())
@@ -148,6 +154,6 @@ class TopicPageApi(TestCase):
 
         response = self.client.get(self.url)
         data = json.loads(response.content.decode('utf-8'))
-        cat2 = data[1]
+        cat2 = data[0]
 
         self.assertEqual(cat2['total_journalists'], 0)
