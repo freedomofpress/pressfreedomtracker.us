@@ -227,7 +227,9 @@ DJANGO_LOGGING = {
     "SQL_LOG": False,
     "DISABLE_EXISTING_LOGGERS": False,
     "PROPOGATE": False,
-    "LOG_LEVEL": os.environ.get('DJANGO_LOG_LEVEL', 'info')
+    "LOG_LEVEL": os.environ.get('DJANGO_LOG_LEVEL', 'info'),
+    # Do not log the content of JSON responses by default--these might be quite big!
+    "CONTENT_JSON_ONLY": os.environ.get('LOG_CONTENT_JSON_ONLY', False)
 }
 
 ## Ensure base log directory exists
