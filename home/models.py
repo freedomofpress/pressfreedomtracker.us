@@ -168,7 +168,7 @@ class HomePageFeature(Orderable):
 
 
 class StatBox(Orderable):
-    page = ParentalKey('home.HomePage', related_name='statboxes')
+    page = ParentalKey(Page, related_name='statboxes')
     value = models.CharField(max_length=1000, validators=[validate_template])
     label = models.CharField(max_length=1000)
     color = models.CharField(
