@@ -207,7 +207,7 @@ export class DateRangeInput extends PureComponent {
 		const moment = Moment(value, DATE_TYPES, true)
 
 		if (moment.isValid()) {
-			this.props.handleFilterChange(filter_key, moment)
+			this.props.handleFilterChange(filter_key, moment.toDate())
 		}
 	}
 
