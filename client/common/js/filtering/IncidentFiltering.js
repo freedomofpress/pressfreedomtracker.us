@@ -320,7 +320,7 @@ class IncidentFiltering extends PureComponent {
 		let value
 		if (!event) {
 			value = null
-		} else if (isMoment(event)) {
+		} else if (isMoment(event) || event instanceof Date) {
 			value = event
 		} else if (event.target && event.target.hasOwnProperty('checked')) {
 			value = event.target.checked
