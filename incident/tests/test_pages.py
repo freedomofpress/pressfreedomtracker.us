@@ -459,6 +459,11 @@ class TestTopicPage(WagtailPageTests):
             'photo_caption': rich_text('<p>Possibly some fangs.</p>'),
             'photo_credit': 'Professor Abraham Van Helsing',
             'photo_credit_link': 'https://example.com',
+            'statboxes': inline_formset([
+                {'value': '{% num_incidents categories=9 %}',
+                 'label': 'Hello world',
+                 'color': 'gamboge'}
+            ]),
             'content': streamfield([
                 ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
                 ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
@@ -505,6 +510,11 @@ class TestTopicPage(WagtailPageTests):
             'photo_caption': rich_text('<p>Possibly some fangs.</p>'),
             'photo_credit': 'Professor Abraham Van Helsing',
             'photo_credit_link': 'https://example.com',
+            'statboxes': inline_formset([
+                {'value': '{% num_incidents categories=9 %}',
+                 'label': 'Hello world',
+                 'color': 'gamboge'}
+            ]),
             'content': streamfield([
                 ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
                 ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
