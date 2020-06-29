@@ -73,8 +73,8 @@ class IncidentFiltering extends PureComponent {
 				if (filter.type === 'date') {
 					const lowerDate = `${filter.name}_lower`
 					const upperDate = `${filter.name}_upper`
-					if (params[lowerDate]) newAcc[lowerDate] = moment(params[lowerDate])
-					if (params[upperDate]) newAcc[upperDate] = moment(params[upperDate])
+					if (params[lowerDate]) newAcc[lowerDate] = moment(params[lowerDate]).toDate()
+					if (params[upperDate]) newAcc[upperDate] = moment(params[upperDate]).toDate()
 				} else if (filter.type === 'autocomplete' && params[filter.name]) {
 					if (filter.many) {
 						newAcc[filter.name] = params[filter.name]
