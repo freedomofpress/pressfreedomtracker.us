@@ -3,14 +3,12 @@
 {% image page.photo fill-665x440 as x1 %}
 {% image page.photo fill-1330x880 as x2 %}
 
-<article class="topic--teaser">
-	<a href="{% pageurl page %}">
-		<img
-			class="topic-image--teaser"
-			alt="{{ page.photo_caption|striptags }}"
-			src="{{ x1.url }}"
-			srcset="{{ x1.url }} {{ x1.width }}w, {{ x2.url }} {{ x2.width }}w"
-		>
+<article class="topic-teaser">
+	<a
+		href="{% pageurl page %}"
+		class="topic-teaser--image"
+		style="background-image:url({{ x2.url }})"
+	>
 		<div class="topic-teaser__text topic-teaser__text--{{ page.text_color }} topic-teaser__text--align-{{ page.text_align }}">
 			{% if page.superheading %}
 				<h4 class="topic-teaser__superheading">{{ page.superheading }}</h3>

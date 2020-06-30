@@ -190,24 +190,24 @@
 	&__stat-table
 		margin-bottom: 20px
 
-.topic--teaser
-	+gray-except-hover
-	position: relative
+.topic-teaser
 	margin-bottom: 20px
-
-.topic-image--teaser
-	min-height: 100%
 	width: 100%
-	height: auto
+	min-height: 400px
 
-	@media (max-width: $medium-screen)
-		object-fit: cover
+.topic-teaser--image
+	+gray-except-hover
+	min-height: 100%
+	background-position: center
+	background-size: cover
+	text-decoration: none
+
+	display: flex
+	flex-direction: column
 
 .topic-teaser__text
-	position: absolute
-	left: 0
-	right: 0
-	padding: 10px
+	width: 100%
+	padding: 16px
 
 	// This is too complicated to use BEM for
 	&--white
@@ -231,22 +231,20 @@
 			background-image: linear-gradient(180deg, rgba(#FFF, 0.15), rgba(#FFF, 0))
 
 	&--align-bottom-center
-		bottom: 0
+		margin-top: auto  // places at bottom of flex container
 		text-align: center
 		padding-top: 100px
 
 	&--align-top-center
-		top: 0
 		text-align: center
 		padding-bottom: 100px
 
 	&--align-bottom-left
-		bottom: 0
+		margin-top: auto  // places at bottom of flex container
 		text-align: left
 		padding-top: 100px
 
 	&--align-top-left
-		top: 0
 		text-align: left
 		padding-bottom: 100px
 
