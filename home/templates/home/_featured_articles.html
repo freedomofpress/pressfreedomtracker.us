@@ -12,7 +12,9 @@
 				<div class="grid-50__item">
 					{% if related.content_type.model == 'blogpage' %}
 						{% include "blog/_blog_grid.html" with location="homepage" page=related %}
-					{% else %}
+					{% elif related.content_type.model == 'topicpage' %}
+						{% include "incident/_topic_page_teaser.html" with page=related %}
+					{% elif related.content_type.model == 'incidentpage' %}
 						{% include "incident/_incident.html" with incident=related teaser=True %}
 					{% endif %}
 				</div>
@@ -24,7 +26,9 @@
 				<div class="grid-50__item">
 					{% if related.content_type.model == 'blogpage' %}
 						{% include "blog/_blog_grid.html" with location="homepage" page=related %}
-					{% else %}
+					{% elif related.content_type.model == 'topicpage' %}
+						{% include "incident/_topic_page_teaser.html" with page=related %}
+					{% elif related.content_type.model == 'incidentpage' %}
 						{% include "incident/_incident.html" with incident=related teaser=True %}
 					{% endif %}
 				</div>

@@ -163,7 +163,7 @@ class HomePageFeature(Orderable):
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
 
     panels = [
-        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage')),
+        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage', 'incident.TopicPage')),
     ]
 
 
