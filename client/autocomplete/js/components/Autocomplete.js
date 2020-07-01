@@ -33,6 +33,9 @@ class Autocomplete extends PureComponent {
 
 	get value() {
 		if (this.props.controlled) {
+			if (!!this.props.value && !this.props.value[0].title) {
+				this.fetchInitialValues(this.props.value)
+			}
 			return this.props.value
 		} else {
 			return this.state.value
