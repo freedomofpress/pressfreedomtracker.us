@@ -1,0 +1,33 @@
+{% extends "wagtailadmin/base.html" %}
+{% load static %}
+
+{% comment %}
+
+This template exists to shim a JS function into the wagtail admin to
+correct for a bug in the wagtail admin where inline panels defined
+with a `min_num` are not correctly ordered during object creation.
+
+See https://github.com/wagtail/wagtail/issues/4010 for details.  If
+that issue is fixed, then this function can and should be removed.
+
+{% endcomment %}
+
+{% block extra_js %}
+	{{ block.super }}
+	<script>
+		function fixOrderables() {
+			// Find all inputs that contain -ORDER in their ID.
+			$("input[id*='-ORDER").each(function(){
+				if($(this).val() === ""){
+					var inputId = $(this).attr("id");
+					// Extract the "real" order from the ID and 1 to new order value.
+					var inputVal = parseInt(inputId.substr(inputId.indexOf("-ORDER") - 1, 1))+1;
+					if (parseInt($(this).val()) != inputVal){
+						$(this).val(inputVal);
+					}
+				}
+			});
+		}
+		document.addEventListener("DOMContentLoaded", fixOrderables);
+	</script>
+{% endblock %}
