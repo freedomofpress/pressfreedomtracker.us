@@ -189,3 +189,77 @@
 
 	&__stat-table
 		margin-bottom: 20px
+
+.topic-teaser
+	margin-bottom: 20px
+	width: 100%
+	min-height: 400px
+
+.topic-teaser--image
+	min-height: 100%
+	background-position: center
+	background-size: cover
+	text-decoration: none
+
+	display: flex
+	flex-direction: column
+
+.topic-teaser__text
+	width: 100%
+	padding: 16px
+
+	// This is too complicated to use BEM for
+	&--white
+		color: #FFF
+		&.topic-header__text--align-bottom-center,
+		&.topic-header__text--align-bottom-left
+			background-image: linear-gradient(0deg, rgba(#000, 0.15), rgba(#000, 0))
+
+		&.topic-header__text--align-top-center,
+		&.topic-header__text--align-top-left
+			background-image: linear-gradient(180deg, rgba(#000, 0.15), rgba(#000, 0))
+
+	&--black
+		color: #000
+		&.topic-header__text--align-bottom-center,
+		&.topic-header__text--align-bottom-left
+			background-image: linear-gradient(0deg, rgba(#FFF, 0.15), rgba(#FFF, 0))
+
+		&.topic-header__text--align-top-center,
+		&.topic-header__text--align-top-left
+			background-image: linear-gradient(180deg, rgba(#FFF, 0.15), rgba(#FFF, 0))
+
+	&--align-bottom-center
+		margin-top: auto  // places at bottom of flex container
+		text-align: center
+		padding-top: 100px
+
+	&--align-top-center
+		text-align: center
+		padding-bottom: 100px
+
+	&--align-bottom-left
+		margin-top: auto  // places at bottom of flex container
+		text-align: left
+		padding-top: 100px
+
+	&--align-top-left
+		text-align: left
+		padding-bottom: 100px
+
+.topic-teaser__superheading
+	+uppercase
+	margin: 0
+	padding: 0
+	font-weight: $sans-regular
+	font-size: 0.9em
+
+.topic-teaser__heading
+	margin: 0
+	padding: 0
+	font-size: 2.5em
+	font-family: $serif
+	font-weight: normal
+
+	@media(max-width: $medium-screen)
+		font-size: 44px

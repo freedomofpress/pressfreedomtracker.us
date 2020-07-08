@@ -153,7 +153,7 @@ class HomePage(MetadataPageMixin, Page):
             context['export_path'] = None
 
         context['features'] = [
-            f.page.specific for f in self.features.all().select_related('page')
+            f.page.specific for f in self.features.all().select_related('page__content_type')
         ]
         return context
 
@@ -163,7 +163,7 @@ class HomePageFeature(Orderable):
     page = models.ForeignKey(Page, on_delete=models.CASCADE)
 
     panels = [
-        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage')),
+        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage', 'incident.TopicPage')),
     ]
 
 
