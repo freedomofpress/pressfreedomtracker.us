@@ -8,6 +8,9 @@ module.exports = api => {
           '@babel/preset-env',
           {
             modules: false,
+            "targets": {
+              "node": "current"
+            },
           },
         ],
         '@babel/preset-react',

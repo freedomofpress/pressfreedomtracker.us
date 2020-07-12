@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Inputs should render AutocompleteInput without error in "debug" mode 1`] = `
+"<div className=\\"filters__input-row\\">
+  <span className=\\"filters__input-label\\">
+    Autocomplete
+  </span>
+  <Autocomplete type=\\"common.CommonTag\\" name=\\"tags\\" canCreate={false} isSingle={false} value={[undefined]} onChange={[Function: bound mockConstructor]} fetchInitialValues={true} apiBase=\\"/autocomplete/\\" controlled={true} />
+</div>"
+`;
