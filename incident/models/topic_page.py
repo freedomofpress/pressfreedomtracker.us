@@ -137,6 +137,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
         ('rich_text', blocks.RichTextBlock()),
         ('tweet', common.blocks.TweetEmbedBlock()),
+        ('tabs', common.blocks.TabbedBlock()),
     ], blank=True)
     sidebar = StreamField([
         ('heading_2', common.blocks.Heading2()),
