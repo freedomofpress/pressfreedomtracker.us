@@ -154,9 +154,6 @@ export const BOOL_FILTER_VALUES = {
 export const CHOICE_FILTER_VALUES = {
   'status_of_prior_restraint': 'PENDING'
 }
-export const AUTOCOMPLETE_FILTER_VALUES = {
-  
-}
 export const EMPTY_FILTER_VALUES = {
 }
 export const PAGE_FETCH_PARAMS = {
@@ -164,3 +161,14 @@ export const PAGE_FETCH_PARAMS = {
 	'charged_under_espionage_act': 'True'
 }
 export const FILTERS_EXPANDED = true
+export const TAG_FILTER_VALUES = {
+  'tags': [
+    {'id': 1}
+  ]
+}
+export const TAG_MOCK_RESULTS = {
+  'items': [
+    {'pk': 1, 'title': 'Tag 1'},
+    {'pk': 2, 'title': 'Tag 2'}
+  ]
+}
