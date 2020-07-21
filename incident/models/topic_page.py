@@ -5,6 +5,7 @@ from marshmallow import Schema, fields
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.edit_handlers import (
     FieldPanel,
+    InlinePanel,
     StreamFieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
@@ -172,6 +173,13 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             classname='collapsible'
         ),
         MultiFieldPanel(
+            heading='Statboxes',
+            children=[
+                InlinePanel('statboxes', label='Statboxes'),
+            ],
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
             heading='Content',
             children=[
                 StreamFieldPanel('content'),
@@ -209,6 +217,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             orphans=5
         )
 
+        context['statboxes'] = self.statboxes.all()
         context['entries_page'] = entries
         context['paginator'] = paginator
 
