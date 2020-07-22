@@ -54,7 +54,7 @@ def is_exportable(field):
     return not (name.startswith('tagged_') or name in EXCLUDED_FIELDS)
 
 
-def to_row(obj):
+def to_row(obj, allowed_fields=[]):
     """Flatten a model object into a list of strings suitable for a CSV
 
     This function attempts to introspect an object's fields and turn
@@ -67,17 +67,24 @@ def to_row(obj):
     row = []
 
     model = type(obj)
-    model_fields = model._meta.get_fields()
+    if allowed_fields:
+        model_fields = [f for f in model._meta.get_fields() if f.name in allowed_fields]
+    else:
+        model_fields = model._meta.get_fields()
 
     for field in filter(is_exportable, model_fields):
         row.append(_serialize_field(obj, field))
     return row
 
 
-def to_json(obj):
+def to_json(obj, allowed_fields=[]):
     incident_dict = {}
     model = type(obj)
-    model_fields = model._meta.get_fields()
+    if allowed_fields:
+        model_fields = [f for f in model._meta.get_fields() if f.name in allowed_fields]
+    else:
+        model_fields = model._meta.get_fields()
+
     for field in filter(is_exportable, model_fields):
         incident_dict[field.name] = _serialize_field(obj, field)
     return incident_dict

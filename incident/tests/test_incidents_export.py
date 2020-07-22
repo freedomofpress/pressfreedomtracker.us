@@ -128,3 +128,39 @@ class IncidentExportTestCase(TestCase):
         response_data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(len(response_data), 1)
         self.assertEqual(response_data[0].keys(), expected_headers)
+
+    def test_fields__json(self):
+        IncidentPageFactory(
+            city='Albuquerque',
+            date='2010-01-01',
+            title='Took a Wrong Turn',
+        )
+        response = self.client.get(
+            self.incident_index.get_full_url() + 'export/?format=json&fields=title,city,date'
+        )
+        response_data = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(
+            response_data,
+            [{'city': 'Albuquerque', 'date': '2010-01-01', 'title': 'Took a Wrong Turn'}]
+        )
+
+    def test_fields__csv(self):
+        IncidentPageFactory(
+            city='Albuquerque',
+            date='2010-01-01',
+            title='Took a Wrong Turn',
+        )
+        response = self.client.get(
+            self.incident_index.get_full_url() + 'export/?format=csv&fields=title,city,date'
+        )
+
+        content = b''.join(list(response.streaming_content)).strip().decode('utf-8').splitlines()
+        headers = content[0].split(',')
+        data = content[1].split(',')
+
+        expected_headers = ['title', 'date', 'city']
+        self.assertEqual(headers, expected_headers)
+
+        expected_data = ['Took a Wrong Turn', '2010-01-01', 'Albuquerque']
+        self.assertEqual(data, expected_data)

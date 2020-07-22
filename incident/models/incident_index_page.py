@@ -54,15 +54,23 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     def export_view_GET(self, request: 'HttpRequest') -> HttpResponse:
         export_format = request.GET.get('format', 'csv')
+        allowed_fields = request.GET.get('fields')
+        if not allowed_fields:
+            allowed_fields = []
+        else:
+            allowed_fields = allowed_fields.split(',')
         incident_filter = IncidentFilter(request.GET)
         incidents = incident_filter.get_queryset()
         if export_format == 'json':
-            return self.export_format_json(incidents)
+            return self.export_format_json(incidents, allowed_fields)
         else:
-            return self.export_format_csv(incidents)
+            return self.export_format_csv(incidents, allowed_fields)
 
-    def export_format_csv(self, incidents):
-        incident_fields = IncidentPage._meta.get_fields()
+    def export_format_csv(self, incidents, allowed_fields):
+        if allowed_fields:
+            incident_fields = [f for f in IncidentPage._meta.get_fields() if f.name in allowed_fields]
+        else:
+            incident_fields = IncidentPage._meta.get_fields()
         headers = [field.name for field in incident_fields
                    if is_exportable(field)]
 
@@ -71,7 +79,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             if headers:
                 yield headers
             for incident in data:
-                yield to_row(incident)
+                yield to_row(incident, allowed_fields)
 
         pseudo_buffer = Echo()
         writer = csv.writer(pseudo_buffer)
@@ -82,10 +90,10 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         response['Content-Disposition'] = 'attachment; filename="incidents.csv"'
         return response
 
-    def export_format_json(self, incidents):
+    def export_format_json(self, incidents, fields):
         incident_list = []
         for incident in incidents:
-            incident_list.append(to_json(incident))
+            incident_list.append(to_json(incident, fields))
         return JsonResponse(
             incident_list,
             safe=False
