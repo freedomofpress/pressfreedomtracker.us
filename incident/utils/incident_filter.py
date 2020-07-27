@@ -433,6 +433,13 @@ class RecentlyUpdatedFilter(IntegerFilter):
         return queryset.with_most_recent_update().updated_within_days(value)
 
 
+class TargetedInstitutionsFilter(ManyRelationFilter):
+    def filter(self, queryset, value):
+        return queryset.filter(
+            Q(targeted_journalists__institution__in=value) | Q(targeted_institutions__in=value)
+        )
+
+
 def get_serialized_filters():
     """
     Returns filters serialized to be passed as JSON to the front-end.
@@ -476,6 +483,7 @@ class IncidentFilter(object):
         'tags': {'verbose_name': 'Has any of these tags'},
         'subpoena_statuses': {'verbose_name': 'Subpoena status'},
         'targeted_journalists': {'verbose_name': 'Targeted any of these journalists', 'filter_cls': RelationThroughFilter, 'relation': 'journalist'},
+        'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
     }
 

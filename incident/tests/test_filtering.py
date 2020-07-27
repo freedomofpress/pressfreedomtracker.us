@@ -1351,3 +1351,58 @@ class RecentlyUpdatedFilterTest(TestCase):
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
         self.assertEqual(set(incidents), {incident_with_new_update})
+
+
+class TargetedInstitutionsFilterTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='targeted_institutions',
+            incident_filter_settings=settings,
+        )
+
+    def test_targeted_institution_filtering(self):
+        inst1 = InstitutionFactory()
+        inst2 = InstitutionFactory()
+        IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with no institutions targeted',
+        )
+        with_institution1_target = IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with institution 1 directly targeted',
+        )
+        with_institution1_target.targeted_institutions.set([inst1])
+        with_institution1_target.save()
+        with_institution2_target = IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with institution 1 directly targeted',
+        )
+        with_institution2_target.targeted_institutions.set([inst2])
+        with_institution2_target.save()
+
+        incident_filter = IncidentFilter({'targeted_institutions': inst1.pk})
+        incident_filter.clean()
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(set(incidents), {with_institution1_target})
+
+    def test_targeted_institution_filtering_via_targeted_journalists(self):
+        tj1 = TargetedJournalistFactory(incident__title='Incident with Institution 1 targeted via journalist')
+        TargetedJournalistFactory(incident__title='Incident with Institution 2 targeted via journalist')
+
+        with_institution1_target = IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with Institution 1 directly targeted',
+        )
+        with_institution1_target.targeted_institutions.set([tj1.institution])
+        with_institution1_target.save()
+
+        incident_filter = IncidentFilter({'targeted_institutions': tj1.institution.pk})
+        incident_filter.clean()
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(set(incidents), {tj1.incident, with_institution1_target})
