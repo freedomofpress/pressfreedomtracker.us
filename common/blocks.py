@@ -218,6 +218,7 @@ class TabbedBlock(blocks.ListBlock):
     class Meta:
         icon = 'list-ul'
 
+
 class ButtonBlock(blocks.StructBlock):
     text = blocks.TextBlock(required=True)
     url = blocks.URLBlock(required=True)
