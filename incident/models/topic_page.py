@@ -231,7 +231,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
                 filter=models.Q(
                     incidents__incident_page__tags=self.incident_tag,
                     incidents__incident_page__live=True,
-                )
+                ),
+                distinct=True,
             )
         ).filter(
             pk=models.OuterRef('pk')

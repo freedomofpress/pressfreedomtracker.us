@@ -95,7 +95,7 @@ class TopicPageApi(TestCase):
         )
 
         # Four targeted journalists on incidents within the topic
-        TargetedJournalistFactory(incident=cls.inc1)
+        cls.tj_incident_1 = TargetedJournalistFactory(incident=cls.inc1)
         TargetedJournalistFactory.create_batch(3, incident=cls.inc2)
 
         # One targeted journalist on an incident outside of the topic
@@ -157,3 +157,13 @@ class TopicPageApi(TestCase):
         cat2 = data[0]
 
         self.assertEqual(cat2['total_journalists'], 0)
+
+    def test_GET_counts_distinct_journalists(self):
+        TargetedJournalistFactory(
+            journalist=self.tj_incident_1.journalist,
+            incident=self.inc3,
+        )
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+        cat = data[1]
+        self.assertEqual(cat['total_journalists'], 4)
