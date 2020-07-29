@@ -1,53 +1,35 @@
 {% load render_as_template %}
-<div class="tab">
+{% load include_block from wagtailcore_tags %}
+
+<div class="tabs js-tabs">
 	<!-- Tab links -->
-	<div role="tablist">
+	<div class="tabs__tablist js-tabs">
 		{% for item in self %}
-		<button role="tab"
-				class="tablinks"
-				aria-controls="{{ item.header|lower }}-tab"
-				id="{{ item.header|lower }}">
-		  {{ item.header }}
-		</button>
+			<a class="tabs__tab" href="#{{ item.header|slugify }}">
+				{{ item.header }}
+			</a>
 		{% endfor %}
 	</div>
 
 	<!-- Tab content -->
-
 	{% for item in self %}
-	<div id="{{ item.header|lower }}-tab"
-		class="tabcontent"
-		tabindex="0"
-		role="tabpanel">
-		{% for block in item.value %}
-			{% if block.block_type == 'heading_2' %}
-				{% include_block block with classname='topic-body__heading' %}
-			{% elif block.block_type == 'rich_text' %}
-				<section class="topic-body__rich-text">
-					{% include_block block %}
-				</section>
-			{% elif block.block_type == 'tweet' %}
-				<section class="topic-body__embed-block">
-					{% include_block block %}
-				</section>
-			{% else %}
-				<section>{% include_block block %}</section>
-			{% endif %}
-		{% endfor %}
-	</div>
+		<div id="{{ item.header|slugify }}" class="tab__panel">
+			{% for block in item.value %}
+				{# TODO: The styles for these things should be separated from topic page styles and generalized #}
+				{% if block.block_type == 'heading_2' %}
+					{% include_block block with classname='topic-body__heading' %}
+				{% elif block.block_type == 'rich_text' %}
+					<section class="topic-body__rich-text">
+						{% include_block block %}
+					</section>
+				{% elif block.block_type == 'tweet' %}
+					<section class="topic-body__embed-block">
+						{% include_block block %}
+					</section>
+				{% else %}
+					<section>{% include_block block %}</section>
+				{% endif %}
+			{% endfor %}
+		</div>
 	{% endfor %}
 </div>
-
-<script>
-	$('.tab button.tablinks').on('click', function(evt) {
-		$('.tabcontent').each(function(idx, elem) {
-			$(this).hide()
-		})
-		$('.tablinks').each(function(idx, elem) {
-			$(this).removeClass('active')
-		})
-		$(this).addClass('active')
-		var contentId = $(this).attr('aria-controls')
-		$(`#${contentId}`).show()
-	})
-</script>

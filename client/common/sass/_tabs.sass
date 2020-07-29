@@ -1,34 +1,32 @@
-.tab
-  overflow: hidden
-  border: 1px solid #ccc
-  background-color: #f1f1f1
+.tabs
+	border-top: 1px solid #EEE
+	margin-top: 20px
 
-  button 
-    background-color: inherit
-    float: left
-    border: none
-    outline: none
-    cursor: pointer
-    padding: 14px 16px
-    transition: 0.3s
+	&__tablist
+		display: flex
+		justify-content: center
+		position: relative
+		margin-top: -20px
 
+	&__tab
+		flex: 0 1 auto
+		border-width: 1px 1px 1px 0
+		border-color: #CCC
+		border-style: solid
+		padding: 0.25em 1em
+		text-align: center
+		text-decoration: none
+		color: #999
+		background-color: #FFF
+		&:hover
+			color: #444
+			background-color: #F5F5F5
+		&.active
+			color: #000
+			background-color: #EEE
 
-    &:hover
-      background-color: #ddd
-
-
-    &.active
-      background-color: #ccc
-
-  .tabcontent
-    display: none
-    padding: 6px 12px
-    border: 1px solid #ccc
-    border-top: none
-    animation: fadeEffect 1s
-
-@keyframes fadeEffect
-  0% 
-    opacity: 0
-  100%
-    opacity: 1
+		&:first-child
+			border-width: 1px
+			border-radius: 4px 0 0 4px
+		&:last-child
+			border-radius: 0 4px 4px 0
