@@ -242,6 +242,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             id__in=models.Subquery(
                 IncidentCategorization.objects.filter(
                     incident_page__tags=self.incident_tag,
+                    incident_page__live=True,
                     category=models.OuterRef('category_id')
                 ).order_by('-incident_page__date').values_list('id', flat=True)[:self.incidents_per_module]
             )

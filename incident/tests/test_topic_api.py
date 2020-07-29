@@ -158,6 +158,16 @@ class TopicPageApi(TestCase):
 
         self.assertEqual(cat2['total_journalists'], 0)
 
+    def test_GET_does_not_include_draft_incidents(self):
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+        cat2 = data[0]
+
+        self.assertNotIn(
+            self.draft_incident.get_full_url(),
+            [i['url'] for i in cat2['incidents']]
+        )
+
     def test_GET_counts_distinct_journalists(self):
         TargetedJournalistFactory(
             journalist=self.tj_incident_1.journalist,
