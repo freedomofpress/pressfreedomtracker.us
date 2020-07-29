@@ -12,6 +12,7 @@ import '../sass/common.sass'
 import '~/slidingnav'
 import '~/IncidentLoader'
 import '~/emails'
+import '~/tabs'
 
 import React from 'react'
 import ReactDOM from 'react-dom'

@@ -199,6 +199,26 @@ class StatTableBlock(blocks.ListBlock):
         icon = 'list-ul'
 
 
+class TabbedBlock(blocks.ListBlock):
+    def __init__(self, **kwargs):
+        super(TabbedBlock, self).__init__(
+            blocks.StructBlock([
+                ('header', blocks.TextBlock(required=True)),
+                ('value', blocks.StreamBlock([
+                    ('heading_2', Heading2()),
+                    ('raw_html', blocks.RawHTMLBlock()),
+                    ('rich_text', blocks.RichTextBlock()),
+                    ('tweet', TweetEmbedBlock()),
+                ])),
+            ]),
+            template='common/blocks/tabbed_block.html',
+            **kwargs
+        )
+
+    class Meta:
+        icon = 'list-ul'
+
+
 class ButtonBlock(blocks.StructBlock):
     text = blocks.TextBlock(required=True)
     url = blocks.URLBlock(required=True)

@@ -1,0 +1,35 @@
+{% load render_as_template %}
+{% load include_block from wagtailcore_tags %}
+
+<div class="tabs js-tabs">
+	<!-- Tab links -->
+	<div class="tabs__tablist js-tabs">
+		{% for item in self %}
+			<a class="tabs__tab" href="#{{ item.header|slugify }}">
+				{{ item.header }}
+			</a>
+		{% endfor %}
+	</div>
+
+	<!-- Tab content -->
+	{% for item in self %}
+		<div id="{{ item.header|slugify }}" class="tab__panel">
+			{% for block in item.value %}
+				{# TODO: The styles for these things should be separated from topic page styles and generalized #}
+				{% if block.block_type == 'heading_2' %}
+					{% include_block block with classname='topic-body__heading' %}
+				{% elif block.block_type == 'rich_text' %}
+					<section class="topic-body__rich-text">
+						{% include_block block %}
+					</section>
+				{% elif block.block_type == 'tweet' %}
+					<section class="topic-body__embed-block">
+						{% include_block block %}
+					</section>
+				{% else %}
+					<section>{% include_block block %}</section>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endfor %}
+</div>
