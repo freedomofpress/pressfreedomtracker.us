@@ -13,6 +13,7 @@ from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.aggregates import ArrayAgg
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -656,13 +657,42 @@ class IncidentPage(MetadataPageMixin, Page):
         exclude_ids = {incident.id for incident in related_incidents}
         if self.id:
             exclude_ids.add(self.id)
-        related_incidents += list(
-            IncidentPage.objects.filter(
+
+        own_tags = [tag.pk for tag in self.tags.all()]
+        candidates = []
+
+        if own_tags:
+            own_tags_set = set(own_tags)
+            candidates = IncidentPage.objects.annotate(
+                tag_array=ExpressionWrapper(
+                    ArrayAgg(
+                        'tags',
+                        filter=models.Q(tags__isnull=False)  # excludes results of `[None]`
+                    ),
+                    output_field=ArrayField(models.IntegerField())
+                ),
+            ).filter(
                 live=True,
-                categories__category=main_category
+                categories__category=main_category,
+                tag_array__overlap=own_tags
             ).exclude(
                 id__in=exclude_ids
-            )[:(maximum - len(related_incidents))]
+            )
+            candidates = sorted(
+                candidates,
+                reverse=True,
+                key=lambda incident: len(set(incident.tag_array) & own_tags_set)
+            )
+        if not len(candidates):
+            candidates = IncidentPage.objects.filter(
+                live=True,
+                categories__category=main_category,
+            ).exclude(
+                id__in=exclude_ids
+            )
+
+        related_incidents += list(
+            candidates[:(maximum - len(related_incidents))]
         )
 
         if len(related_incidents) == 0:

@@ -272,6 +272,26 @@ class GetRelatedIncidentsTest(TestCase):
         related_incidents = incident.get_related_incidents()
         self.assertEqual(related_incidents, [related_incident])
 
+    def test_get_related_incidents__using_tags(self):
+        tag1 = CommonTagFactory()
+        tag2 = CommonTagFactory()
+        tag3 = CommonTagFactory()
+        tag4 = CommonTagFactory()
+        subject = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
+
+        closely_related = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
+        somewhat_related = IncidentPageFactory(parent=self.index, tags=[tag1, tag3], categories=[self.category])
+        slightly_related = IncidentPageFactory(parent=self.index, tags=[tag2, tag4], categories=[self.category])
+        unrelated = IncidentPageFactory(parent=self.index, tags=[tag4], categories=[self.category])
+
+        related_incidents = subject.get_related_incidents()
+
+        self.assertEqual(
+            related_incidents,
+            [closely_related, somewhat_related]
+        )
+
+
 
 class GetIncidentUpdatesTest(TestCase):
     def setUp(self):
