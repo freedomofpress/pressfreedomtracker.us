@@ -9,19 +9,22 @@
 {% block maincontainer %}
 <main>
 	{% include 'incident/_incident.html' with incident=page only %}
-	{% include "common/_section_heading.html" with label="Related Incidents" %}
-	<div class="grid-50">
-		{% for related_case in page.get_related_incidents %}
-			<div class="grid-50__item">
-				{% include "incident/_incident.html" with incident=related_case teaser=True only %}
-			</div>
-		{% endfor %}
-	</div>
-	<a
-		href="{% pageurl page.get_parent %}?categories={{ page.categories.all|comma_separated_pks:'category' }}"
-		class="button button--outline button--center">
-		More related incidents
-	</a>
+	{% if related_incidents %}
+		{% include "common/_section_heading.html" with label="Related Incidents" %}
+
+		<div class="grid-50">
+			{% for related_case in related_incidents %}
+				<div class="grid-50__item">
+					{% include "incident/_incident.html" with incident=related_case teaser=True only %}
+				</div>
+			{% endfor %}
+		</div>
+		<a
+			href="{% pageurl page.get_parent %}?{{ related_qs }}"
+			class="button button--outline button--center">
+			More related incidents
+		</a>
+	{% endif %}
 </main>
 {% endblock %}
 

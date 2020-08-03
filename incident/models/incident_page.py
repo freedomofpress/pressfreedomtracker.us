@@ -1,12 +1,17 @@
 import datetime
+from urllib.parse import urlencode
 
 from django import forms
 from django.db import models
 from django.db.models import (
-    OuterRef,
-    Max,
+    Case,
     ExpressionWrapper,
+    Max,
+    OuterRef,
+    Q,
     Subquery,
+    Value,
+    When,
 )
 from django.db.models.functions import ExtractDay
 from django.utils.html import strip_tags
@@ -592,6 +597,29 @@ class IncidentPage(MetadataPageMixin, Page):
 
     parent_page_types = ['incident.IncidentIndexPage']
 
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        related_incidents = self.get_related_incidents(threshold=4)
+        context['related_incidents'] = related_incidents
+
+        if related_incidents:
+            main_category = self.get_main_category()
+            if main_category:
+                related_filter = {'categories': main_category.pk}
+            else:
+                related_filter = {}
+
+            tags = self.tags.all()
+            if tags:
+                related_filter['tags'] = ','.join(str(tag.pk) for tag in tags)
+            elif self.city and self.state:
+                related_filter.update({'city': self.city, 'state': self.state})
+            elif self.state:
+                related_filter['state'] = self.state
+            context['related_qs'] = urlencode(related_filter)
+        return context
+
     def detention_duration(self):
         """
         Returns the total duration of detention.
@@ -637,68 +665,68 @@ class IncidentPage(MetadataPageMixin, Page):
             return first_category.category
         return None
 
-    def get_related_incidents(self):
+    def get_related_incidents(self, threshold=4):
+        """Locates related incidents using an incident's main category, tags
+        and city/state as parameters.
+
+        This function will query an incident's explicitly set
+        `related_incidents` and always return that entire set.
+        Additionally, it will supplement these with other incidents based
+        matching data until a threshold number of incidents is met.
+        Supplemental incidents are ranked based on overlapping tags and
+        matching city and state values.
+
         """
-        Returns related incidents and/or other incidents in the same category.
-        """
-        # If there are one or fewer related incidents, we will append more incidents from the same category, up to a maximum number
         related_incidents = list(self.related_incidents.order_by('-date'))
         main_category = self.get_main_category()
 
-        # Maximum of related incidents to return, minimum of 2
-        maximum = max(2, min(4, len(related_incidents)))
+        if len(related_incidents) >= threshold:
+            return related_incidents
 
-        if len(related_incidents) >= 2:
-            return related_incidents[:maximum]
-
-        # only add up to two more incidents from the main category
-        maximum += maximum % 2
-
-        exclude_ids = {incident.id for incident in related_incidents}
-        if self.id:
-            exclude_ids.add(self.id)
+        exclude_ids = {incident.pk for incident in related_incidents}
+        if self.pk:
+            exclude_ids.add(self.pk)
 
         own_tags = [tag.pk for tag in self.tags.all()]
-        candidates = []
+        own_tags_set = set(own_tags)
 
-        if own_tags:
-            own_tags_set = set(own_tags)
-            candidates = IncidentPage.objects.annotate(
-                tag_array=ExpressionWrapper(
-                    ArrayAgg(
-                        'tags',
-                        filter=models.Q(tags__isnull=False)  # excludes results of `[None]`
-                    ),
-                    output_field=ArrayField(models.IntegerField())
+        candidates = IncidentPage.objects.annotate(
+            tag_array=ExpressionWrapper(
+                ArrayAgg(
+                    'tags',
+                    filter=models.Q(tags__isnull=False)  # excludes results of `[None]`
                 ),
-            ).filter(
-                live=True,
-                categories__category=main_category,
-                tag_array__overlap=own_tags
-            ).exclude(
-                id__in=exclude_ids
-            )
-            candidates = sorted(
-                candidates,
-                reverse=True,
-                key=lambda incident: len(set(incident.tag_array) & own_tags_set)
-            )
-        if not len(candidates):
-            candidates = IncidentPage.objects.filter(
-                live=True,
-                categories__category=main_category,
-            ).exclude(
-                id__in=exclude_ids
-            )
-
-        related_incidents += list(
-            candidates[:(maximum - len(related_incidents))]
+                output_field=ArrayField(models.IntegerField())
+            ),
+            location_rank=Case(
+                When(city=self.city, state=self.state, then=Value(2)),
+                When(state=None, then=Value(0)),
+                When(state=self.state, then=Value(1)),
+                default=Value(0),
+                output_field=(models.IntegerField())
+            ),
+        ).filter(
+            Q(live=True),
+            Q(categories__category=main_category),
+            Q(tag_array__overlap=own_tags) | Q(location_rank__gt=0)
+        ).exclude(
+            id__in=exclude_ids
         )
 
-        if len(related_incidents) == 0:
-            related_incidents = IncidentPage.objects.filter(live=True).order_by('-date')[:2]
+        def sorter(incident):
+            if incident.tag_array:
+                tag_rank = len(set(incident.tag_array) & own_tags_set)
+            else:
+                tag_rank = 0
+            return (tag_rank, incident.location_rank, incident.date)
 
-        return related_incidents
+        candidates = sorted(candidates, reverse=True, key=sorter)
+
+        related_incidents += candidates
+
+        # Return what we have, even if it potentially does not meet
+        # the threshold.
+        return related_incidents[:threshold]
 
     def get_court_circuit(self):
         if self.state:
