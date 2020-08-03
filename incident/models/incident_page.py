@@ -642,7 +642,7 @@ class IncidentPage(MetadataPageMixin, Page):
         Returns related incidents and/or other incidents in the same category.
         """
         # If there are one or fewer related incidents, we will append more incidents from the same category, up to a maximum number
-        related_incidents = list(self.related_incidents.all())
+        related_incidents = list(self.related_incidents.order_by('-date'))
         main_category = self.get_main_category()
 
         # Maximum of related incidents to return, minimum of 2

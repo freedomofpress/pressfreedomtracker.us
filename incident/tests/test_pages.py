@@ -231,6 +231,29 @@ class GetRelatedIncidentsTest(TestCase):
         )
         self.category = CategoryPageFactory()
 
+    def test_related_incidents_sorted_by_date(self):
+        IncidentPageFactory(parent=self.index)
+
+        related_incident_old = IncidentPageFactory(parent=self.index, date='2016-01-01')
+        related_incident_new = IncidentPageFactory(parent=self.index, date='2020-01-01')
+        related_incident_recent = IncidentPageFactory(parent=self.index, date='2019-01-01')
+
+        incident = IncidentPageFactory(
+            parent=self.index,
+            categories=[self.category],
+            related_incidents=[
+                related_incident_old,
+                related_incident_new,
+                related_incident_recent,
+            ],
+        )
+
+        related_incidents = incident.get_related_incidents()
+        self.assertEqual(
+            related_incidents,
+            [related_incident_new, related_incident_recent, related_incident_old],
+        )
+
     def test_get_related_incidents__saved(self):
         IncidentPageFactory(parent=self.index)
         related_incident = IncidentPageFactory(parent=self.index)
