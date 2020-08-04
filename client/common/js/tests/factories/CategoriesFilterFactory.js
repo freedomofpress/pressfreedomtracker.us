@@ -172,3 +172,14 @@ export const TAG_MOCK_RESULTS = {
     {'pk': 2, 'title': 'Tag 2'}
   ]
 }
+
+export const STATE_FILTER_VALUES = {
+	'state': {'id': 1}
+}
+
+export const STATE_MOCK_RESULTS = {
+  'items': [
+    {'pk': 1, 'title': 'State 1'},
+    {'pk': 2, 'title': 'State 2'}
+  ]
+}
