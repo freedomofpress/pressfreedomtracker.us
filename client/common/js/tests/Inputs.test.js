@@ -143,8 +143,6 @@ describe('Inputs', () => {
         await flushPromises();
         component.update();
 
-        // Before clicking nothing exist
-        //expect(component.find('.autocomplete-layout__item--padded span').text()).toEqual('Nothing selected.');
         component.find('.autocomplete__search').simulate('focus');
 
         // Simulate clicking the first option
@@ -154,7 +152,6 @@ describe('Inputs', () => {
 
         // Check clicking renders the selection
         const selection = component.find('.selection');
-        //expect(selection.length).toEqual(1);
         expect(selection.find('.selection__label').text()).toEqual('State 1');
 
         // Simulate clicking the apply filter button by setting props
