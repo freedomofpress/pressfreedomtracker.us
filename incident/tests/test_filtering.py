@@ -1379,7 +1379,7 @@ class TargetedInstitutionsFilterTest(TestCase):
         with_institution1_target.save()
         with_institution2_target = IncidentPageFactory(
             institution_targets=0,
-            title='Incident with institution 1 directly targeted',
+            title='Incident with institution 2 directly targeted',
         )
         with_institution2_target.targeted_institutions.set([inst2])
         with_institution2_target.save()
