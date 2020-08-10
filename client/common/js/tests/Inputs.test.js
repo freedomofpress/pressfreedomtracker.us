@@ -3,7 +3,7 @@ import axios from 'axios';
 import { shallow, mount } from 'enzyme';
 import { AutocompleteInput } from '~/filtering/Inputs';
 import Autocomplete from 'WagtailAutocomplete/Autocomplete';
-import { TAG_FILTER_VALUES, EMPTY_FILTER_VALUES, TAG_MOCK_RESULTS } from '~/tests/factories/CategoriesFilterFactory';
+import { STATE_FILTER_VALUES, TAG_FILTER_VALUES, EMPTY_FILTER_VALUES, TAG_MOCK_RESULTS, STATE_MOCK_RESULTS } from '~/tests/factories/CategoriesFilterFactory';
 
 jest.mock('axios');
 
@@ -113,6 +113,63 @@ describe('Inputs', () => {
         component.update();
         // Check selection still has text
         expect(component.find('.selection .selection__label').text()).toEqual('Tag 1');
+    });
+
+	it('should render Autocomplete selection results correctly when clicked (single)', async() => {
+        axios.get.mockImplementationOnce(() => Promise.resolve(
+            {
+                'data': STATE_MOCK_RESULTS,
+                'status': 200
+            }
+        ));
+		const component = mount(
+            <AutocompleteInput
+                handleFilterChange={jest.fn()}
+                filterValues={EMPTY_FILTER_VALUES}
+                label={'Autocomplete'}
+                filter={'state'}
+                isSingle={true}
+                type={'incident.State'}
+            />
+        );
+
+        // Mock function to update the props of the root component
+        const handleFilterChangeMock = jest.fn((label, event) => {
+            component.setProps({filterValues: {[label]: event.target.value}});
+        });
+        component.setProps({handleFilterChange: handleFilterChangeMock});
+
+        // Used to complete all the promises
+        await flushPromises();
+        component.update();
+
+        component.find('.autocomplete__search').simulate('focus');
+
+        // Simulate clicking the first option
+        const suggestions = component.find('.suggestions .suggestions__item');
+        suggestions.first().simulate('click');
+        component.update();
+
+        // Check clicking renders the selection
+        const selection = component.find('.selection');
+        expect(selection.find('.selection__label').text()).toEqual('State 1');
+
+        // Simulate clicking the apply filter button by setting props
+        const fetchResult = {
+            items: STATE_MOCK_RESULTS.items.filter(result => result.pk === STATE_FILTER_VALUES.state.id),
+        }
+        axios.get.mockImplementation(() => Promise.resolve(
+            {
+                'data': fetchResult,
+                'status': 200
+            }
+        ));
+        component.setProps({filterValues: STATE_FILTER_VALUES});
+        // Used to complete all the promises
+        await flushPromises();
+        component.update();
+        // Check selection still has text
+        expect(component.find('.selection .selection__label').text()).toEqual('State 1');
     });
 
     it('should render Autocomplete correctly when filtervalues are there in URL', async () => {
