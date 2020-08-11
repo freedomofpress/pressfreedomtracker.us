@@ -27,6 +27,27 @@
 
 {% block main %}
 	{% include "home/_stats.html" with label=page.statboxes_label stats=page.statboxes.all %}
+
+	{% if page.content %}
+		<div class="home-body">
+			{% for block in page.content %}
+				{% if block.block_type == 'heading_2' %}
+					{% include_block block with classname='home-body__heading' %}
+				{% elif block.block_type == 'rich_text' %}
+					<section class="home-body__rich-text">
+						{% include_block block %}
+					</section>
+				{% elif block.block_type == 'tweet' %}
+					<section class="home-body__embed-block">
+						{% include_block block %}
+					</section>
+				{% else %}
+					<section>{% include_block block %}</section>
+				{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
+
 	{% include "home/_featured_articles.html" with label=page.featured_pages_label link_label=page.featured_more_label %}
 {% endblock %}
 
