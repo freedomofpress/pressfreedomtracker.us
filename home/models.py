@@ -9,10 +9,13 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     PageChooserPanel,
     MultiFieldPanel,
+    StreamFieldPanel,
 )
-from wagtail.core.fields import RichTextField
+from wagtail.core import blocks
+from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page, Orderable
 
+import common.blocks
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
@@ -92,16 +95,28 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Text for the filter bar when no filters are applied.',
     )
 
+    content = StreamField([
+        ('heading_2', common.blocks.Heading2()),
+        ('raw_html', blocks.RawHTMLBlock()),
+        ('rich_text', blocks.RichTextBlock()),
+        ('tweet', common.blocks.TweetEmbedBlock()),
+        ('tabs', common.blocks.TabbedBlock()),
+    ], blank=True)
+
     content_panels = Page.content_panels + [
 
-        MultiFieldPanel([
-            FieldPanel('statboxes_label'),
-            InlinePanel(
-                'statboxes',
-                label='Statboxes',
-            ),
-        ], 'Statboxes'),
-
+        MultiFieldPanel(
+            [
+                FieldPanel('statboxes_label'),
+                InlinePanel(
+                    'statboxes',
+                    label='Statboxes',
+                ),
+            ],
+            'Statboxes',
+            classname='collapsible',
+        ),
+        StreamFieldPanel('content'),
         MultiFieldPanel([
             FieldPanel('featured_pages_label'),
             InlinePanel(

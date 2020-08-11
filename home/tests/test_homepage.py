@@ -1,5 +1,10 @@
 from wagtail.core.models import Site, Page
-from wagtail.tests.utils.form_data import nested_form_data, inline_formset
+from wagtail.tests.utils.form_data import (
+    nested_form_data,
+    inline_formset,
+    streamfield,
+    rich_text,
+)
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -57,6 +62,11 @@ class HomePageTest(TestCase):
                     {'page': str(post1.pk)},
                     {'page': str(incident2.pk)},
                     {'page': str(post2.pk)},
+                ]),
+                'content': streamfield([
+                    ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
+                    ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
+                    ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
                 ]),
                 'statboxes': inline_formset([
                     {'value': '{% num_incidents categories=9 %}',
