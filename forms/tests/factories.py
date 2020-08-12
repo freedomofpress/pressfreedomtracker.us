@@ -21,6 +21,7 @@ class FormFieldFactory(DjangoModelFactory):
     sort_order = Sequence(int)
     label = Faker('sentence', nb_words=6, variable_nb_words=True)
     required = Faker('boolean', chance_of_getting_true=50)
+    use_as_reply_to = False
 
     class Params:
         radio = Trait(
@@ -56,3 +57,17 @@ class FormPageFactory(PageFactory):
     radio_field = RelatedFactory(FormFieldFactory, 'page', radio=True)
     dropdown_field = RelatedFactory(FormFieldFactory, 'page', dropdown=True)
     checkboxes_field = RelatedFactory(FormFieldFactory, 'page', checkboxes=True)
+
+
+class FormPageWithReplyToFieldFactory(PageFactory):
+    class Meta:
+        model = FormPage
+
+    email_field = RelatedFactory(
+        FormFieldFactory,
+        'page',
+        field_type='email',
+        use_as_reply_to=True,
+        required=True,
+        label='email_address',
+    )

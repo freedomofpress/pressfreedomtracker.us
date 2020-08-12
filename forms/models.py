@@ -10,12 +10,29 @@ from wagtail.core.fields import RichTextField
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
+from forms.email import send_mail
 from common.models import MetadataPageMixin
 from common.edit_handlers import HelpPanel
 
 
 class FormField(AbstractFormField):
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['page'],
+                condition=models.Q(use_as_reply_to=True),
+                name='only_one_reply_to_form_field',
+            )
+        ]
+
     page = ParentalKey('FormPage', related_name='form_fields')
+
+    use_as_reply_to = models.BooleanField(
+        default=False,
+        help_text='Use the contents of this field as the Reply-To header of the email sent by this from.  Only one field per form can have this checked.',
+    )
+
+    panels = AbstractFormField.panels + [FieldPanel('use_as_reply_to')]
 
 
 @method_decorator(cache_control(private=True), name='serve')
@@ -62,3 +79,19 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         if 'embed' in request.GET:
             response.xframe_options_exempt = True
         return response
+
+    def send_mail(self, form):
+        fields = {x.clean_name: x for x in self.form_fields.all()}
+        addresses = [x.strip() for x in self.to_address.split(',')]
+        content = []
+        reply_to = []
+        for field in form:
+            value = field.value()
+            if isinstance(value, list):
+                value = ', '.join(value)
+            content.append('{}: {}'.format(field.label, value))
+
+            if fields.get(field.name) and fields.get(field.name).use_as_reply_to:
+                reply_to = [value]
+        content = '\n'.join(content)
+        send_mail(self.subject, content, addresses, self.from_address, reply_to=reply_to)
