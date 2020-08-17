@@ -71,3 +71,26 @@ class FormPageWithReplyToFieldFactory(PageFactory):
         required=True,
         label='email_address',
     )
+
+
+class FormPageWithAppendSubjectFieldsFactory(PageFactory):
+    class Meta:
+        model = FormPage
+
+    subject_field = RelatedFactory(
+        FormFieldFactory,
+        'page',
+        field_type='singleline',
+        append_to_subject=True,
+        required=True,
+        label='topic',
+    )
+
+    subject_field2 = RelatedFactory(
+        FormFieldFactory,
+        'page',
+        field_type='singleline',
+        append_to_subject=True,
+        required=True,
+        label='theme',
+    )

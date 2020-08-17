@@ -27,12 +27,19 @@ class FormField(AbstractFormField):
 
     page = ParentalKey('FormPage', related_name='form_fields')
 
+    append_to_subject = models.BooleanField(
+        default=False,
+        help_text='Add the contents of this field to the subject of the email sent by this from.  All fields with this checked will be appended.',
+    )
     use_as_reply_to = models.BooleanField(
         default=False,
         help_text='Use the contents of this field as the Reply-To header of the email sent by this from.  Only one field per form can have this checked.',
     )
 
-    panels = AbstractFormField.panels + [FieldPanel('use_as_reply_to')]
+    panels = AbstractFormField.panels + [
+        FieldPanel('append_to_subject'),
+        FieldPanel('use_as_reply_to'),
+    ]
 
 
 @method_decorator(cache_control(private=True), name='serve')
@@ -85,13 +92,18 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         addresses = [x.strip() for x in self.to_address.split(',')]
         content = []
         reply_to = []
+        subject = self.subject
+
         for field in form:
             value = field.value()
             if isinstance(value, list):
                 value = ', '.join(value)
             content.append('{}: {}'.format(field.label, value))
 
-            if fields.get(field.name) and fields.get(field.name).use_as_reply_to:
-                reply_to = [value]
+            if fields.get(field.name):
+                if fields.get(field.name).append_to_subject and value:
+                    subject = '{0} - {1}'.format(subject, field.value())
+                if fields.get(field.name).use_as_reply_to:
+                    reply_to = [value]
         content = '\n'.join(content)
-        send_mail(self.subject, content, addresses, self.from_address, reply_to=reply_to)
+        send_mail(subject, content, addresses, self.from_address, reply_to=reply_to)
