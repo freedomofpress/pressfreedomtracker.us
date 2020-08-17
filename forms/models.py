@@ -103,7 +103,7 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
             if fields.get(field.name):
                 if fields.get(field.name).append_to_subject and value:
                     subject = '{0} - {1}'.format(subject, field.value())
-                if fields.get(field.name).use_as_reply_to:
+                if fields.get(field.name).use_as_reply_to and value:
                     reply_to = [value]
         content = '\n'.join(content)
         send_mail(subject, content, addresses, self.from_address, reply_to=reply_to)

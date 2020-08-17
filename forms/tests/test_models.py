@@ -46,6 +46,19 @@ class ReplyToFields(TestCase):
         self.form_page.send_mail(form)
         self.assertEqual(mail.outbox[0].reply_to, [reply_to])
 
+    def test_reply_to_header_absent_if_value_absent(self):
+        factory = RequestFactory()
+        request = factory.post(self.form_page.get_url(), {})
+        form = self.form_page.get_form(
+            request.POST,
+            request.FILES,
+            page=self,
+            user=AnonymousUser(),
+        )
+
+        self.form_page.send_mail(form)
+
+
 class AppendSubjectFields(TestCase):
     @classmethod
     def setUpTestData(kls):
