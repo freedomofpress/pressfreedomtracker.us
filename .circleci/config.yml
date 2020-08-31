@@ -2,17 +2,21 @@
 reuse-blerbs:
   - &python_prereqs
     run:
+      environment:
+        SETUPTOOLS_USE_DISTUTILS: stdlib
       name: Install testing pre-reqs
       command: |
         # Set python to 3.5.2
         pyenv global 3.5.2
         pip install -U pip
         pip install pipenv
-        pipenv install
+        pipenv sync
 
 version: 2
 jobs:
   safety_check:
+    environment:
+      SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
       image: ubuntu-1604:201903-01
     working_directory: ~/tracker
@@ -34,6 +38,8 @@ jobs:
           command: make flake8
 
   npm_audit:
+    environment:
+      SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
       image: ubuntu-1604:201903-01
     working_directory: ~/tracker
@@ -51,6 +57,8 @@ jobs:
           path: ~/tracker/test-results/
 
   dev:
+    environment:
+      SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
       image: ubuntu-1604:201903-01
     working_directory: ~/tracker
@@ -84,6 +92,8 @@ jobs:
           path: ~/dockercomposelogs
 
   prod:
+    environment:
+      SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
       image: ubuntu-1604:201903-01
     working_directory: ~/pressfreedom
