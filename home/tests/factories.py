@@ -1,22 +1,29 @@
 import factory
 import wagtail_factories
-from faker import Faker
 from wagtail.core.rich_text import RichText
 
 from home.models import HomePage, StatBox
 from common.choices import CATEGORY_COLOR_CHOICES
+from common.tests.utils import StreamfieldProvider
 
 
-fake = Faker()
+factory.Faker.add_provider(StreamfieldProvider)
 
 
 class HomePageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = HomePage
         django_get_or_create = ('slug',)
+        exclude = ('about_text')
+
+    about_text = factory.Faker('paragraph', nb_sentences=10)
 
     title = 'Home'
-    about = factory.LazyAttribute(lambda _: RichText(fake.paragraph(nb_sentences=10)))
+    about = factory.LazyAttribute(lambda o: RichText(o.about_text))
+    content = factory.Faker(
+        'streamfield',
+        fields=['heading2', 'rich_text_paragraph', 'raw_html', 'tweet', 'tabs']
+    )
 
 
 class StatBoxFactory(factory.DjangoModelFactory):
@@ -41,4 +48,4 @@ class StatBoxFactory(factory.DjangoModelFactory):
         lambda o: o.category if o.category else None
     )
     querystring = ''
-    external_link = '/'
+    external_link = factory.Faker('url', schemes=['https'])

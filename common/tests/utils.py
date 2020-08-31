@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, randrange
 import json
 
 from faker import Faker
@@ -118,15 +118,13 @@ def generate_heading3_field():
 
 
 def generate_raw_html():
-    body = """
-<div style="border: solid 1px orange; margin: 5px; padding: 5px;">
-<p><dl><dt>Block type</dt><dd>Raw <abbr title="Hypertext Markup Language">HTML</abbr></dd>
-<dt>Tags used</dt><dd><pre>abbr, pre, dl, dt, dd, progress, label</pre></dd>
-</dl></p>
-<p>
-<label for="completion">How close are we?</label>
-<progress id="completion" max="100" value="70"> 70% </progress></p></div>"""
-    return generate_field('raw_html', body)
+    body = """<div style="margin: 0 auto; width: 80%; display: flex; justify-content: center; flex-direction: column; background-color: #ffeedd; color: #111; padding: 10px; border-radius: 10px 100px / 120px;">
+<dl><dt>Block type</dt><dd>Raw <abbr title="Hypertext Markup Language">HTML</abbr></dd><dt>Tags used</dt><dd><span style="font-family:monospace;">abbr, dd, div, dl, dt, meter, progress, span, table, td, tr</span></dd></dl>
+
+<table style="width: 66%; margin: 0 auto;">
+<tr><td><label for="completion">How close are we?</label></td><td><progress id="completion" max="100" value="{progress}"> {progress}% </progress></td>
+<tr><td>Fuel remaining</td><td><meter id="fuel" min="0" max="100" low="33" high="66" optimum="80" value="{fuel}"></meter></td></tr></table></div>"""
+    return generate_field('raw_html', body.format(fuel=randrange(0, 101), progress=randrange(0, 101)))
 
 
 def generate_aligned_captioned_image():
@@ -153,6 +151,32 @@ def generate_list():
     return generate_field('list', fake.words())
 
 
+def generate_twitter_embed():
+    return generate_field(
+        'tweet', {'tweet': 'https://twitter.com/SecureDrop/status/1174092303834599424'}
+    )
+
+
+def generate_tabs():
+    block_fns = [generate_heading2_field, generate_rich_text_paragraph]
+    default_tab = {
+        'value': [
+            generate_heading2_field(),
+            generate_rich_text_paragraph(),
+            generate_twitter_embed(),
+            generate_raw_html()
+        ],
+        'header': ' '.join(fake.words(nb=2)).title(),
+    }
+
+    tabs = [default_tab] + [{
+        'header': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'value': [choice(block_fns)() for i in range(randrange(2, 6))],
+    } for _ in range(randrange(1, 4))]
+
+    return generate_field('tabs', tabs)
+
+
 class StreamfieldProvider(BaseProvider):
     def streamfield(self, fields=None):
         valid_fields = {
@@ -168,6 +192,8 @@ class StreamfieldProvider(BaseProvider):
             'styled_text_paragraphs': generate_styled_text_paragraphs,
             'blockquote': generate_block_quote,
             'list': generate_list,
+            'tweet': generate_twitter_embed,
+            'tabs': generate_tabs,
         }
 
         streamfield_data = []
