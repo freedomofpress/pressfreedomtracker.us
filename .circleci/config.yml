@@ -2,14 +2,15 @@
 reuse-blerbs:
   - &python_prereqs
     run:
+      environment:
+        SETUPTOOLS_USE_DISTUTILS: stdlib
       name: Install testing pre-reqs
       command: |
         # Set python to 3.5.2
         pyenv global 3.5.2
         pip install -U pip
-        pip install setuptools==49.6.0
         pip install pipenv
-        SETUPTOOLS_USE_DISTUTILS=stdlib pipenv install
+        pipenv install
 
 version: 2
 jobs:
