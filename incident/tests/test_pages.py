@@ -28,7 +28,8 @@ from .factories import (
     IncidentIndexPageFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
-    TopicPageFactory
+    TopicPageFactory,
+    StateFactory,
 )
 
 
@@ -231,32 +232,59 @@ class GetRelatedIncidentsTest(TestCase):
         )
         self.category = CategoryPageFactory()
 
+    def test_related_incidents_sorted_by_date(self):
+        IncidentPageFactory(parent=self.index)
+
+        related_incident_old = IncidentPageFactory(parent=self.index, date='2016-01-01')
+        related_incident_new = IncidentPageFactory(parent=self.index, date='2020-01-01')
+        related_incident_recent = IncidentPageFactory(parent=self.index, date='2019-01-01')
+
+        incident = IncidentPageFactory(
+            parent=self.index,
+            categories=[self.category],
+            related_incidents=[
+                related_incident_old,
+                related_incident_new,
+                related_incident_recent,
+            ],
+        )
+
+        related_incidents = incident.get_related_incidents()
+        self.assertEqual(
+            related_incidents,
+            [related_incident_new, related_incident_recent, related_incident_old],
+        )
+
     def test_get_related_incidents__saved(self):
         IncidentPageFactory(parent=self.index)
+        tag = CommonTagFactory()
         related_incident = IncidentPageFactory(parent=self.index)
-        category_incident = IncidentPageFactory(parent=self.index, categories=[self.category])
+        tagged_incident = IncidentPageFactory(parent=self.index, categories=[self.category], tags=[tag])
         incident = IncidentPageFactory(
             parent=self.index,
             categories=[self.category],
             related_incidents=[related_incident],
+            tags=[tag],
         )
 
         related_incidents = incident.get_related_incidents()
-        self.assertEqual(related_incidents, [related_incident, category_incident])
+        self.assertEqual(related_incidents, [related_incident, tagged_incident])
 
     def test_get_related_incidents__unsaved(self):
         IncidentPageFactory(parent=self.index)
+        tag = CommonTagFactory()
         related_incident = IncidentPageFactory(parent=self.index)
-        category_incident = IncidentPageFactory(parent=self.index, categories=[self.category])
+        tagged_incident = IncidentPageFactory(parent=self.index, categories=[self.category], tags=[tag])
         incident = IncidentPageFactory(
             parent=self.index,
-            categories=[self.category]
+            categories=[self.category],
+            tags=[tag],
         )
 
         incident.related_incidents = [related_incident]
 
         related_incidents = incident.get_related_incidents()
-        self.assertEqual(related_incidents, [related_incident, category_incident])
+        self.assertEqual(related_incidents, [related_incident, tagged_incident])
 
     def test_get_related_incidents__include_related_once_only(self):
         # Related incidents should only be included once, for being related
@@ -271,6 +299,115 @@ class GetRelatedIncidentsTest(TestCase):
 
         related_incidents = incident.get_related_incidents()
         self.assertEqual(related_incidents, [related_incident])
+
+    def test_get_related_incidents__using_tags(self):
+        tag1 = CommonTagFactory()
+        tag2 = CommonTagFactory()
+        tag3 = CommonTagFactory()
+        tag4 = CommonTagFactory()
+        subject = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
+
+        closely_related = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
+        somewhat_related = IncidentPageFactory(parent=self.index, tags=[tag1, tag3], categories=[self.category])
+        slightly_related = IncidentPageFactory(parent=self.index, tags=[tag2, tag4], categories=[self.category])
+        IncidentPageFactory(parent=self.index, tags=[tag4], categories=[self.category])
+
+        related_incidents = subject.get_related_incidents()
+
+        self.assertEqual(
+            related_incidents,
+            [closely_related, somewhat_related, slightly_related]
+        )
+
+    def test_get_related_incidents__ordered_by_descending_date(self):
+        tag1 = CommonTagFactory()
+        tag2 = CommonTagFactory()
+        tag3 = CommonTagFactory()
+
+        subject = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
+
+        closely_related_old = IncidentPageFactory(
+            parent=self.index,
+            tags=[tag1, tag2, tag3],
+            categories=[self.category],
+            date='2016-01-01',
+        )
+        closely_related_new = IncidentPageFactory(
+            parent=self.index,
+            tags=[tag1, tag2, tag3],
+            categories=[self.category],
+            date='2020-01-01',
+        )
+        closely_related_recent = IncidentPageFactory(
+            parent=self.index,
+            tags=[tag1, tag2, tag3],
+            categories=[self.category],
+            date='2019-01-01',
+        )
+        related_incidents = subject.get_related_incidents()
+
+        self.assertEqual(
+            related_incidents,
+            [closely_related_new, closely_related_recent, closely_related_old]
+        )
+
+    def test_get_related_incidents__using_location(self):
+        tag1 = CommonTagFactory()
+        tag2 = CommonTagFactory()
+        tag3 = CommonTagFactory()
+        tag4 = CommonTagFactory()
+        state = StateFactory(name='New Mexico')
+        other_state = StateFactory(name='Colorado')
+        subject = IncidentPageFactory(
+            parent=self.index,
+            tags=[tag1, tag2, tag3],
+            categories=[self.category],
+            city='Albuquerque',
+            state=state,
+        )
+        close = IncidentPageFactory(
+            title='Close',
+            parent=self.index,
+            tags=[tag2],
+            categories=[self.category],
+            city='Albuquerque',
+            state=state,
+        )
+        nearby = IncidentPageFactory(
+            title='Nearby',
+            parent=self.index,
+            tags=[tag3],
+            categories=[self.category],
+            city='Santa Fe',
+            state=state,
+        )
+        far = IncidentPageFactory(
+            title='Far',
+            parent=self.index,
+            tags=[tag1],
+            categories=[self.category],
+            city='Denver',
+            state=other_state,
+        )
+        nearby_no_tag_overlap = IncidentPageFactory(
+            title='Nearby, no tag overlap',
+            parent=self.index,
+            tags=[tag4],
+            categories=[self.category],
+            city='Santa Fe',
+            state=state,
+        )
+        IncidentPageFactory(
+            title='No relation',
+            parent=self.index,
+            tags=[tag4],
+            categories=[self.category],
+            city='Denver',
+            state=other_state,
+        )
+        related_incidents = subject.get_related_incidents()
+
+        self.assertEqual(related_incidents, [close, nearby, far, nearby_no_tag_overlap])
 
 
 class GetIncidentUpdatesTest(TestCase):
