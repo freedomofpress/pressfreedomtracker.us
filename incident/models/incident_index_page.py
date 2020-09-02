@@ -115,9 +115,9 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             'path',
         )
 
-    def get_context(self, request):
+    def get_context(self, request, *args, **kwargs):
         from common.models import CategoryPage
-        context = super(IncidentIndexPage, self).get_context(request)
+        context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
 
         incident_filter = IncidentFilter(request.GET)
         context['serialized_filters'] = json.dumps(get_serialized_filters())

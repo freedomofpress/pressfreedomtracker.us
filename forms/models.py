@@ -49,8 +49,8 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         ], "Email"),
     ]
 
-    def get_context(self, request):
-        context = super(FormPage, self).get_context(request)
+    def get_context(self, request, *args, **kwargs):
+        context = super(FormPage, self).get_context(request, *args, **kwargs)
         if request.GET.get('embed', None):
             context['template_name'] = 'base.chromeless.html'
         else:

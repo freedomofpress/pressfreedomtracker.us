@@ -263,6 +263,9 @@ wagtail-inventory==1.0 \
     --hash=sha256:17ce404d136ae5fb53c00e1010c69cb3881f00e07a64d427c6b2387395e93ed7 \
     --hash=sha256:6d8f5fc29c40d8559ec339b278ec3f9563ce9b3d570a5edad954cd1d1ae7a460 \
     # via -r requirements.in
+wagtail-livepreview==0.1 \
+    --hash=sha256:fc19d1337933185575e4fb1bd6b0c785fb423d73347745048cdb2887765bdfbf \
+    # via -r requirements.in
 wagtail-metadata==2.0.1 \
     --hash=sha256:1b710fcd6c96f2405db0d9f12ea3055a4532f3e4a43bcb2793700cde714841f1 \
     --hash=sha256:e3ef0776d3a429239dce4d164ac40c779f5d8ac958c630e0ab7442c25c54692e \

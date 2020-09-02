@@ -1,4 +1,4 @@
-{% load static wagtailmetadata_tags %}
+{% load static wagtailmetadata_tags livepreview_tags %}
 {% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
@@ -52,5 +52,6 @@
 	<body class="{% block body_class %}{% endblock %}">
 		{% block body %}
 		{% endblock %}
+		{% livepreview_js %}
 	</body>
 </html>
