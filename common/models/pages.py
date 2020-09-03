@@ -124,6 +124,8 @@ class OrganizationIndexPage(Page):
 
     subpage_types = ['common.OrganizationPage']
 
+    LIVEPREVIEW_DISABLED = True
+
     def serve(self, request):
         raise Http404()
 
@@ -256,6 +258,8 @@ class CategoryPage(MetadataPageMixin, Page):
         FieldPanel('plural_name'),
         FieldPanel('page_color'),
     ]
+
+    LIVEPREVIEW_DISABLED = True
 
     def clean(self):
         self.methodology = unescape(self.methodology)
