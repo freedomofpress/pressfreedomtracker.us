@@ -12,31 +12,44 @@ class SearchStatSource extends React.Component {
 		const selection = editorState.getSelection()
 
 		const search = window.prompt("Enter a url.")
-		const count = Math.floor(Math.random() * 150)
 
 		let nextState
 		if (search) {
 			const url = new URL(search);
 
-			let params = {}
+			const summaryUrl = new URL(search)
+			summaryUrl.pathname = '/all-incidents/summary/'
 
-			for (let [key, value] of url.searchParams.entries()) {
-				params[`param_${key}`] = value
-			}
+			fetch(summaryUrl.href)
+				.then(response => response.json())
+				.then(data => {
+					let params = {}
+					const count = data.total
 
-			const contentWithEntity = content.createEntity(entityType.type, 'IMMUTABLE', {
-				count: count,
-				search: search,
-				...params,
-			})
+					for (let [key, value] of url.searchParams.entries()) {
+						params[`param_${key}`] = value
+					}
 
-			const entityKey = contentWithEntity.getLastCreatedEntityKey()
-			const text = `${count}`
+					const contentWithEntity = content.createEntity(entityType.type, 'IMMUTABLE', {
+						count: count,
+						search: search,
+						...params,
+					})
 
-			const newContent = Modifier.replaceText(content, selection, text, null, entityKey);
-			nextState = EditorState.push(editorState, newContent, 'insert-characters')
+					const entityKey = contentWithEntity.getLastCreatedEntityKey()
+					const text = `${count}`
+
+					const newContent = Modifier.replaceText(content, selection, text, null, entityKey);
+					nextState = EditorState.push(editorState, newContent, 'insert-characters')
+				})
+				.catch((error) => {
+					window.alert("Error while constructing statistics. Please check that the URL is correct.")
+					console.error(error)
+				})
+				.finally(() => { onComplete(nextState) })
+		} else {
+			onComplete(nextState)
 		}
-		onComplete(nextState)
 	}
 
 	render() {
