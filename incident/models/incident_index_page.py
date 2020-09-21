@@ -7,6 +7,7 @@ from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
 from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
+from marshmallow import Schema, fields, EXCLUDE
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.models import Page, Site
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -21,6 +22,17 @@ from incident.feeds import IncidentIndexPageFeed
 
 if TYPE_CHECKING:
     from django.http import HttpRequest  # noqa: F401
+
+
+class SummarySchema(Schema):
+    class Meta:
+        # This schema is populated from the incident filter results
+        # summary, which can contain dynamic fields.  EXCLUDE tells
+        # the schema to ignore those.
+        unknown = EXCLUDE
+    total = fields.Integer(data_key='Total Results')
+    journalists = fields.Integer(data_key='Journalists affected')
+    institutions = fields.Integer(data_key='Institutions affected')
 
 
 class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
@@ -103,6 +115,14 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     def export_view_OPTIONS(self, request: 'HttpRequest') -> HttpResponse:
         return HttpResponse()
+
+    @route(r'^summary/$')
+    @method_decorator(require_http_methods(['GET']))
+    def summary(self, request):
+        incident_filter = IncidentFilter(request.GET)
+        summary = incident_filter.get_summary()
+        result = SummarySchema().load(dict(summary))
+        return JsonResponse(result)
 
     @route(r'^feed/$')
     def feed(self, request):
