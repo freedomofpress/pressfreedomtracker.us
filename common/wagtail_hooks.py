@@ -113,15 +113,15 @@ def register_num_incidents_feature(features):
 
     control = {
         'type': type_,
-        'label': 'Num. Incidents',
-        'description': 'Number of incidents matching a search',
+        'label': 'Stats',
+        'description': 'Statistics data matching an incident search',
     }
 
     features.register_editor_plugin(
         'draftail', feature_name, draftail_features.EntityFeature(
             control,
-            js=[get_files('statistics')[0]['url']],
-            # css={'all': ['creature.css']}  # TODO: make custom css?
+            js=[get_files('statistics', extension='js')[0]['url']],
+            css={'all': [get_files('statistics', extension='css')[0]['url']]}
         )
     )
 
@@ -139,12 +139,24 @@ def num_incidents_entity_decorator(props):
     filters = {
         k.replace('param_', 'data-param-').replace('_', '-'): v for k, v in props.items() if k.startswith('param_')
     }
+    dataset = props.get('dataset', '')
     filters['data-entity'] = 'num-incidents'
     filters['data-count'] = props.get('count', '0')
     filters['data-search'] = props.get('search', '')
+    filters['data-dataset'] = dataset
 
-    tag = "{{% num_incidents {} %}}".format(
-        ' '.join(
+    if dataset == 'TOTAL':
+        tag_name = 'num_incidents'
+    elif dataset == 'JOURNALISTS':
+        tag_name = 'num_journalist_targets'
+    elif dataset == 'INSTITUTIONS':
+        tag_name = 'num_institution_targets'
+    else:
+        tag_name = ''
+
+    tag = "{{% {tag_name} {args} %}}".format(
+        tag_name=tag_name,
+        args=' '.join(
             '{k}="{v}"'.format(k=k.replace('param_', ''), v=v) for k, v in props.items() if k.startswith('param_')
         )
     )
