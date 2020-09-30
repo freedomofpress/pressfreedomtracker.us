@@ -1,5 +1,5 @@
 from common.forms import BaseMergeForm
-from incident.models import Charge, Nationality, Venue, PoliticianOrPublic, Journalist, Institution, GovernmentWorker
+from incident.models import Charge, Nationality, Venue,PoliticianOrPublic, Journalist, Institution, GovernmentWorker, LawEnforcementOrganization
 
 
 class JournalistMergeForm(BaseMergeForm):
@@ -15,6 +15,11 @@ class InstitutionMergeForm(BaseMergeForm):
 class ChargeMergeForm(BaseMergeForm):
     merge_model = Charge
     merge_model_type = 'incident.Charge'
+
+
+class LawEnforcementOrganizationForm(BaseMergeForm):
+    merge_model = LawEnforcementOrganization
+    merge_model_type = 'incident.LawEnforcementOrganization'
 
 
 class NationalityMergeForm(BaseMergeForm):

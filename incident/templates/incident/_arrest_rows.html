@@ -32,7 +32,7 @@
 			Arresting Authority
 		</th>
 		<td class="data-table__value">
-			<a href="{% pageurl page.get_parent %}?arrest_status={{ page.arrest_status }}">
+			<a href="{% pageurl page.get_parent %}?arresting_authority={{ page.arresting_authority.pk }}">
 				{{ page.arresting_authority|capfirst }}
 			</a>
 		</td>
