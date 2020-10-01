@@ -21,6 +21,7 @@ from incident.models import (
     choices,
     Journalist,
     Institution,
+    LawEnforcementOrganization,
     TargetedJournalist,
     GovernmentWorker,
     TopicPage,
@@ -63,6 +64,12 @@ class EquipmentBrokenFactory(factory.DjangoModelFactory):
         model = EquipmentBroken
     equipment = SubFactory(EquipmentFactory)
     quantity = LazyAttribute(lambda _: random.randint(1, 5))
+
+
+class LawEnforcementOrganizationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = LawEnforcementOrganization
+    title = factory.Faker('word')
 
 
 class IncidentUpdateFactory(factory.DjangoModelFactory):
@@ -112,6 +119,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     # Detention/arrest
     arrest_status = None
     status_of_charges = None
+    arresting_authority = None
     release_date = None
     detention_date = None
     unnecessary_use_of_force = False
@@ -152,6 +160,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.ARREST_STATUS, getter=lambda c: c[0]),
             status_of_charges=factory.Iterator(
                 choices.STATUS_OF_CHARGES, getter=lambda c: c[0]),
+            arresting_authority=RelatedFactory(
+                LawEnforcementOrganizationFactory, 'incident'
+            ),
             current_charges=2,
             dropped_charges=2,
             release_date=datetime.date.today(),
