@@ -66,10 +66,23 @@ class EquipmentBrokenFactory(factory.DjangoModelFactory):
     quantity = LazyAttribute(lambda _: random.randint(1, 5))
 
 
+class ItemFactory(factory.DjangoModelFactory):
+    class Meta:
+        abstract = True
+
+    class Params:
+        unique_title = factory.Trait(
+            title=factory.Sequence(
+                lambda n: 'Title {n}'.format(n=n)
+            )
+        )
+
+
 class LawEnforcementOrganizationFactory(factory.DjangoModelFactory):
     class Meta:
         model = LawEnforcementOrganization
-    title = factory.Faker('word')
+        django_get_or_create = ('title',)
+    title = factory.Faker('sentence', nb_words=3)
 
 
 class IncidentUpdateFactory(factory.DjangoModelFactory):
@@ -161,7 +174,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             status_of_charges=factory.Iterator(
                 choices.STATUS_OF_CHARGES, getter=lambda c: c[0]),
             arresting_authority=RelatedFactory(
-                LawEnforcementOrganizationFactory, 'incident'
+                LawEnforcementOrganizationFactory
             ),
             current_charges=2,
             dropped_charges=2,
@@ -380,18 +393,6 @@ class TopicPageFactory(wagtail_factories.PageFactory):
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
     incident_tag = factory.SubFactory(CommonTagFactory)
-
-
-class ItemFactory(factory.DjangoModelFactory):
-    class Meta:
-        abstract = True
-
-    class Params:
-        unique_title = factory.Trait(
-            title=factory.Sequence(
-                lambda n: 'Title {n}'.format(n=n)
-            )
-        )
 
 
 class SnippetFactory(factory.DjangoModelFactory):
