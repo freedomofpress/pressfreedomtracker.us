@@ -1,5 +1,5 @@
 from common.forms import BaseMergeForm
-from incident.models import Charge, Nationality, Venue,PoliticianOrPublic, Journalist, Institution, GovernmentWorker, LawEnforcementOrganization
+from incident.models import Charge, Nationality, Venue, PoliticianOrPublic, Journalist, Institution, GovernmentWorker, LawEnforcementOrganization
 
 
 class JournalistMergeForm(BaseMergeForm):
