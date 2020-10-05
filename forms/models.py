@@ -16,7 +16,7 @@ from common.edit_handlers import HelpPanel
 
 
 class FormField(AbstractFormField):
-    class Meta:
+    class Meta(AbstractFormField.Meta):
         constraints = [
             models.UniqueConstraint(
                 fields=['page'],

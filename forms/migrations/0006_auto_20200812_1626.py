@@ -10,10 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='formfield',
-            options={},
-        ),
         migrations.AddField(
             model_name='formfield',
             name='use_as_reply_to',
