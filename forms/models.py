@@ -1,7 +1,9 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from modelcluster.fields import ParentalKey
+from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.admin.edit_handlers import (
     FieldPanel, FieldRowPanel,
     InlinePanel, MultiFieldPanel
@@ -13,6 +15,29 @@ from wagtailcaptcha.models import WagtailCaptchaEmailForm
 from forms.email import send_mail
 from common.models import MetadataPageMixin
 from common.edit_handlers import HelpPanel
+
+
+class ReplyToValidatorForm(WagtailAdminPageForm):
+    def clean(self):
+        cleaned_data = super().clean()
+
+        reply_to_fields = []
+        reply_to_forms = []
+        for form in self.formsets['form_fields'].forms:
+            if form.is_valid():
+                cleaned_form_data = form.clean()
+                reply_to_field = cleaned_form_data.get('use_as_reply_to')
+
+                if reply_to_field:
+                    reply_to_fields.append(cleaned_form_data.get('label'))
+                    reply_to_forms.append(form)
+
+        if len(reply_to_fields) > 1:
+            for form in reply_to_forms:
+                form.add_error('use_as_reply_to', 'Only one field per form may have this option enabled.')
+            raise ValidationError('Multiple fields with "Use as reply to" checked: {}'.format(', '.join(reply_to_fields)))
+
+        return cleaned_data
 
 
 class FormField(AbstractFormField):
@@ -72,6 +97,7 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
             FieldPanel('subject'),
         ], "Email"),
     ]
+    base_form_class = ReplyToValidatorForm
 
     def get_context(self, request, *args, **kwargs):
         context = super(FormPage, self).get_context(request, *args, **kwargs)
