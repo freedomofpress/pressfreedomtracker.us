@@ -18,6 +18,7 @@ CATEGORIES = {
     # on the CategoryPageFactory class.
     'arrest': [
         'arrest_status',
+        'arresting_authority',
         'status_of_charges',
         'detention_date',
         'release_date',

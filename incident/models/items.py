@@ -50,6 +50,22 @@ class GovernmentWorker(ClusterableModel):
         verbose_name_plural = 'Government employees or contractors'
 
 
+class LawEnforcementOrganization(ClusterableModel):
+    @classmethod
+    def autocomplete_create(kls, value):
+        return kls.objects.create(title=value)
+
+    title = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['title']
+        verbose_name = 'Law enforcement organization'
+        verbose_name_plural = 'Law enforcement organizations'
+
+
 class TargetedJournalist(Orderable):
     incident = ParentalKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='targeted_journalists')
 

@@ -484,6 +484,7 @@ class IncidentFilter(object):
         'subpoena_statuses': {'verbose_name': 'Subpoena status'},
         'targeted_journalists': {'verbose_name': 'Targeted any of these journalists', 'filter_cls': RelationThroughFilter, 'relation': 'journalist'},
         'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter},
+        'arresting_authority': {'filter_cls': RelationFilter, 'verbose_name': 'Arresting authority'},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
     }
 
@@ -530,7 +531,6 @@ class IncidentFilter(object):
             if field.name in cls.exclude_fields:
                 continue
             filters[field.name] = cls._get_filter(field)
-
         return filters
 
     @classmethod

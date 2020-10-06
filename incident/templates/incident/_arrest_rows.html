@@ -26,6 +26,19 @@
 	</tr>
 {% endif %}
 
+{% if page.arresting_authority %}
+	<tr class="data-table__row">
+		<th class="data-table__label">
+			Arresting Authority
+		</th>
+		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?arresting_authority={{ page.arresting_authority.pk }}">
+				{{ page.arresting_authority|capfirst }}
+			</a>
+		</td>
+	</tr>
+{% endif %}
+
 {% if page.current_charges.all %}
 	<tr class="data-table__row">
 		<th class="data-table__label">

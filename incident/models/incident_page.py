@@ -199,6 +199,13 @@ class IncidentPage(MetadataPageMixin, Page):
         blank=True,
         verbose_name='Status of charges'
     )
+    arresting_authority = models.ForeignKey(
+        'incident.LawEnforcementOrganization',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        help_text='Arresting authority.',
+    )
     current_charges = ParentalManyToManyField(
         'incident.Charge',
         blank=True,
@@ -477,6 +484,7 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('arrest_status'),
                 FieldPanel('status_of_charges'),
+                AutocompletePanel('arresting_authority', page_type='incident.LawEnforcementOrganization'),
                 AutocompletePanel('current_charges', 'incident.Charge', is_single=False),
                 AutocompletePanel('dropped_charges', 'incident.Charge', is_single=False),
                 FieldPanel('detention_date'),
