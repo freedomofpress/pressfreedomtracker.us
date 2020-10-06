@@ -173,9 +173,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.ARREST_STATUS, getter=lambda c: c[0]),
             status_of_charges=factory.Iterator(
                 choices.STATUS_OF_CHARGES, getter=lambda c: c[0]),
-            arresting_authority=RelatedFactory(
-                LawEnforcementOrganizationFactory
-            ),
+            arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
             current_charges=2,
             dropped_charges=2,
             release_date=datetime.date.today(),
