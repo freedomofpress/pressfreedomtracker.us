@@ -57,6 +57,11 @@ class FilterAccordion extends PureComponent {
 					>
 						{expanded ? <CollapseIcon /> : <ExpandIcon />}
 						{category.title}
+						{(!expanded && Object.keys(filterValues).length)  ? (
+							<span className="filters__count">
+								{Object.keys(filterValues).length}
+							</span>
+						) : ''}
 					</button>
 				)}
 
