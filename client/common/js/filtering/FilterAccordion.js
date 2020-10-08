@@ -22,6 +22,14 @@ class FilterAccordion extends PureComponent {
 		})
 	}
 
+	getAppliedFilterLength() {
+		return this.props.category.filters.filter(({name}) => {
+			return Object.keys(
+				this.props.filterValues
+			).filter((filterKey) => filterKey.startsWith(name)).length
+		}).length
+	}
+
 	render() {
 		const {
 			expanded,
@@ -57,9 +65,9 @@ class FilterAccordion extends PureComponent {
 					>
 						{expanded ? <CollapseIcon /> : <ExpandIcon />}
 						{category.title}
-						{(!expanded && Object.keys(filterValues).length)  ? (
+						{(!expanded && this.getAppliedFilterLength())  ? (
 							<span className="filters__count">
-								{Object.keys(filterValues).length}
+								{this.getAppliedFilterLength()}
 							</span>
 						) : ''}
 					</button>

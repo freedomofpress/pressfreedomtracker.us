@@ -47,7 +47,18 @@ describe('FilterAccordion', () => {
         let filterAccordion = component.find('.filters__accordion');
         expect(filterAccordion.length).toEqual(1);
         expect(filterAccordion.find('.expand__icon').length).toEqual(1);
+
         // Collapsed accordion should show number of filters applied
+        const collapsedComponent = mount(
+            <FilterAccordion
+                category={categories[1]}
+                collapsible={true}
+                handleFilterChange={jest.fn()}
+                filterValues={filterValues}
+                startExpanded={false}
+            />
+        );
+        filterAccordion = collapsedComponent.find('.filters__accordion');
         expect(filterAccordion.find('.filters__count').length).toEqual(1);
         expect(filterAccordion.find('.filters__count').text()).toEqual('1');
 
