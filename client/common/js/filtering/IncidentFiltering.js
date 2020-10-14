@@ -236,6 +236,10 @@ class IncidentFiltering extends PureComponent {
 					...previousState.categoriesEnabled,
 					[id]: !previousState.categoriesEnabled[id],
 				},
+				startExpanded: {
+					...previousState.startExpanded,
+					[id]: !previousState.startExpanded[id],
+				},
 				filtersTouched: true,
 			}
 		})
