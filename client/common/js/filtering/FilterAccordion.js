@@ -26,7 +26,9 @@ class FilterAccordion extends PureComponent {
 		return this.props.category.filters.filter(({name}) => {
 			return Object.keys(
 				this.props.filterValues
-			).filter((filterKey) => filterKey.startsWith(name)).length
+			).filter(
+				(filterKey) => filterKey.startsWith(name) && !!this.props.filterValues[filterKey].length
+			).length
 		}).length
 	}
 
