@@ -124,6 +124,8 @@ class OrganizationIndexPage(Page):
 
     subpage_types = ['common.OrganizationPage']
 
+    LIVEPREVIEW_DISABLED = True
+
     def serve(self, request):
         raise Http404()
 
@@ -257,15 +259,17 @@ class CategoryPage(MetadataPageMixin, Page):
         FieldPanel('page_color'),
     ]
 
+    LIVEPREVIEW_DISABLED = True
+
     def clean(self):
         self.methodology = unescape(self.methodology)
 
-    def get_context(self, request):
+    def get_context(self, request, *args, **kwargs):
         # placed here to avoid circular dependency
         from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
         from common.models.settings import SearchSettings
 
-        context = super(CategoryPage, self).get_context(request)
+        context = super(CategoryPage, self).get_context(request, *args, **kwargs)
 
         # request.is_preview is not necessarily set
         if getattr(request, 'is_preview', False):
@@ -374,11 +378,11 @@ class SimplePage(MetadataPageMixin, Page):
         StreamFieldPanel('sidebar_content')
     ]
 
-    def get_context(self, request):
+    def get_context(self, request, *args, **kwargs):
         # Avoid circular import
         from home.models import HomePage
 
-        context = super(SimplePage, self).get_context(request)
+        context = super(SimplePage, self).get_context(request, *args, **kwargs)
 
         home = Page.objects.all().live().type(
             HomePage)[0]

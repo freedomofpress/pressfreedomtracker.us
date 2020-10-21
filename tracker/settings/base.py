@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'analytical',
     'captcha',
     'wagtailcaptcha',
+    'livepreview',
 
     'wagtail.contrib.settings',
     'wagtail.contrib.routable_page',

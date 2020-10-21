@@ -57,6 +57,8 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     subpage_types = ['blog.BlogPage']
 
+    LIVEPREVIEW_DISABLED = True
+
     @route(r'^feed/$')
     def feed(self, request):
         return BlogIndexPageFeed(self)(request)
@@ -66,8 +68,8 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
                        .live()\
                        .order_by('-publication_datetime')
 
-    def get_context(self, request):
-        context = super(BlogIndexPage, self).get_context(request)
+    def get_context(self, request, *args, **kwargs):
+        context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
 
         post_filters = BlogFilter.from_querystring(request.GET)
         entry_qs = post_filters.filter(self.get_posts())

@@ -203,8 +203,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         FieldPanel('layout'),
     ]
 
-    def get_context(self, request):
-        context = super(TopicPage, self).get_context(request)
+    def get_context(self, request, *args, **kwargs):
+        context = super(TopicPage, self).get_context(request, *args, **kwargs)
 
         incident_qs = self.incident_index_page.get_incidents().filter(
             tags=self.incident_tag
