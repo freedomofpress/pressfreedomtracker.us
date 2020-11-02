@@ -55,10 +55,10 @@ django-webpack-loader==0.6.0 \
 django==2.2.14 \
     --hash=sha256:edf0ecf6657713b0435b6757e6069466925cae70d634a3283c96b80c01e06191 \
     --hash=sha256:f2250bd35d0f6c23e930c544629934144e5dd39a4c06092e1050c731c1712ba8 \
-    # via -r requirements.in, django-analytical, django-anymail, django-logging-json, django-recaptcha, django-settings-export, django-taggit, django-treebeard, wagtail, wagtail-inventory
-djangorestframework==3.9.2 \
-    --hash=sha256:8a435df9007c8b7d8e69a21ef06650e3c0cbe0d4b09e55dd1bd74c89a75a9fcd \
-    --hash=sha256:f7a266260d656e1cf4ca54d7a7349609dc8af4fe2590edd0ecd7d7643ea94a17 \
+    # via -r requirements.in, django-analytical, django-anymail, django-logging-json, django-recaptcha, django-settings-export, django-taggit, django-treebeard, djangorestframework, wagtail, wagtail-inventory
+djangorestframework==3.12.1 \
+    --hash=sha256:5c5071fcbad6dce16f566d492015c829ddb0df42965d488b878594aabc3aed21 \
+    --hash=sha256:d54452aedebb4b650254ca092f9f4f5df947cb1de6ab245d817b08b4f4156249 \
     # via wagtail
 docutils==0.14 \
     --hash=sha256:02aec4bd92ab067f6ff27a38a38a41173bf01bed8f89157768c1573f53e474a6 \
