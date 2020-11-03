@@ -62,4 +62,5 @@ RUN mkdir /deploy && \
 
 EXPOSE 8000
 USER gcorn
+RUN env DJANGO_DISABLE_DEBUG=1 DJANGO_NO_DB=1 ./manage.py collectstatic -c --noinput
 CMD django-start.sh

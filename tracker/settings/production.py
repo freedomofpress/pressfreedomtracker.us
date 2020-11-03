@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
+import logging
 from .base import *  # noqa: F403, F401
 
 try:
@@ -34,8 +35,9 @@ DATABASES = {
 
 # Static and media files
 #
-STATIC_ROOT = os.environ['DJANGO_STATIC_ROOT']
-MEDIA_ROOT = os.environ['DJANGO_MEDIA_ROOT']
+if 'DJANGO_WHITENOISE' not in os.environ:
+    STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
+MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
 
 # Optional Elasticsearch backend - disabled by default
 #

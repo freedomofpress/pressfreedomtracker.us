@@ -90,11 +90,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django_logging.middleware.DjangoLoggingMiddleware',
+]
 
+# Must be directly after SecurityMiddleware
+if os.environ.get('DJANGO_WHITENOISE'):
+    MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
+
+MIDDLEWARE.extend([
+    'django_logging.middleware.DjangoLoggingMiddleware',
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-]
+])
 
 ROOT_URLCONF = 'tracker.urls'
 
@@ -197,7 +203,7 @@ WAGTAILIMAGES_IMAGE_MODEL = 'common.CustomImage'
 BASE_URL = 'http://example.com'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Django-webpack configuration
 WEBPACK_LOADER = {  # noqa: W605

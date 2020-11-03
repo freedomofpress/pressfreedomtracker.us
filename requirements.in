@@ -27,3 +27,4 @@ wagtail-livepreview
 wagtail-metadata
 unittest-xml-reporting
 wagtail-inventory
+whitenoise
