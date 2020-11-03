@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 from __future__ import absolute_import, unicode_literals
 
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -230,40 +231,60 @@ NOCAPTCHA = True
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True
 
+
 # Logging
+
+console_log = bool(os.environ.get('DJANGO_LOG_CONSOLE'))
+log_level = os.environ.get('DJANGO_LOG_LEVEL', 'info').upper()
+
 DJANGO_LOGGING = {
-    "CONSOLE_LOG": False,
+    "CONSOLE_LOG": console_log,
     "SQL_LOG": False,
     "DISABLE_EXISTING_LOGGERS": False,
     "PROPOGATE": False,
-    "LOG_LEVEL": os.environ.get('DJANGO_LOG_LEVEL', 'info'),
+    "LOG_LEVEL": log_level,
     # Do not log the content of JSON responses by default--these might be quite big!
     "RESPONSE_FIELDS": ('status', 'reason', 'charset', 'headers'),
     "ENCODING": "utf-8",
 }
 
-## Ensure base log directory exists
-LOG_DIR = os.path.join(BASE_DIR, 'logs')
-if not os.path.exists(LOG_DIR):
-    os.makedirs(LOG_DIR)
-DJANGO_OTHER_LOG = os.path.join(LOG_DIR, 'django-other.log')
+log_handlers = {
+    'null': {
+        'class': 'logging.NullHandler',
+    },
+}
+if console_log:
+    django_logfile = None
+    log_handler_names = ['console']
+    log_handlers['console'] = {
+        'level': log_level,
+        'class': 'logging.StreamHandler',
+        'formatter': 'django_builtin',
+        'stream': sys.stdout,
+    }
+else:
+    ## Ensure base log directory exists
+    log_dir = os.path.join(BASE_DIR, 'logs')
+    django_logfile = os.environ.get('DJANGO_LOGFILE')
+    if django_logfile is None:
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        django_logfile = os.path.join(log_dir, 'django-other.log')
+
+    log_handler_names = ['rotate']
+    log_handlers['rotate'] = {
+        'level': log_level,
+        'class': 'logging.handlers.RotatingFileHandler',
+        'backupCount': 5,
+        'maxBytes': 10000000,
+        'filename': django_logfile,
+        'formatter': 'django_builtin'
+    }
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'rotate': {
-            'level': os.environ.get('DJANGO_LOG_LEVEL', 'info').upper(),
-            'class': 'logging.handlers.RotatingFileHandler',
-            'backupCount': 5,
-            'maxBytes': 10000000,
-            'filename': os.environ.get('DJANGO_LOGFILE', DJANGO_OTHER_LOG),
-            'formatter': 'django_builtin'
-        },
-        'null': {
-            'class': 'logging.NullHandler',
-        }
-    },
+    'handlers': log_handlers,
     'formatters': {
         'django_builtin': {
             '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
@@ -272,7 +293,7 @@ LOGGING = {
     },
     'loggers': {
         '': {
-            'handlers': ['rotate'],
+            'handlers': log_handler_names,
             'propagate': False,
         },
     },
