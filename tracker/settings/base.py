@@ -176,6 +176,14 @@ else:
     WAGTAILSEARCH_BACKENDS = {}
 
 
+# Django HTTP settings
+
+# X-XSS-Protection
+SECURE_BROWSER_XSS_FILTER = True
+# X-Content-Type-Options
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "tracker"
