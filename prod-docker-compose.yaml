@@ -24,7 +24,8 @@ services:
       args:
         NODE_VER: 10.17.0-alpine
         NPM_VER: 6.13.4
-    image: quay.io/freedomofpress/tracker.us
+        USERID: 1234
+    image: quay.io/freedomofpress/pressfreedomtrackerus
     depends_on:
       - postgresql
     working_dir: /django
