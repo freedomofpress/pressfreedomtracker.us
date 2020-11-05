@@ -7,6 +7,7 @@ django-anymail
 django-modelcluster
 django-recaptcha
 django-settings-export
+django-storages[google]
 django-webpack-loader
 docutils
 factory_boy
