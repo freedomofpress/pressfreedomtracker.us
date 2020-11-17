@@ -197,14 +197,14 @@ command will terminate all connections to the database and delete all
 data there, so care is encouraged.
 
 Workflow suggestions.  I find it helpful to have one snapshot for each
-active branch I'm working on or reviewing, as well as for master.
+active branch I'm working on or reviewing, as well as for develop.
 Checking out a new branch and running its migrations should be
 followed by running ``make dev-save-db`` to give you a baseline to
 return to when needed.
 
 When checking out a new branch after working on another, it can be
-helpful to restore your snapshot from master, so that the migrations
-for the new branch, which were presumably based off of master, will
+helpful to restore your snapshot from develop, so that the migrations
+for the new branch, which were presumably based off of develop, will
 have a clean starting point.
 
 Adobe Font Licenses
