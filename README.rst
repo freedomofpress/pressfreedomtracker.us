@@ -1,5 +1,13 @@
-.. image:: https://circleci.com/gh/freedomofpress/pressfreedom/tree/master.svg?style=svg&circle-token=e04b02d815f80dcf1194d55659573122ea7994f4
-    :target: https://circleci.com/gh/freedomofpress/pressfreedom/tree/master
+==========================
+U.S. Press Freedom Tracker
+==========================
+
+.. image:: https://circleci.com/gh/freedomofpress/tracker.svg?style=svg&circle-token=e04b02d815f80dcf1194d55659573122ea7994f4
+    :target: https://circleci.com/gh/freedomofpress/tracker
+
+
+This is the website of the U.S. Press Freedom Tracker. It is built with Wagtail and served at `pressfreedomtracker.us <https://pressfreedomtracker.us/>`_.
+
 
 Development
 =============
