@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
 
-    'analytical',
     'captcha',
     'wagtailcaptcha',
 
@@ -216,6 +215,7 @@ WEBPACK_LOADER = {  # noqa: W605
     }
 }
 
+<<<<<<< HEAD
 # Makes Livepreview optional
 LIVEPREVIEW_ENABLED = os.environ.get('LIVEPREVIEW_ENABLED', False)
 if LIVEPREVIEW_ENABLED:
@@ -231,11 +231,23 @@ PIWIK_DOMAIN_PATH = 'analytics.example.com'
 # Piwik Site ID's start at 1, so 0 is an invalid ID which can be used to
 # indicate to the template that the Piwik tracking code should not be rendered.
 PIWIK_SITE_ID = '0'
+=======
+# Disable analytics by default
+ANALYTICS_ENABLED = True
+>>>>>>> Replace django-analytical with custom JS file
 
+# Export analytics settings for use in site templates
 SETTINGS_EXPORT = [
+<<<<<<< HEAD
     'PIWIK_SITE_ID',
     'LIVEPREVIEW_ENABLED',
+=======
+    'ANALYTICS_ENABLED',
+>>>>>>> Replace django-analytical with custom JS file
 ]
+# Prevent template variable name collision with wagtail settings
+SETTINGS_EXPORT_VARIABLE_NAME = 'django_settings'
+
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
