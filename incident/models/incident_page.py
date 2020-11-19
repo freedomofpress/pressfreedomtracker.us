@@ -605,8 +605,8 @@ class IncidentPage(MetadataPageMixin, Page):
 
     parent_page_types = ['incident.IncidentIndexPage']
 
-    def get_context(self, request):
-        context = super().get_context(request)
+    def get_context(self, request, *args, **kwargs):
+        context = super(IncidentPage, self).get_context(request, *args, **kwargs)
 
         related_incidents = self.get_related_incidents(threshold=4)
         context['related_incidents'] = related_incidents
