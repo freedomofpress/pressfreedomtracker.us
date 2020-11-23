@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'analytical',
     'captcha',
     'wagtailcaptcha',
-    'livepreview',
 
     'wagtail.contrib.settings',
     'wagtail.contrib.routable_page',
@@ -217,6 +216,13 @@ WEBPACK_LOADER = {  # noqa: W605
     }
 }
 
+# Makes Livepreview optional
+LIVEPREVIEW_ENABLED = os.environ.get('LIVEPREVIEW_ENABLED', False)
+if LIVEPREVIEW_ENABLED:
+    # The livepreview needs to be added in the INSTALLED_APPS above the
+    # 'wagtail.admin' app
+    INSTALLED_APPS.insert(INSTALLED_APPS.index('wagtail.admin'), 'livepreview')
+
 # Sadly, we have to set these to real-looking (but invalid) values, or
 # django-analytical will raise AnalyticalException. It would be preferable to be
 # able to set these to None (or not be required to set them at all, which the
@@ -228,6 +234,7 @@ PIWIK_SITE_ID = '0'
 
 SETTINGS_EXPORT = [
     'PIWIK_SITE_ID',
+    'LIVEPREVIEW_ENABLED',
 ]
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
