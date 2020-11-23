@@ -10,7 +10,7 @@ from wagtail.admin.utils import (
 )
 
 from common.views import MergeView
-from incident.forms import ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm, GovernmentWorkerMergeForm
+from incident.forms import ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm, GovernmentWorkerMergeForm, LawEnforcementOrganizationForm
 from incident.models import IncidentPage, Journalist, TargetedJournalist, Institution
 
 
@@ -50,6 +50,10 @@ def incident_admin_search_view(request):
 
 class ChargeMergeView(MergeView):
     form_class = ChargeMergeForm
+
+
+class LawEnforcementOrganizationMergeView(MergeView):
+    form_class = LawEnforcementOrganizationForm
 
 
 class NationalityMergeView(MergeView):

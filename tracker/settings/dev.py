@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 import os
 import socket
 import struct
-from django.conf import settings
 from .base import *  # noqa: F403, F401
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -34,7 +33,10 @@ def get_default_gateway_linux():
             return socket.inet_ntoa(struct.pack("<L", int(fields[2], 16)))
 
 
-if settings.DEBUG:
+if 'DJANGO_DISABLE_DEBUG' in os.environ:
+    DEBUG = False
+else:
+    DEBUG = True
     # Fix for https://github.com/jazzband/django-debug-toolbar/issues/950
     DEBUG_TOOLBAR_CONFIG = {
         'SKIP_TEMPLATE_PREFIXES': (
@@ -58,14 +60,17 @@ if settings.DEBUG:
     # Include the wagtail styleguide
     INSTALLED_APPS.append('wagtail.contrib.styleguide')  # noqa: F405
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DJANGO_DB_NAME'],
-        'USER': os.environ['DJANGO_DB_USER'],
-        'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
-        'HOST': os.environ['DJANGO_DB_HOST'],
-        'PORT': os.environ['DJANGO_DB_PORT'],
-        'CONN_MAX_AGE': os.environ.get('DJANGO_DB_MAX_AGE', 600)
+if 'DJANGO_NO_DB' in os.environ:
+    pass
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['DJANGO_DB_NAME'],
+            'USER': os.environ['DJANGO_DB_USER'],
+            'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
+            'HOST': os.environ['DJANGO_DB_HOST'],
+            'PORT': os.environ['DJANGO_DB_PORT'],
+            'CONN_MAX_AGE': os.environ.get('DJANGO_DB_MAX_AGE', 600)
+        }
     }
-}

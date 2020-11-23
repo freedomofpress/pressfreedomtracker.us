@@ -24,7 +24,8 @@ services:
       args:
         NODE_VER: 10.17.0-alpine
         NPM_VER: 6.13.4
-    image: quay.io/freedomofpress/tracker.us
+        USERID: 1234
+    image: quay.io/freedomofpress/pressfreedomtrackerus
     depends_on:
       - postgresql
     working_dir: /django
@@ -51,6 +52,7 @@ services:
       DJANGO_APP_NAME: tracker
       DJANGO_JSON_LOG: "yes"
       DJANGO_LOGFILE: "/django-logs/django.log"
+      DJANGO_WHITENOISE: "yes"
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       RECAPTCHA_PRIVATE_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
     networks:

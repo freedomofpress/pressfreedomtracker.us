@@ -21,6 +21,7 @@ from incident.models import (
     choices,
     Journalist,
     Institution,
+    LawEnforcementOrganization,
     TargetedJournalist,
     GovernmentWorker,
     TopicPage,
@@ -63,6 +64,25 @@ class EquipmentBrokenFactory(factory.DjangoModelFactory):
         model = EquipmentBroken
     equipment = SubFactory(EquipmentFactory)
     quantity = LazyAttribute(lambda _: random.randint(1, 5))
+
+
+class ItemFactory(factory.DjangoModelFactory):
+    class Meta:
+        abstract = True
+
+    class Params:
+        unique_title = factory.Trait(
+            title=factory.Sequence(
+                lambda n: 'Title {n}'.format(n=n)
+            )
+        )
+
+
+class LawEnforcementOrganizationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = LawEnforcementOrganization
+        django_get_or_create = ('title',)
+    title = factory.Faker('sentence', nb_words=3)
 
 
 class IncidentUpdateFactory(factory.DjangoModelFactory):
@@ -112,6 +132,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     # Detention/arrest
     arrest_status = None
     status_of_charges = None
+    arresting_authority = None
     release_date = None
     detention_date = None
     unnecessary_use_of_force = False
@@ -152,6 +173,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.ARREST_STATUS, getter=lambda c: c[0]),
             status_of_charges=factory.Iterator(
                 choices.STATUS_OF_CHARGES, getter=lambda c: c[0]),
+            arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
             current_charges=2,
             dropped_charges=2,
             release_date=datetime.date.today(),
@@ -369,18 +391,6 @@ class TopicPageFactory(wagtail_factories.PageFactory):
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
     incident_tag = factory.SubFactory(CommonTagFactory)
-
-
-class ItemFactory(factory.DjangoModelFactory):
-    class Meta:
-        abstract = True
-
-    class Params:
-        unique_title = factory.Trait(
-            title=factory.Sequence(
-                lambda n: 'Title {n}'.format(n=n)
-            )
-        )
 
 
 class SnippetFactory(factory.DjangoModelFactory):

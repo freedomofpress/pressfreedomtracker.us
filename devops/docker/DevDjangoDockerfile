@@ -1,5 +1,5 @@
-ARG PYTHON_VER
-FROM python:${PYTHON_VER}
+# sha256 as of 2020-11-03 for 3.5-slim-buster
+FROM python@sha256:22732e5e3b27336e36aa3156789a7a730af4fa79599b09693dd9b520c9ee02db
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -16,7 +16,7 @@ COPY dev-requirements.txt /requirements.txt
 RUN pip install --require-hashes -r /requirements.txt
 
 ARG USERID
-RUN adduser --uid "${USERID}" --disabled-password --gecos "" gcorn || true
+RUN getent passwd "${USERID?USERID must be supplied}" || adduser --uid "${USERID}" --disabled-password --gecos "" gcorn
 
 RUN mkdir /django-logs /deploy && \
     chown -R "${USERID}" /django-logs /deploy

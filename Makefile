@@ -49,7 +49,7 @@ compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # be resolved differently.
 	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
 		bash -c 'apt-get update && apt-get install gcc -y && \
-	pip install --require-hashes -r pip-tools-requirements.txt && \
+	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --output-file requirements.txt requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --output-file dev-requirements.txt dev-requirements.in'
 
@@ -60,7 +60,7 @@ upgrade-pip: ## Uses pip-compile to update requirements.txt for upgrading a spec
 # be resolved differently.
 	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
 		bash -c 'apt-get update && apt-get install gcc -y && \
-	pip install --require-hashes -r pip-tools-requirements.txt && \
+	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
@@ -72,7 +72,7 @@ update-pip-dev: ## Uses pip-compile to update dev-requirements.txt for upgrading
 # be resolved differently.
 	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
 		bash -c 'apt-get update && apt-get install gcc -y && \
-	pip install --require-hashes -r pip-tools-requirements.txt && \
+	pip install pip-tools && \
 		pip-compile --require-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
 
@@ -124,13 +124,8 @@ ci-npm-audit:
 
 .PHONY: safety
 safety: ## Runs `safety check` to check python dependencies for vulnerabilities
-	pip install --upgrade safety && \
-		for req_file in `find . -type f -name '*requirements.txt'`; do \
-			echo "Checking file $$req_file" \
-			&& safety check --full-report -r $$req_file \
-			&& echo -e '\n' \
-			|| exit 1; \
-		done
+# Upgrade safety to ensure we are using the latest version.
+	pip install --upgrade safety && ./scripts/safety_check.py
 
 .PHONY: prod-push
 prod-push: ## Publishes prod container image to registry

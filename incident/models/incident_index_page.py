@@ -38,6 +38,8 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     subpage_types = ['incident.IncidentPage']
 
+    LIVEPREVIEW_DISABLED = True
+
     @route('export/')
     @method_decorator(require_http_methods(['HEAD', 'GET', 'OPTIONS']))
     def export_view(self, request: 'HttpRequest') -> HttpResponse:
@@ -115,9 +117,9 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             'path',
         )
 
-    def get_context(self, request):
+    def get_context(self, request, *args, **kwargs):
         from common.models import CategoryPage
-        context = super(IncidentIndexPage, self).get_context(request)
+        context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
 
         incident_filter = IncidentFilter(request.GET)
         context['serialized_filters'] = json.dumps(get_serialized_filters())

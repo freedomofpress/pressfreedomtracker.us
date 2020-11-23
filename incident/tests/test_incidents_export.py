@@ -80,6 +80,7 @@ class IncidentExportTestCase(TestCase):
             'image_caption',
             'arrest_status',
             'status_of_charges',
+            'arresting_authority',
             'release_date',
             'detention_date',
             'unnecessary_use_of_force',

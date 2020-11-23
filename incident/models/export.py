@@ -37,6 +37,7 @@ EXCLUDED_FIELDS = {
     'page_blocks',
     'homepagefeature',
     'statboxes',
+    'live_preview_updates',
 }
 
 
