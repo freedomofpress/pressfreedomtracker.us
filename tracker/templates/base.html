@@ -66,8 +66,8 @@
 	  {% render_bundle 'common' 'js' %}
 	{% endblock %}
 	{% if django_settings.ANALYTICS_ENABLED %}
-			<script src="https://analytics.freedom.press/piwik.js" async defer></script>
 			<script type="text/javascript" src="{% static 'js/piwik.js' %}"></script>
+			<script src="https://analytics.freedom.press/piwik.js" async defer></script>
 			<noscript><p><img src="https://analytics.freedom.press/piwik.php?idsite=5" style="border:0;" alt="" /></p></noscript>
 	{% endif %}
 {% endblock %}
