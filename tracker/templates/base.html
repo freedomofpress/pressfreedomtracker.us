@@ -2,7 +2,6 @@
 {% load get_menu %}
 {% load static wagtailuserbar %}
 {% load render_bundle from webpack_loader %}
-{% load piwik %}
 
 {% block body %}
 	{% wagtailuserbar %}
@@ -66,7 +65,9 @@
 	{% block js %}
 	  {% render_bundle 'common' 'js' %}
 	{% endblock %}
-	{% if settings.PIWIK_SITE_ID != '0' %}
-		{% piwik %}
+	{% if django_settings.ANALYTICS_ENABLED %}
+		<script type="text/javascript" src="{% static 'js/piwik.js' %}"></script>
+		<script src="https://analytics.freedom.press/piwik.js" async defer></script>
+		<noscript><p><img src="https://analytics.freedom.press/piwik.php?idsite=5" style="border:0;" alt="" /></p></noscript>
 	{% endif %}
 {% endblock %}
