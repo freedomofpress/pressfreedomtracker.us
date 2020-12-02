@@ -10,12 +10,12 @@ except ImportError:
     pass
 
 DEBUG = False
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 
 # Domain specific
 #
-BASE_URL = os.environ.get('DJANGO_BASE_URL', 'https://freedom.press')
+BASE_URL = os.environ.get('DJANGO_BASE_URL', 'https://pressfreedomtracker.us')
 STATIC_URL = os.environ.get('DJANGO_STATIC_URL', '/static/')
 MEDIA_URL = os.environ.get('DJANGO_MEDIA_URL', '/media/')
 
@@ -69,31 +69,6 @@ else:
     if 'DJANGO_WHITENOISE' not in os.environ:
         STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT')
     MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
-
-# Optional Elasticsearch backend - disabled by default
-#
-try:
-    es_host = os.environ.get('DJANGO_ES_HOST', 'disable')
-
-    if es_host == 'disable':
-        WAGTAILSEARCH_BACKENDS = {}
-    else:
-        WAGTAILSEARCH_BACKENDS = {
-            'default': {
-                'BACKEND': 'wagtail.search.backends.elasticsearch2',
-                'URLS': [es_host],
-                'INDEX': 'wagtail',
-                'TIMEOUT': 5,
-                'OPTIONS': {
-                    'ca_certs': os.environ['DJANGO_ES_CA_PATH'],
-                    'use_ssl': True,
-                }
-            }
-        }
-except KeyError:
-    pass
-
-# Django logging
 
 # Cloudflare caching
 #
