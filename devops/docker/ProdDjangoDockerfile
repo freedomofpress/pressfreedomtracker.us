@@ -17,8 +17,8 @@ RUN npm install --global gulp-cli
 COPY ./ /src-files
 RUN cd /src-files && ( npm install && npm run build )
 
-# sha256 as of 2020-11-03 for 3.5-slim-buster
-FROM python@sha256:22732e5e3b27336e36aa3156789a7a730af4fa79599b09693dd9b520c9ee02db
+# sha256 as of 2020-11-30 for 3.7-slim-buster
+FROM python@sha256:72343882f59b70f694994130a2d25502f10c128ef59024e03e3b28b6f7dcf4ce
 LABEL MAINTAINER="Freedom of the Press Foundation"
 LABEL APP="pressfreedomtracker.us"
 

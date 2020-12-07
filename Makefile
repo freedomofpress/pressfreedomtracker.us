@@ -47,7 +47,7 @@ compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
+	docker run -v "$(DIR):/code" -w /code -it python:3.7-slim \
 		bash -c 'apt-get update && apt-get install gcc -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --output-file requirements.txt requirements.in && \
@@ -58,7 +58,7 @@ upgrade-pip: ## Uses pip-compile to update requirements.txt for upgrading a spec
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
+	docker run -v "$(DIR):/code" -w /code -it python:3.7-slim \
 		bash -c 'apt-get update && apt-get install gcc -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
@@ -70,7 +70,7 @@ update-pip-dev: ## Uses pip-compile to update dev-requirements.txt for upgrading
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
+	docker run -v "$(DIR):/code" -w /code -it python:3.7-slim \
 		bash -c 'apt-get update && apt-get install gcc -y && \
 	pip install pip-tools && \
 		pip-compile --require-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
@@ -78,7 +78,7 @@ update-pip-dev: ## Uses pip-compile to update dev-requirements.txt for upgrading
 
 .PHONY: upgrade-pip-tools
 upgrade-pip-tools: ## Update the version of pip-tools used for other pip-related make commands
-	docker run -v "$(DIR):/code" -w /code -it python:3.5-slim \
+	docker run -v "$(DIR):/code" -w /code -it python:3.7-slim \
 		bash -c 'pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package pip-tools --output-file pip-tools-requirements.txt pip-tools-requirements.in'
 
@@ -100,7 +100,7 @@ help: ## Prints this message and exits
 .PHONY: flake8
 flake8: ## Runs flake8 linting in Python3 container.
 	@docker run -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
-			python:3.5-slim \
+			python:3.7-slim \
 			bash -c "pip install -q flake8 && flake8"
 
 .PHONY: check-migrations
@@ -110,7 +110,7 @@ check-migrations: ## Check for ungenerated migrations
 .PHONY: bandit
 bandit: ## Runs bandit static code analysis in Python3 container.
 	@docker run -it -v $(PWD):/code -w /code --name fpf_www_bandit --rm \
-		python:3.5-slim \
+		python:3.7-slim \
 		bash -c "pip install -q --upgrade bandit && bandit --recursive . -ll --exclude devops,node_modules,molecule,.venv"
 
 .PHONY: npm-audit
