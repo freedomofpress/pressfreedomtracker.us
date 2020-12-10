@@ -5,7 +5,9 @@ import socket
 import struct
 from .base import *  # noqa: F403, F401
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# The SECRET_KEY below is used only in the local dev env.
+# In the production settings file, a custom env var is required
+# to run the application.
 SECRET_KEY = '(g4bj*$%zf4tqdaas8#ch3-mz_27n+*-973tpxap9zmdz8ii_u'
 
 

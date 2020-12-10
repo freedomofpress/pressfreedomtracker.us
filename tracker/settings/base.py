@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
 
-    'analytical',
     'captcha',
     'wagtailcaptcha',
 
@@ -223,19 +222,17 @@ if LIVEPREVIEW_ENABLED:
     # 'wagtail.admin' app
     INSTALLED_APPS.insert(INSTALLED_APPS.index('wagtail.admin'), 'livepreview')
 
-# Sadly, we have to set these to real-looking (but invalid) values, or
-# django-analytical will raise AnalyticalException. It would be preferable to be
-# able to set these to None (or not be required to set them at all, which the
-# django-analytical docs incorrectly suggest is possible).
-PIWIK_DOMAIN_PATH = 'analytics.example.com'
-# Piwik Site ID's start at 1, so 0 is an invalid ID which can be used to
-# indicate to the template that the Piwik tracking code should not be rendered.
-PIWIK_SITE_ID = '0'
+# Disable analytics by default
+ANALYTICS_ENABLED = True
 
+# Export analytics settings for use in site templates
 SETTINGS_EXPORT = [
-    'PIWIK_SITE_ID',
     'LIVEPREVIEW_ENABLED',
+    'ANALYTICS_ENABLED',
 ]
+# Prevent template variable name collision with wagtail settings
+SETTINGS_EXPORT_VARIABLE_NAME = 'django_settings'
+
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')

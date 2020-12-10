@@ -6,8 +6,9 @@ reuse-blerbs:
         SETUPTOOLS_USE_DISTUTILS: stdlib
       name: Install testing pre-reqs
       command: |
-        # Set python to 3.5.2
-        pyenv global 3.5.2
+        # Set python to 3.7.9
+        pyenv versions
+        pyenv global 3.7.9
         pip install -U pip
         pip install pipenv
         pipenv sync
@@ -18,7 +19,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202010-01
     working_directory: ~/tracker
     steps:
       - checkout
@@ -41,7 +42,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202010-01
     working_directory: ~/tracker
     steps:
       - checkout
@@ -60,7 +61,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202010-01
     working_directory: ~/tracker
     steps:
       - checkout
@@ -95,7 +96,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202010-01
     working_directory: ~/pressfreedom
     steps:
       - checkout
