@@ -1,5 +1,5 @@
-# sha256 as of 2020-11-30 for 3.7-slim-buster
-FROM python@sha256:72343882f59b70f694994130a2d25502f10c128ef59024e03e3b28b6f7dcf4ce
+# sha256 as of 2020-12-11 for 3.7-slim-buster
+FROM python@sha256:563bd6daac518cf3345939c35515643bf66f2b41ca2cf8156783c3cf0f9a480b
 
 RUN apt-get update && apt-get install -y \
     curl \
