@@ -102,6 +102,17 @@ MIDDLEWARE.extend([
 ])
 
 
+# Django HTTP settings
+
+# X-XSS-Protection
+SECURE_BROWSER_XSS_FILTER = True
+
+# X-Content-Type-Options
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# We may want to set SECURE_PROXY_SSL_HEADER here
+
+
 # Make the deployment's onion service name available to templates
 ONION_HOSTNAME = os.environ.get('DJANGO_ONION_HOSTNAME')
 
@@ -187,14 +198,6 @@ else:
     WAGTAILSEARCH_BACKENDS = {}
 
 
-# Django HTTP settings
-
-# X-XSS-Protection
-SECURE_BROWSER_XSS_FILTER = True
-# X-Content-Type-Options
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "tracker"
@@ -204,7 +207,8 @@ WAGTAILIMAGES_IMAGE_MODEL = 'common.CustomImage'
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'http://example.com'
+BASE_URL = 'https://pressfreedomtracker.us'
+
 
 # Django-webpack configuration
 WEBPACK_LOADER = {  # noqa: W605
