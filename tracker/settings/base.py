@@ -101,6 +101,11 @@ MIDDLEWARE.extend([
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ])
 
+
+# Make the deployment's onion service name available to templates
+ONION_HOSTNAME = os.environ.get('DJANGO_ONION_HOSTNAME')
+
+
 ROOT_URLCONF = 'tracker.urls'
 
 TEMPLATES = [
