@@ -96,9 +96,9 @@ if os.environ.get('DJANGO_WHITENOISE'):
     MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 MIDDLEWARE.extend([
-    'django_logging.middleware.DjangoLoggingMiddleware',
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'django_logging.middleware.DjangoLoggingMiddleware',
 ])
 
 
@@ -250,68 +250,84 @@ TAGGIT_CASE_INSENSITIVE = True
 
 
 # Logging
+#
+# Logs are now always JSON. Normally, they go to stdout. To override this for
+# development or legacy deploys, set DJANGO_LOG_DIR in the environment.
 
-console_log = bool(os.environ.get('DJANGO_LOG_CONSOLE'))
-log_level = os.environ.get('DJANGO_LOG_LEVEL', 'info').upper()
+log_level = os.environ.get("DJANGO_LOG_LEVEL", "info").upper()
+log_format = os.environ.get("DJANGO_LOG_FORMAT", "json")
+log_stdout = True
+log_handler = {
+    "formatter": log_format,
+    "class": "logging.StreamHandler",
+    "stream": sys.stdout,
+    "level": log_level,
+}
+
+log_dir = os.environ.get("DJANGO_LOG_PATH")
+if log_dir:
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    log_stdout = False
+    log_handler = {
+        "formatter": log_format,
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": os.path.join(log_dir, "django-other.log"),
+        "backupCount": 5,
+        "maxBytes": 10000000,
+        "level": log_level,
+    }
 
 DJANGO_LOGGING = {
-    "CONSOLE_LOG": console_log,
-    "SQL_LOG": False,
-    "DISABLE_EXISTING_LOGGERS": False,
-    "PROPOGATE": False,
     "LOG_LEVEL": log_level,
-    # Do not log the content of JSON responses by default--these might be quite big!
-    "RESPONSE_FIELDS": ('status', 'reason', 'charset', 'headers'),
-    "ENCODING": "utf-8",
+    "CONSOLE_LOG": log_stdout,
+    "INDENT_CONSOLE_LOG": 0,
+    "DISABLE_EXISTING_LOGGERS": True,
+    "PROPOGATE": False,
+    "SQL_LOG": False,
 }
-
-log_handlers = {
-    'null': {
-        'class': 'logging.NullHandler',
-    },
-}
-if console_log:
-    django_logfile = None
-    log_handler_names = ['console']
-    log_handlers['console'] = {
-        'level': log_level,
-        'class': 'logging.StreamHandler',
-        'formatter': 'django_builtin',
-        'stream': sys.stdout,
-    }
-else:
-    ## Ensure base log directory exists
-    log_dir = os.path.join(BASE_DIR, 'logs')
-    django_logfile = os.environ.get('DJANGO_LOGFILE')
-    if django_logfile is None:
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        django_logfile = os.path.join(log_dir, 'django-other.log')
-
-    log_handler_names = ['rotate']
-    log_handlers['rotate'] = {
-        'level': log_level,
-        'class': 'logging.handlers.RotatingFileHandler',
-        'backupCount': 5,
-        'maxBytes': 10000000,
-        'filename': django_logfile,
-        'formatter': 'django_builtin'
-    }
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': log_handlers,
-    'formatters': {
-        'django_builtin': {
-            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
-            'format': '%(asctime)s %(levelname)s %(name)s %(module)s %(message)s'
-        }
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "normal": log_handler,
+        "null": {"class": "logging.NullHandler"},
     },
-    'loggers': {
-        '': {
-            'handlers': log_handler_names,
-            'propagate': False,
+    "formatters": {
+        "json": {
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+        },
+        "plain": {
+            "format": "%(asctime)s %(levelname)s %(name)s "
+            "%(module)s %(message)s",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["normal"], "propagate": True,
+        },
+        "django.template": {
+            "handlers": ["normal"], "propagate": False,
+        },
+        "django.db.backends": {
+            "handlers": ["normal"], "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["normal"], "propagate": False,
+        },
+        # These are already handled by the django json logging library
+        "django.request": {
+            "handlers": ["null"],
+            "propagate": False,
+        },
+        # Log entries from runserver
+        "django.server": {
+            "handlers": ["null"], "propagate": False,
+        },
+        # Catchall
+        "": {
+            "handlers": ["normal"], "propagate": False,
         },
     },
 }
