@@ -230,7 +230,7 @@ if LIVEPREVIEW_ENABLED:
     INSTALLED_APPS.insert(INSTALLED_APPS.index('wagtail.admin'), 'livepreview')
 
 # Disable analytics by default
-ANALYTICS_ENABLED = True
+ANALYTICS_ENABLED = False
 
 # Export analytics settings for use in site templates
 SETTINGS_EXPORT = [
