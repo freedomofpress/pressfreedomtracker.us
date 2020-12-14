@@ -136,7 +136,7 @@ assist with resolving conflicts within the community.
 
 Currently the Community Team consists of:
 
-
+- Harris Lapiroff (`@harrislapiroff`) - Principal Web Developer - [harris@freedom.press](mailto:harris@freedom.press)
 
 You can contact the whole Community Team or members individually.
 
