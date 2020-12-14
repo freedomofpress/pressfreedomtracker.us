@@ -6,7 +6,7 @@ U.S. Press Freedom Tracker
     :target: https://circleci.com/gh/freedomofpress/tracker
 
 
-This is the website of the U.S. Press Freedom Tracker. It is built with Wagtail and served at `pressfreedomtracker.us <https://pressfreedomtracker.us/>`_.
+This is the code that powers the U.S. Press Freedom Tracker website. It is built with Wagtail and served at `pressfreedomtracker.us <https://pressfreedomtracker.us/>`_.
 
 
 Development
