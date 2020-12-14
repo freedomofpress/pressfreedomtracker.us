@@ -12,7 +12,7 @@ Do you have an idea for something new that you think belongs in the Press Freedo
 
 ## Submitting code and patches
 
-The Press Freeom Tracker follows the standard
+The Press Freedom Tracker follows the standard
 [fork and pull](https://help.github.com/articles/using-pull-requests/)
 model for code contributions via GitHub pull requests.
 
