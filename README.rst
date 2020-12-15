@@ -207,6 +207,60 @@ helpful to restore your snapshot from develop, so that the migrations
 for the new branch, which were presumably based off of develop, will
 have a clean starting point.
 
+Deployment
+=============
+
+Building
+-------------
+
+The development ``docker-compose`` setup includes separate application
+and Node.js containers for hot-reloading purposes. To build a container
+for production use, run:
+
+.. code:: bash
+
+    docker build --build-arg USERID=1000 -t TAG -f devops/docker/ProdDjangoDockerfile .
+
+Running
+-------------
+
+This setup can also be tested locally with `docker-compose` by using:
+
+.. code:: bash
+
+    docker-compose -f prod-docker-compose.yaml up
+
+This setup will configure the app with production-like settings. In
+particular, `whitenoise` is used to serve static files.
+
+Setup
+-------------
+
+When deploying the container to your actual production environment,
+refer to the environment variables in ``prod-docker-compose.yaml``,
+changing things appropriately:
+
+- ``DJANGO_DB_*`` for your database
+- Based on your deployment domain/hostname:
+    - ``DJANGO_BASE_URL``
+    - ``DJANGO_ALLOWED_HOSTS``
+    - ``DJANGO_CSRF_TRUSTED_ORIGINS``
+    - if applicable, ``DJANGO_ONION_HOSTNAME``
+- If you are using a read-only filesystem, give these a path to a read-write tmpfs:
+    - ``DJANGO_GCORN_HEARTBT_DIR``
+    - ``DJANGO_GCORN_UPLOAD_DIR``
+    - ``TMPDIR``
+- Replace these dummied out secrets:
+    - ``DJANGO_SECRET_KEY`` (generate a random one)
+    - ``RECAPTCHA_*``
+- Using an object storage service for media files is recommended; for Google Storage:
+    - ``GS_BUCKET_NAME``
+    - ``GS_CREDENTIALS`` (path to a JSON file)
+    - ``GS_CUSTOM_ENDPOINT`` (if you have a CNAME pointing to your bucket)
+
+This list is incomplete; please open an issues if you run into something
+missing.
+
 Adobe Font Licenses
 ===================
 
