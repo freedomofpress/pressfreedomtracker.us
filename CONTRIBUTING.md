@@ -4,11 +4,11 @@ The Press Freedom Tracker invites help from people able to contribute code, bug 
 
 ## Reporting bugs, problems, or unexpected behavior
 
-If you encounter something that is broken, confusing, or that you think could be improved, you should open a [GitHub Issue](https://github.com/freedomofpress/tracker/issues/new).  It's helpful to describe the situation in as much detail as you can, but you don't have to know why an error is occurring, or even if one is at all.
+If you encounter something that is broken, confusing, or that you think could be improved, you should open a [GitHub Issue](https://github.com/freedomofpress/pressfreedomtracker.us/issues/new).  It's helpful to describe the situation in as much detail as you can, but you don't have to know why an error is occurring, or even if one is at all.
 
 ## New ideas and features
 
-Do you have an idea for something new that you think belongs in the Press Freedom Tracker?  We are happy to hear about it.  Please [open an issue](https://github.com/freedomofpress/tracker/issues/new) describing your idea or feature, and the community and maintainers will give you feedback about it.
+Do you have an idea for something new that you think belongs in the Press Freedom Tracker?  We are happy to hear about it.  Please [open an issue](https://github.com/freedomofpress/pressfreedomtracker.us/issues/new) describing your idea or feature, and the community and maintainers will give you feedback about it.
 
 ## Submitting code and patches
 
@@ -18,7 +18,7 @@ model for code contributions via GitHub pull requests.
 
 ### Finding something to work on
 
-If you're looking for an issue to work out, check out our [open issues](https://github.com/freedomofpress/tracker/issues) and look for ones tagged as [help wanted](https://github.com/freedomofpress/tracker/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or [small](https://github.com/freedomofpress/tracker/issues?q=is%3Aopen+is%3Aissue+label%3ASmall). These issues are the easiest way to start contributing, but if there are other items that catch your interest, please feel free to work on them.
+If you're looking for an issue to work out, check out our [open issues](https://github.com/freedomofpress/pressfreedomtracker.us/issues) and look for ones tagged as [help wanted](https://github.com/freedomofpress/pressfreedomtracker.us/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or [small](https://github.com/freedomofpress/pressfreedomtracker.us/issues?q=is%3Aopen+is%3Aissue+label%3ASmall). These issues are the easiest way to start contributing, but if there are other items that catch your interest, please feel free to work on them.
 
 ### Let us know you're working on something
 
