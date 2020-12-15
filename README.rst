@@ -224,4 +224,4 @@ Search
 The search bar on the site is a shortcut to using incident search.
 This is because the site is primarily incident-related, and using incident search provides more powerful filtering as well as enhanced previews.
 As a result, there is no generic wagtail search view which includes other content such as blog posts.
-See https://github.com/freedomofpress/pressfreedom/pull/592.
+See https://github.com/freedomofpress/pressfreedomtracker.us/pull/592.
