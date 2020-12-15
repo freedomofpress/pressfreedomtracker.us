@@ -34,7 +34,7 @@ services:
       - ${HOST_MEDIA_DIR:-fpf-django-static}:/django-static
       - ${HOST_LOGS_DIR:-fpf-django-logs}:/django-logs
     environment:
-      DJANGO_ALLOWED_HOSTS: app
+      DJANGO_ALLOWED_HOSTS: app localhost
       DJANGO_COLLECT_STATIC: "yes"
       DJANGO_CREATEDEVDATA: "${DJANGO_CREATEDEVDATA:-no}"
       DJANGO_SETTINGS_MODULE: tracker.settings.production-ci
@@ -57,25 +57,12 @@ services:
       # More fake testing keys (see above); generate your own for deployment.
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       RECAPTCHA_PRIVATE_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
+    ports:
+      - "8000:8000"
     networks:
       app:
         aliases:
           - app
-
-  nginx:
-    image: nginx:1.14-alpine
-    volumes:
-      - ./devops/docker/nginx:/etc/nginx/conf.d/:ro
-      - ${HOST_STATIC_DIR:-fpf-django-media}:/django-media:ro
-      - ${HOST_MEDIA_DIR:-fpf-django-static}:/django-static:ro
-    depends_on:
-      - django
-    ports:
-      - "127.0.0.1::8080"
-    networks:
-      app:
-        aliases:
-          - nginx
 
 volumes:
   fpf-django-static:

@@ -9,8 +9,8 @@ def get_nginx_url():
                                     '-f',
                                     'prod-docker-compose.yaml',
                                     'port',
-                                    'nginx',
-                                    '8080']).rstrip().decode("utf-8")
+                                    'django',
+                                    '8000']).rstrip().decode("utf-8")
 
 
 def test_mainpage(host):
