@@ -132,7 +132,7 @@ Choice filters
 
 Choice fields can be filtered by providing one or more choice options.
 Choice options will vary from filter to filter.
-Valid choices can be found in `incident/models/choices.py <https://github.com/freedomofpress/pressfreedom/blob/master/incident/models/choices.py>`_.
+Valid choices can be found in `incident/models/choices.py <https://github.com/freedomofpress/pressfreedomtracker.us/blob/develop/incident/models/choices.py>`_.
 
 .. code:: jinja
 
