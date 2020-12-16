@@ -2,8 +2,8 @@
 U.S. Press Freedom Tracker
 ==========================
 
-.. image:: https://circleci.com/gh/freedomofpress/tracker.svg?style=svg&circle-token=e04b02d815f80dcf1194d55659573122ea7994f4
-    :target: https://circleci.com/gh/freedomofpress/tracker
+.. image:: https://circleci.com/gh/freedomofpress/pressfreedomtracker.us.svg?style=svg
+    :target: https://circleci.com/gh/freedomofpress/pressfreedomtracker.us
 
 
 This is the code that powers the U.S. Press Freedom Tracker website. It is built with Wagtail and served at `pressfreedomtracker.us <https://pressfreedomtracker.us/>`_.
