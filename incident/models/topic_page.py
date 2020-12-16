@@ -33,9 +33,8 @@ class IncidentSchema(Schema):
     description = fields.Method('get_description')
 
     def get_image(self, obj):
-        site = obj.get_site()
-        if obj.teaser_image and site.root_url:
-            return site.root_url + obj.teaser_image.get_rendition('width-720').url
+        if obj.teaser_image:
+            return obj.teaser_image.get_rendition('width-720').url
         else:
             return ''
 
