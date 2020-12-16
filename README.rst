@@ -210,6 +210,12 @@ have a clean starting point.
 Deployment
 =============
 
+*Important Note*: We want to make PFT customizable for organizations who
+wish to deploy it as a tool for regions outside the US, but this work is
+still in progress. Please see
+https://github.com/freedomofpress/pressfreedomtracker.us/issues/647 for
+the current status and how you can help.
+
 Building
 -------------
 
