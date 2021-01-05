@@ -55,6 +55,10 @@ if DEBUG:
         },
     }
 
+    # Disable caching of webpack stats files (can prevent node/django
+    # container race condition).
+    WEBPACK_LOADER['DEFAULT']['CACHE'] = False  # noqa: F405
+
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
     INTERNAL_IPS = [get_default_gateway_linux()]
@@ -79,3 +83,6 @@ else:
             'CONN_MAX_AGE': os.environ.get('DJANGO_DB_MAX_AGE', 600)
         }
     }
+
+# Prevent endless waiting if problem loading webpack bundles.
+WEBPACK_LOADER['DEFAULT']['TIMEOUT'] = 15  # noqa: F405
