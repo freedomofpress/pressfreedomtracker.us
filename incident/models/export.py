@@ -40,6 +40,8 @@ EXCLUDED_FIELDS = {
     'live_preview_updates',
     'locked_at',
     'locked_by',
+    'workflowpage',
+    'workflow_states',
 }
 
 

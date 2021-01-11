@@ -65,12 +65,16 @@ django-anymail==6.0 \
     --hash=sha256:ab5cbfb280492c9cb2ef0497f8ebda4dcb3f99603dcf63c88ae623a66cad71f4 \
     --hash=sha256:f872089943f30283d485d121924598f4156f5bfa76a0885fd66df5205102be0b
     # via -r requirements.in
+django-filter==2.4.0 \
+    --hash=sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06 \
+    --hash=sha256:e00d32cebdb3d54273c48f4f878f898dced8d5dfaad009438fe61ebdf535ace1
+    # via wagtail
 https://github.com/freedomofpress/django-logging/zipball/34fbeeea7a83bd54f8551bb50382a06b69814d4e \
     --hash=sha256:25d9a5e3393591a2fb81b22d069ac586e11abdfcad64ada8b911ca852ef9aa67
     # via -r requirements.in
-django-modelcluster==5.0.1 \
-    --hash=sha256:09e4242119f04e81bfab25c77b09cb6e9d469dc14b14e71f04cd358c7256bc2a \
-    --hash=sha256:6f857bb0251c0982afeb35474aeedb3ec72260df81a0262188df8108067467ba
+django-modelcluster==5.1 \
+    --hash=sha256:783d177f7bf5c8f30fe365c347b9a032920de371fe1c63d955d7b283684d4c08 \
+    --hash=sha256:d4a0f90e85ae1a193f417e149b6b01d0b2a867dcf97f7fae1d34a4363a9d7baa
     # via
     #   -r requirements.in
     #   wagtail
@@ -103,6 +107,7 @@ django==2.2.14 \
     # via
     #   -r requirements.in
     #   django-anymail
+    #   django-filter
     #   django-logging-json
     #   django-recaptcha
     #   django-settings-export
@@ -124,6 +129,9 @@ draftjs-exporter==2.1.5 \
     --hash=sha256:8430b6c0f2a1c644ef9959b36f2f36f093f8209b94f81b4443216d3f386a3bce \
     --hash=sha256:bd589d35d70d7d37cb4847766ab174bad685d0297215c51e86da5345670ba8b2
     # via wagtail
+et-xmlfile==1.0.1 \
+    --hash=sha256:614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b
+    # via openpyxl
 factory-boy==2.11.1 \
     --hash=sha256:6f25cc4761ac109efd503f096e2ad99421b1159f01a29dbb917359dcd68e08ca \
     --hash=sha256:d552cb872b310ae78bd7429bf318e42e1e903b1a109e899a523293dfa762ea4f
@@ -192,6 +200,10 @@ idna==2.8 \
     --hash=sha256:c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407 \
     --hash=sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c
     # via requests
+jdcal==1.4.1 \
+    --hash=sha256:1abf1305fce18b4e8aa248cf8fe0c56ce2032392bc64bbd61b5dff2a19ec8bba \
+    --hash=sha256:472872e096eb8df219c23f2689fc336668bdb43d194094b5cc1707e1640acfc8
+    # via openpyxl
 jinja2==2.11.1 \
     --hash=sha256:93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250 \
     --hash=sha256:b0eaf100007721b5c16c1fc1eecb87409464edc10469ddc9a22a27a99123be49
@@ -238,6 +250,10 @@ marshmallow==3.6.1 \
     --hash=sha256:35ee2fb188f0bd9fc1cf9ac35e45fd394bd1c153cee430745a465ea435514bd5 \
     --hash=sha256:9aa20f9b71c992b4782dad07c51d92884fd0f7c5cb9d3c737bea17ec1bad765f
     # via -r requirements.in
+openpyxl==3.0.5 \
+    --hash=sha256:18e11f9a650128a12580a58e3daba14e00a11d9e907c554a17ea016bf1a2c71b \
+    --hash=sha256:f7d666b569f729257082cf7ddc56262431878f602dcc2bc3980775c59439cdab
+    # via tablib
 pillow==6.2.2 \
     --hash=sha256:00e0bbe9923adc5cc38a8da7d87d4ce16cde53b8d3bba8886cb928e84522d963 \
     --hash=sha256:03457e439d073770d88afdd90318382084732a5b98b0eb6f49454746dbaae701 \
@@ -400,6 +416,10 @@ sqlparse==0.3.0 \
     --hash=sha256:40afe6b8d4b1117e7dff5504d7a8ce07d9a1b15aeeade8a2d10f130a834f8177 \
     --hash=sha256:7c3dca29c022744e95b547e867cee89f4fce4373f3549ccd8797d8eb52cdb873
     # via django
+tablib[xls,xlsx]==3.0.0 \
+    --hash=sha256:41aa40981cddd7ec4d1fabeae7c38d271601b306386bd05b5c3bcae13e5aeb20 \
+    --hash=sha256:f83cac08454f225a34a305daa20e2110d5e6335135d505f93bc66583a5f9c10d
+    # via wagtail
 text-unidecode==1.3 \
     --hash=sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8 \
     --hash=sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93
@@ -449,9 +469,9 @@ wagtail-metadata==3.4.0 \
     --hash=sha256:4d94e3de715d5cb07cb05005f949428b8c68d33a5cd324b8eca10565ed5d0046 \
     --hash=sha256:a17b1b545446f092ec4074a1c5734931a1af0c68a9a56be1732158753df36746
     # via -r requirements.in
-wagtail==2.9.3 \
-    --hash=sha256:17169ea7c6a2cf2dc8f945f0a967424d7932843087df4897c813868d7f9cddc0 \
-    --hash=sha256:7dba2e5cebee2bb39e4c3db703eeb428b6ba323d72e5fbf384f1ce81f65f7e42
+wagtail==2.10.2 \
+    --hash=sha256:d6937bf1b64b970315867eac08f786e206059bd882f793e2a4bffca81cfe71d9 \
+    --hash=sha256:fb3c76685abad023a2e8430e55ec24671ec6b0730759f29aaae5042e581bed92
     # via
     #   -r requirements.in
     #   wagtail-autocomplete
@@ -468,14 +488,22 @@ whitenoise==5.2.0 \
     --hash=sha256:05ce0be39ad85740a78750c86a93485c40f08ad8c62a6006de0233765996e5c7 \
     --hash=sha256:05d00198c777028d72d8b0bbd234db605ef6d60e9410125124002518a48e515d
     # via -r requirements.in
-willow==1.3 \
-    --hash=sha256:4f84c46f65b6a1982e63dbd4d94c6bae705ff21f839164c31e105c3e251bec37 \
-    --hash=sha256:8897a6827c0bb7dee2ac908af53f0d358720bd6032ed20bab3175507e34d739a
+willow==1.4 \
+    --hash=sha256:698f755fc6bfb8984ac8550f470a0cb630ec1e628287475315d4d1e7595d7337 \
+    --hash=sha256:cde01e054c510284ac3459d6b531e1653a58e33a735706ac27905a94fe81742c
     # via wagtail
+xlrd==2.0.1 \
+    --hash=sha256:6a33ee89877bd9abc1158129f6e94be74e2679636b8a205b43b85206c3f0bbdd \
+    --hash=sha256:f72f148f54442c6b056bf931dbc34f986fd0c3b0b6b5a58d013c9aef274d0c88
+    # via tablib
 xlsxwriter==1.3.7 \
     --hash=sha256:9b1ade2d1ba5d9b40a6d1de1d55ded4394ab8002718092ae80a08532c2add2e6 \
     --hash=sha256:b807c2d3e379bf6a925f472955beef3e07495c1bac708640696876e68675b49b
     # via wagtail
+xlwt==1.3.0 \
+    --hash=sha256:a082260524678ba48a297d922cc385f58278b8aa68741596a87de01a9c628b2e \
+    --hash=sha256:c59912717a9b28f1a3c2a98fd60741014b06b043936dcecbc113eaaada156c88
+    # via tablib
 
 # WARNING: The following packages were not pinned, but pip requires them to be
 # pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
