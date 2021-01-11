@@ -96,7 +96,6 @@ if os.environ.get('DJANGO_WHITENOISE'):
     MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
 MIDDLEWARE.extend([
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     'django_logging.middleware.DjangoLoggingMiddleware',
 ])

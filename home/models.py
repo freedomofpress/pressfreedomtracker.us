@@ -13,7 +13,7 @@ from wagtail.admin.edit_handlers import (
 )
 from wagtail.core import blocks
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Page, Orderable
+from wagtail.core.models import Page, Orderable, Site
 
 import common.blocks
 from common.choices import CATEGORY_COLOR_CHOICES
@@ -158,7 +158,7 @@ class HomePage(MetadataPageMixin, Page):
 
         context['serialized_filters'] = json.dumps(get_serialized_filters())
 
-        search_settings = SearchSettings.for_site(request.site)
+        search_settings = SearchSettings.for_site(Site.find_for_request(request))
 
         if search_settings.data_download_page:
             context['export_path'] = search_settings.data_download_page.get_url()

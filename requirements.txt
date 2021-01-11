@@ -1,7 +1,7 @@
-beautifulsoup4==4.6.0 \
-    --hash=sha256:11a9a27b7d3bddc6d86f59fb76afb70e921a25ac2d6cc55b40d072bd68435a76 \
-    --hash=sha256:7015e76bf32f1f574636c4288399a6de66ce08fb7b2457f628a8d70c0fbabb11 \
-    --hash=sha256:808b6ac932dccb0a4126558f7dfdcf41710dd44a4ef497a0bb59a77f9f078e89
+beautifulsoup4==4.8.2 \
+    --hash=sha256:05fd825eb01c290877657a56df4c6e4c311b3965bda790c613a3d6fb01a5462a \
+    --hash=sha256:9fbb4d6e48ecd30bcacc5b63b94088192dcda178513b2ae3c394229f8911b887 \
+    --hash=sha256:e1505eeed31b0f4ce2dbb3bc8eb256c04cc2b3b72af7d551a4ab6efd5cbe5dae
     # via wagtail
 bleach==3.1.4 \
     --hash=sha256:cc8da25076a1fe56c3ac63671e2194458e0c4d9c7becfd52ca251650d517903c \
@@ -111,7 +111,6 @@ django==2.2.14 \
     #   django-treebeard
     #   djangorestframework
     #   wagtail
-    #   wagtail-inventory
 djangorestframework==3.12.1 \
     --hash=sha256:5c5071fcbad6dce16f566d492015c829ddb0df42965d488b878594aabc3aed21 \
     --hash=sha256:d54452aedebb4b650254ca092f9f4f5df947cb1de6ab245d817b08b4f4156249
@@ -393,6 +392,10 @@ six==1.15.0 \
 smartypants==2.0.1 \
     --hash=sha256:8db97f7cbdf08d15b158a86037cd9e116b4cf37703d24e0419a0d64ca5808f0d
     # via typogrify
+soupsieve==2.1 \
+    --hash=sha256:4bb21a6ee4707bf43b61230e80740e71bfe56e55d1f1f50924b087bb2975c851 \
+    --hash=sha256:6dc52924dc0bc710a5d16794e6b3480b2c7c08b07729505feab2b2c16661ff6e
+    # via beautifulsoup4
 sqlparse==0.3.0 \
     --hash=sha256:40afe6b8d4b1117e7dff5504d7a8ce07d9a1b15aeeade8a2d10f130a834f8177 \
     --hash=sha256:7c3dca29c022744e95b547e867cee89f4fce4373f3549ccd8797d8eb52cdb873
@@ -425,8 +428,8 @@ urllib3==1.25.10 \
     --hash=sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a \
     --hash=sha256:e7983572181f5e1522d9c98453462384ee92a0be7fac5f1413a1e35c56cc0461
     # via requests
-wagtail-autocomplete==0.3.1 \
-    --hash=sha256:bb038531de6fb8689a7dd8a56068370248a758ab23da53d054128c4eb2fb4cb1
+wagtail-autocomplete==0.6 \
+    --hash=sha256:5f8ddf16d3ca365af4ad0f09e8f45d9e982ca854dc1b084a8a30f66b00a7739d
     # via -r requirements.in
 wagtail-django-recaptcha==1.0 \
     --hash=sha256:fc177e75da966e9db1dfd9a566c40d30567518d9280b5db4fec4d50a8c853154
@@ -435,20 +438,20 @@ wagtail-factories==1.1.0 \
     --hash=sha256:141cdb65ef0c292d2220a11976311af21d92f4445f2293a8a27ee6e89c96a779 \
     --hash=sha256:3dd25ae90024e6aaf8e714473545dfa3af14e701835652d112f22d3d228b7fc7
     # via -r requirements.in
-wagtail-inventory==1.0 \
-    --hash=sha256:17ce404d136ae5fb53c00e1010c69cb3881f00e07a64d427c6b2387395e93ed7 \
-    --hash=sha256:6d8f5fc29c40d8559ec339b278ec3f9563ce9b3d570a5edad954cd1d1ae7a460
+wagtail-inventory==1.2 \
+    --hash=sha256:2728ca57bd68baae0da50dafa923586c489cef65cfc5ac5a25cc147eedf7ce92 \
+    --hash=sha256:815ba1bb96216f12bb411bd387d2a6cf991fee204af9e3dfcd40ad77202f58dc
     # via -r requirements.in
 wagtail-livepreview==0.1 \
     --hash=sha256:fc19d1337933185575e4fb1bd6b0c785fb423d73347745048cdb2887765bdfbf
     # via -r requirements.in
-wagtail-metadata==2.0.1 \
-    --hash=sha256:1b710fcd6c96f2405db0d9f12ea3055a4532f3e4a43bcb2793700cde714841f1 \
-    --hash=sha256:e3ef0776d3a429239dce4d164ac40c779f5d8ac958c630e0ab7442c25c54692e
+wagtail-metadata==3.4.0 \
+    --hash=sha256:4d94e3de715d5cb07cb05005f949428b8c68d33a5cd324b8eca10565ed5d0046 \
+    --hash=sha256:a17b1b545446f092ec4074a1c5734931a1af0c68a9a56be1732158753df36746
     # via -r requirements.in
-wagtail==2.8.2 \
-    --hash=sha256:2193da20d37021f5f31ee0f3322e7386678537d6e154bb285a11977935333a94 \
-    --hash=sha256:f6530a7ef2ca3207a6e5c1106bf1c9b6ce86fc2d7c96276e10d6f4ae86308c70
+wagtail==2.9.3 \
+    --hash=sha256:17169ea7c6a2cf2dc8f945f0a967424d7932843087df4897c813868d7f9cddc0 \
+    --hash=sha256:7dba2e5cebee2bb39e4c3db703eeb428b6ba323d72e5fbf384f1ce81f65f7e42
     # via
     #   -r requirements.in
     #   wagtail-autocomplete
@@ -468,6 +471,10 @@ whitenoise==5.2.0 \
 willow==1.3 \
     --hash=sha256:4f84c46f65b6a1982e63dbd4d94c6bae705ff21f839164c31e105c3e251bec37 \
     --hash=sha256:8897a6827c0bb7dee2ac908af53f0d358720bd6032ed20bab3175507e34d739a
+    # via wagtail
+xlsxwriter==1.3.7 \
+    --hash=sha256:9b1ade2d1ba5d9b40a6d1de1d55ded4394ab8002718092ae80a08532c2add2e6 \
+    --hash=sha256:b807c2d3e379bf6a925f472955beef3e07495c1bac708640696876e68675b49b
     # via wagtail
 
 # WARNING: The following packages were not pinned, but pip requires them to be

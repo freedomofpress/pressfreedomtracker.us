@@ -19,12 +19,12 @@ python-json-logger
 pyparsing
 typing
 typogrify
-wagtail>=2.8.2,<2.9
-wagtail-autocomplete
+wagtail>=2.9.3,<2.10
+wagtail-autocomplete>=0.6
 wagtail-factories
 wagtail-django-recaptcha
 wagtail-livepreview
-wagtail-metadata
+wagtail-metadata>=3.4.0
 unittest-xml-reporting
-wagtail-inventory
+wagtail-inventory>=1.1
 whitenoise
