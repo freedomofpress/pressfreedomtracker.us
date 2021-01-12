@@ -42,6 +42,10 @@ EXCLUDED_FIELDS = {
     'locked_by',
     'workflowpage',
     'workflow_states',
+    'alias_of',
+    'translation_key',
+    'aliases',
+    'locale',
 }
 
 

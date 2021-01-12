@@ -1,3 +1,9 @@
+anyascii==0.1.7 \
+    --hash=sha256:d0eb076933a9eaf1138cb365a5e2e35360ffbbf3200bf33419aaa17d5f8599f5 \
+    --hash=sha256:f100a4f716867bcf0a3b05d8a183dd122fc1d55304a10127bee256e602452d61
+    # via
+    #   -r requirements.txt
+    #   wagtail
 backcall==0.1.0 \
     --hash=sha256:38ecd85be2c1e78f77fd91700c76e14667dc21e2713b63876c0eb901196e01e4 \
     --hash=sha256:bbbf4b1e5cd2bdb08f915895b51081c041bac22394fdfcfdfbe9f14b77c08bf2
@@ -656,9 +662,9 @@ wagtail-metadata==3.4.0 \
     --hash=sha256:4d94e3de715d5cb07cb05005f949428b8c68d33a5cd324b8eca10565ed5d0046 \
     --hash=sha256:a17b1b545446f092ec4074a1c5734931a1af0c68a9a56be1732158753df36746
     # via -r requirements.txt
-wagtail==2.10.2 \
-    --hash=sha256:d6937bf1b64b970315867eac08f786e206059bd882f793e2a4bffca81cfe71d9 \
-    --hash=sha256:fb3c76685abad023a2e8430e55ec24671ec6b0730759f29aaae5042e581bed92
+wagtail==2.11.3 \
+    --hash=sha256:2d153a61fc7cdff2ef71392301661b6a35a09e66758490ac346410b548e3368a \
+    --hash=sha256:825c143b8acdadc4b85c7880dbd1cfaa35397c42bdbf7965baaf6b2fdd78f913
     # via
     #   -r requirements.txt
     #   wagtail-autocomplete
