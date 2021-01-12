@@ -53,7 +53,6 @@ services:
       DJANGO_DB_NAME: trackerdb
       DJANGO_DB_PORT: 5432
       DJANGO_DB_HOST: db
-      DJANGO_LOG_PATH: /django-logs
       DJANGO_XMLTEST_OUTPUT: "yes"
       DEPLOY_ENV: dev
     working_dir: /django

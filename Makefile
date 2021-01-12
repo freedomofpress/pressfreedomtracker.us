@@ -97,6 +97,9 @@ help: ## Prints this message and exits
 		| sort \
 		| column -s ':' -t
 
+.PHONY: lint
+lint: flake8
+
 .PHONY: flake8
 flake8: ## Runs flake8 linting in Python3 container.
 	@docker run -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \

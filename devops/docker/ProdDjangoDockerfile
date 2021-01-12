@@ -1,4 +1,4 @@
-# sha256 as of 2020-11-03 for 10-alpine
+# sha256 as of 2020-12-11 for 10-alpine
 FROM node@sha256:0d798a992de3fe3e080f49a8b862ce815cd99c110e707c24e711f8e2ea4b389e AS node-assets
 
 # Make npm output less verbose
@@ -17,8 +17,8 @@ RUN npm install --global gulp-cli
 COPY ./ /src-files
 RUN cd /src-files && ( npm install && npm run build )
 
-# sha256 as of 2020-11-30 for 3.7-slim-buster
-FROM python@sha256:72343882f59b70f694994130a2d25502f10c128ef59024e03e3b28b6f7dcf4ce
+# sha256 as of 2020-12-11 for 3.7-slim-buster
+FROM python@sha256:563bd6daac518cf3345939c35515643bf66f2b41ca2cf8156783c3cf0f9a480b
 LABEL MAINTAINER="Freedom of the Press Foundation"
 LABEL APP="pressfreedomtracker.us"
 
