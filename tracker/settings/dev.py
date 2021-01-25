@@ -85,4 +85,4 @@ else:
     }
 
 # Prevent endless waiting if problem loading webpack bundles.
-WEBPACK_LOADER['DEFAULT']['TIMEOUT'] = 15  # noqa: F405
+WEBPACK_LOADER['DEFAULT']['TIMEOUT'] = 60  # noqa: F405
