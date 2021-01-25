@@ -164,6 +164,9 @@ class SearchStatSource extends React.Component {
 							required
 						/>
 					</p>
+					<p>
+						Perform a search on the <a href="https://pressfreedomtracker.us/">main site</a> for incidents to include in this statistic and copy the URL here.
+					</p>
 					<button className="button button-secondary no" onClick={this.onRequestClose}>Cancel</button>
 					<button className="button" type="submit">Save</button>
 				</form>
