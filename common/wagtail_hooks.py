@@ -106,8 +106,6 @@ def urlconf_time():
 
 @hooks.register('register_rich_text_features')
 def register_num_incidents_feature(features):
-    features.default_features.append('numincidents')
-
     feature_name = 'numincidents'
     type_ = 'SEARCHSTAT'
 
