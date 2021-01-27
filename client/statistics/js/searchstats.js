@@ -22,12 +22,12 @@ class SearchStatSource extends React.Component {
 			const { search, dataset } = contentState.getEntity(entityKey).getData()
 			state = {
 				url: search,
-				dataset,
+				dataset: dataset || "TOTAL",
 			}
 		} else {
 			state = {
 				url: "",
-				dataset: "",
+				dataset: "TOTAL",
 			}
 		}
 
