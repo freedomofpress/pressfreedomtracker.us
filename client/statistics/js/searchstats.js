@@ -21,11 +21,13 @@ class SearchStatSource extends React.Component {
 			const contentState = editorState.getCurrentContent()
 			const { search, dataset } = contentState.getEntity(entityKey).getData()
 			state = {
+				isLoading: false,
 				url: search,
 				dataset: dataset || "TOTAL",
 			}
 		} else {
 			state = {
+				isLoading: false,
 				url: "",
 				dataset: "TOTAL",
 			}
@@ -72,6 +74,8 @@ class SearchStatSource extends React.Component {
 	onConfirm(e) {
 		e.preventDefault()
 
+		this.setState({ isLoading: true })
+
 		const { editorState, entityType, onComplete } = this.props
 		const content = editorState.getCurrentContent()
 		const selection = editorState.getSelection()
@@ -84,6 +88,7 @@ class SearchStatSource extends React.Component {
 		fetch(summaryUrl.href)
 			.then(response => response.json())
 			.then(data => {
+				this.setState({ isLoading: false })
 				let params = {}
 				let count
 				if (dataset == 'TOTAL') {
@@ -168,7 +173,9 @@ class SearchStatSource extends React.Component {
 						Perform a search on the <a href="https://pressfreedomtracker.us/">main site</a> for incidents to include in this statistic and copy the URL here.
 					</p>
 					<button className="button button-secondary no" onClick={this.onRequestClose}>Cancel</button>
-					<button className="button" type="submit">Save</button>
+					<button className="button" type="submit" disabled={this.state.isLoading}>
+						{this.state.isLoading ? "Loading..." : "Save"}
+					</button>
 				</form>
 			</ReactModal>
 		)
