@@ -1,5 +1,6 @@
 from django.template.loader import render_to_string
 from wagtail.core import hooks
+from wagtail.core.models import Site
 
 from common.models.settings import SearchSettings
 
@@ -13,7 +14,7 @@ class ShortcutsPanel:
         self.request = request
 
     def render(self):
-        search_page = SearchSettings.for_site(self.request.site).search_page
+        search_page = SearchSettings.for_site(Site.find_for_request(self.request)).search_page
         return render_to_string('dashboard/shortcuts_panel.html', dict(
             incident_page=search_page,
         ))

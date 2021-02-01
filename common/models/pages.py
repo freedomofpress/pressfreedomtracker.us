@@ -8,7 +8,7 @@ from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
 from wagtail.core import blocks
-from wagtail.core.models import Page, Orderable
+from wagtail.core.models import Page, Orderable, Site
 from wagtail.core.fields import RichTextField, StreamField
 
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -284,7 +284,7 @@ class CategoryPage(MetadataPageMixin, Page):
         incident_filter = IncidentFilter(data)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
 
-        search_settings = SearchSettings.for_site(request.site)
+        search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
             context['export_path'] = search_settings.data_download_page.get_url()
         elif search_settings.search_page:

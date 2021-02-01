@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.test import TestCase, RequestFactory
-from wagtail.core.middleware import SiteMiddleware
 from wagtail.core.models import Site, Page
 from wagtail.tests.utils import WagtailPageTests
 from wagtail.tests.utils.form_data import (
@@ -26,8 +25,6 @@ class ContextTest(TestCase):
         IncidentPageFactory(title='Not relevant', categories=[category2])
 
         request = RequestFactory().get('/')
-        # Attach wagtail site.
-        SiteMiddleware().process_request(request)
 
         context = category1.get_context(request)
 
@@ -41,8 +38,6 @@ class ContextTest(TestCase):
         IncidentPageFactory(title='Not category', categories=[category2])
 
         request = RequestFactory().get('/', {'arrest_status': 'DETAINED_NO_PROCESSING'})
-        # Attach wagtail site.
-        SiteMiddleware().process_request(request)
 
         context = category1.get_context(request)
 
@@ -58,8 +53,6 @@ class ContextTest(TestCase):
             '/',
             {'arrest_status': 'DETAINED_NO_PROCESSING'}
         )
-        # Attach wagtail site.
-        SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
         self.assertTrue(context['filtered'])
 
@@ -70,8 +63,6 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/')
-        # Attach wagtail site.
-        SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
         self.assertFalse(context['filtered'])
 
@@ -82,8 +73,6 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/', {'page': '2'})
-        # Attach wagtail site.
-        SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
         self.assertFalse(context['filtered'])
 
@@ -95,8 +84,6 @@ class ContextTest(TestCase):
         """
         category_page = CategoryPageFactory()
         request = RequestFactory().get('/', {'categories': '1'})
-        # Attach wagtail site.
-        SiteMiddleware().process_request(request)
         context = category_page.get_context(request)
         self.assertFalse(context['filtered'])
 

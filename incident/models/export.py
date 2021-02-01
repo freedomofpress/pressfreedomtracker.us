@@ -38,6 +38,14 @@ EXCLUDED_FIELDS = {
     'homepagefeature',
     'statboxes',
     'live_preview_updates',
+    'locked_at',
+    'locked_by',
+    'workflowpage',
+    'workflow_states',
+    'alias_of',
+    'translation_key',
+    'aliases',
+    'locale',
 }
 
 
