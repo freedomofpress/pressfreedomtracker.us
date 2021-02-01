@@ -211,9 +211,7 @@ const SearchStat = (props) => {
 	const data = contentState.getEntity(entityKey).getData()
 
 	return (
-		<TooltipEntity {...props} {...getStatAttributes(data)}>
-			{contentState.getEntity(entityKey).getData().count}
-		</TooltipEntity>
+		<TooltipEntity {...props} {...getStatAttributes(data)} />
 	)
 }
 
