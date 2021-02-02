@@ -8,7 +8,7 @@ from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from wagtail.admin.edit_handlers import FieldPanel
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Site
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
@@ -124,7 +124,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         incident_filter = IncidentFilter(request.GET)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
 
-        search_settings = SearchSettings.for_site(request.site)
+        search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
             context['export_path'] = search_settings.data_download_page.get_url()
         else:

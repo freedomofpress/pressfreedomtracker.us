@@ -5,7 +5,12 @@ import socket
 import struct
 from .base import *  # noqa: F403, F401
 
-# The SECRET_KEY below is used only in the local dev env.
+
+if not os.environ.get('DJANGO_DISABLE_DEBUG'):
+    DEBUG = True
+
+
+# The example SECRET_KEY below is used only in the local dev env.
 # In the production settings file, a custom env var is required
 # to run the application.
 SECRET_KEY = '(g4bj*$%zf4tqdaas8#ch3-mz_27n+*-973tpxap9zmdz8ii_u'
@@ -35,10 +40,7 @@ def get_default_gateway_linux():
             return socket.inet_ntoa(struct.pack("<L", int(fields[2], 16)))
 
 
-if 'DJANGO_DISABLE_DEBUG' in os.environ:
-    DEBUG = False
-else:
-    DEBUG = True
+if DEBUG:
     # Fix for https://github.com/jazzband/django-debug-toolbar/issues/950
     DEBUG_TOOLBAR_CONFIG = {
         'SKIP_TEMPLATE_PREFIXES': (
@@ -61,6 +63,7 @@ else:
     MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
     # Include the wagtail styleguide
     INSTALLED_APPS.append('wagtail.contrib.styleguide')  # noqa: F405
+
 
 if 'DJANGO_NO_DB' in os.environ:
     pass
