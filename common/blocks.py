@@ -10,6 +10,31 @@ from common.validators import validate_template
 
 
 class RichTextTemplateBlock(blocks.RichTextBlock):
+    def __init__(self, features=None, **kwargs):
+        if not features:
+            features = [
+                'h1',
+                'h2',
+                'h3',
+                'h4',
+                'h5',
+                'h6',
+                'bold',
+                'italic',
+                'ol',
+                'ul',
+                'hr',
+                'link',
+                'document-link',
+                'image',
+                'embed',
+                'numincidents',  # Enhanced incident stats entry
+            ]
+        super().__init__(
+            features=features,
+            **kwargs,
+        )
+
     def clean(self, value):
         cleaned_value = super(RichTextTemplateBlock, self).clean(value)
         # cleaned_value is a wagtail.core.rich_text.RichText instance.
@@ -160,6 +185,7 @@ class StyledTextTemplateBlock(StyledTextBlock):
             'document-link',
             'image',
             'code',
+            'numincidents',  # Enhanced incident stats entry
         ],
     )
 

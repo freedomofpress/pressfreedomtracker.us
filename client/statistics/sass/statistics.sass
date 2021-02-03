@@ -1,0 +1,40 @@
+.admin-overlay
+	z-index: 1000
+	position: fixed
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	background: rgba(0, 0, 0, 0.75)
+
+	display: flex
+	align-items: center
+	justify-content: center
+
+.admin-modal
+	background-color: #fff
+	padding: 1em
+	max-width: 600px
+	border-radius: 4px
+
+	&__dataset_field
+		line-height: 2.2
+		margin-bottom: 0.5em
+
+	&__dataset_radio
+		top: -3px
+
+	&__legend
+		height: inherit
+		width: inherit
+		position: static
+		padding: 3px 6px
+		margin: 0 0 0.5em 0
+		font-size: 120%
+		font-weight: bold
+
+	&__label
+		float: none
+
+		input
+			margin-right: 2em

@@ -1,10 +1,14 @@
-from wagtail.contrib.modeladmin.options import (
-    ModelAdmin, modeladmin_register)
-from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
-from wagtail.core import hooks
+import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from django.conf.urls import url
-from django.utils.translation import ugettext as _
 from django.utils.functional import cached_property
+from django.utils.translation import ugettext as _
+from draftjs_exporter.dom import DOM
+from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
+from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
+from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+from wagtail.core import hooks
+from webpack_loader.utils import get_files
+
 from .models import CommonTag
 from .views import TagMergeView, deploy_info_view
 
@@ -98,3 +102,77 @@ def urlconf_time():
     return [
         url(r'^version/?$', deploy_info_view, name='deployinfo'),
     ]
+
+
+@hooks.register('register_rich_text_features')
+def register_num_incidents_feature(features):
+    feature_name = 'numincidents'
+    type_ = 'SEARCHSTAT'
+
+    control = {
+        'type': type_,
+        'label': 'Stats',
+        'description': 'Statistics data matching an incident search',
+    }
+
+    features.register_editor_plugin(
+        'draftail', feature_name, draftail_features.EntityFeature(
+            control,
+            js=[get_files('statistics', extension='js')[0]['url']],
+            css={'all': [get_files('statistics', extension='css')[0]['url']]}
+        )
+    )
+
+    features.register_converter_rule('contentstate', feature_name, {
+        'from_database_format': {'span[data-entity="num-incidents"]': SearchStatEntityElementHandler(type_)},
+        'to_database_format': {'entity_decorators': {type_: num_incidents_entity_decorator}}
+    })
+
+
+def num_incidents_entity_decorator(props):
+    """
+    Draft.js ContentState to database HTML.
+    Converts the num_incidents entities into a span tag.
+    """
+    filters = {
+        k.replace('param_', 'data-param-').replace('_', '-'): v for k, v in props.items() if k.startswith('param_')
+    }
+    dataset = props.get('dataset', '')
+    filters['data-entity'] = 'num-incidents'
+    filters['data-count'] = props.get('count', '0')
+    filters['data-search'] = props.get('search', '')
+    filters['data-dataset'] = dataset
+
+    if dataset == 'TOTAL':
+        tag_name = 'num_incidents'
+    elif dataset == 'JOURNALISTS':
+        tag_name = 'num_journalist_targets'
+    elif dataset == 'INSTITUTIONS':
+        tag_name = 'num_institution_targets'
+    else:
+        tag_name = ''
+
+    tag = "{{% {tag_name} {args} %}}".format(
+        tag_name=tag_name,
+        args=' '.join(
+            '{k}="{v}"'.format(k=k.replace('param_', ''), v=v) for k, v in props.items() if k.startswith('param_')
+        )
+    )
+
+    return DOM.create_element('span', filters, tag)
+
+
+class SearchStatEntityElementHandler(InlineEntityElementHandler):
+    """
+    Database HTML to Draft.js ContentState.
+    Converts the span tag into a SearchStat entity, with the right data.
+    """
+    mutability = 'IMMUTABLE'
+
+    def get_attribute_data(self, attrs):
+        """
+        Take values from the HTML element's attributes
+        """
+        return {
+            k.replace('data-', '').replace('-', '_'): v for k, v in attrs.items()
+        }

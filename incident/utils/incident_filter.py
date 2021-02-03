@@ -10,8 +10,10 @@ from django.db.models import (
     DurationField,
     ForeignKey,
     ManyToManyField,
+    OuterRef,
     PositiveSmallIntegerField,
     Q,
+    Subquery,
     TextField,
     Value,
 )
@@ -724,11 +726,16 @@ class IncidentFilter(object):
         num_this_month = incidents_this_month.count()
 
         tj_queryset = TargetedJournalist.objects.filter(incident__in=queryset)
+        tj_inst_queryset = tj_queryset.filter(
+            institution_id=OuterRef('pk')
+        ).values_list('institution_id', flat=True)
 
         summary = (
             ('Total Results', total_queryset.count()),
             ('Journalists affected', Journalist.objects.filter(targeted_incidents__in=tj_queryset).distinct().count()),
-            ('Institutions affected', Institution.objects.filter(institutions_incidents__in=total_queryset).distinct().count()),
+            ('Institutions affected', Institution.objects.filter(
+                Q(institutions_incidents__in=total_queryset) | Q(id__in=Subquery(tj_inst_queryset))
+            ).distinct().count()),
         )
 
         if num_this_year > 0:

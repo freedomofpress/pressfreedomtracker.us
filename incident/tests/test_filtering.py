@@ -755,10 +755,10 @@ class GetSummaryTest(TestCase):
         "Summary should correctly count incidents in January"
 
         # Two incidents in January 2018, two not
-        IncidentPageFactory(date=date(2018, 1, 15), journalist_targets=1, institution_targets=1)
-        IncidentPageFactory(date=date(2018, 1, 16), journalist_targets=1, institution_targets=1)
-        IncidentPageFactory(date=date(2017, 1, 15), journalist_targets=1, institution_targets=1)
-        IncidentPageFactory(date=date(2018, 2, 15), journalist_targets=1, institution_targets=1)
+        IncidentPageFactory(date=date(2018, 1, 15), journalist_targets=1, institution_targets=1, journalist_targets__institution=None)
+        IncidentPageFactory(date=date(2018, 1, 16), journalist_targets=1, institution_targets=1, journalist_targets__institution=None)
+        IncidentPageFactory(date=date(2017, 1, 15), journalist_targets=1, institution_targets=1, journalist_targets__institution=None)
+        IncidentPageFactory(date=date(2018, 2, 15), journalist_targets=1, institution_targets=1, journalist_targets__institution=None)
 
         with patch('incident.utils.incident_filter.date') as date_:
             date_.today = lambda: date(2018, 1, 20)
@@ -776,10 +776,10 @@ class GetSummaryTest(TestCase):
         "Summary should correctly count incidents in December"
 
         # Two incidents in December 2018, two not
-        IncidentPageFactory(date=date(2018, 12, 15), journalist_targets=2)
-        IncidentPageFactory(date=date(2018, 12, 16), journalist_targets=2)
-        IncidentPageFactory(date=date(2019, 1, 1), journalist_targets=2)
-        IncidentPageFactory(date=date(2018, 2, 15), journalist_targets=2)
+        IncidentPageFactory(date=date(2018, 12, 15), journalist_targets=2, journalist_targets__institution=None)
+        IncidentPageFactory(date=date(2018, 12, 16), journalist_targets=2, journalist_targets__institution=None)
+        IncidentPageFactory(date=date(2019, 1, 1), journalist_targets=2, journalist_targets__institution=None)
+        IncidentPageFactory(date=date(2018, 2, 15), journalist_targets=2, journalist_targets__institution=None)
 
         with patch('incident.utils.incident_filter.date') as date_:
             date_.today = lambda: date(2018, 12, 20)
@@ -873,6 +873,7 @@ class GetSummaryTest(TestCase):
             date=timezone.now().date(),
             journalist_targets=3,
             institution_targets=3,
+            journalist_targets__institution=None,
         )
         IncidentPageFactory(
             status_of_seized_equipment=self.returned_full,
@@ -880,6 +881,7 @@ class GetSummaryTest(TestCase):
             date=timezone.now().date(),
             journalist_targets=5,
             institution_targets=5,
+            journalist_targets__institution=None,
         )
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -905,12 +907,14 @@ class GetSummaryTest(TestCase):
             date=timezone.now().date(),
             journalist_targets=3,
             institution_targets=0,
+            journalist_targets__institution=None,
         )
         IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
             journalist_targets=5,
             institution_targets=0,
+            journalist_targets__institution=None,
         )
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -936,15 +940,15 @@ class GetSummaryTest(TestCase):
             date=timezone.now().date(),
             institution_targets=0,
         )
-        TargetedJournalistFactory(incident=incident1, journalist=journalist1)
-        TargetedJournalistFactory(incident=incident1, journalist=journalist2)
+        TargetedJournalistFactory(incident=incident1, journalist=journalist1, institution=None)
+        TargetedJournalistFactory(incident=incident1, journalist=journalist2, institution=None)
 
         incident2 = IncidentPageFactory(
             categories=[self.category],
             date=timezone.now().date(),
             institution_targets=0,
         )
-        TargetedJournalistFactory(incident=incident2, journalist=journalist1)
+        TargetedJournalistFactory(incident=incident2, journalist=journalist1, institution=None)
 
         incident_filter = IncidentFilter(dict(
             categories=str(self.category.id),
@@ -997,17 +1001,34 @@ class GetSummaryTest(TestCase):
             'categories': [self.category.id],
         })
 
+    def test_institution_count__via_journalists(self):
+        InstitutionFactory()
+
+        TargetedJournalistFactory(
+            incident__institution_targets=0,
+            incident__categories=[self.category],
+            incident__title='Test Incident',
+        )
+        incident_filter = IncidentFilter(dict(
+            categories=str(self.category.id),
+        ))
+        summary = incident_filter.get_summary()
+        institutions_affected = dict(summary)['Institutions affected']
+        self.assertEqual(institutions_affected, 1)
+
     def test_search__no_categories(self):
         # Matched incident page
         IncidentPageFactory(
             title='asdf',
             date=timezone.now().date(),
             journalist_targets=3,
+            journalist_targets__institution=None,
         )
         IncidentPageFactory(
             title='zxcv',
             date=timezone.now().date(),
             journalist_targets=5,
+            journalist_targets__institution=None,
         )
         incident_filter = IncidentFilter({
             'search': 'asdf',
@@ -1035,18 +1056,21 @@ class GetSummaryTest(TestCase):
             categories=[self.category],
             date=timezone.now().date(),
             journalist_targets=3,
+            journalist_targets__institution=None,
         )
         IncidentPageFactory(
             title='zxcv',
             categories=[self.category],
             date=timezone.now().date(),
             journalist_targets=5,
+            journalist_targets__institution=None,
         )
         IncidentPageFactory(
             title='asdf 2',
             categories=[category2],
             date=timezone.now().date(),
             journalist_targets=7,
+            journalist_targets__institution=None,
         )
         incident_filter = IncidentFilter({
             'categories': '{},{}'.format(self.category.id, category2.id),
