@@ -73,7 +73,7 @@ update-pip-dev: ## Uses pip-compile to update dev-requirements.txt for upgrading
 	docker run -v "$(DIR):/code" -w /code -it python:3.7-slim \
 		bash -c 'apt-get update && apt-get install gcc -y && \
 	pip install pip-tools && \
-		pip-compile --require-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
 
 .PHONY: upgrade-pip-tools
