@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+from django.apps import apps
 from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
@@ -50,3 +51,6 @@ if settings.DEBUG:
                        ] + urlpatterns
     except ImportError:
         pass
+
+if apps.is_installed('silk'):
+    urlpatterns = [path('silk/', include('silk.urls', namespace='silk'))] + urlpatterns

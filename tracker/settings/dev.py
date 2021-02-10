@@ -41,6 +41,16 @@ def get_default_gateway_linux():
 
 
 if DEBUG:
+    if os.environ.get('DJANGO_PROFILE', 'no').lower() == 'yes':
+        # Silk
+        INSTALLED_APPS.append('silk')
+        MIDDLEWARE = ['silk.middleware.SilkyMiddleware'] + MIDDLEWARE
+
+        # Django CProfile Middleware
+        MIDDLEWARE.append('django_cprofile_middleware.middleware.ProfilerMiddleware')
+        DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
+
+
     # Fix for https://github.com/jazzband/django-debug-toolbar/issues/950
     DEBUG_TOOLBAR_CONFIG = {
         'SKIP_TEMPLATE_PREFIXES': (
