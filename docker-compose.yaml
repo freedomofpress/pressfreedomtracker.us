@@ -55,6 +55,7 @@ services:
       DJANGO_DB_HOST: db
       DJANGO_XMLTEST_OUTPUT: "yes"
       DEPLOY_ENV: dev
+      DJANGO_PROFILE: "${DJANGO_PROFILE:-no}"
     working_dir: /django
     volumes:
       - ./:/django

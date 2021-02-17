@@ -94,6 +94,22 @@ Second, attach to the running Django container.  This must be done in a shell, a
 
 Once you have done this, you can load the page that will run the code with your ``import ipdb`` and the debugger will activate in the shell you attached.  To detach from the shell without stopping the container press ``Control+P`` followed by ``Control+Q``.
 
+
+Profiling
+---------
+
+There are a couple of options preconfigured in this repo for profiling the application.  They are `django-cprofile-middleware <https://pypi.org/project/django-cprofile-middleware/>`_ and `silk <https://github.com/jazzband/django-silk>`_ middleware.
+
+Profiling is not enabled by default, as it does add potential performance overhead if you don't actively need it.  To enable profiling, set ``DJANGO_PROFILE=yes`` when starting docker compose:
+
+.. code:: bash
+
+    DJANGO_PROFILE=yes docker-compose up
+
+This will enable both middlewares.  To view the cProfile information for any url, append ``?prof`` to the url (or add it to an existing query string with ``&prof``).  This can give you fairly detailed information about which lines of code are causing your view to be slow.  Additional information about the information provided is available in `the Python documentation <https://docs.python.org/3.7/library/profile.html>`_.
+
+If the specific lines of python code are not enough to determine what's causing the slowdown, it might be the database.  To view more detailed profiling data about database queries, I recommend silk.  The silk middleware logs all queries generated on a per-request basis.  To see this, make a request to the view you want to profile, wait for it to complete, then load the silk admin at ``http://localhost:8000/silk``.
+
 Dependency Management
 ---------------------
 

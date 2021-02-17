@@ -1,5 +1,7 @@
 -r requirements.txt
 coverage
+django-cprofile-middleware
 django-debug-toolbar
+django-silk
 flake8
 ipdb
