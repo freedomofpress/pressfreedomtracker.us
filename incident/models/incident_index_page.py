@@ -7,6 +7,7 @@ from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
 from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
+from marshmallow import Schema, fields, EXCLUDE
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.models import Page, Site
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -21,6 +22,17 @@ from incident.feeds import IncidentIndexPageFeed
 
 if TYPE_CHECKING:
     from django.http import HttpRequest  # noqa: F401
+
+
+class SummarySchema(Schema):
+    class Meta:
+        # This schema is populated from the incident filter results
+        # summary, which can contain dynamic fields.  EXCLUDE tells
+        # the schema to ignore those.
+        unknown = EXCLUDE
+    total = fields.Integer(data_key='Total Results')
+    journalists = fields.Integer(data_key='Journalists affected')
+    institutions = fields.Integer(data_key='Institutions affected')
 
 
 class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
@@ -62,7 +74,26 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         else:
             allowed_fields = allowed_fields.split(',')
         incident_filter = IncidentFilter(request.GET)
-        incidents = incident_filter.get_queryset()
+        incidents = incident_filter.get_queryset() \
+            .select_related('teaser_image', 'state', 'arresting_authority') \
+            .prefetch_related(
+                'authors',
+                'categories__category',
+                'current_charges',
+                'dropped_charges',
+                'equipment_broken__equipment',
+                'equipment_seized__equipment',
+                'links',
+                'politicians_or_public_figures_involved',
+                'tags',
+                'target_nationality',
+                'targeted_institutions',
+                'targeted_journalists',
+                'teaser_image__renditions',
+                'updates',
+                'venue',
+                'workers_whose_communications_were_obtained',
+        )
         if export_format == 'json':
             return self.export_format_json(incidents, allowed_fields)
         else:
@@ -103,6 +134,14 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     def export_view_OPTIONS(self, request: 'HttpRequest') -> HttpResponse:
         return HttpResponse()
+
+    @route(r'^summary/$')
+    @method_decorator(require_http_methods(['GET']))
+    def summary(self, request):
+        incident_filter = IncidentFilter(request.GET)
+        summary = incident_filter.get_summary()
+        result = SummarySchema().load(dict(summary))
+        return JsonResponse(result)
 
     @route(r'^feed/$')
     def feed(self, request):

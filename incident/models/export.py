@@ -102,10 +102,13 @@ def to_json(obj, allowed_fields=[]):
 def _serialize_field(obj, field):
     if field.name == 'teaser_image':
         teaser_image = getattr(obj, field.name)
+        val = None
         if teaser_image:
-            val = teaser_image.get_rendition('fill-1330x880').url
-        else:
-            val = None
+            for rend in teaser_image.renditions.all():
+                if rend.filter_spec == 'fill-1330x880':
+                    val = rend.url
+            if not val:
+                val = teaser_image.get_rendition('fill-1330x880').url
     elif field.name == 'slug':
         val = obj.get_full_url()
     elif type(field) == models.ForeignKey:

@@ -188,7 +188,27 @@ class PersonPage(Page):
 
 class QuickFact(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='quick_facts')
-    body = RichTextField(validators=[validate_template])
+    body = RichTextField(
+        features=[
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'bold',
+            'italic',
+            'ol',
+            'ul',
+            'hr',
+            'link',
+            'document-link',
+            'image',
+            'embed',
+            'numincidents',  # Enhanced incident stats entry
+        ],
+        validators=[validate_template],
+    )
     link_url = models.URLField(blank=True)
 
     def clean(self):
@@ -243,7 +263,28 @@ class CategoryIncidentFilter(Orderable):
 
 
 class CategoryPage(MetadataPageMixin, Page):
-    methodology = RichTextField(blank=True, validators=[validate_template])
+    methodology = RichTextField(
+        features=[
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'bold',
+            'italic',
+            'ol',
+            'ul',
+            'hr',
+            'link',
+            'document-link',
+            'image',
+            'embed',
+            'numincidents',  # Enhanced incident stats entry
+        ],
+        blank=True,
+        validators=[validate_template],
+    )
     plural_name = models.CharField(max_length=255, null=True, blank=True)
     page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
 

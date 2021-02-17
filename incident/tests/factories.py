@@ -260,13 +260,13 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             self._prefetched_objects_cache = {'targeted_institutions': targets}
 
     @factory.post_generation
-    def journalist_targets(self, create, count):
+    def journalist_targets(self, create, count, **kwargs):
         if count is None:
             count = 0
         make_targeted_journalist = getattr(TargetedJournalistFactory, 'create' if create else 'build')
         targets = []
         for i in range(count):
-            make_targeted_journalist(incident=self)
+            make_targeted_journalist(incident=self, **kwargs)
         if not create:
             self._prefetched_objects_cache = {'targeted_institutions': targets}
 

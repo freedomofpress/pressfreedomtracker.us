@@ -4,6 +4,9 @@ anyascii==0.1.7 \
     # via
     #   -r requirements.txt
     #   wagtail
+autopep8==1.5.4 \
+    --hash=sha256:d21d3901cb0da6ebd1e83fc9b0dfbde8b46afc2ede4fe32fbda0c7c6118ca094
+    # via django-silk
 backcall==0.1.0 \
     --hash=sha256:38ecd85be2c1e78f77fd91700c76e14667dc21e2713b63876c0eb901196e01e4 \
     --hash=sha256:bbbf4b1e5cd2bdb08f915895b51081c041bac22394fdfcfdfbe9f14b77c08bf2
@@ -124,9 +127,12 @@ django-anymail==6.0 \
     --hash=sha256:ab5cbfb280492c9cb2ef0497f8ebda4dcb3f99603dcf63c88ae623a66cad71f4 \
     --hash=sha256:f872089943f30283d485d121924598f4156f5bfa76a0885fd66df5205102be0b
     # via -r requirements.txt
-django-debug-toolbar==1.11 \
-    --hash=sha256:89d75b60c65db363fb24688d977e5fbf0e73386c67acf562d278402a10fc3736 \
-    --hash=sha256:c2b0134119a624f4ac9398b44f8e28a01c7686ac350a12a74793f3dd57a9eea0
+django-cprofile-middleware==1.0.5 \
+    --hash=sha256:b942185a38f3b582935a55c768f126ce9a6f0cefceee3b5d19e6b307ad129889
+    # via -r dev-requirements.in
+django-debug-toolbar==2.2 \
+    --hash=sha256:eabbefe89881bbe4ca7c980ff102e3c35c8e8ad6eb725041f538988f2f39a943 \
+    --hash=sha256:ff94725e7aae74b133d0599b9bf89bd4eb8f5d2c964106e61d11750228c8774c
     # via -r dev-requirements.in
 django-filter==2.4.0 \
     --hash=sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06 \
@@ -151,6 +157,9 @@ django-recaptcha==2.0.2 \
 django-settings-export==1.2.1 \
     --hash=sha256:fceeae49fc597f654c1217415d8e049fc81c930b7154f5d8f28c432db738ff79
     # via -r requirements.txt
+django-silk==4.1.0 \
+    --hash=sha256:a331e55618fa62eaf3cf5a63f31bc1e91205efbeeca5e587c577498b0e251ed8
+    # via -r dev-requirements.in
 django-storages[google]==1.10.1 \
     --hash=sha256:12de8fb2605b9b57bfaf54b075280d7cbb3b3ee1ca4bc9b9add147af87fe3a2c \
     --hash=sha256:652275ab7844538c462b62810276c0244866f345878256a9e0e86f5b1283ae18
@@ -181,6 +190,7 @@ django==2.2.14 \
     #   django-logging-json
     #   django-recaptcha
     #   django-settings-export
+    #   django-silk
     #   django-storages
     #   django-taggit
     #   django-treebeard
@@ -202,10 +212,6 @@ draftjs-exporter==2.1.5 \
     # via
     #   -r requirements.txt
     #   wagtail
-entrypoints==0.3 \
-    --hash=sha256:589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19 \
-    --hash=sha256:c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451
-    # via flake8
 et-xmlfile==1.0.1 \
     --hash=sha256:614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b
     # via
@@ -223,9 +229,9 @@ faker==4.0.2 \
     # via
     #   -r requirements.txt
     #   factory-boy
-flake8==3.7.7 \
-    --hash=sha256:859996073f341f2670741b51ec1e67a01da142831aa1fdc6242dbf88dffbe661 \
-    --hash=sha256:a796a115208f5c03b18f332f7c11729812c8c3ded6c46319c59b53efd3819da8
+flake8==3.8.4 \
+    --hash=sha256:749dbbd6bfd0cf1318af27bf97a14e28e5ff548ef8e5b1566ccfb25a11e7c839 \
+    --hash=sha256:aadae8761ec651813c24be05c6f7b4680857ef6afaae4651a4eccaef97ce6c3b
     # via -r dev-requirements.in
 google-api-core==1.23.0 \
     --hash=sha256:1bb3c485c38eacded8d685b1759968f6cf47dd9432922d34edb90359eaa391e2 \
@@ -286,6 +292,9 @@ googleapis-common-protos==1.52.0 \
     # via
     #   -r requirements.txt
     #   google-api-core
+gprof2dot==2019.11.30 \
+    --hash=sha256:b43fe04ebb3dfe181a612bbfc69e90555b8957022ad6a466f0308ed9c7f22e99
+    # via django-silk
 gunicorn==19.9.0 \
     --hash=sha256:aa8e0b40b4157b36a5df5e599f45c9c76d6af43845ba3b3b0efe2c70473c2471 \
     --hash=sha256:fa2662097c66f920f53f70621c6c58ca4a3c4d3434205e608e121b5b3b71f4f3
@@ -302,6 +311,10 @@ idna==2.8 \
     # via
     #   -r requirements.txt
     #   requests
+importlib-metadata==3.4.0 \
+    --hash=sha256:ace61d5fc652dc280e7b6b4ff732a9c2d40db2c0f92bc6cb74e07b73d53a1771 \
+    --hash=sha256:fa5daa4477a7414ae34e95942e4dd07f62adf589143c875c133c1e53c4eff38d
+    # via flake8
 ipdb==0.11 \
     --hash=sha256:7081c65ed7bfe7737f83fa4213ca8afd9617b42ff6b3f1daf9a3419839a2a00a
     # via -r dev-requirements.in
@@ -326,7 +339,9 @@ jedi==0.13.3 \
 jinja2==2.11.1 \
     --hash=sha256:93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250 \
     --hash=sha256:b0eaf100007721b5c16c1fc1eecb87409464edc10469ddc9a22a27a99123be49
-    # via -r requirements.txt
+    # via
+    #   -r requirements.txt
+    #   django-silk
 l18n==2020.6.1 \
     --hash=sha256:ea7a65b2f0935b14601a3295f2c5e5e8b54126dd1e6a7fef4e44d2b8dd5b695a
     # via
@@ -503,25 +518,28 @@ pyasn1==0.4.8 \
     #   -r requirements.txt
     #   pyasn1-modules
     #   rsa
-pycodestyle==2.5.0 \
-    --hash=sha256:95a2219d12372f05704562a14ec30bc76b05a5b297b21a5dfe3f6fac3491ae56 \
-    --hash=sha256:e40a936c9a450ad81df37f549d676d127b1b66000a6c500caa2b085bc0ca976c
-    # via flake8
+pycodestyle==2.6.0 \
+    --hash=sha256:2295e7b2f6b5bd100585ebcb1f616591b652db8a741695b3d8f5d28bdc934367 \
+    --hash=sha256:c58a7d2815e0e8d7972bf1803331fb0152f867bd89adf8a01dfd55085434192e
+    # via
+    #   autopep8
+    #   flake8
 pycparser==2.20 \
     --hash=sha256:2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0 \
     --hash=sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705
     # via
     #   -r requirements.txt
     #   cffi
-pyflakes==2.1.1 \
-    --hash=sha256:17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0 \
-    --hash=sha256:d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2
+pyflakes==2.2.0 \
+    --hash=sha256:0d94e0e05a19e57a99444b6ddcf9a6eb2e5c68d3ca1e98e90707af8152c90a92 \
+    --hash=sha256:35b2d75ee967ea93b55750aa9edbbf72813e06a66ba54438df2cfac9e3c27fc8
     # via flake8
 pygments==2.3.1 \
     --hash=sha256:5ffada19f6203563680669ee7f53b64dabbeb100eb51b61996085e99c03b284a \
     --hash=sha256:e8218dd399a61674745138520d0d4cf2621d7e032439341bc3f647bff125818d
     # via
     #   -r requirements.txt
+    #   django-silk
     #   ipython
 pyparsing==2.3.1 \
     --hash=sha256:66c9268862641abcac4a96ba74506e594c884e3f57690a696d21ad8210ed667a \
@@ -532,6 +550,7 @@ python-dateutil==2.8.0 \
     --hash=sha256:c89805f6f4d64db21ed966fda138f8a5ed7a4fdbc1a8ee329ce1b74e3c74da9e
     # via
     #   -r requirements.txt
+    #   django-silk
     #   faker
 python-json-logger==0.1.10 \
     --hash=sha256:3e000053837500f9eb28d6228d7cb99fabfc1874d34b40c08289207292abaf2e \
@@ -544,6 +563,7 @@ pytz==2020.5 \
     #   -r requirements.txt
     #   django
     #   django-modelcluster
+    #   django-silk
     #   google-api-core
     #   l18n
 requests==2.24.0 \
@@ -552,6 +572,7 @@ requests==2.24.0 \
     # via
     #   -r requirements.txt
     #   django-anymail
+    #   django-silk
     #   google-api-core
     #   google-cloud-storage
     #   wagtail
@@ -597,6 +618,7 @@ sqlparse==0.3.0 \
     #   -r requirements.txt
     #   django
     #   django-debug-toolbar
+    #   django-silk
 tablib[xls,xlsx]==3.0.0 \
     --hash=sha256:41aa40981cddd7ec4d1fabeae7c38d271601b306386bd05b5c3bcae13e5aeb20 \
     --hash=sha256:f83cac08454f225a34a305daa20e2110d5e6335135d505f93bc66583a5f9c10d
@@ -609,6 +631,10 @@ text-unidecode==1.3 \
     # via
     #   -r requirements.txt
     #   faker
+toml==0.10.2 \
+    --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
+    --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
+    # via autopep8
 tqdm==4.15.0 \
     --hash=sha256:6ec1dc74efacf2cda936b4a6cf4082ce224c76763bdec9f17e437c8cfcaa9953 \
     --hash=sha256:9f019dcbec25b5b4cb1bbf43e5c346e0d6a001fe4f598d70283d379e5314e202
@@ -619,6 +645,11 @@ traitlets==4.3.2 \
     --hash=sha256:9c4bd2d267b7153df9152698efb1050a5d84982d3384a37b2c1f7723ba3e7835 \
     --hash=sha256:c6cb5e6f57c5a9bdaa40fa71ce7b4af30298fbab9ece9815b5d995ab6217c7d9
     # via ipython
+typing-extensions==3.7.4.3 \
+    --hash=sha256:7cb407020f00f7bfc3cb3e7881628838e69d8f3fcab2f64742a5e76b2f841918 \
+    --hash=sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c \
+    --hash=sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f
+    # via importlib-metadata
 typing==3.6.6 \
     --hash=sha256:4027c5f6127a6267a435201981ba156de91ad0d1d98e9ddc2aa173453453492d \
     --hash=sha256:57dcf675a99b74d64dacf6fba08fb17cf7e3d5fdff53d4a30ea2a5e7e52543d4 \
@@ -712,6 +743,10 @@ xlwt==1.3.0 \
     # via
     #   -r requirements.txt
     #   tablib
+zipp==3.4.0 \
+    --hash=sha256:102c24ef8f171fd729d46599845e95c7ab894a4cf45f5de11a44cc7444fb1108 \
+    --hash=sha256:ed5eee1974372595f9e416cc7bbeeb12335201d8081ca8a0743c954d4446e5cb
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 setuptools==42.0.2 \

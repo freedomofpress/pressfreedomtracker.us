@@ -41,6 +41,15 @@ def get_default_gateway_linux():
 
 
 if DEBUG:
+    if os.environ.get('DJANGO_PROFILE', 'no').lower() == 'yes':
+        # Silk
+        INSTALLED_APPS.append('silk')  # noqa: F405
+        MIDDLEWARE = ['silk.middleware.SilkyMiddleware'] + MIDDLEWARE  # noqa: F405
+
+        # Django CProfile Middleware
+        MIDDLEWARE.append('django_cprofile_middleware.middleware.ProfilerMiddleware')
+        DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
+
     # Fix for https://github.com/jazzband/django-debug-toolbar/issues/950
     DEBUG_TOOLBAR_CONFIG = {
         'SKIP_TEMPLATE_PREFIXES': (
@@ -54,6 +63,10 @@ if DEBUG:
             'debug_toolbar.panels.redirects.TemplatesPanel'
         },
     }
+
+    # Disable caching of webpack stats files (can prevent node/django
+    # container race condition).
+    WEBPACK_LOADER['DEFAULT']['CACHE'] = False  # noqa: F405
 
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
@@ -79,3 +92,6 @@ else:
             'CONN_MAX_AGE': os.environ.get('DJANGO_DB_MAX_AGE', 600)
         }
     }
+
+# Prevent endless waiting if problem loading webpack bundles.
+WEBPACK_LOADER['DEFAULT']['TIMEOUT'] = 60  # noqa: F405

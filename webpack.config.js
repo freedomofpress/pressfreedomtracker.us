@@ -20,6 +20,7 @@ var common = {
 		common: __dirname + '/client/common/js/common.js',
 		editor: __dirname + '/client/autocomplete/js/editor.js',
 		topic: __dirname + '/client/topic/js/index.js',
+		statistics: __dirname + '/client/statistics/js/searchstats.js',
 	},
 
 	output: {
@@ -60,6 +61,7 @@ var common = {
 					path.join(__dirname, '/client/common/js'),
 					path.join(__dirname, '/client/autocomplete/js'),
 					path.join(__dirname, '/client/topic/js'),
+					path.join(__dirname, '/client/statistics/js'),
 				],
 			},
 			{
