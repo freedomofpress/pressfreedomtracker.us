@@ -7,6 +7,7 @@ from wagtail.core.rich_text import RichText
 
 from incident.models import (
     Charge,
+    IncidentAuthor,
     IncidentCategorization,
     IncidentIndexPage,
     IncidentPage,
@@ -27,7 +28,11 @@ from incident.models import (
     TopicPage,
 )
 from common.models import CustomImage
-from common.tests.factories import CategoryPageFactory, CommonTagFactory
+from common.tests.factories import (
+    CategoryPageFactory,
+    CommonTagFactory,
+    PersonPageFactory,
+)
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
 
@@ -347,6 +352,18 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             }
 
     @factory.post_generation
+    def authors(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for author in extracted:
+                IncidentAuthorFactory(
+                    parent_page=self,
+                    author=author,
+                )
+
+    @factory.post_generation
     def categories(self, create, extracted, **kwargs):
         if not create:
             return
@@ -389,6 +406,14 @@ class IncidentCategorizationFactory(factory.DjangoModelFactory):
     sort_order = factory.Sequence(lambda n: n)
     incident_page = factory.SubFactory(IncidentPageFactory)
     category = factory.SubFactory(CategoryPageFactory)
+
+
+class IncidentAuthorFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = IncidentAuthor
+    sort_order = factory.Sequence(lambda n: n)
+    parent_page = factory.SubFactory(IncidentPageFactory)
+    author = factory.SubFactory(PersonPageFactory)
 
 
 class TopicPageFactory(wagtail_factories.PageFactory):
