@@ -118,6 +118,12 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         start_date='-90d',
         tzinfo=datetime.timezone.utc,
     )
+    last_published_at = factory.LazyAttribute(
+        lambda o: o.first_published_at + datetime.timedelta(days=3)
+    )
+    latest_revision_created_at = factory.LazyAttribute(
+        lambda o: o.first_published_at + datetime.timedelta(days=5)
+    )
 
     image_caption_text = Faker('sentence')
     teaser_image_text = Faker('sentence')
