@@ -26,6 +26,7 @@ from incident.models import (
     TargetedJournalist,
     GovernmentWorker,
     TopicPage,
+    Venue,
 )
 from common.models import CustomImage
 from common.tests.factories import (
@@ -384,6 +385,14 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 )
 
     @factory.post_generation
+    def venue(self, create, extracted, **kwargs):
+        if not create:
+            return
+        if extracted:
+            for venue in extracted:
+                venue.venue_incidents.add(self)
+
+    @factory.post_generation
     def categories(self, create, extracted, **kwargs):
         if not create:
             return
@@ -469,6 +478,13 @@ class GovernmentWorkerFactory(factory.DjangoModelFactory):
     # Lazy values
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
+
+
+class VenueFactory(ItemFactory):
+    class Meta:
+        model = Venue
+        django_get_or_create = ('title',)
+    title = factory.Faker('pystr_format', string_format='{{color_name}} Court of {{state}}')
 
 
 class ChargeFactory(ItemFactory):
