@@ -113,6 +113,25 @@ class IncidentLinkFactory(factory.DjangoModelFactory):
     publication = Faker('company')
 
 
+class SnippetFactory(factory.DjangoModelFactory):
+    class Meta:
+        abstract = True
+
+    class Params:
+        unique_name = factory.Trait(
+            name=factory.Sequence(
+                lambda n: 'Name {n}'.format(n=n)
+            )
+        )
+
+
+class StateFactory(SnippetFactory):
+    class Meta:
+        model = State
+        django_get_or_create = ('name',)
+    name = factory.Faker('state')
+
+
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
@@ -135,6 +154,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     title = factory.Faker('sentence')
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
+    state = factory.SubFactory(StateFactory)
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
     teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
     teaser_image = None
