@@ -11,7 +11,7 @@ django-webpack-loader
 docutils
 factory_boy
 gunicorn
-Jinja2
+Jinja2>=2.11.3
 marshmallow
 psycopg2
 Pygments
