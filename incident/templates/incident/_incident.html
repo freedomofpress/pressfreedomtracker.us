@@ -8,7 +8,6 @@ It can take the following context variables:
 
 {% load wagtailcore_tags wagtailsettings_tags wagtailimages_tags typogrify_tags %}
 {% load render_as_template %}
-{% get_settings use_default_site=True %}
 
 <article class="
 	incident
@@ -103,12 +102,15 @@ It can take the following context variables:
 				{% endfor %}
 			{% endif %}
 		</div>
-		{% if not incident.suppress_footer and not teaser and settings.common.SiteSettings.incident_footer %}
-			<div class="incident__call-to-action">
-				{% filter typogrify|richtext %}
-					{% render_as_template settings.common.SiteSettings.incident_footer %}
-				{% endfilter %}
-			</div>
+		{% if not incident.suppress_footer and not teaser %}
+			{% get_settings use_default_site=True %}
+			{% if settings.common.SiteSettings.incident_footer %}
+				<div class="incident__call-to-action">
+					{% filter typogrify|richtext %}
+						{% render_as_template settings.common.SiteSettings.incident_footer %}
+					{% endfilter %}
+				</div>
+			{% endif %}
 		{% endif %}
 		{% if not teaser %}
 			{% for update in incident.get_updates_by_asc_date %}
