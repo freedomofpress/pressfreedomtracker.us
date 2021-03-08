@@ -333,7 +333,27 @@ class CategoryPage(MetadataPageMixin, Page):
         else:
             context['export_path'] = None
 
-        incident_qs = incident_filter.get_queryset()
+        incident_qs = incident_filter.get_queryset() \
+            .with_most_recent_update() \
+            .select_related('teaser_image', 'state', 'arresting_authority') \
+            .prefetch_related(
+                'authors',
+                'categories__category',
+                'current_charges',
+                'dropped_charges',
+                'equipment_broken__equipment',
+                'equipment_seized__equipment',
+                'links',
+                'politicians_or_public_figures_involved',
+                'tags',
+                'target_nationality',
+                'targeted_institutions',
+                'targeted_journalists',
+                'teaser_image__renditions',
+                'updates',
+                'venue',
+                'workers_whose_communications_were_obtained',
+        )
 
         paginator, entries = paginate(
             request,

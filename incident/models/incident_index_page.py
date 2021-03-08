@@ -179,6 +179,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         incident_qs = incident_filter.get_queryset() \
             .select_related('teaser_image', 'state', 'arresting_authority') \
+            .with_most_recent_update() \
             .prefetch_related(
                 'authors',
                 'categories__category',

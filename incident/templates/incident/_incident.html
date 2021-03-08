@@ -54,7 +54,7 @@ It can take the following context variables:
 		{% endif %}
 		<div class='incident__date' title="Published: {{ incident.first_published_at|date:'F j, Y' }}">
 			{{ incident.date|date:"F j, Y" }}
-				{% if teaser and incident.recently_updated %}
+				{% if teaser and incident.updated_days_ago < 7 %}
 				<span
 					class="alert alert--green"
 					title="Updated {{ incident.last_updated|date:'F j, Y'}}"
