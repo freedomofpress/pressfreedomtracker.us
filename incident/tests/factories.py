@@ -51,28 +51,28 @@ class IncidentIndexPageFactory(wagtail_factories.PageFactory):
         )
 
 
-class EquipmentFactory(factory.DjangoModelFactory):
+class EquipmentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Equipment
         django_get_or_create = ('name',)
     name = Faker('word', ext_word_list=['abacus', 'calculator', 'ruler', 'compass', 'graph paper', 'protractor', 'planimeter', 'multimeter', 'photometer', 'diffuser', 'hygrometer', 'timer', 'microscope'])
 
 
-class EquipmentSeizedFactory(factory.DjangoModelFactory):
+class EquipmentSeizedFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = EquipmentSeized
     equipment = SubFactory(EquipmentFactory)
     quantity = LazyAttribute(lambda _: random.randint(1, 5))
 
 
-class EquipmentBrokenFactory(factory.DjangoModelFactory):
+class EquipmentBrokenFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = EquipmentBroken
     equipment = SubFactory(EquipmentFactory)
     quantity = LazyAttribute(lambda _: random.randint(1, 5))
 
 
-class ItemFactory(factory.DjangoModelFactory):
+class ItemFactory(factory.django.DjangoModelFactory):
     class Meta:
         abstract = True
 
@@ -84,14 +84,14 @@ class ItemFactory(factory.DjangoModelFactory):
         )
 
 
-class LawEnforcementOrganizationFactory(factory.DjangoModelFactory):
+class LawEnforcementOrganizationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = LawEnforcementOrganization
         django_get_or_create = ('title',)
     title = factory.Faker('sentence', nb_words=3)
 
 
-class IncidentUpdateFactory(factory.DjangoModelFactory):
+class IncidentUpdateFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentPageUpdates
 
@@ -104,7 +104,7 @@ class MultimediaIncidentUpdateFactory(IncidentUpdateFactory):
     body = Faker('streamfield', fields=['rich_text_paragraph', 'bare_image', 'raw_html', 'blockquote'])
 
 
-class IncidentLinkFactory(factory.DjangoModelFactory):
+class IncidentLinkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentPageLinks
 
@@ -114,7 +114,7 @@ class IncidentLinkFactory(factory.DjangoModelFactory):
     publication = Faker('company')
 
 
-class SnippetFactory(factory.DjangoModelFactory):
+class SnippetFactory(factory.django.DjangoModelFactory):
     class Meta:
         abstract = True
 
@@ -429,7 +429,7 @@ class InexactDateIncidentPageFactory(IncidentPageFactory):
     )
 
 
-class IncidentCategorizationFactory(factory.DjangoModelFactory):
+class IncidentCategorizationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentCategorization
     sort_order = factory.Sequence(lambda n: n)
@@ -437,7 +437,7 @@ class IncidentCategorizationFactory(factory.DjangoModelFactory):
     category = factory.SubFactory(CategoryPageFactory)
 
 
-class IncidentAuthorFactory(factory.DjangoModelFactory):
+class IncidentAuthorFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentAuthor
     sort_order = factory.Sequence(lambda n: n)
@@ -453,7 +453,7 @@ class TopicPageFactory(wagtail_factories.PageFactory):
     incident_tag = factory.SubFactory(CommonTagFactory)
 
 
-class SnippetFactory(factory.DjangoModelFactory):
+class SnippetFactory(factory.django.DjangoModelFactory):
     class Meta:
         abstract = True
 
@@ -465,7 +465,7 @@ class SnippetFactory(factory.DjangoModelFactory):
         )
 
 
-class GovernmentWorkerFactory(factory.DjangoModelFactory):
+class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = GovernmentWorker
         django_get_or_create = ('title',)
@@ -515,7 +515,7 @@ class StateFactory(SnippetFactory):
     name = factory.Faker('state')
 
 
-class JournalistFactory(factory.DjangoModelFactory):
+class JournalistFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Journalist
         django_get_or_create = ('title',)
@@ -523,7 +523,7 @@ class JournalistFactory(factory.DjangoModelFactory):
     title = factory.Faker('name')
 
 
-class InstitutionFactory(factory.DjangoModelFactory):
+class InstitutionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Institution
         django_get_or_create = ('title',)
@@ -541,7 +541,7 @@ class InstitutionFactory(factory.DjangoModelFactory):
     city = factory.Faker('city')
 
 
-class TargetedJournalistFactory(factory.DjangoModelFactory):
+class TargetedJournalistFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = TargetedJournalist
 

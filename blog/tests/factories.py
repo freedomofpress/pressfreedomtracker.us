@@ -38,7 +38,6 @@ class BlogIndexPageFactory(wagtail_factories.PageFactory):
 class BlogPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = BlogPage
-        django_get_or_create = ('slug',)
 
     class Params:
         # for use with the createdevdata command

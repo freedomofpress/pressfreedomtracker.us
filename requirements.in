@@ -9,7 +9,7 @@ django-settings-export
 django-storages[google]
 django-webpack-loader
 docutils
-factory_boy
+factory_boy>=3.2.0
 gunicorn
 Jinja2>=2.11.3
 marshmallow
@@ -21,7 +21,7 @@ typing
 typogrify
 wagtail>=2.11.3,<2.12
 wagtail-autocomplete>=0.6
-wagtail-factories
+wagtail-factories>=2.0.1
 wagtail-django-recaptcha
 wagtail-livepreview
 wagtail-metadata>=3.4.0
