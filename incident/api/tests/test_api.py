@@ -65,12 +65,18 @@ class IncidentAPITest(APITestCase):
         IncidentLinkFactory.create_batch(3, page=cls.incident)
 
     def test_api_requests_are_successful(self):
-        response = self.client.get(reverse('incidentpage-list'))
+        response = self.client.get(
+            reverse('incidentpage-list'),
+            HTTP_ACCEPT='application/json',
+        )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
-        response = self.client.get(reverse('incidentpage-list'))
+        response = self.client.get(
+            reverse('incidentpage-list'),
+            HTTP_ACCEPT='application/json',
+        )
         data = response.json()[0]
         inc = self.incident
 

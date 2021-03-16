@@ -15,6 +15,44 @@ class ChoiceField(serializers.ChoiceField):
         return self._choices[obj]
 
 
+class FlatStringRelatedField(serializers.ManyRelatedField):
+    """Represents relations as a single string of comma separated string
+    values.
+
+    """
+    def __init__(self, **kwargs):
+        kwargs['read_only'] = True
+        kwargs['child_relation'] = serializers.StringRelatedField()
+        super().__init__(**kwargs)
+
+    def to_representation(self, obj):
+        strings = super().to_representation(obj)
+        return ', '.join(strings)
+
+
+class FlatSummaryField(serializers.ManyRelatedField):
+    """Represents relations as a single string of comma separated string
+    values.
+
+    """
+    def __init__(self, **kwargs):
+        kwargs['read_only'] = True
+        kwargs['child_relation'] = SummaryField(read_only=True)
+        super().__init__(**kwargs)
+
+    def to_representation(self, obj):
+        strings = super().to_representation(obj)
+        return ', '.join(strings)
+
+
+class FlatListField(serializers.ListField):
+    """Comma-separated string representation of a list field."""
+
+    def to_representation(self, obj):
+        obj = super().to_representation(obj)
+        return ', '.join([str(element) for element in obj])
+
+
 class EquipmentSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
     equipment = serializers.StringRelatedField(read_only=True)
@@ -26,19 +64,13 @@ class IncidentLinkSerializer(serializers.Serializer):
     publication = serializers.CharField()
 
 
-class IncidentSerializer(serializers.Serializer):
+class BaseIncidentSerializer(serializers.Serializer):
     title = serializers.CharField()
     slug = serializers.CharField()
     first_published_at = serializers.DateTimeField()
     last_published_at = serializers.DateTimeField()
     latest_revision_created_at = serializers.DateTimeField()
 
-    authors = SummaryField(many=True, read_only=True)
-    updates = serializers.StringRelatedField(many=True)
-    categories = SummaryField(many=True, read_only=True)
-    links = IncidentLinkSerializer(many=True)
-    equipment_seized = EquipmentSerializer(many=True, read_only=True)
-    equipment_broken = EquipmentSerializer(many=True, read_only=True)
     date = serializers.DateField()
     exact_date_unknown = serializers.BooleanField()
     city = serializers.CharField()
@@ -48,14 +80,14 @@ class IncidentSerializer(serializers.Serializer):
     teaser_image = serializers.SerializerMethodField()
     primary_video = serializers.URLField()
     image_caption = serializers.CharField()
+    arresting_authority = serializers.StringRelatedField()
     arrest_status = serializers.CharField(source='get_arrest_status_display')
     status_of_charges = serializers.CharField(source='get_status_of_charges_display')
-    arresting_authority = serializers.StringRelatedField()
     release_date = serializers.DateField()
     detention_date = serializers.DateField()
     unnecessary_use_of_force = serializers.BooleanField()
     lawsuit_name = serializers.CharField()
-    venue = serializers.StringRelatedField(many=True)
+
     status_of_seized_equipment = serializers.CharField(source='get_status_of_seized_equipment_display')
     is_search_warrant_obtained = serializers.BooleanField()
     actor = serializers.CharField(source='get_actor_display')
@@ -64,7 +96,7 @@ class IncidentSerializer(serializers.Serializer):
     target_us_citizenship_status = serializers.CharField(source='get_target_us_citizenship_status_display')
     denial_of_entry = serializers.BooleanField()
     stopped_previously = serializers.BooleanField()
-    target_nationality = serializers.StringRelatedField(many=True)
+
     did_authorities_ask_for_device_access = serializers.CharField(source='get_did_authorities_ask_for_device_access_display')
     did_authorities_ask_for_social_media_user = serializers.CharField(source='get_did_authorities_ask_for_social_media_user_display')
     did_authorities_ask_for_social_media_pass = serializers.CharField(source='get_did_authorities_ask_for_social_media_pass_display')
@@ -72,24 +104,16 @@ class IncidentSerializer(serializers.Serializer):
     were_devices_searched_or_seized = serializers.CharField(source='get_were_devices_searched_or_seized_display')
     assailant = serializers.CharField(source='get_assailant_display')
     was_journalist_targeted = serializers.CharField(source='get_was_journalist_targeted_display')
-    workers_whose_communications_were_obtained = serializers.StringRelatedField(many=True)
+
     charged_under_espionage_act = serializers.BooleanField()
     subpoena_type = serializers.CharField(source='get_subpoena_type_display')
-    subpoena_statuses = serializers.ListField(
-        child=ChoiceField(choices.SUBPOENA_STATUS)
-    )
+
     held_in_contempt = serializers.CharField(source='get_held_in_contempt_display')
     detention_status = serializers.CharField(source='get_detention_status_display')
     third_party_in_possession_of_communications = serializers.CharField()
     third_party_business = serializers.CharField(source='get_third_party_business_display')
     legal_order_type = serializers.CharField(source='get_legal_order_type_display')
     status_of_prior_restraint = serializers.CharField(source='get_status_of_prior_restraint_display')
-    targeted_journalists = SummaryField(many=True, read_only=True)
-    targeted_institutions = serializers.StringRelatedField(many=True)
-    tags = serializers.StringRelatedField(many=True)
-    current_charges = serializers.StringRelatedField(many=True)
-    dropped_charges = serializers.StringRelatedField(many=True)
-    politicians_or_public_figures_involved = serializers.StringRelatedField(many=True)
 
     def get_body(self, obj):
         return str(obj.body)
@@ -101,3 +125,50 @@ class IncidentSerializer(serializers.Serializer):
                 if rend.filter_spec == 'fill-1330x880':
                     return rend.url
             return teaser_image.get_rendition('fill-1330x880').url
+
+
+class IncidentSerializer(BaseIncidentSerializer):
+    links = IncidentLinkSerializer(many=True)
+    equipment_seized = EquipmentSerializer(many=True, read_only=True)
+    equipment_broken = EquipmentSerializer(many=True, read_only=True)
+
+    updates = serializers.StringRelatedField(many=True)
+    venue = serializers.StringRelatedField(many=True)
+    workers_whose_communications_were_obtained = serializers.StringRelatedField(many=True)
+    target_nationality = serializers.StringRelatedField(many=True)
+    targeted_institutions = serializers.StringRelatedField(many=True)
+    tags = serializers.StringRelatedField(many=True)
+    current_charges = serializers.StringRelatedField(many=True)
+    dropped_charges = serializers.StringRelatedField(many=True)
+    politicians_or_public_figures_involved = serializers.StringRelatedField(many=True)
+
+    authors = SummaryField(many=True, read_only=True)
+    categories = SummaryField(many=True, read_only=True)
+    targeted_journalists = SummaryField(many=True, read_only=True)
+
+    subpoena_statuses = serializers.ListField(
+        child=ChoiceField(choices.SUBPOENA_STATUS)
+    )
+
+
+class FlatIncidentSerializer(BaseIncidentSerializer):
+    updates = FlatStringRelatedField()
+    venue = FlatStringRelatedField()
+    workers_whose_communications_were_obtained = FlatStringRelatedField()
+    target_nationality = FlatStringRelatedField()
+    targeted_institutions = FlatStringRelatedField()
+    tags = FlatStringRelatedField()
+    current_charges = FlatStringRelatedField()
+    dropped_charges = FlatStringRelatedField()
+    politicians_or_public_figures_involved = FlatStringRelatedField()
+    links = FlatStringRelatedField()
+
+    targeted_journalists = FlatSummaryField()
+    authors = FlatSummaryField()
+    categories = FlatSummaryField()
+    equipment_broken = FlatSummaryField()
+    equipment_seized = FlatSummaryField()
+
+    subpoena_statuses = FlatListField(
+        child=ChoiceField(choices.SUBPOENA_STATUS)
+    )

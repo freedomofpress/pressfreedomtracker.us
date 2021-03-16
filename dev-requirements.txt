@@ -196,11 +196,15 @@ django==2.2.19 \
     #   django-treebeard
     #   djangorestframework
     #   wagtail
+djangorestframework-csv==2.1.0 \
+    --hash=sha256:2f008b20a44f2d3c37835ea5b5ddfe19f54394f07b9cb267c616a917a7f7e27c
+    # via -r requirements.txt
 djangorestframework==3.12.1 \
     --hash=sha256:5c5071fcbad6dce16f566d492015c829ddb0df42965d488b878594aabc3aed21 \
     --hash=sha256:d54452aedebb4b650254ca092f9f4f5df947cb1de6ab245d817b08b4f4156249
     # via
     #   -r requirements.txt
+    #   djangorestframework-csv
     #   wagtail
 docutils==0.14 \
     --hash=sha256:02aec4bd92ab067f6ff27a38a38a41173bf01bed8f89157768c1573f53e474a6 \
@@ -571,6 +575,7 @@ six==1.15.0 \
     #   bleach
     #   django-anymail
     #   django-logging-json
+    #   djangorestframework-csv
     #   google-api-core
     #   google-auth
     #   google-resumable-media
@@ -634,6 +639,11 @@ typing==3.6.6 \
 typogrify==2.0.7 \
     --hash=sha256:8be4668cda434163ce229d87ca273a11922cb1614cb359970b7dc96eed13cb38
     # via -r requirements.txt
+unicodecsv==0.14.1 \
+    --hash=sha256:018c08037d48649a0412063ff4eda26eaa81eff1546dbffa51fa5293276ff7fc
+    # via
+    #   -r requirements.txt
+    #   djangorestframework-csv
 unidecode==1.0.23 \
     --hash=sha256:092cdf7ad9d1052c50313426a625b717dab52f7ac58f859e09ea020953b1ad8f \
     --hash=sha256:8b85354be8fd0c0e10adbf0675f6dc2310e56fda43fa8fe049123b6c475e52fb
