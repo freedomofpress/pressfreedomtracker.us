@@ -115,6 +115,21 @@ class BaseIncidentSerializer(serializers.Serializer):
     legal_order_type = serializers.CharField(source='get_legal_order_type_display')
     status_of_prior_restraint = serializers.CharField(source='get_status_of_prior_restraint_display')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.get('context', {}).get('request')
+        str_fields = request.GET.get('fields', '') if request else None
+        fields = str_fields.split(',') if str_fields else None
+
+        super().__init__(*args, **kwargs)
+
+        if fields is not None:
+            # Drop any fields that are not specified in the `fields`
+            # argument.
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
     def get_body(self, obj):
         return str(obj.body)
 

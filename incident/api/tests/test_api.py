@@ -160,3 +160,15 @@ class IncidentAPITest(APITestCase):
         )
 
         self.assertEqual(len(response.json()), 1)
+
+    def test_dynamic_fields(self):
+        response = self.client.get(
+            reverse('incidentpage-list'),
+            {'fields': 'city,state'},
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(
+            list(response.json()[0].keys()),
+            ['city', 'state'],
+        )
