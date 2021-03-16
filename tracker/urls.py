@@ -9,6 +9,7 @@ from wagtailautocomplete.views import objects, search
 
 from common import views as common_views
 from emails import urls as emails_urls
+from incident.api.urls import api_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -22,6 +23,7 @@ autocomplete_public_urls = [
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
+    path('api/v2/', include(api_urls)),
     path('autocomplete/', include(autocomplete_public_urls)),
     path('admin/autocomplete/', include(autocomplete_admin_urls)),
     path('admin/', include(wagtailadmin_urls)),

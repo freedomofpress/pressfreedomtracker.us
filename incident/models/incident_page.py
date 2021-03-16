@@ -53,6 +53,10 @@ class IncidentAuthor(Orderable):
     parent_page = ParentalKey('IncidentPage', related_name='authors')
     author = models.ForeignKey('common.PersonPage', on_delete=models.CASCADE, related_name='+')
 
+    @property
+    def summary(self):
+        return self.author.title
+
     panels = [
         PageChooserPanel('author')
     ]

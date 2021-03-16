@@ -133,6 +133,14 @@ class StateFactory(SnippetFactory):
     name = factory.Faker('state')
 
 
+def random_choice(choices):
+    return random.choice([x[0] for x in choices])
+
+
+def random_choice_list(choices):
+    return random.sample([x[0] for x in choices], k=random.randint(0, len(choices)))
+
+
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
@@ -199,6 +207,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     held_in_contempt = None
     detention_status = None
 
+    # Legal case
+    lawsuit_name = factory.Faker('pystr_format', string_format='{{name}} v. {{name}}')
+
     class Params:
         arrest = factory.Trait(
             arrest_status=factory.Iterator(
@@ -206,8 +217,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             status_of_charges=factory.Iterator(
                 choices.STATUS_OF_CHARGES, getter=lambda c: c[0]),
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
-            current_charges=2,
-            dropped_charges=2,
             release_date=datetime.date.today(),
             detention_date=datetime.date.today() - datetime.timedelta(days=3),
             unnecessary_use_of_force=factory.Faker('boolean'),
@@ -226,36 +235,34 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.CITIZENSHIP_STATUS_CHOICES, getter=lambda c: c[0]),
             denial_of_entry=factory.Faker('boolean'),
             stopped_previously=factory.Faker('boolean'),
-            target_nationality=1,
-            did_authorities_ask_for_device_access=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
-            did_authorities_ask_for_social_media_user=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
-            did_authorities_ask_for_social_media_pass=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
-            did_authorities_ask_about_work=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
-            were_devices_searched_or_seized=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
+            # did_authorities_ask_for_device_access=factory.Iterator(
+            #     choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
+            did_authorities_ask_for_device_access=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            did_authorities_ask_for_social_media_user=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            did_authorities_ask_for_social_media_pass=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            did_authorities_ask_about_work=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            were_devices_searched_or_seized=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
         )
         physical_attack = factory.Trait(
             assailant=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
-            was_journalist_targeted=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
+            was_journalist_targeted=factory.LazyFunction(
+                lambda: random_choice(choices.MAYBE_BOOLEAN)
+            ),
         )
         leak_case = factory.Trait(
-            workers_whose_communications_were_obtained=2,
+            # workers_whose_communications_were_obtained=2,
             charged_under_espionage_act=factory.Faker('boolean'),
         )
         subpoena = factory.Trait(
             subpoena_type=factory.Iterator(
                 choices.SUBPOENA_TYPE, getter=lambda c: c[0]),
-            subpoena_statuses=factory.List(
-                [factory.Iterator(
-                    choices.SUBPOENA_STATUS, getter=lambda c: c[0])]
-            ),
-            held_in_contempt=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
+            subpoena_statuses=factory.LazyFunction(lambda: random_choice_list(choices.SUBPOENA_STATUS)),
+            # subpoena_statuses=factory.List(
+            #     # [factory.Iterator(
+            #     #     choices.SUBPOENA_STATUS, getter=lambda c: c[0])]
+            #     factory.LazyFunction(lambda: random_choice_list(choices.SUBPOENA_SUBJECT))
+            # ),
+            held_in_contempt=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
             detention_status=factory.Iterator(
                 choices.DETENTION_STATUS, getter=lambda c: c[0]),
             third_party_in_possession_of_communications=factory.Faker('company'),
@@ -324,7 +331,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_charge = getattr(ChargeFactory, 'create' if create else 'build')
         charges = []
         for i in range(count):
-            t = make_charge(unique_title=True)
+            t = make_charge()
             t.current_charge_incidents.add(self)
             charges.append(t)
         if not create:
@@ -337,7 +344,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_charge = getattr(ChargeFactory, 'create' if create else 'build')
         charges = []
         for i in range(count):
-            t = make_charge(unique_title=True)
+            t = make_charge()
             t.dropped_charge_incidents.add(self)
             charges.append(t)
         if not create:
@@ -350,7 +357,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         make_nat = getattr(NationalityFactory, 'create' if create else 'build')
         nats = []
         for i in range(count):
-            t = make_nat(unique_title=True)
+            t = make_nat()
             t.nationality_incidents.add(self)
             nats.append(t)
         if not create:
@@ -364,7 +371,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                            'create' if create else 'build')
         pols = []
         for i in range(count):
-            t = make_pol(unique_title=True)
+            t = make_pol()
             t.politicians_or_public_incidents.add(self)
             pols.append(t)
         if not create:
