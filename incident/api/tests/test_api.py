@@ -147,3 +147,16 @@ class IncidentAPITest(APITestCase):
 
             }
         )
+
+    def test_filtering(self):
+        IncidentPageFactory(
+            parent=self.incident_index,
+            categories=[self.cat2],
+        )
+        response = self.client.get(
+            reverse('incidentpage-list'),
+            {'categories': str(self.cat1.pk)},
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(len(response.json()), 1)
