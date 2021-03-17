@@ -103,7 +103,7 @@ class IncidentCSVTestCase(TestCase):
                 'date': inc.date.isoformat(),
                 'exact_date_unknown': str(inc.exact_date_unknown),
                 'city': inc.city,
-                'state': str(inc.state),
+                'state': inc.state.abbreviation,
                 'teaser': str(inc.teaser),
                 'body': str(inc.body).replace('\n', ''),
                 'teaser_image': inc.teaser_image.get_rendition('fill-1330x880').url,

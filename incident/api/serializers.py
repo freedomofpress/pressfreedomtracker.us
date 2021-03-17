@@ -64,6 +64,11 @@ class IncidentLinkSerializer(serializers.Serializer):
     publication = serializers.CharField()
 
 
+class StateSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    abbreviation = serializers.CharField()
+
+
 class BaseIncidentSerializer(serializers.Serializer):
     title = serializers.CharField()
     slug = serializers.CharField()
@@ -74,7 +79,6 @@ class BaseIncidentSerializer(serializers.Serializer):
     date = serializers.DateField()
     exact_date_unknown = serializers.BooleanField()
     city = serializers.CharField()
-    state = serializers.StringRelatedField()
     body = serializers.SerializerMethodField()
     teaser = serializers.CharField()
     teaser_image = serializers.SerializerMethodField()
@@ -146,6 +150,7 @@ class IncidentSerializer(BaseIncidentSerializer):
     links = IncidentLinkSerializer(many=True)
     equipment_seized = EquipmentSerializer(many=True, read_only=True)
     equipment_broken = EquipmentSerializer(many=True, read_only=True)
+    state = StateSerializer()
 
     updates = serializers.StringRelatedField(many=True)
     venue = serializers.StringRelatedField(many=True)
@@ -183,6 +188,8 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     categories = FlatSummaryField()
     equipment_broken = FlatSummaryField()
     equipment_seized = FlatSummaryField()
+
+    state = serializers.CharField(source='state.abbreviation')
 
     subpoena_statuses = FlatListField(
         child=ChoiceField(choices.SUBPOENA_STATUS)
