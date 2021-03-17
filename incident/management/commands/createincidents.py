@@ -48,7 +48,19 @@ class Command(BaseCommand):
             'Options that can apply to all incidents being created.'
         )
 
-        parser.add_argument('--media', action='store_true')
+        general_group = parser.add_argument_group(
+            'General options',
+            'How many and what type of incidents will be created',
+        )
+
+        general_group.add_argument(
+            '--media', action='store_true',
+            help="When this flag is used, existing images in the wagtail database will be used as the incident's teaser image and in the page's body content.",
+        )
+        general_group.add_argument(
+            '-n', '--number', default=1, type=int, metavar='NUM',
+            help='Generate NUM incidents',
+        )
 
         arrest_group = parser.add_argument_group(
             'Arrest options',
@@ -186,7 +198,8 @@ class Command(BaseCommand):
                 raise CommandError(f'Could not find category `{category}`')
             factory_args.update(factory_argset[category])
 
-        result = factory(
+        result = factory.create_batch(
+            options['number'],
             parent=index,
             categories=categories,
             authors=authors,
@@ -195,4 +208,3 @@ class Command(BaseCommand):
             institution_targets=options['gen_institutions'],
             **factory_args,
         )
-        print(f'{result}, id={result.pk}')
