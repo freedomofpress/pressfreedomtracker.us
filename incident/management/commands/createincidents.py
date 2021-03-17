@@ -58,6 +58,10 @@ class Command(BaseCommand):
             help="When this flag is used, existing images in the wagtail database will be used as the incident's teaser image and in the page's body content.",
         )
         general_group.add_argument(
+            '--show-pks', action='store_true',
+            help='Output primary keys of any incidents created',
+        )
+        general_group.add_argument(
             '-n', '--number', default=1, type=int, metavar='NUM',
             help='Generate NUM incidents',
         )
@@ -208,3 +212,8 @@ class Command(BaseCommand):
             institution_targets=options['gen_institutions'],
             **factory_args,
         )
+        if options['show_pks']:
+            count = len(result)
+            s = '' if count == 1 else 's'
+            keys = ', '.join(str(incident.pk) for incident in result)
+            self.stdout.write(f'Created {count} incident{s} with primary key{s}:\n{keys}')
