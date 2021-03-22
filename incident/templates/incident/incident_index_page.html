@@ -22,7 +22,7 @@
 	<div class="grid-50 js-incident-loading-parent">
 		{% for incident in entries_page %}
 			<div class="grid-50__item js-incident-loading-item">
-				{% include "incident/_incident.html" with incident=incident.specific teaser=True %}
+				{% include "incident/_incident.html" with incident=incident teaser=True %}
 			</div>
 		{% endfor %}
 	</div>
