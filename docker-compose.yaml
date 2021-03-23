@@ -42,7 +42,6 @@ services:
       dockerfile: devops/docker/DevDjangoDockerfile
       args:
         USERID: ${UID:?err}
-        PYTHON_VER: 3.7-slim
     depends_on:
       - node
       - postgresql
