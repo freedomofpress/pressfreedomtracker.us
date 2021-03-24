@@ -9,6 +9,9 @@ ARG NPM_VER
 # Upgrade npm to speicifed version
 RUN npm install npm@${NPM_VER} -g
 
+RUN apk add --no-cache paxctl python make g++
+RUN paxctl -cm /usr/local/bin/node
+
 COPY devops/docker/node-start.sh /usr/bin/node-start.sh
 
 ARG USERID
