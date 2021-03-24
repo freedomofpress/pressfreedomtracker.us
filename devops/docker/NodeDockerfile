@@ -4,6 +4,8 @@ FROM node@sha256:a75f7cc536062f9266f602d49047bc249826581406f8bc5a6605c76f9ed18e9
 # Make npm output less verbose
 ENV NPM_CONFIG_LOGLEVEL warn
 
+ARG NPM_VER
+
 # Upgrade npm to speicifed version
 RUN npm install npm@${NPM_VER} -g
 

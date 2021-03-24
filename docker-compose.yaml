@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: devops/docker/NodeDockerfile
       args:
-        NPM_VER: 6.13.4
+        NPM_VER: 6.14.11
         USERID: ${UID:?err}
     volumes:
       - ./:/django
