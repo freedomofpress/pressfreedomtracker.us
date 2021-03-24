@@ -13,7 +13,7 @@ factory_boy
 gunicorn
 Jinja2>=2.11.3
 marshmallow
-psycopg2
+psycopg2>=2.8.4
 Pygments
 python-json-logger
 pyparsing
