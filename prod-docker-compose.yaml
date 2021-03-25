@@ -22,8 +22,7 @@ services:
       context: .
       dockerfile: devops/docker/ProdDjangoDockerfile
       args:
-        NODE_VER: 10.17.0-alpine
-        NPM_VER: 6.13.4
+        NPM_VER: 6.14.11
         USERID: 1234
     image: quay.io/freedomofpress/pressfreedomtrackerus
     depends_on:
