@@ -721,20 +721,20 @@ class IncidentFilter(object):
             date__year=TODAY.year,
         )
 
-        total_queryset = queryset
+        incident_ids = list(queryset.values_list('pk', flat=True))
         num_this_year = incidents_this_year.count()
         num_this_month = incidents_this_month.count()
 
-        tj_queryset = TargetedJournalist.objects.filter(incident__in=queryset)
+        tj_queryset = TargetedJournalist.objects.filter(incident__in=incident_ids)
         tj_inst_queryset = tj_queryset.filter(
             institution_id=OuterRef('pk')
         ).values_list('institution_id', flat=True)
 
         summary = (
-            ('Total Results', total_queryset.count()),
+            ('Total Results', len(incident_ids)),
             ('Journalists affected', Journalist.objects.filter(targeted_incidents__in=tj_queryset).distinct().count()),
             ('Institutions affected', Institution.objects.filter(
-                Q(institutions_incidents__in=total_queryset) | Q(id__in=Subquery(tj_inst_queryset))
+                Q(institutions_incidents__in=incident_ids) | Q(id__in=Subquery(tj_inst_queryset))
             ).distinct().count()),
         )
 

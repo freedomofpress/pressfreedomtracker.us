@@ -24,8 +24,7 @@ services:
       context: .
       dockerfile: devops/docker/NodeDockerfile
       args:
-        NODE_VER: 10.17.0-alpine
-        NPM_VER: 6.13.4
+        NPM_VER: 6.14.11
         USERID: ${UID:?err}
     volumes:
       - ./:/django
@@ -42,7 +41,6 @@ services:
       dockerfile: devops/docker/DevDjangoDockerfile
       args:
         USERID: ${UID:?err}
-        PYTHON_VER: 3.7-slim
     depends_on:
       - node
       - postgresql

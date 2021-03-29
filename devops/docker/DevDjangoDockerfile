@@ -1,10 +1,11 @@
-# sha256 as of 2020-12-11 for 3.7-slim-buster
-FROM python@sha256:563bd6daac518cf3345939c35515643bf66f2b41ca2cf8156783c3cf0f9a480b
+# sha256 as of 2020-03-23 for 3.9-slim-buster
+FROM python@sha256:aab965875430293ae0f7fe8a369947e598eb568dca0cac2f934d87737101df5b
 
 RUN apt-get update && apt-get install -y \
     curl \
     gcc \
     git \
+    libpq-dev \
     libssl-dev \
     netcat \
     && apt-get clean && rm -rf /var/lib/apt/lists/*

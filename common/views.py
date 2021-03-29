@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
+from django.views.decorators.cache import never_cache
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
 
@@ -93,3 +94,9 @@ def deploy_info_view(request):
     except FileNotFoundError:
         contents = "<file not found at {}>".format(DEPLOYINFO_PATH)
     return HttpResponse(contents, content_type='text/plain; charset=us-ascii')
+
+
+@never_cache
+def health_ok(request):
+    """Lightweight health-check with a 200 response code."""
+    return HttpResponse("okay")
