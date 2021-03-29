@@ -155,3 +155,9 @@ class MergeViewSameNameTest(TestCase):
         CommonTag.objects.get(pk=self.tag1.pk)
         with self.assertRaises(CommonTag.DoesNotExist):
             CommonTag.objects.get(pk=self.tag2.pk)
+
+
+class HealthCheckTestCase(TestCase):
+    def test_health_check_url_returns_200_status(self):
+        self.response = self.client.get('/health/ok/')
+        self.assertEqual(self.response.status_code, 200)
