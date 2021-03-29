@@ -30,6 +30,8 @@ urlpatterns = [
     re_path(r'^documents/(\d+)/(.*)$', common_views.serve),
     path('documents/', include(wagtaildocs_urls)),
 
+    path('health/ok/', common_views.health_ok),
+
     path(r'', include(wagtail_urls)),
 ]
 
