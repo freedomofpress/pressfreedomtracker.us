@@ -25,6 +25,11 @@ from common.utils import (
 from incident.models import IncidentCategorization
 
 
+class NongroupingSubquery(models.Subquery):
+    def get_group_by_cols(self):
+        return []
+
+
 class IncidentSchema(Schema):
     title = fields.Str()
     date = fields.DateTime()
@@ -250,7 +255,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         cats = CategoryPage.objects.live().prefetch_related(
             models.Prefetch('incidents', queryset=with_incident_page, to_attr='categorization_list')
         ).annotate(
-            total_journalists=models.Subquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
+            total_journalists=NongroupingSubquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
             total_incidents=models.Count('incidents__incident_page', filter=models.Q(incidents__incident_page__tags=self.incident_tag, incidents__incident_page__live=True))
         ).order_by('-total_incidents')
 
