@@ -38,10 +38,15 @@ class IncidentSchema(Schema):
     description = fields.Method('get_description')
 
     def get_image(self, obj):
-        if obj.teaser_image:
-            return obj.teaser_image.get_rendition('width-720').url
-        else:
+        if not obj.teaser_image:
             return ''
+        val = ''
+        for rend in obj.teaser_image.renditions.all():
+            if rend.filter_spec == 'width-720':
+                val = rend.url
+        if not val:
+            val = obj.teaser_image.get_rendition('width-720').url
+        return val
 
     def get_description(self, obj):
         return obj.body.render_as_block()
