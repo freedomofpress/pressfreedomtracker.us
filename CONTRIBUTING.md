@@ -38,4 +38,4 @@ To get started working with the code, clone the repo and follow the instructions
 
 ## Conduct and communication
 
-Please read the [Code of Conduct](CODE_OF_CONDUCT.md) which people are expected to follow when discussing the Press Freedom Tracker on this GitHub repository, or other related venues.
+Please read the [Code of Conduct](https://github.com/freedomofpress/.github/blob/main/CODE_OF_CONDUCT.md) which people are expected to follow when discussing the Press Freedom Tracker on this GitHub repository, or other related venues.
