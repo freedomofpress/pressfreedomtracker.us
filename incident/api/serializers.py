@@ -189,7 +189,7 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     equipment_broken = FlatSummaryField()
     equipment_seized = FlatSummaryField()
 
-    state = serializers.CharField(source='state.abbreviation')
+    state = serializers.CharField(source='state.abbreviation', default='')
 
     subpoena_statuses = FlatListField(
         child=ChoiceField(choices.SUBPOENA_STATUS)
