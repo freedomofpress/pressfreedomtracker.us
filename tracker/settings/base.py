@@ -230,6 +230,7 @@ if LIVEPREVIEW_ENABLED:
     # The livepreview needs to be added in the INSTALLED_APPS above the
     # 'wagtail.admin' app
     INSTALLED_APPS.insert(INSTALLED_APPS.index('wagtail.admin'), 'livepreview')
+    LIVEPREVIEW_USE_FILE_RENDERING = False
 
 # Disable analytics by default
 ANALYTICS_ENABLED = False
