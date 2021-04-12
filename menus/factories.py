@@ -1,5 +1,4 @@
 from factory import (
-    DjangoModelFactory,
     Sequence,
     post_generation,
     Faker,
@@ -7,6 +6,7 @@ from factory import (
     LazyAttribute,
     SubFactory,
 )
+from factory.django import DjangoModelFactory
 from wagtail.core.models import Page
 
 from menus.models import Menu, MenuItem

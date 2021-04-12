@@ -196,11 +196,15 @@ django==2.2.19 \
     #   django-treebeard
     #   djangorestframework
     #   wagtail
+djangorestframework-csv==2.1.0 \
+    --hash=sha256:2f008b20a44f2d3c37835ea5b5ddfe19f54394f07b9cb267c616a917a7f7e27c
+    # via -r requirements.txt
 djangorestframework==3.12.1 \
     --hash=sha256:5c5071fcbad6dce16f566d492015c829ddb0df42965d488b878594aabc3aed21 \
     --hash=sha256:d54452aedebb4b650254ca092f9f4f5df947cb1de6ab245d817b08b4f4156249
     # via
     #   -r requirements.txt
+    #   djangorestframework-csv
     #   wagtail
 docutils==0.14 \
     --hash=sha256:02aec4bd92ab067f6ff27a38a38a41173bf01bed8f89157768c1573f53e474a6 \
@@ -217,9 +221,9 @@ et-xmlfile==1.0.1 \
     # via
     #   -r requirements.txt
     #   openpyxl
-factory-boy==2.11.1 \
-    --hash=sha256:6f25cc4761ac109efd503f096e2ad99421b1159f01a29dbb917359dcd68e08ca \
-    --hash=sha256:d552cb872b310ae78bd7429bf318e42e1e903b1a109e899a523293dfa762ea4f
+factory-boy==3.2.0 \
+    --hash=sha256:1d3db4b44b8c8c54cdd8b83ae4bdb9aeb121e464400035f1f03ae0e1eade56a4 \
+    --hash=sha256:401cc00ff339a022f84d64a4339503d1689e8263a4478d876e58a3295b155c5b
     # via
     #   -r requirements.txt
     #   wagtail-factories
@@ -571,6 +575,7 @@ six==1.15.0 \
     #   bleach
     #   django-anymail
     #   django-logging-json
+    #   djangorestframework-csv
     #   google-api-core
     #   google-auth
     #   google-resumable-media
@@ -634,6 +639,11 @@ typing==3.6.6 \
 typogrify==2.0.7 \
     --hash=sha256:8be4668cda434163ce229d87ca273a11922cb1614cb359970b7dc96eed13cb38
     # via -r requirements.txt
+unicodecsv==0.14.1 \
+    --hash=sha256:018c08037d48649a0412063ff4eda26eaa81eff1546dbffa51fa5293276ff7fc
+    # via
+    #   -r requirements.txt
+    #   djangorestframework-csv
 unidecode==1.0.23 \
     --hash=sha256:092cdf7ad9d1052c50313426a625b717dab52f7ac58f859e09ea020953b1ad8f \
     --hash=sha256:8b85354be8fd0c0e10adbf0675f6dc2310e56fda43fa8fe049123b6c475e52fb
@@ -656,9 +666,9 @@ wagtail-autocomplete==0.6 \
 wagtail-django-recaptcha==1.0 \
     --hash=sha256:fc177e75da966e9db1dfd9a566c40d30567518d9280b5db4fec4d50a8c853154
     # via -r requirements.txt
-wagtail-factories==1.1.0 \
-    --hash=sha256:141cdb65ef0c292d2220a11976311af21d92f4445f2293a8a27ee6e89c96a779 \
-    --hash=sha256:3dd25ae90024e6aaf8e714473545dfa3af14e701835652d112f22d3d228b7fc7
+wagtail-factories==2.0.1 \
+    --hash=sha256:3eeb55199f2c9ffbfe14979a94766d724c9e9f4d8f561df61097884e63bd537f \
+    --hash=sha256:e2bd1a22e67b70e1603fc292e97f6f998ee0169477e1f71b5c53368630f1d088
     # via -r requirements.txt
 wagtail-inventory==1.2 \
     --hash=sha256:2728ca57bd68baae0da50dafa923586c489cef65cfc5ac5a25cc147eedf7ce92 \

@@ -3,10 +3,11 @@ import random
 import requests
 import time
 import wagtail_factories
+from itertools import combinations, chain
 
 from django.contrib.auth.models import User
 from django.core import management
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
 from django.db import transaction
 from wagtail.core.models import Site
@@ -19,7 +20,7 @@ from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, SearchSettings,
-    GeneralIncidentFilter, IncidentFilterSettings
+    GeneralIncidentFilter, IncidentFilterSettings, CategoryPage,
 )
 from common.tests.factories import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
@@ -27,13 +28,39 @@ from common.tests.factories import (
 from forms.models import FormPage
 from home.models import HomePage, HomePageFeature
 from incident.models import IncidentIndexPage, IncidentPage
-from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory
+from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory
 from menus.models import Menu, MenuItem
+
 
 LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat orci. Pellentesque eget scelerisque felis, ut iaculis erat. Nullam eget quam felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum eu dictum ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et mi tellus. Suspendisse bibendum mi vel ex ornare imperdiet. Morbi tincidunt ut nisl sit amet fringilla. Proin nibh nibh, venenatis nec nulla eget, cursus finibus lectus. Aenean nec tellus eget sem faucibus ultrices.'
 
 
 fake = Faker()
+
+
+def lookup_category(key):
+    try:
+        return CategoryPage.objects.get(slug=key)
+    except CategoryPage.DoesNotExist:
+        raise CommandError(f'Could not find category with slug `{key}`')
+
+
+def three_combinations(iterable):
+    "generate all combinations of 1, 2, or 3 elements of an iterable"
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in [1, 2, 3])
+
+
+def generate_variations():
+    """Generate a list of many possible combinations of factory parameters
+
+    Iterates over all Traits declared on IncidentPageFactory and
+    returns a list of dicts suitable for keyword arguments, e.g.:
+    [{'arrest': True}, {'arrest': True, 'border_stop': True}, ...]
+
+    """
+    for variation in three_combinations(MultimediaIncidentPageFactory._meta.parameters.keys()):
+        yield {k: True for k in variation}
 
 
 class Command(BaseCommand):
@@ -321,7 +348,13 @@ class Command(BaseCommand):
                 main_menu=True,
                 title='All Incidents',
             )
-            management.call_command('createincidents')
+            for kwargs in generate_variations():
+                for i in range(2):
+                    MultimediaIncidentPageFactory(
+                        parent=incident_index_page,
+                        categories=[lookup_category(key) for key in kwargs.keys()],
+                        **kwargs,
+                    )
         else:
             incident_index_page = IncidentIndexPage.objects.get(slug='all-incidents')
 

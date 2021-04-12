@@ -13,7 +13,6 @@ factory.Faker.add_provider(StreamfieldProvider)
 class HomePageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = HomePage
-        django_get_or_create = ('slug',)
         exclude = ('about_text')
 
     about_text = factory.Faker('paragraph', nb_sentences=10)
@@ -26,7 +25,7 @@ class HomePageFactory(wagtail_factories.PageFactory):
     )
 
 
-class StatBoxFactory(factory.DjangoModelFactory):
+class StatBoxFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = StatBox
 
