@@ -20,6 +20,54 @@ from incident.tests.factories import (
 )
 
 
+class MinimalIncidentCSVTestCase(TestCase):
+    """Test incident API response for an incident with a minimal number of
+    defined fields.
+
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build()
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.incident = IncidentPageFactory(
+            parent=cls.incident_index,
+            first_published_at=None,
+            last_published_at=None,
+            latest_revision_created_at=None,
+            image_caption_text=None,
+            city=None,
+            state=None,
+            body=None,
+            teaser=None,
+            teaser_image=None,
+            image_caption=None,
+            lawsuit_name=None,
+            institution_targets=0,
+        )
+
+    def setUp(self):
+        self.response = self.client.get(
+            reverse('incidentpage-list'),
+            {'format': 'csv'},
+        )
+
+    def test_csv_requests_are_successful(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_state_field_is_blank(self):
+        content_lines = self.response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+
+        headers = next(reader)
+
+        result = dict(zip(headers, next(reader)))
+        self.assertEqual(result['state'], '')
+
+
 class IncidentCSVTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
