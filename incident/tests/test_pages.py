@@ -762,3 +762,20 @@ class IncidentPageQueriesTest(TestCase):
         # 1 base query, plus 20 prefetches.
         with self.assertNumQueries(21):
             list(IncidentPage.objects.with_public_associations())
+
+
+class IncidentPageTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build()
+        root_page.add_child(instance=cls.incident_index)
+
+    def test_computes_unique_date(self):
+        incident = IncidentPageFactory(parent=self.incident_index)
+
+        self.assertEqual(
+            incident.unique_date,
+            f'{incident.date}-{incident.pk}',
+        )

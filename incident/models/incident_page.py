@@ -136,6 +136,7 @@ IncidentPageManager = PageManager.from_queryset(IncidentQuerySet)
 
 class IncidentPage(MetadataPageMixin, Page):
     date = models.DateField()
+    unique_date = models.TextField(unique=True)
 
     exact_date_unknown = models.BooleanField(
         default=False,
@@ -666,6 +667,11 @@ class IncidentPage(MetadataPageMixin, Page):
                 related_filter['state'] = self.state
             context['related_qs'] = urlencode(related_filter)
         return context
+
+    def save(self, *args, **kwargs):
+        self.unique_date = f'{self.date}-{self.pk}'
+
+        super().save(*args, **kwargs)
 
     def detention_duration(self):
         """
