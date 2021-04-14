@@ -8,9 +8,8 @@ from incident.utils.incident_filter import IncidentFilter
 
 
 class IncidentCursorPagination(CursorPagination):
-    page_size = 25
+    page_size = None
     page_size_query_param = 'limit'
-    max_page_size = 200
     ordering = '-unique_date'
 
 
