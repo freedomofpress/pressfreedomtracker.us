@@ -18,6 +18,14 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     renderer_classes = tuple(api_settings.DEFAULT_RENDERER_CLASSES) + (PaginatedCSVRenderer,)
     pagination_class = IncidentCursorPagination
 
+    def get_renderer_context(self):
+        context = super().get_renderer_context()
+
+        # Get set of fields from serializer that has been pruned
+        # according to request's query-string parameters.
+        context['header'] = list(self.get_serializer().fields.keys())
+        return context
+
     def get_serializer_class(self):
         if self.request.accepted_renderer.format == 'csv':
             return FlatIncidentSerializer

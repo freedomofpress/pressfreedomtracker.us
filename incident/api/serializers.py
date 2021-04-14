@@ -172,6 +172,11 @@ class IncidentSerializer(BaseIncidentSerializer):
 
 
 class FlatIncidentSerializer(BaseIncidentSerializer):
+    links = FlatStringRelatedField()
+    equipment_seized = FlatSummaryField()
+    equipment_broken = FlatSummaryField()
+    state = serializers.CharField(source='state.abbreviation', default='')
+
     updates = FlatStringRelatedField()
     venue = FlatStringRelatedField()
     workers_whose_communications_were_obtained = FlatStringRelatedField()
@@ -181,15 +186,10 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     current_charges = FlatStringRelatedField()
     dropped_charges = FlatStringRelatedField()
     politicians_or_public_figures_involved = FlatStringRelatedField()
-    links = FlatStringRelatedField()
 
-    targeted_journalists = FlatSummaryField()
     authors = FlatSummaryField()
     categories = FlatSummaryField()
-    equipment_broken = FlatSummaryField()
-    equipment_seized = FlatSummaryField()
-
-    state = serializers.CharField(source='state.abbreviation', default='')
+    targeted_journalists = FlatSummaryField()
 
     subpoena_statuses = FlatListField(
         child=ChoiceField(choices.SUBPOENA_STATUS)
