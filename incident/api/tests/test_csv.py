@@ -166,7 +166,7 @@ class IncidentCSVTestCase(TestCase):
             result,
             {
                 'title': inc.title,
-                'slug': inc.slug,
+                'url': inc.get_full_url(),
                 'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -240,7 +240,7 @@ class IncidentCSVTestCase(TestCase):
 
         expected_headers = {
             'title',
-            'slug',
+            'url',
             'first_published_at',
             'last_published_at',
             'latest_revision_created_at',

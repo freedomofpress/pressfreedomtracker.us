@@ -71,7 +71,7 @@ class StateSerializer(serializers.Serializer):
 
 class BaseIncidentSerializer(serializers.Serializer):
     title = serializers.CharField()
-    slug = serializers.CharField()
+    url = serializers.SerializerMethodField()
     first_published_at = serializers.DateTimeField()
     last_published_at = serializers.DateTimeField()
     latest_revision_created_at = serializers.DateTimeField()
@@ -133,6 +133,12 @@ class BaseIncidentSerializer(serializers.Serializer):
             existing = set(self.fields)
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
+
+    def get_url(self, obj):
+        if self.context.get('request'):
+            return obj.get_full_url(self.context['request'])
+        else:
+            return obj.get_full_url()
 
     def get_body(self, obj):
         return str(obj.body)
