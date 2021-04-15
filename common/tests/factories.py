@@ -37,14 +37,14 @@ class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
     root_page = None
 
 
-class CategoryIncidentFilterFactory(factory.DjangoModelFactory):
+class CategoryIncidentFilterFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CategoryIncidentFilter
 
     sort_order = factory.Sequence(lambda n: n)
 
 
-class TaxonomySettingsFactory(factory.DjangoModelFactory):
+class TaxonomySettingsFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = TaxonomySettings
         django_get_or_create = ('site',)
@@ -52,7 +52,7 @@ class TaxonomySettingsFactory(factory.DjangoModelFactory):
     site = factory.SubFactory(DevelopmentSiteFactory)
 
 
-class TaxonomyCategoryPageFactory(factory.DjangoModelFactory):
+class TaxonomyCategoryPageFactory(factory.django.DjangoModelFactory):
     taxonomy_setting = factory.SubFactory(TaxonomySettingsFactory)
     sort_order = factory.Sequence(lambda n: n)
 
@@ -161,7 +161,7 @@ class PersonPageFactory(wagtail_factories.PageFactory):
 class OrganizationIndexPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = OrganizationIndexPage
-        django_get_or_create = ('slug',)
+
     title = 'All Organizations'
 
 
@@ -227,7 +227,7 @@ class StyledTextBlockFactory(wagtail_factories.StructBlockFactory):
     font_family = ChoiceBlockFactory
 
 
-class CommonTagFactory(factory.DjangoModelFactory):
+class CommonTagFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CommonTag
         django_get_or_create = ('title',)

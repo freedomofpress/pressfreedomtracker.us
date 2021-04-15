@@ -43,6 +43,7 @@ from common.blocks import (
 from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.models.inlines import IncidentPageUpdates
+from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
 from incident.utils.db import CurrentDate
 from statistics.blocks import StatisticsBlock
@@ -51,6 +52,10 @@ from statistics.blocks import StatisticsBlock
 class IncidentAuthor(Orderable):
     parent_page = ParentalKey('IncidentPage', related_name='authors')
     author = models.ForeignKey('common.PersonPage', on_delete=models.CASCADE, related_name='+')
+
+    @property
+    def summary(self):
+        return self.author.title
 
     panels = [
         PageChooserPanel('author')
@@ -77,6 +82,36 @@ class ChoiceArrayField(ArrayField):
 
 class IncidentQuerySet(PageQuerySet):
     """A QuerySet for incident pages that incorporates update data"""
+    def with_public_associations(self):
+        """Prefetch and select related data for public consumption
+
+        This method gathers most incident-related data that we display
+        on public pages and endpoints.  The goal is to avoid N+1
+        queries when displaying many incidents at once.
+
+        """
+        return self.select_related(
+            'teaser_image',
+            'state',
+            'arresting_authority'
+        ).prefetch_related(
+            'authors__author',
+            'categories__category',
+            'current_charges',
+            'dropped_charges',
+            'equipment_broken__equipment',
+            'equipment_seized__equipment',
+            'links',
+            'politicians_or_public_figures_involved',
+            'tags',
+            'target_nationality',
+            'targeted_institutions',
+            models.Prefetch('targeted_journalists', queryset=TargetedJournalist.objects.select_related('journalist', 'institution')),
+            'teaser_image__renditions',
+            'updates',
+            'venue',
+            'workers_whose_communications_were_obtained',
+        )
 
     def with_most_recent_update(self):
         updates = IncidentPageUpdates.objects.filter(

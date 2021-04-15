@@ -19,6 +19,7 @@ from common.tests.factories import (
     CategoryPageFactory,
     PersonPageFactory,
     CommonTagFactory,
+    CustomImageFactory,
 )
 from home.tests.factories import HomePageFactory
 from incident.models.incident_page import IncidentPage
@@ -27,9 +28,11 @@ from incident.models.export import is_exportable, to_row
 from .factories import (
     IncidentIndexPageFactory,
     IncidentPageFactory,
+    IncidentLinkFactory,
     IncidentUpdateFactory,
     TopicPageFactory,
     StateFactory,
+    VenueFactory,
 )
 
 
@@ -702,3 +705,60 @@ class TestTopicPage(WagtailPageTests):
             list(topic_page.get_context(request)['entries_page']),
             [incident2, incident1, incident3]
         )
+
+
+class IncidentPageQueriesTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build()
+        root_page.add_child(instance=cls.incident_index)
+
+        image = CustomImageFactory.create(
+            file__width=800,
+            file__height=600,
+            file__color='red',
+        )
+
+        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
+        cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(3, parent=root_page)
+
+        incidents = IncidentPageFactory.create_batch(
+            50,
+            parent=cls.incident_index,
+            authors=[author1, author2],
+            categories=[cls.cat1, cls.cat2],
+            equipment_search=True,
+            equipment_damage=True,
+            arrest=True,
+            border_stop=True,
+            physical_attack=True,
+            leak_case=True,
+            workers_whose_communications_were_obtained=2,
+            subpoena=True,
+            prior_restraint=True,
+            target_nationality=2,
+            journalist_targets=2,
+            institution_targets=2,
+            venue=VenueFactory.create_batch(2),
+            teaser_image=image,
+            current_charges=2,
+            dropped_charges=2,
+            politicians_or_public_figures_involved=3,
+        )
+        for incident in incidents:
+            tags = CommonTagFactory.create_batch(3)
+            incident.tags = tags
+            incident.save()
+            IncidentUpdateFactory.create_batch(2, page=incident)
+            IncidentLinkFactory.create_batch(3, page=incident)
+
+            # Pre-generate renditions to avoid INSERT queries that we
+            # don't want to count.
+            incident.teaser_image.get_rendition('fill-1330x880')
+
+    def test_api_selects_and_prefetches(self):
+        # 1 base query, plus 20 prefetches.
+        with self.assertNumQueries(21):
+            list(IncidentPage.objects.with_public_associations())
