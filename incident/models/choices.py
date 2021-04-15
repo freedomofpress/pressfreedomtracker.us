@@ -77,6 +77,7 @@ SUBPOENA_TYPE = [
 
 
 SUBPOENA_STATUS = [
+    ('UNKNOWN', 'unknown'),
     ('PENDING', 'pending'),
     ('DROPPED', 'dropped'),
     ('QUASHED', 'quashed'),
