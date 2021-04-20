@@ -130,9 +130,9 @@ django-anymail==6.0 \
 django-cprofile-middleware==1.0.5 \
     --hash=sha256:b942185a38f3b582935a55c768f126ce9a6f0cefceee3b5d19e6b307ad129889
     # via -r dev-requirements.in
-django-debug-toolbar==2.2 \
-    --hash=sha256:eabbefe89881bbe4ca7c980ff102e3c35c8e8ad6eb725041f538988f2f39a943 \
-    --hash=sha256:ff94725e7aae74b133d0599b9bf89bd4eb8f5d2c964106e61d11750228c8774c
+django-debug-toolbar==3.2.1 \
+    --hash=sha256:a5ff2a54f24bf88286f9872836081078f4baa843dc3735ee88524e89f8821e33 \
+    --hash=sha256:e759e63e3fe2d3110e0e519639c166816368701eab4a47fed75d7de7018467b9
     # via -r dev-requirements.in
 django-filter==2.4.0 \
     --hash=sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06 \
@@ -179,9 +179,9 @@ django-webpack-loader==0.6.0 \
     --hash=sha256:60bab6b9a037a5346fad12d2a70a6bc046afb33154cf75ed640b93d3ebd5f520 \
     --hash=sha256:970b968c2a8975fb7eff56a3bab5d0d90d396740852d1e0c50c5cfe2b824199a
     # via -r requirements.txt
-django==2.2.19 \
-    --hash=sha256:30c235dec87e05667597e339f194c9fed6c855bda637266ceee891bf9093da43 \
-    --hash=sha256:e319a7164d6d30cb177b3fd74d02c52f1185c37304057bb76d74047889c605d9
+django==2.2.20 \
+    --hash=sha256:2484f115891ab1a0e9ae153602a641fbc15d7894c036d79fb78662c0965d7954 \
+    --hash=sha256:2569f9dc5f8e458a5e988b03d6b7a02bda59b006d6782f4ea0fd590ed7336a64
     # via
     #   -r requirements.txt
     #   django-anymail
