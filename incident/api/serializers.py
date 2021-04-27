@@ -71,7 +71,7 @@ class StateSerializer(serializers.Serializer):
 
 class BaseIncidentSerializer(serializers.Serializer):
     title = serializers.CharField()
-    slug = serializers.CharField()
+    url = serializers.SerializerMethodField()
     first_published_at = serializers.DateTimeField()
     last_published_at = serializers.DateTimeField()
     latest_revision_created_at = serializers.DateTimeField()
@@ -134,6 +134,12 @@ class BaseIncidentSerializer(serializers.Serializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
+    def get_url(self, obj):
+        if self.context.get('request'):
+            return obj.get_full_url(self.context['request'])
+        else:
+            return obj.get_full_url()
+
     def get_body(self, obj):
         return str(obj.body)
 
@@ -172,6 +178,11 @@ class IncidentSerializer(BaseIncidentSerializer):
 
 
 class FlatIncidentSerializer(BaseIncidentSerializer):
+    links = FlatStringRelatedField()
+    equipment_seized = FlatSummaryField()
+    equipment_broken = FlatSummaryField()
+    state = serializers.CharField(source='state.abbreviation', default='')
+
     updates = FlatStringRelatedField()
     venue = FlatStringRelatedField()
     workers_whose_communications_were_obtained = FlatStringRelatedField()
@@ -181,15 +192,10 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     current_charges = FlatStringRelatedField()
     dropped_charges = FlatStringRelatedField()
     politicians_or_public_figures_involved = FlatStringRelatedField()
-    links = FlatStringRelatedField()
 
-    targeted_journalists = FlatSummaryField()
     authors = FlatSummaryField()
     categories = FlatSummaryField()
-    equipment_broken = FlatSummaryField()
-    equipment_seized = FlatSummaryField()
-
-    state = serializers.CharField(source='state.abbreviation', default='')
+    targeted_journalists = FlatSummaryField()
 
     subpoena_statuses = FlatListField(
         child=ChoiceField(choices.SUBPOENA_STATUS)

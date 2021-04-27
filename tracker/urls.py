@@ -23,7 +23,7 @@ autocomplete_public_urls = [
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
-    path('api/v2/', include(api_urls)),
+    path('api/edge/', include(api_urls)),
     path('autocomplete/', include(autocomplete_public_urls)),
     path('admin/autocomplete/', include(autocomplete_admin_urls)),
     path('admin/', include(wagtailadmin_urls)),
