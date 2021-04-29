@@ -120,6 +120,34 @@ class IncidentCSVTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_csv_columns_are_in_same_order_as_json_keys(self):
+        json_response = self.client.get(
+            reverse('incidentpage-list'),
+        )
+        csv_response = self.client.get(
+            reverse('incidentpage-list'),
+            {'format': 'csv'},
+        )
+
+        json_keys = list(json_response.json()[0].keys())
+        content_lines = csv_response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+        csv_headers = next(reader)
+
+        self.assertEqual(json_keys, csv_headers)
+
+    def test_csv_supports_dynamic_fields(self):
+        response = self.client.get(
+            reverse('incidentpage-list'),
+            {'fields': 'city,state', 'format': 'csv'},
+        )
+        content_lines = response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+        csv_headers = next(reader)
+        self.assertEqual(
+            csv_headers, ['city', 'state']
+        )
+
     def test_results(self):
         response = self.client.get(
             reverse('incidentpage-list'),
@@ -138,7 +166,7 @@ class IncidentCSVTestCase(TestCase):
             result,
             {
                 'title': inc.title,
-                'slug': inc.slug,
+                'url': inc.get_full_url(),
                 'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -212,7 +240,7 @@ class IncidentCSVTestCase(TestCase):
 
         expected_headers = {
             'title',
-            'slug',
+            'url',
             'first_published_at',
             'last_published_at',
             'latest_revision_created_at',

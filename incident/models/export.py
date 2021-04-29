@@ -46,6 +46,7 @@ EXCLUDED_FIELDS = {
     'translation_key',
     'aliases',
     'locale',
+    'unique_date',
 }
 
 
