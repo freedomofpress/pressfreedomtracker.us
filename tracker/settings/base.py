@@ -101,6 +101,9 @@ if os.environ.get('DJANGO_WHITENOISE'):
 MIDDLEWARE.extend([
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     'django_logging.middleware.DjangoLoggingMiddleware',
+
+    # Middleware for content security policy
+    'csp.middleware.CSPMiddleware',
 ])
 
 
@@ -251,6 +254,45 @@ NOCAPTCHA = True
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True
 
+# Content Security Policy
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "https://analytics.freedom.press",
+    # For Wagtail Admin
+    "'unsafe-inline'",
+    # For Twitter Widgets
+    "'unsafe-eval'",
+    "https://platform.twitter.com/widgets.js",
+    "https://platform.twitter.com/js/horizon_tweet.2bd42981e3af03ce9186a5655508da28.js",
+)
+CSP_STYLE_SRC = (
+    "'self'",
+    # For Wagtail Admin and Twitter Widgets.
+    "'unsafe-inline'",
+)
+CSP_FRAME_SRC = (
+    "'self'",
+    # For Twitter Widgets
+    "https://platform.twitter.com",
+)
+CSP_CONNECT_SRC = (
+    "'self'",
+    "https://analytics.freedom.press",
+    # For Wagtail Admin
+    "https://releases.wagtail.io/latest.txt",
+)
+CSP_IMG_SRC = (
+    "'self'",
+    "analytics.freedom.press",
+    "https://media.pressfreedomtracker.us",
+    # For Wagtail Admin
+    "http://www.gravatar.com",
+)
+
+# Report URI must be a string, not a tuple.
+CSP_REPORT_URI = os.environ.get('DJANGO_CSP_REPORT_URI',
+                                'https://freedomofpress.report-uri.com/r/d/csp/enforce')
 
 # Logging
 #

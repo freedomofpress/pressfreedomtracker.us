@@ -43,3 +43,6 @@ test-results
 
 # Ignore files created to communicate system deployment info
 .versioninfo
+
+# Jetbrains IDE
+.idea
