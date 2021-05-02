@@ -183,26 +183,15 @@ class CategoryPageTest(TestCase):
         self.client.force_login(user)
         preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(self.category_page.pk,))
 
-        post_data = {
+        post_data = nested_form_data({
+            'title': 'Test Category',
             'slug': self.category_page.slug,
-            'title': 'ABC',
-            'quick_facts-TOTAL_FORMS': 0,
-            'quick_facts-INITIAL_FORMS': 0,
-            'quick_facts-MIN_NUM_FORMS': 0,
-            'quick_facts-MAX_NUM_FORMS': 1000,
-            'statistics_items-TOTAL_FORMS': 0,
-            'statistics_items-INITIAL_FORMS': 0,
-            'statistics_items-MIN_NUM_FORMS': 0,
-            'statistics_items-MAX_NUM_FORMS': 1000,
-            'incident_filters-TOTAL_FORMS': 0,
-            'incident_filters-INITIAL_FORMS': 0,
-            'incident_filters-MIN_NUM_FORMS': 0,
-            'incident_filters-MAX_NUM_FORMS': 1000,
-            'incident_filters-0-incident_filter': 'arrest_status',
-            'incident_filters-0-id': 1,
-            'incident_filters-0-ORDER': 1,
-            'page_color': 'red'
-        }
+            'page_color': 'red',
+            'quick_facts': inline_formset([]),
+            'statistics_items': inline_formset([]),
+            'incident_filters': inline_formset([]),
+            'features': inline_formset([]),
+        })
 
         response = self.client.post(
             preview_url,
@@ -250,6 +239,7 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
             'quick_facts': inline_formset([]),
             'statistics_items': inline_formset([]),
             'incident_filters': inline_formset([]),
+            'features': inline_formset([]),
         }
 
     def test_can_create_category_page(self):
