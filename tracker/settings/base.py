@@ -276,19 +276,32 @@ CSP_FRAME_SRC = (
     # For Twitter Widgets
     "https://platform.twitter.com",
 )
-CSP_CONNECT_SRC = (
+CSP_CONNECT_SRC = [
     "'self'",
     "https://analytics.freedom.press",
     # For Wagtail Admin
     "https://releases.wagtail.io/latest.txt",
-)
-CSP_IMG_SRC = (
+]
+CSP_IMG_SRC = [
     "'self'",
-    "analytics.freedom.press",
+    "https://analytics.freedom.press",
     "https://media.pressfreedomtracker.us",
-    # For Wagtail Admin
-    "http://www.gravatar.com",
-)
+    # For Twitter Widgets
+    "https://platform.twitter.com",
+    "https://syndication.twitter.com",
+    "https://pbs.twimg.com",
+    "https://ton.twimg.com",
+    "data:",
+]
+CSP_OBJECT_SRC = ["'self'"]
+CSP_MEDIA_SRC = ["'self'"]
+
+if os.environ.get("DJANGO_CSP_MEDIA_ORIGINS"):
+    csp_media_origins = os.environ["DJANGO_CSP_MEDIA_ORIGINS"].split()
+    CSP_MEDIA_SRC.extend(csp_media_origins)  # video files
+    CSP_IMG_SRC.extend(csp_media_origins)
+    CSP_OBJECT_SRC.extend(csp_media_origins)
+    CSP_CONNECT_SRC.extend(csp_media_origins)
 
 # Report URI must be a string, not a tuple.
 CSP_REPORT_URI = os.environ.get('DJANGO_CSP_REPORT_URI',
