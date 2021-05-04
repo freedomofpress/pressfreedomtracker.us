@@ -85,6 +85,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'common.middleware.page_time_middleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -334,3 +335,6 @@ LOGGING = {
         },
     },
 }
+
+SLOW_PAGE_LOG_THRESHOLD = int(os.environ.get('SLOW_PAGE_LOG_THRESHOLD', 3000))
+SLOW_PAGE_WARN_THRESHOLD = int(os.environ.get('SLOW_PAGE_WARN_THRESHOLD', 6000))
