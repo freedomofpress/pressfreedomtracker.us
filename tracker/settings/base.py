@@ -101,6 +101,9 @@ if os.environ.get('DJANGO_WHITENOISE'):
 MIDDLEWARE.extend([
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     'django_logging.middleware.DjangoLoggingMiddleware',
+
+    # Middleware for content security policy
+    'csp.middleware.CSPMiddleware',
 ])
 
 
@@ -251,6 +254,67 @@ NOCAPTCHA = True
 # django-taggit
 TAGGIT_CASE_INSENSITIVE = True
 
+# Content Security Policy
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "https://analytics.freedom.press",
+    "https://www.google.com/recaptcha",
+    "https://www.gstatic.com/recaptcha",
+    # For Wagtail Admin
+    "'unsafe-inline'",
+    # For Twitter Widgets
+    "'unsafe-eval'",
+    "https://platform.twitter.com/widgets.js",
+    "https://platform.twitter.com/js/horizon_tweet.2bd42981e3af03ce9186a5655508da28.js",
+    # Observable Notebooks
+    "https://cdn.jsdelivr.net",
+    "https://api.observablehq.com",
+    "https://bundle.run",
+)
+CSP_STYLE_SRC = (
+    "'self'",
+    # For Wagtail Admin and Twitter Widgets.
+    "'unsafe-inline'",
+)
+CSP_FRAME_SRC = (
+    "'self'",
+    # For Twitter Widgets
+    "https://platform.twitter.com",
+)
+CSP_CONNECT_SRC = [
+    "'self'",
+    "https://analytics.freedom.press",
+    # For Wagtail Admin
+    "https://releases.wagtail.io/latest.txt",
+    # Observable Notebooks
+    "https://cdn.jsdelivr.net",
+    "https://pressfreedomtracker.us",
+]
+CSP_IMG_SRC = [
+    "'self'",
+    "https://analytics.freedom.press",
+    "https://media.pressfreedomtracker.us",
+    # For Twitter Widgets
+    "https://platform.twitter.com",
+    "https://syndication.twitter.com",
+    "https://pbs.twimg.com",
+    "https://ton.twimg.com",
+    "data:",
+]
+CSP_OBJECT_SRC = ["'self'"]
+CSP_MEDIA_SRC = ["'self'"]
+
+if os.environ.get("DJANGO_CSP_MEDIA_ORIGINS"):
+    csp_media_origins = os.environ["DJANGO_CSP_MEDIA_ORIGINS"].split()
+    CSP_MEDIA_SRC.extend(csp_media_origins)  # video files
+    CSP_IMG_SRC.extend(csp_media_origins)
+    CSP_OBJECT_SRC.extend(csp_media_origins)
+    CSP_CONNECT_SRC.extend(csp_media_origins)
+
+# Report URI must be a string, not a tuple.
+CSP_REPORT_URI = os.environ.get('DJANGO_CSP_REPORT_URI',
+                                'https://freedomofpress.report-uri.com/r/d/csp/enforce')
 
 # Logging
 #
