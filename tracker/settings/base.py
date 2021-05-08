@@ -259,12 +259,18 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = (
     "'self'",
     "https://analytics.freedom.press",
+    "https://www.google.com/recaptcha",
+    "https://www.gstatic.com/recaptcha",
     # For Wagtail Admin
     "'unsafe-inline'",
     # For Twitter Widgets
     "'unsafe-eval'",
     "https://platform.twitter.com/widgets.js",
     "https://platform.twitter.com/js/horizon_tweet.2bd42981e3af03ce9186a5655508da28.js",
+    # Observable Notebooks
+    "https://cdn.jsdelivr.net",
+    "https://api.observablehq.com",
+    "https://bundle.run",
 )
 CSP_STYLE_SRC = (
     "'self'",
@@ -281,6 +287,9 @@ CSP_CONNECT_SRC = [
     "https://analytics.freedom.press",
     # For Wagtail Admin
     "https://releases.wagtail.io/latest.txt",
+    # Observable Notebooks
+    "https://cdn.jsdelivr.net",
+    "https://pressfreedomtracker.us",
 ]
 CSP_IMG_SRC = [
     "'self'",
