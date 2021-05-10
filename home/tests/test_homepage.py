@@ -69,7 +69,7 @@ class HomePageTest(TestCase):
                     ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
                 ]),
                 'statboxes': inline_formset([
-                    {'value': '{% num_incidents categories=9 %}',
+                    {'value': rich_text('{% num_incidents categories="9" %}'),
                      'label': 'Hello world',
                      'color': 'gamboge'}
                 ]),

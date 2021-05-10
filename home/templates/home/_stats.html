@@ -1,4 +1,5 @@
 {% load wagtailcore_tags render_as_template %}
+{% load richtext_inline from common_tags %}
 
 
 {% if stats %}
@@ -17,7 +18,7 @@
 						"
 					>
 						<span class="stats__number">
-							{% render_as_template stat.value %}
+							{% render_as_template stat.value|richtext_inline %}
 						</span>
 						<span class="stats__label">
 							{{ stat.label }}
