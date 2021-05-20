@@ -288,6 +288,12 @@ DJANGO_LOGGING = {
     "DISABLE_EXISTING_LOGGERS": True,
     "PROPOGATE": False,
     "SQL_LOG": False,
+    # Prevent django-logging from parsing json content that we are
+    # only going to discard.
+    "CONTENT_JSON_ONLY": False,
+    # Do not log the content of responses by default--these might be
+    # quite big!
+    "RESPONSE_FIELDS": ("status", "reason", "charset", "headers"),
 }
 
 LOGGING = {
