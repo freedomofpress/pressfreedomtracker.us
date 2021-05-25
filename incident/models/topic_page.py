@@ -166,6 +166,16 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         related_name='+'
     )
     incident_tag = models.ForeignKey('common.CommonTag', on_delete=models.PROTECT)
+    start_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text='Start date for this topic. No incidents before this date will be included.',
+    )
+    end_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text='End date for this topic. No incidents after this date will be included.',
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -206,6 +216,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
                 PageChooserPanel('incident_index_page'),
                 AutocompletePanel('incident_tag', page_type='common.CommonTag'),
                 FieldPanel('incidents_per_module'),
+                FieldPanel('start_date'),
+                FieldPanel('end_date'),
             ],
             classname='collapsible',
         ),
