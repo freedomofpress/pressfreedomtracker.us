@@ -177,3 +177,135 @@ class TopicPageApi(TestCase):
         data = json.loads(response.content.decode('utf-8'))
         cat = data[1]
         self.assertEqual(cat['total_journalists'], 4)
+
+
+class TopicPageApiWithDateRange(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+
+        cls.index = IncidentIndexPageFactory.create(
+            parent=cls.home_page
+        )
+        cls.topic = TopicPageFactory(
+            parent=cls.home_page,
+            incident_index_page=cls.index,
+            incidents_per_module=3,
+        )
+
+        cls.cat = CategoryPageFactory.create(
+            title='Malfeasance',
+            plural_name='Malfeasances'
+        )
+
+        cls.inc1 = IncidentPageFactory.create(
+            date='2021-01-01',
+            categories=[cls.cat],
+            tags=[cls.topic.incident_tag],
+            parent=cls.index,
+        )
+
+        cls.inc2 = IncidentPageFactory.create(
+            date='2021-02-01',
+            categories=[cls.cat],
+            tags=[cls.topic.incident_tag],
+            parent=cls.index,
+        )
+
+        cls.inc3 = IncidentPageFactory.create(
+            date='2021-03-01',
+            categories=[cls.cat],
+            tags=[cls.topic.incident_tag],
+            parent=cls.index,
+        )
+
+        cls.tj_incident_1 = TargetedJournalistFactory(incident=cls.inc1)
+        TargetedJournalistFactory.create_batch(2, incident=cls.inc2)
+        TargetedJournalistFactory.create_batch(4, incident=cls.inc3)
+
+        cls.url = cls.topic.get_full_url() + 'incidents/'
+
+    def test_topic_page_with_start_and_end_date_limits_incidents(self):
+        self.topic.start_date = '2021-01-15'
+        self.topic.end_date = '2021-02-15'
+        self.topic.save()
+
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+
+        category_data = data[0]
+        incidents = category_data['incidents']
+
+        self.assertEqual(
+            {incident['date'] for incident in incidents},
+            {str(self.inc2.date)}
+        )
+        self.assertEqual(category_data['total_incidents'], 1)
+        self.assertEqual(category_data['total_journalists'], 2)
+
+    def test_topic_page_with_start_date_limits_incidents(self):
+        self.topic.start_date = '2021-02-02'
+        self.topic.end_date = None
+        self.topic.save()
+
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+
+        category_data = data[0]
+        incidents = category_data['incidents']
+
+        self.assertEqual(
+            {incident['date'] for incident in incidents},
+            {str(self.inc3.date)}
+        )
+        self.assertEqual(category_data['total_incidents'], 1)
+        self.assertEqual(category_data['total_journalists'], 4)
+
+    def test_topic_page_with_end_date_limits_incidents(self):
+        self.topic.start_date = None
+        self.topic.end_date = '2021-02-01'
+        self.topic.save()
+
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+
+        category_data = data[0]
+        incidents = category_data['incidents']
+
+        self.assertEqual(
+            {incident['date'] for incident in incidents},
+            {str(self.inc1.date), str(self.inc2.date)}
+        )
+        self.assertEqual(category_data['total_incidents'], 2)
+        self.assertEqual(category_data['total_journalists'], 3)
+
+    def test_topic_page_with_single_day_date_range(self):
+        self.topic.start_date = '2021-02-01'
+        self.topic.end_date = '2021-02-01'
+        self.topic.save()
+
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+
+        incidents = data[0]['incidents']
+
+        self.assertEqual(
+            {incident['date'] for incident in incidents},
+            {str(self.inc2.date)}
+        )
