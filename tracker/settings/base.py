@@ -289,12 +289,11 @@ CSP_CONNECT_SRC = [
     "https://releases.wagtail.io/latest.txt",
     # Observable Notebooks
     "https://cdn.jsdelivr.net",
-    "https://pressfreedomtracker.us",
+    "https://static.observableusercontent.com/",
 ]
 CSP_IMG_SRC = [
     "'self'",
     "https://analytics.freedom.press",
-    "https://media.pressfreedomtracker.us",
     # For Twitter Widgets
     "https://platform.twitter.com",
     "https://syndication.twitter.com",
