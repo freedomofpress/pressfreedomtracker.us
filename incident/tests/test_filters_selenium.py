@@ -4,8 +4,10 @@ from datetime import timedelta
 
 from django.utils import timezone
 from wagtail.core.models import Page, Site
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import Select, WebDriverWait
 
 from common.tests.selenium import SeleniumTest
 from common.tests.factories import CategoryPageFactory
@@ -23,7 +25,7 @@ from incident.tests.factories import (
     EquipmentFactory,
     EquipmentBrokenFactory,
 )
-from incident.models import choices
+from incident.models import choices, State
 
 
 def powerset(iterable):
@@ -50,6 +52,12 @@ class FilterTest(SeleniumTest):
         search_settings.save()
 
         self.settings = IncidentFilterSettings.for_site(site)
+
+        # Clear all settings in case some where created during
+        # migrations.
+        GeneralIncidentFilter.objects.filter(
+            incident_filter_settings=self.settings,
+        ).delete()
 
     def open_filters(self):
         self.browser.find_element_by_css_selector('.filters__button--summary-toggle').click()
@@ -198,10 +206,20 @@ class MultiRelationFilterTest(FilterTest):
         self.autocomplete_input = self.browser.find_element_by_css_selector('.autocomplete__search')
 
     def test_filters_multiple_related_selections(self):
+        wait = WebDriverWait(self.browser, 10)
+        self.autocomplete_input.click()
         for equipment in self.equipment[:2]:
-            self.autocomplete_input.clear()
-            self.autocomplete_input.send_keys(equipment.name, Keys.ENTER)
-
+            wait.until(
+                expected_conditions.element_to_be_clickable(
+                    (By.XPATH, f'//span[normalize-space(text()) = "{equipment.name}"]')
+                )
+            )
+            self.browser.find_element_by_xpath(f'//span[normalize-space(text()) = "{equipment.name}"]').click()
+            wait.until(
+                expected_conditions.presence_of_element_located(
+                    (By.XPATH, f'//span[text()="{equipment.name}"][@class="selection__label"]')
+                )
+            )
         self.apply_filters()
 
         url = urllib.parse.urlparse(self.browser.current_url)
@@ -226,6 +244,7 @@ class RelationFilterTest(FilterTest):
 
         self.add_general_filter('state')
 
+        State.objects.all().delete()
         self.vermont = StateFactory(name='Vermont')
         self.new_hampshire = StateFactory(name='New Hampshire')
 
@@ -238,7 +257,7 @@ class RelationFilterTest(FilterTest):
 
     def test_filters_autocomplete_mouse_input(self):
         self.autocomplete_input.click()
-        self.browser.find_element_by_css_selector('.suggestions__item').click()
+        self.browser.find_element_by_xpath(f'//span[normalize-space(text()) = "{str(self.vermont)}"]').click()
 
         self.apply_filters()
 
@@ -253,7 +272,7 @@ class RelationFilterTest(FilterTest):
         self.open_filters()
         self.assertEqual(
             {element.text for element in self.browser.find_elements_by_css_selector('.selection__label')},
-            {self.vermont.name}
+            {str(self.vermont)}
         )
 
     def test_filters_autocomplete_keyboard_input(self):
@@ -274,7 +293,7 @@ class RelationFilterTest(FilterTest):
         self.open_filters()
         self.assertEqual(
             {element.text for element in self.browser.find_elements_by_css_selector('.selection__label')},
-            {self.new_hampshire.name}
+            {str(self.new_hampshire)}
         )
 
 
