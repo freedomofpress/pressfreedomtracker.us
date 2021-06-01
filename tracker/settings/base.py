@@ -357,6 +357,7 @@ DJANGO_LOGGING = {
     # Do not log the content of responses by default--these might be
     # quite big!
     "RESPONSE_FIELDS": ("status", "reason", "charset", "headers"),
+    "ENCODING": "utf-8",
 }
 
 LOGGING = {
