@@ -706,6 +706,25 @@ class TestTopicPage(WagtailPageTests):
             [incident2, incident1, incident3]
         )
 
+    def test_filters_incidents_by_date_range(self):
+        topic_page = TopicPageFactory(
+            parent=self.home_page,
+            incident_index_page=self.index_page,
+            start_date='2021-01-15',
+            end_date='2021-02-15',
+        )
+        IncidentPageFactory(date=date(2021, 1, 2), tags=[topic_page.incident_tag])
+        incident1 = IncidentPageFactory(date=date(2021, 1, 2), exact_date_unknown=True, tags=[topic_page.incident_tag])
+        incident2 = IncidentPageFactory(date=date(2021, 2, 3), tags=[topic_page.incident_tag])
+        IncidentPageFactory(date=date(2021, 3, 4), tags=[topic_page.incident_tag])
+
+        request = RequestFactory().get('/')
+
+        self.assertEqual(
+            list(topic_page.get_context(request)['entries_page']),
+            [incident2, incident1]
+        )
+
 
 class IncidentPageQueriesTest(TestCase):
     @classmethod

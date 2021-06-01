@@ -248,8 +248,23 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         context = super(TopicPage, self).get_context(request, *args, **kwargs)
 
+        incident_lookups = models.Q(tags=self.incident_tag)
+        if self.start_date or self.end_date:
+            target_range = DateRange(
+                lower=self.start_date,
+                upper=self.end_date,
+                bounds='[]',
+            )
+
+            incident_lookups &= (
+                models.Q(date__contained_by=target_range) |
+                models.Q(
+                    exact_date_unknown=True,
+                    date__fuzzy_date__overlap=target_range,
+                )
+            )
         incident_qs = self.incident_index_page.get_incidents().filter(
-            tags=self.incident_tag
+            incident_lookups
         ).order_by('-date')
 
         paginator, entries = paginate(
