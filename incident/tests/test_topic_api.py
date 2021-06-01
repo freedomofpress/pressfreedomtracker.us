@@ -309,3 +309,30 @@ class TopicPageApiWithDateRange(TestCase):
             {incident['date'] for incident in incidents},
             {str(self.inc2.date)}
         )
+
+    def test_topic_page_date_range_inexact_incident_dates(self):
+        self.topic.start_date = '2021-01-15'
+        self.topic.end_date = '2021-02-15'
+        self.topic.save()
+
+        incident = IncidentPageFactory.create(
+            date='2021-02-20',
+            exact_date_unknown=True,
+            categories=[self.cat],
+            tags=[self.topic.incident_tag],
+            parent=self.index,
+        )
+        TargetedJournalistFactory.create_batch(8, incident=incident)
+
+        response = self.client.get(self.url)
+        data = json.loads(response.content.decode('utf-8'))
+
+        category_data = data[0]
+        incidents = category_data['incidents']
+
+        self.assertEqual(
+            {incident['date'] for incident in incidents},
+            {str(self.inc2.date), str(incident.date)}
+        )
+        self.assertEqual(category_data['total_incidents'], 2)
+        self.assertEqual(category_data['total_journalists'], 10)

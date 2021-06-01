@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.postgres.fields import DateRangeField
 from django.http import JsonResponse
 from marshmallow import Schema, fields
 from psycopg2.extras import DateRange
@@ -25,6 +26,23 @@ from common.utils import (
 )
 from incident.models import IncidentCategorization
 from incident.forms import TopicPageForm
+
+
+class FuzzyDate(models.Transform):
+    """Django lookup that transforms a single date into a date range of
+    the month containing that date.
+
+    """
+
+    lookup_name = 'fuzzy_date'
+    template = "daterange(date_trunc('month', %(expressions)s)::date, (date_trunc('month', %(expressions)s) + interval '1 month')::date)"
+
+    @property
+    def output_field(self):
+        return DateRangeField()
+
+
+models.DateField.register_lookup(FuzzyDate)
 
 
 class NongroupingSubquery(models.Subquery):
@@ -264,11 +282,21 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
                 bounds='[]',
             )
 
-            incident_lookups &= models.Q(
-                incident_page__date__contained_by=target_range,
+            incident_lookups &= (
+                models.Q(incident_page__date__contained_by=target_range) |
+                models.Q(
+                    incident_page__exact_date_unknown=True,
+                    incident_page__date__fuzzy_date__overlap=target_range,
+
+                )
             )
-            category_incident_lookups &= models.Q(
-                incidents__incident_page__date__contained_by=target_range,
+            category_incident_lookups &= (
+                models.Q(
+                    incidents__incident_page__date__contained_by=target_range,
+                ) | models.Q(
+                    incidents__incident_page__exact_date_unknown=True,
+                    incidents__incident_page__date__fuzzy_date__overlap=target_range,
+                )
             )
 
         journalist_count = CategoryPage.objects.annotate(
