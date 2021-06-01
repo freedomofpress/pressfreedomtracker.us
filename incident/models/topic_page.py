@@ -24,6 +24,7 @@ from common.utils import (
     paginate,
 )
 from incident.models import IncidentCategorization
+from incident.forms import TopicPageForm
 
 
 class NongroupingSubquery(models.Subquery):
@@ -224,6 +225,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ),
         FieldPanel('layout'),
     ]
+    base_form_class = TopicPageForm
 
     def get_context(self, request, *args, **kwargs):
         context = super(TopicPage, self).get_context(request, *args, **kwargs)
