@@ -19,6 +19,15 @@ services:
         aliases:
           - db
 
+  selenium:
+    image: selenium/standalone-firefox-debug:latest
+    ports:
+      - "127.0.0.1::5900"
+    networks:
+      app:
+        aliases:
+          - selenium
+
   node:
     build:
       context: .
@@ -54,6 +63,7 @@ services:
       DJANGO_XMLTEST_OUTPUT: "yes"
       DEPLOY_ENV: dev
       DJANGO_PROFILE: "${DJANGO_PROFILE:-no}"
+      SELENIUM_HOST: selenium
     working_dir: /django
     volumes:
       - ./:/django
