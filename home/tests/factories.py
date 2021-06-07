@@ -36,7 +36,7 @@ class StatBoxFactory(factory.django.DjangoModelFactory):
 
     sort_order = factory.Sequence(lambda n: n)
     value = factory.LazyAttribute(
-        lambda o: '{{% num_incidents categories={} %}}'.format(o.category.pk) if o.category else '{% num_incidents %}'
+        lambda o: RichText(f'{{% num_incidents categories="{o.category.pk}" %}}') if o.category else RichText('{% num_incidents %}')
     )
     label = factory.LazyAttribute(
         lambda o: 'Total {}'.format(o.category.plural_name) if o.category else '{% num_incidents %}'

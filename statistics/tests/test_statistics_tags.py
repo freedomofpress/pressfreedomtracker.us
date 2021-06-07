@@ -28,10 +28,12 @@ class NumIncidentsTest(TestCase):
             title='hello',
             date=datetime.date(2017, 1, 1),
             categories=[cls.category],
+            state=None,
         )
         cls.old_incident = IncidentPageFactory(
             title='goodbye',
             date=datetime.date(2016, 1, 1),
+            state=None,
         )
 
     def setUp(self):

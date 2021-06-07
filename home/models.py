@@ -19,6 +19,7 @@ import common.blocks
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
+from common.utils import unescape
 from common.validators import validate_template
 from incident.utils.incident_filter import get_serialized_filters
 
@@ -184,7 +185,13 @@ class HomePageFeature(Orderable):
 
 class StatBox(Orderable):
     page = ParentalKey(Page, related_name='statboxes')
-    value = models.CharField(max_length=1000, validators=[validate_template])
+    value = RichTextField(
+        blank=True,
+        null=True,
+        help_text='Primary text for this stat box.  Line breaks will be removed.',
+        validators=[validate_template],
+        features=['bold', 'italic', 'numincidents'],
+    )
     label = models.CharField(max_length=1000)
     color = models.CharField(
         max_length=255,
@@ -213,3 +220,6 @@ class StatBox(Orderable):
         FieldPanel('querystring'),
         FieldPanel('external_link'),
     ]
+
+    def clean(self):
+        self.value = unescape(self.value)
