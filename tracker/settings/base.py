@@ -404,3 +404,6 @@ LOGGING = {
         },
     },
 }
+
+TEST_RUNNER = 'common.test_runner.SeededDiscoveryRunner'
+RANDOM_SEED = 876394101
