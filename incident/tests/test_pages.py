@@ -602,7 +602,7 @@ class TestTopicPage(WagtailPageTests):
             'photo_credit': 'Professor Abraham Van Helsing',
             'photo_credit_link': 'https://example.com',
             'statboxes': inline_formset([
-                {'value': '{% num_incidents categories=9 %}',
+                {'value': rich_text('{% num_incidents categories="9" %}'),
                  'label': 'Hello world',
                  'color': 'gamboge'}
             ]),
@@ -653,7 +653,7 @@ class TestTopicPage(WagtailPageTests):
             'photo_credit': 'Professor Abraham Van Helsing',
             'photo_credit_link': 'https://example.com',
             'statboxes': inline_formset([
-                {'value': '{% num_incidents categories=9 %}',
+                {'value': rich_text('{% num_incidents categories="9" %}'),
                  'label': 'Hello world',
                  'color': 'gamboge'}
             ]),
