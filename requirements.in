@@ -1,7 +1,7 @@
 https://github.com/freedomofpress/django-logging/zipball/15da352a0196c2ffdd9b5c47a08582f62b3c8e4a
 bleach>=3.1.3
 dj-database-url
-Django>=2.2.22,<2.3
+Django>=2.2.24,<2.3
 django-anymail
 django-csp>=3.7
 django-modelcluster
