@@ -21,7 +21,7 @@ class BaseMergeForm(forms.Form):
             widget=type(
                 '_Autocomplete',
                 (Autocomplete,),
-                dict(target_model=self.merge_model_type, can_create=False, is_single=False)
+                dict(target_model=self.merge_model, can_create=False, is_single=False)
             ),
             label='{} to merge'.format(capfirst(self.merge_model_name))
         )
