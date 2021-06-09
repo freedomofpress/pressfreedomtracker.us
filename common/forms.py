@@ -31,4 +31,3 @@ class BaseMergeForm(forms.Form):
 
 class TagMergeForm(BaseMergeForm):
     merge_model = CommonTag
-    merge_model_type = 'common.CommonTag'
