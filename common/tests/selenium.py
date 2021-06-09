@@ -2,6 +2,7 @@ import os
 import socket
 
 from django.db import connections
+from django.db.utils import OperationalError
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.management import call_command
 from selenium import webdriver
@@ -27,6 +28,27 @@ class SeleniumTest(StaticLiveServerTestCase):
     @classmethod
     def tearDownClass(cls):
         cls.browser.quit()
+
+        # Workaround for https://code.djangoproject.com/ticket/22414
+        # Persistent connections not closed by LiveServerTestCase, preventing dropping test databases
+        # https://github.com/cjerdonek/django/commit/b07fbca02688a0f8eb159f0dde132e7498aa40cc
+        def close_sessions(conn):
+            close_sessions_query = """
+                SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE
+                    datname = current_database() AND
+                    pid <> pg_backend_pid();
+            """
+            with conn.cursor() as cursor:
+                try:
+                    cursor.execute(close_sessions_query)
+                except OperationalError:
+                    # In case we terminate our own connection.
+                    pass
+
+        for alias in connections:
+            connections[alias].close()
+            close_sessions(connections[alias])
+
         super().tearDownClass()
 
     def populate_site(self):
