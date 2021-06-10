@@ -84,6 +84,7 @@ SUBPOENA_STATUS = [
     ('UPHELD', 'upheld'),
     ('CARRIED_OUT', 'carried out'),
     ('IGNORED', 'ignored'),
+    ('OBJECTED_TO', 'objected to'),
 ]
 
 
