@@ -121,7 +121,7 @@ var common = {
 if (TARGET === 'build') {
 	module.exports = merge(common, {
 		output: {
-			filename: '[name]-[hash].js'
+			filename: '[name]-[contenthash].js'
 		},
 		plugins: [
 			new webpack.DefinePlugin({
