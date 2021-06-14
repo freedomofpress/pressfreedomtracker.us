@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models.signals import post_delete
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
 from wagtail.core.signals import page_published
@@ -5,6 +7,9 @@ from wagtail.core.signals import page_published
 from common.models import CategoryPage
 from cloudflare.utils import purge_tags_from_cache
 from incident.models import IncidentPage, IncidentIndexPage
+
+
+logger = logging.getLogger('wagtail.frontendcache')
 
 
 def purge_incident_from_frontend_cache_for_category(
@@ -17,6 +22,9 @@ def purge_incident_from_frontend_cache_for_category(
     incidents = IncidentPage.objects.filter(categories__category=instance)
     for incident in incidents:
         purge_page_from_cache(incident)
+        logger.info(
+            f"Purged page IncidentPage with title: {incident.title} and slug: {incident.slug}"
+        )
 
 
 def purge_incident_from_frontend_cache_for_incident(
@@ -30,6 +38,9 @@ def purge_incident_from_frontend_cache_for_incident(
     # Purge cache for related incidents
     for incident in instance.related_incidents.all():
         purge_page_from_cache(incident)
+        logger.info(
+            f"Purged page IncidentPage with title: {incident.title} and slug: {incident.slug}"
+        )
 
     # Purge cache for incidents that share a category and may
     # therefore show up as a related incident
@@ -44,6 +55,9 @@ def purge_incident_index_from_frontend_cache(**kwargs):
     for incident_index_page in IncidentIndexPage.objects.live():
         purge_page_from_cache(incident_index_page)
         tags.append(incident_index_page.get_cache_tag())
+        logger.info(
+            f"Purged page IncidentIndexPage with title: {incident_index_page.title} and slug: {incident_index_page.slug}"
+        )
     purge_tags_from_cache(tags)
 
 

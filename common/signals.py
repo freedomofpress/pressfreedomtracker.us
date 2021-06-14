@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models.signals import post_delete, post_save, pre_delete
 from django.dispatch import receiver
 from wagtail.core.signals import page_published
@@ -11,6 +13,9 @@ from home.models import HomePage
 from blog.models import BlogPage
 
 
+logger = logging.getLogger("wagtail.frontendcache")
+
+
 def purge_category_from_frontend_cache(**kwargs):
     """
     Currently this busts all the category pages' caches. If we wanted to be
@@ -21,12 +26,18 @@ def purge_category_from_frontend_cache(**kwargs):
     for category_page in CategoryPage.objects.live():
         purge_page_from_cache(category_page)
         tags.append(category_page.get_cache_tag())
+        logger.info(
+            f"Purged page CategoryPage with title: {category_page.title} and slug: {category_page.slug}"
+        )
     purge_tags_from_cache(tags)
 
 
 def purge_simple_page_from_frontend_cache(**kwargs):
     for simple_page in SimplePage.objects.live():
         purge_page_from_cache(simple_page)
+        logger.info(
+            f"Purged page SimplePage with title: {simple_page.title} and slug: {simple_page.slug}"
+        )
 
 
 @receiver([pre_delete, post_save])

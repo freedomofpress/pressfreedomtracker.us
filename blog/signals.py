@@ -1,9 +1,14 @@
+import logging
+
 from django.db.models.signals import post_delete
 from wagtail.core.signals import page_published
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
 
 from blog.models import BlogIndexPage, BlogPage
 from cloudflare.utils import purge_tags_from_cache
+
+
+logger = logging.getLogger("wagtail.frontendcache")
 
 
 def purge_blog_index_page_frontend_cache(**kwargs):
@@ -18,6 +23,9 @@ def purge_blog_index_page_frontend_cache(**kwargs):
     for page in BlogIndexPage.objects.all():
         tags.append(page.get_cache_tag())
         purge_page_from_cache(page)
+        logger.info(
+            f"Purged page BlogIndexPage with title: {page.title} and slug: {page.slug}"
+        )
     purge_tags_from_cache(tags)
 
 
