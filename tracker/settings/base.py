@@ -259,8 +259,8 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = (
     "'self'",
     "https://analytics.freedom.press",
-    "https://www.google.com/recaptcha",
-    "https://www.gstatic.com/recaptcha",
+    "https://www.google.com/recaptcha/",
+    "https://www.gstatic.com/recaptcha/",
     # For Wagtail Admin
     "'unsafe-inline'",
     # For Twitter Widgets
@@ -281,6 +281,9 @@ CSP_FRAME_SRC = (
     "'self'",
     # For Twitter Widgets
     "https://platform.twitter.com",
+    # For recaptcha
+    "https://www.google.com/recaptcha/",
+    "https://recaptcha.google.com/recaptcha/",
 )
 CSP_CONNECT_SRC = [
     "'self'",
