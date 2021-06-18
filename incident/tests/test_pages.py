@@ -773,9 +773,30 @@ class IncidentPageTests(TestCase):
         root_page.add_child(instance=cls.incident_index)
 
     def test_computes_unique_date(self):
-        incident = IncidentPageFactory(parent=self.incident_index)
+        incident1 = IncidentPage(
+            date=date(2020, 6, 16),
+            title='Test Incident 1',
+        )
+        incident2 = IncidentPage(
+            date=date(2020, 6, 16),
+            title='Test Incident 2',
+        )
+        self.incident_index.add_child(instance=incident1)
+        self.incident_index.add_child(instance=incident2)
 
-        self.assertEqual(
-            incident.unique_date,
-            f'{incident.date}-{incident.pk}',
+        UNIQUE_DATE_FORMAT = r'\d{4}-\d{2}-\d{2}-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+
+        self.assertRegex(
+            incident1.unique_date,
+            UNIQUE_DATE_FORMAT
+        )
+
+        self.assertRegex(
+            incident2.unique_date,
+            UNIQUE_DATE_FORMAT
+        )
+
+        self.assertNotEqual(
+            incident1.unique_date,
+            incident2.unique_date
         )

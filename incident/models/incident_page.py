@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from urllib.parse import urlencode
 
 from django import forms
@@ -669,7 +670,8 @@ class IncidentPage(MetadataPageMixin, Page):
         return context
 
     def save(self, *args, **kwargs):
-        self.unique_date = f'{self.date}-{self.pk}'
+        uuid_ = uuid.uuid1()
+        self.unique_date = f'{self.date}-{uuid_}'
 
         super().save(*args, **kwargs)
 
