@@ -774,11 +774,11 @@ class IncidentPageTests(TestCase):
 
     def test_computes_unique_date(self):
         incident1 = IncidentPage(
-            date=date(2020, 6,16),
+            date=date(2020, 6, 16),
             title='Test Incident 1',
         )
         incident2 = IncidentPage(
-            date=date(2020, 6,16),
+            date=date(2020, 6, 16),
             title='Test Incident 2',
         )
         self.incident_index.add_child(instance=incident1)
