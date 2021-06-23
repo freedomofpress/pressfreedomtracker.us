@@ -400,6 +400,11 @@ LOGGING = {
         "django.server": {
             "handlers": ["null"], "propagate": False,
         },
+        "wagtail.frontendcache": {
+            "handlers": ["normal"],
+            "propagate": False,
+            "level": "INFO",
+        },
         # Catchall
         "": {
             "handlers": ["normal"], "propagate": False,
