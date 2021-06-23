@@ -1,3 +1,4 @@
+import math
 import re
 from urllib.parse import urljoin
 
@@ -13,6 +14,7 @@ class IncidentIndexPageFeed(Feed):
 
     def __init__(self, incident_index_page, *args, **kwargs):
         self.incident_index_page = incident_index_page
+        self.feed_per_page = self.incident_index_page.feed_per_page
         super(IncidentIndexPageFeed, self).__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
@@ -37,6 +39,18 @@ class IncidentIndexPageFeed(Feed):
             text
         )
 
+    def get_object(self, request, *args, **kwargs):
+        self.page = int(request.GET.get('p', 1))
+
+        total_posts = self.incident_index_page.get_incidents().count()
+        self.last_page = math.ceil(total_posts / self.feed_per_page)
+
+        if self.incident_index_page.feed_limit != 0 and self.incident_index_page.feed_limit < total_posts:
+            self.last_page = math.ceil(
+                self.incident_index_page.feed_limit / self.feed_per_page
+            )
+        return super(IncidentIndexPageFeed, self).get_object(request, *args, **kwargs)
+
     def title(self):
         return '{}: {}'.format(
             self.incident_index_page.get_site().site_name,
@@ -57,13 +71,22 @@ class IncidentIndexPageFeed(Feed):
     def feed_guid(self):
         return self.feed_url()
 
+    def feed_extra_kwargs(self, obj):
+        return {
+            'page': self.page,
+            'last_page': self.last_page,
+        }
+
     def items(self):
         incidents = self.incident_index_page.get_incidents()
 
-        if self.incident_index_page.feed_limit != 0:
-            return incidents[:self.incident_index_page.feed_limit]
+        starting_index = ((self.page - 1) * self.feed_per_page)
+        last_index = (self.page * self.feed_per_page)
 
-        return incidents
+        if self.incident_index_page.feed_limit != 0 and self.incident_index_page.feed_limit < last_index:
+            return incidents[starting_index:self.incident_index_page.feed_limit]
+
+        return incidents[starting_index:last_index]
 
     def item_title(self, obj):
         return self._get_cleaned_feed(obj.title)
