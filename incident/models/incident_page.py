@@ -670,8 +670,12 @@ class IncidentPage(MetadataPageMixin, Page):
         return context
 
     def save(self, *args, **kwargs):
-        uuid_ = uuid.uuid1()
-        self.unique_date = f'{self.date}-{uuid_}'
+        if self.unique_date and self.unique_date[:10] != str(self.date):
+            uuid_ = self.unique_date[11:]
+            self.unique_date = f'{self.date}-{uuid_}'
+        else:
+            uuid_ = uuid.uuid1()
+            self.unique_date = f'{self.date}-{uuid_}'
 
         super().save(*args, **kwargs)
 
