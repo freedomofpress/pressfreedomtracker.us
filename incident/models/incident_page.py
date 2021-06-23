@@ -673,7 +673,7 @@ class IncidentPage(MetadataPageMixin, Page):
         if self.unique_date and self.unique_date[:10] != str(self.date):
             uuid_ = self.unique_date[11:]
             self.unique_date = f'{self.date}-{uuid_}'
-        else:
+        elif not self.unique_date:
             uuid_ = uuid.uuid1()
             self.unique_date = f'{self.date}-{uuid_}'
 
