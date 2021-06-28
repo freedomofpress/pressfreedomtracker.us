@@ -1,6 +1,6 @@
-import math
 from urllib.parse import urljoin
 
+from django.core.paginator import Paginator
 from django.contrib.syndication.views import Feed
 
 from common.feeds import MRSSFeed
@@ -32,14 +32,13 @@ class BlogIndexPageFeed(Feed):
 
     def get_object(self, request, *args, **kwargs):
         self.page = int(request.GET.get('p', 1))
+        posts = self.blog_index_page.get_posts()
 
-        total_posts = self.blog_index_page.get_posts().count()
-        self.last_page = math.ceil(total_posts / self.feed_per_page)
+        if self.blog_index_page.feed_limit != 0:
+            posts = posts[:self.blog_index_page.feed_limit]
 
-        if self.blog_index_page.feed_limit != 0 and self.blog_index_page.feed_limit < total_posts:
-            self.last_page = math.ceil(
-                self.blog_index_page.feed_limit / self.feed_per_page
-            )
+        self.paginator = Paginator(posts, self.feed_per_page)
+        self.last_page = self.paginator.page_range.stop - 1
         return super(BlogIndexPageFeed, self).get_object(request, *args, **kwargs)
 
     def title(self):
@@ -69,15 +68,7 @@ class BlogIndexPageFeed(Feed):
         }
 
     def items(self):
-        posts = self.blog_index_page.get_posts()
-
-        starting_index = ((self.page - 1) * self.feed_per_page)
-        last_index = (self.page * self.feed_per_page)
-
-        if self.blog_index_page.feed_limit != 0 and self.blog_index_page.feed_limit < last_index:
-            return posts[starting_index:self.blog_index_page.feed_limit]
-
-        return posts[starting_index:last_index]
+        return self.paginator.get_page(self.page)
 
     def item_title(self, obj):
         return obj.title

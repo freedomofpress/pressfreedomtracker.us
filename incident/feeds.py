@@ -1,7 +1,7 @@
-import math
 import re
 from urllib.parse import urljoin
 
+from django.core.paginator import Paginator
 from django.contrib.syndication.views import Feed
 
 from common.feeds import MRSSFeed
@@ -41,14 +41,13 @@ class IncidentIndexPageFeed(Feed):
 
     def get_object(self, request, *args, **kwargs):
         self.page = int(request.GET.get('p', 1))
+        incidents = self.incident_index_page.get_incidents()
 
-        total_posts = self.incident_index_page.get_incidents().count()
-        self.last_page = math.ceil(total_posts / self.feed_per_page)
+        if self.incident_index_page.feed_limit != 0:
+            incidents = incidents[:self.incident_index_page.feed_limit]
 
-        if self.incident_index_page.feed_limit != 0 and self.incident_index_page.feed_limit < total_posts:
-            self.last_page = math.ceil(
-                self.incident_index_page.feed_limit / self.feed_per_page
-            )
+        self.paginator = Paginator(incidents, self.feed_per_page)
+        self.last_page = self.paginator.page_range.stop - 1
         return super(IncidentIndexPageFeed, self).get_object(request, *args, **kwargs)
 
     def title(self):
@@ -78,15 +77,7 @@ class IncidentIndexPageFeed(Feed):
         }
 
     def items(self):
-        incidents = self.incident_index_page.get_incidents()
-
-        starting_index = ((self.page - 1) * self.feed_per_page)
-        last_index = (self.page * self.feed_per_page)
-
-        if self.incident_index_page.feed_limit != 0 and self.incident_index_page.feed_limit < last_index:
-            return incidents[starting_index:self.incident_index_page.feed_limit]
-
-        return incidents[starting_index:last_index]
+        return self.paginator.get_page(self.page)
 
     def item_title(self, obj):
         return self._get_cleaned_feed(obj.title)
