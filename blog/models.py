@@ -45,6 +45,11 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         help_text='Maximum number of posts to be included in the '
                   'syndication feed. 0 for unlimited.'
     )
+    feed_per_page = models.PositiveIntegerField(
+        default=20,
+        help_text='Maximum number of posts to be included per page '
+                  'in the syndication feed.'
+    )
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
@@ -53,6 +58,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     settings_panels = Page.settings_panels + [
         FieldPanel('about_blog_title'),
         FieldPanel('feed_limit'),
+        FieldPanel('feed_per_page'),
     ]
 
     subpage_types = ['blog.BlogPage']
