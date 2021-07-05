@@ -1,0 +1,11 @@
+{% extends "wagtailadmin/shared/field.html" %}
+
+{% block form_field %}
+	{{ block.super }}
+
+	{% if field.name == 'title' %}
+		{% if image.id or 'focal_point_x' in uploadform.fields or 'focal_point_x' in form.fields %}
+			<p class="help">Note: the title field is used as alt-text for this image.  Please take a moment to consider how this content will appear for people using assistive technology, such as screen readers.  In most cases, the pre-filled text is not appropriate, and ideally the text should describe the image as though you're explaining what it is to someone who cannot see it.</p>
+		{% endif %}
+	{% endif %}
+{% endblock %}

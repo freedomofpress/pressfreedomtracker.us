@@ -3,6 +3,12 @@ from wagtail.images.models import Image, AbstractImage, AbstractRendition
 
 
 class CustomImage(AbstractImage):
+    slug = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text='Free-form text. Can be used to store the image filename or other workflow-related information.',
+    )
     attribution = models.CharField(
         max_length=255,
         blank=True,
@@ -12,6 +18,7 @@ class CustomImage(AbstractImage):
 
     admin_form_fields = Image.admin_form_fields + (
         'attribution',
+        'slug',
     )
 
 
