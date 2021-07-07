@@ -13,7 +13,16 @@ reuse-blerbs:
         pip install pipenv
         pipenv sync
 
-version: 2
+version: 2.1
+commands:
+  check-changed-files-or-halt:
+    description: "Halt job if changed any changed file matches pattern"
+    parameters:
+      pattern:
+        type: string
+    steps:
+      - run: git diff --name-only develop...HEAD|grep -q '<< parameters.pattern >>' || circleci step halt
+
 jobs:
   safety_check:
     environment:
@@ -46,6 +55,8 @@ jobs:
     working_directory: ~/tracker
     steps:
       - checkout
+      - check-changed-files-or-halt:
+          pattern: ^package-lock.json$
 
       - *python_prereqs
 

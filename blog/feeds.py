@@ -1,5 +1,6 @@
 from urllib.parse import urljoin
 
+from django.core.paginator import Paginator
 from django.contrib.syndication.views import Feed
 
 from common.feeds import MRSSFeed
@@ -12,6 +13,7 @@ class BlogIndexPageFeed(Feed):
 
     def __init__(self, blog_index_page, *args, **kwargs):
         self.blog_index_page = blog_index_page
+        self.feed_per_page = self.blog_index_page.feed_per_page
         super(BlogIndexPageFeed, self).__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
@@ -27,6 +29,17 @@ class BlogIndexPageFeed(Feed):
             self.blog_index_page.get_site().root_url,
             path
         )
+
+    def get_object(self, request, *args, **kwargs):
+        self.page = int(request.GET.get('p', 1))
+        posts = self.blog_index_page.get_posts()
+
+        if self.blog_index_page.feed_limit != 0:
+            posts = posts[:self.blog_index_page.feed_limit]
+
+        self.paginator = Paginator(posts, self.feed_per_page)
+        self.last_page = self.paginator.page_range.stop - 1
+        return super(BlogIndexPageFeed, self).get_object(request, *args, **kwargs)
 
     def title(self):
         return '{}: {}'.format(
@@ -48,13 +61,14 @@ class BlogIndexPageFeed(Feed):
     def feed_guid(self):
         return self.feed_url()
 
+    def feed_extra_kwargs(self, obj):
+        return {
+            'page': self.page,
+            'last_page': self.last_page,
+        }
+
     def items(self):
-        posts = self.blog_index_page.get_posts()
-
-        if self.blog_index_page.feed_limit != 0:
-            return posts[:self.blog_index_page.feed_limit]
-
-        return posts
+        return self.paginator.get_page(self.page)
 
     def item_title(self, obj):
         return obj.title
