@@ -669,15 +669,18 @@ class IncidentPage(MetadataPageMixin, Page):
             context['related_qs'] = urlencode(related_filter)
         return context
 
-    def save(self, *args, **kwargs):
+    def full_clean(self, *args, **kwargs):
         if self.unique_date and self.unique_date[:10] != str(self.date):
+            # if the date has been changed, only change the date part
+            # of unique_date
             uuid_ = self.unique_date[11:]
             self.unique_date = f'{self.date}-{uuid_}'
         elif not self.unique_date:
+            # create a new uuid for unique date if it's not present
             uuid_ = uuid.uuid1()
             self.unique_date = f'{self.date}-{uuid_}'
 
-        super().save(*args, **kwargs)
+        super().full_clean(*args, **kwargs)
 
     def detention_duration(self):
         """
