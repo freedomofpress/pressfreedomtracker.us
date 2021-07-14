@@ -480,6 +480,7 @@ class IncidentFilter(object):
     filter_overrides = {
         'categories': {'lookup': 'categories__category'},
         'date': {'fuzzy': True, 'verbose_name': 'took place between'},
+        'city': {'lookup': 'city__iexact'},
         'equipment_seized': {'lookup': 'equipment_seized__equipment'},
         'equipment_broken': {'lookup': 'equipment_broken__equipment'},
         'tags': {'verbose_name': 'Has any of these tags'},
