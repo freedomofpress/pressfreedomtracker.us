@@ -21,6 +21,7 @@ from common.tests.factories import (
     CommonTagFactory,
     CustomImageFactory,
 )
+from geonames.models import Country, Region, GeoName
 from home.tests.factories import HomePageFactory
 from incident.models.incident_page import IncidentPage
 from incident.models.topic_page import TopicPage
@@ -791,6 +792,8 @@ class IncidentPageTests(TestCase):
         cls.incident_index = IncidentIndexPageFactory.build()
         root_page.add_child(instance=cls.incident_index)
 
+        cls.site = site
+
     def test_computes_unique_date(self):
         incident1 = IncidentPage(
             date=date(2020, 6, 16),
@@ -819,3 +822,46 @@ class IncidentPageTests(TestCase):
             incident1.unique_date,
             incident2.unique_date
         )
+
+    def test_looks_up_latitude_longitude_from_city_and_state(self):
+        incident_index = IncidentIndexPageFactory.build(title='A title')
+        self.site.root_page.add_child(instance=incident_index)
+
+        united_states = Country.objects.create(
+            isocode=1,
+            iso='US',
+            iso3='USA',
+            fips='US',
+            name='United States',
+            capital='Washington',
+            geonameid=1,
+        )
+
+        alaska = Region.objects.create(
+            isocode=united_states,
+            regcode='AK',
+            name='Alaska',
+            geonameid=1,
+        )
+        state = StateFactory(
+            name='Alaska',
+            abbreviation='AK',
+        )
+
+        geoname = GeoName.objects.create(
+            geonameid=1,
+            name='City X',
+            latitude=1.0,
+            longitude=2.0,
+            isocode=united_states,
+            regcode='AK',
+        )
+        incident = IncidentPage(
+            date=date.today(),
+            title='Incident with Geodata',
+            city=geoname.name,
+            state=state,
+        )
+        incident_index.add_child(instance=incident)
+        self.assertEqual(incident.longitude, geoname.longitude)
+        self.assertEqual(incident.latitude, geoname.latitude)

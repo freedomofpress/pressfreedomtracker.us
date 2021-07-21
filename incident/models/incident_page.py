@@ -48,6 +48,7 @@ from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
 from incident.utils.db import CurrentDate
 from statistics.blocks import StatisticsBlock
+from geonames.cities import get_city_coords
 
 
 class IncidentAuthor(Orderable):
