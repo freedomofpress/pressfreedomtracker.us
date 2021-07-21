@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'dashboard',
     'home',
     'emails',
+    'geonames',
 
     'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
