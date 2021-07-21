@@ -16,7 +16,7 @@ class CitiesTestCase(TestCase):
             geonameid=1,
         )
 
-        alaska = Region.objects.create(
+        Region.objects.create(
             isocode=united_states,
             regcode='AK',
             name='Alaska',
