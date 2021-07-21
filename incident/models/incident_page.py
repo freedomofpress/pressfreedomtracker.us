@@ -798,7 +798,11 @@ class IncidentPage(MetadataPageMixin, Page):
         return None
 
     def get_meta_image(self):
-        return self.teaser_image or super(IncidentPage, self).get_meta_image()
+        return (
+            self.teaser_image or
+            self.get_main_category().default_image or
+            super(IncidentPage, self).get_meta_image()
+        )
 
     def get_meta_description(self):
         if self.teaser:
