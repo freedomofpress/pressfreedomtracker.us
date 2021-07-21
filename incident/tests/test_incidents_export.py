@@ -118,6 +118,8 @@ class IncidentExportTestCase(TestCase):
             'target_nationality',
             'workers_whose_communications_were_obtained',
             'politicians_or_public_figures_involved',
+            'longitude',
+            'latitude',
         }
         self.assertEqual(headers, expected_headers)
 

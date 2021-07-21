@@ -99,6 +99,8 @@ class IncidentAPITest(APITestCase):
                 'exact_date_unknown': inc.exact_date_unknown,
                 'city': inc.city,
                 'state': {'name': inc.state.name, 'abbreviation': inc.state.abbreviation},
+                'latitude': inc.latitude,
+                'longitude': inc.longitude,
                 'teaser': str(inc.teaser),
                 'body': str(inc.body),
                 'teaser_image': inc.teaser_image.get_rendition('fill-1330x880').url,

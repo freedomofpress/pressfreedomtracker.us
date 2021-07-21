@@ -196,6 +196,8 @@ class IncidentCSVTestCase(TestCase):
                 'exact_date_unknown': str(inc.exact_date_unknown),
                 'city': inc.city,
                 'state': inc.state.abbreviation,
+                'latitude': '',
+                'longitude': '',
                 'teaser': str(inc.teaser),
                 'body': str(inc.body).replace('\n', ''),
                 'teaser_image': inc.teaser_image.get_rendition('fill-1330x880').url,
@@ -315,6 +317,8 @@ class IncidentCSVTestCase(TestCase):
             'current_charges',
             'dropped_charges',
             'politicians_or_public_figures_involved',
+            'longitude',
+            'latitude',
         }
 
         self.assertEqual(
