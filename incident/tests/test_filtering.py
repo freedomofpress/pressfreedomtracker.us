@@ -79,6 +79,7 @@ class TestFiltering(TestCase):
     def test_should_filter_by_char_field(self):
         """should filter via a field that is a char field"""
         city = 'albuquerque'
+        uppercase_city = 'Albuquerque'
         target = IncidentPageFactory(
             city=city,
         )
@@ -89,6 +90,12 @@ class TestFiltering(TestCase):
             city=city
         )).get_queryset()
 
+        self.assertEqual(len(incidents), 1)
+        self.assertTrue(target in incidents)
+
+        incidents = IncidentFilter(dict(
+            city=uppercase_city
+        )).get_queryset()
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
 
