@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class IncidentCursorPagination(CursorPagination):
-    page_size = None
+    page_size = 25
     page_size_query_param = 'limit'
     ordering = '-unique_date'
 
@@ -44,6 +44,11 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         if self.request.accepted_renderer.format == 'csv':
             return FlatIncidentSerializer
         return super().get_serializer_class()
+
+    def paginate_queryset(self, queryset):
+        if self.request.accepted_renderer.format == 'csv':
+            return None
+        return super().paginate_queryset(queryset)
 
     def get_queryset(self):
         incident_filter = IncidentFilter(self.request.GET)

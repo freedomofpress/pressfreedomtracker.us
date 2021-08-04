@@ -10,7 +10,7 @@ from common.tests.factories import (
     CustomImageFactory,
     CommonTagFactory,
 )
-from incident.models import choices
+from incident.models import choices, IncidentPage
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
@@ -120,6 +120,22 @@ class IncidentCSVTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_csv_data_is_not_paginated(self):
+        IncidentPageFactory.create_batch(30)
+        response = self.client.get(
+            reverse('incidentpage-list'),
+            {'format': 'csv'},
+        )
+        content_lines = response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+
+        # Number of rows in reader, minus 1 for the header, should
+        # equal total number of incidents.
+        self.assertEqual(
+            len(list(reader)) - 1,
+            IncidentPage.objects.count(),
+        )
+
     def test_csv_columns_are_in_same_order_as_json_keys(self):
         json_response = self.client.get(
             reverse('incidentpage-list'),
@@ -129,7 +145,7 @@ class IncidentCSVTestCase(TestCase):
             {'format': 'csv'},
         )
 
-        json_keys = list(json_response.json()[0].keys())
+        json_keys = list(json_response.json()['results'][0].keys())
         content_lines = csv_response.content.splitlines()
         reader = csv.reader(line.decode('utf-8') for line in content_lines)
         csv_headers = next(reader)
