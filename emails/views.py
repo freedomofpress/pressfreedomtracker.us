@@ -1,12 +1,18 @@
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, throttle_classes
+from rest_framework.throttling import UserRateThrottle
 
 from emails.models import EmailSignup
 
 
+class EmailSignupCreateUserThrottle(UserRateThrottle):
+    rate = '20/hour'
+
+
 @api_view(['POST'])
+@throttle_classes([EmailSignupCreateUserThrottle])
 def email_signup_create(request):
     if 'email_address' not in request.POST:
         return Response(status=400)
