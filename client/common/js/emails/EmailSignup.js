@@ -28,6 +28,7 @@ class EmailSignup extends PureComponent {
 			INPUT,
 			LOADING,
 			ALREADY_SIGNED_UP,
+			TOO_MANY_REQUESTS,
 			SUCCESS,
 		} = EmailSignup
 
@@ -44,14 +45,20 @@ class EmailSignup extends PureComponent {
 		}
 
 		const handleReject = (error) => {
+			let errorMessage
 			if (error.response.data === 'already_signed_up') {
 				var state = ALREADY_SIGNED_UP
+				errorMessage = error.response.data
+			} else if (error.response.status === 429) {
+				var state = TOO_MANY_REQUESTS
+				errorMessage = error.response.statusText
 			} else {
 				var state = INPUT
+				errorMessage = error.response.data
 			}
 			this.setState({
 				state,
-				errorMessage: error.response.data,
+				errorMessage,
 			})
 		}
 
@@ -66,6 +73,7 @@ class EmailSignup extends PureComponent {
 			INPUT,
 			LOADING,
 			ALREADY_SIGNED_UP,
+			TOO_MANY_REQUESTS,
 			SUCCESS,
 		} = EmailSignup
 
@@ -84,6 +92,14 @@ class EmailSignup extends PureComponent {
 			return (
 				<div className="emails-signup__message emails-signup__message--already-signed-up">
 					<p className="emails-signup__text">This email address is already signed up.</p>
+				</div>
+			)
+		}
+
+		if (state === TOO_MANY_REQUESTS) {
+			return (
+				<div className="emails-signup__message emails-signup__message--already-signed-up">
+					<p className="emails-signup__text">Too many sign-up requests made. Please try again later.</p>
 				</div>
 			)
 		}
@@ -148,6 +164,9 @@ EmailSignup.ALREADY_SIGNED_UP = 'already_signed_up'
 
 
 EmailSignup.SUCCESS = 'success'
+
+
+EmailSignup.TOO_MANY_REQUESTS = 'too_many_requests'
 
 
 export default EmailSignup

@@ -285,11 +285,20 @@ class CategoryPage(MetadataPageMixin, Page):
         blank=True,
         validators=[validate_template],
     )
+    default_image = models.ForeignKey(
+        'common.CustomImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Default SEO image for the incidents within this category'
+    )
     plural_name = models.CharField(max_length=255, null=True, blank=True)
     page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
 
     content_panels = Page.content_panels + [
         FieldPanel('methodology'),
+        ImageChooserPanel('default_image', heading='Default SEO image for incidents'),
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('statistics_items', label='Statistics'),
         InlinePanel('incident_filters', label='Fields to include in filters'),
