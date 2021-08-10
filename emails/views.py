@@ -10,6 +10,12 @@ from emails.models import EmailSignup
 class EmailSignupCreateUserThrottle(UserRateThrottle):
     rate = '20/hour'
 
+    def get_ident(self, request):
+        try:
+            return request.headers["CF-Connecting-IP"]
+        except KeyError:
+            return super().get_ident(request)
+
 
 @api_view(['POST'])
 @throttle_classes([EmailSignupCreateUserThrottle])
