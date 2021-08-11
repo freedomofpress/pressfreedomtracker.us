@@ -1,5 +1,4 @@
-import logging
-
+import structlog
 from django.db.models.signals import post_delete, post_save, pre_delete
 from django.dispatch import receiver
 from wagtail.core.signals import page_published
@@ -13,7 +12,7 @@ from home.models import HomePage
 from blog.models import BlogPage
 
 
-logger = logging.getLogger("wagtail.frontendcache")
+logger = structlog.get_logger("wagtail.frontendcache")
 
 
 def purge_category_from_frontend_cache(**kwargs):

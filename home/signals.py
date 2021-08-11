@@ -1,5 +1,4 @@
-import logging
-
+import structlog
 from django.db.models.signals import post_delete
 from wagtail.core.signals import page_published
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
@@ -10,7 +9,7 @@ from incident.models import IncidentPage, IncidentIndexPage
 from blog.models import BlogPage, BlogIndexPage
 
 
-logger = logging.getLogger("wagtail.frontendcache")
+logger = structlog.get_logger("wagtail.frontendcache")
 
 
 def purge_homepage_from_frontend_cache(**kwargs):
