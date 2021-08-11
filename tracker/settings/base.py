@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'dashboard',
     'home',
     'emails',
-    'django_logging',  # used for json logging of requests/exceptions
 
     'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
@@ -100,7 +99,6 @@ if os.environ.get('DJANGO_WHITENOISE'):
 
 MIDDLEWARE.extend([
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-    'django_logging.middleware.DjangoLoggingMiddleware',
 
     # Middleware for content security policy
     'csp.middleware.CSPMiddleware',
