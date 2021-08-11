@@ -4,5 +4,5 @@ django-cprofile-middleware
 django-debug-toolbar>=2.2.1
 django-silk
 flake8
-ipdb
+ipdb>=0.13.9
 selenium
