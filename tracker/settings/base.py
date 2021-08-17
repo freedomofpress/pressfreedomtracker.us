@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'dashboard',
     'home',
     'emails',
-    'django_logging',  # used for json logging of requests/exceptions
 
     'cloudflare',  # Only really needs to be registered for the test runner
     'build',  # App for static output
@@ -100,7 +99,6 @@ if os.environ.get('DJANGO_WHITENOISE'):
 
 MIDDLEWARE.extend([
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-    'django_logging.middleware.DjangoLoggingMiddleware',
 
     # Middleware for content security policy
     'csp.middleware.CSPMiddleware',
@@ -346,71 +344,6 @@ if log_dir:
         "level": log_level,
     }
 
-DJANGO_LOGGING = {
-    "LOG_LEVEL": log_level,
-    "CONSOLE_LOG": log_stdout,
-    "INDENT_CONSOLE_LOG": 0,
-    "DISABLE_EXISTING_LOGGERS": True,
-    "PROPOGATE": False,
-    "SQL_LOG": False,
-    # Prevent django-logging from parsing json content that we are
-    # only going to discard.
-    "CONTENT_JSON_ONLY": False,
-    # Do not log the content of responses by default--these might be
-    # quite big!
-    "RESPONSE_FIELDS": ("status", "reason", "charset", "headers"),
-    "ENCODING": "utf-8",
-}
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "normal": log_handler,
-        "null": {"class": "logging.NullHandler"},
-    },
-    "formatters": {
-        "json": {
-            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
-        },
-        "plain": {
-            "format": "%(asctime)s %(levelname)s %(name)s "
-            "%(module)s %(message)s",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["normal"], "propagate": True,
-        },
-        "django.template": {
-            "handlers": ["normal"], "propagate": False,
-        },
-        "django.db.backends": {
-            "handlers": ["normal"], "propagate": False,
-        },
-        "django.security": {
-            "handlers": ["normal"], "propagate": False,
-        },
-        # These are already handled by the django json logging library
-        "django.request": {
-            "handlers": ["null"],
-            "propagate": False,
-        },
-        # Log entries from runserver
-        "django.server": {
-            "handlers": ["null"], "propagate": False,
-        },
-        "wagtail.frontendcache": {
-            "handlers": ["normal"],
-            "propagate": False,
-            "level": "INFO",
-        },
-        # Catchall
-        "": {
-            "handlers": ["normal"], "propagate": False,
-        },
-    },
-}
 
 TEST_RUNNER = 'common.test_runner.SeededDiscoveryRunner'
 RANDOM_SEED = 876394101

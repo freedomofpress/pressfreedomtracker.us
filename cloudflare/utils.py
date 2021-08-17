@@ -1,7 +1,7 @@
 import json
-import logging
 import requests
 
+import structlog
 from typing import Iterable
 from wagtail.contrib.frontend_cache.utils import get_backends
 from wagtail.contrib.frontend_cache.backends import CloudflareBackend
@@ -10,7 +10,7 @@ from wagtail.contrib.frontend_cache.backends import CloudflareBackend
 __all__ = ['purge_tags_from_cache', 'purge_all_from_cache']
 
 
-logger = logging.getLogger('wagtail.frontendcache')
+logger = structlog.get_logger('wagtail.frontendcache')
 
 
 def for_every_cloudflare_backend(func: callable) -> callable:
