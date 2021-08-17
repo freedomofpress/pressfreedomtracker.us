@@ -1,8 +1,10 @@
+import collections
 from typing import TYPE_CHECKING
 
 from rest_framework import viewsets
 from rest_framework.settings import api_settings
 from rest_framework.pagination import CursorPagination
+from rest_framework.response import Response
 from rest_framework_csv.renderers import PaginatedCSVRenderer
 
 from incident.api.serializers import IncidentSerializer, FlatIncidentSerializer
@@ -12,7 +14,36 @@ if TYPE_CHECKING:
     from django.http import HttpResponse
 
 
-class IncidentCursorPagination(CursorPagination):
+class HeaderCursorPagination(CursorPagination):
+    def paginate_queryset(self, queryset, request, view=None):
+        self.use_envelope = False
+        if str(request.GET.get('envelope')).lower() == '1':
+            self.use_envelope = True
+        return super().paginate_queryset(queryset, request, view)
+
+    def get_paginated_response(self, data):
+        next_url = self.get_next_link()
+        previous_url = self.get_previous_link()
+
+        links = []
+        for url, label in (
+                (previous_url, 'prev'),
+                (next_url, 'next'),
+        ):
+            if url is not None:
+                links.append('<{}>; rel="{}"'.format(url, label))
+        headers = {'Link': ', '.join(links)} if links else {}
+
+        if self.use_envelope:
+            return Response(collections.OrderedDict([
+                ('next', self.get_next_link()),
+                ('previous', self.get_previous_link()),
+                ('results', data)
+            ]), headers=headers)
+        return Response(data, headers=headers)
+
+
+class IncidentCursorPagination(HeaderCursorPagination):
     page_size = 25
     page_size_query_param = 'limit'
     ordering = '-unique_date'
