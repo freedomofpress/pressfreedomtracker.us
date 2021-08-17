@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.postgres.fields import DateRangeField
 from django.http import JsonResponse
 from marshmallow import Schema, fields
+from psycopg2.extras import DateRange
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.edit_handlers import (
     FieldPanel,
@@ -23,6 +25,24 @@ from common.utils import (
     paginate,
 )
 from incident.models import IncidentCategorization
+from incident.forms import TopicPageForm
+
+
+class FuzzyDate(models.Transform):
+    """Django lookup that transforms a single date into a date range of
+    the month containing that date.
+
+    """
+
+    lookup_name = 'fuzzy_date'
+    template = "daterange(date_trunc('month', %(expressions)s)::date, (date_trunc('month', %(expressions)s) + interval '1 month')::date)"
+
+    @property
+    def output_field(self):
+        return DateRangeField()
+
+
+models.DateField.register_lookup(FuzzyDate)
 
 
 class NongroupingSubquery(models.Subquery):
@@ -166,6 +186,16 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         related_name='+'
     )
     incident_tag = models.ForeignKey('common.CommonTag', on_delete=models.PROTECT)
+    start_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text='Start date for this topic. No incidents before this date will be included.',
+    )
+    end_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text='End date for this topic. No incidents after this date will be included.',
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -206,17 +236,35 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
                 PageChooserPanel('incident_index_page'),
                 AutocompletePanel('incident_tag', page_type='common.CommonTag'),
                 FieldPanel('incidents_per_module'),
+                FieldPanel('start_date'),
+                FieldPanel('end_date'),
             ],
             classname='collapsible',
         ),
         FieldPanel('layout'),
     ]
+    base_form_class = TopicPageForm
 
     def get_context(self, request, *args, **kwargs):
         context = super(TopicPage, self).get_context(request, *args, **kwargs)
 
+        incident_lookups = models.Q(tags=self.incident_tag)
+        if self.start_date or self.end_date:
+            target_range = DateRange(
+                lower=self.start_date,
+                upper=self.end_date,
+                bounds='[]',
+            )
+
+            incident_lookups &= (
+                models.Q(date__contained_by=target_range) |
+                models.Q(
+                    exact_date_unknown=True,
+                    date__fuzzy_date__overlap=target_range,
+                )
+            )
         incident_qs = self.incident_index_page.get_incidents().filter(
-            tags=self.incident_tag
+            incident_lookups
         ).order_by('-date')
 
         paginator, entries = paginate(
@@ -234,13 +282,42 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         return context
 
     def get_categories_data(self):
+        incident_lookups = models.Q(
+            incident_page__tags=self.incident_tag,
+            incident_page__live=True,
+        )
+        category_incident_lookups = models.Q(
+            incidents__incident_page__tags=self.incident_tag,
+            incidents__incident_page__live=True,
+        )
+        if self.start_date or self.end_date:
+            target_range = DateRange(
+                lower=self.start_date,
+                upper=self.end_date,
+                bounds='[]',
+            )
+
+            incident_lookups &= (
+                models.Q(incident_page__date__contained_by=target_range) |
+                models.Q(
+                    incident_page__exact_date_unknown=True,
+                    incident_page__date__fuzzy_date__overlap=target_range,
+
+                )
+            )
+            category_incident_lookups &= (
+                models.Q(
+                    incidents__incident_page__date__contained_by=target_range,
+                ) | models.Q(
+                    incidents__incident_page__exact_date_unknown=True,
+                    incidents__incident_page__date__fuzzy_date__overlap=target_range,
+                )
+            )
+
         journalist_count = CategoryPage.objects.annotate(
             total_journalists=models.Count(
                 'incidents__incident_page__targeted_journalists__journalist',
-                filter=models.Q(
-                    incidents__incident_page__tags=self.incident_tag,
-                    incidents__incident_page__live=True,
-                ),
+                filter=category_incident_lookups,
                 distinct=True,
             )
         ).filter(
@@ -253,8 +330,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             ).select_related(
                 'incident_page'
             ).filter(
-                incident_page__tags=self.incident_tag,
-                incident_page__live=True
+                incident_lookups
             ).order_by('-incident_page__date')
 
         prefetch_categorizations = models.Prefetch(
@@ -265,7 +341,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             prefetch_categorizations,
         ).annotate(
             total_journalists=NongroupingSubquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
-            total_incidents=models.Count('incidents__incident_page', filter=models.Q(incidents__incident_page__tags=self.incident_tag, incidents__incident_page__live=True))
+            total_incidents=models.Count('incidents__incident_page', filter=category_incident_lookups)
         ).order_by('-total_incidents')
 
         categories_schema = CategorySchema(many=True)
@@ -276,3 +352,11 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     @route('incidents/')
     def incidents_view(self, request):
         return JsonResponse(data=self.get_categories_data(), safe=False)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(start_date__lte=models.F('end_date')),
+                name='start_date_end_date_order'
+            ),
+        ]

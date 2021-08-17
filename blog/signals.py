@@ -1,4 +1,4 @@
-import logging
+from structlog import get_logger
 
 from django.db.models.signals import post_delete
 from wagtail.core.signals import page_published
@@ -8,7 +8,7 @@ from blog.models import BlogIndexPage, BlogPage
 from cloudflare.utils import purge_tags_from_cache
 
 
-logger = logging.getLogger("wagtail.frontendcache")
+logger = get_logger()
 
 
 def purge_blog_index_page_frontend_cache(**kwargs):

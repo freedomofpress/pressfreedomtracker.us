@@ -1,5 +1,4 @@
-import logging
-
+import structlog
 from django.db.models.signals import post_delete
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
 from wagtail.core.signals import page_published
@@ -9,7 +8,7 @@ from cloudflare.utils import purge_tags_from_cache
 from incident.models import IncidentPage, IncidentIndexPage
 
 
-logger = logging.getLogger('wagtail.frontendcache')
+logger = structlog.get_logger('wagtail.frontendcache')
 
 
 def purge_incident_from_frontend_cache_for_category(
