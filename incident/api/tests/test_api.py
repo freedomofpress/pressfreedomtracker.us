@@ -30,7 +30,6 @@ class IncidentAPITest(APITestCase):
             file__width=800,
             file__height=600,
             file__color='green',
-            # collection=photo_collection,
         )
 
         author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
