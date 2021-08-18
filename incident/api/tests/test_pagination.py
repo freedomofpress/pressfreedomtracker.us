@@ -65,6 +65,9 @@ class IncidentListPaginationTestCase(APITestCase):
             ['2021-03-01', '2021-02-01', '2021-01-01'],
         )
         self.assertIsNone(links3.get('next'))
+        # First page link should return the first page's data
+        response_first = self.client.get(links3['first']['url'])
+        self.assertEqual(response_first.json(), response1.json())
 
     def test_pagination_envelope_can_be_enabled_on_demand(self):
         response1 = self.client.get(
@@ -99,3 +102,6 @@ class IncidentListPaginationTestCase(APITestCase):
             ['2021-03-01', '2021-02-01', '2021-01-01'],
         )
         self.assertIsNone(response_data.get('next'))
+        # First page link should return the first page's data
+        response_first = self.client.get(response_data['first'])
+        self.assertEqual(response_first.json(), response1.json())
