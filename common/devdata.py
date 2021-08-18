@@ -1,5 +1,6 @@
 import factory
 import wagtail_factories
+from faker import Faker
 from wagtail.core import blocks
 from wagtail.core.rich_text import RichText
 
@@ -22,6 +23,9 @@ from common.models import (
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
+
+
+fake = Faker()
 
 
 class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
@@ -118,27 +122,13 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         )
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
-    methodology = RichText("Methodology")
+    methodology = factory.LazyAttribute(lambda _: RichText(fake.paragraph(nb_sentences=5)))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_color = factory.Iterator(CATEGORY_COLOR_CHOICES, getter=lambda c: c[0])
 
-    @factory.post_generation
-    def incident_filters(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            CategoryIncidentFilter.objects.bulk_create([
-                CategoryIncidentFilter(
-                    category=self,
-                    incident_filter=incident_filter,
-                )
-                for incident_filter in extracted
-            ])
-
 
 class CustomImageFactory(wagtail_factories.ImageFactory):
-    attribution = factory.Sequence(lambda n: f'Attribution {n}')
+    attribution = factory.Faker('name')
 
     class Meta:
         model = CustomImage
@@ -148,9 +138,9 @@ class PersonPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = PersonPage
 
-    title = factory.Sequence(lambda n: f'Person {n}')
-    bio = RichText("Bio")
-    website = 'https://freedom.press'
+    title = factory.Faker('name')
+    bio = factory.LazyAttribute(lambda _: RichText(fake.paragraph()))
+    website = factory.Faker('uri')
     photo = None
 
 
@@ -165,10 +155,10 @@ class OrganizationPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = OrganizationPage
 
-    title = factory.Sequence(lambda n: f'Organization {n}')
+    title = factory.Faker('company')
     slug = factory.Sequence(lambda n: 'organization-{n}'.format(n=n))
-    website = 'https://freedom.press'
-    description = 'Organization Description'
+    website = factory.Faker('uri')
+    description = factory.Faker('catch_phrase')
 
 
 class SimplePageFactory(wagtail_factories.PageFactory):
@@ -228,4 +218,4 @@ class CommonTagFactory(factory.django.DjangoModelFactory):
         model = CommonTag
         django_get_or_create = ('title',)
 
-    title = factory.Sequence(lambda n: f'Tag {n}')
+    title = factory.Faker('word')
