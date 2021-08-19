@@ -262,8 +262,7 @@ CSP_SCRIPT_SRC = (
     "'unsafe-inline'",
     # For Twitter Widgets
     "'unsafe-eval'",
-    "https://platform.twitter.com/widgets.js",
-    "https://platform.twitter.com/js/horizon_tweet.2bd42981e3af03ce9186a5655508da28.js",
+    "https://platform.twitter.com",
     # Observable Notebooks
     "https://cdn.jsdelivr.net",
     "https://api.observablehq.com",
