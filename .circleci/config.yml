@@ -149,7 +149,7 @@ jobs:
           name: Install dependencies
           command: |
             python -m pip install --upgrade pip
-            pip install diff_cover
+            pip install --require-hashes -r ci-requirements.txt
 
       - attach_workspace:
           at: /tmp/workspace
