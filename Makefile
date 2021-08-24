@@ -36,6 +36,7 @@ dev-tests: ## Run django tests against developer environment
 	docker-compose exec django /bin/bash -ec \
 		"coverage run ./manage.py test --noinput --failfast; \
 		coverage html ; \
+		coverage xml ; \
 		coverage report"
 
 .PHONY: dev-jest-tests
