@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+import sys
 import os
 import structlog
 import socket
@@ -15,6 +16,12 @@ shared_processors = [
     structlog.processors.format_exc_info,
 ]
 
+# Do not cache the logger when running unit tests
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    cache_logger = False
+else:
+    cache_logger = True
+
 structlog.configure(
     processors=shared_processors + [
         structlog.stdlib.filter_by_level,
@@ -26,7 +33,7 @@ structlog.configure(
     context_class=dict,
     logger_factory=structlog.stdlib.LoggerFactory(),
     wrapper_class=structlog.stdlib.BoundLogger,
-    cache_logger_on_first_use=True,
+    cache_logger_on_first_use=cache_logger,
 )
 
 LOGGING = {
