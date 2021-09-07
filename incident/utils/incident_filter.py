@@ -33,7 +33,7 @@ class Filter(object):
     def __init__(self, name, model_field, lookup=None, verbose_name=None):
         self.name = name
         self.model_field = model_field
-        self.lookup = lookup or name
+        self._lookup = lookup
         self.verbose_name = verbose_name
 
     def __repr__(self):
@@ -44,6 +44,10 @@ class Filter(object):
 
     def get_value(self, data):
         return data.get(self.name) or None
+
+    @property
+    def lookup(self):
+        return self._lookup or self.name
 
     def clean(self, value, strict=False):
         return self.model_field.to_python(value)
