@@ -55,13 +55,18 @@ class Filter(object):
     def get_allowed_parameters(self):
         return {self.name}
 
+    def get_query_arguments(self, value):
+        """Returns the give value as a Django Q-object appropriate for the
+filtering query."""
+        return Q(**{self.lookup: value})
+
     def filter(self, queryset, value):
         """
         Filter the queryset according to the given (cleaned) value.
 
         This will only get called if value is not None.
         """
-        return queryset.filter(**{self.lookup: value})
+        return queryset.filter(self.get_query_arguments(value))
 
     def get_verbose_name(self):
         return self.verbose_name or self.model_field.verbose_name
