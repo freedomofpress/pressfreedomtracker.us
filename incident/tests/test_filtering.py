@@ -1211,7 +1211,7 @@ class PendingFilterTest(TestCase):
         self.assertCountEqual(incidents, self.all_incidents)
 
 
-class RelationFilterTest(TestCase):
+class StateFilterTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         GeneralIncidentFilter.objects.all().delete()
@@ -1221,26 +1221,40 @@ class RelationFilterTest(TestCase):
             incident_filter='state',
             incident_filter_settings=settings,
         )
-        cls.state1, cls.state2 = StateFactory.create_batch(2, unique_name=True)
+        cls.new_mexico = StateFactory(name='New Mexico', abbreviation='NM')
+        cls.alaska = StateFactory(name='Alaska', abbreviation='AK')
 
-    def test_ignores_noninteger_parameters(self):
-        incident1 = IncidentPageFactory(state=self.state1)
-        incident2 = IncidentPageFactory(state=self.state2)
+    def test_uses_noninteger_parameters_to_query_abbreviation(self):
+        IncidentPageFactory(state=self.new_mexico)
+        incident2 = IncidentPageFactory(state=self.alaska)
 
         incident_filter = IncidentFilter({
-            'state': 'xyz',
+            'state': 'AK',
         })
 
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
 
-        self.assertEqual(set(incidents), {incident1, incident2})
+        self.assertEqual(set(incidents), {incident2})
+
+    def test_uses_noninteger_parameters_to_query_name(self):
+        incident1 = IncidentPageFactory(state=self.new_mexico)
+        IncidentPageFactory(state=self.alaska)
+
+        incident_filter = IncidentFilter({
+            'state': 'New Mexico',
+        })
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1})
 
     def test_filters_foreign_key_relationships_by_id(self):
-        incident1 = IncidentPageFactory(state=self.state1)
-        IncidentPageFactory(state=self.state2)
+        incident1 = IncidentPageFactory(state=self.new_mexico)
+        IncidentPageFactory(state=self.alaska)
 
-        incident_filter = IncidentFilter({'state': str(self.state1.pk)})
+        incident_filter = IncidentFilter({'state': str(self.new_mexico.pk)})
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
 

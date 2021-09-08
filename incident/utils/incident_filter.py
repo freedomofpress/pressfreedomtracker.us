@@ -1,3 +1,5 @@
+import functools
+import operator
 from datetime import date
 import copy
 
@@ -91,18 +93,37 @@ class IntegerFilter(Filter):
 class RelationFilter(Filter):
     serialized_type = 'autocomplete'
 
+    def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
+        self.text_fields = text_fields
+        super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
+
+    def get_query_arguments(self, value):
+        if isinstance(value, int):
+            return super().get_query_arguments(value)
+        else:
+            arguments = [
+                Q(**{f'{self.name}__{field}__iexact': value}) for field in self.text_fields
+            ]
+            return functools.reduce(operator.or_, arguments)
+
     def clean(self, value, strict=False):
         try:
             return int(value)
         except ValueError:
-            if strict:
+            if self.text_fields:
+                # If this filter supports fallback text fields for
+                # filtering non-integer ID values, return whatever we
+                # were given.
+                return value
+            elif strict:
                 raise ValidationError(
                     'Expected integer for relationship "{}", received "{}"'.format(
                         self.name,
                         value,
                     )
                 )
-            return None
+            else:
+                return None
 
     def serialize(self):
         serialized = super(RelationFilter, self).serialize()
@@ -498,6 +519,7 @@ class IncidentFilter(object):
         'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter},
         'arresting_authority': {'filter_cls': RelationFilter, 'verbose_name': 'Arresting authority'},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
+        'state': {'text_fields': ['abbreviation', 'name']}
     }
 
     _extra_filters = {

@@ -232,13 +232,13 @@ class CleanTest(TestCase):
 
     def test_invalid_data(self):
         CategoryPage.objects.all().delete()
-        CategoryPageFactory(title='Category A', incident_filters=['state'])
-        incident_filter = IncidentFilter({'state': '???'})
+        CategoryPageFactory(title='Category A', incident_filters=['arrest_status'])
+        incident_filter = IncidentFilter({'arrest_status': '???'})
 
         with self.assertRaises(ValidationError) as cm:
             incident_filter.clean(strict=True)
 
         self.assertEqual(
             [str(error) for error in cm.exception],
-            ['Expected integer for relationship "state", received "???"'],
+            ['Invalid value for arrest_status: ???'],
         )
