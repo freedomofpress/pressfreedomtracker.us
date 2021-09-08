@@ -26,7 +26,8 @@ from incident.tests.factories import (
     StateFactory,
     InstitutionFactory,
     JournalistFactory,
-    TargetedJournalistFactory
+    TargetedJournalistFactory,
+    LawEnforcementOrganizationFactory,
 )
 from incident.utils.incident_filter import IncidentFilter
 
@@ -1255,6 +1256,43 @@ class StateFilterTest(TestCase):
         IncidentPageFactory(state=self.alaska)
 
         incident_filter = IncidentFilter({'state': str(self.new_mexico.pk)})
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1})
+
+
+class RelationFilterTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter='arresting_authority',
+            incident_filter_settings=settings,
+        )
+        cls.leo1 = LawEnforcementOrganizationFactory(title='Org 1')
+        cls.leo2 = LawEnforcementOrganizationFactory(title='Org 2')
+
+    def test_uses_noninteger_parameters_to_query_title(self):
+        IncidentPageFactory(arresting_authority=self.leo1)
+        incident2 = IncidentPageFactory(arresting_authority=self.leo2)
+
+        incident_filter = IncidentFilter({
+            'arresting_authority': self.leo2.title,
+        })
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident2})
+
+    def test_filters_foreign_key_relationships_by_id(self):
+        incident1 = IncidentPageFactory(arresting_authority=self.leo1)
+        IncidentPageFactory(arresting_authority=self.leo2)
+
+        incident_filter = IncidentFilter({'arresting_authority': str(self.leo1.pk)})
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
 

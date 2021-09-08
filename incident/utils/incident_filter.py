@@ -3,7 +3,7 @@ import operator
 from datetime import date
 import copy
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, FieldDoesNotExist
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import (
     BooleanField,
@@ -587,6 +587,12 @@ class IncidentFilter(object):
             kwargs['filter_cls'] = ManyRelationFilter
         elif isinstance(model_field, ForeignKey):
             kwargs['filter_cls'] = RelationFilter
+            try:
+                model_field.related_model._meta.get_field('title')
+            except FieldDoesNotExist:
+                pass
+            else:
+                kwargs['text_fields'] = ['title']
         elif isinstance(model_field, DateField):
             kwargs['filter_cls'] = DateFilter
         elif model_field.choices:
