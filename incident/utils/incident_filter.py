@@ -331,8 +331,8 @@ class ManyRelationFilter(Filter):
             ))
         return value
 
-    def filter(self, queryset, value):
-        return queryset.filter(**{'{}__in'.format(self.lookup): value})
+    def get_query_arguments(self, value):
+        return Q(**{f'{self.lookup}__in': value})
 
     def get_verbose_name(self):
         if self.verbose_name:
