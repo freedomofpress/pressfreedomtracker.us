@@ -20,7 +20,7 @@ def get_city_coords(city=None, state=None, iso3='USA'):
         return city_coords
 
     latlong = GeoName.objects.filter(
-        name=city,
+        name__iexact=city,
         regcode=state,
         isocode__iso3=iso3
     ).values_list('latitude', 'longitude')

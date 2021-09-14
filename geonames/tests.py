@@ -43,3 +43,12 @@ class CitiesTestCase(TestCase):
             get_city_coords(city='Missing', state=self.geoname.regcode),
             (None, None)
         )
+
+    def test_city_coords_lookup_is_case_insensitive(self):
+        self.assertEqual(
+            get_city_coords(
+                city=self.geoname.name.lower(),
+                state=self.geoname.regcode,
+            ),
+            (self.geoname.latitude, self.geoname.longitude)
+        )
