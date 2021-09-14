@@ -29,7 +29,7 @@ from incident.tests.factories import (
     TargetedJournalistFactory,
     LawEnforcementOrganizationFactory,
 )
-from incident.utils.incident_filter import IncidentFilter
+from incident.utils.incident_filter import IncidentFilter, ManyRelationValue
 
 
 class TestFiltering(TestCase):
@@ -75,6 +75,18 @@ class TestFiltering(TestCase):
         incidents = IncidentFilter(dict(
             categories='{0},{1}'.format(str(category2.id), str(category3.id)),
         )).get_queryset()
+        self.assertEqual({incident1, incident2}, set(incidents))
+
+    def test_should_filter_by_category_name(self):
+        category1 = CategoryPageFactory(title='Eukarya')
+        category2 = CategoryPageFactory(title='Eubacteria')
+        category3 = CategoryPageFactory(title='Archaea')
+        incident1 = IncidentPageFactory(categories=[category1, category3])
+        incident2 = IncidentPageFactory(categories=[category2])
+
+        incidents = IncidentFilter(
+            {'categories': f'{category1.title},{category2.title}'}
+        ).get_queryset()
         self.assertEqual({incident1, incident2}, set(incidents))
 
     def test_should_filter_by_char_field(self):
@@ -143,6 +155,29 @@ class TestFiltering(TestCase):
         incidents = IncidentFilter(dict(
             categories=str(category.id),
             charges=str(charge.pk),
+        )).get_queryset()
+
+        self.assertEqual(set(incidents), {target1, target2})
+
+    def test_should_filter_charges_by_title_as_one_field(self):
+        """Filter should filter charges by title as if current and dropped charges are a single field"""
+        category = CategoryPageFactory(
+            title='Arrest / Criminal Charge',
+            incident_filters=['charges'],
+        )
+        charge = ChargeFactory()
+        target1 = IncidentPageFactory(categories=[category])
+        target2 = IncidentPageFactory(categories=[category])
+        IncidentPageFactory(categories=[category])
+
+        target1.current_charges.add(charge)
+        target2.dropped_charges.add(charge)
+        target1.current_charges.commit()
+        target2.dropped_charges.commit()
+
+        incidents = IncidentFilter(dict(
+            categories=str(category.id),
+            charges=charge.title,
         )).get_queryset()
 
         self.assertEqual(set(incidents), {target1, target2})
@@ -567,7 +602,7 @@ class ChoiceFilterTest(TestCase):
         self.assertEqual(incidents.count(), 1)
         self.assertIn(target, incidents)
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
             'status_of_seized_equipment': [self.custody],
         })
 
@@ -594,7 +629,7 @@ class ChoiceFilterTest(TestCase):
         incidents = incident_filter.get_queryset()
         self.assertEqual(incidents.count(), 3)
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
         })
 
     def test_filter_should_handle_multiple_choices(self):
@@ -622,7 +657,7 @@ class ChoiceFilterTest(TestCase):
         self.assertIn(target1, incidents)
         self.assertIn(target2, incidents)
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
             'status_of_seized_equipment': [self.custody, self.returned_full],
         })
 
@@ -657,7 +692,7 @@ class MultiChoiceFilterTest(TestCase):
         self.assertEqual(incidents.count(), 1)
         self.assertIn(target, incidents)
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
             'subpoena_statuses': [self.pending],
         })
 
@@ -684,7 +719,7 @@ class MultiChoiceFilterTest(TestCase):
         incidents = incident_filter.get_queryset()
         self.assertEqual(incidents.count(), 3)
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
         })
 
     def test_filter_should_handle_field_with_multiple_values(self):
@@ -711,7 +746,7 @@ class MultiChoiceFilterTest(TestCase):
         self.assertEqual(incidents.count(), 2)
         self.assertIn(target, incidents)
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
             'subpoena_statuses': [self.pending],
         })
 
@@ -745,7 +780,7 @@ class MultiChoiceFilterTest(TestCase):
         self.assertIn(target2, incidents)
         self.assertIn(target3, incidents)
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
             'subpoena_statuses': [self.pending, self.dropped],
         })
 
@@ -830,7 +865,7 @@ class GetSummaryTest(TestCase):
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
             'status_of_seized_equipment': [self.custody],
         })
 
@@ -869,7 +904,48 @@ class GetSummaryTest(TestCase):
             (category2.title, 1),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id, category2.id],
+            'categories': ManyRelationValue(pks=[self.category.id, category2.id]),
+            'lawsuit_name': 'Lawsuit One',
+        })
+
+    def test_category_incident_count_filtered_by_title(self):
+        category2 = CategoryPageFactory(
+            title='Other category',
+        )
+        IncidentPageFactory(
+            lawsuit_name='Lawsuit One',
+            categories=[self.category],
+            date=timezone.now().date(),
+        )
+        IncidentPageFactory(
+            lawsuit_name='Lawsuit Two',
+            categories=[self.category],
+            date=timezone.now().date(),
+        )
+        IncidentPageFactory(
+            lawsuit_name='Lawsuit One',
+            categories=[category2],
+            date=timezone.now().date(),
+        )
+        incident_filter = IncidentFilter(dict(
+            categories='{},{}'.format(self.category.pk, category2.title),
+            lawsuit_name='Lawsuit One',
+        ))
+
+        summary = incident_filter.get_summary()
+        self.assertEqual(summary, (
+            ('Total Results', 2),
+            ('Journalists affected', 0),
+            ('Institutions affected', 4),
+            ('Results in {}'.format(timezone.now().year), 2),
+            ('Results in {0:%B}'.format(timezone.now().date()), 2),
+            (self.category.title, 1),
+            (category2.title, 1),
+        ))
+        self.assertEqual(incident_filter.cleaned_data, {
+            'categories': ManyRelationValue(
+                pks=[self.category.pk],
+                strings=[category2.title]),
             'lawsuit_name': 'Lawsuit One',
         })
 
@@ -905,7 +981,7 @@ class GetSummaryTest(TestCase):
             ('Results in {0:%B}'.format(timezone.now().date()), 1),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
             'status_of_seized_equipment': [self.custody],
         })
 
@@ -937,7 +1013,7 @@ class GetSummaryTest(TestCase):
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
         })
 
     def test_journalist_count__deduped(self):
@@ -971,7 +1047,7 @@ class GetSummaryTest(TestCase):
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
         })
 
     def test_institution_count__deduped(self):
@@ -1006,7 +1082,7 @@ class GetSummaryTest(TestCase):
             ('Results in {0:%B}'.format(timezone.now().date()), 2),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id],
+            'categories': ManyRelationValue(pks=[self.category.id]),
         })
 
     def test_institution_count__via_journalists(self):
@@ -1096,7 +1172,7 @@ class GetSummaryTest(TestCase):
             (category2.title, 1),
         ))
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [self.category.id, category2.id],
+            'categories': ManyRelationValue(pks=[self.category.id, category2.id]),
             'search': 'asdf',
         })
 
@@ -1472,6 +1548,65 @@ class TargetedInstitutionsFilterTest(TestCase):
 
         incidents = incident_filter.get_queryset()
         self.assertEqual(set(incidents), {with_institution1_target})
+
+    def test_targeted_institution_filtering_by_title(self):
+        inst1 = InstitutionFactory()
+        inst2 = InstitutionFactory()
+        IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with no institutions targeted',
+        )
+        with_institution1_target = IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with institution 1 directly targeted',
+        )
+        with_institution1_target.targeted_institutions.set([inst1])
+        with_institution1_target.save()
+        with_institution2_target = IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with institution 2 directly targeted',
+        )
+        with_institution2_target.targeted_institutions.set([inst2])
+        with_institution2_target.save()
+
+        incident_filter = IncidentFilter(
+            {'targeted_institutions': inst1.title},
+        )
+        incident_filter.clean()
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(set(incidents), {with_institution1_target})
+
+    def test_targeted_institution_multifiltering(self):
+        inst1 = InstitutionFactory()
+        inst2 = InstitutionFactory()
+        IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with no institutions targeted',
+        )
+        with_institution1_target = IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with institution 1 directly targeted',
+        )
+        with_institution1_target.targeted_institutions.set([inst1])
+        with_institution1_target.save()
+        with_institution2_target = IncidentPageFactory(
+            institution_targets=0,
+            title='Incident with institution 2 directly targeted',
+        )
+        with_institution2_target.targeted_institutions.set([inst2])
+        with_institution2_target.save()
+
+        incident_filter = IncidentFilter(
+            {'targeted_institutions': f'{inst1.pk},{inst2.title}'},
+        )
+        incident_filter.clean()
+
+        incidents = incident_filter.get_queryset()
+        self.assertEqual(
+            set(incidents),
+            {with_institution1_target, with_institution2_target},
+        )
 
     def test_targeted_institution_filtering_via_targeted_journalists(self):
         tj1 = TargetedJournalistFactory(incident__title='Incident with Institution 1 targeted via journalist')

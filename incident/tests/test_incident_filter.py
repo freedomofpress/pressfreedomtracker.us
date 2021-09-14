@@ -15,6 +15,7 @@ from incident.models import IncidentPage
 from incident.models.choices import ARREST_STATUS, STATUS_OF_CHARGES
 from incident.utils.incident_filter import (
     IncidentFilter,
+    ManyRelationValue,
 )
 
 
@@ -176,7 +177,7 @@ class CleanTest(TestCase):
         incident_filter.clean(strict=True)
 
         self.assertEqual(incident_filter.cleaned_data, {
-            'categories': [category.id],
+            'categories': ManyRelationValue(pks=[category.id]),
         })
 
     def test_param_requires_correct_category(self):
