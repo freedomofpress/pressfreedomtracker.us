@@ -27,7 +27,7 @@ class District(models.Model):
     name = models.TextField(null=True)
     geonameid = models.BigIntegerField(primary_key=True)
 
-    isocode = models.IntegerField()
+    isocode = models.ForeignKey(Country, db_column='isocode', on_delete=models.PROTECT)
     regcode = models.TextField()
     discode = models.TextField()
 
