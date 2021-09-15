@@ -145,7 +145,7 @@ class IncidentCSVTestCase(TestCase):
             {'format': 'csv'},
         )
 
-        json_keys = list(json_response.json()['results'][0].keys())
+        json_keys = list(json_response.json()[0].keys())
         content_lines = csv_response.content.splitlines()
         reader = csv.reader(line.decode('utf-8') for line in content_lines)
         csv_headers = next(reader)

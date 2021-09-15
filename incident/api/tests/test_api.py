@@ -30,7 +30,6 @@ class IncidentAPITest(APITestCase):
             file__width=800,
             file__height=600,
             file__color='green',
-            # collection=photo_collection,
         )
 
         author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
@@ -77,7 +76,7 @@ class IncidentAPITest(APITestCase):
             reverse('incidentpage-list'),
             HTTP_ACCEPT='application/json',
         )
-        data = response.json()['results'][0]
+        data = response.json()[0]
         inc = self.incident
 
         self.maxDiff = None
@@ -161,7 +160,7 @@ class IncidentAPITest(APITestCase):
             HTTP_ACCEPT='application/json',
         )
 
-        self.assertEqual(len(response.json()['results']), 1)
+        self.assertEqual(len(response.json()), 1)
 
     def test_dynamic_fields(self):
         response = self.client.get(
@@ -171,6 +170,6 @@ class IncidentAPITest(APITestCase):
         )
 
         self.assertEqual(
-            list(response.json()['results'][0].keys()),
+            list(response.json()[0].keys()),
             ['city', 'state'],
         )
