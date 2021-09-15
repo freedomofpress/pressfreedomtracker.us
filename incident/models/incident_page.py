@@ -48,6 +48,7 @@ from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
 from incident.utils.db import CurrentDate
 from statistics.blocks import StatisticsBlock
+from geonames.cities import get_city_coords
 
 
 class IncidentAuthor(Orderable):
@@ -156,6 +157,8 @@ class IncidentPage(MetadataPageMixin, Page):
         on_delete=models.SET_NULL,
         help_text='Full name of the state. Abbreviations can be added in the Snippets editor.',
     )
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     body = StreamField([
         ('rich_text', RichTextTemplateBlock(
@@ -681,6 +684,11 @@ class IncidentPage(MetadataPageMixin, Page):
             self.unique_date = f'{self.date}-{uuid_}'
 
         super().full_clean(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        if self.state:
+            self.latitude, self.longitude = get_city_coords(self.city, self.state.abbreviation)
+        return super(IncidentPage, self).save(*args, **kwargs)
 
     def detention_duration(self):
         """

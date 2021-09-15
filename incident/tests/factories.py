@@ -164,6 +164,8 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
     state = factory.SubFactory(StateFactory)
+    longitude = factory.Faker('longitude')
+    latitude = factory.Faker('latitude')
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
     teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
     teaser_image = None
