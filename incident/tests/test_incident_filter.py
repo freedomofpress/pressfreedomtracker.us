@@ -15,6 +15,7 @@ from incident.models import IncidentPage
 from incident.models.choices import ARREST_STATUS, STATUS_OF_CHARGES
 from incident.utils.incident_filter import (
     IncidentFilter,
+    ManyRelationFilter,
     ManyRelationValue,
 )
 
@@ -242,4 +243,39 @@ class CleanTest(TestCase):
         self.assertEqual(
             [str(error) for error in cm.exception],
             ['Invalid value for arrest_status: ???'],
+        )
+
+    def test_text_param_for_relation_filter_without_text_fields(self):
+        CategoryPage.objects.all().delete()
+        CategoryPageFactory(title='Category A', incident_filters=['state'])
+        incident_filter = IncidentFilter({'state': '???'})
+        incident_filter.filter_overrides['state']['text_fields'] = []
+
+        with self.assertRaises(ValidationError) as cm:
+            incident_filter.clean(strict=True)
+
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['Expected integer for relationship "state", received "???"'],
+        )
+
+    def test_text_param_for_relation_filter_without_text_fields_not_included_in_cleaned_data(self):
+        CategoryPage.objects.all().delete()
+        CategoryPageFactory(title='Category A', incident_filters=['state'])
+        incident_filter = IncidentFilter({'state': '???'})
+        incident_filter.filter_overrides['state']['text_fields'] = []
+
+        incident_filter.clean(strict=False)
+
+        self.assertEqual(incident_filter.cleaned_data, {})
+
+    def test_text_param_for_manyrelation_filter_without_text_fields(self):
+        fltr = ManyRelationFilter('venue', IncidentPage.venue, text_fields=[])
+
+        with self.assertRaises(ValidationError) as cm:
+            fltr.clean('???', strict=True)
+
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['Invalid value for venue: ???'],
         )

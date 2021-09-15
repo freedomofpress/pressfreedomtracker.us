@@ -178,9 +178,10 @@ class CleanTest(TestCase):
                 ),
             )
 
-        self.assertEqual(dict(cm.exception), {
-            'params': [
+        self.assertEqual(
+            set(dict(cm.exception)['params']),
+            {
                 'Invalid value for status_of_charges: puppy',
-                'Invalid value for arrest_status: hello',
-            ],
-        })
+                'Invalid value for arrest_status: hello'
+            },
+        )
