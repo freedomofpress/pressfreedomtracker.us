@@ -28,6 +28,8 @@ from incident.tests.factories import (
     JournalistFactory,
     TargetedJournalistFactory,
     LawEnforcementOrganizationFactory,
+    VenueFactory,
+    NationalityFactory,
 )
 from incident.utils.incident_filter import IncidentFilter, ManyRelationValue
 
@@ -51,6 +53,43 @@ class TestFiltering(TestCase):
         )).get_queryset()
 
         self.assertEqual({incident1}, set(incidents))
+
+    def test_should_filter_by_venue_title(self):
+        venue1 = VenueFactory(title='Land')
+        venue2 = VenueFactory(title='Sea')
+        venue3 = VenueFactory(title='Air')
+
+        IncidentPageFactory(venue=[venue1])
+        IncidentPageFactory(venue=[venue2])
+        incident3 = IncidentPageFactory(venue=[venue3])
+
+        incidents = IncidentFilter({'venue': venue3.title}).get_queryset()
+        self.assertEqual(set(incidents), {incident3})
+
+    def test_should_filter_by_nationality_title(self):
+        category1 = CategoryPageFactory(
+            incident_filters=['target_nationality'],
+        )
+        nat1 = NationalityFactory(title='A')
+        nat2 = NationalityFactory(title='B')
+        nat3 = NationalityFactory(title='C')
+
+        incident1 = IncidentPageFactory(categories=[category1])
+        incident1.target_nationality.add(nat1)
+        incident1.save()
+        incident2 = IncidentPageFactory(categories=[category1])
+        incident2.target_nationality.add(nat2)
+        incident2.save()
+        incident3 = IncidentPageFactory(categories=[category1])
+        incident3.target_nationality.add(nat3)
+        incident3.save()
+        incidents = IncidentFilter(
+            {
+                'target_nationality': nat3.title,
+                'categories': str(category1.pk),
+            }
+        ).get_queryset()
+        self.assertEqual(set(incidents), {incident3})
 
     def test_should_filter_by_category(self):
         """should filter by category."""

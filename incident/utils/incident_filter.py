@@ -106,7 +106,9 @@ class RelationFilter(Filter):
             arguments = [
                 Q(**{f'{self.name}__{field}__iexact': value}) for field in self.text_fields
             ]
-            return functools.reduce(operator.or_, arguments)
+            # Combine all filters using OR operator, if there are no valid
+            # filters, perform no filtering with empty Q().
+            return functools.reduce(operator.or_, arguments, Q())
 
     def clean(self, value, strict=False):
         try:
@@ -357,7 +359,9 @@ class ManyRelationFilter(Filter):
             ]
         if value.pks:
             qs.append(Q(**{f'{self.lookup}__in': value.pks}))
-        return functools.reduce(operator.or_, qs)
+        # Combine all filters using OR operator, if there are no valid
+        # filters, perform no filtering with empty Q().
+        return functools.reduce(operator.or_, qs, Q())
 
     def get_verbose_name(self):
         if self.verbose_name:
@@ -401,7 +405,9 @@ class ChargesFilter(ManyRelationFilter):
             dropped_charges_match = Q(dropped_charges__title__in=value.strings)
             current_charges_match = Q(current_charges__title__in=value.strings)
             qs.append(current_charges_match | dropped_charges_match)
-        return functools.reduce(operator.or_, qs)
+        # Combine all filters using OR operator, if there are no valid
+        # filters, perform no filtering with empty Q().
+        return functools.reduce(operator.or_, qs, Q())
 
     def serialize(self):
         serialized = super(ManyRelationFilter, self).serialize()
@@ -508,7 +514,9 @@ class TargetedInstitutionsFilter(ManyRelationFilter):
             qs.append(
                 Q(targeted_journalists__institution__title__in=value.strings) | Q(targeted_institutions__title__in=value.strings)
             )
-        return functools.reduce(operator.or_, qs)
+        # Combine all filters using OR operator, if there are no valid
+        # filters, perform no filtering with empty Q().
+        return functools.reduce(operator.or_, qs, Q())
 
 
 def get_serialized_filters():
@@ -624,6 +632,12 @@ class IncidentFilter(object):
 
         if isinstance(model_field, (ManyToManyField, ManyToOneRel)):
             kwargs['filter_cls'] = ManyRelationFilter
+            try:
+                model_field.related_model._meta.get_field('title')
+            except FieldDoesNotExist:
+                pass
+            else:
+                kwargs['text_fields'] = ['title']
         elif isinstance(model_field, ForeignKey):
             kwargs['filter_cls'] = RelationFilter
             try:
@@ -697,7 +711,10 @@ class IncidentFilter(object):
                 )
             if category_data.strings:
                 qs.append(Q(title__in=category_data.strings))
-            qs = functools.reduce(operator.or_, qs)
+            # Combine string and primary key data using OR operator,
+            # if there are no valid filters, perform no filtering with
+            # empty Q().
+            qs = functools.reduce(operator.or_, qs, Q())
             categories = categories.filter(qs)
 
         for category in categories:
@@ -848,7 +865,10 @@ class IncidentFilter(object):
                 )
             if category_data.strings:
                 qs.append(Q(title__in=category_data.strings))
-            qs = functools.reduce(operator.or_, qs)
+            # Combine string and primary key data using OR operator,
+            # if there are no valid filters, perform no filtering with
+            # empty Q().
+            qs = functools.reduce(operator.or_, qs, Q())
             categories = CategoryPage.objects.filter(qs)
             for category in categories:
                 category_queryset = queryset.filter(categories__category=category)
