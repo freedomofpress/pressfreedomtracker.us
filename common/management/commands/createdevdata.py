@@ -22,7 +22,7 @@ from common.models import (
     FooterSettings, SearchSettings,
     GeneralIncidentFilter, IncidentFilterSettings, CategoryPage,
 )
-from common.tests.factories import (
+from common.devdata import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
 )
 from forms.models import FormPage

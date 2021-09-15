@@ -1,0 +1,11 @@
+[report]
+fail_under = 85
+omit =
+    */migrations/*.py
+    */tests/*.py
+    tracker/settings/*.py
+skip_empty = True
+show_missing = True
+
+[run]
+source = .

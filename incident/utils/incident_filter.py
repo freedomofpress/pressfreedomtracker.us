@@ -508,6 +508,8 @@ class IncidentFilter(object):
         'related_incidents',
         'updates',
         'search_image',
+        'longitude',
+        'latitude',
     }
 
     def __init__(self, data):

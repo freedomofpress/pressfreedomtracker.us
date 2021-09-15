@@ -1,8 +1,9 @@
 from django.contrib.auth.models import AnonymousUser
 from django.core import mail
 from django.test import TestCase, RequestFactory
-from wagtail.core.models import Site
+from wagtail.core.models import Site, Page
 
+from home.tests.factories import HomePageFactory
 from forms.tests.factories import (
     FormPageFactory,
     FormPageWithReplyToFieldFactory,
@@ -10,27 +11,52 @@ from forms.tests.factories import (
 )
 
 
-class FormPageTest(TestCase):
+class FormPageTestCase(TestCase):
+    @classmethod
+    def setUpTestData(kls):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        home_page = HomePageFactory.build()
+        root_page.add_child(instance=home_page)
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': home_page,
+            }
+        )
+        if not created:
+            site.root_page = home_page
+            site.save()
+
+        kls.form_page = FormPageFactory.build()
+        home_page.add_child(instance=kls.form_page)
+
     def test_cache_control_header_private(self):
-        site = Site.objects.get()
-        form_page = FormPageFactory(parent=site.root_page)
-
-        response = self.client.get(form_page.get_url())
-
+        response = self.client.get(self.form_page.get_full_url())
         self.assertEqual(response['cache-control'], 'private')
 
 
-class ReplyToFields(TestCase):
+class ReplyToFieldsTestCase(TestCase):
     @classmethod
     def setUpTestData(kls):
-        site = Site.objects.get()
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        home_page = HomePageFactory.build()
+        root_page.add_child(instance=home_page)
+
+        # site = Site.objects.get(is_default_site=True)
+        # root_page = site.root_page
         kls.form_page = FormPageWithReplyToFieldFactory(
-            parent=site.root_page,
+            parent=home_page,
             title='Form',
             from_address='sender@example.com',
             to_address='receiver@example.com',
             slug='form',
         )
+        # root_page.add_child(instance=kls.form_page)
 
     def test_reply_to_header_form_fields(self):
         factory = RequestFactory()
@@ -59,12 +85,15 @@ class ReplyToFields(TestCase):
         self.form_page.send_mail(form)
 
 
-class AppendSubjectFields(TestCase):
+class AppendSubjectFieldsTestCase(TestCase):
     @classmethod
     def setUpTestData(kls):
-        site = Site.objects.get()
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        home_page = HomePageFactory.build()
+        root_page.add_child(instance=home_page)
         kls.form_page = FormPageWithAppendSubjectFieldsFactory(
-            parent=site.root_page,
+            parent=home_page,
             title='Form',
             subject='Base Subject',
             from_address='sender@example.com',
@@ -87,5 +116,5 @@ class AppendSubjectFields(TestCase):
         self.form_page.send_mail(form)
         self.assertEqual(
             mail.outbox[0].subject,
-            '{0} - {1} - {2}'.format(self.form_page.subject, theme, topic)
+            f'{self.form_page.subject} - {topic} - {theme}'
         )

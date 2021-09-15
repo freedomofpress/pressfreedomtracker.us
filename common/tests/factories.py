@@ -1,6 +1,5 @@
 import factory
 import wagtail_factories
-from faker import Faker
 from wagtail.core import blocks
 from wagtail.core.rich_text import RichText
 
@@ -23,9 +22,6 @@ from common.models import (
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
-
-
-fake = Faker()
 
 
 class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
@@ -122,7 +118,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         )
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
-    methodology = factory.LazyAttribute(lambda _: RichText(fake.paragraph(nb_sentences=5)))
+    methodology = RichText("Methodology")
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_color = factory.Iterator(CATEGORY_COLOR_CHOICES, getter=lambda c: c[0])
 
@@ -142,7 +138,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
 
 
 class CustomImageFactory(wagtail_factories.ImageFactory):
-    attribution = factory.Faker('name')
+    attribution = factory.Sequence(lambda n: f'Attribution {n}')
 
     class Meta:
         model = CustomImage
@@ -152,9 +148,9 @@ class PersonPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = PersonPage
 
-    title = factory.Faker('name')
-    bio = factory.LazyAttribute(lambda _: RichText(fake.paragraph()))
-    website = factory.Faker('uri')
+    title = factory.Sequence(lambda n: f'Person {n}')
+    bio = RichText("Bio")
+    website = 'https://freedom.press'
     photo = None
 
 
@@ -169,10 +165,10 @@ class OrganizationPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = OrganizationPage
 
-    title = factory.Faker('company')
+    title = factory.Sequence(lambda n: f'Organization {n}')
     slug = factory.Sequence(lambda n: 'organization-{n}'.format(n=n))
-    website = factory.Faker('uri')
-    description = factory.Faker('catch_phrase')
+    website = 'https://freedom.press'
+    description = 'Organization Description'
 
 
 class SimplePageFactory(wagtail_factories.PageFactory):
@@ -232,4 +228,4 @@ class CommonTagFactory(factory.django.DjangoModelFactory):
         model = CommonTag
         django_get_or_create = ('title',)
 
-    title = factory.Faker('word')
+    title = factory.Sequence(lambda n: f'Tag {n}')

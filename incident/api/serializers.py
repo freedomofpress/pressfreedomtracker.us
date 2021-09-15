@@ -79,6 +79,8 @@ class BaseIncidentSerializer(serializers.Serializer):
     date = serializers.DateField()
     exact_date_unknown = serializers.BooleanField()
     city = serializers.CharField()
+    longitude = serializers.FloatField()
+    latitude = serializers.FloatField()
     body = serializers.SerializerMethodField()
     teaser = serializers.CharField()
     teaser_image = serializers.SerializerMethodField()
