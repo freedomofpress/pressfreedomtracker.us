@@ -1,5 +1,6 @@
 // jest.config.js
 module.exports = {
+  testEnvironment: "jsdom",
   verbose: true,
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/client/common/js/$1',

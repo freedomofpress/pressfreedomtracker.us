@@ -6,6 +6,6 @@ exports[`FilterAccordion should render without error in "debug" mode 1`] = `
     <CollapseIcon />
     General
   </button>
-  <FilterSet filters={{...}} handleFilterChange={[Function: mockConstructor]} filterValues={{...}} />
+  <FilterSet filters={{...}} handleFilterChange={[Function: mockConstructor] { _isMockFunction: true, getMockImplementation: [Function (anonymous)], mock: Object [Object: null prototype] { calls: [], instances: [], invocationCallOrder: [], results: [] }, mockClear: [Function (anonymous)], mockReset: [Function (anonymous)], mockRestore: [Function (anonymous)], mockReturnValueOnce: [Function (anonymous)], mockResolvedValueOnce: [Function (anonymous)], mockRejectedValueOnce: [Function (anonymous)], mockReturnValue: [Function (anonymous)], mockResolvedValue: [Function (anonymous)], mockRejectedValue: [Function (anonymous)], mockImplementationOnce: [Function (anonymous)], mockImplementation: [Function (anonymous)], mockReturnThis: [Function (anonymous)], mockName: [Function (anonymous)], getMockName: [Function (anonymous)] }} filterValues={{...}} />
 </li>"
 `;

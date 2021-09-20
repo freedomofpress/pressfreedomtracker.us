@@ -8,9 +8,9 @@ import { STATE_FILTER_VALUES, TAG_FILTER_VALUES, EMPTY_FILTER_VALUES, TAG_MOCK_R
 jest.mock('axios');
 
 // Allows me to ensure that all the promises are resolved.
-// setImmediate isn't to be used in production but should
+// nextTick isn't to be used in production but should
 // be fine for testing and CI.
-const flushPromises = () => new Promise(setImmediate);
+const flushPromises = () => new Promise(process.nextTick);
 
 describe('Inputs', () => {
 
