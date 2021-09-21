@@ -1,7 +1,11 @@
+import dataclasses
+import functools
+import operator
 from datetime import date
 import copy
+from typing import List
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, FieldDoesNotExist
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import (
     BooleanField,
@@ -33,7 +37,7 @@ class Filter(object):
     def __init__(self, name, model_field, lookup=None, verbose_name=None):
         self.name = name
         self.model_field = model_field
-        self.lookup = lookup or name
+        self._lookup = lookup
         self.verbose_name = verbose_name
 
     def __repr__(self):
@@ -45,11 +49,20 @@ class Filter(object):
     def get_value(self, data):
         return data.get(self.name) or None
 
+    @property
+    def lookup(self):
+        return self._lookup or self.name
+
     def clean(self, value, strict=False):
         return self.model_field.to_python(value)
 
     def get_allowed_parameters(self):
         return {self.name}
+
+    def get_query_arguments(self, value):
+        """Returns the give value as a Django Q-object appropriate for the
+filtering query."""
+        return Q(**{self.lookup: value})
 
     def filter(self, queryset, value):
         """
@@ -57,7 +70,7 @@ class Filter(object):
 
         This will only get called if value is not None.
         """
-        return queryset.filter(**{self.lookup: value})
+        return queryset.filter(self.get_query_arguments(value))
 
     def get_verbose_name(self):
         return self.verbose_name or self.model_field.verbose_name
@@ -82,18 +95,39 @@ class IntegerFilter(Filter):
 class RelationFilter(Filter):
     serialized_type = 'autocomplete'
 
+    def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
+        self.text_fields = text_fields
+        super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
+
+    def get_query_arguments(self, value):
+        if isinstance(value, int):
+            return super().get_query_arguments(value)
+        else:
+            arguments = [
+                Q(**{f'{self.name}__{field}__iexact': value}) for field in self.text_fields
+            ]
+            # Combine all filters using OR operator, if there are no valid
+            # filters, perform no filtering with empty Q().
+            return functools.reduce(operator.or_, arguments, Q())
+
     def clean(self, value, strict=False):
         try:
             return int(value)
         except ValueError:
-            if strict:
+            if self.text_fields:
+                # If this filter supports fallback text fields for
+                # filtering non-integer ID values, return whatever we
+                # were given.
+                return value
+            elif strict:
                 raise ValidationError(
                     'Expected integer for relationship "{}", received "{}"'.format(
                         self.name,
                         value,
                     )
                 )
-            return None
+            else:
+                return None
 
     def serialize(self):
         serialized = super(RelationFilter, self).serialize()
@@ -274,24 +308,40 @@ class MultiChoiceFilter(Filter):
         return serialized
 
 
+@dataclasses.dataclass(eq=True, frozen=True)
+class ManyRelationValue:
+    pks: List[int] = dataclasses.field(default_factory=list)
+    strings: List[str] = dataclasses.field(default_factory=list)
+
+    def __bool__(self):
+        return bool(self.pks) or bool(self.strings)
+
+
 class ManyRelationFilter(Filter):
     serialized_type = 'autocomplete'
+
+    def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
+        self.text_fields = text_fields
+        super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
     def clean(self, value, strict=False):
         if not value:
             return None
         if isinstance(value, int):
-            values = [value]
+            return ManyRelationValue(pks=[value])
         else:
             values = value.split(',')
         invalid_values = []
 
-        value = []
+        value = ManyRelationValue()
         for v in values:
             try:
-                value.append(int(v))
+                value.pks.append(int(v))
             except ValueError:
-                invalid_values.append(v)
+                if self.text_fields:
+                    value.strings.append(v)
+                else:
+                    invalid_values.append(v)
 
         if invalid_values and strict:
             raise ValidationError('Invalid value{} for {}: {}'.format(
@@ -301,8 +351,17 @@ class ManyRelationFilter(Filter):
             ))
         return value
 
-    def filter(self, queryset, value):
-        return queryset.filter(**{'{}__in'.format(self.lookup): value})
+    def get_query_arguments(self, value):
+        qs = []
+        if self.text_fields and value.strings:
+            qs = [
+                Q(**{f'{self.lookup}__{field}__in': value.strings}) for field in self.text_fields
+            ]
+        if value.pks:
+            qs.append(Q(**{f'{self.lookup}__in': value.pks}))
+        # Combine all filters using OR operator, if there are no valid
+        # filters, perform no filtering with empty Q().
+        return functools.reduce(operator.or_, qs, Q())
 
     def get_verbose_name(self):
         if self.verbose_name:
@@ -336,10 +395,19 @@ class SearchFilter(Filter):
 
 
 class ChargesFilter(ManyRelationFilter):
-    def filter(self, queryset, value):
-        dropped_charges_match = Q(dropped_charges__in=value)
-        current_charges_match = Q(current_charges__in=value)
-        return queryset.filter(current_charges_match | dropped_charges_match)
+    def get_query_arguments(self, value):
+        qs = []
+        if value.pks:
+            dropped_charges_match = Q(dropped_charges__in=value.pks)
+            current_charges_match = Q(current_charges__in=value.pks)
+            qs.append(current_charges_match | dropped_charges_match)
+        if value.strings:
+            dropped_charges_match = Q(dropped_charges__title__in=value.strings)
+            current_charges_match = Q(current_charges__title__in=value.strings)
+            qs.append(current_charges_match | dropped_charges_match)
+        # Combine all filters using OR operator, if there are no valid
+        # filters, perform no filtering with empty Q().
+        return functools.reduce(operator.or_, qs, Q())
 
     def serialize(self):
         serialized = super(ManyRelationFilter, self).serialize()
@@ -436,10 +504,19 @@ class RecentlyUpdatedFilter(IntegerFilter):
 
 
 class TargetedInstitutionsFilter(ManyRelationFilter):
-    def filter(self, queryset, value):
-        return queryset.filter(
-            Q(targeted_journalists__institution__in=value) | Q(targeted_institutions__in=value)
-        )
+    def get_query_arguments(self, value):
+        qs = []
+        if value.pks:
+            qs.append(
+                Q(targeted_journalists__institution__in=value.pks) | Q(targeted_institutions__in=value.pks)
+            )
+        if value.strings:
+            qs.append(
+                Q(targeted_journalists__institution__title__in=value.strings) | Q(targeted_institutions__title__in=value.strings)
+            )
+        # Combine all filters using OR operator, if there are no valid
+        # filters, perform no filtering with empty Q().
+        return functools.reduce(operator.or_, qs, Q())
 
 
 def get_serialized_filters():
@@ -478,7 +555,7 @@ def get_serialized_filters():
 
 class IncidentFilter(object):
     filter_overrides = {
-        'categories': {'lookup': 'categories__category'},
+        'categories': {'lookup': 'categories__category', 'text_fields': ['title']},
         'date': {'fuzzy': True, 'verbose_name': 'took place between'},
         'city': {'lookup': 'city__iexact'},
         'equipment_seized': {'lookup': 'equipment_seized__equipment'},
@@ -486,14 +563,15 @@ class IncidentFilter(object):
         'tags': {'verbose_name': 'Has any of these tags'},
         'subpoena_statuses': {'verbose_name': 'Subpoena status'},
         'targeted_journalists': {'verbose_name': 'Targeted any of these journalists', 'filter_cls': RelationThroughFilter, 'relation': 'journalist'},
-        'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter},
+        'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter, 'text_fields': ['title']},
         'arresting_authority': {'filter_cls': RelationFilter, 'verbose_name': 'Arresting authority'},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
+        'state': {'text_fields': ['abbreviation', 'name']}
     }
 
     _extra_filters = {
         'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
-        'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges')),
+        'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges'), text_fields=['title']),
         'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
         'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last')
     }
@@ -554,8 +632,20 @@ class IncidentFilter(object):
 
         if isinstance(model_field, (ManyToManyField, ManyToOneRel)):
             kwargs['filter_cls'] = ManyRelationFilter
+            try:
+                model_field.related_model._meta.get_field('title')
+            except FieldDoesNotExist:
+                pass
+            else:
+                kwargs['text_fields'] = ['title']
         elif isinstance(model_field, ForeignKey):
             kwargs['filter_cls'] = RelationFilter
+            try:
+                model_field.related_model._meta.get_field('title')
+            except FieldDoesNotExist:
+                pass
+            else:
+                kwargs['text_fields'] = ['title']
         elif isinstance(model_field, DateField):
             kwargs['filter_cls'] = DateFilter
         elif model_field.choices:
@@ -611,11 +701,22 @@ class IncidentFilter(object):
         categories = CategoryPage.objects.live().prefetch_related(
             'incident_filters',
         )
-        category_ids = self.cleaned_data.get('categories')
-        if category_ids:
-            categories = categories.filter(
-                id__in=category_ids,
-            )
+        category_data = self.cleaned_data.get('categories')
+
+        if category_data:
+            qs = []
+            if category_data.pks:
+                qs.append(
+                    Q(id__in=category_data.pks)
+                )
+            if category_data.strings:
+                qs.append(Q(title__in=category_data.strings))
+            # Combine string and primary key data using OR operator,
+            # if there are no valid filters, perform no filtering with
+            # empty Q().
+            qs = functools.reduce(operator.or_, qs, Q())
+            categories = categories.filter(qs)
+
         for category in categories:
             for category_incident_filter in category.incident_filters.all():
                 incident_filter = category_incident_filter.incident_filter
@@ -755,11 +856,20 @@ class IncidentFilter(object):
 
         # If more than one category is included in this set, add a summary item
         # for each category of the form ("Total <Category Name>", <Count>)
-        category_pks = self.cleaned_data.get('categories')
-        if category_pks and len(category_pks) > 1:
-            categories = CategoryPage.objects.filter(
-                pk__in=category_pks
-            )
+        category_data = self.cleaned_data.get('categories')
+        if category_data and len(category_data.pks) + len(category_data.strings) > 1:
+            qs = []
+            if category_data.pks:
+                qs.append(
+                    Q(pk__in=category_data.pks)
+                )
+            if category_data.strings:
+                qs.append(Q(title__in=category_data.strings))
+            # Combine string and primary key data using OR operator,
+            # if there are no valid filters, perform no filtering with
+            # empty Q().
+            qs = functools.reduce(operator.or_, qs, Q())
+            categories = CategoryPage.objects.filter(qs)
             for category in categories:
                 category_queryset = queryset.filter(categories__category=category)
                 summary = summary + ((

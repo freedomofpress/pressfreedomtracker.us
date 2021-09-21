@@ -176,12 +176,14 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             context['export_path'] = self.url + self.reverse_subpage('export_view')
 
         incident_filter.clean()
-        category_ids = incident_filter.cleaned_data.get('categories')
+        category_data = incident_filter.cleaned_data.get('categories')
 
-        if not category_ids:
+        if not category_data:
             context['categories'] = CategoryPage.objects.live()
         else:
-            context['categories'] = CategoryPage.objects.filter(live=True, pk__in=category_ids)
+            context['categories'] = CategoryPage.objects.live().filter(
+                models.Q(pk__in=category_data.pks) | models.Q(title__in=category_data.strings)
+            )
 
         incident_qs = incident_filter.get_queryset() \
             .select_related('teaser_image', 'state', 'arresting_authority') \
