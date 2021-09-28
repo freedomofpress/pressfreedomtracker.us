@@ -414,6 +414,44 @@ class GetRelatedIncidentsTest(TestCase):
         self.assertEqual(related_incidents, [close, nearby, far, nearby_no_tag_overlap])
 
 
+class RecentlyUpdatedMethod(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get()
+        cls.index = IncidentIndexPageFactory(
+            parent=site.root_page,
+            slug='incidents',
+        )
+
+        cls.inc1, cls.inc2, cls.inc3 = IncidentPageFactory.create_batch(
+            3,
+            parent=cls.index,
+        )
+        IncidentUpdateFactory(
+            page=cls.inc1,
+            date=timezone.now() - timedelta(days=30),
+        )
+        IncidentUpdateFactory(
+            page=cls.inc2,
+            date=timezone.now() - timedelta(days=3),
+        )
+        IncidentUpdateFactory(
+            page=cls.inc3,
+            date=timezone.now(),
+        )
+
+    def test_knows_if_an_incident_was_updated_in_the_past_week(self):
+        self.assertFalse(self.inc1.recently_updated())
+        self.assertTrue(self.inc2.recently_updated())
+        self.assertTrue(self.inc3.recently_updated())
+
+    def test_runs_no_queries_if_information_cached(self):
+        incidents = IncidentPage.objects.with_most_recent_update().all()
+        for incident in incidents:
+            with self.assertNumQueries(0):
+                incident.recently_updated()
+
+
 class GetIncidentUpdatesTest(TestCase):
     def setUp(self):
         site = Site.objects.get()

@@ -714,11 +714,14 @@ class IncidentPage(MetadataPageMixin, Page):
         """
         Determines whether an incident has been updated within the last week. Returns a boolean.
         """
-        latest_update = self.updates.order_by('-date').first()
-        if latest_update:
-            delta = datetime.datetime.now(datetime.timezone.utc) - latest_update.date
-            return delta.days < 7
-        return False
+        if getattr(self, 'updated_days_ago', None) is not None:
+            return self.updated_days_ago < 7
+        else:
+            latest_update = self.updates.order_by('-date').first()
+            if latest_update:
+                delta = datetime.datetime.now(datetime.timezone.utc) - latest_update.date
+                return delta.days < 7
+            return False
 
     def get_updates_by_asc_date(self):
         """
