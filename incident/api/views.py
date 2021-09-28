@@ -8,7 +8,12 @@ from rest_framework.response import Response
 from rest_framework.utils.urls import remove_query_param
 from rest_framework_csv.renderers import PaginatedCSVRenderer
 
-from incident.api.serializers import IncidentSerializer, FlatIncidentSerializer
+from incident.api.serializers import (
+    IncidentSerializer,
+    JournalistSerializer,
+    FlatIncidentSerializer,
+)
+from incident import models
 from incident.utils.incident_filter import IncidentFilter
 
 if TYPE_CHECKING:
@@ -95,3 +100,8 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         incidents = incident_filter.get_queryset()
 
         return incidents.with_most_recent_update().with_public_associations()
+
+
+class JournalistViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Journalist.objects.all()
+    serializer_class = JournalistSerializer

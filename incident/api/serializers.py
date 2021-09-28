@@ -69,6 +69,11 @@ class StateSerializer(serializers.Serializer):
     abbreviation = serializers.CharField()
 
 
+class JournalistSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+
+
 class BaseIncidentSerializer(serializers.Serializer):
     title = serializers.CharField()
     url = serializers.SerializerMethodField()

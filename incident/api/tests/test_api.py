@@ -9,6 +9,7 @@ from common.tests.factories import (
     CustomImageFactory,
     CommonTagFactory,
 )
+from incident.tests import factories
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
@@ -16,6 +17,39 @@ from incident.tests.factories import (
     IncidentLinkFactory,
     VenueFactory,
 )
+
+
+class JournalistAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.journalist = factories.JournalistFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('journalist-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('journalist-detail', args=(self.journalist.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('journalist-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.journalist.title,
+            'id': self.journalist.pk,
+        })
 
 
 class IncidentAPITest(APITestCase):
