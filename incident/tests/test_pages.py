@@ -333,18 +333,21 @@ class GetRelatedIncidentsTest(TestCase):
         closely_related_old = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
+            state=None,
             categories=[self.category],
             date='2016-01-01',
         )
         closely_related_new = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
+            state=None,
             categories=[self.category],
             date='2020-01-01',
         )
         closely_related_recent = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
+            state=None,
             categories=[self.category],
             date='2019-01-01',
         )
