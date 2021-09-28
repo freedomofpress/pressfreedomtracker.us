@@ -17,6 +17,7 @@ from incident.tests.factories import (
     IncidentUpdateFactory,
     IncidentLinkFactory,
     VenueFactory,
+    StateFactory,
 )
 
 
@@ -84,11 +85,17 @@ class IncidentCSVTestCase(TestCase):
 
         author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
         cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(3, parent=root_page)
+        state = StateFactory()
 
         cls.incident = IncidentPageFactory(
             parent=cls.incident_index,
             authors=[author1, author2],
             categories=[cls.cat1, cls.cat2],
+            city='City A',
+            state=state,
+            teaser='Teaser',
+            image_caption='Caption',
+            lawsuit_name='Lawsuit Name',
             equipment_search=True,
             equipment_damage=True,
             arrest=True,
@@ -183,9 +190,9 @@ class IncidentCSVTestCase(TestCase):
             {
                 'title': inc.title,
                 'url': inc.get_full_url(),
-                'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                 'authors': ', '.join([author.author.title for author in inc.authors.all()]),
                 'updates': ', '.join([str(update) for update in inc.updates.all()]),
                 'categories': ', '.join([cat.category.title for cat in inc.categories.all()]),

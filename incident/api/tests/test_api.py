@@ -16,6 +16,7 @@ from incident.tests.factories import (
     IncidentUpdateFactory,
     IncidentLinkFactory,
     VenueFactory,
+    StateFactory,
 )
 
 
@@ -72,6 +73,8 @@ class IncidentAPITest(APITestCase):
         cls.incident = IncidentPageFactory(
             parent=cls.incident_index,
             authors=[author1, author2],
+            state=StateFactory(),
+            teaser='Teaser',
             categories=[cls.cat1, cls.cat2],
             equipment_search=True,
             equipment_damage=True,
@@ -119,9 +122,9 @@ class IncidentAPITest(APITestCase):
             {
                 'title': inc.title,
                 'url': inc.get_full_url(),
-                'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                 'authors': [author.author.title for author in inc.authors.all()],
                 'updates': [str(update) for update in inc.updates.all()],
                 'categories': [cat.category.title for cat in inc.categories.all()],
