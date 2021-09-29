@@ -135,13 +135,14 @@ class CleanTest(TestCase):
         self.assertEqual(dict(cm.exception), {'params': ['date_lower must be less than or equal to date_upper']})
 
     def test_clean__kwargs__cleans_with_incident_filter__invalid_param_value(self):
+        CategoryPageFactory(incident_filters=['status_of_charges'])
         with self.assertRaises(ValidationError) as cm:
             validate_dataset_params(
                 dataset='kwargs',
-                params='tags="hello"',
+                params='status_of_charges="hello"',
             )
 
-        self.assertEqual(dict(cm.exception), {'params': ['Invalid value for tags: hello']})
+        self.assertEqual(dict(cm.exception), {'params': ['Invalid value for status_of_charges: hello']})
 
     def test_clean__kwargs__cleans_with_incident_filter__variable_param_value(self):
         with self.assertRaises(ValidationError) as cm:
@@ -165,19 +166,22 @@ class CleanTest(TestCase):
         )
 
     def test_clean_kwargs__combine_multiple_errors(self):
-        category = CategoryPageFactory(incident_filters=['arrest_status'])
+        category = CategoryPageFactory(
+            incident_filters=['arrest_status', 'status_of_charges']
+        )
 
         with self.assertRaises(ValidationError) as cm:
             validate_dataset_params(
                 dataset='kwargs',
-                params='categories="{}" arrest_status="hello" tags="puppy"'.format(
+                params='categories="{}" arrest_status="hello" status_of_charges="puppy"'.format(
                     category.id,
                 ),
             )
 
-        self.assertEqual(dict(cm.exception), {
-            'params': [
-                'Invalid value for arrest_status: hello',
-                'Invalid value for tags: puppy',
-            ],
-        })
+        self.assertEqual(
+            set(dict(cm.exception)['params']),
+            {
+                'Invalid value for status_of_charges: puppy',
+                'Invalid value for arrest_status: hello'
+            },
+        )
