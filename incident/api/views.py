@@ -125,3 +125,8 @@ class ChargeViewSet(viewsets.ReadOnlyModelViewSet):
 class NationalityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Nationality.objects.all()
     serializer_class = ItemSerializer
+
+
+class PoliticianOrPublicViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.PoliticianOrPublic.objects.all()
+    serializer_class = ItemSerializer

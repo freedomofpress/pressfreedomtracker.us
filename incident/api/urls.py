@@ -10,5 +10,6 @@ router.register(r'institutions', views.InstitutionViewSet)
 router.register(r'governmentworkers', views.GovernmentWorkerViewSet)
 router.register(r'charges', views.ChargeViewSet)
 router.register(r'nationalities', views.NationalityViewSet)
+router.register(r'politicians', views.PoliticianOrPublicViewSet)
 
 api_urls = router.urls
