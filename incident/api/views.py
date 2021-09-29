@@ -10,8 +10,7 @@ from rest_framework_csv.renderers import PaginatedCSVRenderer
 
 from incident.api.serializers import (
     IncidentSerializer,
-    InstitutionSerializer,
-    JournalistSerializer,
+    ItemSerializer,
     FlatIncidentSerializer,
 )
 from incident import models
@@ -105,9 +104,14 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
 class JournalistViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Journalist.objects.all()
-    serializer_class = JournalistSerializer
+    serializer_class = ItemSerializer
 
 
 class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Institution.objects.all()
-    serializer_class = InstitutionSerializer
+    serializer_class = ItemSerializer
+
+
+class GovernmentWorkerViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.GovernmentWorker.objects.all()
+    serializer_class = ItemSerializer

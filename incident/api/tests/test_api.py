@@ -86,6 +86,39 @@ class InstitutionAPITest(APITestCase):
         })
 
 
+class GovernmentWorkerAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.worker = factories.GovernmentWorkerFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('governmentworker-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('governmentworker-detail', args=(self.worker.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('governmentworker-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.worker.title,
+            'id': self.worker.pk,
+        })
+
+
 class IncidentAPITest(APITestCase):
     @classmethod
     def setUpTestData(cls):
