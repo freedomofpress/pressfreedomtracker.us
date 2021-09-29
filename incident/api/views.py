@@ -115,3 +115,8 @@ class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
 class GovernmentWorkerViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.GovernmentWorker.objects.all()
     serializer_class = ItemSerializer
+
+
+class ChargeViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Charge.objects.all()
+    serializer_class = ItemSerializer
