@@ -33,6 +33,7 @@ urlpatterns = [
     path('documents/', include(wagtaildocs_urls)),
 
     path('health/ok/', common_views.health_ok),
+    path('health/version/', common_views.health_version),
 
     path(r'', include(wagtail_urls)),
 ]

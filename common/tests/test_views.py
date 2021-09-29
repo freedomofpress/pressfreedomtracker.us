@@ -11,6 +11,7 @@ from incident.tests.factories import (
     IncidentPageFactory,
     TopicPageFactory,
 )
+from unittest import mock
 import json
 
 User = get_user_model()
@@ -164,7 +165,33 @@ class MergeViewSameNameTest(TestCase):
             CommonTag.objects.get(pk=self.tag2.pk)
 
 
+class AdminVersionTestCase(TestCase):
+    def setUp(self):
+        user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+        self.client.force_login(user)
+
+    def test_full_version_url_returns_200_status(self):
+        self.response = self.client.get('/admin/version/')
+        self.assertEqual(self.response.status_code, 200)
+
+    @mock.patch('common.views.open')
+    def test_full_version_url_returns_200_status_filenotfound(self, mock_open):
+        mock_open.side_effect = FileNotFoundError
+        self.response = self.client.get('/admin/version/')
+        self.assertEqual(self.response.status_code, 200)
+
+
 class HealthCheckTestCase(TestCase):
     def test_health_check_url_returns_200_status(self):
         self.response = self.client.get('/health/ok/')
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_version_info_url_returns_200_status(self):
+        self.response = self.client.get('/health/version/')
+        self.assertEqual(self.response.status_code, 200)
+
+    @mock.patch('common.views.open')
+    def test_version_info_url_returns_200_status_filenotfound(self, mock_open):
+        mock_open.side_effect = FileNotFoundError
+        self.response = self.client.get('/health/version/')
         self.assertEqual(self.response.status_code, 200)
