@@ -53,7 +53,7 @@ class FlatListField(serializers.ListField):
         return ', '.join([str(element) for element in obj])
 
 
-class EquipmentSerializer(serializers.Serializer):
+class EquipmentAmountSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
     equipment = serializers.StringRelatedField(read_only=True)
 
@@ -162,8 +162,8 @@ class BaseIncidentSerializer(serializers.Serializer):
 
 class IncidentSerializer(BaseIncidentSerializer):
     links = IncidentLinkSerializer(many=True)
-    equipment_seized = EquipmentSerializer(many=True, read_only=True)
-    equipment_broken = EquipmentSerializer(many=True, read_only=True)
+    equipment_seized = EquipmentAmountSerializer(many=True, read_only=True)
+    equipment_broken = EquipmentAmountSerializer(many=True, read_only=True)
     state = StateSerializer()
 
     updates = serializers.StringRelatedField(many=True)
