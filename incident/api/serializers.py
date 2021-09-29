@@ -69,6 +69,11 @@ class StateSerializer(serializers.Serializer):
     abbreviation = serializers.CharField()
 
 
+class EquipmentSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+
+
 class ItemSerializer(serializers.Serializer):
     """Serializer for incident-related items possessing only primary key and title fields."""
     id = serializers.IntegerField()

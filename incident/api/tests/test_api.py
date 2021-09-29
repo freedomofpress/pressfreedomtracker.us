@@ -251,6 +251,39 @@ class VenueAPITest(APITestCase):
         })
 
 
+class EquipmentAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.equipment = factories.EquipmentFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('equipment-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('equipment-detail', args=(self.equipment.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('equipment-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'name': self.equipment.name,
+            'id': self.equipment.pk,
+        })
+
+
 class IncidentAPITest(APITestCase):
     @classmethod
     def setUpTestData(cls):

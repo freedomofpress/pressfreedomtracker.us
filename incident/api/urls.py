@@ -12,5 +12,6 @@ router.register(r'charges', views.ChargeViewSet)
 router.register(r'nationalities', views.NationalityViewSet)
 router.register(r'politicians', views.PoliticianOrPublicViewSet)
 router.register(r'venues', views.VenueViewSet)
+router.register(r'equipment', views.EquipmentViewSet)
 
 api_urls = router.urls
