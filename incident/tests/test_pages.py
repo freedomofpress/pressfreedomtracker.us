@@ -333,18 +333,21 @@ class GetRelatedIncidentsTest(TestCase):
         closely_related_old = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
+            state=None,
             categories=[self.category],
             date='2016-01-01',
         )
         closely_related_new = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
+            state=None,
             categories=[self.category],
             date='2020-01-01',
         )
         closely_related_recent = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
+            state=None,
             categories=[self.category],
             date='2019-01-01',
         )
@@ -412,6 +415,44 @@ class GetRelatedIncidentsTest(TestCase):
         related_incidents = subject.get_related_incidents()
 
         self.assertEqual(related_incidents, [close, nearby, far, nearby_no_tag_overlap])
+
+
+class RecentlyUpdatedMethod(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get()
+        cls.index = IncidentIndexPageFactory(
+            parent=site.root_page,
+            slug='incidents',
+        )
+
+        cls.inc1, cls.inc2, cls.inc3 = IncidentPageFactory.create_batch(
+            3,
+            parent=cls.index,
+        )
+        IncidentUpdateFactory(
+            page=cls.inc1,
+            date=timezone.now() - timedelta(days=30),
+        )
+        IncidentUpdateFactory(
+            page=cls.inc2,
+            date=timezone.now() - timedelta(days=3),
+        )
+        IncidentUpdateFactory(
+            page=cls.inc3,
+            date=timezone.now(),
+        )
+
+    def test_knows_if_an_incident_was_updated_in_the_past_week(self):
+        self.assertFalse(self.inc1.recently_updated())
+        self.assertTrue(self.inc2.recently_updated())
+        self.assertTrue(self.inc3.recently_updated())
+
+    def test_runs_no_queries_if_information_cached(self):
+        incidents = IncidentPage.objects.with_most_recent_update().all()
+        for incident in incidents:
+            with self.assertNumQueries(0):
+                incident.recently_updated()
 
 
 class GetIncidentUpdatesTest(TestCase):
