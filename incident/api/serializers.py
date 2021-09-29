@@ -74,6 +74,11 @@ class JournalistSerializer(serializers.Serializer):
     title = serializers.CharField()
 
 
+class InstitutionSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+
+
 class BaseIncidentSerializer(serializers.Serializer):
     title = serializers.CharField()
     url = serializers.SerializerMethodField()

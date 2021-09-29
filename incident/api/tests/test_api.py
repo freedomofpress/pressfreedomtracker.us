@@ -53,6 +53,39 @@ class JournalistAPITest(APITestCase):
         })
 
 
+class InstitutionAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.institution = factories.InstitutionFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('institution-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('institution-detail', args=(self.institution.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('institution-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.institution.title,
+            'id': self.institution.pk,
+        })
+
+
 class IncidentAPITest(APITestCase):
     @classmethod
     def setUpTestData(cls):
