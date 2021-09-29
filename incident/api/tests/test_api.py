@@ -152,6 +152,39 @@ class ChargeAPITest(APITestCase):
         })
 
 
+class NationalityAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.nationality = factories.NationalityFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('nationality-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('nationality-detail', args=(self.nationality.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('nationality-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.nationality.title,
+            'id': self.nationality.pk,
+        })
+
+
 class IncidentAPITest(APITestCase):
     @classmethod
     def setUpTestData(cls):
