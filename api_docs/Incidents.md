@@ -22,7 +22,7 @@ These parameters can be used to customize the query and response that the API re
 
 | Query string parameter | Type    | Description                                                                                                                                                                           |
 |------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `limit`                | integer | The maximum number of results to return per page. If this parameter is not provided, then the set of results will not be paginated.                                                   |
+| `limit`                | integer | The maximum number of results to return per page. If this parameter is not provided, it will default to 25.                                                                           |
 | `fields`               | string  | A comma-separated list of field names. The incidents returned in the response will include only the ones given in this parameter. The set of available field names is detailed below. |
 | `format`               | string  | Describes the format of the data in the response. Can be either `json` (the default) or `csv`.                                                                                        |
 
