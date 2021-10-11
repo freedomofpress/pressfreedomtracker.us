@@ -25,7 +25,6 @@ wagtail>=2.11.8,<2.12
 wagtail-autocomplete>=0.6
 wagtail-factories>=2.0.1
 wagtail-django-recaptcha
-wagtail-livepreview
 wagtail-metadata>=3.4.0
 unittest-xml-reporting
 wagtail-inventory>=1.1
