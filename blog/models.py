@@ -63,8 +63,6 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     subpage_types = ['blog.BlogPage']
 
-    LIVEPREVIEW_DISABLED = True
-
     @route(r'^feed/$')
     def feed(self, request):
         return BlogIndexPageFeed(self)(request)

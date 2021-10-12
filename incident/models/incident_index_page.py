@@ -56,8 +56,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     subpage_types = ['incident.IncidentPage']
 
-    LIVEPREVIEW_DISABLED = True
-
     @route('export/')
     @method_decorator(require_http_methods(['HEAD', 'GET', 'OPTIONS']))
     def export_view(self, request: 'HttpRequest') -> HttpResponse:

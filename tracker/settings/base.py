@@ -225,20 +225,11 @@ WEBPACK_LOADER = {  # noqa: W605
     }
 }
 
-# Makes Livepreview optional
-LIVEPREVIEW_ENABLED = os.environ.get('LIVEPREVIEW_ENABLED', False)
-if LIVEPREVIEW_ENABLED:
-    # The livepreview needs to be added in the INSTALLED_APPS above the
-    # 'wagtail.admin' app
-    INSTALLED_APPS.insert(INSTALLED_APPS.index('wagtail.admin'), 'livepreview')
-    LIVEPREVIEW_USE_FILE_RENDERING = False
-
 # Disable analytics by default
 ANALYTICS_ENABLED = False
 
 # Export analytics settings for use in site templates
 SETTINGS_EXPORT = [
-    'LIVEPREVIEW_ENABLED',
     'ANALYTICS_ENABLED',
 ]
 # Prevent template variable name collision with wagtail settings

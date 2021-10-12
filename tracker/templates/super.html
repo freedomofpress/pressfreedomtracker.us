@@ -52,8 +52,5 @@
 	<body class="{% block body_class %}{% endblock %}">
 		{% block body %}
 		{% endblock %}
-		{% if django_settings.LIVEPREVIEW_ENABLED %}
-			{% include "livepreview_js.html" %}
-		{% endif %}
 	</body>
 </html>
