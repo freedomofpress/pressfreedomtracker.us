@@ -7,9 +7,56 @@
 {% endcomment %}
 
 {% with email_settings=settings.emails.EmailSettings %}
-	<div
-		class="js-emails-signup emails-signup {{ class }}"
-		data-signup-prompt="{% filter force_escape %}{% firstof prompt email_settings.signup_prompt "" %}{% endfilter %}"
-		data-success-text="{% filter force_escape %}{% firstof success email_settings.success_text "" %}{% endfilter %}"
-	></div>
+	{% for group in email_settings.mailchimp_groups.all %}
+		<div class="emails-signup">
+			<form action="https://press.us6.list-manage.com/subscribe/post?u=19b87eae477821267dea69438&amp;id=c8d8f610fb" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate emails-signup__form" target="_blank" novalidate>
+				<h2 class="emails-signup__title">{{ email_settings.signup_prompt }}</h2>
+				{% if email_settings.mailchimp_collect_name %}
+					<span class="emails-signup__input-container">
+						<label for="mce-MMERGE6" class="">Full Name</label>
+						<input type="text" value="" name="FULLNAME" class="emails-signup__input" id="mce-MMERGE6">
+					</span>
+				{% endif %}
+				<span class="emails-signup__input-container">
+					{% if email_settings.mailchimp_collect_name %}
+						<label
+							for="mce-EMAIL"
+							class=""
+						>
+							Email address
+						</label>
+					{% endif %}
+
+					<input
+						type="email"
+						class="emails-signup__input"
+						id="mce-EMAIL"
+						placeholder="alice@freedom.press"
+						name="EMAIL"
+					/>
+				</span>
+
+				<div style="display:none" class="mc-field-group input-group">
+					<ul>
+						<li>
+							<input type="checkbox" value="{{ group.group_id }}" name="group[{{ group.category_id }}][{{ group.group_id }}]" id="mce-group[{{ group.category_id }}]-{{ group.category_id }}-0" checked>
+						</li>
+					</ul>
+				</div>
+				<div id="mce-responses" class="clear">
+					<div class="response" id="mce-error-response" style="display:none"></div>
+					<div class="response" id="mce-success-response" style="display:none"></div>
+				</div>
+				<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+				<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_19b87eae477821267dea69438_c8d8f610fb" tabindex="-1" value=""></div>
+				<button type="submit" name="subscribe" id="mc-embedded-subscribe" class="emails-signup__button">Sign up</button>
+			</form>
+		</div>
+	{% empty %}
+		<div
+			class="js-emails-signup emails-signup {{ class }}"
+			data-signup-prompt="{% filter force_escape %}{% firstof prompt email_settings.signup_prompt "" %}{% endfilter %}"
+			data-success-text="{% filter force_escape %}{% firstof success email_settings.success_text "" %}{% endfilter %}"
+		></div>
+	{% endfor %}
 {% endwith %}
