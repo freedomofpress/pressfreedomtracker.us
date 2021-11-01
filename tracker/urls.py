@@ -4,6 +4,7 @@ from django.apps import apps
 from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from wagtailautocomplete.views import objects, search
 
@@ -37,6 +38,11 @@ urlpatterns = [
     path('health/version/', common_views.health_version),
 
     path('charts/', include(chart_urls)),
+
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Schema UI:
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
     path(r'', include(wagtail_urls)),
 ]

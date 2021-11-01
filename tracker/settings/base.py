@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -267,6 +268,7 @@ CSP_STYLE_SRC = (
     "'self'",
     # For Wagtail Admin and Twitter Widgets.
     "'unsafe-inline'",
+    'https://cdn.jsdelivr.net',
 )
 CSP_FRAME_SRC = (
     "'self'",
@@ -294,6 +296,7 @@ CSP_IMG_SRC = [
     "https://pbs.twimg.com",
     "https://ton.twimg.com",
     "data:",
+    'https://cdn.jsdelivr.net',
 ]
 CSP_OBJECT_SRC = ["'self'"]
 CSP_MEDIA_SRC = ["'self'"]
@@ -344,3 +347,14 @@ RANDOM_SEED = 876394101
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 WAGTAILADMIN_COMMENTS_ENABLED = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Press Freedom Tracker API',
+    'DESCRIPTION': 'Programmatic access to up-to-date data.',
+    'VERSION': '1.0.0',
+    'SERVE_URLCONF': 'incident.api.urls',
+}
