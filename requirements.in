@@ -10,6 +10,7 @@ django-storages[google]
 django-webpack-loader
 django-widget-tweaks==1.4.12
 djangorestframework-csv
+drf-spectacular>=0.20.2
 docutils
 factory_boy>=3.2.0
 gunicorn
