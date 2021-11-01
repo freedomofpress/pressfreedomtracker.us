@@ -108,12 +108,12 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return context
 
     def get_serializer_class(self):
-        if self.request.accepted_renderer.format == 'csv':
+        if getattr(self.request, 'accepted_renderer', None) and self.request.accepted_renderer.format == 'csv':
             return FlatIncidentSerializer
         return super().get_serializer_class()
 
     def paginate_queryset(self, queryset):
-        if self.request.accepted_renderer.format == 'csv':
+        if getattr(self.request, 'accepted_renderer', None) and self.request.accepted_renderer.format == 'csv':
             return None
         return super().paginate_queryset(queryset)
 
