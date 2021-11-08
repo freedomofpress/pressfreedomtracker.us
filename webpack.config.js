@@ -19,6 +19,7 @@ var common = {
 	entry: {
 		common: __dirname + '/client/common/js/common.js',
 		statistics: __dirname + '/client/statistics/js/searchstats.js',
+		charts: __dirname + '/client/charts/js/index.js',
 	},
 
 	output: {
@@ -56,6 +57,7 @@ var common = {
 				include: [
 					path.join(__dirname, '/client/common/js'),
 					path.join(__dirname, '/client/statistics/js'),
+					path.join(__dirname, '/client/charts/js'),
 				],
 			},
 			{
