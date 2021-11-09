@@ -284,6 +284,49 @@ class EquipmentAPITest(APITestCase):
         })
 
 
+class CategoryAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build()
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.category = CategoryPageFactory(parent=root_page)
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('category-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('category-detail', args=(self.category.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('category-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'id': self.category.pk,
+            'title': self.category.title,
+            'methodology': self.category.methodology,
+            'plural_name': self.category.plural_name,
+            'page_color': self.category.page_color,
+        })
+        self.assertEqual(response.status_code, 200)
+
+
 class IncidentAPITest(APITestCase):
     @classmethod
     def setUpTestData(cls):

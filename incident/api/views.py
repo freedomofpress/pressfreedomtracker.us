@@ -8,10 +8,12 @@ from rest_framework.response import Response
 from rest_framework.utils.urls import remove_query_param
 from rest_framework_csv.renderers import PaginatedCSVRenderer
 
+from common.models import CategoryPage
 from incident.api.serializers import (
     IncidentSerializer,
     ItemSerializer,
     EquipmentSerializer,
+    CategorySerializer,
     FlatIncidentSerializer,
 )
 from incident import models
@@ -141,3 +143,8 @@ class VenueViewSet(viewsets.ReadOnlyModelViewSet):
 class EquipmentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Equipment.objects.all()
     serializer_class = EquipmentSerializer
+
+
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = CategoryPage.objects.all()
+    serializer_class = CategorySerializer

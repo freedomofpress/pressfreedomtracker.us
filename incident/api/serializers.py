@@ -80,6 +80,14 @@ class ItemSerializer(serializers.Serializer):
     title = serializers.CharField()
 
 
+class CategorySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+    methodology = serializers.CharField()
+    page_color = serializers.CharField()
+    plural_name = serializers.CharField()
+
+
 class BaseIncidentSerializer(serializers.Serializer):
     title = serializers.CharField()
     url = serializers.SerializerMethodField()
