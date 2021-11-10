@@ -399,6 +399,12 @@ class ManyRelationValue:
 
 class ManyRelationFilter(Filter):
     serialized_type = 'autocomplete'
+    openapi_style = 'form'
+    openapi_explode = False
+    openapi_type = {
+        'type': 'array',
+        'items': {'oneOf': [{'type': 'string'}, {'type': 'integer'}]},
+    }
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
         self.text_fields = text_fields

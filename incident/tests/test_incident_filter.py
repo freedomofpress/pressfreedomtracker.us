@@ -95,6 +95,15 @@ class FilterToOpenApiParametersTest(TestCase):
         self.assertEqual(param.style, 'form')
         self.assertEqual(param.enum, fltr.get_choices())
 
+    def test_many_relation_filter(self):
+        field = IncidentPage._meta.get_field('politicians_or_public_figures_involved')
+        fltr = IncidentFilter._get_filter(field)
+        param, = fltr.openapi_parameters()
+
+        self.assertEqual(param.name, 'politicians_or_public_figures_involved')
+        self.assertEqual(param.style, 'form')
+        self.assertEqual(param.explode, False)
+
 
 class SerializeFilterTest(TestCase):
     def test_field_with_verbose_name(self):
