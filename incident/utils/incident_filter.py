@@ -1,5 +1,6 @@
 import dataclasses
 import functools
+import itertools
 import operator
 from datetime import date
 import copy
@@ -26,6 +27,10 @@ from django.db.models import (
 from django.db.models.functions import Trunc, TruncMonth, Cast
 from django.db.models.fields.related import ManyToOneRel
 from django.utils.text import capfirst
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiTypes,
+)
 from psycopg2.extras import DateRange
 from wagtail.core.fields import RichTextField, StreamField
 
@@ -35,6 +40,7 @@ from incident.utils.db import MakeDateRange
 
 class Filter(object):
     serialized_type = 'text'
+    openapi_type = OpenApiTypes.STR
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None):
         self.name = name
@@ -85,17 +91,42 @@ filtering query."""
         }
         return serialized
 
+    def openapi_parameters(self):
+        description = getattr(
+            self,
+            'openapi_description',
+            f'Filter by "{capfirst(self.get_verbose_name())}"'
+        )
+        return [
+            OpenApiParameter(
+                name=self.name,
+                type=self.openapi_type,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description=description,
+            )
+        ]
+
 
 class BooleanFilter(Filter):
     serialized_type = 'bool'
+    openapi_type = OpenApiTypes.BOOL
 
 
 class IntegerFilter(Filter):
     serialized_type = 'int'
+    openapi_type = OpenApiTypes.INT
 
 
 class RelationFilter(Filter):
     serialized_type = 'autocomplete'
+
+    @property
+    def openapi_type(self):
+        if self.text_fields:
+            return {'oneOf': [{'type': 'string'}, {'type': 'integer'}]}
+        else:
+            return OpenApiTypes.INT
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
         self.text_fields = text_fields
@@ -220,6 +251,27 @@ class DateFilter(Filter):
                 bounds='[]'
             )
         })
+
+    def openapi_parameters(self):
+        verbose_model_name = self.model_field.verbose_name
+        lower_description = f'Filter by "{verbose_model_name} is after"'
+        upper_description = f'Filter by "{verbose_model_name} is before"'
+        return [
+            OpenApiParameter(
+                name=f'{self.name}_lower',
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description=lower_description,
+            ),
+            OpenApiParameter(
+                name=f'{self.name}_upper',
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description=upper_description,
+            ),
+        ]
 
 
 class ChoiceFilter(Filter):
@@ -489,6 +541,8 @@ class PendingCasesFilter(BooleanFilter):
 
 
 class RecentlyUpdatedFilter(IntegerFilter):
+    openapi_description = 'Include only incidents updated in the last N days'
+
     def __init__(self, name, verbose_name=None):
         super(RecentlyUpdatedFilter, self).__init__(
             name=name,
@@ -553,6 +607,30 @@ def get_serialized_filters():
         }
         for page in CategoryPage.objects.live().prefetch_related('incident_filters')
     ]
+
+
+def get_openapi_parameters():
+    from common.models import CategoryPage, GeneralIncidentFilter
+    available_filters = IncidentFilter.get_available_filters()
+    general_incident_filters = GeneralIncidentFilter.objects.all()
+    category_incident_filters = [
+        page.incident_filters.all() for page in
+        CategoryPage.objects.live().prefetch_related('incident_filters')
+    ]
+
+    filters = itertools.chain(
+        general_incident_filters,
+        *category_incident_filters
+    )
+
+    return list(itertools.chain(
+        SearchFilter().openapi_parameters(),
+        *(
+            available_filters[fltr.incident_filter].openapi_parameters()
+            for fltr in filters
+            if fltr.incident_filter in available_filters
+        ))
+    )
 
 
 class IncidentFilter(object):
