@@ -35,6 +35,7 @@ class FilterToOpenApiParametersTest(TestCase):
         self.assertEqual(param.type, OpenApiTypes.BOOL)
         self.assertEqual(param.location, OpenApiParameter.QUERY)
         self.assertEqual(param.required, False)
+        self.assertEqual(param.style, None)
         self.assertEqual(param.description, 'Filter by "Search warrant obtained?"')
 
     def test_integer_field(self):
@@ -76,6 +77,23 @@ class FilterToOpenApiParametersTest(TestCase):
         self.assertEqual(upper.location, OpenApiParameter.QUERY)
         self.assertEqual(upper.required, False)
         self.assertEqual(upper.description, 'Filter by "date is before"')
+
+    def test_choice_filter(self):
+        field = IncidentPage._meta.get_field('arrest_status')
+        fltr = IncidentFilter._get_filter(field)
+        param, = fltr.openapi_parameters()
+
+        self.assertEqual(param.name, 'arrest_status')
+        self.assertEqual(param.enum, fltr.get_choices())
+
+    def test_multichoice_filter(self):
+        field = IncidentPage._meta.get_field('subpoena_statuses')
+        fltr = IncidentFilter._get_filter(field)
+        param, = fltr.openapi_parameters()
+
+        self.assertEqual(param.name, 'subpoena_statuses')
+        self.assertEqual(param.style, 'form')
+        self.assertEqual(param.enum, fltr.get_choices())
 
 
 class SerializeFilterTest(TestCase):

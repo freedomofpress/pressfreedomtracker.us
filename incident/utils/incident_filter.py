@@ -41,6 +41,8 @@ from incident.utils.db import MakeDateRange
 class Filter(object):
     serialized_type = 'text'
     openapi_type = OpenApiTypes.STR
+    openapi_style = None
+    openapi_explode = None
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None):
         self.name = name
@@ -91,6 +93,9 @@ filtering query."""
         }
         return serialized
 
+    def get_openapi_enum(self):
+        return None
+
     def openapi_parameters(self):
         description = getattr(
             self,
@@ -104,6 +109,9 @@ filtering query."""
                 location=OpenApiParameter.QUERY,
                 required=False,
                 description=description,
+                enum=self.get_openapi_enum(),
+                style=self.openapi_style,
+                explode=self.openapi_explode,
             )
         ]
 
@@ -316,9 +324,24 @@ class ChoiceFilter(Filter):
             serialized['choices'] = self.model_field.choices
         return serialized
 
+    def get_openapi_enum(self):
+        return self.get_choices()
+
 
 class MultiChoiceFilter(Filter):
     serialized_type = 'choice'
+    openapi_style = 'form'
+    openapi_explode = False
+
+    @property
+    def openapi_type(self):
+        return {
+            'type': 'array',
+            'items': {
+                'type': 'string',
+                'enum': self.get_choices(),
+            }
+        }
 
     def clean(self, value, strict=False):
         choices = self.get_choices()
@@ -360,6 +383,9 @@ class MultiChoiceFilter(Filter):
         if serialized['type'] == 'choice':
             serialized['choices'] = self.model_field.base_field.choices
         return serialized
+
+    def get_openapi_enum(self):
+        return self.get_choices()
 
 
 @dataclasses.dataclass(eq=True, frozen=True)
