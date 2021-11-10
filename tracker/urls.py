@@ -25,7 +25,6 @@ autocomplete_public_urls = [
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
-    path('api/edge/', include(api_urls)),
     path('autocomplete/', include(autocomplete_public_urls)),
     path('admin/autocomplete/', include(autocomplete_admin_urls)),
     path('admin/', include(wagtailadmin_urls)),
@@ -39,11 +38,12 @@ urlpatterns = [
 
     path('charts/', include(chart_urls)),
 
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/', SpectacularAPIView.as_view(api_version='edge'), name='schema'),
     # Schema UI:
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
+    path(r'', include(api_urls)),
     path(r'', include(wagtail_urls)),
 ]
 
