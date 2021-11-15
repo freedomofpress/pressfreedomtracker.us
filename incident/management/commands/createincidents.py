@@ -3,10 +3,10 @@ from django.db import transaction
 
 from common.models import CategoryPage
 from incident.models import IncidentIndexPage
-from common.tests.factories import (
+from common.tests.devdata import (
     PersonPageFactory,
 )
-from incident.tests.factories import (
+from incident.devdata import (
     MultimediaIncidentPageFactory, IncidentPageFactory, VenueFactory,
 )
 

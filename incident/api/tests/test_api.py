@@ -9,13 +9,322 @@ from common.tests.factories import (
     CustomImageFactory,
     CommonTagFactory,
 )
+from incident.tests import factories
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
     IncidentUpdateFactory,
     IncidentLinkFactory,
     VenueFactory,
+    StateFactory,
 )
+
+
+class JournalistAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.journalist = factories.JournalistFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('journalist-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('journalist-detail', args=(self.journalist.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('journalist-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.journalist.title,
+            'id': self.journalist.pk,
+        })
+
+
+class InstitutionAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.institution = factories.InstitutionFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('institution-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('institution-detail', args=(self.institution.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('institution-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.institution.title,
+            'id': self.institution.pk,
+        })
+
+
+class GovernmentWorkerAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.worker = factories.GovernmentWorkerFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('governmentworker-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('governmentworker-detail', args=(self.worker.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('governmentworker-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.worker.title,
+            'id': self.worker.pk,
+        })
+
+
+class ChargeAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.charge = factories.ChargeFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('charge-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('charge-detail', args=(self.charge.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('charge-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.charge.title,
+            'id': self.charge.pk,
+        })
+
+
+class NationalityAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.nationality = factories.NationalityFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('nationality-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('nationality-detail', args=(self.nationality.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('nationality-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.nationality.title,
+            'id': self.nationality.pk,
+        })
+
+
+class PoliticianAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.politician = factories.PoliticianOrPublicFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('politicianorpublic-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('politicianorpublic-detail', args=(self.politician.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('politicianorpublic-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.politician.title,
+            'id': self.politician.pk,
+        })
+
+
+class VenueAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.venue = factories.VenueFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('venue-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('venue-detail', args=(self.venue.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('venue-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'title': self.venue.title,
+            'id': self.venue.pk,
+        })
+
+
+class EquipmentAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.equipment = factories.EquipmentFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('equipment-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('equipment-detail', args=(self.equipment.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('equipment-list'),
+            HTTP_ACCEPT='application/json',
+        )
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'name': self.equipment.name,
+            'id': self.equipment.pk,
+        })
+
+
+class CategoryAPITest(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build()
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.category = CategoryPageFactory(parent=root_page)
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('category-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse('category-detail', args=(self.category.pk,)),
+            HTTP_ACCEPT='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse('category-list'),
+            HTTP_ACCEPT='application/json',
+        )
+
+        data = response.json()[0]
+        self.assertEqual(data, {
+            'id': self.category.pk,
+            'title': self.category.title,
+            'methodology': self.category.methodology,
+            'plural_name': self.category.plural_name,
+            'page_color': self.category.page_color,
+        })
+        self.assertEqual(response.status_code, 200)
 
 
 class IncidentAPITest(APITestCase):
@@ -38,6 +347,8 @@ class IncidentAPITest(APITestCase):
         cls.incident = IncidentPageFactory(
             parent=cls.incident_index,
             authors=[author1, author2],
+            state=StateFactory(),
+            teaser='Teaser',
             categories=[cls.cat1, cls.cat2],
             equipment_search=True,
             equipment_damage=True,
@@ -85,9 +396,9 @@ class IncidentAPITest(APITestCase):
             {
                 'title': inc.title,
                 'url': inc.get_full_url(),
-                'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+                'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
                 'authors': [author.author.title for author in inc.authors.all()],
                 'updates': [str(update) for update in inc.updates.all()],
                 'categories': [cat.category.title for cat in inc.categories.all()],
