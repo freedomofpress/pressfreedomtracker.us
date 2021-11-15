@@ -26,6 +26,7 @@ from django.db.models import (
 )
 from django.db.models.functions import Trunc, TruncMonth, Cast
 from django.db.models.fields.related import ManyToOneRel
+from django.db.utils import ProgrammingError
 from django.utils.text import capfirst
 from drf_spectacular.utils import (
     OpenApiParameter,
@@ -643,26 +644,32 @@ def get_serialized_filters():
 
 def get_openapi_parameters():
     from common.models import CategoryPage, GeneralIncidentFilter
-    available_filters = IncidentFilter.get_available_filters()
-    general_incident_filters = GeneralIncidentFilter.objects.all()
-    category_incident_filters = [
-        page.incident_filters.all() for page in
-        CategoryPage.objects.live().prefetch_related('incident_filters')
-    ]
+    try:
+        available_filters = IncidentFilter.get_available_filters()
+        general_incident_filters = GeneralIncidentFilter.objects.all()
+        category_incident_filters = [
+            page.incident_filters.all() for page in
+            CategoryPage.objects.live().prefetch_related('incident_filters')
+        ]
 
-    filters = itertools.chain(
-        general_incident_filters,
-        *category_incident_filters
-    )
+        filters = itertools.chain(
+            general_incident_filters,
+            *category_incident_filters
+        )
 
-    return list(itertools.chain(
-        SearchFilter().openapi_parameters(),
-        *(
-            available_filters[fltr.incident_filter].openapi_parameters()
-            for fltr in filters
-            if fltr.incident_filter in available_filters
-        ))
-    )
+        return list(itertools.chain(
+            SearchFilter().openapi_parameters(),
+            *(
+                available_filters[fltr.incident_filter].openapi_parameters()
+                for fltr in filters
+                if fltr.incident_filter in available_filters
+            ))
+        )
+    except ProgrammingError:
+        # This branch handles the case of the database not being
+        # properly configured (e.g. migrations were not run) when this
+        # function is called.  This can happen in CI environments.
+        return []
 
 
 class IncidentFilter(object):

@@ -1,5 +1,7 @@
 import itertools
+from unittest import mock
 
+from django.db.utils import ProgrammingError
 from django.test import TestCase
 from drf_spectacular.utils import OpenApiParameter
 from wagtail.core.models import Site
@@ -57,3 +59,8 @@ class GetOpenApiParametersTest(TestCase):
 
         for actual, expected in zip(params, expected_params):
             self.assertEqual(actual, expected)
+
+    @mock.patch('common.models.CategoryPage')
+    def test_returns_empty_list_if_db_error(self, MockCategoryPage):
+        MockCategoryPage.objects.live.side_effect = ProgrammingError
+        self.assertEqual(get_openapi_parameters(), [])
