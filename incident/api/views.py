@@ -10,6 +10,7 @@ from django.db.models import (
 from rest_framework.decorators import action
 from drf_spectacular.utils import (
     extend_schema,
+    OpenApiParameter,
 )
 from rest_framework import viewsets
 from rest_framework.settings import api_settings
@@ -91,7 +92,23 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = IncidentCursorPagination
 
     @extend_schema(
-        parameters=get_openapi_parameters()
+        parameters=get_openapi_parameters() + [
+            OpenApiParameter(
+                name='fields',
+                type={
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                        'enum': list(IncidentSerializer().fields),
+                    }
+                },
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description='Specify which incident fields are given on the result data.',
+                style='form',
+                explode=False,
+            )
+        ]
     )
     def list(self, *args, **kwargs):
         return super().list(*args, **kwargs)
