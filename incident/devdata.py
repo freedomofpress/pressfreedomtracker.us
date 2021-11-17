@@ -1,9 +1,9 @@
 import datetime
-from factory import RelatedFactory, Trait, Faker, SubFactory, Sequence
+from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, Sequence
 import factory
+import random
 import wagtail_factories
-
-from django.utils import timezone
+from wagtail.core.rich_text import RichText
 
 from incident.models import (
     Charge,
@@ -28,6 +28,7 @@ from incident.models import (
     TopicPage,
     Venue,
 )
+from common.models import CustomImage
 from common.tests.factories import (
     CategoryPageFactory,
     CommonTagFactory,
@@ -53,21 +54,22 @@ class IncidentIndexPageFactory(wagtail_factories.PageFactory):
 class EquipmentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Equipment
-    name = factory.Sequence(lambda n: f'Equipment {n}')
+        django_get_or_create = ('name',)
+    name = Faker('word', ext_word_list=['abacus', 'calculator', 'ruler', 'compass', 'graph paper', 'protractor', 'planimeter', 'multimeter', 'photometer', 'diffuser', 'hygrometer', 'timer', 'microscope'])
 
 
 class EquipmentSeizedFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = EquipmentSeized
     equipment = SubFactory(EquipmentFactory)
-    quantity = 1
+    quantity = LazyAttribute(lambda _: random.randint(1, 5))
 
 
 class EquipmentBrokenFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = EquipmentBroken
     equipment = SubFactory(EquipmentFactory)
-    quantity = 1
+    quantity = LazyAttribute(lambda _: random.randint(1, 5))
 
 
 class ItemFactory(factory.django.DjangoModelFactory):
@@ -85,17 +87,21 @@ class ItemFactory(factory.django.DjangoModelFactory):
 class LawEnforcementOrganizationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = LawEnforcementOrganization
-
-    title = factory.Sequence(lambda n: f'Law Enforcement Organization {n}')
+        django_get_or_create = ('title',)
+    title = factory.Faker('sentence', nb_words=3)
 
 
 class IncidentUpdateFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentPageUpdates
 
-    title = factory.Sequence(lambda n: f'Update {n}')
-    date = factory.LazyFunction(timezone.now)
-    body = None
+    title = Faker('sentence')
+    date = Faker('past_datetime', start_date='-15d', tzinfo=datetime.timezone.utc)
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
+
+
+class MultimediaIncidentUpdateFactory(IncidentUpdateFactory):
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'bare_image', 'raw_html', 'blockquote'])
 
 
 class IncidentLinkFactory(factory.django.DjangoModelFactory):
@@ -103,17 +109,36 @@ class IncidentLinkFactory(factory.django.DjangoModelFactory):
         model = IncidentPageLinks
 
     sort_order = Sequence(int)
-    title = 'Link'
-    url = 'https://freedom.press'
-    publication = None
+    title = Faker('sentence')
+    url = Faker('url', schemes=['https'])
+    publication = Faker('company')
 
 
-class StateFactory(factory.django.DjangoModelFactory):
+class SnippetFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        abstract = True
+
+    class Params:
+        unique_name = factory.Trait(
+            name=factory.Sequence(
+                lambda n: 'Name {n}'.format(n=n)
+            )
+        )
+
+
+class StateFactory(SnippetFactory):
     class Meta:
         model = State
-        django_get_or_create = ('name', )
-    name = factory.Sequence(lambda n: f'State {n}')
-    abbreviation = factory.Sequence(lambda n: f'{n}')
+        django_get_or_create = ('name',)
+    name = factory.Faker('state')
+
+
+def random_choice(choices):
+    return random.choice([x[0] for x in choices])
+
+
+def random_choice_list(choices):
+    return random.sample([x[0] for x in choices], k=random.randint(0, len(choices)))
 
 
 class IncidentPageFactory(wagtail_factories.PageFactory):
@@ -121,7 +146,11 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         model = IncidentPage
         exclude = ('teaser_image_text', 'image_caption_text')
 
-    first_published_at = factory.LazyFunction(timezone.now)
+    first_published_at = Faker(
+        'past_datetime',
+        start_date='-90d',
+        tzinfo=datetime.timezone.utc,
+    )
     last_published_at = factory.LazyAttribute(
         lambda o: o.first_published_at + datetime.timedelta(days=3)
     )
@@ -129,16 +158,18 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         lambda o: o.first_published_at + datetime.timedelta(days=5)
     )
 
-    title = factory.Sequence(lambda n: f'Incident {n}')
-    date = factory.LazyFunction(datetime.date.today)
-    city = None
-    state = None
-    longitude = None
-    latitude = None
-    body = None
-    teaser = None
+    image_caption_text = Faker('sentence')
+    teaser_image_text = Faker('sentence')
+    title = factory.Faker('sentence')
+    date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
+    city = factory.Faker('city')
+    state = factory.SubFactory(StateFactory)
+    longitude = factory.Faker('longitude')
+    latitude = factory.Faker('latitude')
+    body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
+    teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
     teaser_image = None
-    image_caption = None
+    image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))
 
     # Detention/arrest
     arrest_status = None
@@ -179,7 +210,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     detention_status = None
 
     # Legal case
-    lawsuit_name = None
+    lawsuit_name = factory.Faker('pystr_format', string_format='{{name}} v. {{name}}')
 
     class Params:
         arrest = factory.Trait(
@@ -190,67 +221,53 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
             release_date=datetime.date.today(),
             detention_date=datetime.date.today() - datetime.timedelta(days=3),
-            unnecessary_use_of_force=False
+            unnecessary_use_of_force=factory.Faker('boolean'),
         )
         equipment_search = factory.Trait(
             status_of_seized_equipment=factory.Iterator(
                 choices.STATUS_OF_SEIZED_EQUIPMENT, getter=lambda c: c[0]),
-            is_search_warrant_obtained=False,
+            is_search_warrant_obtained=factory.Faker('boolean'),
             actor=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
             equip_search=RelatedFactory(EquipmentSeizedFactory, 'incident'),
         )
         border_stop = factory.Trait(
-            border_point='City A',
-            stopped_at_border=False,
+            border_point=factory.Faker('city'),
+            stopped_at_border=factory.Faker('boolean'),
             target_us_citizenship_status=factory.Iterator(
                 choices.CITIZENSHIP_STATUS_CHOICES, getter=lambda c: c[0]),
-            denial_of_entry=False,
-            stopped_previously=False,
+            denial_of_entry=factory.Faker('boolean'),
+            stopped_previously=factory.Faker('boolean'),
             # did_authorities_ask_for_device_access=factory.Iterator(
             #     choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
-            did_authorities_ask_for_device_access=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
-            did_authorities_ask_for_social_media_user=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
-            did_authorities_ask_for_social_media_pass=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
-            did_authorities_ask_about_work=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
-            were_devices_searched_or_seized=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
+            did_authorities_ask_for_device_access=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            did_authorities_ask_for_social_media_user=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            did_authorities_ask_for_social_media_pass=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            did_authorities_ask_about_work=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
+            were_devices_searched_or_seized=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
         )
         physical_attack = factory.Trait(
             assailant=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
-            was_journalist_targeted=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
+            was_journalist_targeted=factory.LazyFunction(
+                lambda: random_choice(choices.MAYBE_BOOLEAN)
             ),
         )
         leak_case = factory.Trait(
             # workers_whose_communications_were_obtained=2,
-            charged_under_espionage_act=False,
+            charged_under_espionage_act=factory.Faker('boolean'),
         )
         subpoena = factory.Trait(
             subpoena_type=factory.Iterator(
                 choices.SUBPOENA_TYPE, getter=lambda c: c[0]),
-            # subpoena_statuses=factory.Iterator(
-            #     choices.SUBPOENA_STATUS, getter=lambda c: c[0]
+            subpoena_statuses=factory.LazyFunction(lambda: random_choice_list(choices.SUBPOENA_STATUS)),
+            # subpoena_statuses=factory.List(
+            #     # [factory.Iterator(
+            #     #     choices.SUBPOENA_STATUS, getter=lambda c: c[0])]
+            #     factory.LazyFunction(lambda: random_choice_list(choices.SUBPOENA_SUBJECT))
             # ),
-            subpoena_statuses=factory.List(
-                [factory.Iterator(
-                    choices.SUBPOENA_STATUS, getter=lambda c: c[0])]
-                # factory.LazyFunction(lambda: random_choice_list(choices.SUBPOENA_SUBJECT))
-            ),
-            held_in_contempt=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
+            held_in_contempt=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
             detention_status=factory.Iterator(
                 choices.DETENTION_STATUS, getter=lambda c: c[0]),
-            third_party_in_possession_of_communications='Megacorp Industries',
+            third_party_in_possession_of_communications=factory.Faker('company'),
             third_party_business=factory.Iterator(
                 choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
             legal_order_type=factory.Iterator(
@@ -261,7 +278,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.STATUS_OF_PRIOR_RESTRAINT, getter=lambda c: c[0]),
         )
         denial_of_access = factory.Trait(
-            politicians_or_public_figures_involved=1,
+            politicians_or_public_figures_involved=random.randint(1, 4),
         )
         equipment_damage = Trait(
             equip_damage=RelatedFactory(EquipmentBrokenFactory, 'incident'),
@@ -405,9 +422,20 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             self.related_incidents.set(extracted)
 
 
+class MultimediaIncidentPageFactory(IncidentPageFactory):
+    body = Faker('streamfield', fields=['rich_text', 'bare_image', 'blockquote', 'raw_html'])
+    teaser_image = Iterator(
+        CustomImage.objects.filter(collection__name='Photos')
+    )
+
+
 class InexactDateIncidentPageFactory(IncidentPageFactory):
     exact_date_unknown = True
-    date = datetime.date(2017, 3, 1)
+    date = factory.Faker(
+        'date_between',
+        start_date=datetime.date(2017, 3, 1),
+        end_date=datetime.date(2017, 3, 31),
+    )
 
 
 class IncidentCategorizationFactory(factory.django.DjangoModelFactory):
@@ -449,46 +477,77 @@ class SnippetFactory(factory.django.DjangoModelFactory):
 class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = GovernmentWorker
+        django_get_or_create = ('title',)
+        exclude = ('first_name', 'last_name')
 
-    title = factory.Sequence(lambda n: f'Worker {n}')
+    title = factory.LazyAttribute(
+        lambda o: '{0} {1}. Worker'.format(o.first_name, o.last_name[0])
+    )
+
+    # Lazy values
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
 
 
 class VenueFactory(ItemFactory):
     class Meta:
         model = Venue
-    title = factory.Sequence(lambda n: f'Venue {n}')
+        django_get_or_create = ('title',)
+    title = factory.Faker('pystr_format', string_format='{{color_name}} Court of {{state}}')
 
 
 class ChargeFactory(ItemFactory):
     class Meta:
         model = Charge
-    title = factory.Sequence(lambda n: f'Charge {n}')
+        django_get_or_create = ('title',)
+    title = factory.Faker('sentence', nb_words=3)
 
 
 class NationalityFactory(ItemFactory):
     class Meta:
         model = Nationality
-    title = factory.Sequence(lambda n: f'Nationality {n}')
+        django_get_or_create = ('title',)
+    title = factory.Faker('country')
 
 
 class PoliticianOrPublicFactory(ItemFactory):
     class Meta:
         model = PoliticianOrPublic
-    title = factory.Sequence(lambda n: f'Politician {n}')
+        django_get_or_create = ('title',)
+    title = factory.Faker('name')
+
+
+class StateFactory(SnippetFactory):
+    class Meta:
+        model = State
+        django_get_or_create = ('name',)
+    name = factory.Faker('state')
 
 
 class JournalistFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Journalist
+        django_get_or_create = ('title',)
 
-    title = factory.Sequence(lambda n: f'Journalist {n}')
+    title = factory.Faker('name')
 
 
 class InstitutionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Institution
+        django_get_or_create = ('title',)
+        exclude = ('city',)
 
-    title = factory.Sequence(lambda n: f'Institution {n}')
+    title = factory.LazyAttributeSequence(
+        lambda o, n: 'The {city} {paper} {n}'.format(
+            city=o.city,
+            paper=random.choice(['Tribune', 'Herald', 'Sun', 'Daily News', 'Post']),
+            n=n,
+        )
+    )
+
+    # Lazy values
+    city = factory.Faker('city')
 
 
 class TargetedJournalistFactory(factory.django.DjangoModelFactory):

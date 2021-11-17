@@ -8,7 +8,15 @@ from rest_framework.response import Response
 from rest_framework.utils.urls import remove_query_param
 from rest_framework_csv.renderers import PaginatedCSVRenderer
 
-from incident.api.serializers import IncidentSerializer, FlatIncidentSerializer
+from common.models import CategoryPage
+from incident.api.serializers import (
+    IncidentSerializer,
+    ItemSerializer,
+    EquipmentSerializer,
+    CategorySerializer,
+    FlatIncidentSerializer,
+)
+from incident import models
 from incident.utils.incident_filter import IncidentFilter
 
 if TYPE_CHECKING:
@@ -95,3 +103,48 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         incidents = incident_filter.get_queryset()
 
         return incidents.with_most_recent_update().with_public_associations()
+
+
+class JournalistViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Journalist.objects.all()
+    serializer_class = ItemSerializer
+
+
+class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Institution.objects.all()
+    serializer_class = ItemSerializer
+
+
+class GovernmentWorkerViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.GovernmentWorker.objects.all()
+    serializer_class = ItemSerializer
+
+
+class ChargeViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Charge.objects.all()
+    serializer_class = ItemSerializer
+
+
+class NationalityViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Nationality.objects.all()
+    serializer_class = ItemSerializer
+
+
+class PoliticianOrPublicViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.PoliticianOrPublic.objects.all()
+    serializer_class = ItemSerializer
+
+
+class VenueViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Venue.objects.all()
+    serializer_class = ItemSerializer
+
+
+class EquipmentViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Equipment.objects.all()
+    serializer_class = EquipmentSerializer
+
+
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = CategoryPage.objects.all()
+    serializer_class = CategorySerializer

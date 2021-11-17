@@ -4,6 +4,7 @@ omit =
     */migrations/*.py
     */tests/*.py
     tracker/settings/*.py
+    incident/devdata.py
 skip_empty = True
 show_missing = True
 

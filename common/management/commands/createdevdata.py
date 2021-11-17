@@ -28,7 +28,7 @@ from common.devdata import (
 from forms.models import FormPage
 from home.models import HomePage, HomePageFeature
 from incident.models import IncidentIndexPage, IncidentPage
-from incident.tests.factories import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory
+from incident.devdata import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory
 from menus.models import Menu, MenuItem
 
 

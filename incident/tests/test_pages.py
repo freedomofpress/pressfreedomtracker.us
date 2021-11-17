@@ -309,12 +309,42 @@ class GetRelatedIncidentsTest(TestCase):
         tag2 = CommonTagFactory()
         tag3 = CommonTagFactory()
         tag4 = CommonTagFactory()
-        subject = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
+        state = StateFactory()
+        subject = IncidentPageFactory(
+            parent=self.index,
+            tags=[tag1, tag2, tag3],
+            categories=[self.category],
+            state=state,
+        )
 
-        closely_related = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
-        somewhat_related = IncidentPageFactory(parent=self.index, tags=[tag1, tag3], categories=[self.category])
-        slightly_related = IncidentPageFactory(parent=self.index, tags=[tag2, tag4], categories=[self.category])
-        IncidentPageFactory(parent=self.index, tags=[tag4], categories=[self.category])
+        closely_related = IncidentPageFactory(
+            title='Closely',
+            state=state,
+            parent=self.index,
+            tags=[tag1, tag2, tag3],
+            categories=[self.category],
+        )
+        somewhat_related = IncidentPageFactory(
+            title='Somewhat',
+            state=state,
+            parent=self.index,
+            tags=[tag1, tag3],
+            categories=[self.category],
+        )
+        slightly_related = IncidentPageFactory(
+            title='Slightly',
+            state=state,
+            parent=self.index,
+            tags=[tag2, tag4],
+            categories=[self.category]
+        )
+        IncidentPageFactory(
+            title='Not related',
+            state=None,
+            parent=self.index,
+            tags=[tag4],
+            categories=[self.category],
+        )
 
         related_incidents = subject.get_related_incidents()
 
@@ -363,8 +393,8 @@ class GetRelatedIncidentsTest(TestCase):
         tag2 = CommonTagFactory()
         tag3 = CommonTagFactory()
         tag4 = CommonTagFactory()
-        state = StateFactory(name='New Mexico')
-        other_state = StateFactory(name='Colorado')
+        state = StateFactory()
+        other_state = StateFactory()
         subject = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
@@ -880,13 +910,13 @@ class IncidentPageTests(TestCase):
 
         Region.objects.create(
             isocode=united_states,
-            regcode='AK',
-            name='Alaska',
+            regcode='AK2',
+            name='Alaska 2',
             geonameid=1,
         )
         state = StateFactory(
-            name='Alaska',
-            abbreviation='AK',
+            name='Alaska 2',
+            abbreviation='AK2',
         )
 
         geoname = GeoName.objects.create(
@@ -895,7 +925,7 @@ class IncidentPageTests(TestCase):
             latitude=1.0,
             longitude=2.0,
             isocode=united_states,
-            regcode='AK',
+            regcode='AK2',
         )
         incident = IncidentPage(
             date=date.today(),
