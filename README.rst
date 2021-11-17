@@ -23,18 +23,7 @@ Prerequisites
 The installation instructions below assume you have the following software on your machine:
 
 * `docker <https://docs.docker.com/engine/installation/>`_
-* `docker-compose <https://docs.docker.com/compose/install/>`_ OR
-* `pipenv <https://docs.pipenv.org/#install-pipenv-today>`_
-
-Note that you can either install docker-compose natively or via `pipenv`.
-If you choose the pipenv route you'll need to run these commands:
-
-.. code:: bash
-
-    # Run this the first time you enter the directory
-    pipenv install
-    # Run this every other time
-    pipenv shell
+* `docker-compose <https://docs.docker.com/compose/install/>`_
 
 Local Development instructions
 ------------------------------
