@@ -114,9 +114,7 @@ check-migrations: ## Check for ungenerated migrations
 
 .PHONY: bandit
 bandit: ## Runs bandit static code analysis in Python3 container.
-	@docker run -it -v $(PWD):/code -w /code --name fpf_www_bandit --rm \
-		python:3.9-slim \
-		bash -c "pip install -q --upgrade bandit && bandit --recursive . -ll --exclude devops,node_modules,molecule,.venv"
+	@docker-compose run --rm django ./scripts/bandit
 
 .PHONY: npm-audit
 npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities
