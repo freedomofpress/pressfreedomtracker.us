@@ -86,7 +86,7 @@ class EquipmentSeized(models.Model):
     _autocomplete_model = 'incident.Equipment'
 
     panels = [
-        AutocompletePanel('equipment', page_type='incident.Equipment'),
+        AutocompletePanel('equipment', target_model='incident.Equipment'),
         FieldPanel('quantity'),
     ]
 
@@ -111,7 +111,7 @@ class EquipmentBroken(models.Model):
     _autocomplete_model = 'incident.Equipment'
 
     panels = [
-        AutocompletePanel('equipment', page_type='incident.Equipment'),
+        AutocompletePanel('equipment', target_model='incident.Equipment'),
         FieldPanel('quantity'),
     ]
 
