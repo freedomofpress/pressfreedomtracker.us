@@ -179,7 +179,8 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     detention_status = None
 
     # Legal case
-    lawsuit_name = None
+    case_number = None
+    case_statuses = None
 
     class Params:
         arrest = factory.Trait(

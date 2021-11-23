@@ -1,29 +1,31 @@
 {% load wagtailcore_tags %}
 
-{% if page.lawsuit_name %}
+{% if page.case_number %}
 	<tr class="data-table__row">
 		<th class="data-table__label">
-			Name of Lawsuit
+			Case number
 		</th>
 		<td class="data-table__value">
-			<a href="{% pageurl page.get_parent %}?lawsuit_name={{ page.lawsuit_name }}">
-				{{ page.lawsuit_name }}
+			<a href="{% pageurl page.get_parent %}?case_number={{ page.case_number }}">
+				{{ page.case_number }}
 			</a>
 		</td>
 	</tr>
 {% endif %}
 
-{% if page.venue.all %}
+{% if page.case_statuses|length > 0 %}
 	<tr class="data-table__row">
 		<th class="data-table__label">
-			Venue
+			Case Status
 		</th>
 		<td class="data-table__value">
-			<ul class="data-table__list">
-				{% for venue in page.venue.all %}
-					<li class="data-table__list-item data-table__list-item--inline">
-						<a href="{% pageurl page.get_parent %}?venue={{ venue.pk }}">{{ venue }}</a></li>
-				{% endfor %}
+			{% for case_status in page.case_statuses %}
+			<a href="{% pageurl page.get_parent %}?case_statuses={{ case_statuses }}">
+				{% get_case_status_display case_status as case_status_display_name %}
+				{{ case_status_display_name|capfirst }}
+			</a>
+			{% if not forloop.last %}, {% endif %}
+			{% endfor %}
 		</td>
 	</tr>
 {% endif %}

@@ -111,7 +111,7 @@ class BaseIncidentSerializer(serializers.Serializer):
     release_date = serializers.DateField()
     detention_date = serializers.DateField()
     unnecessary_use_of_force = serializers.BooleanField()
-    lawsuit_name = serializers.CharField()
+    case_number = serializers.CharField()
 
     status_of_seized_equipment = serializers.CharField(source='get_status_of_seized_equipment_display')
     is_search_warrant_obtained = serializers.BooleanField()
@@ -180,7 +180,9 @@ class IncidentSerializer(BaseIncidentSerializer):
     state = StateSerializer()
 
     updates = serializers.StringRelatedField(many=True)
-    venue = serializers.StringRelatedField(many=True)
+    case_statuses = serializers.ListField(
+        child=ChoiceField(choices.CASE_STATUS)
+    )
     workers_whose_communications_were_obtained = serializers.StringRelatedField(many=True)
     target_nationality = serializers.StringRelatedField(many=True)
     targeted_institutions = serializers.StringRelatedField(many=True)
@@ -205,7 +207,9 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     state = serializers.CharField(source='state.abbreviation', default='')
 
     updates = FlatStringRelatedField()
-    venue = FlatStringRelatedField()
+    case_statuses = FlatListField(
+        child=ChoiceField(choices.CASE_STATUS)
+    )
     workers_whose_communications_were_obtained = FlatStringRelatedField()
     target_nationality = FlatStringRelatedField()
     targeted_institutions = FlatStringRelatedField()

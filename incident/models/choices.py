@@ -87,6 +87,14 @@ SUBPOENA_STATUS = [
     ('OBJECTED_TO', 'objected to'),
 ]
 
+CASE_STATUS = [
+    ('ONGOING', 'ongoing'),
+    ('SETTLED', 'settled'),
+    ('DISMISSED', 'dismissed'),
+    ('UNKNOWN', 'unknown'),
+    ('APPEALED', 'appealed'),
+]
+
 
 EQUIPMENT = [
     ('SEIZED', 'seized'),

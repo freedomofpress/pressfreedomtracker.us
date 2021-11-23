@@ -218,39 +218,6 @@ class PoliticianAPITest(APITestCase):
         })
 
 
-class VenueAPITest(APITestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.venue = factories.VenueFactory()
-
-    def test_list_api_requests_are_successful(self):
-        response = self.client.get(
-            reverse('venue-list'),
-            HTTP_ACCEPT='application/json',
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_retrieve_api_requests_are_successful(self):
-        response = self.client.get(
-            reverse('venue-detail', args=(self.venue.pk,)),
-            HTTP_ACCEPT='application/json',
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_result_attributes(self):
-        response = self.client.get(
-            reverse('venue-list'),
-            HTTP_ACCEPT='application/json',
-        )
-        data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.venue.title,
-            'id': self.venue.pk,
-        })
-
-
 class EquipmentAPITest(APITestCase):
     @classmethod
     def setUpTestData(cls):
@@ -362,7 +329,6 @@ class IncidentAPITest(APITestCase):
             target_nationality=2,
             journalist_targets=2,
             institution_targets=2,
-            venue=VenueFactory.create_batch(2),
             teaser_image=image,
             current_charges=2,
             dropped_charges=2,
@@ -422,8 +388,8 @@ class IncidentAPITest(APITestCase):
                 'release_date': inc.release_date.isoformat(),
                 'detention_date': inc.detention_date.isoformat(),
                 'unnecessary_use_of_force': inc.unnecessary_use_of_force,
-                'lawsuit_name': inc.lawsuit_name,
-                'venue': [str(e) for e in inc.venue.all()],
+                'case_number': inc.case_number,
+                'case_statuses': [dict(choices.CASE_STATUS)[status] for status in inc.case_statuses],
                 'status_of_seized_equipment': inc.get_status_of_seized_equipment_display(),
                 'is_search_warrant_obtained': inc.is_search_warrant_obtained,
                 'actor': inc.get_actor_display(),
