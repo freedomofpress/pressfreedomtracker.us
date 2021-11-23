@@ -18,10 +18,10 @@ class BaseMergeForm(forms.Form):
 
         self.fields['models_to_merge'] = forms.models.ModelMultipleChoiceField(
             queryset=self.merge_model.objects.all(),
-            widget=type(
-                '_Autocomplete',
-                (Autocomplete,),
-                dict(target_model=self.merge_model, can_create=False, is_single=False)
+            widget=Autocomplete(
+                target_model=self.merge_model,
+                can_create=False,
+                is_single=False
             ),
             label='{} to merge'.format(capfirst(self.merge_model_name))
         )
