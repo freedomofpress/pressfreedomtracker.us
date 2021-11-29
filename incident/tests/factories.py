@@ -26,7 +26,6 @@ from incident.models import (
     TargetedJournalist,
     GovernmentWorker,
     TopicPage,
-    Venue,
 )
 from common.tests.factories import (
     CategoryPageFactory,
@@ -180,7 +179,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Legal case
     case_number = None
-    case_statuses = None
+    case_statuses = []
 
     class Params:
         arrest = factory.Trait(
@@ -378,14 +377,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 )
 
     @factory.post_generation
-    def venue(self, create, extracted, **kwargs):
-        if not create:
-            return
-        if extracted:
-            for venue in extracted:
-                venue.venue_incidents.add(self)
-
-    @factory.post_generation
     def categories(self, create, extracted, **kwargs):
         if not create:
             return
@@ -452,12 +443,6 @@ class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
         model = GovernmentWorker
 
     title = factory.Sequence(lambda n: f'Worker {n}')
-
-
-class VenueFactory(ItemFactory):
-    class Meta:
-        model = Venue
-    title = factory.Sequence(lambda n: f'Venue {n}')
 
 
 class ChargeFactory(ItemFactory):

@@ -305,7 +305,7 @@ class IncidentPage(MetadataPageMixin, Page):
     case_statuses = ChoiceArrayField(
         models.CharField(
             max_length=255,
-            choices=choices.SUBPOENA_STATUS,
+            choices=choices.CASE_STATUS,
         ),
         blank=True,
         null=True,
@@ -559,13 +559,8 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Legal Case',
             classname='collapsible collapsed',
             children=[
-<<<<<<< HEAD
-                FieldPanel('lawsuit_name'),
-                AutocompletePanel('venue', 'incident.Venue'),
-=======
                 FieldPanel('case_number'),
                 FieldPanel('case_statuses'),
->>>>>>> Initial implementation of legal case options update
             ]
         ),
 

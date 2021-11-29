@@ -26,7 +26,6 @@ from incident.models import (
     TargetedJournalist,
     GovernmentWorker,
     TopicPage,
-    Venue,
 )
 from common.models import CustomImage
 from common.tests.factories import (
@@ -210,7 +209,8 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     detention_status = None
 
     # Legal case
-    lawsuit_name = factory.Faker('pystr_format', string_format='{{name}} v. {{name}}')
+    case_number = factory.Faker('pystr_format', string_format='{{name}} v. {{name}}')
+    case_statuses = factory.LazyFunction(lambda: random_choice_list(choices.CASE_STATUS))
 
     class Params:
         arrest = factory.Trait(
@@ -394,14 +394,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 )
 
     @factory.post_generation
-    def venue(self, create, extracted, **kwargs):
-        if not create:
-            return
-        if extracted:
-            for venue in extracted:
-                venue.venue_incidents.add(self)
-
-    @factory.post_generation
     def categories(self, create, extracted, **kwargs):
         if not create:
             return
@@ -487,13 +479,6 @@ class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
     # Lazy values
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
-
-
-class VenueFactory(ItemFactory):
-    class Meta:
-        model = Venue
-        django_get_or_create = ('title',)
-    title = factory.Faker('pystr_format', string_format='{{color_name}} Court of {{state}}')
 
 
 class ChargeFactory(ItemFactory):

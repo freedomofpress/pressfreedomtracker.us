@@ -15,7 +15,6 @@ from incident.tests.factories import (
     IncidentIndexPageFactory,
     IncidentUpdateFactory,
     IncidentLinkFactory,
-    VenueFactory,
     StateFactory,
 )
 
