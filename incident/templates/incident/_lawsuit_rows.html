@@ -23,9 +23,7 @@
 			{% for case_status in page.case_statuses %}
 			<a href="{% pageurl page.get_parent %}?case_statuses={{ case_statuses }}">
 				{% get_case_status_display case_status as case_status_display_name %}
-				{{ case_status_display_name|capfirst }}
-			</a>
-			{% if not forloop.last %}, {% endif %}
+				{{ case_status_display_name|capfirst }}</a>{% if not forloop.last %}, {% endif %}
 			{% endfor %}
 		</td>
 	</tr>
