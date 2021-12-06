@@ -7,7 +7,7 @@ from common.tests.devdata import (
     PersonPageFactory,
 )
 from incident.devdata import (
-    MultimediaIncidentPageFactory, IncidentPageFactory, VenueFactory,
+    MultimediaIncidentPageFactory, IncidentPageFactory,
 )
 
 
@@ -176,12 +176,6 @@ class Command(BaseCommand):
             'other_incident': {},
         }
 
-        venues = []
-        if options['venue']:
-            for venue_name in options['venue']:
-                venues.append(VenueFactory(title=venue_name))
-        venues.extend(VenueFactory.create_batch(options['gen_venues']))
-
         authors = []
         if options['author']:
             for author_name in options['author']:
@@ -207,7 +201,6 @@ class Command(BaseCommand):
             parent=index,
             categories=categories,
             authors=authors,
-            venue=venues,
             journalist_targets=options['gen_journalists'],
             institution_targets=options['gen_institutions'],
             **factory_args,

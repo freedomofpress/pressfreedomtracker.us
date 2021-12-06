@@ -279,19 +279,37 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     # Legal Case
+
+    # DEPRECATION WARNING!
+    # PS: Delete lawsuit_name and venue fields in a month.
     lawsuit_name = models.CharField(
         max_length=1024,
         blank=True,
         null=True,
         verbose_name='Lawsuit name'
     )
-
     venue = ParentalManyToManyField(
         'incident.Venue',
         blank=True,
         verbose_name='Case Venue',
         related_name='venue_incidents',
         help_text='Courts that are hearing or have heard this case.'
+    )
+
+    case_number = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        verbose_name='Case number'
+    )
+    case_statuses = ChoiceArrayField(
+        models.CharField(
+            max_length=255,
+            choices=choices.CASE_STATUS,
+        ),
+        blank=True,
+        null=True,
+        verbose_name="Legal case statuses"
     )
 
     # Equipment Seizure or Damage
@@ -541,8 +559,8 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Legal Case',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('lawsuit_name'),
-                AutocompletePanel('venue', 'incident.Venue'),
+                FieldPanel('case_number'),
+                FieldPanel('case_statuses'),
             ]
         ),
 
