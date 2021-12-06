@@ -18,8 +18,6 @@ console.log('Using STATIC_URL', STATIC_URL);
 var common = {
 	entry: {
 		common: __dirname + '/client/common/js/common.js',
-		editor: __dirname + '/client/autocomplete/js/editor.js',
-		topic: __dirname + '/client/topic/js/index.js',
 		statistics: __dirname + '/client/statistics/js/searchstats.js',
 	},
 
@@ -31,8 +29,6 @@ var common = {
 	resolve: {
 		alias: {
 			'~': __dirname + '/client/common/js',
-			WagtailAutocomplete: path.resolve(__dirname, 'client/autocomplete/js/components'),
-			modernizr$: path.resolve(__dirname, '.modernizrrc')
 		},
 		extensions: ['.js', '.jsx'],
 		modules: ['node_modules']
@@ -59,8 +55,6 @@ var common = {
 				],
 				include: [
 					path.join(__dirname, '/client/common/js'),
-					path.join(__dirname, '/client/autocomplete/js'),
-					path.join(__dirname, '/client/topic/js'),
 					path.join(__dirname, '/client/statistics/js'),
 				],
 			},
@@ -85,11 +79,6 @@ var common = {
 			{
 				test: /\.css$/,
 				use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
-			},
-			// Currently unused, but we'll want it if we install modernizr:
-			{
-				test: /\.modernizrrc$/,
- 				use: ['modernizr-loader']
 			},
 			{
 				test: /\.(png|svg|jpg|gif)$/,

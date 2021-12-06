@@ -1,5 +1,0 @@
-{% if incident.exact_date_unknown %}
-	{{ incident.date|date:"F Y" }}
-{% else %}
-	{{ incident.date|date:"F j, Y" }}
-{% endif %}
