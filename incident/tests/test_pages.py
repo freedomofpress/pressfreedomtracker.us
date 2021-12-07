@@ -33,7 +33,6 @@ from .factories import (
     IncidentUpdateFactory,
     TopicPageFactory,
     StateFactory,
-    VenueFactory,
 )
 
 
@@ -832,7 +831,6 @@ class IncidentPageQueriesTest(TestCase):
             target_nationality=2,
             journalist_targets=2,
             institution_targets=2,
-            venue=VenueFactory.create_batch(2),
             teaser_image=image,
             current_charges=2,
             dropped_charges=2,

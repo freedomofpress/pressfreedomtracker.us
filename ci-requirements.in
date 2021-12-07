@@ -1,1 +1,3 @@
 diff_cover>=6.3.3
+pytest
+pytest-testinfra

@@ -23,18 +23,7 @@ Prerequisites
 The installation instructions below assume you have the following software on your machine:
 
 * `docker <https://docs.docker.com/engine/installation/>`_
-* `docker-compose <https://docs.docker.com/compose/install/>`_ OR
-* `pipenv <https://docs.pipenv.org/#install-pipenv-today>`_
-
-Note that you can either install docker-compose natively or via `pipenv`.
-If you choose the pipenv route you'll need to run these commands:
-
-.. code:: bash
-
-    # Run this the first time you enter the directory
-    pipenv install
-    # Run this every other time
-    pipenv shell
+* `docker-compose <https://docs.docker.com/compose/install/>`_
 
 Local Development instructions
 ------------------------------
@@ -146,7 +135,7 @@ There are separate commands to upgrade a package without changing the ``requirem
 
 .. code:: bash
 
-    make upgrade-pip PACKAGE=package-name
+    make pip-update PACKAGE=package-name
 
 will update the package named ``package-name`` to the latest version allowed by the constraints in ``requirements.in`` and compile a new ``dev-requirements.txt`` and ``requirements.txt`` based on that version.
 
@@ -154,7 +143,7 @@ If the package appears only in ``dev-requirements.in``, then you must use this c
 
 .. code:: bash
 
-    make upgrade-pip-dev PACKAGE=package-name
+    make pip-dev-update PACKAGE=package-name
 
 which will update the package named ``package-name`` to the latest version allowed by the constraints in ``requirements.in`` and compile a new ``dev-requirements.txt``.
 

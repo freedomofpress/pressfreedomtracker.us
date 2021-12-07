@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+# Install dependencies
+pip install --require-hashes -r ci-requirements.txt
+
+python -m pytest devops/tests/test_basic.py

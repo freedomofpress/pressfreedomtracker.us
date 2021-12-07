@@ -28,7 +28,6 @@ from incident.tests.factories import (
     JournalistFactory,
     TargetedJournalistFactory,
     LawEnforcementOrganizationFactory,
-    VenueFactory,
     NationalityFactory,
 )
 from incident.utils.incident_filter import IncidentFilter, ManyRelationValue
@@ -53,18 +52,6 @@ class TestFiltering(TestCase):
         )).get_queryset()
 
         self.assertEqual({incident1}, set(incidents))
-
-    def test_should_filter_by_venue_title(self):
-        venue1 = VenueFactory(title='Land')
-        venue2 = VenueFactory(title='Sea')
-        venue3 = VenueFactory(title='Air')
-
-        IncidentPageFactory(venue=[venue1])
-        IncidentPageFactory(venue=[venue2])
-        incident3 = IncidentPageFactory(venue=[venue3])
-
-        incidents = IncidentFilter({'venue': venue3.title}).get_queryset()
-        self.assertEqual(set(incidents), {incident3})
 
     def test_should_filter_by_nationality_title(self):
         category1 = CategoryPageFactory(

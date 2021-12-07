@@ -47,6 +47,8 @@ EXCLUDED_FIELDS = {
     'aliases',
     'locale',
     'unique_date',
+    'lawsuit_name',  # Deprecated
+    'venue',  # Deprecated
 }
 
 

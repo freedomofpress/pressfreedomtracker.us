@@ -1,3 +1,5 @@
+@use "sass:math"
+
 // FONTS
 $sans-serif: 'Source Sans Pro', Calibri, "Gil Sans", sans-serif
 $serif: 'Source Serif Pro', Georgia, serif
@@ -117,7 +119,7 @@ $category-header-margin-top: 1rem
 
 // INCIDENTS
 $title-top-margin: 20px
-$related-cases-margin: $row-margin-bottom / 2
+$related-cases-margin: math.div($row-margin-bottom, 2)
 $incident-body-top-padding: 1rem
 $incident-body-side-padding: 1rem
 $incident-attr-margin: 0 0 15px 0

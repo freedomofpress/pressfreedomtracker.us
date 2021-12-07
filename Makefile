@@ -55,8 +55,8 @@ compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
 		pip-compile --generate-hashes --no-header --output-file ci-requirements.txt ci-requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --output-file dev-requirements.txt dev-requirements.in'
 
-.PHONY: upgrade-pip
-upgrade-pip: ## Uses pip-compile to update requirements.txt for upgrading a specific package
+.PHONY: pip-update
+pip-update: ## Uses pip-compile to update requirements.txt for upgrading a specific package
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
@@ -66,9 +66,25 @@ upgrade-pip: ## Uses pip-compile to update requirements.txt for upgrading a spec
 		pip-compile --generate-hashes --no-header --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
+.PHONY: pip-upgrade
+pip-upgrade: ## Uses pip-compile to update all requirements that are not pinned
+# in requirements.in
+	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
+    pip install pip-tools && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade --output-file requirements.txt requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade --output-file dev-requirements.txt dev-requirements.in'
 
-.PHONY: update-pip-dev
-update-pip-dev: ## Uses pip-compile to update dev-requirements.txt for upgrading a specific package
+.PHONY: pip-dev-upgrade
+pip-dev-upgrade: ## Uses pip-compile to update all dev requirements that are not pinned
+# in dev-requirements.in
+	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
+    pip install pip-tools && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade --output-file dev-requirements.txt dev-requirements.in'
+
+.PHONY: pip-dev-update
+pip-dev-update: ## Uses pip-compile to update dev-requirements.txt for upgrading a specific package
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
@@ -114,9 +130,7 @@ check-migrations: ## Check for ungenerated migrations
 
 .PHONY: bandit
 bandit: ## Runs bandit static code analysis in Python3 container.
-	@docker run -it -v $(PWD):/code -w /code --name fpf_www_bandit --rm \
-		python:3.9-slim \
-		bash -c "pip install -q --upgrade bandit && bandit --recursive . -ll --exclude devops,node_modules,molecule,.venv"
+	@docker-compose run --rm django ./scripts/bandit
 
 .PHONY: npm-audit
 npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities

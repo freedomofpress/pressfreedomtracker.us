@@ -279,19 +279,37 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     # Legal Case
+
+    # DEPRECATION WARNING!
+    # PS: Delete lawsuit_name and venue fields in a month.
     lawsuit_name = models.CharField(
         max_length=1024,
         blank=True,
         null=True,
         verbose_name='Lawsuit name'
     )
-
     venue = ParentalManyToManyField(
         'incident.Venue',
         blank=True,
         verbose_name='Case Venue',
         related_name='venue_incidents',
         help_text='Courts that are hearing or have heard this case.'
+    )
+
+    case_number = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        verbose_name='Case number'
+    )
+    case_statuses = ChoiceArrayField(
+        models.CharField(
+            max_length=255,
+            choices=choices.CASE_STATUS,
+        ),
+        blank=True,
+        null=True,
+        verbose_name="Legal case statuses"
     )
 
     # Equipment Seizure or Damage
@@ -500,10 +518,10 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel('date'),
                 FieldPanel('exact_date_unknown'),
                 FieldPanel('city'),
-                AutocompletePanel('state', page_type='incident.State'),
+                AutocompletePanel('state', target_model='incident.State'),
                 InlinePanel('targeted_journalists', label='Targeted Journalists'),
-                AutocompletePanel('targeted_institutions', 'incident.Institution', is_single=False),
-                AutocompletePanel('tags', 'common.CommonTag', is_single=False),
+                AutocompletePanel('targeted_institutions', 'incident.Institution'),
+                AutocompletePanel('tags', 'common.CommonTag'),
                 InlinePanel('categories', label='Incident categories', min_num=1),
             ]
         ),
@@ -528,9 +546,9 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('arrest_status'),
                 FieldPanel('status_of_charges'),
-                AutocompletePanel('arresting_authority', page_type='incident.LawEnforcementOrganization'),
-                AutocompletePanel('current_charges', 'incident.Charge', is_single=False),
-                AutocompletePanel('dropped_charges', 'incident.Charge', is_single=False),
+                AutocompletePanel('arresting_authority', target_model='incident.LawEnforcementOrganization'),
+                AutocompletePanel('current_charges', 'incident.Charge'),
+                AutocompletePanel('dropped_charges', 'incident.Charge'),
                 FieldPanel('detention_date'),
                 FieldPanel('release_date'),
                 FieldPanel('unnecessary_use_of_force'),
@@ -541,8 +559,8 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Legal Case',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('lawsuit_name'),
-                AutocompletePanel('venue', 'incident.Venue', is_single=False),
+                FieldPanel('case_number'),
+                FieldPanel('case_statuses'),
             ]
         ),
 
@@ -577,7 +595,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel('target_us_citizenship_status'),
                 FieldPanel('denial_of_entry'),
                 FieldPanel('stopped_previously'),
-                AutocompletePanel('target_nationality', 'incident.Nationality', is_single=False),
+                AutocompletePanel('target_nationality', 'incident.Nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
                 FieldPanel('did_authorities_ask_for_social_media_user'),
                 FieldPanel('did_authorities_ask_for_social_media_pass'),
@@ -599,7 +617,7 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
             classname='collapsible collapsed',
             children=[
-                AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker', is_single=False),
+                AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker'),
                 FieldPanel('charged_under_espionage_act'),
             ]
         ),
@@ -637,11 +655,11 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Denial of Access',
             classname='collapsible collapsed',
             children=[
-                AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic', is_single=False),
+                AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
             ]
         ),
 
-        AutocompletePanel('related_incidents', 'incident.IncidentPage', is_single=False),
+        AutocompletePanel('related_incidents', 'incident.IncidentPage'),
     ]
     settings_panels = Page.settings_panels + [
         FieldPanel('suppress_footer')

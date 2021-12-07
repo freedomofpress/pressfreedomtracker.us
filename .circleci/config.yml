@@ -1,18 +1,4 @@
 ---
-reuse-blerbs:
-  - &python_prereqs
-    run:
-      environment:
-        SETUPTOOLS_USE_DISTUTILS: stdlib
-      name: Install testing pre-reqs
-      command: |
-        # Set python to 3.9.1
-        pyenv versions
-        pyenv global 3.9.1
-        pip install -U pip
-        pip install pipenv
-        pipenv sync
-
 version: 2.1
 commands:
   check-changed-files-or-halt:
@@ -27,44 +13,50 @@ jobs:
   safety_check:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
-    machine:
-      image: ubuntu-2004:202101-01
+    docker:
+      - image: cimg/python:3.9
     working_directory: ~/tracker
     steps:
       - checkout
 
-      - *python_prereqs
+      - run:
+          name: Install pip dependencies
+          command: pip install --require-hashes -r dev-requirements.txt
 
       - run:
           name: Check Python dependencies for CVEs
           command: make safety
 
       - run:
+          name: Update bandit to the latest version
+          command: pip install --upgrade bandit
+
+      - run:
           name: Static code analysis for vulnerabilities
-          command: make bandit
+          command: ./scripts/bandit
 
       - run:
           name: Run flake8 tests
-          command: make flake8
+          command: flake8
 
   npm_audit:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
-    machine:
-      image: ubuntu-2004:202101-01
+    docker:
+      - image: node:14-alpine@sha256:5c33bc6f021453ae2e393e6e20650a4df0a4737b1882d389f17069dc1933fdc5
     working_directory: ~/tracker
     steps:
       - checkout
       - check-changed-files-or-halt:
           pattern: ^package-lock.json$
 
-      - *python_prereqs
-
       - run:
           name: Check node dependencies for vulnerabilities
           command: |
-            pipenv run make dev-init
-            pipenv run make ci-npm-audit
+            mkdir -p test-results
+            npm ci
+            $(npm bin)/npm-audit-plus --xml > test-results/audit.xml
+
       - store_test_results:
           path: ~/tracker/test-results/
 
@@ -77,17 +69,15 @@ jobs:
     steps:
       - checkout
 
-      - *python_prereqs
-
       - run:
           name: Ensure we can run dev-env
           command: |
             make dev-init
-            pipenv run docker-compose up -d
+            docker-compose up -d
             while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
-            pipenv run make dev-tests
-            pipenv run make dev-jest-tests
-            pipenv run make check-migrations
+            make dev-tests
+            make dev-jest-tests
+            make check-migrations
           no_output_timeout: 5m
 
       - store_artifacts:
@@ -102,7 +92,7 @@ jobs:
           name: Yank docker logs
           command: |
             mkdir -p ~/dockercomposelogs || true
-            pipenv run docker-compose logs > ~/dockercomposelogs/dev.log
+            docker-compose logs > ~/dockercomposelogs/dev.log
           when: always
 
       - store_artifacts:
@@ -111,29 +101,31 @@ jobs:
   prod:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
-    machine:
-      image: ubuntu-2004:202101-01
-    working_directory: ~/pressfreedom
+    docker:
+      - image: cimg/python:3.9
+    working_directory: ~/tracker
     steps:
       - checkout
 
-      - *python_prereqs
+      - setup_remote_docker:
+          version: 20.10.7
 
       - run:
           name: Ensure we can run prod-env
           command: |
-            pipenv run docker-compose -f prod-docker-compose.yaml build
-            pipenv run docker-compose -f prod-docker-compose.yaml up -d
-            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
-            pipenv run docker-compose -f prod-docker-compose.yaml exec django /bin/bash -c "./manage.py createdevdata --no-download"
-            pipenv run pytest devops/tests/test_basic.py
+            docker-compose -f prod-docker-compose.yaml build
+            docker-compose -f prod-docker-compose.yaml up -d
+            docker run --rm --network tracker_app curlimages/curl:7.80.0 -4 --retry 24 --retry-delay 5 --retry-all-errors http://app:8000/health/ok/
+            docker-compose -f prod-docker-compose.yaml exec django /bin/bash -c "./manage.py createdevdata --no-download"
+            docker-compose -f prod-docker-compose.yaml exec django pip install --require-hashes -r /django/requirements.txt
+            docker-compose -f prod-docker-compose.yaml exec django ./scripts/pytest
           no_output_timeout: 5m
 
       - run:
           name: Yank docker logs
           command: |
             mkdir -p ~/dockercomposelogs || true
-            pipenv run docker-compose -f prod-docker-compose.yaml logs > ~/dockercomposelogs/prod.log
+            docker-compose -f prod-docker-compose.yaml logs > ~/dockercomposelogs/prod.log
           when: always
 
       - store_artifacts:
@@ -141,7 +133,7 @@ jobs:
 
   coverage:
     docker:
-      - image: circleci/python:3.9
+      - image: cimg/python:3.9
     steps:
       - checkout
 

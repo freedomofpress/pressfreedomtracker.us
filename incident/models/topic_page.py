@@ -234,7 +234,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             heading='Incidents',
             children=[
                 PageChooserPanel('incident_index_page'),
-                AutocompletePanel('incident_tag', page_type='common.CommonTag'),
+                AutocompletePanel('incident_tag', target_model='common.CommonTag'),
                 FieldPanel('incidents_per_module'),
                 FieldPanel('start_date'),
                 FieldPanel('end_date'),
