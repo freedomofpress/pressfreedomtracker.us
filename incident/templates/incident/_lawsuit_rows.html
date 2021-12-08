@@ -21,10 +21,23 @@
 		</th>
 		<td class="data-table__value">
 			{% for case_status in page.case_statuses %}
-			<a href="{% pageurl page.get_parent %}?case_statuses={{ case_statuses }}">
+			<a href="{% pageurl page.get_parent %}?case_statuses={{ case_status }}">
 				{% get_case_status_display case_status as case_status_display_name %}
 				{{ case_status_display_name|capfirst }}</a>{% if not forloop.last %}, {% endif %}
 			{% endfor %}
+		</td>
+	</tr>
+{% endif %}
+
+{% if page.case_type %}
+	<tr class="data-table__row">
+		<th class="data-table__label">
+			Type of case
+		</th>
+		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?case_type={{ page.case_type }}">
+				{{ page.case_type }}
+			</a>
 		</td>
 	</tr>
 {% endif %}

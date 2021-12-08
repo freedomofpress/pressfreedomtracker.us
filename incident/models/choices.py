@@ -95,6 +95,10 @@ CASE_STATUS = [
     ('APPEALED', 'appealed'),
 ]
 
+CASE_TYPE = [
+    ('CIVIL', 'Civil'),
+    ('CLASS_ACTION', 'Class Action'),
+]
 
 EQUIPMENT = [
     ('SEIZED', 'seized'),
