@@ -311,6 +311,13 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name="Legal case statuses"
     )
+    case_type = models.CharField(
+        choices=choices.CASE_TYPE,
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name="Type of case"
+    )
 
     # Equipment Seizure or Damage
     status_of_seized_equipment = models.CharField(
@@ -561,6 +568,7 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('case_number'),
                 FieldPanel('case_statuses'),
+                FieldPanel('case_type'),
             ]
         ),
 

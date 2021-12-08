@@ -179,6 +179,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Legal case
     case_number = None
+    case_type = None
     case_statuses = []
 
     class Params:

@@ -85,6 +85,7 @@ class IncidentExportTestCase(TestCase):
             'detention_date',
             'unnecessary_use_of_force',
             'case_number',
+            'case_type',
             'case_statuses',
             'status_of_seized_equipment',
             'is_search_warrant_obtained',
