@@ -1,6 +1,19 @@
 {% load wagtailcore_tags %}
 {% load case_tags %}
 
+{% if page.case_type %}
+	<tr class="data-table__row">
+		<th class="data-table__label">
+			Type of case
+		</th>
+		<td class="data-table__value">
+			<a href="{% pageurl page.get_parent %}?case_type={{ page.case_type }}">
+				{{ page.get_case_type_display|capfirst }}
+			</a>
+		</td>
+	</tr>
+{% endif %}
+
 {% if page.case_number %}
 	<tr class="data-table__row">
 		<th class="data-table__label">
@@ -25,19 +38,6 @@
 				{% get_case_status_display case_status as case_status_display_name %}
 				{{ case_status_display_name|capfirst }}</a>{% if not forloop.last %}, {% endif %}
 			{% endfor %}
-		</td>
-	</tr>
-{% endif %}
-
-{% if page.case_type %}
-	<tr class="data-table__row">
-		<th class="data-table__label">
-			Type of case
-		</th>
-		<td class="data-table__value">
-			<a href="{% pageurl page.get_parent %}?case_type={{ page.case_type }}">
-				{{ page.get_case_type_display|capfirst }}
-			</a>
 		</td>
 	</tr>
 {% endif %}
