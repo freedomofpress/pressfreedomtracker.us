@@ -36,7 +36,7 @@
 		</th>
 		<td class="data-table__value">
 			<a href="{% pageurl page.get_parent %}?case_type={{ page.case_type }}">
-				{{ page.case_type }}
+				{{ page.get_case_type_display|capfirst }}
 			</a>
 		</td>
 	</tr>

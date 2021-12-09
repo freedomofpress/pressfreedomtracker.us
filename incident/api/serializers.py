@@ -112,7 +112,7 @@ class BaseIncidentSerializer(serializers.Serializer):
     detention_date = serializers.DateField()
     unnecessary_use_of_force = serializers.BooleanField()
     case_number = serializers.CharField()
-    case_type = serializers.CharField()
+    case_type = serializers.CharField(source='get_case_type_display')
 
     status_of_seized_equipment = serializers.CharField(source='get_status_of_seized_equipment_display')
     is_search_warrant_obtained = serializers.BooleanField()
