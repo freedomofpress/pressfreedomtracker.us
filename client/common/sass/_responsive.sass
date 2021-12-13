@@ -1,0 +1,13 @@
+$mobile-max: 375px
+$tablet-max: 768px
+
+$tablet-min: $mobile-max + 1px
+$desktop-min: $tablet-max + 1px
+
+=tablet-up
+    @media(min-width: $tablet-min)
+        @content
+
+=desktop-up
+    @media(min-width: $desktop-min)
+        @content

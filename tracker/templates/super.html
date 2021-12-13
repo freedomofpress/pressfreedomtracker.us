@@ -24,7 +24,8 @@
 
 			{% block css %}
 				{% render_bundle 'common' 'css' %}
-			{% endblock %}
+				{% render_bundle 'common' 'js' %}
+				{% endblock %}
 
 			{% block meta %}
 				{% if self %}

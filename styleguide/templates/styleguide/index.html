@@ -1,57 +1,8 @@
-{% extends "base.html" %}
+{% extends "super.html" %}
 
-{% block main %}
-<div style="max-width: 800px; margin: 20px;">
-	<h2>Incident</h2>
-	{% include "styleguide/modules/_incident.html" %}
+{% load webpack_loader %}
 
-	<h2>Data Table</h2>
-	{% include "styleguide/modules/_data-table.html" %}
-
-	<h2>Flex Container</h2>
-	Not pictured here. <code>&lt;div class="flex-container" /&gt;</code> ensures
-	that its last child expands to fill the viewport
-
-	<h2>Layout: Right Sidebar</h2>
-	{% include "styleguide/modules/_layout-right-sidebar.html" %}
-
-	<h2>Layout: Right Sidebar (with Light Sidebar)</h2>
-	{% include "styleguide/modules/_layout-right-sidebar-w-light.html" %}
-
-		<h2>Stats</h2>
-	<p>These are also the border colors.</p>
-	<div class="stats">
-		{% include "styleguide/modules/_stats.html" with color="eastern-blue" %}
-		{% include "styleguide/modules/_stats.html" with color="gamboge" %}
-		{% include "styleguide/modules/_stats.html" with color="gray-dark" %}
-		{% include "styleguide/modules/_stats.html" with color="green-apple" %}
-		{% include "styleguide/modules/_stats.html" with color="green" %}
-		{% include "styleguide/modules/_stats.html" with color="sunshine" %}
-		{% include "styleguide/modules/_stats.html" with color="pink" %}
-		{% include "styleguide/modules/_stats.html" with color="red" %}
-		{% include "styleguide/modules/_stats.html" with color="royal-blue" %}
-		{% include "styleguide/modules/_stats.html" with color="teal" %}
-		{% include "styleguide/modules/_stats.html" with color="violet" %}
-		{% include "styleguide/modules/_stats.html" with color="yellow" %}
-	</div>
-
-	<h2>Category Text Colors</h2>
-	<div class="simple-page">
-		<ul class="category-list">
-			{% include "styleguide/modules/_category_text_colors.html" with color="eastern-blue" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="gamboge" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="gray-dark" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="green-apple" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="green" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="sunshine" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="pink" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="red" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="royal-blue" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="teal" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="violet" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="yellow" %}
-		</ul>
-	</div>
-
-</div>
+{% block body %}
+	{% include 'common/_page-title.html' with content='USPFT HTML Components' %}
+	<p>Components go here.</p>
 {% endblock %}
