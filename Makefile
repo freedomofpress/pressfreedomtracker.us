@@ -115,8 +115,13 @@ help: ## Prints this message and exits
 		| sort \
 		| column -s ':' -t
 
-.PHONY: lint
-lint: flake8
+.PHONY: eslint
+eslint:
+	docker-compose exec node npm run js-lint
+
+.PHONY: stylelint
+stylelint:
+	docker-compose exec node npm run stylelint
 
 .PHONY: flake8
 flake8: ## Runs flake8 linting in Python3 container.

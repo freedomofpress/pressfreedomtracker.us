@@ -1,19 +1,19 @@
 import '../sass/statistics.sass'
-import ReactModal from "react-modal";
+import ReactModal from 'react-modal'
 
-const React = window.React
-const Modifier = window.DraftJS.Modifier
-const EditorState = window.DraftJS.EditorState
-const TooltipEntity = window.draftail.TooltipEntity
-const Icon = window.wagtail.components.Icon
+const { React } = window
+const { Modifier } = window.DraftJS
+const { EditorState } = window.DraftJS
+const { TooltipEntity } = window.draftail
+const { Icon } = window.wagtail.components
 
-ReactModal.setAppElement("#wagtail")
+ReactModal.setAppElement('#wagtail')
 
 class SearchStatSource extends React.Component {
 	constructor(props) {
-        super(props)
+		super(props)
 
-        this.inputRef = React.createRef()
+		this.inputRef = React.createRef()
 
 		const { entityKey, editorState } = props
 		let state
@@ -23,13 +23,13 @@ class SearchStatSource extends React.Component {
 			state = {
 				isLoading: false,
 				url: search,
-				dataset: dataset || "TOTAL",
+				dataset: dataset || 'TOTAL',
 			}
 		} else {
 			state = {
 				isLoading: false,
-				url: "",
-				dataset: "TOTAL",
+				url: '',
+				dataset: 'TOTAL',
 			}
 		}
 
@@ -86,49 +86,48 @@ class SearchStatSource extends React.Component {
 		summaryUrl.pathname = '/all-incidents/summary/'
 
 		fetch(summaryUrl.href)
-			.then(response => response.json())
-			.then(data => {
+			.then((response) => response.json())
+			.then((data) => {
 				this.setState({ isLoading: false })
-				let params = {}
+				const params = {}
 				let count
-				if (dataset == 'TOTAL') {
+				if (dataset === 'TOTAL') {
 					count = data.total
-				} else if (dataset == 'INSTITUTIONS') {
+				} else if (dataset === 'INSTITUTIONS') {
 					count = data.institutions
-				} else if (dataset == 'JOURNALISTS') {
+				} else if (dataset === 'JOURNALISTS') {
 					count = data.journalists
 				} else {
 					count = 0
 				}
 
-				for (let [key, value] of summaryUrl.searchParams.entries()) {
+				for (const [key, value] of summaryUrl.searchParams.entries()) {
 					params[`param_${key}`] = value
 				}
 
 				const contentWithEntity = content.createEntity(entityType.type, 'IMMUTABLE', {
-					count: count,
+					count,
 					search: url,
-					dataset: dataset,
+					dataset,
 					...params,
 				})
 
 				const entityKey = contentWithEntity.getLastCreatedEntityKey()
 				const text = `${count}`
 
-				const newContent = Modifier.replaceText(content, selection, text, null, entityKey);
+				const newContent = Modifier.replaceText(content, selection, text, null, entityKey)
 				nextState = EditorState.push(editorState, newContent, 'insert-characters')
 			})
 			.catch((error) => {
-				window.alert("Error while constructing statistics. Please check that the URL is correct.")
+				window.alert('Error while constructing statistics. Please check that the URL is correct.')
 				console.error(error)
 			})
 			.finally(() => { onComplete(nextState) })
-
 	}
 
 	render() {
-		const { url } = this.state;
-		const datasets = ['Total', 'Journalists', 'Institutions'];
+		const { url } = this.state
+		const datasets = ['Total', 'Journalists', 'Institutions']
 		return (
 			<ReactModal
 				isOpen
@@ -141,23 +140,24 @@ class SearchStatSource extends React.Component {
 				<form onSubmit={this.onConfirm}>
 					<fieldset>
 						<legend className="admin-modal__legend">Select dataset for statistic:</legend>
-						{datasets.map((dataset, index) =>
-							<p class="admin-modal__dataset_field">
+						{datasets.map((dataset, index) => (
+							<p className="admin-modal__dataset_field">
 								<label className="admin-modal__label" key={index}>
 									<input
 										className="admin-modal__dataset_radio"
 										value={dataset.toUpperCase()}
 										checked={this.state.dataset === dataset.toUpperCase()}
 										onChange={this.onChangeDataset}
-										type="radio" />
+										type="radio"
+									/>
 									{dataset}
 								</label>
 							</p>
-						)}
+						))}
 					</fieldset>
 
 					<p>
-						<label className="admin-modal__label" for="url">Enter a URL:</label>
+						<label className="admin-modal__label" htmlFor="url">Enter a URL:</label>
 						<input
 							ref={this.inputRef}
 							type="url"
@@ -170,11 +170,15 @@ class SearchStatSource extends React.Component {
 						/>
 					</p>
 					<p>
-						Perform a search on the <a href="https://pressfreedomtracker.us/">main site</a> for incidents to include in this statistic and copy the URL here.
+						Perform a search on the
+						{' '}
+						<a href="https://pressfreedomtracker.us/">main site</a>
+						{' '}
+						for incidents to include in this statistic and copy the URL here.
 					</p>
 					<button className="button button-secondary no" onClick={this.onRequestClose}>Cancel</button>
 					<button className="button" type="submit" disabled={this.state.isLoading}>
-						{this.state.isLoading ? "Loading..." : "Save"}
+						{this.state.isLoading ? 'Loading...' : 'Save'}
 					</button>
 				</form>
 			</ReactModal>
@@ -184,24 +188,24 @@ class SearchStatSource extends React.Component {
 
 const getStatAttributes = (data) => {
 	const searchUrl = data.search || null
-	const dataset = data.dataset
+	const { dataset } = data
 	const icon = <Icon name="cog" />
 
 	const url = searchUrl
 	let label
-	if (dataset == 'TOTAL') {
-		label = "Incident count"
-	} else if (dataset == 'INSTITUTIONS') {
-		label = "Institutions affected"
-	} else if (dataset == 'JOURNALISTS') {
-		label = "Journalists affected"
+	if (dataset === 'TOTAL') {
+		label = 'Incident count'
+	} else if (dataset === 'INSTITUTIONS') {
+		label = 'Institutions affected'
+	} else if (dataset === 'JOURNALISTS') {
+		label = 'Journalists affected'
 	} else {
-		label = ""
+		label = ''
 	}
 
-	for (let [key, value] of Object.entries(data)) {
+	for (const [key, value] of Object.entries(data)) {
 		if (key.startsWith('param_')) {
-			label += ` ${key.replace('param_', '')}="${value}"`
+			label += ` ${key.replace('param_', '')}='${value}'`
 		}
 	}
 
@@ -212,7 +216,7 @@ const getStatAttributes = (data) => {
 	}
 }
 
-const SearchStat = (props) => {
+const SearchStat = function (props) {
 	const { entityKey, contentState } = props
 
 	const data = contentState.getEntity(entityKey).getData()
@@ -227,5 +231,5 @@ window.draftail.registerPlugin(
 		type: 'SEARCHSTAT',
 		source: SearchStatSource,
 		decorator: SearchStat,
-	}
+	},
 )

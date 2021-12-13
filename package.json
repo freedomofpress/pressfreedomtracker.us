@@ -9,7 +9,7 @@
     "start": "webpack watch --mode development --devtool eval-source-map",
     "test": "jest -u",
     "js-lint": "eslint client/**/*.js",
-    "sass-lint": "sass-lint -v"
+    "stylelint": "stylelint client/**/*.sass"
   },
   "author": "Harris Lapiroff <harris@littleweaverweb.com>",
   "devDependencies": {
@@ -28,6 +28,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint-config-airbnb": "^19.0.0",
+    "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.27.0",
     "file-loader": "^6.2.0",
@@ -38,10 +39,15 @@
     "npm-audit-plus": "^0.2.0",
     "postcss": "^8.2.15",
     "postcss-loader": "^4.2.0",
+    "postcss-sass": "^0.5.0",
     "react-test-renderer": "^16.13.1",
     "sass": "^1.32.8",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",
+    "stylelint": "^14.1.0",
+    "stylelint-config-recommended": "^6.0.0",
+    "stylelint-config-sass-guidelines": "^9.0.1",
+    "stylelint-config-standard": "^24.0.0",
     "watchpack": "^2.2.0",
     "webpack": "^5.38.1",
     "webpack-bundle-tracker": "^1.1.0",
