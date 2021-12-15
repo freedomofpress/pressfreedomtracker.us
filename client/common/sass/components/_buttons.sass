@@ -1,0 +1,46 @@
+.btn
+	display: inline-block
+	font-size: $font-size-small-p
+	font-weight: 500
+	line-height: 1.714
+	padding: 0.5rem 1rem
+	color: $black
+	margin: 1rem 0
+	text-decoration: none
+
+	&-primary
+		border: 3px solid $black
+
+		&::after
+			content: url(../icons/arrow-left.svg)
+			height: 24px
+			width: auto
+			border: 3px solid $black
+			position: absolute
+			padding: 0.5rem 1rem
+			margin-top: calc(-0.5rem - 3px)  //padding-top of parent + border-width
+			margin-left: 1rem  //padding left of parent
+
+		&:hover
+			background-color: $black
+			color: $white
+
+			&::after
+				content: url(../icons/arrow-left-white.svg)
+				background-color: $black
+
+		&:focus
+			border-width: 6px 3px 6px 6px
+
+			&::after
+				border-width: 6px 6px 6px 3px
+				margin-top: calc(-0.5rem - 6px)
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+			&::after
+				content: url(../icons/arrow-left-inactive.svg)
+				border-color: $tag-inactive
+

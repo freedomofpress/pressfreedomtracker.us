@@ -8,13 +8,14 @@
 		margin: 1rem 5rem;
 		display: block;
 		border: 1px dashed black;
+		padding: 1.5rem
 	}
 </style>
 	<h1>PFT Styleguide</h1>
 
 	<hr/>
-	<section id="colors">
-		<h2>Colors</h2>
+	<details id="colors" open>
+		<summary><h2>Colors</h2></summary>
 		<p>The variables for colors can be found in <code>_colors.sass</code> file</p>
 		<code><pre>
 
@@ -28,11 +29,11 @@
 	$accent-background-tags: #FAFEC2
 
 		</pre></code>
-	</section>
+	</details>
 
 	<hr/>
-	<section id="colors">
-		<h2>Typography</h2>
+	<details id="colors" open>
+		<summary><h2>Typography</h2></summary>
 		<p>
 			The font-sizes and the typography styles for the basic
 			html elements can be found in <code>_typography.sass</code> file</p>
@@ -96,5 +97,32 @@
 	&lt;p class="number"&gt;: <p class="Number">12345</p>
 
 		</code>
-	</section>
+	</details>
+
+	<hr/>
+	<details id="buttons" open>
+		<summary><h2>Buttons</h2></summary>
+		<p>
+			The sass for buttons can be found in <code>components/_buttons.sass</code> file.
+			An important thing to remember while using the following styles is whether the HTML
+			markup should have an <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code>. In other
+			words, should the markup appear be a link or a button. The simple rule to follow
+			usually is if the button takes you to another page, then it should be marked up as
+			a link (i.e. <code>&lt;a&gt;</code>) whereas if it changes something in the current
+			page, e.g. filter the content of the page, then it should have the mark up of a button
+			(i.e. <code>&lt;button&gt;</code>)
+		</p>
+
+		<h4>Main CTA</h4>
+		<code>
+			class=".btn btn-primary":
+
+			<a class="btn btn-primary" href="#">Button</a>
+		</code>
+		<code>
+			class=".btn btn-primary" disabled="":
+
+			<a class="btn btn-primary" disabled>Button</a>
+		</code>
+	</details>
 {% endblock %}
