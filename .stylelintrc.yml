@@ -23,6 +23,7 @@ rules:
     declaration-block-trailing-semicolon: null
     order/properties-alphabetical-order: null
     max-nesting-depth: null
+    selector-list-comma-newline-after: null
     color-function-notation: legacy
     alpha-value-notation: number
     color-hex-case: upper
