@@ -1,0 +1,58 @@
+{% load wagtailimages_tags %}
+{% with size=size|default:"big" %}
+	<div class="incident-card">
+		{% if photo %}
+			{% image photo fill-665x440 as x1 %}
+			<img
+				class="card-image-{{ size }}"
+				alt="{{ x1.alt }}"
+				src="{{ x1.url }}"
+			>
+		{% endif %}
+		<h1 class="card-title-{{ size }}">{{ incident.title }}</h1>
+
+		{% if not photo %}
+			<p>
+				{{ incident.teaser }}
+			</p>
+		{% endif %}
+
+		<ol>
+			{% for categorization in incident.categories.all %}
+				<li>
+					{{ categorization.category.title }}
+				</li>
+			{% endfor %}
+		</ol>
+
+		<dl>
+			<dt>Updated on</dt>
+			<dd>
+				{{ incident.latest_update|date:"F j, Y" }}
+			</dd>
+			<dt>Date of Incident</dt>
+			<dd>{{ incident.date|date:"F j, Y" }}</dd>
+			<dt>Location</dt>
+			<dd>{{ incident.city }}, {{ incident.state.name }}</dd>
+			{% if incident.targeted_journalists.all or incident.targeted_institutions.all %}
+				<dt>Targets</dt>
+				{% for journalist in incident.targeted_journalists.all %}
+					<dd>
+						{{ journalist.journalist.title }}{% if journalist.institution %} ({{ journalist.institution.title }}){% endif %}
+					</dd>
+				{% endfor %}
+				{% for institution in incident.targeted_institutions.all %}
+					<dd>{{ institution.title }}</dd>
+				{% endfor %}
+			{% endif %}
+		</dl>
+
+		{% if incident.tags.all %}
+			<ul>
+				{% for tag in incident.tags.all %}
+					<li>#{{ tag.title }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+{% endwith %}
