@@ -1,11 +1,11 @@
 import '../sass/statistics.sass'
 import ReactModal from 'react-modal'
 
-const { React } = window
-const { Modifier } = window.DraftJS
-const { EditorState } = window.DraftJS
-const { TooltipEntity } = window.draftail
-const { Icon } = window.wagtail.components
+const React = window.React
+const Modifier = window.DraftJS.Modifier
+const EditorState = window.DraftJS.EditorState
+const TooltipEntity = window.draftail.TooltipEntity
+const Icon = window.wagtail.components.Icon
 
 ReactModal.setAppElement('#wagtail')
 
