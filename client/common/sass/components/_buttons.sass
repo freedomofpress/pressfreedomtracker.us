@@ -9,17 +9,21 @@
 	text-decoration: none
 
 	&-primary
-		border: 3px solid $black
+		border: 3px solid
+		border-color: $black
 
 		&::after
 			content: url(../icons/arrow-left.svg)
 			height: 24px
-			width: auto
-			border: 3px solid $black
+			width: 15px
+			border: 3px solid
+			border-color: $black
 			position: absolute
 			padding: 0.5rem 1rem
-			margin-top: calc(-0.5rem - 3px)  //padding-top of parent + border-width
-			margin-left: 1rem  //padding left of parent
+			//padding-top of parent + border-width
+			margin-top: calc(-0.5rem - 3px)
+			//padding left of parent
+			margin-left: 1rem
 
 		&:hover
 			background-color: $black
@@ -44,3 +48,29 @@
 				content: url(../icons/arrow-left-inactive.svg)
 				border-color: $tag-inactive
 
+	&-secondary
+		border: 3px solid
+		border-color: $black
+
+		&:hover
+			background-color: $black
+			color: $white
+
+		&:focus
+			border-width: 6px
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+	&-ghost
+		&:hover
+			background-color: $black
+			color: $white
+
+		&:focus
+			border: 3px solid
+			border-color: $black
+
+		&[disabled]
+			color: $tag-inactive
