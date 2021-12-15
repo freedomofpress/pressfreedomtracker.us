@@ -184,26 +184,8 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             )
 
         incident_qs = incident_filter.get_queryset() \
-            .select_related('teaser_image', 'state', 'arresting_authority') \
+            .with_public_associations() \
             .with_most_recent_update() \
-            .prefetch_related(
-                'authors',
-                'categories__category',
-                'current_charges',
-                'dropped_charges',
-                'equipment_broken__equipment',
-                'equipment_seized__equipment',
-                'links',
-                'politicians_or_public_figures_involved',
-                'tags',
-                'target_nationality',
-                'targeted_institutions',
-                'targeted_journalists',
-                'teaser_image__renditions',
-                'updates',
-                'venue',
-                'workers_whose_communications_were_obtained',
-        )
 
         paginator, entries = paginate(
             request,
