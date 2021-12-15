@@ -143,7 +143,7 @@ def random_choice_list(choices):
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
-        exclude = ('teaser_image_text', 'image_caption_text')
+        exclude = ('image_caption_text',)
 
     first_published_at = Faker(
         'past_datetime',
@@ -158,7 +158,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     )
 
     image_caption_text = Faker('sentence')
-    teaser_image_text = Faker('sentence')
     title = factory.Faker('sentence')
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
@@ -166,7 +165,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     longitude = factory.Faker('longitude')
     latitude = factory.Faker('latitude')
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
-    teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
+    teaser = factory.Faker('sentence')
     teaser_image = None
     image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))
 
