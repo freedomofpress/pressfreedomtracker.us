@@ -1,1 +1,161 @@
 $font-base: 'Helvetica Neue', 'Helvetica', sans-serif
+$font-mono: 'Roboto Mono', monospace
+
+// Font sizes
+$font-size-number: 0.75rem
+$font-size-small-ui: 0.8125rem
+$font-size-small-p: 0.875rem
+
+// Mobile
+$font-size-p: 1rem
+$font-size-database-card-title: 1.375rem
+$font-size-card-title-l: 1.625rem
+$font-size-h4: 1.75rem
+$font-size-h3: 2rem
+$font-size-h2: 2.5rem
+$font-size-h1: 3.75rem
+
+// Desktop
+$font-size-p-desktop: 1.125rem
+$font-size-card-title-desktop: 1.375rem
+$font-size-card-title-l-desktop: 1.625rem
+$font-size-h4-desktop: 2rem
+$font-size-h3-desktop: 3.75rem
+$font-size-h2-desktop: 6.25rem
+$font-size-h1-desktop: 9.0625rem
+
+// Tablet
+$font-size-database-card-title-tab: 1.125rem
+$font-size-card-title-tab: 1.375rem
+$font-size-card-title-l-tab: 1.75rem
+$font-size-h4-tab: 2rem
+$font-size-h3-tab: 2.5rem
+$font-size-h2-tab: 3.75rem
+$font-size-h1-tab: 5rem
+
+
+body
+	margin: 0
+	padding: 0
+	font-weight: 400
+	font-family: $font-base
+	font-size: $font-size-p
+	line-height: 1.5
+	color: $black
+
+	+desktop-up
+		font-size: $font-size-p-desktop
+
+h1, h2, h3, h4, h5, h6
+	margin: 1.25rem auto
+
+h1
+	font-size: $font-size-h1
+	text-transform: uppercase
+	line-height: 1
+	font-weight: 300
+	letter-spacing: -0.04em
+
+	+tablet-up
+		font-size: $font-size-h1-tab
+
+	+desktop-up
+		font-size: $font-size-h1-desktop
+
+h2
+	font-size: $font-size-h2
+	line-height: 1
+	font-weight: 400
+	letter-spacing: -0.03em
+
+	+tablet-up
+		font-size: $font-size-h2-tab
+
+	+desktop-up
+		font-size: $font-size-h2-desktop
+
+h3
+	font-size: $font-size-h3
+	line-height: 1
+	font-weight: 400
+	letter-spacing: -0.02em
+
+	+tablet-up
+		font-size: $font-size-h3-tab
+
+	+desktop-up
+		font-size: $font-size-h3-desktop
+
+h4
+	font-size: $font-size-h4
+	line-height: 1
+	font-weight: 400
+
+	+tablet-up
+		font-size: $font-size-h4-tab
+
+	+desktop-up
+		font-size: $font-size-h4-desktop
+
+p
+	font-size: $font-size-p
+	line-height: 1.33
+	font-weight: 400
+
+	+desktop-up
+		font-size: $font-size-p-desktop
+
+.big-card-title
+	font-size: $font-size-card-title-l
+	line-height: 1
+	font-weight: 500
+
+	+tablet-up
+		font-size: $font-size-card-title-l-tab
+
+	+desktop-up
+		font-size: $font-size-card-title-l-desktop
+
+.database-card-title
+	font-weight: 500
+	font-size: $font-size-database-card-title
+	line-height: 1.25
+
+	+tablet-up
+		font-size: $font-size-database-card-title-tab
+
+	+desktop-up
+		font-size: $font-size-card-title-desktop
+
+.small-card-title
+	font-weight: 700
+	font-size: $font-size-p
+	line-height: 1.25
+
+	+tablet-up
+		font-size: $font-size-card-title-tab
+		font-weight: 500
+
+	+desktop-up
+		font-size: $font-size-card-title-desktop
+
+.subtitle
+	font-size: $font-size-p
+	line-height: 1.5
+	font-weight: 700
+
+	+desktop-up
+		font-size: $font-size-p-desktop
+
+.notes
+	font-size: $font-size-small-p
+	font-weight: 400
+
+.small-ui
+	font-size: $font-size-small-ui
+	font-weight: 400
+
+.number
+	font-family: $font-mono
+	font-size: $font-size-number
+	font-weight: 400

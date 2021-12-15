@@ -3,6 +3,98 @@
 {% load webpack_loader %}
 
 {% block body %}
-	{% include 'common/_page-title.html' with content='USPFT HTML Components' %}
-	<p>Components go here.</p>
+<style>
+	code:not(p code) {
+		margin: 1rem 5rem;
+		display: block;
+		border: 1px dashed black;
+	}
+</style>
+	<h1>PFT Styleguide</h1>
+
+	<hr/>
+	<section id="colors">
+		<h2>Colors</h2>
+		<p>The variables for colors can be found in <code>_colors.sass</code> file</p>
+		<code><pre>
+
+	$black: #000
+	$white: #FFF
+
+	$section-background: #F8F8F8
+	$tag-inactive: #C1C1C1
+	$gray-text: #8F8F8F
+	$accent-color: #F2FC67
+	$accent-background-tags: #FAFEC2
+
+		</pre></code>
+	</section>
+
+	<hr/>
+	<section id="colors">
+		<h2>Typography</h2>
+		<p>
+			The font-sizes and the typography styles for the basic
+			html elements can be found in <code>_typography.sass</code> file</p>
+		<code>
+
+	&lt;h1&gt;: <h1>Heading 1</h1>
+
+		</code>
+		<code>
+
+	&lt;h2&gt;: <h2>Heading 2</h2>
+
+		</code>
+		<code>
+
+	&lt;h3&gt;: <h3>Heading 3</h3>
+
+		</code>
+		<code>
+
+	&lt;h4&gt;: <h4>Heading 4</h4>
+
+		</code>
+		<code>
+
+	class="big-card-title": <h3 class="big-card-title">Title Big Card</h3>
+
+		</code>
+		<code>
+
+	class="database-card-title": <h3 class="database-card-title">Title Incident Database Card</h3>
+
+		</code>
+		<code>
+
+	class="small-card-title": <h3 class="small-card-title">Title Small Card</h3>
+
+		</code>
+		<code>
+
+	&lt;p class="subtitle"&gt;: <p class="subtitle">Subtitle</p>
+
+		</code>
+		<code>
+
+	&lt;p&gt;: <p>Paragraph</p>
+
+		</code>
+		<code>
+
+	&lt;p class="notes"&gt;: <p class="notes">Small Paragraph, notes</p>
+
+		</code>
+		<code>
+
+	&lt;p class="small-ui"&gt;: <p class="small-ui">Small UI Text</p>
+
+		</code>
+		<code>
+
+	&lt;p class="number"&gt;: <p class="Number">12345</p>
+
+		</code>
+	</section>
 {% endblock %}
