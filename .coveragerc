@@ -5,6 +5,7 @@ omit =
     */tests/*.py
     tracker/settings/*.py
     incident/devdata.py
+    */urls.py
 skip_empty = True
 show_missing = True
 
