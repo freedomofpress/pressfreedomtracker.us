@@ -98,6 +98,34 @@ jobs:
       - store_artifacts:
           path: ~/dockercomposelogs
 
+  lint:
+    environment:
+      SETUPTOOLS_USE_DISTUTILS: stdlib
+    machine:
+      image: ubuntu-2004:202101-01
+    working_directory: ~/tracker
+    steps:
+      - checkout
+
+      - run:
+          name: Ensure we can run dev-env
+          command: |
+            make dev-init
+            docker-compose up -d
+            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
+          no_output_timeout: 5m
+
+      - run:
+          name: Check for JS linting issues
+          command: make eslint
+
+      - run:
+          name: Check for SASS linting issues
+          command: make stylelint
+
+      - store_artifacts:
+          path: ~/dockercomposelogs
+
   prod:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
@@ -158,6 +186,7 @@ workflows:
     jobs:
       - safety_check
       - npm_audit
+      - lint
       - dev
       - prod
       - coverage:
