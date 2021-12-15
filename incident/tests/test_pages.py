@@ -485,6 +485,20 @@ class RecentlyUpdatedMethod(TestCase):
             with self.assertNumQueries(0):
                 incident.recently_updated()
 
+    def test_annotates_the_date_of_the_latest_update(self):
+        update1 = IncidentUpdateFactory(
+            page=self.inc1,
+            date=timezone.now() - timedelta(days=10),
+        )
+        IncidentUpdateFactory(
+            page=self.inc1,
+            date=timezone.now() - timedelta(days=15),
+        )
+        incident = IncidentPage.objects.with_most_recent_update() \
+            .get(pk=self.inc1.pk)
+
+        self.assertEqual(incident.latest_update, update1.date)
+
 
 class GetIncidentUpdatesTest(TestCase):
     def setUp(self):
