@@ -162,6 +162,22 @@ if ENABLE_DEBUG_TOOLBAR:  # noqa: F405
         },
     }
 
+<<<<<<< HEAD
+=======
+    # Disable caching of webpack stats files (can prevent node/django
+    # container race condition).
+    WEBPACK_LOADER['DEFAULT']['CACHE'] = False  # noqa: F405
+
+    # Obtain the default gateway from docker, needed for
+    # debug toolbar whitelisting
+    INTERNAL_IPS = [get_default_gateway_linux()]
+    # INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
+    # Needs to be injected relatively early in the MIDDLEWARE list
+    # MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
+    # Include the wagtail styleguide
+    INSTALLED_APPS.append('wagtail.contrib.styleguide')  # noqa: F405
+
+>>>>>>> 67abd3a1 (Charts: new version)
 
 if 'DJANGO_NO_DB' in os.environ:
     pass

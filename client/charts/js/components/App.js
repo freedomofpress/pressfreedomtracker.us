@@ -5,10 +5,10 @@ import * as d3 from "d3";
 import { BarChartFilter } from "./BarChartFilter";
 import { BarChartCategories } from "./BarChartCategories";
 import { RadioBars } from "./RadioBars";
-import { USMap } from "./USMap.js";
-import { BarChartHomepage } from "./BarChartHomepage.js";
 import { HomepageMainCharts } from "./HomepageMainCharts.js";
+import { FilterYears } from "./FilterYears.js";
 import { sample } from "lodash";
+import "../../sass/base.sass";
 
 export function App() {
 	const [dataset, setDataset] = useState(null);
@@ -56,9 +56,35 @@ export function App() {
 	}, []);
 
 	return dataset === null ? (
-		"LOADING"
+		<div
+			style={{
+				height: "100vh",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				opacity: 0.4,
+			}}
+		>
+			<div>LOADING...</div>
+		</div>
 	) : (
 		<div>
+			<h1>Homepage Charts</h1>
+			<div className="chartContainer">
+				<HomepageMainCharts
+					data={dataset}
+					width={window.innerWidth - 30}
+					height={window.innerWidth / 3 - 10}
+					// isLastSixMonths={true}
+					selectedYear={2021}
+				/>
+			</div>
+
+			<h1>BarChart Categories</h1>
+			<div className="chartContainer">
+				<BarChartCategories data={dataset} width={300} height={150} />
+			</div>
+
 			<h1>BarChart Filter</h1>
 			<div className="chartContainer">
 				<BarChartFilter
@@ -70,30 +96,19 @@ export function App() {
 				/>
 			</div>
 
+			<h1>BarChart Years Filter</h1>
+			<div className="chartContainer">
+				<FilterYears data={dataset} width={300} height={150} />
+			</div>
+
 			<h1>Radio Bars</h1>
 			<div className="chartContainer">
 				<RadioBars
 					data={dataset}
-					width={500}
+					width={300}
 					height={1600}
 					startDate={"2020-01-01"}
 					endDate={"2020-11-01"}
-				/>
-			</div>
-
-			<h1>BarChart Categories</h1>
-			<div className="chartContainer">
-				<BarChartCategories data={dataset} width={300} height={150} />
-			</div>
-
-			<h1>Homepage Charts</h1>
-			<div className="chartContainer">
-				<HomepageMainCharts
-					data={dataset}
-					width={window.innerWidth - 30}
-					height={window.innerWidth / 3 - 10}
-					// isLastSixMonths={true}
-					selectedYear={2021}
 				/>
 			</div>
 		</div>

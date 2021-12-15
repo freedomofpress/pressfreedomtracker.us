@@ -1,115 +1,184 @@
-import * as d3 from 'd3'
-import React, { useState } from 'react'
-import { countBy } from 'lodash'
+import * as d3 from "d3";
+import React, { useState } from "react";
+import { countBy } from "lodash";
 
 function firstDayOfMonth(date) {
-  const d = new Date(date)
-  d.setDate(1)
-  return d
+	return d3.timeMonth.floor(new Date(date));
+}
+
+function lastDayOfMonth(date) {
+	return d3.timeMonth.ceil(new Date(date));
+}
+
+function closeLineArea(dataset) {
+	const [dateMax, dateMin] = d3.extent(dataset.map((d) => d.date));
+	return [
+		{
+			date: d3.timeMonth.offset(new Date(dateMin), 1).toISOString(),
+			count: 0,
+		},
+		...dataset,
+		{
+			date: dateMax,
+			count: 0,
+		},
+	];
+}
+
+function monthWidth(date, scale) {
+	return scale(d3.timeMonth.offset(new Date(date), 1)) - scale(new Date(date));
 }
 
 const margins = {
-  top: 1,
-  left: 5,
-  right: 20,
-  bottom: 1,
-}
+	top: 0,
+	left: 5,
+	right: 30,
+	bottom: 3,
+};
 
 export function BarChartFilter({ data, width, height }) {
-  const [startDate, setStartDate] = useState('2020-01-01')
-  const [endDate, setEndDate] = useState('2020-11-01')
-  const frequencies = countBy(data, (d) => {
-    return firstDayOfMonth(d.date).toISOString()
-  })
+	const [minDate, maxDate] = d3.extent(data.map((d) => new Date(d.date)));
 
-  const definitiveData = Object.keys(frequencies).map((dateISO) => {
-    return {
-      date: dateISO,
-      count: frequencies[dateISO],
-      isSelected:
-        new Date(dateISO) >= new Date(startDate + 'T00:00:00.000Z') &&
-        new Date(dateISO) <= new Date(endDate + 'T00:00:00.000Z'),
-    }
-  })
+	const [startDate, setStartDate] = useState(firstDayOfMonth(minDate));
+	const [endDate, setEndDate] = useState(lastDayOfMonth(maxDate));
 
-  // console.log(
-  //   'RANGE',
-  //   d3.utcMonth
-  //     .range(
-  //       new Date(d3.min(Object.keys(frequencies))),
-  //       new Date(d3.max(Object.keys(frequencies))),
-  //       1
-  //     )
-  //     .map((monthDate) => frequencies[monthDate.toISOString()] ?? 0)
-  // )
-  const dateBoundaries = d3.extent(definitiveData.map((d) => new Date(d.date)))
+	const frequencies = countBy(data, (d) =>
+		firstDayOfMonth(d.date).toISOString()
+	);
 
-  const xScale = d3
-    .scaleTime()
-    .domain(dateBoundaries)
-    .range([0 + margins.left, width - margins.right])
+	const totalDataGrouped = Object.keys(frequencies).map((dateISO) => {
+		return {
+			date: dateISO,
+			count: frequencies[dateISO],
+			isSelected:
+				new Date(dateISO) >= startDate && new Date(dateISO) <= endDate,
+		};
+	});
 
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(definitiveData.map((d) => d.count))])
-    .range([0, height - margins.bottom - margins.top])
+	const dataFiltered = data.filter(
+		(d) =>
+			new Date(d.date).getTime() >= startDate.getTime() &&
+			new Date(d.date).getTime() <= endDate.getTime()
+	);
 
-  return (
-    <div style={{ flexDirection: 'row', maxWidth: 400 }}>
-      <svg width={width} height={height} key={'BarChartWeeks'}>
-        {yScale.ticks(3).map((tick, i) => (
-          <g key={i + 'axes'}>
-            <line
-              x1={margins.left}
-              x2={width}
-              y1={height - margins.bottom - yScale(tick)}
-              y2={height - margins.bottom - yScale(tick)}
-              stroke="black"
-              strokeWidth={1}
-            />
-            <text
-              x={width}
-              y={height - margins.bottom - yScale(tick) - 4}
-              textAnchor={'end'}
-              fontSize={12}
-            >
-              {tick}
-            </text>
-          </g>
-        ))}
-        {definitiveData.map((d, i) => {
-          return (
-            <rect
-              x={xScale(new Date(d.date))}
-              y={height - margins.bottom - yScale(d.count)}
-              width={(width - margins.right) / 100}
-              height={yScale(d.count)}
-              fill={d.isSelected ? '#F2FC67' : 'black'}
-              stroke={'black'}
-              key={i}
-              onClick={() => console.log(d.date)}
-            />
-          )
-        })}
-      </svg>
-      <input
-        type={'date'}
-        id={'start'}
-        name={'date-start'}
-        value={startDate}
-        min={dateBoundaries[0].toISOString().slice(0, 10)}
-        max={dateBoundaries[1].toISOString().slice(0, 10)}
-        onChange={() => setStartDate(document.getElementById('start').value)}
-      />
-      <input
-        type={'date'}
-        id={'end'}
-        name={'trip-start'}
-        value={endDate}
-        min={dateBoundaries[0].toISOString().slice(0, 10)}
-        max={dateBoundaries[1].toISOString().slice(0, 10)}
-        onChange={() => setEndDate(document.getElementById('end').value)}
-      />
-    </div>
-  )
+	const countDataFiltered = countBy(dataFiltered, (d) =>
+		firstDayOfMonth(d.date).toISOString()
+	);
+
+	const filteredDataGrouped = Object.keys(countDataFiltered).map((dateISO) => {
+		return {
+			date: dateISO,
+			count: countDataFiltered[dateISO],
+		};
+	});
+
+	const dateBoundaries = d3.extent(
+		totalDataGrouped.map((d) => new Date(d.date))
+	);
+
+	const xScale = d3
+		.scaleTime()
+		.domain(dateBoundaries)
+		.range([0 + margins.left, width - margins.right]);
+
+	const yScale = d3
+		.scaleLinear()
+		.domain([0, d3.max(totalDataGrouped.map((d) => d.count))])
+		.range([0, height - margins.bottom]);
+	// .nice(3)
+
+	const yScaleLine = yScale.copy().range([height - margins.bottom, 0]);
+
+	const lineGenerator = d3
+		.line()
+		.curve(d3.curveStepBefore)
+		.x((d) => xScale(new Date(d.date)))
+		.y((d) => yScaleLine(d.count));
+
+	return (
+		<div style={{ flexDirection: "row" }}>
+			<svg width={width} height={height} key={"BarChartWeeks"}>
+				{yScale.ticks(3).map((tick, i) => (
+					<g key={i} className="axesFontFamily">
+						<line
+							x1={margins.left}
+							x2={width}
+							y1={height - margins.bottom - yScale(tick) + (i === 0 ? 1.5 : 0)}
+							y2={height - margins.bottom - yScale(tick) + (i === 0 ? 1.5 : 0)}
+							stroke="black"
+							strokeWidth={i === 0 ? 3 : 1}
+						/>
+						<text
+							x={width}
+							y={height - margins.bottom - yScale(tick) - 4}
+							textAnchor={"end"}
+							fontSize={12}
+						>
+							{tick}
+						</text>
+					</g>
+				))}
+
+				{totalDataGrouped.map((d, i) => {
+					return (
+						<rect
+							x={xScale(new Date(d.date))}
+							y={height - margins.bottom - yScale(d.count)}
+							width={monthWidth(d.date, xScale) + 0.5}
+							height={yScale(d.count)}
+							fill={"black"}
+							key={i}
+						/>
+					);
+				})}
+
+				{filteredDataGrouped.map((d, i) => {
+					return (
+						<rect
+							x={xScale(new Date(d.date))}
+							y={height - margins.bottom - yScale(d.count)}
+							width={monthWidth(d.date, xScale) + 0.5}
+							height={yScale(d.count)}
+							fill={"#F2FC67"}
+							key={i}
+						/>
+					);
+				})}
+
+				<path
+					d={lineGenerator(closeLineArea(filteredDataGrouped))}
+					stroke={"black"}
+					strokeWidth={1}
+					fill={"none"}
+				/>
+			</svg>
+
+			<div>
+				<input
+					type={"date"}
+					name={"date-start"}
+					value={startDate.toISOString().slice(0, 10)}
+					min={dateBoundaries[0].toISOString().slice(0, 10)}
+					max={dateBoundaries[1].toISOString().slice(0, 10)}
+					onChange={(event) => {
+						const d = new Date(event.target.value);
+						if (!Number.isNaN(d.getYear())) setStartDate(d);
+					}}
+					style={{ width: "50%" }}
+				/>
+				<input
+					type={"date"}
+					name={"trip-start"}
+					value={endDate.toISOString().slice(0, 10)}
+					min={dateBoundaries[0].toISOString().slice(0, 10)}
+					max={dateBoundaries[1].toISOString().slice(0, 10)}
+					onChange={(event) => {
+						const d = new Date(event.target.value);
+						if (!Number.isNaN(d.getYear())) setEndDate(d);
+					}}
+					style={{ width: "50%" }}
+				/>
+			</div>
+		</div>
+	);
 }

@@ -1,21 +1,43 @@
 import React, { useState } from "react";
 import * as d3 from "d3";
-import { groupBy, countBy } from "lodash";
+import { countBy } from "lodash";
+import strokeCircle from "./svgIcons/Ellipse 238.svg";
+import fillCircle from "./svgIcons/Ellipse 239.svg";
+import rhombus from "./svgIcons/Exclude.svg";
+import doubleCircle from "./svgIcons/Group 35.svg";
+import doubleCircleFill from "./svgIcons/Group 36.svg";
+import sixPointStar from "./svgIcons/Star 1_new.svg";
+import compassRose from "./svgIcons/Star 2.svg";
+import diamondStar from "./svgIcons/Star 3.svg";
+import superSun from "./svgIcons/star4.svg";
+import sunStar from "./svgIcons/Star 5.svg";
+import flower from "./svgIcons/Vector.svg";
 
 const margins = {
 	top: 10,
 	left: 5,
 	right: 30,
-	bottom: 50,
+	bottom: 30,
+};
+
+const svgIcons = {
+	"Physical Attack": strokeCircle,
+	"Arrest/Criminal Charge": fillCircle,
+	"Arrest / Criminal Charge": fillCircle, // redundant to catch both
+	"Equipment Damage": doubleCircle,
+	"Equipment Search or Seizure": doubleCircleFill,
+	"Chilling Statement": sixPointStar,
+	"Denial of Access": compassRose,
+	"Leak Case": rhombus,
+	"Prior Restraint": diamondStar,
+	"Subpoena/Legal Order": sunStar,
+	"Subpoena / Legal Order": sunStar, // redundant to catch both
+	"Other Incident": flower,
+	"Border Stop": superSun,
 };
 
 export function BarChartCategories({ data, width, height }) {
 	const [hoveredElement, setHoveredElement] = useState(null);
-	const years = [2017, 2018, 2019, 2020, 2021];
-	const [checked, setChecked] = useState(false);
-	const handleChange = () => {
-		setChecked(!checked);
-	};
 
 	const incidents = data
 		.map((d) => ({
@@ -41,8 +63,6 @@ export function BarChartCategories({ data, width, height }) {
 		[]
 	);
 
-	const categories = countCategories.map((d) => d.category).sort();
-
 	const xScale = d3
 		.scaleBand()
 		.domain(countCategories.map((d) => d.category).sort())
@@ -53,35 +73,20 @@ export function BarChartCategories({ data, width, height }) {
 		.domain([0, d3.max(countCategories.map((d) => d.count))])
 		.range([0, height - margins.bottom - margins.top]);
 
-	const colorScale = d3
-		.scaleOrdinal()
-		.domain(countCategories.map((d) => d.category).sort())
-		.range([
-			"#36151e",
-			"#593f62",
-			"#7b6d8d",
-			"#8499b1",
-			"#a5c4d4",
-			"#f5e0b7",
-			"#d6ba73",
-			"#8bbf9f",
-			"#dfbbb1",
-			"#41d3bd",
-		]);
-
 	const barsWidth = (width - margins.right) / 20;
+	const imageWidth = 14;
 
 	return (
 		<svg width={width} height={height} key={"BarChartCategories"}>
 			{yScale.ticks(4).map((tick, i) => (
-				<g key={i}>
+				<g key={i} className="axesFontFamily">
 					<line
 						x1={margins.left}
 						x2={width}
 						y1={height - margins.bottom - yScale(tick)}
 						y2={height - margins.bottom - yScale(tick)}
 						stroke="black"
-						strokeWidth={1}
+						strokeWidth={i === 0 ? 3 : 1}
 					/>
 					<text
 						x={width}
@@ -95,80 +100,38 @@ export function BarChartCategories({ data, width, height }) {
 			))}
 			{countCategories.map((d, i) => {
 				return (
-					<g key={i + "bars"}>
+					<g key={`${i} bars`}>
 						<rect
 							x={xScale(d.category)}
 							y={height - margins.bottom - yScale(d.count)}
 							width={barsWidth}
 							height={yScale(d.count)}
-							fill={hoveredElement == d.category ? "#F2FC67" : "black"}
+							fill={hoveredElement === d.category ? "#F2FC67" : "black"}
+							stroke={"black"}
+							strokeWidth={2}
 							key={i}
 							onMouseOver={() => console.log(d.category)}
 							onMouseEnter={() => setHoveredElement(d.category)}
 							onMouseOut={() => setHoveredElement(null)}
 						/>
-						{/* <line
-            x1={xScale(d.category) + barsWidth/2}
-            x2={xScale(d.category) + barsWidth/2}
-            y1={height - margins.bottom}
-            y2={height}
-            stroke="black"
-            strokeWidth={1}
-          /> */}
 					</g>
 				);
 			})}
 
 			{countCategories.map((d, i) => {
 				return (
-					<circle
-						cx={xScale(d.category) + barsWidth / 2}
-						cy={height - margins.bottom / 2}
-						r={3}
-						fill={colorScale(d.category)}
-						stroke={"gray"}
-						key={d.category}
-					/>
+					<g key={i}>
+						<image
+							width={imageWidth}
+							height={imageWidth}
+							x={xScale(d.category) + barsWidth / 2 - imageWidth / 2}
+							y={height - margins.bottom / 2}
+							href={svgIcons[d.category]}
+							transform={"translate(-50% ,0)"}
+						/>
+					</g>
 				);
 			})}
-
-			{years.map((d) => {
-				return (
-					<label className="container" key={d}>
-						{d}
-						<input type="checkbox" checked={checked} onChange={handleChange} />
-						<span className="checkmark"></span>
-					</label>
-				);
-			})}
-
-			{/* {categories.map((d, i) => {
-        return (
-          <g key={i}>
-            <rect
-              key={i}
-              x={margins.left}
-              y={10 + i * 40}
-              width={330}
-              height={40}
-              fill={'white'}
-              stroke={'black'}
-              strokeWidth={3}
-            />
-            <text
-              x={margins.left + 50}
-              y={i * 40}
-              fill={'black'}
-              key={i}
-              fontSize={18}
-              fontFamily={'Helvetica'}
-              textAnchor={'start'}
-            >
-              {d}
-            </text>
-          </g>
-        )
-      })} */}
 		</svg>
 	);
 }
