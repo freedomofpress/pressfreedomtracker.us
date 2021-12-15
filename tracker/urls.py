@@ -57,5 +57,8 @@ if settings.DEBUG:
     except ImportError:
         pass
 
+if settings.STYLEGUIDE:
+    urlpatterns = [path('styleguide/', include('styleguide.urls'))] + urlpatterns
+
 if apps.is_installed('silk'):
     urlpatterns = [path('silk/', include('silk.urls', namespace='silk'))] + urlpatterns

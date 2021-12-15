@@ -28,6 +28,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 DEBUG = False
+STYLEGUIDE = False
 
 # Application definition
 
