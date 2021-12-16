@@ -11,11 +11,11 @@
 		padding: 1.5rem
 	}
 </style>
-	<h1>PFT Styleguide</h1>
+	<h1 class="page-title">PFT Styleguide</h1>
 
 	<hr/>
 	<details id="colors" open>
-		<summary><h2>Colors</h2></summary>
+		<summary><h2 class="heading">Colors</h2></summary>
 		<p>The variables for colors can be found in <code>_colors.sass</code> file</p>
 		<code><pre>
 
@@ -33,7 +33,7 @@
 
 	<hr/>
 	<details id="colors" open>
-		<summary><h2>Typography</h2></summary>
+		<summary><h2 class="heading">Typography</h2></summary>
 		<p>
 			The font-sizes and the typography styles for the basic
 			html elements can be found in <code>_typography.sass</code> file</p>
@@ -77,7 +77,7 @@
 
 	<hr/>
 	<details id="buttons" open>
-		<summary><h2>Buttons</h2></summary>
+		<summary><h2 class="heading">Buttons</h2></summary>
 		<p>
 			The sass for buttons can be found in <code>components/_buttons.sass</code> file.
 			An important thing to remember while using the following styles is whether the HTML
@@ -89,7 +89,7 @@
 			(i.e. <code>&lt;button&gt;</code>)
 		</p>
 
-		<h4>Main CTA</h4>
+		<h4 class="heading-regular">Main CTA</h4>
 		<code>
 			class=".btn btn-primary":
 
@@ -101,7 +101,7 @@
 			<a class="btn btn-primary" disabled>Button</a>
 		</code>
 
-		<h4>Secondary</h4>
+		<h4 class="heading-regular">Secondary</h4>
 		<code>
 			class=".btn btn-secondary":
 
@@ -113,7 +113,7 @@
 			<a class="btn btn-secondary" disabled>Button</a>
 		</code>
 
-		<h4>Ghost</h4>
+		<h4 class="heading-regular">Ghost</h4>
 		<code>
 			class=".btn btn-ghost":
 
@@ -126,14 +126,14 @@
 		</code>
 
 
-		<h4>Text link</h4>
+		<h4 class="heading-regular">Text link</h4>
 		<code>
 			&lt;a&gt; or class="text-link":
 
 			<a href="#">Text Link</a>
 		</code>
 
-		<h4>Tag</h4>
+		<h4 class="heading-regular">Tag</h4>
 		<code>
 			class=".btn btn-tag":
 
@@ -143,6 +143,11 @@
 			class=".btn btn-tag" disabled="":
 
 			<a class="btn btn-tag" disabled>#Tag</a>
+		</code>
+		<h4 class="heading-regular">Show More/Less</h4>
+		<code>
+			&lt;a&gt; or class="text-link":
+			{% include 'common/_disclose.html' with content="Show more text here" %}
 		</code>
 	</details>
 {% endblock %}
