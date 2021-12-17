@@ -1,1 +1,71 @@
 $font-base: 'Helvetica Neue', 'Helvetica', sans-serif
+$font-mono: 'Roboto Mono', monospace
+
+// Font sizes
+$font-size-number: 0.75rem  // 12px
+$font-size-small-ui: 0.8125rem  // 13px
+$font-size-small-p: 0.875rem  // 14px
+
+// Mobile
+$font-size-p: 1rem  // 16px
+$font-size-database-card-title: 1.375rem  // 22px
+$font-size-card-title-l: 1.625rem  // 26px
+$font-size-h4: 1.75rem  // 28px
+$font-size-h3: 2rem  // 32px
+$font-size-h2: 2.5rem  // 40px
+$font-size-h1: 3.75rem  // 60px
+
+// Desktop
+$font-size-p-desktop: 1.125rem  // 18px
+$font-size-card-title-desktop: 1.375rem  // 22px
+$font-size-card-title-l-desktop: 1.625rem  // 26px
+$font-size-h4-desktop: 2rem  // 32px
+$font-size-h3-desktop: 3.75rem  // 60px
+$font-size-h2-desktop: 6.25rem  // 100px
+$font-size-h1-desktop: 9.0625rem  // 145px
+
+// Tablet
+$font-size-database-card-title-tab: 1.125rem  // 18px
+$font-size-card-title-tab: 1.375rem  // 22px
+$font-size-card-title-l-tab: 1.75rem  // 28px
+$font-size-h4-tab: 2rem  // 32px
+$font-size-h3-tab: 2.5rem  // 40px
+$font-size-h2-tab: 3.75rem  // 60px
+$font-size-h1-tab: 5rem  // 80px
+
+body
+	margin: 0
+	padding: 0
+	font-weight: 400
+	font-family: $font-base
+	font-size: $font-size-p
+	line-height: 1.5
+	color: $black
+	background: $white
+
+	+desktop-up
+		font-size: $font-size-p-desktop
+
+h1, h2, h3, h4, h5, h6
+	margin: 1.25rem auto
+
+p
+	font-size: $font-size-p
+	line-height: 1.33
+	font-weight: 400
+
+	+desktop-up
+		font-size: $font-size-p-desktop
+
+a
+	font-size: $font-size-small-p
+	font-weight: 400
+	line-height: 1.43
+	color: $black
+
+	&:hover
+		background-color: $accent-color
+
+	&:focus
+		border: 3px solid
+		border-color: $black

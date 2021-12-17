@@ -1,0 +1,92 @@
+.btn
+	display: inline-block
+	font-size: $font-size-small-p
+	font-weight: 500
+	line-height: 1.714
+	padding: 0.5rem 1rem
+	color: $black
+	margin: 1rem 0
+	text-decoration: none
+
+	&-primary
+		border: 3px solid
+		border-color: $black
+
+		&::after
+			content: url(../icons/arrow-left.svg)
+			height: 24px
+			width: 16px
+			border: 3px solid
+			border-color: $black
+			position: absolute
+			padding: 0.5rem 0.75rem
+			//padding-top of parent + border-width
+			margin-top: calc(-0.5rem - 3px)
+			//padding left of parent
+			margin-left: 1rem
+
+		&:hover
+			background-color: $black
+			color: $white
+
+			&::after
+				content: url(../icons/arrow-left-white.svg)
+				background-color: $black
+
+		&:focus
+			border-width: 6px 3px 6px 6px
+
+			&::after
+				border-width: 6px 6px 6px 3px
+				margin-top: calc(-0.5rem - 6px)
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+			&::after
+				content: url(../icons/arrow-left-inactive.svg)
+				border-color: $tag-inactive
+
+	&-secondary
+		border: 3px solid
+		border-color: $black
+
+		&:hover
+			background-color: $black
+			color: $white
+
+		&:focus
+			border-width: 6px
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+	&-ghost
+		&:hover
+			background-color: $black
+			color: $white
+
+		&:focus
+			border: 3px solid
+			border-color: $black
+
+		&[disabled]
+			color: $tag-inactive
+
+	&-tag
+		font-weight: 400
+		line-height: 1.23
+		padding: 0.25rem 0.5rem
+		background-color: $accent-background-tags
+
+		&:hover
+			background-color: $accent-color
+
+		&:focus
+			border: 3px solid
+			border-color: $black
+
+		&[disabled]
+			color: $gray-text
