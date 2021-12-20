@@ -25,7 +25,7 @@
 			{% endfor %}
 		</ol>
 
-		<dl>
+		<dl class="dl-inline">
 			<dt>Updated on</dt>
 			<dd>
 				{{ incident.latest_update|date:"F j, Y" }}
@@ -48,9 +48,9 @@
 		</dl>
 
 		{% if incident.tags.all %}
-			<ul>
+			<ul class="tag-list">
 				{% for tag in incident.tags.all %}
-					<li>#{{ tag.title }}</li>
+					<li><a href="#" class="btn btn-tag">#{{ tag.title }}</a></li>
 				{% endfor %}
 			</ul>
 		{% endif %}
