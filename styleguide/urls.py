@@ -6,5 +6,5 @@ from .views import StyleguideView
 
 
 urlpatterns = [
-    url(r'$', StyleguideView.as_view()),
+    url(r'$', StyleguideView.as_view(), name='styleguide'),
 ]
