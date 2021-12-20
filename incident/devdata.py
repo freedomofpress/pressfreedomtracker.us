@@ -290,6 +290,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     # https://adamj.eu/tech/2014/09/03/factory-boy-fun/
     @factory.post_generation
     def institution_targets(self, create, count):
+        if not create:
+            # Simple build, do nothing.
+            return
         if count is None:
             count = 2
         make_target = getattr(InstitutionFactory, 'create' if create else 'build')
@@ -298,8 +301,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             t = make_target()
             self.targeted_institutions.add(t)
             targets.append(t)
-        if not create:
-            self._prefetched_objects_cache = {'targeted_institutions': targets}
 
     @factory.post_generation
     def journalist_targets(self, create, count, **kwargs):
