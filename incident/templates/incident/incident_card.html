@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 {% with size=size|default:"big" %}
 	<article class="incident-card">
 		{% if photo %}
@@ -9,7 +9,11 @@
 				src="{{ x1.url }}"
 			>
 		{% endif %}
-		<h3 class="card-title-{{ size }}">{{ incident.title }}</h3>
+		<a class="text-link--card" href="{% pageurl incident %}">
+			<h3 class="card-title-{{ size }}">
+				{{ incident.title }}
+			</h3>
+		</a>
 
 		{% if not photo %}
 			<p>
