@@ -1,6 +1,6 @@
 {% load wagtailimages_tags %}
 {% with size=size|default:"big" %}
-	<div class="incident-card">
+	<article class="incident-card">
 		{% if photo %}
 			{% image photo fill-665x440 as x1 %}
 			<img
@@ -54,5 +54,5 @@
 				{% endfor %}
 			</ul>
 		{% endif %}
-	</div>
+	</article>
 {% endwith %}
