@@ -28,10 +28,16 @@
 		<dl class="dl-inline">
 			<dt>Updated on</dt>
 			<dd>
-				{{ incident.latest_update|date:"F j, Y" }}
+				<time datetime="{{ incident.latest_update|date:"c" }}">
+					{{ incident.latest_update|date:"F j, Y" }}
+				</time>
 			</dd>
 			<dt>Date of Incident</dt>
-			<dd>{{ incident.date|date:"F j, Y" }}</dd>
+			<dd>
+				<time datetime="{{ incident.date|date:"c" }}">
+					{{ incident.date|date:"F j, Y" }}
+				</time>
+			</dd>
 			<dt>Location</dt>
 			<dd>{{ incident.city }}, {{ incident.state.name }}</dd>
 			{% if incident.targeted_journalists.all or incident.targeted_institutions.all %}
