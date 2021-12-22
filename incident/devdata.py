@@ -143,7 +143,7 @@ def random_choice_list(choices):
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
-        exclude = ('teaser_image_text', 'image_caption_text')
+        exclude = ('image_caption_text', 'title_text')
 
     first_published_at = Faker(
         'past_datetime',
@@ -158,15 +158,16 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     )
 
     image_caption_text = Faker('sentence')
-    teaser_image_text = Faker('sentence')
-    title = factory.Faker('sentence')
+    title_text = Faker('sentence')
+    title = factory.LazyAttribute(lambda o: o.title_text.rstrip('.'))
+
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
     state = factory.SubFactory(StateFactory)
     longitude = factory.Faker('longitude')
     latitude = factory.Faker('latitude')
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
-    teaser = factory.LazyAttribute(lambda o: RichText(o.teaser_image_text))
+    teaser = factory.Faker('sentence')
     teaser_image = None
     image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))
 
@@ -289,6 +290,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     # https://adamj.eu/tech/2014/09/03/factory-boy-fun/
     @factory.post_generation
     def institution_targets(self, create, count):
+        if not create:
+            # Simple build, do nothing.
+            return
         if count is None:
             count = 2
         make_target = getattr(InstitutionFactory, 'create' if create else 'build')
@@ -297,8 +301,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             t = make_target()
             self.targeted_institutions.add(t)
             targets.append(t)
-        if not create:
-            self._prefetched_objects_cache = {'targeted_institutions': targets}
 
     @factory.post_generation
     def journalist_targets(self, create, count, **kwargs):

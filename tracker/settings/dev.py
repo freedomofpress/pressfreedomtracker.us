@@ -98,6 +98,8 @@ SECRET_KEY = '(g4bj*$%zf4tqdaas8#ch3-mz_27n+*-973tpxap9zmdz8ii_u'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+STYLEGUIDE = True
+
 
 try:
     from .local import *  # noqa: F403, F401

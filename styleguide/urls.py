@@ -1,8 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import url
-from django.views.generic import TemplateView
+
+from .views import StyleguideView
+
 
 urlpatterns = [
-    url(r'$', TemplateView.as_view(template_name='styleguide/index.html')),
+    url(r'$', StyleguideView.as_view(), name='styleguide'),
 ]

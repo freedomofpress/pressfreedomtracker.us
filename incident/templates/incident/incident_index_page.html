@@ -1,0 +1,9 @@
+{% extends "super.html" %}
+
+{% load webpack_loader %}
+
+{% block body %}
+	{% for incident in entries_page %}
+		{% include "incident/incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
+	{% endfor %}
+{% endblock %}

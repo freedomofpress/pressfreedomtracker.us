@@ -122,6 +122,9 @@ class IncidentQuerySet(PageQuerySet):
             most_recent_update=Max('date')
         ).values('most_recent_update')
         return self.annotate(
+            # This is not super-efficient, as it runs the subquery
+            # twice.  Need to evaluate if there's a better way.
+            latest_update=ExpressionWrapper(Subquery(updates), output_field=models.DateField()),
             updated_days_ago=ExtractDay(ExpressionWrapper(
                 CurrentDate() - Subquery(updates), output_field=models.DateField())
             ),
