@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { countBy } from "lodash";
 import { BarChartYears } from "./BarChartYears";
 import { CheckBoxesYear } from "./CheckBoxesYear";
-// import countYears from './BarChartYears'
-import { count } from "d3-array";
 
 export function FilterYears({ width, height, data }) {
 	const [selectedYears, setSelectedYears] = useState([]);
@@ -31,7 +29,6 @@ export function FilterYears({ width, height, data }) {
 			<CheckBoxesYear
 				width={width}
 				height={height}
-				// options={countYears.map((d) => d.year)}
 				options={countYears}
 				setSelectedYears={setSelectedYears}
 				selectedYears={selectedYears}

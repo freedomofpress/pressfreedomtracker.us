@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 
 export function CheckBoxesYear({
 	width,
@@ -31,24 +30,18 @@ export function CheckBoxesYear({
 								marginBottom: 16,
 							}}
 						>
-							<svg width={side} height={side}>
-								<rect
-									x={1}
-									y={1}
-									width={side - 2}
-									height={side - 2}
-									key={`${i} box`}
-									stroke={"black"}
-									fill={selectedYears.includes(d.year) ? "black" : "white"}
-									onClick={() => {
-										selectedYears.includes(d.year)
-											? setSelectedYears(
-													selectedYears.filter((y) => y !== d.year)
-											  )
-											: setSelectedYears([...selectedYears, d.year]);
-									}}
-								/>
-							</svg>
+							<input
+								type="checkbox"
+								style={{ width: side, height: side }}
+								checked={selectedYears.includes(d.year)}
+								onChange={() => {
+									selectedYears.includes(d.year)
+										? setSelectedYears(
+												selectedYears.filter((y) => y !== d.year)
+										  )
+										: setSelectedYears([...selectedYears, d.year]);
+								}}
+							/>
 
 							<div
 								style={{

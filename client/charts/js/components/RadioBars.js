@@ -9,10 +9,10 @@ const margins = {
 	bottom: 50,
 };
 
-export function RadioBars({ data, startDate, endDate, width, height }) {
-	const states = countBy(data, (d) => {
-		return d.state;
-	});
+const RADIO_BOX_WIDTH = 35;
+
+export function RadioBars({ data, width, height, onChange = () => {} }) {
+	const states = countBy(data, (d) => d.state);
 
 	const countStates = Object.entries(states)
 		.map(([state, count]) => ({
@@ -28,34 +28,36 @@ export function RadioBars({ data, startDate, endDate, width, height }) {
 
 	return (
 		<div>
-			{countStates.map((d, i) => (
+			{countStates.map(({ state, count }, i) => (
 				<div
 					key={i}
 					style={{
 						display: "flex",
 						flexDirection: "row",
-						marginTop: 8,
-						marginBottom: 8,
-						// marginRight: 150,
-						// marginLeft: 150,
+						marginTop: 12,
+						marginBottom: 12,
 					}}
 				>
 					<div
 						style={{
 							display: "flex",
-							marginRight: 8,
-							// backgroundColor: 'red',
+							flexDirection: "reverse-row",
+							width: RADIO_BOX_WIDTH,
 						}}
 					>
 						<input
 							type="radio"
 							name="drone"
 							checked
+							onChange={() => {
+								onChange(state);
+							}}
 							style={{ width: 24, height: 24 }}
 						/>
 					</div>
+
 					<div
-						key={d.state}
+						key={state}
 						style={{
 							display: "flex",
 							flexDirection: "column",
@@ -80,29 +82,24 @@ export function RadioBars({ data, startDate, endDate, width, height }) {
 									fontFamily: "sans-serif",
 								}}
 							>
-								{d.state}
+								{state}
 							</div>
 							<div
-								className="axesFontFamily"
 								style={{
+									fontFamily: "Roboto Mono",
 									fontSize: 12,
-									// fontFamily: 'sans-serif',
-									// backgroundColor: '#F2F2F2',
-									// width: 25,
 									justifyContent: "flex-end",
 								}}
 							>
-								{d.count}
+								{count}
 							</div>
 						</div>
 
-						{/* FIXME - 42 is a magic number representing the width of the radio boxes */}
-						<svg width={width - 42} height={4}>
+						<svg width={width - RADIO_BOX_WIDTH} height={4}>
 							<rect
 								x={0}
 								y={0}
-								width={xScale(d.count)}
-								// width={width - margins.left - margins.right - xScale(d.count)}
+								width={xScale(count)}
 								height={4}
 								fill={"black"}
 							/>

@@ -23,13 +23,14 @@ export function BarChartYears({
 	const yScale = d3
 		.scaleLinear()
 		.domain([0, d3.max(countYears.map((d) => d.count))])
-		.range([0, height - margins.bottom - margins.top]);
+		.range([0, height - margins.bottom - margins.top])
+		.nice();
 
 	return (
 		<div style={{ flexDirection: "row" }}>
 			<svg width={width} height={height} key={"BarChartYears"}>
 				{yScale.ticks(3).map((tick, i) => (
-					<g key={i} className="axesFontFamily">
+					<g key={i} style={{ fontFamily: "Roboto Mono" }}>
 						<line
 							x1={margins.left}
 							x2={width}
