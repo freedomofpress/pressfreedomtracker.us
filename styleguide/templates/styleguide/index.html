@@ -76,15 +76,6 @@
 	</details>
 
 	<hr/>
-	<details id="footer" open>
-		<summary><h2 class="heading">Footer</h2></summary>
-		<code>
-			&lbrace;% include 'common/_footer.html' %&rbrace;
-		</code>
-		{% include 'common/_footer.html' %}
-	</details>
-
-	<hr/>
 	<details id="text-field" open>
 		<summary><h2 class="heading">Text fields</h2></summary>
 		<p>Preferably always put a <code>&lt;label class="sr-only"&gt;</code> associated with the
@@ -173,6 +164,8 @@
 			{% include 'common/_disclose.html' with content="Show more text here" %}
 		</code>
 	</details>
+
+	<hr/>
 	<details id="cards" open>
 		<summary><h2 class="heading">Cards</h2></summary>
 		<h4 class="heading-regular">Incident Card (Big, No Photo)</h4>
@@ -198,5 +191,14 @@
             &lbrace;% include 'incident/incident_card.html' with incident=incident size='small' photo=incident.teaser_image only %&rbrace;
 		</code>
 		{% include "incident/incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
+	</details>
+
+	<hr/>
+	<details id="footer" open>
+		<summary><h2 class="heading">Footer</h2></summary>
+		<code>
+			&lbrace;% include 'common/_footer.html' %&rbrace;
+		</code>
+		{% include 'common/_footer.html' %}
 	</details>
 {% endblock %}
