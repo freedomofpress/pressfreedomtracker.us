@@ -2,12 +2,22 @@
 	display: flex
 	align-items: center
 	gap: 1rem
+	background-color: white
+	transition: background-color 350ms ease-out
+	z-index: 1000
+
+	&.menu-expanded
+		background-color: #F8F8F8
+
 
 .site-title-link
 	z-index: 1010
 	margin: 1.5rem
 	text-decoration: none
 	font-weight: 700
+
+	&:hover
+		background-color: transparent
 
 .mobile-nav-toggle
 	display: none
@@ -35,21 +45,22 @@
 	justify-content: space-between
 
 	+tablet-down
-		background: #F8F8F8
 		flex-direction: column
+		background-color: #F8F8F8
 		align-items: stretch
 		position: fixed
 		z-index: 1000
 		inset: 0
-		padding: 10rem 1rem 0 1rem
+		padding: 0 1rem 0 1rem
 		max-width: 100%
-		max-height: 100vh
+		max-height: 0
+		overflow: hidden
 
-		transform: translateY(-100%)
-		transition: transform 350ms ease-out
+		transition: max-height 350ms ease-out
 
 		&[data-visible="true"]
-			transform: translateY(0%)
+			max-height: 100vh
+			background-color: #F8F8F8
 
 .primary-navigation
 	display: flex
@@ -59,6 +70,7 @@
 	padding: 0
 
 	+tablet-down
+		margin-top: 10rem
 		flex-direction: column
 
 		a
