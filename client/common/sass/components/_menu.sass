@@ -3,6 +3,30 @@
 	align-items: center
 	gap: 1rem
 
+.site-title-link
+	z-index: 1010
+	margin: 1.5rem
+	text-decoration: none
+	font-weight: 700
+
+.mobile-nav-toggle
+	display: none
+	+tablet-down
+		display: block
+		position: absolute
+		z-index: 9999
+		background-color: transparent
+		background-image: url(../icons/icon-menu-open.svg)
+		background-repeat: no-repeat
+		border: 0
+		width: 3rem
+		top: 1rem
+		right: 2rem
+		aspect-ratio: 1
+
+		&[aria-expanded="true"]
+			background-image: url(../icons/icon-menu-close.svg)
+
 .top-nav-bar
 	box-sizing: border-box
 	display: flex
@@ -15,12 +39,17 @@
 		flex-direction: column
 		align-items: stretch
 		position: fixed
+		z-index: 1000
 		inset: 0
-		padding: 1rem
+		padding: 10rem 1rem 0 1rem
 		max-width: 100%
 		max-height: 100vh
 
+		transform: translateY(-100%)
+		transition: transform 350ms ease-out
 
+		&[data-visible="true"]
+			transform: translateY(0%)
 
 .primary-navigation
 	display: flex
@@ -61,3 +90,6 @@
 		// for some reason I need this to account for the :after
 		// element on these buttons.
 		margin-right: calc(1.5rem + 19px)
+
+.overflow-hidden
+	overflow: hidden
