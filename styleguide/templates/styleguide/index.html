@@ -32,7 +32,7 @@
 	</details>
 
 	<hr/>
-	<details id="colors" open>
+	<details id="typography" open>
 		<summary><h2 class="heading">Typography</h2></summary>
 		<p>
 			The font-sizes and the typography styles for the basic
@@ -76,12 +76,26 @@
 	</details>
 
 	<hr/>
-	<details id="colors" open>
+	<details id="footer" open>
 		<summary><h2 class="heading">Footer</h2></summary>
 		<code>
 			&lbrace;% include 'common/_footer.html' %&rbrace;
 		</code>
 		{% include 'common/_footer.html' %}
+	</details>
+
+	<hr/>
+	<details id="text-field" open>
+		<summary><h2 class="heading">Text fields</h2></summary>
+		<p>Preferably always put a <code>&lt;label class="sr-only"&gt;</code> associated with the
+		input or text fields since placeholder is not accessible to screenreaders.</p>
+		<code>
+			&lt;input class="text-field--single"&gt;
+			<div>
+				<label class="sr-only">label for text</label>
+				<input class="text-field--single" placeholder="Text">
+			</div>
+		</code>
 	</details>
 
 	<hr/>

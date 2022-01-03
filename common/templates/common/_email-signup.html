@@ -4,16 +4,23 @@
 			<h2 class="paragraph-subtitle">{{ email_settings.signup_prompt }}</h2>
 			<form action="https://press.us6.list-manage.com/subscribe/post?u=19b87eae477821267dea69438&amp;id=c8d8f610fb" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate emails-signup__form" target="_blank" novalidate>
 				{% if email_settings.mailchimp_collect_name %}
-					<span class="emails-signup__input-container">
-						<label for="mce-MMERGE6" class="">Full Name</label>
-						<input type="text" value="" name="FULLNAME" class="emails-signup__input" id="mce-MMERGE6">
-					</span>
+					<div class="emails-signup__input-container">
+						<label for="mce-MMERGE6" class="sr-only">Full Name</label>
+						<input
+							type="text"
+							value=""
+							name="FULLNAME"
+							class="emails-signup__input text-field--single"
+							id="mce-MMERGE6"
+							placeholder="Your name"
+						>
+					</div>
 				{% endif %}
-				<span class="emails-signup__input-container">
+				<div class="emails-signup__input-container">
 					{% if email_settings.mailchimp_collect_name %}
 						<label
 							for="mce-EMAIL"
-							class=""
+							class="sr-only"
 						>
 							Email address
 						</label>
@@ -21,12 +28,12 @@
 
 					<input
 						type="email"
-						class="emails-signup__input"
+						class="emails-signup__input text-field--single"
 						id="mce-EMAIL"
-						placeholder="alice@freedom.press"
+						placeholder="Your email address"
 						name="EMAIL"
 					/>
-				</span>
+					</div>
 
 				<div style="display:none" class="mc-field-group input-group">
 					<ul>
