@@ -24,7 +24,7 @@
 
 			{% block css %}
 				{% render_bundle 'common' 'css' %}
-				{% render_bundle 'common' 'js' %}
+				{% render_bundle 'common' 'js' attrs='defer'%}
 				{% endblock %}
 
 			{% block meta %}
