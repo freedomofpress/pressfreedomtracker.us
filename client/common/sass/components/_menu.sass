@@ -2,13 +2,12 @@
 	display: flex
 	align-items: center
 	gap: 1rem
-	background-color: white
+	background-color: #FFF
 	transition: background-color 350ms ease-out
 	z-index: 1000
 
 	&.menu-expanded
 		background-color: #F8F8F8
-
 
 .site-title-link
 	z-index: 1010
@@ -21,6 +20,7 @@
 
 .mobile-nav-toggle
 	display: none
+
 	+tablet-down
 		display: block
 		position: absolute
@@ -34,7 +34,8 @@
 		right: 2rem
 		aspect-ratio: 1
 
-		&[aria-expanded="true"]
+	&[aria-expanded="true"]
+		+tablet-down
 			background-image: url(../icons/icon-menu-close.svg)
 
 .top-nav-bar
@@ -58,7 +59,8 @@
 
 		transition: max-height 350ms ease-out
 
-		&[data-visible="true"]
+	&[data-visible="true"]
+		+tablet-down
 			max-height: 100vh
 			background-color: #F8F8F8
 
