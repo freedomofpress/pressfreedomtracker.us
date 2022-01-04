@@ -1,0 +1,59 @@
+.footer-info
+	background-color: $black
+	color: $gray-text
+
+	a
+		color: $white
+
+		&:hover
+			color: $black
+
+		&:focus
+			border-color: $white
+
+	&__body
+		font-size: $font-size-small-p
+		line-height: 1.43
+
+	&__nav
+		margin-top: 2rem
+		display: flex
+		align-items: flex-end
+		justify-content: space-between
+
+		+desktop-up
+			align-items: center
+
+		&-item
+			list-style: none
+
+			&:not(:last-of-type)
+				margin-right: 2rem
+
+				+desktop-up
+					margin-right: 3.5rem
+
+		&-list
+			padding: 0
+			display: flex
+
+			&:first-of-type
+				flex-wrap: wrap
+
+			&:last-of-type
+				justify-content: flex-end
+
+				.footer-info__nav-item
+					margin-right: 0
+
+					&:not(:first-of-type)
+						margin-left: 2rem
+
+						+desktop-up
+							margin-left: 3.5rem
+
+		&-link
+			display: inline-block
+
+			&:hover
+				background-color: transparent
