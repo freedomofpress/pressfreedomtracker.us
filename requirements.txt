@@ -27,9 +27,9 @@ dj-database-url==0.5.0 \
     --hash=sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163 \
     --hash=sha256:851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9
     # via -r requirements.in
-django==2.2.25 \
-    --hash=sha256:08bad7ef7e90286b438dbe1412c3e633fbc7b96db04735f0c7baadeed52f3fad \
-    --hash=sha256:b1e65eaf371347d4b13eb7e061b09786c973061de95390c327c85c1e2aa2349c
+django==2.2.26 \
+    --hash=sha256:85e62019366692f1d5afed946ca32fef34c8693edf342ac9d067d75d64faf0ac \
+    --hash=sha256:dfa537267d52c6243a62b32855a744ca83c37c70600aacffbfd98bc5d6d8518f
     # via
     #   -r requirements.in
     #   django-anymail
@@ -543,11 +543,6 @@ xlwt==1.3.0 \
     --hash=sha256:c59912717a9b28f1a3c2a98fd60741014b06b043936dcecbc113eaaada156c88
     # via tablib
 
-# The following packages are considered to be unsafe in a requirements file:
-setuptools==59.2.0 \
-    --hash=sha256:157d21de9d055ab9e8ea3186d91e7f4f865e11f42deafa952d90842671fc2576 \
-    --hash=sha256:4adde3d1e1c89bde1c643c64d89cdd94cbfd8c75252ee459d4500bccb9c7d05d
-    # via
-    #   google-api-core
-    #   google-auth
-    #   gunicorn
+# WARNING: The following packages were not pinned, but pip requires them to be
+# pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
+# setuptools
