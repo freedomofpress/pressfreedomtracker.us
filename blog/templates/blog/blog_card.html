@@ -10,16 +10,16 @@
 			>
 		{% endif %}
 		<a class="text-link--card" href="{% pageurl post %}">
-			<h3 class="card-title-{{ size }}">
+			<h3 class="card-title-{{ size }} blog-card--title">
 				{{ post.title }}
 			</h3>
 		</a>
 		{% if not photo %}
-			<p>
+			<p class="blog-card--teaser">
 				{{ post.teaser_text }}
 			</p>
 		{% endif %}
-		<dl class="dl-inline">
+		<dl class="dl-inline blog-card--info">
 			<dt>Published</dt>
 			<dd>
 				<time datetime="{{ post.publication_datetime|date:"c" }}">
