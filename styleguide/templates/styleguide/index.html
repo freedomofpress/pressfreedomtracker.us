@@ -1,6 +1,7 @@
 {% extends "super.html" %}
 
 {% load webpack_loader %}
+{% load wagtailcore_tags %}
 
 {% block body %}
 <style>
@@ -176,6 +177,19 @@
 		<code>
 			&lbrace;% include 'common/_disclose.html' with content="Show more text here" %&rbrace; :
 			{% include 'common/_disclose.html' with content="Show more text here" %}
+		</code>
+	</details>
+
+	<hr/>
+	<details id="category-icons" open>
+		<summary><h2 class="heading">Category Icons</h2></summary>
+		<code>
+			&lt;a class="text-link--category &lbrace;&lbrace; category.slug &rbrace;&rbrace;" href="&lbrace;% pageurl category %&rbrace;"&gt;&lbrace;&lbrace; category.title &rbrace;&rbrace;&lt;/a&gt;:
+			<h4>Category symbols:</h4>
+			{% for category in categories %}
+				<a class="text-link--category {{ category.slug }}" href="{% pageurl category %}">{{ category.title }}</a>
+				<br/>
+			{% endfor %}
 		</code>
 	</details>
 
