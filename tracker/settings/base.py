@@ -195,7 +195,7 @@ if 'postgres' in DATABASES['default']['ENGINE']:
     INSTALLED_APPS.append('wagtail.contrib.postgres_search')
     WAGTAILSEARCH_BACKENDS = {
         'default': {
-            'BACKEND': 'wagtail.contrib.postgres_search.backend',
+            'BACKEND': 'wagtail.search.backends.database.',
         },
     }
 else:
@@ -338,3 +338,5 @@ if log_dir:
 
 TEST_RUNNER = 'common.test_runner.SeededDiscoveryRunner'
 RANDOM_SEED = 876394101
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

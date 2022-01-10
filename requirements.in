@@ -1,6 +1,6 @@
 bleach>=4.1.0
 dj-database-url
-Django>=2.2.26,<2.3
+Django==3.2.11
 django-anymail
 django-csp>=3.7
 django-modelcluster
@@ -21,7 +21,7 @@ pyparsing
 structlog>=21,<22
 typing
 typogrify
-wagtail>=2.11.8,<2.12
+wagtail==2.15.1
 wagtail-autocomplete>=0.6
 wagtail-factories>=2.0.1
 wagtail-django-recaptcha
