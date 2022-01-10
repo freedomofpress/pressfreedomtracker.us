@@ -10,6 +10,15 @@
 		border: 1px dashed black;
 		padding: 1.5rem
 	}
+	hr {
+		max-width: 100%;
+	}
+	pre {
+		overflow: auto;
+	}
+	img {
+		max-width: 100%;
+	}
 </style>
 	<h1 class="page-title">PFT Styleguide</h1>
 
@@ -174,27 +183,27 @@
 	<details id="cards" open>
 		<summary><h2 class="heading">Cards</h2></summary>
 		<h4 class="heading-regular">Incident Card (Big, No Photo)</h4>
-		<code>
-            &lbrace;% include 'incident/incident_card.html' with incident=incident size='big' only %&rbrace;
-		</code>
+		<code><pre>
+    &lbrace;% include 'incident/incident_card.html' with incident=incident size='big' only %&rbrace;
+		</pre></code>
 		{% include "incident/incident_card.html" with incident=incident size="big" only %}
 
 		<h4 class="heading-regular">Incident Card (Big, Photo)</h4>
-		<code>
-            &lbrace;% include 'incident/incident_card.html' with incident=incident size='big' photo=incident.teaser_image only %&rbrace;
-		</code>
+		<code><pre>
+    &lbrace;% include 'incident/incident_card.html' with incident=incident size='big' photo=incident.teaser_image only %&rbrace;
+		</pre></code>
 		{% include "incident/incident_card.html" with incident=incident size="big" photo=incident.teaser_image only %}
 
 		<h4 class="heading-regular">Incident Card (Small, No Photo)</h4>
-		<code>
-            &lbrace;% include 'incident/incident_card.html' with incident=incident size='small' only %&rbrace;
-		</code>
+		<code><pre>
+    &lbrace;% include 'incident/incident_card.html' with incident=incident size='small' only %&rbrace;
+		</pre></code>
 		{% include "incident/incident_card.html" with incident=incident size="small" only %}
 
 		<h4 class="heading-regular">Incident Card (Small, Photo)</h4>
-		<code>
-            &lbrace;% include 'incident/incident_card.html' with incident=incident size='small' photo=incident.teaser_image only %&rbrace;
-		</code>
+		<code><pre>
+    &lbrace;% include 'incident/incident_card.html' with incident=incident size='small' photo=incident.teaser_image only %&rbrace;
+		</pre></code>
 		{% include "incident/incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
 
 		<h4 class="heading-regular">Blog Card (Big, No Photo)</h4>
