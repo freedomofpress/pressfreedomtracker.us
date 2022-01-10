@@ -1,4 +1,5 @@
 .btn
+	position: relative
 	display: inline-block
 	font-size: $font-size-small-p
 	font-weight: 500
@@ -7,11 +8,12 @@
 	background-color: $white
 	color: $black
 	text-decoration: none
+	z-index: 1
 
 	&:focus
 		outline: none
 
-	&:hover
+	&:not([disabled]):hover
 		cursor: pointer
 
 	&-primary
@@ -32,13 +34,26 @@
 			//padding left of parent
 			margin-left: 1rem
 
-		&:hover
-			background-color: $black
+		&:not([disabled])::before
+			content: ""
+			position: absolute
+			background: $black
+			bottom: 0
+			left: 0
+			right: 100%
+			top: 0
+			z-index: -1
+			transition: right 0.09s ease-in
+
+		&:not([disabled]):hover
 			color: $white
 
 			&::after
 				content: url(../icons/arrow-left-white.svg)
 				background-color: $black
+
+			&::before
+				right: 0
 
 		&:focus
 			border-width: 6px 3px 6px 6px
@@ -59,9 +74,22 @@
 		border: 3px solid
 		border-color: $black
 
+		&:not([disabled])::before
+			content: ""
+			position: absolute
+			background: $black
+			bottom: 0
+			left: 0
+			right: 100%
+			top: 0
+			z-index: -1
+			transition: right 0.09s ease-in
+
 		&:hover
-			background-color: $black
 			color: $white
+
+			&::before
+				right: 0
 
 		&:focus
 			border-width: 6px
@@ -71,9 +99,22 @@
 			border-color: $tag-inactive
 
 	&-ghost
+		&:not([disabled])::before
+			content: ""
+			position: absolute
+			background: $black
+			bottom: 0
+			left: 0
+			right: 100%
+			top: 0
+			z-index: -1
+			transition: right 0.09s ease-in
+
 		&:hover
-			background-color: $black
 			color: $white
+
+			&::before
+				right: 0
 
 		&:focus
 			border: 3px solid
@@ -88,7 +129,7 @@
 		padding: 0.25rem 0.5rem
 		background-color: $accent-background-tags
 
-		&:hover
+		&:not([disabled]):hover
 			background-color: $accent-color
 
 		&:focus
