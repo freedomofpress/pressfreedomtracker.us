@@ -36,8 +36,23 @@
 			margin-left: 1rem
 			transition: content 0.01s ease-in 0.08s
 
+		&:focus
+			border-width: 6px 3px 6px 6px
+
+			&::after
+				border-width: 6px 6px 6px 3px
+				margin-top: calc(-0.5rem - 6px)
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+			&::after
+				content: url(../icons/arrow-left-inactive.svg)
+				border-color: $tag-inactive
+
 		&:not([disabled])::before
-			content: ""
+			content: ''
 			position: absolute
 			background: $black
 			bottom: 0
@@ -57,28 +72,13 @@
 			&::before
 				right: calc(-19px - 2 * 0.75rem)
 
-		&:focus
-			border-width: 6px 3px 6px 6px
-
-			&::after
-				border-width: 6px 6px 6px 3px
-				margin-top: calc(-0.5rem - 6px)
-
-		&[disabled]
-			color: $tag-inactive
-			border-color: $tag-inactive
-
-			&::after
-				content: url(../icons/arrow-left-inactive.svg)
-				border-color: $tag-inactive
-
 	&-secondary
 		border: 3px solid
 		border-color: $black
 		transition: color 0.01s ease-in 0.08s
 
 		&:not([disabled])::before
-			content: ""
+			content: ''
 			position: absolute
 			background: $black
 			bottom: 0
@@ -105,7 +105,7 @@
 		transition: color 0.01s ease-in 0.08s
 
 		&:not([disabled])::before
-			content: ""
+			content: ''
 			position: absolute
 			background: $black
 			bottom: 0
@@ -134,12 +134,12 @@
 		padding: 0.25rem 0.5rem
 		background-color: $accent-background-tags
 
-		&:not([disabled]):hover
-			background-color: $accent-color
-
 		&:focus
 			border: 3px solid
 			border-color: $black
+
+		&:not([disabled]):hover
+			background-color: $accent-color
 
 		&[disabled]
 			color: $gray-text
