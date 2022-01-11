@@ -20,6 +20,7 @@
 		border: 3px solid
 		border-color: $black
 		padding: 0.5rem 1rem
+		transition: color 0.01s ease-in 0.08s
 
 		&::after
 			content: url(../icons/arrow-left.svg)
@@ -33,6 +34,7 @@
 			margin-top: calc(-0.5rem - 3px)
 			//padding left of parent
 			margin-left: 1rem
+			transition: content 0.01s ease-in 0.08s
 
 		&:not([disabled])::before
 			content: ""
@@ -50,10 +52,10 @@
 
 			&::after
 				content: url(../icons/arrow-left-white.svg)
-				background-color: $black
+				// background-color: $black
 
 			&::before
-				right: 0
+				right: calc(-19px - 2 * 0.75rem)
 
 		&:focus
 			border-width: 6px 3px 6px 6px
@@ -73,6 +75,7 @@
 	&-secondary
 		border: 3px solid
 		border-color: $black
+		transition: color 0.01s ease-in 0.08s
 
 		&:not([disabled])::before
 			content: ""
@@ -99,6 +102,8 @@
 			border-color: $tag-inactive
 
 	&-ghost
+		transition: color 0.01s ease-in 0.08s
+
 		&:not([disabled])::before
 			content: ""
 			position: absolute
