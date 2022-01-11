@@ -1,15 +1,15 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 {% with size=size|default:"big" %}
 	<article class="incident-card">
-		{% if photo %}
-			{% image photo fill-665x440 as x1 %}
-			<img
-				class="card-image-{{ size }}"
-				alt="{{ x1.alt }}"
-				src="{{ x1.url }}"
-			>
-		{% endif %}
 		<a class="text-link--card" href="{% pageurl incident %}">
+			{% if photo %}
+				{% image photo fill-665x440 as x1 %}
+				<img
+					class="card-image-{{ size }}"
+					alt="{{ x1.alt }}"
+					src="{{ x1.url }}"
+				>
+			{% endif %}
 			<h3 class="card-title-{{ size }}">
 				{{ incident.title }}
 			</h3>
