@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 
 from common.devdata import CommonTagFactory
 from incident.devdata import MultimediaIncidentPageFactory, InstitutionFactory, TargetedJournalistFactory, IncidentCategorizationFactory
+from blog.tests.factories import BlogPageFactory
 
 
 class StyleguideView(TemplateView):
@@ -33,5 +34,8 @@ class StyleguideView(TemplateView):
             incident_page=None,
         )
         context['incident'] = inc
+
+        blog_page = BlogPageFactory.build(with_image=True)
+        context['blog_page'] = blog_page
 
         return context
