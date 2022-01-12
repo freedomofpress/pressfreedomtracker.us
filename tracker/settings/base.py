@@ -340,3 +340,4 @@ TEST_RUNNER = 'common.test_runner.SeededDiscoveryRunner'
 RANDOM_SEED = 876394101
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+WAGTAILADMIN_COMMENTS_ENABLED = False
