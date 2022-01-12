@@ -789,13 +789,14 @@ class IncidentPage(MetadataPageMixin, Page):
         own_tags = [tag.pk for tag in self.tags.all()]
         own_tags_set = set(own_tags)
 
+        conditional_filter = Q(location_rank__gt=0)
+        if own_tags:
+            conditional_filter = Q(tag_array__overlap=own_tags) | Q(location_rank__gt=0)
+
         candidates = IncidentPage.objects.annotate(
-            tag_array=ExpressionWrapper(
-                ArrayAgg(
-                    'tags',
-                    filter=models.Q(tags__isnull=False)  # excludes results of `[None]`
-                ),
-                output_field=ArrayField(models.IntegerField())
+            tag_array=ArrayAgg(
+                'tags',
+                filter=models.Q(tags__isnull=False)  # excludes results of `[None]`
             ),
             location_rank=Case(
                 When(city=self.city, state=self.state, then=Value(2)),
@@ -807,7 +808,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ).filter(
             Q(live=True),
             Q(categories__category=main_category),
-            Q(tag_array__overlap=own_tags) | Q(location_rank__gt=0)
+            conditional_filter
         ).exclude(
             id__in=exclude_ids
         )
