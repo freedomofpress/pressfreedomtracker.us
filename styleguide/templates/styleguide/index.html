@@ -200,6 +200,18 @@
 		</code>
 	</details>
 
+	<details id="categories-block" open>
+		<summary><h2 class="heading">Categories Block</h2></summary>
+
+		<div class="categories-block">
+			{% for category in categories %}
+				<div class="categories-block--item">
+					<a href="#" class="text-link--category {{ category.slug }}">{{ category.title }}</a>
+				</div>
+			{% endfor %}
+		</div>
+	</details>
+
 	<hr/>
 	<details id="cards" open>
 		<summary><h2 class="heading">Cards</h2></summary>
