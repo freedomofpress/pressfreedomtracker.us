@@ -11,3 +11,7 @@ $desktop-min: $tablet-max + 1px
 =desktop-up
     @media(min-width: $desktop-min)
         @content
+
+=tablet-down
+    @media(max-width: $desktop-min)
+        @content

@@ -1,0 +1,110 @@
+.header
+	display: flex
+	align-items: center
+	gap: 1rem
+	background-color: #FFF
+	transition: background-color 350ms ease-out
+	z-index: 1000
+
+	&.menu-expanded
+		background-color: #F8F8F8
+
+.site-title-link
+	z-index: 1010
+	margin: 1.5rem
+	min-width: 11.5rem
+	text-decoration: none
+	font-weight: 700
+
+	&:hover
+		background-color: transparent
+
+.mobile-nav-toggle
+	display: none
+
+	+tablet-down
+		display: block
+		position: absolute
+		z-index: 9999
+		background-color: transparent
+		background-image: url(../icons/icon-menu-open.svg)
+		background-repeat: no-repeat
+		border: 0
+		width: 3rem
+		top: 1rem
+		right: 2rem
+		aspect-ratio: 1
+
+	&[aria-expanded="true"]
+		+tablet-down
+			background-image: url(../icons/icon-menu-close.svg)
+
+.top-nav-bar
+	box-sizing: border-box
+	display: flex
+	width: 100%
+	align-items: center
+	justify-content: space-between
+
+	+tablet-down
+		flex-direction: column
+		background-color: #F8F8F8
+		align-items: stretch
+		position: fixed
+		z-index: 1000
+		inset: 0
+		padding: 0 1rem 0 1rem
+		max-width: 100%
+		max-height: 0
+		overflow: hidden
+
+		transition: max-height 350ms ease-out
+
+	&[data-visible="true"]
+		+tablet-down
+			max-height: 100vh
+			background-color: #F8F8F8
+
+.primary-navigation
+	display: flex
+	gap: 1rem
+	list-style: none
+	margin: 0
+	padding: 0
+
+	+tablet-down
+		margin-top: 10rem
+		flex-direction: column
+
+		a
+			display: flex
+			text-decoration: none
+			justify-content: space-between
+			border-bottom: solid 1px #c1c1c1
+			font-weight: 700
+
+			&:hover
+				background-color: transparent
+
+	a > span
+		display: none
+
+		+tablet-down
+			display: inline
+			font-weight: 400
+			color: $gray-text
+
+.secondary-navigation
+	display: flex
+	gap: 1rem
+	list-style: none
+	margin: 0
+	padding: 0
+
+	.btn-primary
+		// for some reason I need this to account for the :after
+		// element on these buttons.
+		margin-right: calc(1.5rem + 19px)
+
+.overflow-hidden
+	overflow: hidden
