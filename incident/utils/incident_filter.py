@@ -70,6 +70,9 @@ filtering query."""
 
         This will only get called if value is not None.
         """
+
+        # TODO - more understanding needed of why values that are not
+        # ValueError: Field 'id' expected a number but got 'value'.
         return queryset.filter(self.get_query_arguments(value))
 
     def get_verbose_name(self):
