@@ -194,9 +194,9 @@ dj-database-url==0.5.0 \
     --hash=sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163 \
     --hash=sha256:851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9
     # via -r requirements.txt
-django==2.2.25 \
-    --hash=sha256:08bad7ef7e90286b438dbe1412c3e633fbc7b96db04735f0c7baadeed52f3fad \
-    --hash=sha256:b1e65eaf371347d4b13eb7e061b09786c973061de95390c327c85c1e2aa2349c
+django==2.2.26 \
+    --hash=sha256:85e62019366692f1d5afed946ca32fef34c8693edf342ac9d067d75d64faf0ac \
+    --hash=sha256:dfa537267d52c6243a62b32855a744ca83c37c70600aacffbfd98bc5d6d8518f
     # via
     #   -r requirements.txt
     #   django-anymail
@@ -848,9 +848,9 @@ unittest-xml-reporting==3.0.4 \
     --hash=sha256:7bf515ea8cb244255a25100cd29db611a73f8d3d0aaf672ed3266307e14cc1ca \
     --hash=sha256:984cebba69e889401bfe3adb9088ca376b3a1f923f0590d005126c1bffd1a695
     # via -r requirements.txt
-urllib3[secure]==1.26.7 \
-    --hash=sha256:4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece \
-    --hash=sha256:c4fdf4019605b6e5423637e01bc9fe4daef873709a7973e195ceba0a62bbc844
+urllib3[secure]==1.26.8 \
+    --hash=sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed \
+    --hash=sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c
     # via
     #   -r requirements.txt
     #   requests
@@ -932,7 +932,6 @@ setuptools==59.2.0 \
     --hash=sha256:157d21de9d055ab9e8ea3186d91e7f4f865e11f42deafa952d90842671fc2576 \
     --hash=sha256:4adde3d1e1c89bde1c643c64d89cdd94cbfd8c75252ee459d4500bccb9c7d05d
     # via
-    #   -r requirements.txt
     #   google-api-core
     #   google-auth
     #   gunicorn
