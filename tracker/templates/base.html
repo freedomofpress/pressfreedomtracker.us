@@ -1,0 +1,9 @@
+{% extends "super.html" %}
+
+{% block body %}
+	{% include "common/_menu.html" %}
+	<main>
+		{% block main %}{% endblock %}
+	</main>
+	{% include "common/_footer.html" %}
+{% endblock %}

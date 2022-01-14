@@ -1,17 +1,23 @@
 $mobile-max: 375px
 $tablet-max: 768px
+$desktop-max: 1440px
 
 $tablet-min: $mobile-max + 1px
 $desktop-min: $tablet-max + 1px
 
 =tablet-up
-    @media(min-width: $tablet-min)
-        @content
+	@media(min-width: $tablet-min)
+		@content
 
 =desktop-up
-    @media(min-width: $desktop-min)
-        @content
+	@media(min-width: $desktop-min)
+		@content
 
 =tablet-down
-    @media(max-width: $desktop-min)
-        @content
+	@media(max-width: $desktop-min)
+		@content
+
+=constrain-to-desktop
+	+desktop-up
+		max-width: 1440px
+		padding: 0 32px
