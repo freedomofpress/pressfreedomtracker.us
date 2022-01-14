@@ -1,0 +1,21 @@
+.search-block
+	+constrain-to-desktop
+	+grid-container
+	margin-bottom: 32px
+
+.search-block-all-btn
+	grid-column: 1/-1
+	grid-row: 1
+	margin-bottom: 16px
+
+	+desktop-up
+		grid-column: 1/4
+		margin-bottom: 0
+
+.search-block-search-bar
+	grid-column: 1/-1
+	grid-row: 2
+
+	+desktop-up
+		grid-row: 1
+		grid-column: 4/13

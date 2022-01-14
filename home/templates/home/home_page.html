@@ -1,1 +1,22 @@
 {% extends "base.html" %}
+
+{% load pageurl from wagtailcore_tags %}
+
+{% block main %}
+	<h2 class="page-title">
+		The U.S. Press Freedom Tracker
+	</h2>
+	{% with search_page=settings.common.SearchSettings.search_page %}
+		{% if search_page %}
+			{% pageurl search_page as search_page_url %}
+			<div class="search-block">
+				<div class="search-block-all-btn">
+					<a href="{{ search_page_url }}" class="btn btn-primary btn-block">Go to incidents database</a>
+				</div>
+				<div class="search-block-search-bar">
+					{% include "incident/_search_bar.html" with action=search_page_url %}
+				</div>
+			</div>
+		{% endif %}
+	{% endwith %}
+{% endblock %}

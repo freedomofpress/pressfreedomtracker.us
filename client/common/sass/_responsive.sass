@@ -18,6 +18,18 @@ $desktop-min: $tablet-max + 1px
 		@content
 
 =constrain-to-desktop
+	// We specify L/R padding separately to avoid
+	// interference with someone using T/B padding
+	// alongside this mixin
+
+	padding-left: 16px
+	padding-right: 16px
+
+	+tablet-up
+		padding-left: 24px
+		padding-right: 24px
+
 	+desktop-up
 		max-width: 1440px
-		padding: 0 32px
+		padding-left: 32px
+		padding-right: 32px
