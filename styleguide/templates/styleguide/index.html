@@ -207,9 +207,9 @@
 
 		<div class="categories-block">
 			{% for category in categories %}
-				<div class="categories-block--item">
-					<a href="#" class="text-link--category {{ category.slug }}">{{ category.title }}</a>
-				</div>
+				<a href="{% pageurl category %}" class="btn btn-secondary categories-block--item">
+					<span class="{{ category.slug }}">{{ category.title }}</span>
+				</a>
 			{% endfor %}
 		</div>
 	</details>

@@ -15,3 +15,45 @@
 	border-color: $black
 	margin-left: -3px
 	margin-top: -3px
+	font-weight: 700
+
+	span::before
+		vertical-align: middle
+		margin-right: 6px
+
+	&:hover
+		span::before
+			filter: invert(1)
+
+	span.arrest::before
+		content: url(../icons/categories/arrest.svg)
+
+	span.border_stop::before
+		content: url(../icons/categories/border_stop.svg)
+
+	span.chilling_statement::before
+		content: url(../icons/categories/chilling_statement.svg)
+
+	span.denial_of_access::before
+		content: url(../icons/categories/denial_of_access.svg)
+
+	span.equipment_damage::before
+		content: url(../icons/categories/equipment_damage.svg)
+
+	span.equipment_search::before
+		content: url(../icons/categories/equipment_search.svg)
+
+	span.leak_case::before
+		content: url(../icons/categories/leak_case.svg)
+
+	span.other_incident::before
+		content: url(../icons/categories/other.svg)
+
+	span.physical_attack::before
+		content: url(../icons/categories/physical_attack.svg)
+
+	span.prior_restraint::before
+		content: url(../icons/categories/prior_restraint.svg)
+
+	span.subpoena::before
+		content: url(../icons/categories/subpoena.svg)
