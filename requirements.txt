@@ -492,9 +492,9 @@ urllib3==1.26.8 \
     --hash=sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed \
     --hash=sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c
     # via requests
-wagtail==2.15.1 \
-    --hash=sha256:6f1bc7960a7028a6e665a0f5a15ef2ba89faad66060bc4b3952a922fbef1713b \
-    --hash=sha256:97eb520db0056d576b698e832de2ecfa3d795e9ed12e4b9ab738623c1b6277a0
+wagtail==2.15.2 \
+    --hash=sha256:0086c8bf7fb93e456f15f230f0bfcb3d3945420aa663a8a962c404051da96d46 \
+    --hash=sha256:9a2c7ceee79f2d1974f021f76b814ba36744e91c732e7e5113a43cfb046e56f1
     # via
     #   -r requirements.in
     #   wagtail-autocomplete
