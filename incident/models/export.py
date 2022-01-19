@@ -49,6 +49,9 @@ EXCLUDED_FIELDS = {
     'unique_date',
     'lawsuit_name',  # Deprecated
     'venue',  # Deprecated
+    'index_entries',
+    'subscribers',
+    'wagtail_admin_comments',
 }
 
 
