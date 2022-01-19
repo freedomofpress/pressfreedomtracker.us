@@ -159,7 +159,7 @@ class TestExportPage(TestCase):
         csv_line = next(reader)
         # Last elem in these lists is GenericRelatedObjectManager which will have different
         # IDs
-        self.assertEqual(to_row(inc)[:-1], csv_line[:-1])
+        self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
             self.assertNotIn('Unpublished incident', line.decode('utf-8'))
 
