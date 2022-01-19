@@ -46,3 +46,6 @@ test-results
 
 # Jetbrains IDE
 .idea
+
+# local settings
+tracker/settings/local.py
