@@ -206,17 +206,17 @@
 		<summary><h2 class="heading">Categories Block</h2></summary>
 		<code><pre>{% filter force_escape %}{% verbatim %}
 <div class="categories-block">
-	{% for category in categories %}
+	{% for category in all_categories %}
 		<a href="{% pageurl category %}" class="btn btn-secondary categories-block--item">
-			<span class="{{ category.slug }}">{{ category.title }}</span>
+			<span class="category category-{{ category.page_symbol }}">{{ category.title }}</span>
 		</a>
 	{% endfor %}
 </div>{% endverbatim %}{% endfilter %}</pre></code>
 
 		<div class="categories-block">
-			{% for category in categories %}
+			{% for category in all_categories %}
 				<a href="{% pageurl category %}" class="btn btn-secondary categories-block--item">
-					<span class="{{ category.slug }}">{{ category.title }}</span>
+					<span class="category category-{{ category.page_symbol }}">{{ category.title }}</span>
 				</a>
 			{% endfor %}
 		</div>

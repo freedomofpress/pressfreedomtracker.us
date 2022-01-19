@@ -2,7 +2,7 @@ import datetime
 
 from django.views.generic import TemplateView
 
-from common.devdata import CommonTagFactory
+from common.devdata import CommonTagFactory, CategoryPageFactory
 from common.models.pages import CategoryPage
 from common.choices import CATEGORY_SYMBOL_CHOICES
 from incident.devdata import MultimediaIncidentPageFactory, InstitutionFactory, TargetedJournalistFactory, IncidentCategorizationFactory
@@ -35,7 +35,17 @@ class StyleguideView(TemplateView):
             # an incident.
             incident_page=None,
         )
+        all_categories = []
+        for category_value, category_name in CATEGORY_SYMBOL_CHOICES:
+            all_categories.append(
+                CategoryPageFactory.build(
+                    page_symbol=category_value,
+                    **{category_value: True}
+                )
+            )
+
         context['category'] = CategoryPage.objects.first()
+        context['all_categories'] = all_categories
         context['category_symbols'] = CATEGORY_SYMBOL_CHOICES
         context['incident'] = inc
 
