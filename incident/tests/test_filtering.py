@@ -295,7 +295,7 @@ class TestAllFiltersAtOnce(TestCase):
         # skip these fields directly because they are split into
         # upper_date and lower_date fields, and because we pass
         # an explicit categories value
-        filters_to_skip = {'date', 'detention_date', 'release_date', 'categories'}
+        filters_to_skip = {'date', 'detention_date', 'release_date', 'categories', 'index_entries', 'wagtail_admin_comments', 'subscribers'}
         incident_filter = IncidentFilter(dict(
             search='search text',
             date_lower='2011-01-01',

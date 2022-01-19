@@ -121,6 +121,9 @@ class IncidentExportTestCase(TestCase):
             'politicians_or_public_figures_involved',
             'longitude',
             'latitude',
+            'index_entries',
+            'wagtail_admin_comments',
+            'subscribers',
         }
         self.assertEqual(headers, expected_headers)
 

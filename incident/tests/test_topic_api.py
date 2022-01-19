@@ -14,12 +14,11 @@ from home.tests.factories import HomePageFactory
 
 
 class TopicPageApi(TestCase):
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
         Page.objects.filter(slug='home').delete()
         root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
-        root_page.add_child(instance=cls.home_page)
+        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
@@ -27,81 +26,81 @@ class TopicPageApi(TestCase):
                 'site_name': 'Test site',
                 'hostname': 'testserver',
                 'port': '1111',
-                'root_page': cls.home_page,
+                'root_page': self.home_page,
             }
         )
         if not created:
-            site.root_page = cls.home_page
+            site.root_page = self.home_page
             site.save()
 
-        cls.index = IncidentIndexPageFactory.create(
-            parent=cls.home_page
+        self.index = IncidentIndexPageFactory.create(
+            parent=self.home_page
         )
-        cls.topic = TopicPageFactory(
-            parent=cls.home_page,
-            incident_index_page=cls.index,
+        self.topic = TopicPageFactory(
+            parent=self.home_page,
+            incident_index_page=self.index,
             incidents_per_module=3,
         )
 
-        cls.cat1 = CategoryPageFactory.create(
+        self.cat1 = CategoryPageFactory.create(
             title='Malfeasance',
             plural_name='Malfeasances'
         )
-        cls.cat2 = CategoryPageFactory.create(
+        self.cat2 = CategoryPageFactory.create(
             title='Skullduggery',
             plural_name='Instances of Skullduggery'
         )
 
-        cls.inc1 = IncidentPageFactory.create(
+        self.inc1 = IncidentPageFactory.create(
             date='2020-01-01',
-            categories=[cls.cat1],
-            tags=[cls.topic.incident_tag],
-            parent=cls.index,
+            categories=[self.cat1],
+            tags=[self.topic.incident_tag],
+            parent=self.index,
         )
 
-        cls.inc2 = IncidentPageFactory.create(
+        self.inc2 = IncidentPageFactory.create(
             date='2020-01-03',
-            categories=[cls.cat1],
-            tags=[cls.topic.incident_tag],
-            parent=cls.index,
+            categories=[self.cat1],
+            tags=[self.topic.incident_tag],
+            parent=self.index,
         )
 
-        cls.inc3 = IncidentPageFactory.create(
+        self.inc3 = IncidentPageFactory.create(
             date='2020-01-02',
-            categories=[cls.cat1],
-            tags=[cls.topic.incident_tag],
-            parent=cls.index,
+            categories=[self.cat1],
+            tags=[self.topic.incident_tag],
+            parent=self.index,
         )
 
-        cls.inc4 = IncidentPageFactory.create(
+        self.inc4 = IncidentPageFactory.create(
             date='2019-12-31',
-            categories=[cls.cat1],
-            parent=cls.index,
+            categories=[self.cat1],
+            parent=self.index,
         )
 
         IncidentPageFactory.create_batch(
             6,
             date='2019-12-31',
-            tags=[cls.topic.incident_tag],
-            categories=[cls.cat2],
-            parent=cls.index,
+            tags=[self.topic.incident_tag],
+            categories=[self.cat2],
+            parent=self.index,
         )
-        cls.draft_incident = IncidentPageFactory.create(
+        self.draft_incident = IncidentPageFactory.create(
             live=False,
             date='2020-01-01',
-            tags=[cls.topic.incident_tag],
-            categories=[cls.cat2],
-            parent=cls.index,
+            tags=[self.topic.incident_tag],
+            categories=[self.cat2],
+            parent=self.index,
         )
 
         # Four targeted journalists on incidents within the topic
-        cls.tj_incident_1 = TargetedJournalistFactory(incident=cls.inc1)
-        TargetedJournalistFactory.create_batch(3, incident=cls.inc2)
+        self.tj_incident_1 = TargetedJournalistFactory(incident=self.inc1)
+        TargetedJournalistFactory.create_batch(3, incident=self.inc2)
 
         # One targeted journalist on an incident outside of the topic
-        TargetedJournalistFactory(incident=cls.inc4)
+        TargetedJournalistFactory(incident=self.inc4)
 
-        cls.url = cls.topic.get_full_url() + 'incidents/'
+        self.url = self.topic.get_full_url() + 'incidents/'
 
     def test_GET_returns_a_200_response(self):
         response = self.client.get(self.url)
@@ -180,12 +179,11 @@ class TopicPageApi(TestCase):
 
 
 class TopicPageApiWithDateRange(TestCase):
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
         Page.objects.filter(slug='home').delete()
         root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
-        root_page.add_child(instance=cls.home_page)
+        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
@@ -193,53 +191,53 @@ class TopicPageApiWithDateRange(TestCase):
                 'site_name': 'Test site',
                 'hostname': 'testserver',
                 'port': '1111',
-                'root_page': cls.home_page,
+                'root_page': self.home_page,
             }
         )
         if not created:
-            site.root_page = cls.home_page
+            site.root_page = self.home_page
             site.save()
 
-        cls.index = IncidentIndexPageFactory.create(
-            parent=cls.home_page
+        self.index = IncidentIndexPageFactory.create(
+            parent=self.home_page
         )
-        cls.topic = TopicPageFactory(
-            parent=cls.home_page,
-            incident_index_page=cls.index,
+        self.topic = TopicPageFactory(
+            parent=self.home_page,
+            incident_index_page=self.index,
             incidents_per_module=3,
         )
 
-        cls.cat = CategoryPageFactory.create(
+        self.cat = CategoryPageFactory.create(
             title='Malfeasance',
             plural_name='Malfeasances'
         )
 
-        cls.inc1 = IncidentPageFactory.create(
+        self.inc1 = IncidentPageFactory.create(
             date='2021-01-01',
-            categories=[cls.cat],
-            tags=[cls.topic.incident_tag],
-            parent=cls.index,
+            categories=[self.cat],
+            tags=[self.topic.incident_tag],
+            parent=self.index,
         )
 
-        cls.inc2 = IncidentPageFactory.create(
+        self.inc2 = IncidentPageFactory.create(
             date='2021-02-01',
-            categories=[cls.cat],
-            tags=[cls.topic.incident_tag],
-            parent=cls.index,
+            categories=[self.cat],
+            tags=[self.topic.incident_tag],
+            parent=self.index,
         )
 
-        cls.inc3 = IncidentPageFactory.create(
+        self.inc3 = IncidentPageFactory.create(
             date='2021-03-01',
-            categories=[cls.cat],
-            tags=[cls.topic.incident_tag],
-            parent=cls.index,
+            categories=[self.cat],
+            tags=[self.topic.incident_tag],
+            parent=self.index,
         )
 
-        cls.tj_incident_1 = TargetedJournalistFactory(incident=cls.inc1)
-        TargetedJournalistFactory.create_batch(2, incident=cls.inc2)
-        TargetedJournalistFactory.create_batch(4, incident=cls.inc3)
+        self.tj_incident_1 = TargetedJournalistFactory(incident=self.inc1)
+        TargetedJournalistFactory.create_batch(2, incident=self.inc2)
+        TargetedJournalistFactory.create_batch(4, incident=self.inc3)
 
-        cls.url = cls.topic.get_full_url() + 'incidents/'
+        self.url = self.topic.get_full_url() + 'incidents/'
 
     def test_topic_page_with_start_and_end_date_limits_incidents(self):
         self.topic.start_date = '2021-01-15'
