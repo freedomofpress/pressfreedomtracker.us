@@ -189,7 +189,9 @@
 		</p>
 		<code>
 			&lt;a class="text-link category category-&lbrace;&lbrace; category.page_symbol &rbrace;&rbrace;" href="&lbrace;% pageurl category %&rbrace;"&gt;&lbrace;&lbrace; category.title &rbrace;&rbrace;&lt;/a&gt;:
-			<a class="text-link category category-{{ category.page_symbol }}" href="{% pageurl category %}">{{ category.title }}</a>
+			{% if category %}
+				<a class="text-link category category-{{ category.page_symbol }}" href="{% pageurl category %}">{{ category.title }}</a>
+			{% endif %}
 			<h4>Category symbols:</h4>
 			{% for symbol in category_symbols %}
 				<span class="category category-{{ symbol.0 }}">{{ symbol.1 }}</span>
