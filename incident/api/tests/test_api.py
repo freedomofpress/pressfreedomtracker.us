@@ -288,7 +288,7 @@ class CategoryAPITest(APITestCase):
             'title': self.category.title,
             'methodology': self.category.methodology,
             'plural_name': self.category.plural_name,
-            'page_color': self.category.page_color,
+            'page_symbol': self.category.page_symbol,
         })
         self.assertEqual(response.status_code, 200)
 

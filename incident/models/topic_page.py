@@ -75,7 +75,7 @@ class IncidentSchema(Schema):
 class CategorySchema(Schema):
     category = fields.Str(attribute='title')
     category_plural = fields.Str(attribute='plural_name')
-    color = fields.Str(attribute='page_color')
+    symbol = fields.Str(attribute='page_symbol')
     methodology = fields.Str()
     url = fields.Function(lambda obj: obj.get_full_url())
     total_incidents = fields.Int()

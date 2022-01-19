@@ -183,11 +183,16 @@
 	<hr/>
 	<details id="category-icons" open>
 		<summary><h2 class="heading">Category Icons</h2></summary>
+		<p>The symbol and the text are independent of the HTML element. So for instance,
+			the categories with text can be implemented with class as defined below even in a &lt;span&gt;.
+			So for the link to have the same styles as a .text-link, one must add that class as well.
+		</p>
 		<code>
-			&lt;a class="text-link--category &lbrace;&lbrace; category.slug &rbrace;&rbrace;" href="&lbrace;% pageurl category %&rbrace;"&gt;&lbrace;&lbrace; category.title &rbrace;&rbrace;&lt;/a&gt;:
+			&lt;a class="text-link category category-&lbrace;&lbrace; category.page_symbol &rbrace;&rbrace;" href="&lbrace;% pageurl category %&rbrace;"&gt;&lbrace;&lbrace; category.title &rbrace;&rbrace;&lt;/a&gt;:
+			<a class="text-link category category-{{ category.page_symbol }}" href="{% pageurl category %}">{{ category.title }}</a>
 			<h4>Category symbols:</h4>
-			{% for category in categories %}
-				<a class="text-link--category {{ category.slug }}" href="{% pageurl category %}">{{ category.title }}</a>
+			{% for symbol in category_symbols %}
+				<span class="category category-{{ symbol.0 }}">{{ symbol.1 }}</span>
 				<br/>
 			{% endfor %}
 		</code>

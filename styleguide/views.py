@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 
 from common.devdata import CommonTagFactory
 from common.models.pages import CategoryPage
+from common.choices import CATEGORY_SYMBOL_CHOICES
 from incident.devdata import MultimediaIncidentPageFactory, InstitutionFactory, TargetedJournalistFactory, IncidentCategorizationFactory
 from blog.tests.factories import BlogPageFactory
 
@@ -34,7 +35,8 @@ class StyleguideView(TemplateView):
             # an incident.
             incident_page=None,
         )
-        context['categories'] = CategoryPage.objects.all()
+        context['category'] = CategoryPage.objects.first()
+        context['category_symbols'] = CATEGORY_SYMBOL_CHOICES
         context['incident'] = inc
 
         blog_page = BlogPageFactory.build(with_image=True)

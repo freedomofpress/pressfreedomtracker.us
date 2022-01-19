@@ -204,7 +204,7 @@ class CategoryPageTest(TestCase):
             'incident_filters-0-incident_filter': 'arrest_status',
             'incident_filters-0-id': 1,
             'incident_filters-0-ORDER': 1,
-            'page_color': 'red'
+            'page_symbol': 'arrest'
         }
 
         response = self.client.post(
@@ -250,7 +250,7 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
             'title': 'Test Category',
             'slug': 'test-category',
             'methodology': rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag)),
-            'page_color': 'red',
+            'page_symbol': 'arrest',
             'quick_facts': inline_formset([]),
             'statistics_items': inline_formset([]),
             'incident_filters': inline_formset([]),
