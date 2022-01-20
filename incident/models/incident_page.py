@@ -40,6 +40,7 @@ from common.blocks import (
     AlignedCaptionedImageBlock,
     TweetEmbedBlock,
     RichTextTemplateBlock,
+    PullQuoteBlock,
 )
 from common.models import MetadataPageMixin
 from incident.models import choices
@@ -175,6 +176,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
+        ('pull_quote', PullQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
     ])
