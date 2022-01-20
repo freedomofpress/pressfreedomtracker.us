@@ -263,6 +263,14 @@ class RichTextBlockQuoteBlock(blocks.StructBlock):
         icon = "openquote"
 
 
+class PullQuoteBlock(blocks.StructBlock):
+    text = blocks.TextBlock()
+
+    class Meta:
+        template = 'common/blocks/pull_quote_block.html'
+        icon = "openquote"
+
+
 class EmailSignupBlock(blocks.StructBlock):
     text = blocks.CharBlock(
         label='Call to action text',
