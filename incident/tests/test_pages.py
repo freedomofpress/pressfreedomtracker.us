@@ -157,6 +157,8 @@ class TestExportPage(TestCase):
         reader = csv.reader(line.decode('utf-8') for line in content_lines)
         next(reader)  # skip the header row
         csv_line = next(reader)
+        # Last elem in these lists is GenericRelatedObjectManager which will have different
+        # IDs
         self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
             self.assertNotIn('Unpublished incident', line.decode('utf-8'))
@@ -516,12 +518,12 @@ class GetIncidentUpdatesTest(TestCase):
 
 
 class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
+        super().setUp()
         Page.objects.filter(slug='home').delete()
         root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
-        root_page.add_child(instance=cls.home_page)
+        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
@@ -529,18 +531,18 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
                 'site_name': 'Test site',
                 'hostname': 'testserver',
                 'port': '1111',
-                'root_page': cls.home_page,
+                'root_page': self.home_page,
             }
         )
         if not created:
-            site.root_page = cls.home_page
+            site.root_page = self.home_page
             site.save()
 
-        cls.site = site
-        cls.category = CategoryPageFactory(parent=cls.home_page)
-        cls.author = PersonPageFactory(parent=cls.home_page)
-        cls.index_page = IncidentIndexPageFactory(
-            parent=cls.home_page,
+        self.site = site
+        self.category = CategoryPageFactory(parent=self.home_page)
+        self.author = PersonPageFactory(parent=self.home_page)
+        self.index_page = IncidentIndexPageFactory(
+            parent=self.home_page,
         )
 
     def test_can_preview_incident_page(self):
@@ -632,12 +634,12 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
 
 
 class TestTopicPage(WagtailPageTests):
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
+        self.login()
         Page.objects.filter(slug='home').delete()
         root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
-        root_page.add_child(instance=cls.home_page)
+        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
@@ -645,18 +647,18 @@ class TestTopicPage(WagtailPageTests):
                 'site_name': 'Test site',
                 'hostname': 'testserver',
                 'port': '1111',
-                'root_page': cls.home_page,
+                'root_page': self.home_page,
             }
         )
         if not created:
-            site.root_page = cls.home_page
+            site.root_page = self.home_page
             site.save()
 
-        cls.site = site
-        cls.category = CategoryPageFactory(parent=cls.home_page)
-        cls.tag = CommonTagFactory()
-        cls.index_page = IncidentIndexPageFactory(
-            parent=cls.home_page,
+        self.site = site
+        self.category = CategoryPageFactory(parent=self.home_page)
+        self.tag = CommonTagFactory()
+        self.index_page = IncidentIndexPageFactory(
+            parent=self.home_page,
         )
 
     def test_can_create_topic_page(self):

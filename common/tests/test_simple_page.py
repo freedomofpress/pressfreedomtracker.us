@@ -13,12 +13,12 @@ from home.tests.factories import HomePageFactory
 
 
 class SimplePageStatisticsTagsTestCase(WagtailPageTests):
-    @classmethod
-    def setUpTestData(cls):
+    def setUp(self):
+        super(SimplePageStatisticsTagsTestCase, self).setUp()
         Page.objects.filter(slug='home').delete()
         root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
-        root_page.add_child(instance=cls.home_page)
+        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
@@ -26,18 +26,16 @@ class SimplePageStatisticsTagsTestCase(WagtailPageTests):
                 'site_name': 'Test site',
                 'hostname': 'testserver',
                 'port': '1111',
-                'root_page': cls.home_page,
+                'root_page': self.home_page,
             }
         )
         if not created:
-            site.root_page = cls.home_page
+            site.root_page = self.home_page
             site.save()
 
-        cls.site = site
-        cls.category = CategoryPageFactory(parent=cls.home_page)
+        self.site = site
+        self.category = CategoryPageFactory(parent=self.home_page)
 
-    def setUp(self):
-        super(SimplePageStatisticsTagsTestCase, self).setUp()
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
         self.page_data = {
             'title': 'Page 1',
