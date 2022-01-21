@@ -3,10 +3,14 @@
 {% load wagtailcore_tags %}
 
 {% block main %}
+	<h1>{{ page.title }}</h1>
 	<!-- Details table-->
 	{% include "incident/_details_table.html" with incident=page category_details=category_details only %}
 
 	<!-- TODO: Stream block templates-->
+    {% for block in page.body %}
+        <section>{% include_block block %}</section>
+    {% endfor %}
 
 	<!-- Source table (TODO): Only the template styling has been implemented. Backend feature to be implemented -->
 	{% if sources %}
