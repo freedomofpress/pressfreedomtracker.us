@@ -86,12 +86,7 @@ export function FiltersIntegration({
 					width={300}
 					height={150}
 					selectedCategories={selectedCategories}
-					onCategoryClick={(category) => {
-						const newCategories = selectedCategories.includes(category)
-							? selectedCategories.filter((cat) => cat !== category)
-							: [...selectedCategories, category];
-						setSelectedCategories(newCategories);
-					}}
+					setSelectedCategories={setSelectedCategories}
 				/>
 			</div>
 

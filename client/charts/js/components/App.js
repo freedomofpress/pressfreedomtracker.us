@@ -9,6 +9,7 @@ import "../../sass/base.sass";
 
 export function App() {
 	const [dataset, setDataset] = useState(null);
+	const [source, useSource] = useState("api");
 
 	useEffect(() => {
 		const fields = [
@@ -23,8 +24,15 @@ export function App() {
 			`tags`,
 		].join(",");
 
-		fetch(`/api/edge/incidents/?fields=${fields}&format=csv`)
-			.then((r) => r.text())
+		const fetchPromise =
+			source === "api"
+				? fetch(`/api/edge/incidents/?fields=${fields}&format=csv`).then((r) =>
+						r.text()
+				  )
+				: import("../data/incidents.csv.js").then(({ csv }) => csv);
+
+		setDataset(null);
+		fetchPromise
 			.then((str) => d3.csvParse(str, d3.autoType))
 			.then((json) => {
 				// TEMPORARY - RANDOMIZE SOME COLUMNS
@@ -59,7 +67,7 @@ export function App() {
 				console.error(err);
 				return [];
 			});
-	}, []);
+	}, [source]);
 
 	if (dataset === null) {
 		return (
@@ -70,6 +78,7 @@ export function App() {
 					justifyContent: "center",
 					alignItems: "center",
 					opacity: 0.4,
+					fontFamily: "sans-serif",
 				}}
 			>
 				<div>LOADING...</div>
@@ -79,6 +88,29 @@ export function App() {
 
 	return (
 		<div>
+			<button
+				style={{
+					backgroundColor: source === "api" ? "steelblue" : "lightgrey",
+					border: "none",
+					borderRadius: 5,
+					padding: "1em",
+				}}
+				onClick={() => useSource("api")}
+			>
+				api
+			</button>
+			<button
+				style={{
+					backgroundColor: source === "static_prod" ? "steelblue" : "lightgrey",
+					border: "none",
+					borderRadius: 5,
+					padding: "1em",
+				}}
+				onClick={() => useSource("static_prod")}
+			>
+				static prod dataset
+			</button>
+
 			<h1>Homepage Charts</h1>
 			<div className="chartContainer" style={{ width: "90%" }}>
 				<HomepageMainCharts data={dataset} />

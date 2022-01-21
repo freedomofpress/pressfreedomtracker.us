@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { ParentSize } from '@visx/responsive'
 import { TreeMap } from './TreeMap.js'
 import { USMap } from './USMap.js'
@@ -10,6 +10,7 @@ import {
   monthIndexes,
   groupByGeo,
   countIncidentsOutsideUS,
+  categoriesColors,
 } from '../lib/utilities.js'
 
 const categoriesSlugs = {
@@ -91,6 +92,9 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
     year: null,
     sixMonths: true,
   })
+  const treemapWrapper = useRef()
+  const usmapWrapper = useRef()
+  const barchartWrapper = useRef()
 
   const chartWidth = width > 970 ? width / 3 : width
   const chartHeight = width > 970 ? 500 : 480
@@ -117,21 +121,24 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
         setFiltersApplied={setFiltersApplied}
       />
       <div className={'hpChartContainer'} style={{ width: width }}>
-        <div className={'hpChart'}>
+        <div className={'hpChart'} ref={treemapWrapper}>
           <TreeMap
             data={datasetFiltered}
             width={chartWidth}
             height={chartHeight}
             isHomePageDesktopView={width > 970}
-            minimumBarHeight={10}
+            minimumBarHeight={35}
             categoryColumn={'categories'}
             titleLabel={'incidents'}
             openSearchPage={(category) => {
               goToFilterPage({ ...filtersApplied, category }, currentDate)
             }}
+            wrapper={treemapWrapper}
+            categoriesColors={(d) => categoriesColors[d]}
+            allCategories={Object.keys(categoriesColors)}
           />
         </div>
-        <div className={'hpChart'}>
+        <div className={'hpChart'} ref={usmapWrapper}>
           <USMap
             data={datasetAggregatedByGeo}
             incidentsOutsideUS={incidentsOutsideUS}
@@ -140,9 +147,10 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
             openSearchPage={(city) => {
               goToFilterPage({ ...filtersApplied, city }, currentDate)
             }}
+            wrapper={usmapWrapper}
           />
         </div>
-        <div className={'hpChart'}>
+        <div className={'hpChart'} ref={barchartWrapper}>
           <BarChartHomepage
             data={datasetGroupedByMonth}
             x={'monthName'}
@@ -154,6 +162,7 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
             openSearchPage={(monthName) => {
               goToFilterPage({ ...filtersApplied, monthName }, currentDate)
             }}
+            wrapper={barchartWrapper}
           />
         </div>
       </div>

@@ -116,67 +116,13 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
   return datasetGroupedByMonthSorted
 }
 
-const USStates = [
-  'California (CA)',
-  'Oregon (OR)',
-  'New York (NY)',
-  'Virginia (VA)',
-  'Missouri (MO)',
-  'Colorado (CO)',
-  'Texas (TX)',
-  'Illinois (IL)',
-  'Mississippi (MS)',
-  'Michigan (MI)',
-  'Florida (FL)',
-  'Wisconsin (WI)',
-  'District of Columbia (DC)',
-  'North Carolina (NC)',
-  'Georgia (GA)',
-  'Minnesota (MN)',
-  'Idaho (ID)',
-  'Washington (WA)',
-  'North Dakota (ND)',
-  'Arizona (AZ)',
-  'New Mexico (NM)',
-  'Louisiana (LA)',
-  'Utah (UT)',
-  'Vermont (VT)',
-  'Nebraska (NE)',
-  'Pennsylvania (PA)',
-  'Tennessee (TN)',
-  'Kentucky (KY)',
-  'Rhode Island (RI)',
-  'Massachusetts (MA)',
-  'Maine (ME)',
-  'Oklahoma (OK)',
-  'Delaware (DE)',
-  'Ohio (OH)',
-  'Alabama (AL)',
-  'Arkansas (AR)',
-  'Iowa (IA)',
-  'New Jersey (NJ)',
-  'Nevada (NV)',
-  'Maryland (MD)',
-  'South Carolina (SC)',
-  'Indiana (IN)',
-  'Puerto Rico (PR)',
-  'Hawaii (HI)',
-  'Kansas (KS)',
-  'Alaska (AK)',
-  'Connecticut (CT)',
-  'Montana (MT)',
-  'New Hampshire (NH)',
-  'West Virginia (WV)',
-  'South Dakota (SD)',
-]
-
 export function groupByGeo(dataset) {
   // Pick cities from dataset with coordinates
   const cities = dataset.map((d) => ({
     latitude: d.latitude,
     longitude: d.longitude,
     name: d.city,
-    state: USStates.includes(d.state) ? `(${d.state.split('(')[1]}` : 'Abroad',
+    state: d.state !== undefined ? d.state : 'Abroad',
   }))
 
   // Group dataset by city and coordinates (some cities have the same name)
@@ -214,5 +160,19 @@ export function groupByGeo(dataset) {
 }
 
 export function countIncidentsOutsideUS(dataset) {
-  return dataset.filter((d) => !USStates.includes(d.state)).length
+  return dataset.filter((d) => d.state === null).length
+}
+
+export const categoriesColors = {
+  'Physical Attack': '#E07A5F',
+  'Arrest/Criminal Charge': '#669599',
+  'Equipment Damage': '#B0829D',
+  'Equipment Search or Seizure': '#63729A',
+  'Chilling Statement': '#F4C280',
+  'Denial of Access': '#7EBBC8',
+  'Leak Case': '#F9B29F',
+  'Prior Restraint': '#98C9CD',
+  'Subpoena/Legal Order': '#E2B6D0',
+  'Other Incident': '#B2B8E5',
+  'Border Stop': '#FBE0BC',
 }
