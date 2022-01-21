@@ -169,7 +169,9 @@ class IncidentPage(MetadataPageMixin, Page):
             icon='doc-full',
             label='Rich Text',
         )),
-        ('image', ImageChooserBlock()),
+        ('image', ImageChooserBlock(
+            template = 'common/blocks/image_block.html'
+        )),
         ('aligned_image', AlignedCaptionedImageBlock(
             label='Aligned, Captioned Image',
         )),
