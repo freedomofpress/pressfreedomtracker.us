@@ -11,12 +11,15 @@
 		&:focus
 			border-color: $white
 
+	&__nav, &__body
+		max-width: 725px
+
 	&__body
 		font-size: $font-size-small-p
 		line-height: 1.43
+		margin-bottom: 2rem
 
 	&__nav
-		margin-top: 2rem
 		display: flex
 		align-items: flex-end
 		justify-content: space-between
@@ -36,6 +39,7 @@
 		&-list
 			padding: 0
 			display: flex
+			margin: 0
 
 			&:first-of-type
 				flex-wrap: wrap
