@@ -84,7 +84,7 @@ class CategorySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
     methodology = serializers.CharField()
-    page_color = serializers.CharField()
+    page_symbol = serializers.CharField()
     plural_name = serializers.CharField()
 
 

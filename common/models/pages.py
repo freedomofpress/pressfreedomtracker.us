@@ -30,7 +30,7 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
     EmailSignupBlock,
 )
-from common.choices import CATEGORY_COLOR_CHOICES
+from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
@@ -292,7 +292,12 @@ class CategoryPage(MetadataPageMixin, Page):
         help_text='Default SEO image for the incidents within this category'
     )
     plural_name = models.CharField(max_length=255, null=True, blank=True)
-    page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
+    page_symbol = models.CharField(
+        max_length=255,
+        choices=CATEGORY_SYMBOL_CHOICES,
+        default='other_incident',
+        help_text='Please check the styleguide to associate the icons with their name'
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel('methodology'),
@@ -304,7 +309,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
     settings_panels = Page.settings_panels + [
         FieldPanel('plural_name'),
-        FieldPanel('page_color'),
+        FieldPanel('page_symbol'),
     ]
 
     def clean(self):

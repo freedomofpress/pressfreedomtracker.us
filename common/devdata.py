@@ -10,7 +10,7 @@ from common.blocks import (
     Heading3,
     StyledTextBlock,
 )
-from common.choices import CATEGORY_COLOR_CHOICES
+from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.models import (
     CategoryPage,
     CategoryIncidentFilter,
@@ -124,7 +124,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
     methodology = factory.LazyAttribute(lambda _: RichText(fake.paragraph(nb_sentences=5)))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
-    page_color = factory.Iterator(CATEGORY_COLOR_CHOICES, getter=lambda c: c[0])
+    page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
 
 
 class CustomImageFactory(wagtail_factories.ImageFactory):
