@@ -43,7 +43,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     docker:
-      - image: node:14-alpine@sha256:5c33bc6f021453ae2e393e6e20650a4df0a4737b1882d389f17069dc1933fdc5
+      - image: cimg/node:14.17.3
     working_directory: ~/tracker
     steps:
       - checkout
