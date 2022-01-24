@@ -18,8 +18,8 @@ $desktop-min: $tablet-max + 1px
 		@content
 
 =constrain-to-desktop
-	// We specify L/R padding separately to avoid
-	// interference with someone using T/B padding
+	// We specify L/R padding/margins separately to avoid
+	// interference with someone using T/B padding/margins
 	// alongside this mixin
 
 	padding-left: 16px
@@ -33,3 +33,5 @@ $desktop-min: $tablet-max + 1px
 		max-width: 1440px
 		padding-left: 32px
 		padding-right: 32px
+		margin-left: auto
+		margin-right: auto
