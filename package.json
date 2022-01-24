@@ -58,6 +58,7 @@
     "hamburgers": "^0.8.1",
     "invariant": "^2.2.2",
     "js-cookie": "^2.1.3",
+    "lodash": "4.0.0",
     "moment": "^2.18.1",
     "money-math": "^2.4.3",
     "normalize-css": "^2.3.1",
