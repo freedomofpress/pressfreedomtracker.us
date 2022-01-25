@@ -1,17 +1,37 @@
 $mobile-max: 375px
 $tablet-max: 768px
+$desktop-max: 1440px
 
 $tablet-min: $mobile-max + 1px
 $desktop-min: $tablet-max + 1px
 
 =tablet-up
-    @media(min-width: $tablet-min)
-        @content
+	@media(min-width: $tablet-min)
+		@content
 
 =desktop-up
-    @media(min-width: $desktop-min)
-        @content
+	@media(min-width: $desktop-min)
+		@content
 
 =tablet-down
-    @media(max-width: $desktop-min)
-        @content
+	@media(max-width: $desktop-min)
+		@content
+
+=constrain-to-desktop
+	// We specify L/R padding/margins separately to avoid
+	// interference with someone using T/B padding/margins
+	// alongside this mixin
+
+	padding-left: 16px
+	padding-right: 16px
+
+	+tablet-up
+		padding-left: 24px
+		padding-right: 24px
+
+	+desktop-up
+		max-width: 1440px
+		padding-left: 32px
+		padding-right: 32px
+		margin-left: auto
+		margin-right: auto

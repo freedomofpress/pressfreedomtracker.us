@@ -19,7 +19,9 @@
 	&-primary
 		border: 3px solid
 		border-color: $black
-		padding: 0.5rem 1rem
+		// the calc here makes space on right edge for the ">"
+		// which is 16px (inner-width) + 1.5rem (padding) + 3px (border) wide
+		padding: 0.5rem calc(1rem + 1.5rem + 19px) 0.5rem 1rem
 		transition: color 0.01s ease-in 0.08s
 
 		&::after
@@ -29,19 +31,19 @@
 			border: 3px solid
 			border-color: $black
 			position: absolute
+			right: -3px
+			top: -3px
 			padding: 0.5rem 0.75rem
-			//padding-top of parent + border-width
-			margin-top: calc(-0.5rem - 3px)
 			//padding left of parent
-			margin-left: 1rem
 			transition: content 0.01s ease-in 0.08s
 
 		&:focus
+			margin: -3px 0
 			border-width: 6px 3px 6px 6px
 
 			&::after
 				border-width: 6px 6px 6px 3px
-				margin-top: calc(-0.5rem - 6px)
+				top: -6px
 
 		&[disabled]
 			color: $tag-inactive
@@ -70,7 +72,7 @@
 				// background-color: $black
 
 			&::before
-				right: calc(-19px - 2 * 0.75rem)
+				right: 0
 
 	&-secondary
 		border: 3px solid
@@ -143,3 +145,7 @@
 
 		&[disabled]
 			color: $gray-text
+
+	&-block
+		display: block
+		text-align: center

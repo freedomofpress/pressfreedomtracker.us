@@ -25,7 +25,7 @@
 			{% block css %}
 				{% render_bundle 'common' 'css' %}
 				{% render_bundle 'common' 'js' attrs='defer'%}
-				{% endblock %}
+			{% endblock %}
 
 			{% block meta %}
 				{% if self %}
@@ -44,10 +44,7 @@
 	</head>
 
 	<body class="{% block body_class %}{% endblock %}">
-		{% include "menu.html" %}
-		<main id="main">
-			{% block body %}
-		</main>
+		{% block body %}
 		{% endblock %}
 	</body>
 </html>
