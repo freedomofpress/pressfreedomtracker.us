@@ -3,6 +3,8 @@
 {% load webpack_loader %}
 {% load wagtailcore_tags %}
 
+{% block title %}PFT Styleguide{% endblock %}
+
 {% block body %}
 <style>
 	code:not(p code) {
@@ -198,6 +200,26 @@
 				<br/>
 			{% endfor %}
 		</code>
+	</details>
+
+	<details id="categories-block" open>
+		<summary><h2 class="heading">Categories Block</h2></summary>
+		<code><pre>{% filter force_escape %}{% verbatim %}
+<div class="categories-block">
+	{% for category in all_categories %}
+		<a href="{% pageurl category %}" class="btn btn-secondary categories-block--item">
+			<span class="category category-{{ category.page_symbol }}">{{ category.title }}</span>
+		</a>
+	{% endfor %}
+</div>{% endverbatim %}{% endfilter %}</pre></code>
+
+		<div class="categories-block">
+			{% for category in all_categories %}
+				<a href="{% pageurl category %}" class="btn btn-secondary categories-block--item">
+					<span class="category category-{{ category.page_symbol }}">{{ category.title }}</span>
+				</a>
+			{% endfor %}
+		</div>
 	</details>
 
 	<hr/>
