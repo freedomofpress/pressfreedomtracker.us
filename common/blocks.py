@@ -1,3 +1,8 @@
+import re
+
+from django.core.exceptions import ValidationError
+from django.forms.utils import ErrorList
+
 from wagtail.core import blocks
 from wagtail.core.rich_text import RichText
 from wagtail.embeds.blocks import EmbedBlock
@@ -120,6 +125,23 @@ class TweetEmbedBlock(blocks.StructBlock):
         template = 'common/blocks/tweet_embed.html'
         icon = 'pick'
         label = 'Tweet'
+
+    # def clean(self, value):
+    #     result = super().clean(value)
+    #     errors = {}
+    #     twitter_url = r'^(http|https):\/\/(www\.)?twitter.com'
+    #     tweet = value.get('tweet')
+
+    #     if tweet:
+    #         valid = re.match(twitter_url, tweet.url)
+
+    #         if not valid:
+    #             errors['tweet'] = ErrorList(['Please enter a valid Twitter URL.'])
+
+    #         if errors:
+    #             raise ValidationError('Validation error in Tweet Block', params=errors)
+
+    #     return result
 
 
 class StyledTextBlock(blocks.StructBlock):
