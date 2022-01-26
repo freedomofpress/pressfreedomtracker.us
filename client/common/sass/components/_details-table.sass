@@ -1,0 +1,37 @@
+.details-table
+	max-width: 1440px
+	margin-left: auto
+	margin-right: auto
+
+	&__row
+		padding: 0.25rem 2rem
+		border-bottom: 1px solid
+		border-color: $black
+
+		&:first-of-type
+			border-top: 1px solid
+
+		+tablet-up
+			display: flex
+			align-items: center
+
+	&__label
+		font-size: $font-size-small-p
+		line-height: 1.43
+
+		+tablet-up
+			width: 17.5rem
+
+		+desktop-up
+			width: 29.375rem
+
+		&--bold
+			font-weight: 700
+
+	&__value
+		margin-left: 0
+		font-size: $font-size-small-p
+		line-height: 1.43
+
+	> .heading-table
+		margin: 0.25rem 2rem

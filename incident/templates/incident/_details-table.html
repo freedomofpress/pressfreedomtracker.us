@@ -1,0 +1,49 @@
+{% load wagtailcore_tags %}
+<dl class="details-table" aria-labelledby="incident-details-title">
+	<h3 class="heading-table" id="incident-details-title">Incident Details</h3>
+	{% with incident.last_updated as last_updated %}
+		{% if last_updated and incident.updates.all.exists %}
+		<div class="details-table__row">
+			<dt class="details-table__label details-table__label--bold">
+				Updated On
+			</dt>
+			<dd class="details-table__value">
+				{{ last_updated|date:"F j, Y" }}
+			</dd>
+		</div>
+		{% endif %}
+	{% endwith %}
+
+	<div class="details-table__row">
+		<dt class="details-table__label details-table__label--bold">
+			Date of Incident
+		</dt>
+		<dd class="details-table__value">
+			<a href="{% if page.get_parent %}{% pageurl page.get_parent %}?date_lower={{ page.date|date:'Y-m-d' }}&date_upper={{ page.date|date:'Y-m-d' }}{% endif %}" class="text-link">
+				{% if incident.exact_date_unknown %}
+					{{ incident.date|date:"F Y" }}
+				{% else %}
+					{{ incident.date|date:"F j, Y" }}
+				{% endif %}
+			</a>
+		</dd>
+	</div>
+
+	{% if incident.city or incident.state %}
+	<div class="details-table__row">
+		<dt class="details-table__label details-table__label--bold">
+			Location
+		</dt>
+		<dd class="details-table__value">
+			{% if incident.city %}
+				<a href="{% if page.get_parent %}{% pageurl page.get_parent %}?city={{ page.city }}{% endif %}" class="text-link">
+					{{ incident.city }}{% if incident.state %},{% endif %}
+				</a>
+			{% endif %}
+			{% if incident.state %}
+				<a href="{% if page.get_parent %}{% pageurl page.get_parent %}?state={{ page.state.pk }}{% endif %}" class="text-link">{{ incident.state.name }}</a>
+			{% endif %}
+		</dd>
+	</div>
+	{% endif %}
+</dl>
