@@ -1,0 +1,11 @@
+{% load wagtailcore_tags %}
+
+<div class="{{ value.alignment }}">
+    {{ value.video }}
+    {% if value.caption %}
+        <div>{{ value.caption|richtext }}</div>
+    {% endif %}
+    {% if value.attribution %}
+        <p>{{ value.attribution }}</p>
+    {% endif %}
+</div>

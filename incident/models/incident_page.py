@@ -171,7 +171,7 @@ class IncidentPage(MetadataPageMixin, Page):
             label='Rich Text',
         )),
         ('image', ImageChooserBlock(
-            template = 'common/blocks/image_block.html'
+            template='common/blocks/image_block.html'
         )),
         ('aligned_image', AlignedCaptionedImageBlock(
             label='Aligned, Captioned Image',
