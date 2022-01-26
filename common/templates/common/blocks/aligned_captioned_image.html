@@ -1,0 +1,6 @@
+<figure class="{{ value.alignment }}">
+    {% include 'common/blocks/image_block.html' with value=value.image %}
+    {% if value.caption %}
+        <figcaption>{{ value.caption }}</figcaption>
+    {% endif %}
+</figure>
