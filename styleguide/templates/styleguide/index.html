@@ -275,6 +275,14 @@
 	</details>
 
 	<hr/>
+	<details id="details" open>
+		<summary><h2 class="heading">Details</h2></summary>
+		<h4 class="heading-regular">Incident Details</h4>
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' only %&rbrace;
+		</pre></code>
+		{% include "incident/_details-table.html" with incident=incident only %}
+	<hr/>
 	<details id="footer" open>
 		<summary><h2 class="heading">Footer</h2></summary>
 		<code>
