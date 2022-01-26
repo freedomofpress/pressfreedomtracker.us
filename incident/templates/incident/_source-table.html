@@ -1,0 +1,14 @@
+<section class="list-table">
+	<h3 class="heading-table">Sources</h3>
+	<ul class="list-table--col-2">
+		{% for source in sources %}
+		<li class="list-table__row">
+			<a href="{{ source.link }}" class="list-table__item">
+				<div class="list-table__col">{{ source.title }}</div>
+				<div class="list-table__col">{{ source.publisher }}</div>
+				<div class="list-table__link">Go to the article &rarr;</div>
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+</section>
