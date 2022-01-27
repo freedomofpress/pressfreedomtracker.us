@@ -1,9 +1,9 @@
 import re
 
-from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
 
 from wagtail.core import blocks
+from wagtail.core.blocks.struct_block import StructBlockValidationError
 from wagtail.core.rich_text import RichText
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -126,22 +126,22 @@ class TweetEmbedBlock(blocks.StructBlock):
         icon = 'pick'
         label = 'Tweet'
 
-    # def clean(self, value):
-    #     result = super().clean(value)
-    #     errors = {}
-    #     twitter_url = r'^(http|https):\/\/(www\.)?twitter.com'
-    #     tweet = value.get('tweet')
+    def clean(self, value):
+        result = super().clean(value)
+        errors = {}
+        twitter_url = r'^(http|https):\/\/(www\.)?twitter.com'
+        tweet = value.get('tweet')
 
-    #     if tweet:
-    #         valid = re.match(twitter_url, tweet.url)
+        if tweet:
+            valid = re.match(twitter_url, tweet.url)
 
-    #         if not valid:
-    #             errors['tweet'] = ErrorList(['Please enter a valid Twitter URL.'])
+            if not valid:
+                errors['tweet'] = ErrorList(['Please enter a valid Twitter URL.'])
 
-    #         if errors:
-    #             raise ValidationError('Validation error in Tweet Block', params=errors)
+            if errors:
+                raise StructBlockValidationError(errors)
 
-    #     return result
+        return result
 
 
 class StyledTextBlock(blocks.StructBlock):
