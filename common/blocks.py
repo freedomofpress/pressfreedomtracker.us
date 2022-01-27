@@ -127,9 +127,8 @@ class TweetEmbedBlock(blocks.StructBlock):
         label = 'Tweet'
 
     def clean(self, value):
-        result = super().clean(value)
         errors = {}
-        twitter_url = r'^(http|https):\/\/(www\.)?twitter.com'
+        twitter_url = r'^(http|https):\/\/twitter.com'
         tweet = value.get('tweet')
 
         if tweet:
@@ -141,7 +140,7 @@ class TweetEmbedBlock(blocks.StructBlock):
             if errors:
                 raise StructBlockValidationError(errors)
 
-        return result
+        return super().clean(value)
 
 
 class StyledTextBlock(blocks.StructBlock):
