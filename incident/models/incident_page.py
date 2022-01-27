@@ -524,9 +524,10 @@ class IncidentPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
-            heading='Introduction, Image and Teaser',
+            heading='Introduction, Video, Image and Teaser',
             children=[
                 FieldPanel('introduction'),
+                FieldPanel('primary_video'),
                 ImageChooserPanel('teaser_image'),
                 FieldPanel('image_caption'),
                 FieldPanel('teaser'),
@@ -559,7 +560,6 @@ class IncidentPage(MetadataPageMixin, Page):
                       "incident. Displayed as footnotes."
         ),
 
-        FieldPanel('primary_video'),
 
         MultiFieldPanel(
             heading='Detention/Arrest',
