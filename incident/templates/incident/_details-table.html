@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags case_tags %}
 <dl class="details-table" aria-labelledby="incident-details-title">
 	<h3 class="heading-table" id="incident-details-title">Incident Details</h3>
 	{% with incident.last_updated as last_updated %}
@@ -19,7 +19,7 @@
 			Date of Incident
 		</dt>
 		<dd class="details-table__value">
-			<a href="{% if page.get_parent %}{% pageurl page.get_parent %}?date_lower={{ page.date|date:'Y-m-d' }}&date_upper={{ page.date|date:'Y-m-d' }}{% endif %}" class="text-link">
+			<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?date_lower={{ incident.date|date:'Y-m-d' }}&date_upper={{ incident.date|date:'Y-m-d' }}{% endif %}" class="text-link">
 				{% if incident.exact_date_unknown %}
 					{{ incident.date|date:"F Y" }}
 				{% else %}
@@ -36,13 +36,54 @@
 		</dt>
 		<dd class="details-table__value">
 			{% if incident.city %}
-				<a href="{% if page.get_parent %}{% pageurl page.get_parent %}?city={{ page.city }}{% endif %}" class="text-link">
+				<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?city={{ incident.city }}{% endif %}" class="text-link">
 					{{ incident.city }}{% if incident.state %},{% endif %}
 				</a>
 			{% endif %}
 			{% if incident.state %}
-				<a href="{% if page.get_parent %}{% pageurl page.get_parent %}?state={{ page.state.pk }}{% endif %}" class="text-link">{{ incident.state.name }}</a>
+				<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?state={{ incident.state.pk }}{% endif %}" class="text-link">{{ incident.state.name }}</a>
 			{% endif %}
+		</dd>
+	</div>
+	{% endif %}
+
+	{% if incident.case_number %}
+	<div class="details-table__row">
+		<dt class="details-table__label details-table__label--bold">
+			Case number
+		</dt>
+		<dd class="details-table__value">
+			<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?case_number={{ incident.case_number }}{% endif %}">
+				{{ incident.case_number }}
+			</a>
+		</dd>
+	</div>
+	{% endif %}
+
+	{% if incident.case_statuses|length > 0 %}
+	<div class="details-table__row">
+		<dt class="details-table__label details-table__label--bold">
+			Case Status
+		</dt>
+		<dd class="details-table__value">
+			{% for case_status in incident.case_statuses %}
+			<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?case_statuses={{ case_status }}{% endif %}">
+				{% get_case_status_display case_status as case_status_display_name %}
+				{{ case_status_display_name|capfirst }}</a>{% if not forloop.last %}, {% endif %}
+			{% endfor %}
+		</dd>
+	</div>
+	{% endif %}
+
+	{% if incident.case_type %}
+	<div class="details-table__row">
+		<dt class="details-table__label details-table__label--bold">
+			Type of case
+		</dt>
+		<dd class="details-table__value">
+			<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?case_type={{ incident.case_type }}{% endif %}">
+				{{ incident.case_type }}
+			</a>
 		</dd>
 	</div>
 	{% endif %}
