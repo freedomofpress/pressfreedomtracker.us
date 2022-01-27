@@ -1,0 +1,7 @@
+{% if incident.get_tags %}
+    <ul class="tag-list">
+        {% for tag in incident.get_tags %}
+            <li><a href="#" class="btn btn-tag">#{{ tag.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}

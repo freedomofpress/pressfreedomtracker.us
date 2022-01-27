@@ -3,10 +3,18 @@
 {% load wagtailcore_tags %}
 
 {% block main %}
-	<h1>{{ page.title }}</h1>
+    <h1 class="page-title">{{ page.title }}</h1>
+
+    {% include 'incident/incident_tags.html' with incident=page %}
 
 	<!-- Details table-->
 	{% include "incident/_details_table.html" with incident=page category_details=category_details only %}
+
+
+    {% if page.introduction %}
+        <h2 class="article-title">{{ page.introduction }}</h2>
+    {% endif %}
+    {% include 'common/_cover-image.html' with image=page.teaser_image caption=page.image_caption %}
 
 	<!-- TODO: Stream block templates-->
     {% for block in page.body %}
@@ -22,4 +30,6 @@
 	{% if same_event_incidents %}
 		{% include "incident/_same_event_incident_table.html" with same_event_incidents=same_event_incidents only %}
 	{% endif %}
+
+    {% include 'incident/related_incidents.html' %}
 {% endblock %}

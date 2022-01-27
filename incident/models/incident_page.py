@@ -15,6 +15,7 @@ from django.db.models import (
     When,
 )
 from django.db.models.functions import ExtractDay
+from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
@@ -183,6 +184,11 @@ class IncidentPage(MetadataPageMixin, Page):
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
     ])
+
+    introduction = models.TextField(
+        help_text="Optional: introduction displayed above the image.",
+        blank=True,
+    )
 
     teaser = models.TextField(
         help_text="This field is optional and overrides the default teaser text.",
@@ -517,16 +523,16 @@ class IncidentPage(MetadataPageMixin, Page):
     objects = IncidentPageManager()
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body'),
-
         MultiFieldPanel(
-            heading='Teaser',
+            heading='Introduction, Image and Teaser',
             children=[
+                FieldPanel('introduction'),
                 ImageChooserPanel('teaser_image'),
                 FieldPanel('image_caption'),
                 FieldPanel('teaser'),
             ]
         ),
+        StreamFieldPanel('body'),
         MultiFieldPanel(
             heading='Details',
             children=[
@@ -879,3 +885,7 @@ class IncidentPage(MetadataPageMixin, Page):
             strip_tags(self.body.render_as_block()),
             20
         )
+
+    @cached_property
+    def get_tags(self):
+        return self.tags.all()

@@ -1,0 +1,10 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if image %}
+    <figure>
+        {% image image fill-910x510 alt=image.attribution|default:image.title %}
+        {% if caption %}
+            <figcaption>{{ caption|richtext }}</figcaption>
+        {% endif %}
+    </figure>
+{% endif %}
