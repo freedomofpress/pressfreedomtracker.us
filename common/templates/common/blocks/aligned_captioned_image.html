@@ -1,6 +1,6 @@
-<figure class="{{ value.alignment }}">
+<figure class="inline-image {{ value.alignment }}">
     {% include 'common/blocks/image_block.html' with value=value.image %}
     {% if value.caption %}
-        <figcaption>{{ value.caption }}</figcaption>
+        <figcaption class="inline-image__caption">{{ value.caption }}</figcaption>
     {% endif %}
 </figure>
