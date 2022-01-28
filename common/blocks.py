@@ -143,6 +143,31 @@ class TweetEmbedBlock(blocks.StructBlock):
         return super().clean(value)
 
 
+class AsideBlock(blocks.StructBlock):
+    text = blocks.RichTextBlock(
+        features=[
+            'bold',
+            'italic',
+            'h2',
+            'h3',
+            'h4',
+            'ol',
+            'ul',
+            'hr',
+            'embed',
+            'link',
+            'document-link',
+            'image',
+            'code',
+        ],
+    )
+
+    class Meta:
+        template = 'common/blocks/aside_block.html'
+        icon = 'doc-full-inverse'
+        label = 'Aside'
+
+
 class StyledTextBlock(blocks.StructBlock):
     TEXT_ALIGN_CHOICES = (
         ('left', 'Left'),

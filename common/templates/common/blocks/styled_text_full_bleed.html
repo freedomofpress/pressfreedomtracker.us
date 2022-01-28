@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+
+<div style="
+    background-color: {{ value.background_color }};
+    font-family: {{ value.font_family }};
+    font-size: {{ value.font_size }};
+    text-align: {{ value.text_align }};
+">
+    {{ value.text|richtext }}
+</div>
