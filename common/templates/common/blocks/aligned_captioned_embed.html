@@ -1,11 +1,15 @@
 {% load wagtailcore_tags %}
 
-<div class="{{ value.alignment }}">
+<figure class="inline-media {{ value.alignment }}">
     {{ value.video }}
-    {% if value.caption %}
-        <div>{{ value.caption|richtext }}</div>
+    {% if value.caption or value.attribution %}
+        <figcaption class="inline-media__caption">
+            {% if value.caption %}
+                {{ value.caption|richtext }}
+            {% endif %}
+            {% if value.attribution %}
+                <p>{{ value.attribution }}</p>
+            {% endif %}
+        </figcaption>
     {% endif %}
-    {% if value.attribution %}
-        <p>{{ value.attribution }}</p>
-    {% endif %}
-</div>
+</figure>
