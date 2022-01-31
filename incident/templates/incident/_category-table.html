@@ -1,0 +1,19 @@
+{% load wagtailcore_tags case_tags %}
+<dl class="details-table" aria-labelledby="incident-details-title">
+	<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">
+		{{ category.title }}
+	</h3>
+
+	{% for detail in category_detail %}
+		{% if detail.html %}
+		<div class="details-table__row">
+			<dt class="details-table__label">
+				{{ detail.name }}
+			</dt>
+			<dd class="details-table__value">
+				{{ detail.html | safe }}
+			</dd>
+		</div>
+		{% endif %}
+	{% endfor %}
+</dl>

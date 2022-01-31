@@ -6,6 +6,10 @@
 	<!-- Details table-->
 	{% include "incident/_details-table.html" with incident=page only %}
 
+	{% for category, category_detail in category_details.items %}
+		{% include "incident/_category-table.html" with category=category category_detail=category_detail only %}
+	{% endfor %}
+
 	<!-- TODO: Stream block templates-->
 
 	<!-- Source table (TODO): Only the template styling has been implemented. Backend feature to be implemented -->

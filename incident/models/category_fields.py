@@ -1,3 +1,5 @@
+from incident.utils.category_field_values import *
+
 CATEGORY_FIELD_MAP = {
     'arrest': [
         ('arrest_status', 'Arrest Status'),
@@ -47,9 +49,47 @@ CATEGORY_FIELD_MAP = {
         ('legal_order_type', 'Legal Order Type'),
     ],
     'prior-restraint': [
-        ('status_of_prior_restraint', 'Status of Prior Restraint')
+        ('status_of_prior_restraint', 'Status of Prior Restraint'),
     ],
     'denial-of-access': [
         ('politicians_or_public_figures_involved', 'Politicians or Public Figures Involved'),
     ],
+}
+
+CAT_FIELD_VALUES = {
+    'arrest_status': arrest_status_html_val,
+    'status_of_charges': status_of_charges_html_val,
+    'arresting_authority': arresting_authority_html_val,
+    'current_charges': current_charges_html_val,
+    'dropped_charges': dropped_charges_html_val,
+    'detention_date': detention_date_html_val,
+    'release_date': release_date_html_val,
+    'unnecessary_use_of_force': unnecessary_use_of_force_html_val,
+    'equipment_broken': equipment_broken_html_val,
+    'equipment_seized': equipment_seized_html_val,
+    'status_of_seized_equipment': status_of_seized_equipment_html_val,
+    'is_search_warrant_obtained': is_search_warrant_obtained_html_val,
+    'actor': actor_html_val,
+    'border_point': border_point_html_val,
+    'target_nationality': target_nationality_html_val,
+    'target_us_citizenship_status': target_us_citizenship_status_html_val,
+    'denial_of_entry': denial_of_entry_html_val,
+    'stopped_previously': stopped_previously_html_val,
+    'did_authorities_ask_for_device_access': did_authorities_ask_for_device_access_html_val,
+    'did_authorities_ask_for_social_media_user': did_authorities_ask_for_social_media_user_html_val,
+    'did_authorities_ask_for_social_media_pass': did_authorities_ask_for_social_media_pass_html_val,
+    'did_authorities_ask_about_work': did_authorities_ask_about_work_html_val,
+    'assailant': assailant_html_val,
+    'was_journalist_targeted': was_journalist_targeted_html_val,
+    'workers_whose_communications_were_obtained': workers_whose_communications_were_obtained_html_val,
+    'charged_under_espionage_act': charged_under_espionage_act_html_val,
+    'subpoena_type': subpoena_type_html_val,
+    'subpoena_statuses': subpoena_statuses_html_val,
+    'held_in_contempt': held_in_contempt_html_val,
+    'detention_status': detention_status_html_val,
+    'third_party_in_possession_of_communications': third_party_in_possession_of_communications_html_val,
+    'third_party_business': third_party_business_html_val,
+    'legal_order_type': legal_order_type_html_val,
+    'status_of_prior_restraint': status_of_prior_restraint_html_val,
+    'politicians_or_public_figures_involved': politicians_or_public_figures_involved_html_val,
 }
