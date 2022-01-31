@@ -683,15 +683,16 @@ class IncidentPage(MetadataPageMixin, Page):
 
         related_incidents = self.get_related_incidents(threshold=4)
         context['related_incidents'] = related_incidents
+        tags = self.tags.all()
 
+        main_category = self.get_main_category()
         if related_incidents:
-            main_category = self.get_main_category()
+
             if main_category:
                 related_filter = {'categories': main_category.pk}
             else:
                 related_filter = {}
 
-            tags = self.tags.all()
             if tags:
                 related_filter['tags'] = ','.join(str(tag.pk) for tag in tags)
             elif self.city and self.state:
@@ -699,6 +700,8 @@ class IncidentPage(MetadataPageMixin, Page):
             elif self.state:
                 related_filter['state'] = self.state
             context['related_qs'] = urlencode(related_filter)
+        context['main_category'] = main_category
+        context['tags'] = tags
         return context
 
     def full_clean(self, *args, **kwargs):

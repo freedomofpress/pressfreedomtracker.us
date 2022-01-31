@@ -353,6 +353,7 @@ class Command(BaseCommand):
                     MultimediaIncidentPageFactory(
                         parent=incident_index_page,
                         categories=[lookup_category(key) for key in kwargs.keys()],
+                        tags=4,
                         **kwargs,
                     )
         else:

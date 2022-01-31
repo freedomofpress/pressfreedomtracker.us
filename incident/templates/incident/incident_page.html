@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load wagtailembeds_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block main %}
+	<article class="incident-detail">
+		<h2 class="incident-detail__title category category-{{ main_category.page_symbol }} article-title">
+			{{ page.title }}
+		</h2>
+
+		{% if tags %}
+			<ul class="incident-detail__tags tag-list">
+				{% for tag in tags %}
+					<li><a href="#" class="btn btn-tag">#{{ tag.title }}</a></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
+		{% if page.primary_video %}
+			{% embed page.primary_video %}
+		{% elif page.teaser_image %}
+			{% image page.teaser_image fill-908x510 as x1 %}
+			{% image page.teaser_image fill-1816x1020 as x2 %}
+			<figure class="incident-detail__figure">
+				<img
+					src="{{ x1.url }}"
+					alt="{{ x1.alt }}"
+					srcset="{{ x2.url }} 2x"
+					class="incident-detail__image"
+				>
+				{% if page.image_caption or page.teaser_image.attribution %}
+					<figcaption class="incident-detail__caption">
+						{% if page.image_caption %}
+							<div class="paragraph-notes">
+								{{ page.image_caption|richtext }}
+							</div>
+						{% endif %}
+
+						{% if page.teaser_image.attribution %}
+							<span class="paragraph-notes incident-detail__attribution">
+								{{ page.teaser_image.attribution }}
+							</span>
+						{% endif %}
+					</figcaption>
+				{% endif %}
+			</figure>
+		{% endif %}
+	</article>
+{% endblock %}

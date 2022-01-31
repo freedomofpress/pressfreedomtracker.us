@@ -287,6 +287,22 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         chilling_statement = Trait()
         other_incident = Trait()
 
+    @factory.post_generation
+    def tags(self, create, argument, **kwargs):
+        if not argument or not isinstance(argument, int):
+            count = 0
+        else:
+            count = argument
+
+        make_tag = getattr(CommonTagFactory, 'create' if create else 'build')
+        tags = []
+        for i in range(count):
+            tag = make_tag(**kwargs)
+            self.tags.add(tag)
+            tags.append(tag)
+        if not create:
+            self._prefetched_object_cache = {'tags': tags }
+
     # https://adamj.eu/tech/2014/09/03/factory-boy-fun/
     @factory.post_generation
     def institution_targets(self, create, count):
