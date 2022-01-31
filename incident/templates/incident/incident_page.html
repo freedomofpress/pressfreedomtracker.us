@@ -4,11 +4,7 @@
 
 {% block main %}
 	<!-- Details table-->
-	{% include "incident/_details-table.html" with incident=page only %}
-
-	{% for category, category_detail in category_details.items %}
-		{% include "incident/_category-table.html" with category=category category_detail=category_detail only %}
-	{% endfor %}
+	{% include "incident/_details-table.html" with incident=page category_details=category_details only %}
 
 	<!-- TODO: Stream block templates-->
 

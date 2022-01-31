@@ -1,19 +1,37 @@
 .details-table
-	max-width: 1440px
-	margin-left: auto
-	margin-right: auto
+	position: relative
+	+constrain-to-desktop
+
+	&__incident-details
+		margin-top: 0
+		margin-bottom: 0
+
+	#details-toggle-btn
+		position: absolute
+		top: 6px
+		right: 24px
+		+desktop-up
+			display: none
+
+	#incident-details
+		+tablet-down
+			&[data-visible="false"]
+				display: none
+
+			&[data-visible="true"]
+				display: block
 
 	&__row
-		padding: 0.25rem 2rem
+		padding: 0.5rem 0
 		border-bottom: 1px solid
 		border-color: $black
-
-		&:first-of-type
-			border-top: 1px solid
 
 		+tablet-up
 			display: flex
 			align-items: center
+
+		+desktop-up
+			padding: 0.25rem 2rem
 
 	&__label
 		font-size: $font-size-small-p
@@ -38,5 +56,11 @@
 		margin: 0
 		padding: 0
 
-	> .heading-table
-		margin: 0.25rem 2rem
+	.heading-table
+		margin: 0
+		border-bottom: 1px solid
+		border-color: $black
+		padding: 0.25rem 2rem
+
+		+tablet-down
+			padding: 0.5rem 0
