@@ -277,11 +277,36 @@
 	<hr/>
 	<details id="details" open>
 		<summary><h2 class="heading">Details</h2></summary>
-		<h4 class="heading-regular">Incident Details</h4>
+		<h4 class="heading-regular">Key-Value Details</h4>
+		<p>Use a structure similar to this when creating a key value details table:
+		</p>
 		<code><pre>
-    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' only %&rbrace;
+			<dl class="details-table" aria-labelledby="incident-details-title">
+				<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">
+					{{ category.title }}
+				</h3>
+
+				{% for detail in category_detail %}
+					{% if detail.html %}
+					<div class="details-table__row">
+						<dt class="details-table__label">
+							{{ detail.name }}
+						</dt>
+						<dd class="details-table__value">
+							{{ detail.html | safe }}
+						</dd>
+					</div>
+					{% endif %}
+				{% endfor %}
+			</dl>
 		</pre></code>
-		{% include "incident/_details-table.html" with incident=incident only %}
+		<p>
+			All different card details have their own template include files.
+			For example, incident details are accessed like:
+			&lbrace;% include "incident/_details-table.html" with incident=page only %&rbrace;
+			If a new details table is needed for a specific page, create a new include
+			template file, following above structure
+		</p>
 	<hr/>
 	<details id="footer" open>
 		<summary><h2 class="heading">Footer</h2></summary>
