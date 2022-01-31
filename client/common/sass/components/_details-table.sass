@@ -6,21 +6,6 @@
 		margin-top: 0
 		margin-bottom: 0
 
-	#details-toggle-btn
-		position: absolute
-		top: 6px
-		right: 24px
-		+desktop-up
-			display: none
-
-	#incident-details
-		+tablet-down
-			&[data-visible="false"]
-				display: none
-
-			&[data-visible="true"]
-				display: block
-
 	&__row
 		padding: 0.5rem 0
 		border-bottom: 1px solid
@@ -64,3 +49,19 @@
 
 		+tablet-down
 			padding: 0.5rem 0
+
+	.details-toggle-btn
+		position: absolute
+		top: 6px
+		right: 24px
+
+		+desktop-up
+			display: none
+
+	&__container
+		+tablet-down
+			&[data-visible='false']
+				display: none
+
+			&[data-visible='true']
+				display: block
