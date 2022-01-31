@@ -25,7 +25,7 @@ CATEGORIES = {
         'unnecessary_use_of_force',
         'charges',
     ],
-    'border-stop': [
+    'border_stop': [
         'border_point',
         'stopped_at_border',
         'stopped_previously',
@@ -38,20 +38,20 @@ CATEGORIES = {
         'did_authorities_ask_about_work',
         'were_devices_searched_or_seized',
     ],
-    'denial-of-access': [
+    'denial_of_access': [
         'politicians_or_public_figures_involved',
     ],
-    'equipment-search': [
+    'equipment_search': [
         'equipment_seized',
         'status_of_seized_equipment',
         'is_search_warrant_obtained',
         'actor',
     ],
-    'physical-attack': [
+    'physical_attack': [
         'assailant',
         'was_journalist_targeted',
     ],
-    'leak-case': [
+    'leak_case': [
         'charged_under_espionage_act',
     ],
     'subpoena': [
@@ -63,14 +63,14 @@ CATEGORIES = {
         'third_party_business',
         'legal_order_type',
     ],
-    'equipment-damage': [
+    'equipment_damage': [
         'equipment_broken',
     ],
-    'prior-restraint': [
+    'prior_restraint': [
         'status_of_prior_restraint',
     ],
-    'chilling-statement': [],
-    'other-incident': [],
+    'chilling_statement': [],
+    'other_incident': [],
 }
 
 
