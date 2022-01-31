@@ -42,7 +42,7 @@ def boolean_html_val(page, field):
 
 def list_html_val(page, field):
     # If no value for the attribute, return blank
-    if not getattr(page, field):
+    if not len(getattr(page, field).all()):
         return ''
 
     val_list = []
@@ -63,7 +63,7 @@ def list_html_val(page, field):
 
 def equipments_list_html_val(page, field):
     # If no value for the attribute, return blank
-    if not getattr(page, field):
+    if not len(getattr(page, field).all()):
         return ''
 
     val_list = []
