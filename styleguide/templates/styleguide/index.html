@@ -281,29 +281,29 @@
 		<p>Use a structure similar to this when creating a key value details table:
 		</p>
 		<code><pre>
-			<dl class="details-table" aria-labelledby="incident-details-title">
-				<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">
-					{{ category.title }}
-				</h3>
+			&lt;dl class="details-table" aria-labelledby="incident-details-title"&gt;
+				&lt;h3 class="heading-table category category-&lbrace;&lbrace; category.page_symbol &rbrace;&rbrace;" id="&lbrace;&lbrace; category.slug &rbrace;&rbrace;-details-title"&gt;
+					&lbrace;&lbrace; category.title &rbrace;&rbrace;
+				&lt;/h3&gt;
 
-				{% for detail in category_detail %}
-					{% if detail.html %}
-					<div class="details-table__row">
-						<dt class="details-table__label">
-							{{ detail.name }}
-						</dt>
-						<dd class="details-table__value">
-							{{ detail.html | safe }}
-						</dd>
-					</div>
-					{% endif %}
-				{% endfor %}
-			</dl>
+				&lbrace;% for detail in category_detail %&rbrace;
+					&lbrace;% if detail.html %&rbrace;
+					&lt;div class="details-table__row"&gt;
+						&lt;dt class="details-table__label"&gt;
+							&lbrace;&lbrace; detail.name &rbrace;&rbrace;
+						&lt;/dt&gt;
+						&lt;dd class="details-table__value"&gt;
+							&lbrace;&lbrace; detail.html | safe &rbrace;&rbrace;
+						&lt;/dd&gt;
+					&lt;/div&gt;
+					&lbrace;% endif %&rbrace;
+				&lbrace;% endfor %&rbrace;
+			&lt;/dl&gt;
 		</pre></code>
 		<p>
 			All different card details have their own template include files.
 			For example, incident details are accessed like:
-			&lbrace;% include "incident/_details-table.html" with incident=page only %&rbrace;
+			<code>&lbrace;% include "incident/_details-table.html" with incident=page only %&rbrace;</code>
 			If a new details table is needed for a specific page, create a new include
 			template file, following above structure
 		</p>
