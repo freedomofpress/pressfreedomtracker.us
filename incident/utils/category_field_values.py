@@ -24,10 +24,6 @@ def basic_html_val(page, field):
     )
 
 def boolean_html_val(page, field):
-    # If no value for the attribute, return blank
-    if not getattr(page, field):
-        return ''
-
     link = '{}?{}={}'.format(
         page.get_parent().get_url(),
         field,
@@ -141,23 +137,7 @@ def release_date_html_val(page, field):
 	return date_html_val(page, field)
 
 def unnecessary_use_of_force_html_val(page, field):
-	# If no value for the attribute and not main category, return blank
-    main_category = page.get_main_category()
-    if not getattr(page, field) and main_category.slug != 'arrest-detention':
-        return ''
-
-    link = '{}?{}={}&categories={}'.format(
-        page.get_parent().get_url(),
-        field,
-        getattr(page, field),
-        main_category.title
-    )
-    value = 'Yes' if getattr(page, field) else 'No'
-
-    return '<a href="{}" class="text-link">{}</a>'.format(
-        link,
-        value
-    )
+	return boolean_html_val(page, field)
 
 def equipment_broken_html_val(page, field):
 	return equipments_list_html_val(page, field)
@@ -211,31 +191,7 @@ def workers_whose_communications_were_obtained_html_val(page, field):
 	return list_html_val(page, field)
 
 def charged_under_espionage_act_html_val(page, field):
-	# If no value for the attribute and not main category, return blank
-    main_category = page.get_main_category()
-    if not getattr(page, field) and main_category.title != 'Leak Prosecutions':
-        return ''
-
-    if getattr(page, field):
-        link = '{}?{}={}'.format(
-            page.get_parent().get_url(),
-            field,
-            getattr(page, field)
-        )
-        value = 'Yes'
-    else:
-        link = '{}?{}={}&categories={}'.format(
-            page.get_parent().get_url(),
-            field,
-            getattr(page, field),
-            main_category.title
-        )
-        value = 'No'
-
-    return '<a href="{}" class="text-link">{}</a>'.format(
-        link,
-        value
-    )
+	return boolean_html_val(page, field)
 
 def subpoena_type_html_val(page, field):
     return basic_html_val(page, field)
