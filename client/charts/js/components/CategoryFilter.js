@@ -38,12 +38,12 @@ const svgIcons = {
   'Border Stop': superSun,
 }
 
-export function BarChartCategories({
+export function CategoryFilter({
   dataset,
   width,
   height,
-  selectedCategories,
-  setSelectedCategories,
+  filterParameters: selectedCategories,
+  setFilterParameters: setSelectedCategories,
 }) {
   const incidents = dataset.flatMap(({ categories, ...d }) =>
     categories.map((category) => ({ ...d, category }))
@@ -52,7 +52,6 @@ export function BarChartCategories({
   const categoryFrequencies = {
     'Physical Attack': 0,
     'Arrest/Criminal Charge': 0,
-    // 'Arrest / Criminal Charge': 0, // TO DO
     'Equipment Damage': 0,
     'Equipment Search or Seizure': 0,
     'Chilling Statement': 0,
@@ -60,7 +59,6 @@ export function BarChartCategories({
     'Leak Case': 0,
     'Prior Restraint': 0,
     'Subpoena/Legal Order': 0,
-    // 'Subpoena / Legal Order': 0, // TO DO
     'Other Incident': 0,
     'Border Stop': 0,
     ...countBy(incidents, (d) => {
@@ -79,6 +77,11 @@ export function BarChartCategories({
     []
   )
 
+  const maxCategoryCount =
+    d3.max(countCategories.map((d) => d.count)) === 0
+      ? 1
+      : d3.max(countCategories.map((d) => d.count))
+
   const xScale = d3
     .scaleBand()
     .domain(countCategories.map((d) => d.category).sort())
@@ -86,19 +89,27 @@ export function BarChartCategories({
 
   const yScale = d3
     .scaleLinear()
-    .domain([0, d3.max(countCategories.map((d) => d.count))])
+    .domain([0, maxCategoryCount])
     .range([0, height - margins.bottom - margins.top])
     .nice(3)
 
   const barsWidth = (width - margins.right) / 20
   const imageWidth = 14
 
+  function onCategoryClick(d) {
+    const newCategories = (oldCategories) =>
+      oldCategories.includes(d.category)
+        ? oldCategories.filter((cat) => cat !== d.category)
+        : [...oldCategories, d.category]
+    setSelectedCategories('filterCategory', newCategories)
+  }
+
   return (
     <svg
       width={width}
       height={height}
       key={'BarChartCategories'}
-      style={{ fontFamily: 'Roboto Mono' }}
+      style={{ fontFamily: 'monospace' }}
     >
       <AnimatedDataset
         dataset={yScale.ticks(3)}
@@ -141,7 +152,7 @@ export function BarChartCategories({
         attrs={{
           x: (d) => xScale(d.category),
           y: (d) => height - margins.bottom - yScale(d.count),
-          fill: 'black',
+          fill: (d) => (selectedCategories.includes(d.category) ? '#F2FC67' : 'black'),
           width: barsWidth,
           stroke: 'black',
           strokeWidth: 2,
@@ -150,50 +161,11 @@ export function BarChartCategories({
         }}
         events={{
           onClick: (_, d) => {
-            setSelectedCategories((selectedCategories) => {
-              const newCategories = selectedCategories.includes(d.category)
-                ? selectedCategories.filter((cat) => cat !== d.category)
-                : [...selectedCategories, d.category]
-              return newCategories
-            })
+            onCategoryClick(d)
           },
         }}
+        durationByAttr={{ fill: 0 }}
         duration={250}
-        keyFn={(d) => d.category}
-      />
-      <AnimatedDataset
-        dataset={countCategories}
-        tag="rect"
-        init={{
-          height: (d) =>
-            selectedCategories.includes(d.category)
-              ? height - margins.bottom - yScale(d.count)
-              : height - margins.bottom,
-        }}
-        attrs={{
-          x: (d) => xScale(d.category),
-          y: (d) =>
-            selectedCategories.includes(d.category)
-              ? height - margins.bottom - yScale(d.count)
-              : height - margins.bottom,
-          fill: '#F2FC67',
-          width: barsWidth,
-          stroke: 'black',
-          strokeWidth: 2,
-          height: (d) => (selectedCategories.includes(d.category) ? yScale(d.count) : 0),
-          key: (_, i) => i,
-        }}
-        events={{
-          onClick: (_, d) => {
-            setSelectedCategories((selectedCategories) => {
-              const newCategories = selectedCategories.includes(d.category)
-                ? selectedCategories.filter((cat) => cat !== d.category)
-                : [...selectedCategories, d.category]
-              return newCategories
-            })
-          },
-        }}
-        duration={350}
         keyFn={(d) => d.category}
       />
 
@@ -212,12 +184,7 @@ export function BarChartCategories({
                 if (d.count === 0) {
                   return null
                 } else {
-                  return setSelectedCategories((selectedCategories) => {
-                    const newCategories = selectedCategories.includes(d.category)
-                      ? selectedCategories.filter((cat) => cat !== d.category)
-                      : [...selectedCategories, d.category]
-                    return newCategories
-                  })
+                  return onCategoryClick(d)
                 }
               }}
             />

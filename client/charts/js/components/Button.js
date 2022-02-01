@@ -18,6 +18,7 @@ export function Button({ label, selected, selectable = true, onClick }) {
         backgroundColor: selected || (hovered && selectable) ? 'black' : 'white',
         color: selected || (hovered && selectable) ? 'white' : selectable ? 'black' : 'grey',
         cursor: selectable ? 'pointer' : 'default',
+        minWidth: 50,
       }}
       onClick={() => {
         if (selectable) {

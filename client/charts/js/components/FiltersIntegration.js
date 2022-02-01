@@ -1,108 +1,170 @@
-import React, { useState } from "react";
-import * as d3 from "d3";
-import { countBy, sortBy } from "lodash";
-import { BarChartCategories } from "./BarChartCategories";
-import { BarChartFilter } from "./BarChartFilter";
+import React, { useState } from 'react'
+import * as d3 from 'd3'
+import { range } from 'lodash'
+import { CategoryFilter } from './CategoryFilter'
+import { StateFilter } from './StateFilter'
+import {
+  formatDataset,
+  firstDayOfMonth,
+  firstDayOfNextMonth,
+  removeElement,
+  isSubset,
+} from '../lib/utilities'
+import { ButtonsRow } from './ButtonsRow'
+import { TimeMonthsFilter } from './TimeMonthsFilter'
+import { TimeYearsFilter } from './TimeYearsFilter'
 
-// barChart Filter functions
-function firstDayOfMonth(date) {
-	return d3.timeMonth.floor(new Date(date));
-}
+export function FiltersIntegration({ width, dataset: dirtyDataset }) {
+  const dataset = formatDataset(dirtyDataset)
 
-function lastDayOfMonth(date) {
-	return d3.timeMonth.ceil(new Date(date));
-}
+  const [minDate, maxDate] = d3.extent(dataset.map((d) => new Date(d.date)))
+  const dateExtents = [firstDayOfMonth(minDate), firstDayOfNextMonth(maxDate)]
+  const yearDateExtents = dateExtents.map((date) => date.getFullYear())
+  const allYears = range(...yearDateExtents)
 
-function isSubset(subset, container) {
-	// all elements of subset must be present in container
-	return subset.every((element) => container.includes(element));
-}
+  const [filtersParameters, setFitlersParameters] = useState({
+    filterCategory: { type: 'category', parameters: [], enabled: true },
+    filterTimeMonths: {
+      type: 'timeMonths',
+      parameters: {
+        min: minDate,
+        max: maxDate,
+      },
+      enabled: true,
+    },
+    filterTimeYears: {
+      type: 'timeYears',
+      parameters: [...allYears],
+      enabled: true,
+    },
+    filterState: { type: 'state', parameters: 'All', enabled: true },
+  })
 
-export function FiltersIntegration({
-	width,
-	height,
-	dataset: dirtyCategoriesDataset,
-}) {
-	const dataset = dirtyCategoriesDataset.map((d) => ({
-		...d,
-		categories: (d.categories || "").split(",").map((c) => c.trim()),
-	}));
+  function setFilterParameters(filterName, newFilterParameters) {
+    if (typeof newFilterParameters === 'function') {
+      setFitlersParameters((oldFilters) => {
+        const newParameters = oldFilters
+        const oldFilterParameters = oldFilters[filterName].parameters
+        newParameters[filterName].parameters = newFilterParameters(oldFilterParameters)
+        return { ...newParameters }
+      })
+    } else {
+      const newParameters = filtersParameters
+      newParameters[filterName].parameters = newFilterParameters
+      setFitlersParameters({ ...newParameters })
+    }
+  }
 
-	const [minDate, maxDate] = d3.extent(dataset.map((d) => new Date(d.date)));
+  function setFilterEnabling(filterName, isEnabled) {
+    const newFilterParameters = filtersParameters
+    newFilterParameters[filterName].enabled = isEnabled
+    setFitlersParameters({ ...newFilterParameters })
+  }
 
-	const [startDate, setStartDate] = useState(firstDayOfMonth(minDate));
-	const [endDate, setEndDate] = useState(lastDayOfMonth(maxDate));
-	const [selectedCategories, setSelectedCategories] = useState([]);
+  function getFilteringExpression(filterName) {
+    if (filtersParameters[filterName].enabled) {
+      switch (filterName) {
+        case 'filterCategory':
+          return (d) => isSubset(filtersParameters[filterName].parameters, d.categories)
+        case 'filterTimeMonths':
+          return (d) =>
+            new Date(d.date).getTime() >= filtersParameters[filterName].parameters.min.getTime() &&
+            new Date(d.date).getTime() <= filtersParameters[filterName].parameters.max.getTime()
+        case 'filterTimeYears':
+          return (d) =>
+            filtersParameters[filterName].parameters.includes(new Date(d.date).getFullYear())
+        case 'filterState':
+          return (d) =>
+            filtersParameters[filterName].parameters === 'All' ||
+            d.state === filtersParameters[filterName].parameters
+      }
+    } else {
+      return () => true
+    }
+  }
 
-	const datasetFiltered = dataset
-		.filter(
-			(d) =>
-				new Date(d.date).getTime() >= startDate.getTime() &&
-				new Date(d.date).getTime() <= endDate.getTime()
-		)
-		.filter((d) => isSubset(selectedCategories, d.categories));
+  const [timeChartType, setTimeChartType] = useState('Months')
 
-	const monthFrequenciesObj = {
-		...Object.fromEntries(
-			d3.timeMonth
-				.range(minDate, maxDate)
-				.map((date) => [date.toISOString(), 0])
-		),
-		...countBy(
-			dataset.filter((d) => isSubset(selectedCategories, d.categories)),
-			(d) => firstDayOfMonth(d.date).toISOString()
-		),
-	};
-	const monthFrequencies = sortBy(
-		Object.entries(monthFrequenciesObj).map(([dateISO, count]) => ({
-			date: dateISO,
-			count,
-		})),
-		"date"
-	);
+  function applyFilter(dataset, filterName) {
+    const filterCondition = getFilteringExpression(filterName)
+    return dataset.filter(filterCondition)
+  }
 
-	const monthFrequenciesFilteredObj = {
-		...Object.fromEntries(
-			d3.timeMonth
-				.range(minDate, maxDate)
-				.map((date) => [date.toISOString(), 0])
-		),
-		...countBy(datasetFiltered, (d) => firstDayOfMonth(d.date).toISOString()),
-	};
-	const monthFrequenciesFiltered = sortBy(
-		Object.entries(monthFrequenciesFilteredObj).map(([dateISO, count]) => ({
-			date: dateISO,
-			count,
-		})),
-		"date"
-	);
+  function applyFilters(dataset, filterNames) {
+    return filterNames.reduce(
+      (previousValue, currentValue) => applyFilter(previousValue, currentValue),
+      dataset
+    )
+  }
 
-	return (
-		<div>
-			<h3>Categories</h3>
-			<div className="chartContainer">
-				<BarChartCategories
-					dataset={datasetFiltered}
-					width={300}
-					height={150}
-					selectedCategories={selectedCategories}
-					setSelectedCategories={setSelectedCategories}
-				/>
-			</div>
+  const filterNames = Object.keys(filtersParameters)
 
-			<h3>Months</h3>
-			<div className="chartContainer">
-				<BarChartFilter
-					width={300}
-					height={150}
-					monthFrequencies={monthFrequencies}
-					monthFrequenciesFiltered={monthFrequenciesFiltered}
-					startDate={startDate}
-					endDate={endDate}
-					onStartDateChange={setStartDate}
-					onEndDateChange={setEndDate}
-				/>
-			</div>
-		</div>
-	);
+  const filterWithout = Object.fromEntries(
+    filterNames.map((filterName) => [
+      filterName,
+      (dataset) => {
+        const filtersToApply = removeElement(filterNames, filterName)
+        return applyFilters(dataset, filtersToApply)
+      },
+    ])
+  )
+
+  return (
+    <div>
+      <h3>Categories</h3>
+      <div className="chartContainer">
+        <CategoryFilter
+          width={width}
+          height={width / 2}
+          dataset={applyFilters(dataset, filterNames)}
+          filterParameters={filtersParameters.filterCategory.parameters}
+          setFilterParameters={setFilterParameters}
+        />
+      </div>
+
+      <h3>Time</h3>
+      <div className="chartContainer">
+        <ButtonsRow
+          label={'Filter by'}
+          buttonLabels={['Months', 'Years']}
+          defaultSelection={'Months'}
+          updateSelection={(label) => {
+            setFilterEnabling('filterTimeMonths', label === 'Months')
+            setFilterEnabling('filterTimeYears', label === 'Years')
+            setTimeChartType(label)
+          }}
+          isButtonSelectable={() => true}
+        />
+        {timeChartType === 'Months' ? (
+          <TimeMonthsFilter
+            width={width}
+            height={width / 2}
+            dateExtents={dateExtents}
+            dataset={filterWithout.filterTimeMonths(dataset)}
+            filterParameters={filtersParameters.filterTimeMonths.parameters}
+            setFilterParameters={setFilterParameters}
+          />
+        ) : (
+          <TimeYearsFilter
+            width={width}
+            height={width / 2}
+            dateExtents={dateExtents}
+            dataset={filterWithout.filterTimeYears(dataset)}
+            filterParameters={filtersParameters.filterTimeYears.parameters}
+            setFilterParameters={setFilterParameters}
+          />
+        )}
+      </div>
+
+      <h3>States</h3>
+      <div className="chartContainer">
+        <StateFilter
+          width={width}
+          dataset={filterWithout.filterState(dataset)}
+          filterParameters={filtersParameters.filterState.parameters}
+          setFilterParameters={setFilterParameters}
+        />
+      </div>
+    </div>
+  )
 }

@@ -8,7 +8,7 @@ import {
   filterDatasetByFiltersApplied,
   groupByMonthSorted,
   monthIndexes,
-  groupByGeo,
+  groupByState,
   countIncidentsOutsideUS,
   categoriesColors,
 } from '../lib/utilities.js'
@@ -86,22 +86,19 @@ export function HomepageMainCharts(props) {
   )
 }
 
-export function HomepageMainChartsWidth({ data: dataset, width, currentDate = new Date() }) {
+function HomepageMainChartsWidth({ data: dataset, width, currentDate = new Date() }) {
   const [filtersApplied, setFiltersApplied] = React.useState({
     tag: null,
     year: null,
     sixMonths: true,
   })
-  const treemapWrapper = useRef()
-  const usmapWrapper = useRef()
-  const barchartWrapper = useRef()
 
   const chartWidth = width > 970 ? width / 3 : width
   const chartHeight = width > 970 ? 500 : 480
 
   const datasetFiltered = filterDatasetByFiltersApplied(dataset, filtersApplied, currentDate)
 
-  const datasetAggregatedByGeo = groupByGeo(datasetFiltered)
+  const datasetAggregatedByGeo = groupByState(datasetFiltered)
   const incidentsOutsideUS = countIncidentsOutsideUS(datasetFiltered)
 
   const datasetGroupedByMonth = groupByMonthSorted(
@@ -120,8 +117,13 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
         filtersApplied={filtersApplied}
         setFiltersApplied={setFiltersApplied}
       />
+
       <div className={'hpChartContainer'} style={{ width: width }}>
-        <div className={'hpChart'} ref={treemapWrapper}>
+        <div className={'hpChart'}>
+          <ChartDescription>
+            Showing incidents grouped by type of attack. An incident can fall under more than one
+            category.
+          </ChartDescription>
           <TreeMap
             data={datasetFiltered}
             width={chartWidth}
@@ -133,12 +135,13 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
             openSearchPage={(category) => {
               goToFilterPage({ ...filtersApplied, category }, currentDate)
             }}
-            wrapper={treemapWrapper}
-            categoriesColors={(d) => categoriesColors[d]}
             allCategories={Object.keys(categoriesColors)}
           />
         </div>
-        <div className={'hpChart'} ref={usmapWrapper}>
+        <div className={'hpChart'}>
+          <ChartDescription>
+            Showing incidents distribution in the U.S. Incidents are grouped by state.
+          </ChartDescription>
           <USMap
             data={datasetAggregatedByGeo}
             incidentsOutsideUS={incidentsOutsideUS}
@@ -147,10 +150,10 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
             openSearchPage={(city) => {
               goToFilterPage({ ...filtersApplied, city }, currentDate)
             }}
-            wrapper={usmapWrapper}
           />
         </div>
-        <div className={'hpChart'} ref={barchartWrapper}>
+        <div className={'hpChart'}>
+          <ChartDescription>Showing the number of journalists targeted per month.</ChartDescription>
           <BarChartHomepage
             data={datasetGroupedByMonth}
             x={'monthName'}
@@ -162,10 +165,26 @@ export function HomepageMainChartsWidth({ data: dataset, width, currentDate = ne
             openSearchPage={(monthName) => {
               goToFilterPage({ ...filtersApplied, monthName }, currentDate)
             }}
-            wrapper={barchartWrapper}
           />
         </div>
       </div>
     </>
+  )
+}
+
+function ChartDescription({ children }) {
+  return (
+    <div
+      style={{
+        height: '2em',
+        padding: 10,
+        fontFamily: 'sans-serif',
+        fontWeight: 400,
+        fontSize: 14,
+        color: '#7A848E',
+      }}
+    >
+      {children}
+    </div>
   )
 }

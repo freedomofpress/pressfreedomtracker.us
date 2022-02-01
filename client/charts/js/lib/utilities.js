@@ -1,4 +1,6 @@
 import * as d3 from 'd3'
+import { uniq } from 'lodash'
+import usStates from '../data/us-states-coordinates.json'
 
 export const monthNames = [
   'Jan',
@@ -48,17 +50,20 @@ export function filterDatasetByYear(dataset, year) {
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth()
+
   if (currentMonth >= 5) {
     return dataset.filter(
       (d) =>
         new Date(d.date).getFullYear() === currentYear &&
-        new Date(d.date).getMonth() >= currentMonth - 5
+        new Date(d.date).getMonth() >= currentMonth - 5 &&
+        new Date(d.date).getMonth() <= currentMonth
     )
   }
   const monthSixMonthsAgo = 11 - (5 - currentMonth)
   return dataset.filter(
     (d) =>
-      new Date(d.date).getFullYear() === currentYear ||
+      (new Date(d.date).getFullYear() === currentYear &&
+        new Date(d.date).getMonth() <= currentMonth) ||
       (new Date(d.date).getFullYear() === currentYear - 1 &&
         new Date(d.date).getMonth() >= monthSixMonthsAgo)
   )
@@ -116,12 +121,12 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
   return datasetGroupedByMonthSorted
 }
 
-export function groupByGeo(dataset) {
+export function groupByCity(dataset) {
   // Pick cities from dataset with coordinates
   const cities = dataset.map((d) => ({
     latitude: d.latitude,
     longitude: d.longitude,
-    name: d.city,
+    city: d.city,
     state: d.state !== undefined ? d.state : 'Abroad',
   }))
 
@@ -132,13 +137,13 @@ export function groupByGeo(dataset) {
     .flatRollup(
       cities,
       (v) => v.length,
-      (d) => d.name,
+      (d) => d.city,
       (d) => d.state,
       (d) => d.latitude,
       (d) => d.longitude
     )
-    .map(([name, state, latitude, longitude, numberOfIncidents]) => ({
-      name,
+    .map(([city, state, latitude, longitude, numberOfIncidents]) => ({
+      city,
       state,
       latitude,
       longitude,
@@ -148,7 +153,7 @@ export function groupByGeo(dataset) {
 
   // Remove rows without coordinates
   const incidentsGroupedFiltered = incidentsGroupedByCity.filter(
-    (d) => d.latitude !== 'None' || d.longitude !== 'None'
+    (d) => d.latitude !== 'None' && d.longitude !== 'None'
   )
 
   if (incidentsGroupedByCity.length !== incidentsGroupedFiltered.length) {
@@ -159,8 +164,38 @@ export function groupByGeo(dataset) {
   return incidentsGroupedFiltered
 }
 
+export function groupByState(dataset) {
+  const usStatesList = usStates.map((d) => d.acronym)
+
+  // Pick cities from dataset with coordinates
+  const states = dataset.map((d) => ({
+    acronym: d.state !== undefined && usStatesList.includes(d.state) ? d.state : 'Abroad',
+  }))
+
+  // Group dataset by state
+  // Sort the array to plot first the cities with the higher number of incidents
+  const incidentsGroupedByState = d3
+    .flatRollup(
+      states,
+      (v) => v.length,
+      (d) => d.acronym
+    )
+    .map(([acronym, numberOfIncidents]) => ({
+      state: acronym !== 'Abroad' ? usStates.find((d) => d.acronym === acronym).state : 'Abroad',
+      numberOfIncidents,
+      latitude:
+        acronym !== 'Abroad' ? usStates.find((d) => d.acronym === acronym).latitude : undefined,
+      longitude:
+        acronym !== 'Abroad' ? usStates.find((d) => d.acronym === acronym).longitude : undefined,
+    }))
+    .sort((a, b) => b.numberOfIncidents - a.numberOfIncidents)
+
+  return incidentsGroupedByState
+}
+
 export function countIncidentsOutsideUS(dataset) {
-  return dataset.filter((d) => d.state === null).length
+  const usStatesList = usStates.map((d) => d.acronym)
+  return dataset.filter((d) => d.state === undefined || !usStatesList.includes(d.state)).length
 }
 
 export const categoriesColors = {
@@ -175,4 +210,59 @@ export const categoriesColors = {
   'Subpoena/Legal Order': '#E2B6D0',
   'Other Incident': '#B2B8E5',
   'Border Stop': '#FBE0BC',
+}
+
+// barChart Filter functions
+export function firstDayOfMonth(date) {
+  return d3.timeMonth.floor(new Date(date))
+}
+
+export function firstDayOfNextMonth(date) {
+  return d3.timeMonth.ceil(new Date(date))
+}
+
+export function isSubset(subset, container) {
+  // all elements of subset must be present in container
+  return subset.every((element) => container.includes(element))
+}
+
+export const colors = [
+  '#E07A5F',
+  '#669599',
+  '#B0829D',
+  '#63729A',
+  '#F4C280',
+  '#7EBBC8',
+  '#F9B29F',
+  '#98C9CD',
+  '#E2B6D0',
+  '#B2B8E5',
+  '#FBE0BC',
+  '#BAECF7',
+  '#975544',
+  '#435556',
+  '#6B5261',
+  '#484B6B',
+  '#957932',
+  '#54767D',
+]
+export function removeElement(array, element) {
+  return array.filter((d) => d !== element)
+}
+
+export function formatDataset(dataset) {
+  return dataset
+    .map((d) => ({ ...d, categories: d.categories?.replace(/ \/ /gm, '/') }))
+    .map((d) => ({
+      ...d,
+      categories: uniq(d.categories?.split(',').map((c) => c.trim())) || [],
+    }))
+    .map((d) => ({
+      ...d,
+      tags: uniq(d.tags?.split(',').map((c) => c.trim())) || [],
+    }))
+}
+
+export function isDateValid(date) {
+  return !Number.isNaN(new Date(date).getYear())
 }

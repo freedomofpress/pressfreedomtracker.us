@@ -109,7 +109,7 @@ export function HomepageSelection({
         }}
       />
       <ButtonsRow
-        label="From"
+        label="from"
         buttonLabels={['the past six months'].concat(years)}
         defaultSelection={'the past six months'}
         updateSelection={updateSelectedYear}

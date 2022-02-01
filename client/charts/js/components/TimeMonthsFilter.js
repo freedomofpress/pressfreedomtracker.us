@@ -1,7 +1,8 @@
-import * as d3 from 'd3'
 import React from 'react'
-import { sortBy } from 'lodash'
+import * as d3 from 'd3'
+import { sortBy, countBy } from 'lodash'
 import { AnimatedDataset } from 'react-animated-dataset'
+import { firstDayOfMonth } from '../lib/utilities'
 
 const margins = {
   top: 15,
@@ -18,37 +19,68 @@ function monthWidth(date, scale) {
   return scale(d3.timeMonth.offset(new Date(date), 1)) - scale(new Date(date))
 }
 
-function closeLineArea(dataset) {
-  const [dateMax, dateMin] = d3.extent(dataset.map((d) => d.date))
-  return [
-    {
-      date: d3.timeMonth.offset(new Date(dateMin), 1).toISOString(),
-      count: 0,
-    },
-    ...dataset,
-    {
-      date: dateMax,
-      count: 0,
-    },
-  ]
-}
-
-export function BarChartFilter({
+export function TimeMonthsFilter({
   width,
   height,
-  monthFrequencies,
-  monthFrequenciesFiltered,
-  startDate,
-  endDate,
-  onStartDateChange,
-  onEndDateChange,
+  dateExtents,
+  dataset,
+  filterParameters: selectedDateRange,
+  setFilterParameters: setSelectedDateRange,
 }) {
-  const dateBoundaries = d3.extent(monthFrequencies.map((d) => new Date(d.date)))
+  const [minDate, maxDate] = dateExtents
+
+  function closeLineArea(dataset) {
+    return [
+      {
+        date: minDate,
+        count: 0,
+      },
+      ...dataset,
+      {
+        date: maxDate,
+        count: 0,
+      },
+    ]
+  }
+
+  const monthFrequenciesObj = {
+    ...Object.fromEntries(
+      d3.timeMonth.range(minDate, maxDate).map((date) => [date.toISOString(), 0])
+    ),
+    ...countBy(dataset, (d) => firstDayOfMonth(d.date).toISOString()),
+  }
+  const monthFrequencies = sortBy(
+    Object.entries(monthFrequenciesObj).map(([dateISO, count]) => ({
+      date: dateISO,
+      count,
+    })),
+    'date'
+  )
+
+  const datasetSelected = dataset.filter(
+    (d) =>
+      new Date(d.date).getTime() >= selectedDateRange.min.getTime() &&
+      new Date(d.date).getTime() <= selectedDateRange.max.getTime()
+  )
+
+  const monthFrequenciesSelectedObj = {
+    ...Object.fromEntries(
+      d3.timeMonth.range(minDate, maxDate).map((date) => [date.toISOString(), 0])
+    ),
+    ...countBy(datasetSelected, (d) => firstDayOfMonth(d.date).toISOString()),
+  }
+  const monthFrequenciesSelected = sortBy(
+    Object.entries(monthFrequenciesSelectedObj).map(([dateISO, count]) => ({
+      date: dateISO,
+      count,
+    })),
+    'date'
+  )
 
   const xScale = d3
     .scaleTime()
-    .domain(dateBoundaries)
-    .range([0 + margins.left, width - margins.right])
+    .domain(dateExtents)
+    .range([1 + margins.left, width - margins.right])
 
   const yScale = d3
     .scaleLinear()
@@ -66,7 +98,7 @@ export function BarChartFilter({
 
   return (
     <div style={{ flexDirection: 'row' }}>
-      <svg width={width} height={height} style={{ fontFamily: 'Roboto Mono' }}>
+      <svg width={width} height={height} style={{ fontFamily: 'monospace' }}>
         <AnimatedDataset
           dataset={yScale.ticks(3)}
           tag="line"
@@ -117,7 +149,7 @@ export function BarChartFilter({
           keyFn={(d) => d.date}
         />
         <AnimatedDataset
-          dataset={monthFrequenciesFiltered}
+          dataset={monthFrequenciesSelected}
           tag="rect"
           attrs={{
             x: (d) => xScale(new Date(d.date)),
@@ -131,16 +163,16 @@ export function BarChartFilter({
           keyFn={(d) => d.date}
         />
         <AnimatedDataset
-          dataset={[monthFrequenciesFiltered]}
+          dataset={[monthFrequencies]}
           tag="path"
           attrs={{
-            d: (d) => lineGenerator(sortBy(closeLineArea(monthFrequencies), (d) => d.date)),
+            d: (d) => lineGenerator(sortBy(closeLineArea(monthFrequenciesSelected), (d) => d.date)),
             stroke: 'black',
             strokeWidth: 1,
             fill: 'none',
           }}
           duration={300}
-          keyFn={(d) => d.date}
+          keyFn={(d, i) => i}
         />
       </svg>
 
@@ -153,21 +185,31 @@ export function BarChartFilter({
       >
         <input
           type={'date'}
-          value={startDate.toISOString().slice(0, 10)}
-          min={dateBoundaries[0].toISOString().slice(0, 10)}
-          max={dateBoundaries[1].toISOString().slice(0, 10)}
+          value={selectedDateRange.min.toISOString().slice(0, 10)}
+          min={dateExtents[0].toISOString().slice(0, 10)}
+          max={dateExtents[1].toISOString().slice(0, 10)}
           onChange={(event) => {
-            if (isDateValid(event.target.value)) onStartDateChange(new Date(event.target.value))
+            if (isDateValid(event.target.value)) {
+              const newDateRange = (oldDateRange) => {
+                return { ...oldDateRange, min: new Date(event.target.value) }
+              }
+              setSelectedDateRange('filterTimeMonths', newDateRange)
+            }
           }}
           style={{ flexBasis: '50%' }}
         />
         <input
           type={'date'}
-          value={endDate.toISOString().slice(0, 10)}
-          min={dateBoundaries[0].toISOString().slice(0, 10)}
-          max={dateBoundaries[1].toISOString().slice(0, 10)}
+          value={selectedDateRange.max.toISOString().slice(0, 10)}
+          min={dateExtents[0].toISOString().slice(0, 10)}
+          max={dateExtents[1].toISOString().slice(0, 10)}
           onChange={(event) => {
-            if (isDateValid(event.target.value)) onEndDateChange(new Date(event.target.value))
+            if (isDateValid(event.target.value)) {
+              const newDateRange = (oldDateRange) => {
+                return { ...oldDateRange, max: new Date(event.target.value) }
+              }
+              setSelectedDateRange('filterTimeMonths', newDateRange)
+            }
           }}
           style={{ flexBasis: '50%' }}
         />

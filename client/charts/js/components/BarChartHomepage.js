@@ -42,7 +42,6 @@ export function BarChartHomepage({
   height,
   numberOfTicks = 4,
   openSearchPage,
-  wrapper,
 }) {
   const dataset = data.map((d, i) => ({ ...d, index: i }))
 
@@ -87,12 +86,13 @@ export function BarChartHomepage({
   const selectedElement = dataset.find((d) => d[x] === sliderSelection)
   const incidentsCount = selectedElement !== undefined ? selectedElement[y] : 0
 
+  if (!width) return null
+
   if (!isMobileView) {
     return (
       <>
         {hoveredElement && (
           <Tooltip
-            wrapper={wrapper.current}
             content={
               <div style={{ fontFamily: 'sans-serif', fontSize: 12, fontWeight: 500 }}>
                 <div>Number of Incidents</div>
@@ -130,10 +130,12 @@ export function BarChartHomepage({
               dataset={gridLines}
               tag="line"
               init={{
-                opacity: 0,
+                x1: (d) => (d === 0 ? 0 : paddings.left),
+                x2: width - paddings.right,
+                y1: height - paddings.bottom,
+                y2: height - paddings.bottom,
               }}
               attrs={{
-                opacity: 1,
                 x1: (d) => (d === 0 ? 0 : paddings.left),
                 x2: width - paddings.right,
                 y1: (d) => yScale(d),
@@ -149,6 +151,8 @@ export function BarChartHomepage({
               tag="text"
               init={{
                 opacity: 0,
+                x: width - paddings.right,
+                y: height - paddings.bottom,
               }}
               attrs={{
                 opacity: 1,
@@ -167,9 +171,10 @@ export function BarChartHomepage({
             dataset={dataset}
             tag="rect"
             init={{
-              x: width + 100,
-              y: (d) => yScale(0),
+              x: (d) => xScale(d[x]),
+              y: height - paddings.bottom,
               height: 0,
+              width: xScale.bandwidth(),
             }}
             attrs={{
               x: (d) => xScale(d[x]),
@@ -182,7 +187,8 @@ export function BarChartHomepage({
               stroke: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
               cursor: 'pointer',
             }}
-            duration={100}
+            duration={250}
+            durationByAttr={{ fill: 0, stroke: 0 }}
             keyFn={(d) => d.index}
           />
           {dataset.map((d) => (
@@ -198,9 +204,7 @@ export function BarChartHomepage({
                 }}
                 onMouseEnter={() => setHoveredElement(d[x])}
                 onMouseMove={updateTooltipPosition}
-                onMouseLeave={() => {
-                  setHoveredElement(null)
-                }}
+                onMouseLeave={() => setHoveredElement(null)}
                 onMouseUp={() => openSearchPage(d[x])}
               >
                 <title>
@@ -213,12 +217,13 @@ export function BarChartHomepage({
             dataset={dataset}
             tag="text"
             init={{
-              x: width + 100,
+              opacity: 0,
+              x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
+              y: height - paddings.bottom / 2,
             }}
             attrs={{
-              x: (d) => {
-                return xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0
-              },
+              opacity: 1,
+              x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
               y: height - paddings.bottom / 2,
               textAnchor: 'middle',
               fill: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
@@ -228,6 +233,7 @@ export function BarChartHomepage({
               text: (d) => d[x],
             }}
             duration={250}
+            durationByAttr={{ fill: 0 }}
             keyFn={(d) => d.index}
           />
         </svg>
@@ -307,7 +313,7 @@ export function BarChartHomepage({
         <Slider
           elements={dataset.map((d) => d[x])}
           xScale={xSlider}
-          ycoord={height - paddings.bottom / 2}
+          y={height - paddings.bottom / 2}
           setSliderSelection={setSliderSelection}
           sliderSelection={sliderSelection}
           idContainer={'barchart-svg'}
@@ -324,7 +330,7 @@ export function BarChartHomepage({
             fontSize: '14px',
           }}
         >
-          {`${sliderSelection} ${incidentsCount} ${titleLabel}`}
+          {`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
         </text>
       </svg>
     )

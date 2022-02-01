@@ -9,11 +9,15 @@ const margins = {
   bottom: 1,
 }
 
-export function BarChartYears({ data, width, height, selectedYears, countYears }) {
+export function BarChartYears({ width, height, countYears, selectedYears, onClick }) {
+  const internalLeftMargin = 10
+  const internalBottomMargin = 20
+  const barsWidth = 10
+
   const xScale = d3
     .scaleLinear()
     .domain(d3.extent(countYears.map((d) => d.year)))
-    .range([0 + margins.left, width - margins.right])
+    .range([0 + margins.left + internalLeftMargin, width - margins.right])
 
   const yScale = d3
     .scaleLinear()
@@ -21,48 +25,91 @@ export function BarChartYears({ data, width, height, selectedYears, countYears }
     .range([0, height - margins.bottom - margins.top])
     .nice()
 
-  const barsWidth = 10
-
   return (
-    <div style={{ flexDirection: 'row' }}>
-      <svg width={width} height={height} key={'BarChartYears'}>
-        {yScale.ticks(3).map((tick, i) => (
-          <g key={i} style={{ fontFamily: 'Roboto Mono' }}>
-            <line
-              x1={margins.left}
-              x2={width}
-              y1={height - margins.bottom - yScale(tick)}
-              y2={height - margins.bottom - yScale(tick)}
-              stroke="black"
-              strokeWidth={i === 0 ? 3 : 1}
-            />
-            <text
-              x={width}
-              y={height - margins.bottom - yScale(tick) - 4}
-              textAnchor={'end'}
-              fontSize={12}
-            >
-              {tick}
-            </text>
-          </g>
-        ))}
+    <div style={{ flexDirection: 'row', marginBottom: 10 }}>
+      <svg
+        width={width}
+        height={height + internalBottomMargin}
+        key={'BarChartYears'}
+        style={{ fontFamily: 'monospace' }}
+      >
+        <AnimatedDataset
+          dataset={yScale.ticks(3)}
+          tag="line"
+          init={{
+            opacity: 0,
+          }}
+          attrs={{
+            x1: margins.left,
+            x2: width,
+            y1: (tick) => height - margins.bottom - yScale(tick),
+            y2: (tick) => height - margins.bottom - yScale(tick),
+            stroke: 'black',
+            strokeWidth: (_, i) => (i === 0 ? 3 : 1),
+            opacity: 1,
+          }}
+          keyFn={(d) => d}
+          duration={450}
+        />
+        <AnimatedDataset
+          dataset={yScale.ticks(3)}
+          tag="text"
+          init={{
+            opacity: 0,
+          }}
+          attrs={{
+            x: width,
+            y: (tick) => height - margins.bottom - yScale(tick) - 4,
+            text: (tick) => tick,
+            textAnchor: 'end',
+            fontSize: 12,
+            opacity: 1,
+          }}
+          keyFn={(d) => d}
+          duration={450}
+        />
+
         {countYears.map((d, i) => (
           <g key={i}>
-            <rect
-              x={xScale(d.year)}
-              y={height - margins.bottom - yScale(d.count)}
-              width={barsWidth}
-              height={yScale(d.count)}
-              stroke={'black'}
-              strokeWidth={2}
-              fill={'black'}
-              key={d}
+            <AnimatedDataset
+              dataset={countYears}
+              tag="rect"
+              init={{
+                height: 0,
+                y: height,
+              }}
+              attrs={{
+                x: (d) => xScale(d.year),
+                y: (d) => height - margins.bottom - yScale(d.count),
+                fill: (d) => 'black',
+                width: barsWidth,
+                stroke: 'black',
+                strokeWidth: 2,
+                height: (d) => yScale(d.count),
+                key: (d) => d,
+              }}
+              events={{
+                onClick: (_, d) => onClick(d),
+              }}
+              duration={250}
+              keyFn={(d) => d.year}
             />
+            <text
+              x={xScale(d.year) - internalLeftMargin}
+              y={height + internalBottomMargin}
+              style={{ fontSize: 12, fontFamily: 'Helvetica Neue' }}
+            >
+              {d.year}
+            </text>
           </g>
         ))}
         <AnimatedDataset
           dataset={countYears}
           tag="rect"
+          init={{
+            height: 0,
+            y: height,
+          }}
           attrs={{
             x: (d) => xScale(d.year),
             y: (d) =>
@@ -74,8 +121,11 @@ export function BarChartYears({ data, width, height, selectedYears, countYears }
             height: (d) => (selectedYears.includes(d.year) ? yScale(d.count) : 0),
             key: (d, i) => d,
           }}
+          events={{
+            onClick: (_, d) => onClick(d),
+          }}
           duration={250}
-          keyFn={(d) => d.category}
+          keyFn={(d) => d.year}
         />
       </svg>
     </div>

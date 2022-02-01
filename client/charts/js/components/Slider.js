@@ -1,22 +1,15 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import * as d3 from 'd3'
 import { clamp, first, last } from 'lodash'
 
-export function Slider({
-  elements,
-  xScale,
-  ycoord,
-  setSliderSelection,
-  sliderSelection,
-  idContainer,
-}) {
+export function Slider({ elements, xScale, y, setSliderSelection, sliderSelection, idContainer }) {
   const onSliderReleaseRef = useRef(null)
   const onMouseMoveRef = useRef(null)
   const [mousePosition, setMousePosition] = useState({ x: null, y: null })
 
-  if (!elements.includes(sliderSelection) && elements.length > 0) {
+  useEffect(() => {
     setSliderSelection(first(elements))
-  }
+  }, [first(elements)])
 
   function stopMovingSlider(event) {
     window.removeEventListener('mouseup', onSliderReleaseRef.current)
@@ -51,14 +44,14 @@ export function Slider({
       <line
         x1={xScale(first(elements))}
         x2={xScale(last(elements))}
-        y1={ycoord}
-        y2={ycoord}
+        y1={y}
+        y2={y}
         style={{ strokeWidth: '3px', stroke: 'black' }}
       />
       {elements.map((d) => (
         <circle
           cx={xScale(d)}
-          cy={ycoord}
+          cy={y}
           r={4}
           style={{
             fill: 'black',
@@ -74,7 +67,7 @@ export function Slider({
             ? clamp(mousePosition.x, xScale(first(elements)), xScale(last(elements)))
             : xScale(sliderSelection)
         }
-        cy={ycoord}
+        cy={y}
         r={12}
         style={{ fill: 'white', strokeWidth: 3, stroke: 'black' }}
         onMouseDown={() => {

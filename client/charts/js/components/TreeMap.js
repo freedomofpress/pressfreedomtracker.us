@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
 import { Tooltip } from './Tooltip'
-import { categoriesColors } from '../lib/utilities'
+import { colors } from '../lib/utilities.js'
 
 const margins = {
   top: 0,
@@ -13,7 +13,7 @@ const margins = {
 
 const paddings = {
   top: 0,
-  bottom: 40,
+  bottom: 40.5,
   right: 10,
   left: 10,
 }
@@ -113,7 +113,6 @@ export function TreeMap({
   isHomePageDesktopView,
   minimumBarHeight,
   openSearchPage,
-  wrapper,
   categoriesColors,
   allCategories,
 }) {
@@ -147,40 +146,28 @@ export function TreeMap({
     return Math.max(yScale(start) - yScale(end), 1)
   }
 
-  const colorScale =
-    categoriesColors !== undefined
-      ? categoriesColors
-      : d3.scaleOrdinal([
-          '#E07A5F',
-          '#669599',
-          '#B0829D',
-          '#63729A',
-          '#F4C280',
-          '#7EBBC8',
-          '#F9B29F',
-          '#98C9CD',
-          '#E2B6D0',
-          '#B2B8E5',
-          '#FBE0BC',
-          '#BAECF7',
-          '#975544',
-          '#435556',
-          '#6B5261',
-          '#484B6B',
-          '#957932',
-          '#54767D',
-        ])
+  const colorScale = categoriesColors !== undefined ? categoriesColors : d3.scaleOrdinal(colors)
+
+  const colorsByCategory = datasetStackedByCategory
+    .filter((d) => d.numberOfIncidents !== 0)
+    .map((d) => ({
+      category: d.category,
+      color: colorScale(d.category),
+    }))
+
+  const findColor = (cat) => colorsByCategory.find((d) => d.category === cat).color
 
   function nextCategory(dataset, i) {
     const nextCategories = dataset.slice(i + 1).filter((d) => d.numberOfIncidents !== 0)
     return nextCategories.length === 0 ? null : nextCategories[0].category
   }
 
+  if (!width) return null
+
   return (
     <>
       {hoveredElement && (
         <Tooltip
-          wrapper={wrapper.current}
           content={
             <div style={{ fontFamily: 'sans-serif', fontSize: 12, fontWeight: 500 }}>
               <div>Number of Incidents</div>
@@ -188,7 +175,7 @@ export function TreeMap({
                 style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}
               >
                 <div
-                  style={{ borderLeft: `solid 3px ${colorScale(hoveredElement)}`, paddingLeft: 3 }}
+                  style={{ borderLeft: `solid 3px ${findColor(hoveredElement)}`, paddingLeft: 3 }}
                 >
                   {hoveredElement}
                 </div>
@@ -219,8 +206,8 @@ export function TreeMap({
           <line
             x1={width - paddings.left}
             x2={width}
-            y1={height - paddings.bottom}
-            y2={height - paddings.bottom}
+            y1={height - paddings.bottom + 0.5}
+            y2={height - paddings.bottom + 0.5}
             style={{ stroke: 'black', strokeWidth: isHomePageDesktopView ? borderWidth.normal : 0 }}
           />
           <AnimatedDataset
@@ -228,7 +215,9 @@ export function TreeMap({
             tag="rect"
             init={{
               opacity: 0,
-              y: (d) => height - yScale(d.startingPoint),
+              x: paddings.left,
+              y: height - paddings.bottom,
+              width: width - (paddings.right + paddings.left),
               height: 0,
             }}
             attrs={{
@@ -239,11 +228,14 @@ export function TreeMap({
               height: (d) => computeBarHeight(d.startingPoint, d.endPoint),
               fill: (d) =>
                 hoveredElement === d.category || hoveredElement === null
-                  ? colorScale(d.category)
+                  ? d.numberOfIncidents === 0
+                    ? 'white'
+                    : findColor(d.category)
                   : 'white',
-              stroke: (d) => (hoveredElement === d.category ? colorScale(d.category) : 'black'),
+              stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
               strokeWidth: borderWidth.normal,
               cursor: 'pointer',
+              pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
             }}
             events={{
               onMouseMove: updateTooltipPosition,
@@ -253,6 +245,7 @@ export function TreeMap({
               onMouseEnter: (MouseEvent, d) => setHoveredElement(d.category),
               onMouseUp: (MouseEvent, d) => openSearchPage(d.category),
             }}
+            durationByAttr={{ fill: 0, stroke: 0 }}
             keyFn={(d) => d.category}
             duration={250}
           />
@@ -261,6 +254,10 @@ export function TreeMap({
             tag="line"
             init={{
               opacity: 0,
+              x1: paddings.left - borderWidth.normal / 2,
+              x2: width - paddings.right + borderWidth.normal / 2,
+              y1: height - paddings.bottom,
+              y2: height - paddings.bottom,
             }}
             attrs={{
               opacity: (d) =>
@@ -279,10 +276,10 @@ export function TreeMap({
                 height - yScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
               stroke: (d, i) =>
                 hoveredElement === d.category
-                  ? colorScale(d.category)
+                  ? findColor(d.category)
                   : hoveredElement !== null &&
                     hoveredElement === nextCategory(datasetStackedByCategory, i)
-                  ? colorScale(nextCategory(datasetStackedByCategory, i))
+                  ? findColor(nextCategory(datasetStackedByCategory, i))
                   : 'black',
               strokeWidth: borderWidth.normal + 1,
               pointerEvents: 'none',
@@ -290,12 +287,15 @@ export function TreeMap({
             }}
             keyFn={(d) => d.category}
             duration={250}
+            durationByAttr={{ fill: 0, stroke: 0 }}
           />
           <AnimatedDataset
             dataset={datasetStackedByCategory}
             tag="text"
             init={{
               opacity: 0,
+              y: (d) => height - paddings.bottom,
+              x: paddings.left + textPaddings.left,
             }}
             attrs={{
               opacity: (d) =>
@@ -326,6 +326,8 @@ export function TreeMap({
             dataset={datasetStackedByCategory}
             init={{
               opacity: 0,
+              y: (d) => height - paddings.bottom,
+              x: width - textPaddings.right - paddings.right,
             }}
             tag="text"
             attrs={{

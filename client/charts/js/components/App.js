@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
-import { RadioBars } from "./RadioBars";
-import { HomepageMainCharts } from "./HomepageMainCharts.js";
-import { FilterYears } from "./FilterYears.js";
-import { FiltersIntegration } from "./FiltersIntegration";
 import { sample } from "lodash";
+import { HomepageMainCharts } from "./HomepageMainCharts";
+import { FiltersIntegration } from "./FiltersIntegration";
 import "../../sass/base.sass";
 
 export function App() {
@@ -69,47 +67,58 @@ export function App() {
 			});
 	}, [source]);
 
-	if (dataset === null) {
-		return (
-			<div
-				style={{
-					height: "100vh",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					opacity: 0.4,
-					fontFamily: "sans-serif",
-				}}
-			>
-				<div>LOADING...</div>
-			</div>
-		);
-	}
-
-	return (
-		<div>
+	const datasetButtons = (
+		<>
 			<button
 				style={{
 					backgroundColor: source === "api" ? "steelblue" : "lightgrey",
 					border: "none",
 					borderRadius: 5,
-					padding: "1em",
+					padding: ".7em",
+					margin: 3,
 				}}
 				onClick={() => useSource("api")}
 			>
-				api
+				live api
 			</button>
 			<button
 				style={{
 					backgroundColor: source === "static_prod" ? "steelblue" : "lightgrey",
 					border: "none",
 					borderRadius: 5,
-					padding: "1em",
+					padding: ".7em",
+					margin: 3,
 				}}
 				onClick={() => useSource("static_prod")}
 			>
 				static prod dataset
 			</button>
+		</>
+	);
+
+	if (dataset === null) {
+		return (
+			<div>
+				{datasetButtons}
+				<div
+					style={{
+						height: "100vh",
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						opacity: 0.4,
+						fontFamily: "sans-serif",
+					}}
+				>
+					<div>LOADING...</div>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div>
+			{datasetButtons}
 
 			<h1>Homepage Charts</h1>
 			<div className="chartContainer" style={{ width: "90%" }}>
@@ -118,17 +127,7 @@ export function App() {
 
 			<h1>Filters Integration</h1>
 			<div className="chartContainer">
-				<FiltersIntegration dataset={dataset} width={800} height={800} />
-			</div>
-
-			<h3>Years</h3>
-			<div className="chartContainer">
-				<FilterYears data={dataset} width={300} height={150} />
-			</div>
-
-			<h3>States</h3>
-			<div className="chartContainer">
-				<RadioBars data={dataset} width={300} height={1600} />
+				<FiltersIntegration dataset={dataset} width={300} />
 			</div>
 		</div>
 	);

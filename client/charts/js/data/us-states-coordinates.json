@@ -1,0 +1,308 @@
+[
+    {
+      "state": "Alaska (AK)",
+      "latitude": 63.588753,
+      "longitude": -154.493062,
+      "acronym": "AK"
+    },
+    {
+      "state": "Alabama (AL)",
+      "latitude": 32.318231,
+      "longitude": -86.902298,
+      "acronym": "AL"
+    },
+    {
+      "state": "Arkansas (AR)",
+      "latitude": 35.20105,
+      "longitude": -91.831833,
+      "acronym": "AR"
+    },
+    {
+      "state": "Arizona (AZ)",
+      "latitude": 34.048928,
+      "longitude": -111.093731,
+      "acronym": "AZ"
+    },
+    {
+      "state": "California (CA)",
+      "latitude": 36.778261,
+      "longitude": -119.417932,
+      "acronym": "CA"
+    },
+    {
+      "state": "Colorado (CO)",
+      "latitude": 39.550051,
+      "longitude": -105.782067,
+      "acronym": "CO"
+    },
+    {
+      "state": "Connecticut (CT)",
+      "latitude": 41.603221,
+      "longitude": -73.087749,
+      "acronym": "CT"
+    },
+    {
+      "state": "District of Columbia (DC)",
+      "latitude": 38.905985,
+      "longitude": -77.033418,
+      "acronym": "DC"
+    },
+    {
+      "state": "Delaware (DE)",
+      "latitude": 38.910832,
+      "longitude": -75.52767,
+      "acronym": "DE"
+    },
+    {
+      "state": "Florida (FL)",
+      "latitude": 27.664827,
+      "longitude": -81.515754,
+      "acronym": "FL"
+    },
+    {
+      "state": "Georgia (GA)",
+      "latitude": 32.157435,
+      "longitude": -82.907123,
+      "acronym": "GA"
+    },
+    {
+      "state": "Hawaii (HI)",
+      "latitude": 19.898682,
+      "longitude": -155.665857,
+      "acronym": "HI"
+    },
+    {
+      "state": "Iowa (IA)",
+      "latitude": 41.878003,
+      "longitude": -93.097702,
+      "acronym": "IA"
+    },
+    {
+      "state": "Idaho (ID)",
+      "latitude": 44.068202,
+      "longitude": -114.742041,
+      "acronym": "ID"
+    },
+    {
+      "state": "Illinois (IL)",
+      "latitude": 40.633125,
+      "longitude": -89.398528,
+      "acronym": "IL"
+    },
+    {
+      "state": "Indiana (IN)",
+      "latitude": 40.551217,
+      "longitude": -85.602364,
+      "acronym": "IN"
+    },
+    {
+      "state": "Kansas (KS)",
+      "latitude": 39.011902,
+      "longitude": -98.484246,
+      "acronym": "KS"
+    },
+    {
+      "state": "Kentucky (KY)",
+      "latitude": 37.839333,
+      "longitude": -84.270018,
+      "acronym": "KY"
+    },
+    {
+      "state": "Louisiana (LA)",
+      "latitude": 31.244823,
+      "longitude": -92.145024,
+      "acronym": "LA"
+    },
+    {
+      "state": "Massachusetts (MA)",
+      "latitude": 42.407211,
+      "longitude": -71.382437,
+      "acronym": "MA"
+    },
+    {
+      "state": "Maryland (MD)",
+      "latitude": 39.045755,
+      "longitude": -76.641271,
+      "acronym": "MD"
+    },
+    {
+      "state": "Maine (ME)",
+      "latitude": 45.253783,
+      "longitude": -69.445469,
+      "acronym": "ME"
+    },
+    {
+      "state": "Michigan (MI)",
+      "latitude": 44.314844,
+      "longitude": -85.602364,
+      "acronym": "MI"
+    },
+    {
+      "state": "Minnesota (MN)",
+      "latitude": 46.729553,
+      "longitude": -94.6859,
+      "acronym": "MN"
+    },
+    {
+      "state": "Missouri (MO)",
+      "latitude": 37.964253,
+      "longitude": -91.831833,
+      "acronym": "MO"
+    },
+    {
+      "state": "Mississippi (MS)",
+      "latitude": 32.354668,
+      "longitude": -89.398528,
+      "acronym": "MS"
+    },
+    {
+      "state": "Montana (MT)",
+      "latitude": 46.879682,
+      "longitude": -110.362566,
+      "acronym": "MT"
+    },
+    {
+      "state": "North Carolina (NC)",
+      "latitude": 35.759573,
+      "longitude": -79.0193,
+      "acronym": "NC"
+    },
+    {
+      "state": "North Dakota (ND)",
+      "latitude": 47.551493,
+      "longitude": -101.002012,
+      "acronym": "ND"
+    },
+    {
+      "state": "Nebraska (NE)",
+      "latitude": 41.492537,
+      "longitude": -99.901813,
+      "acronym": "NE"
+    },
+    {
+      "state": "New Hampshire (NH)",
+      "latitude": 43.193852,
+      "longitude": -71.572395,
+      "acronym": "NH"
+    },
+    {
+      "state": "New Jersey (NJ)",
+      "latitude": 40.058324,
+      "longitude": -74.405661,
+      "acronym": "NJ"
+    },
+    {
+      "state": "New Mexico (NM)",
+      "latitude": 34.97273,
+      "longitude": -105.032363,
+      "acronym": "NM"
+    },
+    {
+      "state": "Nevada (NV)",
+      "latitude": 38.80261,
+      "longitude": -116.419389,
+      "acronym": "NV"
+    },
+    {
+      "state": "New York (NY)",
+      "latitude": 43.299428,
+      "longitude": -74.217933,
+      "acronym": "NY"
+    },
+    {
+      "state": "Ohio (OH)",
+      "latitude": 40.417287,
+      "longitude": -82.907123,
+      "acronym": "OH"
+    },
+    {
+      "state": "Oklahoma (OK)",
+      "latitude": 35.007752,
+      "longitude": -97.092877,
+      "acronym": "OK"
+    },
+    {
+      "state": "Oregon (OR)",
+      "latitude": 43.804133,
+      "longitude": -120.554201,
+      "acronym": "OR"
+    },
+    {
+      "state": "Pennsylvania (PA)",
+      "latitude": 41.203322,
+      "longitude": -77.194525,
+      "acronym": "PA"
+    },
+    {
+      "state": "Rhode Island (RI)",
+      "latitude": 41.580095,
+      "longitude": -71.477429,
+      "acronym": "RI"
+    },
+    {
+      "state": "South Carolina (SC)",
+      "latitude": 33.836081,
+      "longitude": -81.163725,
+      "acronym": "SC"
+    },
+    {
+      "state": "South Dakota (SD)",
+      "latitude": 43.969515,
+      "longitude": -99.901813,
+      "acronym": "SD"
+    },
+    {
+      "state": "Tennessee (TN)",
+      "latitude": 35.517491,
+      "longitude": -86.580447,
+      "acronym": "TN"
+    },
+    {
+      "state": "Texas (TX)",
+      "latitude": 31.968599,
+      "longitude": -99.901813,
+      "acronym": "TX"
+    },
+    {
+      "state": "Utah (UT)",
+      "latitude": 39.32098,
+      "longitude": -111.093731,
+      "acronym": "UT"
+    },
+    {
+      "state": "Virginia (VA)",
+      "latitude": 37.431573,
+      "longitude": -78.656894,
+      "acronym": "VA"
+    },
+    {
+      "state": "Vermont (VT)",
+      "latitude": 44.558803,
+      "longitude": -72.577841,
+      "acronym": "VT"
+    },
+    {
+      "state": "Washington (WA)",
+      "latitude": 47.751074,
+      "longitude": -120.740139,
+      "acronym": "WA"
+    },
+    {
+      "state": "Wisconsin (WI)",
+      "latitude": 43.78444,
+      "longitude": -88.787868,
+      "acronym": "WI"
+    },
+    {
+      "state": "West Virginia (WV)",
+      "latitude": 38.597626,
+      "longitude": -80.454903,
+      "acronym": "WV"
+    },
+    {
+      "state": "Wyoming (WY)",
+      "latitude": 43.075968,
+      "longitude": -107.290284,
+      "acronym": "WY"
+    }
+  ]
