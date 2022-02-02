@@ -201,10 +201,14 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     image_caption = RichTextField(
-        max_length=255,
         blank=True,
         null=True,
-        help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
+        help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.',
+        features=[
+            'bold',
+            'italic',
+            'link',
+        ]
     )
 
     targeted_institutions = ParentalManyToManyField(
