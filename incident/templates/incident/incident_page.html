@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailembeds_tags wagtailcore_tags wagtailimages_tags %}
+{% load common_tags wagtailembeds_tags wagtailcore_tags wagtailimages_tags %}
 
 {% block main %}
 	<article class="incident-detail">
@@ -30,11 +30,13 @@
 				{% if page.image_caption or page.teaser_image.attribution %}
 					<figcaption class="incident-detail__caption">
 						{% if page.image_caption %}
-							<div class="paragraph-notes">
-								{{ page.image_caption|richtext }}
-							</div>
+							<span class="paragraph-notes">
+								{{ page.image_caption|richtext_inline }}
+							</span>
 						{% endif %}
-
+						{% if page.image_caption and page.teaser_image.attribution %}
+							&mdash;
+						{% endif %}
 						{% if page.teaser_image.attribution %}
 							<span class="paragraph-notes incident-detail__attribution">
 								{{ page.teaser_image.attribution }}
