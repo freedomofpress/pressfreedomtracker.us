@@ -4,17 +4,17 @@
 
 {% block main %}
 	<!-- Details table-->
-	{% include "incident/_details-table.html" with incident=page category_details=category_details only %}
+	{% include "incident/_details_table.html" with incident=page category_details=category_details only %}
 
 	<!-- TODO: Stream block templates-->
 
 	<!-- Source table (TODO): Only the template styling has been implemented. Backend feature to be implemented -->
 	{% if sources %}
-		{% include "incident/_source-table.html" with sources=sources only %}
+		{% include "incident/_source_table.html" with sources=sources only %}
 	{% endif %}
 
 	<!-- Incidents from same event(TODO): Only the template styling has been implemented. Backend feature to be implemented-->
 	{% if same_event_incidents %}
-		{% include "incident/_same-event-incident-table.html" with same_event_incidents=same_event_incidents only %}
+		{% include "incident/_same_event_incident_table.html" with same_event_incidents=same_event_incidents only %}
 	{% endif %}
 {% endblock %}

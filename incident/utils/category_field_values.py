@@ -1,100 +1,72 @@
+from django.template.loader import render_to_string
+
 from incident.models import choices
 
 def basic_html_val(page, field):
     # If no value for the attribute, return blank
-    if not getattr(page, field):
+    value = getattr(page, field)
+    if not value:
         return ''
-
-    link = '{}?{}={}'.format(
-        page.get_parent().get_url(),
-        field,
-        getattr(page, field)
-    )
 
     # If has a get_display function associated with the field, use that
     # else use just the field value
-    if hasattr(page, 'get_{}_display'.format(field)):
-        value = getattr(page, 'get_{}_display'.format(field))().capitalize()
-    else:
-        value = getattr(page, field).capitalize()
+    display_value = value
+    if hasattr(page, f'get_{field}_display'):
+        display_value = getattr(page, 'get_{}_display'.format(field))()
 
-    return '<a href="{}" class="text-link">{}</a>'.format(
-        link,
-        value
-    )
+    return render_to_string('incident/category_field/_basic_field.html', {
+        'page': page,
+        'field': field,
+        'value': value,
+        'display_value': display_value
+    })
 
 def boolean_html_val(page, field):
-    link = '{}?{}={}'.format(
-        page.get_parent().get_url(),
-        field,
-        getattr(page, field)
-    )
-    value = 'Yes' if getattr(page, field) else 'No'
+    value = getattr(page, field)
+    display_value = 'Yes' if value else 'No'
 
-    return '<a href="{}" class="text-link">{}</a>'.format(
-        link,
-        value
-    )
+    return render_to_string('incident/category_field/_basic_field.html', {
+        'page': page,
+        'field': field,
+        'value': value,
+        'display_value': display_value
+    })
 
 def list_html_val(page, field):
     # If no value for the attribute, return blank
-    if not len(getattr(page, field).all()):
+    items = getattr(page, field).all()
+    if not items:
         return ''
 
-    val_list = []
-    for item in getattr(page, field).all():
-        link = '{}?{}={}'.format(
-            page.get_parent().get_url(),
-            field,
-            item.pk
-        )
-        value = item.title.capitalize()
-        val_list.append(
-            '<li class="details-table__list-item"><a href="{}" class="text-link">{}</a></li>'.format(
-            link,
-            value
-        ))
-
-    return '<ul class="details-table__list">{}</ul>'.format('\n'.join(val_list))
+    return render_to_string('incident/category_field/_list_field.html', {
+        'page': page,
+        'field': field,
+        'items': items,
+    })
 
 def equipments_list_html_val(page, field):
     # If no value for the attribute, return blank
-    if not len(getattr(page, field).all()):
+    items = getattr(page, field).all()
+    if not items:
         return ''
 
-    val_list = []
-    for item in getattr(page, field).all():
-        link = '{}?{}={}'.format(
-            page.get_parent().get_url(),
-            field,
-            item.equipment.pk
-        )
-        value = '{}, {}'.format(item.equipment.name, item.quantity)
-        val_list.append(
-            '<li class="details-table__list-item"><a href="{}" class="text-link">{}</a></li>'.format(
-            link,
-            value
-        ))
-
-    return '<ul class="details-table__list">{}</ul>'.format('\n'.join(val_list))
+    return render_to_string('incident/category_field/_equipment_list_field.html', {
+        'page': page,
+        'field': field,
+        'items': items,
+    })
 
 def date_html_val(page, field):
     # If no value for the attribute, return blank
-    if not getattr(page, field):
+    value = getattr(page, field)
+    if not value:
         return ''
 
-    link = '{url}?{field}_lower={val}&{field}_upper={val}'.format(
-        url=page.get_parent().get_url(),
-        field=field,
-        val=getattr(page, field).strftime('%Y-%m-%d')
-    )
-    value = getattr(page, field).strftime('%B %-d, %Y')
-
-    return '<a href="{}" class="text-link"><time datetime="{}">{}</time></a>'.format(
-        link,
-        getattr(page, field).isoformat(),
-        value
-    )
+    return render_to_string('incident/category_field/_date_field.html', {
+        'page': page,
+        'field': field,
+        'value': value,
+    })
 
 
 # Handle all the different category fields html values individually
@@ -119,10 +91,7 @@ def arresting_authority_html_val(page, field):
     )
     value = getattr(page, field).title.capitalize()
 
-    return '<a href="{}" class="text-link">{}</a>'.format(
-        link,
-        value
-    )
+    return f'<a href="{link}" class="text-link">{value}</a>'
 
 def current_charges_html_val(page, field):
 	return list_html_val(page, field)
@@ -208,10 +177,7 @@ def subpoena_statuses_html_val(page, field):
             subpoena_status
         )
         value = dict(choices.SUBPOENA_STATUS).get(subpoena_status).capitalize()
-        html.append('<a href="{}" class="text-link">{}</a>'.format(
-            link,
-            value
-        ))
+        html.append(f'<a href="{link}" class="text-link">{value}</a>')
     html = ', '.join(html)
     return html
 
