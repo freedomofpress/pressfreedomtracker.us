@@ -1,4 +1,40 @@
-from incident.utils.category_field_values import *
+from incident.utils.category_field_values import (
+    arrest_status_html_val,
+    status_of_charges_html_val,
+    arresting_authority_html_val,
+    current_charges_html_val,
+    dropped_charges_html_val,
+    detention_date_html_val,
+    release_date_html_val,
+    unnecessary_use_of_force_html_val,
+    equipment_broken_html_val,
+    equipment_seized_html_val,
+    status_of_seized_equipment_html_val,
+    is_search_warrant_obtained_html_val,
+    actor_html_val,
+    border_point_html_val,
+    target_nationality_html_val,
+    target_us_citizenship_status_html_val,
+    denial_of_entry_html_val,
+    stopped_previously_html_val,
+    did_authorities_ask_for_device_access_html_val,
+    did_authorities_ask_for_social_media_user_html_val,
+    did_authorities_ask_for_social_media_pass_html_val,
+    did_authorities_ask_about_work_html_val,
+    assailant_html_val,
+    was_journalist_targeted_html_val,
+    workers_whose_communications_were_obtained_html_val,
+    charged_under_espionage_act_html_val,
+    subpoena_type_html_val,
+    subpoena_statuses_html_val,
+    held_in_contempt_html_val,
+    detention_status_html_val,
+    third_party_in_possession_of_communications_html_val,
+    third_party_business_html_val,
+    legal_order_type_html_val,
+    status_of_prior_restraint_html_val,
+    politicians_or_public_figures_involved_html_val
+)
 
 CATEGORY_FIELD_MAP = {
     'arrest': [
@@ -22,7 +58,7 @@ CATEGORY_FIELD_MAP = {
     ],
     'border-stop': [
         ('border_point', 'Border Point'),
-        ('target_nationality','Target Nationality'),
+        ('target_nationality', 'Target Nationality'),
         ('target_us_citizenship_status', 'US Citizenship Status of Target'),
         ('denial_of_entry', 'Denied Entry?'),
         ('stopped_previously', 'Stopped Previously?'),
