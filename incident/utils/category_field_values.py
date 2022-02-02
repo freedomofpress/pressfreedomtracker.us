@@ -2,6 +2,7 @@ from django.template.loader import render_to_string
 
 from incident.models import choices
 
+
 def basic_html_val(page, field):
     # If no value for the attribute, return blank
     value = getattr(page, field)
@@ -21,6 +22,7 @@ def basic_html_val(page, field):
         'display_value': display_value
     })
 
+
 def boolean_html_val(page, field):
     value = getattr(page, field)
     display_value = 'Yes' if value else 'No'
@@ -31,6 +33,7 @@ def boolean_html_val(page, field):
         'value': value,
         'display_value': display_value
     })
+
 
 def list_html_val(page, field):
     # If no value for the attribute, return blank
@@ -44,6 +47,7 @@ def list_html_val(page, field):
         'items': items,
     })
 
+
 def equipments_list_html_val(page, field):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
@@ -55,6 +59,7 @@ def equipments_list_html_val(page, field):
         'field': field,
         'items': items,
     })
+
 
 def date_html_val(page, field):
     # If no value for the attribute, return blank
@@ -73,14 +78,17 @@ def date_html_val(page, field):
 # since a lot of them small small differences that can't all be
 # covered using the generic functions above
 
+
 def arrest_status_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def status_of_charges_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def arresting_authority_html_val(page, field):
-	# If no value for the attribute, return blank
+    # If no value for the attribute, return blank
     if not getattr(page, field):
         return ''
 
@@ -93,81 +101,106 @@ def arresting_authority_html_val(page, field):
 
     return f'<a href="{link}" class="text-link">{value}</a>'
 
+
 def current_charges_html_val(page, field):
-	return list_html_val(page, field)
+    return list_html_val(page, field)
+
 
 def dropped_charges_html_val(page, field):
-	return list_html_val(page, field)
+    return list_html_val(page, field)
+
 
 def detention_date_html_val(page, field):
-	return date_html_val(page, field)
+    return date_html_val(page, field)
+
 
 def release_date_html_val(page, field):
-	return date_html_val(page, field)
+    return date_html_val(page, field)
+
 
 def unnecessary_use_of_force_html_val(page, field):
-	return boolean_html_val(page, field)
+    return boolean_html_val(page, field)
+
 
 def equipment_broken_html_val(page, field):
-	return equipments_list_html_val(page, field)
+    return equipments_list_html_val(page, field)
+
 
 def equipment_seized_html_val(page, field):
-	return equipments_list_html_val(page, field)
+    return equipments_list_html_val(page, field)
+
 
 def status_of_seized_equipment_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def is_search_warrant_obtained_html_val(page, field):
-	return boolean_html_val(page, field)
+    return boolean_html_val(page, field)
+
 
 def actor_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def border_point_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def target_nationality_html_val(page, field):
-	return list_html_val(page, field)
+    return list_html_val(page, field)
+
 
 def target_us_citizenship_status_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def denial_of_entry_html_val(page, field):
-	return boolean_html_val(page, field)
+    return boolean_html_val(page, field)
+
 
 def stopped_previously_html_val(page, field):
-	return boolean_html_val(page, field)
+    return boolean_html_val(page, field)
+
 
 def did_authorities_ask_for_device_access_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def did_authorities_ask_for_social_media_user_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def did_authorities_ask_for_social_media_pass_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def did_authorities_ask_about_work_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def assailant_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def was_journalist_targeted_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def workers_whose_communications_were_obtained_html_val(page, field):
-	return list_html_val(page, field)
+    return list_html_val(page, field)
+
 
 def charged_under_espionage_act_html_val(page, field):
-	return boolean_html_val(page, field)
+    return boolean_html_val(page, field)
+
 
 def subpoena_type_html_val(page, field):
     return basic_html_val(page, field)
 
+
 def subpoena_statuses_html_val(page, field):
     if not len(getattr(page, field)):
-        return  ''
+        return ''
 
     html = []
     for subpoena_status in getattr(page, field):
@@ -181,25 +214,30 @@ def subpoena_statuses_html_val(page, field):
     html = ', '.join(html)
     return html
 
+
 def held_in_contempt_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def detention_status_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def third_party_in_possession_of_communications_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def third_party_business_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def legal_order_type_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def status_of_prior_restraint_html_val(page, field):
-	return basic_html_val(page, field)
+    return basic_html_val(page, field)
+
 
 def politicians_or_public_figures_involved_html_val(page, field):
-	return list_html_val(page, field)
-
-
+    return list_html_val(page, field)
