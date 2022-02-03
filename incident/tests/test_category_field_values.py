@@ -71,7 +71,7 @@ class TestCategoryFieldValuesByField(TestCase):
         value = getattr(self.incident, field_name)
         self.assertIn(f'{field_name}_upper={value:%Y-%m-%d}', output)
         self.assertIn(f'{field_name}_lower={value:%Y-%m-%d}', output)
-        self.assertIn(f'{value:%B %-m, %Y}', output)
+        self.assertIn(f'{value:%B %-d, %Y}', output)
         setattr(self.incident, field_name, None)
         self.assertEqual(render_function(self.incident, field_name), '')
 
