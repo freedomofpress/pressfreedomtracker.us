@@ -48,7 +48,7 @@ compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --output-file requirements.txt requirements.in && \
@@ -134,12 +134,12 @@ bandit: ## Runs bandit static code analysis in Python3 container.
 
 .PHONY: npm-audit
 npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities
-	@docker-compose run --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus --ignore 803'
+	@docker-compose run --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus --ignore 803,1006864,1006886'
 
 .PHONY: ci-npm-audit
 ci-npm-audit:
 	@mkdir -p test-results # Creates necessary test-results folder
-	@docker-compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --xml --ignore 803 > test-results/audit.xml'
+	@docker-compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --xml --ignore 803,1006864 > test-results/audit.xml'
 
 .PHONY: safety
 safety: ## Runs `safety check` to check python dependencies for vulnerabilities
