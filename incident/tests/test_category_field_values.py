@@ -299,6 +299,20 @@ class TestCategoryFieldValuesByField(TestCase):
         )
 
 
+class CategoryFieldValuesCompleteness(TestCase):
+    def test_all_categories_provide_details(self):
+        index = IncidentIndexPageFactory()
+        for category_name in IncidentPageFactory._meta.parameters.keys():
+            with self.subTest(category_name=category_name):
+                category = CategoryPageFactory(**{category_name: True})
+                incident = IncidentPageFactory(
+                    parent=index,
+                    categories=[category])
+
+                # Should succeed without errors
+                incident.get_category_details()
+
+
 class CategoryFieldValues(TestCase):
     """Category values"""
     def setUp(self):

@@ -777,7 +777,7 @@ class IncidentPage(MetadataPageMixin, Page):
     def get_category_details(self):
         category_details = {}
         for category in self.categories.all():
-            category_fields = CATEGORY_FIELD_MAP[category.category.slug]
+            category_fields = CATEGORY_FIELD_MAP.get(category.category.slug, [])
             category_details[category.category] = []
             for field in category_fields:
                 display_html = CAT_FIELD_VALUES[field[0]](self, field[0])
