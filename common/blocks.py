@@ -204,6 +204,9 @@ class StyledTextBlock(blocks.StructBlock):
             'code',
         ],
     )
+
+    # These fields are assumed to be deprecated and are left for legacy purposes
+    # The template does not use the values of these fields
     background_color = blocks.ChoiceBlock(choices=BACKGROUND_COLOR_CHOICES, default='white')
     text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default='left')
     font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default='normal')
