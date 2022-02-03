@@ -43,6 +43,7 @@ from common.blocks import (
 )
 from common.models import MetadataPageMixin
 from incident.models import choices
+from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
 from incident.models.inlines import IncidentPageUpdates
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
@@ -699,6 +700,8 @@ class IncidentPage(MetadataPageMixin, Page):
             elif self.state:
                 related_filter['state'] = self.state
             context['related_qs'] = urlencode(related_filter)
+
+        context['category_details'] = self.get_category_details()
         return context
 
     def full_clean(self, *args, **kwargs):
@@ -766,6 +769,21 @@ class IncidentPage(MetadataPageMixin, Page):
         if first_category:
             return first_category.category
         return None
+
+    def get_category_details(self):
+        category_details = {}
+        for category in self.categories.all():
+            category_fields = CATEGORY_FIELD_MAP[category.category.slug]
+            category_details[category.category] = []
+            for field in category_fields:
+                display_html = CAT_FIELD_VALUES[field[0]](self, field[0])
+                category_details[category.category].append(
+                    {
+                        'name': field[1],
+                        'html': display_html,
+                    }
+                )
+        return category_details
 
     def get_related_incidents(self, threshold=4):
         """Locates related incidents using an incident's main category, tags

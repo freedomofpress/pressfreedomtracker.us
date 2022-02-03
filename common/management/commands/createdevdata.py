@@ -39,6 +39,7 @@ fake = Faker()
 
 
 def lookup_category(key):
+    key = key.replace("_", "-")
     try:
         return CategoryPage.objects.get(slug=key)
     except CategoryPage.DoesNotExist:

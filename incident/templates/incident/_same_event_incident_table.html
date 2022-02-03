@@ -1,0 +1,19 @@
+<section class="list-table ">
+	<div class="list-table__headings">
+		<h3 class="heading-table">Incidents from the same event</h3>
+		<h3 class="heading-table">Targets</h3>
+		<h3 class="heading-table">Updated On</h3>
+	</div>
+	<ul class="list-table--col-3">
+		{% for incident in same_event_incidents %}
+		<li class="list-table__row">
+			<a href="{% pageurl incident %}" class="list-table__item">
+				<div class="list-table__col">{{ incident.title }}</div>
+				<div class="list-table__col">{{ incident.targets}}</div>
+				<div class="list-table__col">{{ incident.last_updated }}</div>
+				<div class="list-table__link">Go to the incident &rarr;</div>
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+</section>

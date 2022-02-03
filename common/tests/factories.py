@@ -69,27 +69,27 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         border_stop = factory.Trait(
             title='Border Stop',
             plural_name='Border Stops',
-            slug='border_stop'
+            slug='border-stop'
         )
         denial_of_access = factory.Trait(
             title='Denial of Access',
             plural_name='Denials of Access',
-            slug='denial_of_access',
+            slug='denial-of-access',
         )
         equipment_search = factory.Trait(
             title='Equipment Search or Seizure',
             plural_name='Equipment Searches, Seizures and Damage',
-            slug='equipment_search',
+            slug='equipment-search',
         )
         physical_attack = factory.Trait(
             title='Physical Attack',
             plural_name='Physical Attacks',
-            slug='physical_attack',
+            slug='physical-attack',
         )
         leak_case = factory.Trait(
             title='Leak Case',
             plural_name='Leak Cases',
-            slug='leak_case'
+            slug='leak-case'
         )
         subpoena = factory.Trait(
             title='Subpoena / Legal Order',
@@ -99,22 +99,22 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         equipment_damage = factory.Trait(
             title='Equipment Damage',
             plural_name='Equipment Damages',
-            slug='equipment_damage',
+            slug='equipment-damage',
         )
         other_incident = factory.Trait(
             title='Other Incident',
             plural_name='Other Incidents',
-            slug='other_incident',
+            slug='other-incident',
         )
         chilling_statement = factory.Trait(
             title='Chilling Statement',
             plural_name='Chilling Statements',
-            slug='chilling_statement',
+            slug='chilling-statement',
         )
         prior_restraint = factory.Trait(
             title='Prior Restraint',
             plural_name='Prior Restraints',
-            slug='prior_restraint',
+            slug='prior-restraint',
         )
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))

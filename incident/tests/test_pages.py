@@ -37,15 +37,34 @@ from .factories import (
 )
 
 
-@unittest.skip("Skipping till templates have been added")
 class TestPages(TestCase):
     """Incident Index Page """
+    @classmethod
+    def setUpTestData(cls):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=cls.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': cls.home_page,
+            }
+        )
+        if not created:
+            site.root_page = cls.home_page
+            site.save()
+
+        cls.index = IncidentIndexPageFactory(
+            parent=site.root_page, slug='incidents')
+        cls.incident = IncidentPageFactory(parent=cls.index, slug='one')
+
     def setUp(self):
         self.client = Client()
-
-        site = Site.objects.get()
-        self.index = IncidentIndexPageFactory(
-            parent=site.root_page, slug='incidents')
 
     def test_get_index_should_succeed(self):
         """get index should succed."""
@@ -91,6 +110,10 @@ class TestPages(TestCase):
     def test_get_index_should_succeed_with_noninteger_endpage_number(self):
         """get index should succeed with a noninteger foreign key reference."""
         response = self.client.get('/incidents/?endpage=abc')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_incident_page_should_succeed(self):
+        response = self.client.get('/incidents/one/')
         self.assertEqual(response.status_code, 200)
 
 

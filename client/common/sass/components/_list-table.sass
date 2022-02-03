@@ -1,0 +1,61 @@
+.list-table
+	position: relative
+	+constrain-to-desktop
+
+	&__row
+		padding: 0.25rem 2rem
+		border-bottom: 1px solid
+		border-color: $black
+		list-style: none
+
+		&:first-of-type
+			border-top: 1px solid
+
+	&__col
+		font-size: $font-size-small-p
+		line-height: 1.43
+
+	&__link
+		font-size: 13px
+		line-height: 1.5
+		color: $gray-text
+
+	&__item
+		text-decoration: none
+		color: $black
+		display: grid
+		grid-column-gap: 32px
+
+		&:focus
+			border: 3px solid
+			border-color: $black
+
+	&--col-2
+		padding: 0
+		margin: 0
+
+		.list-table__item
+			+desktop-up
+				grid-template-columns: 1fr 200px 110px
+
+	&--col-3
+		padding: 0
+		margin: 0
+
+		.list-table__item
+			+desktop-up
+				grid-template-columns: 1fr 440px 200px 120px
+
+	> .heading-table
+		margin: 0.25rem 2rem
+
+	&__headings
+		margin: 0.25rem 2rem
+
+		> .heading-table
+			margin: 0
+
+		+desktop-up
+			display: grid
+			grid-template-columns: 1fr 440px 200px 120px
+			grid-column-gap: 32px
