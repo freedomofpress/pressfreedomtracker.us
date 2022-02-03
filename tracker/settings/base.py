@@ -29,6 +29,7 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 DEBUG = False
 STYLEGUIDE = False
+ENABLE_DEBUG_TOOLBAR = False
 
 # Application definition
 

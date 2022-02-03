@@ -34,8 +34,6 @@ urlpatterns = [
 
     path('health/ok/', common_views.health_ok),
     path('health/version/', common_views.health_version),
-
-    path(r'', include(wagtail_urls)),
 ]
 
 
@@ -47,18 +45,15 @@ if settings.DEBUG:
     urlpatterns = staticfiles_urlpatterns() + urlpatterns
     urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + urlpatterns
 
-    # Debugtoolbar isnt always installed in prod, but sometimes i need to
-    # toggle debug mode there.
-    try:
-        import debug_toolbar
-        urlpatterns = [path('styleguide/', include('styleguide.urls')),
-                       path('__debug__/', include(debug_toolbar.urls))
-                       ] + urlpatterns
-    except ImportError:
-        pass
+
+if settings.ENABLE_DEBUG_TOOLBAR:
+    urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))
+
 
 if settings.STYLEGUIDE:
     urlpatterns = [path('styleguide/', include('styleguide.urls'))] + urlpatterns
 
 if apps.is_installed('silk'):
     urlpatterns = [path('silk/', include('silk.urls', namespace='silk'))] + urlpatterns
+
+urlpatterns.append(path(r'', include(wagtail_urls)))
