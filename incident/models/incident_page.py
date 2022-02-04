@@ -188,6 +188,7 @@ class IncidentPage(MetadataPageMixin, Page):
     introduction = models.TextField(
         help_text="Optional: introduction displayed above the image.",
         blank=True,
+        null=True,
     )
 
     teaser = models.TextField(
