@@ -204,6 +204,8 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         else:
             context['layout_template'] = 'base.html'
 
+        context['filters'] = json.loads(context['serialized_filters'])
+
         return context
 
     def get_cache_tag(self):

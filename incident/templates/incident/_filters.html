@@ -1,0 +1,65 @@
+<aside>
+	<form>
+		{% for item in filters %}
+			<fieldset id="{{ item.id }}">
+				<h3>{{ item.title }}</h3>
+				{% for filter_item in item.filters %}
+
+					{% if filter_item.type == 'text' or filter_item.type == 'autocomplete'%}
+						<div>
+							<label for="{{ filter_item.name }}">{{ filter_item.title }}</label>
+							<input type="text" id="{{ filter_item.name }}" name="{{ filter_item.name }}" />
+						</div>
+
+					{% elif filter_item.type == 'date'%}
+						<div>
+							<label for="{{ filter_item.name }}">{{ filter_item.title }}</label>
+							<input type="date" id="{{ filter_item.name }}" name="{{ filter_item.name }}" />
+						</div>
+
+					{% elif filter_item.type == 'choice' %}
+						<fieldset>
+							<h4><label for="{{ id }}">{{ filter_item.title }}</label></h4>
+							<select name="{{ filter_item.name }}" id="{{ filter_item.name }}">
+								{% for choice in filter_item.choices %}
+									<option value="{{ choice.0 }}">{{ choice.1|capfirst }}</option>
+								{% endfor %}
+							</select>
+						</fieldset>
+
+					{% elif filter_item.type == 'radio' %}
+						<fieldset>
+							<h4>{{ filter_item.title }}</h4>
+							{% for choice in filter_item.choices %}
+								{% with id=filter_item.name|add:'-'|add:choice.0 %}
+									<div>
+										<label for="{{ id }}">{{ choice.1|capfirst }}</label>
+										<input type="radio" id="{{ id }}" name="{{ filter_item.name }}" value="{{ choice.0 }}">
+									</div>
+								{% endwith %}
+							{% endfor %}
+						</fieldset>
+
+					{% elif filter_item.type == 'bool' %}
+						<fieldset>
+							<h4>{{ filter_item.title }}</h4>
+							{% with id=filter_item.name|add:'-'|add:'yes' %}
+								<div>
+									<label for="{{ id }}">Yes</label>
+									<input type="radio" id="{{ id }}" name="{{ filter_item.name }}" value="Yes">
+								</div>
+							{% endwith %}
+							{% with id=filter_item.name|add:'-'|add:'no' %}
+								<div>
+									<label for="{{ id }}">No</label>
+									<input type="radio" id="{{ id }}" name="{{ filter_item.name }}" value="No">
+								</div>
+							{% endwith %}
+						</fieldset>
+					{% endif %}
+				{% endfor %}
+			</fieldset>
+		{% endfor %}
+		<button type="submit">Apply filters</button>
+	</form>
+</aside>
