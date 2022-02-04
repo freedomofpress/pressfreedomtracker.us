@@ -101,6 +101,7 @@ class BaseIncidentSerializer(serializers.Serializer):
     longitude = serializers.FloatField()
     latitude = serializers.FloatField()
     body = serializers.SerializerMethodField()
+    introduction = serializers.CharField()
     teaser = serializers.CharField()
     teaser_image = serializers.SerializerMethodField()
     primary_video = serializers.URLField()
