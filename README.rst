@@ -88,6 +88,18 @@ Second, attach to the running Django container.  This must be done in a shell, a
 
 Once you have done this, you can load the page that will run the code with your ``import ipdb`` and the debugger will activate in the shell you attached.  To detach from the shell without stopping the container press ``Control+P`` followed by ``Control+Q``.
 
+Debug Toolbar
++++++++++++++
+
+Another debugging aid is the `django debug toolbar <https://django-debug-toolbar.readthedocs.io/en/latest/index.html>`_
+It is disabled by default for performance reasons.  To enable it, add
+
+.. code:: python
+
+    ENABLE_DEBUG_TOOLBAR = True
+
+To ``tracker/settings/local.py`` (you may need to create this file if it does not exist in your local working copy).  After reloading the page, there should be a tab in the upper-right corner of the page to open the toolbar.
+
 
 Profiling
 ---------
