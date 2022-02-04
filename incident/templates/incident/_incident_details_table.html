@@ -37,8 +37,7 @@
 		<dd class="details-table__value">
 			{% if incident.city %}
 				<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?city={{ incident.city }}{% endif %}" class="text-link">
-					{{ incident.city }}{% if incident.state %},{% endif %}
-				</a>
+					{{ incident.city }}</a>{% if incident.state %},{% endif %}
 			{% endif %}
 			{% if incident.state %}
 				<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?state={{ incident.state.pk }}{% endif %}" class="text-link">{{ incident.state.name }}</a>
