@@ -28,4 +28,20 @@
 		</div>
 	{% endif %}
 
+	{% if page.featured_incidents %}
+		<div class="article-carousel">
+			{% for incident in page.featured_incidents.all %}
+				{% include "incident/_incident_card.html" with size="small" incident=incident.page photo=incident.teaser_image only %}
+			{% endfor %}
+		</div>
+	{% endif %}
+
+	{% if page.featured_blog_posts %}
+		<div class="article-carousel">
+			{% for blog_post in page.featured_blog_posts.all %}
+				{% include "blog/_blog_card.html" with size="small" post=blog_post.page photo=blog_post.teaser_image only %}
+			{% endfor %}
+		</div>
+	{% endif %}
+
 {% endblock %}
