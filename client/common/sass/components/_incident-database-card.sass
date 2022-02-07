@@ -29,6 +29,10 @@
 		margin-top: 0
 		margin-bottom: 0
 
+	&__category-details
+		margin-top: 0
+		margin-bottom: 0
+
 	&__row
 		padding: 0.5rem 0
 		border-bottom: 1px solid
@@ -41,6 +45,15 @@
 		+desktop-up
 			padding: 0.25rem 2rem
 			border: none
+
+		&--inline
+			display: block
+			padding-left: 19px
+
+			dt, dd
+				margin-right: 0.25rem
+				display: inline
+				white-space: normal
 
 	&__label
 		font-size: $font-size-small-p
@@ -66,10 +79,13 @@
 		margin: 0
 		border-bottom: 1px solid
 		border-color: $black
-		padding: 0.25rem 2rem
+		padding: 0.25rem 0
 
 		+tablet-down
 			padding: 0.5rem 0
+
+		+desktop-up
+			border-bottom: none
 
 	.details-toggle-btn
 		position: absolute

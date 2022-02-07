@@ -7,7 +7,7 @@
 			{{ incident.title }}
 		</h3>
 		{% if incident.tags.all %}
-			<ul class="tag-list">
+			<ul class="incident-database-card__tags tag-list">
 				{% for tag in incident.tags.all %}
 					<li><a href="#" class="btn btn-tag">#{{ tag.title }}</a></li>
 				{% endfor %}
