@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
 {% load pageurl richtext from wagtailcore_tags %}
-
 {% block main %}
 
-	<h2 class="page-title">
+	<h1 class="page-title">
 		The U.S. Press Freedom Tracker
-	</h2>
+	</h1>
 
 	{% with search_page=settings.common.SearchSettings.search_page %}
 		{% if search_page %}
@@ -28,20 +27,32 @@
 		</div>
 	{% endif %}
 
-	{% if page.featured_incidents %}
-		<div class="article-carousel">
-			{% for incident in page.featured_incidents.all %}
-				{% include "incident/_incident_card.html" with size="small" incident=incident.page photo=incident.teaser_image only %}
-			{% endfor %}
+	<section class="homepage-section homepage-section--gray">
+		<div class="homepage-section-inner">
+			{% include "home/_blog_section.html" %}
 		</div>
-	{% endif %}
+	</section>
 
-	{% if page.featured_blog_posts %}
-		<div class="article-carousel">
-			{% for blog_post in page.featured_blog_posts.all %}
-				{% include "blog/_blog_card.html" with size="small" post=blog_post.page photo=blog_post.teaser_image only %}
-			{% endfor %}
+	<section class="homepage-section">
+		<div class="homepage-section-inner">
+			{% include "home/_featured_incidents_section.html" %}
 		</div>
-	{% endif %}
+	</section>
+
+	<section class="homepage-section homepage-section--gray">
+		<div class="homepage-section-inner">
+			{% include "home/_categories_section.html" %}
+		</div>
+	</section>
+
+	{% with search_page=settings.common.SearchSettings.search_page %}
+		{% if search_page %}
+			<section class="homepage-section">
+				<div class="homepage-section-inner">
+					{% include "home/_recent_incidents_section.html" %}
+				</div>
+			</section>
+		{% endif %}
+	{% endwith %}
 
 {% endblock %}
