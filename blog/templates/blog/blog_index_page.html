@@ -18,6 +18,6 @@
 		{% include 'blog/_blog_list.html' with blogs=featured_blogs heading='Featured' type='featured' card_size='big' only %}
 	{% endif %}
 
-	{% include 'blog/_blog_list.html' with blogs=entries_page heading='Latest' only %}
+	{% include 'blog/_blog_list.html' with blogs=entries_page heading='Latest' ajax_load=True request=request only %}
 
 {% endblock %}
