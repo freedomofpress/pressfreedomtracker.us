@@ -1,0 +1,24 @@
+.blog-list
+	padding-top: 32px
+	padding-bottom: 32px
+	+constrain-to-desktop
+
+	&--featured
+		background-color: $section-background
+
+		+desktop-up
+			max-width: none
+			padding-left: calc((100% - 1440px) / 2)
+			padding-right: calc((100% - 1440px) / 2)
+
+	&__posts
+		padding: 0
+		+grid-container
+
+	&__item
+		list-style-type: none
+		grid-column: span 3
+		margin-bottom: 2rem
+
+		&--featured
+			grid-column: span 4

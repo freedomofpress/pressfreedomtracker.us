@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 {% with size=size|default:"big" %}
 	<article class="blog-card">
-		<a class="text-link--card" href="{% pageurl post %}">
+		<a class="text-link text-link--card" href="{% pageurl post %}">
 			{% if photo %}
 				{% image photo fill-655x440 as x1 %}
 				<img

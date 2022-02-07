@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load pageurl richtext from wagtailcore_tags %}
+
+{% block main %}
+
+	<h1 class="page-title">
+		Blog
+	</h1>
+
+	{% if page.about %}
+		<div class="site-summary">
+			{{ page.about|richtext }}
+		</div>
+	{% endif %}
+
+	{% if featured_blogs %}
+		{% include 'blog/_blog_list.html' with blogs=featured_blogs heading='Featured' type='featured' card_size='big' only %}
+	{% endif %}
+
+	{% include 'blog/_blog_list.html' with blogs=entries_page heading='Latest' only %}
+
+{% endblock %}

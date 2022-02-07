@@ -1,0 +1,11 @@
+<section class="blog-list {% if type %}blog-list--{{ type }}{% endif %}">
+	<h2 class="heading-regular">{{ heading }}</h2>
+
+	<ul class="blog-list__posts">
+		{% for blog in blogs %}
+			<li class="blog-list__item {% if type %}blog-list__item--{{ type }}{% endif %}">
+				{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'small' photo=blog.teaser_image only %}
+			</li>
+		{% endfor %}
+	</ul>
+</section>
