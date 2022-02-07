@@ -7,9 +7,17 @@
 	+desktop-up
 		flex-direction: row
 
+	&__section
+		flex: 1 1
+
+	&__tags
+		line-height: 2.2
+
 	&__details
 		margin-top: 1rem
 		margin-bottom: 1rem
+		+desktop-up
+			flex: 2 0
 
 	&__details-title
 		+desktop-up
@@ -17,9 +25,13 @@
 
 	&__details-container
 		display: flex
+		flex-wrap: wrap
 
 		+desktop-up
 			flex-direction: row
+
+	&__category-details
+		min-width: 300px
 
 
 .database-card-table
@@ -43,11 +55,11 @@
 			align-items: center
 
 		+desktop-up
-			padding: 0.25rem 2rem
+			padding: 0.25rem 0 0 0
 			border: none
 
 		&--inline
-			display: block
+			//display: block
 			padding-left: 19px
 
 			dt, dd
@@ -79,7 +91,7 @@
 		margin: 0
 		border-bottom: 1px solid
 		border-color: $black
-		padding: 0.25rem 0
+		padding: 0.25rem 0 0 0
 
 		+tablet-down
 			padding: 0.5rem 0
