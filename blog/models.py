@@ -4,10 +4,17 @@ from django.utils.cache import patch_cache_control
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel, StreamFieldPanel
+from modelcluster.fields import ParentalKey
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+    StreamFieldPanel,
+    InlinePanel,
+)
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -54,6 +61,12 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
+        InlinePanel(
+            'featured_blogs',
+            label='Featured Blogs',
+            min_num=3,
+            max_num=6,
+        ),
     ]
 
     settings_panels = Page.settings_panels + [
@@ -95,10 +108,9 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['entries_page'] = entries
         context['paginator'] = paginator
 
-        if request.is_ajax():
-            context['layout_template'] = 'base.ajax.html'
-        else:
-            context['layout_template'] = 'base.html'
+        context['featured_blogs'] = [
+            f.page.specific for f in self.featured_blogs.all()
+        ]
 
         return context
 
@@ -133,6 +145,15 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             strip_tags(self.body.render_as_block()),
             20
         )
+
+
+class BlogIndexPageFeature(Orderable):
+    blog_index_page = ParentalKey('blog.BlogIndexPage', related_name='featured_blogs')
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+
+    panels = [
+        PageChooserPanel('page', ('blog.BlogPage')),
+    ]
 
 
 class BlogPage(MetadataPageMixin, Page):
