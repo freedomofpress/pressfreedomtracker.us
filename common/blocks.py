@@ -143,6 +143,31 @@ class TweetEmbedBlock(blocks.StructBlock):
         return super().clean(value)
 
 
+class AsideBlock(blocks.StructBlock):
+    text = blocks.RichTextBlock(
+        features=[
+            'bold',
+            'italic',
+            'h2',
+            'h3',
+            'h4',
+            'ol',
+            'ul',
+            'hr',
+            'embed',
+            'link',
+            'document-link',
+            'image',
+            'code',
+        ],
+    )
+
+    class Meta:
+        template = 'common/blocks/aside_block.html'
+        icon = 'doc-full-inverse'
+        label = 'Aside'
+
+
 class StyledTextBlock(blocks.StructBlock):
     TEXT_ALIGN_CHOICES = (
         ('left', 'Left'),
@@ -179,6 +204,9 @@ class StyledTextBlock(blocks.StructBlock):
             'code',
         ],
     )
+
+    # These fields are assumed to be deprecated and are left for legacy purposes
+    # The template does not use the values of these fields
     background_color = blocks.ChoiceBlock(choices=BACKGROUND_COLOR_CHOICES, default='white')
     text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default='left')
     font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default='normal')

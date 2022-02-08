@@ -28,6 +28,7 @@ from common.blocks import (
     AlignedCaptionedEmbedBlock,
     TweetEmbedBlock,
     RichTextBlockQuoteBlock,
+    AsideBlock,
 )
 
 
@@ -141,6 +142,7 @@ class BlogPage(MetadataPageMixin, Page):
 
     body = StreamField([
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
+        ('aside', AsideBlock()),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
