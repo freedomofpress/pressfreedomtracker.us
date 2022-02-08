@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { throttle, isElementVisible } from '~/utils'
-
+import { throttle, isElementVisible } from './utils'
 
 class ArticleLoader {
 	constructor() {
@@ -35,10 +34,10 @@ class ArticleLoader {
 	}
 
 	incrementFetches() {
-		++this.fetches
+		this.fetches += 1
 	}
 
-	handleScroll(event) {
+	handleScroll() {
 		if (this.fetches < ArticleLoader.NUM_AUTO_FETCHES) {
 			const elm = this.parentElm.querySelector('.js-article-loading-item:last-child')
 			if (isElementVisible(elm)) {
@@ -48,7 +47,6 @@ class ArticleLoader {
 	}
 
 	replaceIncidents(ajaxBodyHtml) {
-		const fragment = document.createDocumentFragment()
 		const tempElm = document.createElement('span')
 		tempElm.innerHTML = ajaxBodyHtml
 
@@ -88,10 +86,8 @@ class ArticleLoader {
 		const tempElm = document.createElement('span')
 		tempElm.innerHTML = ajaxBodyHtml
 
-		const parentElm = tempElm.querySelector('.js-article-loading-parent')
-
 		const items = tempElm.querySelectorAll('.js-article-loading-item')
-		for (var i = 0; i < items.length; i++) {
+		for (let i = 0; i < items.length; i += 1) {
 			items[i].classList.add('animation-fade-in')
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
 			fragment.appendChild(items[i])
@@ -125,33 +121,31 @@ class ArticleLoader {
 
 		const cameFromClick = event && event.target.className.indexOf('js-article-loading-next-link') !== -1
 		if (!cameFromClick && !this.nextLinkElm) {
-			return null
+			return
 		}
 
 		this.isLoading = true
 		this.nextLinkElm.innerHTML = '<div class="loader">Loading…</div>'
 
 		axios.get(this.nextLinkElm.href)
-			.then(response => {
+			.then((response) => {
 				this.isLoading = false
 				this.incrementFetches()
 
 				if (response.status === 200) {
 					this.appendIncidents(response.data)
-					const urlParams = new URLSearchParams(window.location.search);
+					const urlParams = new URLSearchParams(window.location.search)
 					urlParams.set(
 						'endpage',
-						urlParams.has('endpage') ? parseInt(urlParams.get('endpage')) + 1 : 2
+						urlParams.has('endpage') ? parseInt(urlParams.get('endpage')) + 1 : 2,
 					)
-					history.replaceState(null, null, '?' + urlParams.toString())
+					window.history.replaceState(null, null, '?' + urlParams.toString())
 				}
 			})
 	}
 }
 
-
 ArticleLoader.NUM_AUTO_FETCHES = 0
-
 
 document.addEventListener('DOMContentLoaded', () => {
 	if (window._articleLoader) {

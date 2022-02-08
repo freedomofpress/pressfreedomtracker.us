@@ -26,6 +26,7 @@ module.exports = {
 
 	"rules": {
 		"arrow-body-style": 0,
+		"prefer-template": 0,
 		"no-tabs": 0,
 		"indent": ["error", "tab"],
 		"no-underscore-dangle": 0,
