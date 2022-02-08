@@ -1,4 +1,9 @@
+import re
+
+from django.forms.utils import ErrorList
+
 from wagtail.core import blocks
+from wagtail.core.blocks.struct_block import StructBlockValidationError
 from wagtail.core.rich_text import RichText
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -120,6 +125,22 @@ class TweetEmbedBlock(blocks.StructBlock):
         template = 'common/blocks/tweet_embed.html'
         icon = 'pick'
         label = 'Tweet'
+
+    def clean(self, value):
+        errors = {}
+        twitter_url = r'^(http|https):\/\/twitter.com'
+        tweet = value.get('tweet')
+
+        if tweet:
+            valid = re.match(twitter_url, tweet.url)
+
+            if not valid:
+                errors['tweet'] = ErrorList(['Please enter a valid Twitter URL.'])
+
+            if errors:
+                raise StructBlockValidationError(errors)
+
+        return super().clean(value)
 
 
 class StyledTextBlock(blocks.StructBlock):
@@ -260,6 +281,14 @@ class RichTextBlockQuoteBlock(blocks.StructBlock):
 
     class Meta:
         template = 'common/blocks/blockquote.html'
+        icon = "openquote"
+
+
+class PullQuoteBlock(blocks.StructBlock):
+    text = blocks.TextBlock()
+
+    class Meta:
+        template = 'common/blocks/pull_quote_block.html'
         icon = "openquote"
 
 

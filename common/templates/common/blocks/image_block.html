@@ -1,0 +1,4 @@
+{% load wagtailimages_tags %}
+
+{% image value fill-828x470 as my_image %}
+<img src="{{ my_image.url }}" width="{{ my_image.width }}" height="{{ my_image.height }}" alt="{% if my_image.image.attribution %}{{ my_image.image.attribution }}{% else %}{{ my_image.image.title }}{% endif %}">
