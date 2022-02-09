@@ -2,7 +2,7 @@
     {% if related %}
         <h2>Related Incidents</h2>
         {% for incident in related %}
-            {% include "incident/incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
+            {% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
         {% endfor %}
     {% endif %}
 {% endwith %}
