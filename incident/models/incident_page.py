@@ -696,8 +696,8 @@ class IncidentPage(MetadataPageMixin, Page):
         related_incidents = self.get_related_incidents(threshold=4)
         context['related_incidents'] = related_incidents
 
+        main_category = self.get_main_category()
         if related_incidents:
-            main_category = self.get_main_category()
             if main_category:
                 related_filter = {'categories': main_category.pk}
             else:
@@ -712,6 +712,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 related_filter['state'] = self.state
             context['related_qs'] = urlencode(related_filter)
 
+        context['main_category'] = main_category
         context['category_details'] = self.get_category_details()
         return context
 

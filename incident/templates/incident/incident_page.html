@@ -3,7 +3,7 @@
 {% load wagtailcore_tags %}
 
 {% block main %}
-    <h1 class="article-title">{{ page.title }}</h1>
+    <h1 class="category category-{{ main_category.page_symbol }} article-title">{{ page.title }}</h1>
 
     {% include 'incident/incident_tags.html' with incident=page %}
 
