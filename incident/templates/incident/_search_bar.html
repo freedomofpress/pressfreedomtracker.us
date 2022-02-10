@@ -5,7 +5,7 @@
 		</label>
 		<input
 			id="primary-search-bar"
-			placeholder="Search incidents by text, date, location, tags..."
+			placeholder="{{ placeholder_text|default:"Search incidents by text, date, location, tags..." }}"
 			spellcheck="false"
 			autocomplete="off"
 			type="search"
