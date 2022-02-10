@@ -703,7 +703,7 @@ class IncidentPage(MetadataPageMixin, Page):
             else:
                 related_filter = {}
 
-            tags = self.tags.all()
+            tags = self.get_tags
             if tags:
                 related_filter['tags'] = ','.join(str(tag.pk) for tag in tags)
             elif self.city and self.state:
@@ -819,7 +819,7 @@ class IncidentPage(MetadataPageMixin, Page):
         if self.pk:
             exclude_ids.add(self.pk)
 
-        own_tags = [tag.pk for tag in self.tags.all()]
+        own_tags = [tag.pk for tag in self.get_tags]
         own_tags_set = set(own_tags)
 
         conditional_filter = Q(location_rank__gt=0)
