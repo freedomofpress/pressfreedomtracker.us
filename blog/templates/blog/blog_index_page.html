@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load pageurl richtext from wagtailcore_tags %}
+{% load pageurl richtext include_block from wagtailcore_tags %}
 
 {% block main %}
 
@@ -8,9 +8,11 @@
 		Blog
 	</h1>
 
-	{% if page.about %}
-		<div class="site-summary">
-			{{ page.about|richtext }}
+	{% if page.body %}
+		<div class="site-summary site-summary--blog">
+			{% for block in page.body %}
+				{% include_block block %}
+			{% endfor %}
 		</div>
 	{% endif %}
 

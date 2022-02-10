@@ -11,17 +11,66 @@
 			padding-left: calc((100% - 1440px) / 2)
 			padding-right: calc((100% - 1440px) / 2)
 
+		+tablet-down
+			overflow-x: hidden
+
 	&__posts
 		padding: 0
 		+grid-container
+
+		&--featured-flex
+			+tablet-down
+				display: flex
+				transition: transform 0.9s ease-in-out
 
 	&__item
 		list-style-type: none
 		grid-column: span 3
 		margin-bottom: 2rem
 
+		&:not(&--featured)
+
+			+tablet-down
+				grid-column: 1 / -1
+
+				.card-image-small
+					display: none
+
+				.blog-card--info dt
+					font-weight: 400
+
+			+mobile-down
+				.blog-card--title
+					font-size: 1rem
+					line-height: 1.25
+					font-weight: bold
+
+				.text-link--card
+					margin-top: 0.75rem
+
+			.blog-card__teaser--sm
+				+tablet-down
+					display: block
+
 		&--featured
 			grid-column: span 4
 
+			+tablet-down
+				flex: 0 0 534px
+
+			+mobile-down
+				flex: 0 0 328px
+
 	&__pagination
 		text-align: center
+
+	&__featured-scroller
+		display: none
+		text-align: right
+
+		&--button
+			background: transparent
+			border: none
+
+			&[disabled] .arrow-path
+				stroke: $gray-text

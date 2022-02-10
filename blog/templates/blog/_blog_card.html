@@ -14,11 +14,10 @@
 				{{ post.title }}
 			</h3>
 		</a>
-		{% if not photo %}
-			<p class="blog-card--teaser">
-				{{ post.teaser_text }}
-			</p>
-		{% endif %}
+
+		<p class="blog-card__teaser {% if photo %}blog-card__teaser--sm{% endif %}">
+			{{ post.teaser_text }}
+		</p>
 		<dl class="dl-inline blog-card--info">
 			<dt>Published</dt>
 			<dd>
