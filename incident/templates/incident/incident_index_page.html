@@ -3,6 +3,17 @@
 {% load webpack_loader %}
 
 {% block main %}
+	<h1 class="page-title">Incidents Database</h1>
+
+	<section class="incident-index__search-area">
+		<div class="incident-index__search-bar">
+			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text, date..." %}
+		</div>
+		<div class="incident-index__download">
+			<a class="btn-secondary incident-index__download-button">Download dataset</a>
+		</div>
+	</section>
+
 	{% include 'incident/_filters.html' %}
 
 	<section class="incident-index">

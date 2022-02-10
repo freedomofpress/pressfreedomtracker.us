@@ -1,2 +1,112 @@
 .incident-index
 	+constrain-to-desktop
+
+.incident-index__search-area
+	+constrain-to-desktop
+	display: flex
+	gap: 12px
+	flex-direction: column
+
+	margin-bottom: 32px
+
+	+tablet-up
+		flex-direction: row
+
+	+desktop-up
+		margin-bottom: 52px
+
+.incident-index__search-bar
+	flex: 1 0 auto
+
+.incident-index__download-button
+	@extend .btn
+	font-weight: 700
+	width: calc(100% - 1.5rem - 6px)
+	text-align: center
+
+	border: 3px solid
+	border-color: $black
+	transition: color 0.01s ease-in 0.08s
+
+	&:not([disabled])::before
+		content: ''
+		position: absolute
+		background: $black
+		bottom: 0
+		left: 0
+		right: 100%
+		top: 0
+		z-index: -1
+		transition: right 0.09s ease-in
+
+	&:hover
+		color: $white
+
+		&::before
+			right: 0
+
+	&:focus
+		border-width: 6px
+
+	&[disabled]
+		color: $tag-inactive
+		border-color: $tag-inactive
+
+	+tablet-up
+		width: auto
+		border: none
+		// the calc here makes space on right edge for the down-arrow symbol
+		// which is 16px (inner-width) + 1.5rem (padding) + 3px (border) wide
+		padding: calc(0.5rem + 3px) calc(1rem + 1.5rem + 19px) calc(0.5rem + 3px) 0.5rem
+		transition: color 0.01s ease-in 0.08s
+
+		&::after
+			content: url(../icons/arrow-down.svg)
+			height: 16px
+			width: 24px
+			border: 3px solid
+			border-color: $black
+			position: absolute
+			right: 0px
+			top: 0px
+			padding: 0.75rem 0.5rem
+			//padding left of parent
+			transition: content 0.01s ease-in 0.08s
+
+		&:focus
+			margin: -3px 0
+			border-width: 6px 3px 6px 6px
+
+			&::after
+				border-width: 6px 6px 6px 3px
+				top: -6px
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+			&::after
+				content: url(../icons/arrow-down-inactive.svg)
+				border-color: $tag-inactive
+
+		&:not([disabled])::before
+			content: ''
+			position: absolute
+			background: $black
+			bottom: 0
+			left: 0
+			right: 100%
+			top: 0
+			z-index: -1
+			transition: right 0.09s ease-in
+
+		&:not([disabled]):hover
+			color: $white
+			// border: 3px solid
+			// border-color: $black
+
+			&::after
+				content: url(../icons/arrow-down-white.svg)
+
+			&::before
+				right: 0
