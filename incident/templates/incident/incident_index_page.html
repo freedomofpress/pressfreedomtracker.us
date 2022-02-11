@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load webpack_loader %}
+{% load webpack_loader humanize %}
 
 {% block main %}
 	<h1 class="page-title">Incidents Database</h1>
@@ -10,13 +10,30 @@
 			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text, date..." %}
 		</div>
 		<div class="incident-index__download">
-			<a class="btn-secondary incident-index__download-button">Download dataset</a>
+			<button
+				aria-controls="data-download"
+				aria-expanded="false"
+				id="data-download-toggle-btn"
+				class="btn-secondary incident-index__download-button"
+			>
+				Download dataset
+			</button>
+			<div id="data-download" class="incident-index__download-dropdown" data-visible="false">
+				<ul>
+					<li>Download full dataset
+						<span>{{ incident_count|intcomma }} incidents</span>
+					</li>
+					<li><a href="#">Learn more</li>
+				</ul>
+			</div>
 		</div>
 	</section>
-
-	{% include 'incident/_filters.html' %}
-
-	<section class="incident-index">
+	<section class="incident-index__results">
+		<div class="incident-index__results-header">
+			<p class="paragraph-subtitle">
+				{{ incident_count|intcomma }} incidents recorded
+			</p>
+		</div>
 		{% for incident in entries_page %}
 			{% include "incident/_incident_database_card.html" with incident=incident only %}
 		{% endfor %}
