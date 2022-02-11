@@ -1,5 +1,7 @@
 from django import forms
 
+from incident.models import choices
+
 
 class FilterForm(forms.Form):
 
@@ -43,7 +45,7 @@ class FilterForm(forms.Form):
                 if _type == 'radio':
                     field = forms.ChoiceField
                     kwargs['widget'] = forms.RadioSelect
-                    kwargs['choices'] = [[x[0], x[1].capitalize()] for x in item.get('choices', [])]
+                    kwargs['choices'] = [[x[0], x[1].capitalize()] for x in choices.MAYBE_BOOLEAN]
 
                 if field:
                     self.fields[name] = field(**kwargs)
