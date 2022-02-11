@@ -37,6 +37,11 @@ class FilterForm(forms.Form):
                     kwargs['widget'] = forms.RadioSelect
                     kwargs['choices'] = [('Yes', 'Yes',), ('No', 'No',)]
 
+                if _type == 'checkbox':
+                    field = forms.MultipleChoiceField
+                    kwargs['widget'] = forms.CheckboxSelectMultiple
+                    kwargs['choices'] = [[x[0], x[1].capitalize()] for x in item.get('choices', [])]
+
                 if _type == 'choice':
                     field = forms.ChoiceField
                     kwargs['widget'] = forms.Select
@@ -54,7 +59,35 @@ class FilterForm(forms.Form):
 
 def get_filter_forms(request, serialized_filters):
     filter_forms = []
+    categories = []
+
     for item in serialized_filters:
+
+        # if the item has a filters object then create a form from the item
+        if item.get('filters', []):
+            filter_forms.append(
+                FilterForm(
+                    request.GET,
+                    data=item
+                )
+            )
+
+        # otherwise it's a category page, so add it to the list
+        else:
+            categories.append(item)
+
+    # if we have category items, create form filter for them
+    if categories:
+        item = {
+            'title': 'Limit to',
+            'filters': [{
+                'title': 'Category',
+                'type': 'checkbox',
+                'name': 'categories',
+                'choices': [[x.get('id', ''), x.get('title', '')] for x in categories]
+            }]
+
+        }
         filter_forms.append(
             FilterForm(
                 request.GET,
