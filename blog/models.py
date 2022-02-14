@@ -109,7 +109,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['paginator'] = paginator
 
         context['featured_blogs'] = [
-            f.page.specific for f in self.featured_blogs.all()
+            f.page for f in self.featured_blogs.select_related('page').all()
         ]
 
         return context
@@ -149,10 +149,10 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
 class BlogIndexPageFeature(Orderable):
     blog_index_page = ParentalKey('blog.BlogIndexPage', related_name='featured_blogs')
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
+    page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE)
 
     panels = [
-        PageChooserPanel('page', ('blog.BlogPage')),
+        PageChooserPanel('page'),
     ]
 
 

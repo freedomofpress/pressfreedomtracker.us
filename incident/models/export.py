@@ -52,7 +52,6 @@ EXCLUDED_FIELDS = {
     'index_entries',
     'subscribers',
     'wagtail_admin_comments',
-    'blogindexpagefeature',
 }
 
 
