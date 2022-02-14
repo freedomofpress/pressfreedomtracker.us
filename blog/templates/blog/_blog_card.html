@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 {% with size=size|default:"big" %}
 	<article class="blog-card">
-		<a class="text-link--card" href="{% pageurl post %}">
+		<a class="text-link text-link--card" href="{% pageurl post %}">
 			{% if photo %}
 				{% image photo fill-655x440 as x1 %}
 				<img
@@ -14,11 +14,10 @@
 				{{ post.title }}
 			</h3>
 		</a>
-		{% if not photo %}
-			<p class="blog-card--teaser">
-				{{ post.teaser_text }}
-			</p>
-		{% endif %}
+
+		<p class="blog-card__teaser {% if photo %}blog-card__teaser--sm{% endif %}">
+			{{ post.teaser_text }}
+		</p>
 		<dl class="dl-inline blog-card--info">
 			<dt>Published</dt>
 			<dd>

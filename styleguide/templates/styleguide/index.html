@@ -251,27 +251,27 @@
 
 		<h4 class="heading-regular">Blog Card (Big, No Photo)</h4>
 		<code>
-            &lbrace;% include 'blog/blog_card.html' with post=blog_page size='big' only %&rbrace;
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='big' only %&rbrace;
 		</code>
-		{% include "blog/blog_card.html" with post=blog_page size="big" only %}
+		{% include "blog/_blog_card.html" with post=blog_page size="big" only %}
 
 		<h4 class="heading-regular">Blog Card (Big, Photo)</h4>
 		<code>
-            &lbrace;% include 'blog/blog_card.html' with post=blog_page size='big' photo=incident.teaser_image only %&rbrace;
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='big' photo=incident.teaser_image only %&rbrace;
 		</code>
-		{% include "blog/blog_card.html" with post=blog_page size="big" photo=blog_page.teaser_image only %}
+		{% include "blog/_blog_card.html" with post=blog_page size="big" photo=blog_page.teaser_image only %}
 
 		<h4 class="heading-regular">Blog Card (Small, No Photo)</h4>
 		<code>
-            &lbrace;% include 'blog/blog_card.html' with post=blog_page size='small' only %&rbrace;
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='small' only %&rbrace;
 		</code>
-		{% include "blog/blog_card.html" with post=blog_page size="small" only %}
+		{% include "blog/_blog_card.html" with post=blog_page size="small" only %}
 
 		<h4 class="heading-regular">Blog Card (Small, Photo)</h4>
 		<code>
-            &lbrace;% include 'blog/blog_card.html' with post=blog_page size='small' photo=incident.teaser_image only %&rbrace;
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='small' photo=incident.teaser_image only %&rbrace;
 		</code>
-		{% include "blog/blog_card.html" with post=blog_page size="small" photo=blog_page.teaser_image only %}
+		{% include "blog/_blog_card.html" with post=blog_page size="small" photo=blog_page.teaser_image only %}
 	</details>
 
 	<hr/>
