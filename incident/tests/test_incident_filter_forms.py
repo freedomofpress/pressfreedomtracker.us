@@ -53,7 +53,6 @@ class FilterFormTest(TestCase):
             'Took place before',
         )
 
-
     def test_filter_type_bool(self):
         request = RequestFactory().get('/')
         name = 'unnecessary_use_of_force'
@@ -142,7 +141,37 @@ class FilterFormTest(TestCase):
     def test_get_filter_forms(self):
         request = RequestFactory().get('/')
         name = 'categories'
+        choices = [
+            [12, 'Prior Restraint'],
+            [37, 'Chilling Statement'],
+            [38, 'Other Incident']
+        ]
+
         serialized_filters = [
+            {
+                'title': 'General',
+                'id': -1,
+                'filters': [{'name': 'search', 'title': 'Search terms', 'type': 'text'}],
+            },
+            {
+                'filters': [
+                    {
+                        'choices': [
+                            ['PENDING', 'pending'],
+                            ['DROPPED', 'dropped'],
+                            ['STRUCK_DOWN', 'struck down'],
+                            ['UPHELD', 'upheld'],
+                            ['IGNORED', 'ignored']
+                        ],
+                        'name': 'status_of_prior_restraint',
+                        'title': 'Status of prior restraint',
+                        'type': 'choice'
+                    },
+                ],
+                'id': 12,
+                'title': 'Prior Restraint',
+                'url': '/prior_restraint/',
+            },
             {
                 'id': 37,
                 'title': 'Chilling Statement',
@@ -158,5 +187,9 @@ class FilterFormTest(TestCase):
         ]
         form = get_filter_forms(request, serialized_filters)
 
-        self.assertIsInstance(form[0].fields.get(name), forms.MultipleChoiceField)
-        self.assertIsInstance(form[0].fields.get(name).widget, forms.CheckboxSelectMultiple)
+        self.assertIsInstance(form[-1].fields.get(name), forms.MultipleChoiceField)
+        self.assertIsInstance(form[-1].fields.get(name).widget, forms.CheckboxSelectMultiple)
+        self.assertEqual(
+            form[-1].fields.get(name).choices,
+            capitalize_choice_labels(choices),
+        )

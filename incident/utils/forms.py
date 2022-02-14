@@ -65,7 +65,11 @@ class FilterForm(forms.Form):
 
 def get_filter_forms(request, serialized_filters):
     filter_forms = []
-    categories = []
+
+    # Any filter item with an id other than -1 is a category
+    categories = [
+        item for item in serialized_filters if item.get('id', -1) != -1
+    ]
 
     for item in serialized_filters:
 
@@ -77,10 +81,6 @@ def get_filter_forms(request, serialized_filters):
                     data=item
                 )
             )
-
-        # otherwise it's a category page, so add it to the list
-        else:
-            categories.append(item)
 
     # if we have category items, create form filter for them
     if categories:
