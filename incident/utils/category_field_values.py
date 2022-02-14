@@ -199,7 +199,7 @@ def subpoena_type_html_val(page, field):
 
 
 def subpoena_statuses_html_val(page, field):
-    if not len(getattr(page, field)):
+    if not getattr(page, field):
         return ''
 
     html = []

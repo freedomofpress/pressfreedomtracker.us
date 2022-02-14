@@ -2,8 +2,10 @@
 
 {% load webpack_loader %}
 
-{% block body %}
-	{% for incident in entries_page %}
-		{% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
-	{% endfor %}
+{% block main %}
+	<section class="incident-index">
+		{% for incident in entries_page %}
+			{% include "incident/_incident_database_card.html" with incident=incident only %}
+		{% endfor %}
+	</section>
 {% endblock %}

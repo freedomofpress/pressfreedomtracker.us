@@ -1,0 +1,126 @@
+.incident-database-card
+	padding-bottom: 0.5rem
+	border-bottom: solid 1px
+	border-color: $black
+	display: flex
+	flex-direction: column
+
+	+desktop-up
+		gap: 2rem
+		flex-direction: row
+
+	&__section
+		flex: 1 1
+
+	&__tags
+		line-height: 2.2
+
+	&__details
+		margin-top: 1rem
+		margin-bottom: 1rem
+		flex: 1
+		+desktop-up
+			flex: 2 0
+
+	&__details-title
+		+desktop-up
+			display: none
+
+	&__details-container
+		display: flex
+		flex-wrap: wrap
+		gap: 2rem
+
+		+desktop-up
+			flex-direction: row
+
+	&__main-details
+		flex: 1
+
+	&__category-details
+		flex: 1
+
+.database-card-table
+	position: relative
+
+	&__incident-details
+		margin-top: 0
+		margin-bottom: 0
+
+	&__category-details
+		margin-top: 0
+		margin-bottom: 0
+
+	&__row
+		padding: 0.5rem 0
+		border-bottom: 1px solid
+		border-color: $gray-text
+
+		+tablet-up
+			display: flex
+			align-items: center
+
+		+desktop-up
+			padding: 0.25rem 0 0 0
+			border: none
+
+		&--inline
+			//display: block
+			padding-left: 19px
+
+			dt, dd
+				margin-right: 0.25rem
+				display: inline
+				white-space: normal
+
+	&__label
+		font-size: $font-size-small-p
+		line-height: 1.43
+		white-space: nowrap
+		margin-right: 1rem
+
+		&--bold
+			font-weight: 700
+
+	&__value
+		margin-left: 0
+		font-size: $font-size-small-p
+		white-space: nowrap
+		line-height: 1.43
+
+	&__list
+		list-style-type: none
+		margin: 0
+		padding: 0
+
+	.heading-table
+		margin: 0
+		border-bottom: 1px solid
+		border-color: $black
+		padding: 0.25rem 0 0
+
+		+tablet-down
+			padding: 0.5rem 0
+
+		+desktop-up
+			border-bottom: none
+
+	.details-toggle-btn
+		position: absolute
+		top: 6px
+		right: 24px
+
+		+desktop-up
+			display: none
+
+	.database-card-toggle-btn
+		+desktop-up
+			display: none
+
+	&__container
+		+tablet-down
+			&[data-visible='false']
+				display: none
+
+			&[data-visible='true']
+				display: block

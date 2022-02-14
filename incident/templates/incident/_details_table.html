@@ -6,8 +6,10 @@
 	<div class="details-table__container" id="incident-details" data-visible="false">
 		{% include "incident/_incident_details_table.html" with incident=incident only %}
 
-		{% for category, category_detail in category_details.items %}
-			{% include "incident/_category_table.html" with category=category category_detail=category_detail only %}
+		{% for category, category_detail in incident.get_category_details.items %}
+			{% if category_detail %}
+				{% include "incident/_category_table.html" with category=category category_detail=category_detail only %}
+			{% endif %}
 		{% endfor %}
 	</div>
 </section>
