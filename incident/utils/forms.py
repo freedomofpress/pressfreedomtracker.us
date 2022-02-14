@@ -31,6 +31,12 @@ class FilterForm(forms.Form):
                 if _type == 'date':
                     field = forms.DateField
                     kwargs['widget'] = forms.DateInput
+                    kwargs['label'] = label.replace('between', 'before')
+                    self.fields[f'{name}_upper'] = field(**kwargs)
+                    kwargs['label'] = label.replace('between', 'after')
+                    self.fields[f'{name}_lower'] = field(**kwargs)
+                    field.field_type = _type
+                    continue
 
                 if _type == 'bool':
                     field = forms.ChoiceField

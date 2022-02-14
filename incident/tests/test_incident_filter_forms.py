@@ -40,8 +40,19 @@ class FilterFormTest(TestCase):
         }
         form = FilterForm(request.GET, data=item)
 
-        self.assertIsInstance(form.fields.get(name), forms.DateField)
-        self.assertIsInstance(form.fields.get(name).widget, forms.DateInput)
+        self.assertIsInstance(form.fields.get(f'{name}_lower'), forms.DateField)
+        self.assertIsInstance(form.fields.get(f'{name}_lower').widget, forms.DateInput)
+        self.assertEqual(
+            form.fields.get(f'{name}_lower').label,
+            'Took place after',
+        )
+        self.assertIsInstance(form.fields.get(f'{name}_upper'), forms.DateField)
+        self.assertIsInstance(form.fields.get(f'{name}_upper').widget, forms.DateInput)
+        self.assertEqual(
+            form.fields.get(f'{name}_upper').label,
+            'Took place before',
+        )
+
 
     def test_filter_type_bool(self):
         request = RequestFactory().get('/')
