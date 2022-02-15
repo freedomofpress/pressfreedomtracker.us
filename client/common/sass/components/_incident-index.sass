@@ -2,12 +2,12 @@
 	+constrain-to-desktop
 
 .incident-index__search-area
-	+constrain-to-desktop
 	display: flex
 	gap: 12px
 	flex-direction: column
-
 	margin-bottom: 32px
+
+	+constrain-to-desktop
 
 	+tablet-up
 		flex-direction: row
@@ -18,32 +18,61 @@
 .incident-index__search-bar
 	flex: 1 0 auto
 
+.incident-index__download-details
+	display: block
+	position: relative
+
+	&[open]
+		+tablet-up
+			.incident-index__download-button::after
+				background: $black
+				content: url(../icons/arrow-down-white.svg)
+
+.incident-index__download-select
+	position: absolute
+	padding: 0
+	display: flex
+	flex-direction: column
+	z-index: 100
+	left: 0
+	right: 0
+
+	+tablet-up
+		left: auto
+
+.incident-index__download-wrapper
+	display: flex
+
+	+tablet-up
+		width: 20rem
+
+
+.incident-index__download-list
+	background: $black
+	position: relative
+	flex: auto
+
+.incident-index__download-item
+	box-sizing: border-box
+	display: flex
+	justify-content: space-between
+	width: 100%
+	padding: 0.5rem 0.75rem
+	color: $white
+	text-decoration: none
+
+	span
+		color: $gray-text
+
+	&--more
+		text-decoration: underline
+
 .incident-index__download-button
-	@extend .btn
 	font-weight: 700
 	width: calc(100% - 1.5rem - 6px)
 	text-align: center
-
 	border: 3px solid
 	border-color: $black
-	transition: color 0.01s ease-in 0.08s
-
-	&:not([disabled])::before
-		content: ''
-		position: absolute
-		background: $black
-		bottom: 0
-		left: 0
-		right: 100%
-		top: 0
-		z-index: -1
-		transition: right 0.09s ease-in
-
-	&:hover
-		color: $white
-
-		&::before
-			right: 0
 
 	&:focus
 		border-width: 6px
@@ -74,12 +103,14 @@
 			transition: content 0.01s ease-in 0.08s
 
 		&:focus
-			margin: -3px 0
-			border-width: 6px 3px 6px 6px
+			//margin: -3px 0
+			//border-width: 6px 3px 6px 6px
 
 			&::after
-				border-width: 6px 6px 6px 3px
-				top: -6px
+				border-width: 6px
+				right: -3px
+				top: -3px
+				//box-shadow: rgba(9, 105, 218, 0.3) 0px 0px 0px 3px
 
 		&[disabled]
 			color: $tag-inactive
@@ -88,25 +119,3 @@
 			&::after
 				content: url(../icons/arrow-down-inactive.svg)
 				border-color: $tag-inactive
-
-		&:not([disabled])::before
-			content: ''
-			position: absolute
-			background: $black
-			bottom: 0
-			left: 0
-			right: 100%
-			top: 0
-			z-index: -1
-			transition: right 0.09s ease-in
-
-		&:not([disabled]):hover
-			color: $white
-			// border: 3px solid
-			// border-color: $black
-
-			&::after
-				content: url(../icons/arrow-down-white.svg)
-
-			&::before
-				right: 0

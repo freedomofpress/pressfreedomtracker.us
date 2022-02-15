@@ -10,22 +10,25 @@
 			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text, date..." %}
 		</div>
 		<div class="incident-index__download">
-			<button
-				aria-controls="data-download"
-				aria-expanded="false"
-				id="data-download-toggle-btn"
-				class="btn-secondary incident-index__download-button"
-			>
-				Download dataset
-			</button>
-			<div id="data-download" class="incident-index__download-dropdown" data-visible="false">
-				<ul>
-					<li>Download full dataset
-						<span>{{ incident_count|intcomma }} incidents</span>
-					</li>
-					<li><a href="#">Learn more</li>
-				</ul>
-			</div>
+			<details class="incident-index__download-details">
+				<summary class="btn incident-index__download-button">
+					Download dataset
+				</summary>
+				<div class="incident-index__download-select">
+					<div class="incident-index__download-wrapper">
+						<div class="incident-index__download-list">
+							<a href="#" class="incident-index__download-item">
+								Download full dataset
+								<span>{{ incident_count|intcomma }} incidents</span>
+							</a>
+							<a href="#" class="incident-index__download-item">
+								Download your filtered data
+								<span>394 incidents</span>
+							</a>
+							<a href="#" class="incident-index__download-item incident-index__download-item--more">Learn more</a>
+						</div>
+					</div>
+			</details>
 		</div>
 	</section>
 	<section class="incident-index__results">
