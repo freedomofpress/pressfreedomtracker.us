@@ -1,0 +1,14 @@
+{% load wagtailcore_tags %}
+
+<div class="info-table">
+    <h4 class="heading-regular">{{ value.heading }}</h4>
+
+    <section class="list-table ">
+        <ul class="list-table--col-3">
+            {% for block in value.table %}
+                {% include_block block %}
+            {% endfor %}
+        </ul>
+    <section>
+</div>
+

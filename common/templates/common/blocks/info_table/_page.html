@@ -1,0 +1,11 @@
+{% load wagtailcore_tags %}
+
+{% for item in value.table_data %}
+     <li class="list-table__row">
+        <div class="list-table__item">
+            <div class="list-table__col">{{ item.title|default:item.page.title }}</div>
+            <div class="list-table__col">{{ item.description }}</div>
+            <div class="list-table__link"><a href="{% pageurl item.page %}">{{ value.cta_label }} &rarr;</a></div>
+        </a>
+    </li>
+{% endfor %}
