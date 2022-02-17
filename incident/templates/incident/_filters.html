@@ -1,0 +1,22 @@
+<aside>
+	<form>
+		{% for item in filters %}
+			<fieldset id="{{ item.id }}">
+				<h3>{{ item.title }}</h3>
+				{% for field in item %}
+					<div>
+						{% if field.field_type == 'radio' or field.field_type == 'bool' %}
+							<p>{{ field.title }}</p>
+    						<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+						{% else %}
+    						<p><label for="{{ field.id_for_label }}">{{ field.label }}</label></p>
+						{% endif %}
+						{{ field }}
+					</div>
+				{% endfor %}
+			</fieldset>
+		{% endfor %}
+		<button type="submit">Apply filters</button>
+		<p><a href="{{ page.url }}">Clear filters</a></p>
+	</form>
+</aside>
