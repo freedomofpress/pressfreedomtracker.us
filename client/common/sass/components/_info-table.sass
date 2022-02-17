@@ -42,11 +42,12 @@
 		+desktop-up
 			grid-template-columns:  400px 2fr 1fr
 
-			.info-table__figure
-				display: none
-
 	&__figure
 		margin: 0.5em 0
+
+		.info-table--col-3-desktop &
+			+desktop-up
+				display: none
 
 	&__title
 		font-weight: 700
