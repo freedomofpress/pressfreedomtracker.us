@@ -36,6 +36,31 @@
 			<p class="paragraph-subtitle">
 				{{ incident_count|intcomma }} incidents recorded
 			</p>
+			<details class="incident-index__sort-details" open>
+				<summary class="btn incident-index__sort-button">
+					Sort by <span>&udarr;</span>
+				</summary>
+				<div class="incident-index__sort-menu">
+					<div class="incident-index__sort-modal">
+						<header class="incident-index__sort-header">
+							<h3 class="incident-index__sort-title">
+								Sort incidents by
+							</h3>
+						</header>
+						<div class="incident-index__sort-list">
+							<button class="incident-index__sort-item">
+								Recently updated
+							</button>
+							<button class="incident-index__sort-item">
+								Newest incident date
+							</button>
+							<button class="incident-index__sort-item">
+								Oldest incident date
+							</button>
+						</div>
+					</div>
+				</div>
+			</details>
 		</div>
 		{% for incident in entries_page %}
 			{% include "incident/_incident_database_card.html" with incident=incident only %}

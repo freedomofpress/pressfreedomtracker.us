@@ -1,6 +1,103 @@
 .incident-index__results
 	+constrain-to-desktop
 
+.incident-index__results-header
+	display: flex
+	justify-content: space-between
+
+	p
+		margin: 0
+
+	details
+		padding: 0
+		margin: 0
+
+.incident-index__sort-details
+	&[open]
+		> summary::before
+			position: fixed
+			top: 0
+			bottom: 0
+			left: 0
+			right: 0
+			z-index: 80
+			display: block
+			cursor: default
+			content: ' '
+			background: transparent
+
+.incident-index__sort-button
+	color: $gray-text
+	padding: 0
+	cursor: pointer
+
+	span
+		color: $black
+
+.incident-index__sort-menu
+	position: fixed
+	top: 0
+	left: 0
+	bottom: 0
+	right: 0
+	z-index: 99
+	display: flex
+	padding: 16px
+	pointer-events: none
+	flex-direction: column
+
+	&::before
+		position: absolute
+		top: 0
+		left: 0
+		right: 0
+		bottom: 0
+		background-color: rgba(0, 0, 0, 0.3)
+		content: ''
+		pointer-events: none
+
+		+tablet-up
+			display: none
+
+.incident-index__sort-modal
+	position: relative
+	z-index: 99
+	margin: auto 0
+	overflow: hidden
+	pointer-events: auto
+	background-color: $black
+
+.incident-index__sort-header
+	padding: 16px 12px 0
+
+.incident-index__sort-title
+	color: $white
+	font-weight: 400
+	margin: 0
+	font-size: $font-size-p
+
+	+desktop-up
+		font-size: $font-size-p-desktop
+
+.incident-index__sort-list
+	padding-bottom: 8px
+
+.incident-index__sort-item
+	box-sizing: border-box
+	display: flex
+	justify-content: space-between
+	width: 100%
+	padding: 0.5rem 2rem
+	color: $white
+	background-color: $black
+	border: 0
+	cursor: pointer
+	text-decoration: none
+	font-size: $font-size-p
+
+	+desktop-up
+		font-size: $font-size-p-desktop
+
 .incident-index__search-area
 	display: flex
 	gap: 12px
@@ -45,7 +142,6 @@
 
 	+tablet-up
 		width: 20rem
-
 
 .incident-index__download-list
 	background: $black
