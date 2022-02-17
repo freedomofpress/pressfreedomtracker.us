@@ -31,12 +31,12 @@
 			</details>
 		</div>
 	</section>
-	<section class="incident-index__results">
-		<div class="incident-index__results-header">
+	<section class="incident-index__body">
+		<div class="incident-index__body-header">
 			<p class="paragraph-subtitle">
 				{{ incident_count|intcomma }} incidents recorded
 			</p>
-			<details class="incident-index__sort-details" open>
+			<details class="incident-index__sort-details">
 				<summary class="btn incident-index__sort-button">
 					Sort by
 					<div>
@@ -65,8 +65,15 @@
 				</div>
 			</details>
 		</div>
-		{% for incident in entries_page %}
-			{% include "incident/_incident_database_card.html" with incident=incident only %}
-		{% endfor %}
+
+		<div class="incident-index__filters">
+			{% include 'incident/_filters.html' %}
+		</div>
+
+		<div class="incident-index__results">
+			{% for incident in entries_page %}
+				{% include "incident/_incident_database_card.html" with incident=incident only %}
+			{% endfor %}
+		</div>
 	</section>
 {% endblock %}

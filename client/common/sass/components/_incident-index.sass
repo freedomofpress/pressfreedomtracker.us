@@ -1,10 +1,15 @@
-.incident-index__results
+.incident-index__body
 	+constrain-to-desktop
+	display: grid
+	grid-template-areas: "filters header" "filters results"
+	grid-template-rows: min-content 1fr
+	grid-template-columns: 1fr 2fr
 
-.incident-index__results-header
+.incident-index__body-header
 	display: flex
 	justify-content: space-between
 	position: relative
+	grid-area: header
 
 	+tablet-only
 		border-bottom: solid 3px
@@ -234,3 +239,9 @@
 			&::after
 				content: url(../icons/arrow-down-inactive.svg)
 				border-color: $tag-inactive
+
+.incident-index__filters
+	grid-area: filters
+
+.incident-index__results
+	grid-area: results
