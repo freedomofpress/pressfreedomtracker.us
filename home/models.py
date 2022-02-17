@@ -170,19 +170,19 @@ class HomePage(MetadataPageMixin, Page):
 
 class FeaturedIncident(Orderable):
     home_page = ParentalKey('home.HomePage', related_name='featured_incidents')
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='+')
+    page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page', ('incident.IncidentPage',)),
+        PageChooserPanel('page'),
     ]
 
 
 class FeaturedBlogPost(Orderable):
     home_page = ParentalKey('home.HomePage', related_name='featured_blog_posts')
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='+')
+    page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page', ('blog.BlogPage',)),
+        PageChooserPanel('page'),
     ]
 
 
