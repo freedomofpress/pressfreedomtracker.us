@@ -9,6 +9,10 @@ $desktop-min: $tablet-max + 1px
 	@media(min-width: $tablet-min)
 		@content
 
+=tablet-only
+	@media (min-width: $tablet-min) and (max-width: $desktop-min)
+		@content
+
 =desktop-up
 	@media(min-width: $desktop-min)
 		@content

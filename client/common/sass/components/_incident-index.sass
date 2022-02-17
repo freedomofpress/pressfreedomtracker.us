@@ -4,6 +4,11 @@
 .incident-index__results-header
 	display: flex
 	justify-content: space-between
+	position: relative
+
+	+tablet-only
+		border-bottom: solid 3px
+		border-color: $black
 
 	p
 		margin: 0
@@ -26,13 +31,24 @@
 			content: ' '
 			background: transparent
 
+		summary div
+			+tablet-up
+				background-color: $black
+				color: $white
+
 .incident-index__sort-button
 	color: $gray-text
 	padding: 0
 	cursor: pointer
+	line-height: 1.5
 
-	span
+	div
 		color: $black
+		display: inline-block
+		padding: 5px
+
+		span
+			font-weight: 700
 
 .incident-index__sort-menu
 	position: fixed
@@ -45,6 +61,15 @@
 	padding: 16px
 	pointer-events: none
 	flex-direction: column
+
+	+tablet-up
+		position: absolute
+		padding: 0
+		margin: 0
+		top: auto
+		left: auto
+		right: 0
+		bottom: auto
 
 	&::before
 		position: absolute
@@ -76,9 +101,6 @@
 	margin: 0
 	font-size: $font-size-p
 
-	+desktop-up
-		font-size: $font-size-p-desktop
-
 .incident-index__sort-list
 	padding-bottom: 8px
 
@@ -94,9 +116,6 @@
 	cursor: pointer
 	text-decoration: none
 	font-size: $font-size-p
-
-	+desktop-up
-		font-size: $font-size-p-desktop
 
 .incident-index__search-area
 	display: flex
