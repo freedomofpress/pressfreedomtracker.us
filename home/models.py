@@ -118,15 +118,6 @@ class HomePage(MetadataPageMixin, Page):
             classname='collapsible',
         ),
         StreamFieldPanel('content'),
-        MultiFieldPanel([
-            FieldPanel('featured_pages_label'),
-            InlinePanel(
-                'features',
-                label='Featured Pages',
-                min_num=4,
-                max_num=6,
-            ),
-        ], 'Featured Pages'),
 
         MultiFieldPanel([
             FieldPanel('about'),
@@ -138,6 +129,9 @@ class HomePage(MetadataPageMixin, Page):
                 ]
             ),
         ], 'About'),
+
+        InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
+        InlinePanel('featured_blog_posts', heading="Featured Blog Posts", max_num=6),
 
         MultiFieldPanel([
             FieldPanel('recent_incidents_label'),
@@ -174,6 +168,25 @@ class HomePage(MetadataPageMixin, Page):
         return context
 
 
+class FeaturedIncident(Orderable):
+    home_page = ParentalKey('home.HomePage', related_name='featured_incidents')
+    page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('page'),
+    ]
+
+
+class FeaturedBlogPost(Orderable):
+    home_page = ParentalKey('home.HomePage', related_name='featured_blog_posts')
+    page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('page'),
+    ]
+
+
+# TODO: DEPRECATED, remove
 class HomePageFeature(Orderable):
     home_page = ParentalKey('home.HomePage', related_name='features')
     page = models.ForeignKey(Page, on_delete=models.CASCADE)

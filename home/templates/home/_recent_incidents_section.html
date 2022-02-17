@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+
+<h2 class="homepage-section-header">Latest Incidents</h2>
+
+{% with incidents=search_page.get_incidents|slice:":8" %}
+	<ul class="article-carousel">
+		{% for incident in incidents %}
+			<li class="article-carousel-item article-carousel-item--latest">
+				{% include "incident/_incident_card.html" with size="small" incident=incident photo=incident.teaser_image only %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endwith %}
+
+<div class="homepage-section-actions">
+	<a href="{% pageurl search_page %}" class="btn btn-primary">Go to Incidents Database</a>
+</div>

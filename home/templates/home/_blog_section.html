@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+
+<h2 class="homepage-section-header">From Our Blog</h2>
+
+{% if page.featured_blog_posts %}
+	<ul class="article-carousel">
+		{% for blog_post in page.featured_blog_posts.all %}
+			<li class="article-carousel-item">
+				{% include "blog/_blog_card.html" with size="small" post=blog_post.page.specific photo=blog_post.page.specific.teaser_image only %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endif %}
+
+<div class="homepage-section-actions">
+	<a href="{% pageurl page.blog_index_page %}" class="btn btn-primary">Go to Blog</a>
+</div>

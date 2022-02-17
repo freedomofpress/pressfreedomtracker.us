@@ -1,13 +1,17 @@
+=grid-columns($column-count, $gutter)
+	grid-template-columns: repeat($column-count, minmax(0, 1fr))
+	grid-column-gap: $gutter
+
 =grid-container
 	display: grid
 
-	grid-template-columns: repeat(8, minmax(0, 1fr))
-	grid-column-gap: 16px
+	// 8 equal width cols, 16px gutter
+	+grid-columns(8, 1rem)
 
 	+tablet-up
-		grid-template-columns: repeat(8, minmax(0, 1fr))
-		grid-column-gap: 24px
+		// 8 equal width cols, 24px gutter
+		+grid-columns(8, 1.5rem)
+
 	+desktop-up
-		// 12 equal width columns
-		grid-template-columns: repeat(12, minmax(0, 1fr))
-		grid-column-gap: 32px
+		// 12 equal width cols, 32px gutter
+		+grid-columns(12, 2rem)
