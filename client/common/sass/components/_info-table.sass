@@ -1,14 +1,21 @@
 .info-table
 	margin-bottom: 2em
 
+	&--cols
+		padding: 0
+		margin: 0
+
 	.list-table
 		padding-left: 0
 		padding-right: 0
-		margin-left: -24px
-		margin-right: -24px
+		+desktop-up
+			margin-left: -24px
+			margin-right: -24px
 
 		&__row
-			padding: 0.25rem 1.5rem
+			padding: 0.25rem 0
+			+desktop-up
+				padding: 0.25rem 1.5rem
 			border-color: $tag-inactive
 
 		&__link
@@ -16,8 +23,16 @@
 				color: $gray-text
 				text-decoration: none
 
-	&__cols
-		grid-template-columns: 1fr auto
+	&--col-2
+		+tablet-up
+			grid-template-columns: 240px 1fr
+
+
+	&--col-3
+		+mobile-down
+			grid-template-columns: 1fr auto
+		+tablet-up
+			grid-template-columns:  240px 2fr 1fr
 
 	&__figure
 		margin: 0.5em 0
@@ -26,12 +41,13 @@
 		font-weight: 700
 
 	&__col-right
-		grid-column: 2
-		grid-row: 1 / span 2
-		align-self: center
 		text-align: right
-		.info-table__row-3up &
-			grid-row: 1 / span 3
+		+mobile-down
+			grid-column: 2
+			grid-row: 1 / span 2
+			align-self: center
+			.info-table--row-3 &
+				grid-row: 1 / span 3
 
 	&__col-bottom
 		align-self: end
