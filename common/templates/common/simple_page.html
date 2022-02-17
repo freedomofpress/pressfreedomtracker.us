@@ -5,9 +5,12 @@
 {% block main %}
     <h1 class="page-title">{{ page.title }}</h1>
 
-    <!-- Stream block templates-->
-    {% for block in page.body %}
-        <section>{% include_block block %}</section>
-    {% endfor %}
+    <section class="section-body">
 
+        <!-- Stream block templates-->
+        {% for block in page.body %}
+            <section>{% include_block block %}</section>
+        {% endfor %}
+
+    </section>
 {% endblock %}

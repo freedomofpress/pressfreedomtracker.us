@@ -2,13 +2,17 @@
 
 {% for item in value.table_data %}
      <li class="list-table__row">
-        <div class="list-table__item">
+        <div class="list-table__item info-table__cols {% if item.image %}info-table__row-3up{% endif %}">
             {% if item.image %}
-                <div class="list-table__col list-table__small_screen_only">{% image item.image fill-66x66 alt=item.title %}</div>
+                <div class="list-table__col list-table__small_screen_only">
+                    <figure class="info-table__figure">
+                        {% image item.image fill-66x66 alt=item.title %}
+                    </figure>
+                </div>
             {% endif %}
-            <div class="list-table__col">{{ item.title }}</div>
+            <div class="list-table__col info-table__title">{{ item.title }}</div>
             <div class="list-table__col">{{ item.url|urlize }}</div>
-            <div class="list-table__link"><a href="{{ item.url }}">{{ value.cta_label }} &rarr;</a></div>
+            <div class="list-table__link info-table__col-right info-table__col-bottom"><a href="{{ item.url }}">{{ value.cta_label }} &rarr;</a></div>
         </a>
     </li>
 {% endfor %}

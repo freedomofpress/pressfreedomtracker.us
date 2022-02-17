@@ -1,0 +1,39 @@
+.info-table
+	margin-bottom: 2em
+
+	.list-table
+		padding-left: 0
+		padding-right: 0
+		margin-left: -24px
+		margin-right: -24px
+
+		&__row
+			padding: 0.25rem 1.5rem
+			border-color: $tag-inactive
+
+		&__link
+			a
+				color: $gray-text
+				text-decoration: none
+
+	&__cols
+		grid-template-columns: 1fr auto
+
+	&__figure
+		margin: 0.5em 0
+
+	&__title
+		font-weight: 700
+
+	&__col-right
+		grid-column: 2
+		grid-row: 1 / span 2
+		align-self: center
+		text-align: right
+		.info-table__row-3up &
+			grid-row: 1 / span 3
+
+	&__col-bottom
+		align-self: end
+
+
