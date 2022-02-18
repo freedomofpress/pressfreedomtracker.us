@@ -1,22 +1,26 @@
-<aside>
-	<form>
-		{% for item in filters %}
-			<fieldset id="{{ item.id }}">
-				<h3>{{ item.title }}</h3>
-				{% for field in item %}
-					<div>
-						{% if field.field_type == 'radio' or field.field_type == 'bool' %}
-							<p>{{ field.title }}</p>
-    						<label for="{{ field.id_for_label }}">{{ field.label }}</label>
-						{% else %}
-    						<p><label for="{{ field.id_for_label }}">{{ field.label }}</label></p>
-						{% endif %}
-						{{ field }}
-					</div>
-				{% endfor %}
-			</fieldset>
-		{% endfor %}
-		<button type="submit">Apply filters</button>
-		<p><a href="{{ page.url }}">Clear filters</a></p>
-	</form>
-</aside>
+<form class="filters__form">
+	<header class="filters__header">
+		Filters
+
+		<a href="{{ page.url }}">Clear All</a>
+	</header>
+	{% for item in filters %}
+		<details class="filters__group" role="group" aria-labelledby="{{ item.title|slugify }}">
+			<summary id="{{ item.title|slugify }}" class="filters__form-summary">
+				{{ item.title }}
+			</summary>
+			{% for field in item %}
+				<div>
+					{% if field.field_type == 'radio' or field.field_type == 'bool' %}
+						<p>{{ field.title }}</p>
+    					<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+					{% else %}
+    					<p><label for="{{ field.id_for_label }}">{{ field.label }}</label></p>
+					{% endif %}
+					{{ field }}
+				</div>
+			{% endfor %}
+		</details>
+	{% endfor %}
+	<button class="btn btn-secondary" type="submit">Apply filters</button>
+</form>

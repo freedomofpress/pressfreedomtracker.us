@@ -1,12 +1,17 @@
 .incident-index__body
-	+constrain-to-desktop
+	padding-right: 16px
 	display: grid
 	grid-template-areas: "filters header" "filters results"
 	grid-template-rows: min-content 1fr
-	grid-template-columns: 1fr 2fr
+	grid-template-columns: 4fr 7fr
+	gap: 1rem
+
+	+desktop-up
+		grid-template-columns: 1fr 3fr
 
 .incident-index__body-header
 	display: flex
+	align-items: center
 	justify-content: space-between
 	position: relative
 	grid-area: header
@@ -242,6 +247,7 @@
 
 .incident-index__filters
 	grid-area: filters
+	background: $section-background
 
 .incident-index__results
 	grid-area: results

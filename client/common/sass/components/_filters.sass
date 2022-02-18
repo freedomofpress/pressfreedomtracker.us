@@ -1,0 +1,32 @@
+.filters__form
+	& select
+		max-width: 200px
+
+	button
+		width: 50%
+		margin: 1rem auto
+		display: block
+
+.filters__header
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+	padding: 1rem 2rem
+	display: flex
+	justify-content: space-between
+	align-items: center
+
+.filters__group
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+	padding: 1rem 2rem
+
+	&[open]
+		.filters__form-summary
+			background-image: url(../icons/arrow-up-thin.svg)
+
+.filters__form-summary
+	display: block
+	background-image: url(../icons/arrow-down-thin.svg)
+	background-repeat: no-repeat
+	background-position: right
+
+.filters__fieldset
+	border: 0
