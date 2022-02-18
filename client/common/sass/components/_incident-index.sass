@@ -1,10 +1,13 @@
 .incident-index__body
-	padding-right: 16px
-	display: grid
-	grid-template-areas: "filters header" "filters results"
-	grid-template-rows: min-content 1fr
-	grid-template-columns: 4fr 7fr
-	gap: 1rem
+	padding: 16px
+
+	+tablet-up
+		display: grid
+		grid-template-areas: "filters header" "filters results"
+		grid-template-rows: min-content 1fr
+		grid-template-columns: 4fr 7fr
+		gap: 1rem
+		padding: 0 16px 0 0
 
 	+desktop-up
 		grid-template-columns: 1fr 3fr
@@ -186,11 +189,11 @@
 	color: $white
 	text-decoration: none
 
-	span
-		color: $gray-text
-
 	&--more
 		text-decoration: underline
+
+.incident-index__incident-count
+	color: $gray-text
 
 .incident-index__download-button
 	font-weight: 700
@@ -245,9 +248,64 @@
 				content: url(../icons/arrow-down-inactive.svg)
 				border-color: $tag-inactive
 
+.incident-index__filters-mobile-controls
+	display: none
+
 .incident-index__filters
-	grid-area: filters
 	background: $section-background
+	box-sizing: border-box
+	margin-top: 4rem
+	position: fixed
+	z-index: 600
+	inset: 0
+	max-width: 0
+	overflow: hidden
+	transition: max-width 350ms ease-out
+
+	&[data-visible='true']
+		max-width: 100vw
+		display: flex
+		flex-direction: column
+
+		.filters__header
+			display: none
+
+		.incident-index__filters-mobile-controls
+			background-color: $white
+			padding: 2rem
+			display: flex
+			justify-content: space-between
+			align-items: center
+			z-index: 610
+
+		.incident-index__filters-wrapper
+			overflow: auto
+			flex: 1
+
+	+tablet-up
+		grid-area: filters
+		margin-top: 0
+		position: static
+		max-width: none
 
 .incident-index__results
 	grid-area: results
+
+.incident-index__filters-mobile-clear
+	text-decoration: none
+	color: $gray-text
+
+.mobile-filter-toggle
+	position: fixed
+	z-index: 500
+	bottom: 1rem
+	right: 1rem
+	font-weight: 500
+	line-height: 1.714
+	padding: 0.5rem 0.75rem
+	color: $white
+	border: 0
+	background-color: $black
+
+	+tablet-up
+		display: none

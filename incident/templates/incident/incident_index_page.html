@@ -4,6 +4,9 @@
 
 {% block main %}
 	<h1 class="page-title">Incidents Database</h1>
+	<button class="mobile-filter-toggle" aria-controls="database-filters" aria-expanded="false">
+		Filters
+	</button>
 
 	<section class="incident-index__search-area">
 		<div class="incident-index__search-bar">
@@ -19,15 +22,16 @@
 						<div class="incident-index__download-list">
 							<a href="#" class="incident-index__download-item">
 								Download full dataset
-								<span>{{ incident_count|intcomma }} incidents</span>
+								<span class="incident-index__incident-count">{{ incident_count|intcomma }} incidents</span>
 							</a>
 							<a href="#" class="incident-index__download-item">
 								Download your filtered data
-								<span>394 incidents</span>
+								<span class="incident-index__incident-count">394 incidents</span>
 							</a>
 							<a href="#" class="incident-index__download-item incident-index__download-item--more">Learn more</a>
 						</div>
 					</div>
+				</div>
 			</details>
 		</div>
 	</section>
@@ -66,8 +70,17 @@
 			</details>
 		</div>
 
-		<div class="incident-index__filters">
-			{% include 'incident/_filters.html' %}
+		<div id="database-filters" class="incident-index__filters" data-visible="false">
+			<div class="incident-index__filters-wrapper">
+				{% include 'incident/_filters.html' %}
+			</div>
+			<div class="incident-index__filters-mobile-controls">
+				<a class="incident-index__filters-mobile-clear" href="{{ page.url }}">Clear All</a>
+				</button>
+				<button class="btn btn-secondary">
+					Show {{ incident_count|intcomma }} incidents
+				</button>
+			</div>
 		</div>
 
 		<div class="incident-index__results">

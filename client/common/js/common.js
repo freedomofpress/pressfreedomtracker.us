@@ -1,5 +1,6 @@
 import '../sass/common.sass'
 import './menu'
+import './filterPopout'
 import './details-table'
 import './ArticleLoader'
 import './articleScroller'
