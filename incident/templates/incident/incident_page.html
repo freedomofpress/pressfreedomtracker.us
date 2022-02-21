@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags %}
-
 {% block main %}
 	<h1 class="category category-{{ main_category.page_symbol }} article-title">{{ page.title }}</h1>
 
@@ -9,7 +7,7 @@
 		{% include 'incident/incident_tags.html' with incident=page %}
 	</div>
 
-	<section class="article-content">
+	<article class="article-content">
 		<!-- Details table-->
 		{% include "incident/_details_table.html" with incident=page category_details=category_details only %}
 
@@ -18,14 +16,15 @@
 				<p class="heading">{{ page.introduction }}</p>
 		{% endif %}
 
-		<div class="article-content__inner">
-			{% include 'common/_video-or-image.html' with video=page.primary_video image=page.teaser_image caption=page.image_caption %}
+		<section class="article-content__inner">
+			{% include 'common/_video_or_image.html' with video=page.primary_video image=page.teaser_image caption=page.image_caption %}
 
-			<!-- TODO: Stream block templates-->
-			{% for block in page.body %}
-					<section class="article-content__block">{% include_block block %}</section>
+			{% for update in page.get_updates_by_asc_date %}
+				{% include "incident/_incident_update.html" with update=update only %}
 			{% endfor %}
-		</div>
+
+			{% include "incident/_incident.html" with incident=page only %}
+		</section>
 
 		<!-- Source table (TODO): Only the template styling has been implemented. Backend feature to be implemented -->
 		{% if sources %}
@@ -38,5 +37,5 @@
 		{% endif %}
 
 		{% include 'incident/related_incidents.html' %}
-	</section>
+	</article>
 {% endblock %}

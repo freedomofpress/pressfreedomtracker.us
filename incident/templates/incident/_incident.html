@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+
+<div class="incident">
+	<a class="incident-update__link text-link" href="#incident-original" id="incident-original">
+		{{ incident.last_updated|date:"F j, Y" }}
+	</a>
+	{% for block in incident.body %}
+		<div class="article-content__block">{% include_block block %}</div>
+	{% endfor %}
+</div>

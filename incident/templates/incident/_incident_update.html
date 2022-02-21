@@ -1,0 +1,13 @@
+{% load wagtailcore_tags %}
+
+<div class="incident-update">
+	<a class="incident-update__link text-link" href="#update-{{ update.id }}" id="update-{{ update.id }}">
+		{{ update.date|date:"F j, Y" }} - Update
+	</a>
+	<h3 class="incident-update__title">{{ update.title }}</h3>
+	<div class="incident-update__description">
+		{% for block in update.body %}
+			<section class="article-content__block">{% include_block block %}</section>
+		{% endfor %}
+	</div>
+</div>
