@@ -1,0 +1,23 @@
+.related-incidents
+	background-color: $section-background
+	padding-top: 2rem
+	padding-bottom: 5rem
+
+	&__inner
+		+constrain-to-desktop
+
+	&__actions
+		text-align: right
+		margin-top: 2rem
+		+constrain-to-desktop
+
+	&__container
+		margin: 0
+		padding: 0
+		list-style-type: none
+		grid-auto-flow: row
+		+grid-container
+
+	&__item
+		grid-column: span 3
+		margin-bottom: 2rem

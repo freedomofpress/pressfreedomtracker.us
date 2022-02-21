@@ -1,8 +1,26 @@
-{% with related=page.get_related_incidents %}
-    {% if related %}
-        <h2>Related Incidents</h2>
-        {% for incident in related %}
-            {% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+{% load wagtailcore_tags %}
+
+<section class="related-incidents">
+	<div class="related-incidents__inner">
+	{% with related=page.get_related_incidents %}
+		{% if related %}
+			<h2>Related Incidents</h2>
+			<ul class="related-incidents__container">
+				{% for incident in related %}
+					<li class="related-incidents__item">
+						{% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	{% endwith %}
+	</div>
+
+	{% with search_page=settings.common.SearchSettings.search_page %}
+		{% if search_page %}
+			<div class="related-incidents__actions">
+				<a href="{% pageurl search_page %}" class="btn btn-primary">Go to Incidents Database</a>
+			</div>
+		{% endif %}
+	{% endwith %}
+</section>

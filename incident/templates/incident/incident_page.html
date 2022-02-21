@@ -3,9 +3,9 @@
 {% block main %}
 	<h1 class="category category-{{ main_category.page_symbol }} article-title">{{ page.title }}</h1>
 
-	<div class="incident-tags">
+	<section class="incident-tags">
 		{% include 'incident/incident_tags.html' with incident=page %}
-	</div>
+	</section>
 
 	<article class="article-content">
 		<!-- Details table-->
@@ -25,7 +25,8 @@
 
 			{% include "incident/_incident.html" with incident=page only %}
 		</section>
-
+	</article>
+	<section class="article-meta">
 		<!-- Source table (TODO): Only the template styling has been implemented. Backend feature to be implemented -->
 		{% if sources %}
 			{% include "incident/_source_table.html" with sources=sources only %}
@@ -35,7 +36,7 @@
 		{% if same_event_incidents %}
 			{% include "incident/_same_event_incident_table.html" with same_event_incidents=same_event_incidents only %}
 		{% endif %}
+	</section>
 
-		{% include 'incident/related_incidents.html' %}
-	</article>
+	{% include 'incident/related_incidents.html' %}
 {% endblock %}
