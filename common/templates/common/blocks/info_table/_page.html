@@ -7,7 +7,7 @@
                 <div class="list-table__col info-table__title">{{ item.title|default:item.page.title }}</div>
                 <div class="list-table__col">{{ item.description }}</div>
                 <div class="list-table__link info-table__col-right"><a href="{% pageurl item.page %}">{{ value.cta_label }} &rarr;</a></div>
-            </a>
+			</div>
         </li>
     {% endif %}
 {% endfor %}
