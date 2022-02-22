@@ -3,6 +3,9 @@
 	font-style: italic
 	line-height: 1.5
 
+	&__link
+		display: inline-block
+
 	&__citation
 		font-style: normal
 		text-transform: uppercase
@@ -14,6 +17,12 @@
 		line-height: 1.333
 
 .pullquote
+	width: 100%
+
+	+desktop-up
+		width: 906px
+		margin-left: calc( 673px - 906px )	// 673px is size of rest of content, 906px is width of pullquote
+
 	&__text
 		font-size: $font-size-h3
 		letter-spacing: -0.01em

@@ -1,0 +1,14 @@
+{% load wagtailcore_tags wagtailembeds_tags wagtailimages_tags %}
+
+{% if video or image %}
+    <figure class="primary-banner-media">
+        {% if video %}
+            {% embed video %}
+        {% elif image %}
+            {% image image fill-910x510 alt=image.attribution|default:image.title %}
+        {% endif %}
+        {% if caption %}
+            <figcaption class="media-caption">{{ caption|richtext }}</figcaption>
+        {% endif %}
+    </figure>
+{% endif %}

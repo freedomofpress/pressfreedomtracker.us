@@ -135,6 +135,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     longitude = None
     latitude = None
     body = None
+    introduction = None
     teaser = None
     teaser_image = None
     image_caption = None

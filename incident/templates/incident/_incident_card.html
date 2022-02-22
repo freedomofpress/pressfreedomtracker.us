@@ -56,13 +56,6 @@
 				{% endfor %}
 			{% endif %}
 		</dl>
-
-		{% if incident.tags.all %}
-			<ul class="tag-list">
-				{% for tag in incident.tags.all %}
-					<li><a href="#" class="btn btn-tag">#{{ tag.title }}</a></li>
-				{% endfor %}
-			</ul>
-		{% endif %}
+		{% include 'incident/incident_tags.html' %}
 	</article>
 {% endwith %}

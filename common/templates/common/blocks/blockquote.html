@@ -4,7 +4,7 @@
 	{{ self.text|richtext }}
 	{% if self.source_text and self.source_url %}
 		<cite class="blockquote__citation">
-			<a class="blockquote__link" href="{{ self.source_url}}">
+			<a class="blockquote__link text-link" href="{{ self.source_url}}">
 				{{ self.source_text }}
 			</a>
 		</cite>

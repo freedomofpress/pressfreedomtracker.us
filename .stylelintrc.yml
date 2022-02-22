@@ -9,7 +9,7 @@ files:
     ignore:
         - 'node_modules/**/*'
 rules:
-    indentation: tab
+    indentation: null
     block-closing-brace-empty-line-before: null
     block-closing-brace-newline-after: null
     block-closing-brace-newline-before: null
@@ -26,6 +26,7 @@ rules:
     selector-list-comma-newline-after: null
     selector-no-qualifying-type: null
     selector-class-pattern: null
+    rule-empty-line-before: null
     color-function-notation: legacy
     alpha-value-notation: number
     color-hex-case: upper

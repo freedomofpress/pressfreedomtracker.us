@@ -1,25 +1,42 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags %}
-
 {% block main %}
-	<h1>{{ page.title }}</h1>
+	<h1 class="category category-{{ main_category.page_symbol }} article-title">{{ page.title }}</h1>
 
-	<!-- Details table-->
-	{% include "incident/_details_table.html" with incident=page category_details=category_details only %}
+	<section class="incident-tags">
+		{% include 'incident/incident_tags.html' with incident=page %}
+	</section>
 
-	<!-- TODO: Stream block templates-->
-    {% for block in page.body %}
-        <section>{% include_block block %}</section>
-    {% endfor %}
+	<article class="article-content">
+		<!-- Details table-->
+		{% include "incident/_details_table.html" with incident=page category_details=category_details only %}
 
-	<!-- Source table (TODO): Only the template styling has been implemented. Backend feature to be implemented -->
-	{% if sources %}
-		{% include "incident/_source_table.html" with sources=sources only %}
-	{% endif %}
 
-	<!-- Incidents from same event(TODO): Only the template styling has been implemented. Backend feature to be implemented-->
-	{% if same_event_incidents %}
-		{% include "incident/_same_event_incident_table.html" with same_event_incidents=same_event_incidents only %}
-	{% endif %}
+		{% if page.introduction %}
+				<p class="heading">{{ page.introduction }}</p>
+		{% endif %}
+
+		<section class="article-content__inner">
+			{% include 'common/_video_or_image.html' with video=page.primary_video image=page.teaser_image caption=page.image_caption %}
+
+			{% for update in page.get_updates_by_asc_date %}
+				{% include "incident/_incident_update.html" with update=update only %}
+			{% endfor %}
+
+			{% include "incident/_incident.html" with incident=page only %}
+		</section>
+	</article>
+	<section class="article-meta">
+		<!-- Source table (TODO): Only the template styling has been implemented. Backend feature to be implemented -->
+		{% if sources %}
+			{% include "incident/_source_table.html" with sources=sources only %}
+		{% endif %}
+
+		<!-- Incidents from same event(TODO): Only the template styling has been implemented. Backend feature to be implemented-->
+		{% if same_event_incidents %}
+			{% include "incident/_same_event_incident_table.html" with same_event_incidents=same_event_incidents only %}
+		{% endif %}
+	</section>
+
+	{% include 'incident/related_incidents.html' %}
 {% endblock %}

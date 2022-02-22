@@ -1,6 +1,5 @@
 import datetime
 import uuid
-from urllib.parse import urlencode
 
 from django import forms
 from django.db import models
@@ -15,6 +14,7 @@ from django.db.models import (
     When,
 )
 from django.db.models.functions import ExtractDay
+from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
@@ -183,6 +183,12 @@ class IncidentPage(MetadataPageMixin, Page):
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
     ])
+
+    introduction = models.TextField(
+        help_text="Optional: introduction displayed above the image.",
+        blank=True,
+        null=True,
+    )
 
     teaser = models.TextField(
         help_text="This field is optional and overrides the default teaser text.",
@@ -517,16 +523,17 @@ class IncidentPage(MetadataPageMixin, Page):
     objects = IncidentPageManager()
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body'),
-
         MultiFieldPanel(
-            heading='Teaser',
+            heading='Introduction, Video, Image and Teaser',
             children=[
+                FieldPanel('introduction'),
+                FieldPanel('primary_video'),
                 ImageChooserPanel('teaser_image'),
                 FieldPanel('image_caption'),
                 FieldPanel('teaser'),
             ]
         ),
+        StreamFieldPanel('body'),
         MultiFieldPanel(
             heading='Details',
             children=[
@@ -553,7 +560,6 @@ class IncidentPage(MetadataPageMixin, Page):
                       "incident. Displayed as footnotes."
         ),
 
-        FieldPanel('primary_video'),
 
         MultiFieldPanel(
             heading='Detention/Arrest',
@@ -689,22 +695,8 @@ class IncidentPage(MetadataPageMixin, Page):
         related_incidents = self.get_related_incidents(threshold=4)
         context['related_incidents'] = related_incidents
 
-        if related_incidents:
-            main_category = self.get_main_category()
-            if main_category:
-                related_filter = {'categories': main_category.pk}
-            else:
-                related_filter = {}
-
-            tags = self.tags.all()
-            if tags:
-                related_filter['tags'] = ','.join(str(tag.pk) for tag in tags)
-            elif self.city and self.state:
-                related_filter.update({'city': self.city, 'state': self.state})
-            elif self.state:
-                related_filter['state'] = self.state
-            context['related_qs'] = urlencode(related_filter)
-
+        main_category = self.get_main_category()
+        context['main_category'] = main_category
         context['category_details'] = self.get_category_details()
         return context
 
@@ -811,7 +803,7 @@ class IncidentPage(MetadataPageMixin, Page):
         if self.pk:
             exclude_ids.add(self.pk)
 
-        own_tags = [tag.pk for tag in self.tags.all()]
+        own_tags = [tag.pk for tag in self.get_tags]
         own_tags_set = set(own_tags)
 
         conditional_filter = Q(location_rank__gt=0)
@@ -879,3 +871,7 @@ class IncidentPage(MetadataPageMixin, Page):
             strip_tags(self.body.render_as_block()),
             20
         )
+
+    @cached_property
+    def get_tags(self):
+        return self.tags.all()
