@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.decorators import method_decorator
+from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_control
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -53,7 +54,7 @@ class GroupedFormField(AbstractFormField):
             )
         ]
 
-    group = ParentalKey('FieldGroup', related_name='form_fields')
+    group = ParentalKey('FieldGroup', on_delete=models.CASCADE, related_name='form_fields')
 
     placeholder = models.CharField(
         max_length=255,
@@ -78,7 +79,7 @@ class GroupedFormField(AbstractFormField):
 
 
 class FieldGroup(ClusterableModel, Orderable):
-    page = ParentalKey('FormPage', related_name='field_groups')
+    page = ParentalKey('FormPage', on_delete=models.CASCADE, related_name='field_groups')
 
     title = models.CharField(
         max_length=255,
@@ -102,6 +103,10 @@ class FieldGroup(ClusterableModel, Orderable):
         FieldPanel('template'),
         InlinePanel('form_fields', label="Form field", classname='full-width nested-inline'),
     ]
+
+    @cached_property
+    def fields(self):
+        return self.form_fields.all()
 
 
 @method_decorator(cache_control(private=True), name='serve')
@@ -156,6 +161,10 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         ], "Outro"),
     ]
     # base_form_class = ReplyToValidatorForm
+
+    @cached_property
+    def groups(self):
+        return self.field_groups.all()
 
     def get_form_fields(self):
         fields = []

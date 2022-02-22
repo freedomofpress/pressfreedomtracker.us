@@ -1,0 +1,34 @@
+{% load widget_tweaks common_tags %}
+
+{% for item in group.fields %}
+    {% with field=form|lookup:item.clean_name %}
+
+        <div class="form-field
+            {% if field.errors %}
+                form-field--error
+            {% endif %}
+            {% if field.field.widget.attrs.is_hidden %}
+                form-field--hidden
+            {% endif %}
+        ">
+            {% if 'hiddeninput' not in field|widget_type %}
+                <label for="{{ field.id_for_label }}" class="form-label ">{{ field.label }}</label>
+            {% endif %}
+
+            {% with placeholder="placeholder:"|add:item.placeholder %}
+
+                {% if field.field.required %}
+                    {{ field | add_class:'form-item' | attr:'required' | attr:placeholder }}
+                {% else %}
+                    {{ field | add_class:'form-item' | attr:placeholder }}
+                {% endif %}
+
+            {% endwith %}
+
+            {% for error in field.errors %}
+                <span class="form-field__error__message form-field__error__message--visible">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+    {% endwith %}
+{% endfor %}

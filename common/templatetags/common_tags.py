@@ -49,3 +49,11 @@ def comma_separated_pks(model_list, modifier):
         pks = [str(model.pk) for model in model_list]
 
     return ','.join(pks)
+
+
+@register.filter
+def lookup(d, key):
+    try:
+        return d[key]
+    except Exception:
+        return ''
