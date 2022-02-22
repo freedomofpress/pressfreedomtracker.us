@@ -44,7 +44,7 @@
 				<summary class="btn incident-index__sort-button">
 					Sort by
 					<div>
-						&udarr; <span>Newest incident date</span>
+						&udarr; <span class="incident-index__sort-selection">Newest incident date</span>
 					</div>
 				</summary>
 				<div class="incident-index__sort-menu">
@@ -84,6 +84,9 @@
 		</div>
 
 		<div class="incident-index__results">
+			<div class="incident-index__column-header incident-index__column-header--incident">Incident</div>
+			<div class="incident-index__column-header incident-index__column-header--incident-details">Incident Details</div>
+			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>
 			{% for incident in entries_page %}
 				{% include "incident/_incident_database_card.html" with incident=incident only %}
 			{% endfor %}

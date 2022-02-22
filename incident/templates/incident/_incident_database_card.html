@@ -1,6 +1,6 @@
 <article class="incident-database-card">
 	<div class="incident-database-card__section">
-		<h3 class="card-title-database">
+		<h3 class="card-title-database incident-database-card__title">
 			{% for cat in incident.categories.all %}
 				<span class="category category-{{ cat.category.page_symbol }}"></span>
 			{% endfor %}

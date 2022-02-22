@@ -1,27 +1,18 @@
 .incident-index__body
-	padding: 16px
-
-	+tablet-up
-		display: grid
-		grid-template-areas: "filters header" "filters results"
-		grid-template-rows: min-content 1fr
-		grid-template-columns: 4fr 7fr
-		gap: 1rem
-		padding: 0 16px 0 0
-
-	+desktop-up
-		grid-template-columns: 1fr 3fr
+	+constrain-to-desktop
+	+grid-container
 
 .incident-index__body-header
 	display: flex
 	align-items: center
 	justify-content: space-between
 	position: relative
-	grid-area: header
+	grid-column: 1 / -1
+	margin-bottom: 32px
 
-	+tablet-only
-		border-bottom: solid 3px
-		border-color: $black
+	+tablet-up
+		grid-column: 4 / -1
+		grid-row: 1
 
 	p
 		margin: 0
@@ -129,6 +120,12 @@
 	cursor: pointer
 	text-decoration: none
 	font-size: $font-size-p
+
+.incident-index__sort-selection
+	display: none
+
+	+tablet-up
+		display: inline
 
 .incident-index__search-area
 	display: flex
@@ -283,13 +280,27 @@
 			flex: 1
 
 	+tablet-up
-		grid-area: filters
+		grid-column: 1 / 4
+		grid-row: span 2
 		margin-top: 0
 		position: static
 		max-width: none
 
 .incident-index__results
-	grid-area: results
+	grid-column: 1 / -1
+
+	+tablet-up
+		grid-column: 4 / -1
+		display: grid
+		+grid-columns(9, 2rem)
+
+.incident-index__column-header
+	display: none
+	+desktop-up
+		grid-column: span 3
+		font-size: $font-size-small-p
+		font-weight: 700
+		display: block
 
 .incident-index__filters-mobile-clear
 	text-decoration: none

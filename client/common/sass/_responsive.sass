@@ -10,7 +10,7 @@ $desktop-min: $tablet-max + 1px
 		@content
 
 =tablet-only
-	@media (min-width: $tablet-min) and (max-width: $desktop-min)
+	@media (min-width: $tablet-min) and (max-width: $tablet-max)
 		@content
 
 =desktop-up
@@ -18,7 +18,7 @@ $desktop-min: $tablet-max + 1px
 		@content
 
 =tablet-down
-	@media(max-width: $desktop-min)
+	@media(max-width: $tablet-max)
 		@content
 
 =mobile-down
