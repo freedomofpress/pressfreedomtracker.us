@@ -66,9 +66,13 @@
 		position: absolute
 		top: 6px
 		right: 24px
+		display: none
 
-		+desktop-up
-			display: none
+		&.has-js
+			display: block
+
+			+desktop-up
+				display: none
 
 	&__container
 		+tablet-down

@@ -1,9 +1,9 @@
 <section class="details-table">
 	<h3 class="heading-table" id="incident-details-title">Incident Details</h3>
-	<button class="disclose-summary details-toggle-btn" aria-expanded="false" aria-controls="incident-details" id="details-toggle-btn">
+	<button class="disclose-summary details-toggle-btn" aria-expanded="true" aria-controls="incident-details" id="details-toggle-btn">
 		Show More
 	</button>
-	<div class="details-table__container" id="incident-details" data-visible="false">
+	<div class="details-table__container" id="incident-details" data-visible="true">
 		{% include "incident/_incident_details_table.html" with incident=incident only %}
 
 		{% for category, category_detail in incident.get_category_details.items %}
