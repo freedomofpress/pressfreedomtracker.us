@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block main %}
+    <h1 class="page-title">{{ page.title }}</h1>
+
+    <section class="simplepage-body">
+
+        <!-- Stream block templates-->
+        {% for block in page.body %}
+            <section>{% include_block block %}</section>
+        {% endfor %}
+
+    </section>
+{% endblock %}

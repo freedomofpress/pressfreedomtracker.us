@@ -29,6 +29,7 @@ from common.blocks import (
     TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     EmailSignupBlock,
+    InfoTableBlock,
 )
 from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.utils import (
@@ -432,6 +433,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
         ('email_signup', EmailSignupBlock()),
+        ('info_table', InfoTableBlock()),
     ])
 
     sidebar_content = StreamField(

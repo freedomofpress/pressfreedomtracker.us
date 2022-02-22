@@ -336,3 +336,101 @@ class EmailSignupBlock(blocks.StructBlock):
         template = 'common/blocks/emails_signup.html'
         icon = 'form'
         label = 'Newsletter Signup'
+
+
+class AbstractInfoTableCTABlock(blocks.StructBlock):
+    cta_label = blocks.CharBlock(
+        help_text='Label to be displayed for row link, e.g. "Read the bio", "Contact us", "Visit the page", etc.',
+    )
+
+    class Meta:
+        abstract = True
+
+
+class InfoTableBlockPage(AbstractInfoTableCTABlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('page', blocks.PageChooserBlock()),
+            ('title', blocks.CharBlock(
+                help_text='Optional: defaults to page title',
+                required=False,
+            )),
+            ('description', blocks.CharBlock()),
+        ],
+        icon='list-ul',
+        label='Table row'
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_page.html'
+        icon = 'doc-full'
+
+
+class InfoTableBlockEmail(AbstractInfoTableCTABlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('title', blocks.CharBlock()),
+            ('email', blocks.EmailBlock()),
+        ],
+        icon='list-ul',
+        label='Table row'
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_email.html'
+        icon = 'mail'
+
+
+class InfoTableBlockURL(AbstractInfoTableCTABlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('image', ImageChooserBlock(
+                required=False,
+            )),
+            ('title', blocks.CharBlock()),
+            ('url', blocks.URLBlock()),
+        ],
+        icon='list-ul',
+        label='Table row'
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_url.html'
+        icon = 'site'
+
+
+class InfoTableBlockText(blocks.StructBlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('title', blocks.CharBlock()),
+            ('description', blocks.CharBlock()),
+        ],
+        icon='list-ul',
+        label='Table row',
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_text.html'
+        icon = 'pilcrow'
+
+
+class InfoTableBlock(blocks.StructBlock):
+    heading = blocks.CharBlock(
+        help_text='Heading of the info table',
+    )
+    table = blocks.StreamBlock(
+        [
+            ('page_links', InfoTableBlockPage()),
+            ('email_addresses', InfoTableBlockEmail()),
+            ('external_links', InfoTableBlockURL()),
+            ('plain_text', InfoTableBlockText()),
+        ],
+        max_num=1,
+        icon='list-ul',
+        label='Table type'
+    )
+
+    class Meta:
+        template = 'common/blocks/info_table.html'
+        icon = 'list-ul'
+        label = 'Info table'

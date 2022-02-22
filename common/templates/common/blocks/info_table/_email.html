@@ -1,0 +1,13 @@
+{% load wagtailcore_tags %}
+
+{% for item in value.table_data %}
+     <li class="list-table__row">
+        <div class="list-table__item info-table--col-3">
+            <div class="list-table__col info-table__title">{{ item.title }}</div>
+            <div class="list-table__col">{{ item.email|urlize }}</div>
+            <div class="list-table__link info-table__col-right">
+				<a href="mailto:{{ item.email }}" aria-label="Send email to {{ item.email }}">{{ value.cta_label }} &rarr;</a>
+			</div>
+		</div>
+    </li>
+{% endfor %}
