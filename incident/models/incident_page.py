@@ -1,6 +1,5 @@
 import datetime
 import uuid
-from urllib.parse import urlencode
 
 from django import forms
 from django.db import models
@@ -697,21 +696,6 @@ class IncidentPage(MetadataPageMixin, Page):
         context['related_incidents'] = related_incidents
 
         main_category = self.get_main_category()
-        if related_incidents:
-            if main_category:
-                related_filter = {'categories': main_category.pk}
-            else:
-                related_filter = {}
-
-            tags = self.get_tags
-            if tags:
-                related_filter['tags'] = ','.join(str(tag.pk) for tag in tags)
-            elif self.city and self.state:
-                related_filter.update({'city': self.city, 'state': self.state})
-            elif self.state:
-                related_filter['state'] = self.state
-            context['related_qs'] = urlencode(related_filter)
-
         context['main_category'] = main_category
         context['category_details'] = self.get_category_details()
         return context
