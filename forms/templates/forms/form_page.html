@@ -19,13 +19,13 @@
     </section>
 
     <section class="formpage-form">
-        <form class="form" action="{% pageurl page %}" method="post">
+        <form class="form" action="{% pageurl page %}" method="post" novalidate>
             {% csrf_token %}
             {% for group in page.groups %}
-                <fieldset>
+                <fieldset class="fieldset fieldset--spaced">
                     <h4 class="heading-regular">{{ group.title }}</h4>
                     {% if group.description %}
-                        <p>{{ group.description }}</p>
+                        <p class="hint">{{ group.description }}</p>
                     {% endif %}
                     {% with template='forms/_'|add:group.template|add:'.html' %}
                         {% include template %}

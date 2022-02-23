@@ -20,8 +20,85 @@
 
     +constrain-to-desktop
 
-    .form
-        fieldset
+.form
+    .fieldset
+        padding: 0
+        border: none
+        &--spaced
             margin-bottom: 2em
+
+    .form-label
+        margin-bottom: 1em
+        &--hidden
+            +a11yhide
+
+
+    .form-field
+        position: relative
+
+        &--spaced
+            padding-top: 1em
+
+        &--inline
+            display: inline-block
+
+        &--divider
+            display: inline-block
+            margin: 0 1em
+
+        &--error
+            .form-item
+                border-color: $error
+            &:focus
+                border-color: $error
+
+            .form-label
+                color: $error
+
+        .hint
+            padding-top: 1em
+            clear: left
+            display: block
+
+        &__error__message
+            padding-top: 0.25em
+            font-style: italic
+            color: $error
+            display: none
+            clear: left
+
+            &--visible
+              display: block
+
+    .form-item
+        font-size: $font-size-p-desktop
+        font-style: italic
+        padding: 0.15em
+        padding-bottom: 0
+        display: block
+        border: none
+        border: 1px solid $section-background
+        border-bottom: 1px solid $black
+        appearance: none
+        background-color: $white
+        height: 1.5em
+        width: 100%
+        margin-top: 0.75em
+
+        &::focus-inner
+            border: 0
             padding: 0
-            border: none
+
+        &:focus
+            outline: none
+            border: 1px solid $black
+            background-color: $tag-inactive-bg
+
+
+    .form-item[type=number]::-webkit-inner-spin-button
+    .form-item[type=number]::-webkit-outer-spin-button
+        appearance: none
+
+
+
+

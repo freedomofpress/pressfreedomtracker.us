@@ -57,3 +57,14 @@ def lookup(d, key):
         return d[key]
     except Exception:
         return ''
+
+
+@register.filter(is_safe=False)
+def add_as_string(value, arg):
+    try:
+        return str(value) + str(arg)
+    except (ValueError, TypeError):
+        try:
+            return value + arg
+        except Exception:
+            return ''

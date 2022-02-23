@@ -12,7 +12,7 @@
             {% endif %}
         ">
             {% if 'hiddeninput' not in field|widget_type %}
-                <label for="{{ field.id_for_label }}" class="form-label ">{{ field.label }}</label>
+                <label for="{{ field.id_for_label }}" class="form-label form-label--hidden">{{ field.label }}</label>
             {% endif %}
 
             {% with placeholder="placeholder:"|add:item.placeholder %}

@@ -145,7 +145,7 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
     ] + WagtailCaptchaEmailForm.content_panels + [
         FieldPanel('intro', classname="full"),
         FieldPanel('form_intro', classname="full"),
-        InlinePanel('field_groups', label="Form field groups"),
+        InlinePanel('field_groups', label="Field group"),
         FieldPanel('thank_you_text', classname="full"),
         FieldPanel('button_text'),
         MultiFieldPanel([
