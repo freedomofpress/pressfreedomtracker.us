@@ -8,7 +8,7 @@ from factory import (
 from factory.django import DjangoModelFactory
 from wagtail_factories import PageFactory
 
-from forms.models import GroupedFormField, FormPage
+from forms.models import GroupedFormField, FieldGroup, FormPage
 
 
 class FormFieldFactory(DjangoModelFactory):
@@ -38,34 +38,40 @@ class FormFieldFactory(DjangoModelFactory):
         )
 
 
-class FormPageFactory(PageFactory):
+class FieldGroupFactory(DjangoModelFactory):
     class Meta:
-        model = FormPage
+        model = FieldGroup
 
-    intro = Faker('sentence')
-    thank_you_text = Faker('sentence')
-    button_text = 'Submit'
-
-    singleline_field = RelatedFactory(FormFieldFactory, 'page')
-    multiline_field = RelatedFactory(FormFieldFactory, 'page', field_type='multiline')
-    email_field = RelatedFactory(FormFieldFactory, 'page', field_type='email')
-    number_field = RelatedFactory(FormFieldFactory, 'page', field_type='number')
-    url_field = RelatedFactory(FormFieldFactory, 'page', field_type='url')
-    checkbox_field = RelatedFactory(FormFieldFactory, 'page', field_type='checkbox')
-    date_field = RelatedFactory(FormFieldFactory, 'page', field_type='date')
-    datetime_field = RelatedFactory(FormFieldFactory, 'page', field_type='datetime')
-    radio_field = RelatedFactory(FormFieldFactory, 'page', radio=True)
-    dropdown_field = RelatedFactory(FormFieldFactory, 'page', dropdown=True)
-    checkboxes_field = RelatedFactory(FormFieldFactory, 'page', checkboxes=True)
+    title = Faker('words', nb=4)
+    description = Faker('sentence')
+    sort_order = Sequence(int)
+    template = 'text'
 
 
-class FormPageWithReplyToFieldFactory(PageFactory):
+class FormPageFieldGroupFactory(FieldGroupFactory):
     class Meta:
-        model = FormPage
+        model = FieldGroup
+
+    singleline_field = RelatedFactory(FormFieldFactory, 'group')
+    multiline_field = RelatedFactory(FormFieldFactory, 'group', field_type='multiline')
+    email_field = RelatedFactory(FormFieldFactory, 'group', field_type='email')
+    number_field = RelatedFactory(FormFieldFactory, 'group', field_type='number')
+    url_field = RelatedFactory(FormFieldFactory, 'group', field_type='url')
+    checkbox_field = RelatedFactory(FormFieldFactory, 'group', field_type='checkbox')
+    date_field = RelatedFactory(FormFieldFactory, 'group', field_type='date')
+    datetime_field = RelatedFactory(FormFieldFactory, 'group', field_type='datetime')
+    radio_field = RelatedFactory(FormFieldFactory, 'group', radio=True)
+    dropdown_field = RelatedFactory(FormFieldFactory, 'group', dropdown=True)
+    checkboxes_field = RelatedFactory(FormFieldFactory, 'group', checkboxes=True)
+
+
+class FormPageWithReplyToFieldFieldGroupFactory(FieldGroupFactory):
+    class Meta:
+        model = FieldGroup
 
     email_field = RelatedFactory(
         FormFieldFactory,
-        'page',
+        'group',
         field_type='email',
         use_as_reply_to=True,
         required=True,
@@ -73,13 +79,13 @@ class FormPageWithReplyToFieldFactory(PageFactory):
     )
 
 
-class FormPageWithAppendSubjectFieldsFactory(PageFactory):
+class FormPageWithAppendSubjectFieldsFieldGroupFactory(FieldGroupFactory):
     class Meta:
-        model = FormPage
+        model = FieldGroup
 
     subject_field = RelatedFactory(
         FormFieldFactory,
-        'page',
+        'group',
         field_type='singleline',
         append_to_subject=True,
         required=True,
@@ -88,9 +94,34 @@ class FormPageWithAppendSubjectFieldsFactory(PageFactory):
 
     subject_field2 = RelatedFactory(
         FormFieldFactory,
-        'page',
+        'group',
         field_type='singleline',
         append_to_subject=True,
         required=True,
         label='theme',
     )
+
+
+class FormPageFactory(PageFactory):
+    class Meta:
+        model = FormPage
+
+    intro = Faker('sentence')
+    thank_you_text = Faker('sentence')
+    button_text = 'Submit'
+
+    field_group = RelatedFactory(FormPageFieldGroupFactory, 'page')
+
+
+class FormPageWithReplyToFieldFactory(PageFactory):
+    class Meta:
+        model = FormPage
+
+    field_group = RelatedFactory(FormPageWithReplyToFieldFieldGroupFactory, 'page')
+
+
+class FormPageWithAppendSubjectFieldsFactory(PageFactory):
+    class Meta:
+        model = FormPage
+
+    field_group = RelatedFactory(FormPageWithAppendSubjectFieldsFieldGroupFactory, 'page')
