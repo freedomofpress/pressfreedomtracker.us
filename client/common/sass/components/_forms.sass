@@ -15,12 +15,15 @@
     margin-bottom: 2em
 
     +desktop-up
-        margin: 0 -2rem
-        padding: 0.25rem 2rem
+        margin: 4rem -2rem 2rem
+        padding: 2rem 2rem
 
     +constrain-to-desktop
 
 .form
+
+    +desktop-up
+        max-width: 50%
 
     .fieldset
         padding: 0
@@ -104,6 +107,7 @@
 
     textarea.form-item
         box-sizing: border-box
+        border: 2px solid $black
         font-family: $font-base
         min-height: 200px
         padding: 1em
@@ -149,15 +153,15 @@
             color: currentColor
             width: 1.15em
             height: 1.15em
-            border: 0.15em solid currentColor
+            border: 3px solid currentColor
             transform: translateY(-0.175em)
             display: grid
             place-content: center
 
             &:before
                 content: ''
-                width: 0.6em
-                height: 0.6em
+                width: 0.5em
+                height: 0.5em
                 margin: 20% auto
                 transform: scale(0)
                 transition: 120ms transform ease-in-out
