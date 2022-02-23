@@ -28,14 +28,18 @@
                 {% endif %}
 
             {% endwith %}
-
-            {% for error in field.errors %}
-                <span class="form-field__error__message form-field__error__message--visible">{{ error }}</span>
-            {% endfor %}
         </div>
 
         {% if not forloop.last %}
             <span class="form-field--divider">/</span>
+        {% endif %}
+
+        {% if field.errors %}
+            <div class="form-field form-field--error">
+                {% for error in field.errors %}
+                    <span class="form-field__error__message form-field__error__message--visible">{{ error }}</span>
+                {% endfor %}
+            </div>
         {% endif %}
 
     {% endwith %}
