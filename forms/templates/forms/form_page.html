@@ -32,6 +32,9 @@
                     {% endwith %}
                 </fieldset>
             {% endfor %}
+            <fieldset class="fieldset fieldset--spaced">
+                {{ form.wagtailcaptcha }}
+            </fieldset>
             <button type="submit" class="btn btn-primary">{{ page.button_text }}</button>
         </form>
     </section>

@@ -190,7 +190,7 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         return response
 
     def send_mail(self, form):
-        fields = {x.clean_name: x for x in self.form_fields.all()}
+        fields = {x.clean_name: x for x in self.get_form_fields()}
         addresses = [x.strip() for x in self.to_address.split(',')]
         content = []
         reply_to = []
