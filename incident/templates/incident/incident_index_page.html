@@ -22,7 +22,7 @@
 						<div class="incident-index__download-list">
 							<a href="#" class="incident-index__download-item">
 								Download full dataset
-								<span class="incident-index__incident-count">{{ incident_count|intcomma }} incidents</span>
+								<span class="incident-index__incident-count">{{ incident_count|intcomma }} incident{{ incident_count|pluralize }}</span>
 							</a>
 							<a href="#" class="incident-index__download-item">
 								Download your filtered data
@@ -38,7 +38,7 @@
 	<section class="incident-index__body">
 		<div class="incident-index__body-header">
 			<p class="paragraph-subtitle">
-				{{ incident_count|intcomma }} incidents recorded
+				{{ incident_count|intcomma }} incident{{ incident_count|pluralize }} recorded
 			</p>
 			<details class="incident-index__sort-details">
 				<summary class="btn incident-index__sort-button">
