@@ -21,11 +21,19 @@
     +constrain-to-desktop
 
 .form
+
     .fieldset
         padding: 0
         border: none
         &--spaced
             margin-bottom: 2em
+
+    .hint
+        padding: 0
+        margin: 0
+        margin-top: 1.5em
+        clear: left
+        display: block
 
     .form-label
         margin-bottom: 1em
@@ -55,11 +63,6 @@
             .form-label
                 color: $error
 
-        .hint
-            padding-top: 1em
-            clear: left
-            display: block
-
         &__error__message
             padding-top: 0.25em
             font-style: italic
@@ -71,6 +74,7 @@
               display: block
 
     .form-item
+        font-family: $font-base
         font-size: $font-size-p-desktop
         font-style: italic
         padding: 0.15em
@@ -94,10 +98,81 @@
             border: 1px solid $black
             background-color: $tag-inactive-bg
 
-
-    .form-item[type=number]::-webkit-inner-spin-button
+    .form-item[type=number]::-webkit-inner-spin-button,
     .form-item[type=number]::-webkit-outer-spin-button
         appearance: none
+
+    textarea.form-item
+        box-sizing: border-box
+        font-family: $font-base
+        min-height: 200px
+        padding: 1em
+
+    .form-field__radio-buttons,
+    .form-field__checkboxes
+        margin-top: 0.25em
+
+        ul
+            list-style-type: none
+            padding: 0
+            margin: 0
+
+        label
+            position: relative
+            top: 0
+            vertical-align: middle
+            &:after
+                clear: left
+                content: ""
+                display: block
+                height: 0
+
+        input
+            float: left
+            margin-left: 0.15em
+            margin-right: 0.5em
+            vertical-align: middle
+            &:after
+                clear: left
+                content: ""
+                display: block
+                height: 0
+
+        input[type='radio'],
+        input[type='checkbox']
+            font-family: $font-base
+            appearance: none
+            background-color: $section-background
+            position: relative
+            top: 0.25em
+            font: inherit
+            color: currentColor
+            width: 1.15em
+            height: 1.15em
+            border: 0.15em solid currentColor
+            transform: translateY(-0.175em)
+            display: grid
+            place-content: center
+
+            &:before
+                content: ''
+                width: 0.6em
+                height: 0.6em
+                margin: 20% auto
+                transform: scale(0)
+                transition: 120ms transform ease-in-out
+                box-shadow: inset 1em 1em $black
+
+            &:checked:before
+                 transform: scale(1)
+
+        input[type='radio']
+            border-radius: 50%
+
+            &:before
+                border-radius: 50%
+
+
 
 
 

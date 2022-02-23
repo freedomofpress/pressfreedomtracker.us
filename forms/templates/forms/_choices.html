@@ -1,0 +1,66 @@
+{% load widget_tweaks common_tags %}
+
+{% for item in group.fields %}
+    {% with field=form|lookup:item.clean_name %}
+
+        <div class="form-field
+            {% if field.errors %}
+                form-field--error
+            {% endif %}
+            {% if field.field.widget.attrs.is_hidden %}
+                form-field--hidden
+            {% endif %}
+        ">
+            {% with type=field|widget_type  %}
+
+                {% if field.field.required %}
+
+                    {% if type == 'textarea' %}
+                        {% with placeholder="placeholder:"|add:item.placeholder %}
+                            {{ field | add_class:'form-item'| attr:"rows:" | attr:"cols:" | attr:placeholder | attr:'required' }}
+                        {% endwith %}
+
+                    {% elif type == 'checkboxselectmultiple' or type == 'checkboxinput' %}
+                        <div class="form-field__checkboxes">
+                            <div class="form-field--checkbox">
+                                {{ field | attr:'required' }}
+                            </div>
+                        </div>
+
+                    {% elif type == 'radioselect' %}
+                        <div class='form-field__radio-buttons'>
+                            {{ field | add_class:'form-radio-group' | attr:'required' }}
+                        </div>
+                    {% endif %}
+
+                {% else %}
+
+                    {% if type == 'textarea' %}
+                        {% with placeholder="placeholder:"|add:item.placeholder %}
+                            {{ field | add_class:'form-item' | attr:"rows:" | attr:"cols:" | attr:placeholder }}
+                        {% endwith %}
+
+                    {% elif type == 'checkboxselectmultiple' or type == 'checkboxinput' %}
+                        <div class="form-field__checkboxes">
+                            <div class="form-field--checkbox">
+                                {{ field }}
+                            </div>
+                        </div>
+
+                    {% elif type == 'radioselect' %}
+                        <div class='form-field__radio-buttons'>
+                            {{ field | add_class:'form-radio-group' }}
+                        </div>
+                    {% endif %}
+
+                {% endif %}
+
+            {% endwith %}
+
+            {% for error in field.errors %}
+                <span class="form-field__error__message form-field__error__message--visible">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+    {% endwith %}
+{% endfor %}
