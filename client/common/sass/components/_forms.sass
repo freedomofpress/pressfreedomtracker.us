@@ -1,183 +1,181 @@
 .formpage-body
-    .styled-text
-        margin-bottom: 2em
+	.styled-text
+		margin-bottom: 2em
 
-        +desktop-up
-            max-width: 50%
+		+desktop-up
+			max-width: 50%
 
-    +constrain-to-desktop
-
+	+constrain-to-desktop
 
 .formpage-form
-    padding: 2em 0
-    background-color: $section-background
-    border-bottom: $black 3px solid
-    margin-bottom: 2em
+	padding: 2em 0
+	background-color: $section-background
+	border-bottom: $black 3px solid
+	margin-bottom: 2em
 
-    +desktop-up
-        margin: 4rem -2rem 2rem
-        padding: 2rem 2rem
+	+desktop-up
+		margin: 4rem -2rem 2rem
+		padding: 2rem 2rem
 
-    +constrain-to-desktop
+	+constrain-to-desktop
 
 .form
 
-    +desktop-up
-        max-width: 50%
+	+desktop-up
+		max-width: 50%
 
-    .fieldset
-        padding: 0
-        border: none
-        &--spaced
-            margin-bottom: 2em
+	.fieldset
+		padding: 0
+		border: 0
 
-    .hint
-        padding: 0
-        margin: 0
-        margin-top: 1.5em
-        clear: left
-        display: block
+		&--spaced
+			margin-bottom: 2em
 
-    .form-label
-        margin-bottom: 1em
-        &--hidden
-            +a11yhide
+	.hint
+		padding: 0
+		margin: 0
+		margin-top: 1.5em
+		clear: left
+		display: block
 
+	.form-label
+		margin-bottom: 1em
 
-    .form-field
-        position: relative
+		&--hidden
+			+a11yhide
 
-        &--spaced
-            padding-top: 1em
+	.form-field
+		position: relative
 
-        &--inline
-            display: inline-block
+		&--spaced
+			padding-top: 1em
 
-        &--divider
-            display: inline-block
-            margin: 0 1em
+		&--inline
+			display: inline-block
 
-        &--error
-            .form-item
-                border-color: $error
-            &:focus
-                border-color: $error
+		&--divider
+			display: inline-block
+			margin: 0 1em
 
-            .form-label
-                color: $error
+		&__error__message
+			padding-top: 0.25em
+			font-style: italic
+			color: $error
+			display: none
+			clear: left
 
-        &__error__message
-            padding-top: 0.25em
-            font-style: italic
-            color: $error
-            display: none
-            clear: left
+			&--visible
+				display: block
 
-            &--visible
-              display: block
+	.form-item
+		font-family: $font-base
+		font-size: $font-size-p-desktop
+		font-style: italic
+		padding: 0.15em
+		padding-bottom: 0
+		display: block
+		border: 1px solid $section-background
+		border-bottom-color: $black
+		appearance: none
+		background-color: $white
+		height: 1.5em
+		width: 100%
+		margin-top: 0.75em
 
-    .form-item
-        font-family: $font-base
-        font-size: $font-size-p-desktop
-        font-style: italic
-        padding: 0.15em
-        padding-bottom: 0
-        display: block
-        border: none
-        border: 1px solid $section-background
-        border-bottom: 1px solid $black
-        appearance: none
-        background-color: $white
-        height: 1.5em
-        width: 100%
-        margin-top: 0.75em
+		&::-moz-focus-inner
+			border: 0
+			padding: 0
 
-        &::focus-inner
-            border: 0
-            padding: 0
+		&:focus
+			outline: none
+			border-color: $black
+			background-color: $tag-inactive-bg
 
-        &:focus
-            outline: none
-            border: 1px solid $black
-            background-color: $tag-inactive-bg
+	.form-field--error
+		.form-label
+			color: $error
 
-    .form-item[type=number]::-webkit-inner-spin-button,
-    .form-item[type=number]::-webkit-outer-spin-button
-        appearance: none
+		.form-item
+			border-color: $error
 
-    textarea.form-item
-        box-sizing: border-box
-        border: 2px solid $black
-        font-family: $font-base
-        min-height: 200px
-        padding: 1em
+			&:focus
+				border-color: $error
 
-    .form-field__radio-buttons,
-    .form-field__checkboxes
-        margin-top: 0.25em
+	.form-item[type='number']::-webkit-inner-spin-button,
+	.form-item[type='number']::-webkit-outer-spin-button
+		appearance: none
 
-        ul
-            list-style-type: none
-            padding: 0
-            margin: 0
+	textarea.form-item
+		box-sizing: border-box
+		border: 2px solid
+		font-family: $font-base
+		min-height: 200px
+		padding: 1em
 
-        label
-            position: relative
-            top: 0
-            vertical-align: middle
-            &:after
-                clear: left
-                content: ""
-                display: block
-                height: 0
+	.form-field__radio-buttons,
+	.form-field__checkboxes
+		margin-top: 0.25em
 
-        input
-            float: left
-            margin-left: 0.15em
-            margin-right: 0.5em
-            vertical-align: middle
-            &:after
-                clear: left
-                content: ""
-                display: block
-                height: 0
+		ul
+			list-style-type: none
+			padding: 0
+			margin: 0
 
-        input[type='radio'],
-        input[type='checkbox']
-            font-family: $font-base
-            appearance: none
-            background-color: $section-background
-            position: relative
-            top: 0.25em
-            font: inherit
-            color: currentColor
-            width: 1.15em
-            height: 1.15em
-            border: 3px solid currentColor
-            transform: translateY(-0.175em)
-            display: grid
-            place-content: center
+		label
+			position: relative
+			top: 0
+			vertical-align: middle
+			&::after
+				clear: left
+				content: ''
+				display: block
+				height: 0
 
-            &:before
-                content: ''
-                width: 0.5em
-                height: 0.5em
-                margin: 20% auto
-                transform: scale(0)
-                transition: 120ms transform ease-in-out
-                box-shadow: inset 1em 1em $black
+		input
+			float: left
+			margin-left: 0.15em
+			margin-right: 0.5em
+			vertical-align: middle
+			&::after
+				clear: left
+				content: ''
+				display: block
+				height: 0
 
-            &:checked:before
-                 transform: scale(1)
+		input[type='checkbox'],
+		input[type='radio']
+			font: inherit
+			appearance: none
+			background-color: $section-background
+			position: relative
+			top: 0.25em
+			color: currentColor
+			width: 1.15em
+			height: 1.15em
+			border: 3px solid currentColor
+			transform: translateY(-0.175em)
+			display: grid
+			place-content: center
 
-        input[type='radio']
-            border-radius: 50%
+			&::before
+				content: ''
+				width: 0.5em
+				height: 0.5em
+				margin: 20% auto
+				transform: scale(0)
+				transition: 120ms transform ease-in-out
+				box-shadow: inset 1em 1em #000
 
-            &:before
-                border-radius: 50%
+		input[type='checkbox']
 
+			&:checked::before
+				transform: scale(1)
 
+		input[type='radio']
+			border-radius: 50%
 
+			&::before
+				border-radius: 50%
 
-
-
+			&:checked::before
+				transform: scale(1)
