@@ -8,12 +8,12 @@ from factory import (
 from factory.django import DjangoModelFactory
 from wagtail_factories import PageFactory
 
-from forms.models import FormField, FormPage
+from forms.models import GroupedFormField, FormPage
 
 
 class FormFieldFactory(DjangoModelFactory):
     class Meta:
-        model = FormField
+        model = GroupedFormField
         exclude = ('choices_text',)
 
     field_type = 'singleline'
