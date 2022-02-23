@@ -27,14 +27,15 @@ class ReplyToValidatorForm(WagtailAdminPageForm):
 
         reply_to_fields = []
         reply_to_forms = []
-        for form in self.formsets['form_fields'].forms:
-            if form.is_valid():
-                cleaned_form_data = form.clean()
-                reply_to_field = cleaned_form_data.get('use_as_reply_to')
+        for group in self.formsets['field_groups'].forms:
+            for form in group.formsets['form_fields'].forms:
+                if form.is_valid():
+                    cleaned_form_data = form.clean()
+                    reply_to_field = cleaned_form_data.get('use_as_reply_to')
 
-                if reply_to_field:
-                    reply_to_fields.append(cleaned_form_data.get('label'))
-                    reply_to_forms.append(form)
+                    if reply_to_field:
+                        reply_to_fields.append(cleaned_form_data.get('label'))
+                        reply_to_forms.append(form)
 
         if len(reply_to_fields) > 1:
             for form in reply_to_forms:
@@ -160,7 +161,7 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
             FieldPanel('outro_text'),
         ], "Outro"),
     ]
-    # base_form_class = ReplyToValidatorForm
+    base_form_class = ReplyToValidatorForm
 
     @cached_property
     def groups(self):
