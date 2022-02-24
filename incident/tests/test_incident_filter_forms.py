@@ -102,6 +102,7 @@ class FilterFormTest(TestCase):
             ['RETURNED_PART', 'returned in part']
         ]
         capitalized = capitalize_choice_labels(choices)
+        capitalized = [('', '------')] + capitalized
         item = {
             'filters': [
                 {
