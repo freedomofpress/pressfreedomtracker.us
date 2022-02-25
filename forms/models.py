@@ -47,6 +47,7 @@ class ReplyToValidatorForm(WagtailAdminPageForm):
 
 class GroupedFormField(AbstractFormField):
     class Meta(AbstractFormField.Meta):
+        ordering = ['sort_order']
         constraints = [
             models.UniqueConstraint(
                 fields=['group'],
@@ -80,6 +81,8 @@ class GroupedFormField(AbstractFormField):
 
 
 class FieldGroup(ClusterableModel, Orderable):
+    class Meta:
+        ordering = ['sort_order']
     page = ParentalKey('FormPage', on_delete=models.CASCADE, related_name='field_groups')
 
     title = models.CharField(
