@@ -19,7 +19,7 @@
     </section>
 
     <section class="formpage-form">
-        <form class="form" action="{% pageurl page %}" method="post" novalidate>
+        <form class="form" action="{% pageurl page %}" method="post">
             {% csrf_token %}
             {% for group in page.groups %}
                 <fieldset class="fieldset fieldset--spaced">

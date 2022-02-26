@@ -1,5 +1,4 @@
 FIELD_GROUP_TEMPLATE_CHOICES = [
-    ('text', 'Text fields'),
+    ('default', 'Default'),
     ('date_single', 'Single date'),
-    ('choices', 'Choices'),
 ]
