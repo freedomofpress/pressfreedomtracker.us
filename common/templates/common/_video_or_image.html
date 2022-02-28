@@ -7,8 +7,15 @@
         {% elif image %}
             {% image image fill-910x510 alt=image.attribution|default:image.title %}
         {% endif %}
-        {% if caption %}
-            <figcaption class="media-caption">{{ caption|richtext }}</figcaption>
+        {% if caption or image.attribution %}
+            <figcaption class="media-caption">
+				{{ caption|richtext }}
+				{% if image.attribution %}
+					<span
+						class="media-attribution"
+						aria-label="Attributed to: {{ image.attribution }}"> — {{ image.attribution }}</span>
+				{% endif %}
+			</figcaption>
         {% endif %}
     </figure>
 {% endif %}
