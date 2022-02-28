@@ -284,9 +284,14 @@
 	+tablet-up
 		grid-column: 1 / 4
 		grid-row: span 2
+		align-self: start
 		margin-top: 0
 		position: static
 		max-width: none
+		max-height: calc(100vh - 120px)
+		overflow-y: scroll
+		position: sticky
+		top: 0
 
 .incident-index__results
 	grid-column: 1 / -1
@@ -295,6 +300,9 @@
 		grid-column: 4 / -1
 		display: grid
 		+grid-columns(9, 2rem)
+		position: sticky
+		top: 0
+		overflow-y: scroll
 
 .incident-index__column-header
 	display: none
