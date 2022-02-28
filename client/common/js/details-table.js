@@ -6,7 +6,6 @@ if (document.querySelector('#details-toggle-btn')) {
 	detailsBtn.setAttribute('aria-expanded', 'false')
 	detailsBtn.classList.add('has-js')
 
-
 	detailsBtn.addEventListener('click', () => {
 		if (detailsDiv.dataset.visible === 'false') {
 			detailsDiv.dataset.visible = 'true'
