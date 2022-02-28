@@ -179,6 +179,12 @@ class BlogPage(MetadataPageMixin, Page):
         ('statistics', StatisticsBlock()),
     ])
 
+    introduction = models.TextField(
+        help_text="Optional: introduction displayed above the image/video.",
+        blank=True,
+        null=True,
+    )
+
     link_to_original_post = models.URLField(blank=True)
 
     teaser_image = models.ForeignKey(
@@ -220,6 +226,7 @@ class BlogPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('publication_datetime'),
+        FieldPanel('introduction'),
         StreamFieldPanel('body'),
         FieldPanel('link_to_original_post'),
         MultiFieldPanel(
