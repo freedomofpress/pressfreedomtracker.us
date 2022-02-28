@@ -16,8 +16,10 @@ from django.db.models import (
     ManyToManyField,
     OuterRef,
     PositiveSmallIntegerField,
+    F,
     Q,
     Subquery,
+    TextChoices,
     TextField,
     Value,
 )
@@ -590,6 +592,11 @@ class IncidentFilter(object):
         'latitude',
     }
 
+    class SortOptions(TextChoices):
+        RECENTLY_UPDATED = 'RECENTLY_UPDATED', 'Recently updated'
+        NEWEST_DATE = 'NEWEST', 'Newest incident date'
+        OLDEST_DATE = 'OLDEST', 'Oldest incident date'
+
     def __init__(self, data):
         self.data = data
         self.cleaned_data = None
@@ -690,6 +697,17 @@ class IncidentFilter(object):
             self.search_filter,
         ]
 
+        # Extract sort choice from data.
+        sort_data = self.data.get('sort')
+        if sort_data:
+            try:
+                self.sort = self.SortOptions(sort_data)
+            except ValueError:
+                self.sort = self.SortOptions.NEWEST_DATE
+                errors.append(f'Invalid sort option: "{sort_data}"')
+        else:
+            self.sort = self.SortOptions.NEWEST_DATE
+
         # Collect filters for categories. If categories are selected,
         # use their filters; otherwise use filters for all categories.
         # Clean categories first so that we can check for category ids.
@@ -740,7 +758,7 @@ class IncidentFilter(object):
         # If strict is true, validate that all given filters are valid
         # and raise ValidationError if there are any errors.
         if strict:
-            allowed_parameters = set()
+            allowed_parameters = {'sort'}
             for f in self.filters:
                 allowed_parameters |= f.get_allowed_parameters()
 
@@ -792,10 +810,21 @@ class IncidentFilter(object):
             if cleaned_value is not None:
                 queryset = f.filter(queryset, cleaned_value)
 
+        queryset = self._sort_queryset(queryset)
         return queryset.distinct()
 
     def get_queryset(self):
-        return self._get_queryset().order_by('-date', 'path').distinct()
+        return self._get_queryset().distinct()
+
+    def _sort_queryset(self, queryset):
+        if self.sort == self.SortOptions.OLDEST_DATE:
+            return queryset.order_by('date', 'path')
+        elif self.sort == self.SortOptions.RECENTLY_UPDATED:
+            return queryset.with_most_recent_update().order_by(
+                F('latest_update').desc(nulls_last=True)
+            )
+        else:
+            return queryset.order_by('-date', 'path')
 
     def get_summary(self):
         """

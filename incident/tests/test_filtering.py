@@ -1,6 +1,8 @@
 from datetime import date, timedelta
 from unittest.mock import patch
 
+from django.core.exceptions import ValidationError
+from django.http import QueryDict
 from django.test import TestCase
 from django.utils import timezone
 from wagtail.core.models import Site
@@ -52,6 +54,71 @@ class TestFiltering(TestCase):
         )).get_queryset()
 
         self.assertEqual({incident1}, set(incidents))
+
+    def test_sorting_by_invalid_value_adds_errors(self):
+        incident_filter = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='INVALID')
+        )
+        with self.assertRaises(ValidationError) as cm:
+            incident_filter.clean(strict=True)
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['Invalid sort option: "INVALID"']
+        )
+
+    def test_sorts_by_newest_incident_date(self):
+        incident2 = IncidentPageFactory(date='2022-02-02')
+        incident1 = IncidentPageFactory(date='2022-03-03')
+        incident3 = IncidentPageFactory(date='2022-01-01')
+
+        incidents = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='NEWEST')
+        ).get_queryset()
+
+        self.assertEqual([incident1, incident2, incident3], list(incidents))
+
+    def test_sorts_by_newest_incident_date_by_default(self):
+        incident2 = IncidentPageFactory(date='2022-02-02')
+        incident1 = IncidentPageFactory(date='2022-03-03')
+        incident3 = IncidentPageFactory(date='2022-01-01')
+
+        incidents = IncidentFilter(QueryDict()).get_queryset()
+
+        self.assertEqual([incident1, incident2, incident3], list(incidents))
+
+    def test_sorts_by_oldest_incident_date(self):
+        incident3 = IncidentPageFactory(date='2022-03-03')
+        incident1 = IncidentPageFactory(date='2022-01-01')
+        incident2 = IncidentPageFactory(date='2022-02-02')
+
+        incidents = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='OLDEST')
+        ).get_queryset()
+
+        self.assertEqual([incident1, incident2, incident3], list(incidents))
+
+    def test_sorts_by_recently_updated(self):
+        incident4 = IncidentPageFactory(date='2022-04-04')  # has no update
+        incident3 = IncidentPageFactory(date='2022-01-01')
+        incident1 = IncidentPageFactory(date='2022-02-02')
+        incident2 = IncidentPageFactory(date='2022-03-03')
+
+        dt1 = timezone.now() - timedelta(days=1)
+        dt2 = timezone.now() - timedelta(days=2)
+        dt3 = timezone.now() - timedelta(days=3)
+
+        IncidentUpdateFactory(page=incident1, date=dt1)
+        IncidentUpdateFactory(page=incident2, date=dt2)
+        IncidentUpdateFactory(page=incident3, date=dt3)
+
+        incidents = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='RECENTLY_UPDATED')
+        ).get_queryset()
+
+        self.assertEqual(
+            [incident1, incident2, incident3, incident4],
+            list(incidents),
+        )
 
     def test_should_filter_by_nationality_title(self):
         category1 = CategoryPageFactory(
