@@ -10,6 +10,7 @@ files:
         - 'node_modules/**/*'
 rules:
     indentation: null
+    selector-max-compound-selectors: null
     block-closing-brace-empty-line-before: null
     block-closing-brace-newline-after: null
     block-closing-brace-newline-before: null
