@@ -5,16 +5,20 @@
 	+grid-container
 
 .incident-index__body-header
-	display: flex
-	align-items: center
-	justify-content: space-between
+	display: grid
 	position: relative
 	grid-column: 1 / -1
-	margin-bottom: 32px
+	+grid-columns(9, 2rem)
 
 	+tablet-up
 		grid-column: 4 / -1
 		grid-row: 1
+		position: sticky
+		top: 0
+		z-index: 10
+		background: #fff
+		border-bottom: solid 3px
+		border-color: $black
 
 	p
 		margin: 0
@@ -22,6 +26,15 @@
 	details
 		padding: 0
 		margin: 0
+
+.incident-index__body-header-controls
+	display: flex
+	align-items: center
+	justify-content: space-between
+	grid-column: 1 / -1
+
+	+desktop-up
+		margin-bottom: 32px
 
 .incident-index__sort-details
 	&[open]
@@ -300,9 +313,6 @@
 		grid-column: 4 / -1
 		display: grid
 		+grid-columns(9, 2rem)
-		position: sticky
-		top: 0
-		overflow-y: scroll
 
 .incident-index__column-header
 	display: none
