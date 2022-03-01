@@ -45,7 +45,7 @@
 					<summary class="btn incident-index__sort-button">
 						Sort by
 						<div>
-							&udarr; <span class="incident-index__sort-selection">Newest incident date</span>
+							&udarr; <span class="incident-index__sort-selection">{{ selected_sort.label }}</span>
 						</div>
 					</summary>
 					<div class="incident-index__sort-menu">
@@ -56,15 +56,11 @@
 								</h3>
 							</header>
 							<div class="incident-index__sort-list">
-								<button class="incident-index__sort-item">
-									Recently updated
-								</button>
-								<button class="incident-index__sort-item">
-									Newest incident date
-								</button>
-								<button class="incident-index__sort-item">
-									Oldest incident date
-								</button>
+								{% for choice in sort_choices %}
+									<a class="incident-index__sort-item{% if choice.2 %} incident-index__sort-item--selected{% endif %}" href="?{{ choice.0 }}">
+										{{ choice.1 }}
+									</a>
+								{% endfor %}
 							</div>
 						</div>
 					</div>
