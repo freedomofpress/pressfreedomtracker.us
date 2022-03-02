@@ -60,7 +60,7 @@ pip-update: ## Uses pip-compile to update requirements.txt for upgrading a speci
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
@@ -69,7 +69,7 @@ pip-update: ## Uses pip-compile to update requirements.txt for upgrading a speci
 .PHONY: pip-upgrade
 pip-upgrade: ## Uses pip-compile to update all requirements that are not pinned
 # in requirements.in
-	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
     pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade --output-file requirements.txt requirements.in && \
@@ -78,7 +78,7 @@ pip-upgrade: ## Uses pip-compile to update all requirements that are not pinned
 .PHONY: pip-dev-upgrade
 pip-dev-upgrade: ## Uses pip-compile to update all dev requirements that are not pinned
 # in dev-requirements.in
-	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
     pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade --output-file dev-requirements.txt dev-requirements.in'
@@ -88,7 +88,7 @@ pip-dev-update: ## Uses pip-compile to update dev-requirements.txt for upgrading
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
@@ -96,7 +96,7 @@ pip-dev-update: ## Uses pip-compile to update dev-requirements.txt for upgrading
 
 .PHONY: upgrade-pip-tools
 upgrade-pip-tools: ## Update the version of pip-tools used for other pip-related make commands
-	docker run -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package pip-tools --output-file pip-tools-requirements.txt pip-tools-requirements.in'
 
@@ -120,7 +120,7 @@ lint: flake8
 
 .PHONY: flake8
 flake8: ## Runs flake8 linting in Python3 container.
-	@docker run -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
+	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
 			python:3.9-slim \
 			bash -c "pip install -q flake8 && flake8"
 
@@ -134,12 +134,12 @@ bandit: ## Runs bandit static code analysis in Python3 container.
 
 .PHONY: npm-audit
 npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities
-	@docker-compose run --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus --ignore 803,1006864,1006886'
+	@docker-compose run --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus --ignore 803'
 
 .PHONY: ci-npm-audit
 ci-npm-audit:
 	@mkdir -p test-results # Creates necessary test-results folder
-	@docker-compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --xml --ignore 803,1006864 > test-results/audit.xml'
+	@docker-compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --xml --ignore 803 > test-results/audit.xml'
 
 .PHONY: safety
 safety: ## Runs `safety check` to check python dependencies for vulnerabilities
