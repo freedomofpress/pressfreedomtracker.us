@@ -199,6 +199,15 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['entries_page'] = entries
         context['paginator'] = paginator
         context['summary_table'] = incident_filter.get_summary()
+
+        get_data = request.GET.copy()
+        context['sort_choices'] = []
+        for value, label in IncidentFilter.SortOptions.choices:
+            get_data['sort'] = value
+            context['sort_choices'].append(
+                (get_data.urlencode(), label, value == incident_filter.sort.value)
+            )
+        context['selected_sort'] = incident_filter.sort
         context['incident_count'] = len(incident_qs)
 
         if request.is_ajax():

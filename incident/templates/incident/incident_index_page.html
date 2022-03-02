@@ -36,45 +36,7 @@
 		</div>
 	</section>
 	<section class="incident-index__body">
-		<div class="incident-index__body-header">
-			<div class="incident-index__body-header-controls">
-				<p class="paragraph-subtitle">
-					{{ incident_count|intcomma }} incident{{ incident_count|pluralize }} recorded
-				</p>
-				<details class="incident-index__sort-details">
-					<summary class="btn incident-index__sort-button">
-						Sort by
-						<div>
-							&udarr; <span class="incident-index__sort-selection">Newest incident date</span>
-						</div>
-					</summary>
-					<div class="incident-index__sort-menu">
-						<div class="incident-index__sort-modal">
-							<header class="incident-index__sort-header">
-								<h3 class="incident-index__sort-title">
-									Sort incidents by
-								</h3>
-							</header>
-							<div class="incident-index__sort-list">
-								<button class="incident-index__sort-item">
-									Recently updated
-								</button>
-								<button class="incident-index__sort-item">
-									Newest incident date
-								</button>
-								<button class="incident-index__sort-item">
-									Oldest incident date
-								</button>
-							</div>
-						</div>
-					</div>
-				</details>
-			</div>
-			<div class="incident-index__column-header incident-index__column-header--incident">Incident</div>
-			<div class="incident-index__column-header incident-index__column-header--incident-details">Incident Details</div>
-			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>
-			</div>
-		</div>
+
 
 		<div id="database-filters" class="incident-index__filters" data-visible="false">
 			<div class="incident-index__filters-wrapper">
@@ -87,6 +49,41 @@
 					Show {{ incident_count|intcomma }} incidents
 				</button>
 			</div>
+		</div>
+
+		<div class="incident-index__body-header">
+			<div class="incident-index__body-header-controls">
+				<p class="paragraph-subtitle">
+					{{ incident_count|intcomma }} incident{{ incident_count|pluralize }} recorded
+				</p>
+				<details class="incident-index__sort-details">
+					<summary class="btn incident-index__sort-button">
+						Sort by
+						<div>
+							&udarr; <span class="incident-index__sort-selection">{{ selected_sort.label }}</span>
+						</div>
+					</summary>
+					<div class="incident-index__sort-menu">
+						<div class="incident-index__sort-modal">
+							<header class="incident-index__sort-header">
+								<h3 class="incident-index__sort-title">
+									Sort incidents by
+								</h3>
+							</header>
+							<div class="incident-index__sort-list">
+								{% for choice in sort_choices %}
+									<a class="incident-index__sort-item{% if choice.2 %} incident-index__sort-item--selected{% endif %}" href="?{{ choice.0 }}">
+										{{ choice.1 }}
+									</a>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</details>
+			</div>
+			<div class="incident-index__column-header incident-index__column-header--incident">Incident</div>
+			<div class="incident-index__column-header incident-index__column-header--incident-details">Incident Details</div>
+			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>
 		</div>
 
 		<div class="incident-index__results">
