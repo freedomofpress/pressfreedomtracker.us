@@ -30,12 +30,14 @@
 		</ol>
 
 		<dl class="dl-inline">
-			<dt>Updated on</dt>
-			<dd>
-				<time datetime="{{ incident.latest_update|date:"c" }}">
-					{{ incident.latest_update|date:"F j, Y" }}
-				</time>
-			</dd>
+			{% if incident.latest_update and incident.updates.all.exists %}
+				<dt>Updated on</dt>
+				<dd>
+					<time datetime="{{ incident.latest_update|date:"c" }}">
+						{{ incident.latest_update|date:"F j, Y" }}
+					</time>
+				</dd>
+			{% endif %}
 			<dt>Date of Incident</dt>
 			<dd>
 				<time datetime="{{ incident.date|date:"c" }}">
