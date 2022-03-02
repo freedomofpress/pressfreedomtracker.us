@@ -20,14 +20,16 @@
 				<div class="incident-index__download-select">
 					<div class="incident-index__download-wrapper">
 						<div class="incident-index__download-list">
-							<a href="#" class="incident-index__download-item">
+							<a href="{{ export_path }}" class="incident-index__download-item">
 								Download full dataset
-								<span class="incident-index__incident-count">{{ incident_count|intcomma }} incident{{ incident_count|pluralize }}</span>
+								<span class="incident-index__incident-count">{{ all_incident_count|intcomma }} incident{{ all_incident_count|pluralize }}</span>
 							</a>
-							<a href="#" class="incident-index__download-item">
+							{% if filtered_export_path %}
+								<a href="{{ filtered_export_path }}" class="incident-index__download-item">
 								Download your filtered data
-								<span class="incident-index__incident-count">394 incidents</span>
-							</a>
+									<span class="incident-index__incident-count">{{ incident_count|intcomma }} incident{{ incident_count|pluralize }}</span>
+								</a>
+							{% endif %}
 							<a href="#" class="incident-index__download-item incident-index__download-item--more">Learn more</a>
 						</div>
 					</div>

@@ -1,6 +1,7 @@
 import csv
 import json
 from typing import TYPE_CHECKING
+from urllib import parse
 
 from django.db import models
 from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
@@ -164,6 +165,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         from common.models import CategoryPage
         context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
+        context['all_incident_count'] = len(IncidentFilter({}).get_queryset())
 
         incident_filter = IncidentFilter(request.GET)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
@@ -182,6 +184,12 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         else:
             context['categories'] = CategoryPage.objects.live().filter(
                 models.Q(pk__in=category_data.pks) | models.Q(title__in=category_data.strings)
+            )
+        if incident_filter.cleaned_data:
+            context['filtered_export_path'] = (
+                context['export_path'] +
+                '?' +
+                parse.urlencode(incident_filter.cleaned_data)
             )
 
         incident_qs = incident_filter.get_queryset() \
