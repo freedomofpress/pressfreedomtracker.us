@@ -199,6 +199,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['entries_page'] = entries
         context['paginator'] = paginator
         context['summary_table'] = incident_filter.get_summary()
+        context['incident_count'] = len(incident_qs)
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'

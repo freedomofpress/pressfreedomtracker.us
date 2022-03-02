@@ -51,7 +51,8 @@ class FilterForm(forms.Form):
                 if _type == 'choice':
                     field = forms.ChoiceField
                     kwargs['widget'] = forms.Select
-                    kwargs['choices'] = [[x[0], x[1].capitalize()] for x in item.get('choices', [])]
+                    kwargs['initial'] = ''
+                    kwargs['choices'] = [('', '------')] + [[x[0], x[1].capitalize()] for x in item.get('choices', [])]
 
                 if _type == 'radio':
                     field = forms.ChoiceField

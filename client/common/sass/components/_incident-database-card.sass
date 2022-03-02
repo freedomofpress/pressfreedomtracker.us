@@ -1,26 +1,29 @@
 .incident-database-card
-	padding-bottom: 0.5rem
+	grid-column: 1 / -1
+	padding-top: 1.5rem
+	padding-bottom: 1.5rem
 	border-bottom: solid 1px
 	border-color: $black
 	display: flex
 	flex-direction: column
 
 	+desktop-up
-		gap: 2rem
-		flex-direction: row
+		display: grid
+		+grid-columns(9, 2rem)
+
+	&__title
+		margin-top: 0
+
+	&__title-link
+		text-decoration: none
 
 	&__section
 		flex: 1 1
+		+desktop-up
+			grid-column: span 3
 
 	&__tags
 		line-height: 2.2
-
-	&__details
-		margin-top: 1rem
-		margin-bottom: 1rem
-		flex: 1
-		+desktop-up
-			flex: 2 0
 
 	&__details-title
 		+desktop-up
@@ -32,6 +35,7 @@
 		gap: 2rem
 
 		+desktop-up
+			grid-column: span 3
 			flex-direction: row
 
 	&__main-details
@@ -39,6 +43,13 @@
 
 	&__category-details
 		flex: 1
+		+desktop-up
+			grid-column: span 3
+
+	&__details-toggle
+		align-self: flex-start
+		+desktop-up
+			display: none
 
 .database-card-table
 	position: relative
@@ -65,8 +76,9 @@
 			border: none
 
 		&--inline
-			//display: block
+			display: block
 			padding-left: 19px
+			line-height: 0.5
 
 			dt, dd
 				margin-right: 0.25rem
@@ -93,18 +105,6 @@
 		margin: 0
 		padding: 0
 
-	.heading-table
-		margin: 0
-		border-bottom: 1px solid
-		border-color: $black
-		padding: 0.25rem 0 0
-
-		+tablet-down
-			padding: 0.5rem 0
-
-		+desktop-up
-			border-bottom: none
-
 	.details-toggle-btn
 		position: absolute
 		top: 6px
@@ -124,3 +124,14 @@
 
 			&[data-visible='true']
 				display: block
+
+.heading-table
+	margin: 0
+	border-bottom: 1px solid
+	border-color: $black
+	padding: 0.25rem 0 0
+	+tablet-down
+		padding: 0.5rem 0
+
+	+desktop-up
+		border-bottom: none

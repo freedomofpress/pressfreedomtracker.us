@@ -1,11 +1,14 @@
+{% load wagtailcore_tags %}
 <article class="incident-database-card">
 	<div class="incident-database-card__section">
-		<h3 class="card-title-database">
-			{% for cat in incident.categories.all %}
-				<span class="category category-{{ cat.category.page_symbol }}"></span>
-			{% endfor %}
-			{{ incident.title }}
-		</h3>
+		<a class="incident-database-card__title-link" href="{% pageurl incident %}">
+			<h3 class="card-title-database incident-database-card__title">
+				{% for cat in incident.categories.all %}
+					<span class="category category-{{ cat.category.page_symbol }}"></span>
+				{% endfor %}
+				{{ incident.title }}
+			</h3>
+		</a>
 		{% if incident.tags.all %}
 			<ul class="incident-database-card__tags tag-list">
 				{% for tag in incident.tags.all %}

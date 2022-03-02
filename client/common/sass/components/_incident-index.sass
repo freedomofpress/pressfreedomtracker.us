@@ -1,2 +1,342 @@
-.incident-index
+.incident-index__body
+	grid-template-rows: auto 1fr
+	align-items: start
 	+constrain-to-desktop
+	+grid-container
+
+.incident-index__body-header
+	display: grid
+	position: relative
+	grid-column: 1 / -1
+	+grid-columns(9, 2rem)
+
+	+tablet-up
+		grid-column: 4 / -1
+		grid-row: 1
+		position: sticky
+		top: 0
+		z-index: 10
+		background: #fff
+		border-bottom: solid 3px
+		border-color: $black
+
+	p
+		margin: 0
+
+	details
+		padding: 0
+		margin: 0
+
+.incident-index__body-header-controls
+	display: flex
+	align-items: center
+	justify-content: space-between
+	grid-column: 1 / -1
+
+	+desktop-up
+		margin-bottom: 32px
+
+.incident-index__sort-details
+	&[open]
+		> summary::before
+			position: fixed
+			top: 0
+			bottom: 0
+			left: 0
+			right: 0
+			z-index: 80
+			display: block
+			cursor: default
+			content: ' '
+			background: transparent
+
+		summary div
+			+tablet-up
+				background-color: $black
+				color: $white
+
+.incident-index__sort-button
+	color: $gray-text
+	padding: 0
+	cursor: pointer
+	line-height: 1.5
+
+	div
+		color: $black
+		display: inline-block
+		padding: 5px
+
+		span
+			font-weight: 700
+
+.incident-index__sort-menu
+	position: fixed
+	top: 0
+	left: 0
+	bottom: 0
+	right: 0
+	z-index: 99
+	display: flex
+	padding: 16px
+	pointer-events: none
+	flex-direction: column
+
+	+tablet-up
+		position: absolute
+		padding: 0
+		margin: 0
+		top: auto
+		left: auto
+		right: 0
+		bottom: auto
+
+	&::before
+		position: absolute
+		top: 0
+		left: 0
+		right: 0
+		bottom: 0
+		background-color: rgba(0, 0, 0, 0.3)
+		content: ''
+		pointer-events: none
+
+		+tablet-up
+			display: none
+
+.incident-index__sort-modal
+	position: relative
+	z-index: 99
+	margin: auto 0
+	overflow: hidden
+	pointer-events: auto
+	background-color: $black
+
+.incident-index__sort-header
+	padding: 16px 12px 0
+
+.incident-index__sort-title
+	color: $white
+	font-weight: 400
+	margin: 0
+	font-size: $font-size-p
+
+.incident-index__sort-list
+	padding-bottom: 8px
+
+.incident-index__sort-item
+	box-sizing: border-box
+	display: flex
+	justify-content: space-between
+	width: 100%
+	padding: 0.5rem 2rem
+	color: $white
+	background-color: $black
+	border: 0
+	cursor: pointer
+	text-decoration: none
+	font-size: $font-size-p
+
+.incident-index__sort-selection
+	display: none
+
+	+tablet-up
+		display: inline
+
+.incident-index__search-area
+	display: flex
+	gap: 12px
+	flex-direction: column
+	margin-bottom: 32px
+
+	+constrain-to-desktop
+
+	+tablet-up
+		flex-direction: row
+
+	+desktop-up
+		margin-bottom: 52px
+
+.incident-index__search-bar
+	flex: 1 0 auto
+
+.incident-index__download-details
+	display: block
+	position: relative
+
+	&[open]
+		+tablet-up
+			.incident-index__download-button::after
+				background: $black
+				content: url(../icons/arrow-down-white.svg)
+
+.incident-index__download-select
+	position: absolute
+	padding: 0
+	display: flex
+	flex-direction: column
+	z-index: 100
+	left: 0
+	right: 0
+
+	+tablet-up
+		left: auto
+
+.incident-index__download-wrapper
+	display: flex
+
+	+tablet-up
+		width: 20rem
+
+.incident-index__download-list
+	background: $black
+	position: relative
+	flex: auto
+
+.incident-index__download-item
+	box-sizing: border-box
+	display: flex
+	justify-content: space-between
+	width: 100%
+	padding: 0.5rem 0.75rem
+	color: $white
+	text-decoration: none
+
+	&--more
+		text-decoration: underline
+
+.incident-index__incident-count
+	color: $gray-text
+
+.incident-index__download-button
+	font-weight: 700
+	width: calc(100% - 1.5rem - 6px)
+	text-align: center
+	border: 3px solid
+	border-color: $black
+
+	&:focus
+		border-width: 6px
+
+	&[disabled]
+		color: $tag-inactive
+		border-color: $tag-inactive
+
+	+tablet-up
+		width: auto
+		border: none
+		// the calc here makes space on right edge for the down-arrow symbol
+		// which is 16px (inner-width) + 1.5rem (padding) + 3px (border) wide
+		padding: calc(0.5rem + 3px) calc(1rem + 1.5rem + 19px) calc(0.5rem + 3px) 0.5rem
+		transition: color 0.01s ease-in 0.08s
+
+		&::after
+			content: url(../icons/arrow-down.svg)
+			height: 16px
+			width: 24px
+			border: 3px solid
+			border-color: $black
+			position: absolute
+			right: 0px
+			top: 0px
+			padding: 0.75rem 0.5rem
+			//padding left of parent
+			transition: content 0.01s ease-in 0.08s
+
+		&:focus
+			//margin: -3px 0
+			//border-width: 6px 3px 6px 6px
+
+			&::after
+				border-width: 6px
+				right: -3px
+				top: -3px
+				//box-shadow: rgba(9, 105, 218, 0.3) 0px 0px 0px 3px
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+			&::after
+				content: url(../icons/arrow-down-inactive.svg)
+				border-color: $tag-inactive
+
+.incident-index__filters-mobile-controls
+	display: none
+
+.incident-index__filters
+	background: $section-background
+	box-sizing: border-box
+	margin-top: 4rem
+	position: fixed
+	z-index: 600
+	inset: 0
+	max-width: 0
+	overflow: hidden
+	transition: max-width 350ms ease-out
+
+	&[data-visible='true']
+		max-width: 100vw
+		display: flex
+		flex-direction: column
+
+		.filters__header
+			display: none
+
+		.incident-index__filters-mobile-controls
+			background-color: $white
+			padding: 2rem
+			display: flex
+			justify-content: space-between
+			align-items: center
+			z-index: 610
+
+		.incident-index__filters-wrapper
+			overflow: auto
+			flex: 1
+
+	+tablet-up
+		grid-column: 1 / 4
+		grid-row: span 2
+		align-self: start
+		margin-top: 0
+		position: static
+		max-width: none
+		max-height: 100vh
+		overflow-y: scroll
+		position: sticky
+		top: 0
+
+.incident-index__results
+	grid-column: 1 / -1
+
+	+tablet-up
+		grid-column: 4 / -1
+		display: grid
+		+grid-columns(9, 2rem)
+
+.incident-index__column-header
+	display: none
+	+desktop-up
+		grid-column: span 3
+		font-size: $font-size-small-p
+		font-weight: 700
+		display: block
+
+.incident-index__filters-mobile-clear
+	text-decoration: none
+	color: $gray-text
+
+.mobile-filter-toggle
+	position: fixed
+	z-index: 500
+	bottom: 1rem
+	right: 1rem
+	font-weight: 500
+	line-height: 1.714
+	padding: 0.5rem 0.75rem
+	color: $white
+	border: 0
+	background-color: $black
+
+	+tablet-up
+		display: none
