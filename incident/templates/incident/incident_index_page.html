@@ -90,7 +90,7 @@
 
 		<div class="incident-index__results">
 			{% for incident in entries_page %}
-				{% include "incident/_incident_database_card.html" with incident=incident only %}
+				{% include "incident/_incident_database_card.html" with incident=incident index=page only %}
 			{% endfor %}
 		</div>
 	</section>
