@@ -2,6 +2,7 @@ import csv
 import json
 import unittest
 from datetime import timedelta, date
+from urllib import parse
 
 import wagtail_factories
 from wagtail.core.models import Site, Page
@@ -171,6 +172,14 @@ class TestIncidentIndexPageContext(TestCase):
             '?city=Albuquerque'
         )
         self.assertEqual(context['filtered_export_path'], expected_path)
+
+    def test_includes_search_value(self):
+        search_query = 'delicious treats'
+        request = RequestFactory().get(
+            '/?' + parse.urlencode({'search': search_query})
+        )
+        context = self.index.get_context(request)
+        self.assertEqual(context['search_value'], search_query)
 
 
 class TestExportPage(TestCase):

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
-{% load webpack_loader humanize %}
+{% load wagtailcore_tags webpack_loader humanize %}
 
 {% block main %}
+	{% pageurl page as current_page_url %}
 	<h1 class="page-title" id="title">Incidents Database</h1>
 	<button class="mobile-filter-toggle" aria-controls="database-filters" aria-expanded="false">
 		Filters
@@ -10,7 +11,7 @@
 
 	<section class="incident-index__search-area">
 		<div class="incident-index__search-bar">
-			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text, date..." %}
+			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text" action=current_page_url value=search_value %}
 		</div>
 		<div class="incident-index__download">
 			<details class="incident-index__download-details">
