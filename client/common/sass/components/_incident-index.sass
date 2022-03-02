@@ -197,6 +197,9 @@
 	position: relative
 	flex: auto
 
+.incident-index__incident-count
+	color: $gray-text
+
 .incident-index__download-item
 	box-sizing: border-box
 	display: flex
@@ -204,13 +207,19 @@
 	width: 100%
 	padding: 0.5rem 0.75rem
 	color: $white
+	font-size: $font-size-small-p
 	text-decoration: none
+
+	&--downloadable
+		&:hover
+			color: $black
+			background-color: $accent-color
+
+			.incident-index__incident-count
+				color: $black
 
 	&--more
 		text-decoration: underline
-
-.incident-index__incident-count
-	color: $gray-text
 
 .incident-index__download-button
 	font-weight: 700
