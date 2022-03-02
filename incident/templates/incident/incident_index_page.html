@@ -36,6 +36,21 @@
 		</div>
 	</section>
 	<section class="incident-index__body">
+
+
+		<div id="database-filters" class="incident-index__filters" data-visible="false">
+			<div class="incident-index__filters-wrapper">
+				{% include 'incident/_filters.html' %}
+			</div>
+			<div class="incident-index__filters-mobile-controls">
+				<a class="incident-index__filters-mobile-clear" href="{{ page.url }}">Clear All</a>
+				</button>
+				<button class="btn btn-secondary">
+					Show {{ incident_count|intcomma }} incidents
+				</button>
+			</div>
+		</div>
+
 		<div class="incident-index__body-header">
 			<div class="incident-index__body-header-controls">
 				<p class="paragraph-subtitle">
@@ -69,20 +84,6 @@
 			<div class="incident-index__column-header incident-index__column-header--incident">Incident</div>
 			<div class="incident-index__column-header incident-index__column-header--incident-details">Incident Details</div>
 			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>
-			</div>
-		</div>
-
-		<div id="database-filters" class="incident-index__filters" data-visible="false">
-			<div class="incident-index__filters-wrapper">
-				{% include 'incident/_filters.html' %}
-			</div>
-			<div class="incident-index__filters-mobile-controls">
-				<a class="incident-index__filters-mobile-clear" href="{{ page.url }}">Clear All</a>
-				</button>
-				<button class="btn btn-secondary">
-					Show {{ incident_count|intcomma }} incidents
-				</button>
-			</div>
 		</div>
 
 		<div class="incident-index__results">
