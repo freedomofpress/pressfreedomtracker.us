@@ -45,12 +45,6 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Recent blog posts will automatically be pulled from this page'
     )
 
-    statboxes_label = models.CharField(
-        default='Quick Stats',
-        max_length=255,
-        help_text='Title displayed above stat boxes'
-    )
-
     featured_incidents_label = models.CharField(
         default='Featured Incidents',
         max_length=255,
@@ -93,19 +87,6 @@ class HomePage(MetadataPageMixin, Page):
     )
 
     content_panels = Page.content_panels + [
-
-        MultiFieldPanel(
-            [
-                FieldPanel('statboxes_label'),
-                InlinePanel(
-                    'statboxes',
-                    label='Statboxes',
-                ),
-            ],
-            'Statboxes',
-            classname='collapsible',
-        ),
-
         MultiFieldPanel([
             FieldPanel('about'),
             PageChooserPanel(
@@ -185,46 +166,3 @@ class FeaturedBlogPost(Orderable):
     panels = [
         PageChooserPanel('page'),
     ]
-
-
-# TODO: DEPRECATED, remove
-class StatBox(Orderable):
-    page = ParentalKey(Page, related_name='statboxes')
-    value = RichTextField(
-        blank=True,
-        null=True,
-        help_text='Primary text for this stat box.  Line breaks will be removed.',
-        validators=[validate_template],
-        features=['bold', 'italic', 'numincidents'],
-    )
-    label = models.CharField(max_length=1000)
-    color = models.CharField(
-        max_length=255,
-        choices=CATEGORY_COLOR_CHOICES,
-    )
-    internal_link = models.ForeignKey(
-        'wagtailcore.Page',
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    querystring = models.CharField(
-        max_length=1000,
-        null=True,
-        blank=True,
-        help_text="Append a querystring to the internal link. Should start with '?'"
-    )
-    external_link = models.URLField(blank=True, help_text="This link will not be used if there is an internal link set.")
-
-    panels = [
-        FieldPanel('value'),
-        FieldPanel('label'),
-        FieldPanel('color'),
-        PageChooserPanel('internal_link'),
-        FieldPanel('querystring'),
-        FieldPanel('external_link'),
-    ]
-
-    def clean(self):
-        self.value = unescape(self.value)

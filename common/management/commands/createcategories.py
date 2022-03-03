@@ -10,7 +10,7 @@ from common.tests.factories import (
     CategoryPageFactory,
     DevelopmentSiteFactory,
 )
-from home.tests.factories import StatBoxFactory, HomePageFactory
+from home.tests.factories import HomePageFactory
 
 
 CATEGORIES = {
@@ -96,5 +96,3 @@ class Command(BaseCommand):
             self.stdout.write('.', ending='')
 
         self.stdout.write('')
-        for category in random.sample(list(CategoryPage.objects.all()), 4):
-            StatBoxFactory(page=home_page, category=category)

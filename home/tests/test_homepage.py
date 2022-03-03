@@ -57,7 +57,6 @@ class HomePageTest(TestCase):
                 'title': self.home_page.title,
                 'recent_incidents_label': self.home_page.recent_incidents_label,
                 'featured_pages_label': self.home_page.featured_pages_label,
-                'statboxes_label': self.home_page.statboxes_label,
                 'change_filters_message': self.home_page.change_filters_message,
                 'blog_label': self.home_page.blog_label,
                 'features': inline_formset([
@@ -70,11 +69,6 @@ class HomePageTest(TestCase):
                     ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
                     ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
                     ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
-                ]),
-                'statboxes': inline_formset([
-                    {'value': rich_text('{% num_incidents categories="9" %}'),
-                     'label': 'Hello world',
-                     'color': 'gamboge'}
                 ]),
             })
         )
