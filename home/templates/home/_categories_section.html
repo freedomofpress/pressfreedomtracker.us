@@ -1,6 +1,8 @@
 {% load wagtailcore_tags %}
 
-<h2 class="homepage-section-header">Learn More About Our Categories</h2>
+<h2 class="homepage-section-header">{{ label }}</h2>
+
+<p class="homepage-section-paragraph">{{ body }}</p>
 
 {% with all_categories=settings.common.TaxonomySettings.categories.all %}
 	<div class="categories-block">

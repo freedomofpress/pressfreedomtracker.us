@@ -7,7 +7,6 @@ from psycopg2.extras import DateRange
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.edit_handlers import (
     FieldPanel,
-    InlinePanel,
     StreamFieldPanel,
     MultiFieldPanel,
     PageChooserPanel,

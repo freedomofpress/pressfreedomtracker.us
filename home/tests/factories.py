@@ -3,7 +3,6 @@ import wagtail_factories
 from wagtail.core.rich_text import RichText
 
 from home.models import HomePage
-from common.choices import CATEGORY_COLOR_CHOICES
 from common.tests.utils import StreamfieldProvider
 
 

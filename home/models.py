@@ -13,11 +13,8 @@ from wagtail.admin.edit_handlers import (
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page, Orderable, Site
 
-from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
-from common.utils import unescape
-from common.validators import validate_template
 from incident.utils.incident_filter import get_serialized_filters
 
 
@@ -85,6 +82,15 @@ class HomePage(MetadataPageMixin, Page):
         max_length=255,
         help_text='Text for button to show more blog posts'
     )
+    categories_label = models.CharField(
+        default='Learn More About Our Categories',
+        max_length=255,
+        help_text='Title displayed above categories',
+    )
+    categories_body = models.TextField(
+        help_text='Paragraph of extra information about categories',
+        blank=True,
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel([
@@ -118,6 +124,14 @@ class HomePage(MetadataPageMixin, Page):
             'Featured Incidents',
             classname='collapsible',
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel('categories_label'),
+                FieldPanel('categories_body'),
+            ],
+            'Categories',
+            classname='collapsible',
+        ),
 
         MultiFieldPanel(
             [
@@ -144,9 +158,6 @@ class HomePage(MetadataPageMixin, Page):
         else:
             context['export_path'] = None
 
-        context['features'] = [
-            f.page.specific for f in self.features.all().select_related('page__content_type')
-        ]
         return context
 
 

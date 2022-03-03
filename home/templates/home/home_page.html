@@ -41,7 +41,7 @@
 
 	<section class="homepage-section homepage-section--gray">
 		<div class="homepage-section-inner">
-			{% include "home/_categories_section.html" %}
+			{% include "home/_categories_section.html" with label=page.categories_label body=page.categories_body %}
 		</div>
 	</section>
 
