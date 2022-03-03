@@ -21,11 +21,13 @@
 			</p>
 		{% endif %}
 
-		<ol>
+		<ol class="incident-card__categories">
 			{% for categorization in incident.categories.all %}
-				<li>
-					{{ categorization.category.title }}
-				</li>
+				{% with category=categorization.category %}
+					<li>
+						<a class="text-link category category-{{ category.page_symbol }}" href="{% pageurl category %}">{{ category.title }}</a>
+					</li>
+				{% endwith %}
 			{% endfor %}
 		</ol>
 
