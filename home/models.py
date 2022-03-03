@@ -9,13 +9,10 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     PageChooserPanel,
     MultiFieldPanel,
-    StreamFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page, Orderable, Site
 
-import common.blocks
 from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
@@ -54,16 +51,16 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Title displayed above stat boxes'
     )
 
-    featured_pages_label = models.CharField(
-        default='Featured Articles',
+    featured_incidents_label = models.CharField(
+        default='Featured Incidents',
         max_length=255,
         help_text='Title displayed above featured pages'
     )
 
-    featured_more_label = models.CharField(
-        default='More Incidents',
+    featured_incidents_more_label = models.CharField(
+        default='Go to Incidents Database',
         max_length=255,
-        help_text='Text for button to show more incidents'
+        help_text='Text for button show more incidents'
     )
 
     recent_incidents_label = models.CharField(
@@ -72,37 +69,28 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Title displayed above recent incidents'
     )
 
-    recent_more_label = models.CharField(
-        default='More Incidents',
-        max_length=255,
-        help_text='Text for button to show more incidents'
+    recent_incidents_count = models.PositiveIntegerField(
+        default=8,
+        help_text='Number of recent incidents to display',
     )
 
-    blog_label = models.CharField(
-        default='Partner Articles',
+    recent_incidents_more_label = models.CharField(
+        default='Go to Incidents Database',
+        max_length=255,
+        help_text='Text for button to show more recent incidents'
+    )
+
+    featured_blog_posts_label = models.CharField(
+        default='From Our Blog',
         max_length=255,
         help_text='Title displayed above blog posts'
     )
 
-    blog_more_label = models.CharField(
-        default='More Articles',
+    featured_blog_posts_more_label = models.CharField(
+        default='Go to Blog',
         max_length=255,
         help_text='Text for button to show more blog posts'
     )
-
-    change_filters_message = models.CharField(
-        default='Change filters to search the incident database.',
-        max_length=255,
-        help_text='Text for the filter bar when no filters are applied.',
-    )
-
-    content = StreamField([
-        ('heading_2', common.blocks.Heading2()),
-        ('raw_html', blocks.RawHTMLBlock()),
-        ('rich_text', blocks.RichTextBlock()),
-        ('tweet', common.blocks.TweetEmbedBlock()),
-        ('tabs', common.blocks.TabbedBlock()),
-    ], blank=True)
 
     content_panels = Page.content_panels + [
 
@@ -117,7 +105,6 @@ class HomePage(MetadataPageMixin, Page):
             'Statboxes',
             classname='collapsible',
         ),
-        StreamFieldPanel('content'),
 
         MultiFieldPanel([
             FieldPanel('about'),
@@ -128,24 +115,38 @@ class HomePage(MetadataPageMixin, Page):
                     'common.SimplePageWithSidebar'
                 ]
             ),
-        ], 'About'),
+        ], 'About', classname='collapsible'),
 
-        InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
-        InlinePanel('featured_blog_posts', heading="Featured Blog Posts", max_num=6),
+        MultiFieldPanel(
+            [
+                PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
+                InlinePanel('featured_blog_posts', max_num=6),
+                FieldPanel('featured_blog_posts_label'),
+                FieldPanel('featured_blog_posts_more_label'),
+            ],
+            'Featured Blog Posts',
+            classname='collapsible',
+        ),
 
-        MultiFieldPanel([
-            FieldPanel('recent_incidents_label'),
-        ], 'Recent Incidents'),
+        MultiFieldPanel(
+            [
+                InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
+                FieldPanel('featured_incidents_label'),
+                FieldPanel('featured_incidents_more_label'),
+            ],
+            'Featured Incidents',
+            classname='collapsible',
+        ),
 
-        MultiFieldPanel([
-            FieldPanel('blog_label'),
-            PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
-        ], 'Blog'),
-
-        MultiFieldPanel([
-            FieldPanel('change_filters_message'),
-        ], 'Filter Bar'),
-
+        MultiFieldPanel(
+            [
+                FieldPanel('recent_incidents_label'),
+                FieldPanel('recent_incidents_count'),
+                FieldPanel('recent_incidents_more_label'),
+            ],
+            'Recent Incidents',
+            classname='collapsible',
+        ),
     ]
 
     def get_context(self, request, *args, **kwargs):
@@ -187,15 +188,6 @@ class FeaturedBlogPost(Orderable):
 
 
 # TODO: DEPRECATED, remove
-class HomePageFeature(Orderable):
-    home_page = ParentalKey('home.HomePage', related_name='features')
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
-
-    panels = [
-        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage', 'incident.TopicPage')),
-    ]
-
-
 class StatBox(Orderable):
     page = ParentalKey(Page, related_name='statboxes')
     value = RichTextField(

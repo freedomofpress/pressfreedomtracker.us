@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<h2 class="homepage-section-header">Featured Incidents</h2>
+<h2 class="homepage-section-header">{{ label }}</h2>
 
 {% if page.featured_incidents %}
 	<ul class="article-carousel">
@@ -15,7 +15,7 @@
 {% with search_page=settings.common.SearchSettings.search_page %}
 	{% if search_page %}
 		<div class="homepage-section-actions">
-			<a href="{% pageurl search_page %}" class="btn btn-primary">Go to Incidents Database</a>
+			<a href="{% pageurl search_page %}" class="btn btn-primary">{{ more_label }}</a>
 		</div>
 	{% endif %}
 {% endwith %}

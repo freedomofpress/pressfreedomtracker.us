@@ -19,10 +19,6 @@ class HomePageFactory(wagtail_factories.PageFactory):
 
     title = 'Home'
     about = factory.LazyAttribute(lambda o: RichText(o.about_text))
-    content = factory.Faker(
-        'streamfield',
-        fields=['heading2', 'rich_text_paragraph', 'raw_html', 'tweet', 'tabs']
-    )
 
 
 class StatBoxFactory(factory.django.DjangoModelFactory):

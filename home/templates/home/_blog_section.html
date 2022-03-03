@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<h2 class="homepage-section-header">From Our Blog</h2>
+<h2 class="homepage-section-header">{{ label }}</h2>
 
 {% if page.featured_blog_posts %}
 	<ul class="article-carousel">
@@ -13,5 +13,5 @@
 {% endif %}
 
 <div class="homepage-section-actions">
-	<a href="{% pageurl page.blog_index_page %}" class="btn btn-primary">Go to Blog</a>
+	<a href="{% pageurl page.blog_index_page %}" class="btn btn-primary">{{ more_label }}</a>
 </div>
