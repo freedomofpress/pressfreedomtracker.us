@@ -148,6 +148,9 @@ class HomePage(MetadataPageMixin, Page):
         context = super(HomePage, self).get_context(request, *args, **kwargs)
 
         context['serialized_filters'] = json.dumps(get_serialized_filters())
+        context['featured_blog_posts'] = [
+            f.page for f in self.featured_blog_posts.select_related('page')
+        ]
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
 

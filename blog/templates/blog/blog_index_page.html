@@ -17,7 +17,10 @@
 	{% endif %}
 
 	{% if featured_blogs %}
-		{% include 'blog/_blog_list.html' with blogs=featured_blogs heading='Featured' type='featured' card_size='big' only %}
+		<section class="blog-list blog-list--featured">
+			<h2 class="heading-regular">Featured</h2>
+			{% include 'blog/_blog_carousel.html' with blogs=featured_blogs key='featured-blogs' only %}
+		</section>
 	{% endif %}
 
 	{% include 'blog/_blog_list.html' with blogs=entries_page heading='Latest' ajax_load=True request=request only %}

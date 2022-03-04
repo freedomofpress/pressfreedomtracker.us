@@ -1,0 +1,19 @@
+{% load common_tags %}
+{% with id=key|add_as_string:'-carousel' %}
+<ol id="{{ id }}" class="article-carousel__items">
+	{% for blog in blogs %}
+		<li class="blog-list__item blog-list__item--featured">
+			{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'big' photo=blog.teaser_image only %}
+		</li>
+	{% endfor %}
+</ol>
+
+<div class="article-carousel__scroller" role="scroller" data-articles="{{ id }}">
+	<button class="article-carousel__scroller--button article-carousel__scroller--button-prev">
+		{% include 'common/arrow-prev.svg' %}
+	</button>
+	<button class="article-carousel__scroller--button article-carousel__scroller--button-next">
+		{% include 'common/arrow-next.svg' %}
+	</button>
+</div>
+{% endwith %}

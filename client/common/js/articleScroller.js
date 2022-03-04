@@ -1,14 +1,15 @@
 class ArticleScroller {
-	constructor() {
+	constructor(scrollerElement) {
 		// Since JS is loaded we can show the interactive horizontal scroller
-		document.querySelector('.blog-list__posts--featured').classList.add('blog-list__posts--featured-flex')
-		document.querySelector('.blog-list__featured-scroller').classList.add('blog-list__featured-scroller--visible')
+		this.articleParent = document.getElementById(scrollerElement.dataset.articles)
 
-		this.scrollNextBtn = document.querySelector('.blog-list__featured-scroller--button-next')
-		this.scrollPrevBtn = document.querySelector('.blog-list__featured-scroller--button-prev')
+		this.articleParent.classList.add('article-carousel__items--flex')
+		scrollerElement.classList.add('article-carousel__scroller--visible')
 
-		this.articleParent = document.querySelector('.blog-list__posts--featured-flex')
-		this.articles = this.articleParent.querySelectorAll('.blog-list__item--featured')
+		this.scrollNextBtn = scrollerElement.querySelector('.article-carousel__scroller--button-next')
+		this.scrollPrevBtn = scrollerElement.querySelector('.article-carousel__scroller--button-prev')
+
+		this.articles = this.articleParent.querySelectorAll('li')
 		this.perArticleWidth = this.articles[0].getBoundingClientRect().width
 		this.shift = 0
 
@@ -82,12 +83,14 @@ class ArticleScroller {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	if (window._articleScroller) {
-		console.warn('An ArticleScroller instance already exists.')
+	if (window._articleScrollers) {
+		console.warn('ArticleScroller instances already exist.')
 		return
 	}
 
-	if (document.querySelector('.blog-list__featured-scroller')) {
-		window._articleScroller = new ArticleScroller()
-	}
+	window._articleScrollers = []
+
+	document.querySelectorAll('[role=scroller]').forEach((scroller) => {
+		window._articleScrollers.push(new ArticleScroller(scroller))
+	})
 })

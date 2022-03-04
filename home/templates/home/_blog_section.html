@@ -2,14 +2,8 @@
 
 <h2 class="homepage-section-header">{{ label }}</h2>
 
-{% if page.featured_blog_posts %}
-	<ul class="article-carousel">
-		{% for blog_post in page.featured_blog_posts.all %}
-			<li class="article-carousel-item">
-				{% include "blog/_blog_card.html" with size="small" post=blog_post.page.specific photo=blog_post.page.specific.teaser_image only %}
-			</li>
-		{% endfor %}
-	</ul>
+{% if featured_blog_posts %}
+	{% include 'blog/_blog_carousel.html' with blogs=featured_blog_posts key='featured-blogs' only %}
 {% endif %}
 
 <div class="homepage-section-actions">
