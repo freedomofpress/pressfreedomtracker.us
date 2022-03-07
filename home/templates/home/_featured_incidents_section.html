@@ -3,13 +3,7 @@
 <h2 class="homepage-section-header">{{ label }}</h2>
 
 {% if page.featured_incidents %}
-	<ul class="article-carousel">
-		{% for incident in page.featured_incidents.all %}
-			<li class="article-carousel-item">
-				{% include "incident/_incident_card.html" with size="small" incident=incident.page.specific photo=incident.page.specific.teaser_image only %}
-			</li>
-		{% endfor %}
-	</ul>
+	{% include 'incident/_incident_carousel.html' with incidents=featured_incident_pages key='featured-incidents' only %}
 {% endif %}
 
 {% with search_page=settings.common.SearchSettings.search_page %}

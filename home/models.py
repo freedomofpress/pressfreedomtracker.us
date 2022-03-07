@@ -151,6 +151,12 @@ class HomePage(MetadataPageMixin, Page):
         context['featured_blog_posts'] = [
             f.page for f in self.featured_blog_posts.select_related('page')
         ]
+        context['featured_incident_pages'] = [
+            f.page for f in self.featured_incidents.select_related(
+                'page',
+                'page__teaser_image',
+            )
+        ]
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
 
