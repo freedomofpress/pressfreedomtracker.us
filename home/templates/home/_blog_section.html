@@ -6,6 +6,8 @@
 	{% include 'blog/_blog_carousel.html' with blogs=featured_blog_posts key='featured-blogs' only %}
 {% endif %}
 
-<div class="homepage-section-actions">
-	<a href="{% pageurl page.blog_index_page %}" class="btn btn-primary">{{ more_label }}</a>
-</div>
+{% if page.blog_index_page %}
+	<div class="homepage-section-actions">
+		<a href="{% pageurl page.blog_index_page %}" class="btn btn-primary">{{ more_label }}</a>
+	</div>
+{% endif %}
