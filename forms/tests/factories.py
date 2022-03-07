@@ -45,7 +45,7 @@ class FieldGroupFactory(DjangoModelFactory):
     title = Faker('words', nb=4)
     description = Faker('sentence')
     sort_order = Sequence(int)
-    template = 'text'
+    template = 'default'
 
 
 class FormPageFieldGroupFactory(FieldGroupFactory):
