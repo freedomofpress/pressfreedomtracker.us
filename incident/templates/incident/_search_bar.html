@@ -1,5 +1,5 @@
 <div class="search-bar">
-	<form class="search-form" action="{{ action }}">
+	<form class="search-form" method="GET" action="{{ action }}">
 		<label for="primary-search-bar" class="sr-only">
 			Search incidents by text, date, location, tags...
 		</label>
@@ -10,6 +10,8 @@
 			autocomplete="off"
 			type="search"
 			class="text-field--search-bar"
+			name="search"
+			value="{{ value }}"
 		>
 		<button type="submit" class="btn btn-ghost search-button" value="Search">
 			Search

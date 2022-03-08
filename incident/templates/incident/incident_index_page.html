@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
-{% load webpack_loader humanize %}
+{% load wagtailcore_tags webpack_loader humanize %}
 
 {% block main %}
+	{% pageurl page as current_page_url %}
 	<h1 class="page-title" id="title">Incidents Database</h1>
 	<button class="mobile-filter-toggle" aria-controls="database-filters" aria-expanded="false">
 		Filters
@@ -10,7 +11,7 @@
 
 	<section class="incident-index__search-area">
 		<div class="incident-index__search-bar">
-			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text, date..." %}
+			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text" action=current_page_url value=search_value %}
 		</div>
 		<div class="incident-index__download">
 			<details class="incident-index__download-details">
@@ -20,14 +21,16 @@
 				<div class="incident-index__download-select">
 					<div class="incident-index__download-wrapper">
 						<div class="incident-index__download-list">
-							<a href="#" class="incident-index__download-item">
+							<a href="{{ export_path }}" class="incident-index__download-item incident-index__download-item--downloadable">
 								Download full dataset
-								<span class="incident-index__incident-count">{{ incident_count|intcomma }} incident{{ incident_count|pluralize }}</span>
+								<span class="incident-index__incident-count">{{ all_incident_count|intcomma }} incident{{ all_incident_count|pluralize }}</span>
 							</a>
-							<a href="#" class="incident-index__download-item">
+							{% if filtered_export_path %}
+								<a href="{{ filtered_export_path }}" class="incident-index__download-item incident-index__download-item--downloadable">
 								Download your filtered data
-								<span class="incident-index__incident-count">394 incidents</span>
-							</a>
+									<span class="incident-index__incident-count">{{ incident_count|intcomma }} incident{{ incident_count|pluralize }}</span>
+								</a>
+							{% endif %}
 							<a href="#" class="incident-index__download-item incident-index__download-item--more">Learn more</a>
 						</div>
 					</div>
@@ -88,7 +91,7 @@
 
 		<div class="incident-index__results">
 			{% for incident in entries_page %}
-				{% include "incident/_incident_database_card.html" with incident=incident only %}
+				{% include "incident/_incident_database_card.html" with incident=incident index=page only %}
 			{% endfor %}
 		</div>
 	</section>

@@ -2,6 +2,7 @@ import csv
 import json
 import unittest
 from datetime import timedelta, date
+from urllib import parse
 
 import wagtail_factories
 from wagtail.core.models import Site, Page
@@ -16,6 +17,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from django.utils import timezone
 
+from common.models import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import (
     CategoryPageFactory,
     PersonPageFactory,
@@ -115,6 +117,69 @@ class TestPages(TestCase):
     def test_get_incident_page_should_succeed(self):
         response = self.client.get('/incidents/one/')
         self.assertEqual(response.status_code, 200)
+
+
+class TestIncidentIndexPageContext(TestCase):
+    def setUp(self):
+        Page.objects.filter(slug='home').delete()
+        root_page = Page.objects.get(title='Root')
+        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        root_page.add_child(instance=self.home_page)
+
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+                'root_page': self.home_page,
+            }
+        )
+        if not created:
+            site.root_page = self.home_page
+            site.save()
+
+        self.settings = IncidentFilterSettings.for_site(site)
+        self.site = site
+        self.index = IncidentIndexPageFactory(
+            parent=site.root_page, slug='incidents')
+
+    def test_includes_export_path(self):
+        request = RequestFactory().get('/')
+        context = self.index.get_context(request)
+        self.assertEqual(
+            context['export_path'],
+            self.index.get_url() + self.index.reverse_subpage('export_view')
+        )
+
+    def test_includes_total_incident_count(self):
+        IncidentPageFactory.create_batch(3, parent=self.index)
+        request = RequestFactory().get('/')
+        context = self.index.get_context(request)
+        self.assertEqual(context['all_incident_count'], 3)
+
+    def test_includes_filtered_export_path(self):
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=self.settings,
+            incident_filter='city',
+        )
+
+        request = RequestFactory().get('/?city=Albuquerque')
+        context = self.index.get_context(request)
+        expected_path = (
+            self.index.get_url() +
+            self.index.reverse_subpage('export_view') +
+            '?city=Albuquerque'
+        )
+        self.assertEqual(context['filtered_export_path'], expected_path)
+
+    def test_includes_search_value(self):
+        search_query = 'delicious treats'
+        request = RequestFactory().get(
+            '/?' + parse.urlencode({'search': search_query})
+        )
+        context = self.index.get_context(request)
+        self.assertEqual(context['search_value'], search_query)
 
 
 class TestExportPage(TestCase):
