@@ -2,7 +2,7 @@
 
 <h2 class="homepage-section-header">{{ label }}</h2>
 
-{% if page.featured_incidents %}
+{% if featured_incident_pages %}
 	{% include 'incident/_incident_carousel.html' with incidents=featured_incident_pages key='featured-incidents' only %}
 {% endif %}
 

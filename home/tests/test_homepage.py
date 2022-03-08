@@ -43,6 +43,28 @@ class HomePageTest(TestCase):
 
         self.assertEqual(response.context['self'], self.home_page)
 
+    def test_hides_empty_blog_section(self):
+        self.home_page.featured_blog_posts = []
+        self.home_page.save()
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(
+            response,
+            self.home_page.featured_blog_posts_label,
+        )
+
+    def test_hides_empty_incidents_section(self):
+        self.home_page.featured_incidents = []
+        self.home_page.save()
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(
+            response,
+            self.home_page.featured_incidents_label,
+        )
+
     def test_get_home_page_should_succeed_if_no_blog_index_page(self):
         self.home_page.blog_index_page = None
         self.home_page.save()
