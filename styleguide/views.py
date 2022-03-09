@@ -52,4 +52,7 @@ class StyleguideView(TemplateView):
         blog_page = BlogPageFactory.build(with_image=True)
         context['blog_page'] = blog_page
 
+        blog_pages = BlogPageFactory.build_batch(3, with_image=True)
+        context['blog_pages'] = blog_pages
+
         return context

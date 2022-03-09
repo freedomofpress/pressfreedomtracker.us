@@ -1,16 +1,13 @@
-import random
-
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from wagtail.core.models import Page
 
-from common.models import CategoryPage
 from common.tests.factories import (
     CategoryPageFactory,
     DevelopmentSiteFactory,
 )
-from home.tests.factories import StatBoxFactory, HomePageFactory
+from home.tests.factories import HomePageFactory
 
 
 CATEGORIES = {
@@ -96,5 +93,3 @@ class Command(BaseCommand):
             self.stdout.write('.', ending='')
 
         self.stdout.write('')
-        for category in random.sample(list(CategoryPage.objects.all()), 4):
-            StatBoxFactory(page=home_page, category=category)

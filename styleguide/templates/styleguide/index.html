@@ -221,6 +221,34 @@
 			{% endfor %}
 		</div>
 	</details>
+	<hr/>
+	<details id="card-containers" open>
+		<summary><h2 class="heading">Card Carousel</h2></summary>
+		A grid-based card container that collapses to a horizontally scrolling carousel on tablet/mobile screens.  Requires a small amount of javascript and a unique key defining the ID of the carousel (so that multiple ones can exist on the same page with independent scroll buttons).  Define a template like this:
+		<code><pre>{% filter force_escape %}{% verbatim %}
+{% load common_tags %}
+{% with id=key|add_as_string:'-carousel' %}
+	<ol id="{{ id }}" class="article-carousel__items">
+		{% for blog in blogs %}
+			<li class="article-carousel__item">
+				{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'big' photo=blog.teaser_image only %}
+			</li>
+		{% endfor %}
+	</ol>
+
+	<div class="article-carousel__scroller" role="scroller" data-articles="{{ id }}">
+		<button class="article-carousel__scroller--button article-carousel__scroller--button-prev">
+			{% include 'common/arrow-prev.svg' %}
+		</button>
+		<button class="article-carousel__scroller--button article-carousel__scroller--button-next">
+			{% include 'common/arrow-next.svg' %}
+		</button>
+	</div>
+{% endwith %}{% endverbatim %}{% endfilter %}</pre></code>
+		And include with something like: <code><pre>{% filter force_escape %}{% verbatim %}{% include 'blog/_blog_carousel.html' with blogs=featured_blog_posts key='featured-blogs' only %}{% endverbatim %}{% endfilter %}</pre></code>
+
+{% include 'blog/_blog_carousel.html' with blogs=blog_pages key='styleguide-blogs' only %}
+	</details>
 
 	<hr/>
 	<details id="cards" open>

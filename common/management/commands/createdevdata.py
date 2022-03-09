@@ -26,7 +26,7 @@ from common.devdata import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
 )
 from forms.models import FormPage
-from home.models import HomePage, HomePageFeature
+from home.models import HomePage, FeaturedBlogPost, FeaturedIncident
 from incident.models import IncidentIndexPage, IncidentPage
 from incident.devdata import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory
 from menus.models import Menu, MenuItem
@@ -326,9 +326,8 @@ class Command(BaseCommand):
                 with_image=True,
             )
 
-            for i, page in zip((2, 4, 6), random.sample(list(BlogPage.objects.all()), 3)):
-                HomePageFeature.objects.create(
-                    sort_order=i,
+            for page in random.sample(list(BlogPage.objects.all()), 3):
+                FeaturedBlogPost.objects.create(
                     home_page=home_page,
                     page=page,
                 )
@@ -362,9 +361,8 @@ class Command(BaseCommand):
         search_settings.search_page = incident_index_page
         search_settings.save()
 
-        for i, incident in zip((1, 3, 5), random.sample(list(IncidentPage.objects.all()), 3)):
-            HomePageFeature.objects.create(
-                sort_order=i,
+        for incident in random.sample(list(IncidentPage.objects.all()), 3):
+            FeaturedIncident.objects.create(
                 home_page=home_page,
                 page=incident,
             )

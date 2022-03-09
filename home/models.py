@@ -9,18 +9,12 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     PageChooserPanel,
     MultiFieldPanel,
-    StreamFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page, Orderable, Site
 
-import common.blocks
-from common.choices import CATEGORY_COLOR_CHOICES
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
-from common.utils import unescape
-from common.validators import validate_template
 from incident.utils.incident_filter import get_serialized_filters
 
 
@@ -48,22 +42,16 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Recent blog posts will automatically be pulled from this page'
     )
 
-    statboxes_label = models.CharField(
-        default='Quick Stats',
-        max_length=255,
-        help_text='Title displayed above stat boxes'
-    )
-
-    featured_pages_label = models.CharField(
-        default='Featured Articles',
+    featured_incidents_label = models.CharField(
+        default='Featured Incidents',
         max_length=255,
         help_text='Title displayed above featured pages'
     )
 
-    featured_more_label = models.CharField(
-        default='More Incidents',
+    featured_incidents_more_label = models.CharField(
+        default='Go to Incidents Database',
         max_length=255,
-        help_text='Text for button to show more incidents'
+        help_text='Text for button show more incidents'
     )
 
     recent_incidents_label = models.CharField(
@@ -72,53 +60,39 @@ class HomePage(MetadataPageMixin, Page):
         help_text='Title displayed above recent incidents'
     )
 
-    recent_more_label = models.CharField(
-        default='More Incidents',
-        max_length=255,
-        help_text='Text for button to show more incidents'
+    recent_incidents_count = models.PositiveIntegerField(
+        default=8,
+        help_text='Number of recent incidents to display',
     )
 
-    blog_label = models.CharField(
-        default='Partner Articles',
+    recent_incidents_more_label = models.CharField(
+        default='Go to Incidents Database',
+        max_length=255,
+        help_text='Text for button to show more recent incidents'
+    )
+
+    featured_blog_posts_label = models.CharField(
+        default='From Our Blog',
         max_length=255,
         help_text='Title displayed above blog posts'
     )
 
-    blog_more_label = models.CharField(
-        default='More Articles',
+    featured_blog_posts_more_label = models.CharField(
+        default='Go to Blog',
         max_length=255,
         help_text='Text for button to show more blog posts'
     )
-
-    change_filters_message = models.CharField(
-        default='Change filters to search the incident database.',
+    categories_label = models.CharField(
+        default='Learn More About Our Categories',
         max_length=255,
-        help_text='Text for the filter bar when no filters are applied.',
+        help_text='Title displayed above categories',
+    )
+    categories_body = models.TextField(
+        help_text='Paragraph of extra information about categories',
+        blank=True,
     )
 
-    content = StreamField([
-        ('heading_2', common.blocks.Heading2()),
-        ('raw_html', blocks.RawHTMLBlock()),
-        ('rich_text', blocks.RichTextBlock()),
-        ('tweet', common.blocks.TweetEmbedBlock()),
-        ('tabs', common.blocks.TabbedBlock()),
-    ], blank=True)
-
     content_panels = Page.content_panels + [
-
-        MultiFieldPanel(
-            [
-                FieldPanel('statboxes_label'),
-                InlinePanel(
-                    'statboxes',
-                    label='Statboxes',
-                ),
-            ],
-            'Statboxes',
-            classname='collapsible',
-        ),
-        StreamFieldPanel('content'),
-
         MultiFieldPanel([
             FieldPanel('about'),
             PageChooserPanel(
@@ -128,30 +102,61 @@ class HomePage(MetadataPageMixin, Page):
                     'common.SimplePageWithSidebar'
                 ]
             ),
-        ], 'About'),
+        ], 'About', classname='collapsible'),
 
-        InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
-        InlinePanel('featured_blog_posts', heading="Featured Blog Posts", max_num=6),
+        MultiFieldPanel(
+            [
+                PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
+                InlinePanel('featured_blog_posts', max_num=6),
+                FieldPanel('featured_blog_posts_label'),
+                FieldPanel('featured_blog_posts_more_label'),
+            ],
+            'Featured Blog Posts',
+            classname='collapsible',
+        ),
 
-        MultiFieldPanel([
-            FieldPanel('recent_incidents_label'),
-        ], 'Recent Incidents'),
+        MultiFieldPanel(
+            [
+                InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
+                FieldPanel('featured_incidents_label'),
+                FieldPanel('featured_incidents_more_label'),
+            ],
+            'Featured Incidents',
+            classname='collapsible',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('categories_label'),
+                FieldPanel('categories_body'),
+            ],
+            'Categories',
+            classname='collapsible',
+        ),
 
-        MultiFieldPanel([
-            FieldPanel('blog_label'),
-            PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
-        ], 'Blog'),
-
-        MultiFieldPanel([
-            FieldPanel('change_filters_message'),
-        ], 'Filter Bar'),
-
+        MultiFieldPanel(
+            [
+                FieldPanel('recent_incidents_label'),
+                FieldPanel('recent_incidents_count'),
+                FieldPanel('recent_incidents_more_label'),
+            ],
+            'Recent Incidents',
+            classname='collapsible',
+        ),
     ]
 
     def get_context(self, request, *args, **kwargs):
         context = super(HomePage, self).get_context(request, *args, **kwargs)
 
         context['serialized_filters'] = json.dumps(get_serialized_filters())
+        context['featured_blog_posts'] = [
+            f.page for f in self.featured_blog_posts.select_related('page')
+        ]
+        context['featured_incident_pages'] = [
+            f.page for f in self.featured_incidents.select_related(
+                'page',
+                'page__teaser_image',
+            )
+        ]
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
 
@@ -162,9 +167,6 @@ class HomePage(MetadataPageMixin, Page):
         else:
             context['export_path'] = None
 
-        context['features'] = [
-            f.page.specific for f in self.features.all().select_related('page__content_type')
-        ]
         return context
 
 
@@ -184,55 +186,3 @@ class FeaturedBlogPost(Orderable):
     panels = [
         PageChooserPanel('page'),
     ]
-
-
-# TODO: DEPRECATED, remove
-class HomePageFeature(Orderable):
-    home_page = ParentalKey('home.HomePage', related_name='features')
-    page = models.ForeignKey(Page, on_delete=models.CASCADE)
-
-    panels = [
-        PageChooserPanel('page', ('blog.BlogPage', 'incident.IncidentPage', 'incident.TopicPage')),
-    ]
-
-
-class StatBox(Orderable):
-    page = ParentalKey(Page, related_name='statboxes')
-    value = RichTextField(
-        blank=True,
-        null=True,
-        help_text='Primary text for this stat box.  Line breaks will be removed.',
-        validators=[validate_template],
-        features=['bold', 'italic', 'numincidents'],
-    )
-    label = models.CharField(max_length=1000)
-    color = models.CharField(
-        max_length=255,
-        choices=CATEGORY_COLOR_CHOICES,
-    )
-    internal_link = models.ForeignKey(
-        'wagtailcore.Page',
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-    querystring = models.CharField(
-        max_length=1000,
-        null=True,
-        blank=True,
-        help_text="Append a querystring to the internal link. Should start with '?'"
-    )
-    external_link = models.URLField(blank=True, help_text="This link will not be used if there is an internal link set.")
-
-    panels = [
-        FieldPanel('value'),
-        FieldPanel('label'),
-        FieldPanel('color'),
-        PageChooserPanel('internal_link'),
-        FieldPanel('querystring'),
-        FieldPanel('external_link'),
-    ]
-
-    def clean(self):
-        self.value = unescape(self.value)

@@ -1,21 +1,15 @@
 {% load wagtailcore_tags %}
 
-<h2 class="homepage-section-header">Featured Incidents</h2>
+<h2 class="homepage-section-header">{{ label|default:"Featured Incidents" }}</h2>
 
-{% if page.featured_incidents %}
-	<ul class="article-carousel">
-		{% for incident in page.featured_incidents.all %}
-			<li class="article-carousel-item">
-				{% include "incident/_incident_card.html" with size="small" incident=incident.page.specific photo=incident.page.specific.teaser_image only %}
-			</li>
-		{% endfor %}
-	</ul>
+{% if featured_incident_pages %}
+	{% include 'incident/_incident_carousel.html' with incidents=featured_incident_pages key='featured-incidents' only %}
 {% endif %}
 
 {% with search_page=settings.common.SearchSettings.search_page %}
 	{% if search_page %}
 		<div class="homepage-section-actions">
-			<a href="{% pageurl search_page %}" class="btn btn-primary">Go to Incidents Database</a>
+			<a href="{% pageurl search_page %}" class="btn btn-primary">{{ more_label|default:"Go to Incidents Database" }}</a>
 		</div>
 	{% endif %}
 {% endwith %}

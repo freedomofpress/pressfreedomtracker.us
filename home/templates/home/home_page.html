@@ -27,21 +27,25 @@
 		</div>
 	{% endif %}
 
+	{% if featured_blog_posts %}
+		<section class="homepage-section homepage-section--gray">
+			<div class="homepage-section-inner">
+				{% include "home/_blog_section.html" with label=page.featured_blog_posts_label more_label=page.featured_blog_posts_more_label %}
+			</div>
+		</section>
+	{% endif %}
+
+	{% if featured_incident_pages %}
+		<section class="homepage-section">
+			<div class="homepage-section-inner">
+				{% include "home/_featured_incidents_section.html" with label=page.featured_incidents_label more_label=page.featured_incidents_more_label %}
+			</div>
+		</section>
+	{% endif %}
+
 	<section class="homepage-section homepage-section--gray">
 		<div class="homepage-section-inner">
-			{% include "home/_blog_section.html" %}
-		</div>
-	</section>
-
-	<section class="homepage-section">
-		<div class="homepage-section-inner">
-			{% include "home/_featured_incidents_section.html" %}
-		</div>
-	</section>
-
-	<section class="homepage-section homepage-section--gray">
-		<div class="homepage-section-inner">
-			{% include "home/_categories_section.html" %}
+			{% include "home/_categories_section.html" with label=page.categories_label body=page.categories_body %}
 		</div>
 	</section>
 
@@ -49,7 +53,7 @@
 		{% if search_page %}
 			<section class="homepage-section">
 				<div class="homepage-section-inner">
-					{% include "home/_recent_incidents_section.html" %}
+					{% include "home/_recent_incidents_section.html" with label=page.recent_incidents_label more_label=page.recent_incidents_more_label count=page.recent_incidents_count %}
 				</div>
 			</section>
 		{% endif %}
