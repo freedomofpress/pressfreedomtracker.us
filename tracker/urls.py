@@ -35,13 +35,10 @@ urlpatterns = [
 
     path('health/ok/', common_views.health_ok),
     path('health/version/', common_views.health_version),
-<<<<<<< HEAD
-=======
 
     path('charts/', include(chart_urls)),
 
     path(r'', include(wagtail_urls)),
->>>>>>> 933f4d26 (Add a new charts app)
 ]
 
 

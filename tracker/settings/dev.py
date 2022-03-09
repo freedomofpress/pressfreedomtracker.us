@@ -162,8 +162,6 @@ if ENABLE_DEBUG_TOOLBAR:  # noqa: F405
         },
     }
 
-<<<<<<< HEAD
-=======
     # Disable caching of webpack stats files (can prevent node/django
     # container race condition).
     WEBPACK_LOADER['DEFAULT']['CACHE'] = False  # noqa: F405
@@ -177,7 +175,6 @@ if ENABLE_DEBUG_TOOLBAR:  # noqa: F405
     # Include the wagtail styleguide
     INSTALLED_APPS.append('wagtail.contrib.styleguide')  # noqa: F405
 
->>>>>>> 67abd3a1 (Charts: new version)
 
 if 'DJANGO_NO_DB' in os.environ:
     pass
