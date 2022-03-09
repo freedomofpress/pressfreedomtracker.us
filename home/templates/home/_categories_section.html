@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<h2 class="homepage-section-header">{{ label }}</h2>
+<h2 class="homepage-section-header">{{ label|default:"Learn More About Our Categories" }}</h2>
 
 <p class="homepage-section-paragraph">{{ body }}</p>
 

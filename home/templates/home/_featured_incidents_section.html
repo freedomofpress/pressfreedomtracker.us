@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<h2 class="homepage-section-header">{{ label }}</h2>
+<h2 class="homepage-section-header">{{ label|default:"Featured Incidents" }}</h2>
 
 {% if featured_incident_pages %}
 	{% include 'incident/_incident_carousel.html' with incidents=featured_incident_pages key='featured-incidents' only %}
@@ -9,7 +9,7 @@
 {% with search_page=settings.common.SearchSettings.search_page %}
 	{% if search_page %}
 		<div class="homepage-section-actions">
-			<a href="{% pageurl search_page %}" class="btn btn-primary">{{ more_label }}</a>
+			<a href="{% pageurl search_page %}" class="btn btn-primary">{{ more_label|default:"Go to Incidents Database" }}</a>
 		</div>
 	{% endif %}
 {% endwith %}

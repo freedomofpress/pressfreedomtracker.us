@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<h2 class="homepage-section-header">{{ label }}</h2>
+<h2 class="homepage-section-header">{{ label|default:"Recent Incidents" }}</h2>
 
 {% with incidents=search_page.get_incidents|slice:count %}
 	<ul class="article-carousel">
@@ -13,5 +13,5 @@
 {% endwith %}
 
 <div class="homepage-section-actions">
-	<a href="{% pageurl search_page %}" class="btn btn-primary">{{ more_label }}</a>
+	<a href="{% pageurl search_page %}" class="btn btn-primary">{{ more_label|default:"Go to Incidents Database" }}</a>
 </div>
