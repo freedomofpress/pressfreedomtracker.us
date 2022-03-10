@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import { sample } from "lodash";
-import { HomepageMainCharts } from "./HomepageMainCharts";
-import { FiltersIntegration } from "./FiltersIntegration";
+import HomepageMainCharts from "./HomepageMainCharts";
+import FiltersIntegration from "./FiltersIntegration";
 import "../../sass/base.sass";
 
-export function App() {
+export default function App() {
 	const [dataset, setDataset] = useState(null);
 	const [source, useSource] = useState("api");
 
