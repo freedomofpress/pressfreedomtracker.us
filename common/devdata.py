@@ -68,63 +68,88 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         arrest = factory.Trait(
             title='Arrest / Criminal Charge',
             plural_name='Arrests and Criminal Charges',
-            slug='arrest'
+            slug='arrest',
+            page_symbol='arrest',
         )
         border_stop = factory.Trait(
             title='Border Stop',
             plural_name='Border Stops',
-            slug='border-stop'
+            slug='border-stop',
+            page_symbol='border_stop',
         )
         denial_of_access = factory.Trait(
             title='Denial of Access',
             plural_name='Denials of Access',
             slug='denial-of-access',
+            page_symbol='denial_of_access',
         )
         equipment_search = factory.Trait(
             title='Equipment Search or Seizure',
             plural_name='Equipment Searches, Seizures and Damage',
             slug='equipment-search',
+            page_symbol='equipment_search',
         )
         physical_attack = factory.Trait(
             title='Physical Attack',
             plural_name='Physical Attacks',
             slug='physical-attack',
+            page_symbol='physical_attack',
         )
         leak_case = factory.Trait(
             title='Leak Case',
             plural_name='Leak Cases',
-            slug='leak-case'
+            slug='leak-case',
+            page_symbol='leak_case',
         )
         subpoena = factory.Trait(
             title='Subpoena / Legal Order',
             plural_name='Subpoenas and Legal Orders',
-            slug='subpoena'
+            slug='subpoena',
+            page_symbol='subpoena',
         )
         equipment_damage = factory.Trait(
             title='Equipment Damage',
             plural_name='Equipment Damages',
             slug='equipment-damage',
+            page_symbol='equipment_damage',
         )
         other_incident = factory.Trait(
             title='Other Incident',
             plural_name='Other Incidents',
             slug='other-incident',
+            page_symbol='other_incident',
         )
         chilling_statement = factory.Trait(
             title='Chilling Statement',
             plural_name='Chilling Statements',
             slug='chilling-statement',
+            page_symbol='chilling_statement',
         )
         prior_restraint = factory.Trait(
             title='Prior Restraint',
             plural_name='Prior Restraints',
             slug='prior-restraint',
+            page_symbol='prior_restraint',
         )
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
     methodology = factory.LazyAttribute(lambda _: RichText(fake.paragraph(nb_sentences=5)))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
+
+    @factory.post_generation
+    def incident_filters(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            CategoryIncidentFilter.objects.bulk_create([
+                CategoryIncidentFilter(
+                    category=self,
+                    incident_filter=incident_filter,
+                )
+                for incident_filter in extracted
+            ])
 
 
 class CustomImageFactory(wagtail_factories.ImageFactory):

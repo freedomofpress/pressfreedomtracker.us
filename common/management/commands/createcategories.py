@@ -3,7 +3,7 @@ from django.db import transaction
 
 from wagtail.core.models import Page
 
-from common.tests.factories import (
+from common.devdata import (
     CategoryPageFactory,
     DevelopmentSiteFactory,
 )
