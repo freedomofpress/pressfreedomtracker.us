@@ -3,9 +3,9 @@
 <h2 class="homepage-section-header">{{ label|default:"Recent Incidents" }}</h2>
 
 {% with incidents=search_page.get_incidents|slice:count %}
-	<ul class="article-carousel">
+	<ul class="article-carousel__items">
 		{% for incident in incidents %}
-			<li class="article-carousel-item article-carousel-item--latest">
+			<li class="article-carousel__item article-carousel__item--latest">
 				{% include "incident/_incident_card.html" with size="small" incident=incident photo=incident.teaser_image only %}
 			</li>
 		{% endfor %}
