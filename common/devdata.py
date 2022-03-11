@@ -1,6 +1,5 @@
 import factory
 import wagtail_factories
-from faker import Faker
 from wagtail.core import blocks
 from wagtail.core.rich_text import RichText
 
@@ -23,9 +22,10 @@ from common.models import (
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
+from common.tests.utils import StreamfieldProvider
 
 
-fake = Faker()
+factory.Faker.add_provider(StreamfieldProvider)
 
 
 class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
@@ -63,6 +63,7 @@ class TaxonomyCategoryPageFactory(factory.django.DjangoModelFactory):
 class CategoryPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = CategoryPage
+        exclude = ('methodology_text', )
 
     class Params:
         arrest = factory.Trait(
@@ -121,8 +122,10 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
             slug='prior-restraint',
         )
 
+    methodology_text = factory.Faker('paragraph', nb_sentences=5)
+
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
-    methodology = factory.LazyAttribute(lambda _: RichText(fake.paragraph(nb_sentences=5)))
+    methodology = factory.LazyAttribute(lambda o: RichText(o.methodology_text))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
 
@@ -137,9 +140,12 @@ class CustomImageFactory(wagtail_factories.ImageFactory):
 class PersonPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = PersonPage
+        exclude = ('bio_text', )
+
+    bio_text = factory.Faker('paragraph')
 
     title = factory.Faker('name')
-    bio = factory.LazyAttribute(lambda _: RichText(fake.paragraph()))
+    bio = factory.LazyAttribute(lambda o: RichText(o.bio_text))
     website = factory.Faker('uri')
     photo = None
 
@@ -164,6 +170,10 @@ class OrganizationPageFactory(wagtail_factories.PageFactory):
 class SimplePageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = SimplePage
+
+    body = factory.Faker('streamfield', fields=[
+        'styled_text_paragraphs', 'styled_text', 'raw_html',
+    ])
 
 
 class RichTextBlockFactory(wagtail_factories.blocks.BlockFactory):
