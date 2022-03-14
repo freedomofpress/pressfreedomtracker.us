@@ -306,6 +306,14 @@ class CategoryPage(MetadataPageMixin, Page):
         null=True,
         help_text='Detailed description of how we track the data for this particular category.'
     )
+    blog_index_page = models.ForeignKey(
+        'blog.BlogIndexPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='This blog will be linked from the category page.'
+    )
     default_image = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -339,7 +347,14 @@ class CategoryPage(MetadataPageMixin, Page):
             'Methodology'
         ),
         InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
-        InlinePanel('featured_blogs', heading="Featured Blogs", max_num=6),
+        MultiFieldPanel(
+            [
+                PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
+                InlinePanel('featured_blogs', max_num=6),
+            ],
+            'Featured Blog Posts',
+            classname='collapsible',
+        ),
         InlinePanel('incident_filters', label='Fields to include in filters'),
     ]
 
