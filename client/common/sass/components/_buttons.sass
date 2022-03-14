@@ -11,7 +11,7 @@
 	z-index: 1
 
 	&:focus
-		outline: none
+		outline: $black solid 3px
 
 	&:not([disabled]):hover
 		cursor: pointer
@@ -36,14 +36,6 @@
 			padding: 0.5rem 0.75rem
 			//padding left of parent
 			transition: content 0.01s ease-in 0.08s
-
-		&:focus
-			margin: -3px 0
-			border-width: 6px 3px 6px 6px
-
-			&::after
-				border-width: 6px 6px 6px 3px
-				top: -6px
 
 		&[disabled]
 			color: $tag-inactive
@@ -96,9 +88,6 @@
 			&::before
 				right: 0
 
-		&:focus
-			border-width: 6px
-
 		&[disabled]
 			color: $tag-inactive
 			border-color: $tag-inactive
@@ -123,10 +112,6 @@
 			&::before
 				right: 0
 
-		&:focus
-			border: 3px solid
-			border-color: $black
-
 		&[disabled]
 			color: $tag-inactive
 
@@ -135,10 +120,6 @@
 		line-height: 1.23
 		padding: 0.25rem 0.5rem
 		background-color: $accent-background-tags
-
-		&:focus
-			border: 3px solid
-			border-color: $black
 
 		&:not([disabled]):hover
 			background-color: $accent-color
