@@ -302,7 +302,6 @@ class CategoryPage(MetadataPageMixin, Page):
         validators=[validate_template],
     )
     methodology = RichTextField(
-        max_length=255,
         blank=True,
         null=True,
         help_text='Detailed description of how we track the data for this particular category.'
@@ -383,6 +382,17 @@ class CategoryPage(MetadataPageMixin, Page):
             )
         ]
 
+        context['methodology'] = {
+            'description': self.methodology,
+            'data_items': [
+                {
+                    'label': item.label,
+                    'description': item.description,
+                } for item in self.methodology_items.all()
+            ]
+        }
+        print(context['methodology'])
+
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
             context['export_path'] = search_settings.data_download_page.get_url()
@@ -445,7 +455,6 @@ class CategoryPage(MetadataPageMixin, Page):
                 )),
             } for item in self.statistics_items.all()
         ]
-        print(context['data_items'])
         return context
 
     def get_cache_tag(self):

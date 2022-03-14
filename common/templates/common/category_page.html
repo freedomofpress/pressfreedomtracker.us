@@ -23,6 +23,14 @@
 		</div>
 	</section>
 
+	{% if methodology.description or methodology.data_items %}
+		<section class="categorypage-section categorypage-section--gray">
+			<div class="categorypage-section-inner">
+				{% include "common/_category_methodology_section.html" %}
+			</div>
+		</section>
+	{% endif %}
+
 	{% if featured_incident_pages %}
 		<section class="categorypage-section">
 			<div class="categorypage-section-inner">
