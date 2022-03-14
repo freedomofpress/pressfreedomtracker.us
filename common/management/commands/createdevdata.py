@@ -161,76 +161,6 @@ class Command(BaseCommand):
                     collection=photo_collection,
                 )
 
-        # ABOUT PAGE
-        if not SimplePage.objects.filter(slug='about').exists():
-            about_page = SimplePage(
-                title='About',
-                slug='about',
-                body=json.dumps([
-                    dict(
-                        type='text',
-                        value=dict(
-                            text=LIPSUM,
-                            background_color='white',
-                            text_align='left',
-                            font_size='large',
-                            font_family='sans-serif',
-                        ),
-                    ),
-                ])
-            )
-            home_page.add_child(instance=about_page)
-            home_page.about_page = about_page
-        else:
-            about_page = SimplePage.objects.get(slug='about')
-
-        # FAQ Page
-        SimplePage.objects.filter(
-            slug='frequently-asked-questions',
-        ).delete()
-        faq_page = SimplePageFactory(
-            parent=home_page,
-            title='Frequently Asked Questions',
-            slug='frequently-asked-questions',
-        )
-
-        # RESOURCES PAGE
-        if not Menu.objects.filter(slug='resources').exists():
-            resources_menu = Menu.objects.create(name='Resources Sidebar', slug='resources')
-            MenuItem.objects.bulk_create([
-                MenuItem(
-                    text='About',
-                    link_page=about_page,
-                    menu=resources_menu,
-                    sort_order=1
-                ),
-                MenuItem(
-                    text='A menu item',
-                    link_url='#',
-                    menu=resources_menu,
-                    sort_order=2
-                ),
-            ])
-            resources_page = SimplePageWithSidebar(
-                title='Resources',
-                slug='resources',
-                sidebar_menu=resources_menu,
-                body=json.dumps([
-                    dict(
-                        type='text',
-                        value=dict(
-                            text=LIPSUM,
-                            background_color='white',
-                            text_align='left',
-                            font_size='large',
-                            font_family='sans-serif',
-                        ),
-                    ),
-                ])
-            )
-
-            home_page.add_child(instance=resources_page)
-
         # SUBMIT INCIDENT FORM
         if not FormPage.objects.filter(slug='submit-incident'):
             incident_form = FormPage(title='Submit an incident', slug='submit-incident')
@@ -311,6 +241,64 @@ class Command(BaseCommand):
             MultimediaIncidentUpdateFactory(page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
+
+        # ABOUT PAGE
+        if not SimplePage.objects.filter(slug='about').exists():
+            about_page = SimplePageFactory.build(
+                title='About',
+                slug='about',
+            )
+            home_page.add_child(instance=about_page)
+            home_page.about_page = about_page
+        else:
+            about_page = SimplePage.objects.get(slug='about')
+
+        # FAQ Page
+        SimplePage.objects.filter(
+            slug='frequently-asked-questions',
+        ).delete()
+        faq_page = SimplePageFactory(
+            parent=home_page,
+            title='Frequently Asked Questions',
+            slug='frequently-asked-questions',
+        )
+
+        # RESOURCES PAGE
+        if not Menu.objects.filter(slug='resources').exists():
+            resources_menu = Menu.objects.create(name='Resources Sidebar', slug='resources')
+            MenuItem.objects.bulk_create([
+                MenuItem(
+                    text='About',
+                    link_page=about_page,
+                    menu=resources_menu,
+                    sort_order=1
+                ),
+                MenuItem(
+                    text='A menu item',
+                    link_url='#',
+                    menu=resources_menu,
+                    sort_order=2
+                ),
+            ])
+            resources_page = SimplePageWithSidebar(
+                title='Resources',
+                slug='resources',
+                sidebar_menu=resources_menu,
+                body=json.dumps([
+                    dict(
+                        type='text',
+                        value=dict(
+                            text=LIPSUM,
+                            background_color='white',
+                            text_align='left',
+                            font_size='large',
+                            font_family='sans-serif',
+                        ),
+                    ),
+                ])
+            )
+
+            home_page.add_child(instance=resources_page)
 
         # CREATE MENUS
         if not Menu.objects.filter(slug='primary-navigation').exists():
