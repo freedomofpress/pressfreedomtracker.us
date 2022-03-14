@@ -23,7 +23,8 @@ from common.models import (
     GeneralIncidentFilter, IncidentFilterSettings, CategoryPage,
 )
 from common.devdata import (
-    PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
+    PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory,
+    SimplePageFactory,
 )
 from forms.models import FormPage
 from home.models import HomePage, FeaturedBlogPost, FeaturedIncident
@@ -183,6 +184,16 @@ class Command(BaseCommand):
         else:
             about_page = SimplePage.objects.get(slug='about')
 
+        # FAQ Page
+        SimplePage.objects.filter(
+            slug='frequently-asked-questions',
+        ).delete()
+        faq_page = SimplePageFactory(
+            parent=home_page,
+            title='Frequently Asked Questions',
+            slug='frequently-asked-questions',
+        )
+
         # RESOURCES PAGE
         if not Menu.objects.filter(slug='resources').exists():
             resources_menu = Menu.objects.create(name='Resources Sidebar', slug='resources')
@@ -226,75 +237,6 @@ class Command(BaseCommand):
             home_page.add_child(instance=incident_form)
         else:
             FormPage.objects.get(slug='submit-incident')
-
-        # CREATE MENUS
-        # delete any the existing main menu
-        if not Menu.objects.filter(slug='main').exists():
-            main = Menu.objects.create(name='Main Menu', slug='main')
-            MenuItem.objects.bulk_create([
-                MenuItem(
-                    text='About',
-                    link_page=about_page,
-                    menu=main,
-                    sort_order=1
-                ),
-                MenuItem(
-                    text='Resources',
-                    link_page=resources_page,
-                    menu=main,
-                    sort_order=2
-                ),
-                MenuItem(
-                    text='Contact',
-                    link_url='#',
-                    menu=main,
-                    sort_order=3
-                ),
-                MenuItem(
-                    text='Submit an Incident',
-                    link_page=incident_form,
-                    menu=main,
-                    sort_order=99,
-                    html_classes='header__nav-link--highlighted'
-                ),
-            ])
-
-        footer_menu, created = Menu.objects.get_or_create(
-            name='Footer Menu', slug='footer')
-        if created:
-            MenuItem.objects.bulk_create([
-                MenuItem(
-                    text='About',
-                    link_page=about_page,
-                    menu=footer_menu,
-                    sort_order=1,
-                ),
-                MenuItem(
-                    text='Our Partners',
-                    link_url='#',
-                    menu=footer_menu,
-                    sort_order=2,
-                ),
-                MenuItem(
-                    text='Privacy Policy',
-                    link_url='#',
-                    menu=footer_menu,
-                    sort_order=3,
-                ),
-                MenuItem(
-                    text='Contact',
-                    link_url='#',
-                    menu=footer_menu,
-                    sort_order=4,
-                ),
-            ])
-
-        # FOOTER
-        footer_settings = FooterSettings.for_site(site)
-        footer_settings.body = RichText('U.S. Press Freedom Tracker is a project of <a href="https://freedom.press">Freedom of the Press Foundation</a> and the <a href="https://www.cpj.org/">Committee to Protect Journalists</a>.')
-        if footer_menu:
-            footer_settings.menu = footer_menu
-        footer_settings.save()
 
         # BLOG RELATED PAGES
         if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
@@ -369,6 +311,93 @@ class Command(BaseCommand):
             MultimediaIncidentUpdateFactory(page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
+
+        # CREATE MENUS
+        if not Menu.objects.filter(slug='primary-navigation').exists():
+            primary = Menu.objects.create(name='Primary Navigation', slug='primary-navigation')
+            MenuItem.objects.bulk_create([
+                MenuItem(
+                    text='Incidents Database',
+                    link_page=incident_index_page,
+                    menu=primary,
+                    sort_order=1,
+                ),
+                MenuItem(
+                    text='Blog',
+                    link_page=blog_index_page,
+                    menu=primary,
+                    sort_order=2,
+                ),
+                MenuItem(
+                    text='FAQ',
+                    link_page=faq_page,
+                    menu=primary,
+                    sort_order=3,
+                ),
+                MenuItem(
+                    text='About',
+                    link_page=about_page,
+                    menu=primary,
+                    sort_order=4,
+                ),
+            ])
+
+        if not Menu.objects.filter(slug='secondary-navigation').exists():
+            secondary = Menu.objects.create(
+                name='Secondary Navigation',
+                slug='secondary-navigation',
+            )
+            MenuItem.objects.bulk_create([
+                MenuItem(
+                    text='Donate',
+                    link_url='https://freedom.press/tracker/',
+                    menu=secondary,
+                    sort_order=1,
+                ),
+                MenuItem(
+                    text='Submit an Incident',
+                    link_page=incident_form,
+                    menu=secondary,
+                    sort_order=2,
+                ),
+            ])
+
+        footer_menu, created = Menu.objects.get_or_create(
+            name='Footer Menu', slug='footer')
+        if created:
+            MenuItem.objects.bulk_create([
+                MenuItem(
+                    text='About',
+                    link_page=about_page,
+                    menu=footer_menu,
+                    sort_order=1,
+                ),
+                MenuItem(
+                    text='Our Partners',
+                    link_url='#',
+                    menu=footer_menu,
+                    sort_order=2,
+                ),
+                MenuItem(
+                    text='Privacy Policy',
+                    link_url='#',
+                    menu=footer_menu,
+                    sort_order=3,
+                ),
+                MenuItem(
+                    text='Contact',
+                    link_url='#',
+                    menu=footer_menu,
+                    sort_order=4,
+                ),
+            ])
+
+        # FOOTER
+        footer_settings = FooterSettings.for_site(site)
+        footer_settings.body = RichText('U.S. Press Freedom Tracker is a project of <a href="https://freedom.press">Freedom of the Press Foundation</a> and the <a href="https://www.cpj.org/">Committee to Protect Journalists</a>.')
+        if footer_menu:
+            footer_settings.menu = footer_menu
+        footer_settings.save()
 
         # Create superuser
         if not User.objects.filter(is_superuser=True).exists():
