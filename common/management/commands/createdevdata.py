@@ -162,49 +162,45 @@ class Command(BaseCommand):
                 )
 
         # SUBMIT INCIDENT FORM
-        if not FormPage.objects.filter(slug='submit-incident'):
-            incident_form = FormPage(title='Submit an incident', slug='submit-incident')
-            home_page.add_child(instance=incident_form)
-        else:
-            FormPage.objects.get(slug='submit-incident')
+        FormPage.objects.filter(slug='submit-incident').delete()
+        incident_form = FormPage(title='Submit an incident', slug='submit-incident')
+        home_page.add_child(instance=incident_form)
 
         # BLOG RELATED PAGES
-        if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
-            blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
-            org_index_page = OrganizationIndexPageFactory(parent=home_page)
-            home_page.blog_index_page = blog_index_page
+        BlogIndexPage.objects.filter(slug='fpf-blog').delete()
+        blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
+        org_index_page = OrganizationIndexPageFactory(parent=home_page)
+        home_page.blog_index_page = blog_index_page
 
-            author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
+        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
 
-            BlogPageFactory.create_batch(
-                10,
-                parent=blog_index_page,
-                organization__parent=org_index_page,
-                author=author1,
-                with_image=True,
-            )
-            BlogPageFactory.create_batch(
-                10,
-                parent=blog_index_page,
-                organization__parent=org_index_page,
-                author=author2,
-                with_image=True,
-            )
-            BlogPageFactory.create_batch(
-                10,
-                parent=blog_index_page,
-                organization__parent=org_index_page,
-                author=author3,
-                with_image=True,
-            )
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author1,
+            with_image=True,
+        )
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author2,
+            with_image=True,
+        )
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author3,
+            with_image=True,
+        )
 
-            for page in random.sample(list(BlogPage.objects.all()), 3):
-                FeaturedBlogPost.objects.create(
-                    home_page=home_page,
-                    page=page,
-                )
-        else:
-            blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')
+        for page in random.sample(list(BlogPage.objects.all()), 3):
+            FeaturedBlogPost.objects.create(
+                home_page=home_page,
+                page=page,
+            )
 
         # INCIDENT RELATED PAGES
         search_settings = SearchSettings.for_site(site)
@@ -214,21 +210,19 @@ class Command(BaseCommand):
             incident_filter='date',
         )
 
-        if not IncidentIndexPage.objects.filter(slug='all-incidents'):
-            incident_index_page = IncidentIndexPageFactory(
-                parent=home_page,
-                main_menu=True,
-                title='All Incidents',
-            )
-            for kwargs in generate_variations():
-                for i in range(2):
-                    MultimediaIncidentPageFactory(
-                        parent=incident_index_page,
-                        categories=[lookup_category(key) for key in kwargs.keys()],
-                        **kwargs,
-                    )
-        else:
-            incident_index_page = IncidentIndexPage.objects.get(slug='all-incidents')
+        IncidentIndexPage.objects.filter(slug='all-incidents').delete()
+        incident_index_page = IncidentIndexPageFactory(
+            parent=home_page,
+            main_menu=True,
+            title='All Incidents',
+        )
+        for kwargs in generate_variations():
+            for i in range(2):
+                MultimediaIncidentPageFactory(
+                    parent=incident_index_page,
+                    categories=[lookup_category(key) for key in kwargs.keys()],
+                    **kwargs,
+                )
 
         search_settings.search_page = incident_index_page
         search_settings.save()
