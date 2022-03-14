@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlencode
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -6,7 +7,13 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    InlinePanel,
+    StreamFieldPanel,
+    PageChooserPanel,
+    MultiFieldPanel,
+)
 from wagtail.core import blocks
 from wagtail.core.models import Page, Orderable, Site
 from wagtail.core.fields import RichTextField, StreamField
@@ -261,8 +268,18 @@ class CategoryIncidentFilter(Orderable):
             })
 
 
+class CategoryMethodologyItem(Orderable):
+    page = ParentalKey('common.CategoryPage', related_name='methodology_items')
+    label = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    panels = [
+        FieldPanel('label'),
+        FieldPanel('description'),
+    ]
+
+
 class CategoryPage(MetadataPageMixin, Page):
-    methodology = RichTextField(
+    description = RichTextField(
         features=[
             'h1',
             'h2',
@@ -284,6 +301,12 @@ class CategoryPage(MetadataPageMixin, Page):
         blank=True,
         validators=[validate_template],
     )
+    methodology = RichTextField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Detailed description of how we track the data for this particular category.'
+    )
     default_image = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -301,10 +324,23 @@ class CategoryPage(MetadataPageMixin, Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel('methodology'),
+        FieldPanel('description'),
         ImageChooserPanel('default_image', heading='Default SEO image for incidents'),
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('statistics_items', label='Statistics'),
+        MultiFieldPanel(
+            [
+                FieldPanel('methodology'),
+                InlinePanel(
+                    'methodology_items',
+                    label='Methodology Items',
+                    help_text='Describe the different fields in this particular category and how the data related to that is tracked.',
+                ),
+            ],
+            'Methodology'
+        ),
+        InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
+        InlinePanel('featured_blogs', heading="Featured Blogs", max_num=6),
         InlinePanel('incident_filters', label='Fields to include in filters'),
     ]
 
@@ -314,7 +350,7 @@ class CategoryPage(MetadataPageMixin, Page):
     ]
 
     def clean(self):
-        self.methodology = unescape(self.methodology)
+        self.description = unescape(self.description)
 
     def get_context(self, request, *args, **kwargs):
         # placed here to avoid circular dependency
@@ -335,6 +371,17 @@ class CategoryPage(MetadataPageMixin, Page):
         data['categories'] = str(self.id)
         incident_filter = IncidentFilter(data)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
+        context['incident_qs'] = urlencode(data)
+
+        context['featured_blog_posts'] = [
+            f.page for f in self.featured_blogs.select_related('page')
+        ]
+        context['featured_incident_pages'] = [
+            f.page for f in self.featured_incidents.select_related(
+                'page',
+                'page__teaser_image',
+            )
+        ]
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
@@ -398,6 +445,7 @@ class CategoryPage(MetadataPageMixin, Page):
                 )),
             } for item in self.statistics_items.all()
         ]
+        print(context['data_items'])
         return context
 
     def get_cache_tag(self):
@@ -414,6 +462,24 @@ class CategoryPage(MetadataPageMixin, Page):
         response = super(CategoryPage, self).serve(request, *args, **kwargs)
         response['Cache-Tag'] = self.get_cache_tag()
         return response
+
+
+class FeaturedCategoryIncident(Orderable):
+    category_page = ParentalKey('common.CategoryPage', related_name='featured_incidents')
+    page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('page'),
+    ]
+
+
+class FeaturedCategoryBlog(Orderable):
+    category_page = ParentalKey('common.CategoryPage', related_name='featured_blogs')
+    page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('page'),
+    ]
 
 
 class SimplePage(MetadataPageMixin, Page):

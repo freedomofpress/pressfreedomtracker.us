@@ -1,0 +1,12 @@
+<dl class="details-table__categorypage">
+	{% for item in data_items %}
+	<div class="details-table__row">
+		<dt class="details-table__label details-table__label--bold">
+			{{ item.label }}
+		</dt>
+		<dd class="details-table__value">
+			{{ item.value }}
+		</dd>
+	</div>
+	{% endfor %}
+</dl>
