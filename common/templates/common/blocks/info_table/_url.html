@@ -11,7 +11,9 @@
                 </div>
             {% endif %}
             <div class="list-table__col info-table__title">{{ item.title }}</div>
-            <div class="list-table__col">{{ item.url|urlize }}</div>
+            <div class="list-table__col">
+				<a href="{{ item.url }}" class="text-link" rel="nofollow">{{ item.url }}</a>
+			</div>
             <div class="list-table__link info-table__col-right info-table__col-bottom">
 				<a href="{{ item.url }}" aria-label="Visit link {{ item.title }}">{{ value.cta_label }} &rarr;</a>
 			</div>
