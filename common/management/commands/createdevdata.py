@@ -39,6 +39,47 @@ LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat or
 fake = Faker()
 
 
+FACTORY_ARGS_BY_CATEGORY = {
+    'arrest': {
+        'arrest': True,
+        'current_charges': 1,
+        'dropped_charges': 1,
+    },
+    'equipment_search': {
+        'equipment_search': True,
+    },
+    'equipment_damage': {
+        'equipment_damage': True,
+    },
+    'physical_attack': {
+        'physical_attack': True,
+    },
+    'subpoena': {
+        'subpoena': True,
+    },
+    'prior_restraint': {
+        'prior_restraint': True,
+    },
+    'denial_of_access': {
+        'politicians_or_public_figures_involved': 2,
+    },
+    'leak_case': {
+        'leak_case': True,
+        'workers_whose_communications_were_obtained': 2,
+    },
+    'border_stop': {
+        'border_stop': True,
+        'target_nationality': 1,
+    },
+    'chilling_statement': {
+        'chilling_statement': True,
+    },
+    'other_incident': {
+        'other_incident': True,
+    }
+}
+
+
 def lookup_category(key):
     key = key.replace("_", "-")
     try:
@@ -202,40 +243,6 @@ class Command(BaseCommand):
                 page=page,
             )
 
-        # INCIDENT RELATED PAGES
-        search_settings = SearchSettings.for_site(site)
-        incident_filter_settings = IncidentFilterSettings.for_site(site)
-        GeneralIncidentFilter.objects.create(
-            incident_filter_settings=incident_filter_settings,
-            incident_filter='date',
-        )
-
-        IncidentIndexPage.objects.filter(slug='all-incidents').delete()
-        incident_index_page = IncidentIndexPageFactory(
-            parent=home_page,
-            main_menu=True,
-            title='All Incidents',
-        )
-        for kwargs in generate_variations():
-            for i in range(2):
-                MultimediaIncidentPageFactory(
-                    parent=incident_index_page,
-                    categories=[lookup_category(key) for key in kwargs.keys()],
-                    **kwargs,
-                )
-
-        search_settings.search_page = incident_index_page
-        search_settings.save()
-
-        for incident in random.sample(list(IncidentPage.objects.all()), 3):
-            FeaturedIncident.objects.create(
-                home_page=home_page,
-                page=incident,
-            )
-            MultimediaIncidentUpdateFactory(page=incident)
-            IncidentLinkFactory.create_batch(3, page=incident)
-        home_page.save()
-
         # ABOUT PAGE
         if not SimplePage.objects.filter(slug='about').exists():
             about_page = SimplePageFactory.build(
@@ -293,6 +300,69 @@ class Command(BaseCommand):
             )
 
             home_page.add_child(instance=resources_page)
+
+        # INCIDENT RELATED PAGES
+        search_settings = SearchSettings.for_site(site)
+        incident_filter_settings = IncidentFilterSettings.for_site(site)
+        filters_to_make = [
+            'date',
+            'recently_updated',
+            'city',
+            'state',
+            'targeted_journalists',
+            'targeted_institutions',
+            'tags',
+            'lawsuit_name',
+            'venue',
+            'case_statuses',
+        ]
+        for f in filters_to_make:
+            GeneralIncidentFilter.objects.create(
+                incident_filter_settings=incident_filter_settings,
+                incident_filter=f,
+            )
+
+        IncidentIndexPage.objects.filter(slug='all-incidents').delete()
+        incident_index_page = IncidentIndexPageFactory(
+            parent=home_page,
+            main_menu=True,
+            title='All Incidents',
+        )
+        for category_slugs in generate_variations():
+            category_pages = []
+            kwargs = {}
+            for slug in category_slugs:
+                category_pages.append(lookup_category(slug))
+                kwargs.update(
+                    FACTORY_ARGS_BY_CATEGORY.get(slug, {})
+                )
+            n = random.random()
+            if n < 0.25:
+                kwargs['venues'] = 1
+            elif n < 0.5:
+                kwargs['journalist_targets'] = 1
+            elif n < 0.75:
+                kwargs['institution_targets'] = 1
+
+            for i in range(2):
+                MultimediaIncidentPageFactory(
+                    parent=incident_index_page,
+                    categories=category_pages,
+                    tags=2,
+                    **kwargs,
+                )
+
+        search_settings.search_page = incident_index_page
+        search_settings.save()
+
+        for incident in random.sample(list(IncidentPage.objects.all()), 3):
+            FeaturedIncident.objects.create(
+                home_page=home_page,
+                page=incident,
+            )
+            MultimediaIncidentUpdateFactory(page=incident)
+            IncidentLinkFactory.create_batch(3, page=incident)
+        home_page.save()
 
         # CREATE MENUS
         if not Menu.objects.filter(slug='primary-navigation').exists():

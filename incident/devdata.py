@@ -4,6 +4,7 @@ import factory
 import random
 import wagtail_factories
 from wagtail.core.rich_text import RichText
+from faker.providers import BaseProvider
 
 from incident.models import (
     Charge,
@@ -26,6 +27,7 @@ from incident.models import (
     TargetedJournalist,
     GovernmentWorker,
     TopicPage,
+    Venue,
 )
 from common.models import CustomImage
 from common.tests.factories import (
@@ -40,6 +42,82 @@ from menus.factories import MainMenuItemFactory
 Faker.add_provider(StreamfieldProvider)
 
 
+class ChargeProvider(BaseProvider):
+    def degree(self):
+        return random.choice([
+            'first-degree',
+            'second-degree',
+            'third-degree',
+            'negligent',
+            'criminal',
+            'malevolent',
+            'sneaky',
+            'unprecedented',
+            'unlawful',
+            'transgressive',
+            'corrupt',
+            'misdemeanor',
+            'threatening',
+            'false',
+            'underworld',
+            'scary',
+            'zeroth-degree',
+            'antisocial',
+        ])
+
+    def crime(self):
+        return random.choice([
+            'hooliganism',
+            'hacking',
+            'piracy',
+            'cybercrime',
+            'tomfoolery',
+            'graffiti',
+            'encryption',
+            'calumny',
+            'plagiarism',
+            'forgery',
+            'bootlegging',
+            'misdeeds',
+            'gambling',
+            'espionage',
+            'problematization',
+        ])
+
+
+class LawEnforcementProvider(BaseProvider):
+    def law_enforcement_organization(self):
+        return random.choice([
+            'Police Department',
+            'Police Squad',
+            'Public Safety Officers',
+            "Sheriff's Department",
+            'Military Police',
+            'State Patrol',
+            'Courthouse Security',
+            'Security Forces',
+            'Police Squad',
+            'State Troopers',
+            'Rangers',
+        ])
+
+
+class VenueProvider(BaseProvider):
+    def venue_region(self):
+        return random.choice([
+            'Central',
+            'Eastern',
+            'Northern',
+            'Western',
+            'Southern'
+        ])
+
+
+Faker.add_provider(ChargeProvider)
+Faker.add_provider(VenueProvider)
+Faker.add_provider(LawEnforcementProvider)
+
+
 class IncidentIndexPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentIndexPage
@@ -48,6 +126,33 @@ class IncidentIndexPageFactory(wagtail_factories.PageFactory):
         main_menu = Trait(
             menu=RelatedFactory(MainMenuItemFactory, 'link_page', for_page=True)
         )
+
+
+class ItemFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        abstract = True
+
+    class Params:
+        unique_title = factory.Trait(
+            title=factory.Sequence(
+                lambda n: 'Title {n}'.format(n=n)
+            )
+        )
+
+
+class VenueFactory(ItemFactory):
+    class Meta:
+        model = Venue
+        django_get_or_create = ('title',)
+    title = factory.Faker('pystr_format', string_format='{{ venue_region }} District Court of {{ state}}')
+
+
+class ChargeFactory(ItemFactory):
+    class Meta:
+        model = Charge
+        django_get_or_create = ('title',)
+
+    title = factory.Faker('pystr_format', string_format='{{degree}} {{crime}}')
 
 
 class EquipmentFactory(factory.django.DjangoModelFactory):
@@ -71,23 +176,11 @@ class EquipmentBrokenFactory(factory.django.DjangoModelFactory):
     quantity = LazyAttribute(lambda _: random.randint(1, 5))
 
 
-class ItemFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        abstract = True
-
-    class Params:
-        unique_title = factory.Trait(
-            title=factory.Sequence(
-                lambda n: 'Title {n}'.format(n=n)
-            )
-        )
-
-
 class LawEnforcementOrganizationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = LawEnforcementOrganization
         django_get_or_create = ('title',)
-    title = factory.Faker('sentence', nb_words=3)
+    title = factory.Faker('pystr_format', string_format='{{ city }} {{ law_enforcement_organization }}')
 
 
 class IncidentUpdateFactory(factory.django.DjangoModelFactory):
@@ -294,7 +387,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             # Simple build, do nothing.
             return
         if count is None:
-            count = 2
+            count = 0
         make_target = getattr(InstitutionFactory, 'create' if create else 'build')
         targets = []
         for i in range(count):
@@ -381,6 +474,38 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         if not create:
             self._prefetched_objects_cache = {
                 'politicians_or_public_figures_involved': pols
+            }
+
+    @factory.post_generation
+    def tags(self, create, count):
+        if count is None:
+            return
+        make_tag = getattr(CommonTagFactory,
+                           'create' if create else 'build')
+        tags = []
+        for i in range(count):
+            t = make_tag()
+            t.tagged_items.add(self)
+            tags.append(t)
+        if not create:
+            self._prefetched_objects_cache = {
+                'tags': tags
+            }
+
+    @factory.post_generation
+    def venues(self, create, count):
+        if count is None:
+            return
+        make_venue = getattr(VenueFactory,
+                             'create' if create else 'build')
+        venues = []
+        for i in range(count):
+            t = make_venue()
+            t.venue_incidents.add(self)
+            venues.append(t)
+        if not create:
+            self._prefetched_objects_cache = {
+                'venues': venues
             }
 
     @factory.post_generation
@@ -481,13 +606,6 @@ class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
     # Lazy values
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
-
-
-class ChargeFactory(ItemFactory):
-    class Meta:
-        model = Charge
-        django_get_or_create = ('title',)
-    title = factory.Faker('sentence', nb_words=3)
 
 
 class NationalityFactory(ItemFactory):
