@@ -231,8 +231,7 @@ class StatisticsItem(Orderable):
         blank=True,
         help_text='Whitespace-separated list of arguments to be passed to the statistics function',
     )
-    link = models.CharField(
-        max_length=255,
+    link = models.URLField(
         null=True,
         blank=True,
         help_text='Link to the filtered incident database page, showing incidents related to this filter',
@@ -278,7 +277,7 @@ class CategoryIncidentFilter(Orderable):
 class CategoryMethodologyItem(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='methodology_items')
     label = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    description = models.TextField()
     panels = [
         FieldPanel('label'),
         FieldPanel('description'),
