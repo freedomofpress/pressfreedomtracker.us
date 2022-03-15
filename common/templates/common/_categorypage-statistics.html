@@ -1,12 +1,15 @@
-<dl class="details-table__categorypage">
+<ul class="statistics-table">
 	{% for item in data_items %}
-	<div class="details-table__row">
-		<dt class="details-table__label">
+	<li class="statistics-table__row">
+		<div class="statistics-table__col">
 			{{ item.label }}
-		</dt>
-		<dd class="details-table__value">
+		</div>
+		<div class="statistics-table__col statistics-table__col--right">
 			{{ item.value }}
-		</dd>
-	</div>
+		</div>
+		<div class="statistics-table__col">
+			<a class="statistics-table__link" href="{{ item.link }}" aria-label="Visit filtered incident database page for {{item.label }}">See incidents &rarr;</a>
+		</div>
+	</li>
 	{% endfor %}
-</dl>
+</ul>

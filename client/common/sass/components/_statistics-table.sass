@@ -1,0 +1,26 @@
+.statistics-table
+	margin: 0
+	padding: 0
+	border-top: 1px solid
+	border-color: $black
+	max-width: 750px
+	&__row
+		display: grid
+		border-bottom: 1px solid
+		border-color: $black
+		grid-template-columns: 1fr 30px auto
+		grid-gap: 14px
+		align-items: center
+		padding: 0.5rem 0
+
+		+tablet-up
+			grid-template-columns:  436px 100px 30px 1fr
+			padding: 0.25rem 0
+
+	&__link
+		color: $gray-text
+		text-decoration: none
+
+	&__col--right
+		+tablet-up
+			grid-column: 3

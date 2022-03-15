@@ -231,10 +231,17 @@ class StatisticsItem(Orderable):
         blank=True,
         help_text='Whitespace-separated list of arguments to be passed to the statistics function',
     )
+    link = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        help_text='Link to the filtered incident database page, showing incidents related to this filter',
+    )
     panels = [
         FieldPanel('label'),
         FieldPanel('dataset'),
         FieldPanel('params'),
+        FieldPanel('link'),
     ]
 
     def clean(self):
@@ -406,7 +413,6 @@ class CategoryPage(MetadataPageMixin, Page):
                 } for item in self.methodology_items.all()
             ]
         }
-        print(context['methodology'])
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
@@ -468,6 +474,7 @@ class CategoryPage(MetadataPageMixin, Page):
                     tag_name=item.dataset,
                     params=' ' + item.params if item.params else '',
                 )),
+                'link': item.link,
             } for item in self.statistics_items.all()
         ]
         return context
