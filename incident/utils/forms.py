@@ -1,4 +1,5 @@
 from django import forms
+from django.apps import apps
 
 from incident.models import choices
 
@@ -25,8 +26,22 @@ class FilterForm(forms.Form):
                     'label': label,
                 }
 
-                if _type == 'text' or _type == 'autocomplete':
+                if _type == 'text':
                     field = forms.CharField
+
+                if _type == 'autocomplete':
+                    field = forms.ChoiceField
+                    app_label, model_name = item['autocomplete_type'].split('.')
+                    model = apps.get_model(app_label, model_name)
+                    autocomplete_choices = [('', '------')]
+                    for choice in model.objects.all():
+                        value = str(choice.pk)
+                        title_field = getattr(model, 'autocomplete_search_field', 'title')
+                        title = getattr(choice, title_field)
+                        autocomplete_choices.append(
+                            (value, title)
+                        )
+                    kwargs['choices'] = autocomplete_choices
 
                 if _type == 'date':
                     field = forms.DateField
