@@ -1,0 +1,15 @@
+<ul class="statistics-table">
+	{% for item in data_items %}
+	<li class="statistics-table__row">
+		<div class="statistics-table__col">
+			{{ item.label }}
+		</div>
+		<div class="statistics-table__col statistics-table__col--right">
+			{{ item.value }}
+		</div>
+		<div class="statistics-table__col">
+			<a class="statistics-table__link" href="{{ item.link }}" aria-label="Visit filtered incident database page for {{item.label }}">See incidents &rarr;</a>
+		</div>
+	</li>
+	{% endfor %}
+</ul>

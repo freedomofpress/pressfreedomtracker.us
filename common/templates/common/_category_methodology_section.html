@@ -1,0 +1,18 @@
+{% load wagtailcore_tags %}
+
+<h2 class="methodology-section-header">Data Tracked For This Category</h2>
+
+<div class="methodology-summary">{{ methodology.description|richtext }}</div>
+
+<dl class="methodology-details-table">
+	{% for item in methodology.data_items %}
+	<div class="details-table__row">
+		<dt class="details-table__label details-table__label--bold">
+			{{ item.label }}
+		</dt>
+		<dd class="details-table__value">
+			{{ item.description }}
+		</dd>
+	</div>
+	{% endfor %}
+</dl>
