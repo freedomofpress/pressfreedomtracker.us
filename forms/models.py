@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.decorators import method_decorator
@@ -27,15 +29,22 @@ class ReplyToValidatorForm(WagtailAdminPageForm):
 
         reply_to_fields = []
         reply_to_forms = []
+        labels = defaultdict(list)
         for group in self.formsets['field_groups'].forms:
             for form in group.formsets['form_fields'].forms:
                 if form.is_valid():
                     cleaned_form_data = form.clean()
+                    labels[cleaned_form_data.get('label')].append(form)
                     reply_to_field = cleaned_form_data.get('use_as_reply_to')
 
                     if reply_to_field:
                         reply_to_fields.append(cleaned_form_data.get('label'))
                         reply_to_forms.append(form)
+
+        for label, forms in labels.items():
+            if len(forms) > 1:
+                for form in forms:
+                    form.add_error('label', f'There is another field with the label {label}, please change one of them.')
 
         if len(reply_to_fields) > 1:
             for form in reply_to_forms:
