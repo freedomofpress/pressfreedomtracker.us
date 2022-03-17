@@ -4,6 +4,36 @@ from django.apps import apps
 from incident.models import choices
 
 
+class Datalist(forms.TextInput):
+    template_name = 'incident/datalist.html'
+
+    def __init__(self, attrs=None, choices=()):
+        super().__init__(attrs)
+        self.choices = list(choices)
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context['widget']['choices'] = self.choices
+        return context
+
+
+class DatalistField(forms.ChoiceField):
+    widget = Datalist
+    default_error_messages = {
+        'invalid_choice': 'Select a valid choice. %(value)s is not one of the available choices.',
+    }
+
+    def __init__(self, *, choices=[], list_name='', **kwargs):
+        self.list_name = list_name
+        super().__init__(**kwargs)
+        self.choices = choices
+
+    def widget_attrs(self, widget):
+        attrs = super().widget_attrs(widget)
+        attrs['list'] = self.list_name
+        return attrs
+
+
 class FilterForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -30,18 +60,16 @@ class FilterForm(forms.Form):
                     field = forms.CharField
 
                 if _type == 'autocomplete':
-                    field = forms.ChoiceField
+                    field = DatalistField
                     app_label, model_name = item['autocomplete_type'].split('.')
                     model = apps.get_model(app_label, model_name)
-                    autocomplete_choices = [('', '------')]
+                    autocomplete_choices = []
                     for choice in model.objects.all():
-                        value = str(choice.pk)
                         title_field = getattr(model, 'autocomplete_search_field', 'title')
                         title = getattr(choice, title_field)
-                        autocomplete_choices.append(
-                            (value, title)
-                        )
+                        autocomplete_choices.append(title)
                     kwargs['choices'] = autocomplete_choices
+                    kwargs['list_name'] = f'{name}__choices'
 
                 if _type == 'date':
                     field = forms.DateField

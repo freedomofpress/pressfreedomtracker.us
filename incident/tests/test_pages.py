@@ -63,6 +63,11 @@ class TestPages(TestCase):
             site.root_page = cls.home_page
             site.save()
 
+        incident_filter_settings = IncidentFilterSettings.for_site(site)
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=incident_filter_settings,
+            incident_filter='state',
+        )
         cls.index = IncidentIndexPageFactory(
             parent=site.root_page, slug='incidents')
         cls.incident = IncidentPageFactory(parent=cls.index, slug='one')

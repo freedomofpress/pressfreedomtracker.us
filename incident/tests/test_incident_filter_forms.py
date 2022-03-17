@@ -1,7 +1,12 @@
 from django.test import RequestFactory, TestCase
 from django import forms
 
-from incident.utils.forms import FilterForm, get_filter_forms
+from incident.utils.forms import (
+    FilterForm,
+    get_filter_forms,
+    Datalist,
+    DatalistField,
+)
 from incident.models.choices import MAYBE_BOOLEAN
 from incident.tests.factories import LawEnforcementOrganizationFactory
 
@@ -127,9 +132,8 @@ class FilterFormTest(TestCase):
         leo2 = LawEnforcementOrganizationFactory.create(title='Org 2')
 
         expected_choices = [
-            ('', '------'),
-            (str(leo1.pk), leo1.title),
-            (str(leo2.pk), leo2.title),
+            leo1.title,
+            leo2.title,
         ]
         item = {
             'filters': [
@@ -144,8 +148,8 @@ class FilterFormTest(TestCase):
         }
         form = FilterForm(request.GET, data=item)
 
-        self.assertIsInstance(form.fields.get(name), forms.ChoiceField)
-        self.assertIsInstance(form.fields.get(name).widget, forms.Select)
+        self.assertIsInstance(form.fields.get(name), DatalistField)
+        self.assertIsInstance(form.fields.get(name).widget, Datalist)
         self.assertEqual(form.fields.get(name).choices, expected_choices)
 
     def test_filter_type_radio(self):
