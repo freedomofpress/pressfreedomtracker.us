@@ -106,6 +106,119 @@ class ReplyToFieldsValidatorFormTests(TestCase, WagtailTestUtils):
         self.root_page.add_child(instance=self.home_page)
         self.login()
 
+    def test_does_not_allow_multiple_fields_with_the_same_label_across_groups(self):
+        post_data = nested_form_data({
+            'title': 'Test form page',
+            'slug': 'test-form-page',
+            'intro': rich_text('<p>Test intro</p>'),
+            'form_intro': 'Test form',
+            'thank_you_text': rich_text('<p>Thanks (test)!</p>'),
+            'button_text': 'Test button',
+            'outro_title': 'Test outro',
+            'outro_text': rich_text('<p>Test outro body</p>'),
+            'from_address': 'from@example.com',
+            'to_address': 'to@example.com',
+            'subject': 'Test subject',
+            'field_groups': inline_formset([
+                {
+                    'title': 'Test group',
+                    'description': 'Test description',
+                    'template': 'default',
+                    'form_fields': inline_formset([
+                        {
+                            'label': 'Test label',
+                            'help_text': 'Test',
+                            'required': 'True',
+                            'field_type': 'email',
+                        },
+                        {
+                            'label': 'Test label 1',
+                            'help_text': 'Test',
+                            'required': 'True',
+                            'field_type': 'email',
+                        },
+                    ])
+                },
+                {
+                    'title': 'Test group 2',
+                    'description': 'Test description',
+                    'template': 'default',
+                    'form_fields': inline_formset([
+                        {
+                            'label': 'Test label',
+                            'help_text': 'Test',
+                            'required': 'True',
+                            'field_type': 'email',
+                        },
+                        {
+                            'label': 'Test label 4',
+                            'help_text': 'Test',
+                            'required': 'True',
+                            'field_type': 'email',
+                        },
+                    ])
+                }
+            ])
+        })
+        response = self.client.post(
+            reverse(
+                "wagtailadmin_pages:add",
+                args=('forms', 'formpage', self.home_page.pk)
+            ),
+            post_data
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertContains(response, 'The page could not be created')
+        self.assertContains(response, 'There is another field with the label Test label')
+
+    def test_does_not_allow_multiple_fields_with_the_same_label(self):
+        post_data = nested_form_data({
+            'title': 'Test form page',
+            'slug': 'test-form-page',
+            'intro': rich_text('<p>Test intro</p>'),
+            'form_intro': 'Test form',
+            'thank_you_text': rich_text('<p>Thanks (test)!</p>'),
+            'button_text': 'Test button',
+            'outro_title': 'Test outro',
+            'outro_text': rich_text('<p>Test outro body</p>'),
+            'from_address': 'from@example.com',
+            'to_address': 'to@example.com',
+            'subject': 'Test subject',
+            'field_groups': inline_formset([
+                {
+                    'title': 'Test group',
+                    'description': 'Test description',
+                    'template': 'default',
+                    'form_fields': inline_formset([
+                        {
+                            'label': 'Test label',
+                            'help_text': 'Test',
+                            'required': 'True',
+                            'field_type': 'email',
+                        },
+                        {
+                            'label': 'Test label',
+                            'help_text': 'Test',
+                            'required': 'True',
+                            'field_type': 'email',
+                        },
+                    ])
+                }
+            ])
+        })
+        response = self.client.post(
+            reverse(
+                "wagtailadmin_pages:add",
+                args=('forms', 'formpage', self.home_page.pk)
+            ),
+            post_data
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertContains(response, 'The page could not be created')
+        self.assertContains(response, 'There is another field with the label Test label')
+
     def test_does_not_allow_multiple_reply_to_fields(self):
         post_data = nested_form_data({
             'title': 'Test form page',
