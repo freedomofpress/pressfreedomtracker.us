@@ -2,7 +2,7 @@
 	<header class="filters__header">
 		Filters
 
-		<a href="{{ page.url }}">Clear All</a>
+		<a class="text-link" href="{{ page.url }}">Clear All</a>
 	</header>
 	{% for item in filters %}
 		<details class="filters__group" role="group" aria-labelledby="{{ item.title|slugify }}">
