@@ -24,4 +24,4 @@ RUN mkdir /django-logs /deploy && \
 
 EXPOSE 8000
 USER ${USERID}
-CMD django-start.sh
+CMD [ "django-start.sh" ]
