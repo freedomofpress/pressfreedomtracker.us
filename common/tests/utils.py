@@ -3,9 +3,10 @@ import json
 
 from faker import Faker
 from faker.providers import BaseProvider
+from wagtail.core.models import Page
+
 from common.models import CustomImage
 from common.choices import BACKGROUND_COLOR_CHOICES
-
 from common.blocks import StyledTextBlock, ALIGNMENT_CHOICES
 
 fake = Faker()
@@ -177,6 +178,111 @@ def generate_tabs():
     return generate_field('tabs', tabs)
 
 
+def generate_info_table_pages():
+    num_pages = randrange(2, 11)
+
+    page_links = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'page': page.pk,
+                'description': ' '.join(fake.words(nb=randrange(2, 10))).title(),
+                'title': ' '.join(fake.words(nb=randrange(2, 10))).title() if i % 2 == 0 else None,
+            }
+            for i, page in
+            enumerate(Page.objects.filter(depth__gt=1).order_by('?')[:num_pages])
+        ]
+    }
+
+    table = generate_field('page_links', page_links)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
+def generate_info_table_emails():
+    num_emails = randrange(2, 11)
+
+    emails = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'email': fake.ascii_safe_email(),
+                'title': ' '.join(fake.words(nb=randrange(2, 10))).title(),
+            }
+            for _ in range(num_emails)
+        ]
+    }
+
+    table = generate_field('email_addresses', emails)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
+def generate_info_table_plain_text():
+    num_text = randrange(2, 11)
+    text = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'title': fake.name(),
+                'description': ' '.join(fake.words(nb=randrange(6, 16))).title(),
+            }
+            for _ in range(num_text)
+        ]
+    }
+
+    table = generate_field('plain_text', text)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
+def generate_info_table_external_links():
+    num_links = randrange(2, 11)
+    images = CustomImage.objects.filter(
+        collection__name='Photos',
+    ).order_by('?')[:num_links]
+
+    links = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'url': fake.url(),
+                'title': ' '.join(fake.words(nb=randrange(2, 10))).title(),
+                'image': images[i].pk,
+            }
+            for i in range(num_links)
+        ]
+    }
+
+    table = generate_field('external_links', links)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
 class StreamfieldProvider(BaseProvider):
     def streamfield(self, fields=None):
         valid_fields = {
@@ -194,6 +300,10 @@ class StreamfieldProvider(BaseProvider):
             'list': generate_list,
             'tweet': generate_twitter_embed,
             'tabs': generate_tabs,
+            'info_table_pages': generate_info_table_pages,
+            'info_table_emails': generate_info_table_emails,
+            'info_table_external_links': generate_info_table_external_links,
+            'info_table_plain_text': generate_info_table_plain_text,
         }
 
         streamfield_data = []

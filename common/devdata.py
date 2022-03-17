@@ -197,7 +197,13 @@ class SimplePageFactory(wagtail_factories.PageFactory):
         model = SimplePage
 
     body = factory.Faker('streamfield', fields=[
-        'styled_text_paragraphs', 'styled_text', 'raw_html',
+        'styled_text_paragraphs',
+        'styled_text',
+        'info_table_pages',
+        'info_table_emails',
+        'info_table_external_links',
+        'info_table_plain_text',
+        'raw_html',
     ])
 
 
