@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-
 {% load wagtailcore_tags webpack_loader humanize %}
+{% load query_transform from common_tags %}
 
 {% block main %}
 	{% pageurl page as current_page_url %}
@@ -89,10 +89,31 @@
 			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>
 		</div>
 
-		<div class="incident-index__results">
+		<div class="incident-index__results js-article-loading-parent">
 			{% for incident in entries_page %}
 				{% include "incident/_incident_database_card.html" with incident=incident index=page only %}
 			{% endfor %}
 		</div>
+
+		{% if request and entries_page.has_other_pages %}
+			<div class="incident-index__pagination">
+				{% if entries_page.has_previous %}
+					<a
+						href="?{% query_transform request page=entries_page.previous_page_number %}"
+							  class="btn btn-secondary js-article-loading-prev-link"
+					>
+						Previous Page
+					</a>
+				{% endif %}
+				{% if entries_page.has_next %}
+					<a
+						href="?{% query_transform request page=entries_page.next_page_number %}"
+						class="btn btn-secondary js-article-loading-next-link"
+					>
+						Next Page
+					</a>
+				{% endif %}
+			</div>
+		{% endif %}
 	</section>
 {% endblock %}
