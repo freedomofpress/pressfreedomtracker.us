@@ -89,7 +89,7 @@
 			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>
 		</div>
 
-		<div class="incident-index__results js-article-loading-parent">
+		<div class="incident-index__results js-article-loading-parent" data-pagination-button-text="Load more incidents">
 			{% for incident in entries_page %}
 				{% include "incident/_incident_database_card.html" with incident=incident index=page only %}
 			{% endfor %}

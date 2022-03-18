@@ -13,10 +13,15 @@ class ArticleLoader {
 		// We're going to keep track of the next link element so we can
 		// replace it on load and use it for the next XHR URL.
 		this.nextLinkElm = document.querySelector('.js-article-loading-next-link')
-		this.nextLinkElm.innerText = 'Load More Posts'
 
 		// This is going to be our insertion parent for new items.
 		this.parentElm = document.querySelector('.js-article-loading-parent')
+		if ('paginationButtonText' in this.parentElm.dataset) {
+			this.buttonText = this.parentElm.dataset.paginationButtonText
+		} else {
+			this.buttonText = 'Load More Posts'
+		}
+		this.nextLinkElm.innerText = this.buttonText
 
 		// We're going to keep track of the number of fetches we've made
 		// because only a certain number are going to occur automatically.
@@ -97,7 +102,7 @@ class ArticleLoader {
 		const _elm = tempElm.querySelector('.js-article-loading-next-link')
 		if (_elm) {
 			_elm.addEventListener('click', this.getNextPage)
-			_elm.innerText = 'Load More Posts'
+			_elm.innerText = this.buttonText
 			if (this.nextLinkElm) {
 				this.nextLinkElm.parentNode.replaceChild(_elm, this.nextLinkElm)
 			}
