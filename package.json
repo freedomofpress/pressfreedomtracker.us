@@ -55,24 +55,28 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@visx/responsive": "^2.4.1",
     "axios": "^0.21.2",
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.2.5",
+    "d3": "^7.1.1",
     "date-fns": "^2.14.0",
     "decimal.js": "^7.1.2",
     "element-dataset": "^2.2.6",
     "hamburgers": "^0.8.1",
     "invariant": "^2.2.2",
     "js-cookie": "^2.1.3",
-    "moment": "^2.18.1",
+    "moment": "^2.29.1",
     "money-math": "^2.4.3",
     "normalize-css": "^2.3.1",
     "normalize.css": "^6.0.0",
     "prop-types": "^15.7.2",
     "query-string": "^4.3.4",
     "react": "^16.13.1",
+    "react-animated-dataset": "^0.2.0",
     "react-datepicker": "^3.0.0",
     "react-dom": "^16.13.1",
-    "react-modal": "^3.11.2"
+    "react-modal": "^3.11.2",
+    "topojson-client": "^3.1.0"
   }
 }

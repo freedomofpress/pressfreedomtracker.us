@@ -22,6 +22,7 @@ module.exports = {
 		"HTMLInputElement": true,
 		"fetch": true,
 		"document": true,
+		"import": true,
 	},
 
 	"rules": {

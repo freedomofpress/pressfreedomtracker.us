@@ -1,0 +1,68 @@
+.chartContainer
+	display: table
+	margin: auto
+	outline: solid 1px blue
+
+h1,
+h2,
+h3,
+h4,
+h5
+	text-align: center
+	font-family: Arial, Helvetica, sans-serif
+
+@media (min-width: 1000px)
+	.hpChartContainer
+		display: flex
+
+.hpChart
+	margin: auto
+	display: table
+
+input[type='radio']
+	appearance: none
+	display: flex
+	background-color: black
+	margin: 0
+	font: inherit
+	width: 1em
+	height: 1em
+	border: 0.1em solid black
+	border-radius: 100%
+	transition: 120ms transform ease-in-out
+
+input[type='radio']::before
+	content: ''
+	width: 100%
+	height: 100%
+	background-color: white
+	border-radius: 100%
+	transform: scale(1)
+	transition: 120ms transform ease-in-out
+
+input[type='radio']:checked
+	&::before
+		transform: scale(0.5)
+
+input[type='checkbox']
+	appearance: none
+	display: flex
+	background-color: black
+	margin: 0
+	font: inherit
+	width: 1em
+	height: 1em
+	border: 0.13em solid black
+	transition: 120ms transform ease-in-out
+
+input[type='checkbox']::before
+	content: ''
+	width: 100%
+	height: 100%
+	background-color: white
+	transform: scale(1)
+	transition: 120ms transform ease-in-out
+
+input[type='checkbox']:checked
+	&::before
+		transform: scale(0.5)

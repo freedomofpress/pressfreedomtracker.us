@@ -7,6 +7,7 @@ from django.contrib import admin
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from wagtailautocomplete.views import objects, search
 
+from charts.urls import urlpatterns as chart_urls
 from common import views as common_views
 from emails import urls as emails_urls
 from incident.api.urls import api_urls
@@ -34,6 +35,10 @@ urlpatterns = [
 
     path('health/ok/', common_views.health_ok),
     path('health/version/', common_views.health_version),
+
+    path('charts/', include(chart_urls)),
+
+    path(r'', include(wagtail_urls)),
 ]
 
 

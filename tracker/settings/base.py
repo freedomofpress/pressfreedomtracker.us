@@ -35,6 +35,7 @@ ENABLE_DEBUG_TOOLBAR = False
 
 INSTALLED_APPS = [
     'blog',
+    'charts',
     'common',
     'forms',
     'incident',

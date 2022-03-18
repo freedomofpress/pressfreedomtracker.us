@@ -3,7 +3,7 @@ import random
 import requests
 import time
 import wagtail_factories
-from itertools import combinations, chain
+from itertools import combinations, chain, islice
 
 from django.contrib.auth.models import User
 from django.core import management
