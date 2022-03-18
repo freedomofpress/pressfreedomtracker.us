@@ -58,6 +58,9 @@
 			<div class="incident-index__body-header-controls">
 				<p class="paragraph-subtitle">
 					{{ incident_count|intcomma }} incident{{ incident_count|pluralize }} recorded
+					{% if search_value %}
+						for &lsquo;{{ search_value }}&rsquo;
+					{% endif %}
 				</p>
 				<details class="incident-index__sort-details">
 					<summary class="btn incident-index__sort-button">
