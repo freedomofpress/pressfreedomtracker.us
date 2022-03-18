@@ -84,7 +84,7 @@ class FilterForm(forms.Form):
                 if _type == 'bool':
                     field = forms.ChoiceField
                     kwargs['widget'] = forms.RadioSelect
-                    kwargs['choices'] = [('Yes', 'Yes',), ('No', 'No',)]
+                    kwargs['choices'] = [('1', 'Yes',), ('0', 'No',)]
 
                 if _type == 'checkbox':
                     field = forms.MultipleChoiceField

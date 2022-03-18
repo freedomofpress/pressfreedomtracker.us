@@ -75,7 +75,7 @@ class FilterFormTest(TestCase):
 
         self.assertIsInstance(form.fields.get(name), forms.ChoiceField)
         self.assertIsInstance(form.fields.get(name).widget, forms.RadioSelect)
-        self.assertEqual(form.fields.get(name).choices, [('Yes', 'Yes',), ('No', 'No',)])
+        self.assertEqual(form.fields.get(name).choices, [('1', 'Yes',), ('0', 'No',)])
 
     def test_filter_type_checkbox(self):
         request = RequestFactory().get('/')
