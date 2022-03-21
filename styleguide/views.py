@@ -1,11 +1,9 @@
-import datetime
-
 from django.views.generic import TemplateView
 
-from common.devdata import CommonTagFactory, CategoryPageFactory
+from common.devdata import CategoryPageFactory
 from common.models.pages import CategoryPage
 from common.choices import CATEGORY_SYMBOL_CHOICES
-from incident.devdata import MultimediaIncidentPageFactory, InstitutionFactory, TargetedJournalistFactory, IncidentCategorizationFactory
+from incident.models import IncidentPage
 from blog.tests.factories import BlogPageFactory
 
 
@@ -17,24 +15,7 @@ class StyleguideView(TemplateView):
 
         # Create sample incident for the styleguide without touching
         # the database.
-        inc = MultimediaIncidentPageFactory.build()
-        inc.latest_update = datetime.datetime.utcnow()
-        inc.tags = CommonTagFactory.build_batch(5)
-        inc.targeted_institutions = InstitutionFactory.build_batch(2)
-        inc.targeted_journalists = TargetedJournalistFactory.build_batch(
-            2,
-            # We are creating the incident relationship using
-            # modelcluster directly, tell the factory not to generate
-            # an incident.
-            incident=None,
-        )
-        inc.categories = IncidentCategorizationFactory.build_batch(
-            2,
-            # We are creating the incident relationship using
-            # modelcluster directly, tell the factory not to generate
-            # an incident.
-            incident_page=None,
-        )
+        inc = IncidentPage.objects.first()
         all_categories = []
         for category_value, category_name in CATEGORY_SYMBOL_CHOICES:
             all_categories.append(

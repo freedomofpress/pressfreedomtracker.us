@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from incident.tests.factories import IncidentPageFactory
 from common.models import CustomImage, CustomRendition
 from common.tests.factories import CustomImageFactory
 
@@ -15,6 +16,7 @@ class StyleguideTestCase(TestCase):
             file__color='green',
             collection__name='Photos',
         )
+        IncidentPageFactory()
 
     def tearDown(self):
         # Needed because the page the image is attached to is not

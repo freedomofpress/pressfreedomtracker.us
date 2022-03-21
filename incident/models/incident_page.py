@@ -875,3 +875,21 @@ class IncidentPage(MetadataPageMixin, Page):
     @cached_property
     def get_tags(self):
         return self.tags.all()
+
+    @cached_property
+    def get_all_targets_for_display(self):
+        items = []
+        targeted_journalists = (
+            self.targeted_journalists
+            .select_related('journalist', 'institution')
+            .order_by('journalist__title')
+            .all()
+        )
+        for tj in targeted_journalists:
+            if tj.institution:
+                items.append(f'{tj.journalist.title} ({tj.institution.title})')
+            else:
+                items.append(f'{tj.journalist.title}')
+        for institution in self.targeted_institutions.all():
+            items.append(f'{institution.title}')
+        return ', '.join(items)

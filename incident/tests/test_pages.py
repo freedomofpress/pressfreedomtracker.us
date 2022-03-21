@@ -36,6 +36,8 @@ from .factories import (
     IncidentUpdateFactory,
     TopicPageFactory,
     StateFactory,
+    InstitutionFactory,
+    TargetedJournalistFactory,
 )
 
 
@@ -1033,3 +1035,24 @@ class IncidentPageTests(TestCase):
         incident_index.add_child(instance=incident)
         self.assertEqual(incident.longitude, geoname.longitude)
         self.assertEqual(incident.latitude, geoname.latitude)
+
+    def test_gets_unified_list_of_all_targets(self):
+        inst = InstitutionFactory()
+        inc = IncidentPageFactory(
+            parent=self.incident_index,
+        )
+        inc.targeted_institutions = [inst]
+        inc.save()
+        tj1 = TargetedJournalistFactory(
+            journalist__title='Alex Aardvark',
+            institution=None,
+            incident=inc,
+        )
+        tj2 = TargetedJournalistFactory(
+            journalist__title='Benny Bird',
+            incident=inc,
+        )
+        self.assertEqual(
+            inc.get_all_targets_for_display,
+            f'{tj1.journalist.title}, {tj2.journalist.title} ({tj2.institution.title}), {inst.title}'
+        )
