@@ -3,11 +3,11 @@ extends:
     - stylelint-config-recommended
     - stylelint-config-sass-guidelines
 customSyntax: postcss-sass
+ignoreFiles:
+  - 'node_modules/**/*'
 files:
     include:
         - '**/*.s+(a|c)ss'
-    ignore:
-        - 'node_modules/**/*'
 rules:
     indentation: null
     selector-max-compound-selectors: null

@@ -1,7 +1,7 @@
 module.exports = {
 	"extends": "airbnb",
 
-	"ignorePatterns": ["client/statistics/js/searchstats.js"],
+	"ignorePatterns": ["client/statistics/js/searchstats.js", "client/charts/"],
 
 	"plugins": [
 		"react"
