@@ -5,7 +5,7 @@
 		<a class="text-link" href="{{ page.url }}">Clear All</a>
 	</header>
 	{% for item in filters %}
-		<details class="filters__group" role="group" aria-labelledby="{{ item.title|slugify }}">
+		<details class="filters__group" role="group" aria-labelledby="{{ item.title|slugify }}"{% if item.has_changed %}open{% endif %}>
 			<summary id="{{ item.title|slugify }}" class="filters__form-summary">
 				{{ item.title }}
 			</summary>
