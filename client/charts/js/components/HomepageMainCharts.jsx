@@ -13,6 +13,8 @@ import {
 	categoriesColors,
 } from '../lib/utilities.js'
 
+import '../../sass/HomepageMainCharts.sass'
+
 const categoriesSlugs = {
 	'Arrest/Criminal Charge': 'arrest-criminal-charge',
 	'Border Stop': 'border-stop',
