@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from blog.tests.factories import BlogPageFactory, BlogIndexPageFactory
+from common.tests.factories import CommonTagFactory
 from incident.tests.factories import IncidentPageFactory
 from .factories import HomePageFactory
 
@@ -79,6 +80,7 @@ class HomePageTest(TestCase):
         preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(self.home_page.id,))
         incident1, incident2 = IncidentPageFactory.create_batch(2, parent=self.home_page)
         post1, post2 = BlogPageFactory.create_batch(2, parent=self.home_page)
+        tag1, tag2 = CommonTagFactory.create_batch(2)
 
         response = self.client.post(
             preview_url,
@@ -103,6 +105,10 @@ class HomePageTest(TestCase):
                 'featured_blog_posts': inline_formset([
                     {'page': str(post1.pk)},
                     {'page': str(post2.pk)},
+                ]),
+                'data_viz_tags': inline_formset([
+                    {'tag': f'{{"pk":{tag1.pk},"title":"{tag1.title}"}}'},
+                    {'tag': f'{{"pk":{tag2.pk},"title":"{tag2.title}"}}'},
                 ]),
             })
         )
