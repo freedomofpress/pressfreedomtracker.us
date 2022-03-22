@@ -54,7 +54,7 @@ jobs:
           name: Check node dependencies for vulnerabilities
           command: |
             mkdir -p test-results
-            npm ci
+            npm ci --no-optional
             $(npm bin)/npm-audit-plus --xml --ignore 803,1067259,1006864,1006886 > test-results/audit.xml
 
       - store_test_results:
