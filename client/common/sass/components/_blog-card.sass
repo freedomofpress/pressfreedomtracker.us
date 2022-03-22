@@ -1,11 +1,22 @@
 .blog-card
 	border-top: 1px solid
 	border-color: $black
+	padding-top: 2rem
 
 	&--info
 		margin-top: 12px
 		margin-bottom: 0
 		transition: margin-bottom 0.09s ease-in
+
+	&--inner
+		transition: transform 0.15s ease-in-out
+		&:hover
+			transform: translateY(-0.5rem)
+			cursor: pointer
+
+			.text-link--card
+				background-color: transparent
+				text-decoration: underline
 
 	&__teaser
 		margin-top: 12px
