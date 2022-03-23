@@ -17,8 +17,9 @@ from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from django.utils import timezone
 
-from common.models import IncidentFilterSettings, GeneralIncidentFilter
+from common.models import IncidentFilterSettings, GeneralIncidentFilter, SearchSettings
 from common.tests.factories import (
+    SimplePageFactory,
     CategoryPageFactory,
     PersonPageFactory,
     CommonTagFactory,
@@ -64,6 +65,7 @@ class TestPages(TestCase):
             site.save()
 
         incident_filter_settings = IncidentFilterSettings.for_site(site)
+        cls.search_settings = SearchSettings.for_site(site)
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=incident_filter_settings,
             incident_filter='state',
@@ -125,6 +127,17 @@ class TestPages(TestCase):
         response = self.client.get('/incidents/one/')
         self.assertEqual(response.status_code, 200)
 
+    def test_get_index_should_not_include_learn_more_link(self):
+        response = self.client.get(self.index.get_url())
+        self.assertNotContains(response, 'Learn more')
+
+    def test_get_index_should_include_learn_more_link_if_page_specified(self):
+        url = self.index.get_url()
+        self.search_settings.learn_more_page = SimplePageFactory(parent=self.home_page)
+        self.search_settings.save()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
 
 class TestIncidentIndexPageContext(TestCase):
     def setUp(self):
@@ -147,6 +160,7 @@ class TestIncidentIndexPageContext(TestCase):
             site.save()
 
         self.settings = IncidentFilterSettings.for_site(site)
+        self.search_settings = SearchSettings.for_site(site)
         self.site = site
         self.index = IncidentIndexPageFactory(
             parent=site.root_page, slug='incidents')
@@ -187,6 +201,23 @@ class TestIncidentIndexPageContext(TestCase):
         )
         context = self.index.get_context(request)
         self.assertEqual(context['search_value'], search_query)
+
+    def test_does_not_include_learn_more_path_if_page_not_in_settings(self):
+        self.search_settings.learn_more_page = None
+        self.search_settings.save()
+        request = RequestFactory().get('/')
+        context = self.index.get_context(request)
+        self.assertNotIn('learn_more_path', context)
+
+    def test_includes_learn_more_path_if_page_in_settings(self):
+        self.search_settings.learn_more_page = self.home_page
+        self.search_settings.save()
+        request = RequestFactory().get('/')
+        context = self.index.get_context(request)
+        self.assertEqual(
+            context['learn_more_path'],
+            self.home_page.get_url(),
+        )
 
 
 class TestExportPage(TestCase):

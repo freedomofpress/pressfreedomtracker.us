@@ -31,7 +31,9 @@
 									<span class="incident-index__incident-count">{{ incident_count|intcomma }} incident{{ incident_count|pluralize }}</span>
 								</a>
 							{% endif %}
-							<a href="#" class="incident-index__download-item incident-index__download-item--more">Learn more</a>
+							{% if learn_more_path %}
+								<a href="{{ learn_more_path }}" class="incident-index__download-item incident-index__download-item--more">Learn more</a>
+							{% endif %}
 						</div>
 					</div>
 				</div>

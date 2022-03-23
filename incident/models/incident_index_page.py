@@ -176,6 +176,9 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         else:
             context['export_path'] = self.url + self.reverse_subpage('export_view')
 
+        if search_settings.learn_more_page:
+            context['learn_more_path'] = search_settings.learn_more_page.get_url()
+
         incident_filter.clean()
         context['search_value'] = incident_filter.cleaned_data.get('search', '')
         category_data = incident_filter.cleaned_data.get('categories')
