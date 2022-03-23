@@ -9,9 +9,12 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     PageChooserPanel,
     MultiFieldPanel,
+    TabbedInterface,
+    ObjectList,
 )
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page, Orderable, Site
+from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
@@ -144,19 +147,36 @@ class HomePage(MetadataPageMixin, Page):
         ),
     ]
 
+    data_viz_panels = [
+        InlinePanel('data_viz_tags', heading="Tag Options"),
+    ]
+
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(content_panels, heading='Content'),
+            ObjectList(data_viz_panels, heading="Data Viz"),
+            ObjectList(Page.promote_panels, heading='Promote'),
+            ObjectList(Page.settings_panels, heading='Settings'),
+        ]
+    )
+
     def get_context(self, request, *args, **kwargs):
         context = super(HomePage, self).get_context(request, *args, **kwargs)
 
         context['serialized_filters'] = json.dumps(get_serialized_filters())
+
         context['featured_blog_posts'] = [
             f.page for f in self.featured_blog_posts.select_related('page')
         ]
+
         context['featured_incident_pages'] = [
             f.page for f in self.featured_incidents.select_related(
                 'page',
                 'page__teaser_image',
             )
         ]
+
+        context['data_viz_tags_json'] = json.dumps([t.tag.title for t in self.data_viz_tags.all()])
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
 
@@ -185,4 +205,13 @@ class FeaturedBlogPost(Orderable):
 
     panels = [
         PageChooserPanel('page'),
+    ]
+
+
+class DataVizTag(Orderable):
+    home_page = ParentalKey('home.HomePage', related_name='data_viz_tags')
+    tag = ParentalKey('common.CommonTag')
+
+    panels = [
+        AutocompletePanel('tag', 'common.CommonTag'),
     ]

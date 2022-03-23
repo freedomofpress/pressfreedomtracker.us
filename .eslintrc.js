@@ -8,7 +8,13 @@ module.exports = {
 	],
 
 	"settings": {
-		"import/resolver": "webpack"
+		"import/resolver": {
+			webpack: {
+				config: {
+					extensions: ['.js', '.jsx']
+				}
+			}
+		}
 	},
 
 	"parserOptions": {

@@ -13,6 +13,8 @@ import {
 	categoriesColors,
 } from '../lib/utilities.js'
 
+import '../../sass/HomepageMainCharts.sass'
+
 const categoriesSlugs = {
 	'Arrest/Criminal Charge': 'arrest-criminal-charge',
 	'Border Stop': 'border-stop',
@@ -86,7 +88,12 @@ export default function HomepageMainCharts(props) {
 	)
 }
 
-function HomepageMainChartsWidth({ data: dataset, width, currentDate = new Date() }) {
+function HomepageMainChartsWidth({
+	data: dataset,
+	width,
+	currentDate = new Date(),
+	selectedTags = [],
+}) {
 	const [filtersApplied, setFiltersApplied] = React.useState({
 		tag: null,
 		year: null,
@@ -116,6 +123,7 @@ function HomepageMainChartsWidth({ data: dataset, width, currentDate = new Date(
 				numberOfTags={5}
 				filtersApplied={filtersApplied}
 				setFiltersApplied={setFiltersApplied}
+				selectedTags={selectedTags}
 			/>
 
 			<div className={'hpChartContainer'} style={{ width: width }}>
