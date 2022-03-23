@@ -242,8 +242,10 @@ export default function TreeMap({
 							onMouseLeave: () => {
 								setHoveredElement(null)
 							},
-							onMouseEnter: (MouseEvent, d) => setHoveredElement(d.category),
-							onMouseUp: (MouseEvent, d) => openSearchPage(d.category),
+							// In a future version of react-animated-dataset the functions here may need to be
+							// updated to take arguments (MouseEvent, d) instead
+							onMouseEnter: d => setHoveredElement(d.category),
+							onMouseUp: d => openSearchPage(d.category),
 						}}
 						durationByAttr={{ fill: 0, stroke: 0 }}
 						keyFn={(d) => d.category}
