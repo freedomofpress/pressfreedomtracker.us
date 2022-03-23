@@ -1,8 +1,14 @@
 from django.test import RequestFactory, TestCase
 from django import forms
 
-from incident.utils.forms import FilterForm, get_filter_forms
+from incident.utils.forms import (
+    FilterForm,
+    get_filter_forms,
+    Datalist,
+    DatalistField,
+)
 from incident.models.choices import MAYBE_BOOLEAN
+from incident.tests.factories import LawEnforcementOrganizationFactory
 
 
 def capitalize_choice_labels(choices):
@@ -69,7 +75,7 @@ class FilterFormTest(TestCase):
 
         self.assertIsInstance(form.fields.get(name), forms.ChoiceField)
         self.assertIsInstance(form.fields.get(name).widget, forms.RadioSelect)
-        self.assertEqual(form.fields.get(name).choices, [('Yes', 'Yes',), ('No', 'No',)])
+        self.assertEqual(form.fields.get(name).choices, [('1', 'Yes',), ('0', 'No',)])
 
     def test_filter_type_checkbox(self):
         request = RequestFactory().get('/')
@@ -118,6 +124,33 @@ class FilterFormTest(TestCase):
         self.assertIsInstance(form.fields.get(name), forms.ChoiceField)
         self.assertIsInstance(form.fields.get(name).widget, forms.Select)
         self.assertEqual(form.fields.get(name).choices, capitalized)
+
+    def test_filter_type_autocomplete_single(self):
+        request = RequestFactory().get('/')
+        name = 'arresting_authority'
+        leo1 = LawEnforcementOrganizationFactory.create(title='Org 1')
+        leo2 = LawEnforcementOrganizationFactory.create(title='Org 2')
+
+        expected_choices = [
+            leo1.title,
+            leo2.title,
+        ]
+        item = {
+            'filters': [
+                {
+                    'title': 'Arresting authority',
+                    'type': 'autocomplete',
+                    'name': name,
+                    'autocomplete_type': 'incident.LawEnforcementOrganization',
+                    'many': False
+                },
+            ]
+        }
+        form = FilterForm(request.GET, data=item)
+
+        self.assertIsInstance(form.fields.get(name), DatalistField)
+        self.assertIsInstance(form.fields.get(name).widget, Datalist)
+        self.assertEqual(form.fields.get(name).choices, expected_choices)
 
     def test_filter_type_radio(self):
         request = RequestFactory().get('/')
