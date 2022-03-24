@@ -59,7 +59,7 @@ jobs:
           command: |
             mkdir -p test-results
             npm ci
-            $(npm bin)/npm-audit-plus --xml --ignore 803,1067259,1006864,1006886 > test-results/audit.xml
+            $(npm bin)/npm-audit-plus --xml > test-results/audit.xml
 
       - store_test_results:
           path: ~/tracker/test-results/
