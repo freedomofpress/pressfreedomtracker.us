@@ -22,7 +22,7 @@ from common.models import (
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
-from common.tests.utils import StreamfieldProvider
+from common.tests.utils import StreamfieldProvider, make_html_string
 
 
 factory.Faker.add_provider(StreamfieldProvider)
@@ -136,6 +136,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
     methodology_text = factory.Faker('paragraph', nb_sentences=5)
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
+    description = factory.LazyAttribute(lambda _: make_html_string())
     methodology = factory.LazyAttribute(lambda o: RichText(o.methodology_text))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
