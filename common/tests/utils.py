@@ -44,7 +44,7 @@ def generate_styled_text(as_type='text'):
     text_align = choice([c[0] for c in StyledTextBlock.TEXT_ALIGN_CHOICES])
     font_size = choice([c[0] for c in StyledTextBlock.FONT_SIZE_CHOICES])
     font_family = choice([c[0] for c in StyledTextBlock.FONT_FAMILY_CHOICES])
-    text = fake.text()
+    text = make_html_string()
     return generate_field(
         as_type,
         {
@@ -151,12 +151,12 @@ def generate_raw_html():
     return generate_field('raw_html', body.format(fuel=randrange(0, 101), progress=randrange(0, 101)))
 
 
-def generate_aligned_captioned_image():
+def generate_aligned_captioned_image(as_type='aligned_image'):
     image = choice(CustomImage.objects.filter(collection__name='Photos')).pk
-    caption = '<p>{}</p>'.format(' '.join(fake.words(nb=5)))
-    alignment = choice(ALIGNMENT_CHOICES)
+    caption = make_html_string()
+    alignment = choice(ALIGNMENT_CHOICES)[0]
     return generate_field(
-        'image', {'image': image, 'caption': caption, 'alignment': alignment}
+        as_type, {'image': image, 'caption': caption, 'alignment': alignment}
     )
 
 
