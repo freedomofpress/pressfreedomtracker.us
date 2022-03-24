@@ -29,11 +29,11 @@ const categoriesSlugs = {
 	'Equipment Damage': 'equipment-damage',
 }
 
-function goToFilterPage(filtersApplied, currentDate) {
-	const baseURL =
-		filtersApplied.category === undefined
-			? `https://pressfreedomtracker.us/all-incidents/?`
-			: `https://pressfreedomtracker.us/${categoriesSlugs[filtersApplied.category]}/?`
+function getFilteredUrl(databasePath, filtersApplied, currentDate) {
+	const origin = window.location.origin
+	const baseUrl = filtersApplied.category === undefined
+		? `${origin}${databasePath}?`
+		: `${origin}/${categoriesSlugs[filtersApplied.category]}/?`
 
 	const parameters = []
 
@@ -76,8 +76,12 @@ function goToFilterPage(filtersApplied, currentDate) {
 		parameters.push(`tags=${filtersApplied.tag.replace(' ', '-')}`)
 	}
 
-	const url = `${baseURL}${parameters.join('&')}`
-	window.alert(`Going to page ${url}`)
+	return `${baseUrl}${parameters.join('&')}`
+}
+
+function goToFilterPage(databasePath, filtersApplied, currentDate) {
+	const url = getFilteredUrl(databasePath, filtersApplied, currentDate)
+	window.location = url
 }
 
 export default function HomepageMainCharts(props) {
@@ -93,6 +97,7 @@ function HomepageMainChartsWidth({
 	width,
 	currentDate = new Date(),
 	selectedTags = [],
+	databasePath = '/',
 }) {
 	const [filtersApplied, setFiltersApplied] = React.useState({
 		tag: null,
@@ -141,7 +146,7 @@ function HomepageMainChartsWidth({
 						categoryColumn={'categories'}
 						titleLabel={'incidents'}
 						openSearchPage={(category) => {
-							goToFilterPage({ ...filtersApplied, category }, currentDate)
+							goToFilterPage(databasePath, { ...filtersApplied, category }, currentDate)
 						}}
 						allCategories={Object.keys(categoriesColors)}
 					/>
@@ -156,7 +161,7 @@ function HomepageMainChartsWidth({
 						width={chartWidth}
 						height={chartHeight}
 						openSearchPage={(city) => {
-							goToFilterPage({ ...filtersApplied, city }, currentDate)
+							goToFilterPage(databasePath, { ...filtersApplied, city }, currentDate)
 						}}
 					/>
 				</div>
@@ -171,7 +176,7 @@ function HomepageMainChartsWidth({
 						height={chartHeight}
 						isMobileView={width < 970}
 						openSearchPage={(monthName) => {
-							goToFilterPage({ ...filtersApplied, monthName }, currentDate)
+							goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate)
 						}}
 					/>
 				</div>

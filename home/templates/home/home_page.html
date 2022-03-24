@@ -27,7 +27,15 @@
 		</div>
 	{% endif %}
 
-	<div class="homepage-section"><div class="homepage-section-inner js-homepage-charts" data-tags="{{ data_viz_tags_json|escape }}"></div></div>
+	{% with search_page=settings.common.SearchSettings.search_page %}
+		<div class="homepage-section">
+			<div
+				class="homepage-section-inner js-homepage-charts"
+				data-tags="{{ data_viz_tags_json|escape }}"
+				{% if search_page %}data-database-path="{% pageurl search_page %}"{% endif %}
+			></div>
+		</div>
+	{% endwith %}
 
 	{% if featured_blog_posts %}
 		<section class="homepage-section homepage-section--gray">

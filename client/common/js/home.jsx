@@ -19,9 +19,10 @@ const chartContainers = Array.from(document.getElementsByClassName('js-homepage-
 
 chartContainers.forEach((node) => {
 	const selectedTags = JSON.parse(node.dataset.tags)
+	const databasePath = node.dataset.databasePath
 	ReactDOM.render((
 		<DataLoader dataUrl={`/api/edge/incidents/?fields=${fields}&format=csv`}>
-			<HomepageMainCharts selectedTags={selectedTags} />
+			<HomepageMainCharts selectedTags={selectedTags} databasePath={databasePath} />
 		</DataLoader>
 	), node)
 })
