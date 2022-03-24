@@ -171,6 +171,10 @@ def generate_block_quote():
     )
 
 
+def generate_aside():
+    return generate_field('aside', {'text': make_html_string()})
+
+
 def generate_list():
     return generate_field('list', fake.words())
 
@@ -327,6 +331,7 @@ class StreamfieldProvider(BaseProvider):
             'info_table_emails': generate_info_table_emails,
             'info_table_external_links': generate_info_table_external_links,
             'info_table_plain_text': generate_info_table_plain_text,
+            'aside': generate_aside,
         }
 
         streamfield_data = []
