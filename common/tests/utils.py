@@ -1,4 +1,4 @@
-from random import choice, randrange
+from random import choice, randrange, shuffle
 import json
 
 from faker import Faker
@@ -10,6 +10,29 @@ from common.choices import BACKGROUND_COLOR_CHOICES
 from common.blocks import StyledTextBlock, ALIGNMENT_CHOICES
 
 fake = Faker()
+
+
+def make_words(minimum=3, maximum=11):
+    return ' '.join(fake.words(nb=randrange(minimum, maximum)))
+
+
+def make_html_string():
+    sentence1 = fake.sentence()
+    pieces = [
+        '<strong>{}</strong>',
+        '<em>{}</em>',
+        '<a href="{url}">{{}}</a>'.format(
+            url=fake.url(schemes=['https']),
+        ),
+    ]
+    words = [make_words().capitalize(), make_words(), make_words()]
+    shuffle(pieces)
+
+    sentence2 = ', '.join([
+        piece.format(word)
+        for piece, word in zip(pieces, words)
+    ])
+    return f'{sentence1} {sentence2}.'
 
 
 def generate_field(field_type, value):
