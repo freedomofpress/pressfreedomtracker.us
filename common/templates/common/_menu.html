@@ -3,7 +3,7 @@
 <header class="header">
 	<div class="header__title-wrapper">
 		<a class="site-title-link text-link" href="/">
-			U.S Press Freedom Tracker
+			{{ self.get_site.site_name|default:"U.S Press Freedom Tracker" }}
 		</a>
 	</div>
 
