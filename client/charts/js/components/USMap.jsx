@@ -163,7 +163,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								onMouseLeave={() => {
 									setHoveredElement(null)
 								}}
-								onMouseUp={(mouseEvent) => openSearchPage(d.name)}
+								onMouseUp={(mouseEvent) => openSearchPage(d.usCode)}
 								key={d.state}
 							/>
 						))}
