@@ -340,8 +340,8 @@ export default function BarChartHomepage({
 
 BarChartHomepage.propTypes = {
 	data: PropTypes.array.isRequired,
-	x: PropTypes.number.isRequired,
-	y: PropTypes.number.isRequired,
+	x: PropTypes.string.isRequired,
+	y: PropTypes.string.isRequired,
 	titleLabel: PropTypes.string.isRequired,
 	isMobileView: PropTypes.bool.isRequired,
 	width: PropTypes.number.isRequired,
