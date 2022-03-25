@@ -19,7 +19,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
 
 	const [minDate, maxDate] = d3.extent(dataset.map((d) => new Date(d.date)))
 	const dateExtents = [firstDayOfMonth(minDate), firstDayOfNextMonth(maxDate)]
-	const yearDateExtents = dateExtents.map((date) => date.getFullYear())
+	const yearDateExtents = dateExtents.map((date) => date.getUTCFullYear())
 	const allYears = range(...yearDateExtents)
 
 	const [filtersParameters, setFitlersParameters] = useState({
@@ -72,7 +72,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
 						new Date(d.date).getTime() <= filtersParameters[filterName].parameters.max.getTime()
 				case 'filterTimeYears':
 					return (d) =>
-						filtersParameters[filterName].parameters.includes(new Date(d.date).getFullYear())
+						filtersParameters[filterName].parameters.includes(d.date.getUTCFullYear())
 				case 'filterState':
 					return (d) =>
 						filtersParameters[filterName].parameters === 'All' ||

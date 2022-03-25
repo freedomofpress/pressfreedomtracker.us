@@ -44,28 +44,28 @@ export function filterDatasetByTag(dataset, tag) {
 }
 
 export function filterDatasetByYear(dataset, year) {
-	return dataset.filter((d) => new Date(d.date).getFullYear() === year)
+	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
-	const currentYear = currentDate.getFullYear()
-	const currentMonth = currentDate.getMonth()
+	const currentYear = currentDate.getUTCFullYear()
+	const currentMonth = currentDate.getUTCMonth()
 
 	if (currentMonth >= 5) {
 		return dataset.filter(
 			(d) =>
-				new Date(d.date).getFullYear() === currentYear &&
-				new Date(d.date).getMonth() >= currentMonth - 5 &&
-				new Date(d.date).getMonth() <= currentMonth
+				d.date.getUTCFullYear() === currentYear &&
+				d.date.getUTCMonth() >= currentMonth - 5 &&
+				d.date.getUTCMonth() <= currentMonth
 		)
 	}
 	const monthSixMonthsAgo = 11 - (5 - currentMonth)
 	return dataset.filter(
 		(d) =>
-			(new Date(d.date).getFullYear() === currentYear &&
-				new Date(d.date).getMonth() <= currentMonth) ||
-			(new Date(d.date).getFullYear() === currentYear - 1 &&
-				new Date(d.date).getMonth() >= monthSixMonthsAgo)
+			(d.date.getUTCFullYear() === currentYear &&
+				d.date.getUTCMonth() <= currentMonth) ||
+			(d.date.getUTCFullYear() === currentYear - 1 &&
+				d.date.getUTCMonth() >= monthSixMonthsAgo)
 	)
 }
 
@@ -89,12 +89,12 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 	const datasetGroupedByMonth = d3
 		.groups(
-			dataset.map((d) => ({ month: new Date(d.date).getMonth() })),
+			dataset.map((d) => ({ month: d.date.getUTCMonth() })),
 			(d) => d.month
 		)
 		.map((d) => ({ month: d[0], monthName: monthNames[d[0]], numberOfIncidents: d[1].length }))
 
-	const currentMonth = currentDate.getMonth()
+	const currentMonth = currentDate.getUTCMonth()
 	const monthsConsidered =
 		currentMonth < 5
 			? monthNames.slice(currentMonth - 5).concat(monthNames.slice(0, currentMonth + 1))
