@@ -33,7 +33,7 @@ export default function HomepageSelection({
 	data: originalDataset,
 	numberOfTags = 5,
 	selectedTags = chooseMostFrequentTags(originalDataset, numberOfTags),
-	currentDate = Date.UTC(),
+	currentDate = new Date(Date.UTC()),
 	filtersApplied,
 	setFiltersApplied,
 }) {

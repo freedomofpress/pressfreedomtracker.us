@@ -47,26 +47,10 @@ export function filterDatasetByYear(dataset, year) {
 	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
+// Filter to the last six months, inclusive on the *currentDate* end
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
-	const currentYear = currentDate.getUTCFullYear()
-	const currentMonth = currentDate.getUTCMonth()
-
-	if (currentMonth >= 5) {
-		return dataset.filter(
-			(d) =>
-				d.date.getUTCFullYear() === currentYear &&
-				d.date.getUTCMonth() >= currentMonth - 5 &&
-				d.date.getUTCMonth() <= currentMonth
-		)
-	}
-	const monthSixMonthsAgo = 11 - (5 - currentMonth)
-	return dataset.filter(
-		(d) =>
-			(d.date.getUTCFullYear() === currentYear &&
-				d.date.getUTCMonth() <= currentMonth) ||
-			(d.date.getUTCFullYear() === currentYear - 1 &&
-				d.date.getUTCMonth() >= monthSixMonthsAgo)
-	)
+	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
+	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
 }
 
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
