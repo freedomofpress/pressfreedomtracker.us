@@ -3,11 +3,11 @@
 {% for item in value.table_data %}
     {% if item.page %}
          <li class="list-table__row">
-            <div class="list-table__item info-table--col-3">
+            <div class="list-table__item info-table--col-3 anim-table-row">
                 <div class="list-table__col info-table__title">{{ item.title|default:item.page.title }}</div>
                 <div class="list-table__col">{{ item.description }}</div>
                 <div class="list-table__link info-table__col-right">
-					<a href="{% pageurl item.page %}" aria-label="Visit page {{ item.title|default:item.page.title }}">{{ value.cta_label }} &rarr;</a>
+					<a href="{% pageurl item.page %}" aria-label="Visit page {{ item.title|default:item.page.title }}" class="anim-table-mainlink">{{ value.cta_label }} &rarr;</a>
 				</div>
 			</div>
         </li>
