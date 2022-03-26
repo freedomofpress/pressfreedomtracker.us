@@ -21,6 +21,8 @@ from incident.models.choices import (
 )
 from incident.tests.factories import (
     ChargeFactory,
+    EquipmentSeizedFactory,
+    EquipmentBrokenFactory,
     IncidentPageFactory,
     IncidentIndexPageFactory,
     IncidentUpdateFactory,
@@ -1425,6 +1427,49 @@ class StateFilterTest(TestCase):
         IncidentPageFactory(state=self.alaska)
 
         incident_filter = IncidentFilter({'state': str(self.new_mexico.pk)})
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1})
+
+
+class EquipmentFilterTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        for name in ('equipment_seized', 'equipment_broken'):
+            GeneralIncidentFilter.objects.create(
+                incident_filter=name,
+                incident_filter_settings=settings,
+            )
+
+    def test_seized_equipment_uses_noninteger_parameters_to_query_name(self):
+        incident1 = IncidentPageFactory()
+        incident2 = IncidentPageFactory()
+        seized1 = EquipmentSeizedFactory(incident=incident1)
+        EquipmentSeizedFactory(incident=incident2)
+
+        incident_filter = IncidentFilter({
+            'equipment_seized': seized1.equipment.name,
+        })
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1})
+
+    def test_broken_equipment_uses_noninteger_parameters_to_query_name(self):
+        incident1 = IncidentPageFactory()
+        incident2 = IncidentPageFactory()
+        broken1 = EquipmentBrokenFactory(incident=incident1)
+        EquipmentBrokenFactory(incident=incident2)
+
+        incident_filter = IncidentFilter({
+            'equipment_broken': broken1.equipment.name,
+        })
+
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
 
