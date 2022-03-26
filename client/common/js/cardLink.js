@@ -1,5 +1,4 @@
-function cardLink(selector) {
-	const card = document.querySelector(selector)
+function cardLink(card) {
 	const mainLink = card.querySelector(".text-link--card")
 	const clickableElements = Array.from(card.querySelectorAll(".text-link"))
 
@@ -20,10 +19,14 @@ function cardLink(selector) {
 
 document.addEventListener('DOMContentLoaded', () => {
 	if (document.querySelector(".incident-card--inner")) {
-		cardLink(".incident-card--inner")
+		document.querySelectorAll(".incident-card--inner").forEach((card) => {
+			cardLink(card)
+		})
 	}
 
 	if (document.querySelector(".blog-card--inner")) {
-		cardLink(".blog-card--inner")
+		document.querySelectorAll(".blog-card--inner").forEach((card) => {
+			cardLink(card)
+		})
 	}
 })
