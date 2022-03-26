@@ -3,7 +3,7 @@
 <section class="blog-list {% if type %}blog-list--{{ type }}{% endif %}">
 	<h2 class="heading-regular">{{ heading }}</h2>
 
-	<ol class="blog-list__posts {% if type %}blog-list__posts--{{ type }}{% endif %} {% if ajax_load %}js-article-loading-parent{% endif %}">
+	<ol class="blog-list__posts {% if type %}blog-list__posts--{{ type }}{% endif %} {% if ajax_load and blogs.has_other_pages %}js-article-loading-parent{% endif %}">
 		{% for blog in blogs %}
 			<li
 				class="blog-list__item
