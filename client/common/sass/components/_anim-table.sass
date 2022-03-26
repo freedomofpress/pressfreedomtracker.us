@@ -1,0 +1,12 @@
+.anim-table-row
+	+desktop-up
+		transition: transform 0.2s ease-in-out
+		&:hover
+			transform: translateX(48px)
+			width: calc(100% - 48px)
+			cursor: pointer
+
+	a.anim-table-mainLink--hovered
+		font-size: 16px
+		line-height: 1
+		color: $black
