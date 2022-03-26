@@ -1,12 +1,10 @@
 function cardLink(card) {
-	const mainLink = card.querySelector(".text-link--card")
-	const clickableElements = Array.from(card.querySelectorAll(".text-link"))
+	const mainLink = card.querySelector('.text-link--card')
+	const clickableElements = Array.from(card.querySelectorAll('.text-link'))
 
-	clickableElements.forEach((ele) =>
-		ele.addEventListener("click", (e) => e.stopPropagation())
-	)
+	clickableElements.forEach((ele) => ele.addEventListener('click', (e) => e.stopPropagation()))
 
-	function handleClick(event) {
+	function handleClick() {
 		const noTextSelected = !window.getSelection().toString()
 
 		if (noTextSelected) {
@@ -14,18 +12,18 @@ function cardLink(card) {
 		}
 	}
 
-	card.addEventListener("click", handleClick)
+	card.addEventListener('click', handleClick)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	if (document.querySelector(".incident-card--inner")) {
-		document.querySelectorAll(".incident-card--inner").forEach((card) => {
+	if (document.querySelector('.incident-card--inner')) {
+		document.querySelectorAll('.incident-card--inner').forEach((card) => {
 			cardLink(card)
 		})
 	}
 
-	if (document.querySelector(".blog-card--inner")) {
-		document.querySelectorAll(".blog-card--inner").forEach((card) => {
+	if (document.querySelector('.blog-card--inner')) {
+		document.querySelectorAll('.blog-card--inner').forEach((card) => {
 			cardLink(card)
 		})
 	}
