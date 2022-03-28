@@ -1,4 +1,5 @@
 from random import choice, randrange, shuffle
+import functools
 import json
 
 from faker import Faker
@@ -102,6 +103,10 @@ def generate_rich_text_paragraph():
     return generate_field('rich_text', paragraph)
 
 
+def generate_rich_text_line():
+    return generate_field('rich_text', make_html_string())
+
+
 def generate_rich_text():
     paragraphs = (
         '<h3>{}</h3>'.format(fake.sentence()),
@@ -123,22 +128,9 @@ def generate_rich_text():
     return generate_field('rich_text', ''.join(paragraphs))
 
 
-def generate_heading1_field():
-    content = ' '.join(fake.words())
-
-    return generate_field('heading_1', {'content': content})
-
-
-def generate_heading2_field():
-    content = ' '.join(fake.words())
-
-    return generate_field('heading_2', {'content': content})
-
-
-def generate_heading3_field():
-    content = ' '.join(fake.words())
-
-    return generate_field('heading_3', {'content': content})
+def generate_heading_field(as_type='heading'):
+    content = ' '.join(fake.words()).title()
+    return generate_field(as_type, {'content': content})
 
 
 def generate_raw_html():
@@ -186,10 +178,10 @@ def generate_twitter_embed():
 
 
 def generate_tabs():
-    block_fns = [generate_heading2_field, generate_rich_text_paragraph]
+    block_fns = [functools.partial(generate_heading_field, as_type='heading_2'), generate_rich_text_paragraph]
     default_tab = {
         'value': [
-            generate_heading2_field(),
+            generate_heading_field(as_type='heading_2'),
             generate_rich_text_paragraph(),
             generate_twitter_embed(),
             generate_raw_html()
@@ -313,11 +305,13 @@ def generate_info_table_external_links():
 class StreamfieldProvider(BaseProvider):
     def streamfield(self, fields=None):
         valid_fields = {
-            'heading1': generate_heading1_field,
-            'heading2': generate_heading2_field,
-            'heading3': generate_heading3_field,
+            'heading1': functools.partial(generate_heading_field, as_type='heading_1'),
+            'heading2': functools.partial(generate_heading_field, as_type='heading_2'),
+            'heading3': functools.partial(generate_heading_field, as_type='heading_3'),
+            'heading': generate_heading_field,
             'rich_text': generate_rich_text,
             'rich_text_paragraph': generate_rich_text_paragraph,
+            'rich_text_line': generate_rich_text_line,
             'bare_image': generate_bare_image,
             'aligned_captioned_image': generate_aligned_captioned_image,
             'raw_html': generate_raw_html,
