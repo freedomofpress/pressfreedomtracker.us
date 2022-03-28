@@ -8,7 +8,7 @@
 					{% if block.block_type == 'heading' %}
 						<h2 class="paragraph-subtitle">{{ block.value.content }}</h2>
 					{% else %}
-						<div class="citation-body">{% include_block block %}</div>
+						<div class="rich-text citation-body">{% include_block block %}</div>
 					{% endif %}
 				{% endfor %}
 				<div class="citation-link">
