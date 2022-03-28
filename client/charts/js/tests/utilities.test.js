@@ -523,15 +523,15 @@ describe(groupByCity, () => {
 describe(groupByState, () => {
 	test('groupByState simple test', () => {
 		expect(groupByState([{ state: 'AK' }, { state: 'AL' }, { state: 'AK' }])).toEqual([
-			{ state: 'Alaska (AK)', numberOfIncidents: 2, latitude: 63.588753, longitude: -154.493062 },
-			{ state: 'Alabama (AL)', numberOfIncidents: 1, latitude: 32.318231, longitude: -86.902298 },
+			{ state: 'Alaska (AK)', usCode: 'AK', numberOfIncidents: 2, latitude: 63.588753, longitude: -154.493062 },
+			{ state: 'Alabama (AL)', usCode: 'AL', numberOfIncidents: 1, latitude: 32.318231, longitude: -86.902298 },
 		])
 	})
 
 	test('groupByState missing state', () => {
 		expect(groupByState([{ state: 'AK' }, {}, { state: 'AK' }])).toEqual([
-			{ state: 'Alaska (AK)', numberOfIncidents: 2, latitude: 63.588753, longitude: -154.493062 },
-			{ state: 'Abroad', numberOfIncidents: 1 },
+			{ state: 'Alaska (AK)', usCode: 'AK', numberOfIncidents: 2, latitude: 63.588753, longitude: -154.493062 },
+			{ state: 'Abroad', usCode: null, numberOfIncidents: 1, latitude: undefined, longitude: undefined },
 		])
 	})
 
@@ -545,15 +545,15 @@ describe(groupByState, () => {
 				{ state: 'AK' },
 			])
 		).toEqual([
-			{ state: 'Alaska (AK)', numberOfIncidents: 3, latitude: 63.588753, longitude: -154.493062 },
-			{ state: 'Abroad', numberOfIncidents: 2 },
+			{ state: 'Alaska (AK)', usCode: 'AK', numberOfIncidents: 3, latitude: 63.588753, longitude: -154.493062 },
+			{ state: 'Abroad', usCode: null, numberOfIncidents: 2, latitude: undefined, longitude: undefined },
 		])
 	})
 
 	test('groupByState unordered dataset', () => {
 		expect(groupByState([{ state: 'AL' }, { state: 'AK' }, { state: 'AK' }])).toEqual([
-			{ state: 'Alaska (AK)', numberOfIncidents: 2, latitude: 63.588753, longitude: -154.493062 },
-			{ state: 'Alabama (AL)', numberOfIncidents: 1, latitude: 32.318231, longitude: -86.902298 },
+			{ state: 'Alaska (AK)', usCode: 'AK', numberOfIncidents: 2, latitude: 63.588753, longitude: -154.493062 },
+			{ state: 'Alabama (AL)', usCode: 'AL', numberOfIncidents: 1, latitude: 32.318231, longitude: -86.902298 },
 		])
 	})
 })
