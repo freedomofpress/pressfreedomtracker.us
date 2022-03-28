@@ -49,8 +49,8 @@ function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 		parameters.push(`date_lower=${firstDayMonth}&date_upper=${lastDayMonth}`)
 	}
 
-	if (filtersApplied.city !== undefined) {
-		parameters.push(`city=${filtersApplied.city.replace(' ', '%20')}`)
+	if (filtersApplied.state !== undefined) {
+		parameters.push(`state=${filtersApplied.state.replace(' ', '+')}`)
 	}
 
 	if (filtersApplied.year !== null && filtersApplied.monthName === undefined) {
@@ -160,8 +160,8 @@ function HomepageMainChartsWidth({
 						incidentsOutsideUS={incidentsOutsideUS}
 						width={chartWidth}
 						height={chartHeight}
-						openSearchPage={(city) => {
-							goToFilterPage(databasePath, { ...filtersApplied, city }, currentDate)
+						openSearchPage={(state) => {
+							goToFilterPage(databasePath, { ...filtersApplied, state }, currentDate)
 						}}
 					/>
 				</div>

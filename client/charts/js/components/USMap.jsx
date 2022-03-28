@@ -163,213 +163,218 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								onMouseLeave={() => {
 									setHoveredElement(null)
 								}}
-								onMouseUp={(mouseEvent) => openSearchPage(d.name)}
+								onMouseUp={(mouseEvent) => openSearchPage(d.usCode)}
 								key={d.state}
 							/>
 						))}
 					</g>
 				</svg>
-				<g>
-					<rect
-						x="0"
-						y={
-							height -
-							paddings.bottom -
-							paddings.text * 2 -
-							markerBorder.grid -
-							(width > 400 ? 14 : 12)
-						}
-						width={width}
-						height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
-						fill="white"
-						style={{
-							cursor: 'pointer',
-						}}
-						onMouseEnter={() => setHoveredElement('Abroad')}
-						onMouseOut={() => setHoveredElement(null)}
-					/>
 
-					<AnimatedDataset
-						dataset={['Incidents recorded outside of the US:']}
-						tag="text"
-						attrs={{
-							x: hoveredElement === 'Abroad' ? paddings.text + 30 : paddings.text,
-							y: height - paddings.bottom - paddings.text - markerBorder.grid,
-							fontSize: width > 400 ? '14px' : '12px',
-							fontFamily: 'sans-serif',
-							cursor: 'pointer',
-							fill: 'black',
-							pointerEvents: 'none',
-							text: (d) => d,
-						}}
-						keyFn={(d) => d}
-						duration={300}
-					/>
-					<AnimatedDataset
-						dataset={[String(incidentsOutsideUS)]}
-						tag="text"
-						attrs={{
-							x: width - paddings.arrowSmall - (hoveredElement === 'Abroad' ? paddings.arrow : 95),
-							y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
-							fontSize: width > 400 ? 14 : 12,
-							fontFamily: 'sans-serif',
-							cursor: 'pointer',
-							fill: 'black',
-							textAnchor: 'end',
-							pointerEvents: 'none',
-							text: (d) => d,
-						}}
-						keyFn={(d) => d}
-						duration={300}
-						durationByAttr={{ fill: 0 }}
-					/>
-
-					<AnimatedDataset
-						dataset={['']}
-						tag="path"
-						attrs={{
-							d: 'M6 0.999999L12 7L6 13',
-							stroke: 'black',
-							fill: 'white',
-							strokeWidth: 1,
-							transform: `translate(${
-								hoveredElement === 'Abroad' ? width - paddings.arrow : width - paddings.arrow - 50
-							},${
+				{incidentsOutsideUS && (
+					<g>
+						<rect
+							x="0"
+							y={
 								height -
 								paddings.bottom -
+								paddings.text * 2 -
 								markerBorder.grid -
-								paddings.text -
-								(width > 400 ? 14 : 12) +
-								1
-							})`,
-							opacity: hoveredElement === 'Abroad' ? 1 : 0,
-							pointerEvents: 'none',
-						}}
-						duration={250}
-					/>
+								(width > 400 ? 14 : 12)
+							}
+							width={width}
+							height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
+							fill="white"
+							style={{
+								cursor: 'pointer',
+							}}
+							onMouseEnter={() => setHoveredElement('Abroad')}
+							onMouseOut={() => setHoveredElement(null)}
+							onMouseUp={() => openSearchPage()}
+						/>
 
-					<AnimatedDataset
-						dataset={['']}
-						tag="line"
-						attrs={{
-							x1:
-								hoveredElement === 'Abroad' ? width - paddings.arrow : width - paddings.arrow - 50,
-							x2:
-								12 +
-								(hoveredElement === 'Abroad'
-									? width - paddings.arrow
-									: width - paddings.arrow - 50),
-							y1:
+						<AnimatedDataset
+							dataset={['Incidents recorded outside of the US:']}
+							tag="text"
+							attrs={{
+								x: hoveredElement === 'Abroad' ? paddings.text + 30 : paddings.text,
+								y: height - paddings.bottom - paddings.text - markerBorder.grid,
+								fontSize: width > 400 ? '14px' : '12px',
+								fontFamily: 'sans-serif',
+								cursor: 'pointer',
+								fill: 'black',
+								pointerEvents: 'none',
+								text: (d) => d,
+							}}
+							keyFn={(d) => d}
+							duration={300}
+						/>
+						<AnimatedDataset
+							dataset={[String(incidentsOutsideUS)]}
+							tag="text"
+							attrs={{
+								x: width - paddings.arrowSmall - (hoveredElement === 'Abroad' ? paddings.arrow : 95),
+								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
+								fontSize: width > 400 ? 14 : 12,
+								fontFamily: 'sans-serif',
+								cursor: 'pointer',
+								fill: 'black',
+								textAnchor: 'end',
+								pointerEvents: 'none',
+								text: (d) => d,
+							}}
+							keyFn={(d) => d}
+							duration={300}
+							durationByAttr={{ fill: 0 }}
+						/>
+
+						<AnimatedDataset
+							dataset={['']}
+							tag="path"
+							attrs={{
+								d: 'M6 0.999999L12 7L6 13',
+								stroke: 'black',
+								fill: 'white',
+								strokeWidth: 1,
+								transform: `translate(${
+									hoveredElement === 'Abroad' ? width - paddings.arrow : width - paddings.arrow - 50
+								},${
+									height -
+									paddings.bottom -
+									markerBorder.grid -
+									paddings.text -
+									(width > 400 ? 14 : 12) +
+									1
+								})`,
+								opacity: hoveredElement === 'Abroad' ? 1 : 0,
+								pointerEvents: 'none',
+							}}
+							duration={250}
+						/>
+
+						<AnimatedDataset
+							dataset={['']}
+							tag="line"
+							attrs={{
+								x1:
+									hoveredElement === 'Abroad' ? width - paddings.arrow : width - paddings.arrow - 50,
+								x2:
+									12 +
+									(hoveredElement === 'Abroad'
+										? width - paddings.arrow
+										: width - paddings.arrow - 50),
+								y1:
+									height -
+									paddings.bottom -
+									markerBorder.grid -
+									paddings.text -
+									(width > 400 ? 14 : 12) +
+									8,
+								y2:
+									height -
+									paddings.bottom -
+									markerBorder.grid -
+									paddings.text -
+									(width > 400 ? 14 : 12) +
+									8,
+								stroke: 'black',
+								opacity: hoveredElement === 'Abroad' ? 1 : 0,
+								pointerEvents: 'none',
+							}}
+							duration={250}
+						/>
+
+						<AnimatedDataset
+							dataset={['']}
+							tag="path"
+							attrs={{
+								d: 'M4 1L8 5L4 9',
+								stroke: '#8F8F8F',
+								fill: 'white',
+								strokeWidth: 1,
+								transform: `translate(${
+									width - paddings.arrowSmall + 3 + (hoveredElement === 'Abroad' ? 150 : 0)
+								},${
+									height -
+									paddings.bottom -
+									markerBorder.grid -
+									paddings.text -
+									(width > 400 ? 14 : 12) +
+									3
+								})`,
+								opacity: hoveredElement === 'Abroad' ? 0 : 1,
+								pointerEvents: 'none',
+							}}
+							duration={250}
+						/>
+
+						<AnimatedDataset
+							dataset={['']}
+							tag="line"
+							attrs={{
+								x1: width - paddings.arrowSmall + 3 + (hoveredElement === 'Abroad' ? 150 : 0),
+								x2: width - paddings.arrowSmall + 10 + (hoveredElement === 'Abroad' ? 150 : 0),
+								y1:
+									height -
+									paddings.bottom -
+									markerBorder.grid -
+									paddings.text -
+									(width > 400 ? 14 : 12) +
+									8,
+								y2:
+									height -
+									paddings.bottom -
+									markerBorder.grid -
+									paddings.text -
+									(width > 400 ? 14 : 12) +
+									8,
+								stroke: '#8F8F8F',
+								opacity: hoveredElement === 'Abroad' ? 0 : 1,
+								pointerEvents: 'none',
+							}}
+							duration={250}
+						/>
+
+						<AnimatedDataset
+							dataset={['Go to incidents']}
+							tag="text"
+							attrs={{
+								x: width - paddings.arrowSmall + (hoveredElement === 'Abroad' ? 150 : 0),
+								opacity: hoveredElement === 'Abroad' ? 0 : 1,
+								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
+								fontSize: width > 400 ? 13 : 11,
+								fontFamily: 'sans-serif',
+								cursor: 'pointer',
+								fill: '#bdbdbd',
+								textAnchor: 'end',
+								text: (d) => d,
+								pointerEvents: 'none',
+							}}
+							keyFn={(d) => d}
+							duration={250}
+						/>
+
+						<line
+							x1={0}
+							x2={width}
+							y1={
 								height -
 								paddings.bottom -
+								paddings.text * 2 -
 								markerBorder.grid -
-								paddings.text -
-								(width > 400 ? 14 : 12) +
-								8,
-							y2:
+								(width > 400 ? 14 : 12)
+							}
+							y2={
 								height -
 								paddings.bottom -
+								paddings.text * 2 -
 								markerBorder.grid -
-								paddings.text -
-								(width > 400 ? 14 : 12) +
-								8,
-							stroke: 'black',
-							opacity: hoveredElement === 'Abroad' ? 1 : 0,
-							pointerEvents: 'none',
-						}}
-						duration={250}
-					/>
+								(width > 400 ? 14 : 12)
+							}
+							style={{ stroke: 'black', strokeWidth: markerBorder.small }}
+						/>
+					</g>
+				)}
 
-					<AnimatedDataset
-						dataset={['']}
-						tag="path"
-						attrs={{
-							d: 'M4 1L8 5L4 9',
-							stroke: '#8F8F8F',
-							fill: 'white',
-							strokeWidth: 1,
-							transform: `translate(${
-								width - paddings.arrowSmall + 3 + (hoveredElement === 'Abroad' ? 150 : 0)
-							},${
-								height -
-								paddings.bottom -
-								markerBorder.grid -
-								paddings.text -
-								(width > 400 ? 14 : 12) +
-								3
-							})`,
-							opacity: hoveredElement === 'Abroad' ? 0 : 1,
-							pointerEvents: 'none',
-						}}
-						duration={250}
-					/>
-
-					<AnimatedDataset
-						dataset={['']}
-						tag="line"
-						attrs={{
-							x1: width - paddings.arrowSmall + 3 + (hoveredElement === 'Abroad' ? 150 : 0),
-							x2: width - paddings.arrowSmall + 10 + (hoveredElement === 'Abroad' ? 150 : 0),
-							y1:
-								height -
-								paddings.bottom -
-								markerBorder.grid -
-								paddings.text -
-								(width > 400 ? 14 : 12) +
-								8,
-							y2:
-								height -
-								paddings.bottom -
-								markerBorder.grid -
-								paddings.text -
-								(width > 400 ? 14 : 12) +
-								8,
-							stroke: '#8F8F8F',
-							opacity: hoveredElement === 'Abroad' ? 0 : 1,
-							pointerEvents: 'none',
-						}}
-						duration={250}
-					/>
-
-					<AnimatedDataset
-						dataset={['Go to incidents']}
-						tag="text"
-						attrs={{
-							x: width - paddings.arrowSmall + (hoveredElement === 'Abroad' ? 150 : 0),
-							opacity: hoveredElement === 'Abroad' ? 0 : 1,
-							y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
-							fontSize: width > 400 ? 13 : 11,
-							fontFamily: 'sans-serif',
-							cursor: 'pointer',
-							fill: '#bdbdbd',
-							textAnchor: 'end',
-							text: (d) => d,
-							pointerEvents: 'none',
-						}}
-						keyFn={(d) => d}
-						duration={250}
-					/>
-
-					<line
-						x1={0}
-						x2={width}
-						y1={
-							height -
-							paddings.bottom -
-							paddings.text * 2 -
-							markerBorder.grid -
-							(width > 400 ? 14 : 12)
-						}
-						y2={
-							height -
-							paddings.bottom -
-							paddings.text * 2 -
-							markerBorder.grid -
-							(width > 400 ? 14 : 12)
-						}
-						style={{ stroke: 'black', strokeWidth: markerBorder.small }}
-					/>
-				</g>
 				<line
 					x1={0}
 					x2={width}

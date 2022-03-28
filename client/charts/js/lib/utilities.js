@@ -182,6 +182,7 @@ export function groupByState(dataset) {
 		)
 		.map(([acronym, numberOfIncidents]) => ({
 			state: acronym !== 'Abroad' ? usStates.find((d) => d.acronym === acronym).state : 'Abroad',
+			usCode: acronym !== 'Abroad' ? acronym : null,
 			numberOfIncidents,
 			latitude:
 				acronym !== 'Abroad' ? usStates.find((d) => d.acronym === acronym).latitude : undefined,
