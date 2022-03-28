@@ -24,9 +24,10 @@ from common.models import (
 )
 from common.devdata import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory,
-    SimplePageFactory,
+    SimplePageFactory, SiteSettingsFactory,
 )
 from common.tests.utils import make_html_string
+from emails.devdata import EmailSettingsFactory
 from forms.models import FormPage
 from forms.tests.factories import FormPageFactory
 from home.models import HomePage, FeaturedBlogPost, FeaturedIncident
@@ -458,6 +459,8 @@ class Command(BaseCommand):
         if footer_menu:
             footer_settings.menu = footer_menu
         footer_settings.save()
+        SiteSettingsFactory(site=site)
+        EmailSettingsFactory(site=site)
 
         # Create superuser
         if not User.objects.filter(is_superuser=True).exists():

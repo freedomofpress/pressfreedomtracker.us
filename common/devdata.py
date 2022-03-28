@@ -19,6 +19,7 @@ from common.models import (
     PersonPage,
     OrganizationPage,
     OrganizationIndexPage,
+    SiteSettings,
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
@@ -35,6 +36,20 @@ class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
     port = 8000
     is_default_site = True
     root_page = None
+
+
+class SiteSettingsFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = SiteSettings
+        django_get_or_create = ('site',)
+
+    site = factory.SubFactory(DevelopmentSiteFactory)
+    incident_sidebar_note = factory.Faker('streamfield', fields=[
+        'heading',
+        'rich_text_line',
+    ])
+    homepage_only = True
+    banner_content = None
 
 
 class CategoryIncidentFilterFactory(factory.django.DjangoModelFactory):
