@@ -14,13 +14,15 @@ from forms.models import GroupedFormField, FieldGroup, FormPage
 class FormFieldFactory(DjangoModelFactory):
     class Meta:
         model = GroupedFormField
-        exclude = ('choices_text',)
+        exclude = ('choices_text', 'placeholder_text')
 
     field_type = 'singleline'
     choices_text = Faker('words', nb=4)
+    placeholder_text = Faker('sentence')
     sort_order = Sequence(int)
     label = Faker('sentence', nb_words=6, variable_nb_words=True)
     required = Faker('boolean', chance_of_getting_true=50)
+    placeholder = LazyAttribute(lambda o: o.placeholder_text[:-1])
     use_as_reply_to = False
 
     class Params:
@@ -41,11 +43,42 @@ class FormFieldFactory(DjangoModelFactory):
 class FieldGroupFactory(DjangoModelFactory):
     class Meta:
         model = FieldGroup
+        exclude = ('title_words', )
 
-    title = Faker('words', nb=4)
+    title_words = Faker('words', nb=4)
+
+    title = LazyAttribute(lambda o: ' '.join(o.title_words).capitalize())
     description = Faker('sentence')
     sort_order = Sequence(int)
     template = 'default'
+
+
+class SingleLineDateFieldGroupFactory(FieldGroupFactory):
+    class Meta:
+        model = FieldGroup
+
+    template = 'date_single'
+    day = RelatedFactory(
+        FormFieldFactory,
+        'group',
+        label='Day',
+        field_type='singleline',
+        placeholder='DD',
+    )
+    month = RelatedFactory(
+        FormFieldFactory,
+        'group',
+        label='Month',
+        field_type='singleline',
+        placeholder='MM',
+    )
+    year = RelatedFactory(
+        FormFieldFactory,
+        'group',
+        label='Year',
+        field_type='singleline',
+        placeholder='YYYY',
+    )
 
 
 class FormPageFieldGroupFactory(FieldGroupFactory):
@@ -107,10 +140,13 @@ class FormPageFactory(PageFactory):
         model = FormPage
 
     intro = Faker('sentence')
+    form_intro = Faker('sentence')
     thank_you_text = Faker('sentence')
-    button_text = 'Submit'
+    outro_title = Faker('sentence')
+    button_text = 'Submit Answers'
 
     field_group = RelatedFactory(FormPageFieldGroupFactory, 'page')
+    field_group2 = RelatedFactory(SingleLineDateFieldGroupFactory, 'page')
 
 
 class FormPageWithReplyToFieldFactory(PageFactory):

@@ -24,9 +24,12 @@ from common.models import (
 )
 from common.devdata import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory,
-    SimplePageFactory,
+    SimplePageFactory, SiteSettingsFactory,
 )
+from common.tests.utils import make_html_string
+from emails.devdata import EmailSettingsFactory
 from forms.models import FormPage
+from forms.tests.factories import FormPageFactory
 from home.models import HomePage, FeaturedBlogPost, FeaturedIncident
 from incident.models import IncidentIndexPage, IncidentPage
 from incident.devdata import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory
@@ -204,8 +207,14 @@ class Command(BaseCommand):
 
         # SUBMIT INCIDENT FORM
         FormPage.objects.filter(slug='submit-incident').delete()
-        incident_form = FormPage(title='Submit an incident', slug='submit-incident')
-        home_page.add_child(instance=incident_form)
+        incident_form = FormPageFactory(
+            title='Submit an incident',
+            slug='submit-incident',
+            intro=make_html_string(),
+            thank_you_text=make_html_string(),
+            outro_text=make_html_string(),
+            parent=home_page,
+        )
 
         # BLOG RELATED PAGES
         BlogIndexPage.objects.filter(slug='fpf-blog').delete()
@@ -450,6 +459,8 @@ class Command(BaseCommand):
         if footer_menu:
             footer_settings.menu = footer_menu
         footer_settings.save()
+        SiteSettingsFactory(site=site)
+        EmailSettingsFactory(site=site)
 
         # Create superuser
         if not User.objects.filter(is_superuser=True).exists():

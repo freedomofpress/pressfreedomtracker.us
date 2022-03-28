@@ -19,10 +19,11 @@ from common.models import (
     PersonPage,
     OrganizationPage,
     OrganizationIndexPage,
+    SiteSettings,
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
-from common.tests.utils import StreamfieldProvider
+from common.tests.utils import StreamfieldProvider, make_html_string
 
 
 factory.Faker.add_provider(StreamfieldProvider)
@@ -35,6 +36,20 @@ class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
     port = 8000
     is_default_site = True
     root_page = None
+
+
+class SiteSettingsFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = SiteSettings
+        django_get_or_create = ('site',)
+
+    site = factory.SubFactory(DevelopmentSiteFactory)
+    incident_sidebar_note = factory.Faker('streamfield', fields=[
+        'heading',
+        'rich_text_line',
+    ])
+    homepage_only = True
+    banner_content = None
 
 
 class CategoryIncidentFilterFactory(factory.django.DjangoModelFactory):
@@ -136,6 +151,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
     methodology_text = factory.Faker('paragraph', nb_sentences=5)
 
     title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
+    description = factory.LazyAttribute(lambda _: make_html_string())
     methodology = factory.LazyAttribute(lambda o: RichText(o.methodology_text))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])

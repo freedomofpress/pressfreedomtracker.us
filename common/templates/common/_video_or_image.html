@@ -9,7 +9,7 @@
         {% endif %}
         {% if caption or image.attribution %}
             <figcaption class="media-caption">
-				{{ caption|richtext }}
+				<div class="rich-text">{{ caption|richtext }}</div>
 				{% if image.attribution %}
 					<span
 						class="media-attribution"

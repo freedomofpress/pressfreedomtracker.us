@@ -7,6 +7,7 @@ from common.devdata import (
     CategoryPageFactory,
     DevelopmentSiteFactory,
 )
+from common.tests.utils import make_html_string
 from home.tests.factories import HomePageFactory
 
 
@@ -80,7 +81,10 @@ class Command(BaseCommand):
         Page.objects.filter(slug='home').delete()
 
         root_page = Page.objects.get(slug='root')
-        home_page = HomePageFactory(parent=root_page)
+        home_page = HomePageFactory(
+            parent=root_page,
+            about=make_html_string(),
+        )
         DevelopmentSiteFactory(root_page=home_page)
 
         self.stdout.write('Creating categories', ending='')

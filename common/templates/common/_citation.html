@@ -2,15 +2,19 @@
 
 {% if settings.common.SiteSettings.incident_sidebar_note %}
 	<section class="citation">
-		{% for block in settings.common.SiteSettings.incident_sidebar_note %}
-			{% if block.block_type == 'heading' %}
-				<h2 class="paragraph-subtitle">{{ block.value.content }}</h2>
-			{% else %}
-				<div class="citation-body">{% include_block block %}</div>
-			{% endif %}
-		{% endfor %}
-		<div class="citation-link">
-			<a href="#" class="btn btn-primary">Contact us</a>
+		<div class="citation--inner">
+			<div class="citation-content">
+				{% for block in settings.common.SiteSettings.incident_sidebar_note %}
+					{% if block.block_type == 'heading' %}
+						<h2 class="paragraph-subtitle">{{ block.value.content }}</h2>
+					{% else %}
+						<div class="rich-text citation-body">{% include_block block %}</div>
+					{% endif %}
+				{% endfor %}
+				<div class="citation-link">
+					<a href="#" class="btn btn-primary">Contact us</a>
+				</div>
+			</div>
 		</div>
 	</section>
 {% endif %}

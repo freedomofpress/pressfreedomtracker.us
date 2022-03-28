@@ -12,7 +12,7 @@ factory.Faker.add_provider(StreamfieldProvider)
 class HomePageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = HomePage
-        exclude = ('about_text')
+        exclude = ('about_text',)
 
     about_text = factory.Faker('paragraph', nb_sentences=10)
 

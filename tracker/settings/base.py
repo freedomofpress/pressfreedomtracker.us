@@ -66,8 +66,6 @@ INSTALLED_APPS = [
     'wagtail.images',
     'wagtail.search',
     'wagtail.admin',
-    # See https://docs.wagtail.io/en/stable/reference/contrib/legacy_richtext.html#legacy-richtext
-    'wagtail.contrib.legacy.richtext',
     'wagtail.core',
 
     'modelcluster',
