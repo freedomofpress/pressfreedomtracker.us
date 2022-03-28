@@ -459,7 +459,7 @@ class Command(BaseCommand):
         if footer_menu:
             footer_settings.menu = footer_menu
         footer_settings.save()
-        SiteSettingsFactory(site=site)
+        SiteSettingsFactory(site=site, citation_contact_page=faq_page)
         EmailSettingsFactory(site=site)
 
         # Create superuser

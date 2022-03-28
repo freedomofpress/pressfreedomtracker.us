@@ -11,9 +11,11 @@
 						<div class="rich-text citation-body">{% include_block block %}</div>
 					{% endif %}
 				{% endfor %}
-				<div class="citation-link">
-					<a href="#" class="btn btn-primary">Contact us</a>
-				</div>
+				{% if settings.common.SiteSettings.citation_contact_page %}
+					<div class="citation-link">
+						<a href="{% pageurl settings.common.SiteSettings.citation_contact_page %}" class="btn btn-primary">Contact us</a>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 	</section>
