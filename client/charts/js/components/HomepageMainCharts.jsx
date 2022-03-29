@@ -44,8 +44,9 @@ function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 			: currentDate.getUTCMonth() > 6 || monthNumber <= 6
 			? currentDate.getUTCFullYear()
 			: currentDate.getUTCFullYear() - 1
-		const firstDayMonth = `${year}-${monthNumber}-1`
-		const lastDayMonth = `${year}-${monthNumber}-${new Date(year, monthNumber, 0).getDate()}`
+		const paddedMonthNumber = String(monthNumber).padStart(2, '0')
+		const firstDayMonth = `${year}-${paddedMonthNumber}-01`
+		const lastDayMonth = `${year}-${paddedMonthNumber}-${new Date(year, monthNumber, 0).getDate()}`
 		parameters.push(`date_lower=${firstDayMonth}&date_upper=${lastDayMonth}`)
 	}
 
@@ -54,22 +55,19 @@ function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 	}
 
 	if (filtersApplied.year !== null && filtersApplied.monthName === undefined) {
-		parameters.push(`date_lower=${filtersApplied.year}-1-1&date_upper=${filtersApplied.year}-12-31`)
+		parameters.push(`date_lower=${filtersApplied.year}-01-01&date_upper=${filtersApplied.year}-12-31`)
 	}
 
 	if (filtersApplied.sixMonths && filtersApplied.monthName === undefined) {
 		const currentMonth = currentDate.getUTCMonth()
 		const currentYear = currentDate.getUTCFullYear()
-		const previousYear = currentDate.getUTCFullYear() - 1
-		const firstDate = `${currentMonth > 5 ? currentYear : previousYear}-${
-			currentMonth > 5 ? currentMonth - 5 : 11 - (5 - currentMonth)
-		}-1`
-		const lastDate = `${currentYear}-${currentMonth}-${new Date(
-			currentYear,
-			currentMonth,
-			0
-		).getDay()}`
-		parameters.push(`date_lower=${firstDate}&date_upper=${lastDate}`)
+
+		const lastDate = new Date(currentYear, currentMonth + 1, 0)  // last day of the current month
+		const firstDate = new Date(currentYear, currentMonth - 5, 1)  // first day of the month five months ago
+		const firstDateFormatted = firstDate.toISOString().substring(0, 10)  // Extract the date portion of the ISO datetime
+		const lastDateFormatted = lastDate.toISOString().substring(0, 10)
+
+		parameters.push(`date_lower=${firstDateFormatted}&date_upper=${lastDateFormatted}`)
 	}
 
 	if (filtersApplied.tag !== null) {
