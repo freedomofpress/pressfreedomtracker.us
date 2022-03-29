@@ -1,72 +1,74 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 {% with size=size|default:"big" %}
 	<article class="incident-card">
-		<a class="text-link text-link--card" href="{% pageurl incident %}">
+		<div class="incident-card--inner">
 			{% if photo %}
 				{% image photo fill-665x440 as x1 %}
 				<img
-					class="card-image-{{ size }}"
+					class="card-image card-image-{{ size }}"
 					alt="{{ x1.alt }}"
 					src="{{ x1.url }}"
 				>
 			{% endif %}
-			<h3 class="card-title-{{ size }}">
-				{{ incident.title }}
+			<h3 class="card-title card-title-{{ size }}">
+				<a class="text-link text-link--card" href="{% pageurl incident %}">
+					{{ incident.title }}
+				</a>
 			</h3>
-		</a>
 
-		{% if not photo %}
-			<p>
-				{{ incident.teaser }}
-			</p>
-		{% endif %}
+			{% if not photo %}
+				<p>
+					{{ incident.teaser }}
+				</p>
+			{% endif %}
 
-		<ol class="incident-card__categories">
-			{% for categorization in incident.categories.all %}
-				{% with category=categorization.category %}
-					<li>
-						<a class="text-link category category-{{ category.page_symbol }}" href="{% pageurl category %}">{{ category.title }}</a>
-					</li>
-				{% endwith %}
-			{% endfor %}
-		</ol>
+			<ol class="incident-card__categories">
+				{% for categorization in incident.categories.all %}
+					{% with category=categorization.category %}
+						<li>
+							<a class="text-link category category-{{ category.page_symbol }}" href="{% pageurl category %}">{{ category.title }}</a>
+						</li>
+					{% endwith %}
+				{% endfor %}
+			</ol>
 
-		<dl class="database-card-table__incident-details">
-			{% if incident.latest_update and incident.updates.all.exists %}
+			<dl class="database-card-table__incident-details">
+				{% if incident.latest_update and incident.updates.all.exists %}
+					<div class="database-card-table__row">
+						<dt class="database-card-table__label database-card-table__label--bold">Updated on</dt>
+						<dd class="database-card-table__value">
+							<time datetime="{{ incident.latest_update|date:"c" }}">
+								{{ incident.latest_update|date:"F j, Y" }}
+							</time>
+						</dd>
+					</div>
+				{% endif %}
+
 				<div class="database-card-table__row">
-					<dt class="database-card-table__label database-card-table__label--bold">Updated on</dt>
+					<dt class="database-card-table__label database-card-table__label--bold">
+						Date of Incident
+					</dt>
 					<dd class="database-card-table__value">
-						<time datetime="{{ incident.latest_update|date:"c" }}">
-							{{ incident.latest_update|date:"F j, Y" }}
+						<time datetime="{{ incident.date|date:"c" }}">
+							{{ incident.date|date:"F j, Y" }}
 						</time>
 					</dd>
 				</div>
-			{% endif %}
-
-			<div class="database-card-table__row">
-				<dt class="database-card-table__label database-card-table__label--bold">
-					Date of Incident
-				</dt>
-				<dd class="database-card-table__value">
-					<time datetime="{{ incident.date|date:"c" }}">
-						{{ incident.date|date:"F j, Y" }}
-					</time>
-				</dd>
-			</div>
-			<div class="database-card-table__row">
-				<dt class="database-card-table__label database-card-table__label--bold">Location</dt>
-				<dd class="database-card-table__value">{{ incident.city }}, {{ incident.state.name }}</dd>
-			</div>
-			{% if incident.get_all_targets_for_display %}
 				<div class="database-card-table__row">
-					<dt class="database-card-table__label database-card-table__label--bold">Targets</dt>
-
-					<dd class="database-card-table__value">
-						{{ incident.get_all_targets_for_display }}
-					</dd>
+					<dt class="database-card-table__label database-card-table__label--bold">Location</dt>
+					<dd class="database-card-table__value">{{ incident.city }}, {{ incident.state.name }}</dd>
 				</div>
-			{% endif %}
-		</dl>
-		{% include 'incident/_incident_tags.html' %}
+				{% if incident.get_all_targets_for_display %}
+					<div class="database-card-table__row">
+						<dt class="database-card-table__label database-card-table__label--bold">Targets</dt>
+
+						<dd class="database-card-table__value">
+							{{ incident.get_all_targets_for_display }}
+						</dd>
+					</div>
+				{% endif %}
+			</dl>
+			{% include 'incident/_incident_tags.html' %}
+		</div>
 	</article>
 {% endwith %}

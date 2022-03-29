@@ -2,7 +2,7 @@
 
 {% for item in value.table_data %}
      <li class="list-table__row">
-        <div class="list-table__item info-table--col-3 {% if item.image %}info-table--row-3 info-table--col-3-desktop{% endif %}">
+        <div class="anim-table-row list-table__item info-table--col-3 {% if item.image %}info-table--row-3 info-table--col-3-desktop{% endif %}">
             {% if item.image %}
                 <div class="list-table__col list-table__small_screen_only">
                     <figure class="info-table__figure">
@@ -15,7 +15,7 @@
 				<a href="{{ item.url }}" class="text-link" rel="nofollow">{{ item.url }}</a>
 			</div>
             <div class="list-table__link info-table__col-right info-table__col-bottom">
-				<a href="{{ item.url }}" aria-label="Visit link {{ item.title }}">{{ value.cta_label }} &rarr;</a>
+				<a href="{{ item.url }}" aria-label="Visit link {{ item.title }}" class="anim-table-mainlink">{{ value.cta_label }} &rarr;</a>
 			</div>
 		</div>
     </li>
