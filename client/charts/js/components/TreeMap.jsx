@@ -4,6 +4,16 @@ import { AnimatedDataset } from 'react-animated-dataset'
 import Tooltip from './Tooltip'
 import { colors } from '../lib/utilities.js'
 
+// React-animated-dataset uses an older version of
+// d3 selection and in order to access some of its
+// functionality, we need this separate import.
+// See for details:
+// * https://github.com/accurat/react-animated-dataset/issues/24
+// * https://github.com/d3/d3-selection/tree/v1.4.1#event
+//
+// This can be removed when RAD is updated to use a newer version
+import { event as d3event } from 'd3-selection'
+
 const margins = {
 	top: 0,
 	left: 0,
@@ -238,12 +248,16 @@ export default function TreeMap({
 							pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
 						}}
 						events={{
-							onMouseMove: updateTooltipPosition,
+							// In a future, if we update our version of d3-selection the first
+							// argument will be a MouseEvent, eliminating the need for d3event here
+							onMouseMove: () => {
+								updateTooltipPosition(d3event)
+							},
 							onMouseLeave: () => {
 								setHoveredElement(null)
 							},
-							// In a future version of react-animated-dataset the functions here may need to be
-							// updated to take arguments (MouseEvent, d) instead
+							// In a future, if we update our version of d3-selection this may
+							// need to be updated to take arguments (MouseEvent, d) instead
 							onMouseEnter: d => setHoveredElement(d.category),
 							onMouseUp: d => openSearchPage(d.category),
 						}}
@@ -285,7 +299,6 @@ export default function TreeMap({
 									: 'black',
 							strokeWidth: borderWidth.normal + 1,
 							pointerEvents: 'none',
-							fill: (d) => d.category,
 						}}
 						keyFn={(d) => d.category}
 						duration={250}
