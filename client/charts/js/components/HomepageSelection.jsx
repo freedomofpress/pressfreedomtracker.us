@@ -33,13 +33,13 @@ export default function HomepageSelection({
 	data: originalDataset,
 	numberOfTags = 5,
 	selectedTags = chooseMostFrequentTags(originalDataset, numberOfTags),
-	currentDate = new Date(),
+	currentDate = new Date(Date.UTC()),
 	filtersApplied,
 	setFiltersApplied,
 }) {
 	const years = d3
 		.groups(
-			originalDataset.map((d) => ({ year: new Date(d.date).getFullYear() })),
+			originalDataset.map((d) => ({ year: d.date.getUTCFullYear() })),
 			(d) => d.year
 		)
 		.map((d) => d[0])

@@ -33,6 +33,8 @@
 				class="homepage-section-inner js-homepage-charts"
 				data-tags="{{ data_viz_tags_json|escape }}"
 				{% if search_page %}data-database-path="{% pageurl search_page %}"{% endif %}
+				{% if page.viz_data_start %}data-start-date="{{ page.viz_data_start|date:'c' }}"{% endif %}
+				{% if page.viz_data_end %}data-start-date="{{ page.viz_data_end|date:'c' }}"{% endif %}
 			></div>
 		</div>
 	{% endwith %}

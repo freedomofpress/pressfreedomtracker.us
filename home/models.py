@@ -11,6 +11,7 @@ from wagtail.admin.edit_handlers import (
     MultiFieldPanel,
     TabbedInterface,
     ObjectList,
+    FieldRowPanel,
 )
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page, Orderable, Site
@@ -95,6 +96,18 @@ class HomePage(MetadataPageMixin, Page):
         blank=True,
     )
 
+    # Data Viz Configuration
+    viz_data_start = models.DateField(
+        'Start Date',
+        blank=True,
+        null=True,
+    )
+    viz_data_end = models.DateField(
+        'End Date',
+        blank=True,
+        null=True,
+    )
+
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             FieldPanel('about'),
@@ -149,6 +162,20 @@ class HomePage(MetadataPageMixin, Page):
 
     data_viz_panels = [
         InlinePanel('data_viz_tags', heading="Tag Options"),
+        # A bit of a visual hack--wrapping a FieldRowPanel in a MultiFieldPanel
+        # makes the FieldRowPanel a more reasonable width in the interface
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel('viz_data_start'),
+                        FieldPanel('viz_data_end'),
+                    ],
+                    classname='label-above',
+                )
+            ],
+            heading='Limit Data',
+        )
     ]
 
     edit_handler = TabbedInterface(

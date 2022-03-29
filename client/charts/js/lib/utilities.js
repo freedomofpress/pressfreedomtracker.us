@@ -44,29 +44,13 @@ export function filterDatasetByTag(dataset, tag) {
 }
 
 export function filterDatasetByYear(dataset, year) {
-	return dataset.filter((d) => new Date(d.date).getFullYear() === year)
+	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
+// Filter to the last six months, inclusive on the *currentDate* end
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
-	const currentYear = currentDate.getFullYear()
-	const currentMonth = currentDate.getMonth()
-
-	if (currentMonth >= 5) {
-		return dataset.filter(
-			(d) =>
-				new Date(d.date).getFullYear() === currentYear &&
-				new Date(d.date).getMonth() >= currentMonth - 5 &&
-				new Date(d.date).getMonth() <= currentMonth
-		)
-	}
-	const monthSixMonthsAgo = 11 - (5 - currentMonth)
-	return dataset.filter(
-		(d) =>
-			(new Date(d.date).getFullYear() === currentYear &&
-				new Date(d.date).getMonth() <= currentMonth) ||
-			(new Date(d.date).getFullYear() === currentYear - 1 &&
-				new Date(d.date).getMonth() >= monthSixMonthsAgo)
-	)
+	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
+	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
 }
 
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
@@ -89,12 +73,12 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 	const datasetGroupedByMonth = d3
 		.groups(
-			dataset.map((d) => ({ month: new Date(d.date).getMonth() })),
+			dataset.map((d) => ({ month: d.date.getUTCMonth() })),
 			(d) => d.month
 		)
 		.map((d) => ({ month: d[0], monthName: monthNames[d[0]], numberOfIncidents: d[1].length }))
 
-	const currentMonth = currentDate.getMonth()
+	const currentMonth = currentDate.getUTCMonth()
 	const monthsConsidered =
 		currentMonth < 5
 			? monthNames.slice(currentMonth - 5).concat(monthNames.slice(0, currentMonth + 1))

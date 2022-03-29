@@ -40,7 +40,7 @@ DataLoader.propTypes = {
 }
 
 DataLoader.defaultProps = {
-	dataParser: d3.csvParse,
+	dataParser: data => d3.csvParse(data, d3.autoType),
 	dataKey: 'data',
 	loadingComponent: <Loader />,
 	children: [],

@@ -41,9 +41,9 @@ function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 		const monthNumber = monthIndexes[filtersApplied.monthName]
 		const year = !filtersApplied.sixMonths
 			? filtersApplied.year
-			: currentDate.getMonth() > 6 || monthNumber <= 6
-			? currentDate.getFullYear()
-			: currentDate.getFullYear() - 1
+			: currentDate.getUTCMonth() > 6 || monthNumber <= 6
+			? currentDate.getUTCFullYear()
+			: currentDate.getUTCFullYear() - 1
 		const firstDayMonth = `${year}-${monthNumber}-1`
 		const lastDayMonth = `${year}-${monthNumber}-${new Date(year, monthNumber, 0).getDate()}`
 		parameters.push(`date_lower=${firstDayMonth}&date_upper=${lastDayMonth}`)
@@ -58,9 +58,9 @@ function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 	}
 
 	if (filtersApplied.sixMonths && filtersApplied.monthName === undefined) {
-		const currentMonth = currentDate.getMonth()
-		const currentYear = currentDate.getFullYear()
-		const previousYear = currentDate.getFullYear() - 1
+		const currentMonth = currentDate.getUTCMonth()
+		const currentYear = currentDate.getUTCFullYear()
+		const previousYear = currentDate.getUTCFullYear() - 1
 		const firstDate = `${currentMonth > 5 ? currentYear : previousYear}-${
 			currentMonth > 5 ? currentMonth - 5 : 11 - (5 - currentMonth)
 		}-1`

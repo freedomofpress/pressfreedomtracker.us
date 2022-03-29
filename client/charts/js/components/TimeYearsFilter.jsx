@@ -11,13 +11,13 @@ export default function TimeYearsFilter({
 	filterParameters: selectedYears,
 	setFilterParameters: setSelectedYears,
 }) {
-	const [minDateYear, maxDateYear] = dateExtents.map((date) => date.getFullYear())
+	const [minDateYear, maxDateYear] = dateExtents.map((date) => date.getUTCFullYear())
 	const allYears = range(minDateYear, maxDateYear)
 
 	const initializeYears = Object.fromEntries(allYears.map((year) => [year, 0]))
 
 	const countedYears = countBy(dataset, (d) => {
-		return new Date(d.date).getFullYear()
+		return d.date.getUTCFullYear()
 	})
 
 	const years = { ...initializeYears, ...countedYears }

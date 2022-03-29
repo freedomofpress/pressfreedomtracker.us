@@ -51,31 +51,31 @@ describe(filterDatasetByYear, () => {
 	test('filterDatasetByYear simple case', () => {
 		const x = filterDatasetByYear(
 			[
-				{ date: '2020-01-01' },
-				{ date: '2021-01-01' },
-				{ date: '2022-01-01' },
-				{ date: '2022-01-02' },
+				{ date: new Date(Date.UTC(2020, 1, 1)) },
+				{ date: new Date(Date.UTC(2021, 1, 1)) },
+				{ date: new Date(Date.UTC(2022, 1, 1)) },
+				{ date: new Date(Date.UTC(2022, 1, 2)) },
 			],
 			2022
 		)
 
-		expect(x).toEqual([{ date: '2022-01-01' }, { date: '2022-01-02' }])
+		expect(x).toEqual([{ date: new Date(Date.UTC(2022, 1, 1)) }, { date: new Date(Date.UTC(2022, 1, 2)) }])
 	})
 
 	test('filterDatasetByYear complex dataset', () => {
 		expect(
 			filterDatasetByYear(
 				[
-					{ date: '2020-01-01', column: 2 },
-					{ date: '2021-01-01', column: 3 },
-					{ date: '2022-01-01', column: 2 },
-					{ date: '2022-01-02', column: 4 },
+					{ date: new Date(Date.UTC(2020, 1, 1)), column: 2 },
+					{ date: new Date(Date.UTC(2021, 1, 1)), column: 3 },
+					{ date: new Date(Date.UTC(2022, 1, 1)), column: 2 },
+					{ date: new Date(Date.UTC(2022, 1, 2)), column: 4 },
 				],
 				2022
 			)
 		).toEqual([
-			{ date: '2022-01-01', column: 2 },
-			{ date: '2022-01-02', column: 4 },
+			{ date: new Date(Date.UTC(2022, 1, 1)), column: 2 },
+			{ date: new Date(Date.UTC(2022, 1, 2)), column: 4 },
 		])
 	})
 })
@@ -85,34 +85,34 @@ describe(filterDatasetByLastSixMonths, () => {
 		expect(
 			filterDatasetByLastSixMonths(
 				[
-					{ date: '2020-01-01' },
-					{ date: '2020-02-01' },
-					{ date: '2020-03-01' },
-					{ date: '2020-04-01' },
-					{ date: '2020-05-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-07-01' },
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
-					{ date: '2020-10-01' },
-					{ date: '2020-11-01' },
-					{ date: '2020-12-01' },
-					{ date: '2021-01-01' },
-					{ date: '2021-02-01' },
-					{ date: '2021-03-01' },
-					{ date: '2021-04-01' },
-					{ date: '2021-05-01' },
-					{ date: '2021-06-01' },
+					{ date: new Date(Date.UTC(2020, 0, 1)) },
+					{ date: new Date(Date.UTC(2020, 1, 1)) },
+					{ date: new Date(Date.UTC(2020, 2, 1)) },
+					{ date: new Date(Date.UTC(2020, 3, 1)) },
+					{ date: new Date(Date.UTC(2020, 4, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 6, 1)) },
+					{ date: new Date(Date.UTC(2020, 7, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
+					{ date: new Date(Date.UTC(2020, 9, 1)) },
+					{ date: new Date(Date.UTC(2020, 10, 1)) },
+					{ date: new Date(Date.UTC(2020, 11, 1)) },
+					{ date: new Date(Date.UTC(2021, 0, 1)) },
+					{ date: new Date(Date.UTC(2021, 1, 1)) },
+					{ date: new Date(Date.UTC(2021, 2, 1)) },
+					{ date: new Date(Date.UTC(2021, 3, 1)) },
+					{ date: new Date(Date.UTC(2021, 4, 1)) },
+					{ date: new Date(Date.UTC(2021, 5, 1)) },
 				],
-				new Date(2021, 5, 1)
+				new Date(Date.UTC(2021, 5, 1))
 			)
 		).toEqual([
-			{ date: '2021-01-01' },
-			{ date: '2021-02-01' },
-			{ date: '2021-03-01' },
-			{ date: '2021-04-01' },
-			{ date: '2021-05-01' },
-			{ date: '2021-06-01' },
+			{ date: new Date(Date.UTC(2021, 0, 1)) },
+			{ date: new Date(Date.UTC(2021, 1, 1)) },
+			{ date: new Date(Date.UTC(2021, 2, 1)) },
+			{ date: new Date(Date.UTC(2021, 3, 1)) },
+			{ date: new Date(Date.UTC(2021, 4, 1)) },
+			{ date: new Date(Date.UTC(2021, 5, 1)) },
 		])
 	})
 
@@ -120,29 +120,29 @@ describe(filterDatasetByLastSixMonths, () => {
 		expect(
 			filterDatasetByLastSixMonths(
 				[
-					{ date: '2020-01-01' },
-					{ date: '2020-02-01' },
-					{ date: '2020-03-01' },
-					{ date: '2020-04-01' },
-					{ date: '2020-05-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-07-01' },
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
-					{ date: '2020-10-01' },
-					{ date: '2020-11-01' },
-					{ date: '2020-12-01' },
-					{ date: '2021-01-01' },
+					{ date: new Date(Date.UTC(2020, 1, 1)) },
+					{ date: new Date(Date.UTC(2020, 2, 1)) },
+					{ date: new Date(Date.UTC(2020, 3, 1)) },
+					{ date: new Date(Date.UTC(2020, 4, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 6, 1)) },
+					{ date: new Date(Date.UTC(2020, 7, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
+					{ date: new Date(Date.UTC(2020, 9, 1)) },
+					{ date: new Date(Date.UTC(2020, 10, 1)) },
+					{ date: new Date(Date.UTC(2020, 11, 1)) },
+					{ date: new Date(Date.UTC(2020, 12, 1)) },
+					{ date: new Date(Date.UTC(2021, 1, 1)) },
 				],
-				new Date(2021, 1, 1)
+				new Date(Date.UTC(2021, 1, 1))
 			)
 		).toEqual([
-			{ date: '2020-08-01' },
-			{ date: '2020-09-01' },
-			{ date: '2020-10-01' },
-			{ date: '2020-11-01' },
-			{ date: '2020-12-01' },
-			{ date: '2021-01-01' },
+			{ date: new Date(Date.UTC(2020, 8, 1)) },
+			{ date: new Date(Date.UTC(2020, 9, 1)) },
+			{ date: new Date(Date.UTC(2020, 10, 1)) },
+			{ date: new Date(Date.UTC(2020, 11, 1)) },
+			{ date: new Date(Date.UTC(2020, 12, 1)) },
+			{ date: new Date(Date.UTC(2021, 1, 1)) },
 		])
 	})
 
@@ -150,29 +150,28 @@ describe(filterDatasetByLastSixMonths, () => {
 		expect(
 			filterDatasetByLastSixMonths(
 				[
-					{ date: '2020-01-01' },
-					{ date: '2020-02-01' },
-					{ date: '2020-03-01' },
-					{ date: '2020-04-01' },
-					{ date: '2020-05-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-07-01' },
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
-					{ date: '2020-10-01' },
-					{ date: '2020-11-01' },
-					{ date: '2020-12-01' },
-					{ date: '2021-01-01' },
+					{ date: new Date(Date.UTC(2020, 1, 1)) },
+					{ date: new Date(Date.UTC(2020, 2, 1)) },
+					{ date: new Date(Date.UTC(2020, 3, 1)) },
+					{ date: new Date(Date.UTC(2020, 4, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 6, 1)) },
+					{ date: new Date(Date.UTC(2020, 7, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
+					{ date: new Date(Date.UTC(2020, 9, 1)) },
+					{ date: new Date(Date.UTC(2020, 10, 1)) },
+					{ date: new Date(Date.UTC(2020, 11, 1)) },
+					{ date: new Date(Date.UTC(2021, 0, 1)) },
 				],
-				new Date(2020, 11, 1)
+				new Date(Date.UTC(2020, 11, 1))
 			)
 		).toEqual([
-			{ date: '2020-07-01' },
-			{ date: '2020-08-01' },
-			{ date: '2020-09-01' },
-			{ date: '2020-10-01' },
-			{ date: '2020-11-01' },
-			{ date: '2020-12-01' },
+			{ date: new Date(Date.UTC(2020, 6, 1)) },
+			{ date: new Date(Date.UTC(2020, 7, 1)) },
+			{ date: new Date(Date.UTC(2020, 8, 1)) },
+			{ date: new Date(Date.UTC(2020, 9, 1)) },
+			{ date: new Date(Date.UTC(2020, 10, 1)) },
+			{ date: new Date(Date.UTC(2020, 11, 1)) },
 		])
 	})
 })
@@ -182,29 +181,30 @@ describe(filterDatasetByFiltersApplied, () => {
 		expect(
 			filterDatasetByFiltersApplied(
 				[
-					{ date: '2020-06-01', tags: 'test1' },
-					{ date: '2020-07-01', tags: 'test1' },
-					{ date: '2020-08-01', tags: 'test1' },
-					{ date: '2020-09-01', tags: 'test1' },
-					{ date: '2020-10-01', tags: 'test1' },
-					{ date: '2020-11-01', tags: 'test1' },
-					{ date: '2020-12-01', tags: 'test1' },
-					{ date: '2021-01-01', tags: 'test1' },
-					{ date: '2021-02-01', tags: 'test1' },
-					{ date: '2021-03-01', tags: 'test1' },
-					{ date: '2021-04-01', tags: 'test1' },
-					{ date: '2021-05-01', tags: 'test1' },
-					{ date: '2021-06-01', tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 6, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 7, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 8, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 9, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 10, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 11, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 0, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 5, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 6, 1)), tags: 'test1' },
 				],
 				{ tag: null, year: 2021, sixMonths: false }
 			)
 		).toEqual([
-			{ date: '2021-01-01', tags: 'test1' },
-			{ date: '2021-02-01', tags: 'test1' },
-			{ date: '2021-03-01', tags: 'test1' },
-			{ date: '2021-04-01', tags: 'test1' },
-			{ date: '2021-05-01', tags: 'test1' },
-			{ date: '2021-06-01', tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 0, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 5, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 6, 1)), tags: 'test1' },
 		])
 	})
 
@@ -212,28 +212,28 @@ describe(filterDatasetByFiltersApplied, () => {
 		expect(
 			filterDatasetByFiltersApplied(
 				[
-					{ date: '2020-06-01', tags: 'test1' },
-					{ date: '2020-07-01', tags: 'test1' },
-					{ date: '2020-08-01', tags: 'test1' },
-					{ date: '2020-09-01', tags: 'test1' },
-					{ date: '2020-10-01', tags: 'test1' },
-					{ date: '2020-11-01', tags: 'test1' },
-					{ date: '2020-12-01', tags: 'test1' },
-					{ date: '2021-01-01', tags: 'test1,test2' },
-					{ date: '2021-02-01', tags: 'test1, test2' },
-					{ date: '2021-03-01', tags: 'test1, test2' },
-					{ date: '2021-04-01', tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 6, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 7, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 8, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 9, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 10, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 11, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 12, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1,test2' },
+					{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
 				{ tag: null, year: null, sixMonths: true },
-				new Date(2021, 4, 1)
+				new Date(Date.UTC(2021, 4, 1))
 			)
 		).toEqual([
-			{ date: '2020-11-01', tags: 'test1' },
-			{ date: '2020-12-01', tags: 'test1' },
-			{ date: '2021-01-01', tags: 'test1,test2' },
-			{ date: '2021-02-01', tags: 'test1, test2' },
-			{ date: '2021-03-01', tags: 'test1, test2' },
-			{ date: '2021-04-01', tags: 'test1' },
+			{ date: new Date(Date.UTC(2020, 11, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2020, 12, 1)), tags: 'test1' },
+			{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1,test2' },
+			{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1, test2' },
+			{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
+			{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 		])
 	})
 
@@ -241,25 +241,25 @@ describe(filterDatasetByFiltersApplied, () => {
 		expect(
 			filterDatasetByFiltersApplied(
 				[
-					{ date: '2020-06-01', tags: 'test1' },
-					{ date: '2020-07-01', tags: 'test1' },
-					{ date: '2020-08-01', tags: 'test1' },
-					{ date: '2020-09-01', tags: 'test1' },
-					{ date: '2020-10-01', tags: 'test1' },
-					{ date: '2020-11-01', tags: 'test1' },
-					{ date: '2020-12-01', tags: 'test1' },
-					{ date: '2021-01-01', tags: 'test1,test2' },
-					{ date: '2021-02-01', tags: 'test1, test2' },
-					{ date: '2021-03-01', tags: 'test1, test2' },
-					{ date: '2021-04-01', tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 6, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 7, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 8, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 9, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 10, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 11, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 12, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1,test2' },
+					{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
 				{ tag: 'test2', year: null, sixMonths: false },
-				new Date(2021, 4, 1)
+				new Date(Date.UTC(2021, 4, 1))
 			)
 		).toEqual([
-			{ date: '2021-01-01', tags: 'test1,test2' },
-			{ date: '2021-02-01', tags: 'test1, test2' },
-			{ date: '2021-03-01', tags: 'test1, test2' },
+			{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1,test2' },
+			{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1, test2' },
+			{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
 		])
 	})
 
@@ -267,25 +267,25 @@ describe(filterDatasetByFiltersApplied, () => {
 		expect(
 			filterDatasetByFiltersApplied(
 				[
-					{ date: '2020-06-01', tags: 'test1' },
-					{ date: '2020-07-01', tags: 'test1' },
-					{ date: '2020-08-01', tags: 'test1' },
-					{ date: '2020-09-01', tags: 'test1' },
-					{ date: '2020-10-01', tags: 'test1,test2' },
-					{ date: '2020-11-01', tags: 'test1' },
-					{ date: '2020-12-01', tags: 'test1' },
-					{ date: '2021-01-01', tags: 'test1,test2' },
-					{ date: '2021-02-01', tags: 'test1, test2' },
-					{ date: '2021-03-01', tags: 'test1, test2' },
-					{ date: '2021-04-01', tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 6, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 7, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 8, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 9, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 10, 1)), tags: 'test1,test2' },
+					{ date: new Date(Date.UTC(2020, 11, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 12, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1,test2' },
+					{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
 				{ tag: 'test2', year: null, sixMonths: true },
-				new Date(2021, 4, 1)
+				new Date(Date.UTC(2021, 4, 1))
 			)
 		).toEqual([
-			{ date: '2021-01-01', tags: 'test1,test2' },
-			{ date: '2021-02-01', tags: 'test1, test2' },
-			{ date: '2021-03-01', tags: 'test1, test2' },
+			{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1,test2' },
+			{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1, test2' },
+			{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
 		])
 	})
 
@@ -293,22 +293,22 @@ describe(filterDatasetByFiltersApplied, () => {
 		expect(
 			filterDatasetByFiltersApplied(
 				[
-					{ date: '2020-06-01', tags: 'test1' },
-					{ date: '2020-07-01', tags: 'test1' },
-					{ date: '2020-08-01', tags: 'test1' },
-					{ date: '2020-09-01', tags: 'test1' },
-					{ date: '2020-10-01', tags: 'test1,test2' },
-					{ date: '2020-11-01', tags: 'test1' },
-					{ date: '2020-12-01', tags: 'test1' },
-					{ date: '2021-01-01', tags: 'test1,test2' },
-					{ date: '2021-02-01', tags: 'test1, test2' },
-					{ date: '2021-03-01', tags: 'test1, test2' },
-					{ date: '2021-04-01', tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 6, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 7, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 8, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 9, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 10, 1)), tags: 'test1,test2' },
+					{ date: new Date(Date.UTC(2020, 11, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2020, 12, 1)), tags: 'test1' },
+					{ date: new Date(Date.UTC(2021, 1, 1)), tags: 'test1,test2' },
+					{ date: new Date(Date.UTC(2021, 2, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
+					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
 				{ tag: 'test2', year: 2020, sixMonths: false },
-				new Date(2021, 4, 1)
+				new Date(Date.UTC(2021, 4, 1))
 			)
-		).toEqual([{ date: '2020-10-01', tags: 'test1,test2' }])
+		).toEqual([{ date: new Date(Date.UTC(2020, 10, 1)), tags: 'test1,test2' }])
 	})
 })
 
@@ -317,23 +317,23 @@ describe(groupByMonthSorted, () => {
 		expect(
 			groupByMonthSorted(
 				[
-					{ date: '2020-01-01' },
-					{ date: '2020-02-01' },
-					{ date: '2020-03-01' },
-					{ date: '2020-04-01' },
-					{ date: '2020-05-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-07-01' },
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
-					{ date: '2020-10-01' },
-					{ date: '2020-11-01' },
-					{ date: '2020-12-01' },
+					{ date: new Date(Date.UTC(2020, 0, 1)) },
+					{ date: new Date(Date.UTC(2020, 1, 1)) },
+					{ date: new Date(Date.UTC(2020, 2, 1)) },
+					{ date: new Date(Date.UTC(2020, 3, 1)) },
+					{ date: new Date(Date.UTC(2020, 4, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 6, 1)) },
+					{ date: new Date(Date.UTC(2020, 7, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
+					{ date: new Date(Date.UTC(2020, 9, 1)) },
+					{ date: new Date(Date.UTC(2020, 10, 1)) },
+					{ date: new Date(Date.UTC(2020, 11, 1)) },
 				],
 				false,
-				new Date(2020, 9, 1)
+				new Date(Date.UTC(2020, 9, 1))
 			)
 		).toEqual([
 			{ month: 0, monthName: 'Jan', numberOfIncidents: 1 },
@@ -355,14 +355,14 @@ describe(groupByMonthSorted, () => {
 		expect(
 			groupByMonthSorted(
 				[
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 7, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
 				],
 				false,
-				new Date(2020, 9, 1)
+				new Date(Date.UTC(2020, 9, 1))
 			)
 		).toEqual([
 			{ month: 0, monthName: 'Jan', numberOfIncidents: 0 },
@@ -384,14 +384,14 @@ describe(groupByMonthSorted, () => {
 		expect(
 			groupByMonthSorted(
 				[
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
+					{ date: new Date(Date.UTC(2020, 7, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
 				],
 				false,
-				new Date(2020, 9, 1)
+				new Date(Date.UTC(2020, 9, 1))
 			)
 		).toEqual([
 			{ month: 0, monthName: 'Jan', numberOfIncidents: 0 },
@@ -413,15 +413,15 @@ describe(groupByMonthSorted, () => {
 		expect(
 			groupByMonthSorted(
 				[
-					{ date: '2020-04-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
+					{ date: new Date(Date.UTC(2020, 3, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 7, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
 				],
 				true,
-				new Date(2020, 11, 1)
+				new Date(Date.UTC(2020, 11, 1))
 			)
 		).toEqual([
 			{ month: 6, monthName: 'Jul', numberOfIncidents: 0 },
@@ -437,15 +437,15 @@ describe(groupByMonthSorted, () => {
 		expect(
 			groupByMonthSorted(
 				[
-					{ date: '2020-04-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-06-01' },
-					{ date: '2020-08-01' },
-					{ date: '2020-09-01' },
+					{ date: new Date(Date.UTC(2020, 3, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 5, 1)) },
+					{ date: new Date(Date.UTC(2020, 6, 1)) },
+					{ date: new Date(Date.UTC(2020, 8, 1)) },
 				],
 				true,
-				new Date(2021, 1, 1)
+				new Date(Date.UTC(2021, 1, 1))
 			)
 		).toEqual([
 			{ month: 8, monthName: 'Sep', numberOfIncidents: 1 },
