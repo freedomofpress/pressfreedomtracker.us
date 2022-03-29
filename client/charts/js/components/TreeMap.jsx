@@ -219,6 +219,7 @@ export default function TreeMap({
 						y1={height - paddings.bottom + 0.5}
 						y2={height - paddings.bottom + 0.5}
 						style={{ stroke: 'black', strokeWidth: isHomePageDesktopView ? borderWidth.normal : 0 }}
+						shapeRendering="crispEdges"
 					/>
 					<AnimatedDataset
 						dataset={datasetStackedByCategory}
@@ -246,6 +247,7 @@ export default function TreeMap({
 							strokeWidth: borderWidth.normal,
 							cursor: 'pointer',
 							pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
+							shapeRendering: 'crispEdges',
 						}}
 						events={{
 							// In a future, if we update our version of d3-selection the first
@@ -299,6 +301,7 @@ export default function TreeMap({
 									: 'black',
 							strokeWidth: borderWidth.normal + 1,
 							pointerEvents: 'none',
+							shapeRendering: 'crispEdges',
 						}}
 						keyFn={(d) => d.category}
 						duration={250}

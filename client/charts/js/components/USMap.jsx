@@ -279,6 +279,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								stroke: 'black',
 								opacity: hoveredElement === 'Abroad' ? 1 : 0,
 								pointerEvents: 'none',
+								shapeRendering: 'crispEdges',
 							}}
 							duration={250}
 						/>
@@ -330,6 +331,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								stroke: '#8F8F8F',
 								opacity: hoveredElement === 'Abroad' ? 0 : 1,
 								pointerEvents: 'none',
+								shapeRendering: 'crispEdges',
 							}}
 							duration={250}
 						/>
@@ -371,6 +373,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								(width > 400 ? 14 : 12)
 							}
 							style={{ stroke: 'black', strokeWidth: markerBorder.small }}
+							shapeRendering="crispEdges"
 						/>
 					</g>
 				)}
@@ -381,6 +384,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 					y1={height - paddings.bottom}
 					y2={height - paddings.bottom}
 					style={{ stroke: 'black', strokeWidth: markerBorder.grid }}
+					shapeRendering="crispEdges"
 				/>
 			</svg>
 		</>
