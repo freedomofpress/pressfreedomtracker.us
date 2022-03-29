@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+{% load richtext_inline from common_tags %}
+
+{% block main %}
+	<h1 class="article-title">{{ page.title }}</h1>
+
+	<article class="topicpage">
+		{% if page.description %}
+			{{ page.description|richtext_inline }}
+		{% endif %}
+
+		<section class="topicpage__inner">
+			{% include 'common/_video_or_image.html' with image=page.photo caption=page.photo_caption %}
+		</section>
+
+		<div class="topicpage-body">
+		<section class="topicpage-body__content">
+			{% for block in page.content %}
+				<div class="topicpage__block">{% include_block block %}</div>
+			{% endfor %}
+
+			<div class="topicpage__block">
+				<a class="btn btn-secondary" href="{% pageurl page.incident_index_page %}?tags={{ page.incident_tag.title }}">
+					View incidents in database
+				</a>
+			</div>
+		</section>
+
+		<section class="topicpage-body__sidebar">
+			{% for block in page.sidebar %}
+				{% if block.block_type == 'heading_2' %}
+					{% include_block block with classname='topic-sidebar__heading'%}
+				{% else %}
+					<section class="topic-sidebar__{{ block.block_type }}">{% include_block block %}</section>
+				{% endif %}
+			{% endfor %}
+		</section>
+		</div>
+	</article>
+
+{% endblock %}
