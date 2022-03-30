@@ -32,6 +32,7 @@ class DatalistField(forms.ChoiceField):
         attrs = super().widget_attrs(widget)
         attrs['list'] = self.list_name
         attrs['class'] = 'text-field--single'
+        attrs['autocomplete'] = 'off'
         return attrs
 
 
@@ -60,7 +61,10 @@ class FilterForm(forms.Form):
                 if _type == 'text':
                     field = forms.CharField
                     kwargs['widget'] = forms.TextInput(
-                        attrs={'class': 'text-field--single'},
+                        attrs={
+                            'class': 'text-field--single',
+                            'autocomplete': 'off',
+                        },
                     )
 
                 if _type == 'autocomplete':
