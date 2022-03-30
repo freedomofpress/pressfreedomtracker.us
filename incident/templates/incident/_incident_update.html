@@ -7,7 +7,7 @@
 	<h3 class="incident-update__title">{{ update.title }}</h3>
 	<div class="incident-update__description">
 		{% for block in update.body %}
-			<section class="article-content__block">{% include_block block %}</section>
+			<section class="article-content__block {% if block.block_type == 'rich_text' %}rich-text{% endif %}">{% include_block block %}</section>
 		{% endfor %}
 	</div>
 </div>
