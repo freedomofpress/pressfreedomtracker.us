@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags render_as_template typogrify_tags %}
 
 {% block main %}
 	<h1 class="page-title category category-{{ page.page_symbol }}" id="title">{{ page.title }}</h1>
@@ -14,7 +14,7 @@
 				</a>
 			{% endwith %}
 			<div class="categorypage-summary rich-text">
-				{{ page.description|richtext }}
+				{% filter typogrify %}{% render_as_template page.description %}{% endfilter %}
 			</div>
 
 			{% if data_items %}
