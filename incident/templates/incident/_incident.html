@@ -5,6 +5,6 @@
 		{{ incident.last_updated|date:"F j, Y" }}
 	</a>
 	{% for block in incident.body %}
-		<div class="article-content__block">{% include_block block %}</div>
+		<div class="article-content__block {% if block.block_type == 'rich_text' %}rich-text{% endif %}">{% include_block block %}</div>
 	{% endfor %}
 </div>
