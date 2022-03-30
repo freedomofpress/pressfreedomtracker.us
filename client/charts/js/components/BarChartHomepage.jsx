@@ -56,7 +56,8 @@ export default function BarChartHomepage({
 
 	const yScale = d3
 		.scaleLinear()
-		.domain([0, d3.max(dataset, (d) => d[y])])
+		// Default to domain max 100 if there's no data
+		.domain([0, d3.max(dataset, (d) => d[y]) || 100])
 		.range([height - (isMobileView ? paddings.mobile : paddings.bottom), paddings.top])
 		.nice(numberOfTicks)
 
