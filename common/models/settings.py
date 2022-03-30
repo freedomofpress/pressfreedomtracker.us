@@ -122,6 +122,14 @@ class SiteSettings(BaseSetting):
         null=True,
         help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.'
     )
+    citation_contact_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Page linked by the "Contact Us" link in the footer citation note.',
+    )
     banner_content = RichTextField(
         blank=True,
         null=True,
@@ -144,6 +152,7 @@ class SiteSettings(BaseSetting):
 
     panels = [
         StreamFieldPanel('incident_sidebar_note'),
+        PageChooserPanel('citation_contact_page'),
         FieldPanel('incident_footer'),
         MultiFieldPanel([
             FieldPanel('banner_content'),
