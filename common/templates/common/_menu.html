@@ -1,9 +1,11 @@
 {% load get_menu %}
 <a href="#title" class="skip-link">Skip to content</a>
 <header class="header">
-	<a class="site-title-link text-link" href="/">
-		U.S Press Freedom Tracker
-	</a>
+	<div class="header__title-wrapper">
+		<a class="site-title-link text-link" href="/">
+			{{ self.get_site.site_name|default:"U.S Press Freedom Tracker" }}
+		</a>
+	</div>
 
 	<button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
 		<span class="sr-only">Menu</span>
