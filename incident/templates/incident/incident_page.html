@@ -24,6 +24,12 @@
 			{% endfor %}
 
 			{% include "incident/_incident.html" with incident=page only %}
+
+			{% with incident_cta=settings.common.SiteSettings.incident_footer %}
+				{% if incident_cta %}
+					{% include "incident/_incident_cta.html" %}
+				{% endif %}
+			{% endwith %}
 		</section>
 	</article>
 	<section class="article-meta">
