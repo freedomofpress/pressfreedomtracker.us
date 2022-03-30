@@ -193,6 +193,7 @@ function ChartDescription({ children }) {
 				fontWeight: 400,
 				fontSize: 14,
 				color: '#7A848E',
+				marginBottom: '1rem'
 			}}
 		>
 			{children}

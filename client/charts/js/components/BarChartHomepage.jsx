@@ -143,6 +143,7 @@ export default function BarChartHomepage({
 								y2: (d) => yScale(d),
 								stroke: 'black',
 								strokeWidth: (d) => (d === 0 ? borders.normal : borders.grid),
+								shapeRendering: 'crispEdges',
 							}}
 							duration={250}
 							keyFn={(d) => d}
@@ -187,6 +188,7 @@ export default function BarChartHomepage({
 							strokeWidth: borders.normal,
 							stroke: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
 							cursor: 'pointer',
+							shapeRendering: 'crispEdges',
 						}}
 						duration={250}
 						durationByAttr={{ fill: 0, stroke: 0 }}
@@ -207,6 +209,7 @@ export default function BarChartHomepage({
 								onMouseMove={updateTooltipPosition}
 								onMouseLeave={() => setHoveredElement(null)}
 								onMouseUp={() => openSearchPage(d[x])}
+								shapeRendering="crispEdges"
 							>
 								<title>
 									{d[x]}: {d[y]} {titleLabel}
@@ -268,6 +271,7 @@ export default function BarChartHomepage({
 							y2: (d) => yScale(d),
 							stroke: 'black',
 							strokeWidth: (d) => (d === 0 ? borders.normal : borders.grid),
+							shapeRendering: 'crispEdges',
 						}}
 						duration={250}
 						keyFn={(d) => d}
@@ -304,6 +308,7 @@ export default function BarChartHomepage({
 						strokeWidth: borders.normal,
 						stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
 						cursor: 'pointer',
+						shapeRendering: 'crispEdges',
 					}}
 					events={{
 						onMouseUp: (mouseEvent, d) => openSearchPage(d[x]),
