@@ -149,7 +149,8 @@ export default function TreeMap({
 
 	const yScale = d3
 		.scaleLinear()
-		.domain([0, d3.max(datasetStackedByCategory, (d) => d.endPoint)])
+		// Default to [-1, 0] if there's no data
+		.domain(dataset.length ? [0, d3.max(datasetStackedByCategory, (d) => d.endPoint)] : [-1, 0])
 		.range([height - borderWidth.normal - paddings.top, paddings.bottom])
 
 	const computeBarHeight = (start, end) => {
@@ -214,7 +215,7 @@ export default function TreeMap({
 					}}
 				>
 					<line
-						x1={width - paddings.left}
+						x1={paddings.left}
 						x2={width}
 						y1={height - paddings.bottom + 0.5}
 						y2={height - paddings.bottom + 0.5}

@@ -4,6 +4,7 @@ import TreeMap from './TreeMap'
 import USMap from './USMap'
 import BarChartHomepage from './BarChartHomepage'
 import HomepageSelection from './HomepageSelection'
+import Flashing from '../../../common/js/components/Flashing'
 import {
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
@@ -96,6 +97,7 @@ function HomepageMainChartsWidth({
 	currentDate = new Date(),
 	selectedTags = [],
 	databasePath = '/',
+	loading = false,
 }) {
 	const [filtersApplied, setFiltersApplied] = React.useState({
 		tag: null,
@@ -118,7 +120,7 @@ function HomepageMainChartsWidth({
 	)
 
 	return (
-		<>
+		<Flashing flashing={loading}>
 			<HomepageSelection
 				width={width}
 				height={'40px'}
@@ -179,7 +181,7 @@ function HomepageMainChartsWidth({
 					/>
 				</div>
 			</div>
-		</>
+		</Flashing>
 	)
 }
 

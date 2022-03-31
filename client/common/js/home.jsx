@@ -3,6 +3,7 @@ import ReactDOM from "react-dom"
 
 import HomepageMainCharts from '../../charts/js/components/HomepageMainCharts'
 import DataLoader from "../../charts/js/components/DataLoader"
+import Flashing from './components/Flashing'
 
 const fields = [
 	'categories',
@@ -33,7 +34,12 @@ chartContainers.forEach((node) => {
 	if (endDate) params.append('date_upper', endDate)
 
 	ReactDOM.render((
-		<DataLoader dataUrl={`/api/edge/incidents/?${params.toString()}`}>
+		<DataLoader
+			dataUrl={`/api/edge/incidents/?${params.toString()}`}
+			loadingComponent={(
+				<HomepageMainCharts selectedTags={selectedTags} databasePath={databasePath} data={[]} loading={true} />
+			)}
+		>
 			<HomepageMainCharts selectedTags={selectedTags} databasePath={databasePath} />
 		</DataLoader>
 	), node)
