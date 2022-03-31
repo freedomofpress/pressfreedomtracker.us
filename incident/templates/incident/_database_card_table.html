@@ -59,6 +59,17 @@
 		</div>
 	{% endif %}
 
+	{% if incident.get_all_targets_for_linking %}
+		<div class="database-card-table__row">
+			<dt class="database-card-table__label database-card-table__label--bold">Targets</dt>
+			<dd class="database-card-table__value">
+				{% for target in incident.get_all_targets_for_linking %}
+					<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?{{ target.url_arguments }}{% endif %}">{{ target.text }}</a>{% if not forloop.last %}, {% endif %}
+				{% endfor %}
+			</dd>
+		</div>
+	{% endif %}
+
 	{% if incident.case_statuses|length > 0 %}
 		<div class="database-card-table__row">
 			<dt class="database-card-table__label database-card-table__label--bold">

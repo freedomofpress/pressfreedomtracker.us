@@ -1072,7 +1072,7 @@ class IncidentPageTests(TestCase):
         self.assertEqual(incident.longitude, geoname.longitude)
         self.assertEqual(incident.latitude, geoname.latitude)
 
-    def test_gets_unified_list_of_all_targets(self):
+    def test_gets_unified_list_of_all_targets_as_text(self):
         inst = InstitutionFactory()
         inc = IncidentPageFactory(
             parent=self.incident_index,
@@ -1091,4 +1091,39 @@ class IncidentPageTests(TestCase):
         self.assertEqual(
             inc.get_all_targets_for_display,
             f'{tj1.journalist.title}, {tj2.journalist.title} ({tj2.institution.title}), {inst.title}'
+        )
+
+    def test_gets_unified_list_of_all_targets_as_objects(self):
+        inst = InstitutionFactory()
+        inc = IncidentPageFactory(
+            parent=self.incident_index,
+        )
+        inc.targeted_institutions = [inst]
+        inc.save()
+        TargetedJournalistFactory(
+            journalist__title='Alex Aardvark',
+            institution=None,
+            incident=inc,
+        )
+        tj2 = TargetedJournalistFactory(
+            journalist__title='Benny Bird',
+            incident=inc,
+        )
+        self.assertEqual(inc.get_all_targets_for_linking[0].text, 'Alex Aardvark')
+        self.assertEqual(
+            inc.get_all_targets_for_linking[0].url_arguments,
+            'targeted_journalists=Alex Aardvark'
+        )
+        self.assertEqual(
+            inc.get_all_targets_for_linking[1].text,
+            f'Benny Bird for {tj2.institution.title}',
+        )
+        self.assertEqual(
+            inc.get_all_targets_for_linking[1].url_arguments,
+            'targeted_journalists=Benny Bird'
+        )
+        self.assertEqual(inc.get_all_targets_for_linking[2].text, inst.title)
+        self.assertEqual(
+            inc.get_all_targets_for_linking[2].url_arguments,
+            f'targeted_institutions={inst.title}'
         )

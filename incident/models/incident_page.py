@@ -1,3 +1,4 @@
+import dataclasses
 import datetime
 import uuid
 
@@ -64,6 +65,12 @@ class IncidentAuthor(Orderable):
     panels = [
         PageChooserPanel('author')
     ]
+
+
+@dataclasses.dataclass
+class TargetLink:
+    text: str
+    url_arguments: str
 
 
 class CheckboxMultipleChoice(forms.MultipleChoiceField):
@@ -875,6 +882,29 @@ class IncidentPage(MetadataPageMixin, Page):
     @cached_property
     def get_tags(self):
         return self.tags.all()
+
+    @cached_property
+    def get_all_targets_for_linking(self):
+        items = []
+        for tj in self.targeted_journalists.all():
+            if tj.institution:
+                title = f'{tj.journalist.title} for {tj.institution.title}'
+            else:
+                title = tj.journalist.title
+            items.append(
+                TargetLink(
+                    text=title,
+                    url_arguments=f'targeted_journalists={tj.journalist.title}'
+                )
+            )
+        for institution in self.targeted_institutions.all():
+            items.append(
+                TargetLink(
+                    text=institution.title,
+                    url_arguments=f'targeted_institutions={institution.title}'
+                )
+            )
+        return items
 
     @cached_property
     def get_all_targets_for_display(self):
