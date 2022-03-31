@@ -10,17 +10,22 @@
 				{{ item.title }}
 			</summary>
 			{% for field in item %}
-				<div>
-					{% if field.field_type == 'radio' or field.field_type == 'bool' %}
-						<p>{{ field.title }}</p>
-    					<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+				<div class="filters__field-row">
+					{% if field.widget_type == 'radioselect' or field.widget_type == 'checkboxselectmultiple' %}
+						<div class="filters__field-label">
+							{{ field.label }}
+						</div>
 					{% else %}
-    					<p><label for="{{ field.id_for_label }}">{{ field.label }}</label></p>
+						<div class="filters__field-label">
+							<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+						</div>
 					{% endif %}
 					{{ field }}
 				</div>
 			{% endfor %}
 		</details>
 	{% endfor %}
-	<button class="btn btn-secondary filters__form--submit" type="submit">Apply filters</button>
+	<div class="filters__form-actions">
+		<button class="btn btn-secondary filters__form--submit" type="submit">Apply filters</button>
+	</div>
 </form>
