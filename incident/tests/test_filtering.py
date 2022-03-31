@@ -1537,6 +1537,14 @@ class RelationThroughTest(TestCase):
         self.assertEqual(incidents.count(), 1)
         self.assertIn(self.tj1.incident, incidents)
 
+    def test_filter_should_filter_by_single_journalist_by_title(self):
+        incidents = IncidentFilter({
+            'targeted_journalists': self.tj1.journalist.title,
+        }).get_queryset()
+
+        self.assertEqual(incidents.count(), 1)
+        self.assertIn(self.tj1.incident, incidents)
+
     def test_filter_should_filter_by_multiple_journalists(self):
         incidents = IncidentFilter({
             'targeted_journalists': '{},{}'.format(self.tj1.journalist.pk, self.tj3.journalist.pk),
