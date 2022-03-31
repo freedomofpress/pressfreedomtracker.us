@@ -659,7 +659,6 @@ class GetIncidentUpdatesTest(TestCase):
         )
 
 
-@unittest.skip("Skipping till templates have been added")
 class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
     def setUp(self):
         super().setUp()
