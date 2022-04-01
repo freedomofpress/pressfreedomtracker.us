@@ -184,17 +184,17 @@ export function countIncidentsOutsideUS(dataset) {
 }
 
 export const categoriesColors = {
-	'Physical Attack': '#E07A5F',
 	'Arrest/Criminal Charge': '#669599',
-	'Equipment Damage': '#B0829D',
-	'Equipment Search or Seizure': '#63729A',
+	'Border Stop': '#FBE0BC',
 	'Chilling Statement': '#F4C280',
 	'Denial of Access': '#7EBBC8',
+	'Equipment Damage': '#B0829D',
+	'Equipment Search or Seizure': '#63729A',
 	'Leak Case': '#F9B29F',
+	'Physical Attack': '#E07A5F',
 	'Prior Restraint': '#98C9CD',
 	'Subpoena/Legal Order': '#E2B6D0',
 	'Other Incident': '#B2B8E5',
-	'Border Stop': '#FBE0BC',
 }
 
 // barChart Filter functions
