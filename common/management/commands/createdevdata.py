@@ -32,7 +32,7 @@ from forms.models import FormPage
 from forms.tests.factories import FormPageFactory
 from home.models import HomePage, FeaturedBlogPost, FeaturedIncident
 from incident.models import IncidentIndexPage, IncidentPage
-from incident.devdata import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory
+from incident.devdata import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory, TopicPageFactory
 from menus.models import Menu, MenuItem
 
 
@@ -372,6 +372,17 @@ class Command(BaseCommand):
             MultimediaIncidentUpdateFactory(page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
+
+        topic_page = TopicPageFactory(
+            parent=home_page,
+            incident_index_page=incident_index_page,
+            title='Important Animals Topic Page',
+            incident_tag__title='Important Animals',
+        )
+        tag = topic_page.incident_tag
+        tag.tagged_items.add(
+            *random.sample(list(IncidentPage.objects.all()), 20)
+        )
 
         # CREATE MENUS
         if not Menu.objects.filter(slug='primary-navigation').exists():
