@@ -418,9 +418,9 @@ class ChargesFilter(ManyRelationFilter):
 
 
 class RelationThroughFilter(ManyRelationFilter):
-    def __init__(self, name, model_field, relation, lookup=None, verbose_name=None):
+    def __init__(self, name, model_field, relation, lookup=None, verbose_name=None, text_fields=[]):
         lookup = model_field.name + '__' + relation
-        super(RelationThroughFilter, self).__init__(name, model_field, lookup, verbose_name)
+        super(RelationThroughFilter, self).__init__(name, model_field, lookup, verbose_name, text_fields)
         self.relation = relation
 
     def serialize(self):
@@ -564,7 +564,12 @@ class IncidentFilter(object):
         'equipment_broken': {'lookup': 'equipment_broken__equipment', 'text_fields': ['name']},
         'tags': {'verbose_name': 'Has any of these tags'},
         'subpoena_statuses': {'verbose_name': 'Subpoena status'},
-        'targeted_journalists': {'verbose_name': 'Targeted any of these journalists', 'filter_cls': RelationThroughFilter, 'relation': 'journalist'},
+        'targeted_journalists': {
+            'verbose_name': 'Targeted any of these journalists',
+            'filter_cls': RelationThroughFilter,
+            'relation': 'journalist',
+            'text_fields': ['title'],
+        },
         'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter, 'text_fields': ['title']},
         'arresting_authority': {'filter_cls': RelationFilter, 'verbose_name': 'Arresting authority'},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},

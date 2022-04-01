@@ -46,6 +46,17 @@
 	</div>
 	{% endif %}
 
+	{% if incident.get_all_targets_for_linking %}
+		<div class="details-table__row">
+			<dt class="details-table__label details-table__label--bold">Targets</dt>
+			<dd class="details-table__value">
+				{% for target in incident.get_all_targets_for_linking %}
+					<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?{{ target.url_arguments }}{% endif %}">{{ target.text }}</a>{% if not forloop.last %}, {% endif %}
+				{% endfor %}
+			</dd>
+		</div>
+	{% endif %}
+
 	{% if incident.case_number %}
 	<div class="details-table__row">
 		<dt class="details-table__label details-table__label--bold">
