@@ -52,12 +52,25 @@
 		+desktop-up
 			grid-template-columns:  400px 2fr 1fr
 
+			.info-table-row__hover-only
+				display: none
+
+			&:hover
+				grid-template-columns:  400px 2fr 1fr 1fr
+				.info-table-row__hover-only
+					animation-duration: 0.5s
+					animation-name: fade-in
+					animation-fill-mode: forwards
+					display: block
+					position: absolute
+					top: -60px
+					grid-column: 3
+
+				.info-table__col-right
+					grid-column: 4
+
 	&__figure
 		margin: 0.5em 0
-
-		.info-table--col-3-desktop &
-			+desktop-up
-				display: none
 
 	&__title
 		font-weight: 700
@@ -94,3 +107,9 @@
 
 	&[data-visible='false']
 		display: none
+
+@keyframes fade-in
+	from
+		opacity: 0
+	to
+		opacity: 1
