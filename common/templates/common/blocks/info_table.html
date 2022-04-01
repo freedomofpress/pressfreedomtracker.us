@@ -3,12 +3,18 @@
 <div class="info-table">
     <h4 class="heading-regular">{{ value.heading }}</h4>
 
-    <section class="list-table">
+    <section class="list-table" id="list-table-{{ value.heading|slugify }}">
         <ul class="info-table--cols">
             {% for block in value.table %}
                 {% include_block block %}
             {% endfor %}
         </ul>
-    <section>
+    </section>
+	<button
+		class="btn btn-secondary list-table-toggle-btn"
+		aria-controls="list-table-{{ value.heading|slugify }}"
+		aria-expanded="false"
+	>
+		Show All
+	</button>
 </div>
-

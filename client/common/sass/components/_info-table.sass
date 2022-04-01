@@ -23,6 +23,11 @@
 				color: $gray-text
 				text-decoration: none
 
+		&--collapsed
+			.list-table__row:nth-child(n+8)
+				+tablet-down
+					display: none
+
 	&--col-2
 		+tablet-up
 			grid-template-columns: 240px 1fr
@@ -78,3 +83,14 @@
 
 	&__col-bottom
 		align-self: end
+
+.list-table-toggle-btn
+	margin-top: 32px
+	margin-inline: auto
+	display: block
+
+	+desktop-up
+		display: none
+
+	&[data-visible='false']
+		display: none
