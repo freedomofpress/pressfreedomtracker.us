@@ -19,11 +19,11 @@
 				Written by
 			</dt>
 			<dd class="details-table__value">
-				<a href="{% pageurl blog.author %}" class="text-link">{{ blog.author.title }}</a>
+				<a href="{% pageurl blog.get_parent %}?author={{ blog.author.pk }}" class="text-link">{{ blog.author.title }}</a>
 
 				{% if blog.organization %}
 					from
-					<a href="{% pageurl blog.organization %}" class="text-link">{{ blog.organization.title }}</a>
+					<a href="{% pageurl blog.get_parent %}?organization={{ blog.organization.pk }}" class="text-link">{{ blog.organization.title }}</a>
 				{% endif %}
 			</dd>
 		</div>
