@@ -92,7 +92,7 @@
 		</dt>
 		<dd class="details-table__value">
 			<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?case_type={{ incident.case_type }}{% endif %}">
-				{{ incident.case_type }}
+				{{ incident.get_case_type_display }}
 			</a>
 		</dd>
 	</div>
