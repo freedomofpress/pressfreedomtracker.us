@@ -6,8 +6,8 @@
             {% if item.image %}
                 <div class="list-table__col info-table-row__hover-only">
                     <figure class="info-table__figure">
-						{% image item.image fill-66x66 as small_img %}
-						{% image item.image fill-120x120 as large_img %}
+						{% image item.image height-66 as small_img %}
+						{% image item.image height-120 as large_img %}
 						<img
 							alt="{{ item.title }}"
 							srcset="{{ large_img.url }} 120w, {{ small_img.url }} 66w"
