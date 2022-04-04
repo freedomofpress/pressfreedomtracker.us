@@ -40,7 +40,7 @@ const borderWidth = {
 }
 
 const textStyle = {
-	fontFamily: 'sans-serif',
+	fontFamily: 'var(--font-base)',
 	fontWeight: '500',
 	fontSize: '14px',
 	lineHeight: '17px',
@@ -180,7 +180,7 @@ export default function TreeMap({
 			{hoveredElement && (
 				<Tooltip
 					content={
-						<div style={{ fontFamily: 'sans-serif', fontSize: 12, fontWeight: 500 }}>
+						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
 							<div>Number of Incidents</div>
 							<div
 								style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}

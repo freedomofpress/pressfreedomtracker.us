@@ -31,7 +31,7 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 				width={width}
 				height={height + internalBottomMargin}
 				key={'BarChartYears'}
-				style={{ fontFamily: 'monospace' }}
+				style={{ fontFamily: 'var(--font-mono)' }}
 			>
 				<AnimatedDataset
 					dataset={yScale.ticks(3)}
@@ -97,7 +97,7 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 						<text
 							x={xScale(d.year) - internalLeftMargin}
 							y={height + internalBottomMargin}
-							style={{ fontSize: 12, fontFamily: 'Helvetica Neue' }}
+							style={{ fontSize: 12, fontFamily: 'var(--font-base)' }}
 						>
 							{d.year}
 						</text>

@@ -98,7 +98,7 @@ export default function TimeMonthsFilter({
 
 	return (
 		<div style={{ flexDirection: 'row' }}>
-			<svg width={width} height={height} style={{ fontFamily: 'monospace' }}>
+			<svg width={width} height={height} style={{ fontFamily: 'var(--font-mono)' }}>
 				<AnimatedDataset
 					dataset={yScale.ticks(3)}
 					tag="line"

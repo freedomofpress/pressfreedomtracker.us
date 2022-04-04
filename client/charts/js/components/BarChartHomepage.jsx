@@ -96,7 +96,7 @@ export default function BarChartHomepage({
 				{hoveredElement && (
 					<Tooltip
 						content={
-							<div style={{ fontFamily: 'sans-serif', fontSize: 12, fontWeight: 500 }}>
+							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
 								<div>Number of Incidents</div>
 								<div
 									style={{
@@ -162,7 +162,7 @@ export default function BarChartHomepage({
 								x: width - paddings.right,
 								y: (d) => yScale(d) - textPadding,
 								textAnchor: 'end',
-								fontFamily: 'monospace',
+								fontFamily: 'var(--font-mono)',
 								fontSize: '12px',
 								text: (d) => d,
 							}}
@@ -232,7 +232,7 @@ export default function BarChartHomepage({
 							y: height - paddings.bottom / 2,
 							textAnchor: 'middle',
 							fill: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
-							fontFamily: 'sans-serif',
+							fontFamily: 'var(--font-base)',
 							fontWeight: 500,
 							fontSize: '14px',
 							text: (d) => d[x],
@@ -288,7 +288,7 @@ export default function BarChartHomepage({
 							x: width - paddings.right,
 							y: (d) => yScale(d) - textPadding,
 							textAnchor: 'end',
-							fontFamily: 'monospace',
+							fontFamily: 'var(--font-mono)',
 							fontSize: '12px',
 							text: (d) => d,
 						}}
@@ -332,7 +332,7 @@ export default function BarChartHomepage({
 					textAnchor="middle"
 					style={{
 						fill: 'black',
-						fontFamily: 'sans-serif',
+						fontFamily: 'var(--font-base)',
 						fontWeight: 500,
 						fontSize: '14px',
 					}}

@@ -191,7 +191,7 @@ function ChartDescription({ children }) {
 			style={{
 				height: '2em',
 				padding: 10,
-				fontFamily: 'sans-serif',
+				fontFamily: 'var(--font-base)',
 				fontWeight: 400,
 				fontSize: 14,
 				color: '#7A848E',
