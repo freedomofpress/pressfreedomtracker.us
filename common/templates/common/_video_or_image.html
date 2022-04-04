@@ -5,7 +5,7 @@
         {% if video %}
             {% embed video %}
         {% elif image %}
-            {% image image fill-910x510 alt=image.attribution|default:image.title %}
+            {% image image width-910 alt=image.attribution|default:image.title %}
         {% endif %}
         {% if caption or image.attribution %}
             <figcaption class="media-caption">
