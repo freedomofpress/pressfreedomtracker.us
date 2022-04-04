@@ -1,5 +1,3 @@
-import unittest
-
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.urls import reverse
@@ -136,7 +134,6 @@ class IncidentFilterTest(TestCase):
             incident_filter.clean()
 
 
-@unittest.skip("Skipping till templates have been added")
 class CategoryPageTest(TestCase):
     def setUp(self):
         Page.objects.filter(slug='home').delete()
@@ -189,6 +186,7 @@ class CategoryPageTest(TestCase):
         post_data = {
             'slug': self.category_page.slug,
             'title': 'ABC',
+            'methodology': '{}',
             'quick_facts-TOTAL_FORMS': 0,
             'quick_facts-INITIAL_FORMS': 0,
             'quick_facts-MIN_NUM_FORMS': 0,
@@ -197,6 +195,18 @@ class CategoryPageTest(TestCase):
             'statistics_items-INITIAL_FORMS': 0,
             'statistics_items-MIN_NUM_FORMS': 0,
             'statistics_items-MAX_NUM_FORMS': 1000,
+            'featured_incidents-TOTAL_FORMS': 0,
+            'featured_incidents-INITIAL_FORMS': 0,
+            'featured_incidents-MIN_NUM_FORMS': 0,
+            'featured_incidents-MAX_NUM_FORMS': 1000,
+            'featured_blogs-TOTAL_FORMS': 0,
+            'featured_blogs-INITIAL_FORMS': 0,
+            'featured_blogs-MIN_NUM_FORMS': 0,
+            'featured_blogs-MAX_NUM_FORMS': 1000,
+            'methodology_items-TOTAL_FORMS': 0,
+            'methodology_items-INITIAL_FORMS': 0,
+            'methodology_items-MIN_NUM_FORMS': 0,
+            'methodology_items-MAX_NUM_FORMS': 1000,
             'incident_filters-TOTAL_FORMS': 0,
             'incident_filters-INITIAL_FORMS': 0,
             'incident_filters-MIN_NUM_FORMS': 0,
@@ -219,7 +229,6 @@ class CategoryPageTest(TestCase):
         self.assertEqual(response.context['page'], self.category_page)
 
 
-@unittest.skip("Skipping till templates have been added")
 class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
     @classmethod
     def setUpTestData(cls):
@@ -253,6 +262,9 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
             'page_symbol': 'arrest',
             'quick_facts': inline_formset([]),
             'statistics_items': inline_formset([]),
+            'featured_incidents': inline_formset([]),
+            'featured_blogs': inline_formset([]),
+            'methodology_items': inline_formset([]),
             'incident_filters': inline_formset([]),
         }
 
