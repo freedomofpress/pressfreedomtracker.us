@@ -64,7 +64,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         arrest = factory.Trait(
             title='Arrest / Criminal Charge',
             plural_name='Arrests and Criminal Charges',
-            slug='arrest'
+            slug='arrest-criminal-charge'
         )
         border_stop = factory.Trait(
             title='Border Stop',
@@ -74,12 +74,12 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
         denial_of_access = factory.Trait(
             title='Denial of Access',
             plural_name='Denials of Access',
-            slug='denial-of-access',
+            slug='denial-access',
         )
         equipment_search = factory.Trait(
             title='Equipment Search or Seizure',
             plural_name='Equipment Searches, Seizures and Damage',
-            slug='equipment-search',
+            slug='equipment-search-seizure-or-damage',
         )
         physical_attack = factory.Trait(
             title='Physical Attack',
