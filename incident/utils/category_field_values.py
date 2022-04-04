@@ -95,7 +95,7 @@ def arresting_authority_html_val(page, field):
     link = '{}?{}={}'.format(
         page.get_parent().get_url(),
         field,
-        getattr(page, field).pk
+        getattr(page, field).title
     )
     value = getattr(page, field).title.capitalize()
 
