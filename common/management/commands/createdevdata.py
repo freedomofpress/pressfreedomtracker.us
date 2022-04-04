@@ -82,11 +82,27 @@ FACTORY_ARGS_BY_CATEGORY = {
     }
 }
 
+# mapping of Trait parameters on the CategoryPageFactory to slugs
+# belonging to actual CategoryPage objects.
+PARAM_TO_SLUG_MAP = {
+    'arrest': 'arrest-criminal-charge',
+    'border_stop': 'border-stop',
+    'denial_of_access': 'denial-access',
+    'equipment_search': 'equipment-search-seizure-or-damage',
+    'physical_attack': 'physical-attack',
+    'leak_case': 'leak-case',
+    'subpoena': 'subpoena',
+    'equipment_damage': 'equipment-damage',
+    'other_incident': 'other-incident',
+    'chilling_statement': 'chilling-statement',
+    'prior_restraint': 'prior-restraint',
+}
+
 
 def lookup_category(key):
-    key = key.replace("_", "-")
+    slug = PARAM_TO_SLUG_MAP[key]
     try:
-        return CategoryPage.objects.get(slug=key)
+        return CategoryPage.objects.get(slug=slug)
     except CategoryPage.DoesNotExist:
         raise CommandError(f'Could not find category with slug `{key}`')
 
@@ -337,13 +353,13 @@ class Command(BaseCommand):
             main_menu=True,
             title='All Incidents',
         )
-        for category_slugs in generate_variations():
+        for category_keys in generate_variations():
             category_pages = []
             kwargs = {}
-            for slug in category_slugs:
-                category_pages.append(lookup_category(slug))
+            for key in category_keys:
+                category_pages.append(lookup_category(key))
                 kwargs.update(
-                    FACTORY_ARGS_BY_CATEGORY.get(slug, {})
+                    FACTORY_ARGS_BY_CATEGORY.get(key, {})
                 )
             n = random.random()
             if n < 0.25:
