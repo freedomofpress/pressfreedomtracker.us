@@ -2,7 +2,7 @@ import React from 'react'
 import Button from './Button'
 
 const labelStyle = {
-	fontFamily: 'sans-serif',
+	fontFamily: 'var(--font-base)',
 	fontSize: '18px',
 }
 

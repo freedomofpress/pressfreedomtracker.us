@@ -30,7 +30,7 @@ export default function CheckBoxesYear({ width, options, selectedYears, onClick 
 								onChange={() => onClick(d)}
 							/>
 
-							<div style={{ flexDirection: 'row', marginLeft: 10, fontFamily: 'Helvetica Neue' }}>
+							<div style={{ flexDirection: 'row', marginLeft: 10, fontFamily: 'var(--font-base)' }}>
 								{d.year}
 							</div>
 						</div>

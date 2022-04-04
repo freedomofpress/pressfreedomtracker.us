@@ -1,7 +1,7 @@
 import React from 'react'
 
 const textStyle = {
-	fontFamily: 'sans-serif',
+	fontFamily: 'var(--font-base)',
 	fontWeight: '500',
 	fontSize: '14px',
 }

@@ -107,7 +107,7 @@ export default function App() {
 						justifyContent: "center",
 						alignItems: "center",
 						opacity: 0.4,
-						fontFamily: "sans-serif",
+						fontFamily: 'var(--font-base)',
 					}}
 				>
 					<div>LOADING...</div>

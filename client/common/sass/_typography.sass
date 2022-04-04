@@ -1,4 +1,4 @@
-$font-base: 'Helvetica Neue', 'Helvetica', sans-serif
+$font-base: 'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'
 $font-mono: 'Roboto Mono', monospace
 
 // Font sizes
@@ -32,6 +32,11 @@ $font-size-h4-tab: 2rem  // 32px
 $font-size-h3-tab: 2.5rem  // 40px
 $font-size-h2-tab: 3.75rem  // 60px
 $font-size-h1-tab: 5rem  // 80px
+
+// CSS variables for use in React components
+:root
+	--font-base: $font-base
+	--font-mono: $font-mono
 
 body
 	margin: 0

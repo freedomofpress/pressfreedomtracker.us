@@ -109,7 +109,7 @@ export default function CategoryFilter({
 			width={width}
 			height={height}
 			key={'BarChartCategories'}
-			style={{ fontFamily: 'monospace' }}
+			style={{ fontFamily: 'var(--font-mono)' }}
 		>
 			<AnimatedDataset
 				dataset={yScale.ticks(3)}

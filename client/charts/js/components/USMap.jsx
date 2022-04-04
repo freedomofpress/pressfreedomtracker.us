@@ -63,7 +63,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 			{hoveredElement && hoveredElement !== 'Abroad' && (
 				<Tooltip
 					content={
-						<div style={{ fontFamily: 'sans-serif', fontSize: 12, fontWeight: 500 }}>
+						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
 							<div>Number of Incidents</div>
 							<div
 								style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}
@@ -199,7 +199,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								x: hoveredElement === 'Abroad' ? paddings.text + 30 : paddings.text,
 								y: height - paddings.bottom - paddings.text - markerBorder.grid,
 								fontSize: width > 400 ? '14px' : '12px',
-								fontFamily: 'sans-serif',
+								fontFamily: 'var(--font-base)',
 								cursor: 'pointer',
 								fill: 'black',
 								pointerEvents: 'none',
@@ -215,7 +215,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								x: width - paddings.arrowSmall - (hoveredElement === 'Abroad' ? paddings.arrow : 95),
 								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
 								fontSize: width > 400 ? 14 : 12,
-								fontFamily: 'sans-serif',
+								fontFamily: 'var(--font-base)',
 								cursor: 'pointer',
 								fill: 'black',
 								textAnchor: 'end',
@@ -344,7 +344,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								opacity: hoveredElement === 'Abroad' ? 0 : 1,
 								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
 								fontSize: width > 400 ? 13 : 11,
-								fontFamily: 'sans-serif',
+								fontFamily: 'var(--font-base)',
 								cursor: 'pointer',
 								fill: '#bdbdbd',
 								textAnchor: 'end',

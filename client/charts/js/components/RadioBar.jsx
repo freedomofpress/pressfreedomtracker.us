@@ -49,14 +49,14 @@ export default function RadioBar({ state, count, i, onClick, isSelected, barWidt
 							color: 'black',
 							fontSize: 14,
 							lineHeight: '20px',
-							fontFamily: 'sans-serif',
+							fontFamily: 'var(--font-base)',
 						}}
 					>
 						{state}
 					</div>
 					<div
 						style={{
-							fontFamily: 'monospace',
+							fontFamily: 'var(--font-mono)',
 							fontSize: 12,
 							justifyContent: 'flex-end',
 							backgroundColor: isSelected ? '#F2FC67' : null,
