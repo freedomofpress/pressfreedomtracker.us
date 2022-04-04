@@ -50,30 +50,37 @@
 			grid-template-columns: 1fr auto
 
 		+desktop-up
-			grid-template-columns:  400px 2fr 1fr
+			grid-template-columns:  400px 1fr min-content 1fr
 
 			.info-table-row__hover-only
-				display: none
+				width: 0
+				height: 0
+				grid-column: 3
 
-			&:hover
-				grid-template-columns:  400px 2fr 1fr 1fr
-				.info-table-row__hover-only
-					animation-duration: 0.5s
-					animation-name: fade-in
-					animation-fill-mode: forwards
-					display: block
+				figure
 					position: absolute
 					top: -60px
-					grid-column: 3
+					opacity: 0
+					transition: all 0.25s
+					pointer-events: none
+					display: block
 
-				.info-table__col-right
-					grid-column: 4
+			&:hover
+				.info-table-row__hover-only figure
+					opacity: 1
+					pointer-events: auto
 
 	&__figure
 		margin: 0.5em 0
 
 	&__title
 		font-weight: 700
+		+desktop-up
+			grid-column: 1
+
+	&__url
+		+desktop-up
+			grid-column: 2
 
 	&__col-right
 		text-align: right
@@ -91,7 +98,7 @@
 			grid-column: 2
 			grid-row: 1 / span 3
 			+desktop-up
-				grid-column: unset
+				grid-column: 4
 				grid-row: unset
 
 	&__col-bottom
