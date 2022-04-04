@@ -23,10 +23,10 @@
 		</div>
 	</section>
 
-	{% if methodology.description or methodology.data_items %}
+	{% if page.methodology or page.methodology_items.all %}
 		<section class="categorypage-section categorypage-section--gray">
 			<div class="categorypage-section-inner">
-				{% include "common/_category_methodology_section.html" %}
+				{% include "common/_category_methodology_section.html" with items=page.methodology_items.all methodology_summary=page.methodology only %}
 			</div>
 		</section>
 	{% endif %}
