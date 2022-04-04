@@ -178,6 +178,10 @@ def did_authorities_ask_for_social_media_pass_html_val(page, field):
     return basic_html_val(page, field)
 
 
+def were_devices_searched_or_seized_html_val(page, field):
+    return basic_html_val(page, field)
+
+
 def did_authorities_ask_about_work_html_val(page, field):
     return basic_html_val(page, field)
 
