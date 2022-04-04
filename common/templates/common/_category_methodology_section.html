@@ -2,10 +2,10 @@
 
 <h2 class="methodology-section-header">Data Tracked For This Category</h2>
 
-<div class="methodology-summary rich-text">{{ methodology|richtext }}</div>
+<div class="methodology-summary rich-text">{{ methodology_summary|richtext }}</div>
 
 <dl class="methodology-details-table">
-	{% for item in methodology.data_items %}
+	{% for item in items %}
 	<div class="details-table__row">
 		<dt class="details-table__label details-table__label--bold">
 			{{ item.label }}
