@@ -17,6 +17,7 @@ from incident.utils.category_field_values import (
     target_us_citizenship_status_html_val,
     denial_of_entry_html_val,
     stopped_previously_html_val,
+    stopped_at_border_html_val,
     did_authorities_ask_for_device_access_html_val,
     did_authorities_ask_for_social_media_user_html_val,
     did_authorities_ask_for_social_media_pass_html_val,
@@ -33,7 +34,8 @@ from incident.utils.category_field_values import (
     third_party_business_html_val,
     legal_order_type_html_val,
     status_of_prior_restraint_html_val,
-    politicians_or_public_figures_involved_html_val
+    politicians_or_public_figures_involved_html_val,
+    were_devices_searched_or_seized_html_val,
 )
 
 CATEGORY_FIELD_MAP = {
@@ -58,6 +60,7 @@ CATEGORY_FIELD_MAP = {
     ],
     'border-stop': [
         ('border_point', 'Border Point'),
+        ('stopped_at_border', 'Stopped at border?'),
         ('target_nationality', 'Target Nationality'),
         ('target_us_citizenship_status', 'US Citizenship Status of Target'),
         ('denial_of_entry', 'Denied Entry?'),
@@ -66,6 +69,7 @@ CATEGORY_FIELD_MAP = {
         ('did_authorities_ask_for_social_media_user', 'Asked to display social media?'),
         ('did_authorities_ask_for_social_media_pass', 'Asked for social media passwords?'),
         ('did_authorities_ask_about_work', 'Asked intrusive questions about work?'),
+        ('were_devices_searched_or_seized', 'Were devices searched or seized?'),
     ],
     'physical-attack': [
         ('assailant', 'Assailant'),
@@ -107,6 +111,7 @@ CAT_FIELD_VALUES = {
     'is_search_warrant_obtained': is_search_warrant_obtained_html_val,
     'actor': actor_html_val,
     'border_point': border_point_html_val,
+    'stopped_at_border': stopped_at_border_html_val,
     'target_nationality': target_nationality_html_val,
     'target_us_citizenship_status': target_us_citizenship_status_html_val,
     'denial_of_entry': denial_of_entry_html_val,
@@ -115,6 +120,7 @@ CAT_FIELD_VALUES = {
     'did_authorities_ask_for_social_media_user': did_authorities_ask_for_social_media_user_html_val,
     'did_authorities_ask_for_social_media_pass': did_authorities_ask_for_social_media_pass_html_val,
     'did_authorities_ask_about_work': did_authorities_ask_about_work_html_val,
+    'were_devices_searched_or_seized': were_devices_searched_or_seized_html_val,
     'assailant': assailant_html_val,
     'was_journalist_targeted': was_journalist_targeted_html_val,
     'workers_whose_communications_were_obtained': workers_whose_communications_were_obtained_html_val,

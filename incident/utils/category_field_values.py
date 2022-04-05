@@ -158,6 +158,10 @@ def denial_of_entry_html_val(page, field):
     return boolean_html_val(page, field)
 
 
+def stopped_at_border_html_val(page, field):
+    return boolean_html_val(page, field)
+
+
 def stopped_previously_html_val(page, field):
     return boolean_html_val(page, field)
 
@@ -171,6 +175,10 @@ def did_authorities_ask_for_social_media_user_html_val(page, field):
 
 
 def did_authorities_ask_for_social_media_pass_html_val(page, field):
+    return basic_html_val(page, field)
+
+
+def were_devices_searched_or_seized_html_val(page, field):
     return basic_html_val(page, field)
 
 
