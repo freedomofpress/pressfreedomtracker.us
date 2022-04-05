@@ -3,7 +3,9 @@
 
 .search-button
 	position: absolute
-	height: 100%
+	height: calc(100% - 4px)	//border-width for incident is 2px. So subtract 4px from height
 	right: 2px
+	top: 2px
 	border: 0
 	font-weight: 500
+	background-color: $white
