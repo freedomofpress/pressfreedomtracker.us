@@ -12,6 +12,7 @@ export default function ButtonsRow({
 	defaultSelection = null,
 	updateSelection,
 	isButtonSelectable,
+	tooltipIfUnselectable = null,
 }) {
 	const [selectedButton, setSelectedButton] = React.useState(null)
 
@@ -43,6 +44,7 @@ export default function ButtonsRow({
 							changeSelectedButton(buttonLabel)
 						}}
 						selectable={isButtonSelectable(buttonLabel)}
+						tooltipIfUnselectable={tooltipIfUnselectable}
 						key={buttonLabel}
 					/>
 				))}

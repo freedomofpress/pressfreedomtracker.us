@@ -1,4 +1,5 @@
 import React from 'react'
+import Tooltip from './Tooltip'
 
 const textStyle = {
 	fontFamily: 'var(--font-base)',
@@ -6,9 +7,27 @@ const textStyle = {
 	fontSize: '14px',
 }
 
-export default function Button({ label, selected, selectable = true, onClick }) {
+export default function Button({ label, selected, selectable = true, onClick, tooltipIfUnselectable = null }) {
 	const [hovered, setHovered] = React.useState(false)
+	const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 })
+
+	const updateTooltipPosition = (MouseEvent) => {
+		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
+	}
+
 	return (
+		<>
+		{hovered && !selectable && tooltipIfUnselectable && (
+			<Tooltip
+				x={tooltipPosition.x}
+				y={tooltipPosition.y}
+				content={
+					<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
+						{tooltipIfUnselectable}
+					</div>
+				}
+			/>
+		)}
 		<button
 			style={{
 				padding: 8,
@@ -20,12 +39,14 @@ export default function Button({ label, selected, selectable = true, onClick }) 
 				cursor: selectable ? 'pointer' : 'default',
 				minWidth: 50,
 			}}
+			onMouseMove={updateTooltipPosition}
 			onClick={() => {
 				if (selectable) {
 					onClick()
 				}
 			}}
-			onMouseEnter={() => {
+			onMouseEnter={(e) => {
+				updateTooltipPosition(e)
 				setHovered(true)
 			}}
 			onMouseLeave={() => {
@@ -43,5 +64,6 @@ export default function Button({ label, selected, selectable = true, onClick }) 
 				{label}
 			</p>
 		</button>
+	</>
 	)
 }

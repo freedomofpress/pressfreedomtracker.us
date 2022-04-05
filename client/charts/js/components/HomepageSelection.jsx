@@ -107,6 +107,7 @@ export default function HomepageSelection({
 				isButtonSelectable={(tag) => {
 					return tag === 'All incidents' || isTagSelectable(originalDataset, tag, currentDate)
 				}}
+				tooltipIfUnselectable={'No incidents with this tag in specified date range'}
 			/>
 			<ButtonsRow
 				label="from"
