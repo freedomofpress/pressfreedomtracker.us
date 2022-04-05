@@ -79,11 +79,11 @@ class TestCategoryFieldValuesByField(TestCase):
         setattr(self.incident, field_name, True)
         output = render_function(self.incident, field_name)
         self.assertIn('Yes', output)
-        self.assertIn(f'{field_name}=True', output)
+        self.assertIn(f'{field_name}=1', output)
         setattr(self.incident, field_name, False)
         output = render_function(self.incident, field_name)
         self.assertIn('No', output)
-        self.assertIn(f'{field_name}=False', output)
+        self.assertIn(f'{field_name}=0', output)
 
     def test_arrest_status(self):
         self.assert_choices(
@@ -363,4 +363,5 @@ class CategoryFieldValues(TestCase):
     def test_should_get_boolean_category_fields(self):
         arrest_details = self.category_details[self.category1]
         self.assertEqual(arrest_details[7]['name'], 'Unnecessary use of force?')
-        self.assertIn(str(self.incident.unnecessary_use_of_force), arrest_details[7]['html'])
+        expected_value = '1' if self.incident.unnecessary_use_of_force else '0'
+        self.assertIn(expected_value, arrest_details[7]['html'])

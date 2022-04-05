@@ -30,7 +30,7 @@ def boolean_html_val(page, field):
     return render_to_string('incident/category_field/_basic_field.html', {
         'page': page,
         'field': field,
-        'value': value,
+        'value': '1' if value else '0',
         'display_value': display_value
     })
 
