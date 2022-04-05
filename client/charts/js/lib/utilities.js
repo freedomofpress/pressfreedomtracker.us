@@ -191,7 +191,7 @@ export const categoriesColors = {
 	'Equipment Damage': '#B0829D',
 	'Equipment Search or Seizure': '#63729A',
 	'Leak Case': '#F9B29F',
-	'Physical Attack': '#E07A5F',
+	'Assault': '#E07A5F',
 	'Prior Restraint': '#98C9CD',
 	'Subpoena/Legal Order': '#E2B6D0',
 	'Other Incident': '#B2B8E5',

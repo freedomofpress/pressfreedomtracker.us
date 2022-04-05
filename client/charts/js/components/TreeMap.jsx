@@ -80,7 +80,7 @@ function stackDatasetByCategory(
 		categories.map((d) => d.split(categoryDivider).map((e) => e.trim()))
 	)
 
-	// {"Physical attack": 800, "Arrest": 50, ...}
+	// {"Assault": 800, "Arrest": 50, ...}
 	const incidentsGroupedByCategory =
 		allCategories !== undefined
 			? Object.fromEntries(
@@ -102,7 +102,7 @@ function stackDatasetByCategory(
 		)
 	)
 
-	// [{category: "Physical attack", startingPoint: 0, endPoint: 800}, {category: "Arrest", startingPoint: 800, endPoint: 850}, ...]
+	// [{category: "Assault", startingPoint: 0, endPoint: 800}, {category: "Arrest", startingPoint: 800, endPoint: 850}, ...]
 	const stack = d3.stack().keys(Object.keys(incidentsGroupedByCategory))
 	const datasetStackedByCategory = stack([incidentsGroupedByCategoryAdjusted]).map((d) => ({
 		startingPoint: d[0][0],

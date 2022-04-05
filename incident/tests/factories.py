@@ -226,7 +226,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
             ),
         )
-        physical_attack = factory.Trait(
+        assault = factory.Trait(
             assailant=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
             was_journalist_targeted=factory.Iterator(
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]

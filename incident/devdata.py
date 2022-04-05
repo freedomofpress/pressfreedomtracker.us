@@ -339,7 +339,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             did_authorities_ask_about_work=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
             were_devices_searched_or_seized=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
         )
-        physical_attack = factory.Trait(
+        assault = factory.Trait(
             assailant=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
             was_journalist_targeted=factory.LazyFunction(
                 lambda: random_choice(choices.MAYBE_BOOLEAN)

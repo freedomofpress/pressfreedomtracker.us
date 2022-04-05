@@ -105,11 +105,11 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
             slug='equipment-search-seizure-or-damage',
             page_symbol='equipment_search',
         )
-        physical_attack = factory.Trait(
-            title='Physical Attack',
-            plural_name='Physical Attacks',
-            slug='physical-attack',
-            page_symbol='physical_attack',
+        assault = factory.Trait(
+            title='Assault',
+            plural_name='Assaults',
+            slug='assault',
+            page_symbol='assault',
         )
         leak_case = factory.Trait(
             title='Leak Case',
