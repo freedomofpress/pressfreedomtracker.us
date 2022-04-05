@@ -2,7 +2,7 @@
 	<header class="filters__header">
 		Filters
 
-		<button class="btn btn-ghost" type="reset">Clear All</button>
+		<a class="btn btn-ghost" href="{{ page.url }}">Clear All</a>
 	</header>
 	{% for item in filters %}
 		<details class="filters__group" role="group" aria-labelledby="{{ item.title|slugify }}"{% if item.has_changed %}open{% endif %}>
