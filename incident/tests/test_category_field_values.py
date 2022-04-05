@@ -52,7 +52,7 @@ class TestCategoryFieldValuesByField(TestCase):
         output = render_function(self.incident, field_name)
         for item in getattr(self.incident, field_name).all():
             self.assertIn(item.title, output)
-            self.assertIn(f'{field_name}={item.pk}', output)
+            self.assertIn(f'{field_name}={item.title}', output)
         getattr(self.incident, field_name).clear()
         output = render_function(self.incident, field_name)
         self.assertEqual(output, '')
@@ -61,7 +61,7 @@ class TestCategoryFieldValuesByField(TestCase):
         output = render_function(self.incident, field_name)
         for item in getattr(self.incident, field_name).all():
             self.assertIn(item.equipment.name, output)
-            self.assertIn(f'{field_name}={item.equipment.pk}', output)
+            self.assertIn(f'{field_name}={item.equipment.name}', output)
         getattr(self.incident, field_name).clear()
         output = render_function(self.incident, field_name)
         self.assertEqual(output, '')
@@ -106,7 +106,7 @@ class TestCategoryFieldValuesByField(TestCase):
 
         output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority')
         self.assertIn(leo.title.capitalize(), output)
-        self.assertIn(f'arresting_authority={leo.pk}', output)
+        self.assertIn(f'arresting_authority={leo.title}', output)
 
     def test_current_charges(self):
         self.incident.current_charges = ChargeFactory.create_batch(2)
