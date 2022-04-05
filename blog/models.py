@@ -93,9 +93,9 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         entry_qs = post_filters.filter(self.get_posts())
 
         if request.GET.get('author'):
-            context['author_filter'] = get_object_or_404(PersonPage, pk=post_filters.author)
+            author_filter = get_object_or_404(PersonPage, pk=post_filters.author)
         if request.GET.get('organization'):
-            context['organization_filter'] = get_object_or_404(OrganizationPage, pk=post_filters.organization)
+            organization_filter = get_object_or_404(OrganizationPage, pk=post_filters.organization)
 
         paginator, entries = paginate(
             request,
@@ -108,9 +108,17 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['entries_page'] = entries
         context['paginator'] = paginator
 
-        context['featured_blogs'] = [
-            f.page for f in self.featured_blogs.select_related('page').all()
-        ]
+        if not request.GET.get('author') and not request.GET.get('organization'):
+            context['featured_blogs'] = [
+                f.page for f in self.featured_blogs.select_related('page').all()
+            ]
+
+        context['incident_listing_heading'] = 'Latest'
+        if request.GET.get('author'):
+            context['incident_listing_heading'] = f'Showing posts by <b>{author_filter.title}</b>'
+        if request.GET.get('organization'):
+            context['incident_listing_heading'] = f'Showing posts by <b>{organization_filter.title}</b>'
+
 
         return context
 
