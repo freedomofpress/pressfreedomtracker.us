@@ -119,7 +119,6 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         if request.GET.get('organization'):
             context['incident_listing_heading'] = f'Showing posts by <b>{organization_filter.title}</b>'
 
-
         return context
 
     def get_cache_tag(self):
