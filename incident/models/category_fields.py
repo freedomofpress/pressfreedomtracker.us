@@ -37,7 +37,7 @@ from incident.utils.category_field_values import (
 )
 
 CATEGORY_FIELD_MAP = {
-    'arrest': [
+    'arrest-criminal-charge': [
         ('arrest_status', 'Arrest Status'),
         ('status_of_charges', 'Status of Charges'),
         ('arresting_authority', 'Arresting Authority'),
@@ -50,7 +50,7 @@ CATEGORY_FIELD_MAP = {
     'equipment-damage': [
         ('equipment_broken', 'Equipment Broken'),
     ],
-    'equipment-search': [
+    'equipment-search-seizure-or-damage': [
         ('equipment_seized', 'Equipment Seized'),
         ('status_of_seized_equipment', 'Status of Seized Equipment'),
         ('is_search_warrant_obtained', 'Search Warrant Obtained'),
@@ -87,7 +87,7 @@ CATEGORY_FIELD_MAP = {
     'prior-restraint': [
         ('status_of_prior_restraint', 'Status of Prior Restraint'),
     ],
-    'denial-of-access': [
+    'denial-access': [
         ('politicians_or_public_figures_involved', 'Politicians or Public Figures Involved'),
     ],
 }
