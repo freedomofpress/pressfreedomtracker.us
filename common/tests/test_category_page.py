@@ -30,6 +30,20 @@ class ContextTest(TestCase):
 
         self.assertEqual(set(context['entries_page']), {incident1})
 
+    def test_unpaginated_recent_incidents(self):
+        category1 = CategoryPageFactory()
+        category2 = CategoryPageFactory()
+        incident3 = IncidentPageFactory(categories=[category1], date='2022-01-01')
+        incident1 = IncidentPageFactory(categories=[category1], date='2022-03-01')
+        incident2 = IncidentPageFactory(categories=[category1], date='2022-02-01')
+        IncidentPageFactory(title='Not relevant', categories=[category2])
+
+        request = RequestFactory().get('/')
+
+        context = category1.get_context(request)
+
+        self.assertEqual(list(context['recent_incidents']), [incident1, incident2, incident3])
+
     def test_incidents_filtered_by_category__and_choice(self):
         category1 = CategoryPageFactory(incident_filters=['arrest_status'])
         category2 = CategoryPageFactory()

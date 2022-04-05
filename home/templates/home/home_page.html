@@ -65,7 +65,7 @@
 		{% if search_page %}
 			<section class="homepage-section">
 				<div class="homepage-section-inner">
-					{% include "home/_recent_incidents_section.html" with label=page.recent_incidents_label more_label=page.recent_incidents_more_label count=page.recent_incidents_count %}
+					{% include "home/_recent_incidents_section.html" with incidents_base=search_page.get_incidents label=page.recent_incidents_label more_label=page.recent_incidents_more_label count=page.recent_incidents_count %}
 				</div>
 			</section>
 		{% endif %}
