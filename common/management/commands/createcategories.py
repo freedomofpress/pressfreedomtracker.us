@@ -45,7 +45,7 @@ CATEGORIES = {
         'is_search_warrant_obtained',
         'actor',
     ],
-    'physical_attack': [
+    'assault': [
         'assailant',
         'was_journalist_targeted',
     ],

@@ -22,7 +22,7 @@ const categoriesSlugs = {
 	'Subpoena/Legal Order': 'subpoena',
 	'Leak Case': 'leak-case',
 	'Equipment Search or Seizure': 'equipment-search-seizure-or-damage',
-	'Physical Attack': 'physical-attack',
+	'Assault': 'assault',
 	'Denial of Access': 'denial-access',
 	'Chilling Statement': 'chilling-statement',
 	'Other Incident': 'other-incident',

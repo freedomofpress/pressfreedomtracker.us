@@ -101,7 +101,7 @@ class IncidentCSVTestCase(TestCase):
             equipment_damage=True,
             arrest=True,
             border_stop=True,
-            physical_attack=True,
+            assault=True,
             leak_case=True,
             workers_whose_communications_were_obtained=2,
             subpoena=True,

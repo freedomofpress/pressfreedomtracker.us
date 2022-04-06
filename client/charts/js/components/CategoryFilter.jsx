@@ -23,7 +23,7 @@ const margins = {
 }
 
 const svgIcons = {
-	'Physical Attack': strokeCircle,
+	'Assault': strokeCircle,
 	'Arrest/Criminal Charge': fillCircle,
 	'Arrest / Criminal Charge': fillCircle, // redundant to catch both
 	'Equipment Damage': doubleCircle,
@@ -50,7 +50,7 @@ export default function CategoryFilter({
 	)
 
 	const categoryFrequencies = {
-		'Physical Attack': 0,
+		'Assault': 0,
 		'Arrest/Criminal Charge': 0,
 		'Equipment Damage': 0,
 		'Equipment Search or Seizure': 0,

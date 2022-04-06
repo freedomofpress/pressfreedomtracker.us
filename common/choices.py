@@ -7,7 +7,7 @@ CATEGORY_SYMBOL_CHOICES = [
     ('equipment_search', 'Equipment Search Icon'),
     ('leak_case', 'Leak Case Icon'),
     ('other_incident', 'Other Incidents Icon'),
-    ('physical_attack', 'Physical Attack Icon'),
+    ('assault', 'Assault Icon'),
     ('prior_restraint', 'Prior Restraint Icon'),
     ('subpoena', 'Subpoena Icon'),
 ]

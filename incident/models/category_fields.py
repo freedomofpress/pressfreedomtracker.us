@@ -71,7 +71,7 @@ CATEGORY_FIELD_MAP = {
         ('did_authorities_ask_about_work', 'Asked intrusive questions about work?'),
         ('were_devices_searched_or_seized', 'Were devices searched or seized?'),
     ],
-    'physical-attack': [
+    'assault': [
         ('assailant', 'Assailant'),
         ('was_journalist_targeted', 'Was the journalist targeted?'),
     ],

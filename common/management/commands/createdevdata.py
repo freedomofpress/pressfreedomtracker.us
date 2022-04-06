@@ -54,8 +54,8 @@ FACTORY_ARGS_BY_CATEGORY = {
     'equipment_damage': {
         'equipment_damage': True,
     },
-    'physical_attack': {
-        'physical_attack': True,
+    'assault': {
+        'assault': True,
     },
     'subpoena': {
         'subpoena': True,
@@ -89,7 +89,7 @@ PARAM_TO_SLUG_MAP = {
     'border_stop': 'border-stop',
     'denial_of_access': 'denial-access',
     'equipment_search': 'equipment-search-seizure-or-damage',
-    'physical_attack': 'physical-attack',
+    'assault': 'assault',
     'leak_case': 'leak-case',
     'subpoena': 'subpoena',
     'equipment_damage': 'equipment-damage',
