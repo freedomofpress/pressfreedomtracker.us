@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.text import capfirst
 from django.apps import apps
 
 from incident.models import choices
@@ -99,18 +100,22 @@ class FilterForm(forms.Form):
                 if _type == 'checkbox':
                     field = forms.MultipleChoiceField
                     kwargs['widget'] = forms.CheckboxSelectMultiple
-                    kwargs['choices'] = [[x[0], x[1].capitalize()] for x in item.get('choices', [])]
+                    kwargs['choices'] = [
+                        [value, capfirst(display)] for value, display in item.get('choices', [])
+                    ]
 
                 if _type == 'choice':
                     field = forms.ChoiceField
                     kwargs['widget'] = forms.Select
                     kwargs['initial'] = ''
-                    kwargs['choices'] = [('', '------')] + [[x[0], x[1].capitalize()] for x in item.get('choices', [])]
+                    kwargs['choices'] = [('', '------')] + [
+                        [value, capfirst(display)] for value, display in item.get('choices', [])
+                    ]
 
                 if _type == 'radio':
                     field = forms.ChoiceField
                     kwargs['widget'] = forms.RadioSelect
-                    kwargs['choices'] = [[x[0], x[1].capitalize()] for x in choices.MAYBE_BOOLEAN]
+                    kwargs['choices'] = [[x[0], capfirst(x[1])] for x in choices.MAYBE_BOOLEAN]
 
                 if field:
                     self.fields[name] = field(**kwargs)
