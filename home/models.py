@@ -182,7 +182,7 @@ class HomePage(MetadataPageMixin, Page):
         [
             ObjectList(content_panels, heading='Content'),
             ObjectList(data_viz_panels, heading="Data Viz"),
-            ObjectList(Page.promote_panels, heading='Promote'),
+            ObjectList(MetadataPageMixin.promote_panels, heading='Promote'),
             ObjectList(Page.settings_panels, heading='Settings'),
         ]
     )
