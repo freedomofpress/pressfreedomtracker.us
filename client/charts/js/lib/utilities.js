@@ -185,13 +185,13 @@ export function countIncidentsOutsideUS(dataset) {
 
 export const categoriesColors = {
 	'Arrest/Criminal Charge': '#669599',
+	'Assault': '#E07A5F',
 	'Border Stop': '#FBE0BC',
 	'Chilling Statement': '#F4C280',
 	'Denial of Access': '#7EBBC8',
 	'Equipment Damage': '#B0829D',
 	'Equipment Search or Seizure': '#63729A',
 	'Leak Case': '#F9B29F',
-	'Assault': '#E07A5F',
 	'Prior Restraint': '#98C9CD',
 	'Subpoena/Legal Order': '#E2B6D0',
 	'Other Incident': '#B2B8E5',
