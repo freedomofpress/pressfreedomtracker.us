@@ -1,6 +1,7 @@
 import csv
 import json
 from typing import TYPE_CHECKING
+from urllib import parse
 
 from django.db import models
 from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
@@ -17,6 +18,7 @@ from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
 from incident.models.export import to_row, is_exportable, to_json
 from incident.models.incident_page import IncidentPage
+from incident.utils.forms import get_filter_forms
 from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
 from incident.feeds import IncidentIndexPageFeed
 
@@ -163,6 +165,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         from common.models import CategoryPage
         context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
+        context['all_incident_count'] = len(IncidentFilter({}).get_queryset())
 
         incident_filter = IncidentFilter(request.GET)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
@@ -173,7 +176,11 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         else:
             context['export_path'] = self.url + self.reverse_subpage('export_view')
 
+        if search_settings.learn_more_page:
+            context['learn_more_path'] = search_settings.learn_more_page.get_url()
+
         incident_filter.clean()
+        context['search_value'] = incident_filter.cleaned_data.get('search', '')
         category_data = incident_filter.cleaned_data.get('categories')
 
         if not category_data:
@@ -182,28 +189,16 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             context['categories'] = CategoryPage.objects.live().filter(
                 models.Q(pk__in=category_data.pks) | models.Q(title__in=category_data.strings)
             )
+        if incident_filter.cleaned_data:
+            context['filtered_export_path'] = (
+                context['export_path'] +
+                '?' +
+                parse.urlencode(incident_filter.cleaned_data)
+            )
 
         incident_qs = incident_filter.get_queryset() \
-            .select_related('teaser_image', 'state', 'arresting_authority') \
+            .with_public_associations() \
             .with_most_recent_update() \
-            .prefetch_related(
-                'authors',
-                'categories__category',
-                'current_charges',
-                'dropped_charges',
-                'equipment_broken__equipment',
-                'equipment_seized__equipment',
-                'links',
-                'politicians_or_public_figures_involved',
-                'tags',
-                'target_nationality',
-                'targeted_institutions',
-                'targeted_journalists',
-                'teaser_image__renditions',
-                'updates',
-                'venue',
-                'workers_whose_communications_were_obtained',
-        )
 
         paginator, entries = paginate(
             request,
@@ -217,10 +212,22 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['paginator'] = paginator
         context['summary_table'] = incident_filter.get_summary()
 
+        get_data = request.GET.copy()
+        context['sort_choices'] = []
+        for value, label in IncidentFilter.SortOptions.choices:
+            get_data['sort'] = value
+            context['sort_choices'].append(
+                (get_data.urlencode(), label, value == incident_filter.sort.value)
+            )
+        context['selected_sort'] = incident_filter.sort
+        context['incident_count'] = len(incident_qs)
+
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
         else:
             context['layout_template'] = 'base.html'
+
+        context['filters'] = get_filter_forms(request, json.loads(context['serialized_filters']))
 
         return context
 

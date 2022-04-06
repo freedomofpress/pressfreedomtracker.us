@@ -6,7 +6,7 @@ from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel, StreamFieldPanel, MultiFieldPanel
 from wagtail.core.blocks import RichTextBlock
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Orderable
+from wagtail.core.models import Orderable, Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
@@ -26,6 +26,15 @@ class SearchSettings(BaseSetting):
         help_text='Page linked to by the "Download the data" link at the bottom of the search filters. If a page is selected here, then the link will redirect to it with the search querystring intact. If this field is blank, the link will be a direct download of the CSV data requested.',
     )
 
+    learn_more_page = models.ForeignKey(
+        Page,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Page linked to by the "Learn More" link in the Download Dataset dropdown on the incident database page.',
+    )
+
     search_page = models.ForeignKey(
         'incident.IncidentIndexPage',
         null=True,
@@ -39,6 +48,7 @@ class SearchSettings(BaseSetting):
     panels = [
         PageChooserPanel('search_page'),
         PageChooserPanel('data_download_page'),
+        PageChooserPanel('learn_more_page'),
     ]
 
     class Meta:
@@ -112,6 +122,14 @@ class SiteSettings(BaseSetting):
         null=True,
         help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.'
     )
+    citation_contact_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Page linked by the "Contact Us" link in the footer citation note.',
+    )
     banner_content = RichTextField(
         blank=True,
         null=True,
@@ -134,6 +152,7 @@ class SiteSettings(BaseSetting):
 
     panels = [
         StreamFieldPanel('incident_sidebar_note'),
+        PageChooserPanel('citation_contact_page'),
         FieldPanel('incident_footer'),
         MultiFieldPanel([
             FieldPanel('banner_content'),

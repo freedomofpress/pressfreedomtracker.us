@@ -288,7 +288,7 @@ class CategoryAPITest(APITestCase):
             'title': self.category.title,
             'methodology': self.category.methodology,
             'plural_name': self.category.plural_name,
-            'page_color': self.category.page_color,
+            'page_symbol': self.category.page_symbol,
         })
         self.assertEqual(response.status_code, 200)
 
@@ -314,13 +314,14 @@ class IncidentAPITest(APITestCase):
             parent=cls.incident_index,
             authors=[author1, author2],
             state=StateFactory(),
+            introduction='Introduction',
             teaser='Teaser',
             categories=[cls.cat1, cls.cat2],
             equipment_search=True,
             equipment_damage=True,
             arrest=True,
             border_stop=True,
-            physical_attack=True,
+            assault=True,
             leak_case=True,
             workers_whose_communications_were_obtained=2,
             subpoena=True,
@@ -376,6 +377,7 @@ class IncidentAPITest(APITestCase):
                 'state': {'name': inc.state.name, 'abbreviation': inc.state.abbreviation},
                 'latitude': inc.latitude,
                 'longitude': inc.longitude,
+                'introduction': str(inc.introduction),
                 'teaser': str(inc.teaser),
                 'body': str(inc.body),
                 'teaser_image': inc.teaser_image.get_rendition('fill-1330x880').url,

@@ -1,0 +1,10 @@
+{% load pageurl from wagtailcore_tags %}
+{% if incident.get_tags and incident.get_parent %}
+	{% with parent=incident.get_parent %}
+		<ul class="tag-list">
+			{% for tag in incident.get_tags %}
+				<li><a href="{% pageurl parent %}?tags={{ tag.title|urlencode }}" class="btn btn-tag">#{{ tag.title }}</a></li>
+			{% endfor %}
+		</ul>
+	{% endwith %}
+{% endif %}

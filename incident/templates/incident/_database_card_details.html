@@ -1,0 +1,39 @@
+<button
+	class="disclose-summary incident-database-card__details-toggle"
+	aria-expanded="false"
+	aria-controls="incident-details-{{ incident.pk }} category-details-{{ incident.pk }}"
+>
+	Show More
+</button>
+<div class="incident-database-card__details-container database-card-table__container" id="incident-details-{{ incident.pk }}" data-visible="false">
+	<div class="incident-database-card__main-details">
+		<h3 class="heading-table incident-database-card__details-title" id="incident-details-title">Incident Details</h3>
+
+		{% include "incident/_database_card_table.html" with incident=incident only %}
+	</div>
+</div>
+
+<div id="category-details-{{ incident.pk }}" class="incident-database-card__category-details database-card-table__container" data-visible="false">
+	{% for category, category_detail in incident.get_category_details.items %}
+		{% if category_detail %}
+			<dl class="database-card-table__category-details" aria-labelledby="{{ category.slug }}-details-title">
+				<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">
+					{{ category.title }}
+				</h3>
+
+				{% for detail in category_detail %}
+					{% if detail.html %}
+						<div class="database-card-table__row database-card-table__row--inline">
+							<dt class="database-card-table__label">
+								{{ detail.name }} &rarr;
+							</dt>
+							<dd class="database-card-table__value">
+								{{ detail.html | safe }}
+							</dd>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</dl>
+		{% endif %}
+	{% endfor %}
+</div>

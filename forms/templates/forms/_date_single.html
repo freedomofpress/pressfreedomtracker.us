@@ -1,0 +1,46 @@
+{% load widget_tweaks common_tags %}
+
+{% for item in group.fields %}
+    {% with field=form|lookup:item.clean_name placeholder_length=item.placeholder|length %}
+
+        <div
+            class="form-field form-field--inline
+                {% if field.errors %}
+                    form-field--error
+                {% endif %}
+                {% if field.field.widget.attrs.is_hidden %}
+                    form-field--hidden
+                {% endif %}
+            "
+            style="width: {{ placeholder_length }}em;"
+
+        >
+            {% if 'hiddeninput' not in field|widget_type %}
+                <label for="{{ field.id_for_label }}" class="form-label form-label--hidden">{{ field.label }}</label>
+            {% endif %}
+
+            {% with placeholder="placeholder:"|add:item.placeholder maxlength="maxlength:"|add_as_string:placeholder_length %}
+
+                {% if field.field.required %}
+                    {{ field | add_class:'form-item' | attr:placeholder | attr:maxlength | attr:'pattern=\d*' | attr:'required' }}
+                {% else %}
+                    {{ field | add_class:'form-item' | attr:placeholder | attr:maxlength | attr:'pattern=\d*' }}
+                {% endif %}
+
+            {% endwith %}
+        </div>
+
+        {% if not forloop.last %}
+            <span class="form-field--divider">/</span>
+        {% endif %}
+
+        {% if field.errors %}
+            <div class="form-field form-field--error">
+                {% for error in field.errors %}
+                    <span class="form-field__error__message form-field__error__message--visible">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    {% endwith %}
+{% endfor %}

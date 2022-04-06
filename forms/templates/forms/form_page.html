@@ -1,19 +1,41 @@
-{% extends template_name %}
-{% load wagtailcore_tags typogrify_tags %}
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
 
 {% block main %}
-	<div class="form-page">
-		<h2 class="page-title">{{ page.title }}</h2>
-		{{ page.intro|richtext|typogrify }}
-		<form class="form-page__form" action="{% pageurl page %}" method="POST">
-			{% csrf_token %}
-			{{ form.as_p }}
-			<button
-				type="submit"
-				class="button button--outline"
-			>
-				{{ page.button_text|default:"Submit" }}
-			</button>
-		</form>
-	</div>
+    <h1 class="page-title">{{ page.title }}</h1>
+
+    <section class="formpage-body">
+        {% if page.intro %}
+            <div class="styled-text rich-text">
+                {{ page.intro|richtext }}
+            </div>
+        {% endif %}
+
+        {% if page.form_intro %}
+            <h3 class="heading">{{ page.form_intro }}</h3>
+        {% endif %}
+
+    </section>
+
+    <section class="formpage-form">
+        <form class="form" action="{% pageurl page %}" method="post">
+            {% csrf_token %}
+            {% for group in page.groups %}
+                <fieldset class="fieldset fieldset--spaced">
+                    <h4 class="heading-regular">{{ group.title }}</h4>
+                    {% if group.description %}
+                        <p class="hint">{{ group.description }}</p>
+                    {% endif %}
+                    {% with template='forms/_'|add:group.template|add:'.html' %}
+                        {% include template %}
+                    {% endwith %}
+                </fieldset>
+            {% endfor %}
+            <fieldset class="fieldset fieldset--spaced">
+                {{ form.wagtailcaptcha }}
+            </fieldset>
+            <button type="submit" class="btn btn-primary">{{ page.button_text }}</button>
+        </form>
+    </section>
 {% endblock %}

@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlencode
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -6,7 +7,13 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, StreamFieldPanel, PageChooserPanel
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    InlinePanel,
+    StreamFieldPanel,
+    PageChooserPanel,
+    MultiFieldPanel,
+)
 from wagtail.core import blocks
 from wagtail.core.models import Page, Orderable, Site
 from wagtail.core.fields import RichTextField, StreamField
@@ -29,8 +36,9 @@ from common.blocks import (
     TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     EmailSignupBlock,
+    InfoTableBlock,
 )
-from common.choices import CATEGORY_COLOR_CHOICES
+from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
@@ -223,10 +231,16 @@ class StatisticsItem(Orderable):
         blank=True,
         help_text='Whitespace-separated list of arguments to be passed to the statistics function',
     )
+    link = models.URLField(
+        null=True,
+        blank=True,
+        help_text='Link to the filtered incident database page, showing incidents related to this filter',
+    )
     panels = [
         FieldPanel('label'),
         FieldPanel('dataset'),
         FieldPanel('params'),
+        FieldPanel('link'),
     ]
 
     def clean(self):
@@ -260,8 +274,18 @@ class CategoryIncidentFilter(Orderable):
             })
 
 
+class CategoryMethodologyItem(Orderable):
+    page = ParentalKey('common.CategoryPage', related_name='methodology_items')
+    label = models.CharField(max_length=255)
+    description = models.TextField()
+    panels = [
+        FieldPanel('label'),
+        FieldPanel('description'),
+    ]
+
+
 class CategoryPage(MetadataPageMixin, Page):
-    methodology = RichTextField(
+    description = RichTextField(
         features=[
             'h1',
             'h2',
@@ -283,6 +307,19 @@ class CategoryPage(MetadataPageMixin, Page):
         blank=True,
         validators=[validate_template],
     )
+    methodology = RichTextField(
+        blank=True,
+        null=True,
+        help_text='Detailed description of how we track the data for this particular category.'
+    )
+    blog_index_page = models.ForeignKey(
+        'blog.BlogIndexPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='This blog will be linked from the category page.'
+    )
     default_image = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -292,23 +329,48 @@ class CategoryPage(MetadataPageMixin, Page):
         help_text='Default SEO image for the incidents within this category'
     )
     plural_name = models.CharField(max_length=255, null=True, blank=True)
-    page_color = models.CharField(max_length=255, choices=CATEGORY_COLOR_CHOICES, default='eastern-blue')
+    page_symbol = models.CharField(
+        max_length=255,
+        choices=CATEGORY_SYMBOL_CHOICES,
+        default='other_incident',
+        help_text='Please check the styleguide to associate the icons with their name'
+    )
 
     content_panels = Page.content_panels + [
-        FieldPanel('methodology'),
+        FieldPanel('description'),
         ImageChooserPanel('default_image', heading='Default SEO image for incidents'),
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('statistics_items', label='Statistics'),
+        MultiFieldPanel(
+            [
+                FieldPanel('methodology'),
+                InlinePanel(
+                    'methodology_items',
+                    label='Methodology Items',
+                    help_text='Describe the different fields in this particular category and how the data related to that is tracked.',
+                ),
+            ],
+            'Methodology'
+        ),
+        InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
+        MultiFieldPanel(
+            [
+                PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
+                InlinePanel('featured_blogs', max_num=6),
+            ],
+            'Featured Blog Posts',
+            classname='collapsible',
+        ),
         InlinePanel('incident_filters', label='Fields to include in filters'),
     ]
 
     settings_panels = Page.settings_panels + [
         FieldPanel('plural_name'),
-        FieldPanel('page_color'),
+        FieldPanel('page_symbol'),
     ]
 
     def clean(self):
-        self.methodology = unescape(self.methodology)
+        self.description = unescape(self.description)
 
     def get_context(self, request, *args, **kwargs):
         # placed here to avoid circular dependency
@@ -329,6 +391,27 @@ class CategoryPage(MetadataPageMixin, Page):
         data['categories'] = str(self.id)
         incident_filter = IncidentFilter(data)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
+        context['incident_qs'] = urlencode(data)
+
+        context['featured_blog_posts'] = [
+            f.page for f in self.featured_blogs.select_related('page')
+        ]
+        context['featured_incident_pages'] = [
+            f.page for f in self.featured_incidents.select_related(
+                'page',
+                'page__teaser_image',
+            )
+        ]
+
+        context['methodology'] = {
+            'description': self.methodology,
+            'data_items': [
+                {
+                    'label': item.label,
+                    'description': item.description,
+                } for item in self.methodology_items.all()
+            ]
+        }
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
@@ -368,6 +451,7 @@ class CategoryPage(MetadataPageMixin, Page):
             orphans=5
         )
 
+        context['recent_incidents'] = incident_qs
         context['entries_page'] = entries
         context['paginator'] = paginator
         context['summary_table'] = incident_filter.get_summary()
@@ -390,6 +474,7 @@ class CategoryPage(MetadataPageMixin, Page):
                     tag_name=item.dataset,
                     params=' ' + item.params if item.params else '',
                 )),
+                'link': item.link,
             } for item in self.statistics_items.all()
         ]
         return context
@@ -410,6 +495,24 @@ class CategoryPage(MetadataPageMixin, Page):
         return response
 
 
+class FeaturedCategoryIncident(Orderable):
+    category_page = ParentalKey('common.CategoryPage', related_name='featured_incidents')
+    page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('page'),
+    ]
+
+
+class FeaturedCategoryBlog(Orderable):
+    category_page = ParentalKey('common.CategoryPage', related_name='featured_blogs')
+    page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        PageChooserPanel('page'),
+    ]
+
+
 class SimplePage(MetadataPageMixin, Page):
     body = StreamField([
         ('text', StyledTextTemplateBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
@@ -427,6 +530,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
         ('email_signup', EmailSignupBlock()),
+        ('info_table', InfoTableBlock()),
     ])
 
     sidebar_content = StreamField(

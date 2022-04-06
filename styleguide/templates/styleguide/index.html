@@ -1,57 +1,346 @@
-{% extends "base.html" %}
+{% extends "super.html" %}
 
-{% block main %}
-<div style="max-width: 800px; margin: 20px;">
-	<h2>Incident</h2>
-	{% include "styleguide/modules/_incident.html" %}
+{% load webpack_loader %}
+{% load wagtailcore_tags %}
 
-	<h2>Data Table</h2>
-	{% include "styleguide/modules/_data-table.html" %}
+{% block title %}PFT Styleguide{% endblock %}
 
-	<h2>Flex Container</h2>
-	Not pictured here. <code>&lt;div class="flex-container" /&gt;</code> ensures
-	that its last child expands to fill the viewport
+{% block body %}
+<style>
+	code:not(p code) {
+		margin: 1rem 5rem;
+		display: block;
+		border: 1px dashed black;
+		padding: 1.5rem
+	}
+	hr {
+		max-width: 100%;
+	}
+	pre {
+		overflow: auto;
+	}
+	img {
+		max-width: 100%;
+	}
+</style>
+	<h1 class="page-title">PFT Styleguide</h1>
 
-	<h2>Layout: Right Sidebar</h2>
-	{% include "styleguide/modules/_layout-right-sidebar.html" %}
+	<hr/>
+	<details id="colors" open>
+		<summary><h2 class="heading">Colors</h2></summary>
+		<p>The variables for colors can be found in <code>_colors.sass</code> file</p>
+		<code><pre>
 
-	<h2>Layout: Right Sidebar (with Light Sidebar)</h2>
-	{% include "styleguide/modules/_layout-right-sidebar-w-light.html" %}
+	$black: #000
+	$white: #FFF
 
-		<h2>Stats</h2>
-	<p>These are also the border colors.</p>
-	<div class="stats">
-		{% include "styleguide/modules/_stats.html" with color="eastern-blue" %}
-		{% include "styleguide/modules/_stats.html" with color="gamboge" %}
-		{% include "styleguide/modules/_stats.html" with color="gray-dark" %}
-		{% include "styleguide/modules/_stats.html" with color="green-apple" %}
-		{% include "styleguide/modules/_stats.html" with color="green" %}
-		{% include "styleguide/modules/_stats.html" with color="sunshine" %}
-		{% include "styleguide/modules/_stats.html" with color="pink" %}
-		{% include "styleguide/modules/_stats.html" with color="red" %}
-		{% include "styleguide/modules/_stats.html" with color="royal-blue" %}
-		{% include "styleguide/modules/_stats.html" with color="teal" %}
-		{% include "styleguide/modules/_stats.html" with color="violet" %}
-		{% include "styleguide/modules/_stats.html" with color="yellow" %}
+	$section-background: #F8F8F8
+	$tag-inactive: #C1C1C1
+	$gray-text: #8F8F8F
+	$accent-color: #F2FC67
+	$accent-background-tags: #FAFEC2
+
+		</pre></code>
+	</details>
+
+	<hr/>
+	<details id="typography" open>
+		<summary><h2 class="heading">Typography</h2></summary>
+		<p>
+			The font-sizes and the typography styles for the basic
+			html elements can be found in <code>_typography.sass</code> file</p>
+		<code>
+			class="page-title": <h1 class="page-title">Heading 1</h1>
+		</code>
+		<code>
+			class="article-title": <h1 class="article-title">Heading 2</h1>
+		</code>
+		<code>
+			class="heading": <h1 class="heading">Heading 3</h1>
+		</code>
+		<code>
+			class="heading-regular": <h1 class="heading-regular">Heading 4</h1>
+		</code>
+		<code>
+			class="card-title-big": <h3 class="card-title-big">Title Big Card</h3>
+		</code>
+		<code>
+			class="card-title-database": <h3 class="card-title-database">Title Incident Database Card</h3>
+		</code>
+		<code>
+			class="card-title-small": <h3 class="card-title-small">Title Small Card</h3>
+		</code>
+		<code>
+			&lt;p class="paragraph-subtitle"&gt;: <p class="paragraph-subtitle">Subtitle</p>
+		</code>
+		<code>
+			&lt;p&gt; or class="paragraph": <p>Paragraph</p>
+		</code>
+		<code>
+			&lt;p class="paragraph-notes"&gt;: <p class="paragraph-notes">Small Paragraph, notes</p>
+		</code>
+		<code>
+			&lt;p class="paragraph-small-ui"&gt;: <p class="paragraph-small-ui">Small UI Text</p>
+		</code>
+		<code>
+			&lt;p class="paragraph-number"&gt;: <p class="paragraph-number">12345</p>
+		</code>
+	</details>
+
+	<hr/>
+	<details id="text-field" open>
+		<summary><h2 class="heading">Text fields</h2></summary>
+		<p>Preferably always put a <code>&lt;label class="sr-only"&gt;</code> associated with the
+		input or text fields since placeholder is not accessible to screenreaders.</p>
+		<code>
+			&lt;input class="text-field--single"&gt;
+			<div>
+				<label class="sr-only">label for text</label>
+				<input class="text-field--single" placeholder="Text">
+			</div>
+		</code>
+
+		<code>
+            &lbrace;% include 'incident/_search_bar.html' %&rbrace; :
+			{% include "incident/_search_bar.html" %}
+		</code>
+	</details>
+
+	<hr/>
+	<details id="buttons" open>
+		<summary><h2 class="heading">Buttons</h2></summary>
+		<p>
+			The sass for buttons can be found in <code>components/_buttons.sass</code> file.
+			An important thing to remember while using the following styles is whether the HTML
+			markup should have an <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code>. In other
+			words, should the markup appear be a link or a button. The simple rule to follow
+			usually is if the button takes you to another page, then it should be marked up as
+			a link (i.e. <code>&lt;a&gt;</code>) whereas if it changes something in the current
+			page, e.g. filter the content of the page, then it should have the mark up of a button
+			(i.e. <code>&lt;button&gt;</code>)
+		</p>
+
+		<h4 class="heading-regular">Main CTA</h4>
+		<code>
+			class="btn btn-primary":
+
+			<a class="btn btn-primary" href="#">Button</a>
+		</code>
+		<code>
+			class="btn btn-primary" disabled="":
+
+			<a class="btn btn-primary" disabled>Button</a>
+		</code>
+
+		<h4 class="heading-regular">Secondary</h4>
+		<code>
+			class="btn btn-secondary":
+
+			<a class="btn btn-secondary" href="#">Button</a>
+		</code>
+		<code>
+			class="btn btn-secondary" disabled="":
+
+			<a class="btn btn-secondary" disabled>Button</a>
+		</code>
+
+		<h4 class="heading-regular">Ghost</h4>
+		<code>
+			class="btn btn-ghost":
+
+			<a class="btn btn-ghost" href="#">Button</a>
+		</code>
+		<code>
+			class="btn btn-ghost" disabled="":
+
+			<a class="btn btn-ghost" disabled>Button</a>
+		</code>
+
+
+		<h4 class="heading-regular">Text link</h4>
+		<code>
+			&lt;a&gt; or class="text-link":
+
+			<a class="text-link" href="#">Text Link</a>
+		</code>
+
+		<h4 class="heading-regular">Tag</h4>
+		<code>
+			class="btn btn-tag":
+
+			<a class="btn btn-tag" href="#">#Tag</a>
+		</code>
+		<code>
+			class="btn btn-tag" disabled="":
+
+			<a class="btn btn-tag" disabled>#Tag</a>
+		</code>
+		<h4 class="heading-regular">Show More/Less</h4>
+		<code>
+			&lbrace;% include 'common/_disclose.html' with content="Show more text here" %&rbrace; :
+			{% include 'common/_disclose.html' with content="Show more text here" %}
+		</code>
+	</details>
+
+	<hr/>
+	<details id="category-icons" open>
+		<summary><h2 class="heading">Category Icons</h2></summary>
+		<p>The symbol and the text are independent of the HTML element. So for instance,
+			the categories with text can be implemented with class as defined below even in a &lt;span&gt;.
+			So for the link to have the same styles as a .text-link, one must add that class as well.
+		</p>
+		<code>
+			&lt;a class="text-link category category-&lbrace;&lbrace; category.page_symbol &rbrace;&rbrace;" href="&lbrace;% pageurl category %&rbrace;"&gt;&lbrace;&lbrace; category.title &rbrace;&rbrace;&lt;/a&gt;:
+			{% if category %}
+				<a class="text-link category category-{{ category.page_symbol }}" href="{% pageurl category %}">{{ category.title }}</a>
+			{% endif %}
+			<h4>Category symbols:</h4>
+			{% for symbol in category_symbols %}
+				<span class="category category-{{ symbol.0 }}">{{ symbol.1 }}</span>
+				<br/>
+			{% endfor %}
+		</code>
+	</details>
+
+	<details id="categories-block" open>
+		<summary><h2 class="heading">Categories Block</h2></summary>
+		<code><pre>{% filter force_escape %}{% verbatim %}
+<div class="categories-block">
+	{% for category in all_categories %}
+		<a href="{% pageurl category %}" class="btn btn-secondary categories-block--item">
+			<span class="category category-{{ category.page_symbol }}">{{ category.title }}</span>
+		</a>
+	{% endfor %}
+</div>{% endverbatim %}{% endfilter %}</pre></code>
+
+		<div class="categories-block">
+			{% for category in all_categories %}
+				<a href="{% pageurl category %}" class="btn btn-secondary categories-block--item">
+					<span class="category category-{{ category.page_symbol }}">{{ category.title }}</span>
+				</a>
+			{% endfor %}
+		</div>
+	</details>
+	<hr/>
+	<details id="card-containers" open>
+		<summary><h2 class="heading">Card Carousel</h2></summary>
+		A grid-based card container that collapses to a horizontally scrolling carousel on tablet/mobile screens.  Requires a small amount of javascript and a unique key defining the ID of the carousel (so that multiple ones can exist on the same page with independent scroll buttons).  Define a template like this:
+		<code><pre>{% filter force_escape %}{% verbatim %}
+{% load common_tags %}
+{% with id=key|add_as_string:'-carousel' %}
+	<ol id="{{ id }}" class="article-carousel__items">
+		{% for blog in blogs %}
+			<li class="article-carousel__item">
+				{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'big' photo=blog.teaser_image only %}
+			</li>
+		{% endfor %}
+	</ol>
+
+	<div class="article-carousel__scroller" role="scroller" data-articles="{{ id }}">
+		<button class="article-carousel__scroller--button article-carousel__scroller--button-prev">
+			{% include 'common/arrow-prev.svg' %}
+		</button>
+		<button class="article-carousel__scroller--button article-carousel__scroller--button-next">
+			{% include 'common/arrow-next.svg' %}
+		</button>
 	</div>
+{% endwith %}{% endverbatim %}{% endfilter %}</pre></code>
+		And include with something like: <code><pre>{% filter force_escape %}{% verbatim %}{% include 'blog/_blog_carousel.html' with blogs=featured_blog_posts key='featured-blogs' only %}{% endverbatim %}{% endfilter %}</pre></code>
 
-	<h2>Category Text Colors</h2>
-	<div class="simple-page">
-		<ul class="category-list">
-			{% include "styleguide/modules/_category_text_colors.html" with color="eastern-blue" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="gamboge" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="gray-dark" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="green-apple" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="green" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="sunshine" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="pink" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="red" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="royal-blue" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="teal" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="violet" %}
-			{% include "styleguide/modules/_category_text_colors.html" with color="yellow" %}
-		</ul>
-	</div>
+{% include 'blog/_blog_carousel.html' with blogs=blog_pages key='styleguide-blogs' only %}
+	</details>
 
-</div>
+	<hr/>
+	<details id="cards" open>
+		<summary><h2 class="heading">Cards</h2></summary>
+		<h4 class="heading-regular">Incident Card (Big, No Photo)</h4>
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' only %&rbrace;
+		</pre></code>
+		{% include "incident/_incident_card.html" with incident=incident size="big" only %}
+
+		<h4 class="heading-regular">Incident Card (Big, Photo)</h4>
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' photo=incident.teaser_image only %&rbrace;
+		</pre></code>
+		{% include "incident/_incident_card.html" with incident=incident size="big" photo=incident.teaser_image only %}
+
+		<h4 class="heading-regular">Incident Card (Small, No Photo)</h4>
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' only %&rbrace;
+		</pre></code>
+		{% include "incident/_incident_card.html" with incident=incident size="small" only %}
+
+		<h4 class="heading-regular">Incident Card (Small, Photo)</h4>
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' photo=incident.teaser_image only %&rbrace;
+		</pre></code>
+		{% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
+
+		<h4 class="heading-regular">Blog Card (Big, No Photo)</h4>
+		<code>
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='big' only %&rbrace;
+		</code>
+		{% include "blog/_blog_card.html" with post=blog_page size="big" only %}
+
+		<h4 class="heading-regular">Blog Card (Big, Photo)</h4>
+		<code>
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='big' photo=incident.teaser_image only %&rbrace;
+		</code>
+		{% include "blog/_blog_card.html" with post=blog_page size="big" photo=blog_page.teaser_image only %}
+
+		<h4 class="heading-regular">Blog Card (Small, No Photo)</h4>
+		<code>
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='small' only %&rbrace;
+		</code>
+		{% include "blog/_blog_card.html" with post=blog_page size="small" only %}
+
+		<h4 class="heading-regular">Blog Card (Small, Photo)</h4>
+		<code>
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='small' photo=incident.teaser_image only %&rbrace;
+		</code>
+		{% include "blog/_blog_card.html" with post=blog_page size="small" photo=blog_page.teaser_image only %}
+	</details>
+
+	<hr/>
+	<details id="details" open>
+		<summary><h2 class="heading">Details</h2></summary>
+		<h4 class="heading-regular">Key-Value Details</h4>
+		<p>Use a structure similar to this when creating a key value details table:
+		</p>
+		<code><pre>
+			&lt;dl class="details-table" aria-labelledby="incident-details-title"&gt;
+				&lt;h3 class="heading-table category category-&lbrace;&lbrace; category.page_symbol &rbrace;&rbrace;" id="&lbrace;&lbrace; category.slug &rbrace;&rbrace;-details-title"&gt;
+					&lbrace;&lbrace; category.title &rbrace;&rbrace;
+				&lt;/h3&gt;
+
+				&lbrace;% for detail in category_detail %&rbrace;
+					&lbrace;% if detail.html %&rbrace;
+					&lt;div class="details-table__row"&gt;
+						&lt;dt class="details-table__label"&gt;
+							&lbrace;&lbrace; detail.name &rbrace;&rbrace;
+						&lt;/dt&gt;
+						&lt;dd class="details-table__value"&gt;
+							&lbrace;&lbrace; detail.html | safe &rbrace;&rbrace;
+						&lt;/dd&gt;
+					&lt;/div&gt;
+					&lbrace;% endif %&rbrace;
+				&lbrace;% endfor %&rbrace;
+			&lt;/dl&gt;
+		</pre></code>
+		<p>
+			All different card details have their own template include files.
+			For example, incident details are accessed like:
+			<code>&lbrace;% include "incident/_details-table.html" with incident=page only %&rbrace;</code>
+			If a new details table is needed for a specific page, create a new include
+			template file, following above structure
+		</p>
+	<hr/>
+	<details id="footer" open>
+		<summary><h2 class="heading">Footer</h2></summary>
+		<code>
+			&lbrace;% include 'common/_footer.html' %&rbrace;
+		</code>
+		{% include 'common/_footer.html' %}
+	</details>
 {% endblock %}

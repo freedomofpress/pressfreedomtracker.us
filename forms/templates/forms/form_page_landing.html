@@ -1,6 +1,15 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags typogrify_tags %}
+
+{% load wagtailcore_tags %}
 
 {% block main %}
-  {{ page.thank_you_text|richtext|typogrify }}
+    <h1 class="page-title">{{ page.title }}</h1>
+
+    <section class="formpage-body">
+        {% if page.thank_you_text %}
+            <div class="styled-text rich-text">
+                {{ page.thank_you_text|richtext }}
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}

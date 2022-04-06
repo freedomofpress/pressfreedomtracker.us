@@ -28,11 +28,14 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 DEBUG = False
+STYLEGUIDE = False
+ENABLE_DEBUG_TOOLBAR = False
 
 # Application definition
 
 INSTALLED_APPS = [
     'blog',
+    'charts',
     'common',
     'forms',
     'incident',
@@ -63,8 +66,6 @@ INSTALLED_APPS = [
     'wagtail.images',
     'wagtail.search',
     'wagtail.admin',
-    # See https://docs.wagtail.io/en/stable/reference/contrib/legacy_richtext.html#legacy-richtext
-    'wagtail.contrib.legacy.richtext',
     'wagtail.core',
 
     'modelcluster',
@@ -74,10 +75,12 @@ INSTALLED_APPS = [
     'webpack_loader',
     'wagtailautocomplete',
     'wagtailinventory',
+    'widget_tweaks',
 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',

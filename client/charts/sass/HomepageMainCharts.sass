@@ -1,0 +1,11 @@
+=large-screen
+	@media (min-width: 1000px)
+		@content
+
+.hpChartContainer
+	+large-screen
+		display: flex
+
+.hpChart
+	margin: auto
+	display: table

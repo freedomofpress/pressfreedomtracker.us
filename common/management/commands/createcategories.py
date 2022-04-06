@@ -1,16 +1,14 @@
-import random
-
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from wagtail.core.models import Page
 
-from common.models import CategoryPage
-from common.tests.factories import (
+from common.devdata import (
     CategoryPageFactory,
     DevelopmentSiteFactory,
 )
-from home.tests.factories import StatBoxFactory, HomePageFactory
+from common.tests.utils import make_html_string
+from home.tests.factories import HomePageFactory
 
 
 CATEGORIES = {
@@ -47,7 +45,7 @@ CATEGORIES = {
         'is_search_warrant_obtained',
         'actor',
     ],
-    'physical_attack': [
+    'assault': [
         'assailant',
         'was_journalist_targeted',
     ],
@@ -83,7 +81,10 @@ class Command(BaseCommand):
         Page.objects.filter(slug='home').delete()
 
         root_page = Page.objects.get(slug='root')
-        home_page = HomePageFactory(parent=root_page)
+        home_page = HomePageFactory(
+            parent=root_page,
+            about=make_html_string(),
+        )
         DevelopmentSiteFactory(root_page=home_page)
 
         self.stdout.write('Creating categories', ending='')
@@ -96,5 +97,3 @@ class Command(BaseCommand):
             self.stdout.write('.', ending='')
 
         self.stdout.write('')
-        for category in random.sample(list(CategoryPage.objects.all()), 4):
-            StatBoxFactory(page=home_page, category=category)

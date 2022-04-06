@@ -1,0 +1,15 @@
+{% load wagtailcore_tags %}
+
+<h2 class="homepage-section-header">{{ label|default:"Learn More About Our Categories" }}</h2>
+
+<p class="homepage-section-paragraph">{{ body }}</p>
+
+{% with all_categories=settings.common.TaxonomySettings.categories.all %}
+	<div class="categories-block">
+		{% for category in all_categories %}
+			<a href="{% pageurl category.category %}" class="btn btn-secondary categories-block--item">
+				<span class="category category-{{ category.category.page_symbol }}">{{ category.category.title }}</span>
+			</a>
+		{% endfor %}
+	</div>
+{% endwith %}

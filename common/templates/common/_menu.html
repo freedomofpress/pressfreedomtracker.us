@@ -1,0 +1,33 @@
+{% load get_menu %}
+<a href="#title" class="skip-link">Skip to content</a>
+<header class="header">
+	<div class="header__title-wrapper">
+		<a class="site-title-link text-link" href="/">
+			{{ self.get_site.site_name|default:"U.S Press Freedom Tracker" }}
+		</a>
+	</div>
+
+	<button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
+		<span class="sr-only">Menu</span>
+	</button>
+
+	{% get_menu 'primary-navigation' as primary_items %}
+	<nav class="top-nav-bar" data-visible="false">
+		<ul id="primary-navigation" class="primary-navigation">
+			{% for item in primary_items %}
+				<li>
+					<a href="{{ item.url }}" class="text-link {{ item.html_classes }}">
+						{{ item.text }}
+						<span>Go to the page &rarr;</span>
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+		{% get_menu 'secondary-navigation' as secondary_items %}
+		<ul id="secondary-navigation" class="secondary-navigation">
+			{% for item in secondary_items %}
+				<li><a href="{{ item.url }}" class="btn btn-primary {{ item.html_classes }}">{{ item.text }}</a></li>
+			{% endfor %}
+		</ul>
+	</nav>
+</header>

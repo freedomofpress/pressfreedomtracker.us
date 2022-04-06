@@ -1,0 +1,43 @@
+{% load wagtailcore_tags wagtailimages_tags static typogrify_tags %}
+
+{% with footer=settings.common.FooterSettings %}
+	<section class="footer-info">
+		<div class="footer-info--inner">
+			<div class="footer-info__body">
+				{{ footer.body|richtext|typogrify }}
+			</div>
+
+			<nav class="footer-info__nav" aria-label="Footer links">
+				<ul class="footer-info__nav-list">
+					{% for item in footer.menu.menu_items.all %}
+					<li class="footer-info__nav-item {{ item.html_classes }}">
+						<a class="footer-info__nav-link" href="{{ item.url }}">
+							{{ item.text }}
+						</a>
+					</li>
+					{% endfor %}
+				</ul>
+				<ul class="footer-info__nav-list">
+					<li class="footer-info__nav-item">
+						<a
+							class="footer-info__nav-link"
+							href="https://www.facebook.com/uspressfreedomtracker/"
+							aria-label="Facebook link for U.S. Press Freedom Tracker"
+						>
+							{% include 'common/facebook.svg' %}
+						</a>
+					</li>
+					<li class="footer-info__nav-item">
+						<a
+							class="footer-info__nav-link"
+							href="https://twitter.com/uspresstracker"
+							aria-label="Twitter link for U.S. Press Freedom Tracker"
+						>
+							{% include 'common/twitter.svg' %}
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</section>
+{% endwith %}

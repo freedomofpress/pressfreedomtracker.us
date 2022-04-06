@@ -1,3 +1,17 @@
+CATEGORY_SYMBOL_CHOICES = [
+    ('arrest', 'Arrest Icon'),
+    ('border_stop', 'Border Stop Icon'),
+    ('chilling_statement', 'Chilling Statement Icon'),
+    ('denial_of_access', 'Denial of Access Icon'),
+    ('equipment_damage', 'Equipment Damage Icon'),
+    ('equipment_search', 'Equipment Search Icon'),
+    ('leak_case', 'Leak Case Icon'),
+    ('other_incident', 'Other Incidents Icon'),
+    ('assault', 'Assault Icon'),
+    ('prior_restraint', 'Prior Restraint Icon'),
+    ('subpoena', 'Subpoena Icon'),
+]
+
 CATEGORY_COLOR_CHOICES = [
     ('eastern-blue', 'Eastern Blue'),
     ('gamboge', 'Gamboge'),

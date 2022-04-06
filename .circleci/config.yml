@@ -51,11 +51,15 @@ jobs:
           pattern: ^package-lock.json$
 
       - run:
+          name: Upgrade NPM to consistent version with dev environment
+          command: sudo npm install -g npm@7.24.1
+
+      - run:
           name: Check node dependencies for vulnerabilities
           command: |
             mkdir -p test-results
             npm ci
-            $(npm bin)/npm-audit-plus --xml --ignore 803,1006864,1006886 > test-results/audit.xml
+            $(npm bin)/npm-audit-plus --xml > test-results/audit.xml
 
       - store_test_results:
           path: ~/tracker/test-results/
@@ -94,6 +98,34 @@ jobs:
             mkdir -p ~/dockercomposelogs || true
             docker-compose logs > ~/dockercomposelogs/dev.log
           when: always
+
+      - store_artifacts:
+          path: ~/dockercomposelogs
+
+  lint:
+    environment:
+      SETUPTOOLS_USE_DISTUTILS: stdlib
+    machine:
+      image: ubuntu-2004:202101-01
+    working_directory: ~/tracker
+    steps:
+      - checkout
+
+      - run:
+          name: Ensure we can run dev-env
+          command: |
+            make dev-init
+            docker-compose up -d
+            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
+          no_output_timeout: 5m
+
+      - run:
+          name: Check for JS linting issues
+          command: make eslint
+
+      - run:
+          name: Check for SASS linting issues
+          command: make stylelint
 
       - store_artifacts:
           path: ~/dockercomposelogs
@@ -158,6 +190,7 @@ workflows:
     jobs:
       - safety_check
       - npm_audit
+      - lint
       - dev
       - prod
       - coverage:

@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailembeds_tags wagtailimages_tags %}
+
+{% if video or image %}
+    <figure class="primary-banner-media">
+        {% if video %}
+            {% embed video %}
+        {% elif image %}
+            {% image image width-910 alt=image.attribution|default:image.title %}
+        {% endif %}
+        {% if caption or image.attribution %}
+            <figcaption class="media-caption">
+				<div class="rich-text">{{ caption|richtext }}</div>
+				{% if image.attribution %}
+					<span
+						class="media-attribution"
+						aria-label="Attributed to: {{ image.attribution }}"> — {{ image.attribution }}</span>
+				{% endif %}
+			</figcaption>
+        {% endif %}
+    </figure>
+{% endif %}

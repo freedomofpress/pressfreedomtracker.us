@@ -1,0 +1,9 @@
+{% load wagtailcore_tags %}
+<a
+	href="{% pageurl page.get_parent %}?{{ field }}_lower={{ value|date:'Y-m-d' }}&{{ field }}_upper={{ value|date:'Y-m-d' }}"
+	class="text-link"
+>
+	<time datetime="{{ value|date:'c' }}">
+		{{ value|date:'F j, Y' }}
+	</time>
+</a>

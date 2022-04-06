@@ -1,0 +1,31 @@
+.incident-card
+	border-top: 1px solid
+	border-color: $black
+	padding-top: 2rem
+
+	&__categories
+		list-style-type: none
+		padding: 0
+
+	&--inner
+		transition: transform 0.15s ease-in-out
+		&:hover
+			transform: translateY(-0.5rem)
+			cursor: pointer
+
+			.text-link--card
+				background-color: transparent
+				text-decoration: underline
+
+.dl-inline
+	display: grid
+	grid-template-columns: auto 1fr
+	gap: 0 1em
+
+	dt
+		font-weight: 700
+		grid-column: 1
+
+	dd
+		grid-column: 2
+		margin-left: 0

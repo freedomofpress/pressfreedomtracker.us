@@ -1,0 +1,32 @@
+{% load wagtailcore_tags %}
+
+<section class="details-table">
+	<dl class="details-table__blog-details">
+		{% if blog.publication_datetime %}
+		<div class="details-table__row">
+			<dt class="details-table__label details-table__label--bold">
+				Published On
+			</dt>
+			<dd class="details-table__value">
+				{{ blog.publication_datetime|date:"F j, Y" }}
+			</dd>
+		</div>
+		{% endif %}
+
+		{% if blog.author %}
+		<div class="details-table__row">
+			<dt class="details-table__label details-table__label--bold">
+				Written by
+			</dt>
+			<dd class="details-table__value">
+				<a href="{% pageurl blog.get_parent %}?author={{ blog.author.pk }}" class="text-link">{{ blog.author.title }}</a>
+
+				{% if blog.organization %}
+					from
+					<a href="{% pageurl blog.get_parent %}?organization={{ blog.organization.pk }}" class="text-link">{{ blog.organization.title }}</a>
+				{% endif %}
+			</dd>
+		</div>
+		{% endif %}
+	</dl>
+</section>

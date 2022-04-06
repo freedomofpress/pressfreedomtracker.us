@@ -1,0 +1,72 @@
+.footer-info
+	background-color: $black
+	color: $gray-text
+	padding: 32px 0
+
+	&--inner
+		+constrain-to-desktop
+
+	a
+		color: $white
+
+		&:hover
+			background-color: $accent-color
+			color: $black
+
+			svg
+				filter: invert(1)
+
+		&:focus
+			border-color: $white
+
+	&__nav, &__body
+		max-width: 725px
+
+	&__body
+		font-size: $font-size-small-p
+		line-height: 1.43
+		margin-bottom: 2rem
+
+	&__nav
+		display: flex
+		align-items: flex-end
+		justify-content: space-between
+
+		+desktop-up
+			align-items: center
+
+		&-item
+			list-style: none
+
+			&:not(:last-of-type)
+				margin-right: 2rem
+
+				+desktop-up
+					margin-right: 3.5rem
+
+		&-list
+			padding: 0
+			display: flex
+			margin: 0
+
+			&:first-of-type
+				flex-wrap: wrap
+
+			&:last-of-type
+				justify-content: flex-end
+
+				.footer-info__nav-item
+					margin-right: 0
+
+					&:not(:first-of-type)
+						margin-left: 2rem
+
+						+desktop-up
+							margin-left: 3.5rem
+
+		&-link
+			display: inline-block
+			font-size: $font-size-small-p
+
+			&:hover
+				background-color: transparent

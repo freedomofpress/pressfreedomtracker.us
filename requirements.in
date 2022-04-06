@@ -8,6 +8,7 @@ django-recaptcha
 django-settings-export
 django-storages[google]
 django-webpack-loader
+django-widget-tweaks==1.4.12
 djangorestframework-csv
 docutils
 factory_boy>=3.2.0

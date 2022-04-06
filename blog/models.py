@@ -4,10 +4,17 @@ from django.utils.cache import patch_cache_control
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel, StreamFieldPanel
+from modelcluster.fields import ParentalKey
+from wagtail.admin.edit_handlers import (
+    FieldPanel,
+    MultiFieldPanel,
+    PageChooserPanel,
+    StreamFieldPanel,
+    InlinePanel,
+)
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -28,6 +35,7 @@ from common.blocks import (
     AlignedCaptionedEmbedBlock,
     TweetEmbedBlock,
     RichTextBlockQuoteBlock,
+    AsideBlock,
 )
 
 
@@ -53,6 +61,12 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         StreamFieldPanel('body'),
+        InlinePanel(
+            'featured_blogs',
+            label='Featured Blogs',
+            min_num=3,
+            max_num=6,
+        ),
     ]
 
     settings_panels = Page.settings_panels + [
@@ -79,9 +93,9 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         entry_qs = post_filters.filter(self.get_posts())
 
         if request.GET.get('author'):
-            context['author_filter'] = get_object_or_404(PersonPage, pk=post_filters.author)
+            author_filter = get_object_or_404(PersonPage, pk=post_filters.author)
         if request.GET.get('organization'):
-            context['organization_filter'] = get_object_or_404(OrganizationPage, pk=post_filters.organization)
+            organization_filter = get_object_or_404(OrganizationPage, pk=post_filters.organization)
 
         paginator, entries = paginate(
             request,
@@ -94,10 +108,16 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         context['entries_page'] = entries
         context['paginator'] = paginator
 
-        if request.is_ajax():
-            context['layout_template'] = 'base.ajax.html'
-        else:
-            context['layout_template'] = 'base.html'
+        if not request.GET.get('author') and not request.GET.get('organization'):
+            context['featured_blogs'] = [
+                f.page for f in self.featured_blogs.select_related('page').all()
+            ]
+
+        context['incident_listing_heading'] = 'Latest'
+        if request.GET.get('author'):
+            context['incident_listing_heading'] = f'Showing posts by <b>{author_filter.title}</b>'
+        if request.GET.get('organization'):
+            context['incident_listing_heading'] = f'Showing posts by <b>{organization_filter.title}</b>'
 
         return context
 
@@ -134,6 +154,15 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         )
 
 
+class BlogIndexPageFeature(Orderable):
+    blog_index_page = ParentalKey('blog.BlogIndexPage', related_name='featured_blogs')
+    page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE)
+
+    panels = [
+        PageChooserPanel('page'),
+    ]
+
+
 class BlogPage(MetadataPageMixin, Page):
     publication_datetime = models.DateTimeField(
         help_text='Past or future date of publication'
@@ -141,6 +170,7 @@ class BlogPage(MetadataPageMixin, Page):
 
     body = StreamField([
         ('text', StyledTextBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
+        ('aside', AsideBlock()),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
@@ -155,6 +185,12 @@ class BlogPage(MetadataPageMixin, Page):
         ('heading_3', Heading3()),
         ('statistics', StatisticsBlock()),
     ])
+
+    introduction = models.TextField(
+        help_text="Optional: introduction displayed above the image/video.",
+        blank=True,
+        null=True,
+    )
 
     link_to_original_post = models.URLField(blank=True)
 
@@ -197,6 +233,7 @@ class BlogPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('publication_datetime'),
+        FieldPanel('introduction'),
         StreamFieldPanel('body'),
         FieldPanel('link_to_original_post'),
         MultiFieldPanel(

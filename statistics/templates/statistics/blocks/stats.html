@@ -1,4 +1,5 @@
-{% load render_as_template %}
-<div class="stream-section">
-	{% render_as_template template_string %}
-</div>
+<p>{{ value.visualization }}</p>
+<p>{{ value.dataset }}</p>
+{% if value.params %}
+    <p>{{ value.params }}</p>
+{% endif %}

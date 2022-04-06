@@ -84,7 +84,7 @@ class CategorySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
     methodology = serializers.CharField()
-    page_color = serializers.CharField()
+    page_symbol = serializers.CharField()
     plural_name = serializers.CharField()
 
 
@@ -101,6 +101,7 @@ class BaseIncidentSerializer(serializers.Serializer):
     longitude = serializers.FloatField()
     latitude = serializers.FloatField()
     body = serializers.SerializerMethodField()
+    introduction = serializers.CharField()
     teaser = serializers.CharField()
     teaser_image = serializers.SerializerMethodField()
     primary_video = serializers.URLField()

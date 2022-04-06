@@ -1,0 +1,50 @@
+{% load wagtailcore_tags common_tags %}
+
+<section class="blog-list {% if type %}blog-list--{{ type }}{% endif %}">
+	<h2 class="heading-regular">{{ heading | safe }}</h2>
+
+	<ol class="blog-list__posts {% if type %}blog-list__posts--{{ type }}{% endif %} {% if ajax_load and blogs.has_other_pages %}js-article-loading-parent{% endif %}">
+		{% for blog in blogs %}
+			<li
+				class="blog-list__item
+					{% if type %}blog-list__item--{{ type }}{% endif %}
+					{% if ajax_load %}js-article-loading-item{% endif %}"
+			>
+				{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'small' photo=blog.teaser_image only %}
+			</li>
+		{% endfor %}
+	</ol>
+
+	{% if type == 'featured' %}
+		<div class="blog-list__featured-scroller">
+			<button class="blog-list__featured-scroller--button blog-list__featured-scroller--button-prev">
+				{% include 'common/arrow-prev.svg' %}
+			</button>
+			<button class="blog-list__featured-scroller--button blog-list__featured-scroller--button-next">
+				{% include 'common/arrow-next.svg' %}
+			</button>
+		</div>
+	{% endif %}
+
+	{% if request and blogs.has_other_pages %}
+	<div class="blog-list__pagination">
+		{% if blogs.has_previous %}
+			<a
+				href="?{% query_transform request page=blogs.previous_page_number %}"
+						class="btn btn-secondary {% if ajax_load %}js-article-loading-prev-link{% endif %}"
+			>
+				Previous Page
+			</a>
+		{% endif %}
+
+		{% if blogs.has_next %}
+			<a
+				href="?{% query_transform request page=blogs.next_page_number %}"
+						class="btn btn-secondary {% if ajax_load %}js-article-loading-next-link{% endif %}"
+			>
+				Next Page
+			</a>
+		{% endif %}
+	</div>
+	{% endif %}
+</section>

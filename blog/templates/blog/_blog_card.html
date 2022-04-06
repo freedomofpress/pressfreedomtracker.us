@@ -1,0 +1,38 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+{% with size=size|default:"big" %}
+	<article class="blog-card">
+		<div class="blog-card--inner">
+			{% if photo %}
+				{% image photo fill-655x440 as x1 %}
+				<img
+					class="card-image card-image-{{ size }}"
+					alt="{{ x1.alt }}"
+					src="{{ x1.url }}"
+				>
+			{% endif %}
+			<a class="text-link text-link--card" href="{% pageurl post %}">
+				<h3 class="card-title card-title-{{ size }} blog-card--title">
+					{{ post.title }}
+				</h3>
+			</a>
+
+			<p class="blog-card__teaser {% if photo %}blog-card__teaser--sm{% endif %}">
+				{{ post.teaser_text }}
+			</p>
+			<dl class="dl-inline blog-card--info">
+				<dt>Published</dt>
+				<dd>
+					<time datetime="{{ post.publication_datetime|date:"c" }}">
+						{{ post.publication_datetime|date:"F j, Y" }}
+					</time>
+				</dd>
+				{% if post.author %}
+					<dt>Written by</dt>
+					<dd>
+						{{ post.author.title }}
+					</dd>
+				{% endif %}
+			</dl>
+		</div>
+	</article>
+{% endwith %}

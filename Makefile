@@ -115,8 +115,13 @@ help: ## Prints this message and exits
 		| sort \
 		| column -s ':' -t
 
-.PHONY: lint
-lint: flake8
+.PHONY: eslint
+eslint:
+	docker-compose exec node npm run js-lint
+
+.PHONY: stylelint
+stylelint:
+	docker-compose exec node npm run stylelint
 
 .PHONY: flake8
 flake8: ## Runs flake8 linting in Python3 container.
@@ -134,12 +139,12 @@ bandit: ## Runs bandit static code analysis in Python3 container.
 
 .PHONY: npm-audit
 npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities
-	@docker-compose run --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus --ignore 803'
+	@docker-compose run --rm --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus'
 
 .PHONY: ci-npm-audit
 ci-npm-audit:
 	@mkdir -p test-results # Creates necessary test-results folder
-	@docker-compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --xml --ignore 803 > test-results/audit.xml'
+	@docker-compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --xml > test-results/audit.xml'
 
 .PHONY: safety
 safety: ## Runs `safety check` to check python dependencies for vulnerabilities
