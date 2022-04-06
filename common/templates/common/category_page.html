@@ -43,7 +43,7 @@
 		{% if search_page %}
 			<section class="categorypage-section categorypage-section--gray">
 				<div class="categorypage-section-inner">
-					{% include "home/_recent_incidents_section.html" with count=8 %}
+					{% include "home/_recent_incidents_section.html" with count=8 incidents_base=recent_incidents %}
 				</div>
 			</section>
 		{% endif %}
