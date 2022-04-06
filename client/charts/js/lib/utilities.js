@@ -180,7 +180,9 @@ export function groupByState(dataset) {
 
 export function countIncidentsOutsideUS(dataset) {
 	const usStatesList = usStates.map((d) => d.acronym)
-	return dataset.filter((d) => d.state === undefined || !usStatesList.includes(d.state)).length
+	// Added a quick hack to exclude Puerto Rico from the outside the US list
+	// We should handle this more elegantly in the future
+	return dataset.filter((d) => d.state === undefined || (!usStatesList.includes(d.state) && d.state !== 'PR')).length
 }
 
 export const categoriesColors = {
