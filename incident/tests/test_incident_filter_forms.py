@@ -1,4 +1,5 @@
 from django.test import RequestFactory, TestCase
+from django.utils.text import capfirst
 from django import forms
 
 from incident.utils.forms import (
@@ -12,7 +13,7 @@ from incident.tests.factories import LawEnforcementOrganizationFactory
 
 
 def capitalize_choice_labels(choices):
-    return [[x[0], x[1].capitalize()] for x in choices]
+    return [[x[0], capfirst(x[1])] for x in choices]
 
 
 class FilterFormTest(TestCase):
@@ -124,6 +125,31 @@ class FilterFormTest(TestCase):
         self.assertIsInstance(form.fields.get(name), forms.ChoiceField)
         self.assertIsInstance(form.fields.get(name).widget, forms.Select)
         self.assertEqual(form.fields.get(name).choices, capitalized)
+
+    def test_propertly_capitalizes_choices_beginning_with_acronyms(self):
+        request = RequestFactory().get('/')
+        name = 'target_us_citizenship_status'
+        choices = [
+            ['US_CITIZEN', 'U.S. citizen'],
+            ['PERMANENT_RESIDENT', 'U.S. permanent resident (green card)'],
+            ['NON_RESIDENT', 'U.S. non-resident'],
+        ]
+        expected = [('', '------')] + choices
+        item = {
+            'filters': [
+                {
+                    'title': 'Target US Citizenship status',
+                    'type': 'choice',
+                    'name': name,
+                    'choices': choices
+                }
+            ]
+        }
+        form = FilterForm(request.GET, data=item)
+
+        self.assertIsInstance(form.fields.get(name), forms.ChoiceField)
+        self.assertIsInstance(form.fields.get(name).widget, forms.Select)
+        self.assertEqual(form.fields.get(name).choices, expected)
 
     def test_filter_type_autocomplete_single(self):
         request = RequestFactory().get('/')
