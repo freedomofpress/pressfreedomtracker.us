@@ -74,6 +74,7 @@ class IncidentExportTestCase(TestCase):
             'city',
             'state',
             'body',
+            'introduction',
             'teaser',
             'teaser_image',
             'primary_video',

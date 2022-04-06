@@ -36,7 +36,6 @@ EXCLUDED_FIELDS = {
     'blog_posts',
     'page_blocks',
     'homepagefeature',
-    'statboxes',
     'live_preview_updates',
     'locked_at',
     'locked_by',

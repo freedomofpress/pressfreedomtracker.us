@@ -1,0 +1,31 @@
+.topicpage
+	+constrain-to-desktop
+
+	&__inner
+		+desktop-up
+			max-width: 908px
+			margin: auto
+
+	&__block
+		+desktop-up
+			max-width: 673px
+			margin-left: auto
+			margin-right: 0
+
+	img
+		max-width: 100%
+
+.topicpage-body
+	+grid-container
+
+	&__content
+		grid-column: 1 / -1
+
+		+tablet-up
+			grid-column: 1 / 9
+
+	&__sidebar
+		grid-column: 1 / -1
+
+		+tablet-up
+			grid-column: 9 / -1

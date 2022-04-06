@@ -1,0 +1,15 @@
+{% load wagtailcore_tags %}
+
+{% for item in value.table_data %}
+     <li class="list-table__row">
+        <div class="list-table__item info-table--col-3 anim-table-row">
+            <div class="list-table__col info-table__title">{{ item.title }}</div>
+            <div class="list-table__col">
+				<a href="mailto:{{ item.email }}" class="text-link" rel="nofollow">{{ item.email }}</a>
+			</div>
+            <div class="list-table__link info-table__col-right">
+				<a href="mailto:{{ item.email }}" aria-label="Send email to {{ item.email }}" class="anim-table-mainlink">{{ value.cta_label }} &rarr;</a>
+			</div>
+		</div>
+    </li>
+{% endfor %}

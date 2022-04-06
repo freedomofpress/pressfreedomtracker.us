@@ -98,6 +98,8 @@ SECRET_KEY = '(g4bj*$%zf4tqdaas8#ch3-mz_27n+*-973tpxap9zmdz8ii_u'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+STYLEGUIDE = True
+
 
 try:
     from .local import *  # noqa: F403, F401
@@ -130,6 +132,22 @@ if DEBUG:
         MIDDLEWARE.append('django_cprofile_middleware.middleware.ProfilerMiddleware')
         DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
+    # Disable caching of webpack stats files (can prevent node/django
+    # container race condition).
+    WEBPACK_LOADER['DEFAULT']['CACHE'] = False  # noqa: F405
+
+    # Include the wagtail styleguide
+    INSTALLED_APPS.append('wagtail.contrib.styleguide')  # noqa: F405
+
+
+if ENABLE_DEBUG_TOOLBAR:  # noqa: F405
+    # Obtain the default gateway from docker, needed for
+    # debug toolbar whitelisting
+    INTERNAL_IPS = [get_default_gateway_linux()]
+    INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
+    # Needs to be injected relatively early in the MIDDLEWARE list
+    MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
+
     # Fix for https://github.com/jazzband/django-debug-toolbar/issues/950
     DEBUG_TOOLBAR_CONFIG = {
         'SKIP_TEMPLATE_PREFIXES': (
@@ -151,9 +169,9 @@ if DEBUG:
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
     INTERNAL_IPS = [get_default_gateway_linux()]
-    INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
+    # INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
     # Needs to be injected relatively early in the MIDDLEWARE list
-    MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
+    # MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
     # Include the wagtail styleguide
     INSTALLED_APPS.append('wagtail.contrib.styleguide')  # noqa: F405
 

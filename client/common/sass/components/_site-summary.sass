@@ -1,0 +1,25 @@
+.site-summary
+	font-size: 1.125rem
+	+constrain-to-desktop
+
+	+tablet-up
+		font-size: 1.75rem
+	+desktop-up
+		font-size: 2rem
+
+	img
+		max-width: 100%
+		height: auto
+
+	a
+		color: $black
+
+		&:focus
+			outline: $black solid 3px
+			outline-offset: 2px
+
+		&:hover
+			background-color: $accent-color
+
+	&--blog
+		font-size: 1.125rem

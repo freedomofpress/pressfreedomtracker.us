@@ -7,7 +7,6 @@ from psycopg2.extras import DateRange
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.edit_handlers import (
     FieldPanel,
-    InlinePanel,
     StreamFieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
@@ -75,7 +74,7 @@ class IncidentSchema(Schema):
 class CategorySchema(Schema):
     category = fields.Str(attribute='title')
     category_plural = fields.Str(attribute='plural_name')
-    color = fields.Str(attribute='page_color')
+    symbol = fields.Str(attribute='page_symbol')
     methodology = fields.Str()
     url = fields.Function(lambda obj: obj.get_full_url())
     total_incidents = fields.Int()
@@ -213,13 +212,6 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             classname='collapsible'
         ),
         MultiFieldPanel(
-            heading='Statboxes',
-            children=[
-                InlinePanel('statboxes', label='Statboxes'),
-            ],
-            classname='collapsible',
-        ),
-        MultiFieldPanel(
             heading='Content',
             children=[
                 StreamFieldPanel('content'),
@@ -275,7 +267,6 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             orphans=5
         )
 
-        context['statboxes'] = self.statboxes.all()
         context['entries_page'] = entries
         context['paginator'] = paginator
 

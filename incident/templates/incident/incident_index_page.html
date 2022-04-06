@@ -1,68 +1,124 @@
-{% extends layout_template %}
-{% load common_tags %}
-
-{% block head %}
-	{{ block.super }}
-	{% include "common/_rss_autodiscovery.html" %}
-{% endblock %}
-
-{% block top_sidebar_class %}
-	{{ block.super }}
-	layout-right-sidebar__sidebar--light
-{% endblock%}
-
-{% block top %}
-	{{ block.super }}
-	<h2 class="page-title page-title--in-header">{{ page.title }}</h2>
-{% endblock %}
+{% extends "base.html" %}
+{% load wagtailcore_tags webpack_loader humanize %}
+{% load query_transform from common_tags %}
 
 {% block main %}
-	{% include "incident/_filters.html" %}
+	{% pageurl page as current_page_url %}
+	<h1 class="page-title" id="title">{{ page.title }}</h1>
+	<button class="mobile-filter-toggle" aria-controls="database-filters" aria-expanded="false">
+		Filters
+	</button>
 
-	<div class="grid-50 js-incident-loading-parent">
-		{% for incident in entries_page %}
-			<div class="grid-50__item js-incident-loading-item">
-				{% include "incident/_incident.html" with incident=incident teaser=True %}
+	<section class="incident-index__search-area">
+		<div class="incident-index__search-bar">
+			{% include 'incident/_search_bar.html' with placeholder_text="Search incidents by text" action=current_page_url value=search_value %}
+		</div>
+		<div class="incident-index__download">
+			<details class="incident-index__download-details">
+				<summary class="btn incident-index__download-button">
+					Download dataset
+				</summary>
+				<div class="incident-index__download-select">
+					<div class="incident-index__download-wrapper">
+						<div class="incident-index__download-list">
+							<a href="{{ export_path }}" class="incident-index__download-item incident-index__download-item--downloadable">
+								Download full dataset
+								<span class="incident-index__incident-count">{{ all_incident_count|intcomma }} incident{{ all_incident_count|pluralize }}</span>
+							</a>
+							{% if filtered_export_path %}
+								<a href="{{ filtered_export_path }}" class="incident-index__download-item incident-index__download-item--downloadable">
+								Download your filtered data
+									<span class="incident-index__incident-count">{{ incident_count|intcomma }} incident{{ incident_count|pluralize }}</span>
+								</a>
+							{% endif %}
+							{% if learn_more_path %}
+								<a href="{{ learn_more_path }}" class="incident-index__download-item incident-index__download-item--more">Learn more</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</details>
+		</div>
+	</section>
+	<section class="incident-index__body">
+
+
+		<div id="database-filters" class="incident-index__filters" data-visible="false">
+			<div class="incident-index__filters-wrapper">
+				{% include 'incident/_filters.html' %}
 			</div>
-		{% endfor %}
-	</div>
+			<div class="incident-index__filters-mobile-controls">
+				<a class="incident-index__filters-mobile-clear" href="{{ page.url }}">Clear All</a>
+				</button>
+				<button class="btn btn-secondary">
+					Show {{ incident_count|intcomma }} incidents
+				</button>
+			</div>
+		</div>
 
-	{% if entries_page.has_previous %}
-		<a
-			href="?{% query_transform request page=entries_page.previous_page_number %}"
-				  class="js-incident-loading-prev-link"
-		>
-			Previous Page
-		</a>
-	{% endif %}
+		<div class="incident-index__body-header">
+			<div class="incident-index__body-header-controls">
+				<p class="paragraph-subtitle">
+					{{ incident_count|intcomma }} incident{{ incident_count|pluralize }} recorded
+					{% if search_value %}
+						for &lsquo;{{ search_value }}&rsquo;
+					{% endif %}
+				</p>
+				<details class="incident-index__sort-details">
+					<summary class="btn incident-index__sort-button">
+						Sort by
+						<div>
+							&udarr; <span class="incident-index__sort-selection">{{ selected_sort.label }}</span>
+						</div>
+					</summary>
+					<div class="incident-index__sort-menu">
+						<div class="incident-index__sort-modal">
+							<header class="incident-index__sort-header">
+								<h3 class="incident-index__sort-title">
+									Sort incidents by
+								</h3>
+							</header>
+							<div class="incident-index__sort-list">
+								{% for choice in sort_choices %}
+									<a class="incident-index__sort-item{% if choice.2 %} incident-index__sort-item--selected{% endif %}" href="?{{ choice.0 }}">
+										{{ choice.1 }}
+									</a>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</details>
+			</div>
+			<div class="incident-index__column-header incident-index__column-header--incident">Incident</div>
+			<div class="incident-index__column-header incident-index__column-header--incident-details">Incident Details</div>
+			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>
+		</div>
 
-	{% if entries_page.has_next %}
-		<a
-			href="?{% query_transform request page=entries_page.next_page_number %}"
-				  class="button button--outline button--center js-incident-loading-next-link"
-		>
-			More Incidents
-		</a>
-	{% endif %}
-{% endblock %}
-
-{% block sidebar_class %}
-	layout-right-sidebar__sidebar--light
-	layout-right-sidebar__sidebar--padded
-{% endblock %}
-
-{% block sidebar %}
-	<div class="js-summary-table">
-		{% include "incident/_summary_table.html" with summary_table=summary_table %}
-	</div>
-
-	{% include "common/_incident_sidebar_note.html" %}
-
-	<div class="js-methodologies">
-		{% if categories %}
-			{% for category in categories.all %}
-				{% include "common/_category_methodology.html" with category=category %}
+		<div class="incident-index__results{% if entries_page.has_other_pages %} js-article-loading-parent{% endif %}" data-pagination-button-text="Load more incidents">
+			{% for incident in entries_page %}
+				{% include "incident/_incident_database_card.html" with incident=incident index=page only %}
 			{% endfor %}
+		</div>
+
+		{% if request and entries_page.has_other_pages %}
+			<div class="incident-index__pagination">
+				{% if entries_page.has_previous %}
+					<a
+						href="?{% query_transform request page=entries_page.previous_page_number %}"
+							  class="btn btn-secondary js-article-loading-prev-link"
+					>
+						Previous Page
+					</a>
+				{% endif %}
+				{% if entries_page.has_next %}
+					<a
+						href="?{% query_transform request page=entries_page.next_page_number %}"
+						class="btn btn-secondary js-article-loading-next-link"
+					>
+						Next Page
+					</a>
+				{% endif %}
+			</div>
 		{% endif %}
-	</div>
+	</section>
 {% endblock %}

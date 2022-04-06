@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+
+<h2 class="homepage-section-header">{{ label|default:"Recent Incidents" }}</h2>
+
+{% with incidents=incidents_base|slice:count %}
+	<ul class="article-carousel__items">
+		{% for incident in incidents %}
+			<li class="article-carousel__item article-carousel__item--latest">
+				{% include "incident/_incident_card.html" with size="small" incident=incident photo=incident.teaser_image only %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endwith %}
+
+<div class="homepage-section-actions">
+	<a href="{% pageurl search_page %}" class="btn btn-primary">{{ more_label|default:"Go to Incidents Database" }}</a>
+</div>

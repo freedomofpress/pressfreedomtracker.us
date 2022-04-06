@@ -1,0 +1,100 @@
+{% load wagtailcore_tags case_tags %}
+
+<dl class="database-card-table__incident-details" aria-labelledby="incident-details-title">
+	{% with incident.last_updated as last_updated %}
+		{% if last_updated and incident.updates.all.exists %}
+			<div class="database-card-table__row">
+				<dt class="database-card-table__label database-card-table__label--bold">
+					Updated On
+				</dt>
+				<dd class="database-card-table__value">
+					{{ last_updated|date:"F j, Y" }}
+				</dd>
+			</div>
+		{% endif %}
+	{% endwith %}
+
+	<div class="database-card-table__row">
+		<dt class="database-card-table__label database-card-table__label--bold">
+			Date of Incident
+		</dt>
+		<dd class="database-card-table__value">
+			<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?date_lower={{ incident.date|date:'Y-m-d' }}&date_upper={{ incident.date|date:'Y-m-d' }}{% endif %}" class="text-link">
+				{% if incident.exact_date_unknown %}
+					{{ incident.date|date:"F Y" }}
+				{% else %}
+					{{ incident.date|date:"F j, Y" }}
+				{% endif %}
+			</a>
+		</dd>
+	</div>
+
+	{% if incident.city or incident.state %}
+		<div class="database-card-table__row">
+			<dt class="database-card-table__label database-card-table__label--bold">
+				Location
+			</dt>
+			<dd class="database-card-table__value">
+				{% if incident.city %}
+					<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?city={{ incident.city }}{% endif %}" class="text-link">
+						{{ incident.city }}</a>{% if incident.state %},{% endif %}
+				{% endif %}
+				{% if incident.state %}
+					<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?state={{ incident.state.pk }}{% endif %}" class="text-link">{{ incident.state.name }}</a>
+				{% endif %}
+			</dd>
+		</div>
+	{% endif %}
+
+	{% if incident.case_number %}
+		<div class="database-card-table__row">
+			<dt class="database-card-table__label database-card-table__label--bold">
+				Case number
+			</dt>
+			<dd class="database-card-table__value">
+				<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?case_number={{ incident.case_number }}{% endif %}">
+					{{ incident.case_number }}
+				</a>
+			</dd>
+		</div>
+	{% endif %}
+
+	{% if incident.get_all_targets_for_linking %}
+		<div class="database-card-table__row">
+			<dt class="database-card-table__label database-card-table__label--bold">Targets</dt>
+			<dd class="database-card-table__value">
+				{% for target in incident.get_all_targets_for_linking %}
+					<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?{{ target.url_arguments }}{% endif %}">{{ target.text }}</a>{% if not forloop.last %}, {% endif %}
+				{% endfor %}
+			</dd>
+		</div>
+	{% endif %}
+
+	{% if incident.case_statuses|length > 0 %}
+		<div class="database-card-table__row">
+			<dt class="database-card-table__label database-card-table__label--bold">
+				Case Status
+			</dt>
+			<dd class="database-card-table__value">
+				{% for case_status in incident.case_statuses %}
+					<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?case_statuses={{ case_status }}{% endif %}">
+						{% get_case_status_display case_status as case_status_display_name %}
+						{{ case_status_display_name|capfirst }}</a>{% if not forloop.last %}, {% endif %}
+				{% endfor %}
+			</dd>
+		</div>
+	{% endif %}
+
+	{% if incident.case_type %}
+		<div class="database-card-table__row">
+			<dt class="database-card-table__label database-card-table__label--bold">
+				Type of case
+			</dt>
+			<dd class="database-card-table__value">
+				<a class="text-link" href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?case_type={{ incident.case_type }}{% endif %}">
+					{{ incident.get_case_type_display }}
+				</a>
+			</dd>
+		</div>
+	{% endif %}
+</dl>

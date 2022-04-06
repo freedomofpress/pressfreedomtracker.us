@@ -1,124 +1,65 @@
-{% extends layout_template %}
+{% extends "base.html" %}
 
-{% load common_tags wagtailcore_tags render_as_template typogrify_tags %}
-
-{% block flex_class %}
-	flex-container--grow-3
-{% endblock %}
-
-{% block top_sidebar_class %}
-{{ block.super }}
-	layout-right-sidebar__sidebar--light
-{% endblock%}
-
-{% block secondary-header %}
-<div class="layout-right-sidebar">
-	<div class="
-		layout-right-sidebar__main
-		layout-right-sidebar__main--dark
-		layout-right-sidebar__main--{{ page.page_color }}
-	">
-			<div class="category">
-				<h3 class="category__name">
-					{{ page.title }}
-				</h3>
-				{% if page.quick_facts.all %}
-					<ul class="quickfacts">
-						{% for fact in page.quick_facts.all %}
-							{% if fact.link_url %}
-								<li class="quickfacts__item">
-									<a class="quickfacts__link" href="{{ fact.link_url }}">
-										{% filter richtext_inline|typogrify %}
-											{% render_as_template fact.body %}
-										{% endfilter %}
-									</a>
-								</li>
-							{% else %}
-								<li class="quickfacts__item">
-									{% filter richtext_inline|typogrify %}
-										{% render_as_template fact.body %}
-									{% endfilter %}
-								</li>
-							{% endif %}
-						{% endfor %}
-					</ul>
-				{% endif %}
-			</div>
-	</div>
-	<div class="
-		layout-right-sidebar__sidebar
-		layout-right-sidebar__sidebar--dark
-		layout-right-sidebar__sidebar--{{ page.page_color }}
-	">
-		<table class="data-table data-table--category">
-			<h4 class="section-heading section-heading--light section-heading--margin-top">
-			Category Summary
-		</h4>
-			<tr class="data-table__row data-table__row--light">
-				<th class="data-table__label data-table__label--light">
-					Total cases
-				</th>
-				<td class="data-table__value">{{ total_incidents }}</td>
-			</tr>
-			{% if data_items %}
-				{% for item in data_items %}
-					<tr class='data-table__row'>
-						<th class="data-table__label">
-							{{ item.label }}
-						</th>
-						<td class="data-table__value">{{ item.value }}</td>
-					</tr>
-				{% endfor %}
-			{% endif %}
-		</table>
-	</div>
-</div>
-{% endblock %}
-
-{% block main_class %}
-	layout-right-sidebar__main--padded
-{% endblock %}
+{% load wagtailcore_tags render_as_template typogrify_tags %}
 
 {% block main %}
-	{% include "incident/_filters.html" with no_category_filtering=True category=page.id %}
+	<h1 class="page-title category category-{{ page.page_symbol }}" id="title">{{ page.title }}</h1>
 
-	<div class="grid-50 js-incident-loading-parent">
-		{% for incident in entries_page %}
-			<div class="grid-50__item js-incident-loading-item">
-				{% include "incident/_incident.html" with incident=incident teaser=True %}
+	<section class="categorypage-section">
+		<div class="categorypage-section-inner">
+			{% with search_page=settings.common.SearchSettings.search_page %}
+				<a class="text-link categorypage-count"
+					href="{% if search_page %}{% pageurl search_page %}?{{ incident_qs }}{% endif %}">
+					Total Incidents: {{ total_incidents }}
+				</a>
+			{% endwith %}
+			<div class="categorypage-summary rich-text">
+				{% filter typogrify %}{% render_as_template page.description %}{% endfilter %}
 			</div>
-		{% empty %}
-			<p class="grid-50__item">There are no results for those filters.</p>
-		{% endfor %}
-	</div>
 
-	{% if entries_page.has_next %}
-		<a
-			href="?{% query_transform request page=entries_page.next_page_number %}"
-				  class="button button--outline button--center js-incident-loading-next-link"
-		>
-			More Incidents
-		</a>
+			{% if data_items %}
+				{% include "common/_categorypage-statistics.html" %}
+			{% endif %}
+		</div>
+	</section>
+
+	{% if page.methodology or page.methodology_items.all %}
+		<section class="categorypage-section categorypage-section--gray">
+			<div class="categorypage-section-inner">
+				{% include "common/_category_methodology_section.html" with items=page.methodology_items.all methodology_summary=page.methodology only %}
+			</div>
+		</section>
 	{% endif %}
-{% endblock %}
 
+	{% if featured_incident_pages %}
+		<section class="categorypage-section">
+			<div class="categorypage-section-inner">
+				{% include "home/_featured_incidents_section.html" %}
+			</div>
+		</section>
+	{% endif %}
 
-{% block sidebar_class %}
-	layout-right-sidebar__sidebar--light
-	layout-right-sidebar__sidebar--padded
-{% endblock %}
-
-{% block sidebar %}
-	{# This outer div should be here even if it is empty to provide ajax loading with a container #}
-	<div class="js-summary-table">
-		{% if filtered %}
-			{% include 'incident/_summary_table.html' with label="Search Results Summary" summary_table=summary_table %}
+	{% with search_page=settings.common.SearchSettings.search_page %}
+		{% if search_page %}
+			<section class="categorypage-section categorypage-section--gray">
+				<div class="categorypage-section-inner">
+					{% include "home/_recent_incidents_section.html" with count=8 incidents_base=recent_incidents %}
+				</div>
+			</section>
 		{% endif %}
-	</div>
+	{% endwith %}
 
-	{% include "common/_incident_sidebar_note.html" %}
+	{% if featured_blog_posts %}
+		<section class="categorypage-section">
+			<div class="categorypage-section-inner">
+				{% include "home/_blog_section.html" with label="Articles About "|add:page.title %}
+			</div>
+		</section>
+	{% endif %}
 
-	<div class="js-methodologies">
-		{% include 'common/_category_methodology.html' with category=page %}
-	</div>
+	<section class="categorypage-section categorypage-section--gray">
+		<div class="categorypage-section-inner">
+			{% include "home/_categories_section.html" %}
+		</div>
+	</section>
 {% endblock %}

@@ -1,6 +1,8 @@
 from datetime import date, timedelta
 from unittest.mock import patch
 
+from django.core.exceptions import ValidationError
+from django.http import QueryDict
 from django.test import TestCase
 from django.utils import timezone
 from wagtail.core.models import Site
@@ -19,6 +21,8 @@ from incident.models.choices import (
 )
 from incident.tests.factories import (
     ChargeFactory,
+    EquipmentSeizedFactory,
+    EquipmentBrokenFactory,
     IncidentPageFactory,
     IncidentIndexPageFactory,
     IncidentUpdateFactory,
@@ -52,6 +56,71 @@ class TestFiltering(TestCase):
         )).get_queryset()
 
         self.assertEqual({incident1}, set(incidents))
+
+    def test_sorting_by_invalid_value_adds_errors(self):
+        incident_filter = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='INVALID')
+        )
+        with self.assertRaises(ValidationError) as cm:
+            incident_filter.clean(strict=True)
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['Invalid sort option: "INVALID"']
+        )
+
+    def test_sorts_by_newest_incident_date(self):
+        incident2 = IncidentPageFactory(date='2022-02-02')
+        incident1 = IncidentPageFactory(date='2022-03-03')
+        incident3 = IncidentPageFactory(date='2022-01-01')
+
+        incidents = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='NEWEST')
+        ).get_queryset()
+
+        self.assertEqual([incident1, incident2, incident3], list(incidents))
+
+    def test_sorts_by_newest_incident_date_by_default(self):
+        incident2 = IncidentPageFactory(date='2022-02-02')
+        incident1 = IncidentPageFactory(date='2022-03-03')
+        incident3 = IncidentPageFactory(date='2022-01-01')
+
+        incidents = IncidentFilter(QueryDict()).get_queryset()
+
+        self.assertEqual([incident1, incident2, incident3], list(incidents))
+
+    def test_sorts_by_oldest_incident_date(self):
+        incident3 = IncidentPageFactory(date='2022-03-03')
+        incident1 = IncidentPageFactory(date='2022-01-01')
+        incident2 = IncidentPageFactory(date='2022-02-02')
+
+        incidents = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='OLDEST')
+        ).get_queryset()
+
+        self.assertEqual([incident1, incident2, incident3], list(incidents))
+
+    def test_sorts_by_recently_updated(self):
+        incident4 = IncidentPageFactory(date='2022-04-04')  # has no update
+        incident3 = IncidentPageFactory(date='2022-01-01')
+        incident1 = IncidentPageFactory(date='2022-02-02')
+        incident2 = IncidentPageFactory(date='2022-03-03')
+
+        dt1 = timezone.now() - timedelta(days=1)
+        dt2 = timezone.now() - timedelta(days=2)
+        dt3 = timezone.now() - timedelta(days=3)
+
+        IncidentUpdateFactory(page=incident1, date=dt1)
+        IncidentUpdateFactory(page=incident2, date=dt2)
+        IncidentUpdateFactory(page=incident3, date=dt3)
+
+        incidents = IncidentFilter(
+            QueryDict.fromkeys(['sort'], value='RECENTLY_UPDATED')
+        ).get_queryset()
+
+        self.assertEqual(
+            [incident1, incident2, incident3, incident4],
+            list(incidents),
+        )
 
     def test_should_filter_by_nationality_title(self):
         category1 = CategoryPageFactory(
@@ -1364,6 +1433,49 @@ class StateFilterTest(TestCase):
         self.assertEqual(set(incidents), {incident1})
 
 
+class EquipmentFilterTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        GeneralIncidentFilter.objects.all().delete()
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        for name in ('equipment_seized', 'equipment_broken'):
+            GeneralIncidentFilter.objects.create(
+                incident_filter=name,
+                incident_filter_settings=settings,
+            )
+
+    def test_seized_equipment_uses_noninteger_parameters_to_query_name(self):
+        incident1 = IncidentPageFactory()
+        incident2 = IncidentPageFactory()
+        seized1 = EquipmentSeizedFactory(incident=incident1)
+        EquipmentSeizedFactory(incident=incident2)
+
+        incident_filter = IncidentFilter({
+            'equipment_seized': seized1.equipment.name,
+        })
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1})
+
+    def test_broken_equipment_uses_noninteger_parameters_to_query_name(self):
+        incident1 = IncidentPageFactory()
+        incident2 = IncidentPageFactory()
+        broken1 = EquipmentBrokenFactory(incident=incident1)
+        EquipmentBrokenFactory(incident=incident2)
+
+        incident_filter = IncidentFilter({
+            'equipment_broken': broken1.equipment.name,
+        })
+
+        incident_filter.clean()
+        incidents = incident_filter.get_queryset()
+
+        self.assertEqual(set(incidents), {incident1})
+
+
 class RelationFilterTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1420,6 +1532,14 @@ class RelationThroughTest(TestCase):
     def test_filter_should_filter_by_single_journalist(self):
         incidents = IncidentFilter({
             'targeted_journalists': self.tj1.journalist.pk,
+        }).get_queryset()
+
+        self.assertEqual(incidents.count(), 1)
+        self.assertIn(self.tj1.incident, incidents)
+
+    def test_filter_should_filter_by_single_journalist_by_title(self):
+        incidents = IncidentFilter({
+            'targeted_journalists': self.tj1.journalist.title,
         }).get_queryset()
 
         self.assertEqual(incidents.count(), 1)

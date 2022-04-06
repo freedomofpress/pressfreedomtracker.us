@@ -7,10 +7,36 @@ from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntity
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
 from wagtail.core import hooks
+from wagtail.admin.rich_text.converters.editor_html import PageLinkHandler
 from webpack_loader.utils import get_files
 
-from .models import CommonTag
+from .models import CommonTag, CategoryPage
 from .views import TagMergeView, deploy_info_view
+
+
+class CategoryPageLinkHandler(PageLinkHandler):
+    """Class to apply CSS to links to CategoryPages in rich text"""
+    identifier = 'page'
+
+    @staticmethod
+    def expand_db_attributes(attrs):
+        # Defer to the superclass method for the HTML, then check if
+        # the page we're linking to is a Category page.
+        result = super(CategoryPageLinkHandler, CategoryPageLinkHandler).expand_db_attributes(attrs)
+
+        try:
+            page = CategoryPage.objects.get(pk=attrs['id'])
+            return result.replace(
+                '<a',
+                f'<a class="category category-{page.page_symbol}"',
+            )
+        except CategoryPage.DoesNotExist:
+            return result
+
+
+@hooks.register('register_rich_text_features', order=10)
+def register_external_link(features):
+    features.register_link_type(CategoryPageLinkHandler)
 
 
 class URLHelperWithMerge(AdminURLHelper):

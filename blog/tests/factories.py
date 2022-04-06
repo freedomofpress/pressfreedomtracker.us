@@ -56,6 +56,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
                     'styled_text',
                     'blockquote',
                     'styled_text',
+                    'aside',
                     'list',
                     'styled_text',
                 ],

@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+<ul class="details-table__list">
+  {% for item in items %}
+    <li class="details-table__list-item">
+      <a href="{% pageurl page.get_parent %}?{{ field }}={{ item.equipment.name }}" class="text-link">
+				{{ item.equipment.name|capfirst }}, {{ item.quantity }}
+			</a>
+    </li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,58 @@
+.filters__form
+	select
+		max-width: 200px
+
+	&--submit
+		width: 50%
+		margin: 1rem auto
+		display: block
+
+.filters__header
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+	padding: 1rem 2rem
+	display: flex
+	justify-content: space-between
+	align-items: center
+
+.filters__form-summary
+	margin: -1rem -2rem
+	padding: 1rem 2rem
+	display: block
+	cursor: pointer
+	position: sticky
+	top: 0
+	background-color: $section-background
+	&::before
+		float: right
+		content: url('../icons/arrow-down-thin.svg')
+
+.filters__group
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+	padding: 1rem 2rem
+
+	&[open] .filters__form-summary
+		margin-bottom: 1rem
+		&::before
+			content: url('../icons/arrow-up-thin.svg')
+
+	ul
+		list-style-type: none
+		padding-left: 0
+
+.filters__fieldset
+	border: 0
+
+.filters__field-row
+	margin-bottom: 1.25rem
+
+.filters__field-label
+	margin-bottom: 0.25rem
+	font-size: $font-size-small-ui
+
+.filters__form-actions
+	border-top: 1px solid rgba(0, 0, 0, 0.1)
+	margin: 0 -2rem -1rem
+	padding: 1rem 2rem
+	position: sticky
+	bottom: 0
+	background-color: $section-background

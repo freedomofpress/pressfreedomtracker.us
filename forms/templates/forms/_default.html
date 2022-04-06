@@ -1,0 +1,63 @@
+{% load widget_tweaks common_tags %}
+
+{% for item in group.fields %}
+    {% with field=form|lookup:item.clean_name %}
+
+        <div class="form-field
+            {% if field.errors %}
+                form-field--error
+            {% endif %}
+            {% if field.field.widget.attrs.is_hidden %}
+                form-field--hidden
+            {% endif %}
+        ">
+            {% with type=field|widget_type  %}
+                {% with placeholder="placeholder:"|add:item.placeholder %}
+
+
+                    {% if type == 'textarea' %}
+
+                        <label for="{{ field.id_for_label }}" class="form-label sr-only">{{ field.label }}</label>
+                        {{ field | add_class:'form-item' | attr:"rows:" | attr:"cols:" | attr:placeholder }}
+
+                    {% elif type == 'checkboxinput' %}
+                        <div class="form-field__checkboxes">
+                            <div class="form-field--checkbox">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field }}
+                                {{ field.label }}</label>
+                            </div>
+                        </div>
+
+                    {% elif type == 'checkboxselectmultiple' or type == 'checkboxinput' %}
+                        <div class="form-field__checkboxes">
+                            <div class="form-field--checkbox">
+                                {{ field }}
+                            </div>
+                        </div>
+
+                    {% elif type == 'radioselect' %}
+                        <div class='form-field__radio-buttons'>
+                            {{ field | add_class:'form-radio-group' }}
+                        </div>
+
+                    {% else %}
+
+                        {% if 'hiddeninput' not in type %}
+                            <label for="{{ field.id_for_label }}" class="form-label sr-only">{{ field.label }}</label>
+                        {% endif %}
+
+                        {{ field | add_class:'form-item' | attr:placeholder }}
+
+                    {% endif %}
+
+                {% endwith %}
+            {% endwith %}
+
+            {% for error in field.errors %}
+                <span class="form-field__error__message form-field__error__message--visible">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+    {% endwith %}
+{% endfor %}

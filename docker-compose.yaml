@@ -5,6 +5,7 @@ networks:
 services:
   postgresql:
     image: postgres:13
+    init: true
     ports:
       - "127.0.0.1::5432"
     volumes:
@@ -29,6 +30,7 @@ services:
           - selenium
 
   node:
+    init: true
     build:
       context: .
       dockerfile: devops/docker/NodeDockerfile
@@ -43,6 +45,7 @@ services:
       - app
 
   django:
+    init: true
     stdin_open: true
     tty: true
     build:

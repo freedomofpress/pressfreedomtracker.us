@@ -1,14 +1,39 @@
-from random import choice, randrange
+from random import choice, randrange, shuffle
+import functools
 import json
 
 from faker import Faker
 from faker.providers import BaseProvider
+from wagtail.core.models import Page
+
 from common.models import CustomImage
 from common.choices import BACKGROUND_COLOR_CHOICES
-
 from common.blocks import StyledTextBlock, ALIGNMENT_CHOICES
 
 fake = Faker()
+
+
+def make_words(minimum=3, maximum=11):
+    return ' '.join(fake.words(nb=randrange(minimum, maximum)))
+
+
+def make_html_string():
+    sentence1 = fake.sentence()
+    pieces = [
+        '<strong>{}</strong>',
+        '<em>{}</em>',
+        '<a href="{url}">{{}}</a>'.format(
+            url=fake.url(schemes=['https']),
+        ),
+    ]
+    words = [make_words().capitalize(), make_words(), make_words()]
+    shuffle(pieces)
+
+    sentence2 = ', '.join([
+        piece.format(word)
+        for piece, word in zip(pieces, words)
+    ])
+    return f'{sentence1} {sentence2}.'
 
 
 def generate_field(field_type, value):
@@ -20,7 +45,7 @@ def generate_styled_text(as_type='text'):
     text_align = choice([c[0] for c in StyledTextBlock.TEXT_ALIGN_CHOICES])
     font_size = choice([c[0] for c in StyledTextBlock.FONT_SIZE_CHOICES])
     font_family = choice([c[0] for c in StyledTextBlock.FONT_FAMILY_CHOICES])
-    text = fake.text()
+    text = make_html_string()
     return generate_field(
         as_type,
         {
@@ -78,6 +103,10 @@ def generate_rich_text_paragraph():
     return generate_field('rich_text', paragraph)
 
 
+def generate_rich_text_line():
+    return generate_field('rich_text', make_html_string())
+
+
 def generate_rich_text():
     paragraphs = (
         '<h3>{}</h3>'.format(fake.sentence()),
@@ -99,22 +128,9 @@ def generate_rich_text():
     return generate_field('rich_text', ''.join(paragraphs))
 
 
-def generate_heading1_field():
-    content = ' '.join(fake.words())
-
-    return generate_field('heading_1', {'content': content})
-
-
-def generate_heading2_field():
-    content = ' '.join(fake.words())
-
-    return generate_field('heading_2', {'content': content})
-
-
-def generate_heading3_field():
-    content = ' '.join(fake.words())
-
-    return generate_field('heading_3', {'content': content})
+def generate_heading_field(as_type='heading'):
+    content = ' '.join(fake.words()).title()
+    return generate_field(as_type, {'content': content})
 
 
 def generate_raw_html():
@@ -127,12 +143,12 @@ def generate_raw_html():
     return generate_field('raw_html', body.format(fuel=randrange(0, 101), progress=randrange(0, 101)))
 
 
-def generate_aligned_captioned_image():
+def generate_aligned_captioned_image(as_type='aligned_image'):
     image = choice(CustomImage.objects.filter(collection__name='Photos')).pk
-    caption = '<p>{}</p>'.format(' '.join(fake.words(nb=5)))
-    alignment = choice(ALIGNMENT_CHOICES)
+    caption = make_html_string()
+    alignment = choice(ALIGNMENT_CHOICES)[0]
     return generate_field(
-        'image', {'image': image, 'caption': caption, 'alignment': alignment}
+        as_type, {'image': image, 'caption': caption, 'alignment': alignment}
     )
 
 
@@ -147,6 +163,10 @@ def generate_block_quote():
     )
 
 
+def generate_aside():
+    return generate_field('aside', {'text': make_html_string()})
+
+
 def generate_list():
     return generate_field('list', fake.words())
 
@@ -158,10 +178,10 @@ def generate_twitter_embed():
 
 
 def generate_tabs():
-    block_fns = [generate_heading2_field, generate_rich_text_paragraph]
+    block_fns = [functools.partial(generate_heading_field, as_type='heading_2'), generate_rich_text_paragraph]
     default_tab = {
         'value': [
-            generate_heading2_field(),
+            generate_heading_field(as_type='heading_2'),
             generate_rich_text_paragraph(),
             generate_twitter_embed(),
             generate_raw_html()
@@ -177,14 +197,121 @@ def generate_tabs():
     return generate_field('tabs', tabs)
 
 
+def generate_info_table_pages():
+    num_pages = randrange(2, 11)
+
+    page_links = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'page': page.pk,
+                'description': ' '.join(fake.words(nb=randrange(2, 10))).title(),
+                'title': ' '.join(fake.words(nb=randrange(2, 10))).title() if i % 2 == 0 else None,
+            }
+            for i, page in
+            enumerate(Page.objects.filter(depth__gt=1).order_by('?')[:num_pages])
+        ]
+    }
+
+    table = generate_field('page_links', page_links)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
+def generate_info_table_emails():
+    num_emails = randrange(2, 11)
+
+    emails = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'email': fake.ascii_safe_email(),
+                'title': ' '.join(fake.words(nb=randrange(2, 10))).title(),
+            }
+            for _ in range(num_emails)
+        ]
+    }
+
+    table = generate_field('email_addresses', emails)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
+def generate_info_table_plain_text():
+    num_text = randrange(2, 11)
+    text = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'title': fake.name(),
+                'description': ' '.join(fake.words(nb=randrange(6, 16))).title(),
+            }
+            for _ in range(num_text)
+        ]
+    }
+
+    table = generate_field('plain_text', text)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
+def generate_info_table_external_links():
+    num_links = randrange(2, 11)
+    images = CustomImage.objects.filter(
+        collection__name='Photos',
+    ).order_by('?')[:num_links]
+
+    links = {
+        'cta_label': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+        'table_data': [
+            {
+                'url': fake.url(),
+                'title': ' '.join(fake.words(nb=randrange(2, 10))).title(),
+                'image': images[i].pk,
+            }
+            for i in range(num_links)
+        ]
+    }
+
+    table = generate_field('external_links', links)
+
+    return generate_field(
+        'info_table',
+        {
+            'heading': ' '.join(fake.words(nb=randrange(1, 5))).title(),
+            'table': [table],
+        }
+    )
+
+
 class StreamfieldProvider(BaseProvider):
     def streamfield(self, fields=None):
         valid_fields = {
-            'heading1': generate_heading1_field,
-            'heading2': generate_heading2_field,
-            'heading3': generate_heading3_field,
+            'heading1': functools.partial(generate_heading_field, as_type='heading_1'),
+            'heading2': functools.partial(generate_heading_field, as_type='heading_2'),
+            'heading3': functools.partial(generate_heading_field, as_type='heading_3'),
+            'heading': generate_heading_field,
             'rich_text': generate_rich_text,
             'rich_text_paragraph': generate_rich_text_paragraph,
+            'rich_text_line': generate_rich_text_line,
             'bare_image': generate_bare_image,
             'aligned_captioned_image': generate_aligned_captioned_image,
             'raw_html': generate_raw_html,
@@ -194,6 +321,11 @@ class StreamfieldProvider(BaseProvider):
             'list': generate_list,
             'tweet': generate_twitter_embed,
             'tabs': generate_tabs,
+            'info_table_pages': generate_info_table_pages,
+            'info_table_emails': generate_info_table_emails,
+            'info_table_external_links': generate_info_table_external_links,
+            'info_table_plain_text': generate_info_table_plain_text,
+            'aside': generate_aside,
         }
 
         streamfield_data = []

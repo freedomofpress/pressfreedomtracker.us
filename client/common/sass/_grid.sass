@@ -1,24 +1,17 @@
-.grid-50
-	display: flex
-	flex-direction: row
-	flex-wrap: wrap
-	align-items: stretch
-	margin-left: -$column-gutter-width
+=grid-columns($column-count, $gutter)
+	grid-template-columns: repeat($column-count, minmax(0, 1fr))
+	grid-column-gap: $gutter
 
-	@media(max-width: $small-screen)
-		margin-left: 0
+=grid-container
+	display: grid
 
+	// 8 equal width cols, 16px gutter
+	+grid-columns(8, 1rem)
 
-.grid-50__item
-	box-sizing: border-box
-	display: flex
-	width: 50%
-	overflow: hidden
-	padding-left: $column-gutter-width
+	+tablet-up
+		// 8 equal width cols, 24px gutter
+		+grid-columns(8, 1.5rem)
 
-	@media(max-width: $small-screen)
-		width: 100%
-		padding: 0
-
-		&:last-child
-			margin-bottom: 0
+	+desktop-up
+		// 12 equal width cols, 32px gutter
+		+grid-columns(12, 2rem)

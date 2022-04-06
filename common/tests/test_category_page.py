@@ -30,6 +30,20 @@ class ContextTest(TestCase):
 
         self.assertEqual(set(context['entries_page']), {incident1})
 
+    def test_unpaginated_recent_incidents(self):
+        category1 = CategoryPageFactory()
+        category2 = CategoryPageFactory()
+        incident3 = IncidentPageFactory(categories=[category1], date='2022-01-01')
+        incident1 = IncidentPageFactory(categories=[category1], date='2022-03-01')
+        incident2 = IncidentPageFactory(categories=[category1], date='2022-02-01')
+        IncidentPageFactory(title='Not relevant', categories=[category2])
+
+        request = RequestFactory().get('/')
+
+        context = category1.get_context(request)
+
+        self.assertEqual(list(context['recent_incidents']), [incident1, incident2, incident3])
+
     def test_incidents_filtered_by_category__and_choice(self):
         category1 = CategoryPageFactory(incident_filters=['arrest_status'])
         category2 = CategoryPageFactory()
@@ -186,6 +200,7 @@ class CategoryPageTest(TestCase):
         post_data = {
             'slug': self.category_page.slug,
             'title': 'ABC',
+            'methodology': '{}',
             'quick_facts-TOTAL_FORMS': 0,
             'quick_facts-INITIAL_FORMS': 0,
             'quick_facts-MIN_NUM_FORMS': 0,
@@ -194,6 +209,18 @@ class CategoryPageTest(TestCase):
             'statistics_items-INITIAL_FORMS': 0,
             'statistics_items-MIN_NUM_FORMS': 0,
             'statistics_items-MAX_NUM_FORMS': 1000,
+            'featured_incidents-TOTAL_FORMS': 0,
+            'featured_incidents-INITIAL_FORMS': 0,
+            'featured_incidents-MIN_NUM_FORMS': 0,
+            'featured_incidents-MAX_NUM_FORMS': 1000,
+            'featured_blogs-TOTAL_FORMS': 0,
+            'featured_blogs-INITIAL_FORMS': 0,
+            'featured_blogs-MIN_NUM_FORMS': 0,
+            'featured_blogs-MAX_NUM_FORMS': 1000,
+            'methodology_items-TOTAL_FORMS': 0,
+            'methodology_items-INITIAL_FORMS': 0,
+            'methodology_items-MIN_NUM_FORMS': 0,
+            'methodology_items-MAX_NUM_FORMS': 1000,
             'incident_filters-TOTAL_FORMS': 0,
             'incident_filters-INITIAL_FORMS': 0,
             'incident_filters-MIN_NUM_FORMS': 0,
@@ -201,7 +228,7 @@ class CategoryPageTest(TestCase):
             'incident_filters-0-incident_filter': 'arrest_status',
             'incident_filters-0-id': 1,
             'incident_filters-0-ORDER': 1,
-            'page_color': 'red'
+            'page_symbol': 'arrest'
         }
 
         response = self.client.post(
@@ -246,9 +273,12 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
             'title': 'Test Category',
             'slug': 'test-category',
             'methodology': rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag)),
-            'page_color': 'red',
+            'page_symbol': 'arrest',
             'quick_facts': inline_formset([]),
             'statistics_items': inline_formset([]),
+            'featured_incidents': inline_formset([]),
+            'featured_blogs': inline_formset([]),
+            'methodology_items': inline_formset([]),
             'incident_filters': inline_formset([]),
         }
 

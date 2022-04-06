@@ -1,1 +1,5 @@
-{% include "common/blocks/styled_text.html" with full_bleed=True %}
+{% load wagtailcore_tags %}
+
+<div class="styled-text">
+    <div class="rich-text">{{ value.text|richtext }}</div>
+</div>

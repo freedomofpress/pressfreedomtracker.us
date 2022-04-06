@@ -124,7 +124,7 @@ class TopicPageApi(TestCase):
         cat = data[1]
         self.assertEqual(cat['category'], self.cat1.title)
         self.assertEqual(cat['category_plural'], self.cat1.plural_name)
-        self.assertEqual(cat['color'], self.cat1.page_color)
+        self.assertEqual(cat['symbol'], self.cat1.page_symbol)
         self.assertEqual(cat['methodology'], self.cat1.methodology)
         self.assertEqual(cat['url'], self.cat1.get_full_url())
         self.assertEqual(cat['total_incidents'], 3)

@@ -1,17 +1,23 @@
+from collections import defaultdict
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.decorators import method_decorator
+from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_control
 from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.admin.edit_handlers import (
     FieldPanel, FieldRowPanel,
     InlinePanel, MultiFieldPanel
 )
+from wagtail.core.models import Orderable
 from wagtail.core.fields import RichTextField
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
+from forms.choices import FIELD_GROUP_TEMPLATE_CHOICES
 from forms.email import send_mail
 from common.models import MetadataPageMixin
 from common.edit_handlers import HelpPanel
@@ -23,14 +29,22 @@ class ReplyToValidatorForm(WagtailAdminPageForm):
 
         reply_to_fields = []
         reply_to_forms = []
-        for form in self.formsets['form_fields'].forms:
-            if form.is_valid():
-                cleaned_form_data = form.clean()
-                reply_to_field = cleaned_form_data.get('use_as_reply_to')
+        labels = defaultdict(list)
+        for group in self.formsets['field_groups'].forms:
+            for form in group.formsets['form_fields'].forms:
+                if form.is_valid():
+                    cleaned_form_data = form.clean()
+                    labels[cleaned_form_data.get('label')].append(form)
+                    reply_to_field = cleaned_form_data.get('use_as_reply_to')
 
-                if reply_to_field:
-                    reply_to_fields.append(cleaned_form_data.get('label'))
-                    reply_to_forms.append(form)
+                    if reply_to_field:
+                        reply_to_fields.append(cleaned_form_data.get('label'))
+                        reply_to_forms.append(form)
+
+        for label, forms in labels.items():
+            if len(forms) > 1:
+                for form in forms:
+                    form.add_error('label', f'There is another field with the label {label}, please change one of them.')
 
         if len(reply_to_fields) > 1:
             for form in reply_to_forms:
@@ -40,18 +54,25 @@ class ReplyToValidatorForm(WagtailAdminPageForm):
         return cleaned_data
 
 
-class FormField(AbstractFormField):
+class GroupedFormField(AbstractFormField):
     class Meta(AbstractFormField.Meta):
+        ordering = ['sort_order']
         constraints = [
             models.UniqueConstraint(
-                fields=['page'],
+                fields=['group'],
                 condition=models.Q(use_as_reply_to=True),
                 name='only_one_reply_to_form_field',
             )
         ]
 
-    page = ParentalKey('FormPage', related_name='form_fields')
+    group = ParentalKey('FieldGroup', on_delete=models.CASCADE, related_name='form_fields')
 
+    placeholder = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Optional: placeholder for the field',
+    )
     append_to_subject = models.BooleanField(
         default=False,
         help_text='Add the contents of this field to the subject of the email sent by this from.  All fields with this checked will be appended.',
@@ -62,19 +83,69 @@ class FormField(AbstractFormField):
     )
 
     panels = AbstractFormField.panels + [
+        FieldPanel('placeholder'),
         FieldPanel('append_to_subject'),
         FieldPanel('use_as_reply_to'),
     ]
 
 
+class FieldGroup(ClusterableModel, Orderable):
+    class Meta:
+        ordering = ['sort_order']
+    page = ParentalKey('FormPage', on_delete=models.CASCADE, related_name='field_groups')
+
+    title = models.CharField(
+        max_length=255,
+    )
+    description = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Optional: description for the field group',
+    )
+    template = models.CharField(
+        max_length=20,
+        choices=FIELD_GROUP_TEMPLATE_CHOICES,
+        default=FIELD_GROUP_TEMPLATE_CHOICES[0][0],
+        help_text='Select template used to display this field group',
+    )
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('description'),
+        FieldPanel('template'),
+        InlinePanel('form_fields', label="Form field", classname='full-width nested-inline'),
+    ]
+
+    @cached_property
+    def fields(self):
+        return self.form_fields.all()
+
+
 @method_decorator(cache_control(private=True), name='serve')
 class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
+    form_intro = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Optional: short intro for the form',
+    )
     thank_you_text = RichTextField(blank=True)
     button_text = models.CharField(
         max_length=30,
         blank=True,
         null=True,
+    )
+    outro_title = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Optional: title for the page outro',
+    )
+    outro_text = RichTextField(
+        blank=True,
+        null=True,
+        help_text='Optional: text for the page outro',
     )
 
     content_panels = [
@@ -86,7 +157,8 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
                   '</textarea>'),
     ] + WagtailCaptchaEmailForm.content_panels + [
         FieldPanel('intro', classname="full"),
-        InlinePanel('form_fields', label="Form fields"),
+        FieldPanel('form_intro', classname="full"),
+        InlinePanel('field_groups', label="Field group"),
         FieldPanel('thank_you_text', classname="full"),
         FieldPanel('button_text'),
         MultiFieldPanel([
@@ -96,8 +168,24 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
             ]),
             FieldPanel('subject'),
         ], "Email"),
+        MultiFieldPanel([
+            FieldPanel('outro_title'),
+            FieldPanel('outro_text'),
+        ], "Outro"),
     ]
     base_form_class = ReplyToValidatorForm
+
+    @cached_property
+    def groups(self):
+        return self.field_groups.all()
+
+    def get_form_fields(self):
+        fields = []
+        for group in self.field_groups.all():
+            for field in group.form_fields.all():
+                fields.append(field)
+
+        return fields
 
     def get_context(self, request, *args, **kwargs):
         context = super(FormPage, self).get_context(request, *args, **kwargs)
@@ -114,7 +202,7 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         return response
 
     def send_mail(self, form):
-        fields = {x.clean_name: x for x in self.form_fields.all()}
+        fields = {x.clean_name: x for x in self.get_form_fields()}
         addresses = [x.strip() for x in self.to_address.split(',')]
         content = []
         reply_to = []

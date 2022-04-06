@@ -27,7 +27,7 @@ fi
 export DJANGO_URL="http://$(docker-compose -f ${DOCKER_COMPOSE_FILE} port ${CONTAINER} ${PORT})"
 
 # Are we on Linux?
-if [[ "${PLATFORM,,}" == *"linux"* ]]; then
+if [[ "${PLATFORM}" == *"linux"* ]]; then
     xdg-open "${DJANGO_URL}" &
 # I guess we are on Mac :shrug:
 else

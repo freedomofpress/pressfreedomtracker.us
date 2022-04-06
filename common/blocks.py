@@ -1,4 +1,9 @@
+import re
+
+from django.forms.utils import ErrorList
+
 from wagtail.core import blocks
+from wagtail.core.blocks.struct_block import StructBlockValidationError
 from wagtail.core.rich_text import RichText
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -121,6 +126,47 @@ class TweetEmbedBlock(blocks.StructBlock):
         icon = 'pick'
         label = 'Tweet'
 
+    def clean(self, value):
+        errors = {}
+        twitter_url = r'^(http|https):\/\/twitter.com'
+        tweet = value.get('tweet')
+
+        if tweet:
+            valid = re.match(twitter_url, tweet.url)
+
+            if not valid:
+                errors['tweet'] = ErrorList(['Please enter a valid Twitter URL.'])
+
+            if errors:
+                raise StructBlockValidationError(errors)
+
+        return super().clean(value)
+
+
+class AsideBlock(blocks.StructBlock):
+    text = blocks.RichTextBlock(
+        features=[
+            'bold',
+            'italic',
+            'h2',
+            'h3',
+            'h4',
+            'ol',
+            'ul',
+            'hr',
+            'embed',
+            'link',
+            'document-link',
+            'image',
+            'code',
+        ],
+    )
+
+    class Meta:
+        template = 'common/blocks/aside_block.html'
+        icon = 'doc-full-inverse'
+        label = 'Aside'
+
 
 class StyledTextBlock(blocks.StructBlock):
     TEXT_ALIGN_CHOICES = (
@@ -158,6 +204,9 @@ class StyledTextBlock(blocks.StructBlock):
             'code',
         ],
     )
+
+    # These fields are assumed to be deprecated and are left for legacy purposes
+    # The template does not use the values of these fields
     background_color = blocks.ChoiceBlock(choices=BACKGROUND_COLOR_CHOICES, default='white')
     text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default='left')
     font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default='normal')
@@ -263,6 +312,14 @@ class RichTextBlockQuoteBlock(blocks.StructBlock):
         icon = "openquote"
 
 
+class PullQuoteBlock(blocks.StructBlock):
+    text = blocks.TextBlock()
+
+    class Meta:
+        template = 'common/blocks/pull_quote_block.html'
+        icon = "openquote"
+
+
 class EmailSignupBlock(blocks.StructBlock):
     text = blocks.CharBlock(
         label='Call to action text',
@@ -279,3 +336,101 @@ class EmailSignupBlock(blocks.StructBlock):
         template = 'common/blocks/emails_signup.html'
         icon = 'form'
         label = 'Newsletter Signup'
+
+
+class AbstractInfoTableCTABlock(blocks.StructBlock):
+    cta_label = blocks.CharBlock(
+        help_text='Label to be displayed for row link, e.g. "Read the bio", "Contact us", "Visit the page", etc.',
+    )
+
+    class Meta:
+        abstract = True
+
+
+class InfoTableBlockPage(AbstractInfoTableCTABlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('page', blocks.PageChooserBlock()),
+            ('title', blocks.CharBlock(
+                help_text='Optional: defaults to page title',
+                required=False,
+            )),
+            ('description', blocks.CharBlock()),
+        ],
+        icon='list-ul',
+        label='Table row'
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_page.html'
+        icon = 'doc-full'
+
+
+class InfoTableBlockEmail(AbstractInfoTableCTABlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('title', blocks.CharBlock()),
+            ('email', blocks.EmailBlock()),
+        ],
+        icon='list-ul',
+        label='Table row'
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_email.html'
+        icon = 'mail'
+
+
+class InfoTableBlockURL(AbstractInfoTableCTABlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('image', ImageChooserBlock(
+                required=False,
+            )),
+            ('title', blocks.CharBlock()),
+            ('url', blocks.URLBlock()),
+        ],
+        icon='list-ul',
+        label='Table row'
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_url.html'
+        icon = 'site'
+
+
+class InfoTableBlockText(blocks.StructBlock):
+    table_data = blocks.ListBlock(blocks.StructBlock(
+        [
+            ('title', blocks.CharBlock()),
+            ('description', blocks.CharBlock()),
+        ],
+        icon='list-ul',
+        label='Table row',
+    ))
+
+    class Meta:
+        template = 'common/blocks/info_table/_text.html'
+        icon = 'pilcrow'
+
+
+class InfoTableBlock(blocks.StructBlock):
+    heading = blocks.CharBlock(
+        help_text='Heading of the info table',
+    )
+    table = blocks.StreamBlock(
+        [
+            ('page_links', InfoTableBlockPage()),
+            ('email_addresses', InfoTableBlockEmail()),
+            ('external_links', InfoTableBlockURL()),
+            ('plain_text', InfoTableBlockText()),
+        ],
+        max_num=1,
+        icon='list-ul',
+        label='Table type'
+    )
+
+    class Meta:
+        template = 'common/blocks/info_table.html'
+        icon = 'list-ul'
+        label = 'Info table'

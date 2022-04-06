@@ -23,12 +23,16 @@ from common.models import (
     GeneralIncidentFilter, IncidentFilterSettings, CategoryPage,
 )
 from common.devdata import (
-    PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory
+    PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory,
+    SimplePageFactory, SiteSettingsFactory,
 )
+from common.tests.utils import make_html_string
+from emails.devdata import EmailSettingsFactory
 from forms.models import FormPage
-from home.models import HomePage, HomePageFeature
+from forms.tests.factories import FormPageFactory
+from home.models import HomePage, FeaturedBlogPost, FeaturedIncident
 from incident.models import IncidentIndexPage, IncidentPage
-from incident.devdata import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory
+from incident.devdata import IncidentIndexPageFactory, IncidentLinkFactory, MultimediaIncidentUpdateFactory, MultimediaIncidentPageFactory, TopicPageFactory
 from menus.models import Menu, MenuItem
 
 
@@ -38,9 +42,67 @@ LIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in erat or
 fake = Faker()
 
 
+FACTORY_ARGS_BY_CATEGORY = {
+    'arrest': {
+        'arrest': True,
+        'current_charges': 1,
+        'dropped_charges': 1,
+    },
+    'equipment_search': {
+        'equipment_search': True,
+    },
+    'equipment_damage': {
+        'equipment_damage': True,
+    },
+    'assault': {
+        'assault': True,
+    },
+    'subpoena': {
+        'subpoena': True,
+    },
+    'prior_restraint': {
+        'prior_restraint': True,
+    },
+    'denial_of_access': {
+        'politicians_or_public_figures_involved': 2,
+    },
+    'leak_case': {
+        'leak_case': True,
+        'workers_whose_communications_were_obtained': 2,
+    },
+    'border_stop': {
+        'border_stop': True,
+        'target_nationality': 1,
+    },
+    'chilling_statement': {
+        'chilling_statement': True,
+    },
+    'other_incident': {
+        'other_incident': True,
+    }
+}
+
+# mapping of Trait parameters on the CategoryPageFactory to slugs
+# belonging to actual CategoryPage objects.
+PARAM_TO_SLUG_MAP = {
+    'arrest': 'arrest-criminal-charge',
+    'border_stop': 'border-stop',
+    'denial_of_access': 'denial-access',
+    'equipment_search': 'equipment-search-seizure-or-damage',
+    'assault': 'assault',
+    'leak_case': 'leak-case',
+    'subpoena': 'subpoena',
+    'equipment_damage': 'equipment-damage',
+    'other_incident': 'other-incident',
+    'chilling_statement': 'chilling-statement',
+    'prior_restraint': 'prior-restraint',
+}
+
+
 def lookup_category(key):
+    slug = PARAM_TO_SLUG_MAP[key]
     try:
-        return CategoryPage.objects.get(slug=key)
+        return CategoryPage.objects.get(slug=slug)
     except CategoryPage.DoesNotExist:
         raise CommandError(f'Could not find category with slug `{key}`')
 
@@ -159,28 +221,73 @@ class Command(BaseCommand):
                     collection=photo_collection,
                 )
 
+        # SUBMIT INCIDENT FORM
+        FormPage.objects.filter(slug='submit-incident').delete()
+        incident_form = FormPageFactory(
+            title='Submit an incident',
+            slug='submit-incident',
+            intro=make_html_string(),
+            thank_you_text=make_html_string(),
+            outro_text=make_html_string(),
+            parent=home_page,
+        )
+
+        # BLOG RELATED PAGES
+        BlogIndexPage.objects.filter(slug='fpf-blog').delete()
+        blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
+        org_index_page = OrganizationIndexPageFactory(parent=home_page)
+        home_page.blog_index_page = blog_index_page
+
+        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
+
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author1,
+            with_image=True,
+        )
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author2,
+            with_image=True,
+        )
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author3,
+            with_image=True,
+        )
+
+        for page in random.sample(list(BlogPage.objects.all()), 3):
+            FeaturedBlogPost.objects.create(
+                home_page=home_page,
+                page=page,
+            )
+
         # ABOUT PAGE
         if not SimplePage.objects.filter(slug='about').exists():
-            about_page = SimplePage(
+            about_page = SimplePageFactory.build(
                 title='About',
                 slug='about',
-                body=json.dumps([
-                    dict(
-                        type='text',
-                        value=dict(
-                            text=LIPSUM,
-                            background_color='white',
-                            text_align='left',
-                            font_size='large',
-                            font_family='sans-serif',
-                        ),
-                    ),
-                ])
             )
             home_page.add_child(instance=about_page)
             home_page.about_page = about_page
         else:
             about_page = SimplePage.objects.get(slug='about')
+
+        # FAQ Page
+        SimplePage.objects.filter(
+            slug='frequently-asked-questions',
+        ).delete()
+        faq_page = SimplePageFactory(
+            parent=home_page,
+            title='Frequently Asked Questions',
+            slug='frequently-asked-questions',
+        )
 
         # RESOURCES PAGE
         if not Menu.objects.filter(slug='resources').exists():
@@ -219,42 +326,127 @@ class Command(BaseCommand):
 
             home_page.add_child(instance=resources_page)
 
-        # SUBMIT INCIDENT FORM
-        if not FormPage.objects.filter(slug='submit-incident'):
-            incident_form = FormPage(title='Submit an incident', slug='submit-incident')
-            home_page.add_child(instance=incident_form)
-        else:
-            FormPage.objects.get(slug='submit-incident')
+        # INCIDENT RELATED PAGES
+        search_settings = SearchSettings.for_site(site)
+        incident_filter_settings = IncidentFilterSettings.for_site(site)
+        filters_to_make = [
+            'date',
+            'recently_updated',
+            'city',
+            'state',
+            'targeted_journalists',
+            'targeted_institutions',
+            'tags',
+            'lawsuit_name',
+            'venue',
+            'case_statuses',
+        ]
+        for f in filters_to_make:
+            GeneralIncidentFilter.objects.create(
+                incident_filter_settings=incident_filter_settings,
+                incident_filter=f,
+            )
+
+        IncidentIndexPage.objects.filter(slug='all-incidents').delete()
+        incident_index_page = IncidentIndexPageFactory(
+            parent=home_page,
+            main_menu=True,
+            title='All Incidents',
+        )
+        for category_keys in generate_variations():
+            category_pages = []
+            kwargs = {}
+            for key in category_keys:
+                category_pages.append(lookup_category(key))
+                kwargs.update(
+                    FACTORY_ARGS_BY_CATEGORY.get(key, {})
+                )
+            n = random.random()
+            if n < 0.25:
+                kwargs['venues'] = 1
+            elif n < 0.5:
+                kwargs['journalist_targets'] = 1
+            elif n < 0.75:
+                kwargs['institution_targets'] = 1
+
+            for i in range(2):
+                MultimediaIncidentPageFactory(
+                    parent=incident_index_page,
+                    categories=category_pages,
+                    tags=2,
+                    **kwargs,
+                )
+
+        search_settings.search_page = incident_index_page
+        search_settings.save()
+
+        for incident in random.sample(list(IncidentPage.objects.all()), 3):
+            FeaturedIncident.objects.create(
+                home_page=home_page,
+                page=incident,
+            )
+            MultimediaIncidentUpdateFactory(page=incident)
+            IncidentLinkFactory.create_batch(3, page=incident)
+        home_page.save()
+
+        topic_page = TopicPageFactory(
+            parent=home_page,
+            incident_index_page=incident_index_page,
+            title='Important Animals Topic Page',
+            incident_tag__title='Important Animals',
+        )
+        tag = topic_page.incident_tag
+        tag.tagged_items.add(
+            *random.sample(list(IncidentPage.objects.all()), 20)
+        )
 
         # CREATE MENUS
-        # delete any the existing main menu
-        if not Menu.objects.filter(slug='main').exists():
-            main = Menu.objects.create(name='Main Menu', slug='main')
+        if not Menu.objects.filter(slug='primary-navigation').exists():
+            primary = Menu.objects.create(name='Primary Navigation', slug='primary-navigation')
             MenuItem.objects.bulk_create([
+                MenuItem(
+                    text='Incidents Database',
+                    link_page=incident_index_page,
+                    menu=primary,
+                    sort_order=1,
+                ),
+                MenuItem(
+                    text='Blog',
+                    link_page=blog_index_page,
+                    menu=primary,
+                    sort_order=2,
+                ),
+                MenuItem(
+                    text='FAQ',
+                    link_page=faq_page,
+                    menu=primary,
+                    sort_order=3,
+                ),
                 MenuItem(
                     text='About',
                     link_page=about_page,
-                    menu=main,
-                    sort_order=1
+                    menu=primary,
+                    sort_order=4,
                 ),
+            ])
+
+        if not Menu.objects.filter(slug='secondary-navigation').exists():
+            secondary = Menu.objects.create(
+                name='Secondary Navigation',
+                slug='secondary-navigation',
+            )
+            MenuItem.objects.bulk_create([
                 MenuItem(
-                    text='Resources',
-                    link_page=resources_page,
-                    menu=main,
-                    sort_order=2
-                ),
-                MenuItem(
-                    text='Contact',
-                    link_url='#',
-                    menu=main,
-                    sort_order=3
+                    text='Donate',
+                    link_url='https://freedom.press/tracker/',
+                    menu=secondary,
+                    sort_order=1,
                 ),
                 MenuItem(
                     text='Submit an Incident',
                     link_page=incident_form,
-                    menu=main,
-                    sort_order=99,
-                    html_classes='header__nav-link--highlighted'
+                    menu=secondary,
+                    sort_order=2,
                 ),
             ])
 
@@ -294,82 +486,8 @@ class Command(BaseCommand):
         if footer_menu:
             footer_settings.menu = footer_menu
         footer_settings.save()
-
-        # BLOG RELATED PAGES
-        if not BlogIndexPage.objects.filter(slug='fpf-blog').exists():
-            blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
-            org_index_page = OrganizationIndexPageFactory(parent=home_page)
-            home_page.blog_index_page = blog_index_page
-
-            author1, author2, author3 = PersonPageFactory.create_batch(3, parent=home_page)
-
-            BlogPageFactory.create_batch(
-                10,
-                parent=blog_index_page,
-                organization__parent=org_index_page,
-                author=author1,
-                with_image=True,
-            )
-            BlogPageFactory.create_batch(
-                10,
-                parent=blog_index_page,
-                organization__parent=org_index_page,
-                author=author2,
-                with_image=True,
-            )
-            BlogPageFactory.create_batch(
-                10,
-                parent=blog_index_page,
-                organization__parent=org_index_page,
-                author=author3,
-                with_image=True,
-            )
-
-            for i, page in zip((2, 4, 6), random.sample(list(BlogPage.objects.all()), 3)):
-                HomePageFeature.objects.create(
-                    sort_order=i,
-                    home_page=home_page,
-                    page=page,
-                )
-        else:
-            blog_index_page = BlogIndexPage.objects.get(slug='fpf-blog')
-
-        # INCIDENT RELATED PAGES
-        search_settings = SearchSettings.for_site(site)
-        incident_filter_settings = IncidentFilterSettings.for_site(site)
-        GeneralIncidentFilter.objects.create(
-            incident_filter_settings=incident_filter_settings,
-            incident_filter='date',
-        )
-
-        if not IncidentIndexPage.objects.filter(slug='all-incidents'):
-            incident_index_page = IncidentIndexPageFactory(
-                parent=home_page,
-                main_menu=True,
-                title='All Incidents',
-            )
-            for kwargs in generate_variations():
-                for i in range(2):
-                    MultimediaIncidentPageFactory(
-                        parent=incident_index_page,
-                        categories=[lookup_category(key) for key in kwargs.keys()],
-                        **kwargs,
-                    )
-        else:
-            incident_index_page = IncidentIndexPage.objects.get(slug='all-incidents')
-
-        search_settings.search_page = incident_index_page
-        search_settings.save()
-
-        for i, incident in zip((1, 3, 5), random.sample(list(IncidentPage.objects.all()), 3)):
-            HomePageFeature.objects.create(
-                sort_order=i,
-                home_page=home_page,
-                page=incident,
-            )
-            MultimediaIncidentUpdateFactory(page=incident)
-            IncidentLinkFactory.create_batch(3, page=incident)
-        home_page.save()
+        SiteSettingsFactory(site=site, citation_contact_page=faq_page)
+        EmailSettingsFactory(site=site)
 
         # Create superuser
         if not User.objects.filter(is_superuser=True).exists():

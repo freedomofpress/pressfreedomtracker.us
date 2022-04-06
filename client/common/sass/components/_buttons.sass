@@ -1,0 +1,135 @@
+.btn
+	position: relative
+	display: inline-block
+	font-family: $font-base
+	font-size: $font-size-small-p
+	font-weight: 500
+	line-height: 1.7145
+	padding: 0.5rem 0.75rem
+	background-color: $white
+	color: $black
+	text-decoration: none
+	z-index: 1
+
+	&:focus
+		outline: $black solid 3px
+
+	&:not([disabled]):hover
+		cursor: pointer
+
+	&-primary
+		border: 3px solid
+		border-color: $black
+		// the calc here makes space on right edge for the ">"
+		// which is 16px (inner-width) + 1.5rem (padding) + 3px (border) wide
+		padding: 0.5rem calc(1rem + 1.5rem + 19px) 0.5rem 1rem
+		transition: color 0.01s ease-in 0.08s
+
+		&::after
+			content: url(../icons/arrow-left.svg)
+			height: 24px
+			width: 16px
+			border: 3px solid
+			border-color: $black
+			position: absolute
+			right: -3px
+			top: -3px
+			padding: 0.5rem 0.75rem
+			//padding left of parent
+			transition: content 0.01s ease-in 0.08s
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+			&::after
+				content: url(../icons/arrow-left-inactive.svg)
+				border-color: $tag-inactive
+
+		&:not([disabled])::before
+			content: ''
+			position: absolute
+			background: $black
+			bottom: 0
+			left: 0
+			right: 100%
+			top: 0
+			z-index: -1
+			transition: right 0.09s ease-in
+
+		&:not([disabled]):hover
+			color: $white
+
+			&::after
+				content: url(../icons/arrow-left-white.svg)
+				// background-color: $black
+
+			&::before
+				right: 0
+
+	&-secondary
+		border: 3px solid
+		border-color: $black
+		transition: color 0.01s ease-in 0.08s
+
+		&:not([disabled])::before
+			content: ''
+			position: absolute
+			background: $black
+			bottom: 0
+			left: 0
+			right: 100%
+			top: 0
+			z-index: -1
+			transition: right 0.09s ease-in
+
+		&:hover
+			color: $white
+
+			&::before
+				right: 0
+
+		&[disabled]
+			color: $tag-inactive
+			border-color: $tag-inactive
+
+	&-ghost
+		transition: color 0.01s ease-in 0.08s
+		border-width: 0
+		background-color: transparent
+
+		&:not([disabled])::before
+			content: ''
+			position: absolute
+			background: $black
+			bottom: 0
+			left: 0
+			right: 100%
+			top: 0
+			z-index: -1
+			transition: right 0.09s ease-in
+
+		&:hover
+			color: $white
+
+			&::before
+				right: 0
+
+		&[disabled]
+			color: $tag-inactive
+
+	&-tag
+		font-weight: 400
+		line-height: 1.23
+		padding: 0.25rem 0.5rem
+		background-color: $accent-background-tags
+
+		&:not([disabled]):hover
+			background-color: $accent-color
+
+		&[disabled]
+			color: $gray-text
+
+	&-block
+		display: block
+		text-align: center

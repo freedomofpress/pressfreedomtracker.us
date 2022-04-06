@@ -1,6 +1,6 @@
+import dataclasses
 import datetime
 import uuid
-from urllib.parse import urlencode
 
 from django import forms
 from django.db import models
@@ -15,6 +15,7 @@ from django.db.models import (
     When,
 )
 from django.db.models.functions import ExtractDay
+from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
@@ -40,9 +41,11 @@ from common.blocks import (
     AlignedCaptionedImageBlock,
     TweetEmbedBlock,
     RichTextTemplateBlock,
+    PullQuoteBlock,
 )
 from common.models import MetadataPageMixin
 from incident.models import choices
+from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
 from incident.models.inlines import IncidentPageUpdates
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
@@ -62,6 +65,12 @@ class IncidentAuthor(Orderable):
     panels = [
         PageChooserPanel('author')
     ]
+
+
+@dataclasses.dataclass
+class TargetLink:
+    text: str
+    url_arguments: str
 
 
 class CheckboxMultipleChoice(forms.MultipleChoiceField):
@@ -122,6 +131,9 @@ class IncidentQuerySet(PageQuerySet):
             most_recent_update=Max('date')
         ).values('most_recent_update')
         return self.annotate(
+            # This is not super-efficient, as it runs the subquery
+            # twice.  Need to evaluate if there's a better way.
+            latest_update=ExpressionWrapper(Subquery(updates), output_field=models.DateField()),
             updated_days_ago=ExtractDay(ExpressionWrapper(
                 CurrentDate() - Subquery(updates), output_field=models.DateField())
             ),
@@ -165,16 +177,25 @@ class IncidentPage(MetadataPageMixin, Page):
             icon='doc-full',
             label='Rich Text',
         )),
-        ('image', ImageChooserBlock()),
+        ('image', ImageChooserBlock(
+            template='common/blocks/image_block.html'
+        )),
         ('aligned_image', AlignedCaptionedImageBlock(
             label='Aligned, Captioned Image',
         )),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
+        ('pull_quote', PullQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
     ])
+
+    introduction = models.TextField(
+        help_text="Optional: introduction displayed above the image.",
+        blank=True,
+        null=True,
+    )
 
     teaser = models.TextField(
         help_text="This field is optional and overrides the default teaser text.",
@@ -509,16 +530,17 @@ class IncidentPage(MetadataPageMixin, Page):
     objects = IncidentPageManager()
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body'),
-
         MultiFieldPanel(
-            heading='Teaser',
+            heading='Introduction, Video, Image and Teaser',
             children=[
+                FieldPanel('introduction'),
+                FieldPanel('primary_video'),
                 ImageChooserPanel('teaser_image'),
                 FieldPanel('image_caption'),
                 FieldPanel('teaser'),
             ]
         ),
+        StreamFieldPanel('body'),
         MultiFieldPanel(
             heading='Details',
             children=[
@@ -545,7 +567,6 @@ class IncidentPage(MetadataPageMixin, Page):
                       "incident. Displayed as footnotes."
         ),
 
-        FieldPanel('primary_video'),
 
         MultiFieldPanel(
             heading='Detention/Arrest',
@@ -681,21 +702,9 @@ class IncidentPage(MetadataPageMixin, Page):
         related_incidents = self.get_related_incidents(threshold=4)
         context['related_incidents'] = related_incidents
 
-        if related_incidents:
-            main_category = self.get_main_category()
-            if main_category:
-                related_filter = {'categories': main_category.pk}
-            else:
-                related_filter = {}
-
-            tags = self.tags.all()
-            if tags:
-                related_filter['tags'] = ','.join(str(tag.pk) for tag in tags)
-            elif self.city and self.state:
-                related_filter.update({'city': self.city, 'state': self.state})
-            elif self.state:
-                related_filter['state'] = self.state
-            context['related_qs'] = urlencode(related_filter)
+        main_category = self.get_main_category()
+        context['main_category'] = main_category
+        context['category_details'] = self.get_category_details()
         return context
 
     def full_clean(self, *args, **kwargs):
@@ -764,6 +773,21 @@ class IncidentPage(MetadataPageMixin, Page):
             return first_category.category
         return None
 
+    def get_category_details(self):
+        category_details = {}
+        for category in self.categories.all():
+            category_fields = CATEGORY_FIELD_MAP.get(category.category.slug, [])
+            category_details[category.category] = []
+            for field in category_fields:
+                display_html = CAT_FIELD_VALUES[field[0]](self, field[0])
+                category_details[category.category].append(
+                    {
+                        'name': field[1],
+                        'html': display_html,
+                    }
+                )
+        return category_details
+
     def get_related_incidents(self, threshold=4):
         """Locates related incidents using an incident's main category, tags
         and city/state as parameters.
@@ -786,7 +810,7 @@ class IncidentPage(MetadataPageMixin, Page):
         if self.pk:
             exclude_ids.add(self.pk)
 
-        own_tags = [tag.pk for tag in self.tags.all()]
+        own_tags = [tag.pk for tag in self.get_tags]
         own_tags_set = set(own_tags)
 
         conditional_filter = Q(location_rank__gt=0)
@@ -854,3 +878,48 @@ class IncidentPage(MetadataPageMixin, Page):
             strip_tags(self.body.render_as_block()),
             20
         )
+
+    @cached_property
+    def get_tags(self):
+        return self.tags.all()
+
+    @cached_property
+    def get_all_targets_for_linking(self):
+        items = []
+        for tj in self.targeted_journalists.all():
+            if tj.institution:
+                title = f'{tj.journalist.title} for {tj.institution.title}'
+            else:
+                title = tj.journalist.title
+            items.append(
+                TargetLink(
+                    text=title,
+                    url_arguments=f'targeted_journalists={tj.journalist.title}'
+                )
+            )
+        for institution in self.targeted_institutions.all():
+            items.append(
+                TargetLink(
+                    text=institution.title,
+                    url_arguments=f'targeted_institutions={institution.title}'
+                )
+            )
+        return items
+
+    @cached_property
+    def get_all_targets_for_display(self):
+        items = []
+        targeted_journalists = (
+            self.targeted_journalists
+            .select_related('journalist', 'institution')
+            .order_by('journalist__title')
+            .all()
+        )
+        for tj in targeted_journalists:
+            if tj.institution:
+                items.append(f'{tj.journalist.title} ({tj.institution.title})')
+            else:
+                items.append(f'{tj.journalist.title}')
+        for institution in self.targeted_institutions.all():
+            items.append(f'{institution.title}')
+        return ', '.join(items)

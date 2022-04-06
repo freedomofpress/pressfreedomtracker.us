@@ -1,7 +1,7 @@
 -r requirements.txt
 coverage>=5.5
 django-cprofile-middleware
-django-debug-toolbar>=2.2.1
+django-debug-toolbar>=3.2.4
 django-silk
 flake8
 ipdb>=0.13.9

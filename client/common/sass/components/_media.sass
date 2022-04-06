@@ -1,0 +1,29 @@
+.inline-media
+	&.left
+		float: left
+		margin-bottom: 1em
+		margin-right: 1em
+
+	&.right
+		float: right
+		margin-bottom: 1em
+		margin-left: 1em
+
+	&__caption
+		p
+			font-size: $font-size-small-p
+			letter-spacing: -0.01em
+			line-height: 1.43
+
+			&:first-of-type
+				margin-top: 0.25em
+
+		a
+			color: $black
+
+			&:focus
+				outline: $black solid 3px
+				outline-offset: 2px
+
+			&:hover
+				background-color: $accent-color
