@@ -60,6 +60,13 @@
 	padding: 0
 	cursor: pointer
 	line-height: 1.5
+	list-style-type: none
+
+	&::-webkit-details-marker
+		display: none
+
+	&::marker
+		display: none
 
 	div
 		color: $black
@@ -227,6 +234,13 @@
 	text-align: center
 	border: 3px solid
 	border-color: $black
+	list-style-type: none
+
+	&::-webkit-details-marker
+		display: none
+
+	&::marker
+		display: none
 
 	&:focus
 		border-width: 6px
