@@ -111,7 +111,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
         return incidents.with_most_recent_update().with_public_associations()
 
-    @action(detail=False, renderer_classes=[HomePageCSVRenderer])
+    @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
     def homepage_csv(self, request):
         tag_summary = models.IncidentPage.objects.annotate(
             tag_summary=StringAgg('tags__title', delimiter=', ')

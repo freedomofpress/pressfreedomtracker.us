@@ -348,6 +348,14 @@ class IncidentAPITest(APITestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_homepage_csv_requests_are_successful(self):
+        response = self.client.get(
+            reverse('incidentpage-homepage_csv'),
+            HTTP_ACCEPT='text/csv',
+        )
+
+        self.assertEqual(response.status_code, 200)
+
     def test_result_attributes(self):
         response = self.client.get(
             reverse('incidentpage-list'),
