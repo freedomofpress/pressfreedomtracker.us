@@ -1,4 +1,5 @@
 {% extends "super.html" %}
+{% load static %}
 
 {% block body %}
 	{% include "common/_menu.html" %}
@@ -6,4 +7,8 @@
 		{% block main %}{% endblock %}
 	</main>
 	{% include "common/_footer.html" %}
+	{% if django_settings.ANALYTICS_ENABLED %}
+		<script type="text/javascript" src="{% static 'js/piwik.js' %}"></script>
+		<noscript><p><img src="https://analytics.freedom.press/piwik.php?idsite=5" style="border:0;" alt="" /></p></noscript>
+	{% endif %}
 {% endblock %}
