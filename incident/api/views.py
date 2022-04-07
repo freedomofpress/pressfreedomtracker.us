@@ -28,6 +28,11 @@ if TYPE_CHECKING:
 
 class HomePageCSVRenderer(CSVRenderer):
     header = ['date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary']
+    labels = {
+        'state__abbreviation': 'state',
+        'category_summary': 'categories',
+        'tag_summary': 'tags',
+    }
 
 
 class HeaderCursorPagination(CursorPagination):
