@@ -97,7 +97,8 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
         # Get set of fields from serializer that has been pruned
         # according to request's query-string parameters.
-        context['header'] = list(self.get_serializer().fields.keys())
+        if 'homepage_csv' not in self.request.path:
+            context['header'] = list(self.get_serializer().fields.keys())
         return context
 
     def get_serializer_class(self):
