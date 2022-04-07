@@ -2,7 +2,17 @@ import collections
 from typing import TYPE_CHECKING
 
 from django.contrib.postgres.aggregates import StringAgg
-from django.db.models import CharField, OuterRef, Subquery
+from django.db.models import (
+    CharField,
+    DateField,
+    DurationField,
+    OuterRef,
+    Q,
+    Subquery,
+    Value,
+)
+from django.db.models.functions import Trunc, TruncMonth, Cast
+from psycopg2.extras import DateRange
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.settings import api_settings
@@ -20,6 +30,7 @@ from incident.api.serializers import (
     FlatIncidentSerializer,
 )
 from incident import models
+from incident.utils.db import MakeDateRange
 from incident.utils.incident_filter import IncidentFilter
 
 if TYPE_CHECKING:
@@ -119,6 +130,9 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
     def homepage_csv(self, request):
+        lower_date = request.GET.get('lower_date')
+        upper_date = request.GET.get('upper_date')
+
         tag_summary = models.IncidentPage.objects.annotate(
             tag_summary=StringAgg('tags__title', delimiter=', ')
         ).filter(pk=OuterRef('pk'))
@@ -126,10 +140,32 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
             category_summary=StringAgg('categories__category__title', delimiter=', ')
         ).filter(pk=OuterRef('pk'))
 
+        # TODO: extract fuzzy date logic to IncidentQuerySet
+        target_range = DateRange(
+            lower=lower_date,
+            upper=upper_date,
+            bounds='[]'
+        )
+        exact_date_match = Q(
+            date__contained_by=target_range,
+            exact_date_unknown=False,
+        )
+
+        inexact_date_match_lower = Q(
+            exact_date_unknown=True,
+            fuzzy_date__overlap=target_range,
+        )
+
         incidents = models.IncidentPage.objects.live().annotate(
+            fuzzy_date=MakeDateRange(
+                Cast(Trunc('date', 'month'), DateField()),
+                Cast(TruncMonth('date') + Cast(Value('1 month'), DurationField()), DateField()),
+            ),
             tag_summary=Subquery(tag_summary.values('tag_summary'), output_field=CharField()),
             category_summary=Subquery(category_summary.values('category_summary'), output_field=CharField()),
-        ).values('date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary')
+        ).filter(exact_date_match | inexact_date_match_lower).values(
+            'date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary'
+        )
 
         incidents = list(incidents)  # CSV Renderer requires a list
         return Response(incidents)
