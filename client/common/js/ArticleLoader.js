@@ -154,6 +154,7 @@ ArticleLoader.NUM_AUTO_FETCHES = 0
 
 document.addEventListener('DOMContentLoaded', () => {
 	if (window._articleLoader) {
+		// eslint-disable-next-line no-console
 		console.warn('An ArticleLoader instance already exists.')
 		return
 	}

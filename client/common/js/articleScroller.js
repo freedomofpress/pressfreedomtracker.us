@@ -1,3 +1,5 @@
+import { throttle } from './utils'
+
 class ArticleScroller {
 	constructor(scrollerElement) {
 		// Since JS is loaded we can show the interactive horizontal scroller
@@ -28,19 +30,11 @@ class ArticleScroller {
 		this.scrollPrevBtn.addEventListener('click', this.scrollToRight)
 
 		const self = this
-		this.delay = 250
-    	this.throttled = false
 
-		window.addEventListener('resize', () => {
-			if (!self.throttled) {
-				self.scrollPrevBtn.disabled = !self.prevExists()
-				self.scrollNextBtn.disabled = !self.nextExists()
-				self.throttled = true
-				setTimeout(function() {
-				  	self.throttled = false
-				}, self.delay)
-			}
-		});
+		window.addEventListener('resize', throttle(() => {
+			self.scrollPrevBtn.disabled = !self.prevExists()
+			self.scrollNextBtn.disabled = !self.nextExists()
+		}, 250))
 	}
 
 	static isVisible(article) {
@@ -99,6 +93,7 @@ class ArticleScroller {
 
 document.addEventListener('DOMContentLoaded', () => {
 	if (window._articleScrollers) {
+		// eslint-disable-next-line no-console
 		console.warn('ArticleScroller instances already exist.')
 		return
 	}
