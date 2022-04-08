@@ -84,6 +84,7 @@ class ArticleScroller {
 
 document.addEventListener('DOMContentLoaded', () => {
 	if (window._articleScrollers) {
+		// eslint-disable-next-line no-console
 		console.warn('ArticleScroller instances already exist.')
 		return
 	}

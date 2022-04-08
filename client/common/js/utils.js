@@ -3,7 +3,7 @@ export function throttle(fn, _threshhold, scope, ...args) {
 	let last
 	let deferTimer
 	const threshhold = _threshhold || 250
-	return function () {
+	return () => {
 		const context = scope || this
 		const now = +new Date()
 		if (last && now < last + threshhold) {
