@@ -26,6 +26,21 @@ class ArticleScroller {
 
 		this.scrollNextBtn.addEventListener('click', this.scrollToLeft)
 		this.scrollPrevBtn.addEventListener('click', this.scrollToRight)
+
+		const self = this
+		this.delay = 250
+    	this.throttled = false
+
+		window.addEventListener('resize', () => {
+			if (!self.throttled) {
+				self.scrollPrevBtn.disabled = !self.prevExists()
+				self.scrollNextBtn.disabled = !self.nextExists()
+				self.throttled = true
+				setTimeout(function() {
+				  	self.throttled = false
+				}, self.delay)
+			}
+		});
 	}
 
 	static isVisible(article) {
