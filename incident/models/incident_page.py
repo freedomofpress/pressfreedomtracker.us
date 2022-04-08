@@ -14,13 +14,14 @@ from django.db.models import (
     Value,
     When,
 )
-from django.db.models.functions import ExtractDay
+from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.aggregates import ArrayAgg
+from psycopg2.extras import DateRange
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -49,7 +50,7 @@ from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
 from incident.models.inlines import IncidentPageUpdates
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
-from incident.utils.db import CurrentDate
+from incident.utils.db import CurrentDate, MakeDateRange
 from statistics.blocks import StatisticsBlock
 from geonames.cities import get_city_coords
 
@@ -143,6 +144,27 @@ class IncidentQuerySet(PageQuerySet):
         return self.with_most_recent_update().filter(
             updated_days_ago__lte=days
         )
+
+    def fuzzy_date_filter(self, lower=None, upper=None):
+        target_range = DateRange(
+            lower=lower,
+            upper=upper,
+            bounds='[]',
+        )
+        exact_date_match = Q(
+            date__contained_by=target_range,
+            exact_date_unknown=False,
+        )
+        inexact_date_match = Q(
+            exact_date_unknown=True,
+            fuzzy_date__overlap=target_range,
+        )
+        return self.annotate(
+            fuzzy_date=MakeDateRange(
+                Cast(Trunc('date', 'month'), models.DateField()),
+                Cast(TruncMonth('date') + Cast(Value('1 month'), models.DurationField()), models.DateField()),
+            )
+        ).filter(exact_date_match | inexact_date_match)
 
 
 IncidentPageManager = PageManager.from_queryset(IncidentQuerySet)
