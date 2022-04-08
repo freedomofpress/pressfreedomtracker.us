@@ -133,10 +133,10 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         lower_date = request.GET.get('lower_date')
         upper_date = request.GET.get('upper_date')
 
-        tag_summary = models.IncidentPage.objects.annotate(
+        tag_summary = models.IncidentPage.objects.only('tags').annotate(
             tag_summary=StringAgg('tags__title', delimiter=', ')
         ).filter(pk=OuterRef('pk'))
-        category_summary = models.IncidentPage.objects.annotate(
+        category_summary = models.IncidentPage.objects.only('categories').annotate(
             category_summary=StringAgg('categories__category__title', delimiter=', ')
         ).filter(pk=OuterRef('pk'))
 
@@ -156,7 +156,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
             fuzzy_date__overlap=target_range,
         )
 
-        incidents = models.IncidentPage.objects.live().annotate(
+        incidents = models.IncidentPage.objects.live().only('date', 'city', 'state', 'latitude', 'longitude').annotate(
             fuzzy_date=MakeDateRange(
                 Cast(Trunc('date', 'month'), DateField()),
                 Cast(TruncMonth('date') + Cast(Value('1 month'), DurationField()), DateField()),
