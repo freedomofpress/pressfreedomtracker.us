@@ -157,7 +157,11 @@ export default function TreeMap({
 		return Math.max(yScale(start) - yScale(end), 1)
 	}
 
-	const colorScale = categoriesColors !== undefined ? categoriesColors : d3.scaleOrdinal(colors)
+	const getCategoryColour = (category) => {
+		return categoriesColors[category]
+	}
+
+	const colorScale = categoriesColors !== undefined ? getCategoryColour : d3.scaleOrdinal(colors)
 
 	const colorsByCategory = datasetStackedByCategory
 		.filter((d) => d.numberOfIncidents !== 0)
