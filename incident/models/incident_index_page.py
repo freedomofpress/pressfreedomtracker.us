@@ -165,71 +165,41 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         from common.models import CategoryPage
         context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
-        # CPU: 13622.299 msec
-        # SQL: default 90.77 ms (47 queries including 26 similar and 22 duplicates )
 
+        # Before perf change:
         # context['all_incident_count'] = len(IncidentFilter({}).get_queryset())
-        # CPU: 13498.862 msec
-        # SQL: default 83.86 ms (47 queries including 26 similar and 22 duplicates )
 
-        # context['all_incident_count'] = IncidentFilter({}).get_queryset().count()
-        # CPU: 13540.400 msec
-        # SQL: default 89.50 ms (47 queries including 26 similar and 22 duplicates )
-
+        # Quickest:
         context['all_incident_count'] = IncidentPage.objects.live().count()
-        # CPU: 12399.610 msec
-        # SQL: default 58.53 ms (44 queries including 26 similar and 22 duplicates )
+
+        # Could also be:
+        # context['all_incident_count'] = IncidentFilter({}).get_queryset().count()
 
         incident_filter = IncidentFilter(request.GET)
-        # CPU: 13860.154 msec
-        # SQL: default 81.34 ms (47 queries including 26 similar and 22 duplicates )
-
         context['serialized_filters'] = json.dumps(get_serialized_filters())
-        # CPU: 14995.236 msec
-        # SQL: default 88.75 ms (50 queries including 32 similar and 28 duplicates )
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
-        # CPU: 15628.019 msec
-        # SQL: default 78.66 ms (51 queries including 32 similar and 28 duplicates )
-
         if search_settings.data_download_page:
             context['export_path'] = search_settings.data_download_page.get_url()
-        # CPU: 14214.802 msec
-        # SQL: default 73.66 ms (51 queries including 32 similar and 28 duplicates )
-
         else:
             context['export_path'] = self.url + self.reverse_subpage('export_view')
-        # CPU: 14963.686 msec
-        # SQL: default 88.13 ms (51 queries including 32 similar and 28 duplicates )
 
         if search_settings.learn_more_page:
             context['learn_more_path'] = search_settings.learn_more_page.get_url()
-        # CPU: 15061.529 msec
-        # SQL: default 62.01 ms (51 queries including 32 similar and 28 duplicates )
 
         incident_filter.clean()
-        # CPU: 15531.886 msec
-        # SQL: default 98.72 ms (54 queries including 35 similar and 31 duplicates )
-
         context['search_value'] = incident_filter.cleaned_data.get('search', '')
-        # CPU: 15926.458 msec
-        # SQL: default 97.99 ms (54 queries including 35 similar and 31 duplicates )
 
         category_data = incident_filter.cleaned_data.get('categories')
-        # CPU: 15855.405 msec
-        # SQL: default 74.49 ms (54 queries including 35 similar and 31 duplicates )
 
         if not category_data:
-            context['categories'] = CategoryPage.objects.live()
-        # CPU: 15921.364 msec
-        # SQL: default 82.44 ms (54 queries including 35 similar and 31 duplicates )
-
+            context['categories'] = CategoryPage.objects.live().only('category')
         else:
             context['categories'] = CategoryPage.objects.live().filter(
                 models.Q(pk__in=category_data.pks) | models.Q(title__in=category_data.strings)
-            )
-        # CPU: 15091.855 msec
-        # SQL: default 88.57 ms (54 queries including 35 similar and 31 duplicates )
+            ).only('category')
+
+        # Added: .only('category') to both queryset queries above
 
         if incident_filter.cleaned_data:
             context['filtered_export_path'] = (
@@ -237,21 +207,10 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
                 '?' +
                 parse.urlencode(incident_filter.cleaned_data)
             )
-        # CPU: 15915.301 msec
-        # SQL: default 82.65 ms (54 queries including 35 similar and 31 duplicates )
 
         incident_qs = incident_filter.get_queryset() \
             .with_public_associations() \
             .with_most_recent_update() \
-
-        # CPU: 14680.233 msec
-        # SQL: default 84.42 ms (54 queries including 35 similar and 31 duplicates )
-
-        # CPU: 16034.366 msec
-        # SQL: default 81.46 ms (54 queries including 35 similar and 31 duplicates )
-
-        # CPU: 15800.615 msec
-        # SQL: default 76.79 ms (54 queries including 35 similar and 31 duplicates )
 
         paginator, entries = paginate(
             request,
@@ -260,63 +219,35 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             per_page=8,
             orphans=5
         )
-        # CPU: 16264.933 msec
-        # SQL: default 83.90 ms (55 queries including 35 similar and 31 duplicates )
 
         context['entries_page'] = entries
-        # CPU: 26137.260 msec
-        # SQL: default 117.51 ms (91 queries including 51 similar and 39 duplicates )
-
         context['paginator'] = paginator
-        # CPU: 25801.798 msec
-        # SQL: default 122.81 ms (91 queries including 51 similar and 39 duplicates )
-
         context['summary_table'] = incident_filter.get_summary()
-        # CPU: 32551.078 msec
-        # SQL: default 141.57 ms (96 queries including 51 similar and 39 duplicates )
 
         get_data = request.GET.copy()
-        # CPU: 32932.981 msec
-        # SQL: default 144.91 ms (96 queries including 51 similar and 39 duplicates )
-
         context['sort_choices'] = []
         for value, label in IncidentFilter.SortOptions.choices:
             get_data['sort'] = value
             context['sort_choices'].append(
                 (get_data.urlencode(), label, value == incident_filter.sort.value)
             )
-        # CPU: 32682.904 msec
-        # SQL: default 260.53 ms (96 queries including 51 similar and 39 duplicates )
-
         context['selected_sort'] = incident_filter.sort
-        # CPU: 32510.106 msec
-        # SQL: default 148.10 ms (96 queries including 51 similar and 39 duplicates )
 
+        # Before perf change:
         # context['incident_count'] = len(incident_qs)
-        # CPU: 59793.335 msec
-        # SQL: default 195.33 ms (113 queries including 51 similar and 41 duplicates )
 
-        # context['incident_count'] = incident_qs.count()
-        # CPU: 33221.158 msec
-        # SQL: default 152.68 ms (97 queries including 53 similar and 41 duplicates )
-
+        # Quickest:
         context['incident_count'] = paginator.count
-        # CPU: 32367.758 msec
-        # SQL: default 150.36 ms (96 queries including 51 similar and 39 duplicates )
+
+        # Could also be:
+        # context['incident_count'] = incident_qs.count()
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
-        # CPU: 62599.996 msec
-        # SQL: default 231.05 ms (116 queries including 53 similar and 41 duplicates )
-
         else:
             context['layout_template'] = 'base.html'
-        # CPU: 63089.314 msec
-        # SQL: default 231.05 ms (116 queries including 53 similar and 41 duplicates )
 
         context['filters'] = get_filter_forms(request, json.loads(context['serialized_filters']))
-        # CPU: 63351.939 msec
-        # SQL: default 218.40 ms (122 queries including 55 similar and 43 duplicates )
 
         return context
 
