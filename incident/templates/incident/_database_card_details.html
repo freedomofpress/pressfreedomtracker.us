@@ -1,3 +1,4 @@
+{% load get_category_details %}
 <button
 	class="disclose-summary incident-database-card__details-toggle"
 	aria-expanded="false"
@@ -9,12 +10,13 @@
 	<div class="incident-database-card__main-details">
 		<h3 class="heading-table incident-database-card__details-title" id="incident-details-title">Incident Details</h3>
 
-		{% include "incident/_database_card_table.html" with incident=incident only %}
+		{% include "incident/_database_card_table.html" with incident=incident index=index only %}
 	</div>
 </div>
 
 <div id="category-details-{{ incident.pk }}" class="incident-database-card__category-details database-card-table__container" data-visible="false">
-	{% for category, category_detail in incident.get_category_details.items %}
+	{% get_category_details incident index as all_details %}
+	{% for category, category_detail in all_details.items %}
 		{% if category_detail %}
 			<dl class="database-card-table__category-details" aria-labelledby="{{ category.slug }}-details-title">
 				<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">

@@ -1,4 +1,4 @@
 {% load wagtailcore_tags %}
-<a href="{% pageurl page.get_parent %}?{{ field }}={{ value }}" class="text-link">
+<a href="{% pageurl index %}?{{ field }}={{ value }}" class="text-link">
 	{{ display_value|capfirst }}
 </a>

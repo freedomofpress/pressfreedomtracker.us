@@ -773,13 +773,15 @@ class IncidentPage(MetadataPageMixin, Page):
             return first_category.category
         return None
 
-    def get_category_details(self):
+    def get_category_details(self, index=None):
+        if not index:
+            index = self.get_parent()
         category_details = {}
         for category in self.categories.all():
             category_fields = CATEGORY_FIELD_MAP.get(category.category.slug, [])
             category_details[category.category] = []
             for field in category_fields:
-                display_html = CAT_FIELD_VALUES[field[0]](self, field[0])
+                display_html = CAT_FIELD_VALUES[field[0]](self, field[0], index)
                 category_details[category.category].append(
                     {
                         'name': field[1],
