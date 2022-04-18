@@ -1,7 +1,7 @@
 {% load wagtailcore_tags case_tags %}
 
 <dl class="database-card-table__incident-details" aria-labelledby="incident-details-title">
-	{% with incident.last_updated as last_updated %}
+	{% with incident.latest_update as last_updated %}
 		{% if last_updated and incident.updates.all.exists %}
 			<div class="database-card-table__row">
 				<dt class="database-card-table__label database-card-table__label--bold">
