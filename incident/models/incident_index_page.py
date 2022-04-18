@@ -165,7 +165,15 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         from common.models import CategoryPage
         context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
-        context['all_incident_count'] = len(IncidentFilter({}).get_queryset())
+
+        # Before perf change:
+        # context['all_incident_count'] = len(IncidentFilter({}).get_queryset())
+
+        # Quickest:
+        context['all_incident_count'] = IncidentPage.objects.live().count()
+
+        # Could also be:
+        # context['all_incident_count'] = IncidentFilter({}).get_queryset().count()
 
         incident_filter = IncidentFilter(request.GET)
         context['serialized_filters'] = json.dumps(get_serialized_filters())
@@ -181,14 +189,18 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         incident_filter.clean()
         context['search_value'] = incident_filter.cleaned_data.get('search', '')
+
         category_data = incident_filter.cleaned_data.get('categories')
 
         if not category_data:
-            context['categories'] = CategoryPage.objects.live()
+            context['categories'] = CategoryPage.objects.live().only('category')
         else:
             context['categories'] = CategoryPage.objects.live().filter(
                 models.Q(pk__in=category_data.pks) | models.Q(title__in=category_data.strings)
-            )
+            ).only('category')
+
+        # Added: .only('category') to both queryset queries above
+
         if incident_filter.cleaned_data:
             context['filtered_export_path'] = (
                 context['export_path'] +
@@ -220,7 +232,15 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
                 (get_data.urlencode(), label, value == incident_filter.sort.value)
             )
         context['selected_sort'] = incident_filter.sort
-        context['incident_count'] = len(incident_qs)
+
+        # Before perf change:
+        # context['incident_count'] = len(incident_qs)
+
+        # Quickest:
+        context['incident_count'] = paginator.count
+
+        # Could also be:
+        # context['incident_count'] = incident_qs.count()
 
         if request.is_ajax():
             context['layout_template'] = 'base.ajax.html'
