@@ -74,7 +74,7 @@ class RequestLogTestCase(TestCase):
             HTTP_X_FORWARDED_FOR=forwarded_for,
             HTTP_HOST=host,
             HTTP_REFERER=referer,
-            HTTP_X_REAL_IP=real_ip,
+            HTTP_X_CF_CONNECTING_IP=real_ip,
         )
         request.user = self.user
 
@@ -103,8 +103,8 @@ class RequestLogTestCase(TestCase):
                     'HTTP_REFERER': referer,
                     'HTTP_USER_AGENT': user_agent,
                     'HTTP_X_FORWARDED_FOR': forwarded_for,
-                    'HTTP_X_REAL_IP': real_ip,
-                    'HTTP_X_SCEHEME': '',
+                    'HTTP_X_CF_CONNECTING_IP': real_ip,
+                    'HTTP_X_SCHEME': '',
                 },
                 'method': 'GET',
                 'path_info': '/',
