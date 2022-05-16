@@ -35,7 +35,7 @@ chartContainers.forEach((node) => {
 
 	ReactDOM.render((
 		<DataLoader
-			dataUrl={`/api/edge/incidents/?${params.toString()}`}
+			dataUrl={`/api/edge/incidents/homepage_csv/?${params.toString()}`}
 			loadingComponent={(
 				<HomepageMainCharts selectedTags={selectedTags} databasePath={databasePath} data={[]} loading={true} />
 			)}
