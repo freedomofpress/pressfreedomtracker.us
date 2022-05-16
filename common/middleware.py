@@ -17,8 +17,8 @@ class RequestLogMiddleware(object):
             'HTTP_USER_AGENT',
             'HTTP_REFERER',
             'HTTP_HOST',
+            'HTTP_CF_CONNECTING_IP',
             'HTTP_X_FORWARDED_FOR',
-            'HTTP_X_CF_CONNECTING_IP',
             'HTTP_X_SCHEME',
         )
         self.response_keys = ('charset', 'reason_phrase', 'status_code')
