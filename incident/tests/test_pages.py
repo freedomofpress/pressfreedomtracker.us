@@ -1,3 +1,4 @@
+import calendar
 import csv
 import json
 import unittest
@@ -657,6 +658,72 @@ class GetIncidentUpdatesTest(TestCase):
             list(incident_updates),
             [incident_update3, incident_update1, incident_update2]
         )
+
+
+class IncidentPageDateRangeFilter(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.incident1 = IncidentPageFactory(date='2022-01-14')
+        cls.incident2 = IncidentPageFactory(date='2022-02-14')
+        cls.incident3 = IncidentPageFactory(date='2022-03-14')
+
+    def test_filters_by_date_range(self):
+        incidents = IncidentPage.objects.fuzzy_date_filter(
+            lower='2022-02-01',
+            upper='2022-03-01',
+        )
+        self.assertEqual(set(incidents), {self.incident2})
+
+    def test_filters_by_date_range_unbounded_above(self):
+        incidents = IncidentPage.objects.fuzzy_date_filter(
+            lower='2022-02-01',
+        )
+        self.assertEqual(set(incidents), {self.incident2, self.incident3})
+
+    def test_filters_by_date_range_unbounded_below(self):
+        incidents = IncidentPage.objects.fuzzy_date_filter(
+            upper='2022-02-28',
+        )
+        self.assertEqual(set(incidents), {self.incident2, self.incident1})
+
+    def test_filters_by_date_range_with_boundary_points_included(self):
+        incidents = IncidentPage.objects.fuzzy_date_filter(
+            lower='2022-01-14',
+            upper='2022-02-14',
+        )
+        self.assertEqual(set(incidents), {self.incident2, self.incident1})
+
+
+class IncidentPageFuzzyDateRangeFilter(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.incident1 = IncidentPageFactory(
+            title='January',
+            exact_date_unknown=True,
+            date='2022-01-14',
+        )
+        cls.incident2 = IncidentPageFactory(
+            title='February',
+            exact_date_unknown=True,
+            date='2022-02-14',
+        )
+        cls.incident3 = IncidentPageFactory(
+            title='March',
+            exact_date_unknown=True,
+            date='2022-03-14',
+        )
+
+    def test_filters_inexact_dates_by_any_day_in_same_month(self):
+        c = calendar.Calendar()
+        month = self.incident2.date.month
+        year = self.incident2.date.year
+        for day in [d for d in c.itermonthdates(year, month) if d.month == month]:
+            with self.subTest(day):
+                incidents = IncidentPage.objects.fuzzy_date_filter(
+                    lower=day,
+                    upper='2022-03-05',
+                )
+                self.assertEqual(set(incidents), {self.incident2, self.incident3})
 
 
 class IncidentPageStatisticsTagsTestCase(WagtailPageTests):

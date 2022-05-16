@@ -2,7 +2,7 @@
 <ul class="details-table__list">
   {% for item in items %}
     <li class="details-table__list-item">
-      <a href="{% pageurl page.get_parent %}?{{ field }}={{ item.title }}" class="text-link">{{ item.title|capfirst }}</a>
+      <a href="{% pageurl index %}?{{ field }}={{ item.title }}" class="text-link">{{ item.title|capfirst }}</a>
     </li>
   {% endfor %}
 </ul>

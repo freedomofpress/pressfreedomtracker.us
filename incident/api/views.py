@@ -1,12 +1,19 @@
 import collections
 from typing import TYPE_CHECKING
 
+from django.contrib.postgres.aggregates import StringAgg
+from django.db.models import (
+    CharField,
+    OuterRef,
+    Subquery,
+)
+from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.settings import api_settings
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 from rest_framework.utils.urls import remove_query_param
-from rest_framework_csv.renderers import PaginatedCSVRenderer
+from rest_framework_csv.renderers import PaginatedCSVRenderer, CSVRenderer
 
 from common.models import CategoryPage
 from incident.api.serializers import (
@@ -21,6 +28,15 @@ from incident.utils.incident_filter import IncidentFilter
 
 if TYPE_CHECKING:
     from django.http import HttpResponse
+
+
+class HomePageCSVRenderer(CSVRenderer):
+    header = ['date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary']
+    labels = {
+        'state__abbreviation': 'state',
+        'category_summary': 'categories',
+        'tag_summary': 'tags',
+    }
 
 
 class HeaderCursorPagination(CursorPagination):
@@ -84,8 +100,11 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         context = super().get_renderer_context()
 
         # Get set of fields from serializer that has been pruned
-        # according to request's query-string parameters.
-        context['header'] = list(self.get_serializer().fields.keys())
+        # according to request's query-string parameters.  In the
+        # homepage_csv action, this set is pre-determined and not
+        # affected by the request, in that case we skip this step.
+        if self.action != 'homepage_csv':
+            context['header'] = list(self.get_serializer().fields.keys())
         return context
 
     def get_serializer_class(self):
@@ -103,6 +122,28 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         incidents = incident_filter.get_queryset()
 
         return incidents.with_most_recent_update().with_public_associations()
+
+    @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
+    def homepage_csv(self, request):
+        lower_date = request.GET.get('lower_date')
+        upper_date = request.GET.get('upper_date')
+
+        tag_summary = models.IncidentPage.objects.only('tags').annotate(
+            tag_summary=StringAgg('tags__title', delimiter=', ')
+        ).filter(pk=OuterRef('pk'))
+        category_summary = models.IncidentPage.objects.only('categories').annotate(
+            category_summary=StringAgg('categories__category__title', delimiter=', ')
+        ).filter(pk=OuterRef('pk'))
+
+        incidents = models.IncidentPage.objects.live().only('date', 'city', 'state', 'latitude', 'longitude').annotate(
+            tag_summary=Subquery(tag_summary.values('tag_summary'), output_field=CharField()),
+            category_summary=Subquery(category_summary.values('category_summary'), output_field=CharField()),
+        ).fuzzy_date_filter(lower=lower_date, upper=upper_date).values(
+            'date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary'
+        )
+
+        incidents = list(incidents)  # CSV Renderer requires a list
+        return Response(incidents)
 
 
 class JournalistViewSet(viewsets.ReadOnlyModelViewSet):

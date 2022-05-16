@@ -14,13 +14,14 @@ from django.db.models import (
     Value,
     When,
 )
-from django.db.models.functions import ExtractDay
+from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.aggregates import ArrayAgg
+from psycopg2.extras import DateRange
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     InlinePanel,
@@ -49,7 +50,7 @@ from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
 from incident.models.inlines import IncidentPageUpdates
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
-from incident.utils.db import CurrentDate
+from incident.utils.db import CurrentDate, MakeDateRange
 from statistics.blocks import StatisticsBlock
 from geonames.cities import get_city_coords
 
@@ -143,6 +144,52 @@ class IncidentQuerySet(PageQuerySet):
         return self.with_most_recent_update().filter(
             updated_days_ago__lte=days
         )
+
+    def fuzzy_date_filter(self, lower=None, upper=None):
+        """Filter incidents by date range, accounting for unknown exact dates.
+
+        This method accepts a date range and returns a queryset
+        filtered according to the following algorithm:
+
+        1. If an incident has `exact_date_unknown` equal to `False`,
+        then the incident is included if the date range contains the
+        incident's `date` value.
+
+        2. If an incident has `exact_date_unknown` equal to `True`,
+        then the incident is included if the date range overlaps with
+        the month containing the incident's `date` value.  For
+        example, if an exact date unknown incident has a date of
+        2022-01-13 (or any other date in the month 2022-01), then it
+        will be included in the queryset results if the date range
+        overlaps at all with the range starting on 2022-01-01 and
+        ending on 2022-01-31.
+
+        3. Otherwise, the incident is excluded.
+
+        Keyword arguments:
+        lower -- the lower bound of the date (which is included in the range). If `None`, then the range is unbounded below.
+        upper -- the lower bound of the date (which is included in the range). If `None`, then the range is unbounded below.
+
+        """
+        target_range = DateRange(
+            lower=lower,
+            upper=upper,
+            bounds='[]',
+        )
+        exact_date_match = Q(
+            date__contained_by=target_range,
+            exact_date_unknown=False,
+        )
+        inexact_date_match = Q(
+            exact_date_unknown=True,
+            fuzzy_date__overlap=target_range,
+        )
+        return self.annotate(
+            fuzzy_date=MakeDateRange(
+                Cast(Trunc('date', 'month'), models.DateField()),
+                Cast(TruncMonth('date') + Cast(Value('1 month'), models.DurationField()), models.DateField()),
+            )
+        ).filter(exact_date_match | inexact_date_match)
 
 
 IncidentPageManager = PageManager.from_queryset(IncidentQuerySet)
@@ -773,13 +820,15 @@ class IncidentPage(MetadataPageMixin, Page):
             return first_category.category
         return None
 
-    def get_category_details(self):
+    def get_category_details(self, index=None):
+        if not index:
+            index = self.get_parent()
         category_details = {}
         for category in self.categories.all():
             category_fields = CATEGORY_FIELD_MAP.get(category.category.slug, [])
             category_details[category.category] = []
             for field in category_fields:
-                display_html = CAT_FIELD_VALUES[field[0]](self, field[0])
+                display_html = CAT_FIELD_VALUES[field[0]](self, field[0], index)
                 category_details[category.category].append(
                     {
                         'name': field[1],

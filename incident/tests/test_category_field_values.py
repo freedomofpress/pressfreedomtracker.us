@@ -30,7 +30,7 @@ class TestCategoryFieldValuesByField(TestCase):
 
     def assert_text(self, field_name, render_function):
         setattr(self.incident, field_name, 'Text')
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         self.assertIn('Text', output)
         self.assertIn(f'{field_name}=Text', output)
 
@@ -38,50 +38,50 @@ class TestCategoryFieldValuesByField(TestCase):
         field = IncidentPage._meta.get_field(field_name)
         for choice_value, choice_name in field.choices:
             setattr(self.incident, field_name, choice_value)
-            output = render_function(self.incident, field_name)
+            output = render_function(self.incident, field_name, self.index)
             pretty_name = capfirst(
                 getattr(self.incident, f'get_{field_name}_display')()
             )
             self.assertIn(pretty_name, output)
             self.assertIn(f'{field_name}={choice_value}', output)
         setattr(self.incident, field_name, '')
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         self.assertEqual(output, '')
 
     def assert_many_relationship(self, field_name, render_function):
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         for item in getattr(self.incident, field_name).all():
             self.assertIn(item.title, output)
             self.assertIn(f'{field_name}={item.title}', output)
         getattr(self.incident, field_name).clear()
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         self.assertEqual(output, '')
 
     def assert_equipment(self, field_name, render_function):
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         for item in getattr(self.incident, field_name).all():
             self.assertIn(item.equipment.name, output)
             self.assertIn(f'{field_name}={item.equipment.name}', output)
         getattr(self.incident, field_name).clear()
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         self.assertEqual(output, '')
 
     def assert_date(self, field_name, render_function):
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         value = getattr(self.incident, field_name)
         self.assertIn(f'{field_name}_upper={value:%Y-%m-%d}', output)
         self.assertIn(f'{field_name}_lower={value:%Y-%m-%d}', output)
         self.assertIn(f'{value:%B %-d, %Y}', output)
         setattr(self.incident, field_name, None)
-        self.assertEqual(render_function(self.incident, field_name), '')
+        self.assertEqual(render_function(self.incident, field_name, self.index), '')
 
     def assert_boolean(self, field_name, render_function):
         setattr(self.incident, field_name, True)
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         self.assertIn('Yes', output)
         self.assertIn(f'{field_name}=1', output)
         setattr(self.incident, field_name, False)
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         self.assertIn('No', output)
         self.assertIn(f'{field_name}=0', output)
 
@@ -98,13 +98,13 @@ class TestCategoryFieldValuesByField(TestCase):
         )
 
     def test_arresting_authority(self):
-        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority')
+        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index)
         self.assertEqual(output, '')
 
         leo = LawEnforcementOrganizationFactory()
         self.incident.arresting_authority = leo
 
-        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority')
+        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index)
         self.assertIn(leo.title.capitalize(), output)
         self.assertIn(f'arresting_authority={leo.title}', output)
 
@@ -224,11 +224,11 @@ class TestCategoryFieldValuesByField(TestCase):
         self.incident.subpoena_statuses = []
         field_name = 'subpoena_statuses'
         render_function = CAT_FIELD_VALUES[field_name]
-        output = render_function(self.incident, field_name)
+        output = render_function(self.incident, field_name, self.index)
         self.assertEqual(output, '')
         for choice_value, choice_name in choices.SUBPOENA_STATUS:
             self.incident.subpoena_statuses.append(choice_value)
-            output = render_function(self.incident, field_name)
+            output = render_function(self.incident, field_name, self.index)
             self.assertIn(choice_name.capitalize(), output)
             self.assertIn(f'{field_name}={choice_value}', output)
 

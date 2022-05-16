@@ -37,6 +37,7 @@ const textPaddings = {
 const borderWidth = {
 	hover: 7,
 	normal: 5,
+	mobile: 3,
 }
 
 const textStyle = {
@@ -249,7 +250,7 @@ export default function TreeMap({
 										: findColor(d.category)
 									: 'white',
 							stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
-							strokeWidth: borderWidth.normal,
+							strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
 							cursor: 'pointer',
 							pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
 							shapeRendering: 'crispEdges',
@@ -291,8 +292,8 @@ export default function TreeMap({
 									? 1
 									: 0,
 							display: (d) => (d.startingPoint !== d.endPoint ? null : 'none'),
-							x1: paddings.left - borderWidth.normal / 2,
-							x2: width - paddings.right + borderWidth.normal / 2,
+							x1: paddings.left - (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
+							x2: width - paddings.right + (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
 							y1: (d) =>
 								height - yScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
 							y2: (d) =>
@@ -304,7 +305,7 @@ export default function TreeMap({
 										hoveredElement === nextCategory(datasetStackedByCategory, i)
 									? findColor(nextCategory(datasetStackedByCategory, i))
 									: 'black',
-							strokeWidth: borderWidth.normal + 1,
+							strokeWidth: isHomePageDesktopView ? borderWidth.normal + 1 : borderWidth.mobile,
 							pointerEvents: 'none',
 							shapeRendering: 'crispEdges',
 						}}
