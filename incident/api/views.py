@@ -100,8 +100,10 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         context = super().get_renderer_context()
 
         # Get set of fields from serializer that has been pruned
-        # according to request's query-string parameters.
-        if 'homepage_csv' not in self.request.path:
+        # according to request's query-string parameters.  In the
+        # homepage_csv action, this set is pre-determined and not
+        # affected by the request, in that case we skip this step.
+        if self.action != 'homepage_csv':
             context['header'] = list(self.get_serializer().fields.keys())
         return context
 
