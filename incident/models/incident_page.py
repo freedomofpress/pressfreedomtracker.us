@@ -146,6 +146,31 @@ class IncidentQuerySet(PageQuerySet):
         )
 
     def fuzzy_date_filter(self, lower=None, upper=None):
+        """Filter incidents by date range, accounting for unknown exact dates.
+
+        This method accepts a date range and returns a queryset
+        filtered according to the following algorithm:
+
+        1. If an incident has `exact_date_unknown` equal to `False`,
+        then the incident is included if the date range contains the
+        incident's `date` value.
+
+        2. If an incident has `exact_date_unknown` equal to `True`,
+        then the incident is included if the date range overlaps with
+        the month containing the incident's `date` value.  For
+        example, if an exact date unknown incident has a date of
+        2022-01-13 (or any other date in the month 2022-01), then it
+        will be included in the queryset results if the date range
+        overlaps at all with the range starting on 2022-01-01 and
+        ending on 2022-01-31.
+
+        3. Otherwise, the incident is excluded.
+
+        Keyword arguments:
+        lower -- the lower bound of the date (which is included in the range). If `None`, then the range is unbounded below.
+        upper -- the lower bound of the date (which is included in the range). If `None`, then the range is unbounded below.
+
+        """
         target_range = DateRange(
             lower=lower,
             upper=upper,
