@@ -125,8 +125,8 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
     def homepage_csv(self, request):
-        lower_date = request.GET.get('lower_date')
-        upper_date = request.GET.get('upper_date')
+        lower_bound = request.GET.get('date_lower')
+        upper_bound = request.GET.get('date_upper')
 
         tag_summary = models.IncidentPage.objects.only('tags').annotate(
             tag_summary=StringAgg('tags__title', delimiter=', ')
@@ -138,7 +138,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         incidents = models.IncidentPage.objects.live().only('date', 'city', 'state', 'latitude', 'longitude').annotate(
             tag_summary=Subquery(tag_summary.values('tag_summary'), output_field=CharField()),
             category_summary=Subquery(category_summary.values('category_summary'), output_field=CharField()),
-        ).fuzzy_date_filter(lower=lower_date, upper=upper_date).values(
+        ).fuzzy_date_filter(lower=lower_bound, upper=upper_bound).values(
             'date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary'
         )
 
