@@ -129,7 +129,6 @@ class HomePageCSVTestCase(TestCase):
                 [tag.title for tag in self.tags]
             )
         )
-        print(f'{self.result=}')
 
 
 class IncidentCSVTestCase(TestCase):
