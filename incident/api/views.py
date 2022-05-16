@@ -129,10 +129,18 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         upper_bound = request.GET.get('date_upper')
 
         tag_summary = models.IncidentPage.objects.only('tags').annotate(
-            tag_summary=StringAgg('tags__title', delimiter=', ')
+            tag_summary=StringAgg(
+                'tags__title',
+                delimiter=', ',
+                ordering=('tags__title',)
+            )
         ).filter(pk=OuterRef('pk'))
         category_summary = models.IncidentPage.objects.only('categories').annotate(
-            category_summary=StringAgg('categories__category__title', delimiter=', ')
+            category_summary=StringAgg(
+                'categories__category__title',
+                delimiter=', ',
+                ordering=('categories__category__title',)
+            )
         ).filter(pk=OuterRef('pk'))
 
         incidents = models.IncidentPage.objects.live().only('date', 'city', 'state', 'latitude', 'longitude').annotate(
