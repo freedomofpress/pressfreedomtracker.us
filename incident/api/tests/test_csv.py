@@ -131,6 +131,61 @@ class HomePageCSVTestCase(TestCase):
         )
 
 
+class FilteredHomePageCSVTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build()
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.state = StateFactory(abbreviation='NM')
+        cls.cats = CategoryPageFactory.create_batch(3, parent=root_page)
+        cls.tags = CommonTagFactory.create_batch(3)
+        cls.incident1 = IncidentPageFactory(
+            parent=cls.incident_index,
+            categories=cls.cats,
+            date='2022-01-01',
+            tags=cls.tags,
+            state=cls.state,
+        )
+        cls.incident2 = IncidentPageFactory(
+            parent=cls.incident_index,
+            categories=cls.cats,
+            date='2022-02-02',
+            tags=cls.tags,
+            state=cls.state,
+        )
+        cls.incident3 = IncidentPageFactory(
+            parent=cls.incident_index,
+            categories=cls.cats,
+            date='2022-03-03',
+            tags=cls.tags,
+            state=cls.state,
+        )
+
+    def setUp(self):
+        self.response = self.client.get(
+            reverse('incidentpage-homepage_csv'),
+            {
+                'date_lower': '2022-01-15',
+                'date_upper': '2022-02-15',
+            },
+            HTTP_ACCEPT='text/csv',
+        )
+        content_lines = self.response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+
+        self.headers = next(reader)
+        self.results = []
+        for result in reader:
+            self.results.append(dict(zip(self.headers, result)))
+
+    def test_applies_date_filter(self):
+        self.assertEqual(len(self.results), 1)
+        self.assertEqual(self.results[0]['date'], '2022-02-02')
+
+
 class IncidentCSVTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
