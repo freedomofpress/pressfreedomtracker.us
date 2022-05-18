@@ -87,10 +87,13 @@ class FilterForm(forms.Form):
                     kwargs['widget'] = forms.DateInput(
                         attrs={'type': 'date'}
                     )
-                    kwargs['label'] = label.replace('between', 'before')
-                    self.fields[f'{name}_upper'] = field(**kwargs)
+
                     kwargs['label'] = label.replace('between', 'after')
                     self.fields[f'{name}_lower'] = field(**kwargs)
+
+                    kwargs['label'] = label.replace('between', 'before')
+                    self.fields[f'{name}_upper'] = field(**kwargs)
+
                     field.field_type = _type
                     continue
 
