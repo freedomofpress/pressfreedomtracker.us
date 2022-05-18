@@ -137,12 +137,11 @@ def get_filter_forms(request, serialized_filters):
 
         # if the item has a filters object then create a form from the item
         if item.get('filters', []):
-            filter_forms.append(
-                FilterForm(
-                    request.GET,
-                    data=item
-                )
-            )
+            filter_form = FilterForm(request.GET, data=item)
+            if item['id'] == -1:
+                filter_forms.insert(0, filter_form)
+            else:
+                filter_forms.append(filter_form)
 
     # if we have category items, create form filter for them
     if categories:
