@@ -144,9 +144,9 @@ def get_filter_forms(request, serialized_filters):
     # if we have category items, create form filter for them
     if categories:
         item = {
-            'title': 'Limit to',
+            'title': 'Category',
             'filters': [{
-                'title': 'Category',
+                'title': 'Limit to',
                 'type': 'checkbox',
                 'name': 'categories',
                 'choices': [[x.get('id', ''), x.get('title', '')] for x in categories]
