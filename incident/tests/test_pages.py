@@ -1182,7 +1182,7 @@ class IncidentPageTests(TestCase):
         )
         self.assertEqual(
             inc.get_all_targets_for_linking[1].text,
-            f'Benny Bird for {tj2.institution.title}',
+            f'Benny Bird ({tj2.institution.title})',
         )
         self.assertEqual(
             inc.get_all_targets_for_linking[1].url_arguments,
