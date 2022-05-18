@@ -1,3 +1,5 @@
+import operator
+
 from django import forms
 from django.utils.text import capfirst
 from django.apps import apps
@@ -125,6 +127,7 @@ class FilterForm(forms.Form):
 def get_filter_forms(request, serialized_filters):
     filter_forms = []
 
+    serialized_filters.sort(key=operator.itemgetter('title'))
     # Any filter item with an id other than -1 is a category
     categories = [
         item for item in serialized_filters if item.get('id', -1) != -1

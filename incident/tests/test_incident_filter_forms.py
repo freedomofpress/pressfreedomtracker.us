@@ -1,3 +1,5 @@
+import operator
+
 from django.test import RequestFactory, TestCase
 from django.utils.text import capfirst
 from django import forms
@@ -251,5 +253,5 @@ class FilterFormTest(TestCase):
         self.assertIsInstance(form[-1].fields.get(name).widget, forms.CheckboxSelectMultiple)
         self.assertEqual(
             form[-1].fields.get(name).choices,
-            capitalize_choice_labels(choices),
+            capitalize_choice_labels(sorted(choices, key=operator.itemgetter(1))),
         )
