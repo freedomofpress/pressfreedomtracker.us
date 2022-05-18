@@ -249,9 +249,9 @@ class FilterFormTest(TestCase):
         ]
         form = get_filter_forms(request, serialized_filters)
 
-        self.assertIsInstance(form[-1].fields.get(name), forms.MultipleChoiceField)
-        self.assertIsInstance(form[-1].fields.get(name).widget, forms.CheckboxSelectMultiple)
+        self.assertIsInstance(form[0].fields.get(name), forms.MultipleChoiceField)
+        self.assertIsInstance(form[0].fields.get(name).widget, forms.CheckboxSelectMultiple)
         self.assertEqual(
-            form[-1].fields.get(name).choices,
+            form[0].fields.get(name).choices,
             capitalize_choice_labels(sorted(choices, key=operator.itemgetter(1))),
         )

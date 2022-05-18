@@ -156,7 +156,8 @@ def get_filter_forms(request, serialized_filters):
             }]
 
         }
-        filter_forms.append(
+        filter_forms.insert(
+            0,
             FilterForm(
                 request.GET,
                 data=item
