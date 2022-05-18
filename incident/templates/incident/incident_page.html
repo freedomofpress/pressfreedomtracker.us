@@ -19,7 +19,7 @@
 		<section class="article-content__inner">
 			{% include 'common/_video_or_image.html' with video=page.primary_video image=page.teaser_image caption=page.image_caption %}
 
-			{% for update in page.get_updates_by_asc_date %}
+			{% for update in page.get_updates_by_desc_date %}
 				{% include "incident/_incident_update.html" with update=update only %}
 			{% endfor %}
 
