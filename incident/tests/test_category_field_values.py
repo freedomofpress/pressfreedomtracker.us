@@ -2,6 +2,7 @@ import datetime
 
 from django.test import TestCase
 from django.utils.text import capfirst
+from django.utils.html import strip_tags
 
 from common.tests.factories import CategoryPageFactory
 from incident.models import CAT_FIELD_VALUES, IncidentPage
@@ -101,11 +102,11 @@ class TestCategoryFieldValuesByField(TestCase):
         output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index)
         self.assertEqual(output, '')
 
-        leo = LawEnforcementOrganizationFactory()
+        leo = LawEnforcementOrganizationFactory(title='Los Angeles Police Department')
         self.incident.arresting_authority = leo
 
         output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index)
-        self.assertIn(leo.title.capitalize(), output)
+        self.assertIn(leo.title, strip_tags(output))
         self.assertIn(f'arresting_authority={leo.title}', output)
 
     def test_current_charges(self):

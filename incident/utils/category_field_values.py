@@ -102,7 +102,7 @@ def arresting_authority_html_val(page, field, index):
         field,
         getattr(page, field).title
     )
-    value = getattr(page, field).title.capitalize()
+    value = getattr(page, field).title
 
     return f'<a href="{link}" class="text-link">{value}</a>'
 

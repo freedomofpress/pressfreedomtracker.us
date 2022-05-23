@@ -118,7 +118,7 @@ class HomePageCSVTestCase(TestCase):
         self.assertEqual(
             self.result['categories'],
             ', '.join(
-                [cat.title for cat in self.cats]
+                sorted([cat.title for cat in self.cats])
             )
         )
 
@@ -126,7 +126,7 @@ class HomePageCSVTestCase(TestCase):
         self.assertEqual(
             self.result['tags'],
             ', '.join(
-                [tag.title for tag in self.tags]
+                sorted([tag.title for tag in self.tags])
             )
         )
 
