@@ -1,5 +1,3 @@
-import unittest
-
 from django.test import TestCase, Client
 from unittest.mock import patch
 from wagtail.core.models import Site
@@ -30,13 +28,11 @@ class TestIncidentIndexPageCachePurge(TestCase):
     def tearDown(self):
         self.index.delete()
 
-    @unittest.skip("Skipping till templates have been added")
     def test_cache_tag_index(self):
         "Response from IncidentIndexPage should include Cache-Tag header"
         response = self.client.get('/incidents/')
         self.assertEqual(response['Cache-Tag'], 'incident-index-{}'.format(self.index.pk))
 
-    @unittest.skip("Skipping till templates have been added")
     def test_cache_tag_subpath(self):
         """
         Response from IncidentIndexPage with subpath should include
