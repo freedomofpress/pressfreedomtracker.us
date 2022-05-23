@@ -811,6 +811,12 @@ class IncidentPage(MetadataPageMixin, Page):
         """
         return self.updates.order_by('date').all()
 
+    def get_updates_by_desc_date(self):
+        """
+        Returns updates for the incident sorted in descending order by date of update
+        """
+        return self.updates.order_by('-date').all()
+
     def get_main_category(self):
         """
         Returns the first category in the list of categories
@@ -937,7 +943,7 @@ class IncidentPage(MetadataPageMixin, Page):
         items = []
         for tj in self.targeted_journalists.all():
             if tj.institution:
-                title = f'{tj.journalist.title} for {tj.institution.title}'
+                title = f'{tj.journalist.title} ({tj.institution.title})'
             else:
                 title = tj.journalist.title
             items.append(

@@ -659,6 +659,28 @@ class GetIncidentUpdatesTest(TestCase):
             [incident_update3, incident_update1, incident_update2]
         )
 
+    def test_get_incident_updates_sorted_by_desc_date(self):
+        incident = IncidentPageFactory(parent=self.index)
+        incident_update1 = IncidentUpdateFactory(
+            page=incident,
+            date=timezone.now() - timedelta(days=30),
+        )
+        incident_update2 = IncidentUpdateFactory(
+            page=incident,
+            date=timezone.now() - timedelta(days=3),
+        )
+        incident_update3 = IncidentUpdateFactory(
+            page=incident,
+            date=timezone.now() - timedelta(days=300),
+        )
+
+        incident_updates = incident.get_updates_by_desc_date()
+
+        self.assertEqual(
+            list(incident_updates),
+            [incident_update2, incident_update1, incident_update3]
+        )
+
 
 class IncidentPageDateRangeFilter(TestCase):
     @classmethod
@@ -1182,7 +1204,7 @@ class IncidentPageTests(TestCase):
         )
         self.assertEqual(
             inc.get_all_targets_for_linking[1].text,
-            f'Benny Bird for {tj2.institution.title}',
+            f'Benny Bird ({tj2.institution.title})',
         )
         self.assertEqual(
             inc.get_all_targets_for_linking[1].url_arguments,
