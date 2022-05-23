@@ -107,17 +107,6 @@ class TestIncidentPageCachePurge(TestCase):
 
         assert_never_called_with(purge_page_from_cache, incident)
 
-    def test_cache_purged_on_related_incident(self, purge_page_from_cache):
-        "Should purge cache for an incident when a related incident changes"
-        incident1 = IncidentPageFactory()
-        incident2 = IncidentPageFactory(related_incidents=[incident1])
-
-        # Should trigger purge on incident2
-        incident1.title = 'New Incident Name'
-        incident1.save_revision().publish()
-
-        purge_page_from_cache.assert_any_call(incident2)
-
     def test_cache_not_purged_on_unrelated_incident(
         self,
         purge_page_from_cache
@@ -133,24 +122,3 @@ class TestIncidentPageCachePurge(TestCase):
         incident1.save_revision().publish()  # Should not trigger purge on incident2
 
         assert_never_called_with(purge_page_from_cache, incident2)
-
-    def test_cache_purged_on_same_cat_incident(
-        self,
-        purge_page_from_cache
-    ):
-        """
-        Should purge cache for an incident that is in the same category
-        as a changed incident
-        """
-        category = CategoryPageFactory()
-        incident1 = IncidentPageFactory()
-        incident2 = IncidentPageFactory()
-        incident1.categories = [IncidentCategorization(category=category)]
-        incident2.categories = [IncidentCategorization(category=category)]
-        incident1.save()
-        incident2.save()
-
-        incident1.title = 'New Incident Title'
-        incident1.save_revision().publish()
-
-        purge_page_from_cache.assert_any_call(incident2)

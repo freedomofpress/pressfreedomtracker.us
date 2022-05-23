@@ -26,29 +26,6 @@ def purge_incident_from_frontend_cache_for_category(
         )
 
 
-def purge_incident_from_frontend_cache_for_incident(
-    instance=None, sender=None, **kwargs
-):
-    """
-    Busts the cache for any incident that shares a category or is
-    a related incident to the incident just changed.
-    """
-
-    # Purge cache for related incidents
-    for incident in instance.related_incidents.all():
-        purge_page_from_cache(incident)
-        logger.info(
-            f"Purged page IncidentPage with title: {incident.title} and slug: {incident.slug}"
-        )
-
-    # Purge cache for incidents that share a category and may
-    # therefore show up as a related incident
-    for categorization in instance.categories.all():
-        purge_incident_from_frontend_cache_for_category(
-            instance=categorization.category
-        )
-
-
 def purge_incident_index_from_frontend_cache(**kwargs):
     tags = []
     for incident_index_page in IncidentIndexPage.objects.live():
@@ -68,10 +45,6 @@ page_published.connect(
 post_delete.connect(
     purge_incident_from_frontend_cache_for_category,
     sender=CategoryPage
-)
-page_published.connect(
-    purge_incident_from_frontend_cache_for_incident,
-    sender=IncidentPage
 )
 
 # IncidentIndexPage cache
