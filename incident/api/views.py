@@ -150,7 +150,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return incidents.with_most_recent_update().with_public_associations()
 
     @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
-    def homepage_csv(self, request):
+    def homepage_csv(self, request, version=None):
         lower_bound = request.GET.get('date_lower')
         upper_bound = request.GET.get('date_upper')
 

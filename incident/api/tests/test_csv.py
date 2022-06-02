@@ -88,7 +88,10 @@ class HomePageCSVTestCase(TestCase):
 
     def setUp(self):
         self.response = self.client.get(
-            reverse('incidentpage-homepage_csv'),
+            reverse(
+                'incidentpage-homepage_csv',
+                kwargs={'version': 'edge'},
+            ),
             HTTP_ACCEPT='text/csv',
         )
         content_lines = self.response.content.splitlines()
@@ -166,7 +169,10 @@ class FilteredHomePageCSVTestCase(TestCase):
 
     def setUp(self):
         self.response = self.client.get(
-            reverse('incidentpage-homepage_csv'),
+            reverse(
+                'incidentpage-homepage_csv',
+                kwargs={'version': 'edge'},
+            ),
             {
                 'date_lower': '2022-01-15',
                 'date_upper': '2022-02-15',
