@@ -50,6 +50,7 @@ django==3.2.13 \
     #   django-treebeard
     #   djangorestframework
     #   drf-spectacular
+    #   drf-spectacular-sidecar
     #   wagtail
 django-anymail==8.5 \
     --hash=sha256:2325932f56f914d96e0a54db850f2b246ed2277b753f75319620d051a51551e2 \
@@ -116,10 +117,14 @@ draftjs-exporter==2.1.7 \
     --hash=sha256:5839cbc29d7bce2fb99837a404ca40c3a07313f2a20e2700de7ad6aa9a9a18fb \
     --hash=sha256:d415a9964690a2cddb66a31ef32dd46c277e9b80434b94e39e3043188ed83e33
     # via wagtail
-drf-spectacular==0.22.1 \
+drf-spectacular[sidecar]==0.22.1 \
     --hash=sha256:17ac5e31e5d6150dd5fa10843b429202f4f38069202acc44394cc5a771de63d9 \
     --hash=sha256:866e16ddaae167a1234c76cd8c351161373551db994ce9665b347b32d5daf38b
     # via -r requirements.in
+drf-spectacular-sidecar==2022.6.1 \
+    --hash=sha256:917ba08197573c37b7ee23726cffaf5e12f4fe6d9771cd428a4263042c2bee47 \
+    --hash=sha256:91bf519651c45ca3df606bc2e073681b8a786f4a3b1abec9abb6d097dfa08e7f
+    # via drf-spectacular
 et-xmlfile==1.1.0 \
     --hash=sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c \
     --hash=sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada
