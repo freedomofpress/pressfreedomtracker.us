@@ -1,5 +1,6 @@
 import dataclasses
 import functools
+import itertools
 import operator
 from datetime import date
 import copy
@@ -25,7 +26,12 @@ from django.db.models import (
 )
 from django.db.models.functions import Trunc, TruncMonth, Cast
 from django.db.models.fields.related import ManyToOneRel
+from django.db.utils import ProgrammingError
 from django.utils.text import capfirst
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiTypes,
+)
 from psycopg2.extras import DateRange
 from wagtail.core.fields import RichTextField, StreamField
 
@@ -35,6 +41,9 @@ from incident.utils.db import MakeDateRange
 
 class Filter(object):
     serialized_type = 'text'
+    openapi_type = OpenApiTypes.STR
+    openapi_style = None
+    openapi_explode = None
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None):
         self.name = name
@@ -85,17 +94,48 @@ filtering query."""
         }
         return serialized
 
+    def get_openapi_enum(self):
+        return None
+
+    def openapi_parameters(self):
+        description = getattr(
+            self,
+            'openapi_description',
+            f'Filter by "{capfirst(self.get_verbose_name())}"'
+        )
+        return [
+            OpenApiParameter(
+                name=self.name,
+                type=self.openapi_type,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description=description,
+                enum=self.get_openapi_enum(),
+                style=self.openapi_style,
+                explode=self.openapi_explode,
+            )
+        ]
+
 
 class BooleanFilter(Filter):
     serialized_type = 'bool'
+    openapi_type = OpenApiTypes.BOOL
 
 
 class IntegerFilter(Filter):
     serialized_type = 'int'
+    openapi_type = OpenApiTypes.INT
 
 
 class RelationFilter(Filter):
     serialized_type = 'autocomplete'
+
+    @property
+    def openapi_type(self):
+        if self.text_fields:
+            return {'oneOf': [{'type': 'string'}, {'type': 'integer'}]}
+        else:
+            return OpenApiTypes.INT
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
         self.text_fields = text_fields
@@ -221,6 +261,27 @@ class DateFilter(Filter):
             )
         })
 
+    def openapi_parameters(self):
+        verbose_model_name = self.model_field.verbose_name
+        lower_description = f'Filter by "{verbose_model_name} is after"'
+        upper_description = f'Filter by "{verbose_model_name} is before"'
+        return [
+            OpenApiParameter(
+                name=f'{self.name}_lower',
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description=lower_description,
+            ),
+            OpenApiParameter(
+                name=f'{self.name}_upper',
+                type=OpenApiTypes.DATE,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description=upper_description,
+            ),
+        ]
+
 
 class ChoiceFilter(Filter):
     @property
@@ -264,9 +325,24 @@ class ChoiceFilter(Filter):
             serialized['choices'] = self.model_field.choices
         return serialized
 
+    def get_openapi_enum(self):
+        return self.get_choices()
+
 
 class MultiChoiceFilter(Filter):
     serialized_type = 'choice'
+    openapi_style = 'form'
+    openapi_explode = False
+
+    @property
+    def openapi_type(self):
+        return {
+            'type': 'array',
+            'items': {
+                'type': 'string',
+                'enum': self.get_choices(),
+            }
+        }
 
     def clean(self, value, strict=False):
         choices = self.get_choices()
@@ -309,6 +385,9 @@ class MultiChoiceFilter(Filter):
             serialized['choices'] = self.model_field.base_field.choices
         return serialized
 
+    def get_openapi_enum(self):
+        return self.get_choices()
+
 
 @dataclasses.dataclass(eq=True, frozen=True)
 class ManyRelationValue:
@@ -321,6 +400,12 @@ class ManyRelationValue:
 
 class ManyRelationFilter(Filter):
     serialized_type = 'autocomplete'
+    openapi_style = 'form'
+    openapi_explode = False
+    openapi_type = {
+        'type': 'array',
+        'items': {'oneOf': [{'type': 'string'}, {'type': 'integer'}]},
+    }
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
         self.text_fields = text_fields
@@ -489,6 +574,8 @@ class PendingCasesFilter(BooleanFilter):
 
 
 class RecentlyUpdatedFilter(IntegerFilter):
+    openapi_description = 'Include only incidents updated in the last N days'
+
     def __init__(self, name, verbose_name=None):
         super(RecentlyUpdatedFilter, self).__init__(
             name=name,
@@ -553,6 +640,36 @@ def get_serialized_filters():
         }
         for page in CategoryPage.objects.live().prefetch_related('incident_filters')
     ]
+
+
+def get_openapi_parameters():
+    from common.models import CategoryPage, GeneralIncidentFilter
+    try:
+        available_filters = IncidentFilter.get_available_filters()
+        general_incident_filters = GeneralIncidentFilter.objects.all()
+        category_incident_filters = [
+            page.incident_filters.all() for page in
+            CategoryPage.objects.live().prefetch_related('incident_filters')
+        ]
+
+        filters = itertools.chain(
+            general_incident_filters,
+            *category_incident_filters
+        )
+
+        return list(itertools.chain(
+            SearchFilter().openapi_parameters(),
+            *(
+                available_filters[fltr.incident_filter].openapi_parameters()
+                for fltr in filters
+                if fltr.incident_filter in available_filters
+            ))
+        )
+    except ProgrammingError:
+        # This branch handles the case of the database not being
+        # properly configured (e.g. migrations were not run) when this
+        # function is called.  This can happen in CI environments.
+        return []
 
 
 class IncidentFilter(object):

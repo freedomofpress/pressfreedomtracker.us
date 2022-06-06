@@ -35,7 +35,7 @@ class IncidentListPaginationTestCase(APITestCase):
 
     def test_pagination_header_links_present(self):
         response1 = self.client.get(
-            reverse('incidentpage-list'),
+            reverse('incidentpage-list', kwargs={'version': 'edge'}),
             {'limit': '3'},
         )
         links = humanize_links(response1)
@@ -74,7 +74,7 @@ class IncidentListPaginationTestCase(APITestCase):
 
     def test_pagination_envelope_can_be_enabled_on_demand(self):
         response1 = self.client.get(
-            reverse('incidentpage-list'),
+            reverse('incidentpage-list', kwargs={'version': 'edge'}),
             {'envelope': '1', 'limit': '3'},
         )
         response1_data = response1.json()
