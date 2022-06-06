@@ -324,10 +324,14 @@ class CategoryFieldValues(TestCase):
         self.category2 = CategoryPageFactory(
             **{'equipment_damage': True}
         )
+        # Category 3 has no metadata fields
+        self.category3 = CategoryPageFactory(
+            **{'other_incident': True}
+        )
 
         self.incident = IncidentPageFactory(
             parent=self.index,
-            categories=[self.category1, self.category2],
+            categories=[self.category3, self.category1, self.category2],
             **{'arrest': True, 'equipment_damage': True}
         )
         charge = ChargeFactory()
@@ -337,7 +341,13 @@ class CategoryFieldValues(TestCase):
         self.category_details = self.incident.get_category_details()
 
     def test_should_get_category_details(self):
-        self.assertEqual(len(self.category_details.items()), 2)
+        self.assertEqual(len(self.category_details.items()), 3)
+
+    def test_should_sort_categories_without_metadata_last(self):
+        self.assertEqual(
+            list(self.category_details.items())[-1],
+            (self.category3, []),
+        )
 
     def test_should_get_basic_category_fields(self):
         arrest_details = self.category_details[self.category1]
