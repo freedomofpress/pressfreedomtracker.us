@@ -1,3 +1,4 @@
+{% load pageurl from wagtailcore_tags %}
 {% load get_category_details %}
 <button
 	class="disclose-summary incident-database-card__details-toggle"
@@ -17,25 +18,23 @@
 <div id="category-details-{{ incident.pk }}" class="incident-database-card__category-details database-card-table__container" data-visible="false">
 	{% get_category_details incident index as all_details %}
 	{% for category, category_detail in all_details.items %}
-		{% if category_detail %}
-			<dl class="database-card-table__category-details" aria-labelledby="{{ category.slug }}-details-title">
-				<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">
-					{{ category.title }}
-				</h3>
+		<dl class="database-card-table__category-details" aria-labelledby="{{ category.slug }}-details-title">
+			<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">
+				<a class="text-link text-link--card" href="{% pageurl category %}">{{ category.title }}</a>
+			</h3>
 
-				{% for detail in category_detail %}
-					{% if detail.html %}
-						<div class="database-card-table__row database-card-table__row--inline">
-							<dt class="database-card-table__label">
-								{{ detail.name }} &rarr;
-							</dt>
-							<dd class="database-card-table__value">
-								{{ detail.html | safe }}
-							</dd>
-						</div>
-					{% endif %}
-				{% endfor %}
-			</dl>
-		{% endif %}
+			{% for detail in category_detail %}
+				{% if detail.html %}
+					<div class="database-card-table__row database-card-table__row--inline">
+						<dt class="database-card-table__label">
+							{{ detail.name }} &rarr;
+						</dt>
+						<dd class="database-card-table__value">
+							{{ detail.html | safe }}
+						</dd>
+					</div>
+				{% endif %}
+			{% endfor %}
+		</dl>
 	{% endfor %}
 </div>
