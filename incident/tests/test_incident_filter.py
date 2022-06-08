@@ -1,6 +1,12 @@
+from unittest import mock
+
 from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiTypes,
+)
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Site
 
@@ -18,6 +24,85 @@ from incident.utils.incident_filter import (
     ManyRelationFilter,
     ManyRelationValue,
 )
+
+
+class FilterToOpenApiParametersTest(TestCase):
+    def test_boolean_field(self):
+        field = IncidentPage._meta.get_field('is_search_warrant_obtained')
+        fltr = IncidentFilter._get_filter(field)
+        (param,) = fltr.openapi_parameters()
+        self.assertEqual(param.name, 'is_search_warrant_obtained')
+        self.assertEqual(param.type, OpenApiTypes.BOOL)
+        self.assertEqual(param.location, OpenApiParameter.QUERY)
+        self.assertEqual(param.required, False)
+        self.assertEqual(param.style, None)
+        self.assertEqual(param.description, 'Filter by "Search warrant obtained?"')
+
+    def test_integer_field(self):
+        fltr = IncidentFilter._extra_filters['recently_updated']
+        (param,) = fltr.openapi_parameters()
+        self.assertEqual(param.name, 'recently_updated')
+        self.assertEqual(param.type, OpenApiTypes.INT)
+        self.assertEqual(param.location, OpenApiParameter.QUERY)
+        self.assertEqual(param.required, False)
+        self.assertEqual(param.description, 'Include only incidents updated in the last N days')
+
+    def test_relation_filter(self):
+        field = IncidentPage._meta.get_field('state')
+        fltr = IncidentFilter._get_filter(field)
+        (param,) = fltr.openapi_parameters()
+        self.assertEqual(param.name, 'state')
+        self.assertEqual(param.type, {'oneOf': [{'type': 'string'}, {'type': 'integer'}]})
+
+    def test_integer_only_relation_filter(self):
+        field = IncidentPage._meta.get_field('state')
+        fltr = IncidentFilter._get_filter(field)
+        fltr.text_fields = []
+        (param,) = fltr.openapi_parameters()
+        self.assertEqual(param.type, OpenApiTypes.INT)
+
+    def test_date_filter(self):
+        field = IncidentPage._meta.get_field('date')
+        fltr = IncidentFilter._get_filter(field)
+        lower, upper = fltr.openapi_parameters()
+
+        self.assertEqual(lower.name, 'date_lower')
+        self.assertEqual(lower.type, OpenApiTypes.DATE)
+        self.assertEqual(lower.location, OpenApiParameter.QUERY)
+        self.assertEqual(lower.required, False)
+        self.assertEqual(lower.description, 'Filter by "date is after"')
+
+        self.assertEqual(upper.name, 'date_upper')
+        self.assertEqual(upper.type, OpenApiTypes.DATE)
+        self.assertEqual(upper.location, OpenApiParameter.QUERY)
+        self.assertEqual(upper.required, False)
+        self.assertEqual(upper.description, 'Filter by "date is before"')
+
+    def test_choice_filter(self):
+        field = IncidentPage._meta.get_field('arrest_status')
+        fltr = IncidentFilter._get_filter(field)
+        param, = fltr.openapi_parameters()
+
+        self.assertEqual(param.name, 'arrest_status')
+        self.assertEqual(param.enum, fltr.get_choices())
+
+    def test_multichoice_filter(self):
+        field = IncidentPage._meta.get_field('subpoena_statuses')
+        fltr = IncidentFilter._get_filter(field)
+        param, = fltr.openapi_parameters()
+
+        self.assertEqual(param.name, 'subpoena_statuses')
+        self.assertEqual(param.style, 'form')
+        self.assertEqual(param.enum, fltr.get_choices())
+
+    def test_many_relation_filter(self):
+        field = IncidentPage._meta.get_field('politicians_or_public_figures_involved')
+        fltr = IncidentFilter._get_filter(field)
+        param, = fltr.openapi_parameters()
+
+        self.assertEqual(param.name, 'politicians_or_public_figures_involved')
+        self.assertEqual(param.style, 'form')
+        self.assertEqual(param.explode, False)
 
 
 class SerializeFilterTest(TestCase):
@@ -249,25 +334,24 @@ class CleanTest(TestCase):
         CategoryPage.objects.all().delete()
         CategoryPageFactory(title='Category A', incident_filters=['state'])
         incident_filter = IncidentFilter({'state': '???'})
-        incident_filter.filter_overrides['state']['text_fields'] = []
 
-        with self.assertRaises(ValidationError) as cm:
-            incident_filter.clean(strict=True)
+        with mock.patch.object(IncidentFilter, 'filter_overrides', {'state': {'text_fields': []}}):
+            with self.assertRaises(ValidationError) as cm:
+                incident_filter.clean(strict=True)
 
-        self.assertEqual(
-            [str(error) for error in cm.exception],
-            ['Expected integer for relationship "state", received "???"'],
-        )
+            self.assertEqual(
+                [str(error) for error in cm.exception],
+                ['Expected integer for relationship "state", received "???"'],
+            )
 
     def test_text_param_for_relation_filter_without_text_fields_not_included_in_cleaned_data(self):
         CategoryPage.objects.all().delete()
         CategoryPageFactory(title='Category A', incident_filters=['state'])
         incident_filter = IncidentFilter({'state': '???'})
-        incident_filter.filter_overrides['state']['text_fields'] = []
+        with mock.patch.object(IncidentFilter, 'filter_overrides', {'state': {'text_fields': []}}):
+            incident_filter.clean(strict=False)
 
-        incident_filter.clean(strict=False)
-
-        self.assertEqual(incident_filter.cleaned_data, {})
+            self.assertEqual(incident_filter.cleaned_data, {})
 
     def test_text_param_for_manyrelation_filter_without_text_fields(self):
         fltr = ManyRelationFilter('venue', IncidentPage.venue, text_fields=[])

@@ -4,13 +4,14 @@ from django.apps import apps
 from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from wagtailautocomplete.views import objects, search
 
 from charts.urls import urlpatterns as chart_urls
 from common import views as common_views
 from emails import urls as emails_urls
-from incident.api.urls import api_urls
+from incident.api.urls import urlpatterns as api_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -24,7 +25,6 @@ autocomplete_public_urls = [
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
-    path('api/edge/', include(api_urls)),
     path('autocomplete/', include(autocomplete_public_urls)),
     path('admin/autocomplete/', include(autocomplete_admin_urls)),
     path('admin/', include(wagtailadmin_urls)),
@@ -38,6 +38,12 @@ urlpatterns = [
 
     path('charts/', include(chart_urls)),
 
+    path('api/schema/', SpectacularAPIView.as_view(api_version='edge'), name='schema'),
+    # Schema UI:
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
+    path(r'', include(api_urls)),
     path(r'', include(wagtail_urls)),
 ]
 

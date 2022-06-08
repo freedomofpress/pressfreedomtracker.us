@@ -26,6 +26,7 @@ from incident.models import (
     TargetedJournalist,
     GovernmentWorker,
     TopicPage,
+    Venue,
 )
 from common.tests.factories import (
     CategoryPageFactory,
@@ -79,6 +80,13 @@ class ItemFactory(factory.django.DjangoModelFactory):
                 lambda n: 'Title {n}'.format(n=n)
             )
         )
+
+
+class VenueFactory(ItemFactory):
+    class Meta:
+        model = Venue
+
+    title = factory.Sequence(lambda n: f'Venue {n}')
 
 
 class LawEnforcementOrganizationFactory(factory.django.DjangoModelFactory):

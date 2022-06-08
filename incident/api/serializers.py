@@ -1,8 +1,11 @@
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
 
 from incident.models import choices
 
 
+@extend_schema_field(OpenApiTypes.STR)
 class SummaryField(serializers.RelatedField):
     def to_representation(self, value):
         return value.summary
@@ -157,15 +160,18 @@ class BaseIncidentSerializer(serializers.Serializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
+    @extend_schema_field(OpenApiTypes.URI)
     def get_url(self, obj):
         if self.context.get('request'):
             return obj.get_full_url(self.context['request'])
         else:
             return obj.get_full_url()
 
+    @extend_schema_field(OpenApiTypes.STR)
     def get_body(self, obj):
         return str(obj.body)
 
+    @extend_schema_field(OpenApiTypes.URI)
     def get_teaser_image(self, obj):
         teaser_image = obj.teaser_image
         if teaser_image:

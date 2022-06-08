@@ -8,6 +8,10 @@ from django.db.models import (
     Subquery,
 )
 from rest_framework.decorators import action
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+)
 from rest_framework import viewsets
 from rest_framework.settings import api_settings
 from rest_framework.pagination import CursorPagination
@@ -24,7 +28,7 @@ from incident.api.serializers import (
     FlatIncidentSerializer,
 )
 from incident import models
-from incident.utils.incident_filter import IncidentFilter
+from incident.utils.incident_filter import IncidentFilter, get_openapi_parameters
 
 if TYPE_CHECKING:
     from django.http import HttpResponse
@@ -87,6 +91,28 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     renderer_classes = tuple(api_settings.DEFAULT_RENDERER_CLASSES) + (PaginatedCSVRenderer,)
     pagination_class = IncidentCursorPagination
 
+    @extend_schema(
+        parameters=get_openapi_parameters() + [
+            OpenApiParameter(
+                name='fields',
+                type={
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                        'enum': list(IncidentSerializer().fields),
+                    }
+                },
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description='Specify which incident fields are given on the result data.',
+                style='form',
+                explode=False,
+            )
+        ]
+    )
+    def list(self, *args, **kwargs):
+        return super().list(*args, **kwargs)
+
     def dispatch(self, *args, **kwargs) -> 'HttpResponse':
         response = super().dispatch(*args, **kwargs)
 
@@ -108,12 +134,12 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return context
 
     def get_serializer_class(self):
-        if self.request.accepted_renderer.format == 'csv':
+        if getattr(self.request, 'accepted_renderer', None) and self.request.accepted_renderer.format == 'csv':
             return FlatIncidentSerializer
         return super().get_serializer_class()
 
     def paginate_queryset(self, queryset):
-        if self.request.accepted_renderer.format == 'csv':
+        if getattr(self.request, 'accepted_renderer', None) and self.request.accepted_renderer.format == 'csv':
             return None
         return super().paginate_queryset(queryset)
 
@@ -124,7 +150,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return incidents.with_most_recent_update().with_public_associations()
 
     @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
-    def homepage_csv(self, request):
+    def homepage_csv(self, request, version=None):
         lower_bound = request.GET.get('date_lower')
         upper_bound = request.GET.get('date_upper')
 
