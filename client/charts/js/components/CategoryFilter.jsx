@@ -160,7 +160,7 @@ export default function CategoryFilter({
 					key: (_, i) => i,
 				}}
 				events={{
-					onClick: (_, d) => {
+					onClick: (d, i) => {
 						onCategoryClick(d)
 					},
 				}}

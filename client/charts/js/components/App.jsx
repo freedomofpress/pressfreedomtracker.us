@@ -35,9 +35,6 @@ export default function App() {
 			.then((json) => {
 				// TEMPORARY - RANDOMIZE SOME COLUMNS
 				json.forEach((row) => {
-					// This was automatically converted by d3, but subsequent code starts from stringified ISO dates
-					row.date = row.date.toISOString();
-
 					// The geo coordinates are null only in the randomized dataset, so we manually randomize them here
 					const cities = [
 						{ name: "New York City", latitude: 40.71427, longitude: -74.00597 },
