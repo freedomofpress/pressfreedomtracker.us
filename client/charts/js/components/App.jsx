@@ -24,7 +24,7 @@ export default function App() {
 
 		const fetchPromise =
 			source === "api"
-				? fetch(`/api/edge/incidents/?fields=${fields}&format=csv`).then((r) =>
+				? fetch(`/api/edge/incidents/homepage_csv/`).then((r) =>
 						r.text()
 				  )
 				: import("../data/incidents.csv.js").then(({ csv }) => csv);
