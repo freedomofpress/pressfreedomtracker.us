@@ -58,6 +58,7 @@ certifi==2021.10.8 \
     --hash=sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569
     # via
     #   -r requirements.txt
+    #   mailchimp-marketing
     #   requests
     #   urllib3
 cffi==1.15.0 \
@@ -559,6 +560,9 @@ lxml==4.9.1 \
     # via
     #   -r requirements.txt
     #   unittest-xml-reporting
+mailchimp-marketing==3.0.75 \
+    --hash=sha256:34ca29268823504ddc873b29724905bab7f8eeb42ddb53f66077a2224cd3f02f
+    # via -r requirements.txt
 markupsafe==2.1.1 \
     --hash=sha256:0212a68688482dc52b2d45013df70d169f542b7394fc744c02a57374a4207003 \
     --hash=sha256:089cf3dbf0cd6c100f02945abeb18484bd1ee57a079aefd52cffd17fba910b88 \
@@ -824,6 +828,7 @@ python-dateutil==2.8.2 \
     #   -r requirements.txt
     #   django-silk
     #   faker
+    #   mailchimp-marketing
 python-json-logger==2.0.2 \
     --hash=sha256:202a4f29901a4b8002a6d1b958407eeb2dd1d83c18b18b816f5b64476dde9096 \
     --hash=sha256:99310d148f054e858cd5f4258794ed6777e7ad2c3fd7e1c1b527f1cba4d08420
@@ -884,6 +889,7 @@ requests==2.27.1 \
     #   django-silk
     #   google-api-core
     #   google-cloud-storage
+    #   mailchimp-marketing
     #   wagtail
 rsa==4.8 \
     --hash=sha256:5c6bd9dc7a543b7fe4304a631f8a8a3b674e2bbfc49c2ae96200cdbe55df6b17 \
@@ -905,6 +911,7 @@ six==1.16.0 \
     #   google-auth
     #   html5lib
     #   l18n
+    #   mailchimp-marketing
     #   python-dateutil
 smartypants==2.0.1 \
     --hash=sha256:8db97f7cbdf08d15b158a86037cd9e116b4cf37703d24e0419a0d64ca5808f0d
@@ -1008,6 +1015,7 @@ urllib3[secure,socks]==1.26.10 \
     --hash=sha256:879ba4d1e89654d9769ce13121e0f94310ea32e8d2f8cf587b77c08bbcdb30d6
     # via
     #   -r requirements.txt
+    #   mailchimp-marketing
     #   requests
     #   selenium
 wagtail==2.15.2 \
