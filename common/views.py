@@ -3,6 +3,8 @@ import os
 
 import marshmallow
 import structlog
+import mailchimp_marketing
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404, render
@@ -10,7 +12,7 @@ from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
 from django.views.decorators.cache import never_cache
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from wagtail.core.models import Page
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
@@ -173,6 +175,51 @@ class TagMergeView(FormView):
 
         models_to_merge.exclude(pk=tag.pk).delete()
         return super().form_valid(form)
+
+
+class MailchimpInterestsView(TemplateView):
+    template_name = 'wagtailadmin/mailchimp_interests.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if not getattr(settings, 'MAILCHIMP_API_KEY', None):
+            context['error'] = 'Mailchimp API key not found'
+            return context
+
+        try:
+            client = mailchimp_marketing.Client()
+            client.set_config(
+                {'api_key': settings.MAILCHIMP_API_KEY}
+            )
+
+            table_data = []
+            response = client.lists.get_all_lists()
+            for lst in response.get('lists', []):
+                response = client.lists.get_list_interest_categories(lst['id'])
+
+                for category in response.get('categories', []):
+                    response = client.lists.list_interest_category_interests(
+                        lst['id'],
+                        category['id'],
+                    )
+
+                    for interest in response['interests']:
+                        table_data.append(
+                            (
+                                lst.get('name'),
+                                lst.get('id'),
+                                category.get('title'),
+                                interest.get('name'),
+                                interest.get('id'),
+                            )
+                        )
+        except mailchimp_marketing.api_client.ApiClientError as err:
+            context['error'] = f'Error connecting to Mailchimp: {err.text}'
+            return context
+
+        context['table_data'] = table_data
+        return context
 
 
 def deploy_info_view(request):

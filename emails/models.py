@@ -2,12 +2,15 @@ from dataclasses import dataclass
 from typing import Optional
 
 from django.db import models
+from django.urls import reverse_lazy
+from django.utils.text import format_lazy
 from marshmallow import Schema, fields, post_load
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.core.models import Page
 from wagtail.admin.edit_handlers import (
+    HelpPanel,
     FieldPanel,
     MultiFieldPanel,
     InlinePanel,
@@ -47,6 +50,10 @@ class EmailSettings(BaseSetting, ClusterableModel):
         FieldPanel('success_text'),
         MultiFieldPanel(
             [
+                HelpPanel(heading='Mailchimp', content=format_lazy(
+                    """Valid Mailchimp Audience and Group IDs can be looked up in the <a href="{}">Audience and Group List</a>.""",
+                    reverse_lazy('mailchimp_interests')
+                )),
                 InlinePanel(
                     'mailchimp_groups',
                     label='Group for signups',
