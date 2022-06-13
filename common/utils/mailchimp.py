@@ -33,7 +33,7 @@ def subscribe_for_site(subscription):
             {'api_key': settings.MAILCHIMP_API_KEY}
         )
         groups_by_audience = defaultdict(list)
-        for group in page.mailchimp_groups.all():
+        for group in settings.emails.EmailSettings.mailchimp_groups.all():
             groups_by_audience[group.audience_id].append(group.group_id)
 
         for audience_id, group_ids in groups_by_audience.items():
