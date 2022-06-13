@@ -4,6 +4,7 @@ import os
 import marshmallow
 import structlog
 from django.http import HttpResponse, JsonResponse
+from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404, render
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
@@ -177,6 +178,11 @@ class TagMergeView(FormView):
 def deploy_info_view(request):
     version_full_text = read_version_info_file(VERSION_INFO_FULL_PATH)
     return HttpResponse(version_full_text, content_type="text/plain")
+
+
+@never_cache
+def get_csrf_token(request):
+    return HttpResponse(get_token(request), content_type='text/plain')
 
 
 @never_cache

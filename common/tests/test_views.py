@@ -184,6 +184,12 @@ class AdminVersionTestCase(TestCase):
         self.assertEqual(self.response.status_code, 200)
 
 
+class CsrfTokenViewTest(TestCase):
+    def test_health_check_url_returns_200_status(self):
+        self.response = self.client.get(reverse('csrf_token'))
+        self.assertEqual(self.response.status_code, 200)
+
+
 class HealthCheckTestCase(TestCase):
     def test_health_check_url_returns_200_status(self):
         self.response = self.client.get('/health/ok/')
