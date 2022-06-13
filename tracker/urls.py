@@ -37,6 +37,11 @@ urlpatterns = [
     path('health/version/', common_views.health_version),
 
     path('charts/', include(chart_urls)),
+    path(
+        'subscribe_for_site/',
+        common_views.SubscribeForSite.as_view(),
+        name='subscribe_for_site',
+    ),
 
     path('api/schema/', SpectacularAPIView.as_view(api_version='edge'), name='schema'),
     # Schema UI:

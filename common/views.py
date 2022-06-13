@@ -1,16 +1,24 @@
+import json
 import os
 
-from django.http import HttpResponse
+import marshmallow
+import structlog
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
 from django.views.decorators.cache import never_cache
+from django.views.generic import View
+from wagtail.core.models import Page
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
 
 from common.models import CommonTag
+from emails.models import SubscriptionSchema
 from incident.models import IncidentPage, TopicPage
 from .forms import TagMergeForm
+from .utils import subscribe_for_site, MailchimpError
 
 
 VERSION_INFO_SHORT_PATH = os.environ.get(
@@ -19,6 +27,9 @@ VERSION_INFO_SHORT_PATH = os.environ.get(
 VERSION_INFO_FULL_PATH = os.environ.get(
     "DJANGO_FULL_VERSION_FILE", "/deploy/version-full.txt"
 )
+
+
+logger = structlog.get_logger()
 
 
 def read_version_info_file(p):
@@ -45,6 +56,62 @@ def serve(*args, **kwargs):
         response['content-disposition'] = 'inline' + response['content-disposition'][10:]
 
     return response
+
+
+class SubscribeForSite(View):
+    def post(self, request):
+        if request.is_ajax():
+            try:
+                data = SubscriptionSchema().loads(request.body)
+            except json.JSONDecodeError:
+                logger.warning('JSON could not be decoded', json=request.body)
+                return HttpResponse(status=400)
+            except marshmallow.ValidationError:
+                return HttpResponse(status=400)
+            try:
+                subscribe_for_site(data)
+            except MailchimpError as err:
+                logger.warning(
+                    'Error communicating with Mailchimp',
+                    mailchimp_error=err.text,
+                    mailchimp_status_code=err.status_code,
+                )
+                return JsonResponse(
+                    {
+                        'success': False,
+                        'message': 'Error communicating with Mailchimp',
+                    }
+                )
+            return JsonResponse({'success': True})
+        else:
+            try:
+                data = SubscriptionSchema().load(
+                    request.POST,
+                    unknown=marshmallow.EXCLUDE,
+                )
+            except marshmallow.ValidationError:
+                return render(
+                    request,
+                    'common/_subscribe_error.html',
+                    {'error_message': 'Invalid data submitted'}
+                )
+            try:
+                subscribe_for_site(data)
+            except MailchimpError as err:
+                logger.warning(
+                    'Error communicating with Mailchimp',
+                    mailchimp_error=err.text,
+                    mailchimp_status_code=err.status_code,
+                )
+                return render(
+                    request,
+                    'common/_subscribe_error.html',
+                    {'error_message': 'An internal error occurred'}
+                )
+            return render(
+                request,
+                'common/_subscribe_thanks.html',
+            )
 
 
 class MergeView(FormView):

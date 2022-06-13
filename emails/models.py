@@ -1,7 +1,12 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from django.db import models
+from marshmallow import Schema, fields, post_load
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
+from wagtail.core.models import Page
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
@@ -56,6 +61,21 @@ class EmailSettings(BaseSetting, ClusterableModel):
 
     class Meta:
         verbose_name = 'Email Signups'
+
+
+@dataclass
+class Subscription:
+    email: str
+    full_name: Optional[str] = None
+
+
+class SubscriptionSchema(Schema):
+    email = fields.Str(required=True)
+    full_name = fields.Str()
+
+    @post_load
+    def make_subscription(self, data, **kwargs):
+        return Subscription(**data)
 
 
 class MailchimpGroup(models.Model):
