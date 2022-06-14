@@ -1,55 +1,56 @@
 function submit(event) {
 	event.preventDefault()
 
-	const form = event.currentTarget;
-	const formData = new FormData(form);
-	const plainFormData = Object.fromEntries(formData.entries());
+	const form = event.currentTarget
+	const formData = new FormData(form)
+	const plainFormData = Object.fromEntries(formData.entries())
 	delete plainFormData.csrfmiddlewaretoken
-	const formDataJsonString = JSON.stringify(plainFormData);
+	const formDataJsonString = JSON.stringify(plainFormData)
 
-	const url = form.action;
-	const csrfUrl = form.dataset.csrfEndpoint;
+	const url = form.action
+	const csrfUrl = form.dataset.csrfEndpoint
 
-	if (form.classList.contains("submitting")) {
+	if (form.classList.contains('submitting')) {
 		return
 	}
-	form.classList.add("submitting")
+	form.classList.add('submitting')
 
 	fetch(csrfUrl).then((response) => {
 		return response.text()
-	}).then(csrfToken => {
+	}).then((csrfToken) => {
 		return fetch(url, {
 			method: 'post',
 			headers: {
-				'Accept': 'application/json',
+				Accept: 'application/json',
 				'Content-Type': 'application/json',
 				'X-CSRFToken': csrfToken,
 			},
 			body: formDataJsonString,
 		})
-	}).then(response => {
+	}).then((response) => {
 		if (response.status >= 200 && response.status <= 299) {
 			return response.json()
-		} else {
-			throw Error(response.statusText);
 		}
-	}).then(jsonResponse => {
-		if (jsonResponse.success) {
-			form.classList.remove("submitting")
-			let thanks = document.getElementById('mc-subscribe-thanks')
-			let formSignup = document.getElementById('mc-mailing-list-signup')
-			thanks.style.display = ''
-			formSignup.style.display = 'none'
-		} else {
-			throw Error(jsonResponse.message)
-		}
-	}).catch(error => {
-		form.classList.remove("submitting")
-		let statusBar = form.querySelector('[role="status"]')
-		statusBar.style.display = ''
-		statusBar.textContent = 'An internal error occurred.'
-		console.error(error)
+		throw Error(response.statusText)
 	})
+		.then((jsonResponse) => {
+			if (jsonResponse.success) {
+				form.classList.remove('submitting')
+				const thanks = document.getElementById('mc-subscribe-thanks')
+				const formSignup = document.getElementById('mc-mailing-list-signup')
+				thanks.style.display = ''
+				formSignup.style.display = 'none'
+			} else {
+				throw Error(jsonResponse.message)
+			}
+		})
+		.catch((error) => {
+			form.classList.remove('submitting')
+			const statusBar = form.querySelector('[role="status"]')
+			statusBar.style.display = ''
+			statusBar.textContent = 'An internal error occurred.'
+			console.error(error)
+		})
 }
 
 document.addEventListener('DOMContentLoaded', () => {
