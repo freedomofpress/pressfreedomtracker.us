@@ -88,11 +88,12 @@ class MailchimpGroup(models.Model):
     page = ParentalKey(
         EmailSettings,
         related_name='mailchimp_groups',
-        on_delete=models.CASCADE,
     )
-    category_id = models.IntegerField(
-        help_text='First number in the "name" field from the signup form input line.',
+    audience_id = models.CharField(
+        max_length=100,
+        help_text='Mailchimp audience associated with this group.',
     )
-    group_id = models.IntegerField(
-        help_text='Second number in the "name" field from the signup form input line.',
+    group_id = models.CharField(
+        max_length=100,
+        help_text='Mailchimp group identifier.',
     )
