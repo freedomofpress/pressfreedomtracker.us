@@ -8,7 +8,6 @@ from marshmallow import Schema, fields, post_load
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.core.models import Page
 from wagtail.admin.edit_handlers import (
     HelpPanel,
     FieldPanel,

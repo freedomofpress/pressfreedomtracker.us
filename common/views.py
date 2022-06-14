@@ -7,13 +7,12 @@ import mailchimp_marketing
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
 from django.views.decorators.cache import never_cache
 from django.views.generic import View, TemplateView
-from wagtail.core.models import Page
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
 
@@ -63,7 +62,7 @@ def serve(*args, **kwargs):
 
 class SubscribeForSite(View):
     def post(self, request):
-        if request.is_ajax():
+        if request.accepts('application/json'):
             try:
                 data = SubscriptionSchema().loads(request.body)
             except json.JSONDecodeError:

@@ -23,7 +23,6 @@ function submit(event) {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
-				'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
 				'X-CSRFToken': csrfToken,
 			},
 			body: formDataJsonString,
