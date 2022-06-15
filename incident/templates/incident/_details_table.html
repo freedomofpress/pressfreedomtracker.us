@@ -7,9 +7,7 @@
 		{% include "incident/_incident_details_table.html" with incident=incident only %}
 
 		{% for category, category_detail in incident.get_category_details.items %}
-			{% if category_detail %}
-				{% include "incident/_category_table.html" with category=category category_detail=category_detail only %}
-			{% endif %}
+			{% include "incident/_category_table.html" with category=category category_detail=category_detail only %}
 		{% endfor %}
 	</div>
 </section>

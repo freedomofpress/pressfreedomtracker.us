@@ -829,9 +829,15 @@ class IncidentPage(MetadataPageMixin, Page):
     def get_category_details(self, index=None):
         if not index:
             index = self.get_parent()
+
         category_details = {}
+        categories_without_metadata = {}
         for category in self.categories.all():
             category_fields = CATEGORY_FIELD_MAP.get(category.category.slug, [])
+
+            if not category_fields:
+                categories_without_metadata[category.category] = []
+                continue
             category_details[category.category] = []
             for field in category_fields:
                 display_html = CAT_FIELD_VALUES[field[0]](self, field[0], index)
@@ -841,6 +847,7 @@ class IncidentPage(MetadataPageMixin, Page):
                         'html': display_html,
                     }
                 )
+        category_details.update(categories_without_metadata)
         return category_details
 
     def get_related_incidents(self, threshold=4):
