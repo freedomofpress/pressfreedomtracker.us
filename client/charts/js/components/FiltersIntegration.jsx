@@ -117,7 +117,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
 					width={width}
 					height={width / 2}
 					dataset={applyFilters(dataset, filterNames)}
-					filterParameters={filtersParameters.filterCategory.parameters}
+					filterParameters={filtersParameters}
 					setFilterParameters={setFilterParameters}
 				/>
 			</div>

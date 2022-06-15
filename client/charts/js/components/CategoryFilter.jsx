@@ -42,9 +42,11 @@ export default function CategoryFilter({
 	dataset,
 	width,
 	height,
-	filterParameters: selectedCategories,
+	filterParameters,
 	setFilterParameters: setSelectedCategories,
 }) {
+	const selectedCategories = filterParameters.filterCategory.parameters
+
 	const incidents = dataset.flatMap(({ categories, ...d }) =>
 		categories.map((category) => ({ ...d, category }))
 	)
