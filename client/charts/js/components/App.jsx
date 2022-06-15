@@ -113,6 +113,9 @@ export default function App() {
 		);
 	}
 
+	const urlParams = new Proxy(new URLSearchParams(window.location.search), {
+		get: (searchParams, prop) => searchParams.get(prop),
+	});
 	return (
 		<div>
 			{datasetButtons}
@@ -124,7 +127,7 @@ export default function App() {
 
 			<h1>Filters Integration</h1>
 			<div className="chartContainer">
-				<FiltersIntegration dataset={dataset} width={300} />
+				<FiltersIntegration dataset={dataset} width={300} urlParams={urlParams} />
 			</div>
 		</div>
 	);

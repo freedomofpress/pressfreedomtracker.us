@@ -14,7 +14,7 @@ import ButtonsRow from './ButtonsRow'
 import TimeMonthsFilter from './TimeMonthsFilter'
 import TimeYearsFilter from './TimeYearsFilter'
 
-export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
+export default function FiltersIntegration({ width, dataset: dirtyDataset, urlParams }) {
 	const dataset = formatDataset(dirtyDataset)
 
 	const [minDate, maxDate] = d3.extent(dataset.map((d) => new Date(d.date)))
