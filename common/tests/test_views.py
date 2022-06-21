@@ -1,8 +1,11 @@
 import unittest
+import json
+from unittest import mock
 
+from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.urls import reverse
-from django.test import TestCase
+from django.test import TestCase, RequestFactory, override_settings
 from wagtail.documents.models import Document
 from wagtail.tests.utils import WagtailPageTests
 from common.models import CommonTag
@@ -13,8 +16,7 @@ from incident.tests.factories import (
     IncidentPageFactory,
     TopicPageFactory,
 )
-from unittest import mock
-import json
+from mailchimp_marketing.api_client import ApiClientError
 
 User = get_user_model()
 
@@ -188,6 +190,82 @@ class CsrfTokenViewTest(TestCase):
     def test_health_check_url_returns_200_status(self):
         self.response = self.client.get(reverse('csrf_token'))
         self.assertEqual(self.response.status_code, 200)
+
+
+class MailchimpInterestViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create(username='testadmin', is_superuser=True)
+
+    def setUp(self):
+        fake_mc_data = mock.Mock()
+        fake_mc_data.get_all_lists.return_value = {
+            'lists': [{'id': '1', 'name': 'Test List'}]
+        }
+        fake_mc_data.get_list_interest_categories.return_value = {
+            'categories': [{'id': '2', 'title': 'Test Category'}]
+        }
+        fake_mc_data.list_interest_category_interests.return_value = {
+            'interests': [{'id': '3', 'name': 'Test Group'}]
+        }
+
+        self.mailchimp_lists = fake_mc_data
+
+    def test_view_forbidden_if_not_logged_in(self):
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse('wagtailadmin_login'), response.url)
+
+    def test_view_reports_error_if_no_api_key(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context_data['error'],
+            'Mailchimp API key not found',
+        )
+
+    @override_settings(MAILCHIMP_API_KEY='KEY1')
+    @mock.patch('mailchimp_marketing.Client')
+    def test_view_reports_error_if_request_fails(self, mock_mailchimp_client):
+        instance = mock_mailchimp_client.return_value
+        instance.lists = mock.PropertyMock()
+        instance.lists.get_all_lists.side_effect = ApiClientError(
+            text='Cannot reverse the polarity'
+        )
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context_data['error'],
+            'Error connecting to Mailchimp: Cannot reverse the polarity',
+        )
+
+    @override_settings(MAILCHIMP_API_KEY='KEY1')
+    @mock.patch('mailchimp_marketing.Client')
+    def test_view_succeeds_if_logged_in(self, mock_mailchimp_client):
+        instance = mock_mailchimp_client.return_value
+        instance.lists = self.mailchimp_lists
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(MAILCHIMP_API_KEY='KEY1')
+    @mock.patch('mailchimp_marketing.Client')
+    def test_view_includes_interest_and_audience_ids(self, mock_mailchimp_client):
+        instance = mock_mailchimp_client.return_value
+        instance.lists = self.mailchimp_lists
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(
+            response.context_data['table_data'],
+            [
+                ('Test List', '1', 'Test Category', 'Test Group', '3')
+            ]
+        )
 
 
 class HealthCheckTestCase(TestCase):
