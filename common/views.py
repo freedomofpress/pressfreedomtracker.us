@@ -15,6 +15,7 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import View, TemplateView
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
+from wagtail.core.models import Site
 
 from common.models import CommonTag
 from emails.models import SubscriptionSchema
@@ -71,7 +72,8 @@ class SubscribeForSite(View):
             except marshmallow.ValidationError:
                 return HttpResponse(status=400)
             try:
-                subscribe_for_site(data)
+                site = Site.find_for_request(request)
+                subscribe_for_site(site, data)
             except MailchimpError as err:
                 logger.warning(
                     'Error communicating with Mailchimp',
@@ -98,7 +100,8 @@ class SubscribeForSite(View):
                     {'error_message': 'Invalid data submitted'}
                 )
             try:
-                subscribe_for_site(data)
+                site = Site.find_for_request(request)
+                subscribe_for_site(site, data)
             except MailchimpError as err:
                 logger.warning(
                     'Error communicating with Mailchimp',

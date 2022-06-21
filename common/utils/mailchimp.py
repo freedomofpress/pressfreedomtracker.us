@@ -2,6 +2,7 @@ from collections import defaultdict
 
 import mailchimp_marketing
 from django.conf import settings
+from emails.models import EmailSettings
 
 
 class MailchimpError(Exception):
@@ -21,7 +22,7 @@ class ApiError(MailchimpError):
         self.status_code = status_code
 
 
-def subscribe_for_site(subscription):
+def subscribe_for_site(site, subscription):
     """Create subscriptions for the Mailchimp groups belonging to the site.
     """
     if not getattr(settings, 'MAILCHIMP_API_KEY', None):
@@ -33,7 +34,8 @@ def subscribe_for_site(subscription):
             {'api_key': settings.MAILCHIMP_API_KEY}
         )
         groups_by_audience = defaultdict(list)
-        for group in settings.emails.EmailSettings.mailchimp_groups.all():
+        email_settings = EmailSettings.for_site(site)
+        for group in email_settings.mailchimp_groups.all():
             groups_by_audience[group.audience_id].append(group.group_id)
 
         for audience_id, group_ids in groups_by_audience.items():
