@@ -5,7 +5,6 @@ from django.test import TestCase, override_settings
 from mailchimp_marketing.api_client import ApiClientError
 from wagtail.core.models import Site
 
-from common.devdata import SiteSettingsFactory
 from emails.devdata import EmailSettingsFactory
 from emails.models import MailchimpGroup, Subscription
 from ..utils import subscribe_for_site, ApiKeyMissingError, ApiError
