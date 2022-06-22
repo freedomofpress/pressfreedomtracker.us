@@ -54,10 +54,16 @@
 						</time>
 					</dd>
 				</div>
-				<div class="database-card-table__row">
-					<dt class="database-card-table__label database-card-table__label--bold">Location</dt>
-					<dd class="database-card-table__value">{{ incident.city }}, {{ incident.state.name }}</dd>
-				</div>
+				{% if incident.city or incident.state %}
+					<div class="database-card-table__row">
+						<dt class="database-card-table__label database-card-table__label--bold">Location</dt>
+						<dd class="database-card-table__value">
+							{% if incident.city %}{{ incident.city }}{% endif %}
+							{% if incident.city and incident.state %}, {% endif %}
+							{% if incident.state %}{{ incident.state.name }}{% endif %}
+						</dd>
+					</div>
+				{% endif %}
 				{% if incident.get_all_targets_for_display %}
 					<div class="database-card-table__row">
 						<dt class="database-card-table__label database-card-table__label--bold">Targets</dt>
