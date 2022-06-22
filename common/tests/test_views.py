@@ -2,10 +2,9 @@ import unittest
 import json
 from unittest import mock
 
-from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.urls import reverse
-from django.test import TestCase, RequestFactory, override_settings
+from django.test import TestCase, override_settings
 from wagtail.documents.models import Document
 from wagtail.tests.utils import WagtailPageTests
 from common.models import CommonTag
