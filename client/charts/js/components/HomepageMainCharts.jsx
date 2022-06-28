@@ -72,7 +72,7 @@ function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 	}
 
 	if (filtersApplied.tag !== null) {
-		parameters.push(`tags=${filtersApplied.tag.replace(' ', '-')}`)
+		parameters.push(`tags=${filtersApplied.tag.replace(' ', '+')}`)
 	}
 
 	return `${baseUrl}${parameters.join('&')}`
