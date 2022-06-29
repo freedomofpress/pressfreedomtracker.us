@@ -239,7 +239,6 @@ export function removeElement(array, element) {
 
 export function formatDataset(dataset) {
 	return dataset
-		.map((d) => ({ ...d, categories: d.categories?.replace(/ \/ /gm, '/') }))
 		.map((d) => ({
 			...d,
 			categories: uniq(d.categories?.split(',').map((c) => c.trim())) || [],

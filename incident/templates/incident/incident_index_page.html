@@ -2,6 +2,11 @@
 {% load wagtailcore_tags webpack_loader humanize %}
 {% load query_transform from common_tags %}
 
+{% block body %}
+	{{ block.super }}
+	{% render_bundle 'filterSidebar' 'js' %}
+{% endblock %}
+
 {% block main %}
 	{% pageurl page as current_page_url %}
 	<h1 class="page-title" id="title">{{ page.title }}</h1>
@@ -45,7 +50,10 @@
 
 		<div id="database-filters" class="incident-index__filters" data-visible="false">
 			<div class="incident-index__filters-wrapper">
-				{% include 'incident/_filters.html' %}
+				<div id="filter-sidebar" data-serialized-filters="{{ serialized_filters }}"></div>
+				<noscript>
+					{% include 'incident/_filters.html' %}
+				</noscript>
 			</div>
 			<div class="incident-index__filters-mobile-controls">
 				<a class="incident-index__filters-mobile-clear" href="{{ page.url }}">Clear All</a>

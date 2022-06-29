@@ -14,7 +14,7 @@ import ButtonsRow from './ButtonsRow'
 import TimeMonthsFilter from './TimeMonthsFilter'
 import TimeYearsFilter from './TimeYearsFilter'
 
-export default function FiltersIntegration({ width, dataset: dirtyDataset, urlParams }) {
+export default function FiltersIntegration({ width, dataset: dirtyDataset, initialFilterParams, filters: filterDefs }) {
 	const dataset = formatDataset(dirtyDataset)
 
 	const [minDate, maxDate] = d3.extent(dataset.map((d) => new Date(d.date)))
@@ -38,6 +38,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, urlPa
 			enabled: true,
 		},
 		filterState: { type: 'state', parameters: 'All', enabled: true },
+		...initialFilterParams
 	})
 
 	function setFilterParameters(filterName, newFilterParameters) {
@@ -110,58 +111,25 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, urlPa
 	)
 
 	return (
-		<div>
+		<div className="filter__form">
+			<header className="filters__header">
+				Filters
+
+				<a
+					className="btn btn-ghost"
+					href="/all-incidents/"
+				>
+					Clear All
+				</a>
+			</header>
 			<h3>Categories</h3>
 			<div className="chartContainer">
 				<CategoryFilter
 					width={width}
 					height={width / 2}
 					dataset={applyFilters(dataset, filterNames)}
+					filterDefs={filterDefs.filter(f => f.id !== -1)}
 					filterParameters={filtersParameters}
-					setFilterParameters={setFilterParameters}
-				/>
-			</div>
-
-			<h3>Time</h3>
-			<div className="chartContainer">
-				<ButtonsRow
-					label={'Filter by'}
-					buttonLabels={['Months', 'Years']}
-					defaultSelection={'Months'}
-					updateSelection={(label) => {
-						setFilterEnabling('filterTimeMonths', label === 'Months')
-						setFilterEnabling('filterTimeYears', label === 'Years')
-						setTimeChartType(label)
-					}}
-					isButtonSelectable={() => true}
-				/>
-				{timeChartType === 'Months' ? (
-					<TimeMonthsFilter
-						width={width}
-						height={width / 2}
-						dateExtents={dateExtents}
-						dataset={filterWithout.filterTimeMonths(dataset)}
-						filterParameters={filtersParameters.filterTimeMonths.parameters}
-						setFilterParameters={setFilterParameters}
-					/>
-				) : (
-					<TimeYearsFilter
-						width={width}
-						height={width / 2}
-						dateExtents={dateExtents}
-						dataset={filterWithout.filterTimeYears(dataset)}
-						filterParameters={filtersParameters.filterTimeYears.parameters}
-						setFilterParameters={setFilterParameters}
-					/>
-				)}
-			</div>
-
-			<h3>States</h3>
-			<div className="chartContainer">
-				<StateFilter
-					width={width}
-					dataset={filterWithout.filterState(dataset)}
-					filterParameters={filtersParameters.filterState.parameters}
 					setFilterParameters={setFilterParameters}
 				/>
 			</div>
