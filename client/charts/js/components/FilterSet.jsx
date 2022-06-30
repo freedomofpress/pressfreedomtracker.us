@@ -91,6 +91,38 @@ TextFilter.propTypes = {
 	handleFilterChange: PropTypes.func.isRequired,
 }
 
+function SelectFilter({
+	name,
+	label,
+	value,
+	choices,
+	handleFilterChange,
+}) {
+	let id = `id_${name}`
+	return (
+		<div className={"filters__field-row"}>
+			<div className="filters__field-label">
+				<label htmlFor={id}>{label}</label>
+			</div>
+			<select
+				id={id}
+				name={name}
+				value={value}
+				onChange={handleFilterChange}
+			>
+				<option value="">------</option>
+				{choices.map(([value, choice]) => (
+					<option
+						key={value}
+						value={value}
+					>
+						{choice}
+					</option>
+				))}
+			</select>
+		</div>
+			)
+}
 
 function RadioFilter({
 	name,
@@ -193,6 +225,18 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					handleFilterChange={handleFilterChange}
 				/>
 			)
+		} else if (filter.type === 'choice') {
+			return (
+				<SelectFilter
+					key={index}
+					name={filter.name}
+					label={filter.title}
+					choices={filter.choices}
+					value={filterParameters[filter.name].parameters || ""}
+					handleFilterChange={handleFilterChange}
+				/>
+			)
+
 		} else {
 			console.warn(`no filter defined for type "${filter.type}"`)
 		}
