@@ -905,7 +905,6 @@ class TestTopicPage(WagtailPageTests):
             parent=self.home_page,
         )
 
-    @unittest.skip("Skipping till templates have been added")
     def test_can_create_topic_page(self):
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
 
@@ -947,7 +946,6 @@ class TestTopicPage(WagtailPageTests):
         response = self.client.get(topic_page.url)
         self.assertEqual(response.status_code, 200)
 
-    @unittest.skip("Skipping till templates have been added")
     def test_can_preview_topic_page(self):
         topic_page = TopicPageFactory(
             parent=self.home_page,
