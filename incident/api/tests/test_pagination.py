@@ -19,7 +19,6 @@ def humanize_links(response):
     return result
 
 
-@unittest.skip("Skipping till templates have been added")
 class IncidentListPaginationTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):

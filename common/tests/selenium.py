@@ -15,7 +15,6 @@ SELENIUM_HOST = os.environ['SELENIUM_HOST']
 HOST_IP = socket.gethostbyname(socket.gethostname())
 
 
-@unittest.skip("Skipping till templates have been added")
 class SeleniumTest(StaticLiveServerTestCase):
     host = HOST_IP
 

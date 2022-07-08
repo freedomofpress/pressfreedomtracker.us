@@ -38,7 +38,6 @@ class RequestLogTestCase(TestCase):
         self.response_status_code = 200
         self.response_reason_phrase = 'OK'
 
-    @unittest.skip("Skipping till templates have been added")
     @mock.patch.object(Page, 'serve')
     def test_request_log_failed(self, serve):
         serve.side_effect = Exception('Application Error')

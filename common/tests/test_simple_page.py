@@ -14,7 +14,6 @@ from common.tests.factories import CategoryPageFactory, SimplePageFactory
 from home.tests.factories import HomePageFactory
 
 
-@unittest.skip("Skipping till templates have been added")
 class SimplePageStatisticsTagsTestCase(WagtailPageTests):
     def setUp(self):
         super(SimplePageStatisticsTagsTestCase, self).setUp()

@@ -35,13 +35,11 @@ class TestCategoryPageCacheInvalidation(TestCase):
 
         self.categorypage = CategoryPageFactory(parent=self.home_page, slug='category')
 
-    @unittest.skip("Skipping till templates have been added")
     def test_cache_tag_index(self):
         "Response from CategoryPage should include Cache-Tag header"
         response = self.client.get('/category/')
         self.assertEqual(response['Cache-Tag'], 'category-page-{}'.format(self.categorypage.pk))
 
-    @unittest.skip("Skipping till templates have been added")
     def test_cache_tag_subpath(self):
         """
         Response from IncidentIndexPage with subpath should include
