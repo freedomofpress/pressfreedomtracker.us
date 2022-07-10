@@ -23,27 +23,20 @@ from forms.tests.factories import (
 class FormPageTestCase(TestCase):
     @classmethod
     def setUpTestData(kls):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
         home_page = HomePageFactory.build()
         root_page.add_child(instance=home_page)
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': home_page,
-            }
-        )
-        if not created:
-            site.root_page = home_page
-            site.save()
+        # print("outside if")
+        # if not created:
+        #     print("here")
+        #     site.root_page = home_page
+        #     site.save()
+        #     print(site)
 
         kls.form_page = FormPageFactory.build()
         home_page.add_child(instance=kls.form_page)
 
-    @unittest.skip("Skipping till templates have been added")
     def test_cache_control_header_private(self):
         response = self.client.get(self.form_page.get_full_url())
         self.assertEqual(response['cache-control'], 'private')
