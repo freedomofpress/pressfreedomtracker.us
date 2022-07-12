@@ -23,16 +23,19 @@ from forms.tests.factories import (
 class FormPageTestCase(TestCase):
     @classmethod
     def setUpTestData(kls):
-        site = Site.objects.get(is_default_site=True)
-        root_page = site.root_page
         home_page = HomePageFactory.build()
+        site, created = Site.objects.get_or_create(
+            is_default_site=True,
+            defaults={
+                'site_name': 'Test site',
+                'hostname': 'testserver',
+                'port': '1111',
+            }
+        )
+        if not created:
+            site.save()
+        root_page = site.root_page
         root_page.add_child(instance=home_page)
-        # print("outside if")
-        # if not created:
-        #     print("here")
-        #     site.root_page = home_page
-        #     site.save()
-        #     print(site)
 
         kls.form_page = FormPageFactory.build()
         home_page.add_child(instance=kls.form_page)

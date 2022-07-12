@@ -44,13 +44,6 @@ class DocumentDownloadTest(TestCase):
         self.assertEqual(response['content-disposition'], 'inline; filename="{}"'.format(document.filename))
 
 
-@unittest.skip("Skipping till templates have been added")
-class MergeTagFormTestCase(WagtailPageTests):
-    def test_getting_the_form_succeeds(self):
-        self.response = self.client.get(CommonTagAdmin().url_helper.merge_url)
-        self.assertEqual(self.response.status_code, 200)
-
-
 class MergeTagTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):

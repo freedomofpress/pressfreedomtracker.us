@@ -60,16 +60,6 @@ class IncidentAdminSearch(TestCase):
         )
 
 
-@unittest.skip("Skipping till templates have been added")
-class MergeFormViewTestCase(WagtailPageTests):
-    def test_getting_the_form_succeeds(self):
-        for item in IncidentGroup.items:
-            admin = item()
-            with self.subTest(form=f'Merge {admin.menu_label} form'):
-                self.response = self.client.get(item().url_helper.merge_url)
-                self.assertEqual(self.response.status_code, 200)
-
-
 class InstitutionMergeViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
