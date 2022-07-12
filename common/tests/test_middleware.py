@@ -1,5 +1,4 @@
 import contextlib
-import unittest
 from unittest import mock
 
 import structlog

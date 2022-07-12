@@ -1,5 +1,3 @@
-import unittest
-
 from django.test import TestCase, Client
 from unittest.mock import patch
 from wagtail.core.models import Site, Page

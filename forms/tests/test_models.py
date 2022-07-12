@@ -1,10 +1,8 @@
-import unittest
-
 from django.contrib.auth.models import AnonymousUser
 from django.core import mail
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from wagtail.core.models import Site, Page
+from wagtail.core.models import Site
 from wagtail.tests.utils import WagtailTestUtils
 from wagtail.tests.utils.form_data import (
     inline_formset,

@@ -1,5 +1,3 @@
-import unittest
-
 from django.urls import reverse
 from wagtail.core.models import Site, Page
 from wagtail.tests.utils import WagtailPageTests

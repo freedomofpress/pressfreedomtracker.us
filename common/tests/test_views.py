@@ -1,4 +1,3 @@
-import unittest
 import json
 from unittest import mock
 
@@ -6,7 +5,6 @@ from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.test import TestCase, override_settings
 from wagtail.documents.models import Document
-from wagtail.tests.utils import WagtailPageTests
 from common.models import CommonTag
 from common.wagtail_hooks import CommonTagAdmin
 from django.contrib.auth import get_user_model

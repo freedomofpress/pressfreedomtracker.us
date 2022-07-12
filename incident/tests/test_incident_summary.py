@@ -1,5 +1,4 @@
 import json
-import unittest
 from urllib import parse
 
 from django.test import TestCase

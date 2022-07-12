@@ -1,6 +1,5 @@
 import os
 import socket
-import unittest
 
 from django.db import connections
 from django.db.utils import OperationalError

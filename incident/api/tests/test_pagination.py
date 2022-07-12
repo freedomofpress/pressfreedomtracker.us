@@ -1,5 +1,3 @@
-import unittest
-
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from requests.utils import parse_header_links

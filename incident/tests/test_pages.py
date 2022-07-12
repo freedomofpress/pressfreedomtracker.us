@@ -1,7 +1,6 @@
 import calendar
 import csv
 import json
-import unittest
 from datetime import timedelta, date
 from urllib import parse
 
