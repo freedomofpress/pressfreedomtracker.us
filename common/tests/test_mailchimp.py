@@ -39,11 +39,11 @@ class MailchimpSubscribeTestCase(TestCase):
         subscribe_for_site(self.site, subscription)
 
         instance.set_config.assert_called_with({'api_key': 'KEY1'})
-        instance.lists.add_list_member.assert_called_with(
+        instance.lists.set_list_member.assert_called_with(
             'Audience_1',
             {
                 'email_address': subscriber_email,
-                'status': 'pending',
+                'status_if_new': 'pending',
                 'interests': {
                     'Group_1': True,
                     'Group_2': True,
@@ -67,11 +67,11 @@ class MailchimpSubscribeTestCase(TestCase):
         subscribe_for_site(self.site, subscription)
 
         instance.set_config.assert_called_with({'api_key': 'KEY1'})
-        instance.lists.add_list_member.assert_called_with(
+        instance.lists.set_list_member.assert_called_with(
             'Audience_1',
             {
                 'email_address': subscriber_email,
-                'status': 'pending',
+                'status_if_new': 'pending',
                 'interests': {
                     'Group_1': True,
                     'Group_2': True,
@@ -94,7 +94,7 @@ class MailchimpSubscribeTestCase(TestCase):
         with self.assertRaises(ApiKeyMissingError):
             subscribe_for_site(self.site, subscriber_email)
         instance.set_config.assert_not_called()
-        instance.lists.add_list_member.assert_not_called()
+        instance.lists.set_list_member.assert_not_called()
 
     @override_settings(MAILCHIMP_API_KEY='KEY1')
     @mock.patch('mailchimp_marketing.Client')
@@ -104,7 +104,7 @@ class MailchimpSubscribeTestCase(TestCase):
 
         instance = mock_mailchimp_client.return_value
         instance.lists = mock.PropertyMock()
-        instance.lists.add_list_member.side_effect = ApiClientError(
+        instance.lists.set_list_member.side_effect = ApiClientError(
             text='Cannot reverse the polarity',
         )
 

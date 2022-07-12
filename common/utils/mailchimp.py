@@ -1,3 +1,4 @@
+import hashlib
 from collections import defaultdict
 
 import mailchimp_marketing
@@ -41,7 +42,7 @@ def subscribe_for_site(site, subscription):
         for audience_id, group_ids in groups_by_audience.items():
             member_info = {
                 'email_address': subscription.email,
-                'status': 'pending',
+                'status_if_new': 'pending',
                 'interests': {
                     group_id: True for group_id in group_ids
                 }
@@ -51,6 +52,20 @@ def subscribe_for_site(site, subscription):
                     'FULLNAME': subscription.full_name
                 }
 
-            client.lists.add_list_member(audience_id, member_info)
+            client.lists.set_list_member(
+                audience_id,
+                compute_email_hash(subscription.email),
+                member_info,
+            )
     except mailchimp_marketing.api_client.ApiClientError as err:
         raise ApiError(err.text, err.status_code)
+
+
+def compute_email_hash(email):
+    """Compute the MD5 hash of the lowercase version of the list
+    member's email address.  Required by Mailchimp.
+    """
+    return hashlib.md5(
+        str(email).lower().encode(),
+        usedforsecurity=False,
+    ).hexdigest()
