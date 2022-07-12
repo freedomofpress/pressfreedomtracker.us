@@ -7,7 +7,7 @@ from wagtail.core.models import Site
 
 from emails.devdata import EmailSettingsFactory
 from emails.models import MailchimpGroup, Subscription
-from ..utils import subscribe_for_site, ApiKeyMissingError, ApiError
+from ..utils import subscribe_for_site, ApiKeyMissingError, ApiError, compute_email_hash
 
 
 class MailchimpSubscribeTestCase(TestCase):
@@ -41,6 +41,7 @@ class MailchimpSubscribeTestCase(TestCase):
         instance.set_config.assert_called_with({'api_key': 'KEY1'})
         instance.lists.set_list_member.assert_called_with(
             'Audience_1',
+            compute_email_hash(subscriber_email),
             {
                 'email_address': subscriber_email,
                 'status_if_new': 'pending',
@@ -69,6 +70,7 @@ class MailchimpSubscribeTestCase(TestCase):
         instance.set_config.assert_called_with({'api_key': 'KEY1'})
         instance.lists.set_list_member.assert_called_with(
             'Audience_1',
+            compute_email_hash(subscriber_email),
             {
                 'email_address': subscriber_email,
                 'status_if_new': 'pending',
