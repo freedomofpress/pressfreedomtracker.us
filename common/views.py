@@ -1,16 +1,27 @@
+import json
 import os
 
-from django.http import HttpResponse
+import marshmallow
+import structlog
+import mailchimp_marketing
+from django.conf import settings
+from django.http import HttpResponse, JsonResponse
+from django.middleware.csrf import get_token
+from django.shortcuts import render
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
 from django.views.decorators.cache import never_cache
+from django.views.generic import View, TemplateView
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
+from wagtail.core.models import Site
 
 from common.models import CommonTag
+from emails.models import SubscriptionSchema
 from incident.models import IncidentPage, TopicPage
 from .forms import TagMergeForm
+from .utils import subscribe_for_site, MailchimpError
 
 
 VERSION_INFO_SHORT_PATH = os.environ.get(
@@ -19,6 +30,9 @@ VERSION_INFO_SHORT_PATH = os.environ.get(
 VERSION_INFO_FULL_PATH = os.environ.get(
     "DJANGO_FULL_VERSION_FILE", "/deploy/version-full.txt"
 )
+
+
+logger = structlog.get_logger()
 
 
 def read_version_info_file(p):
@@ -45,6 +59,64 @@ def serve(*args, **kwargs):
         response['content-disposition'] = 'inline' + response['content-disposition'][10:]
 
     return response
+
+
+class SubscribeForSite(View):
+    def post(self, request):
+        if request.accepts('application/json'):
+            try:
+                data = SubscriptionSchema().loads(request.body)
+            except json.JSONDecodeError:
+                logger.warning('JSON could not be decoded', json=request.body)
+                return HttpResponse(status=400)
+            except marshmallow.ValidationError:
+                return HttpResponse(status=400)
+            try:
+                site = Site.find_for_request(request)
+                subscribe_for_site(site, data)
+            except MailchimpError as err:
+                logger.warning(
+                    'Error communicating with Mailchimp',
+                    mailchimp_error=err.text,
+                    mailchimp_status_code=err.status_code,
+                )
+                return JsonResponse(
+                    {
+                        'success': False,
+                        'message': 'Error communicating with Mailchimp',
+                    }
+                )
+            return JsonResponse({'success': True})
+        else:
+            try:
+                data = SubscriptionSchema().load(
+                    request.POST,
+                    unknown=marshmallow.EXCLUDE,
+                )
+            except marshmallow.ValidationError:
+                return render(
+                    request,
+                    'common/_subscribe_error.html',
+                    {'error_message': 'Invalid data submitted'}
+                )
+            try:
+                site = Site.find_for_request(request)
+                subscribe_for_site(site, data)
+            except MailchimpError as err:
+                logger.warning(
+                    'Error communicating with Mailchimp',
+                    mailchimp_error=err.text,
+                    mailchimp_status_code=err.status_code,
+                )
+                return render(
+                    request,
+                    'common/_subscribe_error.html',
+                    {'error_message': 'An internal error occurred'}
+                )
+            return render(
+                request,
+                'common/_subscribe_thanks.html',
+            )
 
 
 class MergeView(FormView):
@@ -107,9 +179,59 @@ class TagMergeView(FormView):
         return super().form_valid(form)
 
 
+class MailchimpInterestsView(TemplateView):
+    template_name = 'wagtailadmin/mailchimp_interests.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if not getattr(settings, 'MAILCHIMP_API_KEY', None):
+            context['error'] = 'Mailchimp API key not found'
+            return context
+
+        try:
+            client = mailchimp_marketing.Client()
+            client.set_config(
+                {'api_key': settings.MAILCHIMP_API_KEY}
+            )
+
+            table_data = []
+            response = client.lists.get_all_lists()
+            for lst in response.get('lists', []):
+                response = client.lists.get_list_interest_categories(lst['id'])
+
+                for category in response.get('categories', []):
+                    response = client.lists.list_interest_category_interests(
+                        lst['id'],
+                        category['id'],
+                    )
+
+                    for interest in response['interests']:
+                        table_data.append(
+                            (
+                                lst.get('name'),
+                                lst.get('id'),
+                                category.get('title'),
+                                interest.get('name'),
+                                interest.get('id'),
+                            )
+                        )
+        except mailchimp_marketing.api_client.ApiClientError as err:
+            context['error'] = f'Error connecting to Mailchimp: {err.text}'
+            return context
+
+        context['table_data'] = table_data
+        return context
+
+
 def deploy_info_view(request):
     version_full_text = read_version_info_file(VERSION_INFO_FULL_PATH)
     return HttpResponse(version_full_text, content_type="text/plain")
+
+
+@never_cache
+def get_csrf_token(request):
+    return HttpResponse(get_token(request), content_type='text/plain')
 
 
 @never_cache

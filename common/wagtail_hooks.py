@@ -1,8 +1,10 @@
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from django.conf.urls import url
+from django.urls import reverse, path
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from draftjs_exporter.dom import DOM
+from wagtail.admin.menu import MenuItem
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
@@ -11,7 +13,7 @@ from wagtail.admin.rich_text.converters.editor_html import PageLinkHandler
 from webpack_loader.utils import get_files
 
 from .models import CommonTag, CategoryPage
-from .views import TagMergeView, deploy_info_view
+from .views import TagMergeView, deploy_info_view, MailchimpInterestsView
 
 
 class CategoryPageLinkHandler(PageLinkHandler):
@@ -186,6 +188,27 @@ def num_incidents_entity_decorator(props):
     )
 
     return DOM.create_element('span', filters, tag)
+
+
+@hooks.register('register_admin_menu_item')
+def register_stats_guide_menu_item():
+    return MenuItem(
+        'Mailchimp Groups',
+        reverse('mailchimp_interests'),
+        classnames='icon icon-mail',
+        order=10000,
+    )
+
+
+@hooks.register('register_admin_urls')
+def mailchimp_urls():
+    return [
+        path(
+            'mailchimp_interests/',
+            MailchimpInterestsView.as_view(),
+            name='mailchimp_interests',
+        )
+    ]
 
 
 class SearchStatEntityElementHandler(InlineEntityElementHandler):

@@ -35,6 +35,12 @@ urlpatterns = [
 
     path('health/ok/', common_views.health_ok),
     path('health/version/', common_views.health_version),
+    path('csrf/', common_views.get_csrf_token, name='csrf_token'),
+    path(
+        'subscribe_for_site/',
+        common_views.SubscribeForSite.as_view(),
+        name='subscribe_for_site',
+    ),
 
     path('charts/', include(chart_urls)),
 

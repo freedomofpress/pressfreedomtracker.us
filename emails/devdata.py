@@ -7,8 +7,8 @@ class MailchimpGroupFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = MailchimpGroup
 
-    category_id = 0
-    group_id = 0
+    audience_id = 'Audience_1'
+    group_id = 'Group_1'
 
 
 class EmailSettingsFactory(factory.django.DjangoModelFactory):

@@ -15,6 +15,7 @@ docutils
 factory_boy>=3.2.0
 gunicorn
 Jinja2>=2.11.3
+mailchimp_marketing>=3.0.66
 marshmallow
 psycopg2>=2.8.4,<2.9
 Pygments
