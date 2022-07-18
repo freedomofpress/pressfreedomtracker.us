@@ -124,6 +124,43 @@ function SelectFilter({
 			)
 }
 
+function DatalistFilter({
+	name,
+	label,
+	value,
+	choices,
+	handleFilterChange,
+}) {
+	let id = `id_${name}`
+	let choicesId = `${name}_choices`
+
+	return (
+		<div className={"filters__field-row"}>
+			<div className="filters__field-label">
+				<label htmlFor={id}>{label}</label>
+			</div>
+			<input
+				value={value}
+				type="text"
+				name={name}
+				className="text-field--single"
+				autoComplete="off"
+				onChange={handleFilterChange}
+				id={id}
+				list={choicesId}
+			/>
+
+			<datalist
+				id={choicesId}
+			>
+				{choices.map((choice, index) => (
+					<option key={index} value={choice}></option>
+				))}
+			</datalist>
+		</div>
+	)
+}
+
 function RadioFilter({
 	name,
 	label,
@@ -236,7 +273,17 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					handleFilterChange={handleFilterChange}
 				/>
 			)
-
+		} else if (filter.type == 'autocomplete') {
+			return (
+				<DatalistFilter
+					key={index}
+					name={filter.name}
+					label={filter.title}
+					choices={filter.choices}
+					value={filterParameters[filter.name].parameters || ""}
+					handleFilterChange={handleFilterChange}
+				/>
+			)
 		} else {
 			console.warn(`no filter defined for type "${filter.type}"`)
 		}
