@@ -23,7 +23,6 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 	const allYears = range(...yearDateExtents)
 
 	const [filtersParameters, setFitlersParameters] = useState({
-		filterCategory: { type: 'category', parameters: [], enabled: true },
 		filterTimeMonths: {
 			type: 'timeMonths',
 			parameters: {
@@ -98,6 +97,36 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 		)
 	}
 
+	function makeUrlParams() {
+		const searchParams = new URLSearchParams("")
+
+		let categories = []
+		filterDefs.forEach(category => {
+			if (category.id === -1 || filtersParameters.filterCategory.parameters.includes(category.title)) {
+				if (category.id !== -1) {
+					categories.push(category.id)
+				}
+				category.filters.forEach( ({name, type})=> {
+					let filter = filtersParameters[name]
+					if (filter && filter.parameters) {
+						if (filter.type === 'autocomplete' || filter.type === 'choice' || filter.type === 'bool' || filter.type === 'radio' || filter.type === 'text') {
+							searchParams.append(name, filter.parameters)
+						} else if (filter.type === 'date') {
+							if (filter.parameters.min) {
+								searchParams.append(`${name}_lower`, filter.parameters.min?.toISOString()?.substring(0, 10))
+							}
+							if (filter.parameters.max) {
+								searchParams.append(`${name}_upper`, filter.parameters.max?.toISOString()?.substring(0, 10))
+							}
+						}
+					}
+				})
+			}
+		})
+		searchParams.append('categories', categories.join(','))
+		return searchParams.toString()
+	}
+
 	const filterNames = Object.keys(filtersParameters)
 
 	const filterWithout = Object.fromEntries(
@@ -132,6 +161,17 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					filterParameters={filtersParameters}
 					setFilterParameters={setFilterParameters}
 				/>
+			</div>
+			<div className="filters__form-actions">
+				<button
+					className="btn btn-secondary filters__form--submit"
+					type="submit"
+					onClick={() => {
+						const url = new URL(window.location);
+						url.search = makeUrlParams()
+						window.location = url.toString()
+					}}
+				>Apply filters</button>
 			</div>
 		</div>
 	)

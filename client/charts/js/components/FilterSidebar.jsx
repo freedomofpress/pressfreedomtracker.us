@@ -45,17 +45,28 @@ export default function FilterSidebar({ serializedFilters}) {
 		get: (searchParams, prop) => searchParams.get(prop),
 	})
 
-	let initialFilterParams = {}
+
+	let activeCategories, categoryParameters = [], initialFilterParams = {}
+	if (!urlParams.categories || urlParams.categories.length === 0) {
+		activeCategories = [];
+	} else {
+		activeCategories = urlParams.categories.split(",").map(Number);
+	}
 	for (const category of filters) {
 		if (category.id === -1) { continue }  // non-categorized filters have an id of -1
+		if (activeCategories.includes(category.id)) {
+			categoryParameters.push(category.title)
+		}
 		for (const filter of category.filters) {
 			if (filter.type === 'date') {
+				let lowerValue = urlParams[`${filter.name}_lower`]
+				let upperValue = urlParams[`${filter.name}_upper`]
 				initialFilterParams[filter.name] = {
 					enabled: false,
 					type: filter.type,
 					parameters: {
-						min: urlParams[`${filter.name}_lower`],
-						max: urlParams[`${filter.name}_upper`],
+						min: lowerValue ? new Date(lowerValue) : null,
+						max: upperValue ? new Date(upperValue) : null,
 					},
 				}
 			} else {
@@ -67,6 +78,7 @@ export default function FilterSidebar({ serializedFilters}) {
 			}
 		}
 	}
+	initialFilterParams.filterCategory = { type: 'category', parameters: categoryParameters, enabled: true }
 
 	return (
 		<FiltersIntegration

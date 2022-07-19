@@ -15,6 +15,8 @@ function DateFilter({
 }) {
 	let lowerId = `id_${name}_after`
 	let upperId = `id_${name}_before`
+	let lowerValue = value.min?.toISOString()?.split('T')[0]
+	let upperValue = value.max?.toISOString()?.split('T')[0]
 	return (
 		<>
 			<div className={"filters__field-row"}>
@@ -23,6 +25,7 @@ function DateFilter({
 				</div>
 				<input
 					type="date"
+					value={lowerValue ?? ""}
 					name={name}
 					id={lowerId}
 					onChange={(event) => {
@@ -42,9 +45,9 @@ function DateFilter({
 				<input
 					type="date"
 					name={name}
+					value={upperValue ?? ""}
 					id={upperId}
 					onChange={(event) => {
-						console.log(name, "upper changed", newMaxDate)
 						let newMaxDate = event.target.value
 						newMaxDate = isDateValid(newMaxDate) ? new Date(newMaxDate) : null
 						const newDateRange = (oldDateRange) => {
@@ -186,6 +189,7 @@ function RadioFilter({
 									type="radio"
 									name={name}
 									value={option.value}
+									checked={value === option.value}
 									id={optionId}
 									onChange={handleFilterChange}
 								/>
@@ -212,8 +216,8 @@ export function BoolFilter(props) {
 	return (
 		<RadioFilter
 			options={[
-				{ label: 'Yes', value: 'True' },
-				{ label: 'No', value: 'False' },
+				{ label: 'Yes', value: '1' },
+				{ label: 'No', value: '0' },
 			]}
 			{...props}
 		/>
