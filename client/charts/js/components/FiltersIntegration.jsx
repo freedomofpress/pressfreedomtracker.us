@@ -35,7 +35,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 		filterTimeYears: {
 			type: 'timeYears',
 			parameters: [...allYears],
-			enabled: true,
+			enabled: false,
 		},
 		filterState: { type: 'state', parameters: 'All', enabled: true },
 		...initialFilterParams
