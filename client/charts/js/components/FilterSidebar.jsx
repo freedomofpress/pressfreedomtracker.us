@@ -83,7 +83,7 @@ export default function FilterSidebar({ serializedFilters}) {
 	return (
 		<FiltersIntegration
 			dataset={dataset}
-			width={300}
+			width={272}
 			initialFilterParams={initialFilterParams}
 			filters={filters}
 		/>

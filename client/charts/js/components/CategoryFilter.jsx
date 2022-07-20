@@ -148,93 +148,98 @@ export default function CategoryFilter({
 
 	return (
 		<div className="filters__form--fieldset">
-			<svg
-				width={width}
-				height={height}
-				key={'BarChartCategories'}
-				style={{ fontFamily: 'var(--font-mono)' }}
-			>
-				<AnimatedDataset
-					dataset={yScale.ticks(3)}
-					tag="line"
-					init={{
-						opacity: 0,
-					}}
-					attrs={{
-						x1: margins.left,
-						x2: width,
-						y1: (tick) => height - margins.bottom - yScale(tick),
-						y2: (tick) => height - margins.bottom - yScale(tick),
-						stroke: 'black',
-						strokeWidth: (_, i) => (i === 0 ? 3 : 1),
-						opacity: 1,
-					}}
-					keyFn={(d) => d}
-					duration={450}
-				/>
-				<AnimatedDataset
-					dataset={yScale.ticks(3)}
-					tag="text"
-					init={{
-						opacity: 0,
-					}}
-					attrs={{
-						x: width,
-						y: (tick) => height - margins.bottom - yScale(tick) - 4,
-						text: (tick) => tick,
-						textAnchor: 'end',
-						fontSize: 12,
-						opacity: 1,
-					}}
-					keyFn={(d) => d}
-					duration={450}
-				/>
-				<AnimatedDataset
-					dataset={countCategories}
-					tag="rect"
-					attrs={{
-						x: (d) => xScale(d.category),
-						y: (d) => height - margins.bottom - yScale(d.count),
-						fill: (d) => (selectedCategories.includes(d.category) ? '#F2FC67' : 'black'),
-						width: barsWidth,
-						stroke: 'black',
-						strokeWidth: 2,
-						height: (d) => yScale(d.count),
-						key: (_, i) => i,
-					}}
-					events={{
-						onClick: (d, i) => {
-							onCategoryClick(d)
-						},
-					}}
-					durationByAttr={{ fill: 0 }}
-					duration={250}
-					keyFn={(d) => d.category}
-				/>
+			<div className="category-graph">
+				<p className="category-graph--label" id="categories-graph-label">Filter by one of more categories</p>
+				<svg
+					width={width}
+					height={height}
+					key={'BarChartCategories'}
+					style={{ fontFamily: 'var(--font-mono)' }}
+					className="category-graph--figure"
+					aria-labelledby="categories-graph-label"
+				>
+					<AnimatedDataset
+						dataset={yScale.ticks(3)}
+						tag="line"
+						init={{
+							opacity: 0,
+						}}
+						attrs={{
+							x1: margins.left,
+							x2: width,
+							y1: (tick) => height - margins.bottom - yScale(tick),
+							y2: (tick) => height - margins.bottom - yScale(tick),
+							stroke: 'black',
+							strokeWidth: (_, i) => (i === 0 ? 3 : 1),
+							opacity: 1,
+						}}
+						keyFn={(d) => d}
+						duration={450}
+					/>
+					<AnimatedDataset
+						dataset={yScale.ticks(3)}
+						tag="text"
+						init={{
+							opacity: 0,
+						}}
+						attrs={{
+							x: width,
+							y: (tick) => height - margins.bottom - yScale(tick) - 4,
+							text: (tick) => tick,
+							textAnchor: 'end',
+							fontSize: 12,
+							opacity: 1,
+						}}
+						keyFn={(d) => d}
+						duration={450}
+					/>
+					<AnimatedDataset
+						dataset={countCategories}
+						tag="rect"
+						attrs={{
+							x: (d) => xScale(d.category),
+							y: (d) => height - margins.bottom - yScale(d.count),
+							fill: (d) => (selectedCategories.includes(d.category) ? '#F2FC67' : 'black'),
+							width: barsWidth,
+							stroke: 'black',
+							strokeWidth: 2,
+							height: (d) => yScale(d.count),
+							key: (_, i) => i,
+						}}
+						events={{
+							onClick: (d, i) => {
+								onCategoryClick(d)
+							},
+						}}
+						durationByAttr={{ fill: 0 }}
+						duration={250}
+						keyFn={(d) => d.category}
+					/>
 
-				{countCategories.map((d, i) => {
-					return (
-						<g key={i}>
-							<image
-								width={imageWidth}
-								height={imageWidth}
-								x={xScale(d.category) + barsWidth / 2 - imageWidth / 2}
-								y={height - margins.bottom / 2}
-								href={svgIcons[d.category]}
-								transform={'translate(0, -7)'}
-								opacity={d.count === 0 ? 0.3 : 1}
-								onClick={() => {
-									if (d.count === 0) {
-										return null
-									} else {
-										return onCategoryClick(d)
-									}
-								}}
-							/>
-						</g>
-					)
-				})}
-			</svg>
+					{countCategories.map((d, i) => {
+						return (
+							<g key={i}>
+								<image
+									width={imageWidth}
+									height={imageWidth}
+									x={xScale(d.category) + barsWidth / 2 - imageWidth / 2}
+									y={height - margins.bottom / 2}
+									href={svgIcons[d.category]}
+									transform={'translate(0, -7)'}
+									opacity={d.count === 0 ? 0.3 : 1}
+									onClick={() => {
+										if (d.count === 0) {
+											return null
+										} else {
+											return onCategoryClick(d)
+										}
+									}}
+								/>
+							</g>
+						)
+					})}
+				</svg>
+			</div>
 			{filterDefs.map(filterDef =>
 				<CategorySection
 					key={filterDef.id}

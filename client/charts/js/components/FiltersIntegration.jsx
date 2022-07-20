@@ -156,7 +156,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 				</summary>
 				<CategoryFilter
 					width={width}
-					height={width / 2}
+					height={width / 1.5}
 					dataset={applyFilters(dataset, filterNames)}
 					filterDefs={filterDefs.filter(f => f.id !== -1)}
 					filterParameters={filtersParameters}
