@@ -143,6 +143,7 @@ class GetSerializedFiltersTest(TestCase):
                 'id': category.id,
                 'title': category.title,
                 'url': category.url,
+                'symbol': category.page_symbol,
                 'filters': [
                     {
                         'title': 'Arrest status',
