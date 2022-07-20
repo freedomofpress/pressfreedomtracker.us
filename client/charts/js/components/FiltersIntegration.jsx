@@ -3,6 +3,7 @@ import * as d3 from 'd3'
 import { range } from 'lodash'
 import CategoryFilter from './CategoryFilter'
 import StateFilter from './StateFilter'
+import GeneralFilter from './GeneralFilter'
 import {
 	formatDataset,
 	firstDayOfMonth,
@@ -163,6 +164,11 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					setFilterParameters={setFilterParameters}
 				/>
 			</details>
+			<GeneralFilter
+				filterDef={filterDefs.filter(f => f.id === -1)[0]}
+				filterParameters={filtersParameters}
+				setFilterParameters={setFilterParameters}
+			/>
 			<div className="filters__form-actions">
 				<button
 					className="btn btn-secondary filters__form--submit"

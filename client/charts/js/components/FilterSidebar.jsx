@@ -53,7 +53,7 @@ export default function FilterSidebar({ serializedFilters}) {
 		activeCategories = urlParams.categories.split(",").map(Number);
 	}
 	for (const category of filters) {
-		if (category.id === -1) { continue }  // non-categorized filters have an id of -1
+		// if (category.id === -1) { continue }  // non-categorized filters have an id of -1
 		if (activeCategories.includes(category.id)) {
 			categoryParameters.push(category.title)
 		}

@@ -40,31 +40,6 @@ const svgIcons = {
 	'Border Stop': superSun,
 }
 
-function RadioFilter({
-	name,
-	label,
-	choices,
-	value,
-}) {
-	let id = `id_${name}`
-	return (
-		<div className="filters__field-row">
-			<div className="filters__field-label">
-				{label}
-			</div>
-			<ul id={id}>
-
-				<li>
-					<label for={`id_${name}_0`}>
-						<input type="radio" name={name} value="1" id={`id_${name}_0`}/>Yes
-					</label>
-				</li>
-				<li><label for={`id_${name}_1`}><input checked={value} type="radio" name={name} value="0" id={`id_${name}_1`}/>No</label></li>
-			</ul>
-		</div>
-	)
-}
-
 export default function CategoryFilter({
 	dataset,
 	width,

@@ -226,6 +226,9 @@ export function BoolFilter(props) {
 
 export default function FilterSet({ filters, handleFilterChange, filterParameters, setFilterParameters }) {
 	const components = filters.map((filter, index) => {
+		if (filter.name === 'search') {
+			return
+		}
 		if (filter.type === 'text') {
 			return (
 				<TextFilter
