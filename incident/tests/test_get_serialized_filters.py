@@ -70,6 +70,7 @@ class GetSerializedFiltersTest(TestCase):
                 'id': category.pk,
                 'title': category.title,
                 'url': category.url,
+                'symbol': category.page_symbol,
                 'filters': [
                     {
                         'title': 'Arresting authority',
