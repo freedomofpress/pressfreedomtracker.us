@@ -147,7 +147,7 @@ export default function CategoryFilter({
 	}
 
 	return (
-		<div>
+		<div className="filters__form--fieldset">
 			<svg
 				width={width}
 				height={height}

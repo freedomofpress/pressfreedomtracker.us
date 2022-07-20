@@ -7,15 +7,18 @@
 		margin: 1rem auto
 		display: block
 
-.filters__header
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
-	padding: 1rem 2rem
-	display: flex
-	justify-content: space-between
-	align-items: center
+	&--header
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+		padding: 1rem 2rem
+		display: flex
+		justify-content: space-between
+		align-items: center
+
+	&--fieldset
+		padding: 0 2rem
 
 .filters__form-summary
-	margin: -1rem -2rem
+	margin: -1rem 0
 	padding: 1rem 2rem
 	display: block
 	cursor: pointer
@@ -28,19 +31,15 @@
 
 .filters__group
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
-	padding: 1rem 2rem
+	padding: 1rem 0
 
 	&[open] .filters__form-summary
-		margin-bottom: 1rem
 		&::before
 			content: url('../icons/arrow-up-thin.svg')
 
 	ul
 		list-style-type: none
 		padding-left: 0
-
-.filters__fieldset
-	border: 0
 
 .filters__field-row
 	margin-bottom: 1.25rem

@@ -140,19 +140,20 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 	)
 
 	return (
-		<div className="filter__form">
-			<header className="filters__header">
-				Filters
-
+		<section className="filters__form" aria-labelledby="filter-sidebar-heading">
+			<div className="filters__form--header">
+				<h2 className="filter__heading" id="filter-sidebar-heading">Filters</h2>
 				<a
 					className="btn btn-ghost"
 					href="/all-incidents/"
 				>
 					Clear All
 				</a>
-			</header>
-			<h3>Categories</h3>
-			<div className="chartContainer">
+			</div>
+			<details className="filters__group filters__form--category" open>
+				<summary className="filters__form-summary">
+					<h3 className="filter__heading">Category</h3>
+				</summary>
 				<CategoryFilter
 					width={width}
 					height={width / 2}
@@ -161,7 +162,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					filterParameters={filtersParameters}
 					setFilterParameters={setFilterParameters}
 				/>
-			</div>
+			</details>
 			<div className="filters__form-actions">
 				<button
 					className="btn btn-secondary filters__form--submit"
@@ -173,6 +174,6 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					}}
 				>Apply filters</button>
 			</div>
-		</div>
+		</section>
 	)
 }
