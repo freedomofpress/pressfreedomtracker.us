@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 export default function CategorySection({
+	symbol,
 	label,
 	count,
 	isOpen,
@@ -9,12 +10,14 @@ export default function CategorySection({
 	children,
 }) {
 	return (
-		<div className="filters__group">
-			<div onClick={() => onClick(label)}>
-				{!isOpen && <span>&#9650;</span>}
-				{isOpen && <span>&#9660;</span>}
+		<div className="category-checkbox">
+			<input type="checkbox" id={symbol} onClick={() => onClick(label)}/>
+			<label
+				htmlFor={symbol}
+				className={`category category-${symbol}`}
+			>
 				{label} ({count})
-			</div>
+			</label>
 			{isOpen && (
 				<>
 					{children}
@@ -25,6 +28,7 @@ export default function CategorySection({
 }
 
 CategorySection.propTypes = {
+	symbol: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
 	count: PropTypes.number.isRequired,
 	isOpen: PropTypes.bool.isRequired,

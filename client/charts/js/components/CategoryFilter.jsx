@@ -238,6 +238,7 @@ export default function CategoryFilter({
 			{filterDefs.map(filterDef =>
 				<CategorySection
 					key={filterDef.id}
+					symbol={filterDef.symbol}
 					label={filterDef.title}
 					count={categoryFrequencies[filterDef.title]}
 					isOpen={selectedCategories.includes(filterDef.title)}

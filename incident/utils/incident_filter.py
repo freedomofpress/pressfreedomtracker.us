@@ -643,6 +643,7 @@ def get_serialized_filters():
             'id': page.id,
             'title': page.title,
             'url': page.url,
+            'symbol': page.page_symbol,
             'filters': [
                 available_filters[obj.incident_filter].serialize()
                 for obj in page.incident_filters.all()
