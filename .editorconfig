@@ -8,8 +8,10 @@ end_of_line = lf
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{html,sass,js,scss,css,php,svg,jsx}]
+[*.{html,js,scss,css,php,svg,jsx}]
 charset = utf-8
+indent_style = tab
+[*.sass]
 indent_style = tab
 
 # PEP 8 Compliant

@@ -11,12 +11,17 @@ export default function CategorySection({
 }) {
 	return (
 		<div className="category-checkbox">
-			<input type="checkbox" id={symbol} onClick={() => onClick(label)}/>
+			<input
+				className="category-checkbox--input"
+				type="checkbox"
+				id={symbol}
+				onClick={() => onClick(label)}/>
 			<label
 				htmlFor={symbol}
-				className={`category category-${symbol}`}
+				className="category-checkbox--label"
 			>
-				{label} ({count})
+				<span className={`category category-${symbol}`}>{label}</span>
+				<span>{count}</span>
 			</label>
 			{isOpen && (
 				<>
