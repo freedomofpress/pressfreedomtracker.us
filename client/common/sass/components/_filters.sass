@@ -54,12 +54,16 @@
 	font-size: $font-size-small-ui
 
 .filters__form-actions
-	border-top: 1px solid rgba(0, 0, 0, 0.1)
-	margin: 0 -2rem -1rem
-	padding: 1rem 2rem
-	position: sticky
-	bottom: 0
-	background-color: $section-background
+	display: none
+
+	+tablet-up
+		display: block
+		border-top: 1px solid rgba(0, 0, 0, 0.1)
+		margin: 0 -2rem -1rem
+		padding: 1rem 2rem
+		position: sticky
+		bottom: 0
+		background-color: $section-background
 
 .filter__heading
 	margin: 0

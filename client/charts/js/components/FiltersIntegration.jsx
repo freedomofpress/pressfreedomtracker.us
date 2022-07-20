@@ -180,6 +180,19 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					}}
 				>Apply filters</button>
 			</div>
+
+			<div class="incident-index__filters-mobile-controls">
+				<a class="incident-index__filters-mobile-clear" href="{{ page.url }}">Clear All</a>
+				<button
+					className="btn btn-secondary filters__form--submit"
+					type="submit"
+					onClick={() => {
+						const url = new URL(window.location);
+						url.search = makeUrlParams()
+						window.location = url.toString()
+					}}
+				>Apply filters</button>
+			</div>
 		</section>
 	)
 }
