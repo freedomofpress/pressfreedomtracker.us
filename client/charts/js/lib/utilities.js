@@ -252,3 +252,10 @@ export function formatDataset(dataset) {
 export function isDateValid(date) {
 	return !Number.isNaN(new Date(date).getYear())
 }
+
+
+// Return a range of numbers, including both start and stop terms.
+// rangeInclusive(0, 4, 1)  --> [0, 1, 2, 3, 4]
+export function rangeInclusive(start, stop, step) {
+	return Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
+}

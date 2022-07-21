@@ -10,6 +10,7 @@ import {
 	groupByCity,
 	groupByState,
 	countIncidentsOutsideUS,
+	rangeInclusive,
 } from '../lib/utilities'
 
 describe(filterDatasetByTag, () => {
@@ -617,6 +618,21 @@ describe(firstDayOfNextMonth, () => {
 		expect(x).toEqual(new Date('02-01-2022'))
 	})
 })
+
+describe(rangeInclusive, () => {
+	test('rangeInclusive', () => {
+		const x = rangeInclusive(0, 4, 1)
+
+		expect(x).toEqual([0, 1, 2, 3, 4])
+	})
+
+	test('rangeInclusive with step', () => {
+		const x = rangeInclusive(0, 10, 3)
+
+		expect(x).toEqual([0, 3, 6, 9])
+	})
+})
+
 
 describe(firstDayOfMonth, () => {
 	test('firstDayOfMonth', () => {

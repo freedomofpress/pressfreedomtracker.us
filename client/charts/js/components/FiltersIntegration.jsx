@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import * as d3 from 'd3'
-import { range } from 'lodash'
 import CategoryFilter from './CategoryFilter'
 import StateFilter from './StateFilter'
 import GeneralFilter from './GeneralFilter'
@@ -10,6 +9,7 @@ import {
 	firstDayOfNextMonth,
 	removeElement,
 	isSubset,
+	rangeInclusive,
 } from '../lib/utilities'
 import ButtonsRow from './ButtonsRow'
 import TimeMonthsFilter from './TimeMonthsFilter'
@@ -21,7 +21,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 	const [minDate, maxDate] = d3.extent(dataset.map((d) => new Date(d.date)))
 	const dateExtents = [firstDayOfMonth(minDate), firstDayOfNextMonth(maxDate)]
 	const yearDateExtents = dateExtents.map((date) => date.getUTCFullYear())
-	const allYears = range(...yearDateExtents)
+	const allYears = rangeInclusive(...yearDateExtents, 1)
 
 	const [filtersParameters, setFitlersParameters] = useState({
 		filterTimeMonths: {
