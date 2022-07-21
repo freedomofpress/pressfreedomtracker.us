@@ -579,21 +579,6 @@ describe(countIncidentsOutsideUS, () => {
 })
 
 describe(formatDataset, () => {
-	test('formatDataset "/" space formatting', () => {
-		const x = formatDataset([
-			{ categories: 'A / B' },
-			{ categories: 'A/B' },
-			{ categories: 'A / B, C / D' },
-			{ categories: 'A/B,C/D' },
-		])
-
-		expect(x).toEqual([
-			{ categories: ['A/B'], tags: [] },
-			{ categories: ['A/B'], tags: [] },
-			{ categories: ['A/B', 'C/D'], tags: [] },
-			{ categories: ['A/B', 'C/D'], tags: [] },
-		])
-	})
 	test('formatDataset categories trimming', () => {
 		const x = formatDataset([{ categories: 'A,B' }, { categories: 'A,C' }, { categories: 'A,B,C' }])
 
