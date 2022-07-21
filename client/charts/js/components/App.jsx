@@ -10,18 +10,6 @@ export default function App() {
 	const [source, useSource] = useState("api");
 
 	useEffect(() => {
-		const fields = [
-			// `title`,
-			`categories`,
-			`authors`,
-			`date`,
-			`city`,
-			`state`,
-			`latitude`,
-			`longitude`,
-			`tags`,
-		].join(",");
-
 		const fetchPromise =
 			source === "api"
 				? fetch(`/api/edge/incidents/homepage_csv/`).then((r) =>

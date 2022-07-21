@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import * as d3 from 'd3'
 import CategoryFilter from './CategoryFilter'
-import StateFilter from './StateFilter'
 import GeneralFilter from './GeneralFilter'
 import {
 	formatDataset,
@@ -11,9 +10,6 @@ import {
 	isSubset,
 	rangeInclusive,
 } from '../lib/utilities'
-import ButtonsRow from './ButtonsRow'
-import TimeMonthsFilter from './TimeMonthsFilter'
-import TimeYearsFilter from './TimeYearsFilter'
 
 export default function FiltersIntegration({ width, dataset: dirtyDataset, initialFilterParams, filters: filterDefs }) {
 	const dataset = formatDataset(dirtyDataset)
@@ -56,12 +52,6 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 		}
 	}
 
-	function setFilterEnabling(filterName, isEnabled) {
-		const newFilterParameters = filtersParameters
-		newFilterParameters[filterName].enabled = isEnabled
-		setFitlersParameters({ ...newFilterParameters })
-	}
-
 	function getFilteringExpression(filterName) {
 		if (filtersParameters[filterName].enabled) {
 			switch (filterName) {
@@ -83,8 +73,6 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 			return () => true
 		}
 	}
-
-	const [timeChartType, setTimeChartType] = useState('Months')
 
 	function applyFilter(dataset, filterName) {
 		const filterCondition = getFilteringExpression(filterName)
@@ -129,16 +117,6 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 	}
 
 	const filterNames = Object.keys(filtersParameters)
-
-	const filterWithout = Object.fromEntries(
-		filterNames.map((filterName) => [
-			filterName,
-			(dataset) => {
-				const filtersToApply = removeElement(filterNames, filterName)
-				return applyFilters(dataset, filtersToApply)
-			},
-		])
-	)
 
 	return (
 		<section className="filters__form" aria-labelledby="filter-sidebar-heading">

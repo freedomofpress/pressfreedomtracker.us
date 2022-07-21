@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
-import HomepageMainCharts from "./HomepageMainCharts";
 import FiltersIntegration from "./FiltersIntegration";
 import "../../sass/base.sass";
 
