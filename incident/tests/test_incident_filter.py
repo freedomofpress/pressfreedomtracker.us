@@ -134,6 +134,7 @@ class SerializeFilterTest(TestCase):
             'autocomplete_type': 'incident.Equipment',
             'name': 'equipment_seized',
             'many': True,
+            'choices': [],
         })
 
     def test_radio_field(self):
@@ -182,6 +183,7 @@ class SerializeFilterTest(TestCase):
             'many': True,
             'autocomplete_type': 'incident.PoliticianOrPublic',
             'name': 'politicians_or_public_figures_involved',
+            'choices': [],
         })
 
 
