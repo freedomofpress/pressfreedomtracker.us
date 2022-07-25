@@ -192,6 +192,52 @@ class FilteredHomePageCSVTestCase(TestCase):
         self.assertEqual(self.results[0]['date'], '2022-02-02')
 
 
+class InvalidFilterHomePageCSVTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build()
+        root_page.add_child(instance=cls.incident_index)
+
+    def setUp(self):
+        self.url = reverse(
+            'incidentpage-homepage_csv',
+            kwargs={'version': 'edge'},
+        )
+
+    def test_returns_400_if_lower_date_argument_is_not_valid(self):
+        self.response = self.client.get(
+            self.url,
+            {
+                'date_lower': 'INVALID_DATE',
+            },
+            HTTP_ACCEPT='text/csv',
+        )
+        self.assertEqual(self.response.status_code, 400)
+
+    def test_returns_400_if_upper_date_argument_is_not_valid(self):
+        self.response = self.client.get(
+            self.url,
+            {
+                'date_upper': 'INVALID_DATE',
+            },
+            HTTP_ACCEPT='text/csv',
+        )
+        self.assertEqual(self.response.status_code, 400)
+
+    def test_returns_400_if_both__date_arguments_are_not_valid(self):
+        self.response = self.client.get(
+            self.url,
+            {
+                'date_lower': 'INVALID_DATE',
+                'date_upper': 'INVALID_DATE',
+            },
+            HTTP_ACCEPT='text/csv',
+        )
+        self.assertEqual(self.response.status_code, 400)
+
+
 class IncidentCSVTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
