@@ -1,3 +1,5 @@
+@use "sass:meta"
+
 $font-base: 'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'
 $font-mono: 'Roboto Mono', monospace
 
@@ -35,8 +37,8 @@ $font-size-h1-tab: 5rem  // 80px
 
 // CSS variables for use in React components
 :root
-	--font-base: $font-base
-	--font-mono: $font-mono
+	--font-base: #{meta.inspect($font-base)}
+	--font-mono: #{meta.inspect($font-mono)}
 
 body
 	margin: 0
