@@ -27,7 +27,7 @@ def subscribe_for_site(site, subscription):
     """Create subscriptions for the Mailchimp groups belonging to the site.
     """
     if not getattr(settings, 'MAILCHIMP_API_KEY', None):
-        raise ApiKeyMissingError
+        raise ApiKeyMissingError('API Key Missing')
 
     try:
         client = mailchimp_marketing.Client()

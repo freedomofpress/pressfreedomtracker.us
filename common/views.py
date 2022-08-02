@@ -69,7 +69,8 @@ class SubscribeForSite(View):
             except json.JSONDecodeError:
                 logger.warning('JSON could not be decoded', json=request.body)
                 return HttpResponse(status=400)
-            except marshmallow.ValidationError:
+            except marshmallow.ValidationError as e:
+                logger.warning('Invalid Mailchimp data received', error_message=str(e))
                 return HttpResponse(status=400)
             try:
                 site = Site.find_for_request(request)
@@ -77,8 +78,8 @@ class SubscribeForSite(View):
             except MailchimpError as err:
                 logger.warning(
                     'Error communicating with Mailchimp',
-                    mailchimp_error=err.text,
-                    mailchimp_status_code=err.status_code,
+                    mailchimp_error=getattr(err, 'text', str(err)),
+                    mailchimp_status_code=getattr(err, 'status_code', '<none>'),
                 )
                 return JsonResponse(
                     {
