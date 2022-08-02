@@ -92,8 +92,10 @@ class MailchimpGroup(models.Model):
     audience_id = models.CharField(
         max_length=100,
         help_text='Mailchimp audience associated with this group.',
+        default='',
     )
     group_id = models.CharField(
         max_length=100,
         help_text='Mailchimp group identifier.',
+        default='',
     )
