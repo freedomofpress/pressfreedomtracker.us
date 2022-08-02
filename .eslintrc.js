@@ -26,6 +26,7 @@ module.exports = {
 	"globals": {
 		"window": true,
 		"HTMLInputElement": true,
+		"FormData": true,
 		"fetch": true,
 		"document": true,
 		"import": true,

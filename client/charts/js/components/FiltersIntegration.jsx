@@ -1,29 +1,25 @@
 import React, { useState } from 'react'
 import * as d3 from 'd3'
-import { range } from 'lodash'
 import CategoryFilter from './CategoryFilter'
-import StateFilter from './StateFilter'
+import GeneralFilter from './GeneralFilter'
 import {
 	formatDataset,
 	firstDayOfMonth,
 	firstDayOfNextMonth,
 	removeElement,
 	isSubset,
+	rangeInclusive,
 } from '../lib/utilities'
-import ButtonsRow from './ButtonsRow'
-import TimeMonthsFilter from './TimeMonthsFilter'
-import TimeYearsFilter from './TimeYearsFilter'
 
-export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
+export default function FiltersIntegration({ width, dataset: dirtyDataset, initialFilterParams, filters: filterDefs }) {
 	const dataset = formatDataset(dirtyDataset)
 
 	const [minDate, maxDate] = d3.extent(dataset.map((d) => new Date(d.date)))
 	const dateExtents = [firstDayOfMonth(minDate), firstDayOfNextMonth(maxDate)]
 	const yearDateExtents = dateExtents.map((date) => date.getUTCFullYear())
-	const allYears = range(...yearDateExtents)
+	const allYears = rangeInclusive(...yearDateExtents, 1)
 
 	const [filtersParameters, setFitlersParameters] = useState({
-		filterCategory: { type: 'category', parameters: [], enabled: true },
 		filterTimeMonths: {
 			type: 'timeMonths',
 			parameters: {
@@ -35,9 +31,10 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
 		filterTimeYears: {
 			type: 'timeYears',
 			parameters: [...allYears],
-			enabled: true,
+			enabled: false,
 		},
 		filterState: { type: 'state', parameters: 'All', enabled: true },
+		...initialFilterParams
 	})
 
 	function setFilterParameters(filterName, newFilterParameters) {
@@ -53,12 +50,6 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
 			newParameters[filterName].parameters = newFilterParameters
 			setFitlersParameters({ ...newParameters })
 		}
-	}
-
-	function setFilterEnabling(filterName, isEnabled) {
-		const newFilterParameters = filtersParameters
-		newFilterParameters[filterName].enabled = isEnabled
-		setFitlersParameters({ ...newFilterParameters })
 	}
 
 	function getFilteringExpression(filterName) {
@@ -83,8 +74,6 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
 		}
 	}
 
-	const [timeChartType, setTimeChartType] = useState('Months')
-
 	function applyFilter(dataset, filterName) {
 		const filterCondition = getFilteringExpression(filterName)
 		return dataset.filter(filterCondition)
@@ -97,74 +86,91 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset }) {
 		)
 	}
 
+	function makeUrlParams() {
+		const searchParams = new URLSearchParams("")
+
+		let categories = []
+		filterDefs.forEach(category => {
+			if (category.id === -1 || filtersParameters.filterCategory.parameters.includes(category.title)) {
+				if (category.id !== -1) {
+					categories.push(category.id)
+				}
+				category.filters.forEach( ({name, type})=> {
+					let filter = filtersParameters[name]
+					if (filter && filter.parameters) {
+						if (filter.type === 'autocomplete' || filter.type === 'choice' || filter.type === 'bool' || filter.type === 'radio' || filter.type === 'text') {
+							searchParams.append(name, filter.parameters)
+						} else if (filter.type === 'date') {
+							if (filter.parameters.min) {
+								searchParams.append(`${name}_lower`, filter.parameters.min?.toISOString()?.substring(0, 10))
+							}
+							if (filter.parameters.max) {
+								searchParams.append(`${name}_upper`, filter.parameters.max?.toISOString()?.substring(0, 10))
+							}
+						}
+					}
+				})
+			}
+		})
+		searchParams.append('categories', categories.join(','))
+		return searchParams.toString()
+	}
+
 	const filterNames = Object.keys(filtersParameters)
 
-	const filterWithout = Object.fromEntries(
-		filterNames.map((filterName) => [
-			filterName,
-			(dataset) => {
-				const filtersToApply = removeElement(filterNames, filterName)
-				return applyFilters(dataset, filtersToApply)
-			},
-		])
-	)
-
 	return (
-		<div>
-			<h3>Categories</h3>
-			<div className="chartContainer">
+		<section className="filters__form" aria-labelledby="filter-sidebar-heading">
+			<div className="filters__form--header">
+				<h2 className="filter__heading" id="filter-sidebar-heading">Filters</h2>
+				<a
+					className="btn btn-ghost"
+					href="/all-incidents/"
+				>
+					Clear All
+				</a>
+			</div>
+			<details className="filters__group filters__form--category" open>
+				<summary className="filters__form-summary">
+					<h3 className="filter__heading">Category</h3>
+				</summary>
 				<CategoryFilter
 					width={width}
-					height={width / 2}
+					height={width / 1.5}
 					dataset={applyFilters(dataset, filterNames)}
-					filterParameters={filtersParameters.filterCategory.parameters}
+					filterDefs={filterDefs.filter(f => f.id !== -1)}
+					filterParameters={filtersParameters}
 					setFilterParameters={setFilterParameters}
 				/>
-			</div>
-
-			<h3>Time</h3>
-			<div className="chartContainer">
-				<ButtonsRow
-					label={'Filter by'}
-					buttonLabels={['Months', 'Years']}
-					defaultSelection={'Months'}
-					updateSelection={(label) => {
-						setFilterEnabling('filterTimeMonths', label === 'Months')
-						setFilterEnabling('filterTimeYears', label === 'Years')
-						setTimeChartType(label)
+			</details>
+			<GeneralFilter
+				filterDef={filterDefs.filter(f => f.id === -1)[0]}
+				filterParameters={filtersParameters}
+				setFilterParameters={setFilterParameters}
+			/>
+			<div className="filters__form-actions">
+				<button
+					className="btn btn-secondary filters__form--submit"
+					type="submit"
+					onClick={() => {
+						const url = new URL(window.location);
+						url.search = makeUrlParams()
+						window.location = url.toString()
 					}}
-					isButtonSelectable={() => true}
-				/>
-				{timeChartType === 'Months' ? (
-					<TimeMonthsFilter
-						width={width}
-						height={width / 2}
-						dateExtents={dateExtents}
-						dataset={filterWithout.filterTimeMonths(dataset)}
-						filterParameters={filtersParameters.filterTimeMonths.parameters}
-						setFilterParameters={setFilterParameters}
-					/>
-				) : (
-					<TimeYearsFilter
-						width={width}
-						height={width / 2}
-						dateExtents={dateExtents}
-						dataset={filterWithout.filterTimeYears(dataset)}
-						filterParameters={filtersParameters.filterTimeYears.parameters}
-						setFilterParameters={setFilterParameters}
-					/>
-				)}
+				>Apply filters</button>
 			</div>
 
-			<h3>States</h3>
-			<div className="chartContainer">
-				<StateFilter
-					width={width}
-					dataset={filterWithout.filterState(dataset)}
-					filterParameters={filtersParameters.filterState.parameters}
-					setFilterParameters={setFilterParameters}
-				/>
+			<div class="incident-index__filters-mobile-controls">
+				<a class="incident-index__filters-mobile-clear" href="{{ page.url }}">Clear All</a>
+				<button
+					className="btn btn-secondary filters__form--submit"
+					type="submit"
+					onClick={() => {
+						const url = new URL(window.location);
+						url.search = makeUrlParams()
+						window.location = url.toString()
+					}}
+				>Apply filters</button>
 			</div>
-		</div>
+		</section>
 	)
 }

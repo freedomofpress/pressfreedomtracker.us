@@ -1,8 +1,10 @@
 import unittest
+import json
+from unittest import mock
 
 from django.core.files.base import ContentFile
 from django.urls import reverse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from wagtail.documents.models import Document
 from wagtail.tests.utils import WagtailPageTests
 from common.models import CommonTag
@@ -13,8 +15,12 @@ from incident.tests.factories import (
     IncidentPageFactory,
     TopicPageFactory,
 )
-from unittest import mock
-import json
+from wagtail.core.models import Site
+from mailchimp_marketing.api_client import ApiClientError
+
+from emails.devdata import EmailSettingsFactory
+from emails.models import Subscription
+from common.utils import ApiError
 
 User = get_user_model()
 
@@ -182,6 +188,185 @@ class AdminVersionTestCase(TestCase):
         mock_open.side_effect = FileNotFoundError
         self.response = self.client.get('/admin/version/')
         self.assertEqual(self.response.status_code, 200)
+
+
+class CsrfTokenViewTest(TestCase):
+    def test_health_check_url_returns_200_status(self):
+        self.response = self.client.get(reverse('csrf_token'))
+        self.assertEqual(self.response.status_code, 200)
+
+
+class MailchimpInterestViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create(username='testadmin', is_superuser=True)
+
+    def setUp(self):
+        fake_mc_data = mock.Mock()
+        fake_mc_data.get_all_lists.return_value = {
+            'lists': [{'id': '1', 'name': 'Test List'}]
+        }
+        fake_mc_data.get_list_interest_categories.return_value = {
+            'categories': [{'id': '2', 'title': 'Test Category'}]
+        }
+        fake_mc_data.list_interest_category_interests.return_value = {
+            'interests': [{'id': '3', 'name': 'Test Group'}]
+        }
+
+        self.mailchimp_lists = fake_mc_data
+
+    def test_view_forbidden_if_not_logged_in(self):
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse('wagtailadmin_login'), response.url)
+
+    def test_view_reports_error_if_no_api_key(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context_data['error'],
+            'Mailchimp API key not found',
+        )
+
+    @override_settings(MAILCHIMP_API_KEY='KEY1')
+    @mock.patch('mailchimp_marketing.Client')
+    def test_view_reports_error_if_request_fails(self, mock_mailchimp_client):
+        instance = mock_mailchimp_client.return_value
+        instance.lists = mock.PropertyMock()
+        instance.lists.get_all_lists.side_effect = ApiClientError(
+            text='Cannot reverse the polarity'
+        )
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context_data['error'],
+            'Error connecting to Mailchimp: Cannot reverse the polarity',
+        )
+
+    @override_settings(MAILCHIMP_API_KEY='KEY1')
+    @mock.patch('mailchimp_marketing.Client')
+    def test_view_succeeds_if_logged_in(self, mock_mailchimp_client):
+        instance = mock_mailchimp_client.return_value
+        instance.lists = self.mailchimp_lists
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(MAILCHIMP_API_KEY='KEY1')
+    @mock.patch('mailchimp_marketing.Client')
+    def test_view_includes_interest_and_audience_ids(self, mock_mailchimp_client):
+        instance = mock_mailchimp_client.return_value
+        instance.lists = self.mailchimp_lists
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('mailchimp_interests'))
+        self.assertEqual(
+            response.context_data['table_data'],
+            [
+                ('Test List', '1', 'Test Category', 'Test Group', '3')
+            ]
+        )
+
+
+class SubscribeForSiteViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.site = Site.objects.get(is_default_site=True)
+        cls.email_settings_page = EmailSettingsFactory(site=cls.site)
+
+    def test_ajax_subscribe_view_for_invalid_json_yields_400(self):
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            HTTP_ACCEPT='application/json',
+            content_type='application/json',
+            data='invalid-json',
+        )
+        self.assertEqual(self.response.status_code, 400)
+
+    def test_ajax_subscribe_view_with_missing_email_yields_400(self):
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            HTTP_ACCEPT='application/json',
+            content_type='application/json',
+            data=json.dumps({'vegetable': 'radish'}),
+        )
+        self.assertEqual(self.response.status_code, 400)
+
+    @mock.patch('common.views.subscribe_for_site')
+    def test_subscribe_view_ajax_succeeds(self, mock_subscribe):
+        email = 'test3@example.com'
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            HTTP_ACCEPT='application/json',
+            content_type='application/json',
+            data=json.dumps({'email': email}),
+        )
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(
+            self.response.json(), {'success': True}
+        )
+        mock_subscribe.assert_called_once_with(
+            self.site,
+            Subscription(email=email, full_name=None)
+        )
+
+    @mock.patch('common.views.subscribe_for_site')
+    def test_subscribe_view_handles_subscription_errors(self, mock_subscribe):
+        mock_subscribe.side_effect = ApiError(text='error', status_code=404)
+        response = self.client.post(
+            reverse('subscribe_for_site'),
+            HTTP_ACCEPT='application/json',
+            content_type='application/json',
+            data=json.dumps({'email': 'test4@example.com'}),
+            HTTP_CF_CONNECTING_IP='8.8.8.8',
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['success'])
+
+    @mock.patch('common.views.subscribe_for_site')
+    def test_subscribe_view_nonajax_handles_subscription_errors(self, mock_subscribe):
+        mock_subscribe.side_effect = ApiError(text='error', status_code=404)
+        response = self.client.post(
+            reverse('subscribe_for_site'),
+            {'email': 'test4@example.com'},
+            HTTP_ACCEPT='text/html',
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            'An internal error occurred',
+            response.content.decode('utf-8'),
+        )
+
+    @mock.patch('common.views.subscribe_for_site')
+    def test_subscribe_view_nonajax_succeeds(self, mock_subscribe):
+        email = 'test3@example.com'
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            {'email': email},
+            HTTP_ACCEPT='text/html',
+        )
+        self.assertEqual(self.response.status_code, 200)
+        # self.assertEqual(self.response.url, reverse('subscribe_thanks'))
+        mock_subscribe.assert_called_once_with(
+            self.site,
+            Subscription(email=email, full_name=None)
+        )
+
+    def test_nonajax_subscribe_view_with_missing_email_yields_error_message(self):
+        response = self.client.post(
+            reverse('subscribe_for_site'),
+            {'vegetable': 'radish'},
+            HTTP_ACCEPT='text/html',
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            'Invalid data submitted',
+            response.content.decode('utf-8'),
+        )
 
 
 class HealthCheckTestCase(TestCase):

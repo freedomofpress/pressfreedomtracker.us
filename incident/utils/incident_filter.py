@@ -6,13 +6,13 @@ from datetime import date
 import copy
 from typing import List
 
+from django.apps import apps
 from django.core.exceptions import ValidationError, FieldDoesNotExist
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import (
     BooleanField,
     CharField,
     DateField,
-    DurationField,
     ForeignKey,
     ManyToManyField,
     OuterRef,
@@ -22,9 +22,7 @@ from django.db.models import (
     Subquery,
     TextChoices,
     TextField,
-    Value,
 )
-from django.db.models.functions import Trunc, TruncMonth, Cast
 from django.db.models.fields.related import ManyToOneRel
 from django.db.utils import ProgrammingError
 from django.utils.text import capfirst
@@ -36,7 +34,6 @@ from psycopg2.extras import DateRange
 from wagtail.core.fields import RichTextField, StreamField
 
 from incident.circuits import STATES_BY_CIRCUIT
-from incident.utils.db import MakeDateRange
 
 
 class Filter(object):
@@ -178,6 +175,13 @@ class RelationFilter(Filter):
             related_model._meta.app_label,
             related_model.__name__,
         )
+        choices = []
+        app_label, model_name = serialized['autocomplete_type'].split('.')
+        autocomplete_model = apps.get_model(app_label, model_name)
+        for choice in autocomplete_model.objects.all():
+            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
         serialized['many'] = False
         return serialized
 
@@ -230,28 +234,7 @@ class DateFilter(Filter):
             return queryset.filter(**{self.lookup: lower_date})
 
         if self.fuzzy:
-            queryset = queryset.annotate(
-                fuzzy_date=MakeDateRange(
-                    Cast(Trunc('date', 'month'), DateField()),
-                    Cast(TruncMonth('date') + Cast(Value('1 month'), DurationField()), DateField()),
-                ),
-            )
-            target_range = DateRange(
-                lower=lower_date,
-                upper=upper_date,
-                bounds='[]'
-            )
-            exact_date_match = Q(
-                date__contained_by=target_range,
-                exact_date_unknown=False,
-            )
-
-            inexact_date_match_lower = Q(
-                exact_date_unknown=True,
-                fuzzy_date__overlap=target_range,
-            )
-
-            return queryset.filter(exact_date_match | inexact_date_match_lower)
+            return queryset.fuzzy_date_filter(lower=lower_date, upper=upper_date)
 
         return queryset.filter(**{
             '{0}__contained_by'.format(self.lookup): DateRange(
@@ -467,6 +450,14 @@ class ManyRelationFilter(Filter):
                 related_model._meta.app_label,
                 related_model.__name__,
             )
+
+        choices = []
+        app_label, model_name = serialized['autocomplete_type'].split('.')
+        autocomplete_model = apps.get_model(app_label, model_name)
+        for choice in autocomplete_model.objects.all():
+            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
         serialized['many'] = True
         return serialized
 
@@ -497,7 +488,18 @@ class ChargesFilter(ManyRelationFilter):
         return functools.reduce(operator.or_, qs, Q())
 
     def serialize(self):
+        # Avoid circular import
+        from incident.models.items import Charge
+
         serialized = super(ManyRelationFilter, self).serialize()
+
+        choices = []
+
+        for choice in Charge.objects.all():
+            title_field = getattr(Charge, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
+
         serialized['autocomplete_type'] = 'incident.Charge'
         return serialized
 
@@ -520,6 +522,15 @@ class RelationThroughFilter(ManyRelationFilter):
                 related_model._meta.app_label,
                 related_model.__name__,
             )
+
+        choices = []
+        app_label, model_name = serialized['autocomplete_type'].split('.')
+        autocomplete_model = apps.get_model(app_label, model_name)
+        for choice in autocomplete_model.objects.all():
+            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
+
         serialized['many'] = True
         return serialized
 
@@ -632,6 +643,7 @@ def get_serialized_filters():
             'id': page.id,
             'title': page.title,
             'url': page.url,
+            'symbol': page.page_symbol,
             'filters': [
                 available_filters[obj.incident_filter].serialize()
                 for obj in page.incident_filters.all()

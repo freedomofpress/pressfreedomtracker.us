@@ -7,19 +7,24 @@
 		margin: 1rem auto
 		display: block
 
-.filters__header
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
-	padding: 1rem 2rem
-	display: flex
-	justify-content: space-between
-	align-items: center
+	&--header
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+		padding: 1rem 2rem
+		display: flex
+		justify-content: space-between
+		align-items: center
+
+	&--fieldset
+		padding: 0 2rem
+
+		.category-graph--label
+			font-size: 0.875rem
 
 .filters__form-summary
-	margin: -1rem -2rem
+	margin: -1rem 0
 	padding: 1rem 2rem
 	display: block
 	cursor: pointer
-	position: sticky
 	top: 0
 	background-color: $section-background
 	&::before
@@ -28,10 +33,9 @@
 
 .filters__group
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1)
-	padding: 1rem 2rem
+	padding: 1rem 0
 
 	&[open] .filters__form-summary
-		margin-bottom: 1rem
 		&::before
 			content: url('../icons/arrow-up-thin.svg')
 
@@ -39,20 +43,29 @@
 		list-style-type: none
 		padding-left: 0
 
-.filters__fieldset
-	border: 0
-
 .filters__field-row
-	margin-bottom: 1.25rem
+	margin: 1.25rem 0
+
+	.filters__form--category &
+		padding-left: 1.75rem
 
 .filters__field-label
 	margin-bottom: 0.25rem
 	font-size: $font-size-small-ui
 
 .filters__form-actions
-	border-top: 1px solid rgba(0, 0, 0, 0.1)
-	margin: 0 -2rem -1rem
-	padding: 1rem 2rem
-	position: sticky
-	bottom: 0
-	background-color: $section-background
+	display: none
+
+	+tablet-up
+		display: block
+		border-top: 1px solid rgba(0, 0, 0, 0.1)
+		margin: 0 -2rem -1rem
+		padding: 1rem 2rem
+		position: sticky
+		bottom: 0
+		background-color: $section-background
+
+.filter__heading
+	margin: 0
+	font-size: 1.25rem
+	font-weight: 400

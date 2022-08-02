@@ -15,7 +15,7 @@ export default function RadioBar({ state, count, i, onClick, isSelected, barWidt
 			<div
 				style={{
 					display: 'flex',
-					flexDirection: 'reverse-row',
+					flexDirection: 'row-reverse',
 					width: RADIO_BOX_WIDTH,
 				}}
 			>
@@ -32,7 +32,6 @@ export default function RadioBar({ state, count, i, onClick, isSelected, barWidt
 				style={{
 					display: 'flex',
 					flexDirection: 'column',
-					alignItems: 'bottom',
 					justifyContent: 'flex-end',
 				}}
 			>

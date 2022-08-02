@@ -240,6 +240,7 @@ SETTINGS_EXPORT = [
 # Prevent template variable name collision with wagtail settings
 SETTINGS_EXPORT_VARIABLE_NAME = 'django_settings'
 
+MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', '')
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')

@@ -20,6 +20,7 @@ var common = {
 		common: __dirname + '/client/common/js/common.js',
 		statistics: __dirname + '/client/statistics/js/searchstats.js',
 		charts: __dirname + '/client/charts/js/index.js',
+		filterSidebar: __dirname + '/client/charts/js/filter-sidebar.js',
 	},
 
 	output: {

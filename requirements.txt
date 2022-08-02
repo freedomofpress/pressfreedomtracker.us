@@ -26,7 +26,9 @@ cachetools==5.0.0 \
 certifi==2021.10.8 \
     --hash=sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872 \
     --hash=sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569
-    # via requests
+    # via
+    #   mailchimp-marketing
+    #   requests
 charset-normalizer==2.0.12 \
     --hash=sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597 \
     --hash=sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df
@@ -313,6 +315,9 @@ lxml==4.9.1 \
     --hash=sha256:fe17d10b97fdf58155f858606bddb4e037b805a60ae023c009f760d8361a4eb8 \
     --hash=sha256:fe749b052bb7233fe5d072fcb549221a8cb1a16725c47c37e42b0b9cb3ff2c3f
     # via unittest-xml-reporting
+mailchimp-marketing==3.0.75 \
+    --hash=sha256:34ca29268823504ddc873b29724905bab7f8eeb42ddb53f66077a2224cd3f02f
+    # via -r requirements.in
 markupsafe==2.1.1 \
     --hash=sha256:0212a68688482dc52b2d45013df70d169f542b7394fc744c02a57374a4207003 \
     --hash=sha256:089cf3dbf0cd6c100f02945abeb18484bd1ee57a079aefd52cffd17fba910b88 \
@@ -500,7 +505,9 @@ pyrsistent==0.18.1 \
 python-dateutil==2.8.2 \
     --hash=sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86 \
     --hash=sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9
-    # via faker
+    # via
+    #   faker
+    #   mailchimp-marketing
 python-json-logger==2.0.2 \
     --hash=sha256:202a4f29901a4b8002a6d1b958407eeb2dd1d83c18b18b816f5b64476dde9096 \
     --hash=sha256:99310d148f054e858cd5f4258794ed6777e7ad2c3fd7e1c1b527f1cba4d08420
@@ -555,6 +562,7 @@ requests==2.27.1 \
     #   django-anymail
     #   google-api-core
     #   google-cloud-storage
+    #   mailchimp-marketing
     #   wagtail
 rsa==4.8 \
     --hash=sha256:5c6bd9dc7a543b7fe4304a631f8a8a3b674e2bbfc49c2ae96200cdbe55df6b17 \
@@ -569,6 +577,7 @@ six==1.16.0 \
     #   google-auth
     #   html5lib
     #   l18n
+    #   mailchimp-marketing
     #   python-dateutil
 smartypants==2.0.1 \
     --hash=sha256:8db97f7cbdf08d15b158a86037cd9e116b4cf37703d24e0419a0d64ca5808f0d
@@ -615,10 +624,12 @@ uritemplate==4.1.1 \
     --hash=sha256:4346edfc5c3b79f694bccd6d6099a322bbeb628dbf2cd86eea55a456ce5124f0 \
     --hash=sha256:830c08b8d99bdd312ea4ead05994a38e8936266f84b9a7878232db50b044e02e
     # via drf-spectacular
-urllib3==1.26.10 \
-    --hash=sha256:8298d6d56d39be0e3bc13c1c97d133f9b45d797169a0e11cdd0e0489d786f7ec \
-    --hash=sha256:879ba4d1e89654d9769ce13121e0f94310ea32e8d2f8cf587b77c08bbcdb30d6
-    # via requests
+urllib3==1.26.11 \
+    --hash=sha256:c33ccba33c819596124764c23a97d25f32b28433ba0dedeb77d873a38722c9bc \
+    --hash=sha256:ea6e8fb210b19d950fab93b60c9009226c63a28808bc8386e05301e25883ac0a
+    # via
+    #   mailchimp-marketing
+    #   requests
 wagtail==2.15.2 \
     --hash=sha256:0086c8bf7fb93e456f15f230f0bfcb3d3945420aa663a8a962c404051da96d46 \
     --hash=sha256:9a2c7ceee79f2d1974f021f76b814ba36744e91c732e7e5113a43cfb046e56f1

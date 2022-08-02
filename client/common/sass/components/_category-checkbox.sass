@@ -1,0 +1,35 @@
+.category-checkbox
+	&--label
+		border: 3px solid
+		border-bottom-width: 0
+		border-color: $black
+		padding: 1rem 0.75rem
+		display: flex
+		justify-content: space-between
+		font-size: 0.875rem
+
+		span:last-of-type
+			font-size: 0.75rem
+
+		&:hover
+			cursor: pointer
+
+	&:last-of-type &--label
+		border-bottom-width: 3px
+
+	&--input
+		clip: rect(0 0 0 0)
+		clip-path: inset(50%)
+		height: 1px
+		overflow: hidden
+		position: absolute
+		white-space: nowrap
+		width: 1px
+
+		&:checked + label
+			background-color: $accent-color
+			border-bottom-width: 3px
+
+		&:focus-visible + label
+			outline: 1px solid $accent-background-tags
+			outline-offset: 3px

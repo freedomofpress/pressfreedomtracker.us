@@ -2,6 +2,7 @@ import collections
 from typing import TYPE_CHECKING
 
 from django.contrib.postgres.aggregates import StringAgg
+from django.core.exceptions import ValidationError
 from django.db.models import (
     CharField,
     OuterRef,
@@ -12,7 +13,7 @@ from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
 )
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.settings import api_settings
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
@@ -28,7 +29,7 @@ from incident.api.serializers import (
     FlatIncidentSerializer,
 )
 from incident import models
-from incident.utils.incident_filter import IncidentFilter, get_openapi_parameters
+from incident.utils.incident_filter import IncidentFilter, get_openapi_parameters, DateFilter
 
 if TYPE_CHECKING:
     from django.http import HttpResponse
@@ -151,8 +152,16 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
     def homepage_csv(self, request, version=None):
-        lower_bound = request.GET.get('date_lower')
-        upper_bound = request.GET.get('date_upper')
+        date_filter = DateFilter(
+            'date',
+            models.IncidentPage._meta.get_field('date'),
+            fuzzy=True,
+        )
+        value = date_filter.get_value(request.GET)
+        try:
+            cleaned_value = date_filter.clean(value, strict=True)
+        except ValidationError:
+            return Response([], status=status.HTTP_400_BAD_REQUEST)
 
         tag_summary = models.IncidentPage.objects.only('tags').annotate(
             tag_summary=StringAgg(
@@ -172,7 +181,11 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         incidents = models.IncidentPage.objects.live().only('date', 'city', 'state', 'latitude', 'longitude').annotate(
             tag_summary=Subquery(tag_summary.values('tag_summary'), output_field=CharField()),
             category_summary=Subquery(category_summary.values('category_summary'), output_field=CharField()),
-        ).fuzzy_date_filter(lower=lower_bound, upper=upper_bound).values(
+        )
+        if cleaned_value is not None:
+            incidents = date_filter.filter(incidents, cleaned_value)
+
+        incidents = incidents.values(
             'date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary'
         )
 

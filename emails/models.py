@@ -1,8 +1,15 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from django.db import models
+from django.urls import reverse_lazy
+from django.utils.text import format_lazy
+from marshmallow import Schema, fields, post_load
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.admin.edit_handlers import (
+    HelpPanel,
     FieldPanel,
     MultiFieldPanel,
     InlinePanel,
@@ -42,6 +49,10 @@ class EmailSettings(BaseSetting, ClusterableModel):
         FieldPanel('success_text'),
         MultiFieldPanel(
             [
+                HelpPanel(heading='Mailchimp', content=format_lazy(
+                    """Valid Mailchimp Audience and Group IDs can be looked up in the <a href="{}">Audience and Group List</a>.""",
+                    reverse_lazy('mailchimp_interests')
+                )),
                 InlinePanel(
                     'mailchimp_groups',
                     label='Group for signups',
@@ -58,15 +69,33 @@ class EmailSettings(BaseSetting, ClusterableModel):
         verbose_name = 'Email Signups'
 
 
+@dataclass
+class Subscription:
+    email: str
+    full_name: Optional[str] = None
+
+
+class SubscriptionSchema(Schema):
+    email = fields.Str(required=True)
+    full_name = fields.Str()
+
+    @post_load
+    def make_subscription(self, data, **kwargs):
+        return Subscription(**data)
+
+
 class MailchimpGroup(models.Model):
     page = ParentalKey(
         EmailSettings,
         related_name='mailchimp_groups',
-        on_delete=models.CASCADE,
     )
-    category_id = models.IntegerField(
-        help_text='First number in the "name" field from the signup form input line.',
+    audience_id = models.CharField(
+        max_length=100,
+        help_text='Mailchimp audience associated with this group.',
+        default='',
     )
-    group_id = models.IntegerField(
-        help_text='Second number in the "name" field from the signup form input line.',
+    group_id = models.CharField(
+        max_length=100,
+        help_text='Mailchimp group identifier.',
+        default='',
     )

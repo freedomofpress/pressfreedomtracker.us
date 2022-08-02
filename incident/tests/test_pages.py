@@ -696,6 +696,13 @@ class IncidentPageDateRangeFilter(TestCase):
         )
         self.assertEqual(set(incidents), {self.incident2})
 
+    def test_filters_by_date_range_using_date_types(self):
+        incidents = IncidentPage.objects.fuzzy_date_filter(
+            lower=date(2022, 2, 1),
+            upper=date(2022, 3, 1),
+        )
+        self.assertEqual(set(incidents), {self.incident2})
+
     def test_filters_by_date_range_unbounded_above(self):
         incidents = IncidentPage.objects.fuzzy_date_filter(
             lower='2022-02-01',
@@ -714,6 +721,12 @@ class IncidentPageDateRangeFilter(TestCase):
             upper='2022-02-14',
         )
         self.assertEqual(set(incidents), {self.incident2, self.incident1})
+
+    def test_validates_dates_passed_to_it(self):
+        with self.assertRaises(ValueError):
+            IncidentPage.objects.fuzzy_date_filter(
+                lower='QWERTY',
+            )
 
 
 class IncidentPageFuzzyDateRangeFilter(TestCase):

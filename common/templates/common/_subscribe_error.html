@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription Error{% endblock %}
+
+{% block main %}
+	<div class="m-t-3 m-b-3">
+		<h1 class="m-b-1">Subscription Error</h1>
+		<div class="text-size--large m-b-1">
+			<p>
+				We are sorry, but there was an error processing your subscription:
+			</p>
+			<p>
+				{{ error_message }}
+			</p>
+			<p>
+				Please try again later.
+			</p>
+		</div>
+		<div class="text-size--large">
+			<a href="/" class="btn btn-primary">Return Home</a>
+		</div>
+	</div>
+{% endblock %}

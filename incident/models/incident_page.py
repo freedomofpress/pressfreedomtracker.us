@@ -172,8 +172,8 @@ class IncidentQuerySet(PageQuerySet):
 
         """
         target_range = DateRange(
-            lower=lower,
-            upper=upper,
+            lower=datetime.date.fromisoformat(str(lower)) if lower is not None else None,
+            upper=datetime.date.fromisoformat(str(upper)) if upper is not None else None,
             bounds='[]',
         )
         exact_date_match = Q(
