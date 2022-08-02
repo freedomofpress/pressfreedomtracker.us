@@ -10,21 +10,9 @@ export default function App() {
 	const [source, useSource] = useState("api");
 
 	useEffect(() => {
-		const fields = [
-			// `title`,
-			`categories`,
-			`authors`,
-			`date`,
-			`city`,
-			`state`,
-			`latitude`,
-			`longitude`,
-			`tags`,
-		].join(",");
-
 		const fetchPromise =
 			source === "api"
-				? fetch(`/api/edge/incidents/?fields=${fields}&format=csv`).then((r) =>
+				? fetch(`/api/edge/incidents/homepage_csv/`).then((r) =>
 						r.text()
 				  )
 				: import("../data/incidents.csv.js").then(({ csv }) => csv);
@@ -35,9 +23,6 @@ export default function App() {
 			.then((json) => {
 				// TEMPORARY - RANDOMIZE SOME COLUMNS
 				json.forEach((row) => {
-					// This was automatically converted by d3, but subsequent code starts from stringified ISO dates
-					row.date = row.date.toISOString();
-
 					// The geo coordinates are null only in the randomized dataset, so we manually randomize them here
 					const cities = [
 						{ name: "New York City", latitude: 40.71427, longitude: -74.00597 },
@@ -116,6 +101,9 @@ export default function App() {
 		);
 	}
 
+	const urlParams = new Proxy(new URLSearchParams(window.location.search), {
+		get: (searchParams, prop) => searchParams.get(prop),
+	});
 	return (
 		<div>
 			{datasetButtons}
@@ -127,7 +115,7 @@ export default function App() {
 
 			<h1>Filters Integration</h1>
 			<div className="chartContainer">
-				<FiltersIntegration dataset={dataset} width={300} />
+				<FiltersIntegration dataset={dataset} width={300} urlParams={urlParams} />
 			</div>
 		</div>
 	);

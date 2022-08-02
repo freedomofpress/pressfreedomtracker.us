@@ -6,6 +6,7 @@ from datetime import date
 import copy
 from typing import List
 
+from django.apps import apps
 from django.core.exceptions import ValidationError, FieldDoesNotExist
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import (
@@ -174,6 +175,13 @@ class RelationFilter(Filter):
             related_model._meta.app_label,
             related_model.__name__,
         )
+        choices = []
+        app_label, model_name = serialized['autocomplete_type'].split('.')
+        autocomplete_model = apps.get_model(app_label, model_name)
+        for choice in autocomplete_model.objects.all():
+            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
         serialized['many'] = False
         return serialized
 
@@ -442,6 +450,14 @@ class ManyRelationFilter(Filter):
                 related_model._meta.app_label,
                 related_model.__name__,
             )
+
+        choices = []
+        app_label, model_name = serialized['autocomplete_type'].split('.')
+        autocomplete_model = apps.get_model(app_label, model_name)
+        for choice in autocomplete_model.objects.all():
+            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
         serialized['many'] = True
         return serialized
 
@@ -472,7 +488,18 @@ class ChargesFilter(ManyRelationFilter):
         return functools.reduce(operator.or_, qs, Q())
 
     def serialize(self):
+        # Avoid circular import
+        from incident.models.items import Charge
+
         serialized = super(ManyRelationFilter, self).serialize()
+
+        choices = []
+
+        for choice in Charge.objects.all():
+            title_field = getattr(Charge, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
+
         serialized['autocomplete_type'] = 'incident.Charge'
         return serialized
 
@@ -495,6 +522,15 @@ class RelationThroughFilter(ManyRelationFilter):
                 related_model._meta.app_label,
                 related_model.__name__,
             )
+
+        choices = []
+        app_label, model_name = serialized['autocomplete_type'].split('.')
+        autocomplete_model = apps.get_model(app_label, model_name)
+        for choice in autocomplete_model.objects.all():
+            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            choices.append(getattr(choice, title_field))
+        serialized['choices'] = choices
+
         serialized['many'] = True
         return serialized
 
@@ -607,6 +643,7 @@ def get_serialized_filters():
             'id': page.id,
             'title': page.title,
             'url': page.url,
+            'symbol': page.page_symbol,
             'filters': [
                 available_filters[obj.incident_filter].serialize()
                 for obj in page.incident_filters.all()
