@@ -1,0 +1,14 @@
+
+{% load render_as_template %}
+<table class="data-table">
+	{% for item in self %}
+		<tr class="data-table__row">
+			<th class="data-table__label">
+				{{ item.header }}
+			</th>
+			<td class="data-table__value">
+				{% render_as_template item.value %}
+			</td>
+		</tr>
+	{% endfor %}
+</table>
