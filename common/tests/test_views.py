@@ -1,4 +1,3 @@
-import unittest
 import json
 from unittest import mock
 
@@ -6,7 +5,6 @@ from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.test import TestCase, override_settings
 from wagtail.documents.models import Document
-from wagtail.tests.utils import WagtailPageTests
 from common.models import CommonTag
 from common.wagtail_hooks import CommonTagAdmin
 from django.contrib.auth import get_user_model
@@ -42,13 +40,6 @@ class DocumentDownloadTest(TestCase):
         )
 
         self.assertEqual(response['content-disposition'], 'inline; filename="{}"'.format(document.filename))
-
-
-@unittest.skip("Skipping till templates have been added")
-class MergeTagFormTestCase(WagtailPageTests):
-    def test_getting_the_form_succeeds(self):
-        self.response = self.client.get(CommonTagAdmin().url_helper.merge_url)
-        self.assertEqual(self.response.status_code, 200)
 
 
 class MergeTagTestCase(TestCase):

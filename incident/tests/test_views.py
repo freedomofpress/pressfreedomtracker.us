@@ -1,15 +1,13 @@
 import json
-import unittest
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
-from wagtail.tests.utils import WagtailPageTests
 
 from incident.models import Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist, GovernmentWorker
-from incident.wagtail_hooks import ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin, IncidentGroup
+from incident.wagtail_hooks import ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
@@ -58,16 +56,6 @@ class IncidentAdminSearch(TestCase):
             set(response.context['pages']),
             {self.incident_page1, self.incident_page3},
         )
-
-
-@unittest.skip("Skipping till templates have been added")
-class MergeFormViewTestCase(WagtailPageTests):
-    def test_getting_the_form_succeeds(self):
-        for item in IncidentGroup.items:
-            admin = item()
-            with self.subTest(form=f'Merge {admin.menu_label} form'):
-                self.response = self.client.get(item().url_helper.merge_url)
-                self.assertEqual(self.response.status_code, 200)
 
 
 class InstitutionMergeViewTestCase(TestCase):

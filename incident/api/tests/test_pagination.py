@@ -1,5 +1,3 @@
-import unittest
-
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from requests.utils import parse_header_links
@@ -19,7 +17,6 @@ def humanize_links(response):
     return result
 
 
-@unittest.skip("Skipping till templates have been added")
 class IncidentListPaginationTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):

@@ -1,10 +1,8 @@
-import unittest
-
 from django.contrib.auth.models import AnonymousUser
 from django.core import mail
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from wagtail.core.models import Site, Page
+from wagtail.core.models import Site
 from wagtail.tests.utils import WagtailTestUtils
 from wagtail.tests.utils.form_data import (
     inline_formset,
@@ -23,27 +21,23 @@ from forms.tests.factories import (
 class FormPageTestCase(TestCase):
     @classmethod
     def setUpTestData(kls):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
         home_page = HomePageFactory.build()
-        root_page.add_child(instance=home_page)
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
                 'site_name': 'Test site',
                 'hostname': 'testserver',
                 'port': '1111',
-                'root_page': home_page,
             }
         )
         if not created:
-            site.root_page = home_page
             site.save()
+        root_page = site.root_page
+        root_page.add_child(instance=home_page)
 
         kls.form_page = FormPageFactory.build()
         home_page.add_child(instance=kls.form_page)
 
-    @unittest.skip("Skipping till templates have been added")
     def test_cache_control_header_private(self):
         response = self.client.get(self.form_page.get_full_url())
         self.assertEqual(response['cache-control'], 'private')
