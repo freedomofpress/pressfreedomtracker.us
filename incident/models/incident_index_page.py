@@ -18,7 +18,6 @@ from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
 from incident.models.export import to_row, is_exportable, to_json
 from incident.models.incident_page import IncidentPage
-from incident.utils.forms import get_filter_forms
 from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
 from incident.feeds import IncidentIndexPageFeed
 
@@ -164,6 +163,8 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     def get_context(self, request, *args, **kwargs):
         from common.models import CategoryPage
+        from incident.utils.forms import get_filter_forms
+
         context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
 
         # Before perf change:
