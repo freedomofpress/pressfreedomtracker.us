@@ -1,11 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from wagtail.core.models import Site
 
 import incident.tests.factories as incident_factories
 from common.models.pages import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
-from incident.models.choices import ARREST_STATUS
+from incident.models.choices import ARREST_STATUS, STATUS_OF_CHARGES
 from incident.utils.incident_filter import get_serialized_filters
 
 
@@ -20,7 +20,8 @@ class GetSerializedFiltersTest(TestCase):
         self.settings = IncidentFilterSettings.for_site(self.site)
 
     def test_serialize_general__search_only(self):
-        serialized = get_serialized_filters()
+        request = RequestFactory().get('/')
+        serialized = get_serialized_filters(request)
         self.assertEqual(serialized, [
             {
                 'id': -1,
@@ -116,13 +117,27 @@ class GetSerializedFiltersTest(TestCase):
         ])
 
     def test_serialize_general_and_category_fields(self):
-        category = CategoryPageFactory(incident_filters=['arrest_status'])
+        category1 = CategoryPageFactory(
+            taxonomy__sort_order=2,
+            incident_filters=['arrest_status'],
+        )
+        category2 = CategoryPageFactory(
+            taxonomy__sort_order=3,
+            incident_filters=['status_of_charges'],
+        )
+        category3 = CategoryPageFactory(
+            taxonomy__sort_order=1,
+            incident_filters=['release_date'],
+        )
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=self.settings,
             incident_filter='city',
         )
 
-        serialized = get_serialized_filters()
+        self.maxDiff = 9999
+
+        with self.assertNumQueries(7):
+            serialized = get_serialized_filters()
         self.assertEqual(serialized, [
             {
                 'id': -1,
@@ -141,10 +156,23 @@ class GetSerializedFiltersTest(TestCase):
                 ]
             },
             {
-                'id': category.id,
-                'title': category.title,
-                'url': category.url,
-                'symbol': category.page_symbol,
+                'id': category3.id,
+                'title': category3.title,
+                'url': category3.url,
+                'symbol': category3.page_symbol,
+                'filters': [
+                    {
+                        'title': 'Release date between',
+                        'type': 'date',
+                        'name': 'release_date',
+                    }
+                ]
+            },
+            {
+                'id': category1.id,
+                'title': category1.title,
+                'url': category1.url,
+                'symbol': category1.page_symbol,
                 'filters': [
                     {
                         'title': 'Arrest status',
@@ -154,5 +182,18 @@ class GetSerializedFiltersTest(TestCase):
                     }
                 ]
             },
-
+            {
+                'id': category2.id,
+                'title': category2.title,
+                'url': category2.url,
+                'symbol': category2.page_symbol,
+                'filters': [
+                    {
+                        'title': 'Status of charges',
+                        'type': 'choice',
+                        'name': 'status_of_charges',
+                        'choices': STATUS_OF_CHARGES,
+                    }
+                ]
+            },
         ])
