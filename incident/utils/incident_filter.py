@@ -32,6 +32,7 @@ from drf_spectacular.utils import (
 )
 from psycopg2.extras import DateRange
 from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.models import Site
 
 from incident.circuits import STATES_BY_CIRCUIT
 
@@ -619,13 +620,25 @@ class TargetedInstitutionsFilter(ManyRelationFilter):
         return functools.reduce(operator.or_, qs, Q())
 
 
-def get_serialized_filters():
+def get_serialized_filters(request=None):
     """
     Returns filters serialized to be passed as JSON to the front-end.
     """
-    from common.models import CategoryPage, GeneralIncidentFilter
+    from common.models import GeneralIncidentFilter, TaxonomySettings
+
     available_filters = IncidentFilter.get_available_filters()
     general_incident_filters = GeneralIncidentFilter.objects.all()
+
+    if request:
+        taxonomy_settings = TaxonomySettings.for_request(request)
+    else:
+        taxonomy_settings = TaxonomySettings.for_site(
+            Site.objects.get(is_default_site=True)
+        )
+    taxonomy_categories = taxonomy_settings.categories.prefetch_related(
+        'category__incident_filters'
+    )
+
     return [
         {
             'id': -1,
@@ -640,17 +653,17 @@ def get_serialized_filters():
         },
     ] + [
         {
-            'id': page.id,
-            'title': page.title,
-            'url': page.url,
-            'symbol': page.page_symbol,
+            'id': page.category.id,
+            'title': page.category.title,
+            'url': page.category.url,
+            'symbol': page.category.page_symbol,
             'filters': [
                 available_filters[obj.incident_filter].serialize()
-                for obj in page.incident_filters.all()
+                for obj in page.category.incident_filters.all()
                 if obj.incident_filter in available_filters
             ],
         }
-        for page in CategoryPage.objects.live().prefetch_related('incident_filters')
+        for page in taxonomy_categories
     ]
 
 
