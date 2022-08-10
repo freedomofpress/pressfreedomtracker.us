@@ -29,32 +29,64 @@ class EmptyChoiceField(forms.ChoiceField):
         super().__init__(choices=choices, required=required, **kwargs)
 
 
-class Datalist(forms.widgets.ChoiceWidget):
-    input_type = 'text'
+# class Datalist(forms.widgets.ChoiceWidget):
+#     input_type = 'text'
+#     template_name = 'incident/datalist.html'
+#     option_template_name = 'django/forms/widgets/select_option.html'
+#     add_id_index = False
+#     checked_attribute = {'selected': True}
+#     option_inherits_attrs = False
+
+#     def get_context(self, name, value, attrs):
+#         context = super().get_context(name, value, attrs)
+#         context['widget']['attrs']['list'] = f'{name}_datalist'
+#         context['widget']['value'] = context['widget']['value'].pop()
+#         return context
+
+
+# class DatalistField(forms.ModelChoiceField):
+#     widget = Datalist
+#     default_error_messages = {
+#         'invalid_choice': 'Select a valid choice. %(value)s is not one of the available choices.',
+#     }
+
+#     def __init__(self, required=False, **kwargs):
+#         super().__init__(required=required, **kwargs)
+
+#     def widget_attrs(self, widget):
+#         attrs = super().widget_attrs(widget)
+#         attrs['class'] = 'text-field--single'
+#         attrs['autocomplete'] = 'off'
+#         return attrs
+
+
+class Datalist(forms.TextInput):
     template_name = 'incident/datalist.html'
-    option_template_name = 'django/forms/widgets/select_option.html'
-    add_id_index = False
-    checked_attribute = {'selected': True}
-    option_inherits_attrs = False
+
+    def __init__(self, attrs=None, choices=()):
+        super().__init__(attrs)
+        self.choices = list(choices)
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
-        context['widget']['attrs']['list'] = f'{name}_datalist'
-        context['widget']['value'] = context['widget']['value'].pop()
+        context['widget']['choices'] = self.choices
         return context
 
 
-class DatalistField(forms.ModelChoiceField):
+class DatalistField(forms.ChoiceField):
     widget = Datalist
     default_error_messages = {
         'invalid_choice': 'Select a valid choice. %(value)s is not one of the available choices.',
     }
 
-    def __init__(self, required=False, **kwargs):
-        super().__init__(required=required, **kwargs)
+    def __init__(self, *, choices=[], list_name='', **kwargs):
+        self.list_name = list_name
+        super().__init__(**kwargs)
+        self.choices = choices
 
     def widget_attrs(self, widget):
         attrs = super().widget_attrs(widget)
+        attrs['list'] = self.list_name
         attrs['class'] = 'text-field--single'
         attrs['autocomplete'] = 'off'
         return attrs
@@ -132,9 +164,10 @@ class ArrestForm(forms.Form):
         ]
     )
     charges = DatalistField(
-        queryset=incident_models.Charge.objects.all(),
-        to_field_name='title',
-        empty_label=None,
+        choices=incident_models.Charge.objects.values_list('title'),
+        list_name='charges__choices'
+        # to_field_name='title',
+        # empty_label=None,
     )
     unnecessary_use_of_force = BooleanChoiceField()
 
@@ -162,9 +195,10 @@ class BorderStopForm(forms.Form):
     stopped_at_border = BooleanChoiceField(label='Stopped at border?')
     stopped_previously = BooleanChoiceField(label='Stopped previously?')
     target_nationality = DatalistField(
-        queryset=incident_models.Nationality.objects.all(),
-        to_field_name='title',
-        empty_label=None,
+        choices=incident_models.Nationality.objects.values_list('title'),
+        list_name='target_nationality__choices'
+        # to_field_name='title',
+        # empty_label=None,
     )
     target_us_citizenship_status = EmptyChoiceField(
         label='US Citizenship Status',
@@ -191,18 +225,20 @@ class BorderStopForm(forms.Form):
 class DenialOfAccessForm(forms.Form):
     title = 'Denial of Access'
     politicians_or_public_figures_involved = DatalistField(
-        queryset=incident_models.PoliticianOrPublic.objects.all(),
-        empty_label=None,
-        to_field_name='title',
+        choices=incident_models.PoliticianOrPublic.objects.values_list('title'),
+        list_name='politicians_or_public_figures_involved__choices'
+        # empty_label=None,
+        # to_field_name='title',
     )
 
 
 class EquipmentDamageForm(forms.Form):
     title = 'Equipment Damage'
     equipment_broken = DatalistField(
-        queryset=incident_models.Equipment.objects.all(),
-        to_field_name='name',
-        empty_label=None,
+        choices=incident_models.Equipment.objects.values_list('name'),
+        list_name='equipment_broken__choices'
+        # to_field_name='name',
+        # empty_label=None,
     )
 
 
@@ -219,9 +255,10 @@ class EquipmentSearchForm(forms.Form):
         ]
     )
     equipment_seized = DatalistField(
-        queryset=incident_models.Equipment.objects.all(),
-        to_field_name='name',
-        empty_label=None,
+        choices=incident_models.Equipment.objects.values_list('name'),
+        list_name='equipment_seized__list',
+        # to_field_name='name',
+        # empty_label=None,
     )
     is_search_warrant_obtained = BooleanChoiceField(label='Search warrant obtained?')
 
@@ -229,9 +266,10 @@ class EquipmentSearchForm(forms.Form):
 class LeakCaseForm(forms.Form):
     title = 'Leak Case'
     workers_whose_communications_were_obtained = DatalistField(
-        queryset=incident_models.GovernmentWorker.objects.all(),
-        empty_label=None,
-        to_field_name='title',
+        choices=incident_models.GovernmentWorker.objects.values_list('title'),
+        list_name='workers_whose_communications_were_obtained__choices',
+        # empty_label=None,
+        # to_field_name='title',
     )
     charged_under_espionage_act = BooleanChoiceField(label='Charged under espionage act?')
 
@@ -283,27 +321,31 @@ class GeneralForm(forms.Form):
     date_upper = FilterDateField(label='Took place before')
     city = FilterCharField(label='City')
     state = DatalistField(
-        queryset=incident_models.State.objects.all(),
-        to_field_name='name',
-        empty_label=None,
+        choices=incident_models.State.objects.values_list('name'),
+        list_name='state__choices',
+        # to_field_name='name',
+        # empty_label=None,
     )
     targeted_journalists = DatalistField(
         label='Targeted any of these journalists',
-        queryset=incident_models.Journalist.objects.all(),
-        to_field_name='title',
-        empty_label=None,
+        choices=incident_models.Journalist.objects.values_list('title'),
+        list_name='targeted_journalists__choices',
+        # to_field_name='title',
+        # empty_label=None,
     )
     targeted_institutions = DatalistField(
         label='Targeted Institutions',
-        queryset=incident_models.Institution.objects.all(),
-        to_field_name='title',
-        empty_label=None,
+        choices=incident_models.Institution.objects.values_list('title'),
+        list_name='targeted_institutions__choices',
+        # to_field_name='title',
+        # empty_label=None,
     )
     tags = DatalistField(
         label='Has any of these tags',
-        queryset=CommonTag.objects.all(),
-        to_field_name='title',
-        empty_label=None,
+        choices=CommonTag.objects.values_list('title'),
+        list_name='tags__choices',
+        # to_field_name='title',
+        # empty_label=None,
     )
     case_number = FilterCharField()
     case_statuses = EmptyChoiceField(
