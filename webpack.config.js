@@ -74,7 +74,7 @@ var common = {
 							sassOptions: {
 								includePaths: [path.resolve(__dirname, 'node_modules/')],
 							},
-							prependData: sassData,
+							additionalData: sassData,
 						}
 					}
 				]
