@@ -1,8 +1,10 @@
 from django.db import models
+from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import (
     FieldPanel,
     StreamFieldPanel,
+    InlinePanel,
 )
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField
@@ -15,8 +17,54 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
     RichTextTemplateBlock,
 )
+from incident.models import choices
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 from statistics.blocks import StatisticsBlock
+
+
+class IncidentCharge(ClusterableModel):
+    incident_page = ParentalKey('incident.IncidentPage', related_name='charges')
+    charge = ParentalKey('incident.Charge', related_name='incidents')
+    date = models.DateField()
+    status = models.CharField(
+        choices=choices.STATUS_OF_CHARGES,
+        max_length=1000,
+    )
+
+    panels = [
+        AutocompletePanel('charge'),
+        FieldPanel('date'),
+        FieldPanel('status'),
+        InlinePanel('updates', label='Updates'),
+    ]
+
+    @property
+    def summary(self):
+        if update := self.updates.order_by('-date').first():
+            status = update.get_status_display()
+            date = update.date
+        else:
+            status = self.get_status_display()
+            date = self.date
+
+        return f'{self.charge.title} ({status} as of {date})'
+
+
+class ChargeUpdate(models.Model):
+    incident_charge = ParentalKey(
+        IncidentCharge,
+        related_name='updates',
+        on_delete=models.CASCADE,
+    )
+    date = models.DateField()
+    status = models.CharField(
+        choices=choices.STATUS_OF_CHARGES,
+        max_length=1000,
+    )
+    panels = [
+        FieldPanel('date'),
+        FieldPanel('status'),
+    ]
 
 
 class IncidentPageUpdates(models.Model):

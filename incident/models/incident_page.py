@@ -619,6 +619,7 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Detention/Arrest',
             classname='collapsible collapsed',
             children=[
+                InlinePanel('charges', label='Charges', min_num=2),
                 FieldPanel('arrest_status'),
                 FieldPanel('status_of_charges'),
                 AutocompletePanel('arresting_authority', target_model='incident.LawEnforcementOrganization'),
