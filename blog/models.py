@@ -194,6 +194,14 @@ class BlogPage(MetadataPageMixin, Page):
 
     link_to_original_post = models.URLField(blank=True)
 
+    lead_image = models.ForeignKey(
+        'common.CustomImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
     teaser_image = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -206,7 +214,7 @@ class BlogPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
-        help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
+        help_text='Image description displayed below the lead image. Organization/Photographer can be set via the image attribution.'
     )
 
     teaser_text = models.TextField(
@@ -233,14 +241,20 @@ class BlogPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('publication_datetime'),
-        FieldPanel('introduction'),
         StreamFieldPanel('body'),
         FieldPanel('link_to_original_post'),
+        MultiFieldPanel(
+            heading='Introduction',
+            children=[
+                FieldPanel('introduction'),
+                ImageChooserPanel('lead_image'),
+                FieldPanel('image_caption'),
+            ]
+        ),
         MultiFieldPanel(
             heading='Teaser',
             children=[
                 ImageChooserPanel('teaser_image'),
-                FieldPanel('image_caption'),
                 FieldPanel('teaser_text'),
             ]
         ),
