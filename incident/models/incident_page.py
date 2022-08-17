@@ -616,7 +616,7 @@ class IncidentPage(MetadataPageMixin, Page):
 
 
         MultiFieldPanel(
-            heading='Detention/Arrest',
+            heading='Arrest/Criminal Charge',
             classname='collapsible collapsed',
             children=[
                 InlinePanel('charges', label='Charges', min_num=2),
