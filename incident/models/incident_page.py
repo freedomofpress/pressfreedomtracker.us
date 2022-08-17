@@ -691,7 +691,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
+            heading='Leak Prosecution (incl. Legal Case, Arrest/Detention)',
             classname='collapsible collapsed',
             children=[
                 AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker'),
