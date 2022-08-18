@@ -14,7 +14,7 @@
 		{% endif %}
 
 		<section class="article-content__inner">
-			{% include 'common/_video_or_image.html' with video=page.primary_video image=page.teaser_image caption=page.image_caption %}
+			{% include 'common/_video_or_image.html' with video=page.primary_video image=page.lead_image caption=page.image_caption %}
 
 			{% for block in page.body %}
 				<div class="article-content__block">{% include_block block %}</div>
