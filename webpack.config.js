@@ -25,7 +25,8 @@ var common = {
 
 	output: {
 		path: target,
-		filename: '[name].js'
+		filename: '[name].js',
+		clean: true,
 	},
 
 	resolve: {
