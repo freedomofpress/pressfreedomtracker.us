@@ -12,7 +12,8 @@ from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 from common.validators import validate_image_format, validate_template
 from common.blocks import Heading2
-from incident.utils.incident_filter import IncidentFilter
+
+from .choices import FILTER_CHOICES
 
 
 @register_setting(icon='search')
@@ -240,7 +241,7 @@ class IncidentFilterSettings(BaseSetting, ClusterableModel):
 
 class GeneralIncidentFilter(Orderable):
     incident_filter_settings = ParentalKey(IncidentFilterSettings, related_name='general_incident_filters')
-    incident_filter = models.CharField(max_length=255, choices=IncidentFilter.get_filter_choices(), unique=True)
+    incident_filter = models.CharField(max_length=255, choices=FILTER_CHOICES, unique=True)
 
     def clean(self):
         from common.models.pages import CategoryIncidentFilter

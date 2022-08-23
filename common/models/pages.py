@@ -46,11 +46,12 @@ from common.utils import (
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape
 from common.validators import validate_template
-from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_numbers_choices
 from statistics.validators import validate_dataset_params
 # Import statistics tags so that statistics dataset choices are populated
 import statistics.templatetags.statistics_tags  # noqa: F401
+
+from .choices import FILTER_CHOICES
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -259,7 +260,7 @@ class TaxonomyCategoryPage(Orderable):
 class CategoryIncidentFilter(Orderable):
     category = ParentalKey('common.CategoryPage', related_name='incident_filters')
     incident_filter = models.CharField(
-        choices=IncidentFilter.get_filter_choices(),
+        choices=FILTER_CHOICES,
         max_length=255,
         unique=True,
     )
