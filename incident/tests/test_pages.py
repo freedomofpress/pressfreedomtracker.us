@@ -649,8 +649,8 @@ class RecentChargeStatusesMethod(TestCase):
         incident = IncidentPage.objects.with_most_recent_status_of_charges().get(pk=self.incident1.pk)
 
         self.assertEqual(
-            incident.most_recent_charge_statuses,
-            ['PENDING_APPEAL', 'UNKNOWN']
+            set(incident.most_recent_charge_statuses),
+            set(['PENDING_APPEAL', 'UNKNOWN'])
         )
 
     def test_returns_the_most_recent_statuses_without_updates(self):
@@ -1159,8 +1159,6 @@ class IncidentPageQueriesTest(TestCase):
             journalist_targets=2,
             institution_targets=2,
             teaser_image=image,
-            current_charges=2,
-            dropped_charges=2,
             politicians_or_public_figures_involved=3,
         )
         for incident in incidents:
@@ -1169,6 +1167,7 @@ class IncidentPageQueriesTest(TestCase):
             incident.save()
             IncidentUpdateFactory.create_batch(2, page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
+            IncidentChargeWithUpdatesFactory.create_batch(3, incident_page=incident)
 
             # Pre-generate renditions to avoid INSERT queries that we
             # don't want to count.

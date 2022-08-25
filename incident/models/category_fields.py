@@ -2,6 +2,7 @@ from incident.utils.category_field_values import (
     arrest_status_html_val,
     status_of_charges_html_val,
     arresting_authority_html_val,
+    charges_html_val,
     current_charges_html_val,
     dropped_charges_html_val,
     detention_date_html_val,
@@ -41,10 +42,8 @@ from incident.utils.category_field_values import (
 CATEGORY_FIELD_MAP = {
     'arrest-criminal-charge': [
         ('arrest_status', 'Arrest Status'),
-        ('status_of_charges', 'Status of Charges'),
         ('arresting_authority', 'Arresting Authority'),
-        ('current_charges', 'Current Charges'),
-        ('dropped_charges', 'Dropped Charges'),
+        ('charges', 'Charges'),
         ('detention_date', 'Detention Date'),
         ('release_date', 'Release Date'),
         ('unnecessary_use_of_force', 'Unnecessary use of force?'),
@@ -100,6 +99,7 @@ CAT_FIELD_VALUES = {
     'arrest_status': arrest_status_html_val,
     'status_of_charges': status_of_charges_html_val,
     'arresting_authority': arresting_authority_html_val,
+    'charges': charges_html_val,
     'current_charges': current_charges_html_val,
     'dropped_charges': dropped_charges_html_val,
     'detention_date': detention_date_html_val,

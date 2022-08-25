@@ -109,8 +109,10 @@ class IncidentQuerySet(PageQuerySet):
         ).prefetch_related(
             'authors__author',
             'categories__category',
-            'current_charges',
-            'dropped_charges',
+            models.Prefetch(
+                'charges',
+                queryset=IncidentCharge.objects.select_related('charge').prefetch_related('updates'),
+            ),
             'equipment_broken__equipment',
             'equipment_seized__equipment',
             'links',
