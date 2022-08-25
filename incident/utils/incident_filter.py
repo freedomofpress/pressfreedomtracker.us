@@ -944,11 +944,11 @@ class IncidentFilter(object):
             if errors:
                 raise ValidationError(errors)
 
-    def _get_queryset(self):
+    def _get_queryset(self, strict=False):
         # Prevent circular imports
         from incident.models.incident_page import IncidentPage
         if self.cleaned_data is None:
-            self.clean()
+            self.clean(strict=strict)
 
         queryset = IncidentPage.objects.live()
 
@@ -960,8 +960,8 @@ class IncidentFilter(object):
         queryset = self._sort_queryset(queryset)
         return queryset.distinct()
 
-    def get_queryset(self):
-        return self._get_queryset().distinct()
+    def get_queryset(self, *, strict=False):
+        return self._get_queryset(strict).distinct()
 
     def _sort_queryset(self, queryset):
         if self.sort == self.SortOptions.OLDEST_DATE:
