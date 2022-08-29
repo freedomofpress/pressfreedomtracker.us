@@ -6,11 +6,10 @@
 				{{ item.charge.title|capfirst }}
 			</a>
 			<ul class="details-table__sublist">
-				<li class="details-table__sublist-item">
-					{{ item.date }}: {{ item.get_status_display|capfirst }}
-				</li>
-				{% for update in item.updates.all %}
-					<li>{{ update.date }}: {{ update.get_status_display|capfirst }}</li>
+				{% for date, status in item.entries_display %}
+					<li class="details-table__sublist-item">
+						{{ date }}: {{ status|capfirst }}
+					</li>
 				{% endfor %}
 			</ul>
 		</li>
