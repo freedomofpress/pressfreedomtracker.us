@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classNames from "classnames"
 
 export default function CategorySection({
 	symbol,
@@ -10,7 +11,7 @@ export default function CategorySection({
 	children,
 }) {
 	return (
-		<div className="category-checkbox">
+		<div className={classNames("category-checkbox", {"category-checkbox--disabled": count === 0})}>
 			<input
 				className="category-checkbox--input"
 				type="checkbox"
