@@ -39,6 +39,7 @@ class IncidentCharge(ClusterableModel):
     ]
 
     def entries_display(self):
+        date_format = '%b. %-d, %Y'
         entries = [
             (self.date, self.get_status_display())
         ] + [

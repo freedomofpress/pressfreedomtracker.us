@@ -10,7 +10,8 @@ from incident.models import choices
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
-    ChargeFactory,
+    IncidentChargeFactory,
+    IncidentChargeWithUpdatesFactory,
     EquipmentBrokenFactory,
     EquipmentSeizedFactory,
     LawEnforcementOrganizationFactory,
@@ -54,6 +55,18 @@ class TestCategoryFieldValuesByField(TestCase):
         for item in getattr(self.incident, field_name).all():
             self.assertIn(item.title, output)
             self.assertIn(f'{field_name}={item.title}', output)
+        getattr(self.incident, field_name).clear()
+        output = render_function(self.incident, field_name, self.index)
+        self.assertEqual(output, '')
+
+    def assert_charges(self, field_name, render_function):
+        output = render_function(self.incident, field_name, self.index)
+        for incident_charge in getattr(self.incident, field_name).all():
+            self.assertIn(incident_charge.charge.title, output)
+            self.assertIn(f'{field_name}={incident_charge.charge.pk}', output)
+            for date, status in incident_charge.entries_display():
+                self.assertIn(date, output)
+                self.assertIn(status.capitalize(), output)
         getattr(self.incident, field_name).clear()
         output = render_function(self.incident, field_name, self.index)
         self.assertEqual(output, '')
@@ -109,20 +122,32 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assertIn(leo.title, strip_tags(output))
         self.assertIn(f'arresting_authority={leo.title}', output)
 
-    def test_current_charges(self):
-        self.incident.current_charges = ChargeFactory.create_batch(2)
-        self.incident.save()
-        self.assert_many_relationship(
-            'current_charges',
-            CAT_FIELD_VALUES['current_charges'],
+    def test_charges(self):
+        IncidentChargeFactory(
+            incident_page=self.incident,
+            status='CHARGES_PENDING',
+            date='2022-01-01',
+        )
+        self.assert_charges(
+            'charges',
+            CAT_FIELD_VALUES['charges'],
         )
 
-    def test_dropped_charges(self):
-        self.incident.dropped_charges = ChargeFactory.create_batch(2)
-        self.incident.save()
-        self.assert_many_relationship(
-            'dropped_charges',
-            CAT_FIELD_VALUES['dropped_charges'],
+    def test_charges_with_updates(self):
+        IncidentChargeWithUpdatesFactory(
+            incident_page=self.incident,
+            status='UNKNOWN',
+            date='2022-01-01',
+            update1__status='CHARGES_PENDING',
+            update1__date='2022-01-02',
+            update2__status='CONVICTED',
+            update2__date='2022-01-03',
+            update3__status='ACQUITTED',
+            update3__date='2022-01-04',
+        )
+        self.assert_charges(
+            'charges',
+            CAT_FIELD_VALUES['charges'],
         )
 
     def test_politicians_or_public_figures_involved(self):
@@ -339,9 +364,6 @@ class CategoryFieldValues(TestCase):
             equipment_damage=True,
             politicians_or_public_figures_involved=3,
         )
-        charge = ChargeFactory()
-        self.incident.current_charges.add(charge)
-        self.incident.save()
 
         self.category_details = self.incident.get_category_details()
 
