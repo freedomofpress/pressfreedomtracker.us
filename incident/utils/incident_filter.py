@@ -202,7 +202,7 @@ class DateFilter(Filter):
     def get_verbose_name(self):
         if self.verbose_name:
             return self.verbose_name
-        return '{} between'.format(super(DateFilter, self).get_verbose_name())
+        return super(DateFilter, self).get_verbose_name()
 
     def clean(self, value, strict=False):
         start, end = value
@@ -700,7 +700,7 @@ def get_openapi_parameters():
 class IncidentFilter(object):
     filter_overrides = {
         'categories': {'lookup': 'categories__category', 'text_fields': ['title']},
-        'date': {'fuzzy': True, 'verbose_name': 'took place between'},
+        'date': {'fuzzy': True, 'verbose_name': 'took place'},
         'city': {'lookup': 'city__iexact'},
         'equipment_seized': {'lookup': 'equipment_seized__equipment', 'text_fields': ['name']},
         'equipment_broken': {'lookup': 'equipment_broken__equipment', 'text_fields': ['name']},

@@ -160,7 +160,7 @@ class SerializeFilterTest(TestCase):
         field = IncidentPage._meta.get_field('release_date')
         filter_ = IncidentFilter._get_filter(field)
         self.assertEqual(filter_.serialize(), {
-            'title': 'Release date between',
+            'title': 'Release date',
             'type': 'date',
             'name': 'release_date',
         })

@@ -41,7 +41,7 @@ class FilterFormTest(TestCase):
         item = {
             'filters': [
                 {
-                    'title': 'Took place between',
+                    'title': 'Took place',
                     'type': 'date',
                     'name': name
                 }
