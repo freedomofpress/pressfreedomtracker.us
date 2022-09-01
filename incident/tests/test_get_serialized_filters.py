@@ -162,7 +162,7 @@ class GetSerializedFiltersTest(TestCase):
                 'symbol': category3.page_symbol,
                 'filters': [
                     {
-                        'title': 'Release date between',
+                        'title': 'Release date',
                         'type': 'date',
                         'name': 'release_date',
                     }
