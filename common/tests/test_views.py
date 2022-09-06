@@ -327,6 +327,7 @@ class SubscribeForSiteViewTest(TestCase):
             HTTP_ACCEPT='text/html',
         )
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'common/_subscribe_error.html')
         self.assertIn(
             'An internal error occurred',
             response.content.decode('utf-8'),
@@ -341,11 +342,36 @@ class SubscribeForSiteViewTest(TestCase):
             HTTP_ACCEPT='text/html',
         )
         self.assertEqual(self.response.status_code, 200)
-        # self.assertEqual(self.response.url, reverse('subscribe_thanks'))
+        self.assertTemplateUsed(self.response, 'common/_subscribe_thanks.html')
         mock_subscribe.assert_called_once_with(
             self.site,
             Subscription(email=email, full_name=None)
         )
+
+    @mock.patch('common.views.subscribe_for_site')
+    def test_subscribe_view_accept_any_succeeds(self, mock_subscribe):
+        email = 'test3@example.com'
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            {'email': email},
+            HTTP_ACCEPT='text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
+        )
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, 'common/_subscribe_thanks.html')
+        mock_subscribe.assert_called_once_with(
+            self.site,
+            Subscription(email=email, full_name=None)
+        )
+
+    def test_subscribe_view_content_type_not_form_data_fails(self):
+        email = 'test3@example.com'
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            {'email': email},
+            HTTP_ACCEPT='*/*',
+            content_type='text/html'
+        )
+        self.assertEqual(self.response.status_code, 400)
 
     def test_nonajax_subscribe_view_with_missing_email_yields_error_message(self):
         response = self.client.post(
