@@ -3,6 +3,7 @@ from unittest import mock
 
 from django.core.files.base import ContentFile
 from django.urls import reverse
+from django.utils.http import urlencode
 from django.test import TestCase, override_settings
 from wagtail.documents.models import Document
 from common.models import CommonTag
@@ -207,9 +208,10 @@ class MailchimpInterestViewTest(TestCase):
         self.mailchimp_lists = fake_mc_data
 
     def test_view_forbidden_if_not_logged_in(self):
-        response = self.client.get(reverse('mailchimp_interests'))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse('wagtailadmin_login'), response.url)
+        target_url = reverse('mailchimp_interests')
+        response = self.client.get(target_url)
+        expected_url = reverse('wagtailadmin_login') + '?' + urlencode({'next': target_url})
+        self.assertRedirects(response, expected_url)
 
     def test_view_reports_error_if_no_api_key(self):
         self.client.force_login(self.user)
