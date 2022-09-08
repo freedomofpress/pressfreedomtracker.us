@@ -3,6 +3,7 @@ from unittest import mock
 
 from django.core.files.base import ContentFile
 from django.urls import reverse
+from django.utils.http import urlencode
 from django.test import TestCase, override_settings
 from wagtail.documents.models import Document
 from common.models import CommonTag
@@ -207,9 +208,10 @@ class MailchimpInterestViewTest(TestCase):
         self.mailchimp_lists = fake_mc_data
 
     def test_view_forbidden_if_not_logged_in(self):
-        response = self.client.get(reverse('mailchimp_interests'))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(reverse('wagtailadmin_login'), response.url)
+        target_url = reverse('mailchimp_interests')
+        response = self.client.get(target_url)
+        expected_url = reverse('wagtailadmin_login') + '?' + urlencode({'next': target_url})
+        self.assertRedirects(response, expected_url)
 
     def test_view_reports_error_if_no_api_key(self):
         self.client.force_login(self.user)
@@ -327,6 +329,7 @@ class SubscribeForSiteViewTest(TestCase):
             HTTP_ACCEPT='text/html',
         )
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'common/_subscribe_error.html')
         self.assertIn(
             'An internal error occurred',
             response.content.decode('utf-8'),
@@ -341,11 +344,36 @@ class SubscribeForSiteViewTest(TestCase):
             HTTP_ACCEPT='text/html',
         )
         self.assertEqual(self.response.status_code, 200)
-        # self.assertEqual(self.response.url, reverse('subscribe_thanks'))
+        self.assertTemplateUsed(self.response, 'common/_subscribe_thanks.html')
         mock_subscribe.assert_called_once_with(
             self.site,
             Subscription(email=email, full_name=None)
         )
+
+    @mock.patch('common.views.subscribe_for_site')
+    def test_subscribe_view_accept_any_succeeds(self, mock_subscribe):
+        email = 'test3@example.com'
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            {'email': email},
+            HTTP_ACCEPT='text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
+        )
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, 'common/_subscribe_thanks.html')
+        mock_subscribe.assert_called_once_with(
+            self.site,
+            Subscription(email=email, full_name=None)
+        )
+
+    def test_subscribe_view_content_type_not_form_data_fails(self):
+        email = 'test3@example.com'
+        self.response = self.client.post(
+            reverse('subscribe_for_site'),
+            {'email': email},
+            HTTP_ACCEPT='*/*',
+            content_type='text/html'
+        )
+        self.assertEqual(self.response.status_code, 400)
 
     def test_nonajax_subscribe_view_with_missing_email_yields_error_message(self):
         response = self.client.post(

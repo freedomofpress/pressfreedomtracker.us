@@ -1027,9 +1027,9 @@ wagtail==2.15.2 \
     #   wagtail-factories
     #   wagtail-inventory
     #   wagtail-metadata
-wagtail-autocomplete==0.8.1 \
-    --hash=sha256:14d3de24247c9e8e3710fad7aac5f8aae38e78624cb348fe45b149cacc8af5f8 \
-    --hash=sha256:bdb9da6f442e2577cff463883dbdf178f9a68ebb49b7e5dbb0c4f21f3b26f5e1
+wagtail-autocomplete==0.9.0 \
+    --hash=sha256:b64828d35f370453c84bc4094174872822798e54414f5fb9fc8a43c2a6c3e727 \
+    --hash=sha256:d85789543308d344447656725b9aac8d1c4c6fb271221a3340008a3c9f2ab6fa
     # via -r requirements.txt
 wagtail-django-recaptcha==1.0 \
     --hash=sha256:fc177e75da966e9db1dfd9a566c40d30567518d9280b5db4fec4d50a8c853154
