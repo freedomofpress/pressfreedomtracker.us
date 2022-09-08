@@ -63,7 +63,7 @@ def serve(*args, **kwargs):
 
 class SubscribeForSite(View):
     def post(self, request):
-        if request.accepts('application/json'):
+        if request.content_type == 'application/json':
             try:
                 data = SubscriptionSchema().loads(request.body)
             except json.JSONDecodeError:
@@ -88,7 +88,7 @@ class SubscribeForSite(View):
                     }
                 )
             return JsonResponse({'success': True})
-        else:
+        elif request.content_type == 'application/x-www-form-urlencoded' or request.content_type == 'multipart/form-data':
             try:
                 data = SubscriptionSchema().load(
                     request.POST,
@@ -106,8 +106,8 @@ class SubscribeForSite(View):
             except MailchimpError as err:
                 logger.warning(
                     'Error communicating with Mailchimp',
-                    mailchimp_error=err.text,
-                    mailchimp_status_code=err.status_code,
+                    mailchimp_error=getattr(err, 'text', str(err)),
+                    mailchimp_status_code=getattr(err, 'status_code', '<none>'),
                 )
                 return render(
                     request,
@@ -118,6 +118,8 @@ class SubscribeForSite(View):
                 request,
                 'common/_subscribe_thanks.html',
             )
+        else:
+            return HttpResponse(status=400)
 
 
 class MergeView(FormView):
