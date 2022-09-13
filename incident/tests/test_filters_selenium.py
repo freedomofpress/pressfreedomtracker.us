@@ -1,3 +1,4 @@
+import unittest
 import urllib.parse
 import itertools
 from datetime import timedelta
@@ -36,6 +37,7 @@ def powerset(iterable):
     )
 
 
+@unittest.skip('Test applies to legacy templates')
 class FilterTest(SeleniumTest):
     def setUp(self):
         super().setUp()
@@ -72,6 +74,7 @@ class FilterTest(SeleniumTest):
         )
 
 
+@unittest.skip('Test applies to legacy templates')
 class BooleanFilterTestCase(FilterTest):
     def setUp(self):
         super().setUp()
