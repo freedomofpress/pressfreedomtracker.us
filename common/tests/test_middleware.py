@@ -68,6 +68,7 @@ class RequestLogTestCase(TestCase):
 
         request = self.factory.get(
             '/',
+            data={'key': 'value'},
             HTTP_USER_AGENT=user_agent,
             HTTP_X_FORWARDED_FOR=forwarded_for,
             HTTP_HOST=host,
@@ -108,6 +109,8 @@ class RequestLogTestCase(TestCase):
                 'path_info': '/',
                 'scheme': 'http',
                 'user': 'username1',
+                'query_string_raw': 'key=value',
+                'query_string_parsed': {'key': 'value'},
             }
         )
 

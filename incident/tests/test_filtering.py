@@ -57,6 +57,21 @@ class TestFiltering(TestCase):
 
         self.assertEqual({incident1}, set(incidents))
 
+    def test_should_filter_by_search_text_with_null_characters(self):
+        """should filter by search text with null characters."""
+        incident1 = IncidentPageFactory(
+            body=[('rich_text', RichText('eggplant'))],
+        )
+        IncidentPageFactory(
+            body=[('rich_text', RichText('science fiction'))],
+        )
+
+        incidents = IncidentFilter(
+            QueryDict('search=eggplant%00')
+        ).get_queryset()
+
+        self.assertQuerysetEqual(incidents, [incident1])
+
     def test_sorting_by_invalid_value_adds_errors(self):
         incident_filter = IncidentFilter(
             QueryDict.fromkeys(['sort'], value='INVALID')
@@ -1591,9 +1606,7 @@ class RecentlyUpdatedFilterTest(TestCase):
             date=timezone.now() - timedelta(days=3),
         )
 
-        incident_filter = IncidentFilter(
-            {'recently_updated': 10}
-        )
+        incident_filter = IncidentFilter(QueryDict('recently_updated=10'))
 
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
@@ -1608,9 +1621,7 @@ class RecentlyUpdatedFilterTest(TestCase):
             first_published_at=timezone.now() - timedelta(days=3),
         )
 
-        incident_filter = IncidentFilter(
-            {'recently_updated': 10}
-        )
+        incident_filter = IncidentFilter(QueryDict('recently_updated=10'))
 
         incident_filter.clean()
         incidents = incident_filter.get_queryset()
@@ -1649,9 +1660,7 @@ class RecentlyUpdatedFilterTest(TestCase):
             first_published_at=timezone.now() - timedelta(days=3),
         )
 
-        incident_filter = IncidentFilter(
-            {'recently_updated': 15}
-        )
+        incident_filter = IncidentFilter(QueryDict('recently_updated=15'))
 
         incident_filter.clean()
         incidents = incident_filter.get_queryset()

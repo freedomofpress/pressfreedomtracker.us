@@ -63,7 +63,7 @@ class Filter(object):
         return self._lookup or self.name
 
     def clean(self, value, strict=False):
-        return self.model_field.to_python(value)
+        return self.model_field.to_python(value.replace('\x00', ''))
 
     def get_allowed_parameters(self):
         return {self.name}
