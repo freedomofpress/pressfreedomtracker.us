@@ -2,7 +2,7 @@
 <ul class="details-table__list">
 	{% for item in items %}
 		<li class="details-table__list-item">
-			<a href="{% pageurl index %}?{{ field }}={{ item.charge.pk }}" class="text-link">
+			<a href="{% pageurl index %}?{{ field }}={{ item.charge.title|urlencode }}" class="text-link">
 				{{ item.charge.title|capfirst }}
 			</a>
 			<ul class="details-table__sublist">

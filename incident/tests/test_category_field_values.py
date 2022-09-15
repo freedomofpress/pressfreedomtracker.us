@@ -1,4 +1,5 @@
 import datetime
+import urllib.parse
 
 from django.test import TestCase
 from django.utils.text import capfirst
@@ -63,7 +64,8 @@ class TestCategoryFieldValuesByField(TestCase):
         output = render_function(self.incident, field_name, self.index)
         for incident_charge in getattr(self.incident, field_name).all():
             self.assertIn(incident_charge.charge.title, output)
-            self.assertIn(f'{field_name}={incident_charge.charge.pk}', output)
+            quoted_title = urllib.parse.quote(incident_charge.charge.title)
+            self.assertIn(f'{field_name}={quoted_title}', output)
             for date, status in incident_charge.entries_display():
                 self.assertIn(date, output)
                 self.assertIn(status.capitalize(), output)
