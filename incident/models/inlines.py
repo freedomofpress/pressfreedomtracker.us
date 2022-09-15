@@ -30,11 +30,13 @@ class IncidentCharge(ClusterableModel):
         choices=choices.STATUS_OF_CHARGES,
         max_length=1000,
     )
+    notes = models.TextField(default='', blank=True)
 
     panels = [
         AutocompletePanel('charge'),
         FieldPanel('date'),
         FieldPanel('status'),
+        FieldPanel('notes'),
         InlinePanel('updates', label='Updates'),
     ]
 
@@ -74,9 +76,11 @@ class ChargeUpdate(models.Model):
         choices=choices.STATUS_OF_CHARGES,
         max_length=1000,
     )
+    notes = models.TextField(default='', blank=True)
     panels = [
         FieldPanel('date'),
         FieldPanel('status'),
+        FieldPanel('notes'),
     ]
 
 
