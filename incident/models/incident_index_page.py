@@ -1,5 +1,6 @@
 import csv
 import json
+import copy
 from typing import TYPE_CHECKING
 from urllib import parse
 
@@ -19,7 +20,7 @@ from common.models.settings import SearchSettings
 from incident.models.export import to_row, is_exportable, to_json
 from incident.models.incident_page import IncidentPage
 from incident.utils.forms import get_filter_forms
-from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
+from incident.utils.incident_filter import IncidentFilter, ManyRelationValue, get_serialized_filters
 from incident.feeds import IncidentIndexPageFeed
 
 if TYPE_CHECKING:
@@ -200,12 +201,16 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             ).only('category')
 
         # Added: .only('category') to both queryset queries above
-
         if incident_filter.cleaned_data:
+            export_filter_data = copy.deepcopy(incident_filter.cleaned_data)
+            for name, value in export_filter_data.items():
+                if isinstance(value, ManyRelationValue) and value.pks:
+                    export_filter_data[name] = ",".join(str(i) for i in value.pks)
+
             context['filtered_export_path'] = (
                 context['export_path'] +
                 '?' +
-                parse.urlencode(incident_filter.cleaned_data)
+                parse.urlencode(export_filter_data)
             )
 
         incident_qs = incident_filter.get_queryset() \
