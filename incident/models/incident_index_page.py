@@ -204,8 +204,9 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         if incident_filter.cleaned_data:
             export_filter_data = copy.deepcopy(incident_filter.cleaned_data)
             for name, value in export_filter_data.items():
-                if isinstance(value, ManyRelationValue) and value.pks:
-                    export_filter_data[name] = ",".join(str(i) for i in value.pks)
+                if isinstance(value, ManyRelationValue):
+                    filter_values = [str(i) for i in value.pks] + value.strings
+                    export_filter_data[name] = ",".join(filter_values)
 
             context['filtered_export_path'] = (
                 context['export_path'] +
