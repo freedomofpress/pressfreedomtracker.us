@@ -104,13 +104,12 @@ class RequestLogTestCase(TestCase):
                     'HTTP_CF_CONNECTING_IP': real_ip,
                     'HTTP_X_FORWARDED_FOR': forwarded_for,
                     'HTTP_X_SCHEME': '',
+                    'QUERY_STRING': 'key=value',
                 },
                 'method': 'GET',
                 'path_info': '/',
                 'scheme': 'http',
                 'user': 'username1',
-                'query_string_raw': 'key=value',
-                'query_string_parsed': {'key': 'value'},
             }
         )
 
