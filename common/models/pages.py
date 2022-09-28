@@ -548,19 +548,6 @@ class SimplePage(MetadataPageMixin, Page):
         StreamFieldPanel('sidebar_content')
     ]
 
-    def get_context(self, request, *args, **kwargs):
-        # Avoid circular import
-        from home.models import HomePage
-
-        context = super(SimplePage, self).get_context(request, *args, **kwargs)
-
-        home = Page.objects.all().live().type(
-            HomePage)[0]
-
-        context['home_page'] = home
-
-        return context
-
     def get_meta_description(self):
         if self.search_description:
             return self.search_description
