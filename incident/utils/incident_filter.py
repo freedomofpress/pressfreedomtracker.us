@@ -423,17 +423,28 @@ class ManyRelationFilter(Filter):
             ))
         return value
 
+    def filter(self, queryset, value):
+        for query_args in self.get_query_arguments(value):
+            queryset = queryset.filter(query_args)
+        return queryset
+
     def get_query_arguments(self, value):
         qs = []
         if self.text_fields and value.strings:
-            qs = [
-                Q(**{f'{self.lookup}__{field}__in': value.strings}) for field in self.text_fields
-            ]
+            for term in value.strings:
+                qs.append(
+                    functools.reduce(
+                        operator.or_,
+                        [
+                            Q(**{f'{self.lookup}__{field}': term}) for field in self.text_fields
+                        ]
+                    )
+                )
         if value.pks:
-            qs.append(Q(**{f'{self.lookup}__in': value.pks}))
-        # Combine all filters using OR operator, if there are no valid
-        # filters, perform no filtering with empty Q().
-        return functools.reduce(operator.or_, qs, Q())
+            qs.extend(
+                [Q(**{self.lookup: pk}) for pk in value.pks]
+            )
+        return qs
 
     def get_verbose_name(self):
         if self.verbose_name:
@@ -478,14 +489,14 @@ class ChargesFilter(ManyRelationFilter):
     def get_query_arguments(self, value):
         qs = []
         if value.pks:
-            charges_match_by_pk = Q(charges__charge__in=value.pks)
-            qs.append(charges_match_by_pk)
+            qs.extend(
+                [Q(charges__charge=pk) for pk in value.pks]
+            )
         if value.strings:
-            charges_match_by_title = Q(charges__charge__title__in=value.strings)
-            qs.append(charges_match_by_title)
-        # Combine all filters using OR operator, if there are no valid
-        # filters, perform no filtering with empty Q().
-        return functools.reduce(operator.or_, qs, Q())
+            qs.extend(
+                [Q(charges__charge__title=title) for title in value.strings]
+            )
+        return qs
 
     def serialize(self):
         # Avoid circular import
@@ -617,16 +628,14 @@ class TargetedInstitutionsFilter(ManyRelationFilter):
     def get_query_arguments(self, value):
         qs = []
         if value.pks:
-            qs.append(
-                Q(targeted_journalists__institution__in=value.pks) | Q(targeted_institutions__in=value.pks)
+            qs.extend(
+                [Q(targeted_journalists__institution=pk) | Q(targeted_institutions=pk) for pk in value.pks]
             )
         if value.strings:
-            qs.append(
-                Q(targeted_journalists__institution__title__in=value.strings) | Q(targeted_institutions__title__in=value.strings)
+            qs.extend(
+                [Q(targeted_journalists__institution__title=title) | Q(targeted_institutions__title=title) for title in value.strings]
             )
-        # Combine all filters using OR operator, if there are no valid
-        # filters, perform no filtering with empty Q().
-        return functools.reduce(operator.or_, qs, Q())
+        return qs
 
 
 def get_serialized_filters(request=None):
@@ -994,7 +1003,6 @@ class IncidentFilter(object):
         of particular filters.
 
         """
-        from common.models import CategoryPage
         from incident.models.items import Institution, TargetedJournalist, Journalist
         queryset = self._get_queryset()
 
@@ -1041,29 +1049,6 @@ class IncidentFilter(object):
                 'Results in {0:%B}'.format(TODAY),
                 num_this_month
             ),)
-
-        # If more than one category is included in this set, add a summary item
-        # for each category of the form ("Total <Category Name>", <Count>)
-        category_data = self.cleaned_data.get('categories')
-        if category_data and len(category_data.pks) + len(category_data.strings) > 1:
-            qs = []
-            if category_data.pks:
-                qs.append(
-                    Q(pk__in=category_data.pks)
-                )
-            if category_data.strings:
-                qs.append(Q(title__in=category_data.strings))
-            # Combine string and primary key data using OR operator,
-            # if there are no valid filters, perform no filtering with
-            # empty Q().
-            qs = functools.reduce(operator.or_, qs, Q())
-            categories = CategoryPage.objects.filter(qs)
-            for category in categories:
-                category_queryset = queryset.filter(categories__category=category)
-                summary = summary + ((
-                    category.plural_name if category.plural_name else category.title,
-                    category_queryset.count(),
-                ),)
 
         return summary
 
