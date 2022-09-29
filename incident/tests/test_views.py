@@ -6,12 +6,15 @@ from django.urls import reverse
 from wagtail.core.models import Site
 from wagtail.core.rich_text import RichText
 
-from incident.models import Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist, GovernmentWorker
+from incident.models import Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist, GovernmentWorker, IncidentPage
 from incident.wagtail_hooks import ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin
 from incident.tests.factories import (
+    ChargeFactory,
     IncidentPageFactory,
     IncidentIndexPageFactory,
     TargetedJournalistFactory,
+    IncidentChargeFactory,
+    IncidentChargeWithUpdatesFactory,
 )
 
 
@@ -233,13 +236,17 @@ class TargetMergeViewTest(TestCase):
 class ChargeMergeViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.inc1 = IncidentPageFactory(current_charges=1, dropped_charges=1)
-        cls.inc2 = IncidentPageFactory(current_charges=1, dropped_charges=1)
-        IncidentPageFactory(current_charges=1, dropped_charges=1)
-        cls.charge1 = cls.inc1.current_charges.all()[0]
-        cls.charge2 = cls.inc2.current_charges.all()[0]
-        cls.charge3 = cls.inc1.dropped_charges.all()[0]
-        cls.charge4 = cls.inc2.dropped_charges.all()[0]
+        cls.inc1 = IncidentPageFactory()
+        cls.inc2 = IncidentPageFactory()
+
+        cls.charge1, cls.charge2, cls.charge3, cls.charge4 = ChargeFactory.create_batch(4)
+        IncidentChargeFactory(incident_page=cls.inc1, charge=cls.charge1)
+        IncidentChargeWithUpdatesFactory(incident_page=cls.inc1, charge=cls.charge2)
+        IncidentChargeFactory(incident_page=cls.inc2, charge=cls.charge3)
+        IncidentChargeWithUpdatesFactory(incident_page=cls.inc2, charge=cls.charge4)
+
+        IncidentChargeFactory()  # this should not be affected
+
         cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
 
     def setUp(self):
@@ -276,12 +283,10 @@ class ChargeMergeViewTest(TestCase):
         Charge.objects.get(title=self.new_charge_title)
 
     def test_new_charge_has_old_charge_relationships(self):
-        new_charge = Charge.objects.get(title=self.new_charge_title)
-        self.assertEqual(set(new_charge.current_charge_incidents.all()), {self.inc1, self.inc2})
-
-    def test_new_charge_has_old_charge_relationships2(self):
-        new_charge = Charge.objects.get(title=self.new_charge_title)
-        self.assertEqual(set(new_charge.dropped_charge_incidents.all()), {self.inc1, self.inc2})
+        incidents_with_new_charge = IncidentPage.objects.filter(
+            charges__charge__title=self.new_charge_title
+        ).distinct()
+        self.assertQuerysetEqual(incidents_with_new_charge, [self.inc1, self.inc2])
 
     def test_merged_charges_are_deleted(self):
         with self.assertRaises(Charge.DoesNotExist):

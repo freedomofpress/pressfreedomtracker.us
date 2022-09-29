@@ -4,7 +4,6 @@ import inspect
 from django.core.exceptions import ValidationError
 from django.utils.text import smart_split
 
-from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import (
     MAPS,
     NUMBERS,
@@ -13,6 +12,8 @@ from statistics.utils import parse_kwargs
 
 
 def validate_dataset_params(dataset, params):
+    from incident.utils.incident_filter import IncidentFilter
+
     errors = {}
 
     if dataset in MAPS:

@@ -14,7 +14,7 @@ from django.db.models import (
     Value,
     When,
 )
-from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth
+from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth, Coalesce
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
@@ -47,7 +47,7 @@ from common.blocks import (
 from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
-from incident.models.inlines import IncidentPageUpdates
+from incident.models.inlines import IncidentPageUpdates, ChargeUpdate, IncidentCharge
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
 from incident.utils.db import CurrentDate, MakeDateRange
@@ -109,8 +109,10 @@ class IncidentQuerySet(PageQuerySet):
         ).prefetch_related(
             'authors__author',
             'categories__category',
-            'current_charges',
-            'dropped_charges',
+            models.Prefetch(
+                'charges',
+                queryset=IncidentCharge.objects.select_related('charge').prefetch_related('updates'),
+            ),
             'equipment_broken__equipment',
             'equipment_seized__equipment',
             'links',
@@ -143,6 +145,33 @@ class IncidentQuerySet(PageQuerySet):
     def updated_within_days(self, days):
         return self.with_most_recent_update().filter(
             updated_days_ago__lte=days
+        )
+
+    def with_most_recent_status_of_charges(self):
+        """Annotate each incident with an array containing every
+        charge's most recent status."""
+        newest_update = ChargeUpdate.objects.filter(
+            incident_charge=OuterRef('pk'),
+            date__gt=OuterRef('date')
+        ).order_by('-date').values('status')[:1]
+
+        latest_status = IncidentCharge.objects.filter(
+            pk=OuterRef('pk'),
+        ).annotate(
+            newest_update=Subquery(newest_update),
+            latest_status=Coalesce('newest_update', 'status'),
+        ).values('latest_status')
+
+        charges_with_latest_status = IncidentCharge.objects.filter(
+            incident_page=OuterRef('pk'),
+        ).values(
+            'incident_page__pk',
+        ).annotate(
+            latest_status=ArrayAgg(latest_status)
+        ).values('latest_status')
+
+        return self.annotate(
+            most_recent_charge_statuses=Subquery(charges_with_latest_status),
         )
 
     def fuzzy_date_filter(self, lower=None, upper=None):
@@ -616,12 +645,13 @@ class IncidentPage(MetadataPageMixin, Page):
 
 
         MultiFieldPanel(
-            heading='Detention/Arrest',
+            heading='Arrest/Criminal Charge',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('arrest_status'),
-                FieldPanel('status_of_charges'),
                 AutocompletePanel('arresting_authority', target_model='incident.LawEnforcementOrganization'),
+                FieldPanel('arrest_status'),
+                InlinePanel('charges', label='Charges'),
+                FieldPanel('status_of_charges'),
                 AutocompletePanel('current_charges', 'incident.Charge'),
                 AutocompletePanel('dropped_charges', 'incident.Charge'),
                 FieldPanel('detention_date'),
@@ -690,7 +720,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Leak Prosecution (incl. Legal Case, Arrest/Detention',
+            heading='Leak Prosecution (incl. Legal Case, Arrest/Detention)',
             classname='collapsible collapsed',
             children=[
                 AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker'),

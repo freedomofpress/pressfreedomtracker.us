@@ -33,6 +33,8 @@ from incident.tests.factories import (
     TargetedJournalistFactory,
     LawEnforcementOrganizationFactory,
     NationalityFactory,
+    IncidentChargeFactory,
+    IncidentChargeWithUpdatesFactory,
 )
 from incident.utils.incident_filter import IncidentFilter, ManyRelationValue
 
@@ -247,7 +249,7 @@ class TestFiltering(TestCase):
         self.assertEqual(set(incidents), {target1, target2})
 
     def test_should_filter_charges_as_one_field(self):
-        """Filter should filter charges as if current and dropped charges are a single field"""
+        """Filter should filter charges regardless of status"""
         category = CategoryPageFactory(
             title='Arrest / Criminal Charge',
             incident_filters=['charges'],
@@ -257,17 +259,20 @@ class TestFiltering(TestCase):
         target2 = IncidentPageFactory(categories=[category])
         IncidentPageFactory(categories=[category])
 
-        target1.current_charges.add(charge)
-        target2.dropped_charges.add(charge)
-        target1.current_charges.commit()
-        target2.dropped_charges.commit()
+        IncidentChargeFactory(
+            incident_page=target1,
+            charge=charge,
+        )
+        IncidentChargeFactory(
+            incident_page=target2,
+            charge=charge,
+        )
 
         incidents = IncidentFilter(dict(
             categories=str(category.id),
             charges=str(charge.pk),
         )).get_queryset()
-
-        self.assertEqual(set(incidents), {target1, target2})
+        self.assertQuerysetEqual(incidents, [target1, target2])
 
     def test_should_filter_charges_by_title_as_one_field(self):
         """Filter should filter charges by title as if current and dropped charges are a single field"""
@@ -280,17 +285,58 @@ class TestFiltering(TestCase):
         target2 = IncidentPageFactory(categories=[category])
         IncidentPageFactory(categories=[category])
 
-        target1.current_charges.add(charge)
-        target2.dropped_charges.add(charge)
-        target1.current_charges.commit()
-        target2.dropped_charges.commit()
-
+        IncidentChargeFactory(
+            incident_page=target1,
+            charge=charge,
+        )
+        IncidentChargeFactory(
+            incident_page=target2,
+            charge=charge,
+        )
         incidents = IncidentFilter(dict(
             categories=str(category.id),
             charges=charge.title,
         )).get_queryset()
 
-        self.assertEqual(set(incidents), {target1, target2})
+        self.assertQuerysetEqual(incidents, [target1, target2])
+
+    def test_should_filter_incidents_by_most_recent_status(self):
+        category = CategoryPageFactory(
+            title='Arrest / Criminal Charge',
+            incident_filters=['status_of_charges'],
+        )
+        desired_status = 'PENDING_APPEAL'
+        target1 = IncidentPageFactory(categories=[category])
+        target2 = IncidentPageFactory(categories=[category])
+        IncidentPageFactory(categories=[category])
+        IncidentChargeWithUpdatesFactory(
+            incident_page=target1,
+            status='UNKNOWN',
+            date='2022-01-01',
+            update1__status='CHARGES_PENDING',
+            update1__date='2022-01-02',
+            update2__status='CONVICTED',
+            update2__date='2022-01-03',
+            update3__status=desired_status,
+            update3__date='2022-01-04',
+        )
+        IncidentChargeWithUpdatesFactory(
+            incident_page=target2,
+            status='UNKNOWN',
+            date='2022-01-01',
+            update1__status='CHARGES_PENDING',
+            update1__date='2022-01-02',
+            update2__status=desired_status,
+            update2__date='2022-01-03',
+            update3__status='CHARGES_DROPPED',
+            update3__date='2022-01-04',
+        )
+        incidents = IncidentFilter(dict(
+            categories=str(category.id),
+            status_of_charges=desired_status,
+        )).get_queryset(strict=True)
+
+        self.assertQuerysetEqual(incidents, [target1])
 
 
 class TestBooleanFiltering(TestCase):

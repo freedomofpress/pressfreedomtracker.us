@@ -1,4 +1,5 @@
 import datetime
+import urllib.parse
 
 from django.test import TestCase
 from django.utils.text import capfirst
@@ -10,7 +11,8 @@ from incident.models import choices
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
-    ChargeFactory,
+    IncidentChargeFactory,
+    IncidentChargeWithUpdatesFactory,
     EquipmentBrokenFactory,
     EquipmentSeizedFactory,
     LawEnforcementOrganizationFactory,
@@ -54,6 +56,19 @@ class TestCategoryFieldValuesByField(TestCase):
         for item in getattr(self.incident, field_name).all():
             self.assertIn(item.title, output)
             self.assertIn(f'{field_name}={item.title}', output)
+        getattr(self.incident, field_name).clear()
+        output = render_function(self.incident, field_name, self.index)
+        self.assertEqual(output, '')
+
+    def assert_charges(self, field_name, render_function):
+        output = render_function(self.incident, field_name, self.index)
+        for incident_charge in getattr(self.incident, field_name).all():
+            self.assertIn(incident_charge.charge.title, output)
+            quoted_title = urllib.parse.quote(incident_charge.charge.title)
+            self.assertIn(f'{field_name}={quoted_title}', output)
+            for date, status in incident_charge.entries_display():
+                self.assertIn(date, output)
+                self.assertIn(status.capitalize(), output)
         getattr(self.incident, field_name).clear()
         output = render_function(self.incident, field_name, self.index)
         self.assertEqual(output, '')
@@ -109,20 +124,32 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assertIn(leo.title, strip_tags(output))
         self.assertIn(f'arresting_authority={leo.title}', output)
 
-    def test_current_charges(self):
-        self.incident.current_charges = ChargeFactory.create_batch(2)
-        self.incident.save()
-        self.assert_many_relationship(
-            'current_charges',
-            CAT_FIELD_VALUES['current_charges'],
+    def test_charges(self):
+        IncidentChargeFactory(
+            incident_page=self.incident,
+            status='CHARGES_PENDING',
+            date='2022-01-01',
+        )
+        self.assert_charges(
+            'charges',
+            CAT_FIELD_VALUES['charges'],
         )
 
-    def test_dropped_charges(self):
-        self.incident.dropped_charges = ChargeFactory.create_batch(2)
-        self.incident.save()
-        self.assert_many_relationship(
-            'dropped_charges',
-            CAT_FIELD_VALUES['dropped_charges'],
+    def test_charges_with_updates(self):
+        IncidentChargeWithUpdatesFactory(
+            incident_page=self.incident,
+            status='UNKNOWN',
+            date='2022-01-01',
+            update1__status='CHARGES_PENDING',
+            update1__date='2022-01-02',
+            update2__status='CONVICTED',
+            update2__date='2022-01-03',
+            update3__status='ACQUITTED',
+            update3__date='2022-01-04',
+        )
+        self.assert_charges(
+            'charges',
+            CAT_FIELD_VALUES['charges'],
         )
 
     def test_politicians_or_public_figures_involved(self):
@@ -328,20 +355,22 @@ class CategoryFieldValues(TestCase):
         self.category3 = CategoryPageFactory(
             **{'other_incident': True}
         )
+        self.category4 = CategoryPageFactory(
+            denial_of_access=True,
+        )
 
         self.incident = IncidentPageFactory(
             parent=self.index,
-            categories=[self.category3, self.category1, self.category2],
-            **{'arrest': True, 'equipment_damage': True}
+            categories=[self.category3, self.category1, self.category2, self.category4],
+            arrest=True,
+            equipment_damage=True,
+            politicians_or_public_figures_involved=3,
         )
-        charge = ChargeFactory()
-        self.incident.current_charges.add(charge)
-        self.incident.save()
 
         self.category_details = self.incident.get_category_details()
 
     def test_should_get_category_details(self):
-        self.assertEqual(len(self.category_details.items()), 3)
+        self.assertEqual(len(self.category_details.items()), 4)
 
     def test_should_sort_categories_without_metadata_last(self):
         self.assertEqual(
@@ -355,10 +384,19 @@ class CategoryFieldValues(TestCase):
         self.assertIn(self.incident.arrest_status, arrest_details[0]['html'])
 
     def test_should_get_list_category_fields(self):
+        denial_of_access_details = self.category_details[self.category4]
+        self.assertEqual(
+            denial_of_access_details[0]['name'],
+            'Politicians or Public Figures Involved',
+        )
+        for item in self.incident.politicians_or_public_figures_involved.all():
+            self.assertIn(item.title, denial_of_access_details[0]['html'])
+
+    def test_should_get_charges_category_fields(self):
         arrest_details = self.category_details[self.category1]
-        self.assertEqual(arrest_details[3]['name'], 'Current Charges')
-        for current_charge in self.incident.current_charges.all():
-            self.assertIn(current_charge.title, arrest_details[3]['html'])
+        self.assertEqual(arrest_details[2]['name'], 'Charges')
+        for charge in self.incident.charges.all():
+            self.assertIn(charge.title, arrest_details[2]['html'])
 
     def test_should_get_equipment_list_category_fields(self):
         equipment_damage_details = self.category_details[self.category2]
@@ -368,11 +406,12 @@ class CategoryFieldValues(TestCase):
 
     def test_should_get_date_category_fields(self):
         arrest_details = self.category_details[self.category1]
-        self.assertEqual(arrest_details[5]['name'], 'Detention Date')
-        self.assertIn(self.incident.detention_date.isoformat(), arrest_details[5]['html'])
+
+        self.assertEqual(arrest_details[3]['name'], 'Detention Date')
+        self.assertIn(self.incident.detention_date.isoformat(), arrest_details[3]['html'])
 
     def test_should_get_boolean_category_fields(self):
         arrest_details = self.category_details[self.category1]
-        self.assertEqual(arrest_details[7]['name'], 'Unnecessary use of force?')
+        self.assertEqual(arrest_details[5]['name'], 'Unnecessary use of force?')
         expected_value = '1' if self.incident.unnecessary_use_of_force else '0'
-        self.assertIn(expected_value, arrest_details[7]['html'])
+        self.assertIn(expected_value, arrest_details[5]['html'])

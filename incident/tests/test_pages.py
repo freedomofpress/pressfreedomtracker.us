@@ -39,6 +39,8 @@ from .factories import (
     StateFactory,
     InstitutionFactory,
     TargetedJournalistFactory,
+    IncidentChargeFactory,
+    IncidentChargeWithUpdatesFactory,
 )
 
 
@@ -576,6 +578,98 @@ class GetRelatedIncidentsTest(TestCase):
         self.assertEqual(related_incidents, [close, nearby, far, nearby_no_tag_overlap])
 
 
+class RecentChargeStatusesMethod(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get()
+        cls.index = IncidentIndexPageFactory(
+            parent=site.root_page,
+            slug='incidents',
+        )
+
+        cls.incident1, cls.incident2, cls.incident3 = IncidentPageFactory.create_batch(
+            3,
+            parent=cls.index,
+        )
+
+        IncidentChargeWithUpdatesFactory(
+            incident_page=cls.incident1,
+            status='UNKNOWN',
+            date='2022-01-01',
+            update1__status='CHARGES_PENDING',
+            update1__date='2022-01-02',
+            update2__status='CONVICTED',
+            update2__date='2022-01-03',
+            update3__status='PENDING_APPEAL',
+            update3__date='2022-01-04',
+        )
+
+        IncidentChargeWithUpdatesFactory(
+            incident_page=cls.incident1,
+            status='NOT_CHARGED',
+            date='2018-01-01',
+            update1__status='ACQUITTED',
+            update1__date='2019-01-02',
+            update2__status='PENDING_APPEAL',
+            update2__date='2020-01-03',
+            update3__status='UNKNOWN',
+            update3__date='2021-01-04',
+        )
+
+        IncidentChargeFactory(
+            incident_page=cls.incident2,
+            date='2022-01-01',
+            status='CONVICTED',
+        )
+        IncidentChargeWithUpdatesFactory(
+            incident_page=cls.incident2,
+            status='NOT_CHARGED',
+            date='2018-01-01',
+            update1__status='ACQUITTED',
+            update1__date='2019-01-02',
+            update2__status='PENDING_APPEAL',
+            update2__date='2020-01-03',
+            update3__status='UNKNOWN',
+            update3__date='2021-01-04',
+        )
+
+        IncidentChargeWithUpdatesFactory(
+            incident_page=cls.incident3,
+            status='NOT_CHARGED',
+            date='2022-01-01',
+            update1__status='ACQUITTED',
+            update1__date='2019-01-02',
+            update2__status='PENDING_APPEAL',
+            update2__date='2020-01-03',
+            update3__status='UNKNOWN',
+            update3__date='2021-01-04',
+        )
+
+    def test_returns_the_most_recent_statuses_on_all_charges(self):
+        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(pk=self.incident1.pk)
+
+        self.assertEqual(
+            set(incident.most_recent_charge_statuses),
+            set(['PENDING_APPEAL', 'UNKNOWN'])
+        )
+
+    def test_returns_the_most_recent_statuses_without_updates(self):
+        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(pk=self.incident2.pk)
+
+        self.assertEqual(
+            incident.most_recent_charge_statuses,
+            ['CONVICTED', 'UNKNOWN']
+        )
+
+    def test_returns_the_most_recent_statuses_if_base_status_more_recent_than_updates(self):
+        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(pk=self.incident3.pk)
+
+        self.assertEqual(
+            incident.most_recent_charge_statuses,
+            ['NOT_CHARGED']
+        )
+
+
 class RecentlyUpdatedMethod(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -808,8 +902,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
                 'targeted_institutions': 'null',
                 'targeted_journalists': inline_formset([]),
                 'tags': 'null',
-                'current_charges': 'null',
-                'dropped_charges': 'null',
+                'charges': inline_formset([]),
                 'arresting_authority': 'null',
                 'venue': 'null',
                 'target_nationality': 'null',
@@ -850,8 +943,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
             'targeted_institutions': 'null',
             'targeted_journalists': inline_formset([]),
             'tags': 'null',
-            'current_charges': 'null',
-            'dropped_charges': 'null',
+            'charges': inline_formset([]),
             'arresting_authority': 'null',
             'venue': 'null',
             'target_nationality': 'null',
@@ -1067,8 +1159,6 @@ class IncidentPageQueriesTest(TestCase):
             journalist_targets=2,
             institution_targets=2,
             teaser_image=image,
-            current_charges=2,
-            dropped_charges=2,
             politicians_or_public_figures_involved=3,
         )
         for incident in incidents:
@@ -1077,6 +1167,7 @@ class IncidentPageQueriesTest(TestCase):
             incident.save()
             IncidentUpdateFactory.create_batch(2, page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
+            IncidentChargeWithUpdatesFactory.create_batch(3, incident_page=incident)
 
             # Pre-generate renditions to avoid INSERT queries that we
             # don't want to count.

@@ -1,0 +1,17 @@
+{% load wagtailcore_tags %}
+<ul class="details-table__list">
+	{% for item in items %}
+		<li class="details-table__list-item">
+			<a href="{% pageurl index %}?{{ field }}={{ item.charge.title|urlencode }}" class="text-link">
+				{{ item.charge.title|capfirst }}
+			</a>
+			<ul class="details-table__sublist">
+				{% for date, status in item.entries_display %}
+					<li class="details-table__sublist-item">
+						{{ date }}: {{ status|capfirst }}
+					</li>
+				{% endfor %}
+			</ul>
+		</li>
+	{% endfor %}
+</ul>

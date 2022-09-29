@@ -13,7 +13,9 @@ from wagtail.tests.utils.form_data import (
 from common.models.pages import CategoryIncidentFilter, CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
+from common.models.choices import FILTER_CHOICES
 from home.tests.factories import HomePageFactory
+from incident.utils.incident_filter import IncidentFilter
 from incident.tests.factories import IncidentPageFactory
 
 
@@ -112,6 +114,16 @@ class IncidentFilterTest(TestCase):
         self.category = CategoryPageFactory()
         self.site = Site.objects.get(is_default_site=True)
         self.settings = IncidentFilterSettings.for_site(self.site)
+
+    def test_filters_match_dynamically_generated_incident_filters(self):
+        # Incident Filter choices are hard-coded to avoid circular
+        # import problems, but ought to match what the
+        # `IncidentFilter` class itself considers to be the list of
+        # possible filter choices.
+        self.assertEqual(
+            FILTER_CHOICES,
+            list(IncidentFilter.get_filter_choices()),
+        )
 
     def test_valid_incident_filter(self):
         """

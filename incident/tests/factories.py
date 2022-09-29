@@ -5,6 +5,7 @@ import wagtail_factories
 
 from django.utils import timezone
 
+import incident.models
 from incident.models import (
     Charge,
     IncidentAuthor,
@@ -459,6 +460,46 @@ class ChargeFactory(ItemFactory):
     class Meta:
         model = Charge
     title = factory.Sequence(lambda n: f'Charge {n}')
+
+
+class ChargeUpdateFactory(ItemFactory):
+    class Meta:
+        model = incident.models.ChargeUpdate
+
+    date = factory.LazyFunction(timezone.now)
+    status = choices.STATUS_OF_CHARGES[0][0]
+
+
+class IncidentChargeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.IncidentCharge
+
+    incident_page = factory.SubFactory(IncidentPageFactory)
+    charge = factory.SubFactory(ChargeFactory)
+    date = factory.LazyFunction(timezone.now)
+    status = choices.STATUS_OF_CHARGES[0][0]
+
+
+class IncidentChargeWithUpdatesFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.IncidentCharge
+
+    incident_page = factory.SubFactory(IncidentPageFactory)
+    charge = factory.SubFactory(ChargeFactory)
+    date = factory.LazyFunction(timezone.now)
+    status = choices.STATUS_OF_CHARGES[0][0]
+    update1 = factory.RelatedFactory(
+        ChargeUpdateFactory,
+        factory_related_name='incident_charge',
+    )
+    update2 = factory.RelatedFactory(
+        ChargeUpdateFactory,
+        factory_related_name='incident_charge',
+    )
+    update3 = factory.RelatedFactory(
+        ChargeUpdateFactory,
+        factory_related_name='incident_charge',
+    )
 
 
 class NationalityFactory(ItemFactory):

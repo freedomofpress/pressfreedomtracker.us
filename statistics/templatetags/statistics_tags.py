@@ -4,7 +4,6 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
 from common.validators import tag_validator
-from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import Statistics
 from statistics.utils import parse_kwargs
 
@@ -17,6 +16,8 @@ statistics = Statistics()
 @register.simple_tag
 def num_incidents(**kwargs):
     """Return the count of incidents matching the given filter parameters"""
+    from incident.utils.incident_filter import IncidentFilter
+
     incident_filter = IncidentFilter(kwargs)
     try:
         incident_filter.clean(strict=True)
@@ -30,6 +31,8 @@ def num_incidents(**kwargs):
 @register.simple_tag
 def num_institution_targets(**kwargs):
     from incident.models.items import Institution
+    from incident.utils.incident_filter import IncidentFilter
+
     incident_filter = IncidentFilter(kwargs)
     try:
         incident_filter.clean(strict=True)
@@ -43,6 +46,8 @@ def num_institution_targets(**kwargs):
 @register.simple_tag
 def num_journalist_targets(**kwargs):
     from incident.models.items import Journalist, TargetedJournalist
+    from incident.utils.incident_filter import IncidentFilter
+
     incident_filter = IncidentFilter(kwargs)
     try:
         incident_filter.clean(strict=True)
@@ -66,6 +71,7 @@ def num_targets(**kwargs):
 
     """
     from incident.models.items import Journalist, TargetedJournalist, Institution
+    from incident.utils.incident_filter import IncidentFilter
 
     incident_filter = IncidentFilter(kwargs)
     try:
@@ -90,6 +96,8 @@ def num_targets(**kwargs):
 @tag_validator(register, 'num_incidents')
 def validate_filter_kwargs(parser, token):
     """Return the count of incidents matching the given filter parameters"""
+    from incident.utils.incident_filter import IncidentFilter
+
     bits = token.split_contents()
     tag_name, bits = bits[0], bits[1:]
 
