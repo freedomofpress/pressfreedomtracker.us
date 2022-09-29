@@ -107,6 +107,20 @@ def arresting_authority_html_val(page, field, index):
     return f'<a href="{link}" class="text-link">{value}</a>'
 
 
+def charges_html_val(page, field, index):
+    # If no value for the attribute, return blank
+    items = getattr(page, field).all()
+    if not items:
+        return ''
+
+    return render_to_string('incident/category_field/_charge_list_field.html', {
+        'page': page,
+        'index': index,
+        'field': field,
+        'items': items,
+    })
+
+
 def current_charges_html_val(page, field, index):
     return list_html_val(page, field, index)
 

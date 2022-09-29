@@ -51,6 +51,9 @@ EXCLUDED_FIELDS = {
     'index_entries',
     'subscribers',
     'wagtail_admin_comments',
+    'dropped_charges',  # Deprecated
+    'current_charges',  # Deprecated
+    'status_of_charges',  # Deprecated
 }
 
 

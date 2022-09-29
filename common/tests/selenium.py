@@ -1,30 +1,40 @@
 import os
 import socket
-import unittest
 
 from django.db import connections
 from django.db.utils import OperationalError
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.management import call_command
 from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from wagtail.core.models import Page, Site, Locale
+
+from home.models import HomePage
 
 
 SELENIUM_HOST = os.environ['SELENIUM_HOST']
 HOST_IP = socket.gethostbyname(socket.gethostname())
 
 
-@unittest.skip("Skipping till templates have been added")
 class SeleniumTest(StaticLiveServerTestCase):
     host = HOST_IP
+    javascript_enabled = True
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        options = webdriver.FirefoxOptions()
+
+        firefox_profile = FirefoxProfile()
+        firefox_profile.set_preference(
+            "javascript.enabled",
+            cls.javascript_enabled,
+        )
+        options.profile = firefox_profile
         cls.browser = webdriver.Remote(
             command_executor=f'http://{SELENIUM_HOST}:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.FIREFOX,
+            options=options,
         )
 
     @classmethod
@@ -62,7 +72,7 @@ class SeleniumTest(StaticLiveServerTestCase):
             depth=1,
         )
 
-        root_page = root.add_child(instance=Page(
+        root_page = root.add_child(instance=HomePage(
             title='Home',
             path='00010001',
             depth=2,

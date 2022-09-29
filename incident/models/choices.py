@@ -11,6 +11,7 @@ ARREST_STATUS = [
     ('DETAINED_CUSTODY', 'detained and still in custody'),
     ('ARRESTED_CUSTODY', 'arrested and still in custody'),
     ('ARRESTED_RELEASED', 'arrested and released'),
+    ('CHARGED_WITHOUT_ARREST', 'charged without arrest'),
 ]
 
 

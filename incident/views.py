@@ -11,7 +11,7 @@ from wagtail.admin.auth import (
 
 from common.views import MergeView
 from incident.forms import ChargeMergeForm, VenueMergeForm, NationalityMergeForm, PoliticianOrPublicMergeForm, JournalistMergeForm, InstitutionMergeForm, GovernmentWorkerMergeForm, LawEnforcementOrganizationForm
-from incident.models import IncidentPage, Journalist, TargetedJournalist, Institution
+from incident.models import IncidentPage, Journalist, TargetedJournalist, Institution, Charge, IncidentCharge
 
 
 @vary_on_headers('X-Requested-With')
@@ -48,8 +48,22 @@ def incident_admin_search_view(request):
         })
 
 
-class ChargeMergeView(MergeView):
+class ChargeMergeView(FormView):
     form_class = ChargeMergeForm
+    template_name = 'modeladmin/merge_form.html'
+    model_admin = None
+
+    def get_success_url(self):
+        return self.model_admin.url_helper.index_url
+
+    def form_valid(self, form):
+        models_to_merge = form.cleaned_data['models_to_merge']
+        new_title = form.cleaned_data['title_for_merged_models']
+        charge, _ = Charge.objects.get_or_create(title=new_title)
+
+        IncidentCharge.objects.filter(charge__in=models_to_merge).update(charge=charge)
+        models_to_merge.delete()
+        return super().form_valid(form)
 
 
 class LawEnforcementOrganizationMergeView(MergeView):

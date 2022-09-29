@@ -46,11 +46,12 @@ from common.utils import (
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape
 from common.validators import validate_template
-from incident.utils.incident_filter import IncidentFilter
 from statistics.registry import get_numbers_choices
 from statistics.validators import validate_dataset_params
 # Import statistics tags so that statistics dataset choices are populated
 import statistics.templatetags.statistics_tags  # noqa: F401
+
+from .choices import FILTER_CHOICES
 
 
 class BaseSidebarPageMixin(models.Model):
@@ -259,7 +260,7 @@ class TaxonomyCategoryPage(Orderable):
 class CategoryIncidentFilter(Orderable):
     category = ParentalKey('common.CategoryPage', related_name='incident_filters')
     incident_filter = models.CharField(
-        choices=IncidentFilter.get_filter_choices(),
+        choices=FILTER_CHOICES,
         max_length=255,
         unique=True,
     )
@@ -547,19 +548,6 @@ class SimplePage(MetadataPageMixin, Page):
         StreamFieldPanel('body'),
         StreamFieldPanel('sidebar_content')
     ]
-
-    def get_context(self, request, *args, **kwargs):
-        # Avoid circular import
-        from home.models import HomePage
-
-        context = super(SimplePage, self).get_context(request, *args, **kwargs)
-
-        home = Page.objects.all().live().type(
-            HomePage)[0]
-
-        context['home_page'] = home
-
-        return context
 
     def get_meta_description(self):
         if self.search_description:

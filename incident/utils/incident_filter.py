@@ -35,6 +35,7 @@ from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Site
 
 from incident.circuits import STATES_BY_CIRCUIT
+from incident.models.choices import STATUS_OF_CHARGES
 
 
 class Filter(object):
@@ -422,17 +423,28 @@ class ManyRelationFilter(Filter):
             ))
         return value
 
+    def filter(self, queryset, value):
+        for query_args in self.get_query_arguments(value):
+            queryset = queryset.filter(query_args)
+        return queryset
+
     def get_query_arguments(self, value):
         qs = []
         if self.text_fields and value.strings:
-            qs = [
-                Q(**{f'{self.lookup}__{field}__in': value.strings}) for field in self.text_fields
-            ]
+            for term in value.strings:
+                qs.append(
+                    functools.reduce(
+                        operator.or_,
+                        [
+                            Q(**{f'{self.lookup}__{field}': term}) for field in self.text_fields
+                        ]
+                    )
+                )
         if value.pks:
-            qs.append(Q(**{f'{self.lookup}__in': value.pks}))
-        # Combine all filters using OR operator, if there are no valid
-        # filters, perform no filtering with empty Q().
-        return functools.reduce(operator.or_, qs, Q())
+            qs.extend(
+                [Q(**{self.lookup: pk}) for pk in value.pks]
+            )
+        return qs
 
     def get_verbose_name(self):
         if self.verbose_name:
@@ -477,16 +489,14 @@ class ChargesFilter(ManyRelationFilter):
     def get_query_arguments(self, value):
         qs = []
         if value.pks:
-            dropped_charges_match = Q(dropped_charges__in=value.pks)
-            current_charges_match = Q(current_charges__in=value.pks)
-            qs.append(current_charges_match | dropped_charges_match)
+            qs.extend(
+                [Q(charges__charge=pk) for pk in value.pks]
+            )
         if value.strings:
-            dropped_charges_match = Q(dropped_charges__title__in=value.strings)
-            current_charges_match = Q(current_charges__title__in=value.strings)
-            qs.append(current_charges_match | dropped_charges_match)
-        # Combine all filters using OR operator, if there are no valid
-        # filters, perform no filtering with empty Q().
-        return functools.reduce(operator.or_, qs, Q())
+            qs.extend(
+                [Q(charges__charge__title=title) for title in value.strings]
+            )
+        return qs
 
     def serialize(self):
         # Avoid circular import
@@ -534,6 +544,16 @@ class RelationThroughFilter(ManyRelationFilter):
 
         serialized['many'] = True
         return serialized
+
+
+class StatusOfChargesFilter(ChoiceFilter):
+    def get_choices(self):
+        return set({value for value, _ in STATUS_OF_CHARGES})
+
+    def filter(self, queryset, value):
+        return queryset.with_most_recent_status_of_charges().filter(
+            most_recent_charge_statuses__contains=value,
+        )
 
 
 class CircuitsFilter(ChoiceFilter):
@@ -608,16 +628,14 @@ class TargetedInstitutionsFilter(ManyRelationFilter):
     def get_query_arguments(self, value):
         qs = []
         if value.pks:
-            qs.append(
-                Q(targeted_journalists__institution__in=value.pks) | Q(targeted_institutions__in=value.pks)
+            qs.extend(
+                [Q(targeted_journalists__institution=pk) | Q(targeted_institutions=pk) for pk in value.pks]
             )
         if value.strings:
-            qs.append(
-                Q(targeted_journalists__institution__title__in=value.strings) | Q(targeted_institutions__title__in=value.strings)
+            qs.extend(
+                [Q(targeted_journalists__institution__title=title) | Q(targeted_institutions__title=title) for title in value.strings]
             )
-        # Combine all filters using OR operator, if there are no valid
-        # filters, perform no filtering with empty Q().
-        return functools.reduce(operator.or_, qs, Q())
+        return qs
 
 
 def get_serialized_filters(request=None):
@@ -714,13 +732,14 @@ class IncidentFilter(object):
         },
         'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter, 'text_fields': ['title']},
         'arresting_authority': {'filter_cls': RelationFilter, 'verbose_name': 'Arresting authority'},
+        'status_of_charges': {'filter_cls': StatusOfChargesFilter},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
-        'state': {'text_fields': ['abbreviation', 'name']}
+        'state': {'text_fields': ['abbreviation', 'name']},
+        'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'}
     }
 
     _extra_filters = {
         'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
-        'charges': ChargesFilter(name='charges', model_field=CharField(verbose_name='charges'), text_fields=['title']),
         'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
         'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last')
     }
@@ -737,6 +756,8 @@ class IncidentFilter(object):
         'search_image',
         'longitude',
         'latitude',
+        # 'dropped_charges',
+        # 'current_charges',
     }
 
     class SortOptions(TextChoices):
@@ -944,11 +965,11 @@ class IncidentFilter(object):
             if errors:
                 raise ValidationError(errors)
 
-    def _get_queryset(self):
+    def _get_queryset(self, strict=False):
         # Prevent circular imports
         from incident.models.incident_page import IncidentPage
         if self.cleaned_data is None:
-            self.clean()
+            self.clean(strict=strict)
 
         queryset = IncidentPage.objects.live()
 
@@ -960,8 +981,8 @@ class IncidentFilter(object):
         queryset = self._sort_queryset(queryset)
         return queryset.distinct()
 
-    def get_queryset(self):
-        return self._get_queryset().distinct()
+    def get_queryset(self, *, strict=False):
+        return self._get_queryset(strict).distinct()
 
     def _sort_queryset(self, queryset):
         if self.sort == self.SortOptions.OLDEST_DATE:
@@ -982,7 +1003,6 @@ class IncidentFilter(object):
         of particular filters.
 
         """
-        from common.models import CategoryPage
         from incident.models.items import Institution, TargetedJournalist, Journalist
         queryset = self._get_queryset()
 
@@ -1029,29 +1049,6 @@ class IncidentFilter(object):
                 'Results in {0:%B}'.format(TODAY),
                 num_this_month
             ),)
-
-        # If more than one category is included in this set, add a summary item
-        # for each category of the form ("Total <Category Name>", <Count>)
-        category_data = self.cleaned_data.get('categories')
-        if category_data and len(category_data.pks) + len(category_data.strings) > 1:
-            qs = []
-            if category_data.pks:
-                qs.append(
-                    Q(pk__in=category_data.pks)
-                )
-            if category_data.strings:
-                qs.append(Q(title__in=category_data.strings))
-            # Combine string and primary key data using OR operator,
-            # if there are no valid filters, perform no filtering with
-            # empty Q().
-            qs = functools.reduce(operator.or_, qs, Q())
-            categories = CategoryPage.objects.filter(qs)
-            for category in categories:
-                category_queryset = queryset.filter(categories__category=category)
-                summary = summary + ((
-                    category.plural_name if category.plural_name else category.title,
-                    category_queryset.count(),
-                ),)
 
         return summary
 
