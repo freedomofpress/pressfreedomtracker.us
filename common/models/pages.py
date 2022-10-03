@@ -38,7 +38,7 @@ from common.blocks import (
     EmailSignupBlock,
     InfoTableBlock,
 )
-from common.choices import CATEGORY_SYMBOL_CHOICES
+from common.choices import CATEGORY_SYMBOL_CHOICES, CATEGORY_CHART_CHOICES
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
@@ -313,6 +313,24 @@ class CategoryPage(MetadataPageMixin, Page):
         null=True,
         help_text='Detailed description of how we track the data for this particular category.'
     )
+
+    # Data Viz Configuration
+    viz_type = models.CharField(
+        max_length=255,
+        choices=CATEGORY_CHART_CHOICES,
+        default='none',
+        help_text='The type of chart shown in the category page. By default, no chart is shown.'
+    )
+    viz_data_start = models.DateField(
+        'Start Date',
+        blank=True,
+        null=True,
+    )
+    viz_data_end = models.DateField(
+        'End Date',
+        blank=True,
+        null=True,
+    )
     blog_index_page = models.ForeignKey(
         'blog.BlogIndexPage',
         null=True,
@@ -352,6 +370,15 @@ class CategoryPage(MetadataPageMixin, Page):
                 ),
             ],
             'Methodology'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('viz_type'),
+                FieldPanel('viz_data_start'),
+                FieldPanel('viz_data_end'),
+            ],
+            'Data Visualization',
+            classname='collapsible',
         ),
         InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
         MultiFieldPanel(
