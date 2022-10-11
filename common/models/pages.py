@@ -1,6 +1,8 @@
 import json
 from urllib.parse import urlencode
+from datetime import datetime
 
+from django import forms
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.http import Http404
@@ -42,6 +44,7 @@ from common.choices import CATEGORY_SYMBOL_CHOICES, CATEGORY_CHART_CHOICES
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
+    widget,
 )
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape
@@ -53,6 +56,7 @@ import statistics.templatetags.statistics_tags  # noqa: F401
 
 from .choices import FILTER_CHOICES
 
+BIRTH_YEAR_CHOICES = ['1980', '1981', '1982']
 
 class BaseSidebarPageMixin(models.Model):
     """
@@ -285,6 +289,9 @@ class CategoryMethodologyItem(Orderable):
     ]
 
 
+
+
+
 class CategoryPage(MetadataPageMixin, Page):
     description = RichTextField(
         features=[
@@ -322,12 +329,12 @@ class CategoryPage(MetadataPageMixin, Page):
         help_text='The type of chart shown in the category page. By default, no chart is shown.'
     )
     viz_data_start = models.DateField(
-        'Start Date',
+        'Start Year',
         blank=True,
         null=True,
     )
     viz_data_end = models.DateField(
-        'End Date',
+        'End Year',
         blank=True,
         null=True,
     )
@@ -374,8 +381,16 @@ class CategoryPage(MetadataPageMixin, Page):
         MultiFieldPanel(
             [
                 FieldPanel('viz_type'),
-                FieldPanel('viz_data_start'),
-                FieldPanel('viz_data_end'),
+                FieldPanel(
+                    'viz_data_start',
+                    classname="year_field",
+                    widget=widget.YearWidget(years=range(2017, datetime.today().year + 1))
+                ),
+                FieldPanel(
+                    'viz_data_end',
+                    classname="year_field",
+                    widget=widget.YearWidget(years=range(2017, datetime.today().year + 1))
+                ),
             ],
             'Data Visualization',
             classname='collapsible',
