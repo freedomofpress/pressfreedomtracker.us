@@ -1,6 +1,7 @@
 import '../sass/common.sass'
 import './menu'
 import './home'
+import './categoryPage'
 import './filterPopout'
 import './cardLink'
 import './animTable'

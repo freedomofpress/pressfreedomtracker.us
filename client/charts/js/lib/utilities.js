@@ -105,6 +105,29 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 	return datasetGroupedByMonthSorted
 }
 
+export function groupByYearsSorted(dataset) {
+	const datasetGroupedByMonth = d3
+		.groups(
+			dataset.map((d) => ({ month: d.date.getUTCMonth() })),
+			(d) => d.month
+		)
+		.map((d) => ({ month: d[0], monthName: monthNames[d[0]], numberOfIncidents: d[1].length }))
+
+	console.log(datasetGroupedByMonth)
+
+	// If yearly selection, we sort the array by month
+	// If last six months selection, we sort the array based on the last six months
+	const datasetGroupedByMonthSorted = monthNames
+				.map((d) =>
+					datasetGroupedByMonth.filter((e) => e.monthName === d).length === 0
+						? { month: monthIndexes[d] - 1, monthName: d, numberOfIncidents: 0 }
+						: datasetGroupedByMonth.filter((e) => e.monthName === d)
+				)
+				.flat()
+
+	return datasetGroupedByMonthSorted
+}
+
 export function groupByCity(dataset) {
 	// Pick cities from dataset with coordinates
 	const cities = dataset.map((d) => ({

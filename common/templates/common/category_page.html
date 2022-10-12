@@ -6,20 +6,27 @@
 	<h1 class="page-title category category-{{ page.page_symbol }}" id="title">{{ page.title }}</h1>
 
 	<section class="categorypage-section">
-		<div class="categorypage-section-inner">
-			{% with search_page=settings.common.SearchSettings.search_page %}
-				<a class="text-link categorypage-count"
-					href="{% if search_page %}{% pageurl search_page %}?{{ incident_qs }}{% endif %}">
-					Total Incidents: {{ total_incidents }}
-				</a>
-			{% endwith %}
-			<div class="categorypage-summary rich-text">
-				{% filter typogrify %}{% render_as_template page.description %}{% endfilter %}
-			</div>
+		<div class="categorypage-section-inner category-page-section--flex">
+			<div class="categorypage-summary">
+				{% with search_page=settings.common.SearchSettings.search_page %}
+					<a class="text-link categorypage-count"
+						href="{% if search_page %}{% pageurl search_page %}?{{ incident_qs }}{% endif %}">
+						Total Incidents: {{ total_incidents }}
+					</a>
+				{% endwith %}
+				<div class="categorypage-summary--text rich-text">
+					{% filter typogrify %}{% render_as_template page.description %}{% endfilter %}
+				</div>
 
-			{% if data_items %}
-				{% include "common/_categorypage-statistics.html" %}
-			{% endif %}
+				{% if data_items %}
+					{% include "common/_categorypage-statistics.html" %}
+				{% endif %}
+			</div>
+			<div class="js-categorypage-charts"
+				data-category-id="{{ page.pk }}"
+				{% if page.viz_data_start %}data-start-date="{{ page.viz_data_start|date:'c' }}"{% endif %}
+				{% if page.viz_data_end %}data-end-date="{{ page.viz_data_end|date:'c' }}"{% endif %}
+			></div>
 		</div>
 	</section>
 

@@ -389,7 +389,7 @@ class CategoryPage(MetadataPageMixin, Page):
                 FieldPanel(
                     'viz_data_end',
                     classname="year_field",
-                    widget=widget.YearWidget(years=range(2017, datetime.today().year + 1))
+                    widget=widget.YearWidget(years=range(2017, datetime.today().year + 1), isEndOfYear=True)
                 ),
             ],
             'Data Visualization',
