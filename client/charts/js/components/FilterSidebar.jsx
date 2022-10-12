@@ -45,16 +45,16 @@ export default function FilterSidebar({ serializedFilters}) {
 	})
 
 
-	let activeCategories, categoryParameters = [], initialFilterParams = {}
+	let activeCategories, categoryParameters = new Set(), initialFilterParams = {}
 	if (!urlParams.categories || urlParams.categories.length === 0) {
-		activeCategories = [];
+		activeCategories = new Set()
 	} else {
-		activeCategories = urlParams.categories.split(",").map(Number);
+		activeCategories = new Set(urlParams.categories.split(",").map(Number))
 	}
 	for (const category of filters) {
 		// if (category.id === -1) { continue }  // non-categorized filters have an id of -1
-		if (activeCategories.includes(category.id)) {
-			categoryParameters.push(category.title)
+		if (activeCategories.has(category.id)) {
+			categoryParameters.add(category.title)
 		}
 		for (const filter of category.filters) {
 			if (filter.type === 'date') {

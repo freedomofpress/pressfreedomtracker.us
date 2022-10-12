@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import * as d3 from 'd3'
 import { countBy } from 'lodash'
 import { AnimatedDataset } from 'react-animated-dataset'
 import CategorySection from './CategorySection'
 import FilterSet from './FilterSet'
+import { FiltersDispatch } from '../lib/context'
+import {
+	TOGGLE_PARAMETER_ITEM,
+	SET_PARAMETER,
+} from '../lib/actionTypes'
 
 import strokeCircle from './svgIcons/strokeCircle.svg'
 import fillCircle from './svgIcons/fillCircle.svg'
@@ -49,6 +54,7 @@ export default function CategoryFilter({
 	setFilterParameters,
 }) {
 	const selectedCategories = filterParameters.filterCategory.parameters
+	const updateFilters = useContext(FiltersDispatch);
 
 	let categoryFrequencies = {}
 	filterDefs.forEach(c => categoryFrequencies[c.title] = 0)
@@ -110,15 +116,17 @@ export default function CategoryFilter({
 		} else {
 			console.log("else")
 		}
-		const newCategories = (oldCategories) =>
-			oldCategories.includes(targetCategory)
-				? oldCategories.filter((cat) => cat !== targetCategory)
-				: [...oldCategories, targetCategory]
-		setFilterParameters('filterCategory', newCategories)
+		updateFilters({type: TOGGLE_PARAMETER_ITEM, payload: { item: targetCategory, filterName: 'filterCategory'}})
 	}
 
 	function handleFilterChange(event) {
-		setFilterParameters(event.target.name, event.target.value)
+		updateFilters({
+			type: SET_PARAMETER,
+			payload: {
+				filterName: event.target.name,
+				value: event.target.value,
+			},
+		})
 	}
 
 	return (
@@ -174,7 +182,7 @@ export default function CategoryFilter({
 						attrs={{
 							x: (d) => xScale(d.category),
 							y: (d) => height - margins.bottom - yScale(d.count),
-							fill: (d) => (selectedCategories.includes(d.category) ? '#F2FC67' : 'black'),
+							fill: (d) => (selectedCategories.has(d.category) ? '#F2FC67' : 'black'),
 							width: barsWidth,
 							stroke: 'black',
 							strokeWidth: 2,
@@ -221,14 +229,13 @@ export default function CategoryFilter({
 					symbol={filterDef.symbol}
 					label={filterDef.title}
 					count={categoryFrequencies[filterDef.title]}
-					isOpen={selectedCategories.includes(filterDef.title)}
+					isOpen={selectedCategories.has(filterDef.title)}
 					onClick={selectCategoryIfHasCount}
 				>
 					<FilterSet
 						filters={filterDef.filters}
 						filterParameters={filterParameters}
 						handleFilterChange={handleFilterChange}
-						setFilterParameters={setFilterParameters}
 					/>
 				</CategorySection>
 			)}

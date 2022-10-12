@@ -1,5 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
+import TagFilter from './TagFilter'
+import { removeElement } from '../lib/utilities'
+import {
+	SET_PARAMETER,
+} from '../lib/actionTypes'
+import { FiltersDispatch } from '../lib/context'
 
 
 function isDateValid(date) {
@@ -11,8 +17,8 @@ function DateFilter({
 	name,
 	label,
 	value,
-	setFilterParameters,
 }) {
+	const updateFilters = useContext(FiltersDispatch);
 	let lowerId = `id_${name}_after`
 	let upperId = `id_${name}_before`
 	let lowerValue = value.min?.toISOString()?.split('T')[0]
@@ -31,10 +37,15 @@ function DateFilter({
 					onChange={(event) => {
 						let newMinDate = event.target.value
 						newMinDate = isDateValid(newMinDate) ? new Date(newMinDate) : null
-						const newDateRange = (oldDateRange) => {
-							return { ...oldDateRange, min: newMinDate }
-						}
-						setFilterParameters(name, newDateRange)
+						// maybe change this to SET_MIN_PARAMETER if
+						// it is easy to do.
+						updateFilters({
+							type: SET_PARAMETER,
+							payload: {
+								filterName: name,
+								value: { min: newMinDate, max: upperValue }
+							},
+						})
 					}}
 				/>
 			</div>
@@ -50,10 +61,13 @@ function DateFilter({
 					onChange={(event) => {
 						let newMaxDate = event.target.value
 						newMaxDate = isDateValid(newMaxDate) ? new Date(newMaxDate) : null
-						const newDateRange = (oldDateRange) => {
-							return { ...oldDateRange, max: newMaxDate }
-						}
-						setFilterParameters(name, newDateRange)
+						updateFilters({
+							type: SET_PARAMETER,
+							payload: {
+								filterName: name,
+								value: { min: lowerValue, max: newMaxDate }
+							},
+						})
 					}}
 				/>
 			</div>
@@ -246,7 +260,6 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					name={filter.name}
 					label={filter.title}
 					value={filterParameters[filter.name].parameters || {}}
-					setFilterParameters={setFilterParameters}
 				/>
 			)
 		} else if (filter.type === 'radio') {
