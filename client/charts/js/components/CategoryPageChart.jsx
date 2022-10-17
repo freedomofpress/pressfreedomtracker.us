@@ -4,12 +4,7 @@ import Flashing from '../../../common/js/components/Flashing'
 import BarChartYears from "./BarChartYears"
 import BarChartHomepage from "./BarChartHomepage"
 import {
-	filterDatasetByFiltersApplied,
-	groupByMonthSorted,
-	monthIndexes,
-	groupByState,
-	countIncidentsOutsideUS,
-	categoriesColors,
+	goToFilterPage,
 	groupByYearsSorted,
 } from '../lib/utilities.js'
 
@@ -23,15 +18,11 @@ export default function CategoryPageChart(props) {
 	)
 }
 
-function goToFilterPage(databasePath) {
-	// const url = getFilteredUrl(databasePath, filtersApplied, currentDate)
-	window.location = databasePath
-}
-
 function CategoryPageChartWidth({
 	data: dataset,
 	width,
-	databasePath = '/',
+	category,
+	databasePath = window.location.pathname,
 	loading = false,
 }) {
 	const chartWidth = width > 970 ? width / 3 : width
@@ -52,8 +43,8 @@ function CategoryPageChartWidth({
 						width={chartWidth}
 						height={chartHeight}
 						isMobileView={width < 970}
-						openSearchPage={() => {
-							goToFilterPage(databasePath)
+						openSearchPage={(year) => {
+							goToFilterPage(databasePath, {category, year}, new Date())
 						}}
 					/>
 				</div>
