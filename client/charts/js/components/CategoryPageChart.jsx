@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { ParentSize } from '@visx/responsive'
 import Flashing from '../../../common/js/components/Flashing'
 import BarChartYears from "./BarChartYears"
+import BarChartHomepage from "./BarChartHomepage"
 import {
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
@@ -22,10 +23,15 @@ export default function CategoryPageChart(props) {
 	)
 }
 
+function goToFilterPage(databasePath) {
+	// const url = getFilteredUrl(databasePath, filtersApplied, currentDate)
+	window.location = databasePath
+}
+
 function CategoryPageChartWidth({
 	data: dataset,
 	width,
-	currentDate = new Date(),
+	databasePath = '/',
 	loading = false,
 }) {
 	const chartWidth = width > 970 ? width / 3 : width
@@ -38,14 +44,18 @@ function CategoryPageChartWidth({
 			<div className={'cpChartContainer'} style={{ width: width }}>
 				<div className={'cpChart'}>
 					<ChartDescription>Showing the number of incidents per year.</ChartDescription>
-					{/* <BarChartYears
+					<BarChartHomepage
+						data={datasetGroupedByYears}
+						x={'year'}
+						y={'numberOfIncidents'}
+						titleLabel={'incidents'}
 						width={chartWidth}
 						height={chartHeight}
-						countYears={countYears}
-						selectedYears={selectedYears}
-						setSelectedYears={setSelectedYears}
-						onClick={onYearClick}
-					/> */}
+						isMobileView={width < 970}
+						openSearchPage={() => {
+							goToFilterPage(databasePath)
+						}}
+					/>
 				</div>
 			</div>
 		</Flashing>

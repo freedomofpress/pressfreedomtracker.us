@@ -44,7 +44,10 @@ export default function BarChartHomepage({
 	numberOfTicks = 4,
 	openSearchPage,
 }) {
+	console.log(data)
+	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
+	console.log(dataset)
 
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [sliderSelection, setSliderSelection] = useState(dataset[0].index)

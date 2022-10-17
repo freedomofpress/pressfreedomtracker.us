@@ -113,19 +113,8 @@ export function groupByYearsSorted(dataset) {
 		)
 		.map((d) => ({ year: d[0], numberOfIncidents: d[1].length }))
 
-	console.log(datasetGroupedByYear)
-
-	// If yearly selection, we sort the array by month
-	// If last six months selection, we sort the array based on the last six months
-	// const datasetGroupedByMonthSorted = monthNames
-	// 			.map((d) =>
-	// 			datasetGroupedByYear.filter((e) => e.monthName === d).length === 0
-	// 					? { month: monthIndexes[d] - 1, monthName: d, numberOfIncidents: 0 }
-	// 					: datasetGroupedByYear.filter((e) => e.monthName === d)
-	// 			)
-	// 			.flat()
-
-	return datasetGroupedByYear
+	const datasetGroupedByYearSorted = datasetGroupedByYear.sort((a, b) => a.year - b.year)
+	return datasetGroupedByYearSorted
 }
 
 export function groupByCity(dataset) {
