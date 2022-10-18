@@ -22,11 +22,14 @@
 					{% include "common/_categorypage-statistics.html" %}
 				{% endif %}
 			</div>
-			<div class="js-categorypage-charts"
-				data-category-id="{{ page.pk }}"
-				{% if page.viz_data_start %}data-start-date="{{ page.viz_data_start|date:'c' }}"{% endif %}
-				{% if page.viz_data_end %}data-end-date="{{ page.viz_data_end|date:'c' }}"{% endif %}
-			></div>
+			{% with search_page=settings.common.SearchSettings.search_page %}
+				<div class="js-categorypage-charts"
+					data-category-id="{{ page.pk }}"
+					{% if search_page %}data-database-path="{% pageurl search_page %}"{% endif %}
+					{% if page.viz_data_start %}data-start-date="{{ page.viz_data_start|date:'c' }}"{% endif %}
+					{% if page.viz_data_end %}data-end-date="{{ page.viz_data_end|date:'c' }}"{% endif %}
+				></div>
+			{% endwith %}
 		</div>
 	</section>
 

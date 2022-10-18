@@ -11,6 +11,7 @@ const fields = [
 const chartContainers = Array.from(document.getElementsByClassName('js-categorypage-charts'))
 
 chartContainers.forEach((node) => {
+	const databasePath = node.dataset.databasePath
 	const categoryId = parseInt(node.dataset.categoryId)
 	const startDate = node.dataset.startDate
 	const endDate = node.dataset.endDate
@@ -29,10 +30,10 @@ chartContainers.forEach((node) => {
 		<DataLoader
 			dataUrl={`/api/edge/incidents/?${params.toString()}`}
 			loadingComponent={(
-				<CategoryPageChart data={[]} loading={true} />
+				<CategoryPageChart data={[]} loading={true}  databasePath={databasePath} category={categoryId}/>
 			)}
 		>
-			<CategoryPageChart/>
+			<CategoryPageChart databasePath={databasePath} category={categoryId}/>
 		</DataLoader>
 	), node)
 })

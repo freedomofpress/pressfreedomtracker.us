@@ -48,11 +48,15 @@ export const categoriesSlugs = {
 
 export function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 	const origin = window.location.origin
-	const baseUrl = filtersApplied.category === undefined
+	const baseUrl = filtersApplied.category === undefined || categoriesSlugs[filtersApplied.category] === undefined
 		? `${origin}${databasePath}?`
 		: `${origin}/${categoriesSlugs[filtersApplied.category]}/?`
 
 	const parameters = []
+
+	if (!!parseInt(filtersApplied.category)) {
+		parameters.push(`categories=${filtersApplied.category}`)
+	}
 
 	if (filtersApplied.monthName !== undefined) {
 		const monthNumber = monthIndexes[filtersApplied.monthName]
