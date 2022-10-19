@@ -6,7 +6,7 @@
 	<h1 class="page-title category category-{{ page.page_symbol }}" id="title">{{ page.title }}</h1>
 
 	<section class="categorypage-section">
-		<div class="categorypage-section-inner category-page-section--flex">
+		<div class="categorypage-section-inner categorypage-section--flex">
 			<div class="categorypage-summary">
 				{% with search_page=settings.common.SearchSettings.search_page %}
 					<a class="text-link categorypage-count"
@@ -25,6 +25,7 @@
 			{% with search_page=settings.common.SearchSettings.search_page %}
 				<div class="js-categorypage-charts"
 					data-category-id="{{ page.pk }}"
+					data-category-name="{{ page.title }}"
 					{% if search_page %}data-database-path="{% pageurl search_page %}"{% endif %}
 					{% if page.viz_data_start %}data-start-date="{{ page.viz_data_start|date:'c' }}"{% endif %}
 					{% if page.viz_data_end %}data-end-date="{{ page.viz_data_end|date:'c' }}"{% endif %}

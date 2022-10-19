@@ -4,6 +4,14 @@
 .categorypage-section-inner
 	+constrain-to-desktop
 
+.categorypage-section--flex
+	+desktop-up
+		display: flex
+		flex-wrap: wrap
+
+		> *
+			flex: 1
+
 .categorypage-section--gray
 	background-color: $section-background
 

@@ -22,11 +22,11 @@ function CategoryPageChartWidth({
 	data: dataset,
 	width,
 	category,
+	categoryName,
 	databasePath = window.location.pathname,
 	loading = false,
 }) {
-	const chartWidth = width > 970 ? width / 3 : width
-	const chartHeight = width > 970 ? 500 : 480
+	const chartHeight = width > 480 ? 500 : 480
 
 	const datasetGroupedByYears = groupByYearsSorted(dataset)
 
@@ -34,16 +34,18 @@ function CategoryPageChartWidth({
 		<Flashing flashing={loading}>
 			<div className={'cpChartContainer'} style={{ width: width }}>
 				<div className={'cpChart'}>
-					<ChartDescription id={'category-page-chart-label'}>Showing the number of incidents per year.</ChartDescription>
+					<ChartDescription id={'category-page-chart-label'}>
+						Number of {categoryName} incidents per year.
+					</ChartDescription>
 					<BarChartHomepage
 						data={datasetGroupedByYears}
 						x={'year'}
 						y={'numberOfIncidents'}
 						titleLabel={'incidents'}
 						id={'category-page-chart-label'}
-						width={chartWidth}
+						width={width}
 						height={chartHeight}
-						isMobileView={width < 970}
+						isMobileView={width < 480}
 						openSearchPage={(year) => {
 							goToFilterPage(databasePath, {category, year}, new Date())
 						}}

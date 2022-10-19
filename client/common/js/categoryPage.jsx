@@ -12,6 +12,7 @@ const chartContainers = Array.from(document.getElementsByClassName('js-categoryp
 
 chartContainers.forEach((node) => {
 	const databasePath = node.dataset.databasePath
+	const categoryName = node.dataset.categoryName
 	const categoryId = parseInt(node.dataset.categoryId)
 	const startDate = node.dataset.startDate
 	const endDate = node.dataset.endDate
@@ -30,10 +31,10 @@ chartContainers.forEach((node) => {
 		<DataLoader
 			dataUrl={`/api/edge/incidents/?${params.toString()}`}
 			loadingComponent={(
-				<CategoryPageChart data={[]} loading={true}  databasePath={databasePath} category={categoryId}/>
+				<CategoryPageChart data={[]} loading={true}  databasePath={databasePath} category={categoryId} categoryName={categoryName}/>
 			)}
 		>
-			<CategoryPageChart databasePath={databasePath} category={categoryId}/>
+			<CategoryPageChart databasePath={databasePath} category={categoryId} categoryName={categoryName}/>
 		</DataLoader>
 	), node)
 })
