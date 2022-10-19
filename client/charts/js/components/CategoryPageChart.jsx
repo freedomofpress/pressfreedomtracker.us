@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { ParentSize } from '@visx/responsive'
 import Flashing from '../../../common/js/components/Flashing'
-import BarChartYears from "./BarChartYears"
+import ChartDescription from "./ChartDescription"
 import BarChartHomepage from "./BarChartHomepage"
 import {
 	goToFilterPage,
@@ -34,12 +34,13 @@ function CategoryPageChartWidth({
 		<Flashing flashing={loading}>
 			<div className={'cpChartContainer'} style={{ width: width }}>
 				<div className={'cpChart'}>
-					<ChartDescription>Showing the number of incidents per year.</ChartDescription>
+					<ChartDescription id={'category-page-chart-label'}>Showing the number of incidents per year.</ChartDescription>
 					<BarChartHomepage
 						data={datasetGroupedByYears}
 						x={'year'}
 						y={'numberOfIncidents'}
 						titleLabel={'incidents'}
+						id={'category-page-chart-label'}
 						width={chartWidth}
 						height={chartHeight}
 						isMobileView={width < 970}
@@ -50,23 +51,5 @@ function CategoryPageChartWidth({
 				</div>
 			</div>
 		</Flashing>
-	)
-}
-
-function ChartDescription({ children }) {
-	return (
-		<div
-			style={{
-				height: '2em',
-				padding: 10,
-				fontFamily: 'var(--font-base)',
-				fontWeight: 400,
-				fontSize: 14,
-				color: '#7A848E',
-				marginBottom: '1rem'
-			}}
-		>
-			{children}
-		</div>
 	)
 }

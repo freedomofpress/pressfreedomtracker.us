@@ -41,6 +41,7 @@ export default function BarChartHomepage({
 	isMobileView,
 	width,
 	height,
+	id = '',
 	numberOfTicks = 4,
 	openSearchPage,
 }) {
@@ -121,6 +122,7 @@ export default function BarChartHomepage({
 				<svg
 					width={width}
 					height={height}
+					aria-labelledby={id}
 					style={{
 						marginTop: margins.top,
 						marginBottom: margins.bottom,

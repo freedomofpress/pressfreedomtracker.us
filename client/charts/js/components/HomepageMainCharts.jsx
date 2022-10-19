@@ -4,6 +4,7 @@ import TreeMap from './TreeMap'
 import USMap from './USMap'
 import BarChartHomepage from './BarChartHomepage'
 import HomepageSelection from './HomepageSelection'
+import ChartDescription from "./ChartDescription"
 import Flashing from '../../../common/js/components/Flashing'
 import {
 	filterDatasetByFiltersApplied,
@@ -66,7 +67,7 @@ function HomepageMainChartsWidth({
 
 			<div className={'hpChartContainer'} style={{ width: width }}>
 				<div className={'hpChart'}>
-					<ChartDescription>
+					<ChartDescription id={'homepage-treemap-chart-label'}>
 						Showing incidents grouped by type of attack. An incident can fall under more than one
 						category.
 					</ChartDescription>
@@ -74,6 +75,7 @@ function HomepageMainChartsWidth({
 						data={datasetFiltered}
 						width={chartWidth}
 						height={chartHeight}
+						id={'homepage-treemap-chart-label'}
 						isHomePageDesktopView={width > 970}
 						minimumBarHeight={35}
 						categoryColumn={'categories'}
@@ -86,7 +88,7 @@ function HomepageMainChartsWidth({
 					/>
 				</div>
 				<div className={'hpChart'}>
-					<ChartDescription>
+					<ChartDescription id={'homepage-usmap-chart-label'}>
 						Showing incidents distribution in the U.S. Incidents are grouped by state.
 					</ChartDescription>
 					<USMap
@@ -94,18 +96,20 @@ function HomepageMainChartsWidth({
 						incidentsOutsideUS={incidentsOutsideUS}
 						width={chartWidth}
 						height={chartHeight}
+						id={'homepage-usmap-chart-label'}
 						openSearchPage={(state) => {
 							goToFilterPage(databasePath, { ...filtersApplied, state }, currentDate)
 						}}
 					/>
 				</div>
 				<div className={'hpChart'}>
-					<ChartDescription>Showing the number of journalists targeted per month.</ChartDescription>
+					<ChartDescription id={'homepage-bar-chart-label'}>Showing the number of journalists targeted per month.</ChartDescription>
 					<BarChartHomepage
 						data={datasetGroupedByMonth}
 						x={'monthName'}
 						y={'numberOfIncidents'}
 						titleLabel={'incidents'}
+						id={'homepage-bar-chart-label'}
 						width={chartWidth}
 						height={chartHeight}
 						isMobileView={width < 970}
@@ -116,23 +120,5 @@ function HomepageMainChartsWidth({
 				</div>
 			</div>
 		</Flashing>
-	)
-}
-
-function ChartDescription({ children }) {
-	return (
-		<div
-			style={{
-				height: '2em',
-				padding: 10,
-				fontFamily: 'var(--font-base)',
-				fontWeight: 400,
-				fontSize: 14,
-				color: '#7A848E',
-				marginBottom: '1rem'
-			}}
-		>
-			{children}
-		</div>
 	)
 }
