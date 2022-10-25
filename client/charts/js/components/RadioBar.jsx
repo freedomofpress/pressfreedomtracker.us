@@ -2,7 +2,7 @@ import React from 'react'
 
 const RADIO_BOX_WIDTH = 35
 
-export default function RadioBar({ state, count, i, onClick, isSelected, barWidth, width }) {
+export default function RadioBar({ label, count, i, onClick, isSelected, barWidth, width }) {
 	return (
 		<div
 			style={{
@@ -51,7 +51,7 @@ export default function RadioBar({ state, count, i, onClick, isSelected, barWidt
 							fontFamily: 'var(--font-base)',
 						}}
 					>
-						{state}
+						{label}
 					</div>
 					<div
 						style={{
