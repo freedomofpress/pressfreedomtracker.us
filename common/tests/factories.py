@@ -121,6 +121,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
     methodology = RichText("Methodology")
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
+    viz_type = 'none'
 
     @factory.post_generation
     def incident_filters(self, create, extracted, **kwargs):
