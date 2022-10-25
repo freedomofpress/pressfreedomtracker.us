@@ -67,7 +67,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 	function getFilteringExpression(filterName) {
 		if (filtersParameters[filterName].enabled) {
 			switch (filterName) {
-				case 'filterCategory':
+				case 'categories':
 					return (d) => isSubset(
 						Array.from(filtersParameters[filterName].parameters),
 						d.categories
@@ -106,9 +106,9 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 
 		let categories = []
 		filterDefs.forEach(category => {
-			if (category.id === -1 || filtersParameters.filterCategory.parameters.includes(category.title)) {
+			if (category.id === -1 || filtersParameters.categories.parameters.has(category.title)) {
 				if (category.id !== -1) {
-					categories.push(category.id)
+					categories.push(category.title)
 				}
 				category.filters.forEach( ({name, type})=> {
 					let filter = filtersParameters[name]

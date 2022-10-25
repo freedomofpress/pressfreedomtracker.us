@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import FiltersIntegration from "./FiltersIntegration";
+import { decode } from "../lib/queryString";
 import "../../sass/base.sass";
 
 export default function FilterSidebar({ serializedFilters}) {
@@ -44,40 +45,7 @@ export default function FilterSidebar({ serializedFilters}) {
 		get: (searchParams, prop) => searchParams.get(prop),
 	})
 
-
-	let activeCategories, categoryParameters = new Set(), initialFilterParams = {}
-	if (!urlParams.categories || urlParams.categories.length === 0) {
-		activeCategories = new Set()
-	} else {
-		activeCategories = new Set(urlParams.categories.split(",").map(Number))
-	}
-	for (const category of filters) {
-		// if (category.id === -1) { continue }  // non-categorized filters have an id of -1
-		if (activeCategories.has(category.id)) {
-			categoryParameters.add(category.title)
-		}
-		for (const filter of category.filters) {
-			if (filter.type === 'date') {
-				let lowerValue = urlParams[`${filter.name}_lower`]
-				let upperValue = urlParams[`${filter.name}_upper`]
-				initialFilterParams[filter.name] = {
-					enabled: false,
-					type: filter.type,
-					parameters: {
-						min: lowerValue ? new Date(lowerValue) : null,
-						max: upperValue ? new Date(upperValue) : null,
-					},
-				}
-			} else {
-				initialFilterParams[filter.name] = {
-					enabled: false,
-					type: filter.type,
-					parameters: urlParams[filter.name]
-				}
-			}
-		}
-	}
-	initialFilterParams.filterCategory = { type: 'category', parameters: categoryParameters, enabled: true }
+	let initialFilterParams = decode(urlParams)
 
 	return (
 		<FiltersIntegration

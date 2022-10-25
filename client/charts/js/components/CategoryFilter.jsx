@@ -53,7 +53,7 @@ export default function CategoryFilter({
 	filterParameters,
 	setFilterParameters,
 }) {
-	const selectedCategories = filterParameters.filterCategory.parameters
+	const selectedCategories = filterParameters.categories.parameters
 	const updateFilters = useContext(FiltersDispatch);
 
 	let categoryFrequencies = {}
@@ -116,7 +116,7 @@ export default function CategoryFilter({
 		} else {
 			console.log("else")
 		}
-		updateFilters({type: TOGGLE_PARAMETER_ITEM, payload: { item: targetCategory, filterName: 'filterCategory'}})
+		updateFilters({type: TOGGLE_PARAMETER_ITEM, payload: { item: targetCategory, filterName: 'categories'}})
 	}
 
 	function handleFilterChange(event) {
