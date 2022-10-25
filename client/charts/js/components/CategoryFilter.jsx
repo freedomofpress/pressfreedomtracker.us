@@ -132,7 +132,7 @@ export default function CategoryFilter({
 	return (
 		<div className="filters__form--fieldset">
 			<div className="category-graph">
-				<p className="category-graph--label" id="categories-graph-label">Filter by one of more categories</p>
+				<p className="category-graph--label" id="categories-graph-label">Filter by one or more categories</p>
 				<svg
 					width={width}
 					height={height}
