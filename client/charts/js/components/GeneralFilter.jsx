@@ -5,6 +5,9 @@ export default function GeneralFilter({
 	filterDef,
 	filterParameters,
 	setFilterParameters,
+	width,
+	dataset,
+	filterWithout,
 }) {
 
 	function handleFilterChange(event) {
@@ -18,6 +21,9 @@ export default function GeneralFilter({
 				filterParameters={filterParameters}
 				handleFilterChange={handleFilterChange}
 				setFilterParameters={setFilterParameters}
+				width={width}
+				filterWithout={filterWithout}
+				dataset={dataset}
 			/>
 		</div>
 	)

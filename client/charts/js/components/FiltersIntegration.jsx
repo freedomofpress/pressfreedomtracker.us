@@ -83,6 +83,11 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					return (d) =>
 						filtersParameters[filterName].parameters === 'All' ||
 						d.state === filtersParameters[filterName].parameters
+				case 'tags':
+					return (d) => isSubset(
+						Array.from(filtersParameters[filterName].parameters),
+						d.tags,
+					)
 			}
 		} else {
 			return () => true

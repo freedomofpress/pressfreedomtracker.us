@@ -51,7 +51,7 @@ export default function CategoryFilter({
 	height,
 	filterDefs,
 	filterParameters,
-	setFilterParameters,
+	filterWithout,
 }) {
 	const selectedCategories = filterParameters.categories.parameters
 	const updateFilters = useContext(FiltersDispatch);
@@ -236,6 +236,8 @@ export default function CategoryFilter({
 						filters={filterDef.filters}
 						filterParameters={filterParameters}
 						handleFilterChange={handleFilterChange}
+						width={width}
+						filterWithout={filterWithout}
 					/>
 				</CategorySection>
 			)}

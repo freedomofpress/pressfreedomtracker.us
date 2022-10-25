@@ -238,10 +238,27 @@ export function BoolFilter(props) {
 	)
 }
 
-export default function FilterSet({ filters, handleFilterChange, filterParameters, setFilterParameters }) {
+export default function FilterSet({ filters, handleFilterChange, filterParameters, width, dataset, filterWithout}) {
 	const components = filters.map((filter, index) => {
 		if (filter.name === 'search') {
 			return
+		} else if (filter.name == 'tags') {
+			return (
+				<details
+					className="filters__group filters__form--category"
+					open={Boolean(filterParameters.tags.parameters)}
+					key={index}
+				>
+					<summary className="filters__form-summary">
+						<h3 className="filter__heading">Tag</h3>
+					</summary>
+					<TagFilter
+						width={width}
+						dataset={filterWithout.tags(dataset)}
+						filterParameters={filterParameters.tags.parameters}
+					/>
+				</details>
+			)
 		}
 		if (filter.type === 'text') {
 			return (
