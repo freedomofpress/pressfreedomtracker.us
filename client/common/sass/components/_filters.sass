@@ -20,6 +20,10 @@
 		.category-graph--label
 			font-size: 0.875rem
 
+		.filter-widget--label
+			font-size: 0.875rem
+			color: $gray-text
+
 .filters__form-summary
 	margin: -1rem 0
 	padding: 1rem 2rem
@@ -69,3 +73,45 @@
 	margin: 0
 	font-size: 1.25rem
 	font-weight: 400
+
+
+.filters__subheader
+	box-sizing: border-box
+	display: flex
+	justify-content: space-between
+	align-items: center
+	width: 100%
+	padding: 0 0.25rem
+
+.filters__suggestions
+	position: relative
+	z-index: 99
+	font-size: $font-size-small-p
+	margin: auto 0
+	max-height: 13rem
+	overflow-y: auto
+
+.filters__suggestion-tooltip
+	display: none
+
+.filters__suggestion-tooltip-text
+	color: $gray-text
+
+.filters__suggestions-item
+	box-sizing: border-box
+	display: flex
+	justify-content: space-between
+	width: 100%
+	padding: 0.5rem 0.75rem
+	background-color: $white
+
+	&--selectable
+		cursor: pointer
+
+		&:hover, &--active
+			color: $black
+			background-color: $accent-color
+
+			.filters__suggestion-tooltip
+				display: inline
+				margin-left: 0.5rem

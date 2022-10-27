@@ -5,6 +5,7 @@ import GeneralFilter from './GeneralFilter'
 import {
 	TOGGLE_PARAMETER_ITEM,
 	SET_PARAMETER,
+	DELETE_PARAMETER_ITEMS,
 } from '../lib/actionTypes'
 import { FiltersDispatch } from '../lib/context'
 import {
@@ -14,6 +15,7 @@ import {
 	removeElement,
 	isSubset,
 	rangeInclusive,
+	difference,
 } from '../lib/utilities'
 
 
@@ -28,11 +30,20 @@ function filterReducer(state, {type, payload}) {
 				old.add(item)
 			}
 			return {...state}
+		case DELETE_PARAMETER_ITEMS:
+			let { items } = payload
+
+			state[payload.filterName].parameters = difference(
+				state[payload.filterName].parameters,
+				new Set(items),
+			)
+			return {...state}
+
 		case SET_PARAMETER:
 			state[payload.filterName].parameters = payload.value
 			return {...state}
 		default:
-		    throw new Error(`Unknown action type: ${type}`);
+		    throw new Error(`Unknown action type: ${type}`)
 	}
 }
 
@@ -176,7 +187,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					filterDef={filterDefs.filter(f => f.id === -1)[0]}
 					filterParameters={filtersParameters}
 					width={width}
-					dataset={applyFilters(dataset, filterNames)}
+					dataset={dataset}
 					filterWithout={filterWithout}
 				/>
 				<div className="filters__form-actions">
