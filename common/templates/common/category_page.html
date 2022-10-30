@@ -27,8 +27,8 @@
 					data-category-id="{{ page.pk }}"
 					data-category-name="{{ page.title }}"
 					{% if search_page %}data-database-path="{% pageurl search_page %}"{% endif %}
-					{% if page.viz_data_start %}data-start-date="{{ page.viz_data_start|date:'c' }}"{% endif %}
-					{% if page.viz_data_end %}data-end-date="{{ page.viz_data_end|date:'c' }}"{% endif %}
+					{% if page.viz_data_start %}data-start-date="{{ viz_data_start }}"{% endif %}
+					{% if page.viz_data_end %}data-end-date="{{ viz_data_end }}"{% endif %}
 				></div>
 			{% endwith %}
 		</div>

@@ -289,7 +289,8 @@ class CategoryMethodologyItem(Orderable):
     ]
 
 
-
+def get_year_choices(start_year=2017):
+    return tuple([(None, "----")]) + tuple((x, x) for x in range(start_year, datetime.today().year + 1))
 
 
 class CategoryPage(MetadataPageMixin, Page):
@@ -328,12 +329,12 @@ class CategoryPage(MetadataPageMixin, Page):
         default='none',
         help_text='The type of chart shown in the category page. By default, no chart is shown.'
     )
-    viz_data_start = models.DateField(
+    viz_data_start = models.PositiveIntegerField(
         'Start Year',
         blank=True,
         null=True,
     )
-    viz_data_end = models.DateField(
+    viz_data_end = models.PositiveIntegerField(
         'End Year',
         blank=True,
         null=True,
@@ -384,12 +385,12 @@ class CategoryPage(MetadataPageMixin, Page):
                 FieldPanel(
                     'viz_data_start',
                     classname="year_field",
-                    widget=widget.YearWidget(years=range(2017, datetime.today().year + 1))
+                    widget=forms.Select(choices=get_year_choices(2017))
                 ),
                 FieldPanel(
                     'viz_data_end',
                     classname="year_field",
-                    widget=widget.YearWidget(years=range(2017, datetime.today().year + 1), isEndOfYear=True)
+                    widget=forms.Select(choices=get_year_choices(2017))
                 ),
             ],
             'Data Visualization',
@@ -445,6 +446,10 @@ class CategoryPage(MetadataPageMixin, Page):
                 'page__teaser_image',
             )
         ]
+
+        # Hard code the date and month. The state
+        context['viz_data_start'] = f"{self.viz_data_start}-01-01"
+        context['viz_data_end'] = f"{self.viz_data_end}-12-31"
 
         context['methodology'] = {
             'description': self.methodology,
