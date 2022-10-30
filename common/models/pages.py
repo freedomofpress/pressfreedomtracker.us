@@ -44,7 +44,6 @@ from common.choices import CATEGORY_SYMBOL_CHOICES, CATEGORY_CHART_CHOICES
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
-    widget,
 )
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape

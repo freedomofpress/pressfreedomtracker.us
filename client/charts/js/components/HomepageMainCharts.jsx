@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { ParentSize } from '@visx/responsive'
 import TreeMap from './TreeMap'
 import USMap from './USMap'
-import BarChartHomepage from './BarChartHomepage'
+import BarChartCommon from './BarChartCommon'
 import HomepageSelection from './HomepageSelection'
 import ChartDescription from "./ChartDescription"
 import Flashing from '../../../common/js/components/Flashing'
@@ -104,7 +104,7 @@ function HomepageMainChartsWidth({
 				</div>
 				<div className={'hpChart'}>
 					<ChartDescription id={'homepage-bar-chart-label'}>Showing the number of journalists targeted per month.</ChartDescription>
-					<BarChartHomepage
+					<BarChartCommon
 						data={datasetGroupedByMonth}
 						x={'monthName'}
 						y={'numberOfIncidents'}

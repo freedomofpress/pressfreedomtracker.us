@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { ParentSize } from '@visx/responsive'
 import Flashing from '../../../common/js/components/Flashing'
 import ChartDescription from "./ChartDescription"
-import BarChartHomepage from "./BarChartHomepage"
+import BarChartCommon from "./BarChartCommon"
 import {
 	goToFilterPage,
 	groupByYearsSorted,
@@ -37,7 +37,7 @@ function CategoryPageChartWidth({
 					<ChartDescription id={'category-page-chart-label'}>
 						Number of {categoryName} incidents per year.
 					</ChartDescription>
-					<BarChartHomepage
+					<BarChartCommon
 						data={datasetGroupedByYears}
 						x={'year'}
 						y={'numberOfIncidents'}
