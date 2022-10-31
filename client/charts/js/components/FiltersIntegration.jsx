@@ -129,7 +129,9 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 				category.filters.forEach( ({name, type})=> {
 					let filter = filtersParameters[name]
 					if (filter && filter.parameters) {
-						if (filter.type === 'autocomplete' || filter.type === 'choice' || filter.type === 'bool' || filter.type === 'radio' || filter.type === 'text') {
+						if (name == 'tags') {
+							searchParams.append('tags', Array.from(filter.parameters).join(','))
+						} else if (filter.type === 'autocomplete' || filter.type === 'choice' || filter.type === 'bool' || filter.type === 'radio' || filter.type === 'text') {
 							searchParams.append(name, filter.parameters)
 						} else if (filter.type === 'date') {
 							if (filter.parameters.min) {
