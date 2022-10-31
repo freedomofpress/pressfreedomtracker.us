@@ -254,7 +254,7 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					</summary>
 					<TagFilter
 						width={width}
-						dataset={filterWithout.tags(dataset)}
+						dataset={dataset}
 						filterParameters={filterParameters.tags.parameters}
 					/>
 				</details>

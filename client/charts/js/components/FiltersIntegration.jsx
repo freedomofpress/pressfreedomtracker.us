@@ -189,7 +189,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					filterDef={filterDefs.filter(f => f.id === -1)[0]}
 					filterParameters={filtersParameters}
 					width={width}
-					dataset={dataset}
+					dataset={applyFilters(dataset, filterNames)}
 					filterWithout={filterWithout}
 				/>
 				<div className="filters__form-actions">

@@ -51,9 +51,6 @@ export default function TagFilter({
 
 	return (
 		<div>
-			<p className="filter-widget--label">
-				Top 3 Tags matching your filters
-			</p>
 			{countTags.map(({ tag, count }, i) => {
 				const isSelected = selectedTags.has(tag)
 				return (
