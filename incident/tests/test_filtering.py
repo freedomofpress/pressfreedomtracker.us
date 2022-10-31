@@ -356,6 +356,46 @@ class TestFiltering(TestCase):
 
         self.assertQuerysetEqual(incidents, [target1])
 
+    def test_filters_by_charge_update_status_for_same_date_updates(self):
+        """ChargeUpdates should have priority when filtering by status
+
+        When a charge has an update applied on the same day, the
+        filter should assume the "most recent" status is stored on the
+        ChargeUpdate, not on the IncidentCharge itself.  Meaning if a
+        an incident has status update happen on the same date as the
+        charge was created, filtering by the "initial" status should
+        not find the that incident.
+
+        """
+        category = CategoryPageFactory(
+            title='Arrest / Criminal Charge',
+            incident_filters=['status_of_charges'],
+        )
+        undesired_status = 'CHARGES_PENDING'
+        desired_status = 'CHARGES_DROPPED'
+        target1 = IncidentPageFactory(categories=[category])
+        IncidentChargeWithUpdatesFactory(
+            incident_page=target1,
+            status=undesired_status,
+            date='2022-01-01',
+            update1__status=desired_status,
+            update1__date='2022-01-01',
+            update2=None,
+            update3=None,
+        )
+        incidents = IncidentFilter(dict(
+            categories=str(category.id),
+            status_of_charges=undesired_status,
+        )).get_queryset(strict=True)
+
+        self.assertQuerysetEqual(incidents, [])
+
+        incidents = IncidentFilter(dict(
+            categories=str(category.id),
+            status_of_charges=desired_status,
+        )).get_queryset(strict=True)
+        self.assertQuerysetEqual(incidents, [target1])
+
 
 class TestBooleanFiltering(TestCase):
     """Boolean filters"""

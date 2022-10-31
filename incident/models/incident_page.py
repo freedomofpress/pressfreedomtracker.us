@@ -152,7 +152,7 @@ class IncidentQuerySet(PageQuerySet):
         charge's most recent status."""
         newest_update = ChargeUpdate.objects.filter(
             incident_charge=OuterRef('pk'),
-            date__gt=OuterRef('date')
+            date__gte=OuterRef('date')
         ).order_by('-date').values('status')[:1]
 
         latest_status = IncidentCharge.objects.filter(
