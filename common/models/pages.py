@@ -57,6 +57,7 @@ from .choices import FILTER_CHOICES
 
 BIRTH_YEAR_CHOICES = ['1980', '1981', '1982']
 
+
 class BaseSidebarPageMixin(models.Model):
     """
     A mixin that gives a model a sidebar menu field and the ability to
