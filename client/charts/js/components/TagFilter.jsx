@@ -75,7 +75,7 @@ export default function TagFilter({
 					<CheckBoxBar
 						key={i}
 						width={width-40}
-						label={tag}
+						label={`#${tag}`}
 						count={count}
 						barWidth={count > 0 ? xScale(count) : 0}
 						isSelected={isSelected}
