@@ -99,6 +99,7 @@
 	display: none
 
 .filters__suggestion-tooltip-text
+	margin-left: 0.25rem
 	color: $gray-text
 
 .filters__suggestions-item
@@ -109,10 +110,18 @@
 	padding: 0.5rem 0.75rem
 	background-color: $white
 
+	&--active
+		color: $black
+		background-color: $accent-color
+
+		.filters__suggestion-tooltip
+			display: inline
+			margin-left: 0.5rem
+
 	&--selectable
 		cursor: pointer
 
-		&:hover, &--active
+		&:hover
 			color: $black
 			background-color: $accent-color
 

@@ -37,6 +37,18 @@ const selectSuggestion = query => ({
 })
 
 
+const incrementActiveSuggestion = {
+	type: 'INCREMENT_ACTIVE_SUGGESTION',
+	payload: null,
+}
+
+
+const decrementActiveSuggestion = {
+	type: 'DECREMENT_ACTIVE_SUGGESTION',
+	payload: null,
+}
+
+
 const AutoComplete = ({
 	suggestions,
 	suggestionsLabelField,
@@ -51,6 +63,10 @@ const AutoComplete = ({
 		switch (type) {
 			case 'SELECT_SUGGESTION':
 				return initialState
+			case 'DECREMENT_ACTIVE_SUGGESTION':
+				return {...state, activeSuggestion: Math.max(0, state.activeSuggestion - 1)}
+			case 'INCREMENT_ACTIVE_SUGGESTION':
+				return {...state, activeSuggestion: Math.min(state.filteredSuggestions.length - 1, state.activeSuggestion + 1)}
 			case 'FILTER_SUGGESTIONS':
 				const filteredSuggestions = suggestions.filter(
 					suggestion =>
@@ -79,6 +95,19 @@ const AutoComplete = ({
 		dispatch(selectSuggestion(val))
 	}
 
+	const onKeyDown = (event) => {
+		if (event.keyCode === 13) { // Enter key
+			let val = state.filteredSuggestions[state.activeSuggestion][suggestionsLabelField]
+			handleSelect(val)
+			dispatch(selectSuggestion(val))
+
+		} else if (event.keyCode === 38) { // up arrow
+			dispatch(decrementActiveSuggestion)
+		} else if (event.keyCode === 40) { // down arrow
+			dispatch(incrementActiveSuggestion)
+		}
+	}
+
 	let suggestionListComponent
 	if (state.showSuggestions && state.userInput) {
 		if (state.filteredSuggestions.length) {
@@ -87,6 +116,7 @@ const AutoComplete = ({
 					{state.filteredSuggestions.map((suggestion, index) => (
 						<li
 							className="filters__suggestions-item filters__suggestions-item--selectable"
+							className={classNames("filters__suggestions-item", "filters__suggestions-item--selectable", {"filters__suggestions-item--active": index === state.activeSuggestion})}
 							onClick={onClick}
 							data-item={suggestion[suggestionsLabelField]}
 							key={index}
@@ -128,6 +158,7 @@ const AutoComplete = ({
 				className="text-field--single"
 				autoComplete="off"
 				onChange={onChange}
+				onKeyDown={onKeyDown}
 				id={id}
 				placeholder={placeholder}
 				value={state.userInput}
