@@ -129,7 +129,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 				category.filters.forEach( ({name, type})=> {
 					let filter = filtersParameters[name]
 					if (filter && filter.parameters) {
-						if (name == 'tags') {
+						if (name == 'tags' && filter.parameters?.size > 0) {
 							searchParams.append('tags', Array.from(filter.parameters).join(','))
 						} else if (filter.type === 'autocomplete' || filter.type === 'choice' || filter.type === 'bool' || filter.type === 'radio' || filter.type === 'text') {
 							searchParams.append(name, filter.parameters)
@@ -145,7 +145,9 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 				})
 			}
 		})
-		searchParams.append('categories', categories.join(','))
+		if (categories.length > 0) {
+			searchParams.append('categories', categories.join(','))
+		}
 		return searchParams.toString()
 	}
 
