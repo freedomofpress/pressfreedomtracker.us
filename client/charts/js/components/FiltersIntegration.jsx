@@ -1,4 +1,4 @@
-import React, { useReducer, createContext} from 'react'
+import React, { useReducer } from 'react'
 import * as d3 from 'd3'
 import CategoryFilter from './CategoryFilter'
 import GeneralFilter from './GeneralFilter'

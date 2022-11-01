@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import TagFilter from './TagFilter'
-import { removeElement } from '../lib/utilities'
 import {
 	SET_PARAMETER,
 } from '../lib/actionTypes'

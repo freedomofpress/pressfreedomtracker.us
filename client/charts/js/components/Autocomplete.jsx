@@ -1,4 +1,4 @@
-import React, {useReducer, useEffect} from 'react'
+import React, {useReducer} from 'react'
 import classNames from "classnames"
 
 import PropTypes from 'prop-types'
@@ -87,7 +87,6 @@ const AutoComplete = ({
 	const [state, dispatch] = useReducer(reducer, initialState)
 
 	const id = `id_${name}`
-	const choicesId = `${name}_choices`
 	const onChange = (event) => dispatch(filterSuggestions(event.target.value))
 	const onClick = (event) => {
 		let val = event.currentTarget.dataset.item

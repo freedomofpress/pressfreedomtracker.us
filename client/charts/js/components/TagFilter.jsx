@@ -3,7 +3,6 @@ import * as d3 from 'd3'
 import { flatMap, countBy } from 'lodash'
 import {
 	TOGGLE_PARAMETER_ITEM,
-	DELETE_PARAMETER_ITEMS,
 } from '../lib/actionTypes'
 import { FiltersDispatch } from '../lib/context'
 import CheckBoxBar from './CheckBoxBar'
