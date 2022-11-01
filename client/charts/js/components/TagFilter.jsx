@@ -19,10 +19,16 @@ const margins = {
 export default function TagFilter({
 	dataset,
 	width,
+	initialPickedTags,
 	filterParameters: selectedTags,
 }) {
 	const updateFilters = useContext(FiltersDispatch)
-	const [pickedTags, setPickedTags] = useState([])
+
+	// "Picked" tags are ones the user has chosen from the extended
+	// tag list, or via the URL parameters.  These will always be
+	// displayed with a checkbox in the list, regardless of incident
+	// count.
+	const [pickedTags, setPickedTags] = useState(Array.from(initialPickedTags))
 
 	const tags = countBy(
 		flatMap(dataset, 'tags')
@@ -46,12 +52,24 @@ export default function TagFilter({
 
 	// separate custom tags the user has picked from the rest into
 	// their own list, the remove them from the rest.
-	let pickedTagData = extendedTags.filter(({tag}) => pickedTags.includes(tag))
+
+	// Remove any picked tags from the extended tags. Picked tags are
+	// already part of the check box list and should not appear in the
+	// drop-down chooser.
 	extendedTags = extendedTags.filter(({tag}) => !pickedTags.includes(tag))
 
+	// Compute what tags to display in the check box list: the top 3
+	// tags (by incident count) plus all picked tags.
+	let topTags = countTags.map(({tag}) => tag)
+	let displayTags = countTags.concat(
+		// Picked tags minus any that are already in the top 3, then
+		// listed alongside their incident count (with zero as a
+		// default).
+		pickedTags.filter(tag => !topTags.includes(tag)).map(tag => ({count: tags[tag] ?? 0, tag}))
+	)
 	return (
-		<div>
-			{countTags.map(({ tag, count }, i) => {
+		<div className="filters__form--fieldset">
+			{displayTags.map(({ tag, count }, i) => {
 				const isSelected = selectedTags.has(tag)
 				return (
 					<CheckBoxBar
@@ -74,51 +92,6 @@ export default function TagFilter({
 					/>
 				)
 			})}
-			{pickedTags.length > 0 && (
-				<>
-					<div className="filters__subheader">
-						<span className="filter-widget--label">Your Picks</span>
-						<button
-							className="btn btn-ghost"
-							onClick={() => {
-								setPickedTags([])
-								updateFilters({
-									type: DELETE_PARAMETER_ITEMS,
-									payload: {
-										filterName: 'tags',
-										payload: pickedTags,
-									}
-								})
-							}}
-						>
-							Clear all
-						</button>
-					</div>
-					{pickedTagData.map(({tag, count}, i) => {
-						const isSelected = selectedTags.has(tag)
-						return (
-							<CheckBoxBar
-								key={i}
-								width={width-40}
-								label={tag}
-								count={count}
-								barWidth={xScale(count)}
-								isSelected={isSelected}
-								index={i}
-								onClick={() => {
-									updateFilters({
-										type: TOGGLE_PARAMETER_ITEM,
-										payload: {
-											filterName: 'tags',
-											item: tag,
-										}
-									})
-								}}
-							/>
-						)
-					})}
-				</>
-			)}
 			<AutoComplete
 				suggestions={extendedTags}
 				suggestionsLabelField="tag"
@@ -140,7 +113,6 @@ export default function TagFilter({
 					})
 				}}
 			/>
-
 		</div>
 	)
 }

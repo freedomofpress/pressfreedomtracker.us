@@ -188,6 +188,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 				<GeneralFilter
 					filterDef={filterDefs.filter(f => f.id === -1)[0]}
 					filterParameters={filtersParameters}
+					initialFilterParams={initialFilterParams}
 					width={width}
 					dataset={applyFilters(dataset, filterNames)}
 					filterWithout={filterWithout}
