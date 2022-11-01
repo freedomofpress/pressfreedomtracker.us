@@ -25,6 +25,7 @@ export default function CheckBoxBar({ label, count, i, onClick, isSelected, barW
 					checked={isSelected}
 					onChange={onClick}
 					style={{ width: 24, height: 24 }}
+					disabled={count < 1}
 				/>
 			</div>
 
