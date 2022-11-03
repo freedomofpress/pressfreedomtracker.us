@@ -33,7 +33,7 @@ const borders = {
 
 const textPadding = 10
 
-export default function BarChartHomepage({
+export default function BarChart({
 	data,
 	x,
 	y,
@@ -41,9 +41,11 @@ export default function BarChartHomepage({
 	isMobileView,
 	width,
 	height,
+	id = '',
 	numberOfTicks = 4,
 	openSearchPage,
 }) {
+	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
 
 	const [hoveredElement, setHoveredElement] = useState(null)
@@ -120,6 +122,7 @@ export default function BarChartHomepage({
 				<svg
 					width={width}
 					height={height}
+					aria-labelledby={id}
 					style={{
 						marginTop: margins.top,
 						marginBottom: margins.bottom,
@@ -344,7 +347,7 @@ export default function BarChartHomepage({
 	}
 }
 
-BarChartHomepage.propTypes = {
+BarChart.propTypes = {
 	data: PropTypes.array.isRequired,
 	x: PropTypes.string.isRequired,
 	y: PropTypes.string.isRequired,

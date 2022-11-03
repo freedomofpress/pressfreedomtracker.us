@@ -118,6 +118,7 @@ function stackDatasetByCategory(
 export default function TreeMap({
 	data: dataset,
 	categoryColumn,
+	id = '',
 	categoryDivider = ',',
 	width,
 	height,
@@ -212,6 +213,7 @@ export default function TreeMap({
 				<svg
 					width={width}
 					height={height}
+					aria-labelledby={id}
 					style={{
 						marginTop: margins.top,
 						marginRight: margins.right,

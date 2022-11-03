@@ -32,6 +32,77 @@ export const monthIndexes = {
 	Dec: 12,
 }
 
+export const categoriesSlugs = {
+	'Arrest/Criminal Charge': 'arrest-criminal-charge',
+	'Border Stop': 'border-stop',
+	'Subpoena/Legal Order': 'subpoena',
+	'Leak Case': 'leak-case',
+	'Equipment Search or Seizure': 'equipment-search-seizure-or-damage',
+	'Assault': 'assault',
+	'Denial of Access': 'denial-access',
+	'Chilling Statement': 'chilling-statement',
+	'Other Incident': 'other-incident',
+	'Prior Restraint': 'prior-restraint',
+	'Equipment Damage': 'equipment-damage',
+}
+
+export function getFilteredUrl(databasePath, filtersApplied, currentDate) {
+	const origin = window.location.origin
+	const baseUrl = filtersApplied.category === undefined || categoriesSlugs[filtersApplied.category] === undefined
+		? `${origin}${databasePath}?`
+		: `${origin}/${categoriesSlugs[filtersApplied.category]}/?`
+
+	const parameters = []
+
+	if (!!parseInt(filtersApplied.category)) {
+		parameters.push(`categories=${filtersApplied.category}`)
+	}
+
+	if (filtersApplied.monthName !== undefined) {
+		const monthNumber = monthIndexes[filtersApplied.monthName]
+		const year = !filtersApplied.sixMonths
+			? filtersApplied.year
+			: currentDate.getUTCMonth() > 6 || monthNumber <= 6
+			? currentDate.getUTCFullYear()
+			: currentDate.getUTCFullYear() - 1
+		const paddedMonthNumber = String(monthNumber).padStart(2, '0')
+		const firstDayMonth = `${year}-${paddedMonthNumber}-01`
+		const lastDayMonth = `${year}-${paddedMonthNumber}-${new Date(year, monthNumber, 0).getDate()}`
+		parameters.push(`date_lower=${firstDayMonth}&date_upper=${lastDayMonth}`)
+	}
+
+	if (filtersApplied.state !== undefined) {
+		parameters.push(`state=${filtersApplied.state.replace(' ', '+')}`)
+	}
+
+	if (filtersApplied.year !== null && filtersApplied.monthName === undefined) {
+		parameters.push(`date_lower=${filtersApplied.year}-01-01&date_upper=${filtersApplied.year}-12-31`)
+	}
+
+	if (filtersApplied.sixMonths && filtersApplied.monthName === undefined) {
+		const currentMonth = currentDate.getUTCMonth()
+		const currentYear = currentDate.getUTCFullYear()
+
+		const lastDate = new Date(currentYear, currentMonth + 1, 0)  // last day of the current month
+		const firstDate = new Date(currentYear, currentMonth - 5, 1)  // first day of the month five months ago
+		const firstDateFormatted = firstDate.toISOString().substring(0, 10)  // Extract the date portion of the ISO datetime
+		const lastDateFormatted = lastDate.toISOString().substring(0, 10)
+
+		parameters.push(`date_lower=${firstDateFormatted}&date_upper=${lastDateFormatted}`)
+	}
+
+	if (filtersApplied.tag !== undefined && filtersApplied.tag !== null) {
+		parameters.push(`tags=${filtersApplied.tag.replace(' ', '+')}`)
+	}
+
+	return `${baseUrl}${parameters.join('&')}`
+}
+
+export function goToFilterPage(databasePath, filtersApplied, currentDate) {
+	const url = getFilteredUrl(databasePath, filtersApplied, currentDate)
+	window.location = url
+}
+
 export function filterDatasetByTag(dataset, tag) {
 	return dataset.filter(
 		(d) =>
@@ -103,6 +174,18 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 				.flat()
 
 	return datasetGroupedByMonthSorted
+}
+
+export function groupByYearsSorted(dataset) {
+	const datasetGroupedByYear = d3
+		.groups(
+			dataset.map((d) => ({ year: d.date.getUTCFullYear() })),
+			(d) => d.year
+		)
+		.map((d) => ({ year: d[0], numberOfIncidents: d[1].length }))
+
+	const datasetGroupedByYearSorted = datasetGroupedByYear.sort((a, b) => a.year - b.year)
+	return datasetGroupedByYearSorted
 }
 
 export function groupByCity(dataset) {

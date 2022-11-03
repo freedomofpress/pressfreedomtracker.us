@@ -1,6 +1,8 @@
 import json
 from urllib.parse import urlencode
+from datetime import datetime
 
+from django import forms
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.http import Http404
@@ -38,7 +40,7 @@ from common.blocks import (
     EmailSignupBlock,
     InfoTableBlock,
 )
-from common.choices import CATEGORY_SYMBOL_CHOICES
+from common.choices import CATEGORY_SYMBOL_CHOICES, CATEGORY_CHART_CHOICES
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
@@ -285,6 +287,10 @@ class CategoryMethodologyItem(Orderable):
     ]
 
 
+def get_year_choices(start_year=2017):
+    return tuple([(None, "----")]) + tuple((x, x) for x in range(start_year, datetime.today().year + 1))
+
+
 class CategoryPage(MetadataPageMixin, Page):
     description = RichTextField(
         features=[
@@ -312,6 +318,24 @@ class CategoryPage(MetadataPageMixin, Page):
         blank=True,
         null=True,
         help_text='Detailed description of how we track the data for this particular category.'
+    )
+
+    # Data Viz Configuration
+    viz_type = models.CharField(
+        max_length=255,
+        choices=CATEGORY_CHART_CHOICES,
+        default='none',
+        help_text='The type of chart shown in the category page. By default, no chart is shown.'
+    )
+    viz_data_start = models.PositiveIntegerField(
+        'Start Year',
+        blank=True,
+        null=True,
+    )
+    viz_data_end = models.PositiveIntegerField(
+        'End Year',
+        blank=True,
+        null=True,
     )
     blog_index_page = models.ForeignKey(
         'blog.BlogIndexPage',
@@ -352,6 +376,23 @@ class CategoryPage(MetadataPageMixin, Page):
                 ),
             ],
             'Methodology'
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('viz_type'),
+                FieldPanel(
+                    'viz_data_start',
+                    classname="year_field",
+                    widget=forms.Select(choices=get_year_choices(2017))
+                ),
+                FieldPanel(
+                    'viz_data_end',
+                    classname="year_field",
+                    widget=forms.Select(choices=get_year_choices(2017))
+                ),
+            ],
+            'Data Visualization',
+            classname='collapsible',
         ),
         InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
         MultiFieldPanel(
@@ -403,6 +444,10 @@ class CategoryPage(MetadataPageMixin, Page):
                 'page__teaser_image',
             )
         ]
+
+        # Hard code the date and month. The state
+        context['viz_data_start'] = f"{self.viz_data_start}-01-01"
+        context['viz_data_end'] = f"{self.viz_data_end}-12-31"
 
         context['methodology'] = {
             'description': self.methodology,
