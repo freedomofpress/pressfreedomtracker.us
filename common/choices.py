@@ -27,6 +27,11 @@ CATEGORY_COLOR_CHOICES = [
     ('dark-gray', 'Dark Gray'),
 ]
 
+CATEGORY_CHART_CHOICES = [
+    ('none', 'No Chart'),
+    ('bar', 'Bar Chart'),
+]
+
 # Category color choices with too bright colors removed
 # and white added
 BACKGROUND_COLOR_CHOICES = [

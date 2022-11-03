@@ -6,19 +6,33 @@
 	<h1 class="page-title category category-{{ page.page_symbol }}" id="title">{{ page.title }}</h1>
 
 	<section class="categorypage-section">
-		<div class="categorypage-section-inner">
-			{% with search_page=settings.common.SearchSettings.search_page %}
-				<a class="text-link categorypage-count"
-					href="{% if search_page %}{% pageurl search_page %}?{{ incident_qs }}{% endif %}">
-					Total Incidents: {{ total_incidents }}
-				</a>
-			{% endwith %}
-			<div class="categorypage-summary rich-text">
-				{% filter typogrify %}{% render_as_template page.description %}{% endfilter %}
-			</div>
+		<div class="categorypage-section-inner categorypage-section--flex">
+			<div class="categorypage-summary">
+				{% with search_page=settings.common.SearchSettings.search_page %}
+					<a class="text-link categorypage-count"
+						href="{% if search_page %}{% pageurl search_page %}?{{ incident_qs }}{% endif %}">
+						Total Incidents: {{ total_incidents }}
+					</a>
+				{% endwith %}
+				<div class="categorypage-summary--text rich-text">
+					{% filter typogrify %}{% render_as_template page.description %}{% endfilter %}
+				</div>
 
-			{% if data_items %}
-				{% include "common/_categorypage-statistics.html" %}
+				{% if data_items %}
+					{% include "common/_categorypage-statistics.html" %}
+				{% endif %}
+			</div>
+			{% if page.viz_type != 'none' %}
+				{% with search_page=settings.common.SearchSettings.search_page %}
+					<div class="js-categorypage-charts"
+						data-category-id="{{ page.pk }}"
+						data-category-name="{{ page.title }}"
+						data-viz-type="{{ page.viz_type }}"
+						{% if search_page %}data-database-path="{% pageurl search_page %}"{% endif %}
+						{% if page.viz_data_start %}data-start-date="{{ viz_data_start }}"{% endif %}
+						{% if page.viz_data_end %}data-end-date="{{ viz_data_end }}"{% endif %}
+					></div>
+				{% endwith %}
 			{% endif %}
 		</div>
 	</section>
