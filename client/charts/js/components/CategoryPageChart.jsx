@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { ParentSize } from '@visx/responsive'
 import Flashing from '../../../common/js/components/Flashing'
 import ChartDescription from "./ChartDescription"
-import BarChartCommon from "./BarChartCommon"
+import BarChart from "./BarChart"
 import {
 	goToFilterPage,
 	groupByYearsSorted,
@@ -23,6 +23,7 @@ function CategoryPageChartWidth({
 	width,
 	category,
 	categoryName,
+	vizType,
 	databasePath = window.location.pathname,
 	loading = false,
 }) {
@@ -37,19 +38,21 @@ function CategoryPageChartWidth({
 					<ChartDescription id={'category-page-chart-label'}>
 						Number of {categoryName} incidents per year.
 					</ChartDescription>
-					<BarChartCommon
-						data={datasetGroupedByYears}
-						x={'year'}
-						y={'numberOfIncidents'}
-						titleLabel={'incidents'}
-						id={'category-page-chart-label'}
-						width={width}
-						height={chartHeight}
-						isMobileView={width < 480}
-						openSearchPage={(year) => {
-							goToFilterPage(databasePath, {category, year}, new Date())
-						}}
-					/>
+					{ vizType === 'bar' && (
+						<BarChart
+							data={datasetGroupedByYears}
+							x={'year'}
+							y={'numberOfIncidents'}
+							titleLabel={'incidents'}
+							id={'category-page-chart-label'}
+							width={width}
+							height={chartHeight}
+							isMobileView={width < 480}
+							openSearchPage={(year) => {
+								goToFilterPage(databasePath, {category, year}, new Date())
+							}}
+						/>
+					)}
 				</div>
 			</div>
 		</Flashing>

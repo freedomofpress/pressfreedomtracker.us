@@ -33,7 +33,7 @@ const borders = {
 
 const textPadding = 10
 
-export default function BarChartCommon({
+export default function BarChart({
 	data,
 	x,
 	y,
@@ -347,7 +347,7 @@ export default function BarChartCommon({
 	}
 }
 
-BarChartCommon.propTypes = {
+BarChart.propTypes = {
 	data: PropTypes.array.isRequired,
 	x: PropTypes.string.isRequired,
 	y: PropTypes.string.isRequired,
