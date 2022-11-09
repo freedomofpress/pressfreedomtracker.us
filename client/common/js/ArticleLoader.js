@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { throttle, isElementVisible } from './utils'
+import { throttle, isElementVisible, showMoreTable } from './utils'
 
 class ArticleLoader {
 	constructor() {
@@ -95,6 +95,12 @@ class ArticleLoader {
 		for (let i = 0; i < items.length; i += 1) {
 			items[i].classList.add('animation-fade-in')
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
+			items[i].querySelector(
+				'.incident-database-card__details-toggle'
+			).addEventListener(
+				'click',
+				showMoreTable
+			)
 			fragment.appendChild(items[i])
 		}
 
