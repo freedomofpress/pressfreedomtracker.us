@@ -210,7 +210,7 @@ WAGTAILIMAGES_IMAGE_MODEL = 'common.CustomImage'
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'https://pressfreedomtracker.us'
+WAGTAILADMIN_BASE_URL = 'https://pressfreedomtracker.us'
 
 
 # Django-webpack configuration
