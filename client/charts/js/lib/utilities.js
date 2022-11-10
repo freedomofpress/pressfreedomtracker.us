@@ -342,3 +342,13 @@ export function isDateValid(date) {
 export function rangeInclusive(start, stop, step) {
 	return Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
 }
+
+
+// Return a new set with elements of set A that are not in set B
+export function difference(setA, setB) {
+  const _difference = new Set(setA);
+  for (const elem of setB) {
+    _difference.delete(elem);
+  }
+  return _difference;
+}
