@@ -262,7 +262,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ('pull_quote', PullQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
-    ])
+    ], use_json_field=True)
 
     introduction = models.TextField(
         help_text="Optional: introduction displayed above the image.",

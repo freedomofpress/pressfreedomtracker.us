@@ -119,7 +119,8 @@ class SiteSettings(BaseSetting):
         default=None,
         blank=True,
         null=True,
-        help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.'
+        help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.',
+        use_json_field=True,
     )
     citation_contact_page = models.ForeignKey(
         'wagtailcore.Page',

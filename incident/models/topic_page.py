@@ -163,7 +163,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('rich_text', blocks.RichTextBlock()),
         ('tweet', common.blocks.TweetEmbedBlock()),
         ('tabs', common.blocks.TabbedBlock()),
-    ], blank=True)
+    ], blank=True, use_json_field=True)
     sidebar = StreamField([
         ('heading_2', common.blocks.Heading2()),
         ('rich_text', common.blocks.RichTextTemplateBlock(
@@ -174,7 +174,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('tweet', common.blocks.TweetEmbedBlock()),
         ('stat_table', common.blocks.StatTableBlock()),
         ('button', common.blocks.ButtonBlock()),
-    ], blank=True)
+    ], blank=True, use_json_field=True)
 
     incident_index_page = models.ForeignKey(
         'incident.IncidentIndexPage',

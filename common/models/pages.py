@@ -573,7 +573,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('heading_3', Heading3()),
         ('email_signup', EmailSignupBlock()),
         ('info_table', InfoTableBlock()),
-    ])
+    ], use_json_field=True)
 
     sidebar_content = StreamField(
         [
@@ -582,7 +582,8 @@ class SimplePage(MetadataPageMixin, Page):
         ],
         default=None,
         blank=True,
-        null=True
+        null=True,
+        use_json_field=True,
     )
 
     content_panels = Page.content_panels + [
@@ -617,7 +618,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
         ('email_signup', EmailSignupBlock()),
-    ])
+    ], use_json_field=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('body'),

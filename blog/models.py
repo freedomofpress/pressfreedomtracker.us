@@ -43,7 +43,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock())
-    ])
+    ], use_json_field=True)
 
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
     feed_limit = models.PositiveIntegerField(
@@ -182,7 +182,7 @@ class BlogPage(MetadataPageMixin, Page):
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
         ('statistics', StatisticsBlock()),
-    ])
+    ], use_json_field=True)
 
     introduction = models.TextField(
         help_text="Optional: introduction displayed above the image/video.",
