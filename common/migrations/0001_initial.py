@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
-import wagtail.core.blocks
-import wagtail.core.fields
+import wagtail.blocks
+import wagtail.fields
 import wagtail.images.blocks
 
 
@@ -23,8 +23,8 @@ class Migration(migrations.Migration):
             name='CategoryPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('description', wagtail.core.fields.RichTextField(blank=True, null=True)),
-                ('methodology', wagtail.core.fields.RichTextField(blank=True, null=True)),
+                ('description', wagtail.fields.RichTextField(blank=True, null=True)),
+                ('methodology', wagtail.fields.RichTextField(blank=True, null=True)),
             ],
             options={
                 'abstract': False,
@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('website', models.URLField(blank=True, null=True)),
-                ('description', wagtail.core.fields.RichTextField(blank=True, null=True)),
+                ('description', wagtail.fields.RichTextField(blank=True, null=True)),
             ],
             options={
                 'abstract': False,
@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
             name='PersonPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('bio', wagtail.core.fields.RichTextField(blank=True, null=True)),
+                ('bio', wagtail.fields.RichTextField(blank=True, null=True)),
             ],
             options={
                 'abstract': False,
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('body', wagtail.core.fields.RichTextField()),
+                ('body', wagtail.fields.RichTextField()),
                 ('link_url', models.URLField(blank=True, null=True)),
             ],
             options={
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
             name='SimplePage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('body', wagtail.core.fields.StreamField((('rich_text', wagtail.core.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.core.blocks.RawHTMLBlock())))),
+                ('body', wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock())))),
             ],
             options={
                 'abstract': False,
@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
             name='SimplePageWithSidebar',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('body', wagtail.core.fields.StreamField((('rich_text', wagtail.core.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.core.blocks.RawHTMLBlock())))),
+                ('body', wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock())))),
             ],
             options={
                 'abstract': False,

@@ -4,7 +4,7 @@ import itertools
 from datetime import timedelta
 
 from django.utils import timezone
-from wagtail.core.models import Page, Site
+from wagtail.models import Page, Site
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions

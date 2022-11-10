@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blogpage',
             name='image_caption',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='Image description displayed below the lead image. Organization/Photographer can be set via the image attribution.', max_length=255, null=True),
+            field=wagtail.fields.RichTextField(blank=True, help_text='Image description displayed below the lead image. Organization/Photographer can be set via the image attribution.', max_length=255, null=True),
         ),
     ]

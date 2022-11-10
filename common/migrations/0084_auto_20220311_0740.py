@@ -4,7 +4,7 @@ import common.validators
 from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -19,12 +19,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='categorypage',
             name='description',
-            field=wagtail.core.fields.RichTextField(blank=True, validators=[common.validators.TemplateValidator()]),
+            field=wagtail.fields.RichTextField(blank=True, validators=[common.validators.TemplateValidator()]),
         ),
         migrations.AlterField(
             model_name='categorypage',
             name='methodology',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='Detailed description of how we track the data for this particular category.', max_length=255, null=True),
+            field=wagtail.fields.RichTextField(blank=True, help_text='Detailed description of how we track the data for this particular category.', max_length=255, null=True),
         ),
         migrations.CreateModel(
             name='FeaturedCategoryIncident',

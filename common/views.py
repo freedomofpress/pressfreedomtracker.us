@@ -15,7 +15,7 @@ from django.views.decorators.cache import never_cache
 from django.views.generic import View, TemplateView
 from wagtail.admin import messages
 from wagtail.documents.views.serve import serve as wagtail_serve
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 from common.models import CommonTag
 from emails.models import SubscriptionSchema

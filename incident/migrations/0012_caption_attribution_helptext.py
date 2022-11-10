@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 from django.db import migrations
 import statistics.blocks
 import statistics.registry
-import wagtail.core.blocks
-import wagtail.core.fields
+import wagtail.blocks
+import wagtail.fields
 import wagtail.images.blocks
 
 
@@ -20,11 +20,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='incidentpage',
             name='image_caption',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.', max_length=255, null=True),
+            field=wagtail.fields.RichTextField(blank=True, help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.', max_length=255, null=True),
         ),
         migrations.AlterField(
             model_name='incidentpageupdates',
             name='body',
-            field=wagtail.core.fields.StreamField((('rich_text', wagtail.core.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.core.blocks.RawHTMLBlock()), ('statistics', wagtail.core.blocks.StructBlock((('visualization', wagtail.core.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.core.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.core.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            field=wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('statistics', wagtail.blocks.StructBlock((('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
         ),
     ]

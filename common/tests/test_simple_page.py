@@ -1,7 +1,7 @@
 from django.urls import reverse
-from wagtail.core.models import Site, Page
-from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import (
+from wagtail.models import Site, Page
+from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils.form_data import (
     nested_form_data,
     streamfield,
     rich_text,

@@ -2,9 +2,9 @@ import re
 
 from django.forms.utils import ErrorList
 
-from wagtail.core import blocks
-from wagtail.core.blocks.struct_block import StructBlockValidationError
-from wagtail.core.rich_text import RichText
+from wagtail import blocks
+from wagtail.blocks.struct_block import StructBlockValidationError
+from wagtail.rich_text import RichText
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
@@ -42,7 +42,7 @@ class RichTextTemplateBlock(blocks.RichTextBlock):
 
     def clean(self, value):
         cleaned_value = super(RichTextTemplateBlock, self).clean(value)
-        # cleaned_value is a wagtail.core.rich_text.RichText instance.
+        # cleaned_value is a wagtail.rich_text.RichText instance.
         # RichText.source is the raw HTML value.
         validate_template(cleaned_value.source)
         return RichText(unescape(cleaned_value.source))

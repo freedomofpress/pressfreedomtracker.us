@@ -1,6 +1,6 @@
 import unittest
 
-from wagtail.core.models import Page
+from wagtail.models import Page
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 

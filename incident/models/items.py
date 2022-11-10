@@ -2,7 +2,7 @@ from django.db import models
 
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
-from wagtail.core.models import Orderable
+from wagtail.models import Orderable
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 

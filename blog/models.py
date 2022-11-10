@@ -5,16 +5,16 @@ from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
     InlinePanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page, Orderable
+from wagtail import blocks
+from wagtail.fields import StreamField, RichTextField
+from wagtail.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route

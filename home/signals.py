@@ -1,6 +1,6 @@
 import structlog
 from django.db.models.signals import post_delete
-from wagtail.core.signals import page_published
+from wagtail.signals import page_published
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
 
 from common.models import CategoryPage
