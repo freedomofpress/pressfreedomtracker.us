@@ -10,7 +10,8 @@ from modelcluster.models import ClusterableModel
 from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.admin.panels import (
     FieldPanel, FieldRowPanel,
-    InlinePanel, MultiFieldPanel
+    InlinePanel, MultiFieldPanel,
+    HelpPanel,
 )
 from wagtail.models import Orderable
 from wagtail.fields import RichTextField
@@ -20,7 +21,6 @@ from wagtailcaptcha.models import WagtailCaptchaEmailForm
 from forms.choices import FIELD_GROUP_TEMPLATE_CHOICES
 from forms.email import send_mail
 from common.models import MetadataPageMixin
-from common.edit_handlers import HelpPanel
 
 
 class ReplyToValidatorForm(WagtailAdminPageForm):
