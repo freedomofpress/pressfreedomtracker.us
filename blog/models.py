@@ -9,14 +9,12 @@ from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
     InlinePanel,
 )
 from wagtail import blocks
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 
@@ -60,7 +58,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body'),
+        FieldPanel('body'),
         InlinePanel(
             'featured_blogs',
             label='Featured Blogs',
@@ -159,7 +157,7 @@ class BlogIndexPageFeature(Orderable):
     page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE)
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 
@@ -241,20 +239,20 @@ class BlogPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('publication_datetime'),
-        StreamFieldPanel('body'),
+        FieldPanel('body'),
         FieldPanel('link_to_original_post'),
         MultiFieldPanel(
             heading='Introduction',
             children=[
                 FieldPanel('introduction'),
-                ImageChooserPanel('lead_image'),
+                FieldPanel('lead_image'),
                 FieldPanel('image_caption'),
             ]
         ),
         MultiFieldPanel(
             heading='Teaser',
             children=[
-                ImageChooserPanel('teaser_image'),
+                FieldPanel('teaser_image'),
                 FieldPanel('teaser_text'),
             ]
         ),

@@ -7,14 +7,11 @@ from psycopg2.extras import DateRange
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import (
     FieldPanel,
-    StreamFieldPanel,
     MultiFieldPanel,
-    PageChooserPanel,
 )
 from wagtail import blocks
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 import common.blocks
@@ -204,7 +201,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
                 FieldPanel('description'),
                 FieldPanel('text_align'),
                 FieldPanel('text_color'),
-                ImageChooserPanel('photo'),
+                FieldPanel('photo'),
                 FieldPanel('photo_caption'),
                 FieldPanel('photo_credit'),
                 FieldPanel('photo_credit_link'),
@@ -214,8 +211,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Content',
             children=[
-                StreamFieldPanel('content'),
-                StreamFieldPanel('sidebar'),
+                FieldPanel('content'),
+                FieldPanel('sidebar'),
             ],
             classname='collapsible',
         ),
@@ -225,7 +222,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Incidents',
             children=[
-                PageChooserPanel('incident_index_page'),
+                FieldPanel('incident_index_page'),
                 AutocompletePanel('incident_tag', target_model='common.CommonTag'),
                 FieldPanel('incidents_per_module'),
                 FieldPanel('start_date'),

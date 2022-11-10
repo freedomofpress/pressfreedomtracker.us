@@ -2,13 +2,11 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.admin.panels import FieldPanel, InlinePanel, PageChooserPanel, StreamFieldPanel, MultiFieldPanel
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.blocks import RichTextBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
-from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 from common.validators import validate_image_format, validate_template
 from common.blocks import Heading2
@@ -47,9 +45,9 @@ class SearchSettings(BaseSetting):
     )
 
     panels = [
-        PageChooserPanel('search_page'),
-        PageChooserPanel('data_download_page'),
-        PageChooserPanel('learn_more_page'),
+        FieldPanel('search_page'),
+        FieldPanel('data_download_page'),
+        FieldPanel('learn_more_page'),
     ]
 
     class Meta:
@@ -77,9 +75,9 @@ class FooterSettings(BaseSetting, ClusterableModel):
 
     panels = [
         FieldPanel('body'),
-        SnippetChooserPanel('menu'),
+        FieldPanel('menu'),
         FieldPanel('partner_logo_text'),
-        PageChooserPanel('partner_logo_link'),
+        FieldPanel('partner_logo_link'),
         InlinePanel(
             'footer_logos',
             label="Footer Logos",
@@ -106,7 +104,7 @@ class FooterLogos(Orderable):
     )
 
     panels = [
-        ImageChooserPanel('logo_image'),
+        FieldPanel('logo_image'),
         FieldPanel('logo_url'),
     ]
 
@@ -152,8 +150,8 @@ class SiteSettings(BaseSetting):
     )
 
     panels = [
-        StreamFieldPanel('incident_sidebar_note'),
-        PageChooserPanel('citation_contact_page'),
+        FieldPanel('incident_sidebar_note'),
+        FieldPanel('citation_contact_page'),
         FieldPanel('incident_footer'),
         MultiFieldPanel([
             FieldPanel('banner_content'),
@@ -215,7 +213,7 @@ class SocialSharingSEOSettings(BaseSetting):
 
     panels = [
         FieldPanel('default_description'),
-        ImageChooserPanel('default_image'),
+        FieldPanel('default_image'),
         FieldPanel('facebook_page_id'),
         FieldPanel('twitter'),
     ]

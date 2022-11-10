@@ -222,7 +222,7 @@ class FeaturedIncident(Orderable):
     page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 
@@ -231,7 +231,7 @@ class FeaturedBlogPost(Orderable):
     page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 
