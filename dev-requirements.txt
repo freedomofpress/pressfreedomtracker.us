@@ -209,6 +209,8 @@ django==3.2.16 \
     #   django-csp
     #   django-debug-toolbar
     #   django-filter
+    #   django-modelcluster
+    #   django-permissionedforms
     #   django-recaptcha
     #   django-settings-export
     #   django-silk
@@ -240,9 +242,15 @@ django-filter==21.1 \
     # via
     #   -r requirements.txt
     #   wagtail
-django-modelcluster==5.3 \
-    --hash=sha256:0347cdcacb19a1078ee56cc3e6d5413ba27b8a5900710c53bb92b5d8ff3819cd \
-    --hash=sha256:f9f4250e706ee5e57503a30fbf37058b73e9fdc3190d75031338b81913cc9b4e
+django-modelcluster==6.0 \
+    --hash=sha256:4ae46f86c43702020f24f212222eef0a2588df937bbb523a5447da247b5fb130 \
+    --hash=sha256:cdcffef5baf5d3759ee04c5b60ffaf1a0c95fc0f265e762f3ddfadde3394e5db
+    # via
+    #   -r requirements.txt
+    #   wagtail
+django-permissionedforms==0.1 \
+    --hash=sha256:4340bb20c4477fffb13b4cc5cccf9f1b1010b64f79956c291c72d2ad2ed243f8 \
+    --hash=sha256:d341a961a27cc77fde8cc42141c6ab55cc1f0cb886963cc2d6967b9674fa47d6
     # via
     #   -r requirements.txt
     #   wagtail
@@ -979,12 +987,6 @@ toml==0.10.2 \
     # via
     #   autopep8
     #   ipdb
-tqdm==4.63.1 \
-    --hash=sha256:4230a49119a416c88cc47d0d2d32d5d90f1a282d5e497d49801950704e49863d \
-    --hash=sha256:6461b009d6792008d0000e1b0c7ca50195ec78c0e808a3a6b668a56a3236c3a5
-    # via
-    #   -r requirements.txt
-    #   wagtail-inventory
 traitlets==5.1.1 \
     --hash=sha256:059f456c5a7c1c82b98c2e8c799f39c9b8128f6d0d46941ee118daace9eb70c7 \
     --hash=sha256:2d313cc50a42cd6c277e7d7dc8d4d7fedd06a2c215f78766ae7b1a66277e0033
@@ -1031,14 +1033,13 @@ urllib3[secure,socks]==1.26.11 \
     #   mailchimp-marketing
     #   requests
     #   selenium
-wagtail==2.16.3 \
-    --hash=sha256:3b52f0e1a4bcad66e57eaa341025e90a6dcd40170f7adb132e9e9df9efa978c9 \
-    --hash=sha256:a1f04513f06c760208698578367f03b3af5400f05d36b94e4a8ce07ee30d42fc
+wagtail==3.0.3 \
+    --hash=sha256:111ed9a0a6ff26d5d881d52deb4bf52b627d79a53c43829611752dbb68a9192f \
+    --hash=sha256:23b3e541401355ea183372582050ea52b049c956dd5b506197f957bb68423ab3
     # via
     #   -r requirements.txt
     #   wagtail-autocomplete
     #   wagtail-factories
-    #   wagtail-inventory
     #   wagtail-metadata
 wagtail-autocomplete==0.9.0 \
     --hash=sha256:b64828d35f370453c84bc4094174872822798e54414f5fb9fc8a43c2a6c3e727 \
@@ -1051,13 +1052,9 @@ wagtail-factories==2.0.1 \
     --hash=sha256:3eeb55199f2c9ffbfe14979a94766d724c9e9f4d8f561df61097884e63bd537f \
     --hash=sha256:e2bd1a22e67b70e1603fc292e97f6f998ee0169477e1f71b5c53368630f1d088
     # via -r requirements.txt
-wagtail-inventory==1.4.1 \
-    --hash=sha256:6b04eaacc5a21d522cd78a8658e31f50a7c992255e40ce8e39184d7bd421075b \
-    --hash=sha256:75f6402b2fc2fd17a96abe5a3740dac45a600fa62a01083b902f202f7516cfff
-    # via -r requirements.txt
-wagtail-metadata==3.5.0 \
-    --hash=sha256:1495994709b7e89f00f46156d3b34e7d2911b1e7b15a24d8d70be6fa40d53483 \
-    --hash=sha256:ab45434faf220b22eab90f22ec525b381456533171093d2bcfd046e364e7340a
+wagtail-metadata==4.0.2 \
+    --hash=sha256:28436201e308921ec6a4e15ac45b3bd09cdd61f699a0973d968653a8e2fff5a7 \
+    --hash=sha256:46e4854a6ba15f7d1aeccf330be63530cc28d3ab26a1a514a663a796581e1ae1
     # via -r requirements.txt
 wcwidth==0.2.5 \
     --hash=sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784 \
