@@ -95,7 +95,7 @@ class IncidentPageUpdates(models.Model):
         ('blockquote', RichTextBlockQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
-    ])
+    ], use_json_field=True)
 
     panels = [
         FieldPanel('title'),
