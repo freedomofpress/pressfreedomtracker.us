@@ -96,10 +96,10 @@ class ArticleLoader {
 			items[i].classList.add('animation-fade-in')
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
 			items[i].querySelector(
-				'.incident-database-card__details-toggle'
+				'.incident-database-card__details-toggle',
 			).addEventListener(
 				'click',
-				showMoreTable
+				showMoreTable,
 			)
 			fragment.appendChild(items[i])
 		}

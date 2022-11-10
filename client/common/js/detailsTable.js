@@ -1,4 +1,4 @@
-import {showMoreTable} from './utils'
+import { showMoreTable } from './utils'
 
 document.querySelectorAll('.list-table-toggle-btn').forEach((button) => {
 	const listId = button.getAttribute('aria-controls')
