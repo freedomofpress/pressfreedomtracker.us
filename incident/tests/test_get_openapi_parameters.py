@@ -4,7 +4,7 @@ from unittest import mock
 from django.db.utils import ProgrammingError
 from django.test import TestCase
 from drf_spectacular.utils import OpenApiParameter
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 from common.models.pages import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter

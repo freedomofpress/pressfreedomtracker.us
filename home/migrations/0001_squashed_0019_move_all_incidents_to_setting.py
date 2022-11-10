@@ -3,7 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
             name='HomePage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('about', wagtail.core.fields.RichTextField(blank=True, help_text='Headings and line breaks will be stripped', null=True)),
+                ('about', wagtail.fields.RichTextField(blank=True, help_text='Headings and line breaks will be stripped', null=True)),
                 ('about_page', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailcore.Page')),
                 ('blog_index_page', models.ForeignKey(blank=True, help_text='Recent blog posts will automatically be pulled from this page', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='blog.BlogIndexPage')),
                 ('incident_index_page', models.ForeignKey(blank=True, help_text='Recent incidents will automatically be pulled from this page', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='incident.IncidentIndexPage')),

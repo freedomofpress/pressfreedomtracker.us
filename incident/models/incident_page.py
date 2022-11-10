@@ -22,16 +22,16 @@ from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.aggregates import ArrayAgg
 from psycopg2.extras import DateRange
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
     StreamFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page, Orderable, PageManager, PageQuerySet
+from wagtail import blocks
+from wagtail.fields import StreamField, RichTextField
+from wagtail.models import Page, Orderable, PageManager, PageQuerySet
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 

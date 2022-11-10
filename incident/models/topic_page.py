@@ -5,15 +5,15 @@ from django.http import JsonResponse
 from marshmallow import Schema, fields
 from psycopg2.extras import DateRange
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     StreamFieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page
+from wagtail import blocks
+from wagtail.fields import StreamField, RichTextField
+from wagtail.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 

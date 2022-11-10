@@ -31,8 +31,8 @@ from drf_spectacular.utils import (
     OpenApiTypes,
 )
 from psycopg2.extras import DateRange
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Site
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Site
 
 from incident.circuits import STATES_BY_CIRCUIT
 from incident.models.choices import STATUS_OF_CHARGES

@@ -1,7 +1,7 @@
 import json
 
 from django.test import TestCase
-from wagtail.core.models import Site, Page
+from wagtail.models import Site, Page
 
 from incident.tests.factories import (
     TopicPageFactory,

@@ -3,8 +3,8 @@
 import common.blocks
 from django.db import migrations, models
 import django.db.models.deletion
-import wagtail.core.blocks
-import wagtail.core.fields
+import wagtail.blocks
+import wagtail.fields
 import wagtailmetadata.models
 
 
@@ -22,14 +22,14 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('superheading', models.TextField(blank=True, help_text='Text that appears above the title in the heading block', null=True)),
-                ('description', wagtail.core.fields.RichTextField(blank=True)),
+                ('description', wagtail.fields.RichTextField(blank=True)),
                 ('text_align', models.CharField(choices=[('top-center', 'Top Center'), ('bottom-center', 'Bottom Center'), ('top-left', 'Top Left'), ('bottom-left', 'Bottom Left')], default='bottom-center', help_text='Alignment of the full header text within the header image', max_length=255)),
                 ('text_color', models.CharField(choices=[('white', 'White'), ('black', 'Black')], default='white', help_text='Color of header text, for legibility against the background.', max_length=255)),
-                ('photo_caption', wagtail.core.fields.RichTextField(blank=True)),
+                ('photo_caption', wagtail.fields.RichTextField(blank=True)),
                 ('photo_credit', models.TextField(blank=True)),
                 ('photo_credit_link', models.URLField(blank=True, null=True)),
-                ('content', wagtail.core.fields.StreamField([('heading_2', wagtail.core.blocks.StructBlock([('content', wagtail.core.blocks.CharBlock())])), ('raw_html', wagtail.core.blocks.RawHTMLBlock()), ('rich_text', wagtail.core.blocks.RichTextBlock())], blank=True)),
-                ('sidebar', wagtail.core.fields.StreamField([('heading_2', wagtail.core.blocks.StructBlock([('content', wagtail.core.blocks.CharBlock())])), ('rich_text', common.blocks.RichTextTemplateBlock(features=['bold', 'italic', 'link', 'ol', 'ul'], icon='doc-full', label='Rich Text')), ('stat_table', common.blocks.StatTableBlock()), ('button', wagtail.core.blocks.StructBlock([('text', wagtail.core.blocks.TextBlock(required=True)), ('url', wagtail.core.blocks.URLBlock(required=True))]))], blank=True)),
+                ('content', wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('rich_text', wagtail.blocks.RichTextBlock())], blank=True)),
+                ('sidebar', wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('rich_text', common.blocks.RichTextTemplateBlock(features=['bold', 'italic', 'link', 'ol', 'ul'], icon='doc-full', label='Rich Text')), ('stat_table', common.blocks.StatTableBlock()), ('button', wagtail.blocks.StructBlock([('text', wagtail.blocks.TextBlock(required=True)), ('url', wagtail.blocks.URLBlock(required=True))]))], blank=True)),
                 ('incident_tag', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='common.CommonTag')),
                 ('photo', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage')),
                 ('search_image', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', verbose_name='Search image')),

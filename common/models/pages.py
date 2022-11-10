@@ -9,16 +9,16 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     StreamFieldPanel,
     PageChooserPanel,
     MultiFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.models import Page, Orderable, Site
-from wagtail.core.fields import RichTextField, StreamField
+from wagtail import blocks
+from wagtail.models import Page, Orderable, Site
+from wagtail.fields import RichTextField, StreamField
 
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel

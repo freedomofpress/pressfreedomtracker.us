@@ -1,5 +1,5 @@
-from wagtail.core.models import Site, Page
-from wagtail.tests.utils.form_data import (
+from wagtail.models import Site, Page
+from wagtail.test.utils.form_data import (
     nested_form_data,
     inline_formset,
 )

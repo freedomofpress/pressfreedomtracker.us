@@ -2,9 +2,9 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.test import TestCase, RequestFactory
-from wagtail.core.models import Site, Page
-from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import (
+from wagtail.models import Site, Page
+from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils.form_data import (
     inline_formset,
     nested_form_data,
     rich_text,

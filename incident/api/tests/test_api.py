@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from wagtail.core.models import Site
+from wagtail.models import Site
 from django.urls import reverse
 
 from incident.models import choices

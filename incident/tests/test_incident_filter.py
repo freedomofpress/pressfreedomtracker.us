@@ -7,8 +7,8 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Site
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Site
 
 from common.models import (
     CategoryPage,

@@ -10,8 +10,8 @@ from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from marshmallow import Schema, fields, EXCLUDE
-from wagtail.admin.edit_handlers import FieldPanel
-from wagtail.core.models import Page, Site
+from wagtail.admin.panels import FieldPanel
+from wagtail.models import Page, Site
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo

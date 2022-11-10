@@ -13,7 +13,7 @@ from common import views as common_views
 from emails import urls as emails_urls
 from incident.api.urls import urlpatterns as api_urls
 from wagtail.admin import urls as wagtailadmin_urls
-from wagtail.core import urls as wagtail_urls
+from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 

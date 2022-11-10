@@ -1,6 +1,6 @@
 from django.template.loader import render_to_string
-from wagtail.core import hooks
-from wagtail.core.models import Site
+from wagtail import hooks
+from wagtail.models import Site
 
 from common.models.settings import SearchSettings
 

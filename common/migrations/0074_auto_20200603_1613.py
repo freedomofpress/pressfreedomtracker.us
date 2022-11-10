@@ -2,7 +2,7 @@
 
 import common.validators
 from django.db import migrations, models
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sitesettings',
             name='banner_content',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='If set an alert banner will appear on the site with this message', null=True, validators=[common.validators.TemplateValidator()], verbose_name='Banner Content'),
+            field=wagtail.fields.RichTextField(blank=True, help_text='If set an alert banner will appear on the site with this message', null=True, validators=[common.validators.TemplateValidator()], verbose_name='Banner Content'),
         ),
         migrations.AddField(
             model_name='sitesettings',

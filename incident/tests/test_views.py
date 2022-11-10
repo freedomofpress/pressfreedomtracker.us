@@ -3,8 +3,8 @@ import json
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from wagtail.core.models import Site
-from wagtail.core.rich_text import RichText
+from wagtail.models import Site
+from wagtail.rich_text import RichText
 
 from incident.models import Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist, GovernmentWorker, IncidentPage
 from incident.wagtail_hooks import ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin

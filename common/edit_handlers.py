@@ -1,6 +1,6 @@
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from wagtail.admin.edit_handlers import EditHandler
+from wagtail.admin.panels import EditHandler
 
 
 class HelpPanel(EditHandler):

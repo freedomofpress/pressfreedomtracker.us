@@ -8,12 +8,12 @@ from django.views.decorators.cache import cache_control
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.admin.forms import WagtailAdminPageForm
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel, FieldRowPanel,
     InlinePanel, MultiFieldPanel
 )
-from wagtail.core.models import Orderable
-from wagtail.core.fields import RichTextField
+from wagtail.models import Orderable
+from wagtail.fields import RichTextField
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
