@@ -3,7 +3,6 @@ from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import (
     FieldPanel,
-    StreamFieldPanel,
     InlinePanel,
 )
 from wagtail import blocks
@@ -101,7 +100,7 @@ class IncidentPageUpdates(models.Model):
     panels = [
         FieldPanel('title'),
         FieldPanel('date'),
-        StreamFieldPanel('body'),
+        FieldPanel('body'),
     ]
 
     def __str__(self):
