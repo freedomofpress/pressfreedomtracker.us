@@ -134,7 +134,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 					if (filter && filter.parameters) {
 						if (name == 'tags' && filter.parameters?.size > 0) {
 							searchParams.append('tags', Array.from(filter.parameters).join(','))
-						} else if (filter.type === 'autocomplete' || filter.type === 'choice' || filter.type === 'bool' || filter.type === 'radio' || filter.type === 'text') {
+						} else if (filter.type === 'autocomplete' || filter.type === 'choice' || filter.type === 'bool' || filter.type === 'radio' || filter.type === 'text' || filter.type === 'string') {
 							searchParams.append(name, filter.parameters)
 						} else if (filter.type === 'date') {
 							if (filter.parameters.min) {
