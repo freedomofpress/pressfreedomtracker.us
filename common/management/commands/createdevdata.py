@@ -337,8 +337,8 @@ class Command(BaseCommand):
             'targeted_journalists',
             'targeted_institutions',
             'tags',
-            'lawsuit_name',
-            'venue',
+            'case_number',
+            'case_type',
             'case_statuses',
         ]
         for f in filters_to_make:
