@@ -40,6 +40,9 @@ function filterReducer(state, {type, payload}) {
 			return {...state}
 
 		case SET_PARAMETER:
+			if (!state.hasOwnProperty(payload.filterName)) {
+				throw new Error(`Cannot set parameter for unknown filter name "${payload.filterName}"`)
+			}
 			state[payload.filterName].parameters = payload.value
 			return {...state}
 		default:
