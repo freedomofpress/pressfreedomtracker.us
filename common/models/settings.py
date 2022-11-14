@@ -15,7 +15,7 @@ from .choices import FILTER_CHOICES
 
 
 @register_setting(icon='search')
-class SearchSettings(BaseSetting):
+class SearchSettings(BaseSiteSetting):
     data_download_page = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
@@ -55,7 +55,7 @@ class SearchSettings(BaseSetting):
 
 
 @register_setting
-class FooterSettings(BaseSetting, ClusterableModel):
+class FooterSettings(BaseSiteSetting, ClusterableModel):
     body = RichTextField(blank=True, null=True)
     menu = models.ForeignKey(
         'menus.Menu',
@@ -110,7 +110,7 @@ class FooterLogos(Orderable):
 
 
 @register_setting
-class SiteSettings(BaseSetting):
+class SiteSettings(BaseSiteSetting):
     incident_sidebar_note = StreamField(
         [
             ('heading', Heading2()),
@@ -165,7 +165,7 @@ class SiteSettings(BaseSetting):
 
 
 @register_setting
-class TaxonomySettings(BaseSetting, ClusterableModel):
+class TaxonomySettings(BaseSiteSetting, ClusterableModel):
     panels = [
         InlinePanel(
             'categories',
@@ -179,7 +179,7 @@ class TaxonomySettings(BaseSetting, ClusterableModel):
 
 
 @register_setting(icon='plus')
-class SocialSharingSEOSettings(BaseSetting):
+class SocialSharingSEOSettings(BaseSiteSetting):
     default_description = models.TextField(
         blank=True,
         null=True,
@@ -224,7 +224,7 @@ class SocialSharingSEOSettings(BaseSetting):
 
 
 @register_setting
-class IncidentFilterSettings(BaseSetting, ClusterableModel):
+class IncidentFilterSettings(BaseSiteSetting, ClusterableModel):
     class Meta:
         verbose_name = 'general incident filters'
 

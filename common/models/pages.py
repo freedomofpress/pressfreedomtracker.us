@@ -131,6 +131,8 @@ class OrganizationIndexPage(Page):
 
     subpage_types = ['common.OrganizationPage']
 
+    preview_modes = []
+
     def serve(self, request):
         raise Http404()
 
@@ -153,6 +155,7 @@ class OrganizationPage(Page):
     ]
 
     parent_page_types = ['common.OrganizationIndexPage']
+    preview_modes = []
 
     def serve(self, request):
         """

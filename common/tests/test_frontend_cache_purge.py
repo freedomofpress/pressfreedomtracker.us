@@ -78,7 +78,7 @@ class TestCategoryPageCacheInvalidation(TestCase):
         """Changing any Setting should purge the entire zone.
 
         In this case we test with FooterSettings as an example, but it
-        should work for any BaseSetting subclass.
+        should work for any BaseSiteSetting subclass.
         """
 
         site = Site.objects.get(is_default_site=True)
