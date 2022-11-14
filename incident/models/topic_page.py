@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import DateRangeField
 from django.http import JsonResponse
 from marshmallow import Schema, fields
 from psycopg2.extras import DateRange
-from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
@@ -337,7 +337,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         result = categories_schema.dump(cats)
         return result
 
-    @route('incidents/')
+    @path('incidents/')
     def incidents_view(self, request):
         return JsonResponse(data=self.get_categories_data(), safe=False)
 

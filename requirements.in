@@ -24,7 +24,7 @@ pyparsing
 structlog>=21,<22
 typing
 typogrify
-wagtail>=3,<4
+wagtail>=4,<4.1
 wagtail-autocomplete>=0.9.0
 wagtail-factories>=2.0.1
 wagtail-django-recaptcha

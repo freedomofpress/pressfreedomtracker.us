@@ -7,7 +7,7 @@ from django.utils.text import format_lazy
 from marshmallow import Schema, fields, post_load
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.contrib.settings.models import BaseSetting, register_setting
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.admin.panels import (
     HelpPanel,
     FieldPanel,
@@ -25,7 +25,7 @@ class EmailSignup(models.Model):
 
 
 @register_setting
-class EmailSettings(BaseSetting, ClusterableModel):
+class EmailSettings(BaseSiteSetting, ClusterableModel):
     signup_prompt = models.CharField(
         max_length=255,
         blank=False,
