@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import TagFilter from './TagFilter'
 import FilterSet from './FilterSet'
+import { FiltersDispatch } from '../lib/context'
+import {
+	SET_PARAMETER,
+} from '../lib/actionTypes'
 
 export default function GeneralFilter({
 	filterDef,
@@ -11,9 +15,16 @@ export default function GeneralFilter({
 	filterWithout,
 	initialFilterParams,
 }) {
+	const updateFilters = useContext(FiltersDispatch);
 
 	function handleFilterChange(event) {
-		setFilterParameters(event.target.name, event.target.value)
+		updateFilters({
+			type: SET_PARAMETER,
+			payload: {
+				filterName: event.target.name,
+				value: event.target.value,
+			},
+		})
 	}
 
 	return (
