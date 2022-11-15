@@ -48,6 +48,8 @@ const queryFields = {
 	lawsuit_name: parseString,
 	venue: parseString,
 	case_statuses: parseString,
+	case_type: parseString,
+	case_number: parseString,
 	arrest_status: parseString,
 	arresting_authority: parseString,
 	status_of_charges: parseString,
