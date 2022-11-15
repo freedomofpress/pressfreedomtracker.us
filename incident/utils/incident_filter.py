@@ -756,6 +756,7 @@ class IncidentFilter(object):
         'search_image',
         'longitude',
         'latitude',
+        '_revisions',
         # 'dropped_charges',
         # 'current_charges',
     }

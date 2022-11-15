@@ -113,7 +113,10 @@ class HomePageTest(TestCase):
             })
         )
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        self.assertJSONEqual(
+            response.content.decode(),
+            {'is_valid': True, 'is_available': True}
+        )
 
         response = self.client.get(preview_url)
         self.assertEqual(response.context['page'], self.home_page)

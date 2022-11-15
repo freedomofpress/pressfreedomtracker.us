@@ -1,6 +1,6 @@
 from django.urls import reverse
 from wagtail.models import Site, Page
-from wagtail.test.utils import WagtailPageTests
+from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import (
     nested_form_data,
     streamfield,
@@ -12,9 +12,10 @@ from common.tests.factories import CategoryPageFactory, SimplePageFactory
 from home.tests.factories import HomePageFactory
 
 
-class SimplePageStatisticsTagsTestCase(WagtailPageTests):
+class SimplePageStatisticsTagsTestCase(WagtailPageTestCase):
     def setUp(self):
-        super(SimplePageStatisticsTagsTestCase, self).setUp()
+        super().setUp()
+        self.login()
         Page.objects.filter(slug='home').delete()
         root_page = Page.objects.get(title='Root')
         self.home_page = HomePageFactory.build(parent=None, slug='home')
@@ -78,7 +79,10 @@ class SimplePageStatisticsTagsTestCase(WagtailPageTests):
             nested_form_data(self.page_data)
         )
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        self.assertJSONEqual(
+            response.content.decode(),
+            {'is_valid': True, 'is_available': True}
+        )
 
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
