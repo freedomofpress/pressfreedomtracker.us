@@ -17,7 +17,7 @@ export default function CategorySection({
 				type="checkbox"
 				id={symbol}
 				checked={isOpen}
-				onClick={() => onClick(label)}/>
+				onChange={() => onClick(label)}/>
 			<label
 				htmlFor={symbol}
 				className="category-checkbox--label"

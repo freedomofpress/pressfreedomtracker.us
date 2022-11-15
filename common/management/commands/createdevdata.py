@@ -21,6 +21,7 @@ from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, SearchSettings,
     GeneralIncidentFilter, IncidentFilterSettings, CategoryPage,
+    CommonTag,
 )
 from common.devdata import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory,
@@ -337,8 +338,8 @@ class Command(BaseCommand):
             'targeted_journalists',
             'targeted_institutions',
             'tags',
-            'lawsuit_name',
-            'venue',
+            'case_number',
+            'case_type',
             'case_statuses',
         ]
         for f in filters_to_make:
@@ -373,7 +374,7 @@ class Command(BaseCommand):
                 MultimediaIncidentPageFactory(
                     parent=incident_index_page,
                     categories=category_pages,
-                    tags=2,
+                    tags=0,
                     **kwargs,
                 )
 
@@ -388,6 +389,36 @@ class Command(BaseCommand):
             MultimediaIncidentUpdateFactory(page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
+
+        tag_groups = [
+            ['summer', 'autumn', 'winter', 'spring'],
+            ['antelopes', 'giraffes', 'deer', 'impalas', 'wildebeest', 'hippopotamuses', 'camels', 'pigs'],
+            ['frogs', 'newts', 'salamanders', 'caecilians', 'toads'],
+            ['box jellyfish', 'true jellyfish', 'stalked jellyfish'],
+            ['diamond', 'sapphire', 'ruby', 'emerald', 'tanzanite', 'opal'],
+            ['moss', 'seaweed', 'ferns', 'trees', 'flowers'],
+            ['spiders', 'centipedes', 'copepods', 'crabs', 'dragonflies', 'crickets', 'mantises', 'termites', 'stick insects', 'aphids', 'bees', 'ants'],
+            ['snails', 'slugs', 'squids', 'octopuses', 'cuttlefish', 'nautiluses', 'ammonites', 'clams', 'oysters'],
+            ['lizards', 'snakes', 'crocodiles', 'geckoes', 'turtles', 'tortoises'],
+            ['ostriches', 'kiwis', 'flamingoes', 'doves', 'hummingbirds', 'storks'],
+            ['kangaroo', 'opossom', 'wombat'],
+            ['shrews', 'rodents', 'rabbits'],
+            ['echidna', 'platypus'],
+            ['plum', 'orchid', 'chrysanthemum', 'bamboo'],
+            ['hyena', 'mongoose', 'civet'],
+            ['tarsier', 'lemur', 'loris', 'baboon'],
+        ]
+        cat_map = {}
+        for incident in IncidentPage.objects.all():
+            incident.tags.clear()
+            cat_ids = [x.category_id for x in incident.categories.all()]
+            for cat_id in cat_ids:
+                if cat_id not in cat_map:
+                    cat_map[cat_id] = tag_groups.pop()
+                tag, _ = CommonTag.objects.get_or_create(title=random.choice(cat_map[cat_id]))
+                incident.tags.add(tag)
+
+            incident.save()
 
         topic_page = TopicPageFactory(
             parent=home_page,

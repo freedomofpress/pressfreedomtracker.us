@@ -2,7 +2,7 @@ import React from 'react'
 
 const RADIO_BOX_WIDTH = 35
 
-export default function RadioBar({ label, count, i, onClick, isSelected, barWidth, width }) {
+export default function CheckBoxBar({ label, count, i, onClick, isSelected, barWidth, width }) {
 	return (
 		<div
 			style={{
@@ -20,11 +20,12 @@ export default function RadioBar({ label, count, i, onClick, isSelected, barWidt
 				}}
 			>
 				<input
-					type="radio"
+					type="checkbox"
 					name="drone"
 					checked={isSelected}
 					onChange={onClick}
 					style={{ width: 24, height: 24 }}
+					disabled={count < 1}
 				/>
 			</div>
 

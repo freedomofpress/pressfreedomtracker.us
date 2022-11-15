@@ -1,5 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
+import TagFilter from './TagFilter'
+import {
+	SET_PARAMETER,
+} from '../lib/actionTypes'
+import { FiltersDispatch } from '../lib/context'
 
 
 function isDateValid(date) {
@@ -11,8 +16,8 @@ function DateFilter({
 	name,
 	label,
 	value,
-	setFilterParameters,
 }) {
+	const updateFilters = useContext(FiltersDispatch);
 	let lowerId = `id_${name}_after`
 	let upperId = `id_${name}_before`
 	let lowerValue = value.min?.toISOString()?.split('T')[0]
@@ -31,10 +36,15 @@ function DateFilter({
 					onChange={(event) => {
 						let newMinDate = event.target.value
 						newMinDate = isDateValid(newMinDate) ? new Date(newMinDate) : null
-						const newDateRange = (oldDateRange) => {
-							return { ...oldDateRange, min: newMinDate }
-						}
-						setFilterParameters(name, newDateRange)
+						// maybe change this to SET_MIN_PARAMETER if
+						// it is easy to do.
+						updateFilters({
+							type: SET_PARAMETER,
+							payload: {
+								filterName: name,
+								value: { min: newMinDate, max: upperValue }
+							},
+						})
 					}}
 				/>
 			</div>
@@ -50,10 +60,13 @@ function DateFilter({
 					onChange={(event) => {
 						let newMaxDate = event.target.value
 						newMaxDate = isDateValid(newMaxDate) ? new Date(newMaxDate) : null
-						const newDateRange = (oldDateRange) => {
-							return { ...oldDateRange, max: newMaxDate }
-						}
-						setFilterParameters(name, newDateRange)
+						updateFilters({
+							type: SET_PARAMETER,
+							payload: {
+								filterName: name,
+								value: { min: lowerValue, max: newMaxDate }
+							},
+						})
 					}}
 				/>
 			</div>
@@ -224,10 +237,30 @@ export function BoolFilter(props) {
 	)
 }
 
-export default function FilterSet({ filters, handleFilterChange, filterParameters, setFilterParameters }) {
+export default function FilterSet({ filters, handleFilterChange, filterParameters, width, dataset, filterWithout}) {
 	const components = filters.map((filter, index) => {
-		if (filter.name === 'search') {
+		if (filter.name === 'search' || filter.name === 'tags') {
 			return
+		} else if (!filterParameters.hasOwnProperty(filter.name)) {
+			console.warn(`no filter parameters defined for filter "${filter.name}"`)
+			return
+		} else if (filter.name == 'tags') {
+			return (
+				<details
+					className="filters__group filters__form--category"
+					open={Boolean(filterParameters.tags.parameters)}
+					key={index}
+				>
+					<summary className="filters__form-summary">
+						<h3 className="filter__heading">Tag</h3>
+					</summary>
+					<TagFilter
+						width={width}
+						dataset={dataset}
+						filterParameters={filterParameters.tags.parameters}
+					/>
+				</details>
+			)
 		}
 		if (filter.type === 'text') {
 			return (
@@ -246,7 +279,6 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					name={filter.name}
 					label={filter.title}
 					value={filterParameters[filter.name].parameters || {}}
-					setFilterParameters={setFilterParameters}
 				/>
 			)
 		} else if (filter.type === 'radio') {
