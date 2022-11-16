@@ -58,8 +58,9 @@ export default function HomepageSelection({
 	function updateSelectedYear(label) {
 		const newFiltersToApply = {
 			tag: filtersApplied.tag,
-			year: label === 'the past six months' ? null : label,
+			year: (label === 'the past six months') || (label === 'All time') ? null : label,
 			sixMonths: label === 'the past six months',
+			allTime: label === 'All Time'
 		}
 
 		setFiltersApplied(newFiltersToApply)
@@ -69,7 +70,7 @@ export default function HomepageSelection({
 		return (
 			filterDatasetByFiltersApplied(
 				originalDataset,
-				{ tag: tag, year: filtersApplied.year, sixMonths: filtersApplied.sixMonths },
+				{ tag: tag, year: filtersApplied.year, sixMonths: filtersApplied.sixMonths, allTime: filtersApplied.allTime },
 				currentDate
 			).length > 0
 		)
@@ -97,6 +98,25 @@ export default function HomepageSelection({
 		return true
 	}
 
+	function isAllTimeSelectable(originalDataset, currentDate) {
+		if (filtersApplied.tag !== null) {
+			return originalDataset
+		}
+		return true
+	}
+
+	function isTimeButtonSelectable(year){
+		   if(year === 'the past six months'){
+				isLastSixMonthsSelectable(originalDataset, currentDate)
+		   }
+		   else if(year === 'All time'){
+				isAllTimeSelectable(originalDataset, currentDate)
+		   }
+		   else{
+				isYearSelectable(originalDataset, year)
+		   }
+	}
+
 	return (
 		<div>
 			<ButtonsRow
@@ -111,14 +131,10 @@ export default function HomepageSelection({
 			/>
 			<ButtonsRow
 				label="from"
-				buttonLabels={['the past six months'].concat(years)}
+				buttonLabels={['the past six months'].concat(years).concat(['All time'])}
 				defaultSelection={'the past six months'}
 				updateSelection={updateSelectedYear}
-				isButtonSelectable={(year) => {
-					return year === 'the past six months'
-						? isLastSixMonthsSelectable(originalDataset, currentDate)
-						: isYearSelectable(originalDataset, year)
-				}}
+				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
 			/>
 		</div>
 	)
