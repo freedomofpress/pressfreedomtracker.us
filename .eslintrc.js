@@ -20,7 +20,8 @@ module.exports = {
 	"parserOptions": {
 		"ecmaFeatures": {
 			"experimentalObjectRestSpread": true
-		}
+		},
+		"ecmaVersion": 2020
 	},
 
 	"globals": {
