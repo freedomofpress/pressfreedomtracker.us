@@ -97,7 +97,7 @@ class ArticleLoader {
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
 			items[i].querySelector(
 				'.incident-database-card__details-toggle',
-			).addEventListener(
+			)?.addEventListener(
 				'click',
 				showMoreTable,
 			)
