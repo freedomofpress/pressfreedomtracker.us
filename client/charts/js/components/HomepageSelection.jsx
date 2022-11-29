@@ -98,22 +98,15 @@ export default function HomepageSelection({
 		return true
 	}
 
-	function isAllTimeSelectable(originalDataset, currentDate) {
-		if (filtersApplied.tag !== null) {
-			return originalDataset
-		}
-		return true
-	}
-
 	function isTimeButtonSelectable(year){
 		   if(year === 'the past six months'){
-				isLastSixMonthsSelectable(originalDataset, currentDate)
+				return isLastSixMonthsSelectable(originalDataset, currentDate)
 		   }
 		   else if(year === 'All time'){
-				isAllTimeSelectable(originalDataset, currentDate)
+				return true
 		   }
 		   else{
-				isYearSelectable(originalDataset, year)
+				return isYearSelectable(originalDataset, year)
 		   }
 	}
 
