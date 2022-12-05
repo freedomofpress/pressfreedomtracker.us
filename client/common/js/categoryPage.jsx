@@ -1,5 +1,5 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom"
 import CategoryPageChart from "../../charts/js/components/CategoryPageChart"
 import DataLoader from "../../charts/js/components/DataLoader"
 
@@ -28,7 +28,8 @@ chartContainers.forEach((node) => {
 	if (startDate) params.append('date_lower', startDate)
 	if (endDate) params.append('date_upper', endDate)
 
-	ReactDOM.render((
+	let root = createRoot(node)
+	root.render((
 		<DataLoader
 			dataUrl={`/api/edge/incidents/?${params.toString()}`}
 			loadingComponent={(
@@ -49,5 +50,5 @@ chartContainers.forEach((node) => {
 				vizType={vizType}
 			/>
 		</DataLoader>
-	), node)
+	))
 })

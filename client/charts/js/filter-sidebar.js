@@ -1,10 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom";
 import FilterSidebar from "./components/FilterSidebar";
 
 function renderSidebar() {
 	let el = document.getElementById("filter-sidebar");
-	ReactDOM.render(<FilterSidebar {...(el.dataset)} />, el);
+	let root = createRoot(el);
+	root.render(<FilterSidebar {...(el.dataset)} />);
 }
 
 // First render

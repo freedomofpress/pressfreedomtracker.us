@@ -1,9 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom";
 import App from "./components/App";
 
 function renderApp() {
-	ReactDOM.render(<App />, document.getElementById("react-target"));
+	const root = createRoot(document.getElementById("react-target"));
+	root.render(<App />);
 }
 
 // First render

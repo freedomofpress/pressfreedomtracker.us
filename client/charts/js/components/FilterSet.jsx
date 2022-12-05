@@ -42,7 +42,10 @@ function DateFilter({
 							type: SET_PARAMETER,
 							payload: {
 								filterName: name,
-								value: { min: newMinDate, max: upperValue }
+								value: {
+									min: newMinDate,
+									max: isDateValid(upperValue) ? new Date(upperValue) : null
+								}
 							},
 						})
 					}}
@@ -64,7 +67,10 @@ function DateFilter({
 							type: SET_PARAMETER,
 							payload: {
 								filterName: name,
-								value: { min: lowerValue, max: newMaxDate }
+								value: {
+									min: isDateValid(lowerValue) ? new Date(lowerValue) : null,
+									max: newMaxDate
+								}
 							},
 						})
 					}}

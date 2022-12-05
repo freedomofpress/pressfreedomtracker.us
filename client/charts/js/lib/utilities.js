@@ -75,7 +75,7 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 		parameters.push(`state=${filtersApplied.state.replace(' ', '+')}`)
 	}
 
-	if (filtersApplied.year !== null && filtersApplied.monthName === undefined) {
+	if (filtersApplied.year !== null && filtersApplied.year !== undefined && filtersApplied.monthName === undefined) {
 		parameters.push(`date_lower=${filtersApplied.year}-01-01&date_upper=${filtersApplied.year}-12-31`)
 	}
 

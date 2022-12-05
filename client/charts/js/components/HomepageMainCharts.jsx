@@ -81,7 +81,7 @@ function HomepageMainChartsWidth({
 						categoryColumn={'categories'}
 						titleLabel={'incidents'}
 						openSearchPage={(category) => {
-							goToFilterPage(databasePath, { ...filtersApplied, category }, currentDate)
+							goToFilterPage(databasePath, { category }, currentDate)
 						}}
 						categoriesColors={categoriesColors}
 						allCategories={Object.keys(categoriesColors)}
