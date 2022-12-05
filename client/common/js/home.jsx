@@ -1,5 +1,5 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom"
 
 import HomepageMainCharts from '../../charts/js/components/HomepageMainCharts'
 import DataLoader from "../../charts/js/components/DataLoader"
@@ -33,7 +33,8 @@ chartContainers.forEach((node) => {
 	if (startDate) params.append('date_lower', startDate)
 	if (endDate) params.append('date_upper', endDate)
 
-	ReactDOM.render((
+	let root = createRoot(node)
+	root.render((
 		<DataLoader
 			dataUrl={`/api/edge/incidents/homepage_csv/?${params.toString()}`}
 			loadingComponent={(
@@ -42,5 +43,5 @@ chartContainers.forEach((node) => {
 		>
 			<HomepageMainCharts selectedTags={selectedTags} databasePath={databasePath} />
 		</DataLoader>
-	), node)
+	))
 })
