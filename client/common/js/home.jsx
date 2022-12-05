@@ -1,5 +1,5 @@
 import React from "react"
-import { createRoot } from "react-dom"
+import { createRoot } from "react-dom/client"
 
 import HomepageMainCharts from '../../charts/js/components/HomepageMainCharts'
 import DataLoader from "../../charts/js/components/DataLoader"
