@@ -1,5 +1,5 @@
 import React from "react"
-import { createRoot } from "react-dom"
+import { createRoot } from "react-dom/client"
 import CategoryPageChart from "../../charts/js/components/CategoryPageChart"
 import DataLoader from "../../charts/js/components/DataLoader"
 
