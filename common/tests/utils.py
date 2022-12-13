@@ -4,7 +4,7 @@ import json
 
 from faker import Faker
 from faker.providers import BaseProvider
-from wagtail.core.models import Page
+from wagtail.models import Page
 
 from common.models import CustomImage
 from common.choices import BACKGROUND_COLOR_CHOICES

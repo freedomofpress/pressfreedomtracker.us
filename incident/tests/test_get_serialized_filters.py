@@ -1,5 +1,5 @@
 from django.test import TestCase, RequestFactory
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 import incident.tests.factories as incident_factories
 from common.models.pages import CategoryPage

@@ -3,7 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='formpage',
             name='outro_text',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='Optional: text for the page outro', null=True),
+            field=wagtail.fields.RichTextField(blank=True, help_text='Optional: text for the page outro', null=True),
         ),
         migrations.AddField(
             model_name='formpage',

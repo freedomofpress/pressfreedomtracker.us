@@ -2,9 +2,9 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.test import TestCase, RequestFactory
-from wagtail.core.models import Site, Page
-from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import (
+from wagtail.models import Site, Page
+from wagtail.test.utils import WagtailPageTestCase
+from wagtail.test.utils.form_data import (
     inline_formset,
     nested_form_data,
     rich_text,
@@ -249,14 +249,17 @@ class CategoryPageTest(TestCase):
             post_data,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        self.assertJSONEqual(
+            response.content.decode(),
+            {'is_valid': True, 'is_available': True}
+        )
 
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], self.category_page)
 
 
-class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
+class CategoryPageMethodologyStatisticsTest(WagtailPageTestCase):
     @classmethod
     def setUpTestData(cls):
         Page.objects.filter(slug='home').delete()
@@ -296,6 +299,10 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
             'incident_filters': inline_formset([]),
         }
 
+    def setUp(self):
+        super().setUp()
+        self.login()
+
     def test_can_create_category_page(self):
         self.assertCanCreate(
             self.home_page,
@@ -314,7 +321,10 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTests):
             nested_form_data(self.page_data)
         )
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        self.assertJSONEqual(
+            response.content.decode(),
+            {'is_valid': True, 'is_available': True}
+        )
 
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)

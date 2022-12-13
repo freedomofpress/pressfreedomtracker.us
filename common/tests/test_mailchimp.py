@@ -3,7 +3,7 @@ from unittest import mock
 from django.conf import settings
 from django.test import TestCase, override_settings
 from mailchimp_marketing.api_client import ApiClientError
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 from emails.devdata import EmailSettingsFactory
 from emails.models import MailchimpGroup, Subscription

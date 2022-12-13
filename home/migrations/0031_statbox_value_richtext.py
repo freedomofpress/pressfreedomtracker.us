@@ -2,7 +2,7 @@
 
 import common.validators
 from django.db import migrations
-import wagtail.core.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='statbox',
             name='value',
-            field=wagtail.core.fields.RichTextField(blank=True, help_text='Primary text for this stat box.  Line breaks will be removed.', null=True, validators=[common.validators.TemplateValidator()]),
+            field=wagtail.fields.RichTextField(blank=True, help_text='Primary text for this stat box.  Line breaks will be removed.', null=True, validators=[common.validators.TemplateValidator()]),
         ),
     ]

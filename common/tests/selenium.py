@@ -7,7 +7,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.management import call_command
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-from wagtail.core.models import Page, Site, Locale
+from wagtail.models import Page, Site, Locale
 
 from home.models import HomePage
 

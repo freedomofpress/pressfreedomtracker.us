@@ -1,6 +1,6 @@
 from django.test import TestCase
 from unittest.mock import patch
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory

@@ -5,9 +5,9 @@ from datetime import timedelta, date
 from urllib import parse
 
 import wagtail_factories
-from wagtail.core.models import Site, Page
-from wagtail.tests.utils import WagtailPageTests
-from wagtail.tests.utils.form_data import (
+from wagtail.models import Site, Page
+from wagtail.test.utils import WagtailPageTestCase
+from wagtail.test.utils.form_data import (
     nested_form_data,
     streamfield,
     inline_formset,
@@ -294,7 +294,7 @@ class TestExportPage(TestCase):
             self.assertNotIn('Unpublished incident', line.decode('utf-8'))
 
 
-class TestFeedsPage(WagtailPageTests):
+class TestFeedsPage(WagtailPageTestCase):
     """RSS Feeds Page"""
     @classmethod
     def setUpTestData(cls):
@@ -854,9 +854,10 @@ class IncidentPageFuzzyDateRangeFilter(TestCase):
                 self.assertEqual(set(incidents), {self.incident2, self.incident3})
 
 
-class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
+class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
     def setUp(self):
         super().setUp()
+        self.login()
         Page.objects.filter(slug='home').delete()
         root_page = Page.objects.get(title='Root')
         self.home_page = HomePageFactory.build(parent=None, slug='home')
@@ -923,7 +924,10 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
             })
         )
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        self.assertJSONEqual(
+            response.content.decode(),
+            {'is_valid': True, 'is_available': True}
+        )
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], incident_page)
@@ -968,7 +972,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTests):
         self.assertEqual(response.status_code, 200)
 
 
-class TestTopicPage(WagtailPageTests):
+class TestTopicPage(WagtailPageTestCase):
     def setUp(self):
         self.login()
         Page.objects.filter(slug='home').delete()
@@ -1083,7 +1087,10 @@ class TestTopicPage(WagtailPageTests):
             form_data,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content.decode(), {'is_valid': True})
+        self.assertJSONEqual(
+            response.content.decode(),
+            {'is_valid': True, 'is_available': True}
+        )
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['page'], topic_page)

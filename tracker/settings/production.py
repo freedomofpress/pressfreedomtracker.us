@@ -106,7 +106,7 @@ LOGGING = {
 
 # Domain specific
 #
-BASE_URL = os.environ.get('DJANGO_BASE_URL', 'https://pressfreedomtracker.us')
+WAGTAILADMIN_BASE_URL = os.environ.get('DJANGO_BASE_URL', 'https://pressfreedomtracker.us')
 STATIC_URL = os.environ.get('DJANGO_STATIC_URL', '/static/')
 MEDIA_URL = os.environ.get('DJANGO_MEDIA_URL', '/media/')
 

@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'wagtail.images',
     'wagtail.search',
     'wagtail.admin',
-    'wagtail.core',
+    'wagtail',
 
     'modelcluster',
     'taggit',
@@ -74,7 +74,6 @@ INSTALLED_APPS = [
     'wagtailmetadata',
     'webpack_loader',
     'wagtailautocomplete',
-    'wagtailinventory',
     'widget_tweaks',
 
     'django.contrib.admin',
@@ -196,16 +195,11 @@ MEDIA_URL = '/media/'
 
 # Search Backend
 
-if 'postgres' in DATABASES['default']['ENGINE']:
-    INSTALLED_APPS.append('wagtail.contrib.postgres_search')
-    WAGTAILSEARCH_BACKENDS = {
-        'default': {
-            'BACKEND': 'wagtail.search.backends.database.',
-        },
-    }
-else:
-    WAGTAILSEARCH_BACKENDS = {}
-
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.search.backends.database',
+    },
+}
 
 # Wagtail settings
 
@@ -216,7 +210,7 @@ WAGTAILIMAGES_IMAGE_MODEL = 'common.CustomImage'
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'https://pressfreedomtracker.us'
+WAGTAILADMIN_BASE_URL = 'https://pressfreedomtracker.us'
 
 
 # Django-webpack configuration

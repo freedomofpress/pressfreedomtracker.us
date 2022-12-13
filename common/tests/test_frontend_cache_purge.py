@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from unittest.mock import patch
-from wagtail.core.models import Site, Page
+from wagtail.models import Site, Page
 
 from common.models import FooterSettings
 from common.tests.factories import CategoryPageFactory
@@ -78,7 +78,7 @@ class TestCategoryPageCacheInvalidation(TestCase):
         """Changing any Setting should purge the entire zone.
 
         In this case we test with FooterSettings as an example, but it
-        should work for any BaseSetting subclass.
+        should work for any BaseSiteSetting subclass.
         """
 
         site = Site.objects.get(is_default_site=True)

@@ -5,8 +5,8 @@ from django.core.exceptions import ValidationError
 from django.http import QueryDict
 from django.test import TestCase
 from django.utils import timezone
-from wagtail.core.models import Site
-from wagtail.core.rich_text import RichText
+from wagtail.models import Site
+from wagtail.rich_text import RichText
 
 from common.models import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter

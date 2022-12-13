@@ -10,9 +10,9 @@ from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from marshmallow import Schema, fields, EXCLUDE
-from wagtail.admin.edit_handlers import FieldPanel
-from wagtail.core.models import Page, Site
-from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.admin.panels import FieldPanel
+from wagtail.models import Page, Site
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
 from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
 from common.models import MetadataPageMixin
@@ -59,7 +59,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     subpage_types = ['incident.IncidentPage']
 
-    @route('export/')
+    @path('export/')
     @method_decorator(require_http_methods(['HEAD', 'GET', 'OPTIONS']))
     def export_view(self, request: 'HttpRequest') -> HttpResponse:
         if request.method == 'GET':
@@ -142,7 +142,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def export_view_OPTIONS(self, request: 'HttpRequest') -> HttpResponse:
         return HttpResponse()
 
-    @route(r'^summary/$')
+    @path('summary/')
     @method_decorator(require_http_methods(['GET']))
     def summary(self, request):
         incident_filter = IncidentFilter(request.GET)
@@ -150,7 +150,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         result = SummarySchema().load(dict(summary))
         return JsonResponse(result)
 
-    @route(r'^feed/$')
+    @path('feed/')
     def feed(self, request):
         return IncidentIndexPageFeed(self)(request)
 

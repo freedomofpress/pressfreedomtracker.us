@@ -22,18 +22,15 @@ from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.aggregates import ArrayAgg
 from psycopg2.extras import DateRange
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
-    PageChooserPanel,
-    StreamFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page, Orderable, PageManager, PageQuerySet
+from wagtail import blocks
+from wagtail.fields import StreamField, RichTextField
+from wagtail.models import Page, Orderable, PageManager, PageQuerySet
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
 
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 from common.blocks import (
@@ -64,7 +61,7 @@ class IncidentAuthor(Orderable):
         return self.author.title
 
     panels = [
-        PageChooserPanel('author')
+        FieldPanel('author')
     ]
 
 
@@ -265,7 +262,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ('pull_quote', PullQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
-    ])
+    ], use_json_field=True)
 
     introduction = models.TextField(
         help_text="Optional: introduction displayed above the image.",
@@ -611,12 +608,12 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('introduction'),
                 FieldPanel('primary_video'),
-                ImageChooserPanel('teaser_image'),
+                FieldPanel('teaser_image'),
                 FieldPanel('image_caption'),
                 FieldPanel('teaser'),
             ]
         ),
-        StreamFieldPanel('body'),
+        FieldPanel('body'),
         MultiFieldPanel(
             heading='Details',
             children=[

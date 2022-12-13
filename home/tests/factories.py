@@ -1,6 +1,6 @@
 import factory
 import wagtail_factories
-from wagtail.core.rich_text import RichText
+from wagtail.rich_text import RichText
 
 from home.models import HomePage
 from common.tests.utils import StreamfieldProvider

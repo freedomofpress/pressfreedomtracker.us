@@ -2,13 +2,11 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, PageChooserPanel, StreamFieldPanel, MultiFieldPanel
-from wagtail.core.blocks import RichTextBlock
-from wagtail.core.fields import RichTextField, StreamField
-from wagtail.core.models import Orderable, Page
-from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.snippets.edit_handlers import SnippetChooserPanel
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.blocks import RichTextBlock
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Orderable, Page
 
 from common.validators import validate_image_format, validate_template
 from common.blocks import Heading2
@@ -17,7 +15,7 @@ from .choices import FILTER_CHOICES
 
 
 @register_setting(icon='search')
-class SearchSettings(BaseSetting):
+class SearchSettings(BaseSiteSetting):
     data_download_page = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
@@ -47,9 +45,9 @@ class SearchSettings(BaseSetting):
     )
 
     panels = [
-        PageChooserPanel('search_page'),
-        PageChooserPanel('data_download_page'),
-        PageChooserPanel('learn_more_page'),
+        FieldPanel('search_page'),
+        FieldPanel('data_download_page'),
+        FieldPanel('learn_more_page'),
     ]
 
     class Meta:
@@ -57,7 +55,7 @@ class SearchSettings(BaseSetting):
 
 
 @register_setting
-class FooterSettings(BaseSetting, ClusterableModel):
+class FooterSettings(BaseSiteSetting, ClusterableModel):
     body = RichTextField(blank=True, null=True)
     menu = models.ForeignKey(
         'menus.Menu',
@@ -77,9 +75,9 @@ class FooterSettings(BaseSetting, ClusterableModel):
 
     panels = [
         FieldPanel('body'),
-        SnippetChooserPanel('menu'),
+        FieldPanel('menu'),
         FieldPanel('partner_logo_text'),
-        PageChooserPanel('partner_logo_link'),
+        FieldPanel('partner_logo_link'),
         InlinePanel(
             'footer_logos',
             label="Footer Logos",
@@ -106,13 +104,13 @@ class FooterLogos(Orderable):
     )
 
     panels = [
-        ImageChooserPanel('logo_image'),
+        FieldPanel('logo_image'),
         FieldPanel('logo_url'),
     ]
 
 
 @register_setting
-class SiteSettings(BaseSetting):
+class SiteSettings(BaseSiteSetting):
     incident_sidebar_note = StreamField(
         [
             ('heading', Heading2()),
@@ -121,7 +119,8 @@ class SiteSettings(BaseSetting):
         default=None,
         blank=True,
         null=True,
-        help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.'
+        help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.',
+        use_json_field=True,
     )
     citation_contact_page = models.ForeignKey(
         'wagtailcore.Page',
@@ -152,8 +151,8 @@ class SiteSettings(BaseSetting):
     )
 
     panels = [
-        StreamFieldPanel('incident_sidebar_note'),
-        PageChooserPanel('citation_contact_page'),
+        FieldPanel('incident_sidebar_note'),
+        FieldPanel('citation_contact_page'),
         FieldPanel('incident_footer'),
         MultiFieldPanel([
             FieldPanel('banner_content'),
@@ -166,7 +165,7 @@ class SiteSettings(BaseSetting):
 
 
 @register_setting
-class TaxonomySettings(BaseSetting, ClusterableModel):
+class TaxonomySettings(BaseSiteSetting, ClusterableModel):
     panels = [
         InlinePanel(
             'categories',
@@ -180,7 +179,7 @@ class TaxonomySettings(BaseSetting, ClusterableModel):
 
 
 @register_setting(icon='plus')
-class SocialSharingSEOSettings(BaseSetting):
+class SocialSharingSEOSettings(BaseSiteSetting):
     default_description = models.TextField(
         blank=True,
         null=True,
@@ -215,7 +214,7 @@ class SocialSharingSEOSettings(BaseSetting):
 
     panels = [
         FieldPanel('default_description'),
-        ImageChooserPanel('default_image'),
+        FieldPanel('default_image'),
         FieldPanel('facebook_page_id'),
         FieldPanel('twitter'),
     ]
@@ -225,7 +224,7 @@ class SocialSharingSEOSettings(BaseSetting):
 
 
 @register_setting
-class IncidentFilterSettings(BaseSetting, ClusterableModel):
+class IncidentFilterSettings(BaseSiteSetting, ClusterableModel):
     class Meta:
         verbose_name = 'general incident filters'
 

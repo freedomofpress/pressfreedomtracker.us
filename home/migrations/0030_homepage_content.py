@@ -2,8 +2,8 @@
 
 import common.blocks
 from django.db import migrations
-import wagtail.core.blocks
-import wagtail.core.fields
+import wagtail.blocks
+import wagtail.fields
 import wagtail.embeds.blocks
 
 
@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='homepage',
             name='content',
-            field=wagtail.core.fields.StreamField([('heading_2', wagtail.core.blocks.StructBlock([('content', wagtail.core.blocks.CharBlock())])), ('raw_html', wagtail.core.blocks.RawHTMLBlock()), ('rich_text', wagtail.core.blocks.RichTextBlock()), ('tweet', wagtail.core.blocks.StructBlock([('tweet', wagtail.embeds.blocks.EmbedBlock())])), ('tabs', common.blocks.TabbedBlock())], blank=True),
+            field=wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('rich_text', wagtail.blocks.RichTextBlock()), ('tweet', wagtail.blocks.StructBlock([('tweet', wagtail.embeds.blocks.EmbedBlock())])), ('tabs', common.blocks.TabbedBlock())], blank=True),
         ),
     ]

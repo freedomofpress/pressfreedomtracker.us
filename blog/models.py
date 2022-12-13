@@ -5,19 +5,17 @@ from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
     InlinePanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page, Orderable
+from wagtail import blocks
+from wagtail.fields import StreamField, RichTextField
+from wagtail.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
 
 from common.utils import DEFAULT_PAGE_KEY, paginate
@@ -45,7 +43,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock())
-    ])
+    ], use_json_field=True)
 
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
     feed_limit = models.PositiveIntegerField(
@@ -60,7 +58,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body'),
+        FieldPanel('body'),
         InlinePanel(
             'featured_blogs',
             label='Featured Blogs',
@@ -77,7 +75,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     subpage_types = ['blog.BlogPage']
 
-    @route(r'^feed/$')
+    @path('feed/')
     def feed(self, request):
         return BlogIndexPageFeed(self)(request)
 
@@ -159,7 +157,7 @@ class BlogIndexPageFeature(Orderable):
     page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE)
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 
@@ -184,7 +182,7 @@ class BlogPage(MetadataPageMixin, Page):
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
         ('statistics', StatisticsBlock()),
-    ])
+    ], use_json_field=True)
 
     introduction = models.TextField(
         help_text="Optional: introduction displayed above the image/video.",
@@ -241,20 +239,20 @@ class BlogPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('publication_datetime'),
-        StreamFieldPanel('body'),
+        FieldPanel('body'),
         FieldPanel('link_to_original_post'),
         MultiFieldPanel(
             heading='Introduction',
             children=[
                 FieldPanel('introduction'),
-                ImageChooserPanel('lead_image'),
+                FieldPanel('lead_image'),
                 FieldPanel('image_caption'),
             ]
         ),
         MultiFieldPanel(
             heading='Teaser',
             children=[
-                ImageChooserPanel('teaser_image'),
+                FieldPanel('teaser_image'),
                 FieldPanel('teaser_text'),
             ]
         ),

@@ -1,6 +1,6 @@
 from django.test import TestCase
-from wagtail.core.models import Site
-from wagtail.core.templatetags.wagtailcore_tags import richtext
+from wagtail.models import Site
+from wagtail.templatetags.wagtailcore_tags import richtext
 
 from home.tests.factories import HomePageFactory
 from common.tests.factories import CategoryPageFactory
