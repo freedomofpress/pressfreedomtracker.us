@@ -10,8 +10,8 @@ from django.core import management
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
 from django.db import transaction
-from wagtail.core.models import Site
-from wagtail.core.rich_text import RichText
+from wagtail.models import Site
+from wagtail.rich_text import RichText
 import factory
 from faker import Faker
 

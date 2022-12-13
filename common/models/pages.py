@@ -9,19 +9,15 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
-    StreamFieldPanel,
     PageChooserPanel,
     MultiFieldPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.models import Page, Orderable, Site
-from wagtail.core.fields import RichTextField, StreamField
-
-from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.snippets.edit_handlers import SnippetChooserPanel
+from wagtail import blocks
+from wagtail.models import Page, Orderable, Site
+from wagtail.fields import RichTextField, StreamField
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -72,7 +68,7 @@ class BaseSidebarPageMixin(models.Model):
     )
 
     settings_panels = [
-        SnippetChooserPanel('sidebar_menu'),
+        FieldPanel('sidebar_menu'),
     ]
 
     def get_sidebar_menu(self):
@@ -135,6 +131,8 @@ class OrganizationIndexPage(Page):
 
     subpage_types = ['common.OrganizationPage']
 
+    preview_modes = []
+
     def serve(self, request):
         raise Http404()
 
@@ -153,10 +151,11 @@ class OrganizationPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('description'),
         FieldPanel('website'),
-        ImageChooserPanel('logo'),
+        FieldPanel('logo'),
     ]
 
     parent_page_types = ['common.OrganizationIndexPage']
+    preview_modes = []
 
     def serve(self, request):
         """
@@ -191,7 +190,7 @@ class PersonPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('bio'),
         FieldPanel('website'),
-        ImageChooserPanel('photo'),
+        FieldPanel('photo'),
     ]
 
 
@@ -363,7 +362,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('description'),
-        ImageChooserPanel('default_image', heading='Default SEO image for incidents'),
+        FieldPanel('default_image', heading='Default SEO image for incidents'),
         InlinePanel('quick_facts', label='Quick Facts'),
         InlinePanel('statistics_items', label='Statistics'),
         MultiFieldPanel(
@@ -546,7 +545,7 @@ class FeaturedCategoryIncident(Orderable):
     page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 
@@ -555,7 +554,7 @@ class FeaturedCategoryBlog(Orderable):
     page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 
@@ -577,7 +576,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('heading_3', Heading3()),
         ('email_signup', EmailSignupBlock()),
         ('info_table', InfoTableBlock()),
-    ])
+    ], use_json_field=True)
 
     sidebar_content = StreamField(
         [
@@ -586,12 +585,13 @@ class SimplePage(MetadataPageMixin, Page):
         ],
         default=None,
         blank=True,
-        null=True
+        null=True,
+        use_json_field=True,
     )
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body'),
-        StreamFieldPanel('sidebar_content')
+        FieldPanel('body'),
+        FieldPanel('sidebar_content')
     ]
 
     def get_meta_description(self):
@@ -621,10 +621,10 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
         ('email_signup', EmailSignupBlock()),
-    ])
+    ], use_json_field=True)
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body'),
+        FieldPanel('body'),
     ]
 
     settings_panels = Page.settings_panels + BaseSidebarPageMixin.settings_panels

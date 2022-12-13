@@ -4,7 +4,7 @@ import json
 
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     PageChooserPanel,
@@ -13,8 +13,8 @@ from wagtail.admin.edit_handlers import (
     ObjectList,
     FieldRowPanel,
 )
-from wagtail.core.fields import RichTextField
-from wagtail.core.models import Page, Orderable, Site
+from wagtail.fields import RichTextField
+from wagtail.models import Page, Orderable, Site
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 from common.models import MetadataPageMixin
@@ -222,7 +222,7 @@ class FeaturedIncident(Orderable):
     page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 
@@ -231,7 +231,7 @@ class FeaturedBlogPost(Orderable):
     page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
     ]
 
 

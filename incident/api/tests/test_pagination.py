@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from requests.utils import parse_header_links
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 from incident.tests.factories import (
     IncidentIndexPageFactory,

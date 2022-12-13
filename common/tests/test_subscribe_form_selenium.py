@@ -1,6 +1,6 @@
 from unittest import mock
 
-from wagtail.core.models import Page, Site
+from wagtail.models import Page, Site
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions

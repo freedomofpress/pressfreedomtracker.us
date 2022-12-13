@@ -8,8 +8,8 @@ from wagtail.admin.menu import MenuItem
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
-from wagtail.core import hooks
-from wagtail.admin.rich_text.converters.editor_html import PageLinkHandler
+from wagtail import hooks
+from wagtail.rich_text.pages import PageLinkHandler
 from webpack_loader.utils import get_files
 
 from .models import CommonTag, CategoryPage

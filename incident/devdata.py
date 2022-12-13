@@ -3,7 +3,7 @@ from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Ite
 import factory
 import random
 import wagtail_factories
-from wagtail.core.rich_text import RichText
+from wagtail.rich_text import RichText
 from faker.providers import BaseProvider
 
 from incident.models import (

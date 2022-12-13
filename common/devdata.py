@@ -1,7 +1,7 @@
 import factory
 import wagtail_factories
-from wagtail.core import blocks
-from wagtail.core.rich_text import RichText
+from wagtail import blocks
+from wagtail.rich_text import RichText
 
 from common.blocks import (
     Heading1,

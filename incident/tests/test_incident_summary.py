@@ -2,7 +2,7 @@ import json
 from urllib import parse
 
 from django.test import TestCase
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 from common.tests.factories import CategoryPageFactory
 from incident.tests.factories import IncidentIndexPageFactory, IncidentPageFactory

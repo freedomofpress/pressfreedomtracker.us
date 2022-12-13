@@ -4,17 +4,14 @@ from django.contrib.postgres.fields import DateRangeField
 from django.http import JsonResponse
 from marshmallow import Schema, fields
 from psycopg2.extras import DateRange
-from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.edit_handlers import (
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
+from wagtail.admin.panels import (
     FieldPanel,
-    StreamFieldPanel,
     MultiFieldPanel,
-    PageChooserPanel,
 )
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField, RichTextField
-from wagtail.core.models import Page
-from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail import blocks
+from wagtail.fields import StreamField, RichTextField
+from wagtail.models import Page
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 import common.blocks
@@ -166,7 +163,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('rich_text', blocks.RichTextBlock()),
         ('tweet', common.blocks.TweetEmbedBlock()),
         ('tabs', common.blocks.TabbedBlock()),
-    ], blank=True)
+    ], blank=True, use_json_field=True)
     sidebar = StreamField([
         ('heading_2', common.blocks.Heading2()),
         ('rich_text', common.blocks.RichTextTemplateBlock(
@@ -177,7 +174,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('tweet', common.blocks.TweetEmbedBlock()),
         ('stat_table', common.blocks.StatTableBlock()),
         ('button', common.blocks.ButtonBlock()),
-    ], blank=True)
+    ], blank=True, use_json_field=True)
 
     incident_index_page = models.ForeignKey(
         'incident.IncidentIndexPage',
@@ -204,7 +201,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
                 FieldPanel('description'),
                 FieldPanel('text_align'),
                 FieldPanel('text_color'),
-                ImageChooserPanel('photo'),
+                FieldPanel('photo'),
                 FieldPanel('photo_caption'),
                 FieldPanel('photo_credit'),
                 FieldPanel('photo_credit_link'),
@@ -214,8 +211,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Content',
             children=[
-                StreamFieldPanel('content'),
-                StreamFieldPanel('sidebar'),
+                FieldPanel('content'),
+                FieldPanel('sidebar'),
             ],
             classname='collapsible',
         ),
@@ -225,7 +222,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         MultiFieldPanel(
             heading='Incidents',
             children=[
-                PageChooserPanel('incident_index_page'),
+                FieldPanel('incident_index_page'),
                 AutocompletePanel('incident_tag', target_model='common.CommonTag'),
                 FieldPanel('incidents_per_module'),
                 FieldPanel('start_date'),
@@ -340,7 +337,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         result = categories_schema.dump(cats)
         return result
 
-    @route('incidents/')
+    @path('incidents/')
     def incidents_view(self, request):
         return JsonResponse(data=self.get_categories_data(), safe=False)
 

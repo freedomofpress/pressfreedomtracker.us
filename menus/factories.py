@@ -7,7 +7,7 @@ from factory import (
     SubFactory,
 )
 from factory.django import DjangoModelFactory
-from wagtail.core.models import Page
+from wagtail.models import Page
 
 from menus.models import Menu, MenuItem
 

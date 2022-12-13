@@ -1,4 +1,4 @@
-from wagtail.core.models import Site, Page
+from wagtail.models import Site, Page
 from django.test import TestCase, Client
 
 from common.tests.factories import PersonPageFactory, OrganizationPageFactory

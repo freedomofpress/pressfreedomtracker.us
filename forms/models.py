@@ -8,19 +8,19 @@ from django.views.decorators.cache import cache_control
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.admin.forms import WagtailAdminPageForm
-from wagtail.admin.edit_handlers import (
+from wagtail.admin.panels import (
     FieldPanel, FieldRowPanel,
-    InlinePanel, MultiFieldPanel
+    InlinePanel, MultiFieldPanel,
+    HelpPanel,
 )
-from wagtail.core.models import Orderable
-from wagtail.core.fields import RichTextField
+from wagtail.models import Orderable
+from wagtail.fields import RichTextField
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 from forms.choices import FIELD_GROUP_TEMPLATE_CHOICES
 from forms.email import send_mail
 from common.models import MetadataPageMixin
-from common.edit_handlers import HelpPanel
 
 
 class ReplyToValidatorForm(WagtailAdminPageForm):
@@ -156,10 +156,10 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
                   '<iframe src="[[URL TO FORM]]?embed=t" width="100%" height="60vh"></iframe>'
                   '</textarea>'),
     ] + WagtailCaptchaEmailForm.content_panels + [
-        FieldPanel('intro', classname="full"),
-        FieldPanel('form_intro', classname="full"),
+        FieldPanel('intro'),
+        FieldPanel('form_intro'),
         InlinePanel('field_groups', label="Field group"),
-        FieldPanel('thank_you_text', classname="full"),
+        FieldPanel('thank_you_text'),
         FieldPanel('button_text'),
         MultiFieldPanel([
             FieldRowPanel([

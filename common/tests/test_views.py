@@ -14,7 +14,7 @@ from incident.tests.factories import (
     IncidentPageFactory,
     TopicPageFactory,
 )
-from wagtail.core.models import Site
+from wagtail.models import Site
 from mailchimp_marketing.api_client import ApiClientError
 
 from emails.devdata import EmailSettingsFactory
