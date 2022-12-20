@@ -29,5 +29,6 @@ wagtail-autocomplete>=0.9.0
 wagtail-factories>=3.1.0
 wagtail-django-recaptcha
 wagtail-metadata>=4
+wagtail-inventory
 unittest-xml-reporting
 whitenoise

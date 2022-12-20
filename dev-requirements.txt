@@ -989,6 +989,12 @@ toml==0.10.2 \
     # via
     #   autopep8
     #   ipdb
+tqdm==4.64.1 \
+    --hash=sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4 \
+    --hash=sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1
+    # via
+    #   -r requirements.txt
+    #   wagtail-inventory
 traitlets==5.1.1 \
     --hash=sha256:059f456c5a7c1c82b98c2e8c799f39c9b8128f6d0d46941ee118daace9eb70c7 \
     --hash=sha256:2d313cc50a42cd6c277e7d7dc8d4d7fedd06a2c215f78766ae7b1a66277e0033
@@ -1042,6 +1048,7 @@ wagtail==4.1.1 \
     #   -r requirements.txt
     #   wagtail-autocomplete
     #   wagtail-factories
+    #   wagtail-inventory
     #   wagtail-metadata
 wagtail-autocomplete==0.9.0 \
     --hash=sha256:b64828d35f370453c84bc4094174872822798e54414f5fb9fc8a43c2a6c3e727 \
@@ -1053,6 +1060,10 @@ wagtail-django-recaptcha==1.0 \
 wagtail-factories==3.1.0 \
     --hash=sha256:26b42998420005ab556f714e72e4a53427aac59ae595c66d1379a2c141f92be5 \
     --hash=sha256:ea366dc1d399e9c24218366fc80a104f51c3f18469ed19c576e15023a226c942
+    # via -r requirements.txt
+wagtail-inventory==1.6 \
+    --hash=sha256:42d7845fd561a1b8c71b100b41f658351d5547a7653cfb689f2263df5ed5bcf3 \
+    --hash=sha256:4bb75ddc87d6abcaed4404b22977ee5b6f3a746c81a657f64b434e0cf2552de3
     # via -r requirements.txt
 wagtail-metadata==4.0.2 \
     --hash=sha256:28436201e308921ec6a4e15ac45b3bd09cdd61f699a0973d968653a8e2fff5a7 \
