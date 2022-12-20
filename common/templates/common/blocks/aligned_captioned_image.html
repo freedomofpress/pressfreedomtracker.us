@@ -1,6 +1,14 @@
 <figure class="inline-media {{ value.alignment }}">
     {% include 'common/blocks/image_block.html' with value=value.image %}
-    {% if value.caption %}
-        <figcaption class="inline-media__caption">{{ value.caption }}</figcaption>
+    {% if value.caption or value.image.attribution %}
+        <figcaption class="inline-media__caption">
+			{% if value.caption %}{{ value.caption }}{% endif %}
+			{% if value.image.attribution %}
+				<span
+					class="media-attribution"
+					aria-label="Attributed to: {{ value.image.attribution }}"> — {{ value.image.attribution }}
+				</span>
+			{% endif %}
+		</figcaption>
     {% endif %}
 </figure>
