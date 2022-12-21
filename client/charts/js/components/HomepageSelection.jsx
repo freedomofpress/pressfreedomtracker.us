@@ -60,7 +60,7 @@ export default function HomepageSelection({
 			tag: filtersApplied.tag,
 			year: (label === 'the past six months') || (label === 'all time') ? null : label,
 			sixMonths: label === 'the past six months',
-			allTime: label === 'All Time'
+			allTime: label === 'all time'
 		}
 
 		setFiltersApplied(newFiltersToApply)
