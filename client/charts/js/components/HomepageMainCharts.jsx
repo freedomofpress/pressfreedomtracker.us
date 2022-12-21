@@ -37,6 +37,7 @@ function HomepageMainChartsWidth({
 		tag: null,
 		year: null,
 		sixMonths: true,
+		allTime: null
 	})
 
 	const chartWidth = width > 970 ? width / 3 : width
