@@ -587,6 +587,10 @@ rsa==4.8 \
     --hash=sha256:5c6bd9dc7a543b7fe4304a631f8a8a3b674e2bbfc49c2ae96200cdbe55df6b17 \
     --hash=sha256:95c5d300c4e879ee69708c428ba566c59478fd653cc3a22243eeb8ed846950bb
     # via google-auth
+setuptools==65.6.3 \
+    --hash=sha256:57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54 \
+    --hash=sha256:a7620757bf984b58deaf32fc8a4577a9bbc0850cf92c20e1ce41c38c19e5fb75
+    # via gunicorn
 six==1.16.0 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
@@ -617,6 +621,10 @@ telepath==0.2 \
     --hash=sha256:801615094d3d964e178183099bf04020f4ff9c84ec43945d40b096df0a5767ee \
     --hash=sha256:ef4cf2a45ed1908c58639c346756955f8a73ae79002a8116d596b3fd702bf84c
     # via wagtail
+tqdm==4.64.1 \
+    --hash=sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4 \
+    --hash=sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1
+    # via wagtail-inventory
 typing==3.7.4.3 \
     --hash=sha256:1187fb9c82fd670d10aa07bbb6cfcfe4bdda42d6fab8d5134f04e8c4d0b71cc9 \
     --hash=sha256:283d868f5071ab9ad873e5e52268d611e851c870a2ba354193026f2dfb29d8b5
@@ -648,6 +656,7 @@ wagtail==4.1.1 \
     #   -r requirements.in
     #   wagtail-autocomplete
     #   wagtail-factories
+    #   wagtail-inventory
     #   wagtail-metadata
 wagtail-autocomplete==0.9.0 \
     --hash=sha256:b64828d35f370453c84bc4094174872822798e54414f5fb9fc8a43c2a6c3e727 \
@@ -659,6 +668,10 @@ wagtail-django-recaptcha==1.0 \
 wagtail-factories==3.1.0 \
     --hash=sha256:26b42998420005ab556f714e72e4a53427aac59ae595c66d1379a2c141f92be5 \
     --hash=sha256:ea366dc1d399e9c24218366fc80a104f51c3f18469ed19c576e15023a226c942
+    # via -r requirements.in
+wagtail-inventory==1.6 \
+    --hash=sha256:42d7845fd561a1b8c71b100b41f658351d5547a7653cfb689f2263df5ed5bcf3 \
+    --hash=sha256:4bb75ddc87d6abcaed4404b22977ee5b6f3a746c81a657f64b434e0cf2552de3
     # via -r requirements.in
 wagtail-metadata==4.0.2 \
     --hash=sha256:28436201e308921ec6a4e15ac45b3bd09cdd61f699a0973d968653a8e2fff5a7 \
@@ -678,7 +691,3 @@ willow==1.4.1 \
     --hash=sha256:0df8ff528531e00b48d40bf72ed81beac1dc82f2d42e5bbed4aff0218bef8c0d \
     --hash=sha256:fc4042696d090e75aef922fa1ed26d483c764f005b36cf523cf7c34e69d5dd7a
     # via wagtail
-
-# WARNING: The following packages were not pinned, but pip requires them to be
-# pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
-# setuptools

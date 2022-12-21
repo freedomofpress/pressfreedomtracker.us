@@ -51,8 +51,8 @@ compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
 	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
-		pip-compile --generate-hashes --no-header --output-file requirements.txt requirements.in && \
-		pip-compile --generate-hashes --no-header --output-file ci-requirements.txt ci-requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --output-file requirements.txt requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --output-file ci-requirements.txt ci-requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --output-file dev-requirements.txt dev-requirements.in'
 
 .PHONY: pip-update
@@ -63,7 +63,7 @@ pip-update: ## Uses pip-compile to update requirements.txt for upgrading a speci
 	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
-		pip-compile --generate-hashes --no-header --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
 .PHONY: pip-upgrade

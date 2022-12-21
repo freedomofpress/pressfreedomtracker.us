@@ -57,11 +57,10 @@ RUN  mkdir /django-media /django-static /django-logs && \
 RUN mkdir -p /etc/gunicorn && chown -R gcorn: /etc/gunicorn
 COPY devops/docker/gunicorn/gunicorn.py /etc/gunicorn/gunicorn.py
 
-RUN mkdir /deploy && \
-    chown -R gcorn: /deploy && \
-    /django/devops/scripts/version-file.sh
+RUN mkdir /deploy && chown -R gcorn: /deploy
 
 EXPOSE 8000
 USER gcorn
+RUN /django/devops/scripts/version-file.sh
 RUN env DJANGO_DISABLE_DEBUG=1 DJANGO_NO_DB=1 ./manage.py collectstatic -c --noinput
 CMD django-start.sh
