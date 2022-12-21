@@ -58,9 +58,9 @@ export default function HomepageSelection({
 	function updateSelectedYear(label) {
 		const newFiltersToApply = {
 			tag: filtersApplied.tag,
-			year: (label === 'the past six months') || (label === 'All time') ? null : label,
+			year: (label === 'the past six months') || (label === 'all time') ? null : label,
 			sixMonths: label === 'the past six months',
-			allTime: label === 'All Time'
+			allTime: label === 'all time'
 		}
 
 		setFiltersApplied(newFiltersToApply)
@@ -102,7 +102,7 @@ export default function HomepageSelection({
 		   if(year === 'the past six months'){
 				return isLastSixMonthsSelectable(originalDataset, currentDate)
 		   }
-		   else if(year === 'All time'){
+		   else if(year === 'all time'){
 				return true
 		   }
 		   else{
@@ -124,7 +124,7 @@ export default function HomepageSelection({
 			/>
 			<ButtonsRow
 				label="from"
-				buttonLabels={['the past six months'].concat(years).concat(['All time'])}
+				buttonLabels={['the past six months'].concat(years).concat(['all time'])}
 				defaultSelection={'the past six months'}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
