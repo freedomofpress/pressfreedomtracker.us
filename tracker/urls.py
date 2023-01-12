@@ -6,7 +6,6 @@ from django.urls import include, path, re_path
 from django.contrib import admin
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
-from wagtailautocomplete.views import objects, search
 
 from charts.urls import urlpatterns as chart_urls
 from common import views as common_views
@@ -17,15 +16,9 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 
-autocomplete_public_urls = [
-    path('objects/', objects),
-    path('search/', search),
-]
-
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
-    path('autocomplete/', include(autocomplete_public_urls)),
     path('admin/autocomplete/', include(autocomplete_admin_urls)),
     path('admin/', include(wagtailadmin_urls)),
     path('emails/', include(emails_urls)),
