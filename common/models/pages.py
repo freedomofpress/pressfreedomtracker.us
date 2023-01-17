@@ -44,7 +44,7 @@ from common.utils import (
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape
 from common.validators import validate_template
-from statistics.registry import get_numbers_choices
+from statistics.registry import get_numbers_choices, get_numbers_default
 from statistics.validators import validate_dataset_params
 # Import statistics tags so that statistics dataset choices are populated
 import statistics.templatetags.statistics_tags  # noqa: F401
@@ -226,7 +226,11 @@ class QuickFact(Orderable):
 class StatisticsItem(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='statistics_items')
     label = models.CharField(max_length=255)
-    dataset = models.CharField(max_length=255, choices=get_numbers_choices())
+    dataset = models.CharField(
+        max_length=255,
+        choices=get_numbers_choices(),
+        default=get_numbers_default(),
+    )
     params = models.CharField(
         max_length=255,
         null=True,
