@@ -18,8 +18,10 @@ def validate_dataset_params(dataset, params):
 
     if dataset in MAPS:
         fn = MAPS[dataset]
-    else:
+    elif dataset in NUMBERS:
         fn = NUMBERS[dataset]
+    else:
+        raise ValidationError(f'Dataset {dataset!r} not found')
 
     params = list(smart_split(params))
 

@@ -26,6 +26,12 @@ MAPS_MOCK = {
 @mock.patch('statistics.validators.NUMBERS', NUMBERS_MOCK)
 @mock.patch('statistics.validators.MAPS', MAPS_MOCK)
 class CleanTest(TestCase):
+    def test_empty_dataset_raises_validation_error(self):
+        with self.assertRaises(ValidationError) as cm:
+            validate_dataset_params(dataset='', params='')
+
+        self.assertEqual(cm.exception.message, "Dataset '' not found")
+
     def test_clean__no_params__gets_none(self):
         validate_dataset_params(dataset='no_params', params='')
 
