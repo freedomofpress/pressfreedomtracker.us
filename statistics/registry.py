@@ -41,6 +41,15 @@ def get_numbers_choices():
         yield (name, name)
 
 
+def get_numbers_default():
+    numbers = get_numbers()
+    if numbers:
+        choices = iter(numbers.keys())
+        return next(choices)
+    else:
+        return ''
+
+
 def get_maps():
     """Return registered statstics names and functions with map values"""
     return MAPS
