@@ -1,0 +1,29 @@
+{% load wagtailcore_tags %}
+
+<h1 class="article-title" id="title">{{ page.title }}</h1>
+
+<div class="newsletter-actions">
+	<a href="" class="btn btn-primary">Go to archived editions</a>
+	<a href="" class="btn btn-primary">Sign up to the Newsletter</a>
+</div>
+
+<article class="article-content">
+	<!-- Details table-->
+	{% include "blog/_details_table.html" with blog=page only %}
+
+
+	{% if page.introduction %}
+			<p class="heading">{{ page.introduction }}</p>
+	{% endif %}
+
+	<section class="article-content__inner">
+		{% include 'common/_video_or_image.html' with video=page.primary_video image=page.lead_image caption=page.image_caption %}
+
+		{% for block in page.body %}
+			<div class="article-content__block">{% include_block block %}</div>
+		{% endfor %}
+	</section>
+</article>
+<div class="article-actions">
+	<a href="https://freedom.press/tracker/" class="btn btn-primary">Donate</a>
+</div>
