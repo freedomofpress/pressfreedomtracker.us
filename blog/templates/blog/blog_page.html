@@ -1,27 +1,12 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
 
 {% block main %}
-	<h1 class="article-title" id="title">{{ page.title }}</h1>
+	{% if page.blog_type == 'newsletter' %}
+		{% include "blog/_newsletter_blog.html" with page=page only %}
+	{% elif page.blog_type == 'special' %}
+		{% include "blog/_special_blog.html" with page=page only %}
+	{% else %}
+		{% include "blog/_default_blog.html" with page=page only %}
+	{% endif %}
 
-	<article class="article-content">
-		<!-- Details table-->
-		{% include "blog/_details_table.html" with blog=page only %}
-
-
-		{% if page.introduction %}
-				<p class="heading">{{ page.introduction }}</p>
-		{% endif %}
-
-		<section class="article-content__inner">
-			{% include 'common/_video_or_image.html' with video=page.primary_video image=page.lead_image caption=page.image_caption %}
-
-			{% for block in page.body %}
-				<div class="article-content__block">{% include_block block %}</div>
-			{% endfor %}
-		</section>
-	</article>
-	<div class="article-actions">
-		<a href="{% pageurl page.get_parent %}" class="btn btn-primary">Return to Blog</a>
-	</div>
 {% endblock %}
