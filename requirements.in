@@ -1,6 +1,6 @@
 bleach>=4.1.0
 dj-database-url
-Django>=3.2.16,<3.3
+Django>=3.2.17,<3.3
 django-anymail
 django-csp>=3.7
 django-modelcluster
