@@ -57,9 +57,11 @@ CATEGORIES = {
         'subpoena_statuses',
         'held_in_contempt',
         'detention_status',
-        'third_party_in_possession_of_communication',
+        'third_party_in_possession_of_communications',
         'third_party_business',
         'legal_order_type',
+        'legal_order_information_requested',
+        'legal_order_target',
     ],
     'equipment_damage': [
         'equipment_broken',

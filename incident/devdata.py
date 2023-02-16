@@ -28,6 +28,8 @@ from incident.models import (
     GovernmentWorker,
     TopicPage,
     Venue,
+    LegalOrder,
+    LegalOrderUpdate,
 )
 from common.models import CustomImage
 from common.tests.factories import (
@@ -240,6 +242,36 @@ def random_choice_list(choices):
     return random.sample([x[0] for x in choices], k=random.randint(0, len(choices)))
 
 
+class LegalOrderUpdateFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = LegalOrderUpdate
+
+    date = Faker(
+        'date_between',
+        start_date=factory.SelfAttribute('..legal_order.date'),
+    )
+    status = factory.Iterator(choices.LegalOrderStatus)
+
+
+class LegalOrderFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = LegalOrder
+
+    order_type = factory.Iterator(choices.LegalOrderType)
+    information_requested = factory.Iterator(choices.InformationRequested)
+    status = choices.LegalOrderStatus.PENDING
+    date = Faker(
+        'past_datetime',
+        start_date='-2y',
+        tzinfo=datetime.timezone.utc,
+    )
+    updates = factory.RelatedFactoryList(
+        LegalOrderUpdateFactory,
+        factory_related_name='legal_order',
+        size=lambda: random.choice([0, 0, 1, 1, 1, 2, 3]),
+    )
+
+
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
@@ -369,23 +401,25 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             # workers_whose_communications_were_obtained=2,
             charged_under_espionage_act=factory.Faker('boolean'),
         )
-        subpoena = factory.Trait(
-            subpoena_type=factory.Iterator(
-                choices.SUBPOENA_TYPE, getter=lambda c: c[0]),
-            subpoena_statuses=factory.LazyFunction(lambda: random_choice_list(choices.SUBPOENA_STATUS)),
-            # subpoena_statuses=factory.List(
-            #     # [factory.Iterator(
-            #     #     choices.SUBPOENA_STATUS, getter=lambda c: c[0])]
-            #     factory.LazyFunction(lambda: random_choice_list(choices.SUBPOENA_SUBJECT))
-            # ),
-            held_in_contempt=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
-            detention_status=factory.Iterator(
-                choices.DETENTION_STATUS, getter=lambda c: c[0]),
+        legal_order_targeting_third_party = factory.Trait(
+            legal_order_target=choices.LegalOrderTarget.THIRD_PARTY,
+            third_party_business=factory.Iterator(choices.ThirdPartyBusiness.values),
             third_party_in_possession_of_communications=factory.Faker('company'),
-            third_party_business=factory.Iterator(
-                choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
-            legal_order_type=factory.Iterator(
-                choices.LEGAL_ORDER_TYPE, getter=lambda c: c[0]),
+
+        )
+        legal_order_targeting_journalist = factory.Trait(
+            legal_order_target=choices.LegalOrderTarget.JOURNALIST,
+        )
+        subpoena = factory.Trait(
+            legal_orders=factory.RelatedFactoryList(
+                LegalOrderFactory,
+                factory_related_name='incident_page',
+                size=lambda: random.choice([1, 1, 1, 2, 2, 3]),
+            ),
+            legal_order_targeting_journalist=factory.Faker('boolean'),
+            legal_order_targeting_third_party=factory.LazyAttribute(
+                lambda o: not o.legal_order_targeting_journalist
+            )
         )
         prior_restraint = factory.Trait(
             status_of_prior_restraint=factory.Iterator(
