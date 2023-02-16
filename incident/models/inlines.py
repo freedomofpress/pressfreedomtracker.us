@@ -123,6 +123,20 @@ class LegalOrder(ClusterableModel):
             sorted(entries, key=lambda item: item[0])
         ]
 
+    @property
+    def summary(self):
+        """Summary of a legal order, used in the CSV export feature."""
+        if update := self.updates.order_by('-date').first():
+            status = update.get_status_display()
+            date = update.date
+        else:
+            status = self.status.label
+            date = self.date
+        info = self.information_requested.label
+        order_type = self.order_type.label
+
+        return f'{order_type} for {info} ({status} as of {date})'
+
 
 class LegalOrderUpdate(models.Model):
     legal_order = ParentalKey(

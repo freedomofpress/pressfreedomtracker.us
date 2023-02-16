@@ -44,7 +44,13 @@ from common.blocks import (
 from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
-from incident.models.inlines import IncidentPageUpdates, ChargeUpdate, IncidentCharge
+from incident.models.inlines import (
+    IncidentPageUpdates,
+    ChargeUpdate,
+    IncidentCharge,
+    LegalOrder,
+    LegalOrderUpdate,
+)
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
 from incident.utils.db import CurrentDate, MakeDateRange
@@ -169,6 +175,35 @@ class IncidentQuerySet(PageQuerySet):
 
         return self.annotate(
             most_recent_charge_statuses=Subquery(charges_with_latest_status),
+        )
+
+    def with_most_recent_status_of_legal_orders(self):
+        """Annotate each incident with an array containing every
+        legal order's most recent status."""
+        newest_update = LegalOrderUpdate.objects.filter(
+            legal_order=OuterRef('pk'),
+            date__gte=OuterRef('date')
+        ).order_by('-date').values('status')[:1]
+
+        latest_status = LegalOrder.objects.filter(
+            pk=OuterRef('pk'),
+        ).annotate(
+            newest_update=Subquery(newest_update),
+            latest_status=Coalesce('newest_update', 'status'),
+        ).values('latest_status')
+
+        legal_orders_with_latest_status = LegalOrder.objects.filter(
+            incident_page=OuterRef('pk'),
+        ).values(
+            'incident_page__pk',
+        ).annotate(
+            latest_status=ArrayAgg(latest_status)
+        ).values('latest_status')
+
+        return self.annotate(
+            most_recent_legal_order_statuses=Subquery(
+                legal_orders_with_latest_status
+            ),
         )
 
     def fuzzy_date_filter(self, lower=None, upper=None):

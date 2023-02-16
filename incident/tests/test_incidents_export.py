@@ -120,6 +120,8 @@ class IncidentExportTestCase(TestCase):
             'politicians_or_public_figures_involved',
             'longitude',
             'latitude',
+            'legal_orders',
+            'legal_order_target',
         }
         self.assertEqual(headers, expected_headers)
 

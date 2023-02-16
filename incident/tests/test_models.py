@@ -32,6 +32,18 @@ class TestLegalOrder(TestCase):
             update3__date=date(2022, 2, 2),
         )
 
+    def test_simple_summary(self):
+        self.assertEqual(
+            self.legal_order.summary,
+            'subpoena for testimony about confidential source (pending as of 2022-01-01)'
+        )
+
+    def test_summarizes_based_on_most_recent_update_status(self):
+        self.assertEqual(
+            self.legal_order_with_updates.summary,
+            'subpoena for testimony about confidential source (objected to as of 2022-02-02)'
+        )
+
     def test_entries_are_ordered_by_date_ascending(self):
         self.assertEqual(
             self.legal_order_with_updates.entries_display(),
