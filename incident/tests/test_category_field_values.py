@@ -19,6 +19,8 @@ from incident.tests.factories import (
     NationalityFactory,
     GovernmentWorkerFactory,
     PoliticianOrPublicFactory,
+    LegalOrderFactory,
+    LegalOrderWithUpdatesFactory,
 )
 
 
@@ -67,6 +69,21 @@ class TestCategoryFieldValuesByField(TestCase):
             quoted_title = urllib.parse.quote(incident_charge.charge.title)
             self.assertIn(f'{field_name}={quoted_title}', output)
             for date, status in incident_charge.entries_display():
+                self.assertIn(date, output)
+                self.assertIn(status.capitalize(), output)
+        getattr(self.incident, field_name).clear()
+        output = render_function(self.incident, field_name, self.index)
+        self.assertEqual(output, '')
+
+    def assert_legal_orders(self, field_name, render_function):
+        output = render_function(self.incident, field_name, self.index)
+        for legal_order in getattr(self.incident, field_name).all():
+            self.assertIn(legal_order.get_order_type_display(), output)
+            self.assertIn(f'legal_order_type={legal_order.order_type}', output)
+
+            self.assertIn(legal_order.get_information_requested_display(), output)
+            self.assertIn(f'legal_order_information_requested={legal_order.information_requested}', output)
+            for date, status in legal_order.entries_display():
                 self.assertIn(date, output)
                 self.assertIn(status.capitalize(), output)
         getattr(self.incident, field_name).clear()
@@ -150,6 +167,20 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assert_charges(
             'charges',
             CAT_FIELD_VALUES['charges'],
+        )
+
+    def test_legal_orders(self):
+        LegalOrderFactory(
+            incident_page=self.incident,
+            order_type=choices.LegalOrderType.NATIONAL_SECURITY_LETTER,
+            information_requested=choices.InformationRequested.TESTIMONY_ABOUT_SOURCE,
+            status=choices.LegalOrderStatus.PENDING,
+            date='2022-01-01',
+        )
+
+        self.assert_legal_orders(
+            'legal_orders',
+            CAT_FIELD_VALUES['legal_orders'],
         )
 
     def test_politicians_or_public_figures_involved(self):
@@ -246,6 +277,34 @@ class TestCategoryFieldValuesByField(TestCase):
             'subpoena_type',
             CAT_FIELD_VALUES['subpoena_type'],
         )
+
+    def test_legal_order_target(self):
+        self.assert_choices(
+            'legal_order_target',
+            CAT_FIELD_VALUES['legal_order_target'],
+        )
+        self.incident.legal_order_target = choices.LegalOrderTarget.THIRD_PARTY
+        self.incident.third_party_in_possession_of_communications = (
+            'Business Name',
+        )
+        self.incident.save()
+        render_function = CAT_FIELD_VALUES['legal_order_target']
+
+        for choice_value in choices.ThirdPartyBusiness.values:
+            self.incident.third_party_business = choice_value
+            self.incident.save()
+            output = render_function(self.incident, 'legal_order_target', self.index)
+            self.assertIn(
+                self.incident.get_third_party_business_display(),
+                output,
+            )
+            self.assertIn(f'third_party_business={choice_value}', output)
+
+        self.assertIn(
+            self.incident.get_third_party_business_display(),
+            output,
+        )
+        self.assertIn(f'third_party_business={choice_value}', output)
 
     def test_subpoena_statuses(self):
         # field = IncidentPage._meta.get_field(field_name)

@@ -107,6 +107,20 @@ def arresting_authority_html_val(page, field, index):
     return f'<a href="{link}" class="text-link">{value}</a>'
 
 
+def legal_orders_html_val(page, field, index):
+    # If no value for the attribute, return blank
+    items = getattr(page, field).all()
+    if not items:
+        return ''
+
+    return render_to_string('incident/category_field/_legal_order_list_field.html', {
+        'page': page,
+        'index': index,
+        'field': field,
+        'items': items,
+    })
+
+
 def charges_html_val(page, field, index):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
@@ -268,3 +282,24 @@ def status_of_prior_restraint_html_val(page, field, index):
 
 def politicians_or_public_figures_involved_html_val(page, field, index):
     return list_html_val(page, field, index)
+
+
+def legal_order_target_html_val(page, field, index):
+    target = page.legal_order_target
+    if not target:
+        return ''
+    if target == choices.LegalOrderTarget.JOURNALIST:
+        return basic_html_val(page, field, index)
+    elif target == choices.LegalOrderTarget.THIRD_PARTY:
+        return render_to_string(
+            'incident/category_field/_legal_order_target_third_party.html',
+            {
+                'page': page,
+                'index': index,
+                'target': target,
+
+                'third_party_business': page.third_party_business,
+                # 'field': field,
+                # 'items': items,
+            }
+        )

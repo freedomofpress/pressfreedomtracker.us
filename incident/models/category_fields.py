@@ -37,6 +37,8 @@ from incident.utils.category_field_values import (
     status_of_prior_restraint_html_val,
     politicians_or_public_figures_involved_html_val,
     were_devices_searched_or_seized_html_val,
+    legal_orders_html_val,
+    legal_order_target_html_val,
 )
 
 CATEGORY_FIELD_MAP = {
@@ -79,13 +81,13 @@ CATEGORY_FIELD_MAP = {
         ('charged_under_espionage_act', 'Charged under Espionage Act'),
     ],
     'subpoena': [
+        ('legal_orders', 'Legal Orders'),
         ('subpoena_type', 'Subpoena Type'),
         ('subpoena_statuses', 'Subpoena Status'),
         ('held_in_contempt', 'Journalist held in contempt?'),
         ('detention_status', 'Detention Status'),
-        ('third_party_in_possession_of_communications', 'Third Party in Possession of Communications'),
-        ('third_party_business', 'Third Party Business'),
         ('legal_order_type', 'Legal Order Type'),
+        ('legal_order_target', 'Legal Order Target'),
     ],
     'prior-restraint': [
         ('status_of_prior_restraint', 'Status of Prior Restraint'),
@@ -134,4 +136,6 @@ CAT_FIELD_VALUES = {
     'legal_order_type': legal_order_type_html_val,
     'status_of_prior_restraint': status_of_prior_restraint_html_val,
     'politicians_or_public_figures_involved': politicians_or_public_figures_involved_html_val,
+    'legal_orders': legal_orders_html_val,
+    'legal_order_target': legal_order_target_html_val,
 }
