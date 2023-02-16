@@ -13,6 +13,8 @@ from common.blocks import ALIGNMENT_CHOICES
 from common.models import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
+from incident.tests import factories
+from incident.models import choices
 from incident.models.choices import (
     ARREST_STATUS,
     DETENTION_STATUS,
@@ -337,7 +339,7 @@ class TestFiltering(TestCase):
 
         self.assertQuerysetEqual(incidents, [target1, target2])
 
-    def test_should_filter_incidents_by_most_recent_status(self):
+    def test_should_filter_incidents_by_most_recent_charge_status(self):
         category = CategoryPageFactory(
             title='Arrest / Criminal Charge',
             incident_filters=['status_of_charges'],
@@ -2172,3 +2174,103 @@ class TargetedInstitutionsFilterTest(TestCase):
 
         incidents = incident_filter.get_queryset()
         self.assertEqual(set(incidents), {tj1.incident, with_institution1_target})
+
+
+class LegalOrderTypeFilterTest(TestCase):
+    desired_type = choices.LegalOrderType.MOTION_TO_COMPEL
+    other_type = choices.LegalOrderType.WARRANT
+
+    @classmethod
+    def setUpTestData(cls):
+        CategoryPageFactory(
+            title='Subpoena / Legal Order',
+            incident_filters=['legal_order_type'],
+        )
+        cls.legal_order1 = factories.LegalOrderFactory(
+            order_type=cls.desired_type,
+        )
+        factories.LegalOrderFactory(
+            order_type=cls.other_type,
+        )
+
+    def test_filters_by_legal_order_type(self):
+        incidents = IncidentFilter({
+            'legal_order_type': self.desired_type,
+        }).get_queryset(strict=True)
+
+        self.assertQuerysetEqual(
+            incidents,
+            [self.legal_order1.incident_page],
+        )
+
+
+class LegalOrderInformationFilterTest(TestCase):
+    desired_info = choices.InformationRequested.TESTIMONY_ABOUT_SOURCE
+    other_info = choices.InformationRequested.OTHER
+
+    @classmethod
+    def setUpTestData(cls):
+        CategoryPageFactory(
+            title='Subpoena / Legal Order',
+            incident_filters=['legal_order_information_requested'],
+        )
+        cls.legal_order1 = factories.LegalOrderFactory(
+            information_requested=cls.desired_info,
+        )
+        factories.LegalOrderFactory(
+            information_requested=cls.other_info,
+        )
+
+    def test_filters_by_legal_order_information_requested(self):
+        incidents = IncidentFilter({
+            'legal_order_information_requested': self.desired_info,
+        }).get_queryset(strict=True)
+
+        self.assertQuerysetEqual(
+            incidents,
+            [self.legal_order1.incident_page],
+        )
+
+
+class LegalOrderStatusFilterTest(TestCase):
+    desired_status = choices.LegalOrderStatus.UPHELD
+    other_status1 = choices.LegalOrderStatus.PENDING
+    other_status2 = choices.LegalOrderStatus.DROPPED
+    other_status3 = choices.LegalOrderStatus.QUASHED
+
+    @classmethod
+    def setUpTestData(cls):
+        CategoryPageFactory(
+            title='Subpoena / Legal Order',
+            incident_filters=['legal_order_status'],
+        )
+        cls.legal_order1 = factories.LegalOrderFactory(
+            status=cls.desired_status,
+        )
+        factories.LegalOrderFactory(
+            status=cls.other_status1,
+        )
+
+        cls.legal_order3 = factories.LegalOrderWithUpdatesFactory(
+            status=cls.other_status1,
+            update1__status=cls.other_status2,
+            update2__status=cls.other_status3,
+            update3__status=cls.desired_status,
+        )
+
+        cls.legal_order4 = factories.LegalOrderWithUpdatesFactory(
+            status=cls.other_status1,
+            update1__status=cls.other_status2,
+            update2__status=cls.desired_status,
+            update3__status=cls.other_status3,
+        )
+
+    def test_filters_by_legal_order_status(self):
+        incidents = IncidentFilter({
+            'legal_order_status': self.desired_status,
+        }).get_queryset(strict=True)
+
+        self.assertQuerysetEqual(
+            incidents,
+            [self.legal_order1.incident_page, self.legal_order3.incident_page],
+        )
