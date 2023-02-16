@@ -575,6 +575,12 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='Third party business'
     )
+    legal_order_target = models.CharField(
+        choices=choices.LegalOrderTarget.choices,
+        max_length=255,
+        blank=True,
+        null=True,
+    )
     legal_order_type = models.CharField(
         choices=choices.LEGAL_ORDER_TYPE,
         max_length=255,
@@ -729,8 +735,8 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Subpoena of Journalism (incl. Legal Case)',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('subpoena_type'),
-                FieldPanel('subpoena_statuses'),
+                FieldPanel('legal_order_target'),
+                InlinePanel('legal_orders', label='Legal Orders'),
                 FieldPanel('held_in_contempt'),
                 FieldPanel('detention_status'),
             ]

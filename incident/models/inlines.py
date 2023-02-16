@@ -83,6 +83,65 @@ class ChargeUpdate(models.Model):
     ]
 
 
+class LegalOrder(ClusterableModel):
+    incident_page = ParentalKey(
+        'incident.IncidentPage',
+        related_name='legal_orders',
+    )
+
+    order_type = models.CharField(
+        max_length=1000,
+        choices=choices.LegalOrderType.choices
+    )
+
+    information_requested = models.CharField(
+        max_length=1000,
+        choices=choices.InformationRequested.choices,
+    )
+
+    status = models.CharField(max_length=1000, choices=choices.LegalOrderStatus.choices)
+    date = models.DateField()
+
+    panels = [
+        FieldPanel('order_type'),
+        FieldPanel('information_requested'),
+        FieldPanel('status'),
+        FieldPanel('date'),
+        InlinePanel('updates', label='Updates'),
+    ]
+
+    def entries_display(self):
+        date_format = '%b. %-d, %Y'
+        entries = [
+            (self.date, self.get_status_display())
+        ] + [
+            (update.date, update.get_status_display()) for update in self.updates.all()
+        ]
+
+        return [
+            (date.strftime(date_format), status) for date, status in
+            sorted(entries, key=lambda item: item[0])
+        ]
+
+
+class LegalOrderUpdate(models.Model):
+    legal_order = ParentalKey(
+        LegalOrder,
+        related_name='updates',
+        on_delete=models.CASCADE,
+    )
+    date = models.DateField()
+    status = models.CharField(
+        max_length=1000,
+        choices=choices.LegalOrderStatus.choices,
+    )
+
+    panels = [
+        FieldPanel('date'),
+        FieldPanel('status')
+    ]
+
+
 class IncidentPageUpdates(models.Model):
     page = ParentalKey('incident.IncidentPage', related_name='updates')
     title = models.CharField(max_length=255)
