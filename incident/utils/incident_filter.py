@@ -602,6 +602,12 @@ class StatusOfChargesFilter(ChoiceFilter):
 
 
 class LegalOrderTypeFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.LegalOrderType.choices
+        return serialized
+
     def get_choices(self):
         return set(choices.LegalOrderType)
 
@@ -628,6 +634,12 @@ class LegalOrderInformationFilter(ChoiceFilter):
 
 
 class LegalOrderStatusFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.LegalOrderStatus.choices
+        return serialized
+
     def get_choices(self):
         return set(choices.LegalOrderStatus)
 
