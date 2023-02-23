@@ -2,7 +2,7 @@
 <ul class="details-table__list">
 	{% for item in items %}
 		<li class="details-table__list">
-			<a href="{% pageurl index %}?legal_order_type={{ item.order_type }}" class="text-link">{{ item.get_order_type_display }}</a>
+			<a href="{% pageurl index %}?categories={{ category | urlencode }}&legal_order_type={{ item.order_type }}" class="text-link">{{ item.get_order_type_display }}</a>
 			for
 			<a href="{% pageurl index %}?legal_order_information_requested={{ item.information_requested }}" class="text-link">
 				{{ item.get_information_requested_display }}

@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from incident.models import choices
 
 
-def basic_html_val(page, field, index):
+def basic_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     value = getattr(page, field)
     if not value:
@@ -21,10 +21,11 @@ def basic_html_val(page, field, index):
         'value': value,
         'display_value': display_value,
         'index': index,
+        'category': category.title,
     })
 
 
-def boolean_html_val(page, field, index):
+def boolean_html_val(page, field, index, category):
     value = getattr(page, field, index)
     display_value = 'Yes' if value else 'No'
 
@@ -37,7 +38,7 @@ def boolean_html_val(page, field, index):
     })
 
 
-def list_html_val(page, field, index):
+def list_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
@@ -51,7 +52,7 @@ def list_html_val(page, field, index):
     })
 
 
-def equipments_list_html_val(page, field, index):
+def equipments_list_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
@@ -65,7 +66,7 @@ def equipments_list_html_val(page, field, index):
     })
 
 
-def date_html_val(page, field, index):
+def date_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     value = getattr(page, field)
     if not value:
@@ -84,15 +85,15 @@ def date_html_val(page, field, index):
 # covered using the generic functions above
 
 
-def arrest_status_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def arrest_status_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def status_of_charges_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def status_of_charges_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def arresting_authority_html_val(page, field, index):
+def arresting_authority_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     if not getattr(page, field):
         return ''
@@ -107,7 +108,7 @@ def arresting_authority_html_val(page, field, index):
     return f'<a href="{link}" class="text-link">{value}</a>'
 
 
-def legal_orders_html_val(page, field, index):
+def legal_orders_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
@@ -121,7 +122,7 @@ def legal_orders_html_val(page, field, index):
     })
 
 
-def charges_html_val(page, field, index):
+def charges_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
@@ -135,111 +136,103 @@ def charges_html_val(page, field, index):
     })
 
 
-def current_charges_html_val(page, field, index):
-    return list_html_val(page, field, index)
+def detention_date_html_val(page, field, index, category):
+    return date_html_val(page, field, index, category)
 
 
-def dropped_charges_html_val(page, field, index):
-    return list_html_val(page, field, index)
+def release_date_html_val(page, field, index, category):
+    return date_html_val(page, field, index, category)
 
 
-def detention_date_html_val(page, field, index):
-    return date_html_val(page, field, index)
+def unnecessary_use_of_force_html_val(page, field, index, category):
+    return boolean_html_val(page, field, index, category)
 
 
-def release_date_html_val(page, field, index):
-    return date_html_val(page, field, index)
+def equipment_broken_html_val(page, field, index, category):
+    return equipments_list_html_val(page, field, index, category)
 
 
-def unnecessary_use_of_force_html_val(page, field, index):
-    return boolean_html_val(page, field, index)
+def equipment_seized_html_val(page, field, index, category):
+    return equipments_list_html_val(page, field, index, category)
 
 
-def equipment_broken_html_val(page, field, index):
-    return equipments_list_html_val(page, field, index)
+def status_of_seized_equipment_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def equipment_seized_html_val(page, field, index):
-    return equipments_list_html_val(page, field, index)
+def is_search_warrant_obtained_html_val(page, field, index, category):
+    return boolean_html_val(page, field, index, category)
 
 
-def status_of_seized_equipment_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def actor_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def is_search_warrant_obtained_html_val(page, field, index):
-    return boolean_html_val(page, field, index)
+def border_point_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def actor_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def target_nationality_html_val(page, field, index, category):
+    return list_html_val(page, field, index, category)
 
 
-def border_point_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def target_us_citizenship_status_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def target_nationality_html_val(page, field, index):
-    return list_html_val(page, field, index)
+def denial_of_entry_html_val(page, field, index, category):
+    return boolean_html_val(page, field, index, category)
 
 
-def target_us_citizenship_status_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def stopped_at_border_html_val(page, field, index, category):
+    return boolean_html_val(page, field, index, category)
 
 
-def denial_of_entry_html_val(page, field, index):
-    return boolean_html_val(page, field, index)
+def stopped_previously_html_val(page, field, index, category):
+    return boolean_html_val(page, field, index, category)
 
 
-def stopped_at_border_html_val(page, field, index):
-    return boolean_html_val(page, field, index)
+def did_authorities_ask_for_device_access_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def stopped_previously_html_val(page, field, index):
-    return boolean_html_val(page, field, index)
+def did_authorities_ask_for_social_media_user_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def did_authorities_ask_for_device_access_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def did_authorities_ask_for_social_media_pass_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def did_authorities_ask_for_social_media_user_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def were_devices_searched_or_seized_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def did_authorities_ask_for_social_media_pass_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def did_authorities_ask_about_work_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def were_devices_searched_or_seized_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def assailant_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def did_authorities_ask_about_work_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def was_journalist_targeted_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def assailant_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def workers_whose_communications_were_obtained_html_val(page, field, index, category):
+    return list_html_val(page, field, index, category)
 
 
-def was_journalist_targeted_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def charged_under_espionage_act_html_val(page, field, index, category):
+    return boolean_html_val(page, field, index, category)
 
 
-def workers_whose_communications_were_obtained_html_val(page, field, index):
-    return list_html_val(page, field, index)
+def subpoena_type_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def charged_under_espionage_act_html_val(page, field, index):
-    return boolean_html_val(page, field, index)
-
-
-def subpoena_type_html_val(page, field, index):
-    return basic_html_val(page, field, index)
-
-
-def subpoena_statuses_html_val(page, field, index):
+def subpoena_statuses_html_val(page, field, index, category):
     if not getattr(page, field, index):
         return ''
 
@@ -256,40 +249,40 @@ def subpoena_statuses_html_val(page, field, index):
     return html
 
 
-def held_in_contempt_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def held_in_contempt_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def detention_status_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def detention_status_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def third_party_in_possession_of_communications_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def third_party_in_possession_of_communications_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def third_party_business_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def third_party_business_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def legal_order_type_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def legal_order_type_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def status_of_prior_restraint_html_val(page, field, index):
-    return basic_html_val(page, field, index)
+def status_of_prior_restraint_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
 
 
-def politicians_or_public_figures_involved_html_val(page, field, index):
-    return list_html_val(page, field, index)
+def politicians_or_public_figures_involved_html_val(page, field, index, category):
+    return list_html_val(page, field, index, category)
 
 
-def legal_order_target_html_val(page, field, index):
+def legal_order_target_html_val(page, field, index, category):
     target = page.legal_order_target
     if not target:
         return ''
     if target == choices.LegalOrderTarget.JOURNALIST:
-        return basic_html_val(page, field, index)
+        return basic_html_val(page, field, index, category)
     elif target == choices.LegalOrderTarget.THIRD_PARTY:
         return render_to_string(
             'incident/category_field/_legal_order_target_third_party.html',
@@ -299,6 +292,7 @@ def legal_order_target_html_val(page, field, index):
                 'target': target,
 
                 'third_party_business': page.third_party_business,
+                'category': category.title,
                 # 'field': field,
                 # 'items': items,
             }

@@ -1,6 +1,9 @@
 import datetime
+import re
 import urllib.parse
+from functools import partial
 
+from bs4 import BeautifulSoup
 from django.test import TestCase
 from django.utils.text import capfirst
 from django.utils.html import strip_tags
@@ -20,103 +23,165 @@ from incident.tests.factories import (
     GovernmentWorkerFactory,
     PoliticianOrPublicFactory,
     LegalOrderFactory,
-    LegalOrderWithUpdatesFactory,
 )
+
+
+def querystring_matches(expected_qs, url):
+    """Returns True if the querystring in the url matches the expected
+    value, False otherwise.
+
+    `expected_qs` is a dictionary of querystring keys and values,
+    formatted as in the output of parse_qs, see
+    https://docs.python.org/3/library/urllib.parse.html#urllib.parse.parse_qs
+
+    `url` is a URL string.
+
+    """
+    parsed = urllib.parse.urlparse(url)
+    return expected_qs == urllib.parse.parse_qs(parsed.query)
 
 
 class TestCategoryFieldValuesByField(TestCase):
     def setUp(self):
         self.index = IncidentIndexPageFactory()
+        self.category = CategoryPageFactory()
+        self.quoted_category_title = urllib.parse.quote(self.category.title)
         self.incident = IncidentPageFactory(
             parent=self.index,
             unnecessary_use_of_force=True,
 
         )
 
+    def assert_link_exists(self, html, text, querystring_params):
+        """Given an HTML string, assert that a link exists matching
+        the given text and querystring parameters.
+
+        `querystring_params` should be a dictionary of querystring
+        key/value pairs.
+
+        """
+        escaped_text = re.escape(text)
+        parsed = BeautifulSoup(html, 'html.parser')
+        self.assertIsNotNone(
+            parsed.find(
+                'a',
+                href=partial(querystring_matches, {
+                    k: [v] for k, v in querystring_params.items()
+                }),
+                string=re.compile(fr'\s*{escaped_text}\s*'),
+            ),
+            f'Link with text {text!r} and querystring parameters {querystring_params} not found in {html}'
+        )
+
     def assert_text(self, field_name, render_function):
         setattr(self.incident, field_name, 'Text')
-        output = render_function(self.incident, field_name, self.index)
-        self.assertIn('Text', output)
-        self.assertIn(f'{field_name}=Text', output)
+        output = render_function(self.incident, field_name, self.index, self.category)
+        self.assert_link_exists(
+            output,
+            'Text',
+            {field_name: 'Text', 'categories': self.category.title},
+        )
 
     def assert_choices(self, field_name, render_function):
         field = IncidentPage._meta.get_field(field_name)
         for choice_value, choice_name in field.choices:
             setattr(self.incident, field_name, choice_value)
-            output = render_function(self.incident, field_name, self.index)
+            output = render_function(self.incident, field_name, self.index, self.category)
+
             pretty_name = capfirst(
                 getattr(self.incident, f'get_{field_name}_display')()
             )
-            self.assertIn(pretty_name, output)
-            self.assertIn(f'{field_name}={choice_value}', output)
+            self.assert_link_exists(output, pretty_name, {
+                field_name: choice_value,
+                'categories': self.category.title,
+            })
         setattr(self.incident, field_name, '')
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         self.assertEqual(output, '')
 
     def assert_many_relationship(self, field_name, render_function):
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         for item in getattr(self.incident, field_name).all():
-            self.assertIn(item.title, output)
-            self.assertIn(f'{field_name}={item.title}', output)
+            self.assert_link_exists(
+                output,
+                item.title,
+                {field_name: item.title},
+            )
         getattr(self.incident, field_name).clear()
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         self.assertEqual(output, '')
 
     def assert_charges(self, field_name, render_function):
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         for incident_charge in getattr(self.incident, field_name).all():
-            self.assertIn(incident_charge.charge.title, output)
-            quoted_title = urllib.parse.quote(incident_charge.charge.title)
-            self.assertIn(f'{field_name}={quoted_title}', output)
+            self.assert_link_exists(
+                output,
+                incident_charge.charge.title,
+                {field_name: incident_charge.charge.title},
+            )
             for date, status in incident_charge.entries_display():
                 self.assertIn(date, output)
                 self.assertIn(status.capitalize(), output)
         getattr(self.incident, field_name).clear()
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         self.assertEqual(output, '')
 
     def assert_legal_orders(self, field_name, render_function):
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         for legal_order in getattr(self.incident, field_name).all():
-            self.assertIn(legal_order.get_order_type_display(), output)
-            self.assertIn(f'legal_order_type={legal_order.order_type}', output)
-
-            self.assertIn(legal_order.get_information_requested_display(), output)
-            self.assertIn(f'legal_order_information_requested={legal_order.information_requested}', output)
+            self.assert_link_exists(
+                output,
+                legal_order.get_order_type_display(),
+                {'legal_order_type': legal_order.order_type}
+            )
+            self.assert_link_exists(
+                output,
+                legal_order.get_information_requested_display(),
+                {'legal_order_information_requested': legal_order.information_requested},
+            )
             for date, status in legal_order.entries_display():
                 self.assertIn(date, output)
                 self.assertIn(status.capitalize(), output)
         getattr(self.incident, field_name).clear()
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         self.assertEqual(output, '')
 
     def assert_equipment(self, field_name, render_function):
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         for item in getattr(self.incident, field_name).all():
-            self.assertIn(item.equipment.name, output)
-            self.assertIn(f'{field_name}={item.equipment.name}', output)
+            self.assert_link_exists(
+                output,
+                item.equipment.name,
+                {field_name: item.equipment.name},
+            )
         getattr(self.incident, field_name).clear()
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         self.assertEqual(output, '')
 
     def assert_date(self, field_name, render_function):
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         value = getattr(self.incident, field_name)
         self.assertIn(f'{field_name}_upper={value:%Y-%m-%d}', output)
         self.assertIn(f'{field_name}_lower={value:%Y-%m-%d}', output)
         self.assertIn(f'{value:%B %-d, %Y}', output)
         setattr(self.incident, field_name, None)
-        self.assertEqual(render_function(self.incident, field_name, self.index), '')
+        self.assertEqual(render_function(self.incident, field_name, self.index, self.category), '')
 
     def assert_boolean(self, field_name, render_function):
         setattr(self.incident, field_name, True)
-        output = render_function(self.incident, field_name, self.index)
-        self.assertIn('Yes', output)
-        self.assertIn(f'{field_name}=1', output)
+        output = render_function(self.incident, field_name, self.index, self.category)
+        self.assert_link_exists(
+            output,
+            'Yes',
+            {field_name: '1'},
+        )
         setattr(self.incident, field_name, False)
-        output = render_function(self.incident, field_name, self.index)
-        self.assertIn('No', output)
-        self.assertIn(f'{field_name}=0', output)
+        output = render_function(self.incident, field_name, self.index, self.category)
+        self.assert_link_exists(
+            output,
+            'No',
+            {field_name: '0'},
+        )
 
     def test_arrest_status(self):
         self.assert_choices(
@@ -131,13 +196,13 @@ class TestCategoryFieldValuesByField(TestCase):
         )
 
     def test_arresting_authority(self):
-        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index)
+        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index, self.category)
         self.assertEqual(output, '')
 
         leo = LawEnforcementOrganizationFactory(title='Los Angeles Police Department')
         self.incident.arresting_authority = leo
 
-        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index)
+        output = CAT_FIELD_VALUES['arresting_authority'](self.incident, 'arresting_authority', self.index, self.category)
         self.assertIn(leo.title, strip_tags(output))
         self.assertIn(f'arresting_authority={leo.title}', output)
 
@@ -293,29 +358,43 @@ class TestCategoryFieldValuesByField(TestCase):
         for choice_value in choices.ThirdPartyBusiness.values:
             self.incident.third_party_business = choice_value
             self.incident.save()
-            output = render_function(self.incident, 'legal_order_target', self.index)
-            self.assertIn(
-                self.incident.get_third_party_business_display(),
+            output = render_function(self.incident, 'legal_order_target', self.index, self.category)
+            self.assert_link_exists(
                 output,
+                self.incident.get_third_party_business_display(),
+                {
+                    'third_party_business': choice_value,
+                    'categories': self.category.title,
+                },
             )
-            self.assertIn(f'third_party_business={choice_value}', output)
+            self.assert_link_exists(
+                output,
+                self.incident.third_party_in_possession_of_communications,
+                {
+                    'third_party_in_possession_of_communications': self.incident.third_party_in_possession_of_communications,
+                    'categories': self.category.title,
+                },
+            )
 
-        self.assertIn(
-            self.incident.get_third_party_business_display(),
-            output,
-        )
-        self.assertIn(f'third_party_business={choice_value}', output)
+            self.assert_link_exists(
+                output,
+                self.incident.get_legal_order_target_display(),
+                {
+                    'legal_order_target': self.incident.legal_order_target,
+                    'categories': self.category.title,
+                },
+            )
 
     def test_subpoena_statuses(self):
         # field = IncidentPage._meta.get_field(field_name)
         self.incident.subpoena_statuses = []
         field_name = 'subpoena_statuses'
         render_function = CAT_FIELD_VALUES[field_name]
-        output = render_function(self.incident, field_name, self.index)
+        output = render_function(self.incident, field_name, self.index, self.category)
         self.assertEqual(output, '')
         for choice_value, choice_name in choices.SUBPOENA_STATUS:
             self.incident.subpoena_statuses.append(choice_value)
-            output = render_function(self.incident, field_name, self.index)
+            output = render_function(self.incident, field_name, self.index, self.category)
             self.assertIn(choice_name.capitalize(), output)
             self.assertIn(f'{field_name}={choice_value}', output)
 

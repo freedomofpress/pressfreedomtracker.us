@@ -926,7 +926,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 continue
             category_details[category.category] = []
             for field in category_fields:
-                display_html = CAT_FIELD_VALUES[field[0]](self, field[0], index)
+                display_html = CAT_FIELD_VALUES[field[0]](self, field[0], index, category.category)
                 category_details[category.category].append(
                     {
                         'name': field[1],
