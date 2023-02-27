@@ -325,6 +325,12 @@ class TestCategoryFieldValuesByField(TestCase):
             CAT_FIELD_VALUES['legal_order_type'],
         )
 
+    def test_legal_order_venue(self):
+        self.assert_choices(
+            'legal_order_venue',
+            CAT_FIELD_VALUES['legal_order_venue'],
+        )
+
     def test_status_of_prior_restraint(self):
         self.assert_choices(
             'status_of_prior_restraint',

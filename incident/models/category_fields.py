@@ -37,6 +37,7 @@ from incident.utils.category_field_values import (
     were_devices_searched_or_seized_html_val,
     legal_orders_html_val,
     legal_order_target_html_val,
+    legal_order_venue_html_val,
 )
 
 CATEGORY_FIELD_MAP = {
@@ -86,6 +87,7 @@ CATEGORY_FIELD_MAP = {
         ('detention_status', 'Detention Status'),
         ('legal_order_type', 'Legal Order Type'),
         ('legal_order_target', 'Legal Order Target'),
+        ('legal_order_venue', 'Legal Order Venue'),
     ],
     'prior-restraint': [
         ('status_of_prior_restraint', 'Status of Prior Restraint'),
@@ -134,4 +136,5 @@ CAT_FIELD_VALUES = {
     'politicians_or_public_figures_involved': politicians_or_public_figures_involved_html_val,
     'legal_orders': legal_orders_html_val,
     'legal_order_target': legal_order_target_html_val,
+    'legal_order_venue': legal_order_venue_html_val,
 }

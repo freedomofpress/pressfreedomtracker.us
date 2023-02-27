@@ -56,6 +56,7 @@ CATEGORIES = {
         'legal_order_target',
         'legal_order_type',
         'legal_order_status',
+        'legal_order_venue',
         'legal_order_information_requested',
         'third_party_business',
         'third_party_in_possession_of_communications',

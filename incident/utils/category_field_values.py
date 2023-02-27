@@ -269,6 +269,10 @@ def legal_order_type_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 
 
+def legal_order_venue_html_val(page, field, index, category):
+    return basic_html_val(page, field, index, category)
+
+
 def status_of_prior_restraint_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 

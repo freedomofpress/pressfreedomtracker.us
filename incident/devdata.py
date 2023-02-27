@@ -405,10 +405,12 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             legal_order_target=choices.LegalOrderTarget.THIRD_PARTY,
             third_party_business=factory.Iterator(choices.ThirdPartyBusiness.values),
             third_party_in_possession_of_communications=factory.Faker('company'),
+            legal_order_venue=factory.Iterator(choices.LegalOrderVenue.values),
 
         )
         legal_order_targeting_journalist = factory.Trait(
             legal_order_target=choices.LegalOrderTarget.JOURNALIST,
+            legal_order_venue=factory.Iterator(choices.LegalOrderVenue.values)
         )
         subpoena = factory.Trait(
             legal_orders=factory.RelatedFactoryList(

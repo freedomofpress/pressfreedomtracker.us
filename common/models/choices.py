@@ -38,6 +38,7 @@ FILTER_CHOICES = [
     ('legal_order_status', 'Legal order status'),
     ('legal_order_target', 'Legal order target'),
     ('legal_order_type', 'Legal order type'),
+    ('legal_order_venue', 'Legal order venue'),
     ('primary_video', 'Primary video'),
     ('release_date', 'Release date'),
     ('is_search_warrant_obtained', 'Search warrant obtained?'),

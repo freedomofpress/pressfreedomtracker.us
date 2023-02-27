@@ -83,6 +83,7 @@ const queryFields = {
 	equipment_broken: parseString,
 	status_of_prior_restraint: parseString,
 	legal_order_target: parseString,
+	legal_order_venue: parseString,
 	legal_order_status: parseString,
 	legal_order_information_requested: parseString,
 	third_party_in_possession_of_communications: parseString,

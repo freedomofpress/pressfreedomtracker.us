@@ -122,6 +122,7 @@ class IncidentExportTestCase(TestCase):
             'latitude',
             'legal_orders',
             'legal_order_target',
+            'legal_order_venue',
         }
         self.assertEqual(headers, expected_headers)
 

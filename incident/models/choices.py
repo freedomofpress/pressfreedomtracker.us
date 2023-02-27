@@ -43,6 +43,11 @@ class ThirdPartyBusiness(TextChoices):
     OTHER = 'OTHER', 'other'
 
 
+class LegalOrderVenue(TextChoices):
+    STATE = 'STATE', 'State'
+    FEDERAL = 'FEDERAL', 'Federal'
+
+
 MAYBE_BOOLEAN = [
     ('NOTHING', 'unknown'),
     ('JUST_TRUE', 'yes'),

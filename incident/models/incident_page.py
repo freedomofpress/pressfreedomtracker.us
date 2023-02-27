@@ -623,6 +623,13 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='Legal order type'
     )
+    legal_order_venue = models.CharField(
+        choices=choices.LegalOrderVenue.choices,
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Legal order venue',
+    )
 
     # Prior Restraint
     status_of_prior_restraint = models.CharField(
