@@ -53,7 +53,6 @@
   },
   "dependencies": {
     "@visx/responsive": "^3.0.0",
-    "axios": "^0.21.2",
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.2.5",
     "d3": "^7.1.1",
