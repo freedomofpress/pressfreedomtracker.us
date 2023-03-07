@@ -56,14 +56,14 @@ jobs:
 
       - run:
           name: Upgrade NPM to consistent version with dev environment
-          command: npm install --location=global npm@8.19.3
+          command: npm install --location=global npm@9.6.0
 
       - run:
           name: Check node dependencies for vulnerabilities
           command: |
             mkdir -p test-results
             npm ci
-            $(npm bin)/npm-audit-plus  --ignore=1084597,1088594 --xml > test-results/audit.xml
+            npx npm-audit-plus  --ignore=1084597,1088594 --xml > test-results/audit.xml
 
       - store_test_results:
           path: ~/tracker/test-results/
