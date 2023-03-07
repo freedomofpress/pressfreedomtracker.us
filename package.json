@@ -62,7 +62,6 @@
     "invariant": "^2.2.2",
     "money-math": "^2.4.3",
     "prop-types": "^15.7.2",
-    "query-string": "^4.3.4",
     "react": "^18.2.0",
     "react-animated-dataset": "^0.4.0",
     "react-datepicker": "^4.8.0",
