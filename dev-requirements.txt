@@ -218,9 +218,9 @@ django==3.2.18 \
     #   drf-spectacular
     #   drf-spectacular-sidecar
     #   wagtail
-django-anymail==8.5 \
-    --hash=sha256:2325932f56f914d96e0a54db850f2b246ed2277b753f75319620d051a51551e2 \
-    --hash=sha256:677e937dc9e2671ca7631abb1d94ddc6b840beb3d53c0fbf699e866a6a9ba92f
+django-anymail==9.0 \
+    --hash=sha256:4239f7c61fb77b6eb8c8591a317a84a2a78f6bce1f8f42847921de74194b5d8a \
+    --hash=sha256:c21d94ffdbada613a85c22a7bf32e37447d2811e1688cd001d3cad3c7f1ff289
     # via -r requirements.txt
 django-cprofile-middleware==1.0.5 \
     --hash=sha256:b942185a38f3b582935a55c768f126ce9a6f0cefceee3b5d19e6b307ad129889
