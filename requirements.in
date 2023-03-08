@@ -16,7 +16,7 @@ gunicorn
 Jinja2>=2.11.3
 mailchimp_marketing>=3.0.66
 marshmallow
-psycopg2>=2.8.4,<2.9
+psycopg2
 Pygments
 python-json-logger
 pyparsing
