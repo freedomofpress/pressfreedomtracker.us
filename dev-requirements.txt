@@ -43,9 +43,9 @@ beautifulsoup4==4.9.3 \
     # via
     #   -r requirements.txt
     #   wagtail
-bleach==4.1.0 \
-    --hash=sha256:0900d8b37eba61a802ee40ac0061f8c2b5dee29c1927dd1d233e075ebf5a71da \
-    --hash=sha256:4d2651ab93271d1129ac9cbc679f524565cc8a1b791909c4a51eac4446a15994
+bleach==6.0.0 \
+    --hash=sha256:1a1a85c1595e07d8db14c5f09f09e6433502c51c595970edc090551f0db99414 \
+    --hash=sha256:33c16e3353dbd13028ab4799a0f89a83f113405c766e9c122df8a06f5b85b3f4
     # via -r requirements.txt
 cachetools==5.0.0 \
     --hash=sha256:486471dfa8799eb7ec503a8059e263db000cdda20075ce5e48903087f79d5fd6 \
@@ -643,7 +643,6 @@ packaging==21.3 \
     --hash=sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522
     # via
     #   -r requirements.txt
-    #   bleach
     #   marshmallow
 parso==0.8.3 \
     --hash=sha256:8c07be290bb59f03588915921e29e8a50002acaf2cdc5fa0e0114f91709fafa0 \
