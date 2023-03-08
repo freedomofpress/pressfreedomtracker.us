@@ -1045,9 +1045,9 @@ wagtail-autocomplete==0.9.0 \
 wagtail-django-recaptcha==1.0 \
     --hash=sha256:fc177e75da966e9db1dfd9a566c40d30567518d9280b5db4fec4d50a8c853154
     # via -r requirements.txt
-wagtail-factories==3.1.0 \
-    --hash=sha256:26b42998420005ab556f714e72e4a53427aac59ae595c66d1379a2c141f92be5 \
-    --hash=sha256:ea366dc1d399e9c24218366fc80a104f51c3f18469ed19c576e15023a226c942
+wagtail-factories==4.0.0 \
+    --hash=sha256:3e39ec1cc13b61c6e467f1bf223ce2d134e823fa9fe4dc7e32d0222cc8d350ec \
+    --hash=sha256:f59f9af283da79b3ddab7b2ca95d6a14b5bbbb929a697563e4f7143948693f53
     # via -r requirements.txt
 wagtail-inventory==1.7.0 \
     --hash=sha256:321697a13bbecd7b812f8fc96f1afaf16334e27c3e296fd592aabe002a40621a \
