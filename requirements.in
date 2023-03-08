@@ -20,7 +20,7 @@ psycopg2
 Pygments
 python-json-logger
 pyparsing
-structlog>=21,<22
+structlog
 typing
 typogrify
 wagtail>=4.1,<4.2
