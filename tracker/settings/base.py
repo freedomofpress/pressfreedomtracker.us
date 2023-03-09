@@ -16,7 +16,6 @@ import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-import dj_database_url
 import logging
 logger = logging.getLogger(__name__)
 
@@ -150,15 +149,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tracker.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-# Set the url as DATABASE_URL in the environment
-DATABASES = {
-    'default': dj_database_url.config(default="sqlite:///db.sqlite3")
-}
 
 
 # Internationalization
