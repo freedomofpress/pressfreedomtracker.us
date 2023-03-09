@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { throttle, isElementVisible, showMoreTable } from './utils'
 
 class ArticleLoader {
@@ -138,20 +137,23 @@ class ArticleLoader {
 		this.isLoading = true
 		this.nextLinkElm.innerHTML = '<div class="loader">Loading…</div>'
 
-		axios.get(this.nextLinkElm.href)
+		fetch(this.nextLinkElm.href)
 			.then((response) => {
+				if (!response.ok) {
+					throw new Error(`HTTP error, status = ${response.status}`)
+				}
+				return response.text()
+			})
+			.then((text) => {
 				this.isLoading = false
 				this.incrementFetches()
-
-				if (response.status === 200) {
-					this.appendIncidents(response.data)
-					const urlParams = new URLSearchParams(window.location.search)
-					urlParams.set(
-						'endpage',
-						urlParams.has('endpage') ? parseInt(urlParams.get('endpage')) + 1 : 2,
-					)
-					window.history.replaceState(null, null, '?' + urlParams.toString())
-				}
+				this.appendIncidents(text)
+				const urlParams = new URLSearchParams(window.location.search)
+				urlParams.set(
+					'endpage',
+					urlParams.has('endpage') ? parseInt(urlParams.get('endpage')) + 1 : 2,
+				)
+				window.history.replaceState(null, null, '?' + urlParams.toString())
 			})
 	}
 }
