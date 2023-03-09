@@ -19,7 +19,6 @@ marshmallow
 psycopg2
 Pygments
 python-json-logger
-pyparsing
 structlog
 typing
 typogrify
