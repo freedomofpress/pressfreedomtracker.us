@@ -141,7 +141,7 @@ class Command(BaseCommand):
         url = 'https://picsum.photos/{width}/{height}'.format(
             width=width, height=height,
         )
-        response = requests.get(url)
+        response = requests.get(url, timeout=5)
         if response and response.content:
             CustomImageFactory(
                 file__from_file=ContentFile(response.content),

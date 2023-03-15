@@ -35,7 +35,8 @@ class TestCacheTags(TestCase):
                 'X-Auth-Email': 'CLOUDFLARE_FAKE_EMAIL',
                 'Content-Type': 'application/json',
                 'X-Auth-Key': 'CLOUDFLARE_FAKE_TOKEN'
-            }
+            },
+            timeout=5,
         )
 
     @patch('cloudflare.utils.requests.delete')
@@ -52,7 +53,8 @@ class TestCacheTags(TestCase):
                 'X-Auth-Email': 'CLOUDFLARE_FAKE_EMAIL',
                 'Content-Type': 'application/json',
                 'X-Auth-Key': 'CLOUDFLARE_FAKE_TOKEN'
-            }
+            },
+            timeout=5,
         )
 
 
