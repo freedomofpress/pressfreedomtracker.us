@@ -36,7 +36,7 @@ from incident.tests.factories import (
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
 )
-from incident.utils.incident_filter import IncidentFilter, ManyRelationValue
+from incident.utils.incident_filter import IncidentFilter, ManyRelationValue, SearchFilter
 
 
 class TestFiltering(TestCase):
@@ -450,67 +450,90 @@ class TestBooleanFiltering(TestCase):
         self.assertEqual(set(incidents), {self.true_bool, self.false_bool})
 
 
-class TestAllFiltersAtOnce(TestCase):
-    def test_all_filters_combined_with_search(self):
-        """filters should be searchable
+class TestAllFiltersAtOnce:
+    """Base class for testing all filters at once."""
 
-        This tests will raise an error if any fields given to
-        IncidentFilter are not configured as `search_fields` on
-        IncidentPage.
+    filters_to_skip = {'index_entries', 'wagtail_admin_comments', 'subscribers'}
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.available_filters = IncidentFilter.get_available_filters()
+        cls.category = CategoryPageFactory(
+            incident_filters=cls.available_filters,
+        )
+
+    @property
+    def category_id(self):
+        """Should return the category ID value to be used by the test case.
+
+        The category filter is a special filter because it is used to
+        determine the validity of other filters in a set of filter
+        data.  This test class relies on a systematic mapping of
+        filters to values, but this can cause problems if the value of
+        the category filter is not set to a specific ID value, which
+        is not known before the tests are being run.  So this function
+        exists to provide that value separately from the rest of the
+        filters due to its importance.
 
         """
-        available_filters = IncidentFilter.get_available_filters()
+        raise NotImplementedError()
 
-        # get a valid value for a given field
-        def value_for_field(field):
-            t = field['type']
-            if t == 'text':
-                return 'value'
-            elif t == 'pk' or t == 'autocomplete':
-                return '1'
-            elif t == 'choice' or t == 'radio':
-                filter_ = available_filters[field['name']]
-                return list(filter_.get_choices())[0]
-            elif t == 'bool':
-                return 'True'
-            elif t == 'int':
-                return '1'
+    def value_for_field(self, fltr):
+        """Takes a Filter class and returns a value.
+
+        Function must be implemented by individual test cases.  This
+        is called on every filter to generate a filter value to be
+        used as data by the IncidentFilter class.  It can a simple
+        value, which will be applied to the filter data under a key
+        with the same name as the filter, or return a dictionary,
+        which will be merged into the overall filter data.  The latter
+        is useful for filters that accept multiple values, such as
+        upper/lower date filters.
+
+        """
+        raise NotImplementedError()
+
+    def all_filters(self):
+        """Generator that yields all filters for the purposes of this test.
+
+        Includes all available filters, the search filter, and *not*
+        the Category filter.  The latter of which is a special-case
+        which must be handled seprately.
+
+        """
+        yield SearchFilter()
+        for category_filter in self.category.incident_filters.all():
+            fltr = self.available_filters[category_filter.incident_filter]
+            if fltr.name in {'categories'} | self.filters_to_skip:
+                # Always skip categories, it's handled in a special case.
+                continue
+            yield fltr
+
+    def setUp(self):
+        filter_data = {
+            'categories': self.category_id,
+        }
+        for fltr in self.all_filters():
+            value = self.value_for_field(fltr)
+            if isinstance(value, dict):
+                filter_data.update(value)
             else:
-                raise ValueError('Could not determine value for field of type %s' % t)
+                filter_data[fltr.name] = value
+        self.incident_filter = IncidentFilter(filter_data)
 
-        category = CategoryPageFactory(incident_filters=available_filters)
-
-        # skip these fields directly because they are split into
-        # upper_date and lower_date fields, and because we pass
-        # an explicit categories value
-        filters_to_skip = {'date', 'detention_date', 'release_date', 'categories', 'index_entries', 'wagtail_admin_comments', 'subscribers'}
-        incident_filter = IncidentFilter(dict(
-            search='search text',
-            date_lower='2011-01-01',
-            date_upper='2012-01-01',
-            categories=str(category.id),
-            release_date_lower='2011-01-01',
-            release_date_upper='2012-01-01',
-            detention_date_lower='2011-01-01',
-            detention_date_upper='2012-01-01',
-            **{
-                available_filters[obj.incident_filter].name: value_for_field(available_filters[obj.incident_filter].serialize())
-                for obj in category.incident_filters.all()
-                if available_filters[obj.incident_filter].name not in filters_to_skip
-            }
-        ))
+    def test_queryset_is_obtainable(self):
         # This test passes if the following functions complete with no
-        # errors.
-        incident_filter.clean(strict=True)
-        incident_filter.get_queryset()
-        incident_filter.get_summary()
+        # errors, and the cleaned filters match our expectations.
+        self.incident_filter.clean(strict=True)
+        self.incident_filter.get_queryset()
+        self.incident_filter.get_summary()
 
         self.assertEqual(
-            set(incident_filter.cleaned_data),
+            set(self.incident_filter.cleaned_data),
             {
                 filter_name
                 for filter_name in IncidentFilter.get_available_filters()
-                if filter_name not in filters_to_skip
+                if filter_name not in self.filters_to_skip
             } | {
                 'date',
                 'detention_date',
@@ -519,6 +542,66 @@ class TestAllFiltersAtOnce(TestCase):
                 'categories',
             }
         )
+
+
+class TestAllFiltersCombinedWithSearch(TestAllFiltersAtOnce, TestCase):
+    @property
+    def category_id(self):
+        return str(self.category.pk)
+
+    def value_for_field(self, fltr):
+        field = fltr.serialize()
+        name = fltr.name
+        t = field['type']
+        if t == 'text':
+            return 'value'
+        elif t == 'pk' or t == 'autocomplete':
+            return '1'
+        elif t == 'choice' or t == 'radio':
+            filter_ = self.available_filters[field['name']]
+            return list(filter_.get_choices())[0]
+        elif t == 'bool':
+            return 'True'
+        elif t == 'int':
+            return '1'
+        elif t == 'date':
+            return {
+                f'{name}_lower': '2011-01-01',
+                f'{name}_upper': '2012-01-01',
+            }
+        else:
+            raise ValueError(f'Could not determine value for field of type {t!r}')
+
+
+class TestAllFiltersForNullCharacterSafety(TestAllFiltersAtOnce, TestCase):
+    @property
+    def category_id(self):
+        return str(self.category.pk) + '\x00'
+
+    # get a valid value for a given field
+    def value_for_field(self, fltr):
+        field = fltr.serialize()
+        name = fltr.name
+        t = field['type']
+        if t == 'text':
+            return 'value\x00'
+        elif t == 'pk' or t == 'autocomplete':
+            return '1\x00'
+        elif t == 'choice' or t == 'radio':
+            filter_ = self.available_filters[field['name']]
+            choice = list(filter_.get_choices())[0]
+            return f'{choice}\x00'
+        elif t == 'bool':
+            return 'True\x00'
+        elif t == 'int':
+            return '1\x00'
+        elif t == 'date':
+            return {
+                f'{name}_lower': '2011\x00-01-01',
+                f'{name}_upper': '2012\x00-01-01',
+            }
+        else:
+            raise ValueError(f'Could not determine value for field of type {t!r}')
 
 
 class FuzzyDateFilterTest(TestCase):
