@@ -152,6 +152,8 @@ class RelationFilter(Filter):
             return functools.reduce(operator.or_, arguments, Q())
 
     def clean(self, value, strict=False):
+        if value and isinstance(value, str):
+            value = value.replace('\x00', '')
         try:
             return int(value)
         except ValueError:
@@ -208,6 +210,10 @@ class DateFilter(Filter):
     def clean(self, value, strict=False):
         start, end = value
 
+        if start:
+            start = start.replace('\x00', '')
+        if end:
+            end = end.replace('\x00', '')
         start = self.model_field.to_python(start)
         end = self.model_field.to_python(end)
 
@@ -282,7 +288,7 @@ class ChoiceFilter(Filter):
     def clean(self, value, strict=False):
         if not value:
             return None
-        values = value.split(',')
+        values = [x.replace('\x00', '') for x in value.split(',')]
         value = []
         invalid_values = []
         choices = self.get_choices()
@@ -333,7 +339,7 @@ class MultiChoiceFilter(Filter):
         choices = self.get_choices()
         if not value:
             return None
-        values = value.split(',')
+        values = [x.replace('\x00', '') for x in value.split(',')]
         value = []
         invalid_values = []
         choices = self.get_choices()
@@ -402,7 +408,7 @@ class ManyRelationFilter(Filter):
         if isinstance(value, int):
             return ManyRelationValue(pks=[value])
         else:
-            values = value.split(',')
+            values = [x.replace('\x00', '') for x in value.split(',')]
         invalid_values = []
 
         value = ManyRelationValue()
