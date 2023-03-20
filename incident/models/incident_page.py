@@ -597,7 +597,7 @@ class IncidentPage(MetadataPageMixin, Page):
         'incident.PoliticianOrPublic',
         blank=True,
         related_name='politicians_or_public_incidents',
-        verbose_name='Politicians or public officials involved',
+        verbose_name='Government agency or public official involved',
     )
 
     objects = IncidentPageManager()

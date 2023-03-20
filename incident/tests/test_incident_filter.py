@@ -178,7 +178,7 @@ class SerializeFilterTest(TestCase):
         field = IncidentPage._meta.get_field('politicians_or_public_figures_involved')
         filter_ = IncidentFilter._get_filter(field)
         self.assertEqual(filter_.serialize(), {
-            'title': 'Politicians or public officials involved',
+            'title': 'Government agency or public official involved',
             'type': 'autocomplete',
             'many': True,
             'autocomplete_type': 'incident.PoliticianOrPublic',
