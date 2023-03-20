@@ -3,7 +3,7 @@
 <h1 class="article-title" id="title">{{ page.title }}</h1>
 
 <div class="newsletter-actions">
-	<a href="" class="btn btn-primary">Go to archived editions</a>
+	<a href="{% pageurl page.get_parent %}?type=newsletter" class="btn btn-primary">Go to archived editions</a>
 	{% if settings.common.SiteSettings.newsletter_subscription_page %}
 		<a href="{% pageurl settings.common.SiteSettings.newsletter_subscription_page %}" class="btn btn-primary">Sign up to the Newsletter</a>
 	{% endif %}
