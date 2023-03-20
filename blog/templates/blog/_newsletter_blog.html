@@ -28,6 +28,6 @@
 </article>
 <div class="article-actions">
 	{% if settings.common.SiteSettings.donation_page %}
-		<a href="{% pageurl settings.common.SiteSettings.donation_page %}" class="btn btn-primary">Donate</a>
+		<a href="{{ settings.common.SiteSettings.donation_page }}" class="btn btn-primary">Donate</a>
 	{% endif %}
 </div>

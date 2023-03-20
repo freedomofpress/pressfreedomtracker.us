@@ -34,6 +34,7 @@ from common.blocks import (
     TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     AsideBlock,
+    ButtonBlock,
 )
 
 
@@ -197,6 +198,7 @@ class BlogPage(MetadataPageMixin, Page):
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
+        ('button', ButtonBlock()),
         ('statistics', StatisticsBlock()),
     ], use_json_field=True)
 
