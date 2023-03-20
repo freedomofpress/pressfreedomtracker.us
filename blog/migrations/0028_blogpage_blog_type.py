@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blogpage',
             name='blog_type',
-            field=models.CharField(choices=[('default', 'Default Blog'), ('newsletter', 'Newsletter'), ('SPECIAL', 'Special Blog')], default='default', help_text='Select template used to display this post.', max_length=20),
+            field=models.CharField(choices=[('default', 'Default Blog'), ('newsletter', 'Newsletter'), ('special', 'Special Blog')], default='default', help_text='Select template used to display this post.', max_length=20),
         ),
     ]

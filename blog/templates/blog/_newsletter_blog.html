@@ -4,7 +4,9 @@
 
 <div class="newsletter-actions">
 	<a href="" class="btn btn-primary">Go to archived editions</a>
-	<a href="" class="btn btn-primary">Sign up to the Newsletter</a>
+	{% if settings.common.SiteSettings.newsletter_subscription_page %}
+		<a href="{% pageurl settings.common.SiteSettings.newsletter_subscription_page %}" class="btn btn-primary">Sign up to the Newsletter</a>
+	{% endif %}
 </div>
 
 <article class="article-content">
@@ -25,5 +27,7 @@
 	</section>
 </article>
 <div class="article-actions">
-	<a href="https://freedom.press/tracker/" class="btn btn-primary">Donate</a>
+	{% if settings.common.SiteSettings.donation_page %}
+		<a href="{% pageurl settings.common.SiteSettings.donation_page %}" class="btn btn-primary">Donate</a>
+	{% endif %}
 </div>

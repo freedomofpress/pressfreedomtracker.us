@@ -2,7 +2,7 @@
 
 {% block main %}
 	{% if page.blog_type == 'newsletter' %}
-		{% include "blog/_newsletter_blog.html" with page=page only %}
+		{% include "blog/_newsletter_blog.html" with page=page settings=settings only %}
 	{% elif page.blog_type == 'special' %}
 		{% include "blog/_special_blog.html" with page=page only %}
 	{% else %}
