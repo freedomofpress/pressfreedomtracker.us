@@ -31,6 +31,7 @@ const markerSize = {
 
 const markerBorder = {
 	normal: 5,
+	hover: 0,
 	grid: 5,
 	small: 1,
 }
@@ -40,15 +41,7 @@ const mapBorder = {
 	nation: 3,
 }
 
-export default function USMap({
-	data: dataset,
-	incidentsOutsideUS,
-	width,
-	height,
-	id,
-	openSearchPage,
-	highlightColor = '#E6E6E6'
-}) {
+export default function USMap({ data: dataset, incidentsOutsideUS, width, height, id, openSearchPage }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 
@@ -75,7 +68,7 @@ export default function USMap({
 							<div
 								style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}
 							>
-								<div style={{ borderLeft: `solid 3px ${highlightColor}`, paddingLeft: 3 }}>
+								<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
 									{hoveredElement}
 								</div>
 								<div>
@@ -127,17 +120,29 @@ export default function USMap({
 							init={{
 								opacity: 0,
 								r: 0,
-								fill: (d) => hoveredElement === `${d.state}` ? 'black' : highlightColor,
-								strokeWidth: markerBorder.normal,
+								fill: (d) =>
+									hoveredElement === null
+										? '#E07A5F'
+										: hoveredElement === `${d.state}`
+										? '#E07A5F'
+										: 'white',
+								strokeWidth: (d) =>
+									hoveredElement === `${d.state}` ? markerBorder.hover : markerBorder.normal,
 							}}
 							attrs={{
 								opacity: 1,
 								cx: (d) => projection([d.longitude, d.latitude])[0],
 								cy: (d) => projection([d.longitude, d.latitude])[1],
 								r: (d) => markerScale(d.numberOfIncidents),
-								fill: (d) => hoveredElement === `${d.state}` ? 'black' : highlightColor,
+								fill: (d) =>
+									hoveredElement === null
+										? '#E07A5F'
+										: hoveredElement === `${d.state}`
+										? '#E07A5F'
+										: 'white',
 								stroke: 'black',
-								strokeWidth: markerBorder.normal,
+								strokeWidth: (d) =>
+									hoveredElement === `${d.state}` ? markerBorder.hover : markerBorder.normal,
 							}}
 							duration={250}
 							durationByAttr={{ fill: 0, strokeWidth: 0 }}

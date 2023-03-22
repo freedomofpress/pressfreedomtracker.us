@@ -44,7 +44,6 @@ export default function BarChart({
 	id = '',
 	numberOfTicks = 4,
 	openSearchPage,
-	highlightColor = '#E6E6E6',
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -109,7 +108,7 @@ export default function BarChart({
 										marginTop: 8,
 									}}
 								>
-									<div style={{ borderLeft: `solid 3px ${highlightColor}`, paddingLeft: 3 }}>
+									<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
 										{hoveredElement}
 									</div>
 									<div>{dataset.find((d) => d[x] === hoveredElement).numberOfIncidents}</div>
@@ -188,9 +187,10 @@ export default function BarChart({
 							y: (d) => yScale(d[y]),
 							height: (d) => computeBarheight(d[y]),
 							width: xScale.bandwidth(),
-							fill: (d) => hoveredElement === d[x] ? 'black' : highlightColor,
+							fill: (d) =>
+								hoveredElement === d[x] ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
 							strokeWidth: borders.normal,
-							stroke: 'black',
+							stroke: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
 							cursor: 'pointer',
 							shapeRendering: 'crispEdges',
 						}}
@@ -234,7 +234,7 @@ export default function BarChart({
 							x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
 							y: height - paddings.bottom / 2,
 							textAnchor: 'middle',
-							fill: 'black',
+							fill: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
 							fontFamily: 'var(--font-base)',
 							fontWeight: 500,
 							fontSize: '14px',
@@ -307,9 +307,10 @@ export default function BarChart({
 						y: (d) => yScale(d[y]),
 						height: (d) => computeBarheight(d[y]),
 						width: xScale.bandwidth(),
-						fill: (d) => sliderSelection === d[x] ? 'black' : highlightColor,
+						fill: (d) =>
+							sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
 						strokeWidth: borders.normal,
-						stroke: 'black',
+						stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
 						cursor: 'pointer',
 						shapeRendering: 'crispEdges',
 					}}
