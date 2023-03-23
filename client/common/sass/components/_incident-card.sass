@@ -3,19 +3,73 @@
 	border-color: $black
 	padding-top: 2rem
 
+	&-collapsible
+		&__toggle
+			display: none
+
+		.card-image-collapsible:last-of-type
+			display: none
+
+		+mobile-down
+			padding-top: 0.5rem
+
+			&__toggle-label
+				margin: 0.5rem 0
+				text-decoration: underline
+				display: flex
+				align-items: center
+
+			&__toggle-icon
+				width: 0.8rem
+				height: 0.8rem
+				background-size: contain
+				background-color: transparent
+				background-image: url(../icons/plus.svg)
+				background-repeat: no-repeat
+				margin-left: 1rem
+
+			&__toggle-label-text:after
+				content: "More"
+
+			&__toggle:checked + .incident-card--inner &__toggle-label-text:after
+				content: "Less"
+
+			.card-image-collapsible:first-of-type
+				display: none
+
+			.incident-card__categories,
+			.database-card-table__incident-details,
+			.tag-list
+				display: none
+
+			&__toggle:checked + .incident-card--inner + &__show-more
+				display: none
+
+			&__toggle:checked + .incident-card--inner .incident-card__categories,
+			&__toggle:checked + .incident-card--inner .database-card-table__incident-details,
+			&__toggle:checked + .incident-card--inner .card-image-collapsible:last-of-type
+				display: block
+
+			&__toggle:checked + .incident-card--inner .tag-list
+				display: flex
+
+			&__toggle:checked + .incident-card--inner &__toggle-icon
+				background-image: url(../icons/cross.svg)
+
 	&__categories
 		list-style-type: none
 		padding: 0
 
 	&--inner
-		transition: transform 0.15s ease-in-out
-		&:hover
-			transform: translateY(-0.5rem)
-			cursor: pointer
+		+tablet-up
+			transition: transform 0.15s ease-in-out
+			&:hover
+				transform: translateY(-0.5rem)
+				cursor: pointer
 
-			.text-link--card
-				background-color: transparent
-				text-decoration: underline
+				.text-link--card
+					background-color: transparent
+					text-decoration: underline
 
 .dl-inline
 	display: grid
