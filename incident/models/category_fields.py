@@ -91,7 +91,7 @@ CATEGORY_FIELD_MAP = {
         ('status_of_prior_restraint', 'Status of Prior Restraint'),
     ],
     'denial-access': [
-        ('politicians_or_public_figures_involved', 'Politicians or Public Figures Involved'),
+        ('politicians_or_public_figures_involved', 'Government agency or public official involved'),
     ],
 }
 

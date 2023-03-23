@@ -387,7 +387,7 @@ class CategoryFieldValues(TestCase):
         denial_of_access_details = self.category_details[self.category4]
         self.assertEqual(
             denial_of_access_details[0]['name'],
-            'Politicians or Public Figures Involved',
+            'Government agency or public official involved',
         )
         for item in self.incident.politicians_or_public_figures_involved.all():
             self.assertIn(item.title, denial_of_access_details[0]['html'])
