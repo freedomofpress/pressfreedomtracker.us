@@ -37,7 +37,7 @@ class ArticleScroller {
 	}
 
 	shiftArticles(shift) {
-		this.articleParent.style.transform = 'translateX(' + shift + ')'
+		this.articleParent.scrollLeft = shift
 	}
 
 	prevExists() {
@@ -52,8 +52,8 @@ class ArticleScroller {
 		if (!this.nextExists()) {
 			return
 		}
-		this.shift -= this.perArticleWidth + 8 // half of the gap to show prev & next
-		this.shiftArticles(this.shift + 'px')
+		this.shift += this.perArticleWidth + 8 // half of the gap to show prev & next
+		this.shiftArticles(this.shift)
 
 		// Check after 1s of scrolling whether button should be disabled or enabled
 		setTimeout(() => {
@@ -68,8 +68,8 @@ class ArticleScroller {
 		if (!this.prevExists()) {
 			return
 		}
-		this.shift += this.perArticleWidth + 8 // half of the gap to show prev & next
-		this.shiftArticles(this.shift + 'px')
+		this.shift -= this.perArticleWidth + 8 // half of the gap to show prev & next
+		this.shiftArticles(this.shift)
 
 		// Check after 1s of scrolling whether button should be disabled or enabled
 		setTimeout(() => {
