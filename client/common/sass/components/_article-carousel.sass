@@ -8,6 +8,16 @@
 				display: flex
 				transition: transform 0.9s ease-in-out
 
+		+mobile-down
+			overflow-x: auto
+			scroll-snap-type: x mandatory
+			scroll-behavior: smooth
+			-webkit-overflow-scrolling: touch
+			-ms-overflow-style: none
+
+			&::-webkit-scrollbar
+				display: none
+
 	&__scroller
 		display: none
 		text-align: right
@@ -33,6 +43,7 @@
 
 		+mobile-down
 			flex: 0 0 328px
+			scroll-snap-align: start
 
 		// The "Latest Incidents" carousel collapses to multiple rows
 		// over smaller viewport sizes
