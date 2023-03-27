@@ -4,20 +4,27 @@
 	padding-top: 2rem
 
 	&-collapsible
-		&__toggle
+		.card-image-collapsible:last-of-type
 			display: none
 
-		.card-image-collapsible:last-of-type
+		&__show-more
 			display: none
 
 		+mobile-down
 			padding-top: 0.5rem
 
-			&__toggle-label
+			&.closed &__show-more,
+			&.open &__show-more
+				display: block
+
+			&__toggle-button
 				margin: 0.5rem 0
 				text-decoration: underline
 				display: flex
 				align-items: center
+				background: none
+				border: 0
+				padding: 0
 
 			&__toggle-icon
 				width: 0.8rem
@@ -28,33 +35,29 @@
 				background-repeat: no-repeat
 				margin-left: 1rem
 
-			&__toggle-label-text:after
-				content: "More"
-
-			&__toggle:checked + .incident-card--inner &__toggle-label-text:after
-				content: "Less"
-
-			.card-image-collapsible:first-of-type
-				display: none
-
-			.incident-card__categories,
-			.database-card-table__incident-details,
-			.tag-list
-				display: none
-
-			&__toggle:checked + .incident-card--inner + &__show-more
-				display: none
-
-			&__toggle:checked + .incident-card--inner .incident-card__categories,
-			&__toggle:checked + .incident-card--inner .database-card-table__incident-details,
-			&__toggle:checked + .incident-card--inner .card-image-collapsible:last-of-type
+			.card-image-collapsible:last-of-type
 				display: block
 
-			&__toggle:checked + .incident-card--inner .tag-list
-				display: flex
+			&.closed
+				.card-image-collapsible:last-of-type
+					display: none
 
-			&__toggle:checked + .incident-card--inner &__toggle-icon
-				background-image: url(../icons/cross.svg)
+				.incident-card__categories,
+				.database-card-table__incident-details,
+				.tag-list
+					display: none
+
+			&.open
+				.incident-card--inner .incident-card__categories,
+				.incident-card--inner .database-card-table__incident-details,
+				.incident-card--inner .card-image-collapsible:last-of-type
+					display: block
+
+				.incident-card--inner .tag-list
+					display: flex
+
+				.incident-card--inner &__toggle-icon
+					background-image: url(../icons/cross.svg)
 
 	&__categories
 		list-style-type: none

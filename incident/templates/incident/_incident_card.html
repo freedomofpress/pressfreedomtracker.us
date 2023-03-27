@@ -1,15 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 {% with size=size|default:"big" details=details|default:"big" %}
 	<article class="incident-card incident-card-{{ size }}">
-
-		{% if size == 'collapsible' %}
-			<input
-				id="incident-card-collapsible-{{ incident.id }}"
-				class="incident-card-collapsible__toggle"
-				type="checkbox"
-			>
-		{% endif %}
-
 		<div class="incident-card--inner">
 			{% if photo %}
 				{% image photo fill-665x440 as x1 %}
@@ -28,13 +19,12 @@
 
 			{% if size == 'collapsible' %}
 			<div class="incident-card-collapsible__show-more">
-				<label
-					for="incident-card-collapsible-{{ incident.id }}"
-					class="incident-card-collapsible__toggle-label"
+				<button
+					class="incident-card-collapsible__toggle-button"
 				>
-					<span class="incident-card-collapsible__toggle-label-text">Show </span>
+					<span class="incident-card-collapsible__toggle-button-text"></span>
 					<div class="incident-card-collapsible__toggle-icon"></div>
-				</label>
+				</button>
 			</div>
 			{% endif %}
 
