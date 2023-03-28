@@ -359,3 +359,7 @@ export function difference(setA, setB) {
   }
   return _difference;
 }
+
+export function trackMatomoEvent(args = []) {
+	if (typeof window._paq === 'object') _paq.push(['trackEvent', ...args]);
+}

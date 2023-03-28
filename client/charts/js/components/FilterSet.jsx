@@ -5,6 +5,7 @@ import {
 	SET_PARAMETER,
 } from '../lib/actionTypes'
 import { FiltersDispatch } from '../lib/context'
+import { trackMatomoEvent } from '../lib/utilities'
 
 
 function isDateValid(date) {
@@ -48,6 +49,8 @@ function DateFilter({
 								}
 							},
 						})
+						// Fire matomo event
+						trackMatomoEvent(['Filter', name, 'Change', event.target.value])
 					}}
 				/>
 			</div>
@@ -73,6 +76,8 @@ function DateFilter({
 								}
 							},
 						})
+						// Fire matomo event
+						trackMatomoEvent(['Filter', name, 'Change', event.target.value])
 					}}
 				/>
 			</div>
