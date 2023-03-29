@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailcore', '0078_referenceindex'),
-        ('common', '0095_alter_statisticsitem_dataset'),
+        ('common', '0096_update_verbose_name_of_politician_or_public_figures_relationship'),
     ]
 
     operations = [
