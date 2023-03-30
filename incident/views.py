@@ -1,7 +1,12 @@
+import csv
+from io import StringIO
+
 from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views.decorators.vary import vary_on_headers
+from django.views.generic import View
 from django.views.generic.edit import FormView
 from wagtail.admin.auth import (
     user_has_any_page_permission,
@@ -16,6 +21,7 @@ from incident.forms import (
     InstitutionMergeForm,
     JournalistMergeForm,
     LawEnforcementOrganizationForm,
+    LegalOrderImportForm,
     NationalityMergeForm,
     PoliticianOrPublicMergeForm,
     VenueMergeForm,
@@ -28,6 +34,7 @@ from incident.models import (
     Journalist,
     TargetedJournalist,
 )
+from incident.utils.csv import parse_row
 
 
 @vary_on_headers('X-Requested-With')
@@ -146,3 +153,64 @@ class InstitutionMergeView(FormView):
 
 class GovernmentWorkerMergeView(MergeView):
     form_class = GovernmentWorkerMergeForm
+
+
+class LegalOrderImportSpec:
+    pass
+
+
+class LegalOrderImportView(FormView):
+    form_class = LegalOrderImportForm
+    template_name = 'modeladmin/legal_order_import_form.html'
+    success_url = reverse_lazy('import_legal_orders:confirm')
+
+    def form_valid(self, form):
+        csv_file = form.cleaned_data['csv_file']
+        reader = csv.DictReader(StringIO(csv_file.read().decode('utf-8')))
+
+        data = {}
+        found_errors = False
+        for n, row in enumerate(reader):
+            source_row_number = n + 2
+            result = parse_row(row)
+            if not result.success:
+                found_errors = True
+                for error in result.errors:
+                    message = f'Row {source_row_number}'
+                    if error.column_name:
+                        message += f', column {error.column_name}'
+                    form.add_error('csv_file', f'{message}: {error.message}')
+            else:
+                data.update(result.value)
+        if found_errors:
+            return self.form_invalid(form)
+        else:
+            self.request.session['legal_order_import'] = data
+            return super().form_valid(form)
+
+
+class LegalOrderImportConfirmView(View):
+    template_name = 'modeladmin/legal_order_import_confirm.html'
+
+    def get(self, request, *args, **kwargs):
+        import_data = request.session['legal_order_import']
+
+        max_legal_orders = 0
+
+        confirmation_data = {}
+        incidents = IncidentPage.objects.in_bulk(list(import_data.keys()))
+        for pk, legal_order_data in import_data.items():
+            legal_orders = legal_order_data.get('legal_orders', [])
+            max_legal_orders = max(
+                max_legal_orders,
+                len(legal_orders)
+            )
+
+            confirmation_data[incidents[int(pk)]] = legal_order_data
+
+        return render(
+            request, self.template_name, {
+                'confirmation_data': confirmation_data,
+                'max_legal_orders': range(max_legal_orders),
+            }
+        )

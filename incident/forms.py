@@ -1,5 +1,7 @@
 from wagtail.admin.forms import WagtailAdminPageForm
 
+from django import forms
+
 from common.forms import BaseMergeForm
 from incident.models import Charge, Nationality, Venue, PoliticianOrPublic, Journalist, Institution, GovernmentWorker, LawEnforcementOrganization
 
@@ -49,3 +51,7 @@ class TopicPageForm(WagtailAdminPageForm):
                 'start_date',
                 'The start date cannot be after the end date.'
             )
+
+
+class LegalOrderImportForm(forms.Form):
+    csv_file = forms.FileField()
