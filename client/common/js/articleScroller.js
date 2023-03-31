@@ -28,6 +28,7 @@ class ArticleScroller {
 		this.scrollNextBtn.addEventListener('click', this.scrollToLeft)
 		this.scrollPrevBtn.addEventListener('click', this.scrollToRight)
 		this.articleParent.addEventListener('scroll', this.updateNextPrevButtons)
+		window.addEventListener('resize', this.updateNextPrevButtons)
 	}
 
 	shiftArticles(shift) {
