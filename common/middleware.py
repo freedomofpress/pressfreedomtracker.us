@@ -69,6 +69,5 @@ class DisableClientSideCachingMiddleware(object):
     def __call__(self, request):
         response = self.get_response(request)
         add_never_cache_headers(response)
-        print(response)
         return response
 
