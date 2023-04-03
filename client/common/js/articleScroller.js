@@ -15,6 +15,7 @@ class ArticleScroller {
 
 		this.scrollToLeft = this.scrollToLeft.bind(this)
 		this.scrollToRight = this.scrollToRight.bind(this)
+		this.updateNextPrevButtons = this.updateNextPrevButtons.bind(this)
 
 		if (!this.prevExists()) {
 			this.scrollPrevBtn.disabled = true
@@ -26,59 +27,48 @@ class ArticleScroller {
 
 		this.scrollNextBtn.addEventListener('click', this.scrollToLeft)
 		this.scrollPrevBtn.addEventListener('click', this.scrollToRight)
-	}
-
-	static isVisible(article) {
-		const rect = article.getBoundingClientRect()
-		if (rect.x < 0 || rect.right > window.innerWidth) {
-			return false
-		}
-		return true
+		this.articleParent.addEventListener('scroll', this.updateNextPrevButtons)
+		window.addEventListener('resize', this.updateNextPrevButtons)
 	}
 
 	shiftArticles(shift) {
-		this.articleParent.style.transform = 'translateX(' + shift + ')'
+		this.articleParent.scrollLeft = shift
 	}
 
 	prevExists() {
-		return !ArticleScroller.isVisible(this.articles[0])
+		return this.articleParent.scrollLeft > 0
 	}
 
 	nextExists() {
-		return !ArticleScroller.isVisible(this.articles[this.articles.length - 1])
+		return (this.articleParent.scrollWidth - this.articleParent.scrollLeft)
+			> this.articleParent.clientWidth
+	}
+
+	updateNextPrevButtons() {
+		this.scrollNextBtn.disabled = false
+		this.scrollPrevBtn.disabled = false
+		if (!this.nextExists()) {
+			this.scrollNextBtn.disabled = true
+		}
+		if (!this.prevExists()) {
+			this.scrollPrevBtn.disabled = true
+		}
 	}
 
 	scrollToLeft() {
 		if (!this.nextExists()) {
 			return
 		}
-		this.shift -= this.perArticleWidth + 8 // half of the gap to show prev & next
-		this.shiftArticles(this.shift + 'px')
-
-		// Check after 1s of scrolling whether button should be disabled or enabled
-		setTimeout(() => {
-			if (!this.nextExists()) {
-				this.scrollNextBtn.disabled = true
-			}
-			this.scrollPrevBtn.disabled = false
-		}, 1000)
+		this.shift += this.perArticleWidth + 8 // half of the gap to show prev & next
+		this.shiftArticles(this.shift)
 	}
 
 	scrollToRight() {
 		if (!this.prevExists()) {
 			return
 		}
-		this.shift += this.perArticleWidth + 8 // half of the gap to show prev & next
-		this.shiftArticles(this.shift + 'px')
-
-		// Check after 1s of scrolling whether button should be disabled or enabled
-		setTimeout(() => {
-			if (!this.prevExists()) {
-				this.scrollPrevBtn.disabled = true
-				return
-			}
-			this.scrollNextBtn.disabled = false
-		}, 1000)
+		this.shift -= this.perArticleWidth + 8 // half of the gap to show prev & next
+		this.shiftArticles(this.shift)
 	}
 }
 
