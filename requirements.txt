@@ -635,9 +635,9 @@ urllib3==1.26.11 \
     # via
     #   mailchimp-marketing
     #   requests
-wagtail==4.1.1 \
-    --hash=sha256:9df6bfe5637ebe5b9e96cd0174cb812d3bb9200913100b6f8007ef31bdc02f70 \
-    --hash=sha256:fe164fa5bb5f62fa8fa35cb456d523b3f263b6bcc0a5e0b688e2c6c1760bc095
+wagtail==4.1.4 \
+    --hash=sha256:4090035f82ba48ed24908c56ab3618564756f56dee03d863525b5c36af01b06f \
+    --hash=sha256:bb2294845eb8b2ec482fefe8a3a66a8ff0a1feec9077fd3604f1b572922f465a
     # via
     #   -r requirements.in
     #   wagtail-autocomplete
