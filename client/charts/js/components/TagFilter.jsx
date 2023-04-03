@@ -89,7 +89,7 @@ export default function TagFilter({
 								}
 							})
 							// Fire matomo event
-							trackMatomoEvent(['Filter', 'Tags', 'Toggle', tag.name])
+							trackMatomoEvent(['Filter', 'Tags', 'Toggle', tag])
 						}}
 					/>
 				)
@@ -114,7 +114,7 @@ export default function TagFilter({
 						}
 					})
 					// Fire matomo event
-					trackMatomoEvent(['Filter', 'Tags', 'Select', tag.name])
+					trackMatomoEvent(['Filter', 'Tags', 'Select', tag])
 				}}
 			/>
 		</div>

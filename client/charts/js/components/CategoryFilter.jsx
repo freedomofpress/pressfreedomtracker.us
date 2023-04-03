@@ -104,6 +104,9 @@ export default function CategoryFilter({
 				value: event.target.value,
 			},
 		})
+
+		// Fire matomo event
+		trackMatomoEvent(['Filter', 'Categories', 'Filter', event.target.name, event.target.value])
 	}
 
 	return (
