@@ -779,24 +779,17 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Subpoena of Journalism (incl. Legal Case)',
+            heading='Subpoena/Legal Order',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('legal_order_target'),
-                InlinePanel('legal_orders', label='Legal Orders'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Legal Order for Journalist\'s Records (incl. Legal Case)',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('name_of_business'),
-                FieldPanel('third_party_business'),
                 FieldPanel('legal_order_type'),
+                FieldPanel('legal_order_target'),
+                FieldPanel('legal_order_venue'),
+                InlinePanel('legal_orders', label='Legal Orders'),
+                FieldPanel('third_party_business'),
+                FieldPanel('name_of_business'),
             ]
         ),
-
         MultiFieldPanel(
             heading='Prior Restraint (incl. Legal Case)',
             classname='collapsible collapsed',
