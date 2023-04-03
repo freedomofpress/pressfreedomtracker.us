@@ -1,6 +1,7 @@
 import csv
 import io
 import json
+from datetime import date
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -463,6 +464,7 @@ class LegalOrderImportTest(TestCase):
     def setUp(self):
         self.client.force_login(self.user)
         self.import_url = reverse('import_legal_orders:show_form')
+        self.confirm_url = reverse('import_legal_orders:confirm')
 
     def post_csv(self, row_data, *args, **kwargs):
         csv_content = io.StringIO()
@@ -629,3 +631,55 @@ class LegalOrderImportTest(TestCase):
                 }
             }
         )
+
+    def test_confirming_a_file_a_file_updates_the_incident(self):
+        venue = choices.LegalOrderVenue.STATE
+        target = choices.LegalOrderTarget.JOURNALIST
+        order_type = choices.LegalOrderType.SUBPOENA
+        info_requested = choices.InformationRequested.OTHER_TESTIMONY
+        status1 = choices.LegalOrderStatus.PENDING
+        date1 = date(2023, 1, 5)
+        status2 = choices.LegalOrderStatus.QUASHED
+        date2 = date(2023, 1, 15)
+
+        session = self.client.session
+
+        session['legal_order_import'] = {
+            str(self.inc1.pk): {
+                'venue': venue.value,
+                'target': target.value,
+                'legal_orders': [{
+                    'information_requested': info_requested.value,
+                    'type': order_type.value,
+                    'statuses': [{
+                        'date': str(date1),
+                        'status': status1.value,
+                    }, {
+                        'date': str(date2),
+                        'status': status2.value,
+                    }],
+                }],
+            }
+        }
+        session.save()
+        response = self.client.post(self.confirm_url)
+        self.assertRedirects(
+            response,
+            reverse('import_legal_orders:show_form'),
+        )
+        # self.assertEqual(response.status_code, )
+
+        # Successful import removes the corresponding session data
+        self.assertNotIn('legal_order_import', self.client.session)
+
+        self.inc1.refresh_from_db()
+        self.assertEqual(self.inc1.legal_order_venue, venue)
+        self.assertEqual(self.inc1.legal_order_target, target)
+        legal_order = self.inc1.legal_orders.all()[0]
+        self.assertEqual(legal_order.information_requested, info_requested)
+        self.assertEqual(legal_order.order_type, order_type)
+        self.assertEqual(legal_order.status, status1)
+        self.assertEqual(legal_order.date, date1)
+        update = legal_order.updates.all()[0]
+        self.assertEqual(update.status, status2)
+        self.assertEqual(update.date, date2)
