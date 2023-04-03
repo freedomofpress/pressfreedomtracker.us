@@ -185,13 +185,13 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 						width={width}
 						height={width / 1.5}
 						dataset={applyFilters(dataset, filterNames)}
-						filterDefs={filterDefs.filter(f => f.id !== -1)}
+						filterDefs={filterDefs?.filter(f => f.id !== -1) || []}
 						filterParameters={filtersParameters}
 						filterWithout={filterWithout}
 					/>
 				</details>
 				<GeneralFilter
-					filterDef={filterDefs.filter(f => f.id === -1)[0]}
+					filterDef={filterDefs?.filter(f => f.id === -1)[0]}
 					filterParameters={filtersParameters}
 					initialFilterParams={initialFilterParams}
 					width={width}

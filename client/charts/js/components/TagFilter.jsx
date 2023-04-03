@@ -69,7 +69,7 @@ export default function TagFilter({
 	return (
 		<div className="filters__form--fieldset">
 			{displayTags.map(({ tag, count }, i) => {
-				const isSelected = selectedTags.has(tag)
+				const isSelected = selectedTags.has && selectedTags.has(tag)
 				return (
 					<CheckBoxBar
 						key={i}

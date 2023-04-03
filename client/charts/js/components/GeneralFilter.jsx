@@ -31,7 +31,7 @@ export default function GeneralFilter({
 		<>
 			<details
 				className="filters__group filters__form--category"
-				open={Boolean(filterParameters.tags.parameters)}
+				open={Boolean(filterParameters?.tags?.parameters)}
 			>
 				<summary className="filters__form-summary">
 					<h3 className="filter__heading">Tag</h3>
@@ -39,13 +39,13 @@ export default function GeneralFilter({
 				<TagFilter
 					width={width}
 					dataset={dataset}
-					filterParameters={filterParameters.tags.parameters}
-					initialPickedTags={initialFilterParams.tags.parameters}
+					filterParameters={filterParameters?.tags?.parameters || []}
+					initialPickedTags={initialFilterParams?.tags?.parameters || []}
 				/>
 			</details>
 			<div className="filters__form--fieldset filters__form--general">
 				<FilterSet
-					filters={filterDef.filters}
+					filters={filterDef?.filters || []}
 					filterParameters={filterParameters}
 					handleFilterChange={handleFilterChange}
 					setFilterParameters={setFilterParameters}
