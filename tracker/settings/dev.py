@@ -193,5 +193,3 @@ else:
 
 # Prevent endless waiting if problem loading webpack bundles.
 WEBPACK_LOADER['DEFAULT']['TIMEOUT'] = 60  # noqa: F405
-
-MIDDLEWARE.append('common.middleware.DisableClientSideCachingMiddleware')

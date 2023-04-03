@@ -2,7 +2,6 @@ import time
 import uuid
 
 from django.http import Http404
-from django.utils.cache import add_never_cache_headers
 import structlog
 
 
@@ -60,14 +59,3 @@ class RequestLogMiddleware(object):
         # Code to be executed for each request/response after
         # the view is called.
         return response
-
-
-class DisableClientSideCachingMiddleware(object):
-    def __init__(self, get_response):
-            self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        add_never_cache_headers(response)
-        return response
-
