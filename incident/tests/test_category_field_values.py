@@ -301,12 +301,6 @@ class TestCategoryFieldValuesByField(TestCase):
     def test_is_search_warrant_obtained(self):
         self.assert_boolean('is_search_warrant_obtained', CAT_FIELD_VALUES['is_search_warrant_obtained'])
 
-    def test_detention_status(self):
-        self.assert_choices(
-            'detention_status',
-            CAT_FIELD_VALUES['detention_status'],
-        )
-
     def test_actor(self):
         self.assert_choices(
             'actor',
@@ -335,12 +329,6 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assert_choices(
             'status_of_prior_restraint',
             CAT_FIELD_VALUES['status_of_prior_restraint'],
-        )
-
-    def test_held_in_contempt(self):
-        self.assert_choices(
-            'held_in_contempt',
-            CAT_FIELD_VALUES['held_in_contempt'],
         )
 
     def test_subpoena_type(self):

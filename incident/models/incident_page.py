@@ -581,6 +581,8 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name="Subpoena statuses"
     )
+
+    # Deprecated field.
     held_in_contempt = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
@@ -588,6 +590,8 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='If subject refused to cooperate, were they held in contempt?',
     )
+
+    # Deprecated field.
     detention_status = models.CharField(
         choices=choices.DETENTION_STATUS,
         max_length=255,
@@ -779,8 +783,6 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('legal_order_target'),
                 InlinePanel('legal_orders', label='Legal Orders'),
-                FieldPanel('held_in_contempt'),
-                FieldPanel('detention_status'),
             ]
         ),
 

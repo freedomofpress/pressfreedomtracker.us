@@ -249,14 +249,6 @@ def subpoena_statuses_html_val(page, field, index, category):
     return html
 
 
-def held_in_contempt_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
-def detention_status_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
 def third_party_in_possession_of_communications_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 

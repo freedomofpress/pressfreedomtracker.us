@@ -146,8 +146,6 @@ class BaseIncidentSerializer(serializers.Serializer):
     charged_under_espionage_act = serializers.BooleanField()
     subpoena_type = serializers.CharField(source='get_subpoena_type_display')
 
-    held_in_contempt = serializers.CharField(source='get_held_in_contempt_display')
-    detention_status = serializers.CharField(source='get_detention_status_display')
     third_party_in_possession_of_communications = serializers.CharField()
     third_party_business = serializers.CharField(source='get_third_party_business_display')
     legal_order_type = serializers.CharField(source='get_legal_order_type_display')

@@ -863,6 +863,8 @@ class IncidentFilter(object):
         'latitude',
         '_revisions',
         'legal_orders',
+        'held_in_contempt',  # Deprecated field
+        'detention_status',  # Deprecated field
         # 'dropped_charges',
         # 'current_charges',
     }
