@@ -601,11 +601,12 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     # Legal Order for Journalist's Records
-    third_party_in_possession_of_communications = models.CharField(
+    name_of_business = models.CharField(
         max_length=512,
         blank=True,
         null=True,
-        verbose_name='Third party in possession of communications'
+        verbose_name='Name of business',
+        help_text='Name of the business targeted by legal order. This field is only displayed if the legal order target is set to "Third Party"',
     )
     third_party_business = models.CharField(
         choices=choices.THIRD_PARTY_BUSINESS,
@@ -790,7 +791,7 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Legal Order for Journalist\'s Records (incl. Legal Case)',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('third_party_in_possession_of_communications'),
+                FieldPanel('name_of_business'),
                 FieldPanel('third_party_business'),
                 FieldPanel('legal_order_type'),
             ]

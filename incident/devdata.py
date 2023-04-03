@@ -404,7 +404,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         legal_order_targeting_third_party = factory.Trait(
             legal_order_target=choices.LegalOrderTarget.THIRD_PARTY,
             third_party_business=factory.Iterator(choices.ThirdPartyBusiness.values),
-            third_party_in_possession_of_communications=factory.Faker('company'),
+            name_of_business=factory.Faker('company'),
             legal_order_venue=factory.Iterator(choices.LegalOrderVenue.values),
 
         )

@@ -105,7 +105,7 @@ class IncidentExportTestCase(TestCase):
             'charged_under_espionage_act',
             'subpoena_type',
             'subpoena_statuses',
-            'third_party_in_possession_of_communications',
+            'name_of_business',
             'third_party_business',
             'legal_order_type',
             'status_of_prior_restraint',

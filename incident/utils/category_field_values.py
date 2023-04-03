@@ -249,7 +249,7 @@ def subpoena_statuses_html_val(page, field, index, category):
     return html
 
 
-def third_party_in_possession_of_communications_html_val(page, field, index, category):
+def name_of_business_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 
 

@@ -343,7 +343,7 @@ class TestCategoryFieldValuesByField(TestCase):
             CAT_FIELD_VALUES['legal_order_target'],
         )
         self.incident.legal_order_target = choices.LegalOrderTarget.THIRD_PARTY
-        self.incident.third_party_in_possession_of_communications = (
+        self.incident.name_of_business = (
             'Business Name',
         )
         self.incident.save()
@@ -363,9 +363,9 @@ class TestCategoryFieldValuesByField(TestCase):
             )
             self.assert_link_exists(
                 output,
-                self.incident.third_party_in_possession_of_communications,
+                self.incident.name_of_business,
                 {
-                    'third_party_in_possession_of_communications': self.incident.third_party_in_possession_of_communications,
+                    'name_of_business': self.incident.name_of_business,
                     'categories': self.category.title,
                 },
             )
@@ -444,10 +444,10 @@ class TestCategoryFieldValuesByField(TestCase):
             CAT_FIELD_VALUES['border_point'],
         )
 
-    def test_third_party_in_possession_of_communications(self):
+    def test_name_of_business(self):
         self.assert_text(
-            'third_party_in_possession_of_communications',
-            CAT_FIELD_VALUES['third_party_in_possession_of_communications'],
+            'name_of_business',
+            CAT_FIELD_VALUES['name_of_business'],
         )
 
     def test_target_nationality(self):

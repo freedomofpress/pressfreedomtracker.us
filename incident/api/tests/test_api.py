@@ -472,7 +472,7 @@ class IncidentAPITest(APITestCase):
                 'charged_under_espionage_act': inc.charged_under_espionage_act,
                 'subpoena_type': inc.get_subpoena_type_display(),
                 'subpoena_statuses': [dict(choices.SUBPOENA_STATUS)[status] for status in inc.subpoena_statuses],
-                'third_party_in_possession_of_communications': inc.third_party_in_possession_of_communications,
+                'name_of_business': inc.name_of_business,
                 'third_party_business': inc.get_third_party_business_display(),
                 'legal_order_type': inc.get_legal_order_type_display(),
                 'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),

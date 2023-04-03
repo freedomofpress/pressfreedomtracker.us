@@ -283,7 +283,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             ),
             detention_status=factory.Iterator(
                 choices.DETENTION_STATUS, getter=lambda c: c[0]),
-            third_party_in_possession_of_communications='Megacorp Industries',
+            name_of_business='Megacorp Industries',
             third_party_business=factory.Iterator(
                 choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
             legal_order_type=factory.Iterator(
