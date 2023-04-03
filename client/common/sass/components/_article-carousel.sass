@@ -7,6 +7,14 @@
 			+tablet-down
 				display: flex
 				transition: transform 0.9s ease-in-out
+				overflow-x: auto
+				scroll-snap-type: x mandatory
+				scroll-behavior: smooth
+				-webkit-overflow-scrolling: touch
+				-ms-overflow-style: none
+
+				&::-webkit-scrollbar
+					display: none
 
 	&__scroller
 		display: none
@@ -30,6 +38,7 @@
 
 		+tablet-down
 			flex: 0 0 534px
+			scroll-snap-align: start
 
 		+mobile-down
 			flex: 0 0 328px
