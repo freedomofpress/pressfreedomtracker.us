@@ -3,15 +3,13 @@ function collapsibleCard(card) {
 		if (card.classList.contains('closed')) {
 			card.classList.remove('closed')
 			card.classList.add('open')
-			card.querySelectorAll('.incident-card-collapsible__toggle-button-text')
-				// eslint-disable-next-line no-param-reassign
-				.forEach((buttonText) => { buttonText.innerText = 'Show Less' })
+			const buttonTextEl = card.querySelector('.incident-card-collapsible__toggle-button-text')
+			if (buttonTextEl) buttonTextEl.innerText = 'Show Less'
 		} else {
 			card.classList.remove('open')
 			card.classList.add('closed')
-			card.querySelectorAll('.incident-card-collapsible__toggle-button-text')
-				// eslint-disable-next-line no-param-reassign
-				.forEach((buttonText) => { buttonText.innerText = 'Show More' })
+			const buttonTextEl = card.querySelector('.incident-card-collapsible__toggle-button-text')
+			if (buttonTextEl) buttonTextEl.innerText = 'Show More'
 		}
 	}
 
