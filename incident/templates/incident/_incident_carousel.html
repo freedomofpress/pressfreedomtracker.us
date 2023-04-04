@@ -3,7 +3,7 @@
 	<ol id="{{ id }}" class="article-carousel__items">
 		{% for incident in incidents %}
 			<li class="article-carousel__item">
-				{% include 'incident/_incident_card.html' with size="small" incident=incident photo=incident.teaser_image only %}
+				{% include 'incident/_incident_card.html' with size="small" details="small" incident=incident photo=incident.teaser_image only %}
 			</li>
 		{% endfor %}
 	</ol>
