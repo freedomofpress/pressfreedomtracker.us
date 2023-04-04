@@ -1,6 +1,8 @@
 function cardLink(card) {
 	const mainLink = card.querySelector('.text-link--card')
-	const clickableElements = Array.from(card.querySelectorAll('.text-link'))
+	const clickableElements = Array.from(
+		card.querySelectorAll('.text-link, .incident-card-collapsible__toggle-button'),
+	)
 
 	clickableElements.forEach((ele) => ele.addEventListener('click', (e) => e.stopPropagation()))
 
