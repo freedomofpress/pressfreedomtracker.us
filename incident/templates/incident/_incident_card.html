@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
-{% with size=size|default:"big" %}
-	<article class="incident-card">
+{% with size=size|default:"big" details=details|default:"big" %}
+	<article class="incident-card incident-card-{{ size }}">
 		<div class="incident-card--inner">
 			{% if photo %}
 				{% image photo fill-665x440 as x1 %}
@@ -10,11 +10,32 @@
 					src="{{ x1.url }}"
 				>
 			{% endif %}
+
 			<h3 class="card-title card-title-{{ size }}">
 				<a class="text-link text-link--card" href="{% pageurl incident %}">
 					{{ incident.title }}
 				</a>
 			</h3>
+
+			{% if size == 'collapsible' %}
+			<div class="incident-card-collapsible__show-more">
+				<button
+					class="incident-card-collapsible__toggle-button"
+				>
+					<span class="incident-card-collapsible__toggle-button-text"></span>
+					<div class="incident-card-collapsible__toggle-icon"></div>
+				</button>
+			</div>
+			{% endif %}
+
+			{% if photo and size == 'collapsible' %}
+				{% image photo fill-665x440 as x1 %}
+				<img
+					class="card-image card-image-{{ size }}"
+					alt="{{ x1.alt }}"
+					src="{{ x1.url }}"
+				>
+			{% endif %}
 
 			{% if not photo %}
 				<p>
@@ -34,7 +55,7 @@
 
 			<dl class="database-card-table__incident-details">
 				{% if incident.latest_update and incident.updates.all.exists %}
-					<div class="database-card-table__row">
+					<div class="database-card-table__row table-{{ details }}">
 						<dt class="database-card-table__label database-card-table__label--bold">Updated on</dt>
 						<dd class="database-card-table__value">
 							<time datetime="{{ incident.latest_update|date:"c" }}">
@@ -44,7 +65,7 @@
 					</div>
 				{% endif %}
 
-				<div class="database-card-table__row">
+				<div class="database-card-table__row table-{{ details }}">
 					<dt class="database-card-table__label database-card-table__label--bold">
 						Date of Incident
 					</dt>
@@ -55,7 +76,7 @@
 					</dd>
 				</div>
 				{% if incident.city or incident.state %}
-					<div class="database-card-table__row">
+					<div class="database-card-table__row table-{{ details }}">
 						<dt class="database-card-table__label database-card-table__label--bold">Location</dt>
 						<dd class="database-card-table__value">
 							{% if incident.city %}{{ incident.city }}{% endif %}
@@ -65,7 +86,7 @@
 					</div>
 				{% endif %}
 				{% if incident.get_all_targets_for_display %}
-					<div class="database-card-table__row">
+					<div class="database-card-table__row table-{{ details }}">
 						<dt class="database-card-table__label database-card-table__label--bold">Targets</dt>
 
 						<dd class="database-card-table__value">
