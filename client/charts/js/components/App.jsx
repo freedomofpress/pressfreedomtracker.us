@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import { sample } from "lodash";
 import HomepageMainCharts from "./HomepageMainCharts";
 import FiltersIntegration from "./FiltersIntegration";
+import IncidentsTimeBarChart from './IncidentsTimeBarChart';
 import "../../sass/base.sass";
 
 export default function App() {
@@ -116,6 +117,11 @@ export default function App() {
 			<h1>Filters Integration</h1>
 			<div className="chartContainer">
 				<FiltersIntegration dataset={dataset} width={300} urlParams={urlParams} />
+			</div>
+
+			<h1>Incidents Bar Chart</h1>
+			<div className="chartContainer">
+				<IncidentsTimeBarChart dataset={dataset} />
 			</div>
 		</div>
 	);

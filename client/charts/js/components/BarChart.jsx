@@ -37,13 +37,17 @@ export default function BarChart({
 	data,
 	x,
 	y,
+	xFormat = x => x,
+	yFormat = y => y,
+	xDomain,
+	yDomain,
 	titleLabel,
 	isMobileView,
 	width,
 	height,
 	id = '',
 	numberOfTicks = 4,
-	openSearchPage,
+	openSearchPage = () => {},
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -59,7 +63,7 @@ export default function BarChart({
 	const yScale = d3
 		.scaleLinear()
 		// Default to domain max 100 if there's no data
-		.domain([0, d3.max(dataset, (d) => d[y]) || 100])
+		.domain(yDomain || [0, d3.max(dataset, (d) => d[y]) || 100])
 		.range([height - (isMobileView ? paddings.mobile : paddings.bottom), paddings.top])
 		.nice(numberOfTicks)
 
@@ -67,19 +71,19 @@ export default function BarChart({
 
 	const xScale = d3
 		.scaleBand()
-		.domain(dataset.map((d) => d[x]))
+		.domain(xDomain || dataset.map((d) => d[x]))
 		.range([paddings.left + paddingsInternal.left, width - paddings.right - paddingsInternal.right])
 		.paddingInner(0.3)
 		.paddingOuter(0.2)
 
 	const xScaleOverLayer = d3
 		.scaleBand()
-		.domain(dataset.map((d) => d[x]))
+		.domain(xDomain || dataset.map((d) => d[x]))
 		.range([paddings.left + paddingsInternal.left, width - paddings.right - paddingsInternal.right])
 
 	const xSlider = d3
 		.scalePoint()
-		.domain(dataset.map((d) => d[x]))
+		.domain(xDomain || dataset.map((d) => d[x]))
 		.range([0, width])
 		.padding(0.3)
 
@@ -111,7 +115,7 @@ export default function BarChart({
 									<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
 										{hoveredElement}
 									</div>
-									<div>{dataset.find((d) => d[x] === hoveredElement).numberOfIncidents}</div>
+									<div>{dataset.find((d) => xFormat(d[x]) === hoveredElement).numberOfIncidents}</div>
 								</div>
 							</div>
 						}
@@ -188,9 +192,9 @@ export default function BarChart({
 							height: (d) => computeBarheight(d[y]),
 							width: xScale.bandwidth(),
 							fill: (d) =>
-								hoveredElement === d[x] ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
+								hoveredElement === xFormat(d[x]) ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
 							strokeWidth: borders.normal,
-							stroke: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
+							stroke: (d) => (hoveredElement === xFormat(d[x]) ? '#E07A5F' : 'black'),
 							cursor: 'pointer',
 							shapeRendering: 'crispEdges',
 						}}
@@ -209,14 +213,14 @@ export default function BarChart({
 									opacity: 0,
 									cursor: 'pointer',
 								}}
-								onMouseEnter={() => setHoveredElement(d[x])}
+								onMouseEnter={() => setHoveredElement(xFormat(d[x]))}
 								onMouseMove={updateTooltipPosition}
 								onMouseLeave={() => setHoveredElement(null)}
-								onMouseUp={() => openSearchPage(d[x])}
+								onMouseUp={() => openSearchPage(xFormat(d[x]))}
 								shapeRendering="crispEdges"
 							>
 								<title>
-									{d[x]}: {d[y]} {titleLabel}
+									{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
 								</title>
 							</rect>
 						</g>
@@ -234,11 +238,11 @@ export default function BarChart({
 							x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
 							y: height - paddings.bottom / 2,
 							textAnchor: 'middle',
-							fill: (d) => (hoveredElement === d[x] ? '#E07A5F' : 'black'),
+							fill: (d) => (hoveredElement === xFormat(d[x]) ? '#E07A5F' : 'black'),
 							fontFamily: 'var(--font-base)',
 							fontWeight: 500,
 							fontSize: '14px',
-							text: (d) => d[x],
+							text: (d) => xFormat(d[x]),
 						}}
 						duration={250}
 						durationByAttr={{ fill: 0 }}
@@ -356,5 +360,5 @@ BarChart.propTypes = {
 	width: PropTypes.number.isRequired,
 	height: PropTypes.number.isRequired,
 	numberOfTicks: PropTypes.number,
-	openSearchPage: PropTypes.func.isRequired,
+	openSearchPage: PropTypes.func,
 }
