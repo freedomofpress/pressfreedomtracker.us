@@ -268,6 +268,12 @@
 		</pre></code>
 		{% include "incident/_incident_card.html" with incident=incident size="big" photo=incident.teaser_image only %}
 
+		<h4 class="heading-regular">Incident Card (Big, Photo, Small Details)</h4>
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' details='small' photo=incident.teaser_image only %&rbrace;
+		</pre></code>
+		{% include "incident/_incident_card.html" with incident=incident size="big" details="small" photo=incident.teaser_image only %}
+
 		<h4 class="heading-regular">Incident Card (Small, No Photo)</h4>
 		<code><pre>
     &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' only %&rbrace;
@@ -279,6 +285,19 @@
     &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' photo=incident.teaser_image only %&rbrace;
 		</pre></code>
 		{% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
+
+		<h4 class="heading-regular">Incident Card (Small, Photo, Small Details)</h4>
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' details='small' photo=incident.teaser_image only %&rbrace;
+		</pre></code>
+		{% include "incident/_incident_card.html" with incident=incident size="small" details="small" photo=incident.teaser_image only %}
+
+		<h4 class="heading-regular">Incident Card (Collapsible)</h4>
+		Collapsible cards are the same as small cards, except with a collapsible layout on mobile viewports.
+		<code><pre>
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='collapsible' photo=incident.teaser_image only %&rbrace;
+		</pre></code>
+		{% include "incident/_incident_card.html" with incident=incident size="collapsible" photo=incident.teaser_image only %}
 
 		<h4 class="heading-regular">Blog Card (Big, No Photo)</h4>
 		<code>
