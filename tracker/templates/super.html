@@ -28,6 +28,11 @@
 			{% block css %}
 				{% render_bundle 'common' 'css' %}
 				{% render_bundle 'common' 'js' attrs='defer'%}
+				{% if page and page.media_js %}
+					{% for js in page.media_js %}
+						{% render_bundle js 'js' attrs='defer' %}
+					{% endfor %}
+				{% endif %}
 			{% endblock %}
 
 			{% block meta %}
