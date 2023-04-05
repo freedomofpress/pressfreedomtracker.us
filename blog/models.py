@@ -17,13 +17,12 @@ from wagtail.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
-
 from common.utils import DEFAULT_PAGE_KEY, paginate
 
 from blog.feeds import BlogIndexPageFeed
 from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
-from common.models import PersonPage, OrganizationPage, MetadataPageMixin
+from common.models import PersonPage, OrganizationPage, MetadataPageMixin, MediaPageMixin
 from common.blocks import (
     Heading1,
     Heading2,
@@ -35,6 +34,7 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
     AsideBlock,
     ButtonBlock,
+    VerticalBarChart,
 )
 
 
@@ -162,7 +162,7 @@ class BlogIndexPageFeature(Orderable):
     ]
 
 
-class BlogPage(MetadataPageMixin, Page):
+class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
     DEFAULT = 'default'
     NEWSLETTER = 'newsletter'
     SPECIAL = 'special'
@@ -200,6 +200,7 @@ class BlogPage(MetadataPageMixin, Page):
         ('heading_3', Heading3()),
         ('button', ButtonBlock()),
         ('statistics', StatisticsBlock()),
+        ('vertical_bar_chart', VerticalBarChart()),
     ], use_json_field=True)
 
     introduction = models.TextField(
