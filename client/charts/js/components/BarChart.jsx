@@ -115,7 +115,7 @@ export default function BarChart({
 									<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
 										{hoveredElement}
 									</div>
-									<div>{dataset.find((d) => xFormat(d[x]) === hoveredElement).numberOfIncidents}</div>
+									<div>{yFormat(dataset.find((d) => xFormat(d[x]) === hoveredElement)[y])}</div>
 								</div>
 							</div>
 						}
