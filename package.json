@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@visx/responsive": "^3.0.0",
+    "canvg": "^4.0.1",
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.2.5",
     "d3": "^7.1.1",
