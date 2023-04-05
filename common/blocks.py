@@ -9,6 +9,7 @@ from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
+from common.models.helpers import get_tags
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape
 from common.validators import validate_template
@@ -434,3 +435,45 @@ class InfoTableBlock(blocks.StructBlock):
         template = 'common/blocks/info_table.html'
         icon = 'list-ul'
         label = 'Info table'
+
+
+class SimpleIncidentSet(blocks.StructBlock):
+    category = blocks.PageChooserBlock(
+        label='Filter by Category',
+        required=False,
+        page_type='common.CategoryPage',
+        help_text='If selected, only incidents in the chosen category will be included.',
+    )
+    tag = blocks.ChoiceBlock(
+        label='Filter by Tag',
+        required=False,
+        choices=get_tags,
+        help_text='If selected, only incidents with the chosen tag will be included.'
+    )
+    lower_date = blocks.DateBlock(
+        label='Filter by Date, lower bound',
+        required=False,
+        help_text='If set, no incidents before this date will be included.',
+    )
+    upper_date = blocks.DateBlock(
+        label='Filter by Date, upper bound',
+        required=False,
+        help_text='If set, no incidents after this date will be included.',
+    )
+
+
+class VerticalBarChart(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    incident_set = SimpleIncidentSet()
+    description = blocks.TextBlock(
+        required=True,
+        help_text='Summary of the chart for people using assistive technology, '
+        'such as screen readers.',
+    )
+
+    class Meta:
+        icon = 'table'
+        template = 'common/blocks/vertical_bar_chart.html'
+
+    class Media:
+        js = ['verticalBarChart']
