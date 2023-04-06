@@ -18,38 +18,48 @@ export default function IncidentsTimeBarChart({
 		.reduce((acc, val) => ({...acc, [val]: true}), {})
 
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = dataset.filter(({ categories = '', tags = '', date }) => {
-		const incidentCategories = categories.split(',').map(d => d.trim())
-		const incidentTags = tags.split(',').map(d => d.trim())
+	const filteredDataset = dataset
+		.filter(({ categories = '', tags = '', date }) => {
+			const incidentCategories = categories.split(',').map(d => d.trim())
+			const incidentTags = tags.split(',').map(d => d.trim())
 
-		const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
-		const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
-		const isExcludedDate = dateRange?.length === 2 && (date < dateRange[0] || date > dateRange[1])
+			const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
+			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
+			const [startDate, endDate] = dateRange;
+			const isBeforeStartDate = startDate && date < startDate
+			const isAfterEndDate = endDate && date > endDate
+			const isExcludedDate = isBeforeStartDate || isAfterEndDate
 
-		return !isExcludedCategory && !isExcludedTag && !isExcludedDate
-	})
+			return !isExcludedCategory && !isExcludedTag && !isExcludedDate
+		})
+		.map(({ date, ...restProps }) => {
+			// Set the date to the start of the month
+			date.setDate(1)
+			date.setHours(0)
+			return { ...restProps, date }
+		})
 
-	// Reduce the incidents by month-year
-	const incidentsByMonth = Array.from(d3.rollup(
-		filteredDataset, d => d.length, d => d3.timeFormat('%Y-%m')(d.date)
-	))
-		.map(([date, count]) => ({ date: d3.timeParse('%Y-%m')(date), count }))
+	// Rollup the incidents by month-year
+	const incidentsByMonth = Array.from(d3.rollup(filteredDataset, d => d.length, d => d.date))
+		.reduce((acc, [date, count]) => ({ ...acc, [d3.timeFormat('%Y-%m')(date)]: count }), {})
+
+	// Expand out all months
+	const allMonths = [
+		...d3.timeMonths(...d3.extent(filteredDataset, d => d.date)),
+		// add in the last month entry because timeMonths excludes the final month
+		d3.max(Object.keys(incidentsByMonth).map(d3.timeParse('%Y-%m')))
+	].filter(d => d)
+
+	// Make sure we have entries for months with no incidents
+	const incidentsByAllMonths = allMonths
+		.map((date) => ({ date, count: incidentsByMonth[d3.timeFormat('%Y-%m')(date)] || 0 }))
 		.sort((a, b) => a.date - b.date)
 
-	// Expand out all months that have no data
-	const expandedMonths = d3.timeMonths(...d3.extent(incidentsByMonth, d => d.date))
-	if (incidentsByMonth.length > 0) {
-		const lastMonth = incidentsByMonth[incidentsByMonth.length - 1].date
-		lastMonth.setMonth(lastMonth.getMonth() + 1)
-		expandedMonths.push(lastMonth)
-	}
-
 	return (<BarChart
-		data={incidentsByMonth}
+		data={incidentsByAllMonths}
 		x={'date'}
 		y={'count'}
-		xFormat={(date) => d3.timeFormat('%Y-%m')(date)}
-		xDomain={expandedMonths}
+		xFormat={d3.timeFormat('%Y-%m')}
 		titleLabel={'incidents'}
 		width={width}
 		height={height}
