@@ -50,6 +50,8 @@ environment, run the following your first run:
 
 You should be able to hit the web server interface by running ``make open-browser``
 
+If you run into any issues starting the application locally, check the `troubleshooting doc <TROUBLESHOOTING.md>`_ for solutions to common problems.
+
 Note: the ``createdevdata`` command fetches images from the internet
 by default.  To disable this behavior, run the command with the
 ``--no-download`` argument, e.g.:
