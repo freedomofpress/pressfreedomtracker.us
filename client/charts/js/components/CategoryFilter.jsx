@@ -53,7 +53,7 @@ export default function CategoryFilter({
 	filterParameters,
 	filterWithout,
 }) {
-	const selectedCategories = filterParameters.categories.parameters
+	const selectedCategories = filterParameters.categories?.parameters || []
 	const updateFilters = useContext(FiltersDispatch);
 
 	let categoryFrequencies = {}
@@ -182,7 +182,7 @@ export default function CategoryFilter({
 						attrs={{
 							x: (d) => xScale(d.category),
 							y: (d) => height - margins.bottom - yScale(d.count),
-							fill: (d) => (selectedCategories.has(d.category) ? '#F2FC67' : 'black'),
+							fill: (d) => (selectedCategories.has && selectedCategories.has(d.category) ? '#F2FC67' : 'black'),
 							width: barsWidth,
 							stroke: 'black',
 							strokeWidth: 2,
