@@ -1,6 +1,5 @@
 from random import choice, randrange, shuffle
 import functools
-import json
 
 from faker import Faker
 from faker.providers import BaseProvider
@@ -355,4 +354,4 @@ class StreamfieldProvider(BaseProvider):
             else:
                 raise Exception('unknown field: {}'.format(field))
 
-        return streamfield_data # json.dumps(streamfield_data)
+        return streamfield_data  # json.dumps(streamfield_data)
