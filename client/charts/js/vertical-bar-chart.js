@@ -11,6 +11,7 @@ function engageCharts() {
 		const filterTag = chartNode.dataset?.tag
 		const lowerValue= chartNode.dataset?.lowerDate
 		const upperValue = chartNode.dataset?.upperDate
+		const description = chartNode.dataset?.description
 
 		const filterUpperDate = upperValue ? new Date(upperValue) : null
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
@@ -24,6 +25,7 @@ function engageCharts() {
 					filterCategories={filterCategory}
 					filterTags={filterTag}
 					dateRange={[filterLowerDate, filterUpperDate]}
+					description={description}
 				/>
 			</DataLoader>
 		))

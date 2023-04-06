@@ -4,6 +4,7 @@ import * as d3 from 'd3'
 
 export default function IncidentsTimeBarChart({
 	dataset,
+	description = '',
 	filterCategories = null, // Array or string of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = null, // Array representing the min and max of dates to show
@@ -25,7 +26,10 @@ export default function IncidentsTimeBarChart({
 
 			const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
 			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
+
 			const [startDate, endDate] = dateRange;
+			if (startDate) startDate.setHours(0)
+			if (endDate) endDate.setHours(0)
 			const isBeforeStartDate = startDate && date < startDate
 			const isAfterEndDate = endDate && date > endDate
 			const isExcludedDate = isBeforeStartDate || isAfterEndDate
@@ -56,6 +60,7 @@ export default function IncidentsTimeBarChart({
 		.sort((a, b) => a.date - b.date)
 
 	return (<BarChart
+		description={description}
 		data={incidentsByAllMonths}
 		x={'date'}
 		y={'count'}

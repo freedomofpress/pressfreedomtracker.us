@@ -48,6 +48,7 @@ export default function BarChart({
 	id = '',
 	numberOfTicks = 4,
 	openSearchPage = () => {},
+	description
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -134,6 +135,7 @@ export default function BarChart({
 						marginLeft: margins.left,
 					}}
 				>
+					{description ? (<desc>{description}</desc>) : null}
 					<g>
 						<AnimatedDataset
 							dataset={gridLines}
@@ -264,6 +266,7 @@ export default function BarChart({
 				}}
 				id="barchart-svg"
 			>
+				{description ? (<desc>{description}</desc>) : null}
 				<g>
 					<AnimatedDataset
 						dataset={gridLines}
