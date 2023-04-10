@@ -197,42 +197,123 @@ class JournalistViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Journalist.objects.all()
     serializer_class = ItemSerializer
 
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
+
 
 class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Institution.objects.all()
     serializer_class = ItemSerializer
+
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
 
 
 class GovernmentWorkerViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.GovernmentWorker.objects.all()
     serializer_class = ItemSerializer
 
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
+
 
 class ChargeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Charge.objects.all()
     serializer_class = ItemSerializer
+
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
 
 
 class NationalityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Nationality.objects.all()
     serializer_class = ItemSerializer
 
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
+
 
 class PoliticianOrPublicViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.PoliticianOrPublic.objects.all()
     serializer_class = ItemSerializer
+
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
 
 
 class VenueViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Venue.objects.all()
     serializer_class = ItemSerializer
 
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
+
 
 class EquipmentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Equipment.objects.all()
     serializer_class = EquipmentSerializer
 
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
+
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CategoryPage.objects.all()
     serializer_class = CategorySerializer
+
+    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+        response = super().dispatch(*args, **kwargs)
+
+        # Allow requests from any orign to allow this to be an accessible API
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+
+        return response
