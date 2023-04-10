@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block body %}
-	{% include "common/_menu.html" %}
+	{% block menu %}
+		{% include "common/_menu.html" %}
+	{% endblock %}
 	<main>
 		{% block main %}{% endblock %}
 	</main>
