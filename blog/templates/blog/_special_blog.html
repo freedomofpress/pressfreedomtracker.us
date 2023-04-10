@@ -1,7 +1,9 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% image page.lead_image scale-100 as tmp_photo %}
-<div class="special-blog__hero-bg" style="background-image: url('{{ tmp_photo.url }}')"></div>
+<div class="special-blog__hero-bg" style="background-image: url('{{ tmp_photo.url }}')">
+	<span class="sr-only">Background hero image of {{ page.lead_image.title }}</span>
+</div>
 <div class="special-blog__hero">
 	<h1 class="special-blog__hero-title article-title" id="title">{{ page.title }}</h1>
 
