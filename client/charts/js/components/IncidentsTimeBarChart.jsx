@@ -4,10 +4,10 @@ import * as d3 from 'd3'
 
 export default function IncidentsTimeBarChart({
 	dataset,
-	description = '',
+	description,
 	filterCategories = null, // Array or string of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
-	dateRange = null, // Array representing the min and max of dates to show
+	dateRange = [null, null], // Array representing the min and max of dates to show
 	width = 800,
 	height = 500,
 	isMobileView = false,
@@ -59,8 +59,14 @@ export default function IncidentsTimeBarChart({
 		.map((date) => ({ date, count: incidentsByMonth[d3.timeFormat('%Y-%m')(date)] || 0 }))
 		.sort((a, b) => a.date - b.date)
 
+	// Generate a default description for a11y
+	const startYear = d3.timeFormat("%Y")(allMonths[0])
+	const endYear = d3.timeFormat("%Y")(allMonths[allMonths.length - 1])
+	const dateDescription = (startYear === endYear) ? `in ${startYear}` : `from ${startYear} to ${endYear}`
+	const generatedDescription = `Incidents ${dateDescription}`
+
 	return (<BarChart
-		description={description}
+		description={description || generatedDescription}
 		data={incidentsByAllMonths}
 		x={'date'}
 		y={'count'}
