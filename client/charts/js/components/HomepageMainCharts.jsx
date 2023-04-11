@@ -14,6 +14,8 @@ import {
 	countIncidentsOutsideUS,
 	categoriesColors,
 } from '../lib/utilities.js'
+// TODO: this is just a placeholder for testing / development purposes
+import ChartDownloader from './ChartDownloader'
 
 import '../../sass/HomepageMainCharts.sass'
 
@@ -111,19 +113,24 @@ function HomepageMainChartsWidth({
 				</div>
 				<div className={'hpChart'}>
 					<ChartDescription id={'homepage-bar-chart-label'}>Showing the number of journalists targeted per month.</ChartDescription>
-					<BarChart
-						data={datasetGroupedByMonth}
-						x={'monthName'}
-						y={'numberOfIncidents'}
-						titleLabel={'incidents'}
-						id={'homepage-bar-chart-label'}
-						width={chartWidth}
-						height={chartHeight}
-						isMobileView={width < 970}
-						openSearchPage={(monthName) => {
-							goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
-						}}
-					/>
+					<ChartDownloader
+						chartTitle="This is a Chart Title"
+						creditUrl="https://pressfreedomtracker.us/blog/a-hearing-of-national-significance-a-texas-judge-and-a-hush-request/"
+					>
+						<BarChart
+							data={datasetGroupedByMonth}
+							x={'monthName'}
+							y={'numberOfIncidents'}
+							titleLabel={'incidents'}
+							id={'homepage-bar-chart-label'}
+							width={chartWidth}
+							height={chartHeight}
+							isMobileView={width < 970}
+							openSearchPage={(monthName) => {
+								goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+							}}
+						/>
+					</ChartDownloader>
 				</div>
 			</div>
 		</Flashing>
