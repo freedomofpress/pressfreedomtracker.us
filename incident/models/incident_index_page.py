@@ -228,7 +228,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         context['entries_page'] = entries
         context['paginator'] = paginator
-        context['summary_table'] = incident_filter.get_summary()
 
         get_data = request.GET.copy()
         context['sort_choices'] = []
