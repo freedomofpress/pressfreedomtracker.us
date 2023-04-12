@@ -66,6 +66,7 @@ services:
       DJANGO_XMLTEST_OUTPUT: "yes"
       DEPLOY_ENV: dev
       DJANGO_PROFILE: "${DJANGO_PROFILE:-no}"
+      PYINSTRUMENT: "${PYINSTRUMENT:-no}"
       SELENIUM_HOST: selenium
     working_dir: /django
     volumes:
