@@ -36,7 +36,7 @@ function DataLoader({ dataUrl, dataParser, dataKey, loadingComponent, children }
 				// Get the url, key, and parser for this entry
 				const dataUrlEntry = dataUrls[i]
 				const dataKeyEntry = dataKeys[i]
-				const dataParserEntry = dataParser[i]
+				const dataParserEntry = dataParsers[i]
 
 				// Get the cache key
 				const fetchCacheKey = `${dataKeyEntry}-${dataUrlEntry}-${btoa(dataParserEntry.toString())}`

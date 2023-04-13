@@ -1,9 +1,9 @@
-import React from "react"
-import { createRoot } from "react-dom/client"
+import React from 'react'
+import { createRoot } from 'react-dom/client'
 
+import * as d3 from 'd3'
 import HomepageMainCharts from '../../charts/js/components/HomepageMainCharts'
-import DataLoader from "../../charts/js/components/DataLoader"
-import Flashing from './components/Flashing'
+import DataLoader from '../../charts/js/components/DataLoader'
 
 const fields = [
 	'categories',
@@ -33,15 +33,15 @@ chartContainers.forEach((node) => {
 	if (startDate) params.append('date_lower', startDate)
 	if (endDate) params.append('date_upper', endDate)
 
-	let root = createRoot(node)
+	const root = createRoot(node)
 	root.render((
 		<DataLoader
-			dataUrl={`/api/edge/incidents/homepage_csv/?${params.toString()}`}
-			loadingComponent={(
-				<HomepageMainCharts selectedTags={selectedTags} databasePath={databasePath} data={[]} loading={true} />
-			)}
+			dataUrl={[`/api/edge/incidents/homepage_csv/?${params.toString()}`, '/api/edge/categories/']}
+			dataKey={['data', 'categories']}
+			dataParser={[d3.csvParse, JSON.parse]}
+			loadingComponent={false}
 		>
-			<HomepageMainCharts selectedTags={selectedTags} databasePath={databasePath} />
+			<HomepageMainCharts data={[]} selectedTags={selectedTags} databasePath={databasePath} />
 		</DataLoader>
 	))
 })
