@@ -32,6 +32,7 @@ function HomepageMainChartsWidth({
 	selectedTags = [],
 	databasePath = '/',
 	loading = false,
+	categories = [],
 }) {
 	const [filtersApplied, setFiltersApplied] = React.useState({
 		tag: null,
@@ -39,6 +40,11 @@ function HomepageMainChartsWidth({
 		sixMonths: true,
 		allTime: null
 	})
+
+	const categoriesColorMap = categories.reduce(
+		(acc, { title }, i) => ({ ...acc, [title]: categoriesColors[i % categoriesColors.length] }),
+		{}
+	)
 
 	const chartWidth = width > 970 ? width / 3 : width
 	const chartHeight = width > 970 ? 500 : 480
@@ -82,10 +88,10 @@ function HomepageMainChartsWidth({
 						categoryColumn={'categories'}
 						titleLabel={'incidents'}
 						openSearchPage={(category) => {
-							goToFilterPage(databasePath, { category }, currentDate)
+							goToFilterPage(databasePath, { category }, currentDate, categories)
 						}}
-						categoriesColors={categoriesColors}
-						allCategories={Object.keys(categoriesColors)}
+						categoriesColors={categoriesColorMap}
+						allCategories={Object.keys(categoriesColorMap)}
 					/>
 				</div>
 				<div className={'hpChart'}>
@@ -99,7 +105,7 @@ function HomepageMainChartsWidth({
 						height={chartHeight}
 						id={'homepage-usmap-chart-label'}
 						openSearchPage={(state) => {
-							goToFilterPage(databasePath, { ...filtersApplied, state }, currentDate)
+							goToFilterPage(databasePath, { ...filtersApplied, state }, currentDate, categories)
 						}}
 					/>
 				</div>
@@ -115,7 +121,7 @@ function HomepageMainChartsWidth({
 						height={chartHeight}
 						isMobileView={width < 970}
 						openSearchPage={(monthName) => {
-							goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate)
+							goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
 						}}
 					/>
 				</div>

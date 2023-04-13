@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { ParentSize } from '@visx/responsive'
 import Flashing from '../../../common/js/components/Flashing'
 import ChartDescription from "./ChartDescription"
@@ -21,6 +21,7 @@ export default function CategoryPageChart(props) {
 function CategoryPageChartWidth({
 	data: dataset,
 	width,
+	categories,
 	category,
 	categoryName,
 	vizType,
@@ -49,7 +50,7 @@ function CategoryPageChartWidth({
 							height={chartHeight}
 							isMobileView={width < 480}
 							openSearchPage={(year) => {
-								goToFilterPage(databasePath, {category, year}, new Date())
+								goToFilterPage(databasePath, {category, year}, new Date(), categories)
 							}}
 						/>
 					)}

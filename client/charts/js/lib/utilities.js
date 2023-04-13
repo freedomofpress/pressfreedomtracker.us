@@ -32,21 +32,8 @@ export const monthIndexes = {
 	Dec: 12,
 }
 
-export const categoriesSlugs = {
-	'Arrest/Criminal Charge': 'arrest-criminal-charge',
-	'Border Stop': 'border-stop',
-	'Subpoena/Legal Order': 'subpoena',
-	'Leak Case': 'leak-case',
-	'Equipment Search or Seizure': 'equipment-search-seizure-or-damage',
-	'Assault': 'assault',
-	'Denial of Access': 'denial-access',
-	'Chilling Statement': 'chilling-statement',
-	'Other Incident': 'other-incident',
-	'Prior Restraint': 'prior-restraint',
-	'Equipment Damage': 'equipment-damage',
-}
-
-export function getFilteredUrl(databasePath, filtersApplied, currentDate) {
+export function getFilteredUrl(databasePath, filtersApplied, currentDate, categories) {
+	const categoriesSlugs = categories.reduce((acc, { title, slug }) => ({ ...acc, [title]: slug }), {})
 	const origin = window.location.origin
 	const baseUrl = filtersApplied.category === undefined || categoriesSlugs[filtersApplied.category] === undefined
 		? `${origin}${databasePath}?`
@@ -98,8 +85,8 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate) {
 	return `${baseUrl}${parameters.join('&')}`
 }
 
-export function goToFilterPage(databasePath, filtersApplied, currentDate) {
-	const url = getFilteredUrl(databasePath, filtersApplied, currentDate)
+export function goToFilterPage(databasePath, filtersApplied, currentDate, categories) {
+	const url = getFilteredUrl(databasePath, filtersApplied, currentDate, categories)
 	window.location = url
 }
 
@@ -115,13 +102,20 @@ export function filterDatasetByTag(dataset, tag) {
 }
 
 export function filterDatasetByYear(dataset, year) {
-	return dataset.filter((d) => d.date.getUTCFullYear() === year)
+	return dataset.filter(
+		(d) => (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date).getUTCFullYear() === year
+	)
 }
 
 // Filter to the last six months, inclusive on the *currentDate* end
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
 	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
-	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
+	return dataset.filter(
+		d => {
+			const date = (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date)
+			return +date > +sixMonthsAgo && +date <= +currentDate
+		}
+	)
 }
 
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
@@ -144,7 +138,9 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 	const datasetGroupedByMonth = d3
 		.groups(
-			dataset.map((d) => ({ month: d.date.getUTCMonth() })),
+			dataset.map((d) => ({
+				month: (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date).getUTCMonth()
+			})),
 			(d) => d.month
 		)
 		.map((d) => ({ month: d[0], monthName: monthNames[d[0]], numberOfIncidents: d[1].length }))
@@ -179,7 +175,9 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 export function groupByYearsSorted(dataset) {
 	const datasetGroupedByYear = d3
 		.groups(
-			dataset.map((d) => ({ year: d.date.getUTCFullYear() })),
+			dataset.map((d) => ({
+				year: (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date).getUTCFullYear()
+			})),
 			(d) => d.year
 		)
 		.map((d) => ({ year: d[0], numberOfIncidents: d[1].length }))
@@ -268,19 +266,10 @@ export function countIncidentsOutsideUS(dataset) {
 	return dataset.filter((d) => d.state === undefined || (!usStatesList.includes(d.state) && d.state !== 'PR')).length
 }
 
-export const categoriesColors = {
-	'Arrest/Criminal Charge': '#669599',
-	'Assault': '#BAECF7',
-	'Border Stop': '#FBE0BC',
-	'Chilling Statement': '#F4C280',
-	'Denial of Access': '#7EBBC8',
-	'Equipment Damage': '#B0829D',
-	'Equipment Search or Seizure': '#63729A',
-	'Leak Case': '#F9B29F',
-	'Prior Restraint': '#98C9CD',
-	'Subpoena/Legal Order': '#E2B6D0',
-	'Other Incident': '#B2B8E5',
-}
+export const categoriesColors = [
+	'#669599', '#BAECF7', '#FBE0BC', '#F4C280', '#7EBBC8', '#B0829D',
+	'#63729A', '#F9B29F', '#98C9CD', '#E2B6D0', '#B2B8E5',
+]
 
 // barChart Filter functions
 export function firstDayOfMonth(date) {
