@@ -344,7 +344,7 @@ class CategoryAPITest(APITestCase):
             'id': self.category.pk,
             'title': self.category.title,
             'slug': self.category.slug,
-            'url': self.category.url,
+            'url': "http://testserver" + self.category.url,
             'methodology': self.category.methodology,
             'plural_name': self.category.plural_name,
             'page_symbol': self.category.page_symbol
