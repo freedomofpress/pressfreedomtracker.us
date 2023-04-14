@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
-{% if page.blog_type == 'special' %}
-	{% block menu %}
+{% block menu %}
+	{% if page.blog_type == 'special' %}
 		{% include "common/_menu.html" with btn_class="transparent" %}
-	{% endblock %}
-{% endif %}
+	{% else %}
+		{{ block.super }}
+	{% endif %}
+{% endblock %}
 
 {% block main %}
 	{% if page.blog_type == 'newsletter' %}
