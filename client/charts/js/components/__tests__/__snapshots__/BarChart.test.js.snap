@@ -1,0 +1,186 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders BarChart with mocked data 1`] = `
+<svg
+  aria-labelledby=""
+  height={500}
+  style={
+    {
+      "marginBottom": 0,
+      "marginLeft": 0,
+      "marginRight": 2,
+      "marginTop": 0,
+    }
+  }
+  width={480}
+>
+  <g>
+    <g />
+    <g />
+  </g>
+  <g />
+  <g>
+    <rect
+      height={0}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onMouseMove={[Function]}
+      onMouseUp={[Function]}
+      shapeRendering="crispEdges"
+      style={
+        {
+          "cursor": "pointer",
+          "opacity": 0,
+        }
+      }
+      width={68.33333333333333}
+      x={20}
+      y={460}
+    >
+      <title>
+        Nov
+        : 
+        0
+         
+        incidents
+      </title>
+    </rect>
+  </g>
+  <g>
+    <rect
+      height={0}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onMouseMove={[Function]}
+      onMouseUp={[Function]}
+      shapeRendering="crispEdges"
+      style={
+        {
+          "cursor": "pointer",
+          "opacity": 0,
+        }
+      }
+      width={68.33333333333333}
+      x={88.33333333333333}
+      y={460}
+    >
+      <title>
+        Dec
+        : 
+        0
+         
+        incidents
+      </title>
+    </rect>
+  </g>
+  <g>
+    <rect
+      height={0}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onMouseMove={[Function]}
+      onMouseUp={[Function]}
+      shapeRendering="crispEdges"
+      style={
+        {
+          "cursor": "pointer",
+          "opacity": 0,
+        }
+      }
+      width={68.33333333333333}
+      x={156.66666666666666}
+      y={460}
+    >
+      <title>
+        Jan
+        : 
+        0
+         
+        incidents
+      </title>
+    </rect>
+  </g>
+  <g>
+    <rect
+      height={0}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onMouseMove={[Function]}
+      onMouseUp={[Function]}
+      shapeRendering="crispEdges"
+      style={
+        {
+          "cursor": "pointer",
+          "opacity": 0,
+        }
+      }
+      width={68.33333333333333}
+      x={225}
+      y={460}
+    >
+      <title>
+        Feb
+        : 
+        0
+         
+        incidents
+      </title>
+    </rect>
+  </g>
+  <g>
+    <rect
+      height={0}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onMouseMove={[Function]}
+      onMouseUp={[Function]}
+      shapeRendering="crispEdges"
+      style={
+        {
+          "cursor": "pointer",
+          "opacity": 0,
+        }
+      }
+      width={68.33333333333333}
+      x={293.3333333333333}
+      y={460}
+    >
+      <title>
+        Mar
+        : 
+        0
+         
+        incidents
+      </title>
+    </rect>
+  </g>
+  <g>
+    <rect
+      height={0}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onMouseMove={[Function]}
+      onMouseUp={[Function]}
+      shapeRendering="crispEdges"
+      style={
+        {
+          "cursor": "pointer",
+          "opacity": 0,
+        }
+      }
+      width={68.33333333333333}
+      x={361.66666666666663}
+      y={460}
+    >
+      <title>
+        Apr
+        : 
+        0
+         
+        incidents
+      </title>
+    </rect>
+  </g>
+  <g />
+</svg>
+`;
