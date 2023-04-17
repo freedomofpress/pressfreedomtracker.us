@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Button with mocked data 1`] = `
+<button
+  onClick={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onMouseMove={[Function]}
+  style={
+    {
+      "backgroundColor": "white",
+      "border": "none",
+      "color": "black",
+      "cursor": "pointer",
+      "marginBottom": 3,
+      "minWidth": 50,
+      "outline": "solid 3px black",
+      "padding": 8,
+    }
+  }
+>
+  <p
+    style={
+      {
+        "fontFamily": "var(--font-base)",
+        "fontSize": "14px",
+        "fontWeight": "500",
+        "margin": 0,
+      }
+    }
+  >
+    test
+  </p>
+</button>
+`;

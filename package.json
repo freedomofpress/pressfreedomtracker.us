@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack watch --mode development --devtool eval-source-map",
-    "test": "jest -u --passWithNoTests",
+    "test": "jest -u --passWithNoTests --coverage",
     "js-lint": "eslint client/**/*.js",
     "stylelint": "stylelint client/**/*.sass"
   },
