@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { ParentSize } from '@visx/responsive'
 import TreeMap from './TreeMap'
 import USMap from './USMap'

@@ -56,11 +56,6 @@ class FlatListField(serializers.ListField):
         return ', '.join([str(element) for element in obj])
 
 
-class CategoryUrlField(serializers.CharField):
-    def to_representation(self, url):
-        return self.context.get('request').build_absolute_uri(url)
-
-
 class EquipmentAmountSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
     equipment = serializers.StringRelatedField(read_only=True)
@@ -95,7 +90,14 @@ class CategorySerializer(serializers.Serializer):
     page_symbol = serializers.CharField()
     plural_name = serializers.CharField()
     slug = serializers.CharField()
-    url = CategoryUrlField()
+    url = serializers.SerializerMethodField()
+
+    @extend_schema_field(OpenApiTypes.URI)
+    def get_url(self, obj):
+        if self.context.get('request'):
+            return obj.get_full_url(self.context['request'])
+        else:
+            return obj.get_full_url()
 
 
 class BaseIncidentSerializer(serializers.Serializer):
