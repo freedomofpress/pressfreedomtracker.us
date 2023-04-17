@@ -59,14 +59,12 @@ jobs:
           command: npm install --location=global npm@9.6.4
 
       - run:
-          name: Check node dependencies for vulnerabilities
-          command: |
-            mkdir -p test-results
-            npm ci
-            npx npm-audit-plus  --ignore=1084597,1088594 --xml > test-results/audit.xml
+          name: Obtain misc resources
+          command: git clone --depth 1 https://github.com/freedomofpress/fpf-misc-resources.git
 
-      - store_test_results:
-          path: ~/tracker/test-results/
+      - run:
+          name: Check node dependencies for vulnerabilities
+          command: npx audit-ci@^6 --config fpf-misc-resources/audit-ci/pressfreedomtracker.us.json5
 
   dev:
     environment:
