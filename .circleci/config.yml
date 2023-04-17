@@ -47,7 +47,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     docker:
-      - image: cimg/node:16.16.0
+      - image: cimg/node:18.16
     working_directory: ~/tracker
     steps:
       - checkout
@@ -56,7 +56,7 @@ jobs:
 
       - run:
           name: Upgrade NPM to consistent version with dev environment
-          command: npm install --location=global npm@9.6.0
+          command: npm install --location=global npm@9.6.4
 
       - run:
           name: Check node dependencies for vulnerabilities
