@@ -34,6 +34,7 @@ from common.blocks import (
     TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     AsideBlock,
+    ButtonBlock,
 )
 
 
@@ -162,8 +163,24 @@ class BlogIndexPageFeature(Orderable):
 
 
 class BlogPage(MetadataPageMixin, Page):
+    DEFAULT = 'default'
+    NEWSLETTER = 'newsletter'
+    SPECIAL = 'special'
+    BLOG_TEMPLATE_CHOICES = (
+        (DEFAULT, 'Default Blog'),
+        (NEWSLETTER, 'Newsletter'),
+        (SPECIAL, 'Special Blog'),
+    )
+
     publication_datetime = models.DateTimeField(
         help_text='Past or future date of publication'
+    )
+
+    blog_type = models.CharField(
+        max_length=20,
+        choices=BLOG_TEMPLATE_CHOICES,
+        default=DEFAULT,
+        help_text='Select template used to display this post.',
     )
 
     body = StreamField([
@@ -181,6 +198,7 @@ class BlogPage(MetadataPageMixin, Page):
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
+        ('button', ButtonBlock()),
         ('statistics', StatisticsBlock()),
     ], use_json_field=True)
 
@@ -258,6 +276,10 @@ class BlogPage(MetadataPageMixin, Page):
         ),
         PageChooserPanel('organization', 'common.OrganizationPage'),
         PageChooserPanel('author', 'common.PersonPage'),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel('blog_type')
     ]
 
     parent_page_types = ['blog.BlogIndexPage']
