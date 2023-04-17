@@ -38,7 +38,7 @@ chartContainers.forEach((node) => {
 		<DataLoader
 			dataUrl={[`/api/edge/incidents/homepage_csv/?${params.toString()}`, '/api/edge/categories/']}
 			dataKey={['data', 'categories']}
-			dataParser={[d3.csvParse, JSON.parse]}
+			dataParser={[(data) => d3.csvParse(data, d3.autoType), JSON.parse]}
 			loadingComponent={false}
 		>
 			<HomepageMainCharts data={[]} selectedTags={selectedTags} databasePath={databasePath} />

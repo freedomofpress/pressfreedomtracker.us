@@ -112,7 +112,7 @@ export default function App() {
 				<DataLoader
 					dataUrl={['/api/edge/categories/', source === "api" && `/api/edge/incidents/homepage_csv/`]}
 					dataKey={['categories', source === "api" && 'data']}
-					dataParser={[JSON.parse, source === "api" && (r => randomizeJson(d3.csvParse(r)))]}
+					dataParser={[JSON.parse, source === "api" && (r => randomizeJson(d3.csvParse(r, d3.autoType)))]}
 					loadingComponent={false}
 				>
 					<HomepageMainCharts data={dataset} />

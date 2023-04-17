@@ -102,20 +102,13 @@ export function filterDatasetByTag(dataset, tag) {
 }
 
 export function filterDatasetByYear(dataset, year) {
-	return dataset.filter(
-		(d) => (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date).getUTCFullYear() === year
-	)
+	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
 // Filter to the last six months, inclusive on the *currentDate* end
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
 	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
-	return dataset.filter(
-		d => {
-			const date = (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date)
-			return +date > +sixMonthsAgo && +date <= +currentDate
-		}
-	)
+	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
 }
 
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
@@ -138,9 +131,7 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 	const datasetGroupedByMonth = d3
 		.groups(
-			dataset.map((d) => ({
-				month: (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date).getUTCMonth()
-			})),
+			dataset.map((d) => ({ month: d.date.getUTCMonth() })),
 			(d) => d.month
 		)
 		.map((d) => ({ month: d[0], monthName: monthNames[d[0]], numberOfIncidents: d[1].length }))
@@ -175,9 +166,7 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 export function groupByYearsSorted(dataset) {
 	const datasetGroupedByYear = d3
 		.groups(
-			dataset.map((d) => ({
-				year: (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date).getUTCFullYear()
-			})),
+			dataset.map((d) => ({ year: d.date.getUTCFullYear() })),
 			(d) => d.year
 		)
 		.map((d) => ({ year: d[0], numberOfIncidents: d[1].length }))

@@ -39,9 +39,7 @@ export default function HomepageSelection({
 }) {
 	const years = d3
 		.groups(
-			originalDataset.map((d) => ({
-				year: (typeof d.date === "string" ? d3.timeParse("%Y-%m-%d")(d.date) : d.date).getUTCFullYear()
-			})),
+			originalDataset.map((d) => ({ year: d.date.getUTCFullYear() })),
 			(d) => d.year
 		)
 		.map((d) => d[0])
