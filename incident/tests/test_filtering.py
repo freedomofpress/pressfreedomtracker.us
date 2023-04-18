@@ -41,8 +41,9 @@ from incident.utils.incident_filter import IncidentFilter, ManyRelationValue, Se
 
 class TestFiltering(TestCase):
     """Incident filters"""
-    def setUp(self):
-        self.index = IncidentIndexPageFactory()
+    @classmethod
+    def setUpTestData(cls):
+        cls.index = IncidentIndexPageFactory()
 
     def test_should_filter_by_search_text(self):
         """should filter by search text."""
