@@ -775,7 +775,13 @@ class IncidentPage(MetadataPageMixin, Page):
         index.SearchField('city'),
         index.RelatedFields('state', [
             index.SearchField('name'),
-        ])
+        ]),
+        index.SearchField('introduction'),
+        index.SearchField('teaser'),
+        index.RelatedFields('teaser_image', [
+            index.SearchField('attribution'),
+        ]),
+        index.SearchField('image_caption'),
     ]
 
     def get_context(self, request, *args, **kwargs):

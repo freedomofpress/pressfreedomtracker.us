@@ -30,6 +30,7 @@ from incident.models import (
     Venue,
 )
 from common.tests.factories import (
+    CustomImageFactory,
     CategoryPageFactory,
     CommonTagFactory,
     PersonPageFactory,
@@ -416,6 +417,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
 
 class IncidentPageWithBodyFactory(IncidentPageFactory):
+    teaser_image = factory.SubFactory(CustomImageFactory)
     body = wagtail_factories.StreamFieldFactory({
         'rich_text': factory.SubFactory(RichTextTemplateBlockFactory),
         'image': factory.SubFactory(

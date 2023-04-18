@@ -475,6 +475,10 @@ class TestSearchFiltering(TestCase):
         cls.incident1 = IncidentPageWithBodyFactory(
             parent=cls.index,
             title='Fruit Incident',
+            introduction='Avocado',
+            teaser='Lemon',
+            teaser_image__attribution='Cherry',
+            image_caption=RichText('Banana'),
             state__name='Lime',
             state__abbreviation='LI',
             body__0__rich_text=RichText('Mango.'),
@@ -503,6 +507,55 @@ class TestSearchFiltering(TestCase):
             body__6__video__alignment=ALIGNMENT_CHOICES[1][0],
         )
 
+
+        cls.incident2 = IncidentPageWithBodyFactory(
+            parent=cls.index,
+            title='Vegetable Incident',
+            introduction='Celery',
+            teaser='Kale',
+            teaser_image__attribution='Radish',
+            image_caption=RichText('Spinach'),
+            state__name=' Radicchio',
+            state__abbreviation='RA',
+            body__0__rich_text=RichText('Cabbage.'),
+            body__1__aligned_image__caption=RichText('Lettuce'),
+            body__1__aligned_image__alignment=ALIGNMENT_CHOICES[2][0],
+            body__2__raw_html='<table><tr><td>Endive</td></tr></table>',
+            body__3__tweet__tweet=EmbedValue(
+                'https://twitter.com/FreedomofPress/status/1648023528459890688',
+                # Text of this tweet:
+                # Want the latest news on press freedom? Subscribe to
+                # our newsletter. It’s free. It’s easy to sign up. And
+                # you’ll be more informed than ever.
+            ),
+            body__4__blockquote__text=RichText('Corn'),
+            body__4__blockquote__source_text=RichText('Beet'),
+            body__4__blockquote__source_url='https://bell-pepper.com',
+            body__5__pull_quote__text='Chickpea',
+            body__6__video__caption=RichText('Leek'),
+            body__6__video__attribution='Shallot',
+            body__6__video__video=EmbedValue(
+                'https://www.youtube.com/watch?v=DEa0xegtIEk',
+            ),
+            body__6__video__alignment=ALIGNMENT_CHOICES[1][0],
+        )
+
+    def test_introduction_is_searched(self):
+        incidents = IncidentFilter({'search': 'avocado'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_teaser_is_searched(self):
+        incidents = IncidentFilter({'search': 'lemon'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_teaser_image_attribution_is_searched(self):
+        incidents = IncidentFilter({'search': 'cherry'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_image_caption_is_searched(self):
+        incidents = IncidentFilter({'search': 'banana'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
     def test_state_name_is_searched(self):
         incidents = IncidentFilter({'search': 'lime'}).get_queryset()
         self.assertQuerysetEqual(incidents, [self.incident1])
@@ -518,10 +571,6 @@ class TestSearchFiltering(TestCase):
     def test_body_image_alignments_are_not_searched(self):
         incidents = IncidentFilter({'search': 'full'}).get_queryset()
         self.assertQuerysetEqual(incidents, [])
-
-    def test_body_raw_html_is_searched(self):
-        incidents = IncidentFilter({'search': 'table'}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
 
     def test_body_tweet_embeds_are_searched(self):
         incidents = IncidentFilter({'search': 'restrict'}).get_queryset()
