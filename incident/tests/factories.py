@@ -147,7 +147,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     title = factory.Sequence(lambda n: f'Incident {n}')
     date = factory.LazyFunction(datetime.date.today)
     city = None
-    state = None
+    state = factory.SubFactory(StateFactory)
     longitude = None
     latitude = None
     body = None
