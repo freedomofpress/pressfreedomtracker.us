@@ -31,7 +31,7 @@ from wagtail import blocks
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page, Orderable, PageManager, PageQuerySet
 from wagtail.images.blocks import ImageChooserBlock
-
+from wagtail.search import index
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 from common.blocks import (
     RichTextBlockQuoteBlock,
@@ -769,6 +769,14 @@ class IncidentPage(MetadataPageMixin, Page):
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+        index.SearchField('city'),
+        index.RelatedFields('state', [
+            index.SearchField('name'),
+        ])
+    ]
 
     def get_context(self, request, *args, **kwargs):
         context = super(IncidentPage, self).get_context(request, *args, **kwargs)

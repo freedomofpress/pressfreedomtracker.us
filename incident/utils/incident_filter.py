@@ -8,7 +8,7 @@ from typing import List
 
 from django.apps import apps
 from django.core.exceptions import ValidationError, FieldDoesNotExist
-from django.contrib.postgres.search import SearchQuery, SearchVector
+from django.contrib.postgres.search import SearchQuery
 from django.db.models import (
     BooleanField,
     CharField,
@@ -23,6 +23,7 @@ from django.db.models import (
     TextChoices,
     TextField,
 )
+from django.db.models.functions import Concat
 from django.db.models.fields.related import ManyToOneRel
 from django.db.utils import ProgrammingError
 from django.http import QueryDict
@@ -520,9 +521,12 @@ class SearchFilter(Filter):
         super(SearchFilter, self).__init__('search', CharField(verbose_name='search terms'))
 
     def filter(self, queryset, value):
-        query = SearchQuery(value)
-        vector = SearchVector('title', 'body')
-        return queryset.annotate(search=vector).filter(search=query)
+        return queryset.annotate(
+            title_and_body_search=Concat(
+                F('index_entries__title'),
+                F('index_entries__body'),
+            ),
+        ).filter(title_and_body_search=SearchQuery(value))
 
 
 class ChargesFilter(ManyRelationFilter):

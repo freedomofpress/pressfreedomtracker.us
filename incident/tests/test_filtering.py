@@ -7,7 +7,9 @@ from django.test import TestCase
 from django.utils import timezone
 from wagtail.models import Site
 from wagtail.rich_text import RichText
+from wagtail.embeds.blocks import EmbedValue
 
+from common.blocks import ALIGNMENT_CHOICES
 from common.models import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
@@ -24,6 +26,7 @@ from incident.tests.factories import (
     EquipmentSeizedFactory,
     EquipmentBrokenFactory,
     IncidentPageFactory,
+    IncidentPageWithBodyFactory,
     IncidentIndexPageFactory,
     IncidentUpdateFactory,
     InexactDateIncidentPageFactory,
@@ -59,6 +62,20 @@ class TestFiltering(TestCase):
         )).get_queryset()
 
         self.assertEqual({incident1}, set(incidents))
+
+    def test_should_filter_by_search_text_in_title(self):
+        """should filter by search text."""
+        incident1 = IncidentPageFactory(
+            title='Mango',
+            body=[('rich_text', RichText('eggplant'))],
+        )
+        IncidentPageFactory(
+            body=[('rich_text', RichText('greengage'))],
+        )
+
+        incidents = IncidentFilter({'search': 'mango'}).get_queryset()
+
+        self.assertQuerysetEqual(incidents, [incident1])
 
     def test_should_filter_by_search_text_with_null_characters(self):
         """should filter by search text with null characters."""
@@ -449,6 +466,94 @@ class TestBooleanFiltering(TestCase):
         }).get_queryset()
 
         self.assertEqual(set(incidents), {self.true_bool, self.false_bool})
+
+
+class TestSearchFiltering(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.index = IncidentIndexPageFactory()
+        cls.incident1 = IncidentPageWithBodyFactory(
+            parent=cls.index,
+            title='Fruit Incident',
+            state__name='Lime',
+            state__abbreviation='LI',
+            body__0__rich_text=RichText('Mango.'),
+            body__1__aligned_image__caption=RichText('Apple'),
+            body__1__aligned_image__alignment=ALIGNMENT_CHOICES[2][0],
+            body__2__raw_html='<table><tr><td>kiwi</td></tr></table>',
+            body__3__tweet__tweet=EmbedValue(
+                'https://twitter.com/FreedomofPress/status/1646551319262396423',
+                # Text of this tweet:
+                # Our last newsletter covered censorship under the
+                # unconstitutional RESTRICT Act, US hypocrisy on
+                # espionage charges against journalists, a frivolous
+                # attempt by the city of LA to force journalists to
+                # return records it gave them, and
+                # more. Read/subscribe here:
+            ),
+            body__4__blockquote__text=RichText('Pear'),
+            body__4__blockquote__source_text=RichText('Plum'),
+            body__4__blockquote__source_url='https://bread.com',
+            body__5__pull_quote__text='Apricot',
+            body__6__video__caption=RichText('Fig'),
+            body__6__video__attribution='Guava',
+            body__6__video__video=EmbedValue(
+                'https://www.youtube.com/watch?v=DEa0xegtIEk',
+            ),
+            body__6__video__alignment=ALIGNMENT_CHOICES[1][0],
+        )
+
+    def test_state_name_is_searched(self):
+        incidents = IncidentFilter({'search': 'lime'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_rich_text_body_content_is_searched(self):
+        incidents = IncidentFilter({'search': 'mango'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_image_captions_are_searched(self):
+        incidents = IncidentFilter({'search': 'apple'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_image_alignments_are_not_searched(self):
+        incidents = IncidentFilter({'search': 'full'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [])
+
+    def test_body_raw_html_is_searched(self):
+        incidents = IncidentFilter({'search': 'table'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_tweet_embeds_are_searched(self):
+        incidents = IncidentFilter({'search': 'restrict'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_blockquote_texts_are_searched(self):
+        incidents = IncidentFilter({'search': 'pear'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_blockquote_source_texts_are_searched(self):
+        incidents = IncidentFilter({'search': 'plum'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_blockquote_source_urls_are_not_searched(self):
+        incidents = IncidentFilter({'search': 'bread'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [])
+
+    def test_body_blockquote_source_urls_are_searched(self):
+        incidents = IncidentFilter({'search': 'apricot'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_video_embed_captions_are_searched(self):
+        incidents = IncidentFilter({'search': 'fig'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_video_embed_attributions_are_searched(self):
+        incidents = IncidentFilter({'search': 'guava'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_body_video_embed_alignments_are_not_searched(self):
+        incidents = IncidentFilter({'search': 'right'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [])
 
 
 class TestAllFiltersAtOnce:
