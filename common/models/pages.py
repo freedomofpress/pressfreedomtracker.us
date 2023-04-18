@@ -503,7 +503,6 @@ class CategoryPage(MetadataPageMixin, Page):
         context['recent_incidents'] = incident_qs
         context['entries_page'] = entries
         context['paginator'] = paginator
-        context['summary_table'] = incident_filter.get_summary()
 
         #  check if filters other than category are applied
         filters = dict(request.GET)
