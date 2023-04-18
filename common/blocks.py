@@ -467,8 +467,10 @@ class VerticalBarChart(blocks.StructBlock):
     incident_set = SimpleIncidentSet()
     description = blocks.TextBlock(
         required=True,
-        help_text='Summary of the chart for people using assistive technology, '
-        'such as screen readers.',
+        help_text='Description for assistive technology users. '
+        'If the chart is demonstrating a specific trend, try to include that, '
+        'e.g., "Bar chart showing a decreasing number of assaults over the '
+        'course of 2023."',
     )
 
     class Meta:
