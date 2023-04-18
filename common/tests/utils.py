@@ -354,4 +354,4 @@ class StreamfieldProvider(BaseProvider):
             else:
                 raise Exception('unknown field: {}'.format(field))
 
-        return streamfield_data  # json.dumps(streamfield_data)
+        return streamfield_data
