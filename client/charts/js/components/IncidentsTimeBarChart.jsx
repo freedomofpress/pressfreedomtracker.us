@@ -46,31 +46,48 @@ export default function IncidentsTimeBarChart({
 	// Rollup the incidents by month-year
 	const incidentsByMonth = Array.from(d3.rollup(filteredDataset, d => d.length, d => d.date))
 		.reduce((acc, [date, count]) => ({ ...acc, [d3.timeFormat('%Y-%m')(date)]: count }), {})
+	const incidentsByYear = Array.from(d3.rollup(filteredDataset, d => d.length, d => d.date))
+		.reduce((acc, [date, count]) => ({ ...acc, [d3.timeFormat('%Y')(date)]: count }), {})
+
+	// If the dataset we are working with spans >24 months then automatically switch to year
+	const spansMoreThanTwoYears = Object.keys(incidentsByMonth).length > 24
+	const timeIntervalFn = spansMoreThanTwoYears ? d3.timeYears : d3.timeMonths
+	const incidentsByTime = spansMoreThanTwoYears ? incidentsByYear : incidentsByMonth
+	const timeFormat = spansMoreThanTwoYears ? d3.timeFormat('%Y') : d3.timeFormat('%Y-%m')
 
 	// Expand out all months
-	const allMonths = [
-		...d3.timeMonths(...d3.extent(filteredDataset, d => d.date)),
-		// add in the last month entry because timeMonths excludes the final month
-		d3.max(Object.keys(incidentsByMonth).map(d3.timeParse('%Y-%m')))
+	const allTime = [
+		...timeIntervalFn(...d3.extent(filteredDataset, d => d.date)),
+		// add in the last "time" entry because timeMonths / timeYears excludes the final month / year
+		d3.max(Object.keys(incidentsByTime).map(d3.timeParse('%Y-%m')))
 	].filter(d => d)
 
-	// Make sure we have entries for months with no incidents
-	const incidentsByAllMonths = allMonths
-		.map((date) => ({ date, count: incidentsByMonth[d3.timeFormat('%Y-%m')(date)] || 0 }))
+	const xFormat = (date) => {
+		if (spansMoreThanTwoYears) return timeFormat(date)
+		if (Object.keys(incidentsByYear).length === 1) return d3.timeFormat("%b")(date)
+		if (d3.timeFormat('%m-%Y')(date) === d3.timeFormat('%m-%Y')(allTime[0])
+			|| d3.timeFormat('%m')(date) === '01') return d3.timeFormat("%Y")(date)
+		return d3.timeFormat("%b")(date)
+	}
+
+	// Make sure we have entries for months / years with no incidents
+	const incidentsByAllTime = allTime
+		.map((date) => ({ date, count: incidentsByTime[timeFormat(date)] || 0 }))
 		.sort((a, b) => a.date - b.date)
 
 	// Generate a default description for a11y
-	const startYear = d3.timeFormat("%Y")(allMonths[0])
-	const endYear = d3.timeFormat("%Y")(allMonths[allMonths.length - 1])
+	const startYear = d3.timeFormat("%Y")(allTime[0])
+	const endYear = d3.timeFormat("%Y")(allTime[allTime.length - 1])
 	const dateDescription = (startYear === endYear) ? `in ${startYear}` : `from ${startYear} to ${endYear}`
 	const generatedDescription = `Incidents ${dateDescription}`
 
 	return (<BarChart
 		description={description || generatedDescription}
-		data={incidentsByAllMonths}
+		data={incidentsByAllTime}
 		x={'date'}
 		y={'count'}
-		xFormat={d3.timeFormat('%Y-%m')}
+		xFormat={xFormat}
+		tooltipXFormat={d3.timeFormat("%b %Y")}
 		titleLabel={'incidents'}
 		width={width}
 		height={height}

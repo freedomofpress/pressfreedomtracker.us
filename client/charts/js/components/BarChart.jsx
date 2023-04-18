@@ -41,6 +41,7 @@ export default function BarChart({
 	yFormat = y => y,
 	xDomain,
 	yDomain,
+	tooltipXFormat,
 	titleLabel,
 	isMobileView,
 	width,
@@ -116,7 +117,7 @@ export default function BarChart({
 									<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
 										{hoveredElement}
 									</div>
-									<div>{yFormat(dataset.find((d) => xFormat(d[x]) === hoveredElement)[y])}</div>
+									<div>{yFormat(dataset.find((d) => (tooltipXFormat || xFormat)(d[x]) === hoveredElement)[y])}</div>
 								</div>
 							</div>
 						}
@@ -194,9 +195,9 @@ export default function BarChart({
 							height: (d) => computeBarheight(d[y]),
 							width: xScale.bandwidth(),
 							fill: (d) =>
-								hoveredElement === xFormat(d[x]) ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
+								hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
 							strokeWidth: borders.normal,
-							stroke: (d) => (hoveredElement === xFormat(d[x]) ? '#E07A5F' : 'black'),
+							stroke: (d) => (hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
 							cursor: 'pointer',
 							shapeRendering: 'crispEdges',
 						}}
@@ -215,7 +216,7 @@ export default function BarChart({
 									opacity: 0,
 									cursor: 'pointer',
 								}}
-								onMouseEnter={() => setHoveredElement(xFormat(d[x]))}
+								onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
 								onMouseMove={updateTooltipPosition}
 								onMouseLeave={() => setHoveredElement(null)}
 								onMouseUp={() => openSearchPage(xFormat(d[x]))}
@@ -240,7 +241,7 @@ export default function BarChart({
 							x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
 							y: height - paddings.bottom / 2,
 							textAnchor: 'middle',
-							fill: (d) => (hoveredElement === xFormat(d[x]) ? '#E07A5F' : 'black'),
+							fill: (d) => (hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
 							fontFamily: 'var(--font-base)',
 							fontWeight: 500,
 							fontSize: '14px',
