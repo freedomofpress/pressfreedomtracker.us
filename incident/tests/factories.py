@@ -33,6 +33,13 @@ from common.tests.factories import (
     CategoryPageFactory,
     CommonTagFactory,
     PersonPageFactory,
+    RichTextTemplateBlockFactory,
+    AlignedCaptionedImageBlockFactory,
+    RawHTMLBlockFactory,
+    TweetEmbedBlockFactory,
+    RichTextBlockQuoteBlockFactory,
+    PullQuoteBlockFactory,
+    AlignedCaptionedEmbedBlockFactory,
 )
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
@@ -406,6 +413,21 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
         if extracted:
             self.related_incidents.set(extracted)
+
+
+class IncidentPageWithBodyFactory(IncidentPageFactory):
+    body = wagtail_factories.StreamFieldFactory({
+        'rich_text': factory.SubFactory(RichTextTemplateBlockFactory),
+        'image': factory.SubFactory(
+            wagtail_factories.blocks.ImageChooserBlockFactory
+        ),
+        'aligned_image': factory.SubFactory(AlignedCaptionedImageBlockFactory),
+        'raw_html': factory.SubFactory(RawHTMLBlockFactory),
+        'tweet': factory.SubFactory(TweetEmbedBlockFactory),
+        'blockquote': factory.SubFactory(RichTextBlockQuoteBlockFactory),
+        'pull_quote': factory.SubFactory(PullQuoteBlockFactory),
+        'video': factory.SubFactory(AlignedCaptionedEmbedBlockFactory),
+    })
 
 
 class InexactDateIncidentPageFactory(IncidentPageFactory):
