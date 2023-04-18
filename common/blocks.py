@@ -463,7 +463,7 @@ class SimpleIncidentSet(blocks.StructBlock):
 
 
 class VerticalBarChart(blocks.StructBlock):
-    title = blocks.CharBlock(required=True)
+    title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
     description = blocks.TextBlock(
         required=True,
