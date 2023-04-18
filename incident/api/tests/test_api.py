@@ -346,8 +346,7 @@ class CategoryAPITest(APITestCase):
             'slug': self.category.slug,
             'url': self.category.get_full_url(),
             'methodology': self.category.methodology,
-            'plural_name': self.category.plural_name,
-            'page_symbol': self.category.page_symbol
+            'plural_name': self.category.plural_name
         })
         self.assertEqual(response.status_code, 200)
 
