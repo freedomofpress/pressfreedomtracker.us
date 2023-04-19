@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Tooltip with mocked data 1`] = `
+<div
+  style={
+    {
+      "backgroundColor": "white",
+      "border": "5px solid black",
+      "left": "30px",
+      "padding": 12,
+      "pointerEvents": "none",
+      "position": "fixed",
+      "top": "-40px",
+    }
+  }
+>
+  test
+</div>
+`;

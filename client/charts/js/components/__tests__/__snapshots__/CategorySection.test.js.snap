@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders CategorySection with mocked data 1`] = `
+<div
+  className="category-checkbox"
+>
+  <input
+    checked={false}
+    className="category-checkbox--input"
+    id="test"
+    onChange={[Function]}
+    type="checkbox"
+  />
+  <label
+    className="category-checkbox--label"
+    htmlFor="test"
+  >
+    <span
+      className="category category-test"
+    >
+      test
+    </span>
+    <span>
+      2
+    </span>
+  </label>
+</div>
+`;
