@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders CheckBoxBar with mocked data 1`] = `
+<div
+  style={
+    {
+      "display": "flex",
+      "flexDirection": "row",
+      "marginBottom": 12,
+      "marginTop": 12,
+    }
+  }
+>
+  <div
+    style={
+      {
+        "display": "flex",
+        "flexDirection": "row-reverse",
+        "width": 35,
+      }
+    }
+  >
+    <input
+      checked={false}
+      disabled={false}
+      name="drone"
+      onChange={[Function]}
+      style={
+        {
+          "height": 24,
+          "width": 24,
+        }
+      }
+      type="checkbox"
+    />
+  </div>
+  <div
+    style={
+      {
+        "display": "flex",
+        "flexDirection": "column",
+        "justifyContent": "flex-end",
+      }
+    }
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "marginBottom": 0,
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "color": "black",
+            "fontFamily": "var(--font-base)",
+            "fontSize": 14,
+            "lineHeight": "20px",
+          }
+        }
+      >
+        test
+      </div>
+      <div
+        style={
+          {
+            "backgroundColor": null,
+            "fontFamily": "var(--font-mono)",
+            "fontSize": 12,
+            "justifyContent": "flex-end",
+            "padding": 3,
+          }
+        }
+      >
+        2
+      </div>
+    </div>
+    <div
+      style={
+        {
+          "height": 4,
+          "width": NaN,
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "backgroundColor": "black",
+            "border": "1px solid black",
+            "height": 3,
+            "transition": "all 250ms ",
+            "width": undefined,
+            "zIndex": -1,
+          }
+        }
+      />
+      <div
+        style={
+          {
+            "backgroundColor": "#F2FC67",
+            "height": 3,
+            "left": 1,
+            "position": "relative",
+            "top": -4,
+            "transition": "all 250ms ",
+            "width": 0,
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;

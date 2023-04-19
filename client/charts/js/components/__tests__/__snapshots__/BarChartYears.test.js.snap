@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders BarChartYears with mocked data 1`] = `
+<div
+  style={
+    {
+      "flexDirection": "row",
+      "marginBottom": 10,
+    }
+  }
+>
+  <svg
+    height={520}
+    style={
+      {
+        "fontFamily": "var(--font-mono)",
+      }
+    }
+    width={480}
+  >
+    <g />
+    <g />
+    <g>
+      <g />
+      <text
+        style={
+          {
+            "fontFamily": "var(--font-base)",
+            "fontSize": 12,
+          }
+        }
+        x={215.5}
+        y={520}
+      >
+        2012
+      </text>
+    </g>
+    <g />
+  </svg>
+</div>
+`;
