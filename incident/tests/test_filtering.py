@@ -481,6 +481,7 @@ class TestSearchFiltering(TestCase):
             image_caption=RichText('Banana'),
             state__name='Lime',
             state__abbreviation='LI',
+            city='Pomelo',
             body__0__rich_text=RichText('Mango.'),
             body__1__aligned_image__caption=RichText('Apple'),
             body__1__aligned_image__alignment=ALIGNMENT_CHOICES[2][0],
@@ -554,6 +555,10 @@ class TestSearchFiltering(TestCase):
 
     def test_image_caption_is_searched(self):
         incidents = IncidentFilter({'search': 'banana'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_city_is_searched(self):
+        incidents = IncidentFilter({'search': 'pomelo'}).get_queryset()
         self.assertQuerysetEqual(incidents, [self.incident1])
 
     def test_state_name_is_searched(self):
