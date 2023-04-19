@@ -79,8 +79,7 @@
 					<div class="database-card-table__row table-{{ details }}">
 						<dt class="database-card-table__label database-card-table__label--bold">Location</dt>
 						<dd class="database-card-table__value">
-							{% if incident.city %}{{ incident.city }}{% endif %}
-							{% if incident.city and incident.state %}, {% endif %}
+							{% if incident.city %}{{ incident.city }}{% endif %}{% if incident.city and incident.state %}, {% endif %}
 							{% if incident.state %}{{ incident.state.name }}{% endif %}
 						</dd>
 					</div>
