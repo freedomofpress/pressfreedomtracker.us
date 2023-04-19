@@ -27,6 +27,7 @@ from incident.tests.factories import (
     EquipmentBrokenFactory,
     IncidentPageFactory,
     IncidentPageWithBodyFactory,
+    IncidentUpdateWithBodyFactory,
     IncidentIndexPageFactory,
     IncidentUpdateFactory,
     InexactDateIncidentPageFactory,
@@ -507,7 +508,14 @@ class TestSearchFiltering(TestCase):
             ),
             body__6__video__alignment=ALIGNMENT_CHOICES[1][0],
         )
-
+        IncidentUpdateWithBodyFactory(
+            page=cls.incident1,
+            title='Coconut',
+            body__0__rich_text=RichText('Strawberry.'),
+        )
+        # Save required here to force update of index after
+        # IncidentUpdate created.
+        cls.incident1.save()
 
         cls.incident2 = IncidentPageWithBodyFactory(
             parent=cls.index,
@@ -608,6 +616,14 @@ class TestSearchFiltering(TestCase):
     def test_body_video_embed_alignments_are_not_searched(self):
         incidents = IncidentFilter({'search': 'right'}).get_queryset()
         self.assertQuerysetEqual(incidents, [])
+
+    def test_update_titles_are_searched(self):
+        incidents = IncidentFilter({'search': 'coconut'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_update_bodies_are_searched(self):
+        incidents = IncidentFilter({'search': 'strawberry'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [self.incident1])
 
 
 class TestAllFiltersAtOnce:

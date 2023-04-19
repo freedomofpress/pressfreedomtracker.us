@@ -114,6 +114,19 @@ class IncidentUpdateFactory(factory.django.DjangoModelFactory):
     body = None
 
 
+class IncidentUpdateWithBodyFactory(IncidentUpdateFactory):
+    body = wagtail_factories.StreamFieldFactory({
+        'rich_text': factory.SubFactory(RichTextTemplateBlockFactory),
+        'image': factory.SubFactory(
+            wagtail_factories.blocks.ImageChooserBlockFactory
+        ),
+        'raw_html': factory.SubFactory(RawHTMLBlockFactory),
+        'tweet': factory.SubFactory(TweetEmbedBlockFactory),
+        'blockquote': factory.SubFactory(RichTextBlockQuoteBlockFactory),
+        'video': factory.SubFactory(AlignedCaptionedEmbedBlockFactory),
+    })
+
+
 class IncidentLinkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentPageLinks
