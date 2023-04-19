@@ -1,4 +1,5 @@
 import React from 'react'
+import { ParentSize } from '@visx/responsive'
 import BarChart from './BarChart'
 import * as d3 from 'd3'
 
@@ -8,8 +9,6 @@ export default function IncidentsTimeBarChart({
 	filterCategories = null, // Array or string of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = [null, null], // Array representing the min and max of dates to show
-	width = 800,
-	height = 500,
 	isMobileView = false,
 }) {
 	// Create maps so that we don't have to do n^2 lookup times
@@ -81,16 +80,22 @@ export default function IncidentsTimeBarChart({
 	const dateDescription = (startYear === endYear) ? `in ${startYear}` : `from ${startYear} to ${endYear}`
 	const generatedDescription = `Incidents ${dateDescription}`
 
-	return (<BarChart
-		description={description || generatedDescription}
-		data={incidentsByAllTime}
-		x={'date'}
-		y={'count'}
-		xFormat={xFormat}
-		tooltipXFormat={d3.timeFormat("%b %Y")}
-		titleLabel={'incidents'}
-		width={width}
-		height={height}
-		isMobileView={isMobileView}
-	/>)
+	return (
+		<ParentSize>
+			{(parent) =>
+				<BarChart
+					description={description || generatedDescription}
+					data={incidentsByAllTime}
+					x={'date'}
+					y={'count'}
+					xFormat={xFormat}
+					tooltipXFormat={d3.timeFormat("%b %Y")}
+					titleLabel={'incidents'}
+					width={parent.width}
+					height={parent.width * 0.75}
+					isMobileView={isMobileView}
+				/>
+			}
+		</ParentSize>
+	)
 }
