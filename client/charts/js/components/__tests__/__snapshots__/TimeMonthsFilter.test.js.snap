@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders TimeMonthsFilter with mocked data 1`] = `
+<div
+  style={
+    {
+      "flexDirection": "row",
+    }
+  }
+>
+  <svg
+    height={500}
+    style={
+      {
+        "fontFamily": "var(--font-mono)",
+      }
+    }
+    width={500}
+  >
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+  </svg>
+  <div
+    style={
+      {
+        "display": "flex",
+        "justifyContent": "space-between",
+        "width": "100%",
+      }
+    }
+  >
+    <input
+      max="2022-01-01"
+      min="2020-01-01"
+      onChange={[Function]}
+      style={
+        {
+          "flexBasis": "50%",
+        }
+      }
+      type="date"
+      value="2020-01-01"
+    />
+    <input
+      max="2022-01-01"
+      min="2020-01-01"
+      onChange={[Function]}
+      style={
+        {
+          "flexBasis": "50%",
+        }
+      }
+      type="date"
+      value="2022-01-01"
+    />
+  </div>
+</div>
+`;
