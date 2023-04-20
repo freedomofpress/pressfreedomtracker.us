@@ -27,7 +27,7 @@
 		{% get_menu 'secondary-navigation' as secondary_items %}
 		<ul id="secondary-navigation" class="secondary-navigation">
 			{% for item in secondary_items %}
-				<li><a href="{{ item.url }}" class="btn btn-primary {{ item.html_classes }}">{{ item.text }}</a></li>
+				<li><a href="{{ item.url }}" class="btn btn-primary {{ item.html_classes }} {{ btn_class }}">{{ item.text }}</a></li>
 			{% endfor %}
 		</ul>
 	</nav>

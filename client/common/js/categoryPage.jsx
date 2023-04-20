@@ -1,7 +1,8 @@
-import React from "react"
-import { createRoot } from "react-dom/client"
-import CategoryPageChart from "../../charts/js/components/CategoryPageChart"
-import DataLoader from "../../charts/js/components/DataLoader"
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import * as d3 from 'd3'
+import CategoryPageChart from '../../charts/js/components/CategoryPageChart'
+import DataLoader from '../../charts/js/components/DataLoader'
 
 const fields = [
 	'title',
@@ -21,29 +22,23 @@ chartContainers.forEach((node) => {
 	const params = new URLSearchParams([
 		['fields', fields.join(',')],
 		['format', 'csv'],
-		['categories', categoryId]
+		['categories', categoryId],
 	])
 
 	// If start or end date are set, limit the query to those dates
 	if (startDate) params.append('date_lower', startDate)
 	if (endDate) params.append('date_upper', endDate)
 
-	let root = createRoot(node)
+	const root = createRoot(node)
 	root.render((
 		<DataLoader
-			dataUrl={`/api/edge/incidents/?${params.toString()}`}
-			loadingComponent={(
-				<CategoryPageChart
-					data={[]}
-					loading={true}
-					databasePath={databasePath}
-					category={categoryId}
-					categoryName={categoryName}
-					vizType={vizType}
-				/>
-			)}
+			dataUrl={[`/api/edge/incidents/?${params.toString()}`, '/api/edge/categories/']}
+			dataKey={['data', 'categories']}
+			dataParser={[(data) => d3.csvParse(data, d3.autoType), JSON.parse]}
+			loadingComponent={false}
 		>
 			<CategoryPageChart
+				data={[]}
 				databasePath={databasePath}
 				category={categoryId}
 				categoryName={categoryName}

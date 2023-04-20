@@ -11,16 +11,19 @@ class TestFiltering(TestCase):
         cls.index = BlogIndexPageFactory()
         cls.post1 = BlogPageFactory()
         cls.post2 = BlogPageFactory()
+        cls.post3 = BlogPageFactory(blog_type="newsletter")
 
     def test_should_parse_query_string_objects(self):
         """BlogFilter should parse dict-like querystring objects"""
         get_query = {
             'author': '1',
             'organization': '2',
+            'type': 'newsletter',
         }
         filters = BlogFilter.from_querystring(get_query)
         self.assertEqual(filters.author, 1)
         self.assertEqual(filters.organization, 2)
+        self.assertEqual(filters.blog_type, 'newsletter')
 
     def test_should_ignore_absent_data(self):
         """BlogFilter should set absent filter values to None"""
@@ -40,12 +43,18 @@ class TestFiltering(TestCase):
 
     def test_should_filter_blog_pages_by_author(self):
         """BlogFilter should filter BlogPages by author"""
-        filters = BlogFilter(organization=None, author=self.post1.author.pk)
+        filters = BlogFilter(organization=None, author=self.post1.author.pk, blog_type=None)
         found = filters.filter(BlogPage.objects)
         self.assertEqual(set(found), {self.post1})
 
     def test_should_filter_blog_pages_by_organization(self):
         """BlogFilter should filter BlogPages by organization"""
-        filters = BlogFilter(organization=self.post2.organization, author=None)
+        filters = BlogFilter(organization=self.post2.organization, author=None, blog_type=None)
         found = filters.filter(BlogPage.objects)
         self.assertEqual(set(found), {self.post2})
+
+    def test_should_filter_blog_pages_by_blog_type(self):
+        """BlogFilter should filter BlogPages by blog type"""
+        filters = BlogFilter(organization=None, author=None, blog_type="newsletter")
+        found = filters.filter(BlogPage.objects)
+        self.assertEqual(set(found), {self.post3})

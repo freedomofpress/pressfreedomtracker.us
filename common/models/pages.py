@@ -8,6 +8,7 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.html import strip_tags
+from django.utils.module_loading import import_string
 from django.template.defaultfilters import truncatewords
 from wagtail.admin.panels import (
     FieldPanel,
@@ -19,6 +20,7 @@ from wagtail import blocks
 from wagtail.models import Page, Orderable, Site
 from wagtail.fields import RichTextField, StreamField
 from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
+from wagtailinventory.helpers import get_page_blocks
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
@@ -123,6 +125,35 @@ class MetadataPageMixin(OriginalMetadataPageMixin):
 
     class Meta:
         abstract = True
+
+
+class MediaPageMixin:
+    """Mixin for pages requiring extra JS or other media files in page
+    data or its StreamField blocks.
+
+    """
+    @property
+    def page_js(self):
+        """Can be overridden if the page always needs a particular JS bundle"""
+        return []
+
+    def streamfield_media(self, media_type):
+        """Returns the JS bundle names required by the page's StreamField blocks."""
+        media = []
+
+        block_cls_names = get_page_blocks(self)
+        for block_cls_name in block_cls_names:
+            block_cls = import_string(block_cls_name)
+            if hasattr(block_cls, 'Media') and hasattr(
+                    block_cls.Media, media_type
+            ):
+                media.extend(getattr(block_cls.Media, media_type))
+        return media
+
+    @property
+    def media_js(self):
+        """Returns the JS bundle names required by the page and its StreamField blocks."""
+        return sorted(set(self.page_js + self.streamfield_media('js')))
 
 
 class OrganizationIndexPage(Page):
@@ -503,7 +534,6 @@ class CategoryPage(MetadataPageMixin, Page):
         context['recent_incidents'] = incident_qs
         context['entries_page'] = entries
         context['paginator'] = paginator
-        context['summary_table'] = incident_filter.get_summary()
 
         #  check if filters other than category are applied
         filters = dict(request.GET)

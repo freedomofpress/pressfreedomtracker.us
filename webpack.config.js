@@ -21,6 +21,7 @@ var common = {
 		statistics: __dirname + '/client/statistics/js/searchstats.js',
 		charts: __dirname + '/client/charts/js/index.js',
 		filterSidebar: __dirname + '/client/charts/js/filter-sidebar.js',
+		verticalBarChart: __dirname + '/client/charts/js/vertical-bar-chart.js',
 	},
 
 	output: {

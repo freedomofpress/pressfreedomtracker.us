@@ -34,7 +34,7 @@ class TestPages(TestCase):
 
         cls.index = BlogIndexPageFactory(
             parent=site.root_page, slug='all-blogs')
-        cls.incident = BlogPageFactory(parent=cls.index, slug='one')
+        cls.blog_page = BlogPageFactory(parent=cls.index, slug='one')
 
     def setUp(self):
         self.client = Client()
@@ -56,7 +56,7 @@ class TestPages(TestCase):
     def test_get_index_for_author_should_not_contain_featured_blogs(self):
         BlogIndexPageFeature.objects.create(
             blog_index_page=self.index,
-            page=self.incident,
+            page=self.blog_page,
         )
         author = PersonPageFactory()
         response = self.client.get(f'/all-blogs/?author={author.pk}')
@@ -74,8 +74,26 @@ class TestPages(TestCase):
     def test_get_index_for_organization_should_not_contain_featured_blogs(self):
         BlogIndexPageFeature.objects.create(
             blog_index_page=self.index,
-            page=self.incident,
+            page=self.blog_page,
         )
         org = OrganizationPageFactory()
         response = self.client.get(f'/all-blogs/?organization={org.pk}')
         self.assertNotContains(response, 'Featured')
+
+    def test_get_blog_page_vertical_bar_chart_additional_js_media(self):
+        response = self.client.get(self.blog_page.url)
+        self.assertContains(response, 'verticalBarChart')
+
+        # Remove the bar chart from the body -- not sure if there's an
+        # easier way to ensure this!
+        new_body = []
+        for item in self.blog_page.body:
+            if item.block_type == 'vertical_bar_chart':
+                continue
+            new_body.append((item.block_type, item.value))
+        self.blog_page.body = new_body
+        self.blog_page.save()
+
+        # We should no longer have that JS bundle in the response
+        response = self.client.get(self.blog_page.url)
+        self.assertNotContains(response, 'verticalBarChart')

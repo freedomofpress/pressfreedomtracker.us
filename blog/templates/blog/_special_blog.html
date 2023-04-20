@@ -1,0 +1,41 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% image page.lead_image scale-100 as tmp_photo %}
+<div class="special-blog__hero-bg" style="background-image: url('{{ tmp_photo.url }}')">
+	<span class="sr-only">Background hero image of {{ page.lead_image.title }}</span>
+</div>
+<div class="special-blog__hero">
+	<h1 class="special-blog__hero-title article-title" id="title">{{ page.title }}</h1>
+
+	<div class="special-blog__hero-text">
+		{% if page.publication_datetime %}
+			<p class="special-blog__hero-meta">
+				<span class="special-blog__hero-date">{{ page.publication_datetime|date:"F j, Y" }}</span>
+				{% if page.author %}
+					<span class="special-blog__hero-author"> — {{ page.author }}</span>
+				{% endif %}
+			</p>
+		{% endif %}
+		{% if page.lead_image.attribution %}
+			<p class="special-blog__hero-citation">
+				{{ page.lead_image.attribution }}
+			</p>
+		{% endif %}
+	</div>
+</div>
+
+<article class="article-content">
+
+	{% if page.introduction %}
+			<p class="heading">{{ page.introduction }}</p>
+	{% endif %}
+
+	<section class="article-content__inner">
+		{% for block in page.body %}
+			<div class="article-content__block">{% include_block block %}</div>
+		{% endfor %}
+	</section>
+</article>
+<div class="article-actions">
+	<a href="{% pageurl page.get_parent %}" class="btn btn-primary">Return to Blog</a>
+</div>

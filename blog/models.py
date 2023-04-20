@@ -17,13 +17,12 @@ from wagtail.models import Page, Orderable
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
-
 from common.utils import DEFAULT_PAGE_KEY, paginate
 
 from blog.feeds import BlogIndexPageFeed
 from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
-from common.models import PersonPage, OrganizationPage, MetadataPageMixin
+from common.models import PersonPage, OrganizationPage, MetadataPageMixin, MediaPageMixin
 from common.blocks import (
     Heading1,
     Heading2,
@@ -34,6 +33,8 @@ from common.blocks import (
     TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     AsideBlock,
+    ButtonBlock,
+    VerticalBarChart,
 )
 
 
@@ -161,9 +162,25 @@ class BlogIndexPageFeature(Orderable):
     ]
 
 
-class BlogPage(MetadataPageMixin, Page):
+class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
+    DEFAULT = 'default'
+    NEWSLETTER = 'newsletter'
+    SPECIAL = 'special'
+    BLOG_TEMPLATE_CHOICES = (
+        (DEFAULT, 'Default Blog'),
+        (NEWSLETTER, 'Newsletter'),
+        (SPECIAL, 'Special Blog'),
+    )
+
     publication_datetime = models.DateTimeField(
         help_text='Past or future date of publication'
+    )
+
+    blog_type = models.CharField(
+        max_length=20,
+        choices=BLOG_TEMPLATE_CHOICES,
+        default=DEFAULT,
+        help_text='Select template used to display this post.',
     )
 
     body = StreamField([
@@ -181,7 +198,9 @@ class BlogPage(MetadataPageMixin, Page):
         ('heading_1', Heading1()),
         ('heading_2', Heading2()),
         ('heading_3', Heading3()),
+        ('button', ButtonBlock()),
         ('statistics', StatisticsBlock()),
+        ('vertical_bar_chart', VerticalBarChart()),
     ], use_json_field=True)
 
     introduction = models.TextField(
@@ -258,6 +277,10 @@ class BlogPage(MetadataPageMixin, Page):
         ),
         PageChooserPanel('organization', 'common.OrganizationPage'),
         PageChooserPanel('author', 'common.PersonPage'),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel('blog_type')
     ]
 
     parent_page_types = ['blog.BlogIndexPage']

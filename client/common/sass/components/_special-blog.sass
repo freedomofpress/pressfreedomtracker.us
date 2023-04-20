@@ -1,0 +1,40 @@
+.special-blog__hero
+	display: flex
+	flex-direction: column
+	justify-content: flex-end
+	color: $white
+	height: 600px
+
+	&-text
+		width: calc(100% - 64px)
+		+constrain-to-desktop
+
+		+desktop-up
+			display: flex
+			justify-content: space-between
+
+	&-title
+		width: calc(100% - 64px)
+
+	&-bg
+		position: absolute
+		width: 100vw
+		height: 640px
+		background-position: center
+		background-repeat: no-repeat
+		background-size: cover
+		top: 0
+		z-index: -1
+
+		&::before
+			content: ' '
+			background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.9) 15%, rgba(255, 255, 255, 0.3) 85%, rgba(255, 255, 255, 0.8) 100%)
+			position: absolute
+			top: 0
+			left: 0
+			right: 0
+			bottom: 0
+			z-index: 0
+
+		+desktop-up
+			height: 662px

@@ -263,6 +263,26 @@ class Command(BaseCommand):
             with_image=True,
         )
 
+        # newsletter pages
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author1,
+            with_image=True,
+            blog_type=BlogPage.NEWSLETTER
+        )
+
+        # special blog pages
+        BlogPageFactory.create_batch(
+            10,
+            parent=blog_index_page,
+            organization__parent=org_index_page,
+            author=author2,
+            with_image=True,
+            blog_type=BlogPage.SPECIAL
+        )
+
         for page in random.sample(list(BlogPage.objects.all()), 3):
             FeaturedBlogPost.objects.create(
                 home_page=home_page,
@@ -517,7 +537,11 @@ class Command(BaseCommand):
         if footer_menu:
             footer_settings.menu = footer_menu
         footer_settings.save()
-        SiteSettingsFactory(site=site, citation_contact_page=faq_page)
+        SiteSettingsFactory(
+            site=site,
+            citation_contact_page=faq_page,
+            donation_page='https://freedom.press/tracker/'
+        )
         EmailSettingsFactory(site=site)
 
         # Create superuser

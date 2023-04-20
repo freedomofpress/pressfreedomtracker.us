@@ -130,6 +130,18 @@ class SiteSettings(BaseSiteSetting):
         related_name='+',
         help_text='Page linked by the "Contact Us" link in the footer citation note.',
     )
+    newsletter_subscription_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Page linked by the "Sign up to the Newsletter" link in the monthly newsletter pages.',
+    )
+    donation_page = models.URLField(
+        blank=True,
+        help_text='Page linked by "Donate" button in newsletter and other pages'
+    )
     banner_content = RichTextField(
         blank=True,
         null=True,
@@ -153,6 +165,8 @@ class SiteSettings(BaseSiteSetting):
     panels = [
         FieldPanel('incident_sidebar_note'),
         FieldPanel('citation_contact_page'),
+        FieldPanel('newsletter_subscription_page'),
+        FieldPanel('donation_page'),
         FieldPanel('incident_footer'),
         MultiFieldPanel([
             FieldPanel('banner_content'),

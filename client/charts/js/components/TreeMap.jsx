@@ -172,7 +172,7 @@ export default function TreeMap({
 			color: colorScale(d.category),
 		}))
 
-	const findColor = (cat) => colorsByCategory.find((d) => d.category === cat).color
+	const findColor = (cat) => colorsByCategory.find((d) => d.category === cat)?.color || "#EEEEEE"
 
 	function nextCategory(dataset, i) {
 		const nextCategories = dataset.slice(i + 1).filter((d) => d.numberOfIncidents !== 0)

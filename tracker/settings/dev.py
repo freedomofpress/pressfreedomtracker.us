@@ -123,6 +123,9 @@ def get_default_gateway_linux():
 
 
 if DEBUG:
+    if os.environ.get('PYINSTRUMENT', 'no').lower() == 'yes':
+        MIDDLEWARE = ['pyinstrument.middleware.ProfilerMiddleware'] + MIDDLEWARE  # noqa: F405
+
     if os.environ.get('DJANGO_PROFILE', 'no').lower() == 'yes':
         # Silk
         INSTALLED_APPS.append('silk')  # noqa: F405

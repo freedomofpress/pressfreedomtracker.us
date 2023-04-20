@@ -1,3 +1,4 @@
+from datetime import date
 from unittest import mock
 
 from django.core.exceptions import ValidationError
@@ -103,6 +104,78 @@ class FilterToOpenApiParametersTest(TestCase):
         self.assertEqual(param.name, 'politicians_or_public_figures_involved')
         self.assertEqual(param.style, 'form')
         self.assertEqual(param.explode, False)
+
+
+class URLizeFilterTest(TestCase):
+    """Test cases for obtaining a representation of filters as URL
+    parameters/query strings."""
+
+    def test_get_url_parameters_uncleaned(self):
+        params = IncidentFilter({
+            'search': 'test',
+            'date_lower': '20319-10291-1022',  # invalid date should be removed
+        }).get_url_parameters()
+
+        self.assertEqual(
+            params, 'search=test'
+        )
+
+    def test_boolean_field(self):
+        field = IncidentPage._meta.get_field('is_search_warrant_obtained')
+        filter_ = IncidentFilter._get_filter(field)
+
+        self.assertEqual(
+            filter_.as_url_parameters(True),
+            {'is_search_warrant_obtained': '1'}
+        )
+        self.assertEqual(
+            filter_.as_url_parameters(False),
+            {'is_search_warrant_obtained': '0'}
+        )
+
+    def test_choice_field(self):
+        field = IncidentPage._meta.get_field('were_devices_searched_or_seized')
+        filter_ = IncidentFilter._get_filter(field)
+
+        self.assertEqual(
+            filter_.as_url_parameters(['JUST_TRUE']),
+            {'were_devices_searched_or_seized': 'JUST_TRUE'}
+        )
+
+    def test_multichoice_field(self):
+        field = IncidentPage._meta.get_field('subpoena_statuses')
+        filter_ = IncidentFilter._get_filter(field)
+
+        self.assertEqual(
+            filter_.as_url_parameters(['UNKNOWN', 'PENDING']),
+            {'subpoena_statuses': 'UNKNOWN,PENDING'}
+        )
+
+    def test_many_relation_field(self):
+        field = IncidentPage._meta.get_field('politicians_or_public_figures_involved')
+        filter_ = IncidentFilter._get_filter(field)
+
+        value = ManyRelationValue(
+            pks=[1, 2],
+            strings=['Person 1', 'Person 2'],
+        )
+        self.assertEqual(
+            filter_.as_url_parameters(value),
+            {'politicians_or_public_figures_involved': '1,2,Person 1,Person 2'}
+        )
+
+    def test_date_field(self):
+        field = IncidentPage._meta.get_field('detention_date')
+        filter_ = IncidentFilter._get_filter(field)
+
+        date_value = (date(2022, 2, 2), date.today())
+        self.assertEqual(
+            filter_.as_url_parameters(date_value),
+            {
+                'detention_date_lower': str(date_value[0]),
+                'detention_date_upper': str(date_value[1]),
+            }
+        )
 
 
 class SerializeFilterTest(TestCase):
