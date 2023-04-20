@@ -87,8 +87,16 @@ class CategorySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
     methodology = serializers.CharField()
-    page_symbol = serializers.CharField()
     plural_name = serializers.CharField()
+    slug = serializers.CharField()
+    url = serializers.SerializerMethodField()
+
+    @extend_schema_field(OpenApiTypes.URI)
+    def get_url(self, obj):
+        if self.context.get('request'):
+            return obj.get_full_url(self.context['request'])
+        else:
+            return obj.get_full_url()
 
 
 class BaseIncidentSerializer(serializers.Serializer):

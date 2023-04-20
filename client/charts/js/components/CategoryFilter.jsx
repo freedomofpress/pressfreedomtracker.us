@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import classNames from 'classnames'
 import * as d3 from 'd3'
 import { countBy } from 'lodash'
 import { AnimatedDataset } from 'react-animated-dataset'
@@ -10,39 +11,11 @@ import {
 	SET_PARAMETER,
 } from '../lib/actionTypes'
 
-import strokeCircle from './svgIcons/strokeCircle.svg'
-import fillCircle from './svgIcons/fillCircle.svg'
-import rhombus from './svgIcons/rhombus.svg'
-import doubleCircle from './svgIcons/doubleCircle.svg'
-import doubleCircleFill from './svgIcons/doubleCircleFill.svg'
-import sixPointStar from './svgIcons/sixPointStar.svg'
-import compassRose from './svgIcons/compassRose.svg'
-import diamondStar from './svgIcons/diamondStar.svg'
-import superSun from './svgIcons/superSun.svg'
-import sunStar from './svgIcons/sunStar.svg'
-import flower from './svgIcons/flower.svg'
-
 const margins = {
 	top: 15,
 	left: 5,
 	right: 30,
 	bottom: 30,
-}
-
-const svgIcons = {
-	'Assault': strokeCircle,
-	'Arrest/Criminal Charge': fillCircle,
-	'Arrest / Criminal Charge': fillCircle, // redundant to catch both
-	'Equipment Damage': doubleCircle,
-	'Equipment Search or Seizure': doubleCircleFill,
-	'Chilling Statement': sixPointStar,
-	'Denial of Access': compassRose,
-	'Leak Case': rhombus,
-	'Prior Restraint': diamondStar,
-	'Subpoena/Legal Order': sunStar,
-	'Subpoena / Legal Order': sunStar, // redundant to catch both
-	'Other Incident': flower,
-	'Border Stop': superSun,
 }
 
 export default function CategoryFilter({
@@ -74,6 +47,7 @@ export default function CategoryFilter({
 			{
 				category: curr,
 				count: categoryFrequencies[curr],
+				symbol: filterDefs.find(d => d.title === curr)?.symbol
 			},
 		],
 		[]
@@ -202,22 +176,25 @@ export default function CategoryFilter({
 					{countCategories.map((d, i) => {
 						return (
 							<g key={i}>
-								<image
+								<foreignObject
 									width={imageWidth}
 									height={imageWidth}
 									x={xScale(d.category) + barsWidth / 2 - imageWidth / 2}
 									y={height - margins.bottom / 2}
-									href={svgIcons[d.category]}
 									transform={'translate(0, -7)'}
 									opacity={d.count === 0 ? 0.3 : 1}
-									onClick={() => {
-										if (d.count === 0) {
-											return null
-										} else {
-											return onCategoryClick(d)
-										}
-									}}
-								/>
+								>
+									<div
+										className={classNames('category', `category-${d.symbol}`)}
+										onClick={() => {
+											if (d.count === 0) {
+												return null
+											} else {
+												return onCategoryClick(d)
+											}
+										}}
+									/>
+								</foreignObject>
 							</g>
 						)
 					})}
