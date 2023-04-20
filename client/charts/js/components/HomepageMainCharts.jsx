@@ -14,8 +14,6 @@ import {
 	countIncidentsOutsideUS,
 	categoriesColors,
 } from '../lib/utilities.js'
-// TODO: this is just a placeholder for testing / development purposes
-import ChartDownloader from './ChartDownloader'
 
 import '../../sass/HomepageMainCharts.sass'
 
