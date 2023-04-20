@@ -222,6 +222,114 @@ class TestIncidentIndexPageContext(TestCase):
         )
 
 
+class TestFilteredExportPath(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get()
+        cls.index = IncidentIndexPageFactory(parent=site.root_page)
+        cls.settings = IncidentFilterSettings.for_site(site)
+
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=cls.settings,
+            incident_filter='is_search_warrant_obtained',
+        )
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=cls.settings,
+            incident_filter='status_of_seized_equipment',
+        )
+        GeneralIncidentFilter.objects.create(
+            incident_filter_settings=cls.settings,
+            incident_filter='targeted_institutions',
+        )
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_date_filter_lower(self):
+        request = RequestFactory().get('/?date_lower=2022-01-01')
+        context = self.index.get_context(request)
+
+        expected_path = (
+            self.index.get_url() +
+            self.index.reverse_subpage('export_view') +
+            '?date_lower=2022-01-01'
+        )
+        self.assertEqual(
+            context['filtered_export_path'],
+            expected_path,
+        )
+
+    def test_date_filter_upper(self):
+        request = RequestFactory().get('/?date_upper=2022-01-01')
+        context = self.index.get_context(request)
+
+        expected_path = (
+            self.index.get_url() +
+            self.index.reverse_subpage('export_view') +
+            '?date_upper=2022-01-01'
+        )
+        self.assertEqual(
+            context['filtered_export_path'],
+            expected_path,
+        )
+
+    def test_date_filter_both(self):
+        request = RequestFactory().get('/?date_upper=2022-01-01&date_lower=2021-05-05')
+        context = self.index.get_context(request)
+
+        expected_path = (
+            self.index.get_url() +
+            self.index.reverse_subpage('export_view') +
+            '?date_lower=2021-05-05&date_upper=2022-01-01'
+        )
+        self.assertEqual(
+            context['filtered_export_path'],
+            expected_path,
+        )
+
+    def test_boolean_filter(self):
+        request = RequestFactory().get('/?is_search_warrant_obtained=1')
+        context = self.index.get_context(request)
+
+        expected_path = (
+            self.index.get_url() +
+            self.index.reverse_subpage('export_view') +
+            '?is_search_warrant_obtained=1'
+        )
+        self.assertEqual(
+            context['filtered_export_path'],
+            expected_path,
+        )
+
+    def test_choice_filter(self):
+        request = RequestFactory().get('/?status_of_seized_equipment=RETURNED_FULL')
+        context = self.index.get_context(request)
+
+        expected_path = (
+            self.index.get_url() +
+            self.index.reverse_subpage('export_view') +
+            '?status_of_seized_equipment=RETURNED_FULL'
+        )
+        self.assertEqual(
+            context['filtered_export_path'],
+            expected_path,
+        )
+
+    def test_many_relation_filter(self):
+        request = RequestFactory().get('/?targeted_institutions=1,New York Times')
+        context = self.index.get_context(request)
+
+        expected_path = (
+            self.index.get_url() +
+            self.index.reverse_subpage('export_view') +
+            '?targeted_institutions=1%2CNew+York+Times'
+        )
+        self.assertEqual(
+            context['filtered_export_path'],
+            expected_path,
+        )
+
+
 class TestExportPage(TestCase):
     """CSV Exports"""
     @classmethod
