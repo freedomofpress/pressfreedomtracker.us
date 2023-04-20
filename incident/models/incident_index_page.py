@@ -2,7 +2,6 @@ import csv
 import json
 import copy
 from typing import TYPE_CHECKING
-from urllib import parse
 
 from django.db import models
 from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
@@ -211,7 +210,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             context['filtered_export_path'] = (
                 context['export_path'] +
                 '?' +
-                parse.urlencode(export_filter_data)
+                incident_filter.get_url_parameters()
             )
 
         incident_qs = incident_filter.get_queryset() \

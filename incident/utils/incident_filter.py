@@ -25,6 +25,7 @@ from django.db.models import (
 )
 from django.db.models.fields.related import ManyToOneRel
 from django.db.utils import ProgrammingError
+from django.http import QueryDict
 from django.utils.text import capfirst
 from drf_spectacular.utils import (
     OpenApiParameter,
@@ -115,10 +116,22 @@ filtering query."""
             )
         ]
 
+    def value_to_string(self, value):
+        return str(value)
+
+    def as_url_parameters(self, value):
+        return {self.name: self.value_to_string(value)}
+
 
 class BooleanFilter(Filter):
     serialized_type = 'bool'
     openapi_type = OpenApiTypes.BOOL
+
+    def value_to_string(self, value):
+        if value:
+            return '1'
+        else:
+            return '0'
 
 
 class IntegerFilter(Filter):
@@ -273,6 +286,16 @@ class DateFilter(Filter):
             ),
         ]
 
+    def as_url_parameters(self, value):
+        result = {}
+        lower_date, upper_date = value
+        if lower_date:
+            result[f'{self.name}_lower'] = self.value_to_string(lower_date)
+        if upper_date:
+            result[f'{self.name}_upper'] = self.value_to_string(upper_date)
+
+        return result
+
 
 class ChoiceFilter(Filter):
     @property
@@ -318,6 +341,9 @@ class ChoiceFilter(Filter):
 
     def get_openapi_enum(self):
         return self.get_choices()
+
+    def value_to_string(self, value):
+        return ','.join(value)
 
 
 class MultiChoiceFilter(Filter):
@@ -378,6 +404,9 @@ class MultiChoiceFilter(Filter):
 
     def get_openapi_enum(self):
         return self.get_choices()
+
+    def value_to_string(self, value):
+        return ','.join(value)
 
 
 @dataclasses.dataclass(eq=True, frozen=True)
@@ -479,6 +508,11 @@ class ManyRelationFilter(Filter):
         serialized['choices'] = choices
         serialized['many'] = True
         return serialized
+
+    def value_to_string(self, value):
+        return ','.join(
+            str(item) for item in itertools.chain(value.pks, value.strings)
+        )
 
 
 class SearchFilter(Filter):
@@ -990,6 +1024,17 @@ class IncidentFilter(object):
 
     def get_queryset(self, *, strict=False):
         return self._get_queryset(strict).distinct()
+
+    def get_url_parameters(self, strict=False):
+        if self.cleaned_data is None:
+            self.clean(strict=strict)
+
+        querydict = QueryDict('', mutable=True)
+        for f in self.filters:
+            cleaned_value = self.cleaned_data.get(f.name)
+            if cleaned_value is not None:
+                querydict.update(f.as_url_parameters(cleaned_value))
+        return querydict.urlencode()
 
     def _sort_queryset(self, queryset):
         if self.sort == self.SortOptions.OLDEST_DATE:
