@@ -59,6 +59,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
                     'aside',
                     'list',
                     'styled_text',
+                    'vertical_bar_chart',
                 ],
             )
         )
@@ -78,6 +79,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
             'styled_text',
             'list',
             'styled_text',
+            'vertical_bar_chart',
         ],
     )
     teaser_text = factory.Faker(

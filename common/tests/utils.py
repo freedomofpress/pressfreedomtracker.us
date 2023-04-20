@@ -1,6 +1,5 @@
 from random import choice, randrange, shuffle
 import functools
-import json
 
 from faker import Faker
 from faker.providers import BaseProvider
@@ -160,6 +159,23 @@ def generate_block_quote():
     return generate_field(
         'blockquote',
         {'text': text, 'source_text': source_text, 'source_url': source_url},
+    )
+
+
+def generate_vertical_bar_chart():
+    incident_set = {
+        'category': None,
+        'tag': None,
+        'lower_date': fake.date_between('-2y', '-1y'),
+        'upper_date': fake.date_between('-11M'),
+    }
+    return generate_field(
+        'vertical_bar_chart',
+        {
+            'title': make_words().capitalize(),
+            'incident_set': incident_set,
+            'description': fake.text(max_nb_chars=200),
+        }
     )
 
 
@@ -326,6 +342,7 @@ class StreamfieldProvider(BaseProvider):
             'info_table_external_links': generate_info_table_external_links,
             'info_table_plain_text': generate_info_table_plain_text,
             'aside': generate_aside,
+            'vertical_bar_chart': generate_vertical_bar_chart,
         }
 
         streamfield_data = []
@@ -337,4 +354,4 @@ class StreamfieldProvider(BaseProvider):
             else:
                 raise Exception('unknown field: {}'.format(field))
 
-        return json.dumps(streamfield_data)
+        return streamfield_data
