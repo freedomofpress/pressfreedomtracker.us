@@ -52,7 +52,7 @@ export default function BarChart({
 	openSearchPage,
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
-	setSvgEl = () => {}
+	setSvgEl = () => {},
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
