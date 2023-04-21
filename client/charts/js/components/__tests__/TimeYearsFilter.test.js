@@ -1,10 +1,11 @@
 import React from 'react'
 import * as d3 from 'd3'
-import ReactTestRenderer from 'react-test-renderer'
+import ShallowRenderer from 'react-test-renderer/shallow'
 import TimeYearsFilter from '../TimeYearsFilter'
 
 test('renders TimeYearsFilter with mocked data', () => {
-	expect(ReactTestRenderer.create(
+	const renderer = new ShallowRenderer();
+	expect(renderer.render(
 		<TimeYearsFilter
 			width={500}
 			height={500}

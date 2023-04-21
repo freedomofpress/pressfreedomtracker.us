@@ -18,10 +18,103 @@ exports[`renders BarChartYears with mocked data 1`] = `
     }
     width={480}
   >
-    <g />
-    <g />
+    <AnimatedDataset
+      attrs={
+        {
+          "opacity": 1,
+          "stroke": "black",
+          "strokeWidth": [Function],
+          "x1": 1,
+          "x2": 480,
+          "y1": [Function],
+          "y2": [Function],
+        }
+      }
+      dataset={
+        [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+        ]
+      }
+      duration={450}
+      init={
+        {
+          "opacity": 0,
+        }
+      }
+      keyFn={[Function]}
+      tag="line"
+    />
+    <AnimatedDataset
+      attrs={
+        {
+          "fontSize": 12,
+          "opacity": 1,
+          "text": [Function],
+          "textAnchor": "end",
+          "x": 480,
+          "y": [Function],
+        }
+      }
+      dataset={
+        [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+        ]
+      }
+      duration={450}
+      init={
+        {
+          "opacity": 0,
+        }
+      }
+      keyFn={[Function]}
+      tag="text"
+    />
     <g>
-      <g />
+      <AnimatedDataset
+        attrs={
+          {
+            "fill": [Function],
+            "height": [Function],
+            "key": [Function],
+            "stroke": "black",
+            "strokeWidth": 2,
+            "width": 10,
+            "x": [Function],
+            "y": [Function],
+          }
+        }
+        dataset={
+          [
+            {
+              "count": 2,
+              "numberOfIncidents": 0,
+              "year": 2012,
+            },
+          ]
+        }
+        duration={250}
+        events={
+          {
+            "onClick": [Function],
+          }
+        }
+        init={
+          {
+            "height": 0,
+            "y": 500,
+          }
+        }
+        keyFn={[Function]}
+        tag="rect"
+      />
       <text
         style={
           {
@@ -35,7 +128,43 @@ exports[`renders BarChartYears with mocked data 1`] = `
         2012
       </text>
     </g>
-    <g />
+    <AnimatedDataset
+      attrs={
+        {
+          "fill": [Function],
+          "height": [Function],
+          "key": [Function],
+          "stroke": "black",
+          "strokeWidth": 2,
+          "width": 10,
+          "x": [Function],
+          "y": [Function],
+        }
+      }
+      dataset={
+        [
+          {
+            "count": 2,
+            "numberOfIncidents": 0,
+            "year": 2012,
+          },
+        ]
+      }
+      duration={250}
+      events={
+        {
+          "onClick": [Function],
+        }
+      }
+      init={
+        {
+          "height": 0,
+          "y": 500,
+        }
+      }
+      keyFn={[Function]}
+      tag="rect"
+    />
   </svg>
 </div>
 `;

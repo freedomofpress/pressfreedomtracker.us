@@ -1,9 +1,10 @@
 import React from 'react'
-import ReactTestRenderer from 'react-test-renderer'
+import ShallowRenderer from 'react-test-renderer/shallow'
 import BarChartYears from '../BarChartYears'
 
 test('renders BarChartYears with mocked data', () => {
-	expect(ReactTestRenderer.create(
+	const renderer = new ShallowRenderer();
+	expect(renderer.render(
 		<BarChartYears
 			countYears={[{"year":2012,"count":2,"numberOfIncidents":0}]}
 			x="monthName"

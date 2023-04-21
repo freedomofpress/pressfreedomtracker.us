@@ -1,0 +1,160 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders CategoryFilter with mocked data 1`] = `
+<div
+  className="filters__form--fieldset"
+>
+  <div
+    className="category-graph"
+  >
+    <p
+      className="category-graph--label"
+      id="categories-graph-label"
+    >
+      Filter by one or more categories
+    </p>
+    <svg
+      aria-labelledby="categories-graph-label"
+      className="category-graph--figure"
+      height={500}
+      style={
+        {
+          "fontFamily": "var(--font-mono)",
+        }
+      }
+      width={500}
+    >
+      <AnimatedDataset
+        attrs={
+          {
+            "opacity": 1,
+            "stroke": "black",
+            "strokeWidth": [Function],
+            "x1": 5,
+            "x2": 500,
+            "y1": [Function],
+            "y2": [Function],
+          }
+        }
+        dataset={
+          [
+            0,
+            0.5,
+            1,
+          ]
+        }
+        duration={450}
+        init={
+          {
+            "opacity": 0,
+          }
+        }
+        keyFn={[Function]}
+        tag="line"
+      />
+      <AnimatedDataset
+        attrs={
+          {
+            "fontSize": 12,
+            "opacity": 1,
+            "text": [Function],
+            "textAnchor": "end",
+            "x": 500,
+            "y": [Function],
+          }
+        }
+        dataset={
+          [
+            0,
+            0.5,
+            1,
+          ]
+        }
+        duration={450}
+        init={
+          {
+            "opacity": 0,
+          }
+        }
+        keyFn={[Function]}
+        tag="text"
+      />
+      <AnimatedDataset
+        attrs={
+          {
+            "fill": [Function],
+            "height": [Function],
+            "key": [Function],
+            "stroke": "black",
+            "strokeWidth": 2,
+            "width": 23.5,
+            "x": [Function],
+            "y": [Function],
+          }
+        }
+        dataset={
+          [
+            {
+              "category": "test-def",
+              "count": 0,
+            },
+            {
+              "category": "test",
+              "count": 1,
+            },
+          ]
+        }
+        duration={250}
+        durationByAttr={
+          {
+            "fill": 0,
+          }
+        }
+        events={
+          {
+            "onClick": [Function],
+          }
+        }
+        keyFn={[Function]}
+        tag="rect"
+      />
+      <g>
+        <image
+          height={14}
+          onClick={[Function]}
+          opacity={0.3}
+          transform="translate(0, -7)"
+          width={14}
+          x={242.25}
+          y={485}
+        />
+      </g>
+      <g>
+        <image
+          height={14}
+          onClick={[Function]}
+          opacity={1}
+          transform="translate(0, -7)"
+          width={14}
+          x={9.75}
+          y={485}
+        />
+      </g>
+    </svg>
+  </div>
+  <CategorySection
+    count={0}
+    isOpen={false}
+    label="test-def"
+    onClick={[Function]}
+    symbol="test-def"
+  >
+    <FilterSet
+      filterParameters={{}}
+      filters={[]}
+      handleFilterChange={[Function]}
+      width={500}
+    />
+  </CategorySection>
+</div>
+`;

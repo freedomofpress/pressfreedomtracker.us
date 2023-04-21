@@ -206,7 +206,7 @@ export default function CategoryFilter({
 					symbol={filterDef.symbol}
 					label={filterDef.title}
 					count={categoryFrequencies[filterDef.title]}
-					isOpen={selectedCategories.has(filterDef.title)}
+					isOpen={!!selectedCategories.has && selectedCategories.has(filterDef.title)}
 					onClick={selectCategoryIfHasCount}
 				>
 					<FilterSet

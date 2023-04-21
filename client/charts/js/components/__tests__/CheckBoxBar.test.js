@@ -1,9 +1,10 @@
 import React from 'react'
-import ReactTestRenderer from 'react-test-renderer'
+import ShallowRenderer from 'react-test-renderer/shallow'
 import CheckBoxBar from '../CheckBoxBar'
 
 test('renders CheckBoxBar with mocked data', () => {
-	expect(ReactTestRenderer.create(
+	const renderer = new ShallowRenderer();
+	expect(renderer.render(
 		<CheckBoxBar
 			label="test"
 			count={2}

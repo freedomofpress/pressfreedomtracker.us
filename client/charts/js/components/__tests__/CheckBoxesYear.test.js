@@ -1,13 +1,14 @@
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
-import Button from '../Button'
+import CheckBoxesYear from '../CheckBoxesYear'
 
-test('renders Button with mocked data', () => {
+test('renders CheckBoxesYear with mocked data', () => {
 	const renderer = new ShallowRenderer();
 	expect(renderer.render(
-		<Button
-			label="test"
-			selected={false}
+		<CheckBoxesYear
+			width={500}
+			options={[{ year: 2020 }]}
+			selectedYears={[2020]}
 			onClick={() => {}}
 		/>
 	)).toMatchSnapshot();

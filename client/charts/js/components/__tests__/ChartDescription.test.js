@@ -1,9 +1,10 @@
 import React from 'react'
-import ReactTestRenderer from 'react-test-renderer'
+import ShallowRenderer from 'react-test-renderer/shallow'
 import ChartDescription from '../ChartDescription'
 
 test('renders ChartDescription with mocked data', () => {
-	expect(ReactTestRenderer.create(
+	const renderer = new ShallowRenderer();
+	expect(renderer.render(
 		<ChartDescription id="test">
 			This is a test
 		</ChartDescription>

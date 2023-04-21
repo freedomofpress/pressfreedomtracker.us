@@ -1,10 +1,11 @@
 import React from 'react'
-import ReactTestRenderer from 'react-test-renderer'
+import ShallowRenderer from 'react-test-renderer/shallow'
 import TimeMonthsFilter from '../TimeMonthsFilter'
 import * as d3 from 'd3'
 
 test('renders TimeMonthsFilter with mocked data', () => {
-	expect(ReactTestRenderer.create(
+	const renderer = new ShallowRenderer();
+	expect(renderer.render(
 		<TimeMonthsFilter
 			width={500}
 			height={500}
