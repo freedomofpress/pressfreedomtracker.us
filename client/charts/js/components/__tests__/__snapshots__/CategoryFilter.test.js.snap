@@ -97,10 +97,12 @@ exports[`renders CategoryFilter with mocked data 1`] = `
             {
               "category": "test-def",
               "count": 0,
+              "symbol": "test-def",
             },
             {
               "category": "test",
               "count": 1,
+              "symbol": undefined,
             },
           ]
         }
@@ -119,26 +121,34 @@ exports[`renders CategoryFilter with mocked data 1`] = `
         tag="rect"
       />
       <g>
-        <image
+        <foreignObject
           height={14}
-          onClick={[Function]}
           opacity={0.3}
           transform="translate(0, -7)"
           width={14}
           x={242.25}
           y={485}
-        />
+        >
+          <div
+            className="category category-test-def"
+            onClick={[Function]}
+          />
+        </foreignObject>
       </g>
       <g>
-        <image
+        <foreignObject
           height={14}
-          onClick={[Function]}
           opacity={1}
           transform="translate(0, -7)"
           width={14}
           x={9.75}
           y={485}
-        />
+        >
+          <div
+            className="category category-undefined"
+            onClick={[Function]}
+          />
+        </foreignObject>
       </g>
     </svg>
   </div>
