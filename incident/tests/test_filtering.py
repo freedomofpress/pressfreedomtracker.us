@@ -507,6 +507,9 @@ class TestSearchFiltering(TestCase):
                 'https://www.youtube.com/watch?v=DEa0xegtIEk',
             ),
             body__6__video__alignment=ALIGNMENT_CHOICES[1][0],
+            body__7__tweet__tweet=EmbedValue(
+                'https://completely-nonexistent-site.com/empty-url',
+            ),
         )
         IncidentUpdateWithBodyFactory(
             page=cls.incident1,
@@ -588,6 +591,10 @@ class TestSearchFiltering(TestCase):
     def test_body_tweet_embeds_are_searched(self):
         incidents = IncidentFilter({'search': 'restrict'}).get_queryset()
         self.assertQuerysetEqual(incidents, [self.incident1])
+
+    def test_unreachable_body_tweet_embeds_are_not_searched(self):
+        incidents = IncidentFilter({'search': 'nonexistent'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [])
 
     def test_body_blockquote_texts_are_searched(self):
         incidents = IncidentFilter({'search': 'pear'}).get_queryset()
