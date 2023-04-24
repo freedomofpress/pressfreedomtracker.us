@@ -4,8 +4,8 @@ import FiltersIntegration from "./FiltersIntegration";
 import { decode } from "../lib/queryString";
 import "../../sass/base.sass";
 
-export default function FilterSidebar({ serializedFilters}) {
-	const [dataset, setDataset] = useState(null);
+export default function FilterSidebar({ serializedFilters, initialDataset = null }) {
+	const [dataset, setDataset] = useState(initialDataset);
 	let filters = JSON.parse(serializedFilters)
 
 	useEffect(() => {
