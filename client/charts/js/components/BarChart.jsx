@@ -48,8 +48,11 @@ export default function BarChart({
 	height,
 	id = '',
 	numberOfTicks = 4,
-	openSearchPage = () => {},
-	description
+	description,
+	openSearchPage,
+	// function prop received from ChartDownloader that binds the svg element to allow
+	// it to be downloaded
+	setSvgEl = () => {},
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -126,6 +129,7 @@ export default function BarChart({
 					/>
 				)}
 				<svg
+					ref={setSvgEl}
 					width={width}
 					height={height}
 					aria-labelledby={id}
@@ -257,6 +261,7 @@ export default function BarChart({
 	} else {
 		return (
 			<svg
+				ref={setSvgEl}
 				width={width}
 				height={height}
 				style={{
