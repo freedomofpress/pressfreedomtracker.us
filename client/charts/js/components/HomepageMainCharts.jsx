@@ -111,24 +111,19 @@ function HomepageMainChartsWidth({
 				</div>
 				<div className={'hpChart'}>
 					<ChartDescription id={'homepage-bar-chart-label'}>Showing the number of journalists targeted per month.</ChartDescription>
-					<ChartDownloader
-						chartTitle="This is a Chart Title"
-						creditUrl="https://pressfreedomtracker.us/blog/a-hearing-of-national-significance-a-texas-judge-and-a-hush-request/"
-					>
-						<BarChart
-							data={datasetGroupedByMonth}
-							x={'monthName'}
-							y={'numberOfIncidents'}
-							titleLabel={'incidents'}
-							id={'homepage-bar-chart-label'}
-							width={chartWidth}
-							height={chartHeight}
-							isMobileView={width < 970}
-							openSearchPage={(monthName) => {
-								goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
-							}}
-						/>
-					</ChartDownloader>
+					<BarChart
+						data={datasetGroupedByMonth}
+						x={'monthName'}
+						y={'numberOfIncidents'}
+						titleLabel={'incidents'}
+						id={'homepage-bar-chart-label'}
+						width={chartWidth}
+						height={chartHeight}
+						isMobileView={width < 970}
+						openSearchPage={(monthName) => {
+							goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+						}}
+					/>
 				</div>
 			</div>
 		</Flashing>
