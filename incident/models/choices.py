@@ -29,6 +29,7 @@ class LegalOrderStatus(TextChoices):
     DROPPED = 'DROPPED', 'dropped'
     QUASHED = 'QUASHED', 'quashed'
     UPHELD = 'UPHELD', 'upheld'
+    PARTIALLY_UPHELD = 'PARTIALLY_UPHELD', 'partially upheld'
     CARRIED_OUT = 'CARRIED_OUT', 'carried out'
     IGNORED = 'IGNORED', 'ignored'
     OBJECTED_TO = 'OBJECTED_TO', 'objected to'
