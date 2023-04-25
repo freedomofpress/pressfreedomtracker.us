@@ -27,7 +27,7 @@ rules:
     declaration-block-semicolon-space-after: null
     declaration-block-semicolon-space-before: null
     declaration-block-trailing-semicolon: null
-    order/properties-alphabetical-order: null
+    declaration-block-no-redundant-longhand-properties: null
     max-line-length: null
     max-nesting-depth: null
     selector-list-comma-newline-after: null
@@ -36,4 +36,3 @@ rules:
     rule-empty-line-before: null
     color-function-notation: legacy
     alpha-value-notation: number
-    color-hex-case: upper
