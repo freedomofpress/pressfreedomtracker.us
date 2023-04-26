@@ -22,9 +22,9 @@ export default function IncidentsTimeBarChart({
 
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = dataset
-		.filter(({ categories = '', tags = '', date }) => {
-			const incidentCategories = categories.split(',').map(d => d.trim())
-			const incidentTags = tags.split(',').map(d => d.trim())
+		.filter(({ categories, tags, date }) => {
+			const incidentCategories = categories ? categories.split(',').map(d => d.trim()) : []
+			const incidentTags = tags ? tags.split(',').map(d => d.trim()) : []
 
 			const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
 			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
