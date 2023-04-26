@@ -1,15 +1,18 @@
 import React from 'react'
 import { ParentSize } from '@visx/responsive'
 import BarChart from './BarChart'
+import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
 
 export default function IncidentsTimeBarChart({
 	dataset,
+	title,
 	description,
 	filterCategories = null, // Array or string of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	isMobileView = false,
+	creditUrl = ''
 }) {
 	// Create maps so that we don't have to do n^2 lookup times
 	const filterCategoryMap = (Array.isArray(filterCategories) ? filterCategories : [filterCategories])
@@ -19,9 +22,9 @@ export default function IncidentsTimeBarChart({
 
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = dataset
-		.filter(({ categories = '', tags = '', date }) => {
-			const incidentCategories = categories.split(',').map(d => d.trim())
-			const incidentTags = tags.split(',').map(d => d.trim())
+		.filter(({ categories, tags, date }) => {
+			const incidentCategories = categories ? categories.split(',').map(d => d.trim()) : []
+			const incidentTags = tags ? tags.split(',').map(d => d.trim()) : []
 
 			const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
 			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
@@ -83,18 +86,24 @@ export default function IncidentsTimeBarChart({
 	return (
 		<ParentSize>
 			{(parent) =>
-				<BarChart
-					description={description || generatedDescription}
-					data={incidentsByAllTime}
-					x={'date'}
-					y={'count'}
-					xFormat={xFormat}
-					tooltipXFormat={d3.timeFormat("%b %Y")}
-					titleLabel={'incidents'}
-					width={parent.width}
-					height={parent.width * 0.75}
-					isMobileView={isMobileView}
-				/>
+				<ChartDownloader
+					chartTitle={title}
+					creditUrl={creditUrl}
+					downloadFileName={title ? `${title}.png` : 'chart.png'}
+				>
+					<BarChart
+						description={description || generatedDescription}
+						data={incidentsByAllTime}
+						x={'date'}
+						y={'count'}
+						xFormat={xFormat}
+						tooltipXFormat={d3.timeFormat("%b %Y")}
+						titleLabel={'incidents'}
+						width={parent.width}
+						height={parent.width * 0.75}
+						isMobileView={isMobileView}
+					/>
+				</ChartDownloader>
 			}
 		</ParentSize>
 	)

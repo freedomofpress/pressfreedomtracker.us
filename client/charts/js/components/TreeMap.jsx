@@ -104,7 +104,9 @@ function stackDatasetByCategory(
 	)
 
 	// [{category: "Assault", startingPoint: 0, endPoint: 800}, {category: "Arrest", startingPoint: 800, endPoint: 850}, ...]
-	const stack = d3.stack().keys(Object.keys(incidentsGroupedByCategory))
+	const stack = d3.stack().keys(
+		Object.keys(incidentsGroupedByCategory).sort((a, b) => a.localeCompare(b))
+	)
 	const datasetStackedByCategory = stack([incidentsGroupedByCategoryAdjusted]).map((d) => ({
 		startingPoint: d[0][0],
 		endPoint: !isNaN(d[0][1]) ? d[0][1] : d[0][0],
