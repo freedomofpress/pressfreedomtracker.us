@@ -182,8 +182,7 @@ class IncidentQuerySet(PageQuerySet):
         legal order's most recent status."""
         newest_update = LegalOrderUpdate.objects.filter(
             legal_order=OuterRef('pk'),
-            date__gte=OuterRef('date')
-        ).order_by('-date').values('status')[:1]
+        ).order_by('-sort_order').values('status')[:1]
 
         latest_status = LegalOrder.objects.filter(
             pk=OuterRef('pk'),

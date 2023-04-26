@@ -56,6 +56,39 @@ class TestLegalOrder(TestCase):
         )
 
 
+class TestLegalOrderWithUnknownDateUpdate(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.legal_order_with_updates = LegalOrderWithUpdatesFactory(
+            order_type=choices.LegalOrderType.SUBPOENA,
+            information_requested=choices.InformationRequested.TESTIMONY_ABOUT_SOURCE,
+            status=choices.LegalOrderStatus.PENDING,
+            date=date(2022, 1, 1),
+            update1__status=choices.LegalOrderStatus.UPHELD,
+            update2__status=choices.LegalOrderStatus.DROPPED,
+            update2__date=None,
+            update3__status=choices.LegalOrderStatus.OBJECTED_TO,
+            update3__date=None,
+        )
+
+    def test_summarizes_based_on_most_recent_update_status(self):
+        self.assertEqual(
+            self.legal_order_with_updates.summary,
+            'subpoena for testimony about confidential source (objected to)'
+        )
+
+    def test_entries_are_ordered_by_date_ascending(self):
+        self.assertEqual(
+            self.legal_order_with_updates.entries_display(),
+            [
+                ('Jan. 1, 2022', 'pending'),
+                ('Jan. 2, 2022', 'upheld'),
+                ('Unknown date', 'dropped'),
+                ('Unknown date', 'objected to'),
+            ]
+        )
+
+
 class TestIncidentCharge(TestCase):
     def test_simple_summary(self):
         incident_charge = IncidentChargeFactory(

@@ -789,10 +789,11 @@ class RecentLegalOrderStatusesMethod(TestCase):
             parent=site.root_page,
         )
 
-        cls.incident1, cls.incident2, cls.incident3 = IncidentPageFactory.create_batch(
-            3,
-            parent=cls.index,
-        )
+        cls.incident1, cls.incident2, cls.incident3, cls.incident4 = \
+            IncidentPageFactory.create_batch(
+                4,
+                parent=cls.index,
+            )
 
         LegalOrderWithUpdatesFactory(
             incident_page=cls.incident1,
@@ -846,6 +847,18 @@ class RecentLegalOrderStatusesMethod(TestCase):
             update3__date='2022-12-04',
         )
 
+        LegalOrderWithUpdatesFactory(
+            incident_page=cls.incident4,
+            status=choices.LegalOrderStatus.UNKNOWN,
+            date='2023-01-01',
+            update1__status=choices.LegalOrderStatus.UPHELD,
+            update1__date='2021-11-09',
+            update2__status=choices.LegalOrderStatus.CARRIED_OUT,
+            update2__date='2022-06-06',
+            update3__status=choices.LegalOrderStatus.PARTIALLY_UPHELD,
+            update3__date=None,
+        )
+
     def test_returns_most_recent_status_on_all_legal_orders(self):
         incident = IncidentPage.objects \
             .with_most_recent_status_of_legal_orders().get(
@@ -874,14 +887,24 @@ class RecentLegalOrderStatusesMethod(TestCase):
 
     def test_handles_base_status_more_recent_than_updates(self):
         """if the base status is more recent than all status updates,
-        it returns the base status for that legal order"""
+        it returns updated status for that legal order"""
         incident = IncidentPage.objects \
             .with_most_recent_status_of_legal_orders().get(
                 pk=self.incident3.pk
             )
         self.assertEqual(
             incident.most_recent_legal_order_statuses,
-            [choices.LegalOrderStatus.UNKNOWN],
+            [choices.LegalOrderStatus.QUASHED],
+        )
+
+    def test_handles_latest_updates_with_unknown_dates(self):
+        incident = IncidentPage.objects \
+            .with_most_recent_status_of_legal_orders().get(
+                pk=self.incident4.pk
+            )
+        self.assertEqual(
+            incident.most_recent_legal_order_statuses,
+            [choices.LegalOrderStatus.PARTIALLY_UPHELD],
         )
 
 

@@ -572,16 +572,19 @@ class LegalOrderWithUpdatesFactory(factory.django.DjangoModelFactory):
         LegalOrderUpdateFactory,
         factory_related_name='legal_order',
         date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=1)),
+        sort_order=1,
     )
     update2 = factory.RelatedFactory(
         LegalOrderUpdateFactory,
         factory_related_name='legal_order',
         date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=2)),
+        sort_order=2,
     )
     update3 = factory.RelatedFactory(
         LegalOrderUpdateFactory,
         factory_related_name='legal_order',
         date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=3)),
+        sort_order=3,
     )
 
 

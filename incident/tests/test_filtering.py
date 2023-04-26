@@ -2274,3 +2274,24 @@ class LegalOrderStatusFilterTest(TestCase):
             incidents,
             [self.legal_order1.incident_page, self.legal_order3.incident_page],
         )
+
+    def test_filters_by_legal_order_status_without_date(self):
+        legal_order5 = factories.LegalOrderWithUpdatesFactory(
+            status=self.other_status1,
+            update1__status=self.other_status2,
+            update2__status=self.other_status1,
+            update3__date=None,
+            update3__status=self.desired_status,
+        )
+        incidents = IncidentFilter({
+            'legal_order_status': self.desired_status,
+        }).get_queryset(strict=True)
+
+        self.assertQuerysetEqual(
+            incidents,
+            [
+                self.legal_order1.incident_page,
+                self.legal_order3.incident_page,
+                legal_order5.incident_page,
+            ],
+        )

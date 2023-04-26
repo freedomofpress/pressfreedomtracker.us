@@ -112,39 +112,43 @@ class LegalOrder(ClusterableModel):
 
     def entries_display(self):
         date_format = '%b. %-d, %Y'
-        entries = [
-            (self.date, self.get_status_display())
-        ] + [
-            (update.date, update.get_status_display()) for update in self.updates.all()
-        ]
 
-        return [
-            (date.strftime(date_format), status) for date, status in
-            sorted(entries, key=lambda item: item[0])
+        update_entries = [
+            (
+                update.date.strftime(date_format) if update.date else 'Unknown date',
+                update.get_status_display(),
+            )
+            for update in self.updates.all()
         ]
+        entries = [
+            (self.date.strftime(date_format), self.get_status_display())
+        ] + update_entries
+        return entries
 
     @property
     def summary(self):
         """Summary of a legal order, used in the CSV export feature."""
-        if update := self.updates.order_by('-date').first():
+        date_text_template = ' as of {date}'
+        if update := self.updates.last():
             status = update.get_status_display()
-            date = update.date
+            date_text = date_text_template.format(date=update.date) \
+                if update.date else ''
         else:
             status = self.status.label
-            date = self.date
+            date_text = date_text_template.format(date=self.date)
         info = self.information_requested.label
         order_type = self.order_type.label
 
-        return f'{order_type} for {info} ({status} as of {date})'
+        return f'{order_type} for {info} ({status}{date_text})'
 
 
-class LegalOrderUpdate(models.Model):
+class LegalOrderUpdate(Orderable):
     legal_order = ParentalKey(
         LegalOrder,
         related_name='updates',
         on_delete=models.CASCADE,
     )
-    date = models.DateField()
+    date = models.DateField(blank=True, null=True)
     status = models.CharField(
         max_length=1000,
         choices=choices.LegalOrderStatus.choices,
