@@ -461,6 +461,23 @@ class SimpleIncidentSet(blocks.StructBlock):
         help_text='If set, no incidents after this date will be included.',
     )
 
+class PluralIncidentSet(blocks.StructBlock):
+    category = blocks.ListBlock(blocks.PageChooserBlock(
+        label='Filter by Category',
+        required=False,
+        page_type='common.CategoryPage',
+        help_text='If selected, only incidents in the chosen category will be included.',
+    ))
+    lower_date = blocks.DateBlock(
+        label='Filter by Date, lower bound',
+        required=False,
+        help_text='If set, no incidents before this date will be included.',
+    )
+    upper_date = blocks.DateBlock(
+        label='Filter by Date, upper bound',
+        required=False,
+        help_text='If set, no incidents after this date will be included.',
+    )
 
 class VerticalBarChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
@@ -483,7 +500,7 @@ class VerticalBarChart(blocks.StructBlock):
 
 class TreeMapChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
-    incident_set = SimpleIncidentSet()
+    incident_set = PluralIncidentSet()
     description = blocks.TextBlock(
         required=True,
         help_text='Description for assistive technology users. '

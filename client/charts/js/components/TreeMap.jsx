@@ -22,7 +22,7 @@ const margins = {
 }
 
 const paddings = {
-	top: 0,
+	top: 10,
 	bottom: 40.5,
 	right: 10,
 	left: 10,
@@ -129,9 +129,32 @@ export default function TreeMap({
 	openSearchPage,
 	categoriesColors,
 	allCategories,
+	// function prop received from ChartDownloader that binds the svg element to allow
+	// it to be downloaded
+	setSvgEl = () => {},
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+
+	// Because the chart can be rendered horizontally on desktop and vertically on
+	// mobile, we abstract the dimensions below
+	const isMobile = width < 500
+	const chartLength = isMobile ? height : width
+	const chartWidth = isMobile ? width : height
+	const chartLengthPaddingBefore = isMobile ? paddings.top : paddings.left
+	const chartLengthPaddingAfter = isMobile ? paddings.bottom : paddings.right
+	const chartWidthPaddingBefore = isMobile ? paddings.left : paddings.top
+	const chartWidthPaddingAfter = isMobile ? paddings.right : paddings.bottom
+	const chartLengthDimension = isMobile ? 'y' : 'x'
+	const chartWidthDimension = isMobile ? 'x' : 'y'
+	const chartLengthTitle = isMobile ? 'height' : 'width'
+	const chartWidthTitle = isMobile ? 'width' : 'height'
+
+	// Calculate the height of the legend
+
+	// Calculate the height of the legend and adjust the padding accordingly
+	if (isMobile) paddings.top = 10
+	else paddings.top = 40
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -139,7 +162,7 @@ export default function TreeMap({
 
 	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(
 		dataset,
-		height,
+		chartLength,
 		minimumBarHeight
 	)
 
@@ -151,14 +174,14 @@ export default function TreeMap({
 		allCategories
 	)
 
-	const yScale = d3
+	const lengthScale = d3
 		.scaleLinear()
 		// Default to [-1, 0] if there's no data
 		.domain(dataset.length ? [0, d3.max(datasetStackedByCategory, (d) => d.endPoint)] : [-1, 0])
-		.range([height - borderWidth.normal - paddings.top, paddings.bottom])
+		.range([chartLength - chartLengthPaddingBefore, chartLengthPaddingAfter])
 
 	const computeBarHeight = (start, end) => {
-		return Math.max(yScale(start) - yScale(end), 1)
+		return Math.max(lengthScale(start) - lengthScale(end), 1)
 	}
 
 	const getCategoryColour = (category) => {
@@ -222,6 +245,7 @@ export default function TreeMap({
 						marginBottom: margins.bottom,
 						marginLeft: margins.left,
 					}}
+					ref={setSvgEl}
 				>
 					<line
 						x1={paddings.left}
@@ -236,17 +260,17 @@ export default function TreeMap({
 						tag="rect"
 						init={{
 							opacity: 0,
-							x: paddings.left,
-							y: height - paddings.bottom,
-							width: width - (paddings.right + paddings.left),
-							height: 0,
+							[chartWidthDimension]: chartWidthPaddingBefore,
+							[chartLengthDimension]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
+							[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
+							[chartLengthTitle]: 0,
 						}}
 						attrs={{
 							opacity: 1,
-							x: paddings.left,
-							y: (d) => height - yScale(d.startingPoint),
-							width: width - (paddings.right + paddings.left),
-							height: (d) => computeBarHeight(d.startingPoint, d.endPoint),
+							[chartWidthDimension]: chartWidthPaddingBefore,
+							[chartLengthDimension]: (d) => chartLength - lengthScale(d.startingPoint),
+							[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
+							[chartLengthTitle]: (d) => computeBarHeight(d.startingPoint, d.endPoint),
 							fill: (d) =>
 								hoveredElement === d.category || hoveredElement === null
 									? d.numberOfIncidents === 0
@@ -282,10 +306,10 @@ export default function TreeMap({
 						tag="line"
 						init={{
 							opacity: 0,
-							x1: paddings.left - borderWidth.normal / 2,
-							x2: width - paddings.right + borderWidth.normal / 2,
-							y1: height - paddings.bottom,
-							y2: height - paddings.bottom,
+							[`${chartWidthDimension}1`]: chartWidthPaddingBefore - borderWidth.normal / 2,
+							[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + borderWidth.normal / 2,
+							[`${chartLengthDimension}1`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
+							[`${chartLengthDimension}2`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
 						}}
 						attrs={{
 							opacity: (d) =>
@@ -296,12 +320,12 @@ export default function TreeMap({
 									? 1
 									: 0,
 							display: (d) => (d.startingPoint !== d.endPoint ? null : 'none'),
-							x1: paddings.left - (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
-							x2: width - paddings.right + (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
-							y1: (d) =>
-								height - yScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
-							y2: (d) =>
-								height - yScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
+							[`${chartWidthDimension}1`]: chartWidthPaddingBefore - (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
+							[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
+							[`${chartLengthDimension}1`]: (d) =>
+								chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
+							[`${chartLengthDimension}2`]: (d) =>
+								chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
 							stroke: (d, i) =>
 								hoveredElement === d.category
 									? findColor(d.category)
@@ -317,72 +341,101 @@ export default function TreeMap({
 						duration={250}
 						durationByAttr={{ fill: 0, stroke: 0 }}
 					/>
-					<AnimatedDataset
-						dataset={datasetStackedByCategory}
-						tag="text"
-						init={{
-							opacity: 0,
-							y: (d) => height - paddings.bottom,
-							x: paddings.left + textPaddings.left,
-						}}
-						attrs={{
-							opacity: (d) =>
-								datasetStackedByCategory
-									.filter(
-										(d) =>
-											yScale(d.startingPoint) - yScale(d.endPoint) - paddingRect > minimumHeightText
-									)
-									.map((d) => d.category)
-									.includes(d.category)
-									? 1
-									: 0,
-							y: (d) =>
-								height -
-								yScale(d.startingPoint) +
-								computeBarHeight(d.startingPoint, d.endPoint) / 2 +
-								textPaddings.top,
-							x: paddings.left + textPaddings.left,
-							textAnchor: 'start',
-							...textStyle,
-							pointerEvents: 'none',
-							text: (d) => d.category,
-						}}
-						keyFn={(d) => d.category}
-						duration={250}
-					/>
-					<AnimatedDataset
-						dataset={datasetStackedByCategory}
-						init={{
-							opacity: 0,
-							y: (d) => height - paddings.bottom,
-							x: width - textPaddings.right - paddings.right,
-						}}
-						tag="text"
-						attrs={{
-							opacity: (d) =>
-								datasetStackedByCategory
-									.filter(
-										(d) =>
-											yScale(d.startingPoint) - yScale(d.endPoint) - paddingRect > minimumHeightText
-									)
-									.map((d) => d.category)
-									.includes(d.category)
-									? 1
-									: 0,
-							y: (d) =>
-								height -
-								yScale(d.startingPoint) +
-								computeBarHeight(d.startingPoint, d.endPoint) / 2 +
-								textPaddings.top,
-							x: width - textPaddings.right - paddings.right,
-							textAnchor: 'end',
-							...textStyle,
-							pointerEvents: 'none',
-							text: (d) => d.numberOfIncidents,
-						}}
-						keyFn={(d) => d.category}
-						duration={250}
-					/>
+					{isMobile ?
+						// Text label inside of bars that displays on mobile
+						(<>
+							<AnimatedDataset
+								dataset={datasetStackedByCategory}
+								tag="text"
+								init={{
+									opacity: 0,
+									y: (d) => height - paddings.bottom,
+									x: paddings.left + textPaddings.left,
+								}}
+								attrs={{
+									opacity: (d) =>
+										datasetStackedByCategory
+											.filter(
+												(d) =>
+													lengthScale(d.startingPoint) - lengthScale(d.endPoint) - paddingRect > minimumHeightText
+											)
+											.map((d) => d.category)
+											.includes(d.category)
+											? 1
+											: 0,
+									y: (d) =>
+										height -
+										lengthScale(d.startingPoint) +
+										computeBarHeight(d.startingPoint, d.endPoint) / 2 +
+										textPaddings.top,
+									x: paddings.left + textPaddings.left,
+									textAnchor: 'start',
+									...textStyle,
+									pointerEvents: 'none',
+									text: (d) => d.category,
+								}}
+								keyFn={(d) => d.category}
+								duration={250}
+							/>
+							<AnimatedDataset
+								dataset={datasetStackedByCategory}
+								init={{
+									opacity: 0,
+									y: (d) => height - paddings.bottom,
+									x: width - textPaddings.right - paddings.right,
+								}}
+								tag="text"
+								attrs={{
+									opacity: (d) =>
+										datasetStackedByCategory
+											.filter(
+												(d) =>
+													lengthScale(d.startingPoint) - lengthScale(d.endPoint) - paddingRect > minimumHeightText
+											)
+											.map((d) => d.category)
+											.includes(d.category)
+											? 1
+											: 0,
+									y: (d) =>
+										height -
+										lengthScale(d.startingPoint) +
+										computeBarHeight(d.startingPoint, d.endPoint) / 2 +
+										textPaddings.top,
+									x: width - textPaddings.right - paddings.right,
+									textAnchor: 'end',
+									...textStyle,
+									pointerEvents: 'none',
+									text: (d) => d.numberOfIncidents,
+								}}
+								keyFn={(d) => d.category}
+								duration={250}
+							/>
+						</>)
+						:
+						// X axis and legend only shown on desktop
+						(<>
+							<AnimatedDataset
+								dataset={datasetStackedByCategory}
+								init={{
+									opacity: 0,
+									y: height - paddings.bottom,
+									x: 0,
+								}}
+								tag="text"
+								attrs={{
+									opacity: 1,
+									y: height - paddings.bottom / 2,
+									x: d => chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
+									textAnchor: 'end',
+									...textStyle,
+									pointerEvents: 'none',
+									text: (d) => d.numberOfIncidents,
+								}}
+								keyFn={(d) => d.category}
+								duration={250}
+							/>
+						</>)
+					}
 				</svg>
 			</div>
 		</>

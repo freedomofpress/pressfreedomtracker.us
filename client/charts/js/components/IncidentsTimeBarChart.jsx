@@ -3,6 +3,7 @@ import { ParentSize } from '@visx/responsive'
 import BarChart from './BarChart'
 import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
+import { filterDatasets } from '../lib/utilities'
 
 export default function IncidentsTimeBarChart({
 	dataset,
@@ -14,36 +15,8 @@ export default function IncidentsTimeBarChart({
 	isMobileView = false,
 	creditUrl = ''
 }) {
-	// Create maps so that we don't have to do n^2 lookup times
-	const filterCategoryMap = (Array.isArray(filterCategories) ? filterCategories : [filterCategories])
-		.reduce((acc, val) => ({...acc, [val]: true}), {})
-	const filterTagsMap = (Array.isArray(filterTags) ? filterTags : [filterTags])
-		.reduce((acc, val) => ({...acc, [val]: true}), {})
-
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = dataset
-		.filter(({ categories, tags, date }) => {
-			const incidentCategories = categories ? categories.split(',').map(d => d.trim()) : []
-			const incidentTags = tags ? tags.split(',').map(d => d.trim()) : []
-
-			const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
-			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
-
-			const [startDate, endDate] = dateRange;
-			if (startDate) startDate.setHours(0)
-			if (endDate) endDate.setHours(0)
-			const isBeforeStartDate = startDate && date < startDate
-			const isAfterEndDate = endDate && date > endDate
-			const isExcludedDate = isBeforeStartDate || isAfterEndDate
-
-			return !isExcludedCategory && !isExcludedTag && !isExcludedDate
-		})
-		.map(({ date, ...restProps }) => {
-			// Set the date to the start of the month
-			date.setDate(1)
-			date.setHours(0)
-			return { ...restProps, date }
-		})
+	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
 
 	// Rollup the incidents by month-year
 	const incidentsByMonth = Array.from(d3.rollup(filteredDataset, d => d.length, d => d.date))
