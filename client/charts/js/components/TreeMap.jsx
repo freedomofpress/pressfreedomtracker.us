@@ -49,6 +49,8 @@ const textStyle = {
 
 const paddingRect = borderWidth.normal
 const minimumHeightText = 17
+const averageLetterWidth = 8
+const labelHeight = 30
 
 function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight) {
 	const totalIncidents = dataset.length
@@ -68,6 +70,7 @@ function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight)
 
 function stackDatasetByCategory(
 	dataset,
+	filterElements,
 	categoryColumn,
 	categoryDivider,
 	minimumNumberOfIncidents,
@@ -78,7 +81,10 @@ function stackDatasetByCategory(
 	// Any incident having multiple categories is counted once per category
 	const categoriesSimplified = [].concat.apply(
 		[],
-		categories.map((d) => d.split(categoryDivider).map((e) => e.trim()))
+		categories.map(
+			(d) => d.split(categoryDivider).map((e) => e.trim())
+				.filter(f => !filterElements || filterElements.length === 0 || filterElements.includes(f))
+		)
 	)
 
 	// {"Assault": 800, "Arrest": 50, ...}
@@ -126,7 +132,7 @@ export default function TreeMap({
 	height,
 	isHomePageDesktopView,
 	minimumBarHeight,
-	openSearchPage,
+	openSearchPage = () => {},
 	categoriesColors,
 	allCategories,
 	// function prop received from ChartDownloader that binds the svg element to allow
@@ -135,6 +141,7 @@ export default function TreeMap({
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+	const [selectedElements, setSelectedElements] = useState([])
 
 	// Because the chart can be rendered horizontally on desktop and vertically on
 	// mobile, we abstract the dimensions below
@@ -143,18 +150,12 @@ export default function TreeMap({
 	const chartWidth = isMobile ? width : height
 	const chartLengthPaddingBefore = isMobile ? paddings.top : paddings.left
 	const chartLengthPaddingAfter = isMobile ? paddings.bottom : paddings.right
-	const chartWidthPaddingBefore = isMobile ? paddings.left : paddings.top
+	let chartWidthPaddingBefore = isMobile ? paddings.left : paddings.top
 	const chartWidthPaddingAfter = isMobile ? paddings.right : paddings.bottom
 	const chartLengthDimension = isMobile ? 'y' : 'x'
 	const chartWidthDimension = isMobile ? 'x' : 'y'
 	const chartLengthTitle = isMobile ? 'height' : 'width'
 	const chartWidthTitle = isMobile ? 'width' : 'height'
-
-	// Calculate the height of the legend
-
-	// Calculate the height of the legend and adjust the padding accordingly
-	if (isMobile) paddings.top = 10
-	else paddings.top = 40
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -168,6 +169,7 @@ export default function TreeMap({
 
 	const datasetStackedByCategory = stackDatasetByCategory(
 		dataset,
+		selectedElements,
 		categoryColumn,
 		categoryDivider,
 		minimumNumberOfIncidents,
@@ -191,7 +193,6 @@ export default function TreeMap({
 	const colorScale = categoriesColors !== undefined ? getCategoryColour : d3.scaleOrdinal(colors)
 
 	const colorsByCategory = datasetStackedByCategory
-		.filter((d) => d.numberOfIncidents !== 0)
 		.map((d) => ({
 			category: d.category,
 			color: colorScale(d.category),
@@ -204,11 +205,42 @@ export default function TreeMap({
 		return nextCategories.length === 0 ? null : nextCategories[0].category
 	}
 
+	// Calculate the positions of the rects for the legend
+	const datasetCategoriesLabelsLegend = datasetStackedByCategory.reduce((acc, val) => {
+		let labelStartingX = paddings.left
+		let labelStartingY = 15
+		const labelWidth = val.category.length * averageLetterWidth + 15
+		if (acc.length > 0) {
+			const lastLabel = acc[acc.length - 1]
+			labelStartingX = lastLabel.labelStartingX + lastLabel.labelWidth
+			labelStartingY = lastLabel.labelStartingY
+			if (labelStartingX + labelWidth > width - paddings.right) {
+				labelStartingX = paddings.left
+				labelStartingY += labelHeight
+			}
+		}
+		return [...acc, { ...val, labelStartingX, labelStartingY, labelWidth }]
+	}, [])
+
+	const toggleSelectedCategory = category => {
+		const existingCategoryIndex = selectedElements.indexOf(category)
+		if (existingCategoryIndex >= 0) {
+			setSelectedElements(selectedElements.filter(d => d !== category))
+		} else {
+			setSelectedElements([...selectedElements, category])
+		}
+	}
+
+	if (!isMobile) {
+		chartWidthPaddingBefore = datasetCategoriesLabelsLegend[datasetCategoriesLabelsLegend.length - 1].labelStartingY
+			+ paddings.top + labelHeight * 1.5
+	}
+
 	if (!width) return null
 
 	return (
 		<>
-			{hoveredElement && (
+			{hoveredElement && !!(tooltipPosition.x || tooltipPosition.y) && (
 				<Tooltip
 					content={
 						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -290,6 +322,7 @@ export default function TreeMap({
 								updateTooltipPosition(d3event)
 							},
 							onMouseLeave: () => {
+								setTooltipPosition({ x: 0, y: 0 })
 								setHoveredElement(null)
 							},
 							// In a future, if we update our version of d3-selection this may
@@ -414,6 +447,45 @@ export default function TreeMap({
 						:
 						// X axis and legend only shown on desktop
 						(<>
+							{datasetCategoriesLabelsLegend
+								.sort((a, b) => hoveredElement === b.category ? 0 : 1)
+								.map(d => (
+									<g
+										key={d.category}
+										onMouseLeave={() => {
+											setTooltipPosition({ x: 0, y: 0 })
+											setHoveredElement(null)
+										}}
+										onClick={() => toggleSelectedCategory(d.category)}
+										onMouseEnter={() => setHoveredElement(d.category)}
+										onMouseUp={() => openSearchPage(d.category)}
+										cursor="pointer"
+									>
+										<rect
+											x={d.labelStartingX}
+											y={d.labelStartingY}
+											width={d.labelWidth}
+											height={30}
+											strokeWidth={hoveredElement === d.category ? borderWidth.normal : borderWidth.mobile}
+											stroke={hoveredElement === d.category ? findColor(d.category) : 'black'}
+											fill={hoveredElement === d.category || hoveredElement === null
+												? (d.numberOfIncidents === 0 && hoveredElement !== d.category)
+													? 'white'
+													: findColor(d.category)
+												: 'white'}
+										/>
+										<text
+											x={d.labelStartingX + (d.labelWidth / 2)}
+											y={d.labelStartingY + labelHeight / 2 + 1}
+											textAnchor="middle"
+											dominantBaseline="middle"
+											{...textStyle}
+										>
+											{d.category}
+										</text>
+									</g>
+								)
+							)}
 							<AnimatedDataset
 								dataset={datasetStackedByCategory}
 								init={{
@@ -423,7 +495,7 @@ export default function TreeMap({
 								}}
 								tag="text"
 								attrs={{
-									opacity: 1,
+									opacity: (d) => d.numberOfIncidents ? 1 : 0,
 									y: height - paddings.bottom / 2,
 									x: d => chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
 									textAnchor: 'end',
