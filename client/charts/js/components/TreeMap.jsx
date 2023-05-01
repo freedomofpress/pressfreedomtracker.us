@@ -448,7 +448,13 @@ export default function TreeMap({
 						// X axis and legend only shown on desktop
 						(<>
 							{datasetCategoriesLabelsLegend
-								.sort((a, b) => hoveredElement === b.category ? 0 : 1)
+								.sort((a, b) => {
+									const isFirst = hoveredElement === a.category
+									const isSecond = hoveredElement === b.category
+									if (isFirst) return 1
+									else if (isSecond) return -1
+									return 0
+								})
 								.map(d => (
 									<g
 										key={d.category}
@@ -460,6 +466,9 @@ export default function TreeMap({
 										onMouseEnter={() => setHoveredElement(d.category)}
 										onMouseUp={() => openSearchPage(d.category)}
 										cursor="pointer"
+										tabIndex="0"
+										role="button"
+										aria-pressed={selectedElements.indexOf(d.category) >= 0}
 									>
 										<rect
 											x={d.labelStartingX}
