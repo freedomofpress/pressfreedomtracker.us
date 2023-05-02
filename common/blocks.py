@@ -461,6 +461,7 @@ class SimpleIncidentSet(blocks.StructBlock):
         help_text='If set, no incidents after this date will be included.',
     )
 
+
 class PluralIncidentSet(blocks.StructBlock):
     category = blocks.ListBlock(blocks.PageChooserBlock(
         label='Filter by Category',
@@ -478,6 +479,7 @@ class PluralIncidentSet(blocks.StructBlock):
         required=False,
         help_text='If set, no incidents after this date will be included.',
     )
+
 
 class VerticalBarChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
