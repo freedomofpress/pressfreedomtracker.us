@@ -181,7 +181,7 @@ def generate_vertical_bar_chart():
 
 def generate_tree_map_chart():
     incident_set = {
-        'category': None,
+        'category': [],
         'tag': None,
         'lower_date': fake.date_between('-2y', '-1y'),
         'upper_date': fake.date_between('-11M'),
