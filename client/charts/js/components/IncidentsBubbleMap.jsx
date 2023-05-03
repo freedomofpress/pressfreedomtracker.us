@@ -1,5 +1,5 @@
 import React from 'react'
-import { filterDatasets, categoriesColors } from '../lib/utilities'
+import { filterDatasets, groupByState, groupByCity } from '../lib/utilities'
 import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
 import USMap from './USMap'
@@ -11,22 +11,20 @@ export default ({
 	filterCategories = null, // Array or string of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = [null, null], // Array representing the min and max of dates to show
+	aggregationLocality = 'state', // Whether to group incidents by state or city
 	isMobileView = false,
 	creditUrl = '',
 	categories
 }) => {
+	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
+
 	// Remove empty strings from filterCategories
 	let filteredFilterCategories = filterCategories.filter(d => d)
 	filteredFilterCategories = filteredFilterCategories.length ? filteredFilterCategories : null
 
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filteredFilterCategories, filterTags, dateRange)
-
-	const categoriesColorMap = [...(new Set([...filterCategories, ...categories.map(d => d.title)]))]
-		.reduce(
-			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
-			{}
-		)
+	const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[aggregationLocality](filteredDataset)
 
 	return (
 		<ParentSize>
@@ -37,16 +35,9 @@ export default ({
 					downloadFileName={title ? `${title}.png` : 'chart.png'}
 				>
 					<USMap
-						data={filteredDataset}
-						categoryColumn="categories"
-						description={description}
-						titleLabel={'incidents'}
+						data={datasetAggregatedByGeo}
 						width={parent.width}
 						height={parent.width * 0.75}
-						isMobileView={isMobileView}
-						categoriesColors={categoriesColorMap}
-						allCategories={Object.keys(categoriesColorMap)}
-						minimumBarHeight={35}
 					/>
 				</ChartDownloader>
 			}

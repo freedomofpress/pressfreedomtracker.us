@@ -503,6 +503,13 @@ class VerticalBarChart(blocks.StructBlock):
 class BubbleMapChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = PluralIncidentSet()
+    group_by = blocks.ChoiceBlock(
+        label='Group Incidents by',
+        required=True,
+        choices=[('state', 'State'), ('city', 'City')],
+        help_text='Choose whether to group by city or by state'
+    )
+
     description = blocks.TextBlock(
         required=True,
         help_text='Description for assistive technology users. '
@@ -513,8 +520,8 @@ class BubbleMapChart(blocks.StructBlock):
 
     class Meta:
         icon = 'table'
-        template = 'common/blocks/tree_map_chart.html'
+        template = 'common/blocks/bubble_map_chart.html'
 
     class Media:
-        js = ['treeMapChart']
+        js = ['bubbleMapChart']
 

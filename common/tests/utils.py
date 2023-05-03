@@ -192,6 +192,7 @@ def generate_bubble_map_chart():
             'title': make_words().capitalize(),
             'incident_set': incident_set,
             'description': fake.text(max_nb_chars=200),
+            'group_by': 'state',
         }
     )
 

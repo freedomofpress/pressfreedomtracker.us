@@ -41,7 +41,17 @@ const mapBorder = {
 	nation: 3,
 }
 
-export default function USMap({ data: dataset, incidentsOutsideUS, width, height, id, openSearchPage }) {
+export default function USMap({
+	data: dataset,
+	incidentsOutsideUS,
+	width,
+	height,
+	id,
+	openSearchPage,
+	// function prop received from ChartDownloader that binds the svg element to allow
+	// it to be downloaded
+	setSvgEl = () => {},
+}) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 
@@ -83,7 +93,7 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 					y={tooltipPosition.y}
 				/>
 			)}
-			<svg width={width} height={height} aria-labelledby={id}>
+			<svg width={width} height={height} aria-labelledby={id} ref={setSvgEl}>
 				<svg
 					width={width}
 					height={height - (paddings.bottom + paddings.top + paddings.map)}

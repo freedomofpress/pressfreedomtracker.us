@@ -222,6 +222,8 @@ export function groupByCity(dataset) {
 		state: d.state !== undefined ? d.state : 'Abroad',
 	}))
 
+	// TODO we need a city list to plot lat lng
+
 	// Group dataset by city and coordinates (some cities have the same name)
 	// Reorganize the array as: [{latitude: .., longitude: .., name: .., numberOfIncidents: ..}, {..}, ...]
 	// Sort the array to plot first the cities with the higher number of incidents
