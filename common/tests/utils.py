@@ -187,7 +187,7 @@ def generate_tree_map_chart():
         'upper_date': fake.date_between('-11M'),
     }
     return generate_field(
-        'vertical_bar_chart',
+        'tree_map_chart',
         {
             'title': make_words().capitalize(),
             'incident_set': incident_set,
