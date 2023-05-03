@@ -35,6 +35,7 @@ from common.blocks import (
     AsideBlock,
     ButtonBlock,
     VerticalBarChart,
+    BubbleMapChart,
 )
 
 
@@ -201,6 +202,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('button', ButtonBlock()),
         ('statistics', StatisticsBlock()),
         ('vertical_bar_chart', VerticalBarChart()),
+        ('bubble_map_chart', BubbleMapChart()),
     ], use_json_field=True)
 
     introduction = models.TextField(

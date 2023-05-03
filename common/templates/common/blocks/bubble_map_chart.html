@@ -1,0 +1,26 @@
+{% if value.title %}<h2>{{ value.title }}</h2>{% endif %}
+<div className="chartContainer">
+	<div
+		class="bubble-map-chart"
+		{% if value.incident_set.category %}
+			{% for category in value.incident_set.category %}
+				data-category-{{ forloop.counter }}="{{ category.title }}"
+			{% endfor %}
+		{% endif %}
+		{% if value.incident_set.tag %}
+			data-tag="{{ value.incident_set.tag }}"
+		{% endif %}
+		{% if value.incident_set.lower_date %}
+			data-lower-date="{{ value.incident_set.lower_date|date:'c' }}"
+		{% endif %}
+		{% if value.incident_set.upper_date %}
+			data-upper-date="{{ value.incident_set.upper_date|date:'c' }}"
+		{% endif %}
+		{% if value.description %}
+			data-description="{{ value.description }}"
+		{% endif %}
+		{% if value.title %}
+			data-title="{{ value.title }}"
+		{% endif %}
+	></div>
+</div>

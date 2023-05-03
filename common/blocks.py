@@ -462,6 +462,25 @@ class SimpleIncidentSet(blocks.StructBlock):
     )
 
 
+class PluralIncidentSet(blocks.StructBlock):
+    category = blocks.ListBlock(blocks.PageChooserBlock(
+        label='Filter by Category',
+        required=False,
+        page_type='common.CategoryPage',
+        help_text='If selected, only incidents in the chosen category will be included.',
+    ))
+    lower_date = blocks.DateBlock(
+        label='Filter by Date, lower bound',
+        required=False,
+        help_text='If set, no incidents before this date will be included.',
+    )
+    upper_date = blocks.DateBlock(
+        label='Filter by Date, upper bound',
+        required=False,
+        help_text='If set, no incidents after this date will be included.',
+    )
+
+
 class VerticalBarChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
@@ -479,3 +498,23 @@ class VerticalBarChart(blocks.StructBlock):
 
     class Media:
         js = ['verticalBarChart']
+
+
+class BubbleMapChart(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    incident_set = PluralIncidentSet()
+    description = blocks.TextBlock(
+        required=True,
+        help_text='Description for assistive technology users. '
+        'If the chart is demonstrating a specific trend, try to include that, '
+        'e.g., "Bar chart showing a decreasing number of assaults over the '
+        'course of 2023."',
+    )
+
+    class Meta:
+        icon = 'table'
+        template = 'common/blocks/tree_map_chart.html'
+
+    class Media:
+        js = ['treeMapChart']
+
