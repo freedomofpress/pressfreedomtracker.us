@@ -175,7 +175,7 @@ class Command(BaseCommand):
 
         geolocated = options.get('geolocated', False)
         if geolocated:
-            management.call_command('loaddata', 'cities5000.json', app='geonames')
+            management.call_command('loaddata', 'cities5000-us-only.json.xz', app='geonames')
 
         # createcategories will handle creating homepage.
         management.call_command('createcategories')
