@@ -16,7 +16,7 @@ import factory
 from faker import Faker
 
 from blog.models import BlogIndexPage, BlogPage
-from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
+from blog.devdata import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, SearchSettings,
@@ -252,7 +252,7 @@ class Command(BaseCommand):
 
         # BLOG RELATED PAGES
         BlogIndexPage.objects.filter(slug='fpf-blog').delete()
-        blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
+        blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True)
         org_index_page = OrganizationIndexPageFactory(parent=home_page)
         home_page.blog_index_page = blog_index_page
 
@@ -263,21 +263,18 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author1,
-            with_image=True,
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author2,
-            with_image=True,
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author3,
-            with_image=True,
         )
 
         # newsletter pages
@@ -286,7 +283,6 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author1,
-            with_image=True,
             blog_type=BlogPage.NEWSLETTER
         )
 
@@ -296,7 +292,6 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author2,
-            with_image=True,
             blog_type=BlogPage.SPECIAL
         )
 
