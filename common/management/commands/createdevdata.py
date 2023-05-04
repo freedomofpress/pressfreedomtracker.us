@@ -122,7 +122,9 @@ def generate_variations():
     [{'arrest': True}, {'arrest': True, 'border_stop': True}, ...]
 
     """
-    for variation in three_combinations(MultimediaIncidentPageFactory._meta.parameters.keys()):
+    category_params = MultimediaIncidentPageFactory._meta.parameters.keys()
+    non_category_params = {'geolocated'}
+    for variation in three_combinations(category_params - non_category_params):
         yield {k: True for k in variation}
 
 
@@ -136,11 +138,15 @@ class Command(BaseCommand):
             dest='download_images',
             help='Download external images',
         )
+        parser.add_argument(
+            '--geolocated',
+            action='store_true',
+            dest='geolocated',
+            help='Load latitude/longitide data and apply to incidents',
+        )
 
     def fetch_image(self, width, height, collection):
-        url = 'https://picsum.photos/{width}/{height}'.format(
-            width=width, height=height,
-        )
+        url = f'https://source.unsplash.com/{width}x{height}?animal'
         response = requests.get(url, timeout=5)
         if response and response.content:
             CustomImageFactory(
@@ -159,6 +165,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Creating development data')
         self.stdout.flush()
+
+        geolocated = options.get('geolocated', False)
+        if geolocated:
+            management.call_command('loaddata', 'cities5000.json', app='geonames')
 
         # createcategories will handle creating homepage.
         management.call_command('createcategories')
@@ -376,7 +386,7 @@ class Command(BaseCommand):
         )
         for category_keys in generate_variations():
             category_pages = []
-            kwargs = {}
+            kwargs = {'geolocated': geolocated}
             for key in category_keys:
                 category_pages.append(lookup_category(key))
                 kwargs.update(
