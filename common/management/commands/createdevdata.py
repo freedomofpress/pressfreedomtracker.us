@@ -3,7 +3,7 @@ import random
 import requests
 import time
 import wagtail_factories
-from itertools import combinations, chain
+from itertools import combinations, chain, cycle
 
 from django.contrib.auth.models import User
 from django.core import management
@@ -132,6 +132,13 @@ class Command(BaseCommand):
     help = 'Creates data appropriate for development'
 
     def add_arguments(self, parser):
+        parser.add_argument(
+            '--max-incidents',
+            dest='max_incidents',
+            type=int,
+            default=500,
+            help='Maximum number of incidents to create (default 500)',
+        )
         parser.add_argument(
             '--no-download',
             action='store_false',
@@ -384,7 +391,8 @@ class Command(BaseCommand):
             main_menu=True,
             title='All Incidents',
         )
-        for category_keys in generate_variations():
+        number_created = 0
+        for category_keys in cycle(generate_variations()):
             category_pages = []
             kwargs = {'geolocated': geolocated}
             for key in category_keys:
@@ -401,12 +409,16 @@ class Command(BaseCommand):
                 kwargs['institution_targets'] = 1
 
             for i in range(2):
-                MultimediaIncidentPageFactory(
-                    parent=incident_index_page,
-                    categories=category_pages,
-                    tags=0,
-                    **kwargs,
-                )
+                if number_created < options['max_incidents']:
+                    MultimediaIncidentPageFactory(
+                        parent=incident_index_page,
+                        categories=category_pages,
+                        tags=0,
+                        **kwargs,
+                    )
+                number_created += 1
+            if number_created >= options['max_incidents']:
+                break
 
         search_settings.search_page = incident_index_page
         search_settings.save()
@@ -458,7 +470,10 @@ class Command(BaseCommand):
         )
         tag = topic_page.incident_tag
         tag.tagged_items.add(
-            *random.sample(list(IncidentPage.objects.all()), 20)
+            *random.sample(
+                list(IncidentPage.objects.all()),
+                min(20, options['max_incidents']),
+            )
         )
 
         # CREATE MENUS
