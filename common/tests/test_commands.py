@@ -16,6 +16,16 @@ class CreateDevDataTestCase(TestCase):
         with open(os.devnull, 'w') as devnull:
             management.call_command('createdevdata', '--no-download', stdout=devnull)
 
+    def test_createdevdata_geolocated(self):
+        with open(os.devnull, 'w') as devnull:
+            management.call_command(
+                'createdevdata',
+                '--no-download',
+                '--geolocated',
+                '--max-incidents=3',
+                stdout=devnull,
+            )
+
     @mock.patch('requests.get')
     def test_createdevdata_fetch_images(self, mock_requests):
         mock_response = mock_requests.return_value
