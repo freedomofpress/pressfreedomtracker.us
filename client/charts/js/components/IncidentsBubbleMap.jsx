@@ -1,5 +1,10 @@
 import React from 'react'
-import { filterDatasets, groupByState, groupByCity } from '../lib/utilities'
+import {
+	filterDatasets,
+	groupByState,
+	groupByCity,
+	countIncidentsOutsideUS
+} from '../lib/utilities'
 import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
 import USMap from './USMap'
@@ -26,6 +31,7 @@ export default ({
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filteredFilterCategories, filterTags, dateRange)
 	const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[aggregationLocality](filteredDataset)
+	const incidentsOutsideUS = countIncidentsOutsideUS(filteredDataset)
 
 	return (
 		<ParentSize>
@@ -38,6 +44,7 @@ export default ({
 					<USMap
 						data={datasetAggregatedByGeo}
 						aggregationLocality={aggregationLocalityFnMap[aggregationLocality]}
+						incidentsOutsideUS={incidentsOutsideUS}
 						width={parent.width}
 						height={parent.width * 0.75}
 					/>
