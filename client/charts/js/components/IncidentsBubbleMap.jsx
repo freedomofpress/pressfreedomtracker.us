@@ -17,6 +17,7 @@ export default ({
 	categories
 }) => {
 	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
+	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
 
 	// Remove empty strings from filterCategories
 	let filteredFilterCategories = filterCategories.filter(d => d)
@@ -36,6 +37,7 @@ export default ({
 				>
 					<USMap
 						data={datasetAggregatedByGeo}
+						aggregationLocality={aggregationLocalityFnMap[aggregationLocality]}
 						width={parent.width}
 						height={parent.width * 0.75}
 					/>

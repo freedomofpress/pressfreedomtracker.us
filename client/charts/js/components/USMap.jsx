@@ -48,6 +48,7 @@ export default function USMap({
 	height,
 	id,
 	openSearchPage,
+	aggregationLocality = d => d.state,
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
@@ -82,8 +83,8 @@ export default function USMap({
 									{hoveredElement}
 								</div>
 								<div>
-									{dataset.filter((d) => `${d.state}` === hoveredElement).length !== 0
-										? dataset.find((d) => `${d.state}` === hoveredElement).numberOfIncidents
+									{dataset.filter((d) => `${aggregationLocality(d)}` === hoveredElement).length !== 0
+										? dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement).numberOfIncidents
 										: ''}
 								</div>
 							</div>
@@ -133,11 +134,11 @@ export default function USMap({
 								fill: (d) =>
 									hoveredElement === null
 										? '#E07A5F'
-										: hoveredElement === `${d.state}`
+										: hoveredElement === `${aggregationLocality(d)}`
 										? '#E07A5F'
 										: 'white',
 								strokeWidth: (d) =>
-									hoveredElement === `${d.state}` ? markerBorder.hover : markerBorder.normal,
+									hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal,
 							}}
 							attrs={{
 								opacity: 1,
@@ -147,16 +148,16 @@ export default function USMap({
 								fill: (d) =>
 									hoveredElement === null
 										? '#E07A5F'
-										: hoveredElement === `${d.state}`
+										: hoveredElement === `${aggregationLocality(d)}`
 										? '#E07A5F'
 										: 'white',
 								stroke: 'black',
 								strokeWidth: (d) =>
-									hoveredElement === `${d.state}` ? markerBorder.hover : markerBorder.normal,
+									hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal,
 							}}
 							duration={250}
 							durationByAttr={{ fill: 0, strokeWidth: 0 }}
-							keyFn={(d) => `${d.state}`}
+							keyFn={(d) => `${aggregationLocality(d)}`}
 						/>
 					</g>
 					<g>
@@ -168,13 +169,13 @@ export default function USMap({
 								style={{ opacity: 0, cursor: 'pointer' }}
 								onMouseMove={updateTooltipPosition}
 								onMouseEnter={(mouseEvent) => {
-									setHoveredElement(`${d.state}`)
+									setHoveredElement(`${aggregationLocality(d)}`)
 								}}
 								onMouseLeave={() => {
 									setHoveredElement(null)
 								}}
 								onMouseUp={(mouseEvent) => openSearchPage(d.usCode)}
-								key={d.state}
+								key={aggregationLocality(d)}
 							/>
 						))}
 					</g>
