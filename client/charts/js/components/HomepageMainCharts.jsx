@@ -107,6 +107,7 @@ function HomepageMainChartsWidth({
 						openSearchPage={(state) => {
 							goToFilterPage(databasePath, { ...filtersApplied, state }, currentDate, categories)
 						}}
+						addBottomBorder={true}
 					/>
 				</div>
 				<div className={'hpChart'}>

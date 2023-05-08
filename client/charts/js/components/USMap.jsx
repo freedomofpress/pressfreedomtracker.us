@@ -12,7 +12,7 @@ const margins = {
 	bottom: 0,
 }
 
-const paddings = {
+const defaultPaddings = {
 	left: 0,
 	right: 40,
 	bottom: 40,
@@ -49,12 +49,16 @@ export default function USMap({
 	id,
 	openSearchPage,
 	aggregationLocality = d => d.state,
+	addBottomBorder,
+  	overridePaddings = {},
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+
+  	const paddings = {...defaultPaddings, ...overridePaddings}
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -389,14 +393,16 @@ export default function USMap({
 					</g>
 				)}
 
-				<line
+			  	{addBottomBorder ? (
+				  <line
 					x1={0}
 					x2={width}
 					y1={height - paddings.bottom}
 					y2={height - paddings.bottom}
 					style={{ stroke: 'black', strokeWidth: markerBorder.grid }}
 					shapeRendering="crispEdges"
-				/>
+				  />
+				) : null}
 			</svg>
 		</>
 	)

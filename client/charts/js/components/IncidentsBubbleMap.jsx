@@ -46,7 +46,8 @@ export default ({
 						aggregationLocality={aggregationLocalityFnMap[aggregationLocality]}
 						incidentsOutsideUS={incidentsOutsideUS}
 						width={parent.width}
-						height={parent.width * 0.75}
+						height={parent.width * 0.7}
+						overridePaddings={{ map: 0, bottom: 0 }}
 					/>
 				</ChartDownloader>
 			}
