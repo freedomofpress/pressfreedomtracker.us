@@ -37,6 +37,7 @@ from common.tests.factories import (
 )
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
+from geonames.models import GeoName
 
 
 Faker.add_provider(StreamfieldProvider)
@@ -225,6 +226,12 @@ class StateFactory(SnippetFactory):
     name = factory.Faker('state')
 
 
+class AbbreviatedStateFactory(SnippetFactory):
+    class Meta:
+        model = State
+        django_get_or_create = ('abbreviation',)
+
+
 def random_choice(choices):
     return random.choice([x[0] for x in choices])
 
@@ -236,7 +243,7 @@ def random_choice_list(choices):
 class IncidentPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = IncidentPage
-        exclude = ('image_caption_text', 'title_text')
+        exclude = ('image_caption_text', 'title_text', 'geoname')
 
     first_published_at = Faker(
         'past_datetime',
@@ -257,8 +264,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     date = factory.Faker('date_between', start_date='-1y', end_date='-30d')
     city = factory.Faker('city')
     state = factory.SubFactory(StateFactory)
-    longitude = factory.Faker('longitude')
-    latitude = factory.Faker('latitude')
+    longitude = None
+    longitude = None
+
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
     teaser = factory.Faker('sentence')
     teaser_image = None
@@ -307,6 +315,18 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     case_statuses = factory.LazyFunction(lambda: random_choice_list(choices.CASE_STATUS))
 
     class Params:
+        geolocated = factory.Trait(
+            geoname=factory.Iterator(
+                GeoName.objects.filter(isocode__iso3='USA').order_by('?')
+            ),
+            city=factory.LazyAttribute(lambda o: o.geoname.name),
+            state=factory.SubFactory(
+                AbbreviatedStateFactory,
+                abbreviation=factory.SelfAttribute('..geoname.regcode'),
+            ),
+            longitude=factory.LazyAttribute(lambda o: o.geoname.longitude),
+            latitude=factory.LazyAttribute(lambda o: o.geoname.latitude),
+        )
         arrest = factory.Trait(
             arrest_status=factory.Iterator(
                 choices.ARREST_STATUS, getter=lambda c: c[0]),
