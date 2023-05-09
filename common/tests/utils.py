@@ -164,7 +164,7 @@ def generate_block_quote():
 
 def generate_vertical_bar_chart():
     incident_set = {
-        'category': None,
+        'category': [],
         'tag': None,
         'lower_date': fake.date_between('-2y', '-1y'),
         'upper_date': fake.date_between('-11M'),

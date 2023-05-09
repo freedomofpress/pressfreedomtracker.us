@@ -438,37 +438,18 @@ class InfoTableBlock(blocks.StructBlock):
 
 
 class SimpleIncidentSet(blocks.StructBlock):
-    category = blocks.PageChooserBlock(
-        label='Filter by Category',
-        required=False,
-        page_type='common.CategoryPage',
-        help_text='If selected, only incidents in the chosen category will be included.',
-    )
-    tag = blocks.ChoiceBlock(
-        label='Filter by Tag',
-        required=False,
-        choices=get_tags,
-        help_text='If selected, only incidents with the chosen tag will be included.'
-    )
-    lower_date = blocks.DateBlock(
-        label='Filter by Date, lower bound',
-        required=False,
-        help_text='If set, no incidents before this date will be included.',
-    )
-    upper_date = blocks.DateBlock(
-        label='Filter by Date, upper bound',
-        required=False,
-        help_text='If set, no incidents after this date will be included.',
-    )
-
-
-class PluralIncidentSet(blocks.StructBlock):
     category = blocks.ListBlock(blocks.PageChooserBlock(
         label='Filter by Category',
         required=False,
         page_type='common.CategoryPage',
         help_text='If selected, only incidents in the chosen category will be included.',
     ))
+    tag = blocks.ChoiceBlock(
+        label='Filter by Tag',
+        required=False,
+        choices=get_tags,
+        help_text='If selected, only incidents with the chosen tag will be included.'
+    )
     lower_date = blocks.DateBlock(
         label='Filter by Date, lower bound',
         required=False,
@@ -502,7 +483,7 @@ class VerticalBarChart(blocks.StructBlock):
 
 class TreeMapChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
-    incident_set = PluralIncidentSet()
+    incident_set = SimpleIncidentSet()
     description = blocks.TextBlock(
         required=True,
         help_text='Description for assistive technology users. '

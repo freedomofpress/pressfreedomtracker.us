@@ -7,7 +7,8 @@ function engageCharts() {
 	const charts = document.querySelectorAll('.chart-vertical-bar')
 	charts.forEach((chartNode) => {
 		let root = createRoot(chartNode)
-		const filterCategory = chartNode.dataset?.category
+		const categoryKeys = Object.keys(chartNode.dataset || {}).filter(d => d.indexOf('category') === 0)
+		const filterCategories = categoryKeys.map(k => chartNode.dataset[k])
 		const filterTag = chartNode.dataset?.tag
 		const lowerValue= chartNode.dataset?.lowerDate
 		const upperValue = chartNode.dataset?.upperDate
@@ -23,7 +24,7 @@ function engageCharts() {
 				dataKey="dataset"
 			>
 				<IncidentsTimeBarChart
-					filterCategories={filterCategory}
+					filterCategories={filterCategories}
 					filterTags={filterTag}
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
