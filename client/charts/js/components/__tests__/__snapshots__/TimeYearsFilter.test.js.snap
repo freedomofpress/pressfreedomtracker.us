@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders TimeYearsFilter with mocked data 1`] = `
+<div
+  style={
+    {
+      "flexDirection": "row",
+    }
+  }
+>
+  <BarChartYears
+    countYears={
+      [
+        {
+          "count": 1,
+          "year": 2020,
+        },
+        {
+          "count": 0,
+          "year": 2021,
+        },
+      ]
+    }
+    height={500}
+    onClick={[Function]}
+    selectedYears={
+      [
+        "2020",
+      ]
+    }
+    width={500}
+  />
+  <CheckBoxesYear
+    onClick={[Function]}
+    options={
+      [
+        {
+          "count": 1,
+          "year": 2020,
+        },
+        {
+          "count": 0,
+          "year": 2021,
+        },
+      ]
+    }
+    selectedYears={
+      [
+        "2020",
+      ]
+    }
+    width={500}
+  />
+</div>
+`;

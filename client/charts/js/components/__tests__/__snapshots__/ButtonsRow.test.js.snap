@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders ButtonsRow with mocked data 1`] = `
+<div
+  style={
+    {
+      "alignItems": "center",
+      "display": "flex",
+      "margin": 12,
+    }
+  }
+>
+  <div
+    style={
+      {
+        "fontFamily": "var(--font-base)",
+        "fontSize": "18px",
+      }
+    }
+  >
+    test
+  </div>
+  <div
+    style={
+      {
+        "marginLeft": 10,
+      }
+    }
+  >
+    <Button
+      label="test1"
+      onClick={[Function]}
+      selectable={true}
+      selected={false}
+      tooltipIfUnselectable={null}
+    />
+    <Button
+      label="test2"
+      onClick={[Function]}
+      selectable={true}
+      selected={false}
+      tooltipIfUnselectable={null}
+    />
+  </div>
+</div>
+`;
