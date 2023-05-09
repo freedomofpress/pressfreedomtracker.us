@@ -3,7 +3,7 @@ import random
 import requests
 import time
 import wagtail_factories
-from itertools import combinations, chain
+from itertools import combinations, chain, cycle
 
 from django.contrib.auth.models import User
 from django.core import management
@@ -16,7 +16,7 @@ import factory
 from faker import Faker
 
 from blog.models import BlogIndexPage, BlogPage
-from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
+from blog.devdata import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, SearchSettings,
@@ -122,7 +122,9 @@ def generate_variations():
     [{'arrest': True}, {'arrest': True, 'border_stop': True}, ...]
 
     """
-    for variation in three_combinations(MultimediaIncidentPageFactory._meta.parameters.keys()):
+    category_params = MultimediaIncidentPageFactory._meta.parameters.keys()
+    non_category_params = {'geolocated'}
+    for variation in three_combinations(category_params - non_category_params):
         yield {k: True for k in variation}
 
 
@@ -131,16 +133,27 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
+            '--max-incidents',
+            dest='max_incidents',
+            type=int,
+            default=500,
+            help='Maximum number of incidents to create (default 500)',
+        )
+        parser.add_argument(
             '--no-download',
             action='store_false',
             dest='download_images',
             help='Download external images',
         )
+        parser.add_argument(
+            '--geolocated',
+            action='store_true',
+            dest='geolocated',
+            help='Load latitude/longitide data and apply to incidents',
+        )
 
     def fetch_image(self, width, height, collection):
-        url = 'https://picsum.photos/{width}/{height}'.format(
-            width=width, height=height,
-        )
+        url = f'https://source.unsplash.com/{width}x{height}?animal'
         response = requests.get(url, timeout=5)
         if response and response.content:
             CustomImageFactory(
@@ -159,6 +172,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write('Creating development data')
         self.stdout.flush()
+
+        geolocated = options.get('geolocated', False)
+        if geolocated:
+            management.call_command('loaddata', 'cities5000-us-only.json.xz', app='geonames')
 
         # createcategories will handle creating homepage.
         management.call_command('createcategories')
@@ -235,7 +252,7 @@ class Command(BaseCommand):
 
         # BLOG RELATED PAGES
         BlogIndexPage.objects.filter(slug='fpf-blog').delete()
-        blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True, with_image=True)
+        blog_index_page = BlogIndexPageFactory(parent=home_page, main_menu=True)
         org_index_page = OrganizationIndexPageFactory(parent=home_page)
         home_page.blog_index_page = blog_index_page
 
@@ -246,21 +263,18 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author1,
-            with_image=True,
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author2,
-            with_image=True,
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author3,
-            with_image=True,
         )
 
         # newsletter pages
@@ -269,7 +283,6 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author1,
-            with_image=True,
             blog_type=BlogPage.NEWSLETTER
         )
 
@@ -279,7 +292,6 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author2,
-            with_image=True,
             blog_type=BlogPage.SPECIAL
         )
 
@@ -374,9 +386,10 @@ class Command(BaseCommand):
             main_menu=True,
             title='All Incidents',
         )
-        for category_keys in generate_variations():
+        number_created = 0
+        for category_keys in cycle(generate_variations()):
             category_pages = []
-            kwargs = {}
+            kwargs = {'geolocated': geolocated}
             for key in category_keys:
                 category_pages.append(lookup_category(key))
                 kwargs.update(
@@ -391,12 +404,16 @@ class Command(BaseCommand):
                 kwargs['institution_targets'] = 1
 
             for i in range(2):
-                MultimediaIncidentPageFactory(
-                    parent=incident_index_page,
-                    categories=category_pages,
-                    tags=0,
-                    **kwargs,
-                )
+                if number_created < options['max_incidents']:
+                    MultimediaIncidentPageFactory(
+                        parent=incident_index_page,
+                        categories=category_pages,
+                        tags=0,
+                        **kwargs,
+                    )
+                number_created += 1
+            if number_created >= options['max_incidents']:
+                break
 
         search_settings.search_page = incident_index_page
         search_settings.save()
@@ -448,7 +465,10 @@ class Command(BaseCommand):
         )
         tag = topic_page.incident_tag
         tag.tagged_items.add(
-            *random.sample(list(IncidentPage.objects.all()), 20)
+            *random.sample(
+                list(IncidentPage.objects.all()),
+                min(20, options['max_incidents']),
+            )
         )
 
         # CREATE MENUS
