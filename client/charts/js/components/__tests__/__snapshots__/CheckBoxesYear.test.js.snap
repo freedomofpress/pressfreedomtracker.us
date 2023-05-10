@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders CheckBoxesYear with mocked data 1`] = `
+<div
+  style={
+    {
+      "display": "flex",
+      "flexDirection": "column",
+      "width": 500,
+    }
+  }
+>
+  <div>
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "fontSize": 14,
+            "marginBottom": 16,
+          }
+        }
+      >
+        <input
+          checked={true}
+          onChange={[Function]}
+          style={
+            {
+              "height": 20,
+              "width": 20,
+            }
+          }
+          type="checkbox"
+        />
+        <div
+          style={
+            {
+              "flexDirection": "row",
+              "fontFamily": "var(--font-base)",
+              "marginLeft": 10,
+            }
+          }
+        >
+          2020
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "backgroundColor": "#F2FC67",
+            "display": "flex",
+            "fontFamily": "Helvetica Neue",
+            "fontSize": 12,
+            "height": 15,
+            "padding": 3,
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;

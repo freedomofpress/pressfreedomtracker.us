@@ -1,0 +1,170 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders BarChartYears with mocked data 1`] = `
+<div
+  style={
+    {
+      "flexDirection": "row",
+      "marginBottom": 10,
+    }
+  }
+>
+  <svg
+    height={520}
+    style={
+      {
+        "fontFamily": "var(--font-mono)",
+      }
+    }
+    width={480}
+  >
+    <AnimatedDataset
+      attrs={
+        {
+          "opacity": 1,
+          "stroke": "black",
+          "strokeWidth": [Function],
+          "x1": 1,
+          "x2": 480,
+          "y1": [Function],
+          "y2": [Function],
+        }
+      }
+      dataset={
+        [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+        ]
+      }
+      duration={450}
+      init={
+        {
+          "opacity": 0,
+        }
+      }
+      keyFn={[Function]}
+      tag="line"
+    />
+    <AnimatedDataset
+      attrs={
+        {
+          "fontSize": 12,
+          "opacity": 1,
+          "text": [Function],
+          "textAnchor": "end",
+          "x": 480,
+          "y": [Function],
+        }
+      }
+      dataset={
+        [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+        ]
+      }
+      duration={450}
+      init={
+        {
+          "opacity": 0,
+        }
+      }
+      keyFn={[Function]}
+      tag="text"
+    />
+    <g>
+      <AnimatedDataset
+        attrs={
+          {
+            "fill": [Function],
+            "height": [Function],
+            "key": [Function],
+            "stroke": "black",
+            "strokeWidth": 2,
+            "width": 10,
+            "x": [Function],
+            "y": [Function],
+          }
+        }
+        dataset={
+          [
+            {
+              "count": 2,
+              "numberOfIncidents": 0,
+              "year": 2012,
+            },
+          ]
+        }
+        duration={250}
+        events={
+          {
+            "onClick": [Function],
+          }
+        }
+        init={
+          {
+            "height": 0,
+            "y": 500,
+          }
+        }
+        keyFn={[Function]}
+        tag="rect"
+      />
+      <text
+        style={
+          {
+            "fontFamily": "var(--font-base)",
+            "fontSize": 12,
+          }
+        }
+        x={215.5}
+        y={520}
+      >
+        2012
+      </text>
+    </g>
+    <AnimatedDataset
+      attrs={
+        {
+          "fill": [Function],
+          "height": [Function],
+          "key": [Function],
+          "stroke": "black",
+          "strokeWidth": 2,
+          "width": 10,
+          "x": [Function],
+          "y": [Function],
+        }
+      }
+      dataset={
+        [
+          {
+            "count": 2,
+            "numberOfIncidents": 0,
+            "year": 2012,
+          },
+        ]
+      }
+      duration={250}
+      events={
+        {
+          "onClick": [Function],
+        }
+      }
+      init={
+        {
+          "height": 0,
+          "y": 500,
+        }
+      }
+      keyFn={[Function]}
+      tag="rect"
+    />
+  </svg>
+</div>
+`;

@@ -73,6 +73,12 @@ To test your frontend code with jest, you can run the following command:
 
     docker-compose exec node npm test
 
+If tests need to be updated, you can run the following command:
+
+.. code:: bash
+
+    docker-compose exec node npm test-update
+
 Debugging
 ---------
 

@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders CheckBoxesYear with mocked data 1`] = `
+<React.Fragment>
+  <line
+    style={
+      {
+        "stroke": "black",
+        "strokeWidth": "3px",
+      }
+    }
+    x1="Nov"
+    x2="Apr"
+    y1={400}
+    y2={400}
+  />
+  <circle
+    cx="Nov"
+    cy={400}
+    onMouseUp={[Function]}
+    r={4}
+    style={
+      {
+        "fill": "black",
+        "strokeWidth": 3,
+      }
+    }
+  />
+  <circle
+    cx="Dec"
+    cy={400}
+    onMouseUp={[Function]}
+    r={4}
+    style={
+      {
+        "fill": "black",
+        "strokeWidth": 3,
+      }
+    }
+  />
+  <circle
+    cx="Jan"
+    cy={400}
+    onMouseUp={[Function]}
+    r={4}
+    style={
+      {
+        "fill": "black",
+        "strokeWidth": 3,
+      }
+    }
+  />
+  <circle
+    cx="Feb"
+    cy={400}
+    onMouseUp={[Function]}
+    r={4}
+    style={
+      {
+        "fill": "black",
+        "strokeWidth": 3,
+      }
+    }
+  />
+  <circle
+    cx="Mar"
+    cy={400}
+    onMouseUp={[Function]}
+    r={4}
+    style={
+      {
+        "fill": "black",
+        "strokeWidth": 3,
+      }
+    }
+  />
+  <circle
+    cx="Apr"
+    cy={400}
+    onMouseUp={[Function]}
+    r={4}
+    style={
+      {
+        "fill": "black",
+        "strokeWidth": 3,
+      }
+    }
+  />
+  <circle
+    cx="Nov"
+    cy={400}
+    onMouseDown={[Function]}
+    r={12}
+    style={
+      {
+        "fill": "white",
+        "stroke": "black",
+        "strokeWidth": 3,
+      }
+    }
+  />
+</React.Fragment>
+`;

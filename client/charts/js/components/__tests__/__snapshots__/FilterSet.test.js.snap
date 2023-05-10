@@ -1,0 +1,417 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders FilterSet with mocked data 1`] = `
+[
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_date_after"
+      >
+        Took place
+         after
+      </label>
+    </div>
+    <input
+      id="id_date_after"
+      name="date"
+      onChange={[Function]}
+      type="date"
+      value=""
+    />
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_date_before"
+      >
+        Took place
+         before
+      </label>
+    </div>
+    <input
+      id="id_date_before"
+      name="date"
+      onChange={[Function]}
+      type="date"
+      value=""
+    />
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_city"
+      >
+        City
+      </label>
+    </div>
+    <input
+      autoComplete="off"
+      className="text-field--single"
+      id="id_city"
+      name="city"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_state"
+      >
+        State
+      </label>
+    </div>
+    <input
+      autoComplete="off"
+      className="text-field--single"
+      id="id_state"
+      list="state_choices"
+      name="state"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <datalist
+      id="state_choices"
+    >
+      <option
+        value="Alaska"
+      />
+      <option
+        value="Alabama"
+      />
+      <option
+        value="Arkansas"
+      />
+      <option
+        value="American Samoa"
+      />
+      <option
+        value="Arizona"
+      />
+      <option
+        value="California"
+      />
+      <option
+        value="Colorado"
+      />
+      <option
+        value="Connecticut"
+      />
+      <option
+        value="District of Columbia"
+      />
+      <option
+        value="Delaware"
+      />
+      <option
+        value="Florida"
+      />
+      <option
+        value="Georgia"
+      />
+      <option
+        value="Guam"
+      />
+      <option
+        value="Hawaii"
+      />
+      <option
+        value="Iowa"
+      />
+      <option
+        value="Idaho"
+      />
+      <option
+        value="Illinois"
+      />
+      <option
+        value="Indiana"
+      />
+      <option
+        value="Kansas"
+      />
+    </datalist>
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_targeted_journalists"
+      >
+        Targeted any of these journalists
+      </label>
+    </div>
+    <input
+      autoComplete="off"
+      className="text-field--single"
+      id="id_targeted_journalists"
+      list="targeted_journalists_choices"
+      name="targeted_journalists"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <datalist
+      id="targeted_journalists_choices"
+    >
+      <option
+        value="Abigail Peterson"
+      />
+      <option
+        value="Adam Buchanan"
+      />
+      <option
+        value="Adam Lopez MD"
+      />
+      <option
+        value="Alicia Savage"
+      />
+      <option
+        value="Amanda Rosales"
+      />
+      <option
+        value="Angela Davis"
+      />
+      <option
+        value="Angela Johnson"
+      />
+      <option
+        value="Anthony Black"
+      />
+      <option
+        value="Anthony Ellison"
+      />
+      <option
+        value="Anthony Poole"
+      />
+      <option
+        value="April Olson"
+      />
+      <option
+        value="Ariel Hill"
+      />
+      <option
+        value="Austin Henry"
+      />
+    </datalist>
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_targeted_institutions"
+      >
+        Targeted Institutions
+      </label>
+    </div>
+    <input
+      autoComplete="off"
+      className="text-field--single"
+      id="id_targeted_institutions"
+      list="targeted_institutions_choices"
+      name="targeted_institutions"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <datalist
+      id="targeted_institutions_choices"
+    >
+      <option
+        value="The Aaronmouth Post 141"
+      />
+      <option
+        value="The Alexanderbury Sun 191"
+      />
+      <option
+        value="The Alexisberg Post 155"
+      />
+      <option
+        value="The Amberport Tribune 100"
+      />
+      <option
+        value="The Andrewview Tribune 39"
+      />
+      <option
+        value="The Annaberg Tribune 145"
+      />
+      <option
+        value="The Anneside Post 41"
+      />
+      <option
+        value="The Ashleymouth Tribune 184"
+      />
+      <option
+        value="The Austinborough Sun 164"
+      />
+      <option
+        value="The Banksberg Herald 142"
+      />
+      <option
+        value="The Batesland Post 126"
+      />
+      <option
+        value="The Beckyview Daily News 128"
+      />
+      <option
+        value="The Bellburgh Post 135"
+      />
+      <option
+        value="The Benderton Sun 102"
+      />
+      <option
+        value="The Bethfort Daily News 7"
+      />
+      <option
+        value="The Blevinsland Tribune 200"
+      />
+      <option
+        value="The Bobbymouth Tribune 170"
+      />
+      <option
+        value="The Bradleyshire Herald 198"
+      />
+      <option
+        value="The Brittanyshire Sun 74"
+      />
+      <option
+        value="The Brownview Daily News 148"
+      />
+      <option
+        value="The Bryantmouth Daily News 11"
+      />
+    </datalist>
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_case_number"
+      >
+        Case number
+      </label>
+    </div>
+    <input
+      autoComplete="off"
+      className="text-field--single"
+      id="id_case_number"
+      name="case_number"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_case_type"
+      >
+        Type of case
+      </label>
+    </div>
+    <select
+      id="id_case_type"
+      name="case_type"
+      onChange={[Function]}
+      value=""
+    >
+      <option
+        value=""
+      >
+        ------
+      </option>
+      <option
+        value="CIVIL"
+      >
+        Civil
+      </option>
+      <option
+        value="CLASS_ACTION"
+      >
+        Class Action
+      </option>
+    </select>
+  </div>,
+  <div
+    className="filters__field-row"
+  >
+    <div
+      className="filters__field-label"
+    >
+      <label
+        htmlFor="id_case_statuses"
+      >
+        Legal case statuses
+      </label>
+    </div>
+    <select
+      id="id_case_statuses"
+      name="case_statuses"
+      onChange={[Function]}
+      value=""
+    >
+      <option
+        value=""
+      >
+        ------
+      </option>
+      <option
+        value="ONGOING"
+      >
+        ongoing
+      </option>
+      <option
+        value="SETTLED"
+      >
+        settled
+      </option>
+      <option
+        value="DISMISSED"
+      >
+        dismissed
+      </option>
+      <option
+        value="UNKNOWN"
+      >
+        unknown
+      </option>
+      <option
+        value="APPEALED"
+      >
+        appealed
+      </option>
+    </select>
+  </div>,
+]
+`;
