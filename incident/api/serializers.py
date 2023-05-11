@@ -99,7 +99,27 @@ class CategorySerializer(serializers.Serializer):
             return obj.get_full_url()
 
 
-class BaseIncidentSerializer(serializers.Serializer):
+class VariableFieldSerializer(serializers.Serializer):
+    """A serializer that takes a set of field names its context with
+    the key `requested_fields` that controls what fields should be
+    returned.
+
+    """
+
+    def __init__(self, *args, **kwargs):
+        requested_fields = kwargs.get('context', {}).get('requested_fields', set())
+
+        super().__init__(*args, **kwargs)
+
+        if requested_fields:
+            # Drop any fields that are not specified in
+            # `requested_fields`.
+            existing = set(self.fields)
+            for field_name in existing - requested_fields:
+                self.fields.pop(field_name)
+
+
+class BaseIncidentSerializer(VariableFieldSerializer):
     title = serializers.CharField()
     url = serializers.SerializerMethodField()
     first_published_at = serializers.DateTimeField()
@@ -150,21 +170,6 @@ class BaseIncidentSerializer(serializers.Serializer):
     third_party_business = serializers.CharField(source='get_third_party_business_display')
     legal_order_type = serializers.CharField(source='get_legal_order_type_display')
     status_of_prior_restraint = serializers.CharField(source='get_status_of_prior_restraint_display')
-
-    def __init__(self, *args, **kwargs):
-        request = kwargs.get('context', {}).get('request')
-        str_fields = request.GET.get('fields', '') if request else None
-        fields = str_fields.split(',') if str_fields else None
-
-        super().__init__(*args, **kwargs)
-
-        if fields is not None:
-            # Drop any fields that are not specified in the `fields`
-            # argument.
-            allowed = set(fields)
-            existing = set(self.fields)
-            for field_name in existing - allowed:
-                self.fields.pop(field_name)
 
     @extend_schema_field(OpenApiTypes.URI)
     def get_url(self, obj):
@@ -239,3 +244,11 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     subpoena_statuses = FlatListField(
         child=ChoiceField(choices.SUBPOENA_STATUS)
     )
+
+
+class CSVIncidentSerializer(VariableFieldSerializer):
+    title = serializers.CharField()
+    date = serializers.DateField()
+    url = serializers.CharField()
+    tags = serializers.CharField(source='tag_summary')
+    categories = serializers.CharField(source='category_summary')

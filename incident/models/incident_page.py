@@ -14,13 +14,13 @@ from django.db.models import (
     Value,
     When,
 )
-from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth, Coalesce
+from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth, Coalesce, Concat
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.aggregates import ArrayAgg
+from django.contrib.postgres.aggregates import ArrayAgg, StringAgg
 from psycopg2.extras import DateRange
 from wagtail.admin.panels import (
     FieldPanel,
@@ -97,6 +97,47 @@ class ChoiceArrayField(ArrayField):
 
 class IncidentQuerySet(PageQuerySet):
     """A QuerySet for incident pages that incorporates update data"""
+    def for_csv(self, with_annotations, request):
+        # TODO: if 'url' in with_annotations, get the actually correct
+        # base URI for the incident index page.
+        base_uri = request.build_absolute_uri('/all-incidents/')
+        available_annotations = {
+            'tag_summary': Subquery(
+                IncidentPage.objects.only('tags').annotate(
+                    tag_summary=StringAgg(
+                        'tags__title',
+                        delimiter=', ',
+                        ordering=('tags__title',)
+                    )
+                ).filter(
+                    pk=OuterRef('pk')
+                ).values('tag_summary'),
+                output_field=models.CharField()
+            ),
+            'category_summary': Subquery(
+                IncidentPage.objects.only('categories').annotate(
+                    category_summary=StringAgg(
+                        'categories__category__title',
+                        delimiter=', ',
+                        ordering=('categories__category__title',)
+                    )
+                ).filter(
+                    pk=OuterRef('pk')
+                ).values('category_summary'),
+                output_field=models.CharField(),
+            ),
+            'url': Concat(
+                Value(base_uri),
+                "slug",
+                output_field=models.CharField()
+            ),
+        }
+        annotations_to_apply = {
+            label: expression for label, expression in available_annotations.items()
+            if label in with_annotations
+        }
+        return self.annotate(**annotations_to_apply)
+
     def with_public_associations(self):
         """Prefetch and select related data for public consumption
 
@@ -1073,3 +1114,34 @@ class IncidentPage(MetadataPageMixin, Page):
         for institution in self.targeted_institutions.all():
             items.append(f'{institution.title}')
         return ', '.join(items)
+
+
+# CSV_ANNOTATIONS = {
+#     'tag_summary': Subquery(
+#         IncidentPage.objects.only('tags').annotate(
+#             tag_summary=StringAgg(
+#                 'tags__title',
+#                 delimiter=', ',
+#                 ordering=('tags__title',)
+#             )
+#         ).filter(
+#             pk=OuterRef('pk')
+#         ).values('tag_summary'),
+#         output_field=models.CharField(),
+#     ),
+#     'category_summary': Subquery(
+#         IncidentPage.objects.only('categories').annotate(
+#             tag_summary=StringAgg(
+#                 'categories__category__title',
+#                 delimiter=', ',
+#                 ordering=('categories__category__title',)
+#             )
+#         ).filter(
+#             pk=OuterRef('pk')
+#         ).values('category_summary'),
+#         output_field=models.CharField(),
+#     ),
+#     # 'authors': models.IncidentPage.only('authors').annotate(
+
+#     # )
+# }

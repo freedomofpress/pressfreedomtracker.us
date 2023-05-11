@@ -8,6 +8,7 @@ from django.db.models import (
     OuterRef,
     Subquery,
 )
+from django.utils.functional import cached_property
 from rest_framework.decorators import action
 from drf_spectacular.utils import (
     extend_schema,
@@ -27,6 +28,7 @@ from incident.api.serializers import (
     EquipmentSerializer,
     CategorySerializer,
     FlatIncidentSerializer,
+    CSVIncidentSerializer,
 )
 from incident import models
 from incident.utils.incident_filter import IncidentFilter, get_openapi_parameters, DateFilter
@@ -123,6 +125,30 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
         return response
 
+    @cached_property
+    def csv_format_is_requested(self):
+        return getattr(self.request, 'accepted_renderer', None) and \
+            self.request.accepted_renderer.format == 'csv'
+
+    @cached_property
+    def requested_fields(self):
+        if fields := self.request.GET.get('fields'):
+            return set(map(str.strip, fields.split(',')))
+        else:
+            return set()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['requested_fields'] = self.requested_fields
+        return context
+
+    @cached_property
+    def can_apply_csv_serializer(self):
+        if self.requested_fields:
+            return self.requested_fields <= CSVIncidentSerializer().fields.keys()
+        else:
+            return False
+
     def get_renderer_context(self):
         context = super().get_renderer_context()
 
@@ -135,8 +161,13 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return context
 
     def get_serializer_class(self):
-        if getattr(self.request, 'accepted_renderer', None) and self.request.accepted_renderer.format == 'csv':
-            return FlatIncidentSerializer
+        if self.csv_format_is_requested:
+            # If it's possible to use the faster CSV serializer, use
+            # that.
+            if self.can_apply_csv_serializer:
+                return CSVIncidentSerializer
+            else:
+                return FlatIncidentSerializer
         return super().get_serializer_class()
 
     def paginate_queryset(self, queryset):
@@ -145,6 +176,30 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return super().paginate_queryset(queryset)
 
     def get_queryset(self):
+        if self.csv_format_is_requested and self.can_apply_csv_serializer:
+            annotated_fields = {
+                'categories': 'category_summary',
+                'tags': 'tag_summary',
+                'url': 'url',
+            }
+            result_fields = []
+            annotations = []
+
+            requested_fields = self.requested_fields
+            serializer = self.get_serializer()
+            valid_fields = requested_fields.intersection(set(serializer.fields))
+            for field in valid_fields:
+                result_fields.append(
+                    annotated_fields.get(field, field)
+                )
+            annotations = {
+                v for k, v in annotated_fields.items()
+                if k in requested_fields
+            }
+            return models.IncidentPage.objects.live()\
+                .for_csv(annotations, self.request)\
+                .values(*result_fields)
+
         incident_filter = IncidentFilter(self.request.GET)
         incidents = incident_filter.get_queryset()
 
