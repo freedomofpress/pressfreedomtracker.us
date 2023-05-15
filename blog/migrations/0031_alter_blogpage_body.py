@@ -19,6 +19,7 @@ def migrate_simple_incidents(apps, schema_editor):
                     incident_set['categories'] = [incident_set.get('category')]
                     blog_page.save()
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
