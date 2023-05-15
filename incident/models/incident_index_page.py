@@ -163,7 +163,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         )
 
     def get_context(self, request, *args, **kwargs):
-        from common.models import CategoryPage
         context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
 
         # Before perf change:
@@ -190,16 +189,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         incident_filter.clean()
         context['search_value'] = incident_filter.cleaned_data.get('search', '')
 
-        category_data = incident_filter.cleaned_data.get('categories')
-
-        if not category_data:
-            context['categories'] = CategoryPage.objects.live().only('category')
-        else:
-            context['categories'] = CategoryPage.objects.live().filter(
-                models.Q(pk__in=category_data.pks) | models.Q(title__in=category_data.strings)
-            ).only('category')
-
-        # Added: .only('category') to both queryset queries above
         if incident_filter.cleaned_data:
             export_filter_data = copy.deepcopy(incident_filter.cleaned_data)
             for name, value in export_filter_data.items():

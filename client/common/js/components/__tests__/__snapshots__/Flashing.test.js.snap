@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Flashing false 1`] = `
+<div
+  className="flashing flashing--off"
+>
+  test
+</div>
+`;
+
+exports[`renders Flashing true 1`] = `
+<div
+  className="flashing"
+>
+  test
+</div>
+`;

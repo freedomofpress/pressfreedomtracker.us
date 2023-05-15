@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Tooltip with mocked data 1`] = `
+{
+  "$$typeof": Symbol(react.portal),
+  "children": <div
+    style={
+      {
+        "backgroundColor": "white",
+        "border": "5px solid black",
+        "left": "30px",
+        "padding": 12,
+        "pointerEvents": "none",
+        "position": "fixed",
+        "top": "-40px",
+      }
+    }
+  >
+    test
+  </div>,
+  "containerInfo": <body />,
+  "implementation": null,
+  "key": null,
+}
+`;

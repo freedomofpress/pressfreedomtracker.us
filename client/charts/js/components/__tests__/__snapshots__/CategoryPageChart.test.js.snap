@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders CategoryPageChart with mocked data 1`] = `
+<div
+  style={
+    {
+      "height": "100%",
+      "width": "100%",
+    }
+  }
+>
+  <div
+    className="flashing flashing--off"
+  >
+    <div
+      className="cpChartContainer"
+      style={
+        {
+          "width": 0,
+        }
+      }
+    >
+      <div
+        className="cpChart"
+      >
+        <div
+          className="chartDescription"
+          id="category-page-chart-label"
+        >
+          Number of 
+          test
+           incidents per year.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
