@@ -126,7 +126,7 @@ export default function TreeMap({
 	height,
 	isHomePageDesktopView,
 	minimumBarHeight,
-	openSearchPage,
+	searchPageURL,
 	categoriesColors,
 	allCategories,
 }) {
@@ -233,50 +233,55 @@ export default function TreeMap({
 					/>
 					<AnimatedDataset
 						dataset={datasetStackedByCategory}
-						tag="rect"
-						init={{
-							opacity: 0,
-							x: paddings.left,
-							y: height - paddings.bottom,
-							width: width - (paddings.right + paddings.left),
-							height: 0,
-						}}
-						attrs={{
-							opacity: 1,
-							x: paddings.left,
-							y: (d) => height - yScale(d.startingPoint),
-							width: width - (paddings.right + paddings.left),
-							height: (d) => computeBarHeight(d.startingPoint, d.endPoint),
-							fill: (d) =>
-								hoveredElement === d.category || hoveredElement === null
-									? d.numberOfIncidents === 0
-										? 'white'
-										: findColor(d.category)
-									: 'white',
-							stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
-							strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
-							cursor: 'pointer',
-							pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
-							shapeRendering: 'crispEdges',
-						}}
-						events={{
-							// In a future, if we update our version of d3-selection the first
-							// argument will be a MouseEvent, eliminating the need for d3event here
-							onMouseMove: () => {
-								updateTooltipPosition(d3event)
-							},
-							onMouseLeave: () => {
-								setHoveredElement(null)
-							},
-							// In a future, if we update our version of d3-selection this may
-							// need to be updated to take arguments (MouseEvent, d) instead
-							onMouseEnter: d => setHoveredElement(d.category),
-							onMouseUp: d => openSearchPage(d.category),
-						}}
-						durationByAttr={{ fill: 0, stroke: 0 }}
+						tag="a"
+						attrs={{ href: d => searchPageURL(d.category) }}
 						keyFn={(d) => d.category}
-						duration={250}
-					/>
+					>
+						<AnimatedDataset
+							tag="rect"
+							init={{
+								opacity: 0,
+								x: paddings.left,
+								y: height - paddings.bottom,
+								width: width - (paddings.right + paddings.left),
+								height: 0,
+							}}
+							attrs={{
+								opacity: 1,
+								x: paddings.left,
+								y: (d) => height - yScale(d.startingPoint),
+								width: width - (paddings.right + paddings.left),
+								height: (d) => computeBarHeight(d.startingPoint, d.endPoint),
+								fill: (d) =>
+									hoveredElement === d.category || hoveredElement === null
+										? d.numberOfIncidents === 0
+											? 'white'
+											: findColor(d.category)
+										: 'white',
+								stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
+								strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
+								cursor: 'pointer',
+								pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
+								shapeRendering: 'crispEdges',
+							}}
+							events={{
+								// In a future, if we update our version of d3-selection the first
+								// argument will be a MouseEvent, eliminating the need for d3event here
+								onMouseMove: () => {
+									updateTooltipPosition(d3event)
+								},
+								onMouseLeave: () => {
+									setHoveredElement(null)
+								},
+								// In a future, if we update our version of d3-selection this may
+								// need to be updated to take arguments (MouseEvent, d) instead
+								onMouseEnter: d => setHoveredElement(d.category),
+							}}
+							durationByAttr={{ fill: 0, stroke: 0 }}
+							keyFn={(d) => d.category}
+							duration={250}
+						/>
+					</AnimatedDataset>
 					<AnimatedDataset
 						dataset={datasetStackedByCategory}
 						tag="line"
