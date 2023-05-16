@@ -141,6 +141,10 @@ class IncidentQuerySet(PageQuerySet):
                 Value('/'),
                 output_field=models.CharField()
             ),
+            'arresting_authority_title': models.F('arresting_authority__title'),
+            'status_of_seized_equipment_display': annotation_for_choices_display(
+                'status_of_seized_equipment', choices.STATUS_OF_SEIZED_EQUIPMENT
+            )
         }
         annotations_to_apply = {
             label: expression for label, expression in available_annotations.items()
@@ -1126,32 +1130,15 @@ class IncidentPage(MetadataPageMixin, Page):
         return ', '.join(items)
 
 
-# CSV_ANNOTATIONS = {
-#     'tag_summary': Subquery(
-#         IncidentPage.objects.only('tags').annotate(
-#             tag_summary=StringAgg(
-#                 'tags__title',
-#                 delimiter=', ',
-#                 ordering=('tags__title',)
-#             )
-#         ).filter(
-#             pk=OuterRef('pk')
-#         ).values('tag_summary'),
-#         output_field=models.CharField(),
-#     ),
-#     'category_summary': Subquery(
-#         IncidentPage.objects.only('categories').annotate(
-#             tag_summary=StringAgg(
-#                 'categories__category__title',
-#                 delimiter=', ',
-#                 ordering=('categories__category__title',)
-#             )
-#         ).filter(
-#             pk=OuterRef('pk')
-#         ).values('category_summary'),
-#         output_field=models.CharField(),
-#     ),
-#     # 'authors': models.IncidentPage.only('authors').annotate(
+def annotation_for_choices_display(field_name, all_choices):
+    """Return an SQL case statement for converting choice values
+    (i.e. the strings stored in the database) to human-readable choice
+    display values (which are typically stored in our Python code).
 
-#     # )
-# }
+    """
+    return Case(
+        *[
+            When(**{field_name: choice_value}, then=Value(choice_name))
+            for choice_value, choice_name in all_choices
+        ]
+    )

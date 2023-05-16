@@ -247,8 +247,26 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
 
 
 class CSVIncidentSerializer(VariableFieldSerializer):
+    # Ordinary fields directly on IncidentPage/Page
     title = serializers.CharField()
     date = serializers.DateField()
+    exact_date_unknown = serializers.BooleanField()
+    city = serializers.CharField()
+    longitude = serializers.FloatField()
+    latitude = serializers.FloatField()
+    introduction = serializers.CharField()
+    teaser = serializers.CharField()
+    primary_video = serializers.URLField()
+    image_caption = serializers.CharField()
+
+    # Choice fields -- data is on IncidentPage but choice text
+    # requires an annotation
+    status_of_seized_equipment = serializers.CharField(
+        source='status_of_seized_equipment_display'
+    )
+
+    # Computed fields requiring an annotation
+    arresting_authority = serializers.CharField(source='arresting_authority_title')
     url = serializers.CharField()
     tags = serializers.CharField(source='tag_summary')
     categories = serializers.CharField(source='category_summary')

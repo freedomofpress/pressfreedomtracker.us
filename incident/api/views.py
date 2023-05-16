@@ -180,6 +180,8 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
             annotated_fields = {
                 'categories': 'category_summary',
                 'tags': 'tag_summary',
+                'arresting_authority': 'arresting_authority_title',
+                'status_of_seized_equipment': 'status_of_seized_equipment_display',
                 'url': 'url',
             }
             result_fields = []

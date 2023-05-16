@@ -128,6 +128,33 @@ class PerformantCSVTestCase(TestCase):
             ),
         )
 
+    def test_tags_are_correct(self):
+        self.assertEqual(
+            self.result['tags'],
+            ', '.join(tag.title for tag in self.incident.tags.all())
+        )
+
+    def test_categories_are_correct(self):
+        self.assertEqual(
+            self.result['categories'],
+            ', '.join(
+                categorization.category.title for categorization in self.incident.categories.all()
+            )
+        )
+
+    def test_choice_field_is_correct(self):
+        self.assertEqual(
+            self.result['status_of_seized_equipment'],
+            self.incident.get_status_of_seized_equipment_display(),
+        )
+
+    def test_arresting_authority_is_correct(self):
+        self.assertEqual(
+            self.result['arresting_authority'],
+            'Police Squad!',
+        )
+
+
 class HomePageCSVTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
