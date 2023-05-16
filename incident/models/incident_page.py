@@ -53,7 +53,7 @@ from incident.models.inlines import (
 )
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
-from incident.utils.db import CurrentDate, MakeDateRange
+from incident.utils.db import CurrentDate, MakeDateRange, Left
 from statistics.blocks import StatisticsBlock
 from geonames.cities import get_city_coords
 
@@ -98,9 +98,10 @@ class ChoiceArrayField(ArrayField):
 class IncidentQuerySet(PageQuerySet):
     """A QuerySet for incident pages that incorporates update data"""
     def for_csv(self, with_annotations, request):
+        from .incident_index_page import IncidentIndexPage
         # TODO: if 'url' in with_annotations, get the actually correct
         # base URI for the incident index page.
-        base_uri = request.build_absolute_uri('/all-incidents/')
+        base_uri = request.build_absolute_uri('/')
         available_annotations = {
             'tag_summary': Subquery(
                 IncidentPage.objects.only('tags').annotate(
@@ -128,7 +129,16 @@ class IncidentQuerySet(PageQuerySet):
             ),
             'url': Concat(
                 Value(base_uri),
+                Subquery(
+                    IncidentIndexPage.objects.only('slug').filter(
+                        depth=OuterRef('depth') - Value(1),
+                        path=Left(OuterRef('path'), -1 * Page.steplen),
+                    ).values('slug'),
+                    output_field=models.CharField(),
+                ),
+                Value('/'),
                 "slug",
+                Value('/'),
                 output_field=models.CharField()
             ),
         }

@@ -1,4 +1,5 @@
 import csv
+from urllib import parse
 
 from django.test import TestCase
 from django.urls import reverse
@@ -67,6 +68,65 @@ class MinimalIncidentCSVTestCase(TestCase):
         result = dict(zip(headers, next(reader)))
         self.assertEqual(result['state'], '')
 
+
+class PerformantCSVTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build(
+            slug='incident-index',
+        )
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.state = StateFactory(abbreviation='NM')
+        cls.cats = CategoryPageFactory.create_batch(3, parent=root_page)
+        cls.tags = CommonTagFactory.create_batch(3)
+        cls.incident = IncidentPageFactory(
+            arrest=True,
+            parent=cls.incident_index,
+            categories=cls.cats,
+            tags=cls.tags,
+            state=cls.state,
+            status_of_seized_equipment=choices.STATUS_OF_SEIZED_EQUIPMENT[0][0],
+            arresting_authority__title='Police Squad!',
+        )
+        IncidentPageFactory()
+
+    def setUp(self):
+        fields = [
+            'title',
+            'tags',
+            'url',
+            'categories',
+            'status_of_seized_equipment',
+            'arresting_authority',
+        ]
+        url = reverse(
+            'incidentpage-list',
+            kwargs={'version': 'edge'},
+        ) + '?' + parse.urlencode({'fields': ','.join(fields)})
+
+        with self.assertNumQueries(1):
+            self.response = self.client.get(
+                url,
+                HTTP_ACCEPT='text/csv',
+            )
+        content_lines = self.response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+
+        self.headers = next(reader)
+        self.result = dict(zip(self.headers, next(reader)))
+
+    def test_requests_are_successful(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_url_has_correct_path(self):
+        self.assertTrue(
+            self.result['url'].endswith(
+                f'/{self.incident_index.slug}/{self.incident.slug}/'
+            ),
+        )
 
 class HomePageCSVTestCase(TestCase):
     @classmethod
