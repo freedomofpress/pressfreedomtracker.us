@@ -87,8 +87,9 @@ class ColumnSet:
 
 
 class DateColumn:
-    def __init__(self, name):
+    def __init__(self, name, required=True):
         self.name = name
+        self.required = required
 
     def get_value(self, row, prefix=None, suffix=None):
         key = self.name
@@ -99,7 +100,10 @@ class DateColumn:
         try:
             row_value = row[key]
         except KeyError:
-            raise ColumnNotFound('Column not found', column_name=key)
+            if self.required:
+                raise ColumnNotFound('Column not found', column_name=key)
+            else:
+                return Result.ok(None)
 
         try:
             # We return a string since we are ultimately serializing
@@ -233,7 +237,7 @@ def parse_row(row):
                         ColumnSpec('statuses', EnumeratedColumns(
                             column_set=ColumnSet([
                                 ColumnSpec('status', ChoiceColumn('status', choices.LegalOrderStatus)),
-                                ColumnSpec('date', DateColumn('date')),
+                                ColumnSpec('date', DateColumn('date', required=False)),
                             ]),
                             prefix_format=None,  # no prefix for these
                             suffix_format='{i}',

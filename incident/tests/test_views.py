@@ -632,6 +632,48 @@ class LegalOrderImportTest(TestCase):
             }
         )
 
+    def test_posting_a_file_with_missing_update_dates_updates_the_session(self):
+        venue = choices.LegalOrderVenue.STATE
+        target = choices.LegalOrderTarget.JOURNALIST
+        order_type = choices.LegalOrderType.SUBPOENA
+        info_requested = choices.InformationRequested.OTHER_TESTIMONY
+        status1 = choices.LegalOrderStatus.PENDING
+        date1 = '2023-01-05'
+        status2 = choices.LegalOrderStatus.QUASHED
+        date2 = ''
+        response = self.post_csv([{
+            'slug': self.inc1.slug,
+            'venue': venue.label,
+            'target': target.label,
+            'legal_order1_type': order_type.label,
+            'legal_order1_information_requested': info_requested.label,
+            'legal_order1_status1': status1.label,
+            'legal_order1_date1': date1,
+            'legal_order1_status2': status2.label,
+            'legal_order1_date2': date2,
+        }], follow=True)
+
+        self.assertEqual(
+            self.client.session['legal_order_import'],
+            {
+                str(self.inc1.pk): {
+                    'venue': venue.value,
+                    'target': target.value,
+                    'legal_orders': [{
+                        'information_requested': info_requested.value,
+                        'type': order_type.value,
+                        'statuses': [{
+                            'date': date1,
+                            'status': status1.value,
+                        }, {
+                            'date': None,
+                            'status': status2.value,
+                        }],
+                    }],
+                }
+            }
+        )
+
     def test_confirming_a_file_a_file_updates_the_incident(self):
         venue = choices.LegalOrderVenue.STATE
         target = choices.LegalOrderTarget.JOURNALIST
@@ -656,6 +698,58 @@ class LegalOrderImportTest(TestCase):
                         'status': status1.value,
                     }, {
                         'date': str(date2),
+                        'status': status2.value,
+                    }],
+                }],
+            }
+        }
+        session.save()
+        response = self.client.post(self.confirm_url)
+        self.assertRedirects(
+            response,
+            reverse('import_legal_orders:show_form'),
+        )
+        # self.assertEqual(response.status_code, )
+
+        # Successful import removes the corresponding session data
+        self.assertNotIn('legal_order_import', self.client.session)
+
+        self.inc1.refresh_from_db()
+        self.assertEqual(self.inc1.legal_order_venue, venue)
+        self.assertEqual(self.inc1.legal_order_target, target)
+        legal_order = self.inc1.legal_orders.all()[0]
+        self.assertEqual(legal_order.information_requested, info_requested)
+        self.assertEqual(legal_order.order_type, order_type)
+        self.assertEqual(legal_order.status, status1)
+        self.assertEqual(legal_order.date, date1)
+        update = legal_order.updates.all()[0]
+        self.assertEqual(update.status, status2)
+        self.assertEqual(update.date, date2)
+
+    def test_confirming_a_file_with_missing_update_date_updates_the_incident(self):
+        venue = choices.LegalOrderVenue.STATE
+        target = choices.LegalOrderTarget.JOURNALIST
+        order_type = choices.LegalOrderType.SUBPOENA
+        info_requested = choices.InformationRequested.OTHER_TESTIMONY
+        status1 = choices.LegalOrderStatus.PENDING
+        date1 = date(2023, 1, 5)
+        status2 = choices.LegalOrderStatus.QUASHED
+        date2 = None
+
+        session = self.client.session
+
+        session['legal_order_import'] = {
+            str(self.inc1.pk): {
+                'venue': venue.value,
+                'target': target.value,
+                'legal_orders': [{
+                    'information_requested': info_requested.value,
+                    'type': order_type.value,
+                    'statuses': [{
+                        'date': str(date1),
+                        'status': status1.value,
+                    }, {
+                        'date': date2,
                         'status': status2.value,
                     }],
                 }],
