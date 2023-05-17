@@ -641,7 +641,7 @@ class LegalOrderImportTest(TestCase):
         date1 = '2023-01-05'
         status2 = choices.LegalOrderStatus.QUASHED
         date2 = ''
-        response = self.post_csv([{
+        self.post_csv([{
             'slug': self.inc1.slug,
             'venue': venue.label,
             'target': target.label,
@@ -709,7 +709,6 @@ class LegalOrderImportTest(TestCase):
             response,
             reverse('import_legal_orders:show_form'),
         )
-        # self.assertEqual(response.status_code, )
 
         # Successful import removes the corresponding session data
         self.assertNotIn('legal_order_import', self.client.session)
