@@ -277,7 +277,7 @@ def legal_order_target_html_val(page, field, index, category):
     target = page.legal_order_target
     if not target:
         return ''
-    if target == choices.LegalOrderTarget.JOURNALIST:
+    if target in (choices.LegalOrderTarget.JOURNALIST, choices.LegalOrderTarget.INSTITUTION):
         return basic_html_val(page, field, index, category)
     elif target == choices.LegalOrderTarget.THIRD_PARTY:
         return render_to_string(

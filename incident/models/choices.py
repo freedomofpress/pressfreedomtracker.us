@@ -3,7 +3,8 @@ from django.db.models import TextChoices
 
 class LegalOrderTarget(TextChoices):
     JOURNALIST = 'JOURNALIST', 'Journalist'
-    THIRD_PARTY = 'THIRD_PARTY', 'Third Party'
+    THIRD_PARTY = 'THIRD_PARTY', 'Third-party'
+    INSTITUTION = 'INSTITUTION', 'Institution'
 
 
 class LegalOrderType(TextChoices):
@@ -19,7 +20,7 @@ class LegalOrderType(TextChoices):
 class InformationRequested(TextChoices):
     TESTIMONY_ABOUT_SOURCE = 'TESTIMONY_ABOUT_SOURCE', 'testimony about confidential source'
     OTHER_TESTIMONY = 'OTHER_TESTIMONY', 'other testimony'
-    JOURNALIST_COMMUNICATIONS = 'JOURNALIST_COMMUNICATIONS', 'journalist communications or work product'
+    JOURNALIST_COMMUNICATIONS = 'JOURNALIST_COMMUNICATIONS', 'communications or work product'
     OTHER = 'OTHER', 'other'
 
 
