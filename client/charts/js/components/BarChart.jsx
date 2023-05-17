@@ -49,7 +49,7 @@ export default function BarChart({
 	id = '',
 	numberOfTicks = 4,
 	description,
-	searchPageURL,
+	searchPageURL = () => {},
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
