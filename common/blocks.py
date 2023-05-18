@@ -438,17 +438,11 @@ class InfoTableBlock(blocks.StructBlock):
 
 
 class SimpleIncidentSet(blocks.StructBlock):
-    category = blocks.PageChooserBlock(
-        label='Filter by Category',
-        required=False,
-        page_type='common.CategoryPage',
-        help_text='If selected, only incidents in the chosen category will be included.',
-    )
     categories = blocks.ListBlock(blocks.PageChooserBlock(
         label='Filter by Category',
         required=False,
         page_type='common.CategoryPage',
-        help_text='If selected, only incidents in the chosen category will be included.',
+        help_text='If selected, only incidents with the chosen category will be included. If multiple categories are selected, incidents that have any of the selected categories will be included.',
     ))
     tag = blocks.ChoiceBlock(
         label='Filter by Tag',

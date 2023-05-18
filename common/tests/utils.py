@@ -164,7 +164,6 @@ def generate_block_quote():
 
 def generate_vertical_bar_chart():
     incident_set = {
-        'category': None,
         'categories': [],
         'tag': None,
         'lower_date': fake.date_between('-2y', '-1y'),
@@ -182,7 +181,6 @@ def generate_vertical_bar_chart():
 
 def generate_tree_map_chart():
     incident_set = {
-        'category': None,
         'categories': [],
         'tag': None,
         'lower_date': fake.date_between('-2y', '-1y'),
