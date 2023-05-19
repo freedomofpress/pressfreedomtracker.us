@@ -30,9 +30,17 @@ from incident.models import (
     Venue,
 )
 from common.tests.factories import (
+    CustomImageFactory,
     CategoryPageFactory,
     CommonTagFactory,
     PersonPageFactory,
+    RichTextTemplateBlockFactory,
+    AlignedCaptionedImageBlockFactory,
+    RawHTMLBlockFactory,
+    TweetEmbedBlockFactory,
+    RichTextBlockQuoteBlockFactory,
+    PullQuoteBlockFactory,
+    AlignedCaptionedEmbedBlockFactory,
 )
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
@@ -106,6 +114,19 @@ class IncidentUpdateFactory(factory.django.DjangoModelFactory):
     body = None
 
 
+class IncidentUpdateWithBodyFactory(IncidentUpdateFactory):
+    body = wagtail_factories.StreamFieldFactory({
+        'rich_text': factory.SubFactory(RichTextTemplateBlockFactory),
+        'image': factory.SubFactory(
+            wagtail_factories.blocks.ImageChooserBlockFactory
+        ),
+        'raw_html': factory.SubFactory(RawHTMLBlockFactory),
+        'tweet': factory.SubFactory(TweetEmbedBlockFactory),
+        'blockquote': factory.SubFactory(RichTextBlockQuoteBlockFactory),
+        'video': factory.SubFactory(AlignedCaptionedEmbedBlockFactory),
+    })
+
+
 class IncidentLinkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentPageLinks
@@ -140,7 +161,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     title = factory.Sequence(lambda n: f'Incident {n}')
     date = factory.LazyFunction(datetime.date.today)
     city = None
-    state = None
+    state = factory.SubFactory(StateFactory)
     longitude = None
     latitude = None
     body = None
@@ -406,6 +427,22 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
         if extracted:
             self.related_incidents.set(extracted)
+
+
+class IncidentPageWithBodyFactory(IncidentPageFactory):
+    teaser_image = factory.SubFactory(CustomImageFactory)
+    body = wagtail_factories.StreamFieldFactory({
+        'rich_text': factory.SubFactory(RichTextTemplateBlockFactory),
+        'image': factory.SubFactory(
+            wagtail_factories.blocks.ImageChooserBlockFactory
+        ),
+        'aligned_image': factory.SubFactory(AlignedCaptionedImageBlockFactory),
+        'raw_html': factory.SubFactory(RawHTMLBlockFactory),
+        'tweet': factory.SubFactory(TweetEmbedBlockFactory),
+        'blockquote': factory.SubFactory(RichTextBlockQuoteBlockFactory),
+        'pull_quote': factory.SubFactory(PullQuoteBlockFactory),
+        'video': factory.SubFactory(AlignedCaptionedEmbedBlockFactory),
+    })
 
 
 class InexactDateIncidentPageFactory(IncidentPageFactory):
