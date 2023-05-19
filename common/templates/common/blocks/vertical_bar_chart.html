@@ -16,6 +16,9 @@
 		{% if value.incident_set.upper_date %}
 			data-upper-date="{{ value.incident_set.upper_date|date:'c' }}"
 		{% endif %}
+		{% if value.time_period %}
+			data-time-period="{{ value.time_period }}"
+		{% endif %}
 		{% if value.description %}
 			data-description="{{ value.description }}"
 		{% endif %}

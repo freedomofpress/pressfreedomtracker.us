@@ -12,6 +12,7 @@ function engageCharts() {
 		const filterTag = chartNode.dataset?.tag
 		const lowerValue= chartNode.dataset?.lowerDate
 		const upperValue = chartNode.dataset?.upperDate
+		const timePeriod = chartNode.dataset?.timePeriod
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
 
@@ -30,6 +31,7 @@ function engageCharts() {
 					title={title}
 					description={description}
 					creditUrl={chartNode.baseURI}
+					timePeriod={timePeriod}
 				/>
 			</DataLoader>
 		))

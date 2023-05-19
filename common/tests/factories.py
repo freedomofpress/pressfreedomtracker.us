@@ -1,13 +1,21 @@
 import factory
 import wagtail_factories
+from wagtail_factories.blocks import BlockFactory
 from wagtail import blocks
 from wagtail.rich_text import RichText
 
 from common.blocks import (
+    ALIGNMENT_CHOICES,
     Heading1,
     Heading2,
     Heading3,
     StyledTextBlock,
+    RichTextTemplateBlock,
+    AlignedCaptionedImageBlock,
+    TweetEmbedBlock,
+    PullQuoteBlock,
+    RichTextBlockQuoteBlock,
+    AlignedCaptionedEmbedBlock,
 )
 from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.models import (
@@ -22,6 +30,55 @@ from common.models import (
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
+
+
+class RichTextTemplateBlockFactory(BlockFactory):
+    class Meta:
+        model = RichTextTemplateBlock
+
+
+class AlignedCaptionedImageBlockFactory(wagtail_factories.StructBlockFactory):
+    image = factory.SubFactory(
+        wagtail_factories.blocks.ImageChooserBlockFactory,
+    )
+    caption = RichText('Caption')
+    alignment = ALIGNMENT_CHOICES[0][0]
+
+    class Meta:
+        model = AlignedCaptionedImageBlock
+
+
+class TweetEmbedBlockFactory(wagtail_factories.StructBlockFactory):
+    tweet = factory.SubFactory(wagtail_factories.blocks.CharBlockFactory)
+
+    class Meta:
+        model = TweetEmbedBlock
+
+
+class RichTextBlockQuoteBlockFactory(wagtail_factories.StructBlockFactory):
+    text = RichText('Quote content')
+    source_text = RichText('Name of source')
+    source_url = 'https://freedom.press'
+
+    class Meta:
+        model = RichTextBlockQuoteBlock
+
+
+class PullQuoteBlockFactory(wagtail_factories.StructBlockFactory):
+    text = 'Text of Quote'
+
+    class Meta:
+        model = PullQuoteBlock
+
+
+class AlignedCaptionedEmbedBlockFactory(wagtail_factories.StructBlockFactory):
+    caption = RichText('Embed caption')
+    attribution = 'Attribution of embed'
+    video = factory.SubFactory(wagtail_factories.blocks.CharBlockFactory)
+    alignment = ALIGNMENT_CHOICES[0][0]
+
+    class Meta:
+        model = AlignedCaptionedEmbedBlock
 
 
 class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
