@@ -484,6 +484,12 @@ class SimpleIncidentSet(blocks.StructBlock):
 class VerticalBarChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
+    time_period = blocks.ChoiceBlock(
+        label='Display by',
+        required=False,
+        choices=[('months', 'Months'), ('years', 'Years')],
+        help_text='Choose whether to display bars aggregated by months or years. If not provided, will default to months if there is less than two years of data, years if there is more than two years of data.'
+    )
     description = blocks.TextBlock(
         required=True,
         help_text='Description for assistive technology users. '
