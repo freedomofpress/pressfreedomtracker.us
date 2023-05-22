@@ -65,6 +65,11 @@ export default function BarChart({
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
 
+	// Calculate the space per label and only show every other label if too crowded
+	const xDomainItems = xDomain || dataset.map((d) => d[x])
+	const xLabelWidth = width / xDomainItems.length
+	const xLabelDisplayInterval = xLabelWidth < 40 ? 2 : 1
+
 	const yScale = d3
 		.scaleLinear()
 		// Default to domain max 100 if there's no data
@@ -76,19 +81,19 @@ export default function BarChart({
 
 	const xScale = d3
 		.scaleBand()
-		.domain(xDomain || dataset.map((d) => d[x]))
+		.domain(xDomainItems)
 		.range([paddings.left + paddingsInternal.left, width - paddings.right - paddingsInternal.right])
 		.paddingInner(0.3)
 		.paddingOuter(0.2)
 
 	const xScaleOverLayer = d3
 		.scaleBand()
-		.domain(xDomain || dataset.map((d) => d[x]))
+		.domain(xDomainItems)
 		.range([paddings.left + paddingsInternal.left, width - paddings.right - paddingsInternal.right])
 
 	const xSlider = d3
 		.scalePoint()
-		.domain(xDomain || dataset.map((d) => d[x]))
+		.domain(xDomainItems)
 		.range([0, width])
 		.padding(0.3)
 
@@ -234,7 +239,7 @@ export default function BarChart({
 						</g>
 					))}
 					<AnimatedDataset
-						dataset={dataset}
+						dataset={dataset.filter((d, i) => i % xLabelDisplayInterval === 0)}
 						tag="text"
 						init={{
 							opacity: 0,

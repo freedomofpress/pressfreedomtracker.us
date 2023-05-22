@@ -164,13 +164,30 @@ def generate_block_quote():
 
 def generate_vertical_bar_chart():
     incident_set = {
-        'category': None,
+        'categories': [],
         'tag': None,
         'lower_date': fake.date_between('-2y', '-1y'),
         'upper_date': fake.date_between('-11M'),
     }
     return generate_field(
         'vertical_bar_chart',
+        {
+            'title': make_words().capitalize(),
+            'incident_set': incident_set,
+            'description': fake.text(max_nb_chars=200),
+        }
+    )
+
+
+def generate_tree_map_chart():
+    incident_set = {
+        'categories': [],
+        'tag': None,
+        'lower_date': fake.date_between('-2y', '-1y'),
+        'upper_date': fake.date_between('-11M'),
+    }
+    return generate_field(
+        'tree_map_chart',
         {
             'title': make_words().capitalize(),
             'incident_set': incident_set,
@@ -343,6 +360,7 @@ class StreamfieldProvider(BaseProvider):
             'info_table_plain_text': generate_info_table_plain_text,
             'aside': generate_aside,
             'vertical_bar_chart': generate_vertical_bar_chart,
+            'tree_map_chart': generate_tree_map_chart,
         }
 
         streamfield_data = []

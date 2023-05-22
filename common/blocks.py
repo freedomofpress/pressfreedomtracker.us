@@ -1,4 +1,5 @@
 import re
+import bleach
 
 from django.forms.utils import ErrorList
 
@@ -11,6 +12,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.models.helpers import get_tags
 from common.templatetags.render_as_template import render_as_template
+from common.search import get_searchable_content_for_fields
 from common.utils import unescape
 from common.validators import validate_template
 
@@ -94,6 +96,11 @@ class AlignedCaptionedImageBlock(blocks.StructBlock):
     )
     alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
 
+    def get_searchable_content(self, value):
+        return get_searchable_content_for_fields(
+            value, self.child_blocks, ['caption']
+        )
+
     class Meta:
         template = 'common/blocks/aligned_captioned_image.html'
         icon = 'image'
@@ -112,6 +119,11 @@ class AlignedCaptionedEmbedBlock(blocks.StructBlock):
         help_text='Organization / Director.'
     )
     alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
+
+    def get_searchable_content(self, value):
+        return get_searchable_content_for_fields(
+            value, self.child_blocks, ['caption', 'attribution'],
+        )
 
     class Meta:
         template = 'common/blocks/aligned_captioned_embed.html'
@@ -142,6 +154,13 @@ class TweetEmbedBlock(blocks.StructBlock):
                 raise StructBlockValidationError(errors)
 
         return super().clean(value)
+
+    def get_searchable_content(self, value):
+        tweet_content = value.get('tweet', None)
+        if tweet_content and tweet_content.html:
+            return [bleach.clean(tweet_content.html, strip=True, tags={})]
+        else:
+            return []
 
 
 class AsideBlock(blocks.StructBlock):
@@ -438,12 +457,12 @@ class InfoTableBlock(blocks.StructBlock):
 
 
 class SimpleIncidentSet(blocks.StructBlock):
-    category = blocks.PageChooserBlock(
+    categories = blocks.ListBlock(blocks.PageChooserBlock(
         label='Filter by Category',
         required=False,
         page_type='common.CategoryPage',
-        help_text='If selected, only incidents in the chosen category will be included.',
-    )
+        help_text='If selected, only incidents with the chosen category will be included. If multiple categories are selected, incidents that have any of the selected categories will be included.',
+    ))
     tag = blocks.ChoiceBlock(
         label='Filter by Tag',
         required=False,
@@ -465,6 +484,12 @@ class SimpleIncidentSet(blocks.StructBlock):
 class VerticalBarChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
+    time_period = blocks.ChoiceBlock(
+        label='Display by',
+        required=False,
+        choices=[('months', 'Months'), ('years', 'Years')],
+        help_text='Choose whether to display bars aggregated by months or years. If not provided, will default to months if there is less than two years of data, years if there is more than two years of data.'
+    )
     description = blocks.TextBlock(
         required=True,
         help_text='Description for assistive technology users. '
@@ -479,3 +504,22 @@ class VerticalBarChart(blocks.StructBlock):
 
     class Media:
         js = ['verticalBarChart']
+
+
+class TreeMapChart(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    incident_set = SimpleIncidentSet()
+    description = blocks.TextBlock(
+        required=True,
+        help_text='Description for assistive technology users. '
+        'If the chart is demonstrating a specific trend, try to include that, '
+        'e.g., "Bar chart showing a decreasing number of assaults over the '
+        'course of 2023."',
+    )
+
+    class Meta:
+        icon = 'table'
+        template = 'common/blocks/tree_map_chart.html'
+
+    class Media:
+        js = ['treeMapChart']

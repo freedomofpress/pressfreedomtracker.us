@@ -1,10 +1,11 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
-import IncidentsTimeBarChart from './components/IncidentsTimeBarChart'
+import TreeMapChart from './components/IncidentsTreeMap'
 import DataLoader from "../../charts/js/components/DataLoader"
+import * as d3 from 'd3'
 
 function engageCharts() {
-	const charts = document.querySelectorAll('.chart-vertical-bar')
+	const charts = document.querySelectorAll('.chart-tree-map')
 	charts.forEach((chartNode) => {
 		let root = createRoot(chartNode)
 		const categoryKeys = Object.keys(chartNode.dataset || {}).filter(d => d.indexOf('category') === 0)
@@ -12,7 +13,6 @@ function engageCharts() {
 		const filterTag = chartNode.dataset?.tag
 		const lowerValue= chartNode.dataset?.lowerDate
 		const upperValue = chartNode.dataset?.upperDate
-		const timePeriod = chartNode.dataset?.timePeriod
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
 
@@ -21,17 +21,17 @@ function engageCharts() {
 
 		root.render((
 			<DataLoader
-				dataUrl={`/api/edge/incidents/homepage_csv/?`}
-				dataKey="dataset"
+				dataUrl={[`/api/edge/incidents/homepage_csv/?`, '/api/edge/categories/']}
+				dataKey={['dataset', 'categories']}
+				dataParser={[(data) => d3.csvParse(data, d3.autoType), JSON.parse]}
 			>
-				<IncidentsTimeBarChart
+				<TreeMapChart
 					filterCategories={filterCategories.length ? filterCategories : null}
 					filterTags={filterTag}
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
 					description={description}
 					creditUrl={chartNode.baseURI}
-					timePeriod={timePeriod}
 				/>
 			</DataLoader>
 		))
