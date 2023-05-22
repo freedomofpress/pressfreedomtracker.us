@@ -549,4 +549,3 @@ class BubbleMapChart(blocks.StructBlock):
 
     class Media:
         js = ['bubbleMapChart']
-
