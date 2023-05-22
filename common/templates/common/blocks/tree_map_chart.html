@@ -1,7 +1,7 @@
 {% if value.title %}<h2>{{ value.title }}</h2>{% endif %}
 <div className="chartContainer">
 	<div
-		class="chart-vertical-bar"
+		class="chart-tree-map"
 		{% if value.incident_set.categories %}
 			{% for category in value.incident_set.categories %}
 				data-category-{{ forloop.counter }}="{{ category.title }}"
@@ -15,9 +15,6 @@
 		{% endif %}
 		{% if value.incident_set.upper_date %}
 			data-upper-date="{{ value.incident_set.upper_date|date:'c' }}"
-		{% endif %}
-		{% if value.time_period %}
-			data-time-period="{{ value.time_period }}"
 		{% endif %}
 		{% if value.description %}
 			data-description="{{ value.description }}"

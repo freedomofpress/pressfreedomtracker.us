@@ -128,6 +128,37 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 	return datasetFilteredBySixMonths
 }
 
+export function filterDatasets(
+	dataset,
+	filterCategories = null, // Array or string of valid categories or category
+	filterTags = null, // Array or string of valid tags or tag
+	dateRange = [null, null], // Array representing the min and max of dates to show
+) {
+	// Create maps so that we don't have to do n^2 lookup times
+	const filterCategoryMap = (Array.isArray(filterCategories) ? filterCategories : [filterCategories])
+		.reduce((acc, val) => ({...acc, [val]: true}), {})
+	const filterTagsMap = (Array.isArray(filterTags) ? filterTags : [filterTags])
+		.reduce((acc, val) => ({...acc, [val]: true}), {})
+
+	// Filter down to the categories and tags and date range we want
+	return dataset
+		.filter(({ categories, tags, date }) => {
+			const incidentCategories = categories ? categories.split(',').map(d => d.trim()) : []
+			const incidentTags = tags ? tags.split(',').map(d => d.trim()) : []
+
+			const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
+			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
+
+			const [startDate, endDate] = dateRange;
+			const isBeforeStartDate = startDate && date < startDate
+			const isAfterEndDate = endDate && date > endDate
+			const isExcludedDate = isBeforeStartDate || isAfterEndDate
+
+			return !isExcludedCategory && !isExcludedTag && !isExcludedDate
+		})
+		.map(({ date, ...restProps }) => ({ ...restProps, date: d3.utcMonth.floor(date) }))
+}
+
 export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 	const datasetGroupedByMonth = d3
 		.groups(

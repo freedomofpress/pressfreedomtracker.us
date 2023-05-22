@@ -35,6 +35,7 @@ from common.blocks import (
     AsideBlock,
     ButtonBlock,
     VerticalBarChart,
+    TreeMapChart,
 )
 
 
@@ -201,6 +202,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('button', ButtonBlock()),
         ('statistics', StatisticsBlock()),
         ('vertical_bar_chart', VerticalBarChart()),
+        ('tree_map_chart', TreeMapChart()),
     ], use_json_field=True)
 
     introduction = models.TextField(
