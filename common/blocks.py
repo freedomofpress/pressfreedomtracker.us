@@ -457,12 +457,12 @@ class InfoTableBlock(blocks.StructBlock):
 
 
 class SimpleIncidentSet(blocks.StructBlock):
-    category = blocks.PageChooserBlock(
+    categories = blocks.ListBlock(blocks.PageChooserBlock(
         label='Filter by Category',
         required=False,
         page_type='common.CategoryPage',
-        help_text='If selected, only incidents in the chosen category will be included.',
-    )
+        help_text='If selected, only incidents with the chosen category will be included. If multiple categories are selected, incidents that have any of the selected categories will be included.',
+    ))
     tag = blocks.ChoiceBlock(
         label='Filter by Tag',
         required=False,
@@ -504,3 +504,22 @@ class VerticalBarChart(blocks.StructBlock):
 
     class Media:
         js = ['verticalBarChart']
+
+
+class TreeMapChart(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    incident_set = SimpleIncidentSet()
+    description = blocks.TextBlock(
+        required=True,
+        help_text='Description for assistive technology users. '
+        'If the chart is demonstrating a specific trend, try to include that, '
+        'e.g., "Bar chart showing a decreasing number of assaults over the '
+        'course of 2023."',
+    )
+
+    class Meta:
+        icon = 'table'
+        template = 'common/blocks/tree_map_chart.html'
+
+    class Media:
+        js = ['treeMapChart']
