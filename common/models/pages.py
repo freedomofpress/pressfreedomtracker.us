@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.http import Http404
 from django.shortcuts import redirect
+from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.module_loading import import_string
 from django.template.defaultfilters import truncatewords
@@ -39,6 +40,7 @@ from common.blocks import (
     InfoTableBlock,
 )
 from common.choices import CATEGORY_SYMBOL_CHOICES, CATEGORY_CHART_CHOICES
+from common.models.settings import SocialSharingSEOSettings
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
@@ -94,12 +96,12 @@ class BaseSidebarPageMixin(models.Model):
 class MetadataPageMixin(OriginalMetadataPageMixin):
     "Provide defaults for metadate for pages in this application"
 
-    def _get_ssssettings(self):
-        # Imported here to avoid circular dependency
-        from common.models.settings import SocialSharingSEOSettings
+    @cached_property
+    def social_sharing_seo_settings(self):
         return SocialSharingSEOSettings.for_site(self.get_site())
 
-    def get_meta_description(self):
+    @cached_property
+    def meta_description(self):
         """
         Return either the search_description set on the page or the
         default description set for the site
@@ -111,7 +113,8 @@ class MetadataPageMixin(OriginalMetadataPageMixin):
         ssssettings = self._get_ssssettings()
         return ssssettings.default_description
 
-    def get_meta_image(self):
+    @cached_property
+    def meta_image(self):
         """
         Return either the search_image set on the page or the
         default image set for the site
@@ -122,6 +125,15 @@ class MetadataPageMixin(OriginalMetadataPageMixin):
 
         ssssettings = self._get_ssssettings()
         return ssssettings.default_image
+
+    def _get_ssssettings(self):
+        return self.social_sharing_seo_settings
+
+    def get_meta_description(self):
+        return self.meta_description
+
+    def get_meta_image(self):
+        return self.meta_image
 
     class Meta:
         abstract = True

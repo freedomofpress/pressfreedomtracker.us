@@ -2,6 +2,7 @@ db.sqlite3*
 /static/
 /media/
 /htmlcov/
+/coverage/
 /pressfreedom/settings/local.py
 *.pyc
 __pycache__

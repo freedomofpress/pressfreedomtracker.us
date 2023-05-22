@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders ChartDescription with mocked data 1`] = `
+<div
+  className="chartDescription"
+  id="test"
+>
+  This is a test
+</div>
+`;

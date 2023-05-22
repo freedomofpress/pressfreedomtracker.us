@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders TagFilter with mocked data 1`] = `
+<div
+  className="filters__form--fieldset"
+>
+  <CheckBoxBar
+    barWidth={120}
+    count={1}
+    index={0}
+    isSelected={false}
+    label="#lemur"
+    onClick={[Function]}
+    width={160}
+  />
+  <CheckBoxBar
+    barWidth={120}
+    count={1}
+    index={1}
+    isSelected={false}
+    label="#baboon"
+    onClick={[Function]}
+    width={160}
+  />
+  <CheckBoxBar
+    barWidth={120}
+    count={1}
+    index={2}
+    isSelected={false}
+    label="#civet"
+    onClick={[Function]}
+    width={160}
+  />
+  <AutoComplete
+    handleSelect={[Function]}
+    itemNamePlural="tags"
+    itemNameSingular="tag"
+    name="tags"
+    placeholder="Find tags..."
+    suggestions={[]}
+    suggestionsLabelField="tag"
+    suggestionsSidenoteField="count"
+  />
+</div>
+`;

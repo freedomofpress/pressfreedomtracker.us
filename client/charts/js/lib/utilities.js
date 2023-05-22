@@ -150,20 +150,13 @@ export function filterDatasets(
 			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
 
 			const [startDate, endDate] = dateRange;
-			if (startDate) startDate.setHours(0)
-			if (endDate) endDate.setHours(0)
 			const isBeforeStartDate = startDate && date < startDate
 			const isAfterEndDate = endDate && date > endDate
 			const isExcludedDate = isBeforeStartDate || isAfterEndDate
 
 			return !isExcludedCategory && !isExcludedTag && !isExcludedDate
 		})
-		.map(({ date, ...restProps }) => {
-			// Set the date to the start of the month
-			date.setDate(1)
-			date.setHours(0)
-			return { ...restProps, date }
-		})
+		.map(({ date, ...restProps }) => ({ ...restProps, date: d3.utcMonth.floor(date) }))
 }
 
 export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
@@ -221,8 +214,6 @@ export function groupByCity(dataset) {
 		city: d.city,
 		state: d.state !== undefined ? d.state : 'Abroad',
 	}))
-
-	// TODO we need a city list to plot lat lng
 
 	// Group dataset by city and coordinates (some cities have the same name)
 	// Reorganize the array as: [{latitude: .., longitude: .., name: .., numberOfIncidents: ..}, {..}, ...]
