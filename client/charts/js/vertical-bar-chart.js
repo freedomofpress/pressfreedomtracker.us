@@ -30,7 +30,7 @@ function engageCharts() {
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
 					description={description}
-					creditUrl={chartNode.baseURI}
+					creditUrl={'pressfreedomtracker.us'}
 					timePeriod={timePeriod}
 				/>
 			</DataLoader>
