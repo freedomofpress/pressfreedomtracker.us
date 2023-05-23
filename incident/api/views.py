@@ -176,6 +176,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return super().paginate_queryset(queryset)
 
     def get_queryset(self):
+        incident_filter = IncidentFilter(self.request.GET)
         if self.csv_format_is_requested and self.can_apply_csv_serializer:
             annotated_fields = {
                 'categories': 'category_summary',
@@ -198,11 +199,10 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
                 v for k, v in annotated_fields.items()
                 if k in requested_fields
             }
-            return models.IncidentPage.objects.live()\
+            return incident_filter.get_queryset()\
                 .for_csv(annotations, self.request)\
                 .values(*result_fields)
 
-        incident_filter = IncidentFilter(self.request.GET)
         incidents = incident_filter.get_queryset()
 
         return incidents.with_most_recent_update().with_public_associations()

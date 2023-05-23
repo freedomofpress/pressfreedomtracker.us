@@ -107,7 +107,7 @@ class PerformantCSVTestCase(TestCase):
             kwargs={'version': 'edge'},
         ) + '?' + parse.urlencode({'fields': ','.join(fields)})
 
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(3):
             self.response = self.client.get(
                 url,
                 HTTP_ACCEPT='text/csv',
@@ -323,6 +323,104 @@ class InvalidFilterHomePageCSVTestCase(TestCase):
             HTTP_ACCEPT='text/csv',
         )
         self.assertEqual(self.response.status_code, 400)
+
+
+class FilteredPerformantCSVTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build(
+            slug='incident-index',
+        )
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.state = StateFactory(abbreviation='NM')
+        cls.cats = CategoryPageFactory.create_batch(3, parent=root_page)
+        cls.tags = CommonTagFactory.create_batch(3)
+        cls.incident1 = IncidentPageFactory(
+            parent=cls.incident_index,
+            date='2022-01-01',
+            categories=[cls.cats[0]],
+            tags=[cls.tags[0]],
+            state__abbreviation='NM',
+        )
+        cls.incident2 = IncidentPageFactory(
+            parent=cls.incident_index,
+            date='2022-02-02',
+            categories=[cls.cats[1]],
+            tags=[cls.tags[1]],
+            state__abbreviation='AK',
+        )
+        cls.incident3 = IncidentPageFactory(
+            parent=cls.incident_index,
+            date='2022-03-03',
+            categories=[cls.cats[2]],
+            tags=[cls.tags[2]],
+            state__abbreviation='VT',
+        )
+
+    def filtered_request(self, filters):
+        fields = [
+            'title',
+            'date',
+            'tags',
+            'categories',
+        ]
+        response = self.client.get(
+            path=reverse(
+                'incidentpage-list',
+                kwargs={'version': 'edge'},
+            ),
+            data={
+                'fields': ','.join(fields),
+                **filters
+            },
+            HTTP_ACCEPT='text/csv',
+        )
+        content_lines = response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+
+        headers = next(reader)
+        result = [dict(zip(headers, row)) for row in reader]
+        return result
+
+    def test_date_filter(self):
+        # 2 queries expected:
+        # * 1 for the general incident filters
+        # * 1 for the category incident filters
+        # * 1 for the actual incident query
+        with self.assertNumQueries(3):
+            result = self.filtered_request({
+                'date_lower': '2022-01-15',
+                'date_upper': '2022-02-15',
+            })
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['title'], self.incident2.title)
+
+    def test_tags_filter(self):
+        # 2 queries expected:
+        # * 1 for the general incident filters
+        # * 1 for the category incident filters
+        # * 1 for the actual incident query
+        with self.assertNumQueries(3):
+            result = self.filtered_request({
+                'tags': self.tags[1].pk
+            })
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['title'], self.incident2.title)
+
+    def test_categories_filter(self):
+        # 3 queries expected:
+        # * 1 for the general incident filters
+        # * 1 for the category incident filters
+        # * 1 for the actual incident query
+        with self.assertNumQueries(3):
+            result = self.filtered_request({
+                'categories': self.cats[1].pk
+            })
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['title'], self.incident2.title)
 
 
 class IncidentCSVTestCase(TestCase):
