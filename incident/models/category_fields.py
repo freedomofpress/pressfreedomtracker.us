@@ -79,9 +79,6 @@ CATEGORY_FIELD_MAP = {
     ],
     'subpoena': [
         ('legal_orders', 'Legal Orders'),
-        ('subpoena_type', 'Subpoena Type'),
-        ('subpoena_statuses', 'Subpoena Status'),
-        ('legal_order_type', 'Legal Order Type'),
         ('legal_order_target', 'Legal Order Target'),
         ('legal_order_venue', 'Legal Order Venue'),
     ],
