@@ -1,6 +1,8 @@
 import bleach
+import hashlib
 from bs4 import BeautifulSoup
 from django import template
+from django.core.cache import cache
 from django.utils.html import mark_safe
 from wagtail.templatetags.wagtailcore_tags import richtext
 
@@ -31,6 +33,12 @@ def richtext_inline(value):
 def richtext_aside(value):
     "Returns HTML-formatted rich text with span injected in each block level element"
     html_str = richtext(value).__html__()
+
+    # Implicit cache invalidation happens based on the string
+    cache_key = hashlib.md5(html_str.encode('UTF-8')).hexdigest()
+    if cache_key in cache:
+        return cache.get(cache_key)
+
     soup = BeautifulSoup(html_str, 'html.parser')
     block_elems = soup.select('[data-block-key]')
     for elem in block_elems:
@@ -41,7 +49,10 @@ def richtext_aside(value):
             for content in reversed(elem.contents):
                 new_span.insert(0, content.extract())
             elem.append(new_span)
-    return mark_safe(str(soup))
+
+    aside_html = mark_safe(str(soup))
+    cache.set(cache_key, aside_html, 3600)
+    return aside_html
 
 
 @register.simple_tag
