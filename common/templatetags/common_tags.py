@@ -1,4 +1,5 @@
 import bleach
+from bs4 import BeautifulSoup
 from django import template
 from django.utils.html import mark_safe
 from wagtail.templatetags.wagtailcore_tags import richtext
@@ -24,6 +25,23 @@ def richtext_inline(value):
             'a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong', 'span'
         }
     ))
+
+
+@register.filter
+def richtext_aside(value):
+    "Returns HTML-formatted rich text with span injected in each block level element"
+    html_str = richtext(value).__html__()
+    soup = BeautifulSoup(html_str, 'html.parser')
+    block_elems = soup.select('[data-block-key]')
+    for elem in block_elems:
+        if elem.string:
+            elem.string.wrap(soup.new_tag('span'))
+        elif len(elem.contents):
+            new_span = soup.new_tag('span')
+            for content in reversed(elem.contents):
+                new_span.insert(0, content.extract())
+            elem.append(new_span)
+    return mark_safe(str(soup))
 
 
 @register.simple_tag

@@ -1,5 +1,6 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags  %}
+{% load richtext_aside from common_tags %}
 
 <aside class="aside aside--reversed">
-    {{ value.text|richtext }}
+    {{ value.text|richtext_aside }}
 </aside>
