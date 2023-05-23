@@ -1,8 +1,32 @@
 .aside
 	&--reversed
-		*
+		* > span
 			color: $white
 			background-color: $black
+			padding: 5px 1px // To fill gap left by line-height
+
+		/* Seems like the line-height & gaps created between spans
+			are little different for ol li and ul li from the rest,
+			so adding some very specific rules for padding to fill
+			the gaps. The numbers Saptak determined from experimenting.
+			This is needed to align the background of list-style icons
+			correctly with the rest of the text. */
+		ol li > span
+			padding: 4px 1px
+
+		ul li > span
+			padding: 6.5px 1px 4px
+
+		/* This rule  is needed to add background color to the list-style
+			icons. Sadly, ::marker doesn't support background-color, so
+			we need this kind of a hack. This hack also makes the above
+			code necessary */ 
+		ol, ul
+			background-color: $black
+			color: $white
+
+			li
+				background-color: $white
 		a
 			color: $white
 
