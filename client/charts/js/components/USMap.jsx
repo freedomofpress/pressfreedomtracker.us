@@ -164,9 +164,11 @@ export default function USMap({
 							keyFn={(d) => `${aggregationLocality(d)}`}
 						/>
 					</g>
-					<g>
+					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
 							<circle
+								role="listitem"
+								aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 								cx={projection([d.longitude, d.latitude])[0]}
 								cy={projection([d.longitude, d.latitude])[1]}
 								r={markerScale(d.numberOfIncidents) + 5}
