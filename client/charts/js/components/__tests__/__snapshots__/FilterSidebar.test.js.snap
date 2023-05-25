@@ -1897,7 +1897,27 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
+      "legal_order_information_requested": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
+      "legal_order_status": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
+      "legal_order_target": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
       "legal_order_type": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
+      "legal_order_venue": {
         "enabled": false,
         "parameters": null,
         "type": "string",
@@ -1991,6 +2011,11 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "type": "string",
       },
       "third_party_business": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
+      "third_party_in_possession_of_communications": {
         "enabled": false,
         "parameters": null,
         "type": "string",

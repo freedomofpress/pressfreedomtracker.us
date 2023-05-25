@@ -8,7 +8,7 @@ from typing import List
 
 from django.apps import apps
 from django.core.exceptions import ValidationError, FieldDoesNotExist
-from django.contrib.postgres.search import SearchQuery, SearchVector
+from django.contrib.postgres.search import SearchQuery
 from django.db.models import (
     BooleanField,
     CharField,
@@ -23,6 +23,7 @@ from django.db.models import (
     TextChoices,
     TextField,
 )
+from django.db.models.functions import Concat
 from django.db.models.fields.related import ManyToOneRel
 from django.db.utils import ProgrammingError
 from django.http import QueryDict
@@ -36,6 +37,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Site
 
 from incident.circuits import STATES_BY_CIRCUIT
+from incident.models import choices
 from incident.models.choices import STATUS_OF_CHARGES
 
 
@@ -520,9 +522,12 @@ class SearchFilter(Filter):
         super(SearchFilter, self).__init__('search', CharField(verbose_name='search terms'))
 
     def filter(self, queryset, value):
-        query = SearchQuery(value)
-        vector = SearchVector('title', 'body')
-        return queryset.annotate(search=vector).filter(search=query)
+        return queryset.annotate(
+            title_and_body_search=Concat(
+                F('index_entries__title'),
+                F('index_entries__body'),
+            ),
+        ).filter(title_and_body_search=SearchQuery(value))
 
 
 class ChargesFilter(ManyRelationFilter):
@@ -593,6 +598,54 @@ class StatusOfChargesFilter(ChoiceFilter):
     def filter(self, queryset, value):
         return queryset.with_most_recent_status_of_charges().filter(
             most_recent_charge_statuses__contains=value,
+        )
+
+
+class LegalOrderTypeFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.LegalOrderType.choices
+        return serialized
+
+    def get_choices(self):
+        return set(choices.LegalOrderType)
+
+    def filter(self, queryset, value):
+        return queryset.filter(
+            Q(legal_orders__order_type__in=value)
+        )
+
+
+class LegalOrderInformationFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.InformationRequested.choices
+        return serialized
+
+    def get_choices(self):
+        return set(choices.InformationRequested)
+
+    def filter(self, queryset, value):
+        return queryset.filter(
+            Q(legal_orders__information_requested__in=value)
+        )
+
+
+class LegalOrderStatusFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.LegalOrderStatus.choices
+        return serialized
+
+    def get_choices(self):
+        return set(choices.LegalOrderStatus)
+
+    def filter(self, queryset, value):
+        return queryset.with_most_recent_status_of_legal_orders().filter(
+            most_recent_legal_order_statuses__contains=value,
         )
 
 
@@ -775,13 +828,25 @@ class IncidentFilter(object):
         'status_of_charges': {'filter_cls': StatusOfChargesFilter},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
         'state': {'text_fields': ['abbreviation', 'name']},
-        'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'}
+        'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'},
+        'legal_order_type': {'filter_cls': LegalOrderTypeFilter},
     }
 
     _extra_filters = {
         'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
         'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
-        'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last')
+        'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last'),
+        'legal_order_information_requested': LegalOrderInformationFilter(
+            name='legal_order_information_requested',
+            verbose_name='Information requested in legal order',
+            model_field=CharField(),
+        ),
+        'legal_order_status': LegalOrderStatusFilter(
+            name='legal_order_status',
+            verbose_name='Legal order status',
+            model_field=CharField(),
+        ),
+
     }
 
     # IncidentPage fields that cannot be filtered on.
@@ -797,6 +862,9 @@ class IncidentFilter(object):
         'longitude',
         'latitude',
         '_revisions',
+        'legal_orders',
+        'held_in_contempt',  # Deprecated field
+        'detention_status',  # Deprecated field
         # 'dropped_charges',
         # 'current_charges',
     }

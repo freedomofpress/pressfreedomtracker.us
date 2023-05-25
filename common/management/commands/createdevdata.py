@@ -101,6 +101,12 @@ PARAM_TO_SLUG_MAP = {
 
 
 def lookup_category(key):
+    """Find the category for a given factory trait parameter.
+
+    Answers the question: if we used a given trait to create an
+    incident page, what category does it belong to?
+
+    """
     slug = PARAM_TO_SLUG_MAP[key]
     try:
         return CategoryPage.objects.get(slug=slug)
@@ -122,7 +128,7 @@ def generate_variations():
     [{'arrest': True}, {'arrest': True, 'border_stop': True}, ...]
 
     """
-    category_params = MultimediaIncidentPageFactory._meta.parameters.keys()
+    category_params = PARAM_TO_SLUG_MAP.keys()
     non_category_params = {'geolocated'}
     for variation in three_combinations(category_params - non_category_params):
         yield {k: True for k in variation}

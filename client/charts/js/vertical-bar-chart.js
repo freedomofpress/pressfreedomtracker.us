@@ -7,10 +7,12 @@ function engageCharts() {
 	const charts = document.querySelectorAll('.chart-vertical-bar')
 	charts.forEach((chartNode) => {
 		let root = createRoot(chartNode)
-		const filterCategory = chartNode.dataset?.category
+		const categoryKeys = Object.keys(chartNode.dataset || {}).filter(d => d.indexOf('category') === 0)
+		const filterCategories = categoryKeys.map(k => chartNode.dataset[k]).filter(d => d)
 		const filterTag = chartNode.dataset?.tag
 		const lowerValue= chartNode.dataset?.lowerDate
 		const upperValue = chartNode.dataset?.upperDate
+		const timePeriod = chartNode.dataset?.timePeriod
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
 
@@ -23,12 +25,13 @@ function engageCharts() {
 				dataKey="dataset"
 			>
 				<IncidentsTimeBarChart
-					filterCategories={filterCategory}
+					filterCategories={filterCategories.length ? filterCategories : null}
 					filterTags={filterTag}
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
 					description={description}
-					creditUrl={chartNode.baseURI}
+					creditUrl={'pressfreedomtracker.us'}
+					timePeriod={timePeriod}
 				/>
 			</DataLoader>
 		))

@@ -30,9 +30,17 @@ from incident.models import (
     Venue,
 )
 from common.tests.factories import (
+    CustomImageFactory,
     CategoryPageFactory,
     CommonTagFactory,
     PersonPageFactory,
+    RichTextTemplateBlockFactory,
+    AlignedCaptionedImageBlockFactory,
+    RawHTMLBlockFactory,
+    TweetEmbedBlockFactory,
+    RichTextBlockQuoteBlockFactory,
+    PullQuoteBlockFactory,
+    AlignedCaptionedEmbedBlockFactory,
 )
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
@@ -106,6 +114,19 @@ class IncidentUpdateFactory(factory.django.DjangoModelFactory):
     body = None
 
 
+class IncidentUpdateWithBodyFactory(IncidentUpdateFactory):
+    body = wagtail_factories.StreamFieldFactory({
+        'rich_text': factory.SubFactory(RichTextTemplateBlockFactory),
+        'image': factory.SubFactory(
+            wagtail_factories.blocks.ImageChooserBlockFactory
+        ),
+        'raw_html': factory.SubFactory(RawHTMLBlockFactory),
+        'tweet': factory.SubFactory(TweetEmbedBlockFactory),
+        'blockquote': factory.SubFactory(RichTextBlockQuoteBlockFactory),
+        'video': factory.SubFactory(AlignedCaptionedEmbedBlockFactory),
+    })
+
+
 class IncidentLinkFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = IncidentPageLinks
@@ -140,7 +161,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     title = factory.Sequence(lambda n: f'Incident {n}')
     date = factory.LazyFunction(datetime.date.today)
     city = None
-    state = None
+    state = factory.SubFactory(StateFactory)
     longitude = None
     latitude = None
     body = None
@@ -246,6 +267,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             charged_under_espionage_act=False,
         )
         subpoena = factory.Trait(
+            legal_order_target=choices.LegalOrderTarget.JOURNALIST,
             subpoena_type=factory.Iterator(
                 choices.SUBPOENA_TYPE, getter=lambda c: c[0]),
             # subpoena_statuses=factory.Iterator(
@@ -261,7 +283,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             ),
             detention_status=factory.Iterator(
                 choices.DETENTION_STATUS, getter=lambda c: c[0]),
-            third_party_in_possession_of_communications='Megacorp Industries',
+            name_of_business='Megacorp Industries',
             third_party_business=factory.Iterator(
                 choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
             legal_order_type=factory.Iterator(
@@ -408,6 +430,22 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             self.related_incidents.set(extracted)
 
 
+class IncidentPageWithBodyFactory(IncidentPageFactory):
+    teaser_image = factory.SubFactory(CustomImageFactory)
+    body = wagtail_factories.StreamFieldFactory({
+        'rich_text': factory.SubFactory(RichTextTemplateBlockFactory),
+        'image': factory.SubFactory(
+            wagtail_factories.blocks.ImageChooserBlockFactory
+        ),
+        'aligned_image': factory.SubFactory(AlignedCaptionedImageBlockFactory),
+        'raw_html': factory.SubFactory(RawHTMLBlockFactory),
+        'tweet': factory.SubFactory(TweetEmbedBlockFactory),
+        'blockquote': factory.SubFactory(RichTextBlockQuoteBlockFactory),
+        'pull_quote': factory.SubFactory(PullQuoteBlockFactory),
+        'video': factory.SubFactory(AlignedCaptionedEmbedBlockFactory),
+    })
+
+
 class InexactDateIncidentPageFactory(IncidentPageFactory):
     exact_date_unknown = True
     date = datetime.date(2017, 3, 1)
@@ -499,6 +537,54 @@ class IncidentChargeWithUpdatesFactory(factory.django.DjangoModelFactory):
     update3 = factory.RelatedFactory(
         ChargeUpdateFactory,
         factory_related_name='incident_charge',
+    )
+
+
+class LegalOrderFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.LegalOrder
+
+    incident_page = factory.SubFactory(IncidentPageFactory)
+    order_type = choices.LegalOrderType.SUBPOENA
+    information_requested = choices.InformationRequested.OTHER
+    status = choices.LegalOrderStatus.PENDING
+    date = factory.LazyFunction(timezone.now)
+
+
+class LegalOrderUpdateFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.LegalOrderUpdate
+
+    date = factory.LazyFunction(timezone.now)
+    status = choices.LegalOrderStatus.UNKNOWN
+
+
+class LegalOrderWithUpdatesFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.LegalOrder
+
+    incident_page = factory.SubFactory(IncidentPageFactory)
+    order_type = choices.LegalOrderType.SUBPOENA
+    information_requested = choices.LegalOrderType.OTHER
+    status = choices.LegalOrderStatus.PENDING
+    date = factory.LazyFunction(timezone.now)
+    update1 = factory.RelatedFactory(
+        LegalOrderUpdateFactory,
+        factory_related_name='legal_order',
+        date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=1)),
+        sort_order=1,
+    )
+    update2 = factory.RelatedFactory(
+        LegalOrderUpdateFactory,
+        factory_related_name='legal_order',
+        date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=2)),
+        sort_order=2,
+    )
+    update3 = factory.RelatedFactory(
+        LegalOrderUpdateFactory,
+        factory_related_name='legal_order',
+        date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=3)),
+        sort_order=3,
     )
 
 

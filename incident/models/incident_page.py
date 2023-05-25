@@ -31,7 +31,7 @@ from wagtail import blocks
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page, Orderable, PageManager, PageQuerySet
 from wagtail.images.blocks import ImageChooserBlock
-
+from wagtail.search import index
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 from common.blocks import (
     RichTextBlockQuoteBlock,
@@ -44,7 +44,13 @@ from common.blocks import (
 from common.models import MetadataPageMixin
 from incident.models import choices
 from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
-from incident.models.inlines import IncidentPageUpdates, ChargeUpdate, IncidentCharge
+from incident.models.inlines import (
+    IncidentPageUpdates,
+    ChargeUpdate,
+    IncidentCharge,
+    LegalOrder,
+    LegalOrderUpdate,
+)
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
 from incident.utils.db import CurrentDate, MakeDateRange
@@ -169,6 +175,34 @@ class IncidentQuerySet(PageQuerySet):
 
         return self.annotate(
             most_recent_charge_statuses=Subquery(charges_with_latest_status),
+        )
+
+    def with_most_recent_status_of_legal_orders(self):
+        """Annotate each incident with an array containing every
+        legal order's most recent status."""
+        newest_update = LegalOrderUpdate.objects.filter(
+            legal_order=OuterRef('pk'),
+        ).order_by('-sort_order').values('status')[:1]
+
+        latest_status = LegalOrder.objects.filter(
+            pk=OuterRef('pk'),
+        ).annotate(
+            newest_update=Subquery(newest_update),
+            latest_status=Coalesce('newest_update', 'status'),
+        ).values('latest_status')
+
+        legal_orders_with_latest_status = LegalOrder.objects.filter(
+            incident_page=OuterRef('pk'),
+        ).values(
+            'incident_page__pk',
+        ).annotate(
+            latest_status=ArrayAgg(latest_status)
+        ).values('latest_status')
+
+        return self.annotate(
+            most_recent_legal_order_statuses=Subquery(
+                legal_orders_with_latest_status
+            ),
         )
 
     def fuzzy_date_filter(self, lower=None, upper=None):
@@ -546,6 +580,8 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name="Subpoena statuses"
     )
+
+    # Deprecated field.
     held_in_contempt = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
@@ -553,6 +589,8 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='If subject refused to cooperate, were they held in contempt?',
     )
+
+    # Deprecated field.
     detention_status = models.CharField(
         choices=choices.DETENTION_STATUS,
         max_length=255,
@@ -562,11 +600,12 @@ class IncidentPage(MetadataPageMixin, Page):
     )
 
     # Legal Order for Journalist's Records
-    third_party_in_possession_of_communications = models.CharField(
+    name_of_business = models.CharField(
         max_length=512,
         blank=True,
         null=True,
-        verbose_name='Third party in possession of communications'
+        verbose_name='Name of business',
+        help_text='Name of the business targeted by legal order. This field is only displayed if the legal order target is set to "Third Party"',
     )
     third_party_business = models.CharField(
         choices=choices.THIRD_PARTY_BUSINESS,
@@ -575,12 +614,25 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='Third party business'
     )
+    legal_order_target = models.CharField(
+        choices=choices.LegalOrderTarget.choices,
+        max_length=255,
+        blank=True,
+        null=True,
+    )
     legal_order_type = models.CharField(
         choices=choices.LEGAL_ORDER_TYPE,
         max_length=255,
         blank=True,
         null=True,
         verbose_name='Legal order type'
+    )
+    legal_order_venue = models.CharField(
+        choices=choices.LegalOrderVenue.choices,
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Legal order venue',
     )
 
     # Prior Restraint
@@ -726,26 +778,17 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Subpoena of Journalism (incl. Legal Case)',
+            heading='Subpoena/Legal Order',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('subpoena_type'),
-                FieldPanel('subpoena_statuses'),
-                FieldPanel('held_in_contempt'),
-                FieldPanel('detention_status'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Legal Order for Journalist\'s Records (incl. Legal Case)',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('third_party_in_possession_of_communications'),
-                FieldPanel('third_party_business'),
                 FieldPanel('legal_order_type'),
+                FieldPanel('legal_order_target'),
+                FieldPanel('legal_order_venue'),
+                InlinePanel('legal_orders', label='Legal Orders'),
+                FieldPanel('third_party_business'),
+                FieldPanel('name_of_business'),
             ]
         ),
-
         MultiFieldPanel(
             heading='Prior Restraint (incl. Legal Case)',
             classname='collapsible collapsed',
@@ -769,6 +812,24 @@ class IncidentPage(MetadataPageMixin, Page):
     ]
 
     parent_page_types = ['incident.IncidentIndexPage']
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+        index.SearchField('city'),
+        index.RelatedFields('state', [
+            index.SearchField('name'),
+        ]),
+        index.SearchField('introduction'),
+        index.SearchField('teaser'),
+        index.RelatedFields('teaser_image', [
+            index.SearchField('attribution'),
+        ]),
+        index.SearchField('image_caption'),
+        index.RelatedFields('updates', [
+            index.SearchField('title'),
+            index.SearchField('body'),
+        ]),
+    ]
 
     def get_context(self, request, *args, **kwargs):
         context = super(IncidentPage, self).get_context(request, *args, **kwargs)
@@ -867,7 +928,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 continue
             category_details[category.category] = []
             for field in category_fields:
-                display_html = CAT_FIELD_VALUES[field[0]](self, field[0], index)
+                display_html = CAT_FIELD_VALUES[field[0]](self, field[0], index, category.category)
                 category_details[category.category].append(
                     {
                         'name': field[1],
