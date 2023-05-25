@@ -2,8 +2,8 @@
 <div className="chartContainer">
 	<div
 		class="chart-bubble-map"
-		{% if value.incident_set.category %}
-			{% for category in value.incident_set.category %}
+		{% if value.incident_set.categories %}
+			{% for category in value.incident_set.categories %}
 				data-category-{{ forloop.counter }}="{{ category.title }}"
 			{% endfor %}
 		{% endif %}
