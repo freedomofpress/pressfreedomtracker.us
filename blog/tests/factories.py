@@ -61,6 +61,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
                     'styled_text',
                     'vertical_bar_chart',
                     'tree_map_chart',
+                    'bubble_map_chart',
                 ],
             )
         )
@@ -82,6 +83,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
             'styled_text',
             'vertical_bar_chart',
             'tree_map_chart',
+            'bubble_map_chart',
         ],
     )
     teaser_text = factory.Faker(

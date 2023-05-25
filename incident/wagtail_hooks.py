@@ -1,9 +1,10 @@
 from django.conf.urls import url
-from django.urls import reverse
+from django.urls import reverse, path, include
 from wagtail.contrib.modeladmin.options import (
     ModelAdminGroup,
     modeladmin_register,
 )
+from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
 from wagtail.admin.search import SearchArea
 from wagtail import hooks
 
@@ -28,6 +29,8 @@ from incident.views import (
     InstitutionMergeView,
     LawEnforcementOrganizationMergeView,
     GovernmentWorkerMergeView,
+    LegalOrderImportView,
+    LegalOrderImportConfirmView,
 )
 
 
@@ -36,6 +39,61 @@ def incident_admin_search_url():
     return [
         url(r'^incident-search/$', incident_admin_search_view, name='incident-admin-search'),
     ]
+
+
+@hooks.register('register_admin_urls')
+def incident_legal_order_import_url():
+    return [
+        path(
+            'legal_orders/',
+            include(
+                (
+                    [
+                        path(
+                            'import/',
+                            LegalOrderImportView.as_view(),
+                            name='show_form',
+                        ),
+                        path(
+                            'confirm/',
+                            LegalOrderImportConfirmView.as_view(),
+                            name='confirm',
+                        ),
+                        # path(
+                        #     'success/',
+                        #     TemplateView.as_view(template_name='....'),
+                        #     name='success',
+                        # ),
+                    ],
+                    'import_legal_orders',
+                ),
+                namespace='import_legal_orders',
+            )
+        ),
+    ]
+
+
+@hooks.register('register_admin_menu_item')
+def register_tools_menu_item():
+    legal_order_import_item = MenuItem(
+        'Import Legal Orders',
+        reverse('import_legal_orders:show_form'),
+        classnames='icon icon-table'
+    )
+    mc_groups_item = MenuItem(
+        'Mailchimp Groups',
+        reverse('mailchimp_interests'),
+        classnames='icon icon-mail',
+        order=10,
+    )
+
+    submenu = Menu(
+        items=[
+            legal_order_import_item,
+            mc_groups_item,
+        ],
+    )
+    return SubmenuMenuItem('Tools', submenu, icon_name='code', order=10000)
 
 
 @hooks.register('register_admin_search_area')

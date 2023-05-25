@@ -196,6 +196,24 @@ def generate_tree_map_chart():
     )
 
 
+def generate_bubble_map_chart():
+    incident_set = {
+        'categories': [],
+        'tag': None,
+        'lower_date': fake.date_between('-2y', '-1y'),
+        'upper_date': fake.date_between('-11M'),
+    }
+    return generate_field(
+        'bubble_map_chart',
+        {
+            'title': make_words().capitalize(),
+            'incident_set': incident_set,
+            'description': fake.text(max_nb_chars=200),
+            'group_by': 'state',
+        }
+    )
+
+
 def generate_aside():
     return generate_field('aside', {'text': make_html_string()})
 
@@ -361,6 +379,7 @@ class StreamfieldProvider(BaseProvider):
             'aside': generate_aside,
             'vertical_bar_chart': generate_vertical_bar_chart,
             'tree_map_chart': generate_tree_map_chart,
+            'bubble_map_chart': generate_bubble_map_chart,
         }
 
         streamfield_data = []

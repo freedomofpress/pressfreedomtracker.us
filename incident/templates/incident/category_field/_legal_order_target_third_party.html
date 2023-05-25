@@ -1,0 +1,4 @@
+{% load wagtailcore_tags %}
+<a href="{% pageurl index %}?categories={{ category|urlencode }}&legal_order_target={{ target }}" class="text-link">{{ page.get_legal_order_target_display|capfirst }}</a>:
+<a href="{% pageurl index %}?categories={{ category|urlencode }}&name_of_business={{ page.name_of_business|urlencode }}" class="text-link">{{ page.name_of_business }}</a>
+(<a href="{% pageurl index %}?categories={{ category|urlencode }}&third_party_business={{ page.third_party_business }}" class="text-link">{{ page.get_third_party_business_display }}</a>)

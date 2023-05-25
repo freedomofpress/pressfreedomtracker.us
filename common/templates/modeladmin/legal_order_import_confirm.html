@@ -1,0 +1,70 @@
+{% extends "wagtailadmin/base.html" %}
+{% load wagtailcore_tags %}
+
+{% block titletag %}Confirm Legal Order Import{% endblock %}
+
+{% block content %}
+	{% block header %}
+        {% include "wagtailadmin/shared/header_with_locale_selector.html" with title="Import Legal Orders" subtitle="Confirmation" icon="table" merged=1 %}
+    {% endblock %}
+
+	<div class="nice-padding">
+		<p>
+			Confirm that the changes here are correct.
+		</p>
+		<table class="listing full-width">
+			<thead>
+				<tr class="table-headers">
+					<th rowspan="2"><strong>Incident page</strong></th>
+					<th rowspan="2"><strong>Venue</strong></th>
+					<th rowspan="2"><strong>Target</strong></th>
+					{% for i in max_legal_orders %}
+						<th colspan="3">
+							<strong>Legal Order {{ i|add:1 }}</strong>
+						</th>
+					{% endfor %}
+				</tr>
+				<tr>
+					{% for _ in max_legal_orders %}
+						<td>Type</td>
+						<td>Info Req.</td>
+						<td>Status</td>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for incident, data in confirmation_data.items  %}
+					<tr>
+						<td>
+							{{ incident.title }}
+							[<a href="{% url 'wagtailadmin_pages:edit' incident.pk %}">Edit Page</a>]
+							[<a href="{% pageurl incident %}">View Live</a>]
+						</td>
+						<td>
+							{{ data.venue }}
+						</td>
+						<td>{{ data.target }}</td>
+						{% for legal_order in data.legal_orders %}
+						<td>
+							{{ legal_order.type }}
+						</td>
+						<td>
+							{{ legal_order.information_requested }}
+						</td>
+						<td>
+							{% for status in legal_order.statuses %}
+								{{ status.date }} {{ status.status }}<br>
+							{% endfor %}
+						</td>
+						{% endfor %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<br><br><br>
+		<form method="post">
+			{% csrf_token %}
+			<input type="submit" value="Confirm" class="button" />
+		</form>
+	</div>
+{% endblock %}

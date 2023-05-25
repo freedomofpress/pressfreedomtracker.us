@@ -1,4 +1,5 @@
 -r requirements.txt
+beautifulsoup4
 coverage>=5.5
 django-cprofile-middleware>=1.0.5
 pyinstrument>=4.4.0
