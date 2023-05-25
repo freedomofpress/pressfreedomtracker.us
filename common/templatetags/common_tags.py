@@ -35,7 +35,7 @@ def richtext_aside(value):
     html_str = richtext(value).__html__()
 
     # Implicit cache invalidation happens based on the string
-    cache_key = hashlib.md5(html_str.encode('UTF-8')).hexdigest()  # nosec
+    cache_key = f"aside_html_cache_{hashlib.md5(html_str.encode('UTF-8')).hexdigest()}"  # nosec
     if cache_key in cache:
         return cache.get(cache_key)
 
