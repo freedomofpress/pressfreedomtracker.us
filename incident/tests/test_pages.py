@@ -27,6 +27,7 @@ from common.tests.factories import (
 )
 from geonames.models import Country, Region, GeoName
 from home.tests.factories import HomePageFactory
+from incident.models import choices
 from incident.models.incident_page import IncidentPage
 from incident.models.topic_page import TopicPage
 from incident.models.export import is_exportable, to_row
@@ -41,6 +42,8 @@ from .factories import (
     TargetedJournalistFactory,
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
+    LegalOrderWithUpdatesFactory,
+    LegalOrderFactory,
 )
 
 
@@ -778,6 +781,133 @@ class RecentChargeStatusesMethod(TestCase):
         )
 
 
+class RecentLegalOrderStatusesMethod(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get()
+        cls.index = IncidentIndexPageFactory(
+            parent=site.root_page,
+        )
+
+        cls.incident1, cls.incident2, cls.incident3, cls.incident4 = \
+            IncidentPageFactory.create_batch(
+                4,
+                parent=cls.index,
+            )
+
+        LegalOrderWithUpdatesFactory(
+            incident_page=cls.incident1,
+            status=choices.LegalOrderStatus.UNKNOWN,
+            date='2022-01-01',
+            update1__status=choices.LegalOrderStatus.PENDING,
+            update1__date='2022-01-02',
+            update2__status=choices.LegalOrderStatus.IGNORED,
+            update2__date='2022-01-03',
+            update3__status=choices.LegalOrderStatus.DROPPED,
+            update3__date='2022-01-04',
+        )
+        LegalOrderWithUpdatesFactory(
+            incident_page=cls.incident1,
+            status=choices.LegalOrderStatus.UNKNOWN,
+            date='2022-01-01',
+            update1__status=choices.LegalOrderStatus.UPHELD,
+            update1__date='2021-11-09',
+            update2__status=choices.LegalOrderStatus.CARRIED_OUT,
+            update2__date='2022-06-06',
+            update3__status=choices.LegalOrderStatus.QUASHED,
+            update3__date='2023-12-04',
+        )
+
+        LegalOrderFactory(
+            incident_page=cls.incident2,
+            status=choices.LegalOrderStatus.PENDING,
+            date='2022-01-01',
+        )
+        LegalOrderWithUpdatesFactory(
+            incident_page=cls.incident2,
+            status=choices.LegalOrderStatus.UNKNOWN,
+            date='2022-01-01',
+            update1__status=choices.LegalOrderStatus.UPHELD,
+            update1__date='2021-11-09',
+            update2__status=choices.LegalOrderStatus.CARRIED_OUT,
+            update2__date='2022-06-06',
+            update3__status=choices.LegalOrderStatus.QUASHED,
+            update3__date='2023-12-04',
+        )
+
+        LegalOrderWithUpdatesFactory(
+            incident_page=cls.incident3,
+            status=choices.LegalOrderStatus.UNKNOWN,
+            date='2023-01-01',
+            update1__status=choices.LegalOrderStatus.UPHELD,
+            update1__date='2021-11-09',
+            update2__status=choices.LegalOrderStatus.CARRIED_OUT,
+            update2__date='2022-06-06',
+            update3__status=choices.LegalOrderStatus.QUASHED,
+            update3__date='2022-12-04',
+        )
+
+        LegalOrderWithUpdatesFactory(
+            incident_page=cls.incident4,
+            status=choices.LegalOrderStatus.UNKNOWN,
+            date='2023-01-01',
+            update1__status=choices.LegalOrderStatus.UPHELD,
+            update1__date='2021-11-09',
+            update2__status=choices.LegalOrderStatus.CARRIED_OUT,
+            update2__date='2022-06-06',
+            update3__status=choices.LegalOrderStatus.PARTIALLY_UPHELD,
+            update3__date=None,
+        )
+
+    def test_returns_most_recent_status_on_all_legal_orders(self):
+        incident = IncidentPage.objects \
+            .with_most_recent_status_of_legal_orders().get(
+                pk=self.incident1.pk
+            )
+        self.assertEqual(
+            set(incident.most_recent_legal_order_statuses),
+            set([
+                choices.LegalOrderStatus.DROPPED,
+                choices.LegalOrderStatus.QUASHED,
+            ])
+        )
+
+    def test_returns_the_most_recent_statuses_without_updates(self):
+        incident = IncidentPage.objects \
+            .with_most_recent_status_of_legal_orders().get(
+                pk=self.incident2.pk
+            )
+        self.assertEqual(
+            set(incident.most_recent_legal_order_statuses),
+            set([
+                choices.LegalOrderStatus.PENDING,
+                choices.LegalOrderStatus.QUASHED,
+            ])
+        )
+
+    def test_handles_base_status_more_recent_than_updates(self):
+        """if the base status is more recent than all status updates,
+        it returns updated status for that legal order"""
+        incident = IncidentPage.objects \
+            .with_most_recent_status_of_legal_orders().get(
+                pk=self.incident3.pk
+            )
+        self.assertEqual(
+            incident.most_recent_legal_order_statuses,
+            [choices.LegalOrderStatus.QUASHED],
+        )
+
+    def test_handles_latest_updates_with_unknown_dates(self):
+        incident = IncidentPage.objects \
+            .with_most_recent_status_of_legal_orders().get(
+                pk=self.incident4.pk
+            )
+        self.assertEqual(
+            incident.most_recent_legal_order_statuses,
+            [choices.LegalOrderStatus.PARTIALLY_UPHELD],
+        )
+
+
 class RecentlyUpdatedMethod(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1012,6 +1142,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                 'targeted_journalists': inline_formset([]),
                 'tags': 'null',
                 'charges': inline_formset([]),
+                'legal_orders': inline_formset([]),
                 'arresting_authority': 'null',
                 'venue': 'null',
                 'target_nationality': 'null',
@@ -1056,6 +1187,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
             'targeted_journalists': inline_formset([]),
             'tags': 'null',
             'charges': inline_formset([]),
+            'legal_orders': inline_formset([]),
             'arresting_authority': 'null',
             'venue': 'null',
             'target_nationality': 'null',

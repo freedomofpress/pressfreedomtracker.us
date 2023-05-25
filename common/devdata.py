@@ -166,8 +166,9 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
                 CategoryIncidentFilter(
                     category=self,
                     incident_filter=incident_filter,
+                    sort_order=i,
                 )
-                for incident_filter in extracted
+                for i, incident_filter in enumerate(extracted)
             ])
 
 

@@ -83,6 +83,83 @@ class ChargeUpdate(models.Model):
     ]
 
 
+class LegalOrder(ClusterableModel):
+    incident_page = ParentalKey(
+        'incident.IncidentPage',
+        related_name='legal_orders',
+    )
+
+    order_type = models.CharField(
+        max_length=1000,
+        choices=choices.LegalOrderType.choices
+    )
+
+    information_requested = models.CharField(
+        max_length=1000,
+        choices=choices.InformationRequested.choices,
+    )
+
+    status = models.CharField(max_length=1000, choices=choices.LegalOrderStatus.choices)
+    date = models.DateField()
+
+    panels = [
+        FieldPanel('order_type'),
+        FieldPanel('information_requested'),
+        FieldPanel('status'),
+        FieldPanel('date'),
+        InlinePanel('updates', label='Updates'),
+    ]
+
+    def entries_display(self):
+        date_format = '%b. %-d, %Y'
+
+        update_entries = [
+            (
+                update.date.strftime(date_format) if update.date else 'Unknown date',
+                update.get_status_display(),
+            )
+            for update in self.updates.all()
+        ]
+        entries = [
+            (self.date.strftime(date_format), self.get_status_display())
+        ] + update_entries
+        return entries
+
+    @property
+    def summary(self):
+        """Summary of a legal order, used in the CSV export feature."""
+        date_text_template = ' as of {date}'
+        if update := self.updates.last():
+            status = update.get_status_display()
+            date_text = date_text_template.format(date=update.date) \
+                if update.date else ''
+        else:
+            status = self.status.label
+            date_text = date_text_template.format(date=self.date)
+        info = self.information_requested.label
+        order_type = self.order_type.label
+
+        return f'{order_type} for {info} ({status}{date_text})'
+
+
+class LegalOrderUpdate(Orderable):
+    legal_order = ParentalKey(
+        LegalOrder,
+        related_name='updates',
+        on_delete=models.CASCADE,
+    )
+    date = models.DateField(blank=True, null=True)
+    status = models.CharField(
+        max_length=1000,
+        choices=choices.LegalOrderStatus.choices,
+    )
+
+    panels = [
+        FieldPanel('date'),
+        FieldPanel('status')
+    ]
+
+
 class IncidentPageUpdates(models.Model):
     page = ParentalKey('incident.IncidentPage', related_name='updates')
     title = models.CharField(max_length=255)

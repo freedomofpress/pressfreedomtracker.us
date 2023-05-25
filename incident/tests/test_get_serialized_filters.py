@@ -5,7 +5,12 @@ import incident.tests.factories as incident_factories
 from common.models.pages import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
-from incident.models.choices import ARREST_STATUS, STATUS_OF_CHARGES
+from incident.models.choices import (
+    ARREST_STATUS,
+    STATUS_OF_CHARGES,
+    LegalOrderType,
+    LegalOrderStatus,
+)
 from incident.utils.incident_filter import get_serialized_filters
 
 
@@ -35,6 +40,32 @@ class GetSerializedFiltersTest(TestCase):
                 ]
             },
         ])
+
+    def test_serialized_filters_include_legal_order_type(self):
+        category = CategoryPageFactory(incident_filters=[
+            'legal_order_type',
+        ])
+        general, category = get_serialized_filters()
+        legal_order_type_filter = category['filters'][0]
+        self.assertEqual(legal_order_type_filter, {
+            'name': 'legal_order_type',
+            'title': 'Legal order type',
+            'type': 'choice',
+            'choices': LegalOrderType.choices
+        })
+
+    def test_serialized_filters_include_legal_order_status(self):
+        category = CategoryPageFactory(incident_filters=[
+            'legal_order_status',
+        ])
+        general, category = get_serialized_filters()
+        legal_order_type_filter = category['filters'][0]
+        self.assertEqual(legal_order_type_filter, {
+            'name': 'legal_order_status',
+            'title': 'Legal order status',
+            'type': 'choice',
+            'choices': LegalOrderStatus.choices
+        })
 
     def test_serialized_filters_includes_autocomplete_choices(self):
         self.maxDiff = 9999
