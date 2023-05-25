@@ -24,12 +24,8 @@ export default ({
 	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
 	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
 
-	// Remove empty strings from filterCategories
-	let filteredFilterCategories = filterCategories.filter(d => d)
-	filteredFilterCategories = filteredFilterCategories.length ? filteredFilterCategories : null
-
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filteredFilterCategories, filterTags, dateRange)
+	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
 	const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[aggregationLocality](filteredDataset)
 	const incidentsOutsideUS = countIncidentsOutsideUS(filteredDataset)
 
