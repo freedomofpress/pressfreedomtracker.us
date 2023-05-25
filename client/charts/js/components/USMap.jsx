@@ -43,6 +43,7 @@ const mapBorder = {
 
 export default function USMap({
 	data: dataset,
+	description,
 	incidentsOutsideUS,
 	width,
 	height,
@@ -99,6 +100,7 @@ export default function USMap({
 				/>
 			)}
 			<svg width={width} height={height} aria-labelledby={id} ref={setSvgEl}>
+				{description ? (<desc>{description}</desc>) : null}
 				<svg
 					width={width}
 					height={height - (paddings.bottom + paddings.top + paddings.map)}

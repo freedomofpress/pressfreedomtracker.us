@@ -43,6 +43,7 @@ export default ({
 				>
 					<USMap
 						data={datasetAggregatedByGeo}
+						description={description}
 						aggregationLocality={aggregationLocalityFnMap[aggregationLocality]}
 						incidentsOutsideUS={incidentsOutsideUS}
 						width={parent.width}
