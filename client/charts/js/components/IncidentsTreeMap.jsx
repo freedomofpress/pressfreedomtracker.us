@@ -8,17 +8,21 @@ export default ({
 	dataset,
 	title,
 	description,
-	filterCategories = null, // Array of valid categories or category
+	filterCategories = [], // Array of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	isMobileView = false,
 	creditUrl = '',
 	categories
 }) => {
-	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
+	// Remove empty strings from filterCategories
+	let filteredFilterCategories = filterCategories.filter(d => d)
+	filteredFilterCategories = filteredFilterCategories.length ? filteredFilterCategories : null
 
-	const categoriesColorMap = [...(new Set([...(filterCategories || []), ...categories.map(d => d.title)]))]
+	// Filter down to the categories and tags and date range we want
+	const filteredDataset = filterDatasets(dataset, filteredFilterCategories, filterTags, dateRange)
+
+	const categoriesColorMap = [...(new Set([...filterCategories, ...categories.map(d => d.title)]))]
 		.reduce(
 			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
 			{}

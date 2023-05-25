@@ -26,7 +26,7 @@ function engageCharts() {
 				dataParser={[(data) => d3.csvParse(data, d3.autoType), JSON.parse]}
 			>
 				<TreeMapChart
-					filterCategories={filterCategories.length ? filterCategories : null}
+					filterCategories={filterCategories}
 					filterTags={filterTag}
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
