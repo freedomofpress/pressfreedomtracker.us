@@ -35,7 +35,7 @@ def richtext_aside(value):
     html_str = richtext(value).__html__()
 
     # Implicit cache invalidation happens based on the string
-    cache_key = hashlib.md5(html_str.encode('UTF-8')).hexdigest()
+    cache_key = hashlib.md5(html_str.encode('UTF-8')).hexdigest()  # nosec
     if cache_key in cache:
         return cache.get(cache_key)
 
@@ -51,6 +51,8 @@ def richtext_aside(value):
             elem.append(new_span)
 
     aside_html = mark_safe(str(soup))
+
+    # Setting cache for 1 hour
     cache.set(cache_key, aside_html, 3600)
     return aside_html
 
