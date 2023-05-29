@@ -1,3 +1,4 @@
+import hashlib
 from unittest import mock
 
 from django.test import TestCase
@@ -51,3 +52,22 @@ class TestTemplateTags(TestCase):
 
         self.assertEqual(richtext_aside(paragraph_aside), paragraph_aside_with_span)
         self.assertEqual(richtext_aside(heading_aside), heading_aside_with_span)
+
+    @mock.patch('django.core.cache.cache.get')
+    def test_cache_usage_in_richtext_aside(self, mock_django_cache_get):
+        paragraph_aside = '<p data-block-key="89kgh">This is paragraph with <b>bold text</b></p>'
+        heading_aside = '<h3 data-block-key="89agh">This is a heading</h3>'
+        paragraph_aside_cache_key = f"aside_html_cache_{hashlib.md5(paragraph_aside.encode('UTF-8')).hexdigest()}"
+
+        richtext_aside(paragraph_aside)
+        self.assertFalse(mock_django_cache_get.called)
+
+        # Testing that calling with the different HTML string doesn't call cache.get
+        richtext_aside(heading_aside)
+        self.assertFalse(mock_django_cache_get.called)
+
+        # Testing that calling with the same HTML string calls the cache.get
+        richtext_aside(paragraph_aside)
+        self.assertTrue(mock_django_cache_get.called)
+        self.assertEqual(mock_django_cache_get.call_count, 1)
+        mock_django_cache_get.assert_called_once_with(paragraph_aside_cache_key)
