@@ -57,7 +57,7 @@ class TestTemplateTags(TestCase):
     def test_cache_usage_in_richtext_aside(self, mock_django_cache_get):
         paragraph_aside = '<p data-block-key="89kgh">This is paragraph with <b>bold text</b></p>'
         heading_aside = '<h3 data-block-key="89agh">This is a heading</h3>'
-        paragraph_aside_cache_key = f"aside_html_cache_{hashlib.md5(paragraph_aside.encode('UTF-8')).hexdigest()}"
+        paragraph_aside_cache_key = f"aside_html_cache_{hashlib.md5(paragraph_aside.encode('UTF-8')).hexdigest()}"  # nosec
 
         richtext_aside(paragraph_aside)
         self.assertFalse(mock_django_cache_get.called)
