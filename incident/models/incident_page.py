@@ -115,6 +115,33 @@ class IncidentQuerySet(PageQuerySet):
                 ).values('tag_summary'),
                 output_field=models.CharField()
             ),
+            'link_summary': Subquery(
+                IncidentPage.objects.only('links').annotate(
+                    link_summary=StringAgg(
+                        expression=Concat(
+                            'links__title',
+                            Value(' ('),
+                            'links__url',
+                            Value(')'),
+                            Case(
+                                When(
+                                    links__publication__isnull=True,
+                                    then=Value(''),
+                                ),
+                                default=Concat(
+                                    Value(' via '),
+                                    'links__publication',
+                                ),
+                            ),
+                            output_field=models.CharField(),
+                        ),
+                        delimiter=', ',
+                    )
+                ).filter(
+                    pk=OuterRef('pk')
+                ).values('link_summary'),
+                output_field=models.CharField()
+            ),
             'category_summary': Subquery(
                 IncidentPage.objects.only('categories').annotate(
                     category_summary=StringAgg(

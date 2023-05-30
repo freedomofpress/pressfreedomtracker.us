@@ -99,6 +99,9 @@ class PerformantCSVTestCase(TestCase):
             third_party_business=choices.ThirdPartyBusiness.TRAVEL,
             status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[1][0],
         )
+        IncidentLinkFactory.create_batch(3, page=cls.incident)
+        IncidentLinkFactory(page=cls.incident, publication='Galactic Express')
+
         IncidentPageFactory()
 
     def setUp(self):
@@ -119,6 +122,7 @@ class PerformantCSVTestCase(TestCase):
             'third_party_business',
             'status_of_prior_restraint',
             'state',
+            'links',
         ]
         url = reverse(
             'incidentpage-list',
@@ -150,6 +154,12 @@ class PerformantCSVTestCase(TestCase):
         self.assertEqual(
             self.result['state'],
             self.incident.state.abbreviation,
+        )
+
+    def test_links_are_correct(self):
+        self.assertEqual(
+            self.result['links'],
+            ', '.join(str(link) for link in self.incident.links.all())
         )
 
     def test_tags_are_correct(self):
