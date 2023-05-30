@@ -134,8 +134,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     def requested_fields(self):
         if fields := self.request.GET.get('fields'):
             return set(map(str.strip, fields.split(',')))
-        else:
-            return set()
+        return set()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -146,8 +145,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     def can_apply_csv_serializer(self):
         if self.requested_fields:
             return self.requested_fields <= CSVIncidentSerializer().fields.keys()
-        else:
-            return False
+        return False
 
     def get_renderer_context(self):
         context = super().get_renderer_context()
@@ -166,8 +164,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
             # that.
             if self.can_apply_csv_serializer:
                 return CSVIncidentSerializer
-            else:
-                return FlatIncidentSerializer
+            return FlatIncidentSerializer
         return super().get_serializer_class()
 
     def paginate_queryset(self, queryset):
