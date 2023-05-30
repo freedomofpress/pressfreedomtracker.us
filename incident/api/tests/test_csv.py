@@ -90,6 +90,14 @@ class PerformantCSVTestCase(TestCase):
             state=cls.state,
             status_of_seized_equipment=choices.STATUS_OF_SEIZED_EQUIPMENT[0][0],
             arresting_authority__title='Police Squad!',
+            actor=choices.ACTORS[0][0],
+            target_us_citizenship_status=choices.CITIZENSHIP_STATUS_CHOICES[0][0],
+            did_authorities_ask_for_device_access=choices.MAYBE_BOOLEAN[0][0],
+            did_authorities_ask_about_work=choices.MAYBE_BOOLEAN[0][0],
+            assailant=choices.ACTORS[0][0],
+            was_journalist_targeted=choices.MAYBE_BOOLEAN[1][0],
+            third_party_business=choices.ThirdPartyBusiness.TRAVEL,
+            status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[1][0],
         )
         IncidentPageFactory()
 
@@ -100,7 +108,16 @@ class PerformantCSVTestCase(TestCase):
             'url',
             'categories',
             'status_of_seized_equipment',
+            'arrest_status',
             'arresting_authority',
+            'actor',
+            'target_us_citizenship_status',
+            'did_authorities_ask_for_device_access',
+            'did_authorities_ask_about_work',
+            'assailant',
+            'was_journalist_targeted',
+            'third_party_business',
+            'status_of_prior_restraint',
         ]
         url = reverse(
             'incidentpage-list',
@@ -146,6 +163,54 @@ class PerformantCSVTestCase(TestCase):
         self.assertEqual(
             self.result['status_of_seized_equipment'],
             self.incident.get_status_of_seized_equipment_display(),
+        )
+
+    def test_arrest_status_is_correct(self):
+        self.assertEqual(
+            self.result['arrest_status'],
+            self.incident.get_arrest_status_display(),
+        )
+
+    def test_assailant_is_correct(self):
+        self.assertEqual(
+            self.result['assailant'],
+            self.incident.get_assailant_display(),
+        )
+
+    def test_authorities_device_access_is_correct(self):
+        self.assertEqual(
+            self.result['did_authorities_ask_for_device_access'],
+            self.incident.get_did_authorities_ask_for_device_access_display(),
+        )
+
+    def test_authorities_work_access_is_correct(self):
+        self.assertEqual(
+            self.result['did_authorities_ask_about_work'],
+            self.incident.get_did_authorities_ask_about_work_display(),
+        )
+
+    def test_actor_is_correct(self):
+        self.assertEqual(
+            self.result['actor'],
+            self.incident.get_actor_display(),
+        )
+
+    def test_was_journalist_targeted_is_correct(self):
+        self.assertEqual(
+            self.result['was_journalist_targeted'],
+            self.incident.get_was_journalist_targeted_display(),
+        )
+
+    def test_third_party_business_is_correct(self):
+        self.assertEqual(
+            self.result['third_party_business'],
+            self.incident.get_third_party_business_display(),
+        )
+
+    def test_status_of_prior_restraint_is_correct(self):
+        self.assertEqual(
+            self.result['status_of_prior_restraint'],
+            self.incident.get_status_of_prior_restraint_display(),
         )
 
     def test_arresting_authority_is_correct(self):

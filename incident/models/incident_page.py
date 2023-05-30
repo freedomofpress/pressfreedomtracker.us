@@ -144,7 +144,34 @@ class IncidentQuerySet(PageQuerySet):
             'arresting_authority_title': models.F('arresting_authority__title'),
             'status_of_seized_equipment_display': annotation_for_choices_display(
                 'status_of_seized_equipment', choices.STATUS_OF_SEIZED_EQUIPMENT
-            )
+            ),
+            'arrest_status_display': annotation_for_choices_display(
+                'arrest_status', choices.ARREST_STATUS,
+            ),
+            'actor_display': annotation_for_choices_display(
+                'actor', choices.ACTORS,
+            ),
+            'target_us_citizenship_status_display': annotation_for_choices_display(
+                'target_us_citizenship_status', choices.CITIZENSHIP_STATUS_CHOICES,
+            ),
+            'did_authorities_ask_for_device_access_display': annotation_for_choices_display(
+                'did_authorities_ask_for_device_access', choices.MAYBE_BOOLEAN,
+            ),
+            'did_authorities_ask_about_work_display': annotation_for_choices_display(
+                'did_authorities_ask_about_work', choices.MAYBE_BOOLEAN,
+            ),
+            'assailant_display': annotation_for_choices_display(
+                'assailant', choices.ACTORS,
+            ),
+            'was_journalist_targeted_display': annotation_for_choices_display(
+                'was_journalist_targeted', choices.MAYBE_BOOLEAN,
+            ),
+            'third_party_business_display': annotation_for_choices_display(
+                'third_party_business', choices.ThirdPartyBusiness.choices,
+            ),
+            'status_of_prior_restraint_display': annotation_for_choices_display(
+                'status_of_prior_restraint', choices.STATUS_OF_PRIOR_RESTRAINT,
+            ),
         }
         annotations_to_apply = {
             label: expression for label, expression in available_annotations.items()

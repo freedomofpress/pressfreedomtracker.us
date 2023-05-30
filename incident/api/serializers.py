@@ -258,11 +258,43 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     teaser = serializers.CharField()
     primary_video = serializers.URLField()
     image_caption = serializers.CharField()
+    release_date = serializers.DateField()
+    detention_date = serializers.DateField()
+    unnecessary_use_of_force = serializers.BooleanField()
+    case_number = serializers.CharField()
+    case_type = serializers.CharField()
+    is_search_warrant_obtained = serializers.BooleanField()
+    border_point = serializers.CharField()
+    denial_of_entry = serializers.BooleanField()
+    stopped_previously = serializers.BooleanField()
+    charged_under_espionage_act = serializers.BooleanField()
+    name_of_business = serializers.CharField()
 
     # Choice fields -- data is on IncidentPage but choice text
     # requires an annotation
     status_of_seized_equipment = serializers.CharField(
         source='status_of_seized_equipment_display'
+    )
+    arrest_status = serializers.CharField(source='arrest_status_display')
+    actor = serializers.CharField(source='actor_display')
+    target_us_citizenship_status = serializers.CharField(
+        source='target_us_citizenship_status_display',
+    )
+    did_authorities_ask_for_device_access = serializers.CharField(
+        source='did_authorities_ask_for_device_access_display',
+    )
+    did_authorities_ask_about_work = serializers.CharField(
+        source='did_authorities_ask_about_work_display',
+    )
+    assailant = serializers.CharField(source='assailant_display')
+    was_journalist_targeted = serializers.CharField(
+        source='was_journalist_targeted_display',
+    )
+    third_party_business = serializers.CharField(
+        source='third_party_business_display',
+    )
+    status_of_prior_restraint = serializers.CharField(
+        source='status_of_prior_restraint_display',
     )
 
     # Computed fields requiring an annotation

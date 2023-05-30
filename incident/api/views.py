@@ -180,6 +180,15 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
                 'tags': 'tag_summary',
                 'arresting_authority': 'arresting_authority_title',
                 'status_of_seized_equipment': 'status_of_seized_equipment_display',
+                'arrest_status': 'arrest_status_display',
+                'actor': 'actor_display',
+                'target_us_citizenship_status': 'target_us_citizenship_status_display',
+                'did_authorities_ask_for_device_access': 'did_authorities_ask_for_device_access_display',
+                'did_authorities_ask_about_work': 'did_authorities_ask_about_work_display',
+                'assailant': 'assailant_display',
+                'was_journalist_targeted': 'was_journalist_targeted_display',
+                'third_party_business': 'third_party_business_display',
+                'status_of_prior_restraint': 'status_of_prior_restraint_display',
                 'url': 'url',
             }
             result_fields = []
