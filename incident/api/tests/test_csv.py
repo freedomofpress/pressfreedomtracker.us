@@ -18,6 +18,7 @@ from incident.tests.factories import (
     IncidentUpdateFactory,
     IncidentLinkFactory,
     StateFactory,
+    EquipmentSeizedFactory,
 )
 
 
@@ -98,7 +99,9 @@ class PerformantCSVTestCase(TestCase):
             was_journalist_targeted=choices.MAYBE_BOOLEAN[1][0],
             third_party_business=choices.ThirdPartyBusiness.TRAVEL,
             status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[1][0],
+            equipment_damage=True,
         )
+        EquipmentSeizedFactory.create_batch(3, incident=cls.incident)
         IncidentLinkFactory.create_batch(3, page=cls.incident)
         IncidentLinkFactory(page=cls.incident, publication='Galactic Express')
 
@@ -123,6 +126,8 @@ class PerformantCSVTestCase(TestCase):
             'status_of_prior_restraint',
             'state',
             'links',
+            'equipment_broken',
+            'equipment_seized',
         ]
         url = reverse(
             'incidentpage-list',
@@ -160,6 +165,18 @@ class PerformantCSVTestCase(TestCase):
         self.assertEqual(
             self.result['links'],
             ', '.join(str(link) for link in self.incident.links.all())
+        )
+
+    def test_equipment_broken_is_correct(self):
+        self.assertEqual(
+            self.result['equipment_broken'],
+            ', '.join(e.summary for e in self.incident.equipment_broken.all())
+        )
+
+    def test_equipment_seized_is_correct(self):
+        self.assertEqual(
+            self.result['equipment_seized'],
+            ', '.join(e.summary for e in self.incident.equipment_seized.all())
         )
 
     def test_tags_are_correct(self):

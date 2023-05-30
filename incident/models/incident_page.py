@@ -115,6 +115,36 @@ class IncidentQuerySet(PageQuerySet):
                 ).values('tag_summary'),
                 output_field=models.CharField()
             ),
+            'equipment_broken_summary': Subquery(
+                IncidentPage.objects.only('equipment_broken').annotate(
+                    equipment_broken_summary=StringAgg(
+                        expression=Concat(
+                            'equipment_broken__equipment__name',
+                            Value(': count of '),
+                            'equipment_broken__quantity',
+                            output_field=models.CharField(),
+                        ),
+                        delimiter=', '
+                    ),
+                ).filter(
+                    pk=OuterRef('pk'),
+                ).values('equipment_broken_summary'),
+            ),
+            'equipment_seized_summary': Subquery(
+                IncidentPage.objects.only('equipment_seized').annotate(
+                    equipment_seized_summary=StringAgg(
+                        expression=Concat(
+                            'equipment_seized__equipment__name',
+                            Value(': count of '),
+                            'equipment_seized__quantity',
+                            output_field=models.CharField(),
+                        ),
+                        delimiter=', '
+                    ),
+                ).filter(
+                    pk=OuterRef('pk'),
+                ).values('equipment_seized_summary'),
+            ),
             'link_summary': Subquery(
                 IncidentPage.objects.only('links').annotate(
                     link_summary=StringAgg(
