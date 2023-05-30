@@ -141,6 +141,7 @@ class IncidentQuerySet(PageQuerySet):
                 Value('/'),
                 output_field=models.CharField()
             ),
+            'state_abbreviation': models.F('state__abbreviation'),
             'arresting_authority_title': models.F('arresting_authority__title'),
             'status_of_seized_equipment_display': annotation_for_choices_display(
                 'status_of_seized_equipment', choices.STATUS_OF_SEIZED_EQUIPMENT

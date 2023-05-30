@@ -302,3 +302,4 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     url = serializers.CharField()
     tags = serializers.CharField(source='tag_summary')
     categories = serializers.CharField(source='category_summary')
+    state = serializers.CharField(source='state_abbreviation')

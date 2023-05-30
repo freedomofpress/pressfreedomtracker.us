@@ -190,6 +190,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
                 'third_party_business': 'third_party_business_display',
                 'status_of_prior_restraint': 'status_of_prior_restraint_display',
                 'url': 'url',
+                'state': 'state_abbreviation',
             }
             result_fields = []
             annotations = []

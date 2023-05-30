@@ -118,6 +118,7 @@ class PerformantCSVTestCase(TestCase):
             'was_journalist_targeted',
             'third_party_business',
             'status_of_prior_restraint',
+            'state',
         ]
         url = reverse(
             'incidentpage-list',
@@ -143,6 +144,12 @@ class PerformantCSVTestCase(TestCase):
             self.result['url'].endswith(
                 f'/{self.incident_index.slug}/{self.incident.slug}/'
             ),
+        )
+
+    def test_state_is_correct(self):
+        self.assertEqual(
+            self.result['state'],
+            self.incident.state.abbreviation,
         )
 
     def test_tags_are_correct(self):
