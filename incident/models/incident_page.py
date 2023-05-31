@@ -14,13 +14,13 @@ from django.db.models import (
     Value,
     When,
 )
-from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth, Coalesce
+from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth, Coalesce, Concat
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from modelcluster.fields import ParentalManyToManyField, ParentalKey
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.aggregates import ArrayAgg
+from django.contrib.postgres.aggregates import ArrayAgg, StringAgg
 from psycopg2.extras import DateRange
 from wagtail.admin.panels import (
     FieldPanel,
@@ -53,7 +53,7 @@ from incident.models.inlines import (
 )
 from incident.models.items import TargetedJournalist
 from incident.circuits import CIRCUITS_BY_STATE
-from incident.utils.db import CurrentDate, MakeDateRange
+from incident.utils.db import CurrentDate, MakeDateRange, Left
 from statistics.blocks import StatisticsBlock
 from geonames.cities import get_city_coords
 
@@ -97,6 +97,146 @@ class ChoiceArrayField(ArrayField):
 
 class IncidentQuerySet(PageQuerySet):
     """A QuerySet for incident pages that incorporates update data"""
+    def for_csv(self, with_annotations, request):
+        from .incident_index_page import IncidentIndexPage
+        # TODO: if 'url' in with_annotations, get the actually correct
+        # base URI for the incident index page.
+        base_uri = request.build_absolute_uri('/')
+        available_annotations = {
+            'tag_summary': Subquery(
+                IncidentPage.objects.only('tags').annotate(
+                    tag_summary=StringAgg(
+                        'tags__title',
+                        delimiter=', ',
+                        ordering=('tags__title',)
+                    )
+                ).filter(
+                    pk=OuterRef('pk')
+                ).values('tag_summary'),
+                output_field=models.CharField()
+            ),
+            'equipment_broken_summary': Subquery(
+                IncidentPage.objects.only('equipment_broken').annotate(
+                    equipment_broken_summary=StringAgg(
+                        expression=Concat(
+                            'equipment_broken__equipment__name',
+                            Value(': count of '),
+                            'equipment_broken__quantity',
+                            output_field=models.CharField(),
+                        ),
+                        delimiter=', '
+                    ),
+                ).filter(
+                    pk=OuterRef('pk'),
+                ).values('equipment_broken_summary'),
+            ),
+            'equipment_seized_summary': Subquery(
+                IncidentPage.objects.only('equipment_seized').annotate(
+                    equipment_seized_summary=StringAgg(
+                        expression=Concat(
+                            'equipment_seized__equipment__name',
+                            Value(': count of '),
+                            'equipment_seized__quantity',
+                            output_field=models.CharField(),
+                        ),
+                        delimiter=', '
+                    ),
+                ).filter(
+                    pk=OuterRef('pk'),
+                ).values('equipment_seized_summary'),
+            ),
+            'link_summary': Subquery(
+                IncidentPage.objects.only('links').annotate(
+                    link_summary=StringAgg(
+                        expression=Concat(
+                            'links__title',
+                            Value(' ('),
+                            'links__url',
+                            Value(')'),
+                            Case(
+                                When(
+                                    links__publication__isnull=True,
+                                    then=Value(''),
+                                ),
+                                default=Concat(
+                                    Value(' via '),
+                                    'links__publication',
+                                ),
+                            ),
+                            output_field=models.CharField(),
+                        ),
+                        delimiter=', ',
+                    )
+                ).filter(
+                    pk=OuterRef('pk')
+                ).values('link_summary'),
+                output_field=models.CharField()
+            ),
+            'category_summary': Subquery(
+                IncidentPage.objects.only('categories').annotate(
+                    category_summary=StringAgg(
+                        'categories__category__title',
+                        delimiter=', ',
+                        ordering=('categories__category__title',)
+                    )
+                ).filter(
+                    pk=OuterRef('pk')
+                ).values('category_summary'),
+                output_field=models.CharField(),
+            ),
+            'url': Concat(
+                Value(base_uri),
+                Subquery(
+                    IncidentIndexPage.objects.only('slug').filter(
+                        depth=OuterRef('depth') - Value(1),
+                        path=Left(OuterRef('path'), -1 * Page.steplen),
+                    ).values('slug'),
+                    output_field=models.CharField(),
+                ),
+                Value('/'),
+                "slug",
+                Value('/'),
+                output_field=models.CharField()
+            ),
+            'state_abbreviation': models.F('state__abbreviation'),
+            'arresting_authority_title': models.F('arresting_authority__title'),
+            'status_of_seized_equipment_display': annotation_for_choices_display(
+                'status_of_seized_equipment', choices.STATUS_OF_SEIZED_EQUIPMENT
+            ),
+            'arrest_status_display': annotation_for_choices_display(
+                'arrest_status', choices.ARREST_STATUS,
+            ),
+            'actor_display': annotation_for_choices_display(
+                'actor', choices.ACTORS,
+            ),
+            'target_us_citizenship_status_display': annotation_for_choices_display(
+                'target_us_citizenship_status', choices.CITIZENSHIP_STATUS_CHOICES,
+            ),
+            'did_authorities_ask_for_device_access_display': annotation_for_choices_display(
+                'did_authorities_ask_for_device_access', choices.MAYBE_BOOLEAN,
+            ),
+            'did_authorities_ask_about_work_display': annotation_for_choices_display(
+                'did_authorities_ask_about_work', choices.MAYBE_BOOLEAN,
+            ),
+            'assailant_display': annotation_for_choices_display(
+                'assailant', choices.ACTORS,
+            ),
+            'was_journalist_targeted_display': annotation_for_choices_display(
+                'was_journalist_targeted', choices.MAYBE_BOOLEAN,
+            ),
+            'third_party_business_display': annotation_for_choices_display(
+                'third_party_business', choices.ThirdPartyBusiness.choices,
+            ),
+            'status_of_prior_restraint_display': annotation_for_choices_display(
+                'status_of_prior_restraint', choices.STATUS_OF_PRIOR_RESTRAINT,
+            ),
+        }
+        annotations_to_apply = {
+            label: expression for label, expression in available_annotations.items()
+            if label in with_annotations
+        }
+        return self.annotate(**annotations_to_apply)
+
     def with_public_associations(self):
         """Prefetch and select related data for public consumption
 
@@ -1073,3 +1213,17 @@ class IncidentPage(MetadataPageMixin, Page):
         for institution in self.targeted_institutions.all():
             items.append(f'{institution.title}')
         return ', '.join(items)
+
+
+def annotation_for_choices_display(field_name, all_choices):
+    """Return an SQL case statement for converting choice values
+    (i.e. the strings stored in the database) to human-readable choice
+    display values (which are typically stored in our Python code).
+
+    """
+    return Case(
+        *[
+            When(**{field_name: choice_value}, then=Value(choice_name))
+            for choice_value, choice_name in all_choices
+        ]
+    )

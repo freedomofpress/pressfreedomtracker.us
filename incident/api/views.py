@@ -8,6 +8,7 @@ from django.db.models import (
     OuterRef,
     Subquery,
 )
+from django.utils.functional import cached_property
 from rest_framework.decorators import action
 from drf_spectacular.utils import (
     extend_schema,
@@ -27,6 +28,7 @@ from incident.api.serializers import (
     EquipmentSerializer,
     CategorySerializer,
     FlatIncidentSerializer,
+    CSVIncidentSerializer,
 )
 from incident import models
 from incident.utils.incident_filter import IncidentFilter, get_openapi_parameters, DateFilter
@@ -123,6 +125,28 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
         return response
 
+    @cached_property
+    def csv_format_is_requested(self):
+        return getattr(self.request, 'accepted_renderer', None) and \
+            self.request.accepted_renderer.format == 'csv'
+
+    @cached_property
+    def requested_fields(self):
+        if fields := self.request.GET.get('fields'):
+            return set(map(str.strip, fields.split(',')))
+        return set()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['requested_fields'] = self.requested_fields
+        return context
+
+    @cached_property
+    def can_apply_csv_serializer(self):
+        if self.requested_fields:
+            return self.requested_fields <= CSVIncidentSerializer().fields.keys()
+        return False
+
     def get_renderer_context(self):
         context = super().get_renderer_context()
 
@@ -135,7 +159,11 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return context
 
     def get_serializer_class(self):
-        if getattr(self.request, 'accepted_renderer', None) and self.request.accepted_renderer.format == 'csv':
+        if self.csv_format_is_requested:
+            # If it's possible to use the faster CSV serializer, use
+            # that.
+            if self.can_apply_csv_serializer:
+                return CSVIncidentSerializer
             return FlatIncidentSerializer
         return super().get_serializer_class()
 
@@ -146,6 +174,45 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         incident_filter = IncidentFilter(self.request.GET)
+        if self.csv_format_is_requested and self.can_apply_csv_serializer:
+            annotated_fields = {
+                'categories': 'category_summary',
+                'tags': 'tag_summary',
+                'links': 'link_summary',
+                'equipment_broken': 'equipment_broken_summary',
+                'equipment_seized': 'equipment_seized_summary',
+                'arresting_authority': 'arresting_authority_title',
+                'status_of_seized_equipment': 'status_of_seized_equipment_display',
+                'arrest_status': 'arrest_status_display',
+                'actor': 'actor_display',
+                'target_us_citizenship_status': 'target_us_citizenship_status_display',
+                'did_authorities_ask_for_device_access': 'did_authorities_ask_for_device_access_display',
+                'did_authorities_ask_about_work': 'did_authorities_ask_about_work_display',
+                'assailant': 'assailant_display',
+                'was_journalist_targeted': 'was_journalist_targeted_display',
+                'third_party_business': 'third_party_business_display',
+                'status_of_prior_restraint': 'status_of_prior_restraint_display',
+                'url': 'url',
+                'state': 'state_abbreviation',
+            }
+            result_fields = []
+            annotations = []
+
+            requested_fields = self.requested_fields
+            serializer = self.get_serializer()
+            valid_fields = requested_fields.intersection(set(serializer.fields))
+            for field in valid_fields:
+                result_fields.append(
+                    annotated_fields.get(field, field)
+                )
+            annotations = {
+                v for k, v in annotated_fields.items()
+                if k in requested_fields
+            }
+            return incident_filter.get_queryset()\
+                .for_csv(annotations, self.request)\
+                .values(*result_fields)
+
         incidents = incident_filter.get_queryset()
 
         return incidents.with_most_recent_update().with_public_associations()
