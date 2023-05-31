@@ -65,7 +65,10 @@
 
 	&__category-details
 		margin-top: 0
-		margin-bottom: 0
+		margin-bottom: 0.5rem
+
+		.database-card-table__row--inline
+			padding-left: 19px
 
 	&__row
 		padding: 0.5rem 0
@@ -81,12 +84,19 @@
 
 		&--inline
 			display: block
-			padding-left: 19px
 			line-height: 0.5
+
+			+tablet-up
+				padding: 0.1rem 0
+				border: none
+
+			+mobile-down
+				padding: 0.3rem 0
+				border-color: $gray-border
 
 			dt, dd
 				margin-right: 0.25rem
-				display: inline
+				display: inline-block
 				white-space: normal
 
 	&__label
@@ -131,10 +141,11 @@
 .heading-table
 	margin: 0
 	border-bottom: 1px solid
-	border-color: $black
+	border-color: $gray-border
 	padding: 0.25rem 0 0
 	+tablet-down
-		padding: 0.5rem 0
+		padding: 0.3rem 0
+		margin-top: 1rem
 
 	+desktop-up
 		border-bottom: none
