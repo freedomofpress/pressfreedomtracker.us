@@ -215,13 +215,12 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
 
     link_to_original_post = models.URLField(blank=True)
 
-    lead_image = models.ForeignKey(
-        'common.CustomImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
+    lead_image = StreamField([
+        ('image', ImageChooserBlock()),
+        ('vertical_bar_chart', VerticalBarChart()),
+        ('tree_map_chart', TreeMapChart()),
+        ('bubble_map_chart', BubbleMapChart()),
+    ], use_json_field=True, blank=True, default=None, max_num=1)
 
     teaser_image = models.ForeignKey(
         'common.CustomImage',
