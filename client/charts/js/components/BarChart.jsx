@@ -53,6 +53,7 @@ export default function BarChart({
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
+	interactive = true,
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -109,7 +110,7 @@ export default function BarChart({
 	if (!isMobileView) {
 		return (
 			<>
-				{hoveredElement && (
+				{hoveredElement && interactive && (
 					<Tooltip
 						content={
 							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -223,12 +224,12 @@ export default function BarChart({
 								width={xScaleOverLayer.bandwidth()}
 								style={{
 									opacity: 0,
-									cursor: 'pointer',
+									cursor: interactive ? 'pointer' : 'default',
 								}}
-								onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
-								onMouseMove={updateTooltipPosition}
-								onMouseLeave={() => setHoveredElement(null)}
-								onMouseUp={() => openSearchPage(xFormat(d[x]))}
+								onMouseEnter={interactive && (() => setHoveredElement((tooltipXFormat || xFormat)(d[x])))}
+								onMouseMove={interactive && updateTooltipPosition}
+								onMouseLeave={interactive && (() => setHoveredElement(null))}
+								onMouseUp={interactive && (() => openSearchPage(xFormat(d[x])))}
 								shapeRendering="crispEdges"
 							>
 								<title>

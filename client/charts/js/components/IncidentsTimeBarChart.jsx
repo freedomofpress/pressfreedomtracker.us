@@ -14,7 +14,8 @@ export default function IncidentsTimeBarChart({
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	timePeriod,
 	isMobileView = false,
-	creditUrl = ''
+	creditUrl = '',
+	interactive = true,
 }) {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
@@ -66,12 +67,8 @@ export default function IncidentsTimeBarChart({
 
 	return (
 		<ParentSize>
-			{(parent) =>
-				<ChartDownloader
-					chartTitle={title}
-					creditUrl={creditUrl}
-					downloadFileName={title ? `${title}.png` : 'chart.png'}
-				>
+			{(parent) => {
+				const barchart = (
 					<BarChart
 						description={description || generatedDescription}
 						data={incidentsByAllTime}
@@ -83,9 +80,20 @@ export default function IncidentsTimeBarChart({
 						width={parent.width}
 						height={parent.width * 0.75}
 						isMobileView={isMobileView}
+						interactive={interactive}
 					/>
-				</ChartDownloader>
-			}
+				);
+
+				return interactive ? (
+					<ChartDownloader
+						chartTitle={title}
+						creditUrl={creditUrl}
+						downloadFileName={title ? `${title}.png` : 'chart.png'}
+					>
+						{barchart}
+					</ChartDownloader>
+				) : barchart
+			}}
 		</ParentSize>
 	)
 }

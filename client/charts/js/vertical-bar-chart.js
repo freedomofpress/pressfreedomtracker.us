@@ -15,6 +15,7 @@ function engageCharts() {
 		const timePeriod = chartNode.dataset?.timePeriod
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
+		const interactive = !!chartNode.dataset?.interactive
 
 		const filterUpperDate = upperValue ? new Date(upperValue) : null
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
@@ -32,6 +33,7 @@ function engageCharts() {
 					description={description}
 					creditUrl={'pressfreedomtracker.us'}
 					timePeriod={timePeriod}
+					interactive={interactive}
 				/>
 			</DataLoader>
 		))
