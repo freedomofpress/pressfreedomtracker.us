@@ -19,7 +19,8 @@ export default ({
 	aggregationLocality = 'state', // Whether to group incidents by state or city
 	isMobileView = false,
 	creditUrl = '',
-	categories
+	categories,
+	interactive = true,
 }) => {
 	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
 	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
@@ -31,12 +32,8 @@ export default ({
 
 	return (
 		<ParentSize>
-			{(parent) =>
-				<ChartDownloader
-					chartTitle={title}
-					creditUrl={creditUrl}
-					downloadFileName={title ? `${title}.png` : 'chart.png'}
-				>
+			{(parent) => {
+				const usmap = (
 					<USMap
 						data={datasetAggregatedByGeo}
 						description={description}
@@ -45,9 +42,20 @@ export default ({
 						width={parent.width}
 						height={parent.width * 0.7}
 						overridePaddings={{ map: 0, bottom: 0 }}
+						interactive={interactive}
 					/>
-				</ChartDownloader>
-			}
+				);
+
+				return interactive ? (
+					<ChartDownloader
+						chartTitle={title}
+						creditUrl={creditUrl}
+						downloadFileName={title ? `${title}.png` : 'chart.png'}
+					>
+						{usmap}
+					</ChartDownloader>
+				) : usmap
+			}}
 		</ParentSize>
 	)
 }

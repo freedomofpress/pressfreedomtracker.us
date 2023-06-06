@@ -16,6 +16,7 @@ function engageCharts() {
 		const groupBy = chartNode.dataset?.groupBy
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
+		const interactive = !!chartNode.dataset?.interactive
 
 		const filterUpperDate = upperValue ? new Date(upperValue) : null
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
@@ -34,6 +35,7 @@ function engageCharts() {
 					title={title}
 					description={description}
 					creditUrl={chartNode.baseURI}
+					interactive={interactive}
 				/>
 			</DataLoader>
 		))

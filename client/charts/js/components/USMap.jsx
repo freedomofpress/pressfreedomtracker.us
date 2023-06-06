@@ -55,6 +55,7 @@ export default function USMap({
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
+	interactive = true,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -76,7 +77,7 @@ export default function USMap({
 
 	return (
 		<>
-			{hoveredElement && hoveredElement !== 'Abroad' && (
+			{hoveredElement && interactive && hoveredElement !== 'Abroad' && (
 				<Tooltip
 					content={
 						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -174,15 +175,17 @@ export default function USMap({
 								cx={projection([d.longitude, d.latitude])[0]}
 								cy={projection([d.longitude, d.latitude])[1]}
 								r={markerScale(d.numberOfIncidents) + 5}
-								style={{ opacity: 0, cursor: 'pointer' }}
-								onMouseMove={updateTooltipPosition}
-								onMouseEnter={(mouseEvent) => {
+								style={{ opacity: 0, cursor: interactive ? 'pointer' : 'default' }}
+								onMouseMove={interactive && updateTooltipPosition}
+								onMouseEnter={interactive && ((mouseEvent) => {
 									setHoveredElement(`${aggregationLocality(d)}`)
-								}}
-								onMouseLeave={() => {
+								})}
+								onMouseLeave={interactive && (() => {
 									setHoveredElement(null)
-								}}
-								onMouseUp={(mouseEvent) => openSearchPage(d.usCode)}
+								})}
+								onMouseUp={interactive && (
+									(mouseEvent) => openSearchPage(d.usCode)
+								)}
 								key={aggregationLocality(d)}
 							/>
 						))}
@@ -204,11 +207,11 @@ export default function USMap({
 							height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
 							fill="white"
 							style={{
-								cursor: 'pointer',
+								cursor: interactive ? 'pointer' : 'default',
 							}}
-							onMouseEnter={() => setHoveredElement('Abroad')}
-							onMouseOut={() => setHoveredElement(null)}
-							onMouseUp={() => openSearchPage()}
+							onMouseEnter={interactive && (() => setHoveredElement('Abroad'))}
+							onMouseOut={interactive && (() => setHoveredElement(null))}
+							onMouseUp={interactive && (() => openSearchPage())}
 						/>
 
 						<AnimatedDataset
@@ -219,7 +222,7 @@ export default function USMap({
 								y: height - paddings.bottom - paddings.text - markerBorder.grid,
 								fontSize: width > 400 ? '14px' : '12px',
 								fontFamily: 'var(--font-base)',
-								cursor: 'pointer',
+								cursor: interactive ? 'pointer' : 'default',
 								fill: 'black',
 								pointerEvents: 'none',
 								text: (d) => d,
@@ -235,7 +238,7 @@ export default function USMap({
 								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
 								fontSize: width > 400 ? 14 : 12,
 								fontFamily: 'var(--font-base)',
-								cursor: 'pointer',
+								cursor: interactive ? 'pointer' : 'default',
 								fill: 'black',
 								textAnchor: 'end',
 								pointerEvents: 'none',
@@ -364,7 +367,7 @@ export default function USMap({
 								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
 								fontSize: width > 400 ? 13 : 11,
 								fontFamily: 'var(--font-base)',
-								cursor: 'pointer',
+								cursor: interactive ? 'pointer' : 'default',
 								fill: '#bdbdbd',
 								textAnchor: 'end',
 								text: (d) => d,

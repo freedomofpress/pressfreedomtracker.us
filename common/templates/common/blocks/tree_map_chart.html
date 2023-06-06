@@ -22,5 +22,8 @@
 		{% if value.title %}
 			data-title="{{ value.title }}"
 		{% endif %}
+		{% if static_graphic is None %}
+			data-interactive="true"
+		{% endif %}
 	></div>
 </div>

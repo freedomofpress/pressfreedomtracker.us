@@ -138,6 +138,7 @@ export default function TreeMap({
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
+	interactive = true,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -240,7 +241,7 @@ export default function TreeMap({
 
 	return (
 		<>
-			{hoveredElement && !!(tooltipPosition.x || tooltipPosition.y) && (
+			{hoveredElement && interactive && !!(tooltipPosition.x || tooltipPosition.y) && (
 				<Tooltip
 					content={
 						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -311,24 +312,24 @@ export default function TreeMap({
 									: 'white',
 							stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
 							strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
-							cursor: 'pointer',
+							cursor: interactive ? 'pointer' : 'default',
 							pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
 							shapeRendering: 'crispEdges',
 						}}
 						events={{
 							// In a future, if we update our version of d3-selection the first
 							// argument will be a MouseEvent, eliminating the need for d3event here
-							onMouseMove: () => {
+							onMouseMove: interactive && (() => {
 								updateTooltipPosition(d3event)
-							},
-							onMouseLeave: () => {
+							}),
+							onMouseLeave: interactive && (() => {
 								setTooltipPosition({ x: 0, y: 0 })
 								setHoveredElement(null)
-							},
+							}),
 							// In a future, if we update our version of d3-selection this may
 							// need to be updated to take arguments (MouseEvent, d) instead
-							onMouseEnter: d => setHoveredElement(d.category),
-							onMouseUp: d => openSearchPage(d.category),
+							onMouseEnter: interactive && (d => setHoveredElement(d.category)),
+							onMouseUp: interactive && (d => openSearchPage(d.category)),
 						}}
 						durationByAttr={{ fill: 0, stroke: 0 }}
 						keyFn={(d) => d.category}
@@ -458,14 +459,14 @@ export default function TreeMap({
 								.map(d => (
 									<g
 										key={d.category}
-										onMouseLeave={() => {
+										onMouseLeave={interactive && (() => {
 											setTooltipPosition({ x: 0, y: 0 })
 											setHoveredElement(null)
-										}}
-										onClick={() => toggleSelectedCategory(d.category)}
-										onMouseEnter={() => setHoveredElement(d.category)}
-										onMouseUp={() => openSearchPage(d.category)}
-										cursor="pointer"
+										})}
+										onClick={interactive && (() => toggleSelectedCategory(d.category))}
+										onMouseEnter={interactive && (() => setHoveredElement(d.category))}
+										onMouseUp={interactive && (() => openSearchPage(d.category))}
+										cursor={interactive ? 'pointer' : 'default'}
 										tabIndex="0"
 										role="button"
 										aria-pressed={selectedElements.indexOf(d.category) >= 0}
