@@ -25,12 +25,12 @@ function engageCharts() {
 				dataKey="dataset"
 			>
 				<IncidentsTimeBarChart
-					filterCategories={filterCategories.length ? filterCategories : null}
+					filterCategories={filterCategories}
 					filterTags={filterTag}
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
 					description={description}
-					creditUrl={chartNode.baseURI}
+					creditUrl={'pressfreedomtracker.us'}
 					timePeriod={timePeriod}
 				/>
 			</DataLoader>

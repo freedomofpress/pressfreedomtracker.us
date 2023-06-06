@@ -1,6 +1,7 @@
 import re
 import bleach
 
+from django import forms
 from django.forms.utils import ErrorList
 
 from wagtail import blocks
@@ -10,7 +11,7 @@ from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
-from common.models.helpers import get_tags
+from common.models.helpers import get_tags, get_categories
 from common.templatetags.render_as_template import render_as_template
 from common.search import get_searchable_content_for_fields
 from common.utils import unescape
@@ -457,12 +458,13 @@ class InfoTableBlock(blocks.StructBlock):
 
 
 class SimpleIncidentSet(blocks.StructBlock):
-    categories = blocks.ListBlock(blocks.PageChooserBlock(
+    categories = blocks.MultipleChoiceBlock(
         label='Filter by Category',
         required=False,
-        page_type='common.CategoryPage',
-        help_text='If selected, only incidents with the chosen category will be included. If multiple categories are selected, incidents that have any of the selected categories will be included.',
-    ))
+        widget=forms.CheckboxSelectMultiple,
+        choices=get_categories,
+        help_text='If selected, incidents belonging to any of the selected categories will be included.',
+    )
     tag = blocks.ChoiceBlock(
         label='Filter by Tag',
         required=False,
@@ -523,3 +525,29 @@ class TreeMapChart(blocks.StructBlock):
 
     class Media:
         js = ['treeMapChart']
+
+
+class BubbleMapChart(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    incident_set = SimpleIncidentSet()
+    group_by = blocks.ChoiceBlock(
+        label='Group Incidents by',
+        required=True,
+        choices=[('state', 'State'), ('city', 'City')],
+        help_text='Choose whether to group by city or by state'
+    )
+
+    description = blocks.TextBlock(
+        required=True,
+        help_text='Description for assistive technology users. '
+        'If the chart is demonstrating a specific trend, try to include that, '
+        'e.g., "Bar chart showing a decreasing number of assaults over the '
+        'course of 2023."',
+    )
+
+    class Meta:
+        icon = 'table'
+        template = 'common/blocks/bubble_map_chart.html'
+
+    class Media:
+        js = ['bubbleMapChart']

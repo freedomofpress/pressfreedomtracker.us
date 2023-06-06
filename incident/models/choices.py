@@ -1,3 +1,55 @@
+from django.db.models import TextChoices
+
+
+class LegalOrderTarget(TextChoices):
+    JOURNALIST = 'JOURNALIST', 'Journalist'
+    THIRD_PARTY = 'THIRD_PARTY', 'Third-party'
+    INSTITUTION = 'INSTITUTION', 'Institution'
+
+
+class LegalOrderType(TextChoices):
+    SUBPOENA = 'SUBPOENA', 'subpoena'
+    COURT_ORDER_2703 = '2703', '2703(d) court order'
+    WARRANT = 'WARRANT', 'warrant'
+    MOTION_TO_COMPEL = 'MOTION_TO_COMPEL', 'Motion to compel'
+    NATIONAL_SECURITY_LETTER = 'NATIONAL_SECURITY_LETTER', 'national security letter'
+    FISA = 'FISA', 'FISA order'
+    OTHER = 'OTHER', 'other'
+
+
+class InformationRequested(TextChoices):
+    TESTIMONY_ABOUT_SOURCE = 'TESTIMONY_ABOUT_SOURCE', 'testimony about confidential source'
+    OTHER_TESTIMONY = 'OTHER_TESTIMONY', 'other testimony'
+    JOURNALIST_COMMUNICATIONS = 'JOURNALIST_COMMUNICATIONS', 'communications or work product'
+    OTHER = 'OTHER', 'other'
+
+
+class LegalOrderStatus(TextChoices):
+    UNKNOWN = 'UNKNOWN', 'unknown'
+    PENDING = 'PENDING', 'pending'
+    DROPPED = 'DROPPED', 'dropped'
+    QUASHED = 'QUASHED', 'quashed'
+    UPHELD = 'UPHELD', 'upheld'
+    PARTIALLY_UPHELD = 'PARTIALLY_UPHELD', 'partially upheld'
+    CARRIED_OUT = 'CARRIED_OUT', 'carried out'
+    IGNORED = 'IGNORED', 'ignored'
+    OBJECTED_TO = 'OBJECTED_TO', 'objected to'
+
+
+class ThirdPartyBusiness(TextChoices):
+    TELECOM = 'TELECOM', 'telecom company'
+    TECH_COMPANY = 'TECH_COMPANY', 'tech company'
+    ISP = 'ISP', 'internet service provider'
+    FINANCIAL = 'FINANCIAL', 'bank/financial institution'
+    TRAVEL = 'TRAVEL', 'travel company'
+    OTHER = 'OTHER', 'other'
+
+
+class LegalOrderVenue(TextChoices):
+    STATE = 'STATE', 'State'
+    FEDERAL = 'FEDERAL', 'Federal'
+
+
 MAYBE_BOOLEAN = [
     ('NOTHING', 'unknown'),
     ('JUST_TRUE', 'yes'),

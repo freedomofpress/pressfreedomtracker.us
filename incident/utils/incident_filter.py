@@ -37,6 +37,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Site
 
 from incident.circuits import STATES_BY_CIRCUIT
+from incident.models import choices
 from incident.models.choices import STATUS_OF_CHARGES
 
 
@@ -600,6 +601,54 @@ class StatusOfChargesFilter(ChoiceFilter):
         )
 
 
+class LegalOrderTypeFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.LegalOrderType.choices
+        return serialized
+
+    def get_choices(self):
+        return set(choices.LegalOrderType)
+
+    def filter(self, queryset, value):
+        return queryset.filter(
+            Q(legal_orders__order_type__in=value)
+        )
+
+
+class LegalOrderInformationFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.InformationRequested.choices
+        return serialized
+
+    def get_choices(self):
+        return set(choices.InformationRequested)
+
+    def filter(self, queryset, value):
+        return queryset.filter(
+            Q(legal_orders__information_requested__in=value)
+        )
+
+
+class LegalOrderStatusFilter(ChoiceFilter):
+    def serialize(self):
+        serialized = super().serialize()
+        if serialized['type'] == 'choice':
+            serialized['choices'] = choices.LegalOrderStatus.choices
+        return serialized
+
+    def get_choices(self):
+        return set(choices.LegalOrderStatus)
+
+    def filter(self, queryset, value):
+        return queryset.with_most_recent_status_of_legal_orders().filter(
+            most_recent_legal_order_statuses__contains=value,
+        )
+
+
 class CircuitsFilter(ChoiceFilter):
     def get_choices(self):
         return set(STATES_BY_CIRCUIT)
@@ -779,13 +828,25 @@ class IncidentFilter(object):
         'status_of_charges': {'filter_cls': StatusOfChargesFilter},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
         'state': {'text_fields': ['abbreviation', 'name']},
-        'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'}
+        'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'},
+        'legal_order_type': {'filter_cls': LegalOrderTypeFilter},
     }
 
     _extra_filters = {
         'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
         'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
-        'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last')
+        'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last'),
+        'legal_order_information_requested': LegalOrderInformationFilter(
+            name='legal_order_information_requested',
+            verbose_name='Information requested in legal order',
+            model_field=CharField(),
+        ),
+        'legal_order_status': LegalOrderStatusFilter(
+            name='legal_order_status',
+            verbose_name='Legal order status',
+            model_field=CharField(),
+        ),
+
     }
 
     # IncidentPage fields that cannot be filtered on.
@@ -801,6 +862,9 @@ class IncidentFilter(object):
         'longitude',
         'latitude',
         '_revisions',
+        'legal_orders',
+        'held_in_contempt',  # Deprecated field
+        'detention_status',  # Deprecated field
         # 'dropped_charges',
         # 'current_charges',
     }
@@ -894,7 +958,7 @@ class IncidentFilter(object):
         raises a ValidationError for errors; otherwise the fields with errors
         are simply ignored.
         """
-        from common.models import CategoryPage, GeneralIncidentFilter
+        from common.models import CategoryPage, GeneralIncidentFilter, CategoryIncidentFilter
         self.cleaned_data = {}
         errors = []
 
@@ -929,37 +993,38 @@ class IncidentFilter(object):
         except ValidationError as exc:
             errors.append(exc)
 
-        categories = CategoryPage.objects.live().prefetch_related(
-            'incident_filters',
-        )
         category_data = self.cleaned_data.get('categories')
 
         if category_data:
             qs = []
             if category_data.pks:
                 qs.append(
-                    Q(id__in=category_data.pks)
+                    Q(category__id__in=category_data.pks)
                 )
             if category_data.strings:
-                qs.append(Q(title__in=category_data.strings))
+                qs.append(Q(category__title__in=category_data.strings))
             # Combine string and primary key data using OR operator,
             # if there are no valid filters, perform no filtering with
             # empty Q().
             qs = functools.reduce(operator.or_, qs, Q())
-            categories = categories.filter(qs)
 
-        for category in categories:
-            for category_incident_filter in category.incident_filters.all():
-                incident_filter = category_incident_filter.incident_filter
-                if incident_filter in available_filters:
-                    self.filters.append(available_filters[incident_filter])
+            enabled_filter_set_categories = CategoryIncidentFilter.objects.filter(
+                qs
+            ).values_list('incident_filter', flat=True)
+        else:
+            enabled_filter_set_categories = CategoryIncidentFilter.objects.values_list(
+                'incident_filter',
+                flat=True,
+            )
 
         # Collect filters from general settings.
-        general_incident_filters = GeneralIncidentFilter.objects.all()
-        for general_incident_filter in general_incident_filters:
-            incident_filter = general_incident_filter.incident_filter
-            if incident_filter in available_filters:
-                self.filters.append(available_filters[incident_filter])
+        enabled_filter_set_general = GeneralIncidentFilter.objects.filter(
+            incident_filter__in=available_filters.keys(),
+        ).values_list('incident_filter', flat=True)
+
+        self.filters.extend([v for k, v in available_filters.items() if k in set(
+            itertools.chain(enabled_filter_set_general, enabled_filter_set_categories)
+        )])
 
         # Clean collected filters.
         for f in self.filters:

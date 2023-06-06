@@ -130,10 +130,13 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 
 export function filterDatasets(
 	dataset,
-	filterCategories = null, // Array or string of valid categories or category
+	filterCategories = [], // Array of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = [null, null], // Array representing the min and max of dates to show
 ) {
+	// Remove empty strings from filterCategories
+	filterCategories = filterCategories.filter(d => d)
+
 	// Create maps so that we don't have to do n^2 lookup times
 	const filterCategoryMap = (Array.isArray(filterCategories) ? filterCategories : [filterCategories])
 		.reduce((acc, val) => ({...acc, [val]: true}), {})
@@ -146,7 +149,7 @@ export function filterDatasets(
 			const incidentCategories = categories ? categories.split(',').map(d => d.trim()) : []
 			const incidentTags = tags ? tags.split(',').map(d => d.trim()) : []
 
-			const isExcludedCategory = filterCategories && !incidentCategories.find(c => filterCategoryMap[c])
+			const isExcludedCategory = filterCategories.length && !incidentCategories.find(c => filterCategoryMap[c])
 			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
 
 			const [startDate, endDate] = dateRange;

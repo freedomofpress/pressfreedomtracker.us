@@ -9,7 +9,7 @@ export default function IncidentsTimeBarChart({
 	dataset,
 	title,
 	description,
-	filterCategories = null, // Array or string of valid categories or category
+	filterCategories = [], // Array of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	timePeriod,

@@ -54,6 +54,8 @@ EXCLUDED_FIELDS = {
     'dropped_charges',  # Deprecated
     'current_charges',  # Deprecated
     'status_of_charges',  # Deprecated
+    'held_in_contempt',  # Deprecated
+    'detention_status',  # Deprecated
     '_revisions',
     'latest_revision',
 }

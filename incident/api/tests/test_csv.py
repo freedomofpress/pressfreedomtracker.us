@@ -1,4 +1,5 @@
 import csv
+from urllib import parse
 
 from django.test import TestCase
 from django.urls import reverse
@@ -17,6 +18,7 @@ from incident.tests.factories import (
     IncidentUpdateFactory,
     IncidentLinkFactory,
     StateFactory,
+    EquipmentSeizedFactory,
 )
 
 
@@ -66,6 +68,190 @@ class MinimalIncidentCSVTestCase(TestCase):
 
         result = dict(zip(headers, next(reader)))
         self.assertEqual(result['state'], '')
+
+
+class PerformantCSVTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build(
+            slug='incident-index',
+        )
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.state = StateFactory(abbreviation='NM')
+        cls.cats = CategoryPageFactory.create_batch(3, parent=root_page)
+        cls.tags = CommonTagFactory.create_batch(3)
+        cls.incident = IncidentPageFactory(
+            arrest=True,
+            parent=cls.incident_index,
+            categories=cls.cats,
+            tags=cls.tags,
+            state=cls.state,
+            status_of_seized_equipment=choices.STATUS_OF_SEIZED_EQUIPMENT[0][0],
+            arresting_authority__title='Police Squad!',
+            actor=choices.ACTORS[0][0],
+            target_us_citizenship_status=choices.CITIZENSHIP_STATUS_CHOICES[0][0],
+            did_authorities_ask_for_device_access=choices.MAYBE_BOOLEAN[0][0],
+            did_authorities_ask_about_work=choices.MAYBE_BOOLEAN[0][0],
+            assailant=choices.ACTORS[0][0],
+            was_journalist_targeted=choices.MAYBE_BOOLEAN[1][0],
+            third_party_business=choices.ThirdPartyBusiness.TRAVEL,
+            status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[1][0],
+            equipment_damage=True,
+        )
+        EquipmentSeizedFactory.create_batch(3, incident=cls.incident)
+        IncidentLinkFactory.create_batch(3, page=cls.incident)
+        IncidentLinkFactory(page=cls.incident, publication='Galactic Express')
+
+        IncidentPageFactory()
+
+    def setUp(self):
+        fields = [
+            'title',
+            'tags',
+            'url',
+            'categories',
+            'status_of_seized_equipment',
+            'arrest_status',
+            'arresting_authority',
+            'actor',
+            'target_us_citizenship_status',
+            'did_authorities_ask_for_device_access',
+            'did_authorities_ask_about_work',
+            'assailant',
+            'was_journalist_targeted',
+            'third_party_business',
+            'status_of_prior_restraint',
+            'state',
+            'links',
+            'equipment_broken',
+            'equipment_seized',
+        ]
+        url = reverse(
+            'incidentpage-list',
+            kwargs={'version': 'edge'},
+        ) + '?' + parse.urlencode({'fields': ','.join(fields)})
+
+        with self.assertNumQueries(3):
+            self.response = self.client.get(
+                url,
+                HTTP_ACCEPT='text/csv',
+            )
+        content_lines = self.response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+
+        self.headers = next(reader)
+        self.result = dict(zip(self.headers, next(reader)))
+
+    def test_requests_are_successful(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_url_has_correct_path(self):
+        self.assertTrue(
+            self.result['url'].endswith(
+                f'/{self.incident_index.slug}/{self.incident.slug}/'
+            ),
+        )
+
+    def test_state_is_correct(self):
+        self.assertEqual(
+            self.result['state'],
+            self.incident.state.abbreviation,
+        )
+
+    def test_links_are_correct(self):
+        self.assertEqual(
+            self.result['links'],
+            ', '.join(str(link) for link in self.incident.links.all())
+        )
+
+    def test_equipment_broken_is_correct(self):
+        self.assertEqual(
+            self.result['equipment_broken'],
+            ', '.join(e.summary for e in self.incident.equipment_broken.all())
+        )
+
+    def test_equipment_seized_is_correct(self):
+        self.assertEqual(
+            self.result['equipment_seized'],
+            ', '.join(e.summary for e in self.incident.equipment_seized.all())
+        )
+
+    def test_tags_are_correct(self):
+        self.assertEqual(
+            self.result['tags'],
+            ', '.join(tag.title for tag in self.incident.tags.all())
+        )
+
+    def test_categories_are_correct(self):
+        self.assertEqual(
+            self.result['categories'],
+            ', '.join(
+                categorization.category.title for categorization in self.incident.categories.all()
+            )
+        )
+
+    def test_choice_field_is_correct(self):
+        self.assertEqual(
+            self.result['status_of_seized_equipment'],
+            self.incident.get_status_of_seized_equipment_display(),
+        )
+
+    def test_arrest_status_is_correct(self):
+        self.assertEqual(
+            self.result['arrest_status'],
+            self.incident.get_arrest_status_display(),
+        )
+
+    def test_assailant_is_correct(self):
+        self.assertEqual(
+            self.result['assailant'],
+            self.incident.get_assailant_display(),
+        )
+
+    def test_authorities_device_access_is_correct(self):
+        self.assertEqual(
+            self.result['did_authorities_ask_for_device_access'],
+            self.incident.get_did_authorities_ask_for_device_access_display(),
+        )
+
+    def test_authorities_work_access_is_correct(self):
+        self.assertEqual(
+            self.result['did_authorities_ask_about_work'],
+            self.incident.get_did_authorities_ask_about_work_display(),
+        )
+
+    def test_actor_is_correct(self):
+        self.assertEqual(
+            self.result['actor'],
+            self.incident.get_actor_display(),
+        )
+
+    def test_was_journalist_targeted_is_correct(self):
+        self.assertEqual(
+            self.result['was_journalist_targeted'],
+            self.incident.get_was_journalist_targeted_display(),
+        )
+
+    def test_third_party_business_is_correct(self):
+        self.assertEqual(
+            self.result['third_party_business'],
+            self.incident.get_third_party_business_display(),
+        )
+
+    def test_status_of_prior_restraint_is_correct(self):
+        self.assertEqual(
+            self.result['status_of_prior_restraint'],
+            self.incident.get_status_of_prior_restraint_display(),
+        )
+
+    def test_arresting_authority_is_correct(self):
+        self.assertEqual(
+            self.result['arresting_authority'],
+            'Police Squad!',
+        )
 
 
 class HomePageCSVTestCase(TestCase):
@@ -236,6 +422,104 @@ class InvalidFilterHomePageCSVTestCase(TestCase):
             HTTP_ACCEPT='text/csv',
         )
         self.assertEqual(self.response.status_code, 400)
+
+
+class FilteredPerformantCSVTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        root_page = site.root_page
+        cls.incident_index = IncidentIndexPageFactory.build(
+            slug='incident-index',
+        )
+        root_page.add_child(instance=cls.incident_index)
+
+        cls.state = StateFactory(abbreviation='NM')
+        cls.cats = CategoryPageFactory.create_batch(3, parent=root_page)
+        cls.tags = CommonTagFactory.create_batch(3)
+        cls.incident1 = IncidentPageFactory(
+            parent=cls.incident_index,
+            date='2022-01-01',
+            categories=[cls.cats[0]],
+            tags=[cls.tags[0]],
+            state__abbreviation='NM',
+        )
+        cls.incident2 = IncidentPageFactory(
+            parent=cls.incident_index,
+            date='2022-02-02',
+            categories=[cls.cats[1]],
+            tags=[cls.tags[1]],
+            state__abbreviation='AK',
+        )
+        cls.incident3 = IncidentPageFactory(
+            parent=cls.incident_index,
+            date='2022-03-03',
+            categories=[cls.cats[2]],
+            tags=[cls.tags[2]],
+            state__abbreviation='VT',
+        )
+
+    def filtered_request(self, filters):
+        fields = [
+            'title',
+            'date',
+            'tags',
+            'categories',
+        ]
+        response = self.client.get(
+            path=reverse(
+                'incidentpage-list',
+                kwargs={'version': 'edge'},
+            ),
+            data={
+                'fields': ','.join(fields),
+                **filters
+            },
+            HTTP_ACCEPT='text/csv',
+        )
+        content_lines = response.content.splitlines()
+        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+
+        headers = next(reader)
+        result = [dict(zip(headers, row)) for row in reader]
+        return result
+
+    def test_date_filter(self):
+        # 2 queries expected:
+        # * 1 for the general incident filters
+        # * 1 for the category incident filters
+        # * 1 for the actual incident query
+        with self.assertNumQueries(3):
+            result = self.filtered_request({
+                'date_lower': '2022-01-15',
+                'date_upper': '2022-02-15',
+            })
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['title'], self.incident2.title)
+
+    def test_tags_filter(self):
+        # 2 queries expected:
+        # * 1 for the general incident filters
+        # * 1 for the category incident filters
+        # * 1 for the actual incident query
+        with self.assertNumQueries(3):
+            result = self.filtered_request({
+                'tags': self.tags[1].pk
+            })
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['title'], self.incident2.title)
+
+    def test_categories_filter(self):
+        # 3 queries expected:
+        # * 1 for the general incident filters
+        # * 1 for the category incident filters
+        # * 1 for the actual incident query
+        with self.assertNumQueries(3):
+            result = self.filtered_request({
+                'categories': self.cats[1].pk
+            })
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]['title'], self.incident2.title)
 
 
 class IncidentCSVTestCase(TestCase):
@@ -410,9 +694,7 @@ class IncidentCSVTestCase(TestCase):
                 'charged_under_espionage_act': str(inc.charged_under_espionage_act),
                 'subpoena_type': inc.get_subpoena_type_display(),
                 'subpoena_statuses': ', '.join([dict(choices.SUBPOENA_STATUS)[status] for status in inc.subpoena_statuses]),
-                'held_in_contempt': inc.get_held_in_contempt_display(),
-                'detention_status': inc.get_detention_status_display(),
-                'third_party_in_possession_of_communications': inc.third_party_in_possession_of_communications,
+                'name_of_business': inc.name_of_business,
                 'third_party_business': inc.get_third_party_business_display(),
                 'legal_order_type': inc.get_legal_order_type_display(),
                 'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),
@@ -486,9 +768,7 @@ class IncidentCSVTestCase(TestCase):
             'charged_under_espionage_act',
             'subpoena_type',
             'subpoena_statuses',
-            'held_in_contempt',
-            'detention_status',
-            'third_party_in_possession_of_communications',
+            'name_of_business',
             'third_party_business',
             'legal_order_type',
             'status_of_prior_restraint',

@@ -12,7 +12,7 @@ const margins = {
 	bottom: 0,
 }
 
-const paddings = {
+const defaultPaddings = {
 	left: 0,
 	right: 40,
 	bottom: 40,
@@ -41,9 +41,25 @@ const mapBorder = {
 	nation: 3,
 }
 
-export default function USMap({ data: dataset, incidentsOutsideUS, width, height, id, searchPageURL }) {
+export default function USMap({
+	data: dataset,
+	description,
+	incidentsOutsideUS,
+	width,
+	height,
+	id,
+	searchPageURL,
+	aggregationLocality = d => d.state,
+	addBottomBorder,
+  	overridePaddings = {},
+	// function prop received from ChartDownloader that binds the svg element to allow
+	// it to be downloaded
+	setSvgEl = () => {},
+}) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+
+  	const paddings = {...defaultPaddings, ...overridePaddings}
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -72,8 +88,8 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 									{hoveredElement}
 								</div>
 								<div>
-									{dataset.filter((d) => `${d.state}` === hoveredElement).length !== 0
-										? dataset.find((d) => `${d.state}` === hoveredElement).numberOfIncidents
+									{dataset.filter((d) => `${aggregationLocality(d)}` === hoveredElement).length !== 0
+										? dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement).numberOfIncidents
 										: ''}
 								</div>
 							</div>
@@ -83,7 +99,8 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 					y={tooltipPosition.y}
 				/>
 			)}
-			<svg width={width} height={height} aria-labelledby={id}>
+			<svg width={width} height={height} aria-labelledby={id} ref={setSvgEl}>
+				{description ? (<desc>{description}</desc>) : null}
 				<svg
 					width={width}
 					height={height - (paddings.bottom + paddings.top + paddings.map)}
@@ -123,11 +140,11 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								fill: (d) =>
 									hoveredElement === null
 										? '#E07A5F'
-										: hoveredElement === `${d.state}`
+										: hoveredElement === `${aggregationLocality(d)}`
 										? '#E07A5F'
 										: 'white',
 								strokeWidth: (d) =>
-									hoveredElement === `${d.state}` ? markerBorder.hover : markerBorder.normal,
+									hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal,
 							}}
 							attrs={{
 								opacity: 1,
@@ -137,34 +154,36 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 								fill: (d) =>
 									hoveredElement === null
 										? '#E07A5F'
-										: hoveredElement === `${d.state}`
+										: hoveredElement === `${aggregationLocality(d)}`
 										? '#E07A5F'
 										: 'white',
 								stroke: 'black',
 								strokeWidth: (d) =>
-									hoveredElement === `${d.state}` ? markerBorder.hover : markerBorder.normal,
+									hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal,
 							}}
 							duration={250}
 							durationByAttr={{ fill: 0, strokeWidth: 0 }}
-							keyFn={(d) => `${d.state}`}
+							keyFn={(d) => `${aggregationLocality(d)}`}
 						/>
 					</g>
-					<g>
+					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
 							<a href={searchPageURL(d.usCode)}>
 								<circle
+									role="listitem"
+									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									cx={projection([d.longitude, d.latitude])[0]}
 									cy={projection([d.longitude, d.latitude])[1]}
 									r={markerScale(d.numberOfIncidents) + 5}
 									style={{ opacity: 0, cursor: 'pointer' }}
 									onMouseMove={updateTooltipPosition}
 									onMouseEnter={(mouseEvent) => {
-										setHoveredElement(`${d.state}`)
+										setHoveredElement(`${aggregationLocality(d)}`)
 									}}
 									onMouseLeave={() => {
 										setHoveredElement(null)
 									}}
-									key={d.state}
+									key={aggregationLocality(d)}
 								/>
 							</a>
 						))}
@@ -380,14 +399,16 @@ export default function USMap({ data: dataset, incidentsOutsideUS, width, height
 					</g>
 				)}
 
-				<line
+			  	{addBottomBorder ? (
+				  <line
 					x1={0}
 					x2={width}
 					y1={height - paddings.bottom}
 					y2={height - paddings.bottom}
 					style={{ stroke: 'black', strokeWidth: markerBorder.grid }}
 					shapeRendering="crispEdges"
-				/>
+				  />
+				) : null}
 			</svg>
 		</>
 	)

@@ -267,6 +267,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             charged_under_espionage_act=False,
         )
         subpoena = factory.Trait(
+            legal_order_target=choices.LegalOrderTarget.JOURNALIST,
             subpoena_type=factory.Iterator(
                 choices.SUBPOENA_TYPE, getter=lambda c: c[0]),
             # subpoena_statuses=factory.Iterator(
@@ -282,7 +283,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             ),
             detention_status=factory.Iterator(
                 choices.DETENTION_STATUS, getter=lambda c: c[0]),
-            third_party_in_possession_of_communications='Megacorp Industries',
+            name_of_business='Megacorp Industries',
             third_party_business=factory.Iterator(
                 choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
             legal_order_type=factory.Iterator(
@@ -536,6 +537,54 @@ class IncidentChargeWithUpdatesFactory(factory.django.DjangoModelFactory):
     update3 = factory.RelatedFactory(
         ChargeUpdateFactory,
         factory_related_name='incident_charge',
+    )
+
+
+class LegalOrderFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.LegalOrder
+
+    incident_page = factory.SubFactory(IncidentPageFactory)
+    order_type = choices.LegalOrderType.SUBPOENA
+    information_requested = choices.InformationRequested.OTHER
+    status = choices.LegalOrderStatus.PENDING
+    date = factory.LazyFunction(timezone.now)
+
+
+class LegalOrderUpdateFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.LegalOrderUpdate
+
+    date = factory.LazyFunction(timezone.now)
+    status = choices.LegalOrderStatus.UNKNOWN
+
+
+class LegalOrderWithUpdatesFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = incident.models.LegalOrder
+
+    incident_page = factory.SubFactory(IncidentPageFactory)
+    order_type = choices.LegalOrderType.SUBPOENA
+    information_requested = choices.LegalOrderType.OTHER
+    status = choices.LegalOrderStatus.PENDING
+    date = factory.LazyFunction(timezone.now)
+    update1 = factory.RelatedFactory(
+        LegalOrderUpdateFactory,
+        factory_related_name='legal_order',
+        date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=1)),
+        sort_order=1,
+    )
+    update2 = factory.RelatedFactory(
+        LegalOrderUpdateFactory,
+        factory_related_name='legal_order',
+        date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=2)),
+        sort_order=2,
+    )
+    update3 = factory.RelatedFactory(
+        LegalOrderUpdateFactory,
+        factory_related_name='legal_order',
+        date=factory.LazyAttribute(lambda o: o.factory_parent.date + datetime.timedelta(days=3)),
+        sort_order=3,
     )
 
 
