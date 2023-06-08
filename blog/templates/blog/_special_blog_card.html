@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags wagtailimages_tags %}
+
+{% image post.teaser_image scale-100 as tmp_photo %}
+<article class="special-blog-card">
+	<img src="{{ tmp_photo.url }}" alt="{{ post.teaser_image.title }}" width="{{ tmp_photo.width }}" height="{{ tmp_photo.height }}">
+	<div class="special-blog-card__info">
+		<a class="text-link text-link--card" href="{% pageurl post %}">
+			<h2 class="special-blog-card__title">{{ post.title }}</h2>
+		</a>
+		<p class="special-blog-card__metadata">
+			{{ post.publication_datetime|date:"F j, Y" }}
+			{% if post.author %}
+				— {{ post.author }}
+			{% endif %}
+		</p>
+		<p>{{ post.teaser_text }}</p>
+	</div>
+</article>

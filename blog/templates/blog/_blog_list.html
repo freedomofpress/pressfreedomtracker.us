@@ -1,30 +1,32 @@
 {% load wagtailcore_tags common_tags %}
-
 <section class="blog-list {% if type %}blog-list--{{ type }}{% endif %}">
+	{% if not post_filters.author and not post_filters.organization %}
+		<div class="button-row">
+			<a class="btn btn-secondary button-row--item{% if not post_filters.blog_type %} button-row--active{% endif %}" href="?{% query_transform request type=None %}"><span>All posts</span></a>
+			{% for value, label in type_choices %}
+				<a class="btn btn-secondary button-row--item{% if value == post_filters.blog_type %} button-row--active{% endif %}" href="?{% query_transform request type=value %}"><span>{{ label }}</span></a>
+			{% endfor %}
+		</div>
+	{% endif %}
+
 	<h2 class="heading-regular">{{ heading | safe }}</h2>
 
 	<ol class="blog-list__posts {% if type %}blog-list__posts--{{ type }}{% endif %} {% if ajax_load and blogs.has_other_pages %}js-article-loading-parent{% endif %}">
 		{% for blog in blogs %}
 			<li
 				class="blog-list__item
-					{% if type %}blog-list__item--{{ type }}{% endif %}
+					{% if blog.blog_type == 'special' %}blog-list__item--special{% endif %}
 					{% if ajax_load %}js-article-loading-item{% endif %}"
 			>
-				{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'small' photo=blog.teaser_graphic only %}
+				{% if blog.blog_type == 'special' %}
+					{% include 'blog/_special_blog_card.html' with post=blog only %}
+				{% else %}
+					{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'small' photo=blog.teaser_graphic only %}
+				{% endif %}
+
 			</li>
 		{% endfor %}
 	</ol>
-
-	{% if type == 'featured' %}
-		<div class="blog-list__featured-scroller">
-			<button class="blog-list__featured-scroller--button blog-list__featured-scroller--button-prev">
-				{% include 'common/arrow-prev.svg' %}
-			</button>
-			<button class="blog-list__featured-scroller--button blog-list__featured-scroller--button-next">
-				{% include 'common/arrow-next.svg' %}
-			</button>
-		</div>
-	{% endif %}
 
 	{% if request and blogs.has_other_pages %}
 	<div class="blog-list__pagination">
