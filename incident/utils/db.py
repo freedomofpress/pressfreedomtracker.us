@@ -1,4 +1,4 @@
-from django.db.models import Func, DateField
+from django.db.models import Func, DateField, CharField
 from django.contrib.postgres import fields
 
 
@@ -23,3 +23,9 @@ class CurrentDate(Func):
     """
     template = 'CURRENT_DATE'
     output_field = DateField()
+
+
+class Left(Func):
+    function = "LEFT"
+    arity = 2
+    output_field = CharField()

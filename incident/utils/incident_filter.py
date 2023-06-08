@@ -958,7 +958,7 @@ class IncidentFilter(object):
         raises a ValidationError for errors; otherwise the fields with errors
         are simply ignored.
         """
-        from common.models import CategoryPage, GeneralIncidentFilter
+        from common.models import CategoryPage, GeneralIncidentFilter, CategoryIncidentFilter
         self.cleaned_data = {}
         errors = []
 
@@ -993,37 +993,38 @@ class IncidentFilter(object):
         except ValidationError as exc:
             errors.append(exc)
 
-        categories = CategoryPage.objects.live().prefetch_related(
-            'incident_filters',
-        )
         category_data = self.cleaned_data.get('categories')
 
         if category_data:
             qs = []
             if category_data.pks:
                 qs.append(
-                    Q(id__in=category_data.pks)
+                    Q(category__id__in=category_data.pks)
                 )
             if category_data.strings:
-                qs.append(Q(title__in=category_data.strings))
+                qs.append(Q(category__title__in=category_data.strings))
             # Combine string and primary key data using OR operator,
             # if there are no valid filters, perform no filtering with
             # empty Q().
             qs = functools.reduce(operator.or_, qs, Q())
-            categories = categories.filter(qs)
 
-        for category in categories:
-            for category_incident_filter in category.incident_filters.all():
-                incident_filter = category_incident_filter.incident_filter
-                if incident_filter in available_filters:
-                    self.filters.append(available_filters[incident_filter])
+            enabled_filter_set_categories = CategoryIncidentFilter.objects.filter(
+                qs
+            ).values_list('incident_filter', flat=True)
+        else:
+            enabled_filter_set_categories = CategoryIncidentFilter.objects.values_list(
+                'incident_filter',
+                flat=True,
+            )
 
         # Collect filters from general settings.
-        general_incident_filters = GeneralIncidentFilter.objects.all()
-        for general_incident_filter in general_incident_filters:
-            incident_filter = general_incident_filter.incident_filter
-            if incident_filter in available_filters:
-                self.filters.append(available_filters[incident_filter])
+        enabled_filter_set_general = GeneralIncidentFilter.objects.filter(
+            incident_filter__in=available_filters.keys(),
+        ).values_list('incident_filter', flat=True)
+
+        self.filters.extend([v for k, v in available_filters.items() if k in set(
+            itertools.chain(enabled_filter_set_general, enabled_filter_set_categories)
+        )])
 
         # Clean collected filters.
         for f in self.filters:

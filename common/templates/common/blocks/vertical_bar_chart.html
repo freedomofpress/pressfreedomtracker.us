@@ -4,7 +4,7 @@
 		class="chart-vertical-bar"
 		{% if value.incident_set.categories %}
 			{% for category in value.incident_set.categories %}
-				data-category-{{ forloop.counter }}="{{ category.title }}"
+				data-category-{{ forloop.counter }}="{{ category }}"
 			{% endfor %}
 		{% endif %}
 		{% if value.incident_set.tag %}
