@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js"
+    "build": "esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node",
+    "start": "node ./build/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "esbuild": "0.14.13",
     "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
