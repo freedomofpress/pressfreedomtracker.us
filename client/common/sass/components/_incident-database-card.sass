@@ -66,7 +66,7 @@
 	&__row
 		padding: 0.5rem 0
 		border-bottom: 1px solid
-		border-color: $gray-text
+		border-color: $gray-border
 
 		&.table-small, +tablet-up
 			display: flex
@@ -80,10 +80,6 @@
 			line-height: 0.5
 
 			+tablet-up
-				padding: 0.1rem 0
-				border: none
-
-			+mobile-down
 				padding: 0.3rem 0
 				border-color: $gray-border
 
@@ -91,6 +87,7 @@
 				margin-right: 0.25rem
 				display: inline-block
 				white-space: normal
+				vertical-align: top
 
 	&__category-details
 		margin-top: 0
@@ -132,6 +129,8 @@
 
 	&__container
 		+tablet-down
+			margin-top: 1rem
+
 			&[data-visible='false']
 				display: none
 
@@ -145,7 +144,6 @@
 	padding: 0.25rem 0 0
 	+tablet-down
 		padding: 0.3rem 0
-		margin-top: 1rem
 
 	+desktop-up
 		border-bottom: none
