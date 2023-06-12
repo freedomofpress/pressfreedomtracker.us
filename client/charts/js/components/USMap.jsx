@@ -99,7 +99,15 @@ export default function USMap({
 					y={tooltipPosition.y}
 				/>
 			)}
-			<svg width={width} height={height} aria-labelledby={id} ref={setSvgEl}>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				xmlnsXlink="http://www.w3.org/1999/xlink"
+				version="1.1"
+				width={width}
+				height={height}
+				aria-labelledby={id}
+				ref={setSvgEl}
+			>
 				{description ? (<desc>{description}</desc>) : null}
 				<svg
 					width={width}

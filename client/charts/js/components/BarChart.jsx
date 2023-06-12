@@ -134,6 +134,9 @@ export default function BarChart({
 					/>
 				)}
 				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					xmlnsXlink="http://www.w3.org/1999/xlink"
+					version="1.1"
 					ref={setSvgEl}
 					width={width}
 					height={height}
@@ -232,7 +235,7 @@ export default function BarChart({
 								shapeRendering="crispEdges"
 							>
 								<title>
-									{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
+									{`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
 								</title>
 							</rect>
 						</g>

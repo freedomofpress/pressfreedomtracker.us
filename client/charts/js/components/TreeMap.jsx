@@ -266,259 +266,260 @@ export default function TreeMap({
 					y={tooltipPosition.y}
 				/>
 			)}
-			<div>
-				<svg
-					width={width}
-					height={height}
-					aria-labelledby={id}
-					style={{
-						marginTop: margins.top,
-						marginRight: margins.right,
-						marginBottom: margins.bottom,
-						marginLeft: margins.left,
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				xmlnsXlink="http://www.w3.org/1999/xlink"
+				version="1.1"
+				width={width}
+				height={height}
+				aria-labelledby={id}
+				style={{
+					marginTop: margins.top,
+					marginRight: margins.right,
+					marginBottom: margins.bottom,
+					marginLeft: margins.left,
+				}}
+				ref={setSvgEl}
+			>
+				<line
+					x1={paddings.left}
+					x2={width}
+					y1={height - paddings.bottom + 0.5}
+					y2={height - paddings.bottom + 0.5}
+					style={{ stroke: 'black', strokeWidth: isHomePageDesktopView ? borderWidth.normal : 0 }}
+					shapeRendering="crispEdges"
+				/>
+				<AnimatedDataset
+					dataset={datasetStackedByCategory}
+					tag="rect"
+					init={{
+						opacity: 0,
+						[chartWidthDimension]: chartWidthPaddingBefore,
+						[chartLengthDimension]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
+						[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
+						[chartLengthTitle]: 0,
 					}}
-					ref={setSvgEl}
-				>
-					<line
-						x1={paddings.left}
-						x2={width}
-						y1={height - paddings.bottom + 0.5}
-						y2={height - paddings.bottom + 0.5}
-						style={{ stroke: 'black', strokeWidth: isHomePageDesktopView ? borderWidth.normal : 0 }}
-						shapeRendering="crispEdges"
-					/>
-					<AnimatedDataset
-						dataset={datasetStackedByCategory}
-						tag="rect"
-						init={{
-							opacity: 0,
-							[chartWidthDimension]: chartWidthPaddingBefore,
-							[chartLengthDimension]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
-							[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
-							[chartLengthTitle]: 0,
-						}}
-						attrs={{
-							opacity: 1,
-							[chartWidthDimension]: chartWidthPaddingBefore,
-							[chartLengthDimension]: (d) => chartLength - lengthScale(d.startingPoint),
-							[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
-							[chartLengthTitle]: (d) => computeBarHeight(d.startingPoint, d.endPoint),
-							fill: (d) =>
-								hoveredElement === d.category || hoveredElement === null
-									? d.numberOfIncidents === 0
-										? 'white'
-										: findColor(d.category)
-									: 'white',
-							stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
-							strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
-							cursor: 'pointer',
-							pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
-							shapeRendering: 'crispEdges',
-						}}
-						events={{
-							// In a future, if we update our version of d3-selection the first
-							// argument will be a MouseEvent, eliminating the need for d3event here
-							onMouseMove: () => {
-								updateTooltipPosition(d3event)
-							},
-							onMouseLeave: () => {
-								setTooltipPosition({ x: 0, y: 0 })
-								setHoveredElement(null)
-							},
-							// In a future, if we update our version of d3-selection this may
-							// need to be updated to take arguments (MouseEvent, d) instead
-							onMouseEnter: d => setHoveredElement(d.category),
-							onMouseUp: d => openSearchPage(d.category),
-						}}
-						durationByAttr={{ fill: 0, stroke: 0 }}
-						keyFn={(d) => d.category}
-						duration={250}
-					/>
-					<AnimatedDataset
-						dataset={datasetStackedByCategory}
-						tag="line"
-						init={{
-							opacity: 0,
-							[`${chartWidthDimension}1`]: chartWidthPaddingBefore - borderWidth.normal / 2,
-							[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + borderWidth.normal / 2,
-							[`${chartLengthDimension}1`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
-							[`${chartLengthDimension}2`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
-						}}
-						attrs={{
-							opacity: (d) =>
-								datasetStackedByCategory
-									.filter((d) => d.startingPoint !== d.endPoint)
-									.map((d) => d.category)
-									.includes(d.category)
-									? 1
-									: 0,
-							display: (d) => (d.startingPoint !== d.endPoint ? null : 'none'),
-							[`${chartWidthDimension}1`]: chartWidthPaddingBefore - (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
-							[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
-							[`${chartLengthDimension}1`]: (d) =>
-								chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
-							[`${chartLengthDimension}2`]: (d) =>
-								chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
-							stroke: (d, i) =>
-								hoveredElement === d.category
-									? findColor(d.category)
-									: hoveredElement !== null &&
-										hoveredElement === nextCategory(datasetStackedByCategory, i)
-									? findColor(nextCategory(datasetStackedByCategory, i))
-									: 'black',
-							strokeWidth: isHomePageDesktopView ? borderWidth.normal + 1 : borderWidth.mobile,
-							pointerEvents: 'none',
-							shapeRendering: 'crispEdges',
-						}}
-						keyFn={(d) => d.category}
-						duration={250}
-						durationByAttr={{ fill: 0, stroke: 0 }}
-					/>
-					{isMobile ?
-						// Text label inside of bars that displays on mobile
-						(<>
-							<AnimatedDataset
-								dataset={datasetStackedByCategory}
-								tag="text"
-								init={{
-									opacity: 0,
-									y: (d) => height - paddings.bottom,
-									x: paddings.left + textPaddings.left,
-								}}
-								attrs={{
-									opacity: (d) =>
-										datasetStackedByCategory
-											.filter(
-												(d) =>
-													lengthScale(d.startingPoint) - lengthScale(d.endPoint) - paddingRect > minimumHeightText
-											)
-											.map((d) => d.category)
-											.includes(d.category)
-											? 1
-											: 0,
-									y: (d) =>
-										height -
-										lengthScale(d.startingPoint) +
-										computeBarHeight(d.startingPoint, d.endPoint) / 2 +
-										textPaddings.top,
-									x: paddings.left + textPaddings.left,
-									textAnchor: 'start',
-									...textStyle,
-									pointerEvents: 'none',
-									text: (d) => d.category,
-								}}
-								keyFn={(d) => d.category}
-								duration={250}
-							/>
-							<AnimatedDataset
-								dataset={datasetStackedByCategory}
-								init={{
-									opacity: 0,
-									y: (d) => height - paddings.bottom,
-									x: width - textPaddings.right - paddings.right,
-								}}
-								tag="text"
-								attrs={{
-									opacity: (d) =>
-										datasetStackedByCategory
-											.filter(
-												(d) =>
-													lengthScale(d.startingPoint) - lengthScale(d.endPoint) - paddingRect > minimumHeightText
-											)
-											.map((d) => d.category)
-											.includes(d.category)
-											? 1
-											: 0,
-									y: (d) =>
-										height -
-										lengthScale(d.startingPoint) +
-										computeBarHeight(d.startingPoint, d.endPoint) / 2 +
-										textPaddings.top,
-									x: width - textPaddings.right - paddings.right,
-									textAnchor: 'end',
-									...textStyle,
-									pointerEvents: 'none',
-									text: (d) => d.numberOfIncidents,
-								}}
-								keyFn={(d) => d.category}
-								duration={250}
-							/>
-						</>)
-						:
-						// X axis and legend only shown on desktop
-						(<>
-							{datasetCategoriesLabelsLegend
-								.sort((a, b) => {
-									const isFirst = hoveredElement === a.category
-									const isSecond = hoveredElement === b.category
-									if (isFirst) return 1
-									else if (isSecond) return -1
-									return 0
-								})
-								.map(d => (
-									<g
-										key={d.category}
-										onMouseLeave={() => {
-											setTooltipPosition({ x: 0, y: 0 })
-											setHoveredElement(null)
-										}}
-										onClick={() => toggleSelectedCategory(d.category)}
-										onMouseEnter={() => setHoveredElement(d.category)}
-										onMouseUp={() => openSearchPage(d.category)}
-										cursor="pointer"
-										tabIndex="0"
-										role="button"
-										aria-pressed={selectedElements.indexOf(d.category) >= 0}
+					attrs={{
+						opacity: 1,
+						[chartWidthDimension]: chartWidthPaddingBefore,
+						[chartLengthDimension]: (d) => chartLength - lengthScale(d.startingPoint),
+						[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
+						[chartLengthTitle]: (d) => computeBarHeight(d.startingPoint, d.endPoint),
+						fill: (d) =>
+							hoveredElement === d.category || hoveredElement === null
+								? d.numberOfIncidents === 0
+									? 'white'
+									: findColor(d.category)
+								: 'white',
+						stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
+						strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
+						cursor: 'pointer',
+						pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
+						shapeRendering: 'crispEdges',
+					}}
+					events={{
+						// In a future, if we update our version of d3-selection the first
+						// argument will be a MouseEvent, eliminating the need for d3event here
+						onMouseMove: () => {
+							updateTooltipPosition(d3event)
+						},
+						onMouseLeave: () => {
+							setTooltipPosition({ x: 0, y: 0 })
+							setHoveredElement(null)
+						},
+						// In a future, if we update our version of d3-selection this may
+						// need to be updated to take arguments (MouseEvent, d) instead
+						onMouseEnter: d => setHoveredElement(d.category),
+						onMouseUp: d => openSearchPage(d.category),
+					}}
+					durationByAttr={{ fill: 0, stroke: 0 }}
+					keyFn={(d) => d.category}
+					duration={250}
+				/>
+				<AnimatedDataset
+					dataset={datasetStackedByCategory}
+					tag="line"
+					init={{
+						opacity: 0,
+						[`${chartWidthDimension}1`]: chartWidthPaddingBefore - borderWidth.normal / 2,
+						[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + borderWidth.normal / 2,
+						[`${chartLengthDimension}1`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
+						[`${chartLengthDimension}2`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
+					}}
+					attrs={{
+						opacity: (d) =>
+							datasetStackedByCategory
+								.filter((d) => d.startingPoint !== d.endPoint)
+								.map((d) => d.category)
+								.includes(d.category)
+								? 1
+								: 0,
+						display: (d) => (d.startingPoint !== d.endPoint ? null : 'none'),
+						[`${chartWidthDimension}1`]: chartWidthPaddingBefore - (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
+						[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
+						[`${chartLengthDimension}1`]: (d) =>
+							chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
+						[`${chartLengthDimension}2`]: (d) =>
+							chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
+						stroke: (d, i) =>
+							hoveredElement === d.category
+								? findColor(d.category)
+								: hoveredElement !== null &&
+									hoveredElement === nextCategory(datasetStackedByCategory, i)
+								? findColor(nextCategory(datasetStackedByCategory, i))
+								: 'black',
+						strokeWidth: isHomePageDesktopView ? borderWidth.normal + 1 : borderWidth.mobile,
+						pointerEvents: 'none',
+						shapeRendering: 'crispEdges',
+					}}
+					keyFn={(d) => d.category}
+					duration={250}
+					durationByAttr={{ fill: 0, stroke: 0 }}
+				/>
+				{isMobile ?
+					// Text label inside of bars that displays on mobile
+					(<>
+						<AnimatedDataset
+							dataset={datasetStackedByCategory}
+							tag="text"
+							init={{
+								opacity: 0,
+								y: (d) => height - paddings.bottom,
+								x: paddings.left + textPaddings.left,
+							}}
+							attrs={{
+								opacity: (d) =>
+									datasetStackedByCategory
+										.filter(
+											(d) =>
+												lengthScale(d.startingPoint) - lengthScale(d.endPoint) - paddingRect > minimumHeightText
+										)
+										.map((d) => d.category)
+										.includes(d.category)
+										? 1
+										: 0,
+								y: (d) =>
+									height -
+									lengthScale(d.startingPoint) +
+									computeBarHeight(d.startingPoint, d.endPoint) / 2 +
+									textPaddings.top,
+								x: paddings.left + textPaddings.left,
+								textAnchor: 'start',
+								...textStyle,
+								pointerEvents: 'none',
+								text: (d) => d.category,
+							}}
+							keyFn={(d) => d.category}
+							duration={250}
+						/>
+						<AnimatedDataset
+							dataset={datasetStackedByCategory}
+							init={{
+								opacity: 0,
+								y: (d) => height - paddings.bottom,
+								x: width - textPaddings.right - paddings.right,
+							}}
+							tag="text"
+							attrs={{
+								opacity: (d) =>
+									datasetStackedByCategory
+										.filter(
+											(d) =>
+												lengthScale(d.startingPoint) - lengthScale(d.endPoint) - paddingRect > minimumHeightText
+										)
+										.map((d) => d.category)
+										.includes(d.category)
+										? 1
+										: 0,
+								y: (d) =>
+									height -
+									lengthScale(d.startingPoint) +
+									computeBarHeight(d.startingPoint, d.endPoint) / 2 +
+									textPaddings.top,
+								x: width - textPaddings.right - paddings.right,
+								textAnchor: 'end',
+								...textStyle,
+								pointerEvents: 'none',
+								text: (d) => d.numberOfIncidents,
+							}}
+							keyFn={(d) => d.category}
+							duration={250}
+						/>
+					</>)
+					:
+					// X axis and legend only shown on desktop
+					(<>
+						{datasetCategoriesLabelsLegend
+							.sort((a, b) => {
+								const isFirst = hoveredElement === a.category
+								const isSecond = hoveredElement === b.category
+								if (isFirst) return 1
+								else if (isSecond) return -1
+								return 0
+							})
+							.map(d => (
+								<g
+									key={d.category}
+									onMouseLeave={() => {
+										setTooltipPosition({ x: 0, y: 0 })
+										setHoveredElement(null)
+									}}
+									onClick={() => toggleSelectedCategory(d.category)}
+									onMouseEnter={() => setHoveredElement(d.category)}
+									onMouseUp={() => openSearchPage(d.category)}
+									cursor="pointer"
+									tabIndex="0"
+									role="button"
+									aria-pressed={selectedElements.indexOf(d.category) >= 0}
+								>
+									<rect
+										x={d.labelStartingX}
+										y={d.labelStartingY}
+										width={d.labelWidth}
+										height={30}
+										strokeWidth={hoveredElement === d.category ? borderWidth.normal : borderWidth.mobile}
+										stroke={hoveredElement === d.category ? findColor(d.category) : 'black'}
+										fill={hoveredElement === d.category || hoveredElement === null
+											? (d.numberOfIncidents === 0 && hoveredElement !== d.category)
+												? 'white'
+												: findColor(d.category)
+											: 'white'}
+									/>
+									<text
+										x={d.labelStartingX + (d.labelWidth / 2)}
+										y={d.labelStartingY + labelHeight / 2 + 1}
+										textAnchor="middle"
+										dominantBaseline="middle"
+										{...textStyle}
 									>
-										<rect
-											x={d.labelStartingX}
-											y={d.labelStartingY}
-											width={d.labelWidth}
-											height={30}
-											strokeWidth={hoveredElement === d.category ? borderWidth.normal : borderWidth.mobile}
-											stroke={hoveredElement === d.category ? findColor(d.category) : 'black'}
-											fill={hoveredElement === d.category || hoveredElement === null
-												? (d.numberOfIncidents === 0 && hoveredElement !== d.category)
-													? 'white'
-													: findColor(d.category)
-												: 'white'}
-										/>
-										<text
-											x={d.labelStartingX + (d.labelWidth / 2)}
-											y={d.labelStartingY + labelHeight / 2 + 1}
-											textAnchor="middle"
-											dominantBaseline="middle"
-											{...textStyle}
-										>
-											{d.category}
-										</text>
-									</g>
-								)
-							)}
-							<AnimatedDataset
-								dataset={datasetStackedByCategory}
-								init={{
-									opacity: 0,
-									y: height - paddings.bottom,
-									x: 0,
-								}}
-								tag="text"
-								attrs={{
-									opacity: (d) => d.numberOfIncidents ? 1 : 0,
-									y: height - paddings.bottom / 2,
-									x: d => chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
-									textAnchor: 'end',
-									...textStyle,
-									pointerEvents: 'none',
-									text: (d) => d.numberOfIncidents,
-								}}
-								keyFn={(d) => d.category}
-								duration={250}
-							/>
-						</>)
-					}
-				</svg>
-			</div>
+										{d.category}
+									</text>
+								</g>
+							)
+						)}
+						<AnimatedDataset
+							dataset={datasetStackedByCategory}
+							init={{
+								opacity: 0,
+								y: height - paddings.bottom,
+								x: 0,
+							}}
+							tag="text"
+							attrs={{
+								opacity: (d) => d.numberOfIncidents ? 1 : 0,
+								y: height - paddings.bottom / 2,
+								x: d => chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
+								textAnchor: 'end',
+								...textStyle,
+								pointerEvents: 'none',
+								text: (d) => d.numberOfIncidents,
+							}}
+							keyFn={(d) => d.category}
+							duration={250}
+						/>
+					</>)
+				}
+			</svg>
 		</>
 	)
 }
