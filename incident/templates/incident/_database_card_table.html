@@ -3,7 +3,7 @@
 <dl class="database-card-table__incident-details" aria-labelledby="incident-details-title">
 	{% with incident.latest_update as last_updated %}
 		{% if last_updated and incident.updates.all.exists %}
-			<div class="database-card-table__row">
+			<div class="database-card-table__row database-card-table__row--inline">
 				<dt class="database-card-table__label database-card-table__label--bold">
 					Updated On
 				</dt>
@@ -14,7 +14,7 @@
 		{% endif %}
 	{% endwith %}
 
-	<div class="database-card-table__row">
+	<div class="database-card-table__row database-card-table__row--inline">
 		<dt class="database-card-table__label database-card-table__label--bold">
 			Date of Incident
 		</dt>
@@ -30,7 +30,7 @@
 	</div>
 
 	{% if incident.city or incident.state %}
-		<div class="database-card-table__row">
+		<div class="database-card-table__row database-card-table__row--inline">
 			<dt class="database-card-table__label database-card-table__label--bold">
 				Location
 			</dt>
@@ -47,7 +47,7 @@
 	{% endif %}
 
 	{% if incident.case_number %}
-		<div class="database-card-table__row">
+		<div class="database-card-table__row database-card-table__row--inline">
 			<dt class="database-card-table__label database-card-table__label--bold">
 				Case number
 			</dt>
@@ -60,7 +60,7 @@
 	{% endif %}
 
 	{% if incident.get_all_targets_for_linking %}
-		<div class="database-card-table__row">
+		<div class="database-card-table__row database-card-table__row--inline">
 			<dt class="database-card-table__label database-card-table__label--bold">Targets</dt>
 			<dd class="database-card-table__value">
 				{% for target in incident.get_all_targets_for_linking %}
@@ -71,7 +71,7 @@
 	{% endif %}
 
 	{% if incident.case_statuses|length > 0 %}
-		<div class="database-card-table__row">
+		<div class="database-card-table__row database-card-table__row--inline">
 			<dt class="database-card-table__label database-card-table__label--bold">
 				Case Status
 			</dt>
@@ -86,7 +86,7 @@
 	{% endif %}
 
 	{% if incident.case_type %}
-		<div class="database-card-table__row">
+		<div class="database-card-table__row database-card-table__row--inline">
 			<dt class="database-card-table__label database-card-table__label--bold">
 				Type of case
 			</dt>

@@ -12,7 +12,9 @@
 		{% if incident.tags.all %}
 			<ul class="incident-database-card__tags tag-list">
 				{% for tag in incident.tags.all %}
-					<li><a href="{% pageurl index %}?tags={{ tag.title|urlencode }}" class="btn btn-tag">#{{ tag.title }}</a></li>
+					<li><a href="{% pageurl index %}?tags={{ tag.title|urlencode }}" class="btn btn-tag btn-tag-database">
+						#{{ tag.title }}
+					</a></li>
 				{% endfor %}
 			</ul>
 		{% endif %}
