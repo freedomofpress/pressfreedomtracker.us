@@ -15,6 +15,7 @@ from wagtail.rich_text import RichText
 import factory
 from faker import Faker
 
+from blog.choices import BlogTemplateType
 from blog.models import BlogIndexPage, BlogPage
 from blog.devdata import BlogIndexPageFactory, BlogPageFactory
 from common.models import (
@@ -287,7 +288,7 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author1,
-            blog_type=BlogPage.NEWSLETTER
+            blog_type=BlogTemplateType.NEWSLETTER
         )
 
         # special blog pages
@@ -296,7 +297,7 @@ class Command(BaseCommand):
             parent=blog_index_page,
             organization__parent=org_index_page,
             author=author2,
-            blog_type=BlogPage.SPECIAL
+            blog_type=BlogTemplateType.SPECIAL
         )
 
         for page in random.sample(list(BlogPage.objects.all()), 3):

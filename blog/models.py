@@ -19,6 +19,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
 from common.utils import DEFAULT_PAGE_KEY, paginate
 
+from blog.choices import BlogTemplateType
 from blog.feeds import BlogIndexPageFeed
 from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
@@ -165,23 +166,14 @@ class BlogIndexPageFeature(Orderable):
 
 
 class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
-    DEFAULT = 'default'
-    NEWSLETTER = 'newsletter'
-    SPECIAL = 'special'
-    BLOG_TEMPLATE_CHOICES = (
-        (DEFAULT, 'Default Blog'),
-        (NEWSLETTER, 'Newsletter'),
-        (SPECIAL, 'Special Blog'),
-    )
-
     publication_datetime = models.DateTimeField(
         help_text='Past or future date of publication'
     )
 
     blog_type = models.CharField(
         max_length=20,
-        choices=BLOG_TEMPLATE_CHOICES,
-        default=DEFAULT,
+        choices=BlogTemplateType.choices,
+        default=BlogTemplateType.DEFAULT,
         help_text='Select template used to display this post.',
     )
 

@@ -1,3 +1,6 @@
+from .choices import BlogTemplateType
+
+
 def string_to_int_or_none(s):
     """Converts a valid digit string to an integer, or None if not valid"""
     if s:
@@ -16,7 +19,10 @@ class BlogFilter(object):
         those values"""
         author_id = string_to_int_or_none(query.get('author'))
         organization_id = string_to_int_or_none(query.get('organization'))
-        blog_type = query.get('type')
+        try:
+            blog_type = BlogTemplateType(query.get('type'))
+        except ValueError:
+            blog_type = None
 
         return cls(organization_id, author_id, blog_type)
 
