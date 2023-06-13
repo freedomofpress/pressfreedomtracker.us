@@ -107,6 +107,12 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
             orphans=5
         )
 
+        context['type_choices'] = [
+            (BlogTemplateType.DEFAULT, 'Articles'),
+            (BlogTemplateType.SPECIAL, 'Special Sections'),
+            (BlogTemplateType.NEWSLETTER, 'Newsletters'),
+        ]
+        context['post_filters'] = post_filters
         context['entries_page'] = entries
         context['paginator'] = paginator
 

@@ -23,6 +23,6 @@
 		</section>
 	{% endif %}
 
-	{% include 'blog/_blog_list.html' with blogs=entries_page heading=incident_listing_heading ajax_load=True request=request only %}
+	{% include 'blog/_blog_list.html' with blogs=entries_page heading=incident_listing_heading ajax_load=True request=request post_filters=post_filters type_choices=type_choices only %}
 
 {% endblock %}
