@@ -35,7 +35,7 @@ export default ({
 							description={description}
 							titleLabel={'incidents'}
 							width={parent.width}
-							height={parent.width * 0.75}
+							height={Math.min(parent.width * 0.75, 600)}
 							isMobileView={isMobileView}
 							categoriesColors={categoriesColorMap}
 							allCategories={Object.keys(categoriesColorMap)}

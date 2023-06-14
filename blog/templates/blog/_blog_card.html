@@ -2,13 +2,19 @@
 {% with size=size|default:"big" %}
 	<article class="blog-card">
 		<div class="blog-card--inner">
-			{% if photo %}
-				{% image photo fill-655x440 as x1 %}
+			{% if photo.0.block_type == "image" %}
+				{% image photo.0.value fill-655x440 as x1 %}
 				<img
 					class="card-image card-image-{{ size }}"
 					alt="{{ x1.alt }}"
 					src="{{ x1.url }}"
 				>
+			{% elif photo.0.block_type == "vertical_bar_chart" %}
+				{% include 'common/blocks/vertical_bar_chart.html' with value=photo.0 static_graphic=true %}
+			{% elif photo.0.block_type == "tree_map_chart" %}
+				{% include 'common/blocks/tree_map_chart.html' with value=photo.0 static_graphic=true %}
+			{% elif photo.0.block_type == "bubble_map_chart" %}
+				{% include 'common/blocks/bubble_map_chart.html' with value=photo.0 static_graphic=true %}
 			{% endif %}
 			<a class="text-link text-link--card" href="{% pageurl post %}">
 				<h3 class="card-title card-title-{{ size }} blog-card--title">

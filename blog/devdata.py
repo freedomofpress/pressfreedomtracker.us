@@ -39,8 +39,9 @@ class BlogPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = BlogPage
 
-    teaser_image = factory.Iterator(
-        CustomImage.objects.filter(collection__name='Photos'),
+    teaser_image = factory.Faker(
+        'streamfield',
+        fields=['bare_image'],
     )
     body = factory.Faker(
         'streamfield',

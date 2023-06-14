@@ -1,5 +1,7 @@
 import bleach
 import hashlib
+import os
+from base64 import b64encode
 from bs4 import BeautifulSoup
 from django import template
 from django.core.cache import cache

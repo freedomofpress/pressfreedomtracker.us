@@ -222,13 +222,12 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('bubble_map_chart', BubbleMapChart()),
     ], use_json_field=True, blank=True, default=None, max_num=1)
 
-    teaser_image = models.ForeignKey(
-        'common.CustomImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
+    teaser_image = StreamField([
+        ('image', ImageChooserBlock()),
+        ('vertical_bar_chart', VerticalBarChart()),
+        ('tree_map_chart', TreeMapChart()),
+        ('bubble_map_chart', BubbleMapChart()),
+    ], use_json_field=True, blank=True, default=None, max_num=1)
 
     image_caption = RichTextField(
         max_length=255,
@@ -290,7 +289,8 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
     subpage_types = []
 
     def get_meta_image(self):
-        return self.teaser_image or super(BlogPage, self).get_meta_image()
+        teaser_is_image = self.teaser_image and self.teaser_image[0] and self.teaser_image[0].block_type == "image"
+        return self.teaser_image[0].value if teaser_is_image else super(BlogPage, self).get_meta_image()
 
     def get_meta_description(self):
         if self.teaser_text:
