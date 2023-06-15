@@ -16,6 +16,7 @@ from common.templatetags.render_as_template import render_as_template
 from common.search import get_searchable_content_for_fields
 from common.utils import unescape
 from common.validators import validate_template
+from incident.utils import charts
 
 
 class RichTextTemplateBlock(blocks.RichTextBlock):
@@ -518,10 +519,17 @@ class TreeMapChart(blocks.StructBlock):
         'e.g., "Bar chart showing a decreasing number of assaults over the '
         'course of 2023."',
     )
+    group_by = blocks.ChoiceBlock(
+        label='Group Incidents By',
+        required=True,
+        choices=charts.TreeMapBranches.choices,
+        default=charts.TreeMapBranches.CATEGORIES,
+    )
 
     class Meta:
         icon = 'table'
         template = 'common/blocks/tree_map_chart.html'
+        value_class = charts.TreeMapChartValue
 
     class Media:
         js = ['treeMapChart']

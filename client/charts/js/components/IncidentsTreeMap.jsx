@@ -14,14 +14,16 @@ export default ({
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	isMobileView = false,
 	creditUrl = '',
+	branchFieldName,
 	categories,
+	branches,
 	interactive = true,
 	fullSize = true,
 }) => {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
 
-	const categoriesColorMap = [...(new Set([...filterCategories, ...categories.map(d => d.title)]))]
+	const categoriesColorMap = [...(new Set([...filterCategories, ...branches.map(d => d.title)]))]
 		.reduce(
 			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
 			{}
@@ -33,7 +35,7 @@ export default ({
 				const treemap = fullSize ? (
 						<TreeMap
 							data={filteredDataset}
-							categoryColumn="categories"
+							categoryColumn={branchFieldName}
 							description={description}
 							titleLabel={'incidents'}
 							width={parent.width}
@@ -47,7 +49,7 @@ export default ({
 					) : (
 						<TreeMapMini
 							data={filteredDataset}
-							categoryColumn="categories"
+							categoryColumn={branchFieldName}
 							categoriesColors={categoriesColorMap}
 						 	allCategories={Object.keys(categoriesColorMap)}
 						/>
