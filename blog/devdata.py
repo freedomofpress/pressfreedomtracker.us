@@ -6,7 +6,6 @@ import factory
 import wagtail_factories
 
 from blog.models import BlogPage, BlogIndexPage
-from common.models import CustomImage
 from common.tests.factories import (
     PersonPageFactory,
     OrganizationPageFactory,
