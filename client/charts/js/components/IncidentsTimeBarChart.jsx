@@ -17,6 +17,7 @@ export default function IncidentsTimeBarChart({
 	isMobileView = false,
 	creditUrl = '',
 	interactive = true,
+	fullSize = true,
 }) {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
@@ -69,7 +70,7 @@ export default function IncidentsTimeBarChart({
 	return (
 		<ParentSize>
 			{(parent) => {
-				const barchart = parent.width > 350 ? (
+				const barchart = fullSize ? (
 					<BarChart
 						description={description || generatedDescription}
 						data={incidentsByAllTime}
@@ -84,7 +85,7 @@ export default function IncidentsTimeBarChart({
 						interactive={interactive}
 					/>
 				) : (
-					<BarChartMini />
+					<BarChartMini data={incidentsByAllTime} x={'count'} />
 				);
 
 				return interactive ? (

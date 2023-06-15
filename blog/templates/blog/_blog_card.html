@@ -10,11 +10,17 @@
 					src="{{ x1.url }}"
 				>
 			{% elif photo.0.block_type == "vertical_bar_chart" %}
-				{% include 'common/blocks/vertical_bar_chart.html' with value=photo.0 static_graphic=true %}
+				<div class="card-image card-image-{{ size }}">
+					{% include 'common/blocks/vertical_bar_chart.html' with value=photo.0 mini_graphic=true static_graphic=true %}
+				</div>
 			{% elif photo.0.block_type == "tree_map_chart" %}
-				{% include 'common/blocks/tree_map_chart.html' with value=photo.0 static_graphic=true %}
+				<div class="card-image card-image-{{ size }}">
+					{% include 'common/blocks/tree_map_chart.html' with value=photo.0 mini_graphic=true static_graphic=true %}
+				</div>
 			{% elif photo.0.block_type == "bubble_map_chart" %}
-				{% include 'common/blocks/bubble_map_chart.html' with value=photo.0 static_graphic=true %}
+				<div class="card-image card-image-{{ size }}">
+					{% include 'common/blocks/bubble_map_chart.html' with value=photo.0 static_graphic=true %}
+				</div>
 			{% endif %}
 			<a class="text-link text-link--card" href="{% pageurl post %}">
 				<h3 class="card-title card-title-{{ size }} blog-card--title">

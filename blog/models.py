@@ -40,7 +40,7 @@ from common.blocks import (
 )
 
 
-class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
+class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
     body = StreamField([
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),

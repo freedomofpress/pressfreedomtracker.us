@@ -224,7 +224,7 @@ export default function BarChart({
 								width={xScaleOverLayer.bandwidth()}
 								style={{
 									opacity: 0,
-									cursor: interactive ? 'pointer' : 'default',
+									cursor: interactive ? 'pointer' : 'inherit',
 								}}
 								onMouseEnter={interactive && (() => setHoveredElement((tooltipXFormat || xFormat)(d[x])))}
 								onMouseMove={interactive && updateTooltipPosition}

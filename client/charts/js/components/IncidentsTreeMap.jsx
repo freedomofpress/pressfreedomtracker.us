@@ -3,6 +3,7 @@ import { filterDatasets, categoriesColors } from '../lib/utilities'
 import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
 import TreeMap from './TreeMap'
+import TreeMapMini from './TreeMapMini'
 
 export default ({
 	dataset,
@@ -15,6 +16,7 @@ export default ({
 	creditUrl = '',
 	categories,
 	interactive = true,
+	fullSize = true,
 }) => {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
@@ -28,7 +30,7 @@ export default ({
 	return (
 		<ParentSize>
 			{(parent) => {
-				const treemap = (
+				const treemap = fullSize ? (
 						<TreeMap
 							data={filteredDataset}
 							categoryColumn="categories"
@@ -42,7 +44,14 @@ export default ({
 							minimumBarHeight={35}
 							interactive={interactive}
 						/>
-					)
+					) : (
+						<TreeMapMini
+							data={filteredDataset}
+							categoryColumn="categories"
+							categoriesColors={categoriesColorMap}
+						 	allCategories={Object.keys(categoriesColorMap)}
+						/>
+				)
 				return interactive ? (
 					<ChartDownloader
 						chartTitle={title}

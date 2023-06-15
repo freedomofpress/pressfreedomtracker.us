@@ -52,7 +52,7 @@ const minimumHeightText = 17
 const averageLetterWidth = 8
 const labelHeight = 30
 
-function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight) {
+export function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight) {
 	const totalIncidents = dataset.length
 
 	const y = d3
@@ -68,7 +68,7 @@ function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight)
 	return minimumNumberOfIncidents
 }
 
-function stackDatasetByCategory(
+export function stackDatasetByCategory(
 	dataset,
 	filterElements,
 	categoryColumn,
@@ -312,7 +312,7 @@ export default function TreeMap({
 									: 'white',
 							stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
 							strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
-							cursor: interactive ? 'pointer' : 'default',
+							cursor: interactive ? 'pointer' : 'inherit',
 							pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
 							shapeRendering: 'crispEdges',
 						}}
@@ -466,7 +466,7 @@ export default function TreeMap({
 										onClick={interactive && (() => toggleSelectedCategory(d.category))}
 										onMouseEnter={interactive && (() => setHoveredElement(d.category))}
 										onMouseUp={interactive && (() => openSearchPage(d.category))}
-										cursor={interactive ? 'pointer' : 'default'}
+										cursor={interactive ? 'pointer' : 'inherit'}
 										tabIndex="0"
 										role="button"
 										aria-pressed={selectedElements.indexOf(d.category) >= 0}
