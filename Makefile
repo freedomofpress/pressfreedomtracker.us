@@ -64,6 +64,7 @@ pip-update: ## Uses pip-compile to update requirements.txt for upgrading a speci
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file ci-requirements.txt ci-requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
 .PHONY: pip-upgrade
