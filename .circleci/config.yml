@@ -1,4 +1,8 @@
 ---
+refs:
+  setup_remote_docker: &setup_remote_docker
+    setup_remote_docker:
+      version: 20.10.18
 version: 2.1
 commands:
   check-changed-files-or-halt:
@@ -79,7 +83,7 @@ jobs:
           name: Ensure we can run dev-env
           command: |
             make dev-init
-            docker-compose up -d
+            docker compose up --detach
             while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
             make dev-tests
             make dev-jest-tests
@@ -98,7 +102,7 @@ jobs:
           name: Yank docker logs
           command: |
             mkdir -p ~/dockercomposelogs || true
-            docker-compose logs > ~/dockercomposelogs/dev.log
+            docker compose logs > ~/dockercomposelogs/dev.log
           when: always
 
       - store_artifacts:
@@ -117,7 +121,7 @@ jobs:
           name: Ensure we can run dev-env
           command: |
             make dev-init
-            docker-compose up -d
+            docker compose up --detach
             while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
           no_output_timeout: 5m
 
@@ -141,25 +145,24 @@ jobs:
     steps:
       - checkout
 
-      - setup_remote_docker:
-          version: 20.10.7
+      - *setup_remote_docker
 
       - run:
           name: Ensure we can run prod-env
           command: |
-            docker-compose -f prod-docker-compose.yaml build
-            docker-compose -f prod-docker-compose.yaml up -d
+            docker compose -f prod-docker-compose.yaml build
+            docker compose -f prod-docker-compose.yaml up -d
             docker run --rm --network tracker_app curlimages/curl:7.80.0 -4 --retry 24 --retry-delay 5 --retry-all-errors http://app:8000/health/ok/
-            docker-compose -f prod-docker-compose.yaml exec django /bin/bash -c "./manage.py createdevdata --no-download"
-            docker-compose -f prod-docker-compose.yaml exec django pip install --require-hashes -r /django/requirements.txt
-            docker-compose -f prod-docker-compose.yaml exec django ./scripts/pytest
+            docker compose -f prod-docker-compose.yaml exec django /bin/bash -c "./manage.py createdevdata --no-download"
+            docker compose -f prod-docker-compose.yaml exec django pip install --require-hashes -r /django/requirements.txt
+            docker compose -f prod-docker-compose.yaml exec django ./scripts/pytest
           no_output_timeout: 5m
 
       - run:
           name: Yank docker logs
           command: |
             mkdir -p ~/dockercomposelogs || true
-            docker-compose -f prod-docker-compose.yaml logs > ~/dockercomposelogs/prod.log
+            docker compose -f prod-docker-compose.yaml logs > ~/dockercomposelogs/prod.log
           when: always
 
       - store_artifacts:
