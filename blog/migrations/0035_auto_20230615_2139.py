@@ -14,7 +14,7 @@ def update_lead_graphic(apps, schema_editor):
         if page.lead_image:
             page.lead_graphic = wagtail.blocks.StreamValue(
                 stream_block=page.lead_graphic.stream_block,
-                stream_data=[{ "type": "image", "value": page.lead_image.pk }]
+                stream_data=[{"type": "image", "value": page.lead_image.pk}]
             )
             page.save()
 
@@ -26,7 +26,7 @@ def update_teaser_graphic(apps, schema_editor):
         if page.teaser_image:
             page.teaser_graphic = wagtail.blocks.StreamValue(
                 stream_block=page.teaser_graphic.stream_block,
-                stream_data=[{ "type": "image", "value": page.teaser_image }]
+                stream_data=[{"type": "image", "value": page.teaser_image}]
             )
             page.save()
 
