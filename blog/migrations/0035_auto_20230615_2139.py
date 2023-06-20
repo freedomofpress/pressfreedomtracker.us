@@ -11,14 +11,10 @@ def update_lead_graphic(apps, schema_editor):
     BlogPage = apps.get_model("blog", "BlogPage")
 
     for page in BlogPage.objects.all():
-        stream_data = []
-
         if page.lead_image:
-            stream_data.append(page.lead_image)
-            print(page.lead_image)
-            stream_block = page.lead_graphic.stream_block
             page.lead_graphic = wagtail.blocks.StreamValue(
-                stream_block, stream_data, is_lazy=True
+                stream_block=page.lead_graphic.stream_block,
+                stream_data=[{ "type": "image", "value": page.lead_image.pk }]
             )
             page.save()
 
@@ -27,14 +23,10 @@ def update_teaser_graphic(apps, schema_editor):
     BlogPage = apps.get_model("blog", "BlogPage")
 
     for page in BlogPage.objects.all():
-        stream_data = []
-
         if page.teaser_image:
-            print(page.teaser_image)
-            stream_data.append(page.teaser_image)
-            stream_block = page.teaser_graphic.stream_block
             page.teaser_graphic = wagtail.blocks.StreamValue(
-                stream_block, stream_data, is_lazy=True
+                stream_block=page.teaser_graphic.stream_block,
+                stream_data=[{ "type": "image", "value": page.teaser_image }]
             )
             page.save()
 

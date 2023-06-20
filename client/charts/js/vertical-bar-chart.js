@@ -4,8 +4,9 @@ import IncidentsTimeBarChart from './components/IncidentsTimeBarChart'
 import DataLoader from "../../charts/js/components/DataLoader"
 
 function engageCharts() {
-	const charts = document.querySelectorAll('.chart-vertical-bar')
+	const charts = document.querySelectorAll('.chart-vertical-bar:not(.engaged)')
 	charts.forEach((chartNode) => {
+		chartNode.classList.add('engaged')
 		let root = createRoot(chartNode)
 		const categoryKeys = Object.keys(chartNode.dataset || {}).filter(d => d.indexOf('category') === 0)
 		const filterCategories = categoryKeys.map(k => chartNode.dataset[k]).filter(d => d)
@@ -43,3 +44,17 @@ function engageCharts() {
 }
 
 engageCharts();
+
+// Add listener for query change to rerun
+let previousUrl = '';
+
+const observer = new MutationObserver(function(mutations) {
+	if (window.location.href !== previousUrl) {
+		previousUrl = window.location.href;
+		engageCharts();
+	}
+});
+const config = {subtree: true, childList: true};
+
+// start listening to changes
+observer.observe(document, config);
