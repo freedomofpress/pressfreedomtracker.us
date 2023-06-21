@@ -157,166 +157,190 @@ exports[`renders BarChart with mocked data 1`] = `
       tag="rect"
     />
     <g>
-      <rect
-        height={0}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onMouseMove={[Function]}
-        onMouseUp={[Function]}
-        shapeRendering="crispEdges"
-        style={
-          {
-            "cursor": "pointer",
-            "opacity": 0,
-          }
-        }
-        width={68.33333333333333}
-        x={20}
-        y={460}
+      <a
+        aria-label="Nov: 0 incidents"
+        role="link"
       >
-        <title>
-          Nov
-          : 
-          0
-           
-          incidents
-        </title>
-      </rect>
+        <rect
+          height={0}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onMouseMove={[Function]}
+          shapeRendering="crispEdges"
+          style={
+            {
+              "cursor": "pointer",
+              "opacity": 0,
+            }
+          }
+          width={68.33333333333333}
+          x={20}
+          y={460}
+        >
+          <title>
+            Nov
+            : 
+            0
+             
+            incidents
+          </title>
+        </rect>
+      </a>
     </g>
     <g>
-      <rect
-        height={0}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onMouseMove={[Function]}
-        onMouseUp={[Function]}
-        shapeRendering="crispEdges"
-        style={
-          {
-            "cursor": "pointer",
-            "opacity": 0,
-          }
-        }
-        width={68.33333333333333}
-        x={88.33333333333333}
-        y={460}
+      <a
+        aria-label="Dec: 0 incidents"
+        role="link"
       >
-        <title>
-          Dec
-          : 
-          0
-           
-          incidents
-        </title>
-      </rect>
+        <rect
+          height={0}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onMouseMove={[Function]}
+          shapeRendering="crispEdges"
+          style={
+            {
+              "cursor": "pointer",
+              "opacity": 0,
+            }
+          }
+          width={68.33333333333333}
+          x={88.33333333333333}
+          y={460}
+        >
+          <title>
+            Dec
+            : 
+            0
+             
+            incidents
+          </title>
+        </rect>
+      </a>
     </g>
     <g>
-      <rect
-        height={0}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onMouseMove={[Function]}
-        onMouseUp={[Function]}
-        shapeRendering="crispEdges"
-        style={
-          {
-            "cursor": "pointer",
-            "opacity": 0,
-          }
-        }
-        width={68.33333333333333}
-        x={156.66666666666666}
-        y={460}
+      <a
+        aria-label="Jan: 0 incidents"
+        role="link"
       >
-        <title>
-          Jan
-          : 
-          0
-           
-          incidents
-        </title>
-      </rect>
+        <rect
+          height={0}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onMouseMove={[Function]}
+          shapeRendering="crispEdges"
+          style={
+            {
+              "cursor": "pointer",
+              "opacity": 0,
+            }
+          }
+          width={68.33333333333333}
+          x={156.66666666666666}
+          y={460}
+        >
+          <title>
+            Jan
+            : 
+            0
+             
+            incidents
+          </title>
+        </rect>
+      </a>
     </g>
     <g>
-      <rect
-        height={0}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onMouseMove={[Function]}
-        onMouseUp={[Function]}
-        shapeRendering="crispEdges"
-        style={
-          {
-            "cursor": "pointer",
-            "opacity": 0,
-          }
-        }
-        width={68.33333333333333}
-        x={225}
-        y={460}
+      <a
+        aria-label="Feb: 0 incidents"
+        role="link"
       >
-        <title>
-          Feb
-          : 
-          0
-           
-          incidents
-        </title>
-      </rect>
+        <rect
+          height={0}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onMouseMove={[Function]}
+          shapeRendering="crispEdges"
+          style={
+            {
+              "cursor": "pointer",
+              "opacity": 0,
+            }
+          }
+          width={68.33333333333333}
+          x={225}
+          y={460}
+        >
+          <title>
+            Feb
+            : 
+            0
+             
+            incidents
+          </title>
+        </rect>
+      </a>
     </g>
     <g>
-      <rect
-        height={0}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onMouseMove={[Function]}
-        onMouseUp={[Function]}
-        shapeRendering="crispEdges"
-        style={
-          {
-            "cursor": "pointer",
-            "opacity": 0,
-          }
-        }
-        width={68.33333333333333}
-        x={293.3333333333333}
-        y={460}
+      <a
+        aria-label="Mar: 0 incidents"
+        role="link"
       >
-        <title>
-          Mar
-          : 
-          0
-           
-          incidents
-        </title>
-      </rect>
+        <rect
+          height={0}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onMouseMove={[Function]}
+          shapeRendering="crispEdges"
+          style={
+            {
+              "cursor": "pointer",
+              "opacity": 0,
+            }
+          }
+          width={68.33333333333333}
+          x={293.3333333333333}
+          y={460}
+        >
+          <title>
+            Mar
+            : 
+            0
+             
+            incidents
+          </title>
+        </rect>
+      </a>
     </g>
     <g>
-      <rect
-        height={0}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onMouseMove={[Function]}
-        onMouseUp={[Function]}
-        shapeRendering="crispEdges"
-        style={
-          {
-            "cursor": "pointer",
-            "opacity": 0,
-          }
-        }
-        width={68.33333333333333}
-        x={361.66666666666663}
-        y={460}
+      <a
+        aria-label="Apr: 0 incidents"
+        role="link"
       >
-        <title>
-          Apr
-          : 
-          0
-           
-          incidents
-        </title>
-      </rect>
+        <rect
+          height={0}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onMouseMove={[Function]}
+          shapeRendering="crispEdges"
+          style={
+            {
+              "cursor": "pointer",
+              "opacity": 0,
+            }
+          }
+          width={68.33333333333333}
+          x={361.66666666666663}
+          y={460}
+        >
+          <title>
+            Apr
+            : 
+            0
+             
+            incidents
+          </title>
+        </rect>
+      </a>
     </g>
     <AnimatedDataset
       attrs={
