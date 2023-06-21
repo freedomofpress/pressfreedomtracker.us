@@ -184,7 +184,7 @@ class BaseIncidentSerializer(VariableFieldSerializer):
 
     @extend_schema_field(OpenApiTypes.URI)
     def get_teaser_image(self, obj):
-        teaser_image = obj.teaser_image
+        teaser_image = obj.teaser_graphic[0].value
         if teaser_image:
             for rend in teaser_image.renditions.all():
                 if rend.filter_spec == 'fill-1330x880':

@@ -301,7 +301,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     body = Faker('streamfield', fields=['rich_text_paragraph', 'raw_html'])
     teaser = factory.Faker('sentence')
-    teaser_image = None
+    teaser_graphic = []
     image_caption = factory.LazyAttribute(lambda o: RichText(o.image_caption_text))
 
     # Detention/arrest
@@ -599,9 +599,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
 class MultimediaIncidentPageFactory(IncidentPageFactory):
     body = Faker('streamfield', fields=['rich_text', 'bare_image', 'rich_text', 'aligned_captioned_image', 'blockquote', 'raw_html'])
-    teaser_image = Iterator(
-        CustomImage.objects.filter(collection__name='Photos')
-    )
+    teaser_graphic = Faker('streamfield', fields=['image'])
 
 
 class InexactDateIncidentPageFactory(IncidentPageFactory):

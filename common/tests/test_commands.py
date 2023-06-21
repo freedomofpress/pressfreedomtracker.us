@@ -37,8 +37,8 @@ class CreateDevDataTestCase(TestCase):
     def setUp(self):
         # Reset iterator counters to ensure they are able to find one
         # of the above images across all tests.
-        BlogPageFactory.teaser_image.reset()
-        MultimediaIncidentPageFactory.teaser_image.reset()
+        BlogPageFactory.teaser_graphic.reset()
+        MultimediaIncidentPageFactory.teaser_graphic.reset()
 
     def test_createdevdata_works(self):
         """The createdevdata command successfully creates pages"""

@@ -6,7 +6,7 @@
 	<ul class="article-carousel__items">
 		{% for incident in incidents %}
 			<li class="article-carousel__item article-carousel__item--latest">
-				{% include "incident/_incident_card.html" with size="collapsible" details="small" incident=incident photo=incident.teaser_image only %}
+				{% include "incident/_incident_card.html" with size="collapsible" details="small" incident=incident photo=incident.teaser_graphic.0 only %}
 			</li>
 		{% endfor %}
 	</ul>

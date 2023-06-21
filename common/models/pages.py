@@ -160,7 +160,7 @@ class MediaPageMixin:
         try:
             for post in self.get_posts():
                 block_cls_names = block_cls_names + get_page_blocks(post)
-        except e:
+        except Exception:
             pass
 
         for block_cls_name in block_cls_names:
