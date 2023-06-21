@@ -157,7 +157,10 @@ exports[`renders BarChart with mocked data 1`] = `
       tag="rect"
     />
     <g>
-      <a>
+      <a
+        aria-label="Nov: 0 incidents"
+        role="link"
+      >
         <rect
           height={0}
           onMouseEnter={[Function]}
@@ -185,7 +188,10 @@ exports[`renders BarChart with mocked data 1`] = `
       </a>
     </g>
     <g>
-      <a>
+      <a
+        aria-label="Dec: 0 incidents"
+        role="link"
+      >
         <rect
           height={0}
           onMouseEnter={[Function]}
@@ -213,7 +219,10 @@ exports[`renders BarChart with mocked data 1`] = `
       </a>
     </g>
     <g>
-      <a>
+      <a
+        aria-label="Jan: 0 incidents"
+        role="link"
+      >
         <rect
           height={0}
           onMouseEnter={[Function]}
@@ -241,7 +250,10 @@ exports[`renders BarChart with mocked data 1`] = `
       </a>
     </g>
     <g>
-      <a>
+      <a
+        aria-label="Feb: 0 incidents"
+        role="link"
+      >
         <rect
           height={0}
           onMouseEnter={[Function]}
@@ -269,7 +281,10 @@ exports[`renders BarChart with mocked data 1`] = `
       </a>
     </g>
     <g>
-      <a>
+      <a
+        aria-label="Mar: 0 incidents"
+        role="link"
+      >
         <rect
           height={0}
           onMouseEnter={[Function]}
@@ -297,7 +312,10 @@ exports[`renders BarChart with mocked data 1`] = `
       </a>
     </g>
     <g>
-      <a>
+      <a
+        aria-label="Apr: 0 incidents"
+        role="link"
+      >
         <rect
           height={0}
           onMouseEnter={[Function]}
