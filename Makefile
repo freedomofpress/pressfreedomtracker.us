@@ -17,7 +17,7 @@ open-browser: ## Opens a web-browser pointing to the compose env
 
 .PHONY: dev-import-db
 dev-import-db: ## Import a postgres export file located at import.db
-	docker-compose exec -it postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ postgres/g' | psql securedropdb -U postgres &> /dev/null"
+	docker compose exec -it postgresql bash -c "cat /django/import.db | sed 's/OWNER\ TO\ [a-z]*/OWNER\ TO\ postgres/g' | psql securedropdb -U postgres &> /dev/null"
 
 .PHONY: save-db
 dev-save-db: ## Export developer db to file
@@ -33,7 +33,7 @@ ci-tests: ## Runs testinfra against a pre-running CI container (useful for debug
 
 .PHONY: dev-tests
 dev-tests: ## Run django tests against developer environment
-	docker-compose exec django /bin/bash -ec \
+	docker compose exec django /bin/bash -ec \
 		"coverage run ./manage.py test --noinput --failfast; \
 		coverage html ; \
 		coverage xml ; \
@@ -41,7 +41,7 @@ dev-tests: ## Run django tests against developer environment
 
 .PHONY: dev-jest-tests
 dev-jest-tests: ## Run django tests against developer environment
-	docker-compose exec node npm test
+	docker compose exec node npm test
 
 .PHONY: compile-pip-dependencies
 compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
@@ -64,6 +64,7 @@ pip-update: ## Uses pip-compile to update requirements.txt for upgrading a speci
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
+		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file ci-requirements.txt ci-requirements.in && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
 
 .PHONY: pip-upgrade
@@ -117,11 +118,11 @@ help: ## Prints this message and exits
 
 .PHONY: eslint
 eslint:
-	docker-compose exec node npm run js-lint
+	docker compose exec node npm run js-lint
 
 .PHONY: stylelint
 stylelint:
-	docker-compose exec node npm run stylelint
+	docker compose exec node npm run stylelint
 
 .PHONY: flake8
 flake8: ## Runs flake8 linting in Python3 container.
@@ -131,11 +132,11 @@ flake8: ## Runs flake8 linting in Python3 container.
 
 .PHONY: check-migrations
 check-migrations: ## Check for ungenerated migrations
-	docker-compose exec -T django /bin/bash -c "./manage.py makemigrations --dry-run --check"
+	docker compose exec -T django /bin/bash -c "./manage.py makemigrations --dry-run --check"
 
 .PHONY: bandit
 bandit: ## Runs bandit static code analysis in Python3 container.
-	@docker-compose run --rm django ./scripts/bandit
+	@docker compose run --rm django ./scripts/bandit
 
 .PHONY: npm-audit
 npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities
