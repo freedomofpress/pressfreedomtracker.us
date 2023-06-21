@@ -290,7 +290,11 @@ export default function TreeMap({
 					<AnimatedDataset
 						dataset={datasetStackedByCategory}
 						tag="a"
-						attrs={{ href: d => searchPageURL(d.category) }}
+						attrs={{
+							href: d => searchPageURL(d.category),
+							role: "link",
+							ariaLabel: d => d.category,
+						}}
 						keyFn={(d) => d.category}
 					>
 						<AnimatedDataset

@@ -216,7 +216,11 @@ export default function BarChart({
 					/>
 					{dataset.map((d) => (
 						<g key={d[x]}>
-							<a href={searchPageURL(xFormat(d[x]))}>
+							<a
+								href={searchPageURL(xFormat(d[x]))}
+								role="link"
+								aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+							>
 								<rect
 									x={xScaleOverLayer(d[x])}
 									y={yScale(d[y])}
@@ -321,7 +325,11 @@ export default function BarChart({
 				<AnimatedDataset
 					dataset={dataset}
 					tag="a"
-					attrs={{ href: d => searchPageURL(d[x]) }}
+					attrs={{
+						href: d => searchPageURL(d[x]),
+						role: "link",
+						ariaLabel: d => `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
+					}}
 					keyFn={(d) => d.index}
 				>
 					<AnimatedDataset
@@ -341,6 +349,19 @@ export default function BarChart({
 						duration={250}
 						keyFn={(d) => d.index}
 					/>
+					<text
+						x={width / 2}
+						y={height - paddings.mobile / 2 - 7}
+						textAnchor="middle"
+						style={{
+							fill: 'black',
+							fontFamily: 'var(--font-base)',
+							fontWeight: 500,
+							fontSize: '14px',
+						}}
+					>
+						{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
+					</text>
 				</AnimatedDataset>
 				<Slider
 					elements={dataset.map((d) => d[x])}
@@ -350,20 +371,6 @@ export default function BarChart({
 					sliderSelection={sliderSelection}
 					idContainer={'barchart-svg'}
 				/>
-
-				<text
-					x={width / 2}
-					y={height - paddings.mobile / 2 - 7}
-					textAnchor="middle"
-					style={{
-						fill: 'black',
-						fontFamily: 'var(--font-base)',
-						fontWeight: 500,
-						fontSize: '14px',
-					}}
-				>
-					{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
-				</text>
 			</svg>
 		)
 	}

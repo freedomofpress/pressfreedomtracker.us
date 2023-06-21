@@ -168,7 +168,11 @@ export default function USMap({
 					</g>
 					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
-							<a href={searchPageURL(d.usCode)}>
+							<a
+								href={searchPageURL(d.usCode)}
+								role="link"
+								aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+							>
 								<circle
 									role="listitem"
 									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
@@ -192,7 +196,11 @@ export default function USMap({
 
 				{incidentsOutsideUS && (
 					<g>
-						<a href={searchPageURL()}>
+						<a
+							href={searchPageURL()}
+							role="link"
+							aria-label="Incidents recorded outside of the US"
+						>
 							<rect
 								x="0"
 								y={
