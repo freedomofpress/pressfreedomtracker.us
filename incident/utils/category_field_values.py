@@ -1,6 +1,6 @@
 from django.template.loader import render_to_string
 
-from incident.models import choices
+from incident import choices
 
 
 def basic_html_val(page, field, index, category):

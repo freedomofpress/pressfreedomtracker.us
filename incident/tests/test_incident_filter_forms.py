@@ -10,7 +10,7 @@ from incident.utils.forms import (
     Datalist,
     DatalistField,
 )
-from incident.models.choices import MAYBE_BOOLEAN
+from incident.choices import MAYBE_BOOLEAN
 from incident.tests.factories import LawEnforcementOrganizationFactory
 
 

@@ -37,8 +37,8 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Site
 
 from incident.circuits import STATES_BY_CIRCUIT
-from incident.models import choices
-from incident.models.choices import STATUS_OF_CHARGES
+from incident import choices
+from incident.choices import STATUS_OF_CHARGES
 
 
 class Filter(object):

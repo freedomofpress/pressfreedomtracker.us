@@ -2,7 +2,7 @@ from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
 
-from incident.models import choices
+from incident import choices
 
 
 @extend_schema_field(OpenApiTypes.STR)

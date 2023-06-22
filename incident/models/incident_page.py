@@ -42,7 +42,7 @@ from common.blocks import (
     PullQuoteBlock,
 )
 from common.models import MetadataPageMixin
-from incident.models import choices
+from incident import choices
 from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
 from incident.models.inlines import (
     IncidentPageUpdates,

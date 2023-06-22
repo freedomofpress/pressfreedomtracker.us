@@ -11,7 +11,8 @@ from common.tests.factories import (
     CustomImageFactory,
     CommonTagFactory,
 )
-from incident.models import choices, IncidentPage
+from incident import choices
+from incident.models import IncidentPage
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
