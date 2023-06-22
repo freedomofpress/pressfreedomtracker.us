@@ -48,7 +48,7 @@ export default function USMap({
 	width,
 	height,
 	id,
-	openSearchPage,
+	searchPageURL,
 	aggregationLocality = d => d.state,
 	addBottomBorder,
   	overridePaddings = {},
@@ -169,50 +169,80 @@ export default function USMap({
 					</g>
 					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
-							<circle
-								role="listitem"
-								aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-								cx={projection([d.longitude, d.latitude])[0]}
-								cy={projection([d.longitude, d.latitude])[1]}
-								r={markerScale(d.numberOfIncidents) + 5}
-								style={{ opacity: 0, cursor: interactive ? 'pointer' : 'inherit' }}
-								onMouseMove={interactive ? updateTooltipPosition : () => {}}
-								onMouseEnter={interactive ? ((mouseEvent) => {
-									setHoveredElement(`${aggregationLocality(d)}`)
-								}) : () => {}}
-								onMouseLeave={interactive ? (() => {
-									setHoveredElement(null)
-								}) : () => {}}
-								onMouseUp={interactive ? (
-									(mouseEvent) => openSearchPage(d.usCode)
-								) : () => {}}
-								key={aggregationLocality(d)}
-							/>
+							interactive ? (
+								<a
+									href={searchPageURL(d.usCode)}
+									role="link"
+									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+								>
+									<circle
+										role="listitem"
+										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+										cx={projection([d.longitude, d.latitude])[0]}
+										cy={projection([d.longitude, d.latitude])[1]}
+										r={markerScale(d.numberOfIncidents) + 5}
+										style={{ opacity: 0, cursor: interactive ? 'pointer' : 'inherit' }}
+										onMouseMove={updateTooltipPosition}
+										onMouseEnter={() => setHoveredElement(`${aggregationLocality(d)}`)}
+										onMouseLeave={() => setHoveredElement(null)}
+										key={aggregationLocality(d)}
+									/>
+								</a>
+								) : (
+									<circle
+										role="listitem"
+										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+										cx={projection([d.longitude, d.latitude])[0]}
+										cy={projection([d.longitude, d.latitude])[1]}
+										r={markerScale(d.numberOfIncidents) + 5}
+										style={{ opacity: 0 }}
+										key={aggregationLocality(d)}
+									/>
+								)
 						))}
 					</g>
 				</svg>
 
 				{incidentsOutsideUS && (
 					<g>
-						<rect
-							x="0"
-							y={
-								height -
-								paddings.bottom -
-								paddings.text * 2 -
-								markerBorder.grid -
-								(width > 400 ? 14 : 12)
-							}
-							width={width}
-							height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
-							fill="white"
-							style={{
-								cursor: interactive ? 'pointer' : 'inherit',
-							}}
-							onMouseEnter={interactive ? (() => setHoveredElement('Abroad')) : () => {}}
-							onMouseOut={interactive ? (() => setHoveredElement(null)) : () => {}}
-							onMouseUp={interactive ? (() => openSearchPage()) : () => {}}
-						/>
+						{interactive ? (
+							<a
+								href={searchPageURL()}
+								role="link"
+								aria-label="Incidents recorded outside of the US"
+							>
+								<rect
+									x="0"
+									y={
+										height -
+										paddings.bottom -
+										paddings.text * 2 -
+										markerBorder.grid -
+										(width > 400 ? 14 : 12)
+									}
+									width={width}
+									height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
+									fill="white"
+									style={{ cursor: 'pointer' }}
+									onMouseEnter={() => setHoveredElement('Abroad')}
+									onMouseOut={() => setHoveredElement(null)}
+								/>
+							</a>
+						) : (
+							<rect
+								x="0"
+								y={
+									height -
+									paddings.bottom -
+									paddings.text * 2 -
+									markerBorder.grid -
+									(width > 400 ? 14 : 12)
+								}
+								width={width}
+								height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
+								fill="white"
+							/>
+						)}
 
 						<AnimatedDataset
 							dataset={['Incidents recorded outside of the US:']}
