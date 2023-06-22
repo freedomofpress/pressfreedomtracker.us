@@ -229,6 +229,24 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('bubble_map_chart', BubbleMapChart()),
     ], use_json_field=True, blank=True, default=[], max_num=1)
 
+    # Note: The following fields are deprecated in favor for lead_graphic and teaser_graphic,
+    # and will be removed in a future version
+    lead_image = models.ForeignKey(
+        'common.CustomImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
+    teaser_image = models.ForeignKey(
+        'common.CustomImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
+
     image_caption = RichTextField(
         max_length=255,
         blank=True,
