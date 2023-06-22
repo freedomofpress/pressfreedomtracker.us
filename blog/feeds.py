@@ -17,8 +17,8 @@ class BlogIndexPageFeed(Feed):
         super(BlogIndexPageFeed, self).__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
-        if obj.teaser_graphic and obj.teaser_graphic[0].block_type == "image":
-            return obj.teaser_graphic[0].value.get_rendition('original')
+        if obj.teaser_graphic:
+            return obj.teaser_graphic.get_rendition('original')
 
     def _get_categories(self, obj):
         categories = obj.categories.all().select_related('category')
