@@ -1,7 +1,7 @@
 from wagtail.models import Site, Page
 from django.test import TestCase, Client
 
-from common.tests.factories import PersonPageFactory, OrganizationPageFactory
+from common.tests.factories import PersonPageFactory, OrganizationPageFactory, CustomImageFactory
 from home.tests.factories import HomePageFactory
 from blog.models import BlogIndexPageFeature
 from .factories import (
@@ -32,9 +32,20 @@ class TestPages(TestCase):
             site.root_page = cls.home_page
             site.save()
 
+        CustomImageFactory.create(
+            file__width=800,
+            file__height=600,
+            file__color='green',
+            collection__name='Photos',
+        )
+
         cls.index = BlogIndexPageFactory(
             parent=site.root_page, slug='all-blogs')
-        cls.blog_page = BlogPageFactory(parent=cls.index, slug='one')
+        cls.blog_page = BlogPageFactory(
+            parent=cls.index,
+            slug='one',
+            with_image=True,
+        )
 
     def setUp(self):
         self.client = Client()
