@@ -48,7 +48,7 @@ export default function USMap({
 	width,
 	height,
 	id,
-	openSearchPage,
+	searchPageURL,
 	aggregationLocality = d => d.state,
 	addBottomBorder,
   	overridePaddings = {},
@@ -168,48 +168,58 @@ export default function USMap({
 					</g>
 					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
-							<circle
-								role="listitem"
+							<a
+								href={searchPageURL(d.usCode)}
+								role="link"
 								aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-								cx={projection([d.longitude, d.latitude])[0]}
-								cy={projection([d.longitude, d.latitude])[1]}
-								r={markerScale(d.numberOfIncidents) + 5}
-								style={{ opacity: 0, cursor: 'pointer' }}
-								onMouseMove={updateTooltipPosition}
-								onMouseEnter={(mouseEvent) => {
-									setHoveredElement(`${aggregationLocality(d)}`)
-								}}
-								onMouseLeave={() => {
-									setHoveredElement(null)
-								}}
-								onMouseUp={(mouseEvent) => openSearchPage(d.usCode)}
-								key={aggregationLocality(d)}
-							/>
+							>
+								<circle
+									role="listitem"
+									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+									cx={projection([d.longitude, d.latitude])[0]}
+									cy={projection([d.longitude, d.latitude])[1]}
+									r={markerScale(d.numberOfIncidents) + 5}
+									style={{ opacity: 0, cursor: 'pointer' }}
+									onMouseMove={updateTooltipPosition}
+									onMouseEnter={(mouseEvent) => {
+										setHoveredElement(`${aggregationLocality(d)}`)
+									}}
+									onMouseLeave={() => {
+										setHoveredElement(null)
+									}}
+									key={aggregationLocality(d)}
+								/>
+							</a>
 						))}
 					</g>
 				</svg>
 
 				{incidentsOutsideUS && (
 					<g>
-						<rect
-							x="0"
-							y={
-								height -
-								paddings.bottom -
-								paddings.text * 2 -
-								markerBorder.grid -
-								(width > 400 ? 14 : 12)
-							}
-							width={width}
-							height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
-							fill="white"
-							style={{
-								cursor: 'pointer',
-							}}
-							onMouseEnter={() => setHoveredElement('Abroad')}
-							onMouseOut={() => setHoveredElement(null)}
-							onMouseUp={() => openSearchPage()}
-						/>
+						<a
+							href={searchPageURL()}
+							role="link"
+							aria-label="Incidents recorded outside of the US"
+						>
+							<rect
+								x="0"
+								y={
+									height -
+									paddings.bottom -
+									paddings.text * 2 -
+									markerBorder.grid -
+									(width > 400 ? 14 : 12)
+								}
+								width={width}
+								height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
+								fill="white"
+								style={{
+									cursor: 'pointer',
+								}}
+								onMouseEnter={() => setHoveredElement('Abroad')}
+								onMouseOut={() => setHoveredElement(null)}
+							/>
+						</a>
 
 						<AnimatedDataset
 							dataset={['Incidents recorded outside of the US:']}
