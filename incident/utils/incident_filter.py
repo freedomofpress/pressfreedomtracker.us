@@ -855,7 +855,7 @@ class IncidentFilter(object):
     exclude_fields = {
         'page_ptr',
         'exact_date_unknown',
-        'teaser_graphic',
+        'teaser_image',
         'related_incidents',
         'updates',
         'search_image',

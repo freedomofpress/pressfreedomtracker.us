@@ -41,7 +41,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
     teaser_graphic = factory.Faker(
         'streamfield',
         fields=['bare_image'],
-    )
+    ),
     body = factory.Faker(
         'streamfield',
         fields=[

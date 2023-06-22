@@ -7,7 +7,6 @@ from django.test import TestCase
 
 from common.devdata import CustomImageFactory
 from common.management.commands.createdevdata import Command
-from blog.devdata import BlogPageFactory
 from incident.devdata import MultimediaIncidentPageFactory
 
 
@@ -37,8 +36,8 @@ class CreateDevDataTestCase(TestCase):
     def setUp(self):
         # Reset iterator counters to ensure they are able to find one
         # of the above images across all tests.
-        BlogPageFactory.teaser_graphic.reset()
-        MultimediaIncidentPageFactory.teaser_graphic.reset()
+        # BlogPageFactory.teaser_graphic.reset()
+        MultimediaIncidentPageFactory.teaser_image.reset()
 
     def test_createdevdata_works(self):
         """The createdevdata command successfully creates pages"""

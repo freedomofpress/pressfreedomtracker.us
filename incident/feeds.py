@@ -18,8 +18,8 @@ class IncidentIndexPageFeed(Feed):
         super(IncidentIndexPageFeed, self).__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
-        if obj.teaser_graphic[0] and obj.teaser_graphic[0].type == 'image':
-            return obj.teaser_graphic[0].value.get_rendition('original')
+        if obj.teaser_image:
+            return obj.teaser_image.get_rendition('original')
 
     def _get_categories(self, obj):
         categories = obj.categories.all().select_related('category')
