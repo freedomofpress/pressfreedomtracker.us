@@ -44,6 +44,11 @@ class TestPages(TestCase):
         response = self.client.get('/all-blogs/')
         self.assertEqual(response.status_code, 200)
 
+    def test_get_index_feed_should_succeed(self):
+        """get feed should succed."""
+        response = self.client.get('/all-blogs/feed/')
+        self.assertEqual(response.status_code, 200)
+
     def test_get_index_for_unknown_author_should_return_404(self):
         response = self.client.get('/all-blogs/?author=999')
         self.assertEqual(response.status_code, 404)
