@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
+import DynamicWrapper from './DynamicWrapper'
 import Slider from './Slider'
 import Tooltip from './Tooltip'
 
@@ -216,38 +217,25 @@ export default function BarChart({
 					/>
 					{dataset.map((d) => (
 						<g key={d[x]}>
-							{searchPageURL ? (
-								<a
-									href={searchPageURL(xFormat(d[x]))}
-									role="link"
-									aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
-								>
-									<rect
-										x={xScaleOverLayer(d[x])}
-										y={yScale(d[y])}
-										height={computeBarheight(d[y])}
-										width={xScaleOverLayer.bandwidth()}
-										style={{
-											opacity: 0,
-											cursor: 'pointer',
-										}}
-										onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
-										onMouseMove={updateTooltipPosition}
-										onMouseLeave={() => setHoveredElement(null)}
-										shapeRendering="crispEdges"
-									>
-										<title>
-											{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
-										</title>
-									</rect>
-								</a>
-							) : (
+							<DynamicWrapper
+								wrapperComponent={
+									<a
+										href={searchPageURL && searchPageURL(xFormat(d[x]))}
+										role="link"
+										aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+									/>
+								}
+								wrap={searchPageURL}
+							>
 								<rect
 									x={xScaleOverLayer(d[x])}
 									y={yScale(d[y])}
 									height={computeBarheight(d[y])}
 									width={xScaleOverLayer.bandwidth()}
-									style={{ opacity: 0 }}
+									style={{
+										opacity: 0,
+										cursor: searchPageURL ? 'pointer' : 'inherit',
+									}}
 									onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
 									onMouseMove={updateTooltipPosition}
 									onMouseLeave={() => setHoveredElement(null)}
@@ -257,7 +245,7 @@ export default function BarChart({
 										{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
 									</title>
 								</rect>
-							)}
+							</DynamicWrapper>
 						</g>
 					))}
 					<AnimatedDataset
@@ -340,82 +328,53 @@ export default function BarChart({
 						keyFn={(d) => d}
 					/>
 				</g>
-				{searchPageURL ? (
-					<AnimatedDataset
-						dataset={dataset}
-						tag="a"
-						attrs={{
-							href: d => searchPageURL(d[x]),
-							role: "link",
-							ariaLabel: d => `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
-						}}
-						keyFn={(d) => d.index}
-					>
-						<AnimatedDataset
-							tag="rect"
-							attrs={{
-								x: (d) => xScale(d[x]),
-								y: (d) => yScale(d[y]),
-								height: (d) => computeBarheight(d[y]),
-								width: xScale.bandwidth(),
-								fill: (d) =>
-									sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
-								strokeWidth: borders.normal,
-								stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
-								cursor: 'pointer',
-								shapeRendering: 'crispEdges',
-							}}
-							duration={250}
-							keyFn={(d) => d.index}
-						/>
-						<text
-							x={width / 2}
-							y={height - paddings.mobile / 2 - 7}
-							textAnchor="middle"
-							style={{
-								fill: 'black',
-								fontFamily: 'var(--font-base)',
-								fontWeight: 500,
-								fontSize: '14px',
-							}}
-						>
-							{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
-						</text>
-					</AnimatedDataset>
-				) : (
-					<>
+				<DynamicWrapper
+					wrapperComponent={
 						<AnimatedDataset
 							dataset={dataset}
-							tag="rect"
+							tag="a"
 							attrs={{
-								x: (d) => xScale(d[x]),
-								y: (d) => yScale(d[y]),
-								height: (d) => computeBarheight(d[y]),
-								width: xScale.bandwidth(),
-								fill: (d) =>
-									sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
-								strokeWidth: borders.normal,
-								stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
-								shapeRendering: 'crispEdges',
+								href: d => searchPageURL && d && searchPageURL(d[x]),
+								role: "link",
+								ariaLabel: d => d && `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
 							}}
-							duration={250}
 							keyFn={(d) => d.index}
 						/>
-						<text
-							x={width / 2}
-							y={height - paddings.mobile / 2 - 7}
-							textAnchor="middle"
-							style={{
-								fill: 'black',
-								fontFamily: 'var(--font-base)',
-								fontWeight: 500,
-								fontSize: '14px',
-							}}
-						>
-							{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
-						</text>
-					</>
-				)}
+					}
+					wrap={searchPageURL}
+				>
+					<AnimatedDataset
+						dataset={searchPageURL ? undefined : dataset}
+						tag="rect"
+						attrs={{
+							x: (d) => xScale(d[x]),
+							y: (d) => yScale(d[y]),
+							height: (d) => computeBarheight(d[y]),
+							width: xScale.bandwidth(),
+							fill: (d) =>
+								sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
+							strokeWidth: borders.normal,
+							stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
+							cursor: searchPageURL ? 'pointer' : 'inherit',
+							shapeRendering: 'crispEdges',
+						}}
+						duration={250}
+						keyFn={(d) => d.index}
+					/>
+					<text
+						x={width / 2}
+						y={height - paddings.mobile / 2 - 7}
+						textAnchor="middle"
+						style={{
+							fill: 'black',
+							fontFamily: 'var(--font-base)',
+							fontWeight: 500,
+							fontSize: '14px',
+						}}
+					>
+						{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
+					</text>
+				</DynamicWrapper>
 				<Slider
 					elements={dataset.map((d) => d[x])}
 					xScale={xSlider}

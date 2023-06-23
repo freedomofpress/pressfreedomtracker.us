@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 import { AnimatedDataset } from 'react-animated-dataset'
+import DynamicWrapper from './DynamicWrapper'
 import us from '../data/us-states.json'
 import Tooltip from './Tooltip'
 
@@ -168,37 +169,23 @@ export default function USMap({
 					</g>
 					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
-							searchPageURL ? (
-								<a
-									href={searchPageURL(d.usCode)}
-									role="link"
-									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-								>
-									<circle
-										role="listitem"
+							<DynamicWrapper
+								wrapperComponent={
+									<a
+										href={searchPageURL && searchPageURL(d.usCode)}
+										role="link"
 										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-										cx={projection([d.longitude, d.latitude])[0]}
-										cy={projection([d.longitude, d.latitude])[1]}
-										r={markerScale(d.numberOfIncidents) + 5}
-										style={{ opacity: 0, cursor: 'pointer' }}
-										onMouseMove={updateTooltipPosition}
-										onMouseEnter={(mouseEvent) => {
-											setHoveredElement(`${aggregationLocality(d)}`)
-										}}
-										onMouseLeave={() => {
-											setHoveredElement(null)
-										}}
-										key={aggregationLocality(d)}
 									/>
-								</a>
-							) : (
+								}
+								wrap={searchPageURL}
+							>
 								<circle
 									role="listitem"
 									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									cx={projection([d.longitude, d.latitude])[0]}
 									cy={projection([d.longitude, d.latitude])[1]}
 									r={markerScale(d.numberOfIncidents) + 5}
-									style={{ opacity: 0 }}
+									style={{ opacity: 0, cursor: searchPageURL ? 'pointer' : 'inherit' }}
 									onMouseMove={updateTooltipPosition}
 									onMouseEnter={(mouseEvent) => {
 										setHoveredElement(`${aggregationLocality(d)}`)
@@ -208,7 +195,7 @@ export default function USMap({
 									}}
 									key={aggregationLocality(d)}
 								/>
-							)
+							</DynamicWrapper>
 						))}
 					</g>
 				</svg>
