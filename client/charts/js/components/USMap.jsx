@@ -168,18 +168,37 @@ export default function USMap({
 					</g>
 					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
-							<a
-								href={searchPageURL(d.usCode)}
-								role="link"
-								aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-							>
+							searchPageURL ? (
+								<a
+									href={searchPageURL(d.usCode)}
+									role="link"
+									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+								>
+									<circle
+										role="listitem"
+										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+										cx={projection([d.longitude, d.latitude])[0]}
+										cy={projection([d.longitude, d.latitude])[1]}
+										r={markerScale(d.numberOfIncidents) + 5}
+										style={{ opacity: 0, cursor: 'pointer' }}
+										onMouseMove={updateTooltipPosition}
+										onMouseEnter={(mouseEvent) => {
+											setHoveredElement(`${aggregationLocality(d)}`)
+										}}
+										onMouseLeave={() => {
+											setHoveredElement(null)
+										}}
+										key={aggregationLocality(d)}
+									/>
+								</a>
+							) : (
 								<circle
 									role="listitem"
 									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									cx={projection([d.longitude, d.latitude])[0]}
 									cy={projection([d.longitude, d.latitude])[1]}
 									r={markerScale(d.numberOfIncidents) + 5}
-									style={{ opacity: 0, cursor: 'pointer' }}
+									style={{ opacity: 0 }}
 									onMouseMove={updateTooltipPosition}
 									onMouseEnter={(mouseEvent) => {
 										setHoveredElement(`${aggregationLocality(d)}`)
@@ -189,12 +208,12 @@ export default function USMap({
 									}}
 									key={aggregationLocality(d)}
 								/>
-							</a>
+							)
 						))}
 					</g>
 				</svg>
 
-				{incidentsOutsideUS && (
+				{incidentsOutsideUS && searchPageURL && (
 					<g>
 						<a
 							href={searchPageURL()}

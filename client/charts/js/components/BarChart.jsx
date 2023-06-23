@@ -49,7 +49,7 @@ export default function BarChart({
 	id = '',
 	numberOfTicks = 4,
 	description,
-	searchPageURL = () => {},
+	searchPageURL,
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
@@ -216,20 +216,38 @@ export default function BarChart({
 					/>
 					{dataset.map((d) => (
 						<g key={d[x]}>
-							<a
-								href={searchPageURL(xFormat(d[x]))}
-								role="link"
-								aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
-							>
+							{searchPageURL ? (
+								<a
+									href={searchPageURL(xFormat(d[x]))}
+									role="link"
+									aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+								>
+									<rect
+										x={xScaleOverLayer(d[x])}
+										y={yScale(d[y])}
+										height={computeBarheight(d[y])}
+										width={xScaleOverLayer.bandwidth()}
+										style={{
+											opacity: 0,
+											cursor: 'pointer',
+										}}
+										onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
+										onMouseMove={updateTooltipPosition}
+										onMouseLeave={() => setHoveredElement(null)}
+										shapeRendering="crispEdges"
+									>
+										<title>
+											{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
+										</title>
+									</rect>
+								</a>
+							) : (
 								<rect
 									x={xScaleOverLayer(d[x])}
 									y={yScale(d[y])}
 									height={computeBarheight(d[y])}
 									width={xScaleOverLayer.bandwidth()}
-									style={{
-										opacity: 0,
-										cursor: 'pointer',
-									}}
+									style={{ opacity: 0 }}
 									onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
 									onMouseMove={updateTooltipPosition}
 									onMouseLeave={() => setHoveredElement(null)}
@@ -239,7 +257,7 @@ export default function BarChart({
 										{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
 									</title>
 								</rect>
-							</a>
+							)}
 						</g>
 					))}
 					<AnimatedDataset
@@ -322,47 +340,82 @@ export default function BarChart({
 						keyFn={(d) => d}
 					/>
 				</g>
-				<AnimatedDataset
-					dataset={dataset}
-					tag="a"
-					attrs={{
-						href: d => searchPageURL(d[x]),
-						role: "link",
-						ariaLabel: d => `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
-					}}
-					keyFn={(d) => d.index}
-				>
+				{searchPageURL ? (
 					<AnimatedDataset
-						tag="rect"
+						dataset={dataset}
+						tag="a"
 						attrs={{
-							x: (d) => xScale(d[x]),
-							y: (d) => yScale(d[y]),
-							height: (d) => computeBarheight(d[y]),
-							width: xScale.bandwidth(),
-							fill: (d) =>
-								sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
-							strokeWidth: borders.normal,
-							stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
-							cursor: 'pointer',
-							shapeRendering: 'crispEdges',
+							href: d => searchPageURL(d[x]),
+							role: "link",
+							ariaLabel: d => `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
 						}}
-						duration={250}
 						keyFn={(d) => d.index}
-					/>
-					<text
-						x={width / 2}
-						y={height - paddings.mobile / 2 - 7}
-						textAnchor="middle"
-						style={{
-							fill: 'black',
-							fontFamily: 'var(--font-base)',
-							fontWeight: 500,
-							fontSize: '14px',
-						}}
 					>
-						{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
-					</text>
-				</AnimatedDataset>
+						<AnimatedDataset
+							tag="rect"
+							attrs={{
+								x: (d) => xScale(d[x]),
+								y: (d) => yScale(d[y]),
+								height: (d) => computeBarheight(d[y]),
+								width: xScale.bandwidth(),
+								fill: (d) =>
+									sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
+								strokeWidth: borders.normal,
+								stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
+								cursor: 'pointer',
+								shapeRendering: 'crispEdges',
+							}}
+							duration={250}
+							keyFn={(d) => d.index}
+						/>
+						<text
+							x={width / 2}
+							y={height - paddings.mobile / 2 - 7}
+							textAnchor="middle"
+							style={{
+								fill: 'black',
+								fontFamily: 'var(--font-base)',
+								fontWeight: 500,
+								fontSize: '14px',
+							}}
+						>
+							{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
+						</text>
+					</AnimatedDataset>
+				) : (
+					<>
+						<AnimatedDataset
+							dataset={dataset}
+							tag="rect"
+							attrs={{
+								x: (d) => xScale(d[x]),
+								y: (d) => yScale(d[y]),
+								height: (d) => computeBarheight(d[y]),
+								width: xScale.bandwidth(),
+								fill: (d) =>
+									sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
+								strokeWidth: borders.normal,
+								stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
+								shapeRendering: 'crispEdges',
+							}}
+							duration={250}
+							keyFn={(d) => d.index}
+						/>
+						<text
+							x={width / 2}
+							y={height - paddings.mobile / 2 - 7}
+							textAnchor="middle"
+							style={{
+								fill: 'black',
+								fontFamily: 'var(--font-base)',
+								fontWeight: 500,
+								fontSize: '14px',
+							}}
+						>
+							{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
+						</text>
+					</>
+				)}
 				<Slider
 					elements={dataset.map((d) => d[x])}
 					xScale={xSlider}
