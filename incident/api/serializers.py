@@ -306,3 +306,4 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     links = serializers.CharField(source='link_summary')
     equipment_broken = serializers.CharField(source='equipment_broken_summary')
     equipment_seized = serializers.CharField(source='equipment_seized_summary')
+    status_of_charges = serializers.CharField(source='status_of_charges_summary')

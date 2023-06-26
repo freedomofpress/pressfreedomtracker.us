@@ -95,6 +95,41 @@ class ChoiceArrayField(ArrayField):
         return super(ArrayField, self).formfield(**defaults)
 
 
+def most_recent_status_of_charges_subquery():
+    """Return a subquery that will evaluate to a comma-separated
+    string containing every charge's most recent status.
+
+    """
+    newest_update = ChargeUpdate.objects.filter(
+        incident_charge=OuterRef('pk'),
+        date__gte=OuterRef('date')
+    ).order_by('-date').values('status')[:1]
+
+    latest_status = IncidentCharge.objects.filter(
+        pk=OuterRef('pk'),
+    ).annotate(
+        newest_update=Subquery(newest_update),
+        latest_status=Coalesce('newest_update', 'status'),
+        latest_status_label=annotation_for_choices_display(
+            'latest_status',
+            choices.STATUS_OF_CHARGES,
+        ),
+    ).values('latest_status_label')
+
+    charges_with_latest_status = IncidentCharge.objects.filter(
+        incident_page=OuterRef('pk'),
+    ).values(
+        'incident_page__pk',
+    ).annotate(
+        latest_status=StringAgg(
+            expression=latest_status,
+            delimiter=', ',
+        )
+    ).values('latest_status')
+
+    return Subquery(charges_with_latest_status)
+
+
 class IncidentQuerySet(PageQuerySet):
     """A QuerySet for incident pages that incorporates update data"""
     def for_csv(self, with_annotations, request):
@@ -115,6 +150,7 @@ class IncidentQuerySet(PageQuerySet):
                 ).values('tag_summary'),
                 output_field=models.CharField()
             ),
+            'status_of_charges_summary': most_recent_status_of_charges_subquery(),
             'equipment_broken_summary': Subquery(
                 IncidentPage.objects.only('equipment_broken').annotate(
                     equipment_broken_summary=StringAgg(

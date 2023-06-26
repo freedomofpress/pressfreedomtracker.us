@@ -20,6 +20,7 @@ from incident.tests.factories import (
     IncidentLinkFactory,
     StateFactory,
     EquipmentSeizedFactory,
+    IncidentChargeWithUpdatesFactory,
 )
 
 
@@ -106,6 +107,28 @@ class PerformantCSVTestCase(TestCase):
         IncidentLinkFactory.create_batch(3, page=cls.incident)
         IncidentLinkFactory(page=cls.incident, publication='Galactic Express')
 
+        IncidentChargeWithUpdatesFactory(
+            incident_page=cls.incident,
+            status='UNKNOWN',
+            date='2022-01-01',
+            update1__status='CHARGES_PENDING',
+            update1__date='2022-01-02',
+            update2__status='CONVICTED',
+            update2__date='2022-01-03',
+            update3__status='PENDING_APPEAL',
+            update3__date='2022-01-04',
+        )
+        IncidentChargeWithUpdatesFactory(
+            incident_page=cls.incident,
+            status='UNKNOWN',
+            date='2022-01-01',
+            update1__status='CHARGES_PENDING',
+            update1__date='2022-01-02',
+            update2__status='PENDING_APPEAL',
+            update2__date='2022-01-03',
+            update3__status='CHARGES_DROPPED',
+            update3__date='2022-01-04',
+        )
         IncidentPageFactory()
 
     def setUp(self):
@@ -129,6 +152,7 @@ class PerformantCSVTestCase(TestCase):
             'links',
             'equipment_broken',
             'equipment_seized',
+            'status_of_charges',
         ]
         url = reverse(
             'incidentpage-list',
@@ -252,6 +276,14 @@ class PerformantCSVTestCase(TestCase):
         self.assertEqual(
             self.result['arresting_authority'],
             'Police Squad!',
+        )
+
+    def test_status_of_charges_is_correct(self):
+        self.assertEqual(
+            self.result['status_of_charges'],
+            ', '.join(
+                charge.updates.order_by('-date').first().get_status_display() for charge in self.incident.charges.all()
+            )
         )
 
 
