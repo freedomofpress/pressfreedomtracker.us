@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
+import DynamicWrapper from './DynamicWrapper'
 import Slider from './Slider'
 import Tooltip from './Tooltip'
 
@@ -49,7 +50,7 @@ export default function BarChart({
 	id = '',
 	numberOfTicks = 4,
 	description,
-	searchPageURL = () => {},
+	searchPageURL,
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
@@ -216,10 +217,15 @@ export default function BarChart({
 					/>
 					{dataset.map((d) => (
 						<g key={d[x]}>
-							<a
-								href={searchPageURL(xFormat(d[x]))}
-								role="link"
-								aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+							<DynamicWrapper
+								wrapperComponent={
+									<a
+										href={searchPageURL && searchPageURL(xFormat(d[x]))}
+										role="link"
+										aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+									/>
+								}
+								wrap={searchPageURL}
 							>
 								<rect
 									x={xScaleOverLayer(d[x])}
@@ -228,7 +234,7 @@ export default function BarChart({
 									width={xScaleOverLayer.bandwidth()}
 									style={{
 										opacity: 0,
-										cursor: 'pointer',
+										cursor: searchPageURL ? 'pointer' : 'inherit',
 									}}
 									onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
 									onMouseMove={updateTooltipPosition}
@@ -239,7 +245,7 @@ export default function BarChart({
 										{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
 									</title>
 								</rect>
-							</a>
+							</DynamicWrapper>
 						</g>
 					))}
 					<AnimatedDataset
@@ -322,17 +328,23 @@ export default function BarChart({
 						keyFn={(d) => d}
 					/>
 				</g>
-				<AnimatedDataset
-					dataset={dataset}
-					tag="a"
-					attrs={{
-						href: d => searchPageURL(d[x]),
-						role: "link",
-						ariaLabel: d => `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
-					}}
-					keyFn={(d) => d.index}
+				<DynamicWrapper
+					wrapperComponent={
+						<AnimatedDataset
+							dataset={dataset}
+							tag="a"
+							attrs={{
+								href: d => searchPageURL && d && searchPageURL(d[x]),
+								role: "link",
+								ariaLabel: d => d && `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
+							}}
+							keyFn={(d) => d.index}
+						/>
+					}
+					wrap={searchPageURL}
 				>
 					<AnimatedDataset
+						dataset={searchPageURL ? undefined : dataset}
 						tag="rect"
 						attrs={{
 							x: (d) => xScale(d[x]),
@@ -343,7 +355,7 @@ export default function BarChart({
 								sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
 							strokeWidth: borders.normal,
 							stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
-							cursor: 'pointer',
+							cursor: searchPageURL ? 'pointer' : 'inherit',
 							shapeRendering: 'crispEdges',
 						}}
 						duration={250}
@@ -362,7 +374,7 @@ export default function BarChart({
 					>
 						{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
 					</text>
-				</AnimatedDataset>
+				</DynamicWrapper>
 				<Slider
 					elements={dataset.map((d) => d[x])}
 					xScale={xSlider}

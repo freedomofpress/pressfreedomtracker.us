@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
+import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
 import { colors } from '../lib/utilities.js'
 
@@ -287,17 +288,23 @@ export default function TreeMap({
 						style={{ stroke: 'black', strokeWidth: isHomePageDesktopView ? borderWidth.normal : 0 }}
 						shapeRendering="crispEdges"
 					/>
-					<AnimatedDataset
-						dataset={datasetStackedByCategory}
-						tag="a"
-						attrs={{
-							href: d => searchPageURL(d.category),
-							role: "link",
-							ariaLabel: d => d.category,
-						}}
-						keyFn={(d) => d.category}
+					<DynamicWrapper
+						wrapperComponent={
+							<AnimatedDataset
+								dataset={datasetStackedByCategory}
+								tag="a"
+								attrs={{
+									href: d => d && searchPageURL && searchPageURL(d.category),
+									role: "link",
+									ariaLabel: d => d.category,
+								}}
+								keyFn={(d) => d.category}
+							/>
+						}
+						wrap={searchPageURL}
 					>
 						<AnimatedDataset
+							dataset={searchPageURL ? undefined : datasetStackedByCategory}
 							tag="rect"
 							init={{
 								opacity: 0,
@@ -320,7 +327,7 @@ export default function TreeMap({
 										: 'white',
 								stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
 								strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
-								cursor: 'pointer',
+								cursor: searchPageURL ? 'pointer' : 'inherit',
 								pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
 								shapeRendering: 'crispEdges',
 							}}
@@ -342,7 +349,7 @@ export default function TreeMap({
 							keyFn={(d) => d.category}
 							duration={250}
 						/>
-					</AnimatedDataset>
+					</DynamicWrapper>
 					<AnimatedDataset
 						dataset={datasetStackedByCategory}
 						tag="line"
