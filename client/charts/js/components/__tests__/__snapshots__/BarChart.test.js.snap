@@ -157,9 +157,13 @@ exports[`renders BarChart with mocked data 1`] = `
       tag="rect"
     />
     <g>
-      <a
-        aria-label="Nov: 0 incidents"
-        role="link"
+      <DynamicWrapper
+        wrapperComponent={
+          <a
+            aria-label="Nov: 0 incidents"
+            role="link"
+          />
+        }
       >
         <rect
           height={0}
@@ -169,7 +173,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -185,12 +189,16 @@ exports[`renders BarChart with mocked data 1`] = `
             incidents
           </title>
         </rect>
-      </a>
+      </DynamicWrapper>
     </g>
     <g>
-      <a
-        aria-label="Dec: 0 incidents"
-        role="link"
+      <DynamicWrapper
+        wrapperComponent={
+          <a
+            aria-label="Dec: 0 incidents"
+            role="link"
+          />
+        }
       >
         <rect
           height={0}
@@ -200,7 +208,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -216,12 +224,16 @@ exports[`renders BarChart with mocked data 1`] = `
             incidents
           </title>
         </rect>
-      </a>
+      </DynamicWrapper>
     </g>
     <g>
-      <a
-        aria-label="Jan: 0 incidents"
-        role="link"
+      <DynamicWrapper
+        wrapperComponent={
+          <a
+            aria-label="Jan: 0 incidents"
+            role="link"
+          />
+        }
       >
         <rect
           height={0}
@@ -231,7 +243,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -247,12 +259,16 @@ exports[`renders BarChart with mocked data 1`] = `
             incidents
           </title>
         </rect>
-      </a>
+      </DynamicWrapper>
     </g>
     <g>
-      <a
-        aria-label="Feb: 0 incidents"
-        role="link"
+      <DynamicWrapper
+        wrapperComponent={
+          <a
+            aria-label="Feb: 0 incidents"
+            role="link"
+          />
+        }
       >
         <rect
           height={0}
@@ -262,7 +278,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -278,12 +294,16 @@ exports[`renders BarChart with mocked data 1`] = `
             incidents
           </title>
         </rect>
-      </a>
+      </DynamicWrapper>
     </g>
     <g>
-      <a
-        aria-label="Mar: 0 incidents"
-        role="link"
+      <DynamicWrapper
+        wrapperComponent={
+          <a
+            aria-label="Mar: 0 incidents"
+            role="link"
+          />
+        }
       >
         <rect
           height={0}
@@ -293,7 +313,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -309,12 +329,16 @@ exports[`renders BarChart with mocked data 1`] = `
             incidents
           </title>
         </rect>
-      </a>
+      </DynamicWrapper>
     </g>
     <g>
-      <a
-        aria-label="Apr: 0 incidents"
-        role="link"
+      <DynamicWrapper
+        wrapperComponent={
+          <a
+            aria-label="Apr: 0 incidents"
+            role="link"
+          />
+        }
       >
         <rect
           height={0}
@@ -324,7 +348,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -340,7 +364,7 @@ exports[`renders BarChart with mocked data 1`] = `
             incidents
           </title>
         </rect>
-      </a>
+      </DynamicWrapper>
     </g>
     <AnimatedDataset
       attrs={

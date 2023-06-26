@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 import { AnimatedDataset } from 'react-animated-dataset'
+import DynamicWrapper from './DynamicWrapper'
 import us from '../data/us-states.json'
 import Tooltip from './Tooltip'
 
@@ -169,41 +170,38 @@ export default function USMap({
 					</g>
 					<g role="list" aria-label="U.S. Map">
 						{dataset.filter(hasLatLon).map((d) => (
-							interactive ? (
-								<a
-									href={searchPageURL(d.usCode)}
-									role="link"
+							<DynamicWrapper
+								wrapperComponent={
+									<a
+										href={searchPageURL && searchPageURL(d.usCode)}
+										role="link"
+										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
+									/>
+								}
+								wrap={interactive && searchPageURL}
+							>
+								<circle
+									role="listitem"
 									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-								>
-									<circle
-										role="listitem"
-										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-										cx={projection([d.longitude, d.latitude])[0]}
-										cy={projection([d.longitude, d.latitude])[1]}
-										r={markerScale(d.numberOfIncidents) + 5}
-										style={{ opacity: 0, cursor: interactive ? 'pointer' : 'inherit' }}
-										onMouseMove={updateTooltipPosition}
-										onMouseEnter={() => setHoveredElement(`${aggregationLocality(d)}`)}
-										onMouseLeave={() => setHoveredElement(null)}
-										key={aggregationLocality(d)}
-									/>
-								</a>
-								) : (
-									<circle
-										role="listitem"
-										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
-										cx={projection([d.longitude, d.latitude])[0]}
-										cy={projection([d.longitude, d.latitude])[1]}
-										r={markerScale(d.numberOfIncidents) + 5}
-										style={{ opacity: 0 }}
-										key={aggregationLocality(d)}
-									/>
-								)
+									cx={projection([d.longitude, d.latitude])[0]}
+									cy={projection([d.longitude, d.latitude])[1]}
+									r={markerScale(d.numberOfIncidents) + 5}
+									style={{ opacity: 0, cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit' }}
+									onMouseMove={interactive && updateTooltipPosition}
+									onMouseEnter={interactive && ((mouseEvent) => {
+										setHoveredElement(`${aggregationLocality(d)}`)
+									})}
+									onMouseLeave={interactive && (() => {
+										setHoveredElement(null)
+									})}
+									key={aggregationLocality(d)}
+								/>
+							</DynamicWrapper>
 						))}
 					</g>
 				</svg>
 
-				{incidentsOutsideUS && (
+				{incidentsOutsideUS && searchPageURL && (
 					<g>
 						{interactive ? (
 							<a
