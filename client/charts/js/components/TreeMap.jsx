@@ -278,6 +278,7 @@ export default function TreeMap({
 						marginRight: margins.right,
 						marginBottom: margins.bottom,
 						marginLeft: margins.left,
+						pointerEvents: interactive ? "auto" : "none"
 					}}
 					ref={setSvgEl}
 				>
@@ -335,16 +336,16 @@ export default function TreeMap({
 							events={{
 								// In a future, if we update our version of d3-selection the first
 								// argument will be a MouseEvent, eliminating the need for d3event here
-								onMouseMove: interactive && (() => {
+								onMouseMove: () => {
 									updateTooltipPosition(d3event)
-								}),
-								onMouseLeave: interactive && (() => {
+								},
+								onMouseLeave: () => {
 									setTooltipPosition({ x: 0, y: 0 })
 									setHoveredElement(null)
-								}),
+								},
 								// In a future, if we update our version of d3-selection this may
 								// need to be updated to take arguments (MouseEvent, d) instead
-								onMouseEnter: interactive && (d => setHoveredElement(d.category)),
+								onMouseEnter: d => setHoveredElement(d.category),
 							}}
 							durationByAttr={{ fill: 0, stroke: 0 }}
 							keyFn={(d) => d.category}
@@ -475,14 +476,15 @@ export default function TreeMap({
 								.map(d => (
 									<g
 										key={d.category}
-										onMouseLeave={interactive && (() => {
+										onMouseLeave={() => {
 											setTooltipPosition({ x: 0, y: 0 })
 											setHoveredElement(null)
-										})}
-										onClick={interactive && (() => toggleSelectedCategory(d.category))}
-										onMouseEnter={interactive && (() => setHoveredElement(d.category))}
-										onMouseUp={interactive && (() => openSearchPage(d.category))}
+										}}
+										onClick={() => toggleSelectedCategory(d.category)}
+										onMouseEnter={() => setHoveredElement(d.category)}
+										onMouseUp={() => openSearchPage(d.category)}
 										cursor={interactive ? 'pointer' : 'inherit'}
+										pointerEvents={interactive ? "auto" : "none"}
 										tabIndex="0"
 										role="button"
 										aria-pressed={selectedElements.indexOf(d.category) >= 0}

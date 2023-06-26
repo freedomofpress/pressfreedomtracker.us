@@ -168,7 +168,7 @@ export default function USMap({
 							keyFn={(d) => `${aggregationLocality(d)}`}
 						/>
 					</g>
-					<g role="list" aria-label="U.S. Map">
+					<g role="list" aria-label="U.S. Map" style={{ pointerEvents: interactive ? "auto" : "none" }}>
 						{dataset.filter(hasLatLon).map((d) => (
 							<DynamicWrapper
 								wrapperComponent={
@@ -187,13 +187,13 @@ export default function USMap({
 									cy={projection([d.longitude, d.latitude])[1]}
 									r={markerScale(d.numberOfIncidents) + 5}
 									style={{ opacity: 0, cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit' }}
-									onMouseMove={interactive && updateTooltipPosition}
-									onMouseEnter={interactive && ((mouseEvent) => {
+									onMouseMove={updateTooltipPosition}
+									onMouseEnter={(mouseEvent) => {
 										setHoveredElement(`${aggregationLocality(d)}`)
-									})}
-									onMouseLeave={interactive && (() => {
+									}}
+									onMouseLeave={() => {
 										setHoveredElement(null)
-									})}
+									}}
 									key={aggregationLocality(d)}
 								/>
 							</DynamicWrapper>

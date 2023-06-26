@@ -209,7 +209,7 @@ export default function BarChart({
 								hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
 							strokeWidth: borders.normal,
 							stroke: (d) => (hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
-							cursor: 'pointer',
+							cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 							shapeRendering: 'crispEdges',
 						}}
 						duration={250}
@@ -217,7 +217,7 @@ export default function BarChart({
 						keyFn={(d) => d.index}
 					/>
 					{dataset.map((d) => (
-						<g key={d[x]}>
+						<g key={d[x]} style={{ pointerEvents: interactive ? "auto" : "none" }}>
 							<DynamicWrapper
 								wrapperComponent={
 									<a
@@ -237,9 +237,9 @@ export default function BarChart({
 										opacity: 0,
 										cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 									}}
-									onMouseEnter={interactive && (() => setHoveredElement((tooltipXFormat || xFormat)(d[x])))}
-									onMouseMove={interactive && updateTooltipPosition}
-									onMouseLeave={interactive && (() => setHoveredElement(null))}
+									onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
+									onMouseMove={updateTooltipPosition}
+									onMouseLeave={() => setHoveredElement(null)}
 									shapeRendering="crispEdges"
 								>
 									<title>
