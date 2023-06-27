@@ -16,12 +16,14 @@ class TreeMapChartValue(blocks.StructValue):
 
     def data_url(self):
         """Return the URL to be used to fetch primary data set for the chart."""
+        fields = {'categories', 'tags', 'date'}
+        fields.add(self.get('group_by').lower())
         return reverse(
             'incidentpage-list',
             kwargs={'version': 'edge'},
         ) + '?' + parse.urlencode(
             {
-                'fields': self.get('group_by').lower(),
+                'fields': ','.join(fields),
                 'format': 'csv',
             }
         )
