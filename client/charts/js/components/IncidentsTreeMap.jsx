@@ -23,7 +23,7 @@ export default ({
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
 
-	const categoriesColorMap = [...(new Set([...filterCategories, ...branches.map(d => d.title)]))]
+	const categoriesColorMap = [...(new Set([...branches.map(d => d.title)]))]
 		.reduce(
 			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
 			{}
