@@ -119,7 +119,7 @@ export function stackDatasetByCategory(
 		endPoint: !isNaN(d[0][1]) ? d[0][1] : d[0][0],
 		numberOfIncidents: incidentsGroupedByCategory[d.key],
 		category: d.key,
-	}))
+	})).filter((d) => d.numberOfIncidents > 0)  // Only display non-empty groups in the chart.
 
 	return datasetStackedByCategory
 }
