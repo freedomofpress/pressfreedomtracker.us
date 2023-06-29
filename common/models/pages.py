@@ -154,6 +154,15 @@ class MediaPageMixin:
         media = []
 
         block_cls_names = get_page_blocks(self)
+
+        # If the page is a blog index page, loop through all the posts to see if
+        # there is a chart as the primary image
+        try:
+            for post in self.get_posts():
+                block_cls_names = block_cls_names + get_page_blocks(post)
+        except Exception:
+            pass
+
         for block_cls_name in block_cls_names:
             block_cls = import_string(block_cls_name)
             if hasattr(block_cls, 'Media') and hasattr(

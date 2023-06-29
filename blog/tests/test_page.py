@@ -1,7 +1,7 @@
 from wagtail.models import Site, Page
 from django.test import TestCase, Client
 
-from common.tests.factories import PersonPageFactory, OrganizationPageFactory
+from common.tests.factories import PersonPageFactory, OrganizationPageFactory, CustomImageFactory
 from home.tests.factories import HomePageFactory
 from blog.models import BlogIndexPageFeature
 from .factories import (
@@ -32,9 +32,20 @@ class TestPages(TestCase):
             site.root_page = cls.home_page
             site.save()
 
+        CustomImageFactory.create(
+            file__width=800,
+            file__height=600,
+            file__color='green',
+            collection__name='Photos',
+        )
+
         cls.index = BlogIndexPageFactory(
             parent=site.root_page, slug='all-blogs')
-        cls.blog_page = BlogPageFactory(parent=cls.index, slug='one')
+        cls.blog_page = BlogPageFactory(
+            parent=cls.index,
+            slug='one',
+            with_image=True,
+        )
 
     def setUp(self):
         self.client = Client()
@@ -42,6 +53,11 @@ class TestPages(TestCase):
     def test_get_index_should_succeed(self):
         """get index should succed."""
         response = self.client.get('/all-blogs/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_index_feed_should_succeed(self):
+        """get feed should succed."""
+        response = self.client.get('/all-blogs/feed/')
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_for_unknown_author_should_return_404(self):

@@ -53,7 +53,7 @@ const minimumHeightText = 17
 const averageLetterWidth = 8
 const labelHeight = 30
 
-function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight) {
+export function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight) {
 	const totalIncidents = dataset.length
 
 	const y = d3
@@ -69,7 +69,7 @@ function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight)
 	return minimumNumberOfIncidents
 }
 
-function stackDatasetByCategory(
+export function stackDatasetByCategory(
 	dataset,
 	filterElements,
 	categoryColumn,
@@ -139,6 +139,7 @@ export default function TreeMap({
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
+	interactive = true,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -241,7 +242,7 @@ export default function TreeMap({
 
 	return (
 		<>
-			{hoveredElement && !!(tooltipPosition.x || tooltipPosition.y) && (
+			{hoveredElement && interactive && !!(tooltipPosition.x || tooltipPosition.y) && (
 				<Tooltip
 					content={
 						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -277,6 +278,7 @@ export default function TreeMap({
 						marginRight: margins.right,
 						marginBottom: margins.bottom,
 						marginLeft: margins.left,
+						pointerEvents: interactive ? "auto" : "none"
 					}}
 					ref={setSvgEl}
 				>
@@ -301,10 +303,10 @@ export default function TreeMap({
 								keyFn={(d) => d.category}
 							/>
 						}
-						wrap={searchPageURL}
+						wrap={interactive && searchPageURL}
 					>
 						<AnimatedDataset
-							dataset={searchPageURL ? undefined : datasetStackedByCategory}
+							dataset={(interactive && searchPageURL) ? undefined : datasetStackedByCategory}
 							tag="rect"
 							init={{
 								opacity: 0,
@@ -327,7 +329,7 @@ export default function TreeMap({
 										: 'white',
 								stroke: (d) => (hoveredElement === d.category ? findColor(d.category) : 'black'),
 								strokeWidth: isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile,
-								cursor: searchPageURL ? 'pointer' : 'inherit',
+								cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 								pointerEvents: (d) => (d.numberOfIncidents === 0 ? 'none' : null),
 								shapeRendering: 'crispEdges',
 							}}
@@ -481,7 +483,8 @@ export default function TreeMap({
 										onClick={() => toggleSelectedCategory(d.category)}
 										onMouseEnter={() => setHoveredElement(d.category)}
 										onMouseUp={() => openSearchPage(d.category)}
-										cursor="pointer"
+										cursor={interactive ? 'pointer' : 'inherit'}
+										pointerEvents={interactive ? "auto" : "none"}
 										tabIndex="0"
 										role="button"
 										aria-pressed={selectedElements.indexOf(d.category) >= 0}

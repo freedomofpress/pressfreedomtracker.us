@@ -1,5 +1,5 @@
 {% if value.title %}<h2>{{ value.title }}</h2>{% endif %}
-<div className="chartContainer">
+<div class="chartContainer">
 	<div
 		class="chart-tree-map"
 		{% if value.incident_set.categories %}
@@ -21,6 +21,12 @@
 		{% endif %}
 		{% if value.title %}
 			data-title="{{ value.title }}"
+		{% endif %}
+		{% if static_graphic is None %}
+			data-interactive="true"
+		{% endif %}
+		{% if mini_graphic is None %}
+			data-full-size="true"
 		{% endif %}
 	></div>
 </div>

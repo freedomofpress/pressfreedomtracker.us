@@ -1,6 +1,7 @@
 import React from 'react'
 import { ParentSize } from '@visx/responsive'
 import BarChart from './BarChart'
+import BarChartMini from './BarChartMini'
 import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
 import { filterDatasets } from '../lib/utilities'
@@ -14,7 +15,9 @@ export default function IncidentsTimeBarChart({
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	timePeriod,
 	isMobileView = false,
-	creditUrl = ''
+	creditUrl = '',
+	interactive = true,
+	fullSize = true,
 }) {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
@@ -66,12 +69,8 @@ export default function IncidentsTimeBarChart({
 
 	return (
 		<ParentSize>
-			{(parent) =>
-				<ChartDownloader
-					chartTitle={title}
-					creditUrl={creditUrl}
-					downloadFileName={title ? `${title}.png` : 'chart.png'}
-				>
+			{(parent) => {
+				const barchart = fullSize ? (
 					<BarChart
 						description={description || generatedDescription}
 						data={incidentsByAllTime}
@@ -81,11 +80,24 @@ export default function IncidentsTimeBarChart({
 						tooltipXFormat={d3.utcFormat(showByYears ? "%Y" : "%b %Y")}
 						titleLabel={'incidents'}
 						width={parent.width}
-						height={parent.width * 0.75}
+						height={Math.min(parent.width * 0.75, 600)}
 						isMobileView={isMobileView}
+						interactive={interactive}
 					/>
-				</ChartDownloader>
-			}
+				) : (
+					<BarChartMini data={incidentsByAllTime} x={'count'} />
+				);
+
+				return interactive ? (
+					<ChartDownloader
+						chartTitle={title}
+						creditUrl={creditUrl}
+						downloadFileName={title ? `${title}.png` : 'chart.png'}
+					>
+						{barchart}
+					</ChartDownloader>
+				) : barchart
+			}}
 		</ParentSize>
 	)
 }

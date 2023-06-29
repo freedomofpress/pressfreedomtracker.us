@@ -6,7 +6,6 @@ import factory
 import wagtail_factories
 
 from blog.models import BlogPage, BlogIndexPage
-from common.models import CustomImage
 from common.tests.factories import (
     PersonPageFactory,
     OrganizationPageFactory,
@@ -42,8 +41,9 @@ class BlogPageFactory(wagtail_factories.PageFactory):
     class Params:
         # for use with the createdevdata command
         with_image = factory.Trait(
-            teaser_image=factory.Iterator(
-                CustomImage.objects.filter(collection__name='Photos')
+            teaser_graphic=factory.Faker(
+                'streamfield',
+                fields=['bare_image'],
             ),
             body=factory.Faker(
                 'streamfield',

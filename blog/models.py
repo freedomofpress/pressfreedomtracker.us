@@ -40,7 +40,7 @@ from common.blocks import (
 )
 
 
-class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
+class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
     body = StreamField([
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
@@ -215,6 +215,22 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
 
     link_to_original_post = models.URLField(blank=True)
 
+    lead_graphic = StreamField([
+        ('image', ImageChooserBlock()),
+        ('vertical_bar_chart', VerticalBarChart()),
+        ('tree_map_chart', TreeMapChart()),
+        ('bubble_map_chart', BubbleMapChart()),
+    ], use_json_field=True, blank=True, default=[], max_num=1)
+
+    teaser_graphic = StreamField([
+        ('image', ImageChooserBlock()),
+        ('vertical_bar_chart', VerticalBarChart()),
+        ('tree_map_chart', TreeMapChart()),
+        ('bubble_map_chart', BubbleMapChart()),
+    ], use_json_field=True, blank=True, default=[], max_num=1)
+
+    # Note: The following fields are deprecated in favor for lead_graphic and teaser_graphic,
+    # and will be removed in a future version
     lead_image = models.ForeignKey(
         'common.CustomImage',
         null=True,
@@ -268,14 +284,14 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
             heading='Introduction',
             children=[
                 FieldPanel('introduction'),
-                FieldPanel('lead_image'),
+                FieldPanel('lead_graphic'),
                 FieldPanel('image_caption'),
             ]
         ),
         MultiFieldPanel(
             heading='Teaser',
             children=[
-                FieldPanel('teaser_image'),
+                FieldPanel('teaser_graphic'),
                 FieldPanel('teaser_text'),
             ]
         ),
@@ -291,7 +307,8 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
     subpage_types = []
 
     def get_meta_image(self):
-        return self.teaser_image or super(BlogPage, self).get_meta_image()
+        teaser_is_image = self.teaser_graphic and self.teaser_graphic[0] and self.teaser_graphic[0].block_type == "image"
+        return self.teaser_graphic[0].value if teaser_is_image else super(BlogPage, self).get_meta_image()
 
     def get_meta_description(self):
         if self.teaser_text:
