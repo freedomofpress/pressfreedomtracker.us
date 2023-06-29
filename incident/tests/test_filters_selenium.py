@@ -26,7 +26,8 @@ from incident.tests.factories import (
     EquipmentFactory,
     EquipmentBrokenFactory,
 )
-from incident.models import choices, State
+from incident import choices
+from incident.models import State
 
 
 def powerset(iterable):

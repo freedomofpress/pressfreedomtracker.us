@@ -16,7 +16,7 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
     RichTextTemplateBlock,
 )
-from incident.models import choices
+from incident import choices
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 from statistics.blocks import StatisticsBlock
 

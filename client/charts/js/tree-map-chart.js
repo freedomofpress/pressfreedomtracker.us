@@ -21,12 +21,28 @@ function engageCharts() {
 
 		const filterUpperDate = upperValue ? new Date(upperValue) : null
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
+		const url = chartNode.dataset.url
+
+		let dataKey = ['dataset']
+		let dataUrl = [url]
+		let dataParser = [(data) => d3.csvParse(data, d3.autoType)]
+
+		const branchFieldName = chartNode.dataset.branchFieldName
+		const branches = JSON.parse(chartNode.dataset.branches)
+		let additionalProps = {}
+		if (branches.type == 'list') {
+			additionalProps.branches = branches.value
+		} else if (branches.type == 'url') {
+			dataUrl.push(branches.value)
+			dataKey.push("branches")
+			dataParser.push(JSON.parse)
+		}
 
 		root.render((
 			<DataLoader
-				dataUrl={[`/api/edge/incidents/homepage_csv/?`, '/api/edge/categories/']}
-				dataKey={['dataset', 'categories']}
-				dataParser={[(data) => d3.csvParse(data, d3.autoType), JSON.parse]}
+				dataUrl={dataUrl}
+				dataKey={dataKey}
+				dataParser={dataParser}
 			>
 				<TreeMapChart
 					filterCategories={filterCategories}
@@ -37,6 +53,8 @@ function engageCharts() {
 					creditUrl={chartNode.baseURI}
 					interactive={interactive}
 					fullSize={fullSize}
+					branchFieldName={branchFieldName}
+					{...additionalProps}
 				/>
 			</DataLoader>
 		))

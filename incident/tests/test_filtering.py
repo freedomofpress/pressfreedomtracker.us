@@ -14,8 +14,8 @@ from common.models import CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from incident.tests import factories
-from incident.models import choices
-from incident.models.choices import (
+from incident import choices
+from incident.choices import (
     ARREST_STATUS,
     DETENTION_STATUS,
     STATUS_OF_CHARGES,

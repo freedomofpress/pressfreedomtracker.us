@@ -2,6 +2,7 @@ import datetime
 from factory import RelatedFactory, Trait, Faker, SubFactory, LazyAttribute, Iterator, Sequence
 import factory
 import random
+from operator import itemgetter
 import wagtail_factories
 from wagtail.rich_text import RichText
 from faker.providers import BaseProvider
@@ -30,6 +31,8 @@ from incident.models import (
     Venue,
     LegalOrder,
     LegalOrderUpdate,
+    IncidentCharge,
+    ChargeUpdate,
 )
 from common.models import CustomImage
 from common.tests.factories import (
@@ -150,12 +153,43 @@ class VenueFactory(ItemFactory):
     title = factory.Faker('pystr_format', string_format='{{ venue_region }} District Court of {{ state}}')
 
 
+class ChargeUpdateFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ChargeUpdate
+
+    date = Faker(
+        'date_between',
+        start_date=factory.SelfAttribute('..incident_charge.date'),
+    )
+    status = factory.Iterator(choices.STATUS_OF_CHARGES, getter=itemgetter(0))
+    notes = ''
+
+
 class ChargeFactory(ItemFactory):
     class Meta:
         model = Charge
         django_get_or_create = ('title',)
 
     title = factory.Faker('pystr_format', string_format='{{degree}} {{crime}}')
+
+
+class IncidentChargeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = IncidentCharge
+
+    date = Faker(
+        'past_datetime',
+        start_date='-2y',
+        tzinfo=datetime.timezone.utc,
+    )
+    charge = factory.SubFactory(ChargeFactory)
+    status = 'CHARGES_PENDING'
+    notes = ''
+    updates = factory.RelatedFactoryList(
+        ChargeUpdateFactory,
+        factory_related_name='incident_charge',
+        size=lambda: random.choice([0, 1, 1, 1, 2, 3]),
+    )
 
 
 class EquipmentFactory(factory.django.DjangoModelFactory):
@@ -362,8 +396,11 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         arrest = factory.Trait(
             arrest_status=factory.Iterator(
                 choices.ARREST_STATUS, getter=lambda c: c[0]),
-            status_of_charges=factory.Iterator(
-                choices.STATUS_OF_CHARGES, getter=lambda c: c[0]),
+            charges=factory.RelatedFactoryList(
+                IncidentChargeFactory,
+                factory_related_name='incident_page',
+                size=lambda: random.choice([1, 1, 1, 2, 2, 3]),
+            ),
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
             release_date=datetime.date.today(),
             detention_date=datetime.date.today() - datetime.timedelta(days=3),
