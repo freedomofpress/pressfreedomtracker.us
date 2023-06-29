@@ -4,7 +4,7 @@ from django import forms
 from django.utils.text import capfirst
 from django.apps import apps
 
-from incident.models import choices
+from incident import choices
 
 
 class Datalist(forms.TextInput):

@@ -27,7 +27,7 @@ from common.tests.factories import (
 )
 from geonames.models import Country, Region, GeoName
 from home.tests.factories import HomePageFactory
-from incident.models import choices
+from incident import choices
 from incident.models.incident_page import IncidentPage
 from incident.models.topic_page import TopicPage
 from incident.models.export import is_exportable, to_row

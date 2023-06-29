@@ -46,8 +46,6 @@ fake = Faker()
 FACTORY_ARGS_BY_CATEGORY = {
     'arrest': {
         'arrest': True,
-        'current_charges': 1,
-        'dropped_charges': 1,
     },
     'equipment_search': {
         'equipment_search': True,

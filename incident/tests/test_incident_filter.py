@@ -19,7 +19,7 @@ from common.models import (
 )
 from common.tests.factories import CategoryPageFactory
 from incident.models import IncidentPage
-from incident.models.choices import ARREST_STATUS, STATUS_OF_CHARGES
+from incident.choices import ARREST_STATUS, STATUS_OF_CHARGES
 from incident.utils.incident_filter import (
     IncidentFilter,
     ManyRelationFilter,
