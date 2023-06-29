@@ -87,7 +87,7 @@ exports[`renders BarChart with mocked data 1`] = `
     <AnimatedDataset
       attrs={
         {
-          "cursor": "pointer",
+          "cursor": "inherit",
           "fill": [Function],
           "height": [Function],
           "shapeRendering": "crispEdges",
@@ -164,11 +164,9 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
-        wrap={[Function]}
         wrapperComponent={
           <a
             aria-label="Nov: 0 incidents"
-            href=""
             role="link"
           />
         }
@@ -181,7 +179,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -207,11 +205,9 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
-        wrap={[Function]}
         wrapperComponent={
           <a
             aria-label="Dec: 0 incidents"
-            href=""
             role="link"
           />
         }
@@ -224,7 +220,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -250,11 +246,9 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
-        wrap={[Function]}
         wrapperComponent={
           <a
             aria-label="Jan: 0 incidents"
-            href=""
             role="link"
           />
         }
@@ -267,7 +261,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -293,11 +287,9 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
-        wrap={[Function]}
         wrapperComponent={
           <a
             aria-label="Feb: 0 incidents"
-            href=""
             role="link"
           />
         }
@@ -310,7 +302,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -336,11 +328,9 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
-        wrap={[Function]}
         wrapperComponent={
           <a
             aria-label="Mar: 0 incidents"
-            href=""
             role="link"
           />
         }
@@ -353,7 +343,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }
@@ -379,11 +369,9 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
-        wrap={[Function]}
         wrapperComponent={
           <a
             aria-label="Apr: 0 incidents"
-            href=""
             role="link"
           />
         }
@@ -396,7 +384,7 @@ exports[`renders BarChart with mocked data 1`] = `
           shapeRendering="crispEdges"
           style={
             {
-              "cursor": "pointer",
+              "cursor": "inherit",
               "opacity": 0,
             }
           }

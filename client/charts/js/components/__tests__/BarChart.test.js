@@ -13,7 +13,6 @@ test('renders BarChart with mocked data', () => {
 			isMobileView={false}
 			width={480}
 			height={500}
-			searchPageURL={() => ""}
 		/>
 	)).toMatchSnapshot();
 });
