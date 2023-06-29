@@ -4,8 +4,18 @@
     <figure class="primary-banner-media">
         {% if video %}
             {% embed video %}
-        {% elif image %}
-            {% image image width-910 alt=image.attribution|default:image.title %}
+        {% elif image.0.block_type == "image" %}
+						<div class="primary-banner-media__inner">
+							  {% image image.0.value width-910 alt=image.attribution|default:image.0.value.title %}
+            </div>
+        {% elif image.0.block_type == "vertical_bar_chart" %}
+            {% include 'common/blocks/vertical_bar_chart.html' with value=image.0.value static_graphic=true %}
+        {% elif image.0.block_type == "tree_map_chart" %}
+			      {% include 'common/blocks/tree_map_chart.html' with value=image.0.value static_graphic=true %}
+        {% elif image.0.block_type == "bubble_map_chart" %}
+						<div class="primary-banner-media__inner">
+                {% include 'common/blocks/bubble_map_chart.html' with value=image.0.value static_graphic=true %}
+						</div>
         {% endif %}
         {% if caption or image.attribution %}
             <figcaption class="media-caption">

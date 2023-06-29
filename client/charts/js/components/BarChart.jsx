@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
+import DynamicWrapper from './DynamicWrapper'
 import Slider from './Slider'
 import Tooltip from './Tooltip'
 
@@ -49,10 +50,11 @@ export default function BarChart({
 	id = '',
 	numberOfTicks = 4,
 	description,
-	openSearchPage,
+	searchPageURL,
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
+	interactive = true,
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -109,7 +111,7 @@ export default function BarChart({
 	if (!isMobileView) {
 		return (
 			<>
-				{hoveredElement && (
+				{hoveredElement && interactive && (
 					<Tooltip
 						content={
 							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -134,9 +136,6 @@ export default function BarChart({
 					/>
 				)}
 				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					xmlnsXlink="http://www.w3.org/1999/xlink"
-					version="1.1"
 					ref={setSvgEl}
 					width={width}
 					height={height}
@@ -210,7 +209,7 @@ export default function BarChart({
 								hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
 							strokeWidth: borders.normal,
 							stroke: (d) => (hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
-							cursor: 'pointer',
+							cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 							shapeRendering: 'crispEdges',
 						}}
 						duration={250}
@@ -218,26 +217,36 @@ export default function BarChart({
 						keyFn={(d) => d.index}
 					/>
 					{dataset.map((d) => (
-						<g key={d[x]}>
-							<rect
-								x={xScaleOverLayer(d[x])}
-								y={yScale(d[y])}
-								height={computeBarheight(d[y])}
-								width={xScaleOverLayer.bandwidth()}
-								style={{
-									opacity: 0,
-									cursor: 'pointer',
-								}}
-								onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
-								onMouseMove={updateTooltipPosition}
-								onMouseLeave={() => setHoveredElement(null)}
-								onMouseUp={() => openSearchPage(xFormat(d[x]))}
-								shapeRendering="crispEdges"
+						<g key={d[x]} style={{ pointerEvents: interactive ? "auto" : "none" }}>
+							<DynamicWrapper
+								wrapperComponent={
+									<a
+										href={searchPageURL && searchPageURL(xFormat(d[x]))}
+										role="link"
+										aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+									/>
+								}
+								wrap={interactive && searchPageURL}
 							>
-								<title>
-									{`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
-								</title>
-							</rect>
+								<rect
+									x={xScaleOverLayer(d[x])}
+									y={yScale(d[y])}
+									height={computeBarheight(d[y])}
+									width={xScaleOverLayer.bandwidth()}
+									style={{
+										opacity: 0,
+										cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
+									}}
+									onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
+									onMouseMove={updateTooltipPosition}
+									onMouseLeave={() => setHoveredElement(null)}
+									shapeRendering="crispEdges"
+								>
+									<title>
+										{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
+									</title>
+								</rect>
+							</DynamicWrapper>
 						</g>
 					))}
 					<AnimatedDataset
@@ -320,27 +329,53 @@ export default function BarChart({
 						keyFn={(d) => d}
 					/>
 				</g>
-				<AnimatedDataset
-					dataset={dataset}
-					tag="rect"
-					attrs={{
-						x: (d) => xScale(d[x]),
-						y: (d) => yScale(d[y]),
-						height: (d) => computeBarheight(d[y]),
-						width: xScale.bandwidth(),
-						fill: (d) =>
-							sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
-						strokeWidth: borders.normal,
-						stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
-						cursor: 'pointer',
-						shapeRendering: 'crispEdges',
-					}}
-					events={{
-						onMouseUp: (mouseEvent, d) => openSearchPage(d[x]),
-					}}
-					duration={250}
-					keyFn={(d) => d.index}
-				/>
+				<DynamicWrapper
+					wrapperComponent={
+						<AnimatedDataset
+							dataset={dataset}
+							tag="a"
+							attrs={{
+								href: d => searchPageURL && d && searchPageURL(d[x]),
+								role: "link",
+								ariaLabel: d => d && `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
+							}}
+							keyFn={(d) => d.index}
+						/>
+					}
+					wrap={searchPageURL}
+				>
+					<AnimatedDataset
+						dataset={searchPageURL ? undefined : dataset}
+						tag="rect"
+						attrs={{
+							x: (d) => xScale(d[x]),
+							y: (d) => yScale(d[y]),
+							height: (d) => computeBarheight(d[y]),
+							width: xScale.bandwidth(),
+							fill: (d) =>
+								sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
+							strokeWidth: borders.normal,
+							stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
+							cursor: searchPageURL ? 'pointer' : 'inherit',
+							shapeRendering: 'crispEdges',
+						}}
+						duration={250}
+						keyFn={(d) => d.index}
+					/>
+					<text
+						x={width / 2}
+						y={height - paddings.mobile / 2 - 7}
+						textAnchor="middle"
+						style={{
+							fill: 'black',
+							fontFamily: 'var(--font-base)',
+							fontWeight: 500,
+							fontSize: '14px',
+						}}
+					>
+						{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
+					</text>
+				</DynamicWrapper>
 				<Slider
 					elements={dataset.map((d) => d[x])}
 					xScale={xSlider}
@@ -349,20 +384,6 @@ export default function BarChart({
 					sliderSelection={sliderSelection}
 					idContainer={'barchart-svg'}
 				/>
-
-				<text
-					x={width / 2}
-					y={height - paddings.mobile / 2 - 7}
-					textAnchor="middle"
-					style={{
-						fill: 'black',
-						fontFamily: 'var(--font-base)',
-						fontWeight: 500,
-						fontSize: '14px',
-					}}
-				>
-					{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
-				</text>
 			</svg>
 		)
 	}
@@ -377,5 +398,5 @@ BarChart.propTypes = {
 	width: PropTypes.number.isRequired,
 	height: PropTypes.number.isRequired,
 	numberOfTicks: PropTypes.number,
-	openSearchPage: PropTypes.func,
+	searchPageURL: PropTypes.func,
 }

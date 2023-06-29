@@ -10,9 +10,9 @@ import {
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
 	groupByState,
-	goToFilterPage,
 	countIncidentsOutsideUS,
 	categoriesColors,
+	getFilteredUrl,
 } from '../lib/utilities.js'
 
 import '../../sass/HomepageMainCharts.sass'
@@ -87,9 +87,9 @@ function HomepageMainChartsWidth({
 						minimumBarHeight={35}
 						categoryColumn={'categories'}
 						titleLabel={'incidents'}
-						openSearchPage={(category) => {
-							goToFilterPage(databasePath, { category }, currentDate, categories)
-						}}
+						searchPageURL={(category) =>
+							getFilteredUrl(databasePath, { category }, currentDate, categories)
+						}
 						categoriesColors={categoriesColorMap}
 						allCategories={Object.keys(categoriesColorMap)}
 					/>
@@ -104,9 +104,9 @@ function HomepageMainChartsWidth({
 						width={chartWidth}
 						height={chartHeight}
 						id={'homepage-usmap-chart-label'}
-						openSearchPage={(state) => {
-							goToFilterPage(databasePath, { ...filtersApplied, state }, currentDate, categories)
-						}}
+						searchPageURL={(state) =>
+							getFilteredUrl(databasePath, { ...filtersApplied, state }, currentDate, categories)
+						}
 						addBottomBorder={true}
 					/>
 				</div>
@@ -121,9 +121,9 @@ function HomepageMainChartsWidth({
 						width={chartWidth}
 						height={chartHeight}
 						isMobileView={width < 970}
-						openSearchPage={(monthName) => {
-							goToFilterPage(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
-						}}
+						searchPageURL={(monthName) =>
+							getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+						}
 					/>
 				</div>
 			</div>

@@ -10,7 +10,7 @@
 					{% if type %}blog-list__item--{{ type }}{% endif %}
 					{% if ajax_load %}js-article-loading-item{% endif %}"
 			>
-				{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'small' photo=blog.teaser_image only %}
+				{% include 'blog/_blog_card.html' with post=blog size=card_size|default:'small' photo=blog.teaser_graphic only %}
 			</li>
 		{% endfor %}
 	</ol>
