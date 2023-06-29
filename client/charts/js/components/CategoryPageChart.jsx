@@ -4,7 +4,7 @@ import Flashing from '../../../common/js/components/Flashing'
 import ChartDescription from "./ChartDescription"
 import BarChart from "./BarChart"
 import {
-	goToFilterPage,
+	getFilteredUrl,
 	groupByYearsSorted,
 } from '../lib/utilities.js'
 
@@ -49,9 +49,9 @@ function CategoryPageChartWidth({
 							width={width}
 							height={chartHeight}
 							isMobileView={width < 480}
-							openSearchPage={(year) => {
-								goToFilterPage(databasePath, {category, year}, new Date(), categories)
-							}}
+							searchPageURL={(year) =>
+								getFilteredUrl(databasePath, {category, year}, new Date(), categories)
+							}
 						/>
 					)}
 				</div>
