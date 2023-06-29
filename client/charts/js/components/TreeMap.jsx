@@ -482,7 +482,6 @@ export default function TreeMap({
 										}}
 										onClick={() => toggleSelectedCategory(d.category)}
 										onMouseEnter={() => setHoveredElement(d.category)}
-										onMouseUp={() => openSearchPage(d.category)}
 										cursor={interactive ? 'pointer' : 'inherit'}
 										pointerEvents={interactive ? "auto" : "none"}
 										tabIndex="0"
