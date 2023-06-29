@@ -87,7 +87,7 @@ exports[`renders BarChart with mocked data 1`] = `
     <AnimatedDataset
       attrs={
         {
-          "cursor": "pointer",
+          "cursor": "inherit",
           "fill": [Function],
           "height": [Function],
           "shapeRendering": "crispEdges",
@@ -156,7 +156,13 @@ exports[`renders BarChart with mocked data 1`] = `
       keyFn={[Function]}
       tag="rect"
     />
-    <g>
+    <g
+      style={
+        {
+          "pointerEvents": "auto",
+        }
+      }
+    >
       <DynamicWrapper
         wrapperComponent={
           <a
@@ -191,7 +197,13 @@ exports[`renders BarChart with mocked data 1`] = `
         </rect>
       </DynamicWrapper>
     </g>
-    <g>
+    <g
+      style={
+        {
+          "pointerEvents": "auto",
+        }
+      }
+    >
       <DynamicWrapper
         wrapperComponent={
           <a
@@ -226,7 +238,13 @@ exports[`renders BarChart with mocked data 1`] = `
         </rect>
       </DynamicWrapper>
     </g>
-    <g>
+    <g
+      style={
+        {
+          "pointerEvents": "auto",
+        }
+      }
+    >
       <DynamicWrapper
         wrapperComponent={
           <a
@@ -261,7 +279,13 @@ exports[`renders BarChart with mocked data 1`] = `
         </rect>
       </DynamicWrapper>
     </g>
-    <g>
+    <g
+      style={
+        {
+          "pointerEvents": "auto",
+        }
+      }
+    >
       <DynamicWrapper
         wrapperComponent={
           <a
@@ -296,7 +320,13 @@ exports[`renders BarChart with mocked data 1`] = `
         </rect>
       </DynamicWrapper>
     </g>
-    <g>
+    <g
+      style={
+        {
+          "pointerEvents": "auto",
+        }
+      }
+    >
       <DynamicWrapper
         wrapperComponent={
           <a
@@ -331,7 +361,13 @@ exports[`renders BarChart with mocked data 1`] = `
         </rect>
       </DynamicWrapper>
     </g>
-    <g>
+    <g
+      style={
+        {
+          "pointerEvents": "auto",
+        }
+      }
+    >
       <DynamicWrapper
         wrapperComponent={
           <a

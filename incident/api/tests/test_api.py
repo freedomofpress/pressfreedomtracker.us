@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from wagtail.models import Site
 from django.urls import reverse
 
-from incident.models import choices
+from incident import choices
 from common.tests.factories import (
     PersonPageFactory,
     CategoryPageFactory,

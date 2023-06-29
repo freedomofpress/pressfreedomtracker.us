@@ -264,15 +264,15 @@
 
 		<h4 class="heading-regular">Incident Card (Big, Photo)</h4>
 		<code><pre>
-    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' photo=incident.teaser_image only %&rbrace;
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' photo=incident.teaser_graphic.0 only %&rbrace;
 		</pre></code>
-		{% include "incident/_incident_card.html" with incident=incident size="big" photo=incident.teaser_image only %}
+		{% include "incident/_incident_card.html" with incident=incident size="big" photo=incident.teaser_graphic.0 only %}
 
 		<h4 class="heading-regular">Incident Card (Big, Photo, Small Details)</h4>
 		<code><pre>
-    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' details='small' photo=incident.teaser_image only %&rbrace;
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='big' details='small' photo=incident.teaser_graphic.0 only %&rbrace;
 		</pre></code>
-		{% include "incident/_incident_card.html" with incident=incident size="big" details="small" photo=incident.teaser_image only %}
+		{% include "incident/_incident_card.html" with incident=incident size="big" details="small" photo=incident.teaser_graphic.0 only %}
 
 		<h4 class="heading-regular">Incident Card (Small, No Photo)</h4>
 		<code><pre>
@@ -282,22 +282,22 @@
 
 		<h4 class="heading-regular">Incident Card (Small, Photo)</h4>
 		<code><pre>
-    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' photo=incident.teaser_image only %&rbrace;
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' photo=incident.teaser_graphic.0 only %&rbrace;
 		</pre></code>
-		{% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_image only %}
+		{% include "incident/_incident_card.html" with incident=incident size="small" photo=incident.teaser_graphic.0 only %}
 
 		<h4 class="heading-regular">Incident Card (Small, Photo, Small Details)</h4>
 		<code><pre>
-    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' details='small' photo=incident.teaser_image only %&rbrace;
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='small' details='small' photo=incident.teaser_graphic.0 only %&rbrace;
 		</pre></code>
-		{% include "incident/_incident_card.html" with incident=incident size="small" details="small" photo=incident.teaser_image only %}
+		{% include "incident/_incident_card.html" with incident=incident size="small" details="small" photo=incident.teaser_graphic.0 only %}
 
 		<h4 class="heading-regular">Incident Card (Collapsible)</h4>
 		Collapsible cards are the same as small cards, except with a collapsible layout on mobile viewports.
 		<code><pre>
-    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='collapsible' photo=incident.teaser_image only %&rbrace;
+    &lbrace;% include 'incident/_incident_card.html' with incident=incident size='collapsible' photo=incident.teaser_graphic.0 only %&rbrace;
 		</pre></code>
-		{% include "incident/_incident_card.html" with incident=incident size="collapsible" photo=incident.teaser_image only %}
+		{% include "incident/_incident_card.html" with incident=incident size="collapsible" photo=incident.teaser_graphic.0 only %}
 
 		<h4 class="heading-regular">Blog Card (Big, No Photo)</h4>
 		<code>
@@ -307,9 +307,9 @@
 
 		<h4 class="heading-regular">Blog Card (Big, Photo)</h4>
 		<code>
-            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='big' photo=incident.teaser_image only %&rbrace;
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='big' photo=incident.teaser_graphic.0 only %&rbrace;
 		</code>
-		{% include "blog/_blog_card.html" with post=blog_page size="big" photo=blog_page.teaser_image only %}
+		{% include "blog/_blog_card.html" with post=blog_page size="big" photo=blog_page.teaser_graphic.0 only %}
 
 		<h4 class="heading-regular">Blog Card (Small, No Photo)</h4>
 		<code>
@@ -319,9 +319,9 @@
 
 		<h4 class="heading-regular">Blog Card (Small, Photo)</h4>
 		<code>
-            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='small' photo=incident.teaser_image only %&rbrace;
+            &lbrace;% include 'blog/_blog_card.html' with post=blog_page size='small' photo=incident.teaser_graphic.0 only %&rbrace;
 		</code>
-		{% include "blog/_blog_card.html" with post=blog_page size="small" photo=blog_page.teaser_image only %}
+		{% include "blog/_blog_card.html" with post=blog_page size="small" photo=blog_page.teaser_graphic.0 only %}
 	</details>
 
 	<hr/>

@@ -3,6 +3,7 @@ import { filterDatasets, categoriesColors } from '../lib/utilities'
 import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
 import TreeMap from './TreeMap'
+import TreeMapMini from './TreeMapMini'
 
 export default ({
 	dataset,
@@ -13,12 +14,16 @@ export default ({
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	isMobileView = false,
 	creditUrl = '',
-	categories
+	branchFieldName,
+	categories,
+	branches,
+	interactive = true,
+	fullSize = true,
 }) => {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
 
-	const categoriesColorMap = [...(new Set([...filterCategories, ...categories.map(d => d.title)]))]
+	const categoriesColorMap = [...(new Set([...branches.map(d => d.title)]))]
 		.reduce(
 			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
 			{}
@@ -26,26 +31,39 @@ export default ({
 
 	return (
 		<ParentSize>
-			{(parent) =>
-				<ChartDownloader
-					chartTitle={title}
-					creditUrl={creditUrl}
-					downloadFileName={title ? `${title}.png` : 'chart.png'}
-				>
-					<TreeMap
-						data={filteredDataset}
-						categoryColumn="categories"
-						description={description}
-						titleLabel={'incidents'}
-						width={parent.width}
-						height={parent.width * 0.75}
-						isMobileView={isMobileView}
-						categoriesColors={categoriesColorMap}
-						allCategories={Object.keys(categoriesColorMap)}
-						minimumBarHeight={35}
-					/>
-				</ChartDownloader>
-			}
+			{(parent) => {
+				const treemap = fullSize ? (
+						<TreeMap
+							data={filteredDataset}
+							categoryColumn={branchFieldName}
+							description={description}
+							titleLabel={'incidents'}
+							width={parent.width}
+							height={Math.min(parent.width * 0.75, 600)}
+							isMobileView={isMobileView}
+							categoriesColors={categoriesColorMap}
+							allCategories={Object.keys(categoriesColorMap)}
+							minimumBarHeight={35}
+							interactive={interactive}
+						/>
+					) : (
+						<TreeMapMini
+							data={filteredDataset}
+							categoryColumn={branchFieldName}
+							categoriesColors={categoriesColorMap}
+						 	allCategories={Object.keys(categoriesColorMap)}
+						/>
+				)
+				return interactive ? (
+					<ChartDownloader
+						chartTitle={title}
+						creditUrl={creditUrl}
+						downloadFileName={title ? `${title}.png` : 'chart.png'}
+					>
+						{treemap}
+					</ChartDownloader>
+				) : treemap
+			}}
 		</ParentSize>
 	)
 }

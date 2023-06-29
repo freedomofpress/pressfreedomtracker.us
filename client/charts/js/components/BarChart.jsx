@@ -54,6 +54,7 @@ export default function BarChart({
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
+	interactive = true,
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -110,7 +111,7 @@ export default function BarChart({
 	if (!isMobileView) {
 		return (
 			<>
-				{hoveredElement && (
+				{hoveredElement && interactive && (
 					<Tooltip
 						content={
 							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -208,7 +209,7 @@ export default function BarChart({
 								hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
 							strokeWidth: borders.normal,
 							stroke: (d) => (hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
-							cursor: 'pointer',
+							cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 							shapeRendering: 'crispEdges',
 						}}
 						duration={250}
@@ -216,7 +217,7 @@ export default function BarChart({
 						keyFn={(d) => d.index}
 					/>
 					{dataset.map((d) => (
-						<g key={d[x]}>
+						<g key={d[x]} style={{ pointerEvents: interactive ? "auto" : "none" }}>
 							<DynamicWrapper
 								wrapperComponent={
 									<a
@@ -225,7 +226,7 @@ export default function BarChart({
 										aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
 									/>
 								}
-								wrap={searchPageURL}
+								wrap={interactive && searchPageURL}
 							>
 								<rect
 									x={xScaleOverLayer(d[x])}
@@ -234,7 +235,7 @@ export default function BarChart({
 									width={xScaleOverLayer.bandwidth()}
 									style={{
 										opacity: 0,
-										cursor: searchPageURL ? 'pointer' : 'inherit',
+										cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 									}}
 									onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
 									onMouseMove={updateTooltipPosition}

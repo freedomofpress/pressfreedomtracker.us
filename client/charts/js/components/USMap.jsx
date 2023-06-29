@@ -56,6 +56,7 @@ export default function USMap({
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
 	setSvgEl = () => {},
+	interactive = true,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -77,7 +78,7 @@ export default function USMap({
 
 	return (
 		<>
-			{hoveredElement && hoveredElement !== 'Abroad' && (
+			{hoveredElement && interactive && hoveredElement !== 'Abroad' && (
 				<Tooltip
 					content={
 						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
@@ -167,7 +168,7 @@ export default function USMap({
 							keyFn={(d) => `${aggregationLocality(d)}`}
 						/>
 					</g>
-					<g role="list" aria-label="U.S. Map">
+					<g role="list" aria-label="U.S. Map" style={{ pointerEvents: interactive ? "auto" : "none" }}>
 						{dataset.filter(hasLatLon).map((d) => (
 							<DynamicWrapper
 								wrapperComponent={
@@ -177,7 +178,7 @@ export default function USMap({
 										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									/>
 								}
-								wrap={searchPageURL}
+								wrap={interactive && searchPageURL}
 							>
 								<circle
 									role="listitem"
@@ -185,7 +186,7 @@ export default function USMap({
 									cx={projection([d.longitude, d.latitude])[0]}
 									cy={projection([d.longitude, d.latitude])[1]}
 									r={markerScale(d.numberOfIncidents) + 5}
-									style={{ opacity: 0, cursor: searchPageURL ? 'pointer' : 'inherit' }}
+									style={{ opacity: 0, cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit' }}
 									onMouseMove={updateTooltipPosition}
 									onMouseEnter={(mouseEvent) => {
 										setHoveredElement(`${aggregationLocality(d)}`)
@@ -202,11 +203,30 @@ export default function USMap({
 
 				{incidentsOutsideUS && searchPageURL && (
 					<g>
-						<a
-							href={searchPageURL()}
-							role="link"
-							aria-label="Incidents recorded outside of the US"
-						>
+						{interactive ? (
+							<a
+								href={searchPageURL()}
+								role="link"
+								aria-label="Incidents recorded outside of the US"
+							>
+								<rect
+									x="0"
+									y={
+										height -
+										paddings.bottom -
+										paddings.text * 2 -
+										markerBorder.grid -
+										(width > 400 ? 14 : 12)
+									}
+									width={width}
+									height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
+									fill="white"
+									style={{ cursor: 'pointer' }}
+									onMouseEnter={() => setHoveredElement('Abroad')}
+									onMouseOut={() => setHoveredElement(null)}
+								/>
+							</a>
+						) : (
 							<rect
 								x="0"
 								y={
@@ -219,13 +239,8 @@ export default function USMap({
 								width={width}
 								height={paddings.text * 2 + markerBorder.grid + (width > 400 ? 14 : 12)}
 								fill="white"
-								style={{
-									cursor: 'pointer',
-								}}
-								onMouseEnter={() => setHoveredElement('Abroad')}
-								onMouseOut={() => setHoveredElement(null)}
 							/>
-						</a>
+						)}
 
 						<AnimatedDataset
 							dataset={['Incidents recorded outside of the US:']}
@@ -235,7 +250,7 @@ export default function USMap({
 								y: height - paddings.bottom - paddings.text - markerBorder.grid,
 								fontSize: width > 400 ? '14px' : '12px',
 								fontFamily: 'var(--font-base)',
-								cursor: 'pointer',
+								cursor: interactive ? 'pointer' : 'inherit',
 								fill: 'black',
 								pointerEvents: 'none',
 								text: (d) => d,
@@ -251,7 +266,7 @@ export default function USMap({
 								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
 								fontSize: width > 400 ? 14 : 12,
 								fontFamily: 'var(--font-base)',
-								cursor: 'pointer',
+								cursor: interactive ? 'pointer' : 'inherit',
 								fill: 'black',
 								textAnchor: 'end',
 								pointerEvents: 'none',
@@ -380,7 +395,7 @@ export default function USMap({
 								y: height - paddings.bottom - paddings.text - markerBorder.grid - 1,
 								fontSize: width > 400 ? 13 : 11,
 								fontFamily: 'var(--font-base)',
-								cursor: 'pointer',
+								cursor: interactive ? 'pointer' : 'inherit',
 								fill: '#bdbdbd',
 								textAnchor: 'end',
 								text: (d) => d,

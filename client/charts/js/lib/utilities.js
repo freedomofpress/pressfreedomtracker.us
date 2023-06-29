@@ -85,11 +85,6 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 	return `${baseUrl}${parameters.join('&')}`
 }
 
-export function goToFilterPage(databasePath, filtersApplied, currentDate, categories) {
-	const url = getFilteredUrl(databasePath, filtersApplied, currentDate, categories)
-	window.location = url
-}
-
 export function filterDatasetByTag(dataset, tag) {
 	return dataset.filter(
 		(d) =>

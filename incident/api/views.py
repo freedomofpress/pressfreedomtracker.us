@@ -181,6 +181,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
                 'links': 'link_summary',
                 'equipment_broken': 'equipment_broken_summary',
                 'equipment_seized': 'equipment_seized_summary',
+                'status_of_charges': 'status_of_charges_summary',
                 'arresting_authority': 'arresting_authority_title',
                 'status_of_seized_equipment': 'status_of_seized_equipment_display',
                 'arrest_status': 'arrest_status_display',

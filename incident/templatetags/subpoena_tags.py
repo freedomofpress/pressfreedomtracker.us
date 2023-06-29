@@ -1,5 +1,5 @@
 from django import template
-from incident.models import choices
+from incident import choices
 
 
 register = template.Library()

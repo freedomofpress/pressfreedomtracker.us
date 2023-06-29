@@ -5,8 +5,9 @@ import DataLoader from "../../charts/js/components/DataLoader"
 import * as d3 from 'd3'
 
 function engageCharts() {
-	const charts = document.querySelectorAll('.chart-bubble-map')
+	const charts = document.querySelectorAll('.chart-bubble-map:not(.engaged)')
 	charts.forEach((chartNode) => {
+		chartNode.classList.add('engaged')
 		let root = createRoot(chartNode)
 		const categoryKeys = Object.keys(chartNode.dataset || {}).filter(d => d.indexOf('category') === 0)
 		const filterCategories = categoryKeys.map(k => chartNode.dataset[k])
@@ -16,6 +17,8 @@ function engageCharts() {
 		const groupBy = chartNode.dataset?.groupBy
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
+		const interactive = !!chartNode.dataset?.interactive
+		const fullSize = !!chartNode.dataset?.fullSize
 
 		const filterUpperDate = upperValue ? new Date(upperValue) : null
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
@@ -34,6 +37,8 @@ function engageCharts() {
 					title={title}
 					description={description}
 					creditUrl={chartNode.baseURI}
+					interactive={interactive}
+					fullSize={fullSize}
 				/>
 			</DataLoader>
 		))
