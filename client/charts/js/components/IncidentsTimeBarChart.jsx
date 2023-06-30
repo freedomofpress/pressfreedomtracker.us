@@ -6,22 +6,7 @@ import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
 import { filterDatasets } from '../lib/utilities'
 
-export default function IncidentsTimeBarChart({
-	dataset,
-	title,
-	description,
-	filterCategories = [], // Array of valid categories or category
-	filterTags = null, // Array or string of valid tags or tag
-	dateRange = [null, null], // Array representing the min and max of dates to show
-	timePeriod,
-	isMobileView = false,
-	creditUrl = '',
-	interactive = true,
-	fullSize = true,
-}) {
-	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
-
+export function processIncidentsTimeData(filteredDataset, timePeriod) {
 	// Rollup the incidents by month-year
 	const incidentsByMonth = Array
 		.from(d3.rollup(filteredDataset, d => d.length, d => d3.utcFormat('%Y-%m')(d.date)))
@@ -60,6 +45,27 @@ export default function IncidentsTimeBarChart({
 	const incidentsByAllTime = allTime
 		.map((date) => ({ date, count: incidentsByTime[timeFormat(date)] || 0 }))
 		.sort((a, b) => a.date - b.date)
+
+	return { incidentsByAllTime, xFormat, showByYears, allTime }
+}
+
+export default function IncidentsTimeBarChart({
+	dataset,
+	title,
+	description,
+	filterCategories = [], // Array of valid categories or category
+	filterTags = null, // Array or string of valid tags or tag
+	dateRange = [null, null], // Array representing the min and max of dates to show
+	timePeriod,
+	isMobileView = false,
+	creditUrl = '',
+	interactive = true,
+	fullSize = true,
+}) {
+	// Filter down to the categories and tags and date range we want
+	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
+
+	const { incidentsByAllTime, xFormat, showByYears, allTime } = processIncidentsTimeData(filteredDataset, timePeriod);
 
 	// Generate a default description for a11y
 	const startYear = d3.utcFormat("%Y")(allTime[0])
