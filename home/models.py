@@ -17,12 +17,12 @@ from wagtail.fields import RichTextField
 from wagtail.models import Page, Orderable, Site
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
-from common.models import MetadataPageMixin
+from common.models import MetadataPageMixin, MediaPageMixin
 from common.models.settings import SearchSettings
 from incident.utils.incident_filter import get_serialized_filters
 
 
-class HomePage(MetadataPageMixin, Page):
+class HomePage(MetadataPageMixin, MediaPageMixin, Page):
     about = RichTextField(
         blank=True,
         null=True,
