@@ -163,6 +163,14 @@ class MediaPageMixin:
         except Exception:
             pass
 
+        # If the page is a home page, loop through all the panels and posts to see if
+        # there is a chart as the primary image
+        try:
+            for blog_post in self.featured_blog_posts.select_related('page'):
+                block_cls_names = block_cls_names + get_page_blocks(blog_post.page)
+        except Exception:
+            pass
+
         for block_cls_name in block_cls_names:
             block_cls = import_string(block_cls_name)
             if hasattr(block_cls, 'Media') and hasattr(

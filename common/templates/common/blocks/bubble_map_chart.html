@@ -1,4 +1,4 @@
-{% if value.title %}<h2>{{ value.title }}</h2>{% endif %}
+{% if static_graphic is None and value.title %}<h2>{{ value.title }}</h2>{% endif %}
 <div class="chartContainer">
 	<div
 		class="chart-bubble-map"
@@ -27,6 +27,9 @@
 		{% endif %}
 		{% if static_graphic is None %}
 			data-interactive="true"
+		{% endif %}
+		{% if mini_graphic is None %}
+			data-full-size="true"
 		{% endif %}
 	></div>
 </div>
