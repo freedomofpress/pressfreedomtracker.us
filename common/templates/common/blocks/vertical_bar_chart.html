@@ -1,4 +1,4 @@
-{% if value.title %}<h2>{{ value.title }}</h2>{% endif %}
+{% if static_graphic is None and value.title %}<h2>{{ value.title }}</h2>{% endif %}
 <div class="chartContainer">
 	<div
 		class="chart-vertical-bar"

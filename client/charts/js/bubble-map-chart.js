@@ -46,3 +46,17 @@ function engageCharts() {
 }
 
 engageCharts();
+
+// Add listener for query change to rerun
+let previousUrl = '';
+
+const observer = new MutationObserver(function(mutations) {
+	if (window.location.href !== previousUrl) {
+		previousUrl = window.location.href;
+		engageCharts();
+	}
+});
+const config = {subtree: true, childList: true};
+
+// start listening to changes
+observer.observe(document, config);

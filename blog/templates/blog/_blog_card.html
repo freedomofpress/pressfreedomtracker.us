@@ -19,7 +19,7 @@
 				</div>
 			{% elif photo.0.block_type == "bubble_map_chart" %}
 				<div class="card-image card-image-{{ size }}">
-					{% include 'common/blocks/bubble_map_chart.html' with value=photo.0.value static_graphic=true %}
+					{% include 'common/blocks/bubble_map_chart.html' with value=photo.0.value mini_graphic=true static_graphic=true %}
 				</div>
 			{% endif %}
 			<a class="text-link text-link--card" href="{% pageurl post %}">
