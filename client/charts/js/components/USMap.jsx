@@ -133,40 +133,21 @@ export default function USMap({
 						))}
 					</g>
 					<g>
-						<AnimatedDataset
-							dataset={dataset.filter(hasLatLon)}
-							tag="circle"
-							init={{
-								opacity: 0,
-								r: 0,
-								fill: (d) =>
-									hoveredElement === null
-										? '#E07A5F'
-										: hoveredElement === `${aggregationLocality(d)}`
-										? '#E07A5F'
-										: 'white',
-								strokeWidth: (d) =>
-									hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal,
-							}}
-							attrs={{
-								opacity: 1,
-								cx: (d) => projection([d.longitude, d.latitude])[0],
-								cy: (d) => projection([d.longitude, d.latitude])[1],
-								r: (d) => markerScale(d.numberOfIncidents),
-								fill: (d) =>
-									hoveredElement === null
-										? '#E07A5F'
-										: hoveredElement === `${aggregationLocality(d)}`
-										? '#E07A5F'
-										: 'white',
-								stroke: 'black',
-								strokeWidth: (d) =>
-									hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal,
-							}}
-							duration={250}
-							durationByAttr={{ fill: 0, strokeWidth: 0 }}
-							keyFn={(d) => `${aggregationLocality(d)}`}
-						/>
+						{dataset.filter(hasLatLon).map(d => (<circle
+							key={aggregationLocality(d)}
+							opacity={1}
+							cx={projection([d.longitude, d.latitude])[0]}
+							cy={projection([d.longitude, d.latitude])[1]}
+							r={markerScale(d.numberOfIncidents)}
+							fill={hoveredElement === null
+								? '#E07A5F'
+								: hoveredElement === `${aggregationLocality(d)}`
+								? '#E07A5F'
+								: 'white'
+							}
+							stroke={'black'}
+							strokeWidth={hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal}
+						/>))}
 					</g>
 					<g role="list" aria-label="U.S. Map" style={{ pointerEvents: interactive ? "auto" : "none" }}>
 						{dataset.filter(hasLatLon).map((d) => (

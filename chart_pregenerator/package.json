@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node --loader:.node=copy",
+    "build": "npx relative-deps && esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node --loader:.node=copy",
     "start": "node ./build/server.js",
     "prepare": "relative-deps"
   },
