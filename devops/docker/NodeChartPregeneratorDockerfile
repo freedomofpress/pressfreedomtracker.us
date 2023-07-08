@@ -1,0 +1,23 @@
+# sha256 as of 2022-08-02
+FROM node:16-alpine@sha256:1908564153449b1c46b329e6ce2307e226bc566294f822f11c5a8bcef4eeaad7
+
+WORKDIR chart_pregenerator
+
+# Make npm output less verbose
+ENV NPM_CONFIG_LOGLEVEL warn
+
+ARG NPM_VER
+
+# Upgrade npm to speicifed version
+RUN npm install npm@${NPM_VER} --location=global
+
+RUN apk add --no-cache paxctl python3 make g++
+RUN paxctl -cm /usr/local/bin/node
+
+COPY devops/docker/node-chart-pregenerator-start.sh /usr/bin/node-chart-pregenerator-start.sh
+
+ARG USERID
+RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
+
+USER ${USERID}
+CMD [ "/usr/bin/node-chart-pregenerator-start.sh" ]

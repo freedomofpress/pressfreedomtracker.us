@@ -44,6 +44,23 @@ services:
     networks:
       - app
 
+  node-chart-pregenerator:
+    init: true
+    build:
+      context: .
+      dockerfile: devops/docker/NodeChartPregeneratorDockerfile
+      args:
+        NPM_VER: 9.6.0
+        USERID: ${UID:?err}
+    volumes:
+      - ./:/django
+    ports:
+      - "127.0.0.1:3000:3000"
+    working_dir: /django
+    user: ${UID:?err}
+    networks:
+      - app
+
   django:
     init: true
     stdin_open: true
