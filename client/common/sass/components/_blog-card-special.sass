@@ -57,3 +57,13 @@
 
 		p
 			margin: 0
+
+	&::before
+		content: ' '
+		background: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.00) 100%)
+		z-index: 1
+		position: absolute
+		height: 600px
+		/* 1440px + 32px (margin left) + 32px (margin right) */
+		width: 1504px
+		max-width: 100%
