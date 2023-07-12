@@ -475,6 +475,7 @@ class IncidentAPITest(APITestCase):
                 'name_of_business': inc.name_of_business,
                 'third_party_business': inc.get_third_party_business_display(),
                 'legal_order_type': inc.get_legal_order_type_display(),
+                'legal_order_venue': inc.get_legal_order_venue_display(),
                 'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),
                 'targeted_journalists': [e.summary for e in inc.targeted_journalists.all()],
                 'targeted_institutions': [str(e) for e in inc.targeted_institutions.all()],
