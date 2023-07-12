@@ -266,6 +266,9 @@ class IncidentQuerySet(PageQuerySet):
             'status_of_prior_restraint_display': annotation_for_choices_display(
                 'status_of_prior_restraint', choices.STATUS_OF_PRIOR_RESTRAINT,
             ),
+            'legal_order_venue_display': annotation_for_choices_display(
+                'legal_order_venue', choices.LegalOrderVenue.choices,
+            ),
         }
         annotations_to_apply = {
             label: expression for label, expression in available_annotations.items()

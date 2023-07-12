@@ -195,6 +195,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
                 'status_of_prior_restraint': 'status_of_prior_restraint_display',
                 'url': 'url',
                 'state': 'state_abbreviation',
+                'legal_order_venue': 'legal_order_venue_display',
             }
             result_fields = []
             annotations = []

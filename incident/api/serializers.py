@@ -297,6 +297,9 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     status_of_prior_restraint = serializers.CharField(
         source='status_of_prior_restraint_display',
     )
+    legal_order_venue = serializers.CharField(
+        source='legal_order_venue_display',
+    )
 
     # Computed fields requiring an annotation
     arresting_authority = serializers.CharField(source='arresting_authority_title')
