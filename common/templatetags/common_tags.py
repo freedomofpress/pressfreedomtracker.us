@@ -63,9 +63,25 @@ def richtext_aside(value):
 
 @register.simple_tag
 def query_transform(request, **kwargs):
+    """Modify the get parameters of a Django request object
+
+    :param request: The Django request from which to obtain GET
+        parameters.
+    :param kwargs: Keyword arguments are used to provide the new
+        parameters. Any argument given here will be updated/added to
+        the result, unless the value is given as ``None``, in which
+        case that key will be removed from the result.
+    :return: A URL-encoded string of the new GET parameters.
+    :rtype: str
+
+    """
     updated = request.GET.copy()
     for k, v in kwargs.items():
-        updated[k] = v
+        if v is None:
+            if k in updated:
+                del updated[k]
+        else:
+            updated[k] = v
     return updated.urlencode()
 
 

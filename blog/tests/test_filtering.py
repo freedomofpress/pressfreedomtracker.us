@@ -41,6 +41,14 @@ class TestFiltering(TestCase):
         filters = BlogFilter.from_querystring(get_query)
         self.assertIsNone(filters.author)
 
+    def test_should_ignore_unparsable_data_for_blog_type(self):
+        """BlogFilter should set invalid blog_type data to None"""
+        get_query = {
+            'type': 'AAA',
+        }
+        filters = BlogFilter.from_querystring(get_query)
+        self.assertIsNone(filters.blog_type)
+
     def test_should_filter_blog_pages_by_author(self):
         """BlogFilter should filter BlogPages by author"""
         filters = BlogFilter(organization=None, author=self.post1.author.pk, blog_type=None)
