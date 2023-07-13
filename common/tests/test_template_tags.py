@@ -1,9 +1,15 @@
 import hashlib
 from unittest import mock
 
-from django.test import TestCase
+from django.http import QueryDict
+from django.test import TestCase, RequestFactory
 
-from common.templatetags.common_tags import lookup, add_as_string, richtext_aside
+from common.templatetags.common_tags import (
+    lookup,
+    add_as_string,
+    richtext_aside,
+    query_transform,
+)
 
 
 class TestTemplateTags(TestCase):
@@ -75,3 +81,30 @@ class TestTemplateTags(TestCase):
         self.assertTrue(mock_django_cache_get.called)
         self.assertEqual(mock_django_cache_get.call_count, 1)
         mock_django_cache_get.assert_called_once_with(paragraph_aside_cache_key)
+
+    def test_query_transform(self):
+        request = RequestFactory().get('/?page=1&sort=title')
+        result = query_transform(request, page=2)
+
+        # Parse result using Django's QueryDict for ease of assertion
+        qd = QueryDict(result)
+        self.assertEqual(qd['page'], '2')
+        self.assertEqual(qd['sort'], 'title')
+
+    def test_query_transform_removes_keys_set_to_none(self):
+        request = RequestFactory().get('/?page=1&sort=title')
+        result = query_transform(request, sort=None)
+
+        # Parse result using Django's QueryDict for ease of assertion
+        qd = QueryDict(result)
+        self.assertEqual(qd['page'], '1')
+        self.assertTrue('sort' not in qd)
+
+    def test_query_transform_ignores_unknown_keys_set_to_none(self):
+        request = RequestFactory().get('/?page=1&sort=title')
+        result = query_transform(request, tree=None)
+
+        # Parse result using Django's QueryDict for ease of assertion
+        qd = QueryDict(result)
+        self.assertEqual(qd['page'], '1')
+        self.assertEqual(qd['sort'], 'title')

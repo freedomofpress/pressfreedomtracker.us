@@ -16,6 +16,7 @@
 
 	&__posts
 		padding: 0
+		grid-auto-flow: dense
 		+grid-container
 
 		&--featured-flex
@@ -60,6 +61,9 @@
 
 			+mobile-down
 				flex: 0 0 328px
+
+		&--special
+			grid-column: 1 / -1
 
 	&__pagination
 		text-align: center

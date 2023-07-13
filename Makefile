@@ -138,15 +138,6 @@ check-migrations: ## Check for ungenerated migrations
 bandit: ## Runs bandit static code analysis in Python3 container.
 	@docker compose run --rm django ./scripts/bandit
 
-.PHONY: npm-audit
-npm-audit: ## Checks NodeJS NPM dependencies for vulnerabilities
-	@docker compose run --rm --entrypoint "/bin/ash -c" node 'npm install && $$(npm bin)/npm-audit-plus --ignore=1084597,1088594'
-
-.PHONY: ci-npm-audit
-ci-npm-audit:
-	@mkdir -p test-results # Creates necessary test-results folder
-	@docker compose run --entrypoint "/bin/ash -c" node 'npm ci && $$(npm bin)/npm-audit-plus --ignore=1084597 --xml > test-results/audit.xml'
-
 .PHONY: safety
 safety: ## Runs `safety check` to check python dependencies for vulnerabilities
 # Upgrade safety to ensure we are using the latest version.

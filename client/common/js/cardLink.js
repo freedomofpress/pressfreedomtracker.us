@@ -29,4 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			cardLink(card)
 		})
 	}
+
+	if (document.querySelector('.special-blog-card')) {
+		document.querySelectorAll('.special-blog-card').forEach((card) => {
+			cardLink(card)
+		})
+	}
 })
