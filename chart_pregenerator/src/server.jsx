@@ -21,7 +21,17 @@ const FPF_BASE_URL = `http://${process.env.DJANGO_HOST || 'localhost'}:8000`
 const chart_height = 800
 const chart_width = 1190
 
-const generateBarChartSVG = async () => {
+const generateBarChartSVG = async (req) => {
+	let options = {
+		filterTags: null,
+		filterCategories: [],
+		dateRange: [null, null],
+		timePeriod: "months"
+	}
+
+	try { options = {...options, ...JSON.parse(req.query.options)} }
+	catch (e) {} // do nothing
+
 	const { dataset } = await loadData({
 		dataUrl: `${FPF_BASE_URL}/api/edge/incidents/homepage_csv/?`,
 		dataKey: 'dataset',
@@ -31,81 +41,98 @@ const generateBarChartSVG = async () => {
 
 	if (!dataset) return "<svg />";
 
-	const filterTags = null
-	const filterCategories = []
-	const dateRange = [null, null]
-	const timePeriod = "months"
+	try {
+		// Filter down to the categories and tags and date range we want
+		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
+		const { incidentsByAllTime } = processIncidentsTimeData(filteredDataset, options.timePeriod);
 
-	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
-
-	const { incidentsByAllTime } = processIncidentsTimeData(filteredDataset, timePeriod);
-
-	return ReactDOMServer.renderToString(
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			xmlnsXlink="http://www.w3.org/1999/xlink"
-			version="1.1"
-			width={chart_width}
-			height={chart_height}
-			viewBox={`0 0 ${chart_width} ${chart_height}`}
-		>
-			<BarChart
-				data={incidentsByAllTime}
-				x={'date'}
+		return ReactDOMServer.renderToString(
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				xmlnsXlink="http://www.w3.org/1999/xlink"
+				version="1.1"
 				width={chart_width}
 				height={chart_height}
-			/>
-		</svg>
-	)
+				viewBox={`0 0 ${chart_width} ${chart_height}`}
+			>
+				<BarChart
+					data={incidentsByAllTime}
+					x={'date'}
+					width={chart_width}
+					height={chart_height}
+				/>
+			</svg>
+		)
+	} catch (e) {
+		return "<svg />";
+	}
 }
 
-const generateTreemapChartSVG = async () => {
+const generateTreemapChartSVG = async (req) => {
+	let options = {
+		filterTags: null,
+		filterCategories: [],
+		dateRange: [null, null],
+		branch: 'categories'
+	}
+
+	try { options = {...options, ...JSON.parse(req.query.options)} }
+	catch (e) {} // do nothing
+
 	const dataKey = ['dataset', 'branches']
 	const dataUrl = [
 		`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories&format=csv`,
-		`${FPF_BASE_URL}/api/edge/categories/`
+		`${FPF_BASE_URL}/api/edge/${options.branch}/`
 	]
 	const dataParser = [(data) => d3.csvParse(data, d3.autoType), JSON.parse]
 	const { dataset, branches } = await loadData({ dataUrl, dataKey, dataParser, fetchFn: fetch })
 
 	if (!dataset) return "<svg />";
 
-	const filterTags = null
-	const filterCategories = []
-	const dateRange = [null, null]
+	try {
+		// Filter down to the categories and tags and date range we want
+		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
+		const categoriesColorMap = [...(new Set([...branches.map(d => d.title)]))]
+			.reduce(
+				(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
+				{}
+			)
 
-	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
-
-	const categoriesColorMap = [...(new Set([...branches.map(d => d.title)]))]
-		.reduce(
-			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
-			{}
-		)
-
-	return ReactDOMServer.renderToString(
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			xmlnsXlink="http://www.w3.org/1999/xlink"
-			version="1.1"
-			width={chart_width}
-			height={chart_height}
-			viewBox={`0 0 ${chart_width} ${chart_height}`}
-		>
-			<TreeMap
-				data={filteredDataset}
+		return ReactDOMServer.renderToString(
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				xmlnsXlink="http://www.w3.org/1999/xlink"
+				version="1.1"
 				width={chart_width}
 				height={chart_height}
-				categoryColumn={'categories'}
-				categoriesColors={categoriesColorMap}
-				allCategories={Object.keys(categoriesColorMap)}
-			/>
-		</svg>
-	)
+				viewBox={`0 0 ${chart_width} ${chart_height}`}
+			>
+				<TreeMap
+					data={filteredDataset}
+					width={chart_width}
+					height={chart_height}
+					categoryColumn={'categories'}
+					categoriesColors={categoriesColorMap}
+					allCategories={Object.keys(categoriesColorMap)}
+				/>
+			</svg>
+		)
+	} catch (e) {
+		return "<svg />";
+	}
 }
 
-const generateUSMapSVG = async () => {
+const generateUSMapSVG = async (req) => {
+	let options = {
+		filterTags: null,
+		filterCategories: [],
+		dateRange: [null, null],
+		aggregationLocality: 'state'
+	}
+
+	try { options = {...options, ...JSON.parse(req.query.options)} }
+	catch (e) {} // do nothing
+
 	const { dataset } = await loadData({
 		dataUrl: `${FPF_BASE_URL}/api/edge/incidents/homepage_csv/?`,
 		dataKey: 'dataset',
@@ -115,35 +142,40 @@ const generateUSMapSVG = async () => {
 
 	if (!dataset) return "<svg />";
 
-	const filterTags = null
-	const filterCategories = []
-	const dateRange = [null, null]
-	const aggregationLocality = 'state'
+	try {
+		const aggregationLocalityMap = {
+			state: groupByState,
+			city: groupByCity
+		}
+		const aggregationLocalityFnMap = {
+			state: d => d.state,
+			city: d => `${d.city}, ${d.state}`
+		}
 
-	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
-	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
+		// Filter down to the categories and tags and date range we want
+		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
+		const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[options.aggregationLocality](filteredDataset)
 
-	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
-	const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[aggregationLocality](filteredDataset)
-
-	return ReactDOMServer.renderToString(
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			xmlnsXlink="http://www.w3.org/1999/xlink"
-			version="1.1"
-			width={chart_width}
-			height={chart_height}
-			viewBox={`0 0 ${chart_width} ${chart_height}`}
-		>
-			<USMap
-				data={datasetAggregatedByGeo}
-				aggregationLocality={aggregationLocalityFnMap[aggregationLocality]}
+		return ReactDOMServer.renderToString(
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				xmlnsXlink="http://www.w3.org/1999/xlink"
+				version="1.1"
 				width={chart_width}
 				height={chart_height}
-			/>
-		</svg>
-	)
+				viewBox={`0 0 ${chart_width} ${chart_height}`}
+			>
+				<USMap
+					data={datasetAggregatedByGeo}
+					aggregationLocality={aggregationLocalityFnMap[options.aggregationLocality]}
+					width={chart_width}
+					height={chart_height}
+				/>
+			</svg>
+		)
+	} catch (e) {
+		return "<svg />";
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
