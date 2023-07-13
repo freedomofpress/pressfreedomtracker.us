@@ -94,6 +94,7 @@ if not os.environ.get('DJANGO_DISABLE_DEBUG'):
 # In the production settings file, a custom env var is required
 # to run the application.
 SECRET_KEY = '(g4bj*$%zf4tqdaas8#ch3-mz_27n+*-973tpxap9zmdz8ii_u'
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

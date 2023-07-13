@@ -60,6 +60,8 @@ services:
         aliases:
           - app
 
+# TODO add chart_pregenerator
+
 volumes:
   fpf-django-static:
   fpf-django-media:

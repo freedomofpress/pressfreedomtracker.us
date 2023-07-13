@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 import fetch from 'node-fetch'
 import ReactDOMServer from 'react-dom/server'
 import express from 'express'
-import Resvg from '@resvg/resvg-js'
+import { Resvg } from '@resvg/resvg-js'
 import BarChart from 'tracker/client/charts/js/components/BarChartMini'
 import TreeMap from 'tracker/client/charts/js/components/TreeMapMini'
 import USMap from 'tracker/client/charts/js/components/USMap'
@@ -11,12 +11,12 @@ import { processIncidentsTimeData } from 'tracker/client/charts/js/components/In
 import { filterDatasets } from 'tracker/client/charts/js/lib/utilities'
 import { categoriesColors } from 'tracker/client/charts/js/lib/utilities'
 import { loadData } from 'tracker/client/charts/js/components/DataLoader'
-import {groupByCity, groupByState} from "../../client/charts/js/lib/utilities";
+import { groupByCity, groupByState } from "tracker/client/charts/js/lib/utilities";
 
 const PORT = process.env.PORT || 3000
 const app = express()
 
-const FPF_BASE_URL = 'http://localhost:8000'
+const FPF_BASE_URL = `http://${process.env.DJANGO_HOST || 'localhost'}:8000`
 
 const chart_height = 800
 const chart_width = 1190
@@ -28,6 +28,8 @@ const generateBarChartSVG = async () => {
 		dataParser: (data) => d3.csvParse(data, d3.autoType),
 		fetchFn: fetch
 	})
+
+	if (!dataset) return "<svg />";
 
 	const filterTags = null
 	const filterCategories = []
@@ -66,6 +68,8 @@ const generateTreemapChartSVG = async () => {
 	]
 	const dataParser = [(data) => d3.csvParse(data, d3.autoType), JSON.parse]
 	const { dataset, branches } = await loadData({ dataUrl, dataKey, dataParser, fetchFn: fetch })
+
+	if (!dataset) return "<svg />";
 
 	const filterTags = null
 	const filterCategories = []
@@ -108,6 +112,8 @@ const generateUSMapSVG = async () => {
 		dataParser: (data) => d3.csvParse(data, d3.autoType),
 		fetchFn: fetch
 	})
+
+	if (!dataset) return "<svg />";
 
 	const filterTags = null
 	const filterCategories = []
@@ -155,7 +161,7 @@ app.get('/bar-chart.svg', async (req, res) => {
 app.get('/bar-chart.png', async (req, res) => {
 	const component = await generateBarChartSVG(req)
 
-	const resvg = new Resvg.Resvg(component)
+	const resvg = new Resvg(component)
 	const pngData = resvg.render()
 	const pngBuffer = pngData.asPng()
 	res.setHeader('Content-Type', 'image/png')
@@ -172,7 +178,7 @@ app.get('/treemap-chart.svg', async (req, res) => {
 app.get('/treemap-chart.png', async (req, res) => {
 	const component = await generateTreemapChartSVG(req)
 
-	const resvg = new Resvg.Resvg(component)
+	const resvg = new Resvg(component)
 	const pngData = resvg.render()
 	const pngBuffer = pngData.asPng()
 	res.setHeader('Content-Type', 'image/png')
@@ -189,7 +195,7 @@ app.get('/bubble-map.svg', async (req, res) => {
 app.get('/bubble-map.png', async (req, res) => {
 	const component = await generateUSMapSVG(req)
 
-	const resvg = new Resvg.Resvg(component)
+	const resvg = new Resvg(component)
 	const pngData = resvg.render()
 	const pngBuffer = pngData.asPng()
 	res.setHeader('Content-Type', 'image/png')

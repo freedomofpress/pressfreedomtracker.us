@@ -1,15 +1,13 @@
 {
   "name": "chart_pregenerator",
-  "version": "1.0.0",
+  "version": "0.0.0",
+  "private": true,
   "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "npx relative-deps && esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node --loader:.node=copy",
     "start": "node ./build/server.js",
-    "prepare": "relative-deps"
+    "dev": "node dev.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@resvg/resvg-js": "^2.4.1",
     "esbuild": "0.18.10",
@@ -21,6 +19,8 @@
     "tracker": "^0.0.0"
   },
   "devDependencies": {
+    "chokidar": "^3.5.3",
+    "nodemon": "^3.0.1",
     "relative-deps": "^1.0.7"
   },
   "relativeDependencies": {
