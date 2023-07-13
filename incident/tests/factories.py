@@ -288,6 +288,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
             legal_order_type=factory.Iterator(
                 choices.LEGAL_ORDER_TYPE, getter=lambda c: c[0]),
+            legal_order_venue=choices.LegalOrderVenue.STATE,
         )
         prior_restraint = factory.Trait(
             status_of_prior_restraint=factory.Iterator(

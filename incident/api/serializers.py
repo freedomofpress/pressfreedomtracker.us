@@ -169,6 +169,7 @@ class BaseIncidentSerializer(VariableFieldSerializer):
     name_of_business = serializers.CharField()
     third_party_business = serializers.CharField(source='get_third_party_business_display')
     legal_order_type = serializers.CharField(source='get_legal_order_type_display')
+    legal_order_venue = serializers.CharField(source='get_legal_order_venue_display')
     status_of_prior_restraint = serializers.CharField(source='get_status_of_prior_restraint_display')
 
     @extend_schema_field(OpenApiTypes.URI)
@@ -295,6 +296,9 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     )
     status_of_prior_restraint = serializers.CharField(
         source='status_of_prior_restraint_display',
+    )
+    legal_order_venue = serializers.CharField(
+        source='legal_order_venue_display',
     )
 
     # Computed fields requiring an annotation

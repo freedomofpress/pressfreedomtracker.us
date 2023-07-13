@@ -102,6 +102,7 @@ class PerformantCSVTestCase(TestCase):
             third_party_business=choices.ThirdPartyBusiness.TRAVEL,
             status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[1][0],
             equipment_damage=True,
+            subpoena=True,
         )
         EquipmentSeizedFactory.create_batch(3, incident=cls.incident)
         IncidentLinkFactory.create_batch(3, page=cls.incident)
@@ -153,6 +154,7 @@ class PerformantCSVTestCase(TestCase):
             'equipment_broken',
             'equipment_seized',
             'status_of_charges',
+            'legal_order_venue',
         ]
         url = reverse(
             'incidentpage-list',
@@ -284,6 +286,12 @@ class PerformantCSVTestCase(TestCase):
             ', '.join(
                 charge.updates.order_by('-date').first().get_status_display() for charge in self.incident.charges.all()
             )
+        )
+
+    def test_legal_order_venue_is_correct(self):
+        self.assertEqual(
+            self.result['legal_order_venue'],
+            self.incident.get_legal_order_venue_display(),
         )
 
 
@@ -730,6 +738,7 @@ class IncidentCSVTestCase(TestCase):
                 'name_of_business': inc.name_of_business,
                 'third_party_business': inc.get_third_party_business_display(),
                 'legal_order_type': inc.get_legal_order_type_display(),
+                'legal_order_venue': inc.get_legal_order_venue_display(),
                 'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),
                 'targeted_journalists': ', '.join([e.summary for e in inc.targeted_journalists.all()]),
                 'targeted_institutions': ', '.join([str(e) for e in inc.targeted_institutions.all()]),
@@ -804,6 +813,7 @@ class IncidentCSVTestCase(TestCase):
             'name_of_business',
             'third_party_business',
             'legal_order_type',
+            'legal_order_venue',
             'status_of_prior_restraint',
             'targeted_journalists',
             'targeted_institutions',

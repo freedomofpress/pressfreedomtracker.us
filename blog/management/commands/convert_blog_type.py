@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from blog.models import BlogPage
+from blog.choices import BlogTemplateType
 
 
 class Command(BaseCommand):
@@ -21,7 +22,7 @@ class Command(BaseCommand):
 
         parser.add_argument(
             'template_type',
-            choices=[choice[0] for choice in BlogPage.BLOG_TEMPLATE_CHOICES],
+            choices=[choice[0] for choice in BlogTemplateType.choices],
             help='Template type to convert pages to',
         )
 

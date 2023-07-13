@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from wagtail.models import Site
 
-from ..models import BlogPage
+from ..choices import BlogTemplateType
 from .factories import (
     BlogIndexPageFactory,
     BlogPageFactory
@@ -19,17 +19,17 @@ class ConvertBlogTypeTest(TestCase):
         index = BlogIndexPageFactory(parent=s.root_page)
         cls.blog_post = BlogPageFactory(
             title='Blog Post 1',
-            blog_type=BlogPage.DEFAULT,
+            blog_type=BlogTemplateType.DEFAULT,
             parent=index,
         )
         cls.newsletter_post = BlogPageFactory(
             title='Newsletter 1',
-            blog_type=BlogPage.DEFAULT,
+            blog_type=BlogTemplateType.DEFAULT,
             parent=index,
         )
         cls.special_post = BlogPageFactory(
             title='Something very special',
-            blog_type=BlogPage.SPECIAL,
+            blog_type=BlogTemplateType.SPECIAL,
             parent=index,
         )
 
@@ -53,6 +53,6 @@ class ConvertBlogTypeTest(TestCase):
         self.blog_post.refresh_from_db()
         self.special_post.refresh_from_db()
 
-        self.assertEqual(self.newsletter_post.blog_type, BlogPage.NEWSLETTER)
-        self.assertEqual(self.special_post.blog_type, BlogPage.SPECIAL)
-        self.assertEqual(self.blog_post.blog_type, BlogPage.DEFAULT)
+        self.assertEqual(self.newsletter_post.blog_type, BlogTemplateType.NEWSLETTER)
+        self.assertEqual(self.special_post.blog_type, BlogTemplateType.SPECIAL)
+        self.assertEqual(self.blog_post.blog_type, BlogTemplateType.DEFAULT)
