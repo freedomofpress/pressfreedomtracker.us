@@ -88,7 +88,7 @@ jobs:
             make dev-tests
             make dev-jest-tests
             make check-migrations
-          no_output_timeout: 8m
+          no_output_timeout: 5m
 
       - store_artifacts:
           path: htmlcov

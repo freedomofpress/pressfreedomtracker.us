@@ -76,7 +76,7 @@ services:
       - node
       - postgresql
     environment:
-      DJANGO_ALLOWED_HOSTS: app
+      DJANGO_ALLOWED_HOSTS: app localhost
       DJANGO_CREATEDEVDATA: "${DJANGO_CREATEDEVDATA:-no}"
       DJANGO_DB_PASSWORD: trackerpassword
       DJANGO_DB_USER: tracker
