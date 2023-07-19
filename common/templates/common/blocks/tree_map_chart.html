@@ -31,5 +31,9 @@
 		data-branch-field-name="{{ value.branch_field_name }}"
 		data-branches="{{ value.branches }}"
 		data-url="{{ value.data_url }}"
-	></div>
+	>
+		{% if mini_graphic is not None %}
+			<svg viewBox="0 0 655 440" width="100%" style="display: block" />
+		{% endif %}
+	</div>
 </div>
