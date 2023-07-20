@@ -1,5 +1,5 @@
-# Harris, Cameron, and Saptak are codeowners for all website changes
-*   @harrislapiroff @chigby @SaptakS
+# The full web team are codeowners for all website changes
+*   @harrislapiroff @chigby @SaptakS @dkaoster
 
 # Harris should be in the loop on all ownership modifications
 .github/    @harrislapiroff
