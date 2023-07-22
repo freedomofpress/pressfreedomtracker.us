@@ -15,7 +15,7 @@ export default ({
 		<svg
 			viewBox={`0 0 ${width} ${height}`}
 			width="100%"
-			style={{ display: "block", marginBottom: "0.75rem" }}
+			style={{ display: "block", marginBottom: "0.75rem", backgroundColor: "#fafafa" }}
 		>
 			{data.map((row, i) => (
 				<rect

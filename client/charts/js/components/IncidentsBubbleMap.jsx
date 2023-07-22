@@ -21,6 +21,7 @@ export default ({
 	creditUrl = '',
 	categories,
 	interactive = true,
+	fullSize,
 }) => {
 	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
 	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
@@ -39,8 +40,8 @@ export default ({
 						description={description}
 						aggregationLocality={aggregationLocalityFnMap[aggregationLocality]}
 						incidentsOutsideUS={incidentsOutsideUS}
-						width={parent.width}
-						height={parent.width * 0.7}
+						width={fullSize ? parent.width : 655}
+						height={fullSize ? (parent.width * 0.7) : 440}
 						overridePaddings={{ map: 0, bottom: 0 }}
 						interactive={interactive}
 					/>
