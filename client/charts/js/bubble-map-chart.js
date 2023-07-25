@@ -28,6 +28,13 @@ function engageCharts() {
 				dataUrl={[`/api/edge/incidents/homepage_csv/?`]}
 				dataKey={['dataset']}
 				dataParser={[(data) => d3.csvParse(data, d3.autoType)]}
+				loadingComponent={(
+					<svg
+						viewBox="0 0 655 440"
+						width="100%"
+						style={{ display: fullSize ? 'none' : 'block', backgroundColor: '#fafafa' }}
+					/>
+				)}
 			>
 				<BubbleMapChart
 					filterCategories={filterCategories}

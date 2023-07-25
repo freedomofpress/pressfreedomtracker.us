@@ -43,6 +43,13 @@ function engageCharts() {
 				dataUrl={dataUrl}
 				dataKey={dataKey}
 				dataParser={dataParser}
+				loadingComponent={(
+					<svg
+						viewBox="0 0 655 440"
+						width="100%"
+						style={{ display: fullSize ? 'none' : 'block', backgroundColor: '#fafafa' }}
+					/>
+				)}
 			>
 				<TreeMapChart
 					filterCategories={filterCategories}
