@@ -61,7 +61,9 @@ services:
     working_dir: /django
     user: ${UID:?err}
     networks:
-      - app
+      app:
+        aliases:
+          - chartgen
 
   django:
     init: true
@@ -88,6 +90,8 @@ services:
       DJANGO_PROFILE: "${DJANGO_PROFILE:-no}"
       PYINSTRUMENT: "${PYINSTRUMENT:-no}"
       SELENIUM_HOST: selenium
+      DJANGO_CHART_HOST: chartgen
+      DJANGO_CHART_PORT: 3000
     working_dir: /django
     volumes:
       - ./:/django
