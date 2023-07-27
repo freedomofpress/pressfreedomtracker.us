@@ -204,7 +204,7 @@ def generate_stacked_bar_chart():
         'upper_date': fake.date_between('-11M'),
     }
     return generate_field(
-        'tree_map_chart',
+        'stacked_bar_chart',
         {
             'title': make_words().capitalize(),
             'incident_set': incident_set,
@@ -396,6 +396,7 @@ class StreamfieldProvider(BaseProvider):
             'aside': generate_aside,
             'vertical_bar_chart': generate_vertical_bar_chart,
             'tree_map_chart': generate_tree_map_chart,
+            'stacked_bar_chart': generate_stacked_bar_chart,
             'bubble_map_chart': generate_bubble_map_chart,
         }
 
