@@ -3,11 +3,15 @@ import * as d3 from 'd3'
 
 export default ({
 	data,
+	allCategories,
+	categoriesColors = {},
 	x,
 	width = 655,
 	height = 440,
 }) => {
-	const xScale = d3.scaleLinear().domain([0, d3.max(data, d => d[x])]).range([0, width])
+	const stackedData = d3.stack().keys(allCategories || [x])(data)
+
+	const xScale = d3.scaleLinear().domain([0, d3.max(stackedData.flat(), d => d[1])]).range([0, width])
 
 	const yHeight = height / data.length
 
@@ -17,16 +21,16 @@ export default ({
 			width="100%"
 			style={{ display: "block", marginBottom: "0.75rem", backgroundColor: "#fafafa" }}
 		>
-			{data.map((row, i) => (
+			{stackedData.map((branchBars) => branchBars.map((branchEntry, i) => (
 				<rect
 					key={`row-${i}`}
-					x={0}
+					x={xScale(branchEntry[0])}
 					y={yHeight * i}
-					width={xScale(row[x])}
+					width={xScale(branchEntry[1] - branchEntry[0])}
 					height={yHeight}
-					fill="#E07A5F"
+					fill={categoriesColors[branchBars.key] || "#E07A5F"}
 				/>
-			))}
+			)))}
 		</svg>
 	)
 }

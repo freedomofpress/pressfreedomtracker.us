@@ -196,6 +196,23 @@ def generate_tree_map_chart():
     )
 
 
+def generate_stacked_bar_chart():
+    incident_set = {
+        'categories': [],
+        'tag': None,
+        'lower_date': fake.date_between('-2y', '-1y'),
+        'upper_date': fake.date_between('-11M'),
+    }
+    return generate_field(
+        'tree_map_chart',
+        {
+            'title': make_words().capitalize(),
+            'incident_set': incident_set,
+            'description': fake.text(max_nb_chars=200),
+        }
+    )
+
+
 def generate_bubble_map_chart():
     incident_set = {
         'categories': [],

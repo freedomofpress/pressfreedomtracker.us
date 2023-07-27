@@ -4,7 +4,7 @@ import BarChart from './BarChart'
 import BarChartMini from './BarChartMini'
 import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
-import { filterDatasets } from '../lib/utilities'
+import { categoriesColors, filterDatasets } from '../lib/utilities'
 
 export default function IncidentsTimeBarChart({
 	dataset,
@@ -18,17 +18,30 @@ export default function IncidentsTimeBarChart({
 	creditUrl = '',
 	interactive = true,
 	fullSize = true,
+	branchFieldName,
+	branches,
 }) {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
 
-	// Rollup the incidents by month-year
-	const incidentsByMonth = Array
-		.from(d3.rollup(filteredDataset, d => d.length, d => d3.utcFormat('%Y-%m')(d.date)))
-		.reduce((acc, [date, count]) => ({ ...acc, [date]: count }), {})
-	const incidentsByYear = Array
-		.from(d3.rollup(filteredDataset, d => d.length, d => d3.utcFormat('%Y')(d.date)))
-		.reduce((acc, [date, count]) => ({ ...acc, [date]: count }), {})
+	// Rollup the incidents
+	const genIncidentsByTime = (dateFn) => filteredDataset.reduce((acc, d) => {
+		const date = dateFn(d.date)
+
+		const dateData = acc[date] || { count: 0 }
+		dateData.count += 1
+
+		if (branchFieldName) {
+			const branchValues = (d[branchFieldName] || "").split(',').map(e => e.trim())
+			branchValues.forEach(branchName => {
+				dateData[branchName] = dateData[branchName] ? dateData[branchName] + 1 : 1
+			})
+		}
+
+		return ({ ...acc, [date]: dateData })
+	}, {});
+	const incidentsByMonth = genIncidentsByTime(d3.utcFormat('%Y-%m'))
+	const incidentsByYear = genIncidentsByTime(d3.utcFormat('%Y'))
 
 	// If the dataset we are working with spans >24 months then automatically switch to year
 	const showByYears = timePeriod ? timePeriod === 'years' : Object.keys(incidentsByMonth).length > 24
@@ -58,7 +71,7 @@ export default function IncidentsTimeBarChart({
 
 	// Make sure we have entries for months / years with no incidents
 	const incidentsByAllTime = allTime
-		.map((date) => ({ date, count: incidentsByTime[timeFormat(date)] || 0 }))
+		.map((date) => ({ date, ...(incidentsByTime[timeFormat(date)] || { count: 0 }) }))
 		.sort((a, b) => a.date - b.date)
 
 	// Generate a default description for a11y
@@ -67,6 +80,12 @@ export default function IncidentsTimeBarChart({
 	const dateDescription = (startYear === endYear) ? `in ${startYear}` : `from ${startYear} to ${endYear}`
 	const generatedDescription = `Incidents ${dateDescription}`
 
+	const categoriesColorMap = branches && [...(new Set([...branches.map(d => d.title)]))]
+		.reduce(
+			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
+			{}
+		)
+
 	return (
 		<ParentSize>
 			{(parent) => {
@@ -74,6 +93,9 @@ export default function IncidentsTimeBarChart({
 					<BarChart
 						description={description || generatedDescription}
 						data={incidentsByAllTime}
+						categoriesColors={categoriesColorMap}
+						categoryColumn={branchFieldName}
+						allCategories={categoriesColorMap && Object.keys(categoriesColorMap)}
 						x={'date'}
 						y={'count'}
 						xFormat={xFormat}
@@ -85,7 +107,12 @@ export default function IncidentsTimeBarChart({
 						interactive={interactive}
 					/>
 				) : (
-					<BarChartMini data={incidentsByAllTime} x={'count'} />
+					<BarChartMini
+						data={incidentsByAllTime}
+						categoriesColors={categoriesColorMap}
+						allCategories={categoriesColorMap && Object.keys(categoriesColorMap)}
+						x={'count'}
+					/>
 				);
 
 				return interactive ? (

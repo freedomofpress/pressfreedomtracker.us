@@ -8,7 +8,7 @@ from wagtail import blocks
 from incident.choices import ACTORS, STATUS_OF_CHARGES
 
 
-class TreeMapChartValue(blocks.StructValue):
+class IncidentChartValue(blocks.StructValue):
     def branch_field_name(self):
         """Return the name of the field in the dataset that will be
         used to branch/segment the chart."""
@@ -43,7 +43,7 @@ class TreeMapChartValue(blocks.StructValue):
 
         """
         group_by = self.get('group_by')
-        if group_by == TreeMapBranches.CATEGORIES:
+        if group_by == IncidentBranches.CATEGORIES:
             branches_value = {
                 'type': 'url',
                 'value': reverse(
@@ -51,7 +51,7 @@ class TreeMapChartValue(blocks.StructValue):
                     kwargs={'version': 'edge'},
                 )
             }
-        elif group_by == TreeMapBranches.ASSAILANT:
+        elif group_by == IncidentBranches.ASSAILANT:
             branches_value = {
                 'type': 'list',
                 'value': [
@@ -59,7 +59,7 @@ class TreeMapChartValue(blocks.StructValue):
                     value, title in ACTORS
                 ]
             }
-        elif group_by == TreeMapBranches.STATUS_OF_CHARGES:
+        elif group_by == IncidentBranches.STATUS_OF_CHARGES:
             branches_value = {
                 'type': 'list',
                 'value': [
@@ -71,7 +71,7 @@ class TreeMapChartValue(blocks.StructValue):
         return json.dumps(branches_value)
 
 
-class TreeMapBranches(TextChoices):
+class IncidentBranches(TextChoices):
     CATEGORIES = 'CATEGORIES', 'Categories'
     ASSAILANT = 'ASSAILANT', 'Assailant'
     STATUS_OF_CHARGES = 'STATUS_OF_CHARGES', 'Status of Charges'

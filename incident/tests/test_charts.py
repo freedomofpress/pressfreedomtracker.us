@@ -45,7 +45,7 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
 
 class TestCategoriesTreeMap(TestTreeMapChartValue, TestCase):
     expected_branch_field_name = 'categories'
-    group_by = charts.TreeMapBranches.CATEGORIES
+    group_by = charts.IncidentBranches.CATEGORIES
 
     def test_branches(self):
         branches = json.loads(self.tree_map_chart_value.branches())
@@ -61,7 +61,7 @@ class TestCategoriesTreeMap(TestTreeMapChartValue, TestCase):
 
 class TestAssailantTreeMap(TestTreeMapChartValue, TestCase):
     expected_branch_field_name = 'assailant'
-    group_by = charts.TreeMapBranches.ASSAILANT
+    group_by = charts.IncidentBranches.ASSAILANT
 
     def test_branches(self):
         expected_branches = {
@@ -77,7 +77,7 @@ class TestAssailantTreeMap(TestTreeMapChartValue, TestCase):
 
 class TestChargeStatusTreeMap(TestTreeMapChartValue, TestCase):
     expected_branch_field_name = 'status_of_charges'
-    group_by = charts.TreeMapBranches.STATUS_OF_CHARGES
+    group_by = charts.IncidentBranches.STATUS_OF_CHARGES
 
     def test_branches(self):
         expected_branches = {
