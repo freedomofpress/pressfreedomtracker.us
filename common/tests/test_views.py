@@ -1,6 +1,7 @@
 import json
 from unittest import mock
 
+import requests
 from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.utils.http import urlencode
@@ -9,6 +10,7 @@ from wagtail.documents.models import Document
 from common.models import CommonTag
 from common.wagtail_hooks import CommonTagAdmin
 from django.contrib.auth import get_user_model
+
 from incident.tests.factories import (
     IncidentIndexPageFactory,
     IncidentPageFactory,
@@ -180,6 +182,41 @@ class AdminVersionTestCase(TestCase):
         mock_open.side_effect = FileNotFoundError
         self.response = self.client.get('/admin/version/')
         self.assertEqual(self.response.status_code, 200)
+
+
+class AdminCheckNodeChartHealth(TestCase):
+    def setUp(self):
+        user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+        self.client.force_login(user)
+
+    def test_check_chart_health_url_returns_200_status(self):
+        response = self.client.get(reverse('check_chart_health'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_check_chart_health_url_returns_ok_text(self):
+        response = self.client.get(reverse('check_chart_health'))
+        self.assertContains(response, '<p>ok</p>')
+
+    @mock.patch('requests.get')
+    def test_check_chart_health_timeout_informs_user(self, mock_requests):
+        mock_requests.side_effect = requests.exceptions.Timeout
+
+        response = self.client.get(reverse('check_chart_health'))
+        self.assertContains(response, 'Timed out')
+
+    @mock.patch('requests.get')
+    def test_check_chart_health_too_many_redirects_informs_user(self, mock_requests):
+        mock_requests.side_effect = requests.exceptions.TooManyRedirects
+
+        response = self.client.get(reverse('check_chart_health'))
+        self.assertContains(response, 'Too many redirects')
+
+    @mock.patch('requests.get')
+    def test_check_chart_health_other_error_informs_user(self, mock_requests):
+        mock_requests.side_effect = requests.exceptions.ConnectionError
+
+        response = self.client.get(reverse('check_chart_health'))
+        self.assertContains(response, 'Request exception')
 
 
 class CsrfTokenViewTest(TestCase):

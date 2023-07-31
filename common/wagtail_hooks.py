@@ -11,7 +11,7 @@ from wagtail.rich_text.pages import PageLinkHandler
 from webpack_loader.utils import get_files
 
 from .models import CommonTag, CategoryPage
-from .views import TagMergeView, deploy_info_view, MailchimpInterestsView
+from .views import TagMergeView, deploy_info_view, MailchimpInterestsView, check_chart_health
 
 
 class CategoryPageLinkHandler(PageLinkHandler):
@@ -127,6 +127,11 @@ modeladmin_register(CommonTagAdmin)
 def urlconf_time():
     return [
         re_path(r'^version/?$', deploy_info_view, name='deployinfo'),
+        path(
+            'check_chart_health/',
+            check_chart_health,
+            name='check_chart_health',
+        ),
     ]
 
 
