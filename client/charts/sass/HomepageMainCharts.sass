@@ -4,8 +4,10 @@
 
 .hpChartContainer
 	+large-screen
-		display: flex
+		display: grid
+		grid-auto-flow: column
+		grid-auto-columns: 1fr
 
 .hpChart
-	margin: auto
 	display: table
+	width: 100%
