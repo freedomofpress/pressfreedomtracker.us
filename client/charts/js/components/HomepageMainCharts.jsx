@@ -108,6 +108,7 @@ function HomepageMainChartsWidth({
 							getFilteredUrl(databasePath, { ...filtersApplied, state }, currentDate, categories)
 						}
 						addBottomBorder={true}
+						overridePaddings={{ bottom: 46 }}
 					/>
 				</div>
 				<div className={'hpChart'}>

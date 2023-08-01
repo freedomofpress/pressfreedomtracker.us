@@ -234,7 +234,7 @@ export default function TreeMap({
 	}
 
 	if (!isMobile) {
-		chartWidthPaddingBefore = datasetCategoriesLabelsLegend[datasetCategoriesLabelsLegend.length - 1].labelStartingY
+		chartWidthPaddingBefore = datasetCategoriesLabelsLegend[datasetCategoriesLabelsLegend.length - 1]?.labelStartingY
 			+ paddings.top + labelHeight * 1.5
 	}
 
