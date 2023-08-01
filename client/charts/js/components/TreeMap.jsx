@@ -270,16 +270,17 @@ export default function TreeMap({
 			)}
 			<div>
 				<svg
-					width={width}
-					height={height}
+					width="100%"
 					aria-labelledby={id}
 					style={{
 						marginTop: margins.top,
 						marginRight: margins.right,
 						marginBottom: margins.bottom,
 						marginLeft: margins.left,
-						pointerEvents: interactive ? "auto" : "none"
+						pointerEvents: interactive ? "auto" : "none",
+						display: "block",
 					}}
+					viewBox={[0, 0, width, height]}
 					ref={setSvgEl}
 				>
 					<line
