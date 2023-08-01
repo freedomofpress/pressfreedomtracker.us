@@ -17,10 +17,6 @@
 				<div class="card-image card-image-{{ size }}">
 					{% include 'common/blocks/tree_map_chart.html' with value=photo.0.value mini_graphic=true static_graphic=true %}
 				</div>
-			{% elif photo.0.block_type == "stacked_bar_chart" %}
-				<div class="card-image card-image-{{ size }}">
-					{% include 'common/blocks/stacked_bar_chart.html' with value=photo.0.value mini_graphic=true static_graphic=true %}
-				</div>
 			{% elif photo.0.block_type == "bubble_map_chart" %}
 				<div class="card-image card-image-{{ size }}">
 					{% include 'common/blocks/bubble_map_chart.html' with value=photo.0.value mini_graphic=true static_graphic=true %}

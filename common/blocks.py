@@ -500,10 +500,17 @@ class VerticalBarChart(blocks.StructBlock):
         'e.g., "Bar chart showing a decreasing number of assaults over the '
         'course of 2023."',
     )
+    group_by = blocks.ChoiceBlock(
+        label='Group Incidents By',
+        required=False,
+        choices=charts.IncidentBranches.choices,
+        default=None,
+    )
 
     class Meta:
         icon = 'table'
         template = 'common/blocks/vertical_bar_chart.html'
+        value_class = charts.IncidentChartValue
 
     class Media:
         js = ['verticalBarChart']
@@ -533,32 +540,6 @@ class TreeMapChart(blocks.StructBlock):
 
     class Media:
         js = ['treeMapChart']
-
-
-class StackedBarChart(blocks.StructBlock):
-    title = blocks.CharBlock(required=False)
-    incident_set = SimpleIncidentSet()
-    description = blocks.TextBlock(
-        required=True,
-        help_text='Description for assistive technology users. '
-        'If the chart is demonstrating a specific trend, try to include that, '
-        'e.g., "Bar chart showing a decreasing number of assaults over the '
-        'course of 2023."',
-    )
-    group_by = blocks.ChoiceBlock(
-        label='Group Incidents By',
-        required=True,
-        choices=charts.IncidentBranches.choices,
-        default=charts.IncidentBranches.CATEGORIES,
-    )
-
-    class Meta:
-        icon = 'table'
-        template = 'common/blocks/stacked_bar_chart.html'
-        value_class = charts.IncidentChartValue
-
-    class Media:
-        js = ['stackedBarChart']
 
 
 class BubbleMapChart(blocks.StructBlock):

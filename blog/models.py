@@ -37,7 +37,6 @@ from common.blocks import (
     ButtonBlock,
     VerticalBarChart,
     TreeMapChart,
-    StackedBarChart,
     BubbleMapChart,
 )
 
@@ -203,7 +202,6 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('statistics', StatisticsBlock()),
         ('vertical_bar_chart', VerticalBarChart()),
         ('tree_map_chart', TreeMapChart()),
-        ('stacked_bar_chart', StackedBarChart()),
         ('bubble_map_chart', BubbleMapChart()),
     ], use_json_field=True)
 
@@ -219,7 +217,6 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('image', ImageChooserBlock()),
         ('vertical_bar_chart', VerticalBarChart()),
         ('tree_map_chart', TreeMapChart()),
-        ('stacked_bar_chart', StackedBarChart()),
         ('bubble_map_chart', BubbleMapChart()),
     ], use_json_field=True, blank=True, default=[], max_num=1)
 
@@ -227,7 +224,6 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('image', ImageChooserBlock()),
         ('vertical_bar_chart', VerticalBarChart()),
         ('tree_map_chart', TreeMapChart()),
-        ('stacked_bar_chart', StackedBarChart()),
         ('bubble_map_chart', BubbleMapChart()),
     ], use_json_field=True, blank=True, default=[], max_num=1)
 
