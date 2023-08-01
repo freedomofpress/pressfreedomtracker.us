@@ -4,16 +4,24 @@ exports[`renders BarChart with mocked data 1`] = `
 <React.Fragment>
   <svg
     aria-labelledby=""
-    height={500}
     style={
       {
+        "display": "block",
         "marginBottom": 0,
         "marginLeft": 0,
         "marginRight": 2,
         "marginTop": 0,
       }
     }
-    width={480}
+    viewBox={
+      [
+        0,
+        0,
+        480,
+        500,
+      ]
+    }
+    width="100%"
   >
     <g>
       <AnimatedDataset
