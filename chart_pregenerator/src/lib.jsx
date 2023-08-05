@@ -1,15 +1,17 @@
 import * as d3 from 'd3'
-import ReactDOMServer from 'react-dom/server'
 import React from 'react'
+import ReactDOMServer from 'react-dom/server'
 import fetch from 'node-fetch'
-import BarChart from 'tracker/client/charts/js/components/BarChartMini'
-import TreeMap from 'tracker/client/charts/js/components/TreeMapMini'
+import BarChart from 'tracker/client/charts/js/components/BarChart'
+import BarChartMini from 'tracker/client/charts/js/components/BarChartMini'
+import TreeMap from 'tracker/client/charts/js/components/TreeMap'
+import TreeMapMini from 'tracker/client/charts/js/components/TreeMapMini'
 import USMap from 'tracker/client/charts/js/components/USMap'
 import { processIncidentsTimeData } from 'tracker/client/charts/js/components/IncidentsTimeBarChart'
 import { filterDatasets } from 'tracker/client/charts/js/lib/utilities'
 import { categoriesColors } from 'tracker/client/charts/js/lib/utilities'
 import { loadData } from 'tracker/client/charts/js/components/DataLoader'
-import { groupByCity, groupByState } from "tracker/client/charts/js/lib/utilities";
+import { groupByCity, groupByState } from "tracker/client/charts/js/lib/utilities"
 
 const FPF_BASE_URL = `http://${process.env.DJANGO_HOST || 'localhost'}:8000`
 
@@ -41,7 +43,7 @@ export const generateBarChartSVG = async (req) => {
 	try {
 		// Filter down to the categories and tags and date range we want
 		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
-		const { incidentsByAllTime } = processIncidentsTimeData(filteredDataset, options.timePeriod);
+		const { incidentsByAllTime, xFormat, showByYears, allTime } = processIncidentsTimeData(filteredDataset, options.timePeriod);
 
 		return ReactDOMServer.renderToString(
 			<svg
@@ -51,16 +53,23 @@ export const generateBarChartSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
+				style={{ fontFamily: "sans-serif" }}
 			>
 				<BarChart
 					data={incidentsByAllTime}
 					x={'date'}
+					y={'count'}
+					xFormat={xFormat}
+					titleLabel={'incidents'}
 					width={options.width}
-					height={options.width}
+					height={options.height}
+					disableAnimation={true}
+					isMobileView={false}
 				/>
 			</svg>
 		)
 	} catch (e) {
+		console.error(e);
 		return "<svg />";
 	}
 }
@@ -105,6 +114,7 @@ export const generateTreemapChartSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
+				style={{ fontFamily: "sans-serif" }}
 			>
 				<TreeMap
 					data={filteredDataset}
@@ -113,10 +123,14 @@ export const generateTreemapChartSVG = async (req) => {
 					categoryColumn={'categories'}
 					categoriesColors={categoriesColorMap}
 					allCategories={Object.keys(categoriesColorMap)}
+					minimumBarHeight={35}
+					disableAnimation={true}
+					interactive={false}
 				/>
 			</svg>
 		)
 	} catch (e) {
+		console.error(e);
 		return "<svg />";
 	}
 }
@@ -165,16 +179,19 @@ export const generateUSMapSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
+				style={{ fontFamily: "sans-serif" }}
 			>
 				<USMap
 					data={datasetAggregatedByGeo}
 					aggregationLocality={aggregationLocalityFnMap[options.aggregationLocality]}
 					width={options.width}
 					height={options.height}
+					disableAnimation={true}
 				/>
 			</svg>
 		)
 	} catch (e) {
+		console.error(e);
 		return "<svg />";
 	}
 }

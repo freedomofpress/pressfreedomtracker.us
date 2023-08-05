@@ -14,6 +14,7 @@ import { colors } from '../lib/utilities.js'
 //
 // This can be removed when RAD is updated to use a newer version
 import { event as d3event } from 'd3-selection'
+import StaticDataset from './StaticDataset'
 
 const margins = {
 	top: 0,
@@ -140,10 +141,13 @@ export default function TreeMap({
 	// it to be downloaded
 	setSvgEl = () => {},
 	interactive = true,
+	disableAnimation = false,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 	const [selectedElements, setSelectedElements] = useState([])
+
+	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
 	// Because the chart can be rendered horizontally on desktop and vertically on
 	// mobile, we abstract the dimensions below
@@ -268,7 +272,7 @@ export default function TreeMap({
 					y={tooltipPosition.y}
 				/>
 			)}
-			<div>
+			<>
 				<svg
 					width={width}
 					height={height}
@@ -292,7 +296,7 @@ export default function TreeMap({
 					/>
 					<DynamicWrapper
 						wrapperComponent={
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								tag="a"
 								attrs={{
@@ -305,7 +309,7 @@ export default function TreeMap({
 						}
 						wrap={interactive && searchPageURL}
 					>
-						<AnimatedDataset
+						<Dataset
 							dataset={(interactive && searchPageURL) ? undefined : datasetStackedByCategory}
 							tag="rect"
 							init={{
@@ -352,7 +356,7 @@ export default function TreeMap({
 							duration={250}
 						/>
 					</DynamicWrapper>
-					<AnimatedDataset
+					<Dataset
 						dataset={datasetStackedByCategory}
 						tag="line"
 						init={{
@@ -395,7 +399,7 @@ export default function TreeMap({
 					{isMobile ?
 						// Text label inside of bars that displays on mobile
 						(<>
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								tag="text"
 								init={{
@@ -428,7 +432,7 @@ export default function TreeMap({
 								keyFn={(d) => d.category}
 								duration={250}
 							/>
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								init={{
 									opacity: 0,
@@ -513,7 +517,7 @@ export default function TreeMap({
 									</g>
 								)
 							)}
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								init={{
 									opacity: 0,
@@ -536,7 +540,7 @@ export default function TreeMap({
 						</>)
 					}
 				</svg>
-			</div>
+			</>
 		</>
 	)
 }

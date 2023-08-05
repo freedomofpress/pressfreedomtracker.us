@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
+import StaticDataset from './StaticDataset'
 import DynamicWrapper from './DynamicWrapper'
 import Slider from './Slider'
 import Tooltip from './Tooltip'
@@ -55,6 +56,7 @@ export default function BarChart({
 	// it to be downloaded
 	setSvgEl = () => {},
 	interactive = true,
+	disableAnimation = false,
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -62,6 +64,8 @@ export default function BarChart({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [sliderSelection, setSliderSelection] = useState(dataset[0].index)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+
+	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -149,7 +153,7 @@ export default function BarChart({
 				>
 					{description ? (<desc>{description}</desc>) : null}
 					<g>
-						<AnimatedDataset
+						<Dataset
 							dataset={gridLines}
 							tag="line"
 							init={{
@@ -170,7 +174,7 @@ export default function BarChart({
 							duration={250}
 							keyFn={(d) => d}
 						/>
-						<AnimatedDataset
+						<Dataset
 							dataset={gridLines}
 							tag="text"
 							init={{
@@ -191,7 +195,7 @@ export default function BarChart({
 							keyFn={(d) => d}
 						/>
 					</g>
-					<AnimatedDataset
+					<Dataset
 						dataset={dataset}
 						tag="rect"
 						init={{
@@ -243,13 +247,13 @@ export default function BarChart({
 									shapeRendering="crispEdges"
 								>
 									<title>
-										{xFormat(d[x])}: {yFormat(d[y])} {titleLabel}
+										{`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
 									</title>
 								</rect>
 							</DynamicWrapper>
 						</g>
 					))}
-					<AnimatedDataset
+					<Dataset
 						dataset={dataset.filter((d, i) => i % xLabelDisplayInterval === 0)}
 						tag="text"
 						init={{
@@ -291,7 +295,7 @@ export default function BarChart({
 			>
 				{description ? (<desc>{description}</desc>) : null}
 				<g>
-					<AnimatedDataset
+					<Dataset
 						dataset={gridLines}
 						tag="line"
 						init={{
@@ -310,7 +314,7 @@ export default function BarChart({
 						duration={250}
 						keyFn={(d) => d}
 					/>
-					<AnimatedDataset
+					<Dataset
 						dataset={gridLines}
 						tag="text"
 						init={{
@@ -331,7 +335,7 @@ export default function BarChart({
 				</g>
 				<DynamicWrapper
 					wrapperComponent={
-						<AnimatedDataset
+						<Dataset
 							dataset={dataset}
 							tag="a"
 							attrs={{
@@ -344,7 +348,7 @@ export default function BarChart({
 					}
 					wrap={searchPageURL}
 				>
-					<AnimatedDataset
+					<Dataset
 						dataset={searchPageURL ? undefined : dataset}
 						tag="rect"
 						attrs={{
