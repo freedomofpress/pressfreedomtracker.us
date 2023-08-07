@@ -1,8 +1,9 @@
 from wagtail.models import Site, Page
 from django.test import TestCase, Client
 
-from common.tests.factories import PersonPageFactory, OrganizationPageFactory, CustomImageFactory
+from common.tests.factories import PersonPageFactory, OrganizationPageFactory, CustomImageFactory, CategoryPageFactory
 from home.tests.factories import HomePageFactory
+from incident.tests.factories import IncidentPageFactory
 from blog.models import BlogIndexPageFeature
 from .factories import (
     BlogIndexPageFactory,
@@ -46,6 +47,8 @@ class TestPages(TestCase):
             slug='one',
             with_image=True,
         )
+        cat = CategoryPageFactory()
+        IncidentPageFactory(categories=[cat])
 
     def setUp(self):
         self.client = Client()
@@ -100,14 +103,15 @@ class TestPages(TestCase):
         response = self.client.get(self.blog_page.url)
         self.assertContains(response, 'verticalBarChart')
 
-        # Remove the bar chart from the body -- not sure if there's an
-        # easier way to ensure this!
+        # Remove the bar chart from the body and the lead graphic --
+        # not sure if there's an easier way to ensure this!
         new_body = []
         for item in self.blog_page.body:
             if item.block_type == 'vertical_bar_chart':
                 continue
             new_body.append((item.block_type, item.value))
         self.blog_page.body = new_body
+        self.blog_page.lead_graphic = None
         self.blog_page.save()
 
         # We should no longer have that JS bundle in the response
