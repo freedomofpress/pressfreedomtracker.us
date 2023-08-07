@@ -24,6 +24,7 @@ from emails.models import SubscriptionSchema
 from incident.models import IncidentPage, TopicPage
 from .forms import TagMergeForm
 from .utils import subscribe_for_site, MailchimpError
+from .utils.chart_pregenerator.config import settings as pregenerator_settings
 
 
 VERSION_INFO_SHORT_PATH = os.environ.get(
@@ -235,8 +236,8 @@ def deploy_info_view(request):
 
 
 def check_chart_health(request):
-    port = settings.CHART_PREGENERATOR['PORT']
-    host = settings.CHART_PREGENERATOR['HOST']
+    port = pregenerator_settings.port
+    host = pregenerator_settings.host
     error_message = ''
 
     context = {
