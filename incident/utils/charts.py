@@ -3,12 +3,17 @@ from urllib import parse
 
 from django.db.models import TextChoices
 from django.urls import reverse
-from wagtail import blocks
 
+from common.utils.charts import ChartValue
+from common.utils.chart_pregenerator.types import ChartType
+from common.models.charts import (
+    TreeMapOptionsSchema,
+    VerticalBarChartOptionsSchema,
+)
 from incident.choices import ACTORS, STATUS_OF_CHARGES
 
 
-class IncidentChartValue(blocks.StructValue):
+class BranchingChartValue(ChartValue):
     def branch_field_name(self):
         """Return the name of the field in the dataset that will be
         used to branch/segment the chart."""
@@ -69,6 +74,16 @@ class IncidentChartValue(blocks.StructValue):
             }
 
         return json.dumps(branches_value)
+
+
+class TreeMapChartValue(BranchingChartValue):
+    options_schema = TreeMapOptionsSchema
+    chart_type = ChartType.TREEMAP
+
+
+class VerticalBarChartValue(BranchingChartValue):
+    options_schema = VerticalBarChartOptionsSchema
+    chart_type = ChartType.VERTICAL_BAR
 
 
 class IncidentBranches(TextChoices):

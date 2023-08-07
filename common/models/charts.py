@@ -18,6 +18,42 @@ from common.utils.chart_pregenerator.types import (
 logger = structlog.get_logger()
 
 
+class BaseChartOptionsSchema(Schema):
+    """Base schema that consolidates data shared between the options
+    of different types of charts."""
+    tag = fields.Str(attribute='incident_set.tag', data_key='filterTags')
+    filter_categories = fields.List(
+        fields.Str(),
+        data_key='filterCategories',
+        attribute='incident_set.categories',
+    )
+    date_range = fields.Method('get_date_range', data_key='dateRange')
+    width = fields.Int()
+    height = fields.Int()
+
+    def get_date_range(self, obj):
+        lower = obj.get('incident_set', {}).get('lower_date', None)
+        upper = obj.get('incident_set', {}).get('upper_date', None)
+        if lower:
+            lower = lower.isoformat()
+
+        if upper:
+            upper = upper.isoformat()
+        return [lower, upper]
+
+
+class VerticalBarChartOptionsSchema(BaseChartOptionsSchema):
+    time_period = fields.Str(data_key='timePeriod')
+
+
+class BubbleMapChartOptionsSchema(BaseChartOptionsSchema):
+    group_by = fields.Str(data_key='aggregationLocality')
+
+
+class TreeMapOptionsSchema(BaseChartOptionsSchema):
+    group_by = fields.Str(data_key="branch")
+
+
 class ChartSnapshot(models.Model):
     last_generated = models.DateTimeField(auto_now=True)
     chart_type = models.CharField(
