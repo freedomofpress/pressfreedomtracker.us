@@ -196,11 +196,7 @@ exports[`renders BarChart with mocked data 1`] = `
           y={460}
         >
           <title>
-            Nov
-            : 
-            0
-             
-            incidents
+            Nov: 0 incidents
           </title>
         </rect>
       </DynamicWrapper>
@@ -237,11 +233,7 @@ exports[`renders BarChart with mocked data 1`] = `
           y={460}
         >
           <title>
-            Dec
-            : 
-            0
-             
-            incidents
+            Dec: 0 incidents
           </title>
         </rect>
       </DynamicWrapper>
@@ -278,11 +270,7 @@ exports[`renders BarChart with mocked data 1`] = `
           y={460}
         >
           <title>
-            Jan
-            : 
-            0
-             
-            incidents
+            Jan: 0 incidents
           </title>
         </rect>
       </DynamicWrapper>
@@ -319,11 +307,7 @@ exports[`renders BarChart with mocked data 1`] = `
           y={460}
         >
           <title>
-            Feb
-            : 
-            0
-             
-            incidents
+            Feb: 0 incidents
           </title>
         </rect>
       </DynamicWrapper>
@@ -360,11 +344,7 @@ exports[`renders BarChart with mocked data 1`] = `
           y={460}
         >
           <title>
-            Mar
-            : 
-            0
-             
-            incidents
+            Mar: 0 incidents
           </title>
         </rect>
       </DynamicWrapper>
@@ -401,11 +381,7 @@ exports[`renders BarChart with mocked data 1`] = `
           y={460}
         >
           <title>
-            Apr
-            : 
-            0
-             
-            incidents
+            Apr: 0 incidents
           </title>
         </rect>
       </DynamicWrapper>
