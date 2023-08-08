@@ -101,7 +101,13 @@ export default function USMap({
 					y={tooltipPosition.y}
 				/>
 			)}
-			<svg width={width} height={height} aria-labelledby={id} ref={setSvgEl}>
+			<svg
+				width="100%"
+				viewBox={`0 0 ${width} ${height}`}
+				aria-labelledby={id}
+				ref={setSvgEl}
+				style={{display: 'block'}}
+			>
 				{description ? (<desc>{description}</desc>) : null}
 				<svg
 					width={width}

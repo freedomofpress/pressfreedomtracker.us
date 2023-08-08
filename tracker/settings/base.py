@@ -267,6 +267,7 @@ CSP_FRAME_SRC = (
     # For recaptcha
     "https://www.google.com/recaptcha/",
     "https://recaptcha.google.com/recaptcha/",
+    "https://www.youtube.com",
 )
 CSP_CONNECT_SRC = [
     "'self'",

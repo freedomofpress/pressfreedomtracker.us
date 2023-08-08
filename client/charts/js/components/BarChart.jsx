@@ -141,15 +141,16 @@ export default function BarChart({
 				)}
 				<svg
 					ref={setSvgEl}
-					width={width}
-					height={height}
+					width="100%"
 					aria-labelledby={id}
 					style={{
 						marginTop: margins.top,
 						marginBottom: margins.bottom,
 						marginRight: margins.right,
 						marginLeft: margins.left,
+						display: "block",
 					}}
+					viewBox={[0, 0, width, height]}
 				>
 					{description ? (<desc>{description}</desc>) : null}
 					<g>
