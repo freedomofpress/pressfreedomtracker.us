@@ -120,7 +120,7 @@ export function stackDatasetByCategory(
 		category: d.key,
 	}))
 		// Only display non-empty groups in the chart.
-		.filter((d) => d.numberOfIncidents > 0 || allCategories.indexOf(d.category) >= 0)
+		.filter((d) => d.numberOfIncidents > 0 || (filterElements.length && allCategories.indexOf(d.category) >= 0))
 
 	return datasetStackedByCategory
 }

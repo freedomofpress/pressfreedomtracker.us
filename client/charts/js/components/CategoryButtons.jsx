@@ -46,6 +46,12 @@ export default function CategoryButtons({
 		)
 	})
 
+	const fillColor = (d) => {
+		if (hoveredElement === d.category) return findColor(d.category)
+		if (!hoveredElement && d.numberOfIncidents !== 0) return findColor(d.category)
+		return "white"
+	}
+
 	return (<>
 		{datasetCategoriesLabelsLegend
 			.sort((a, b) => {
@@ -74,11 +80,7 @@ export default function CategoryButtons({
 							height={30}
 							strokeWidth={hoveredElement === d.category ? borderWidth.normal : borderWidth.mobile}
 							stroke={hoveredElement === d.category ? findColor(d.category) : 'black'}
-							fill={hoveredElement === d.category || !hoveredElement
-								? (d.numberOfIncidents === 0 && hoveredElement && hoveredElement !== d.category)
-									? 'white'
-									: findColor(d.category)
-								: 'white'}
+							fill={fillColor(d)}
 						/>
 						<text
 							x={d.labelStartingX + (d.labelWidth / 2)}
