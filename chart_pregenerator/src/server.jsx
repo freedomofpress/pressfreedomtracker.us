@@ -21,7 +21,7 @@ app.get('/bar-chart.svg', async (req, res) => {
 app.get('/bar-chart.png', async (req, res) => {
 	const component = await generateBarChartSVG(req)
 
-	const resvg = new Resvg(component)
+	const resvg = new Resvg(component, { font: { defaultFontFamily: 'Arial' }, logLevel: 'debug' })
 	const pngData = resvg.render()
 	const pngBuffer = pngData.asPng()
 	res.setHeader('Content-Type', 'image/png')
@@ -38,7 +38,7 @@ app.get('/treemap-chart.svg', async (req, res) => {
 app.get('/treemap-chart.png', async (req, res) => {
 	const component = await generateTreemapChartSVG(req)
 
-	const resvg = new Resvg(component)
+	const resvg = new Resvg(component, { font: { defaultFontFamily: 'Arial' }, logLevel: 'debug' })
 	const pngData = resvg.render()
 	const pngBuffer = pngData.asPng()
 	res.setHeader('Content-Type', 'image/png')
@@ -55,7 +55,7 @@ app.get('/bubble-map.svg', async (req, res) => {
 app.get('/bubble-map.png', async (req, res) => {
 	const component = await generateUSMapSVG(req)
 
-	const resvg = new Resvg(component)
+	const resvg = new Resvg(component, { font: { defaultFontFamily: 'Arial' }, logLevel: 'debug' })
 	const pngData = resvg.render()
 	const pngBuffer = pngData.asPng()
 	res.setHeader('Content-Type', 'image/png')

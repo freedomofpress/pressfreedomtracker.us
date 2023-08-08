@@ -26,6 +26,7 @@ export const generateBarChartSVG = async (req) => {
 		timePeriod: "months",
 		width: chart_width,
 		height: chart_height,
+		mini: false,
 	}
 
 	try { options = {...options, ...JSON.parse(req.query.options)} }
@@ -43,7 +44,9 @@ export const generateBarChartSVG = async (req) => {
 	try {
 		// Filter down to the categories and tags and date range we want
 		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
-		const { incidentsByAllTime, xFormat, showByYears, allTime } = processIncidentsTimeData(filteredDataset, options.timePeriod);
+		const { incidentsByAllTime, xFormat } = processIncidentsTimeData(filteredDataset, options.timePeriod);
+
+		const Chart = options.mini ? BarChartMini : BarChart;
 
 		return ReactDOMServer.renderToString(
 			<svg
@@ -53,9 +56,9 @@ export const generateBarChartSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
-				style={{ fontFamily: "sans-serif" }}
+				style={{ fontFamily: "Arial, sans-serif" }}
 			>
-				<BarChart
+				<Chart
 					data={incidentsByAllTime}
 					x={'date'}
 					y={'count'}
@@ -82,6 +85,7 @@ export const generateTreemapChartSVG = async (req) => {
 		branch: 'categories',
 		width: chart_width,
 		height: chart_height,
+		mini: false,
 	}
 
 	try { options = {...options, ...JSON.parse(req.query.options)} }
@@ -106,6 +110,8 @@ export const generateTreemapChartSVG = async (req) => {
 				{}
 			)
 
+		const Chart = options.mini ? TreeMapMini : TreeMap;
+
 		return ReactDOMServer.renderToString(
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -114,9 +120,9 @@ export const generateTreemapChartSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
-				style={{ fontFamily: "sans-serif" }}
+				style={{ fontFamily: "Arial, sans-serif" }}
 			>
-				<TreeMap
+				<Chart
 					data={filteredDataset}
 					width={options.width}
 					height={options.height}
@@ -179,7 +185,7 @@ export const generateUSMapSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
-				style={{ fontFamily: "sans-serif" }}
+				style={{ fontFamily: "Arial, sans-serif" }}
 			>
 				<USMap
 					data={datasetAggregatedByGeo}

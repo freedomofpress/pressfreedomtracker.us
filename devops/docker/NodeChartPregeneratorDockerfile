@@ -14,6 +14,11 @@ RUN npm install npm@${NPM_VER} --location=global
 RUN apk add --no-cache paxctl python3 make g++
 RUN paxctl -cm /usr/local/bin/node
 
+# Install fonts
+RUN apk --no-cache add msttcorefonts-installer fontconfig && \
+    update-ms-fonts && \
+    fc-cache -f
+
 COPY devops/docker/node-chart-pregenerator-start.sh /usr/bin/node-chart-pregenerator-start.sh
 
 ARG USERID
