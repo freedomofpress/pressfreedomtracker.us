@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
-import CategoryButtons from './CategoryButtons.jsx'
+import CategoryButtons, { calculateCategoriesLabelsLegend, calculateButtonsHeight } from './CategoryButtons.jsx'
 import { colors } from '../lib/utilities.js'
 
 // React-animated-dataset uses an older version of
@@ -147,7 +147,6 @@ export default function TreeMap({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 	const [selectedElements, setSelectedElements] = useState([])
-	const [buttonsHeight, setButtonsHeight] = useState(0)
 
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
@@ -164,10 +163,6 @@ export default function TreeMap({
 	const chartWidthDimension = isMobile ? 'x' : 'y'
 	const chartLengthTitle = isMobile ? 'height' : 'width'
 	const chartWidthTitle = isMobile ? 'width' : 'height'
-
-	useEffect(() => {
-		if(isMobile) setButtonsHeight(0)
-	})
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -187,6 +182,9 @@ export default function TreeMap({
 		minimumNumberOfIncidents,
 		allCategories
 	)
+
+	const categoryButtonsLabels = calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width)
+	const buttonsHeight = isMobile ? 0 : calculateButtonsHeight(categoryButtonsLabels)
 
 	const lengthScale = d3
 		.scaleLinear()
@@ -456,12 +454,9 @@ export default function TreeMap({
 						(<>
 							<CategoryButtons
 								interactive={interactive}
-								datasetStackedByCategory={datasetStackedByCategory}
-								paddings={paddings}
-								width={width}
+								categoryButtonsLabels={categoryButtonsLabels}
 								hoveredElement={hoveredElement}
 								setHoveredElement={setHoveredElement}
-								setButtonsHeight={setButtonsHeight}
 								toggleSelectedCategory={toggleSelectedCategory}
 								selectedElements={selectedElements}
 								findColor={findColor}

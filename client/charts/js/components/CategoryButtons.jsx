@@ -10,21 +10,8 @@ const borderWidth = {
 	mobile: 3,
 }
 
-export default function CategoryButtons({
-	interactive,
-	datasetStackedByCategory,
-	paddings,
-	width,
-	hoveredElement,
-	setHoveredElement,
-	setButtonsHeight,
-	toggleSelectedCategory = () => {},
-	selectedElements = [],
-	findColor,
-	textStyle,
-}) {
-	// Calculate the positions of the rects for the legend
-	const datasetCategoriesLabelsLegend = datasetStackedByCategory.reduce((acc, val) => {
+export function calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width) {
+	return datasetStackedByCategory.reduce((acc, val) => {
 		let labelStartingX = paddings.left
 		let labelStartingY = 15
 		const labelWidth = val.category.length * averageLetterWidth + 15
@@ -39,13 +26,22 @@ export default function CategoryButtons({
 		}
 		return [...acc, { ...val, labelStartingX, labelStartingY, labelWidth }]
 	}, [])
+}
 
-	useEffect(() => {
-		setButtonsHeight(
-			d3.max(datasetCategoriesLabelsLegend, d => d.labelStartingY) + labelHeight * 1.5
-		)
-	})
+export function calculateButtonsHeight(categoryButtonsLabels) {
+	return d3.max(categoryButtonsLabels, d => d.labelStartingY) + labelHeight * 1.5
+}
 
+export default function CategoryButtons({
+	interactive,
+	categoryButtonsLabels,
+	hoveredElement,
+	setHoveredElement,
+	toggleSelectedCategory = () => {},
+	selectedElements = [],
+	findColor,
+	textStyle,
+}) {
 	const fillColor = (d) => {
 		if (hoveredElement === d.category) return findColor(d.category)
 		if (!hoveredElement && d.numberOfIncidents !== 0) return findColor(d.category)
@@ -53,7 +49,7 @@ export default function CategoryButtons({
 	}
 
 	return (<>
-		{datasetCategoriesLabelsLegend
+		{categoryButtonsLabels
 			.sort((a, b) => {
 				const isFirst = hoveredElement === a.category
 				const isSecond = hoveredElement === b.category

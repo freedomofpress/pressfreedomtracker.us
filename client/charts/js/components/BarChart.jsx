@@ -6,7 +6,7 @@ import StaticDataset from './StaticDataset'
 import DynamicWrapper from './DynamicWrapper'
 import Slider from './Slider'
 import Tooltip from './Tooltip'
-import CategoryButtons from './CategoryButtons'
+import CategoryButtons, { calculateCategoriesLabelsLegend, calculateButtonsHeight } from './CategoryButtons.jsx'
 import { computeMinimumNumberOfIncidents, stackDatasetByCategory } from './TreeMap'
 
 const margins = {
@@ -77,7 +77,6 @@ export default function BarChart({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [sliderSelection, setSliderSelection] = useState(dataset[0].index)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
-	const [buttonsHeight, setButtonsHeight] = useState(0)
 
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
@@ -104,6 +103,11 @@ export default function BarChart({
 		minimumNumberOfIncidents,
 		allCategories
 	)
+
+	const categoryButtonsLabels = calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width)
+	const buttonsHeight = isMobileView || !allCategories
+		? 0
+		: calculateButtonsHeight(categoryButtonsLabels)
 
 	const stackedData = d3.stack().keys(allCategories || [y])(dataset)
 
@@ -198,12 +202,9 @@ export default function BarChart({
 					{allCategories && (
 						<CategoryButtons
 							interactive={interactive}
-							datasetStackedByCategory={datasetStackedByCategory}
-							paddings={paddings}
-							width={width}
+							categoryButtonsLabels={categoryButtonsLabels}
 							hoveredElement={!hoveredElement?.x && hoveredElement?.y}
 							setHoveredElement={(el) => setHoveredElement(el ? { y: el } : el)}
-							setButtonsHeight={setButtonsHeight}
 							findColor={findColor}
 							textStyle={textStyle}
 						/>
