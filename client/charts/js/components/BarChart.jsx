@@ -6,6 +6,8 @@ import StaticDataset from './StaticDataset'
 import DynamicWrapper from './DynamicWrapper'
 import Slider from './Slider'
 import Tooltip from './Tooltip'
+import CategoryButtons from './CategoryButtons'
+import { computeMinimumNumberOfIncidents, stackDatasetByCategory } from './TreeMap'
 
 const margins = {
 	top: 0,
@@ -33,10 +35,21 @@ const borders = {
 	grid: 1,
 }
 
+const textStyle = {
+	fontFamily: 'var(--font-base)',
+	fontWeight: '500',
+	fontSize: '14px',
+	lineHeight: '17px',
+}
+
 const textPadding = 10
 
 export default function BarChart({
 	data,
+	allCategories,
+	categoriesColors = {},
+	categoryColumn,
+	categoryDivider = ',',
 	x,
 	y,
 	xFormat = x => x,
@@ -64,6 +77,7 @@ export default function BarChart({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [sliderSelection, setSliderSelection] = useState(dataset[0].index)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+	const [buttonsHeight, setButtonsHeight] = useState(0)
 
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
@@ -76,11 +90,28 @@ export default function BarChart({
 	const xLabelWidth = width / xDomainItems.length
 	const xLabelDisplayInterval = xLabelWidth < 40 ? 2 : 1
 
+	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(
+		dataset,
+		width,
+		35
+	)
+
+	const datasetStackedByCategory = stackDatasetByCategory(
+		dataset.map(d => ({ categories: Object.keys(d).join(', ') })),
+		[],
+		categoryColumn,
+		categoryDivider,
+		minimumNumberOfIncidents,
+		allCategories
+	)
+
+	const stackedData = d3.stack().keys(allCategories || [y])(dataset)
+
 	const yScale = d3
 		.scaleLinear()
 		// Default to domain max 100 if there's no data
-		.domain(yDomain || [0, d3.max(dataset, (d) => d[y]) || 100])
-		.range([height - (isMobileView ? paddings.mobile : paddings.bottom), paddings.top])
+		.domain(yDomain || [0, d3.max(stackedData.flat(), d => d[1]) || 100])
+		.range([height - (isMobileView ? paddings.mobile : paddings.bottom), paddings.top + buttonsHeight])
 		.nice(numberOfTicks)
 
 	const gridLines = yScale.ticks(numberOfTicks)
@@ -107,6 +138,15 @@ export default function BarChart({
 		return height - yScale(y_) - (isMobileView ? paddings.mobile : paddings.bottom)
 	}
 
+	const toggleSelectedCategory = () => {}
+	const findColor = (color) => categoriesColors[color] || 'white'
+	const getBarColor = (key, data, defaultColor) => {
+		const barColor = categoriesColors[key] || '#E07A5F'
+		const isHoveredByDate = hoveredElement?.x === (tooltipXFormat || xFormat)(data[x])
+		const isHoveredByKey = !hoveredElement?.x && hoveredElement?.y === key
+		return isHoveredByDate || isHoveredByKey ? barColor : !hoveredElement ? barColor : defaultColor
+	}
+
 	const selectedElement = dataset.find((d) => d[x] === sliderSelection)
 	const incidentsCount = selectedElement !== undefined ? selectedElement[y] : 0
 
@@ -115,11 +155,13 @@ export default function BarChart({
 	if (!isMobileView) {
 		return (
 			<>
-				{hoveredElement && interactive && (
+				{hoveredElement?.x && interactive && (
 					<Tooltip
 						content={
 							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
-								<div>Number of Incidents</div>
+								<div>Number of{
+									(hoveredElement?.y && hoveredElement?.y !== 'count') ? ` ${hoveredElement.y.replace('Incident', '')}` : ''
+								} Incidents</div>
 								<div
 									style={{
 										display: 'flex',
@@ -129,9 +171,9 @@ export default function BarChart({
 									}}
 								>
 									<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
-										{hoveredElement}
+										{hoveredElement?.x}
 									</div>
-									<div>{yFormat(dataset.find((d) => (tooltipXFormat || xFormat)(d[x]) === hoveredElement)[y])}</div>
+									<div>{yFormat(dataset.find((d) => (tooltipXFormat || xFormat)(d[x]) === hoveredElement?.x)[hoveredElement?.y || y])}</div>
 								</div>
 							</div>
 						}
@@ -153,6 +195,19 @@ export default function BarChart({
 					viewBox={[0, 0, width, height]}
 				>
 					{description ? (<desc>{description}</desc>) : null}
+					{allCategories && (
+						<CategoryButtons
+							interactive={interactive}
+							datasetStackedByCategory={datasetStackedByCategory}
+							paddings={paddings}
+							width={width}
+							hoveredElement={!hoveredElement?.x && hoveredElement?.y}
+							setHoveredElement={(el) => setHoveredElement(el ? { y: el } : el)}
+							setButtonsHeight={setButtonsHeight}
+							findColor={findColor}
+							textStyle={textStyle}
+						/>
+					)}
 					<g>
 						<Dataset
 							dataset={gridLines}
@@ -196,64 +251,72 @@ export default function BarChart({
 							keyFn={(d) => d}
 						/>
 					</g>
-					<Dataset
-						dataset={dataset}
-						tag="rect"
-						init={{
-							x: (d) => xScale(d[x]),
-							y: height - paddings.bottom,
-							height: 0,
-							width: xScale.bandwidth(),
-						}}
-						attrs={{
-							x: (d) => xScale(d[x]),
-							y: (d) => yScale(d[y]),
-							height: (d) => computeBarheight(d[y]),
-							width: xScale.bandwidth(),
-							fill: (d) =>
-								hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : hoveredElement === null ? '#E07A5F' : 'white',
-							strokeWidth: borders.normal,
-							stroke: (d) => (hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
-							cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
-							shapeRendering: 'crispEdges',
-						}}
-						duration={250}
-						durationByAttr={{ fill: 0, stroke: 0 }}
-						keyFn={(d) => d.index}
-					/>
-					{dataset.map((d) => (
-						<g key={d[x]} style={{ pointerEvents: interactive ? "auto" : "none" }}>
+					{stackedData.map(branchBars => (
+							<Dataset
+								dataset={branchBars}
+								tag="rect"
+								init={{
+									x: (d) => xScale(d.data[x]),
+									y: height - paddings.bottom,
+									height: 0,
+									width: xScale.bandwidth(),
+								}}
+								attrs={{
+									x: (d) => xScale(d.data[x]),
+									y: (d) => yScale(d[1]),
+									height: (d) => computeBarheight(d[1] - d[0]) || 0,
+									width: xScale.bandwidth(),
+									fill: (d) => getBarColor(branchBars.key, d.data, 'white'),
+									strokeWidth: borders.normal,
+									stroke: (d) => hoveredElement?.x ? getBarColor(branchBars.key, d.data, 'black') : 'black',
+									cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
+									shapeRendering: 'crispEdges',
+								}}
+								duration={250}
+								durationByAttr={{ fill: 0, stroke: 0 }}
+								keyFn={(d) => branchBars.key + d.data.index}
+								key={branchBars.key}
+							/>
+						))}
+					{stackedData.map(branchBars => branchBars.map((branchEntry) => (
+						<g
+							key={branchBars.key + branchEntry.data.index}
+							style={{ pointerEvents: interactive ? "auto" : "none" }}
+						>
 							<DynamicWrapper
 								wrapperComponent={
 									<a
-										href={searchPageURL && searchPageURL(xFormat(d[x]))}
+										href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
 										role="link"
-										aria-label={`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+										aria-label={`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
 									/>
 								}
 								wrap={interactive && searchPageURL}
 							>
 								<rect
-									x={xScaleOverLayer(d[x])}
-									y={yScale(d[y])}
-									height={computeBarheight(d[y])}
+									x={xScaleOverLayer(branchEntry.data[x])}
+									y={yScale(branchEntry[1])}
+									height={computeBarheight(branchEntry[1] - branchEntry[0]) || 0}
 									width={xScaleOverLayer.bandwidth()}
 									style={{
 										opacity: 0,
 										cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 									}}
-									onMouseEnter={() => setHoveredElement((tooltipXFormat || xFormat)(d[x]))}
+									onMouseEnter={() => setHoveredElement({
+										x: (tooltipXFormat || xFormat)(branchEntry.data[x]),
+										y: branchBars.key
+									})}
 									onMouseMove={updateTooltipPosition}
 									onMouseLeave={() => setHoveredElement(null)}
 									shapeRendering="crispEdges"
 								>
 									<title>
-										{`${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`}
+										{`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
 									</title>
 								</rect>
 							</DynamicWrapper>
 						</g>
-					))}
+					)))}
 					<Dataset
 						dataset={dataset.filter((d, i) => i % xLabelDisplayInterval === 0)}
 						tag="text"
@@ -267,7 +330,7 @@ export default function BarChart({
 							x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
 							y: height - paddings.bottom / 2,
 							textAnchor: 'middle',
-							fill: (d) => (hoveredElement === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
+							fill: (d) => (hoveredElement?.x === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
 							fontFamily: 'var(--font-base)',
 							fontWeight: 500,
 							fontSize: '14px',
@@ -334,53 +397,56 @@ export default function BarChart({
 						keyFn={(d) => d}
 					/>
 				</g>
-				<DynamicWrapper
-					wrapperComponent={
-						<Dataset
-							dataset={dataset}
-							tag="a"
-							attrs={{
-								href: d => searchPageURL && d && searchPageURL(d[x]),
-								role: "link",
-								ariaLabel: d => d && `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
-							}}
-							keyFn={(d) => d.index}
-						/>
-					}
-					wrap={searchPageURL}
-				>
-					<Dataset
-						dataset={searchPageURL ? undefined : dataset}
-						tag="rect"
-						attrs={{
-							x: (d) => xScale(d[x]),
-							y: (d) => yScale(d[y]),
-							height: (d) => computeBarheight(d[y]),
-							width: xScale.bandwidth(),
-							fill: (d) =>
-								sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
-							strokeWidth: borders.normal,
-							stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
-							cursor: searchPageURL ? 'pointer' : 'inherit',
-							shapeRendering: 'crispEdges',
-						}}
-						duration={250}
-						keyFn={(d) => d.index}
-					/>
-					<text
-						x={width / 2}
-						y={height - paddings.mobile / 2 - 7}
-						textAnchor="middle"
-						style={{
-							fill: 'black',
-							fontFamily: 'var(--font-base)',
-							fontWeight: 500,
-							fontSize: '14px',
-						}}
+				{stackedData.map((branchBars) => branchBars.map((branchEntry) => (
+					<DynamicWrapper
+						wrapperComponent={
+							<Dataset
+								dataset={branchEntry.data}
+								tag="a"
+								attrs={{
+									href: d => searchPageURL && d && searchPageURL(d[x]),
+									role: "link",
+									ariaLabel: d => d && `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
+								}}
+								keyFn={(d) => branchBars.key + d.data.index}
+							/>
+						}
+						wrap={searchPageURL}
 					>
-						{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
-					</text>
-				</DynamicWrapper>
+						<Dataset
+							dataset={searchPageURL ? undefined : branchEntry.data}
+							tag="rect"
+							attrs={{
+								x: (d) => xScale(d[x]),
+								y: (d) => yScale(d[y]),
+								height: (d) => computeBarheight(d[y]),
+								width: xScale.bandwidth(),
+								fill: (d) =>
+									sliderSelection === d[x] ? '#E07A5F' : sliderSelection === null ? '#E07A5F' : 'white',
+								strokeWidth: borders.normal,
+								stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
+								cursor: searchPageURL ? 'pointer' : 'inherit',
+								shapeRendering: 'crispEdges',
+							}}
+							duration={250}
+							keyFn={(d) => branchBars.key + d.data.index}
+							key={branchBars.key}
+						/>
+						<text
+							x={width / 2}
+							y={height - paddings.mobile / 2 - 7}
+							textAnchor="middle"
+							style={{
+								fill: 'black',
+								fontFamily: 'var(--font-base)',
+								fontWeight: 500,
+								fontSize: '14px',
+							}}
+						>
+							{`${sliderSelection}: ${incidentsCount} ${titleLabel}`}
+						</text>
+					</DynamicWrapper>
+				)))}
 				<Slider
 					elements={dataset.map((d) => d[x])}
 					xScale={xSlider}

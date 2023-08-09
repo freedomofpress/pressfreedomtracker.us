@@ -2,6 +2,7 @@ import React from "react"
 import { createRoot } from "react-dom/client"
 import IncidentsTimeBarChart from './components/IncidentsTimeBarChart'
 import DataLoader from "../../charts/js/components/DataLoader"
+import * as d3 from 'd3'
 
 function engageCharts() {
 	const charts = document.querySelectorAll('.chart-vertical-bar:not(.engaged)')
@@ -21,11 +22,28 @@ function engageCharts() {
 
 		const filterUpperDate = upperValue ? new Date(upperValue) : null
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
+		const url = chartNode.dataset.url
+
+		let dataKey = ['dataset']
+		let dataUrl = [url || '/api/edge/incidents/homepage_csv/?']
+		let dataParser = [(data) => d3.csvParse(data, d3.autoType)]
+
+		const branchFieldName = chartNode.dataset.branchFieldName
+		const branches = chartNode.dataset.branches && JSON.parse(chartNode.dataset.branches)
+		let additionalProps = {}
+		if (chartNode.dataset.branches && branches.type == 'list') {
+			additionalProps.branches = branches.value
+		} else if (chartNode.dataset.branches && branches.type == 'url') {
+			dataUrl.push(branches.value)
+			dataKey.push("branches")
+			dataParser.push(JSON.parse)
+		}
 
 		root.render((
 			<DataLoader
-				dataUrl={`/api/edge/incidents/homepage_csv/?`}
-				dataKey="dataset"
+				dataUrl={dataUrl}
+				dataKey={dataKey}
+				dataParser={dataParser}
 				loadingComponent={(
 					<svg
 						viewBox="0 0 655 440"
@@ -44,6 +62,8 @@ function engageCharts() {
 					timePeriod={timePeriod}
 					interactive={interactive}
 					fullSize={fullSize}
+					branchFieldName={branchFieldName}
+					{...additionalProps}
 				/>
 			</DataLoader>
 		))
