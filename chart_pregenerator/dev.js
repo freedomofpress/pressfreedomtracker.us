@@ -2,6 +2,7 @@ const path = require('path')
 const esbuild = require("esbuild")
 const relativeDeps = require("relative-deps")
 const chokidar = require("chokidar")
+const debounce = require('lodash.debounce');
 const nodemon = require('nodemon');
 
 const config = {
@@ -18,28 +19,38 @@ const config = {
 		await relativeDeps.installRelativeDeps()
 		await esbuild.build(config)
 
+		const rebuild = debounce(async () => {
+			console.log('\nChanges detected, rebuilding app...');
+			await relativeDeps.installRelativeDeps()
+			await esbuild.build(config)
+		}, 2000);
+
 		chokidar.watch(
 			["../client/**/*.js", "../client/**/*.jsx", "./src/**/*.js", "./src/**/*.jsx"],
 			{ ignoreInitial: true, }
 		)
-			.on('all', async (event, path) => {
-					console.log('\nChanges detected, rebuilding app...');
-					await relativeDeps.installRelativeDeps()
-					await esbuild.build(config)
+			.on('all', () => {
+				rebuild.cancel();
+				rebuild();
 			})
 
-		nodemon({
-			script: 'build/server.js',
-			delay: 2000,
-		});
+		const runApp = () => {
+			nodemon({
+				script: 'build/server.js',
+				delay: 2000,
+			});
 
-		nodemon.on('start', function () {
-			console.log('App has started');
-		}).on('quit', function () {
-			console.log('App has quit');
-			process.exit();
-		}).on('restart', async function () {
-			console.log('App restarted');
-		});
+			nodemon.on('start', function () {
+				console.log('App has started');
+			}).on('restart', async function () {
+				console.log('App restarted');
+			}).on('crash', async function () {
+				console.log('App crashed, restarting...');
+				nodemon.emit('quit');
+				runApp();
+			});
+		}
+
+		runApp();
 	})();
 }

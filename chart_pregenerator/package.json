@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "chokidar": "^3.5.3",
+    "lodash.debounce": "^4.0.8",
     "nodemon": "^3.0.1",
     "relative-deps": "^1.0.7"
   },
