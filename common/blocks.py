@@ -505,6 +505,8 @@ class VerticalBarChart(blocks.StructBlock):
         required=False,
         choices=charts.IncidentBranches.choices,
         default=None,
+        help_text='If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped '
+        'by the selected classification.',
     )
 
     class Meta:
