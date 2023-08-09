@@ -108,42 +108,30 @@ exports[`renders BarChart with mocked data 1`] = `
       }
       dataset={
         [
-          {
-            "index": 0,
-            "month": 10,
-            "monthName": "Nov",
-            "numberOfIncidents": 0,
-          },
-          {
-            "index": 1,
-            "month": 11,
-            "monthName": "Dec",
-            "numberOfIncidents": 0,
-          },
-          {
-            "index": 2,
-            "month": 0,
-            "monthName": "Jan",
-            "numberOfIncidents": 0,
-          },
-          {
-            "index": 3,
-            "month": 1,
-            "monthName": "Feb",
-            "numberOfIncidents": 0,
-          },
-          {
-            "index": 4,
-            "month": 2,
-            "monthName": "Mar",
-            "numberOfIncidents": 0,
-          },
-          {
-            "index": 5,
-            "month": 3,
-            "monthName": "Apr",
-            "numberOfIncidents": 0,
-          },
+          [
+            0,
+            0,
+          ],
+          [
+            0,
+            0,
+          ],
+          [
+            0,
+            0,
+          ],
+          [
+            0,
+            0,
+          ],
+          [
+            0,
+            0,
+          ],
+          [
+            0,
+            0,
+          ],
         ]
       }
       duration={250}

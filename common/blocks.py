@@ -500,10 +500,19 @@ class VerticalBarChart(blocks.StructBlock):
         'e.g., "Bar chart showing a decreasing number of assaults over the '
         'course of 2023."',
     )
+    group_by = blocks.ChoiceBlock(
+        label='Group Incidents By',
+        required=False,
+        choices=charts.IncidentBranches.choices,
+        default=None,
+        help_text='If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped '
+        'by the selected classification.',
+    )
 
     class Meta:
         icon = 'table'
         template = 'common/blocks/vertical_bar_chart.html'
+        value_class = charts.IncidentChartValue
 
     class Media:
         js = ['verticalBarChart']
@@ -522,14 +531,14 @@ class TreeMapChart(blocks.StructBlock):
     group_by = blocks.ChoiceBlock(
         label='Group Incidents By',
         required=True,
-        choices=charts.TreeMapBranches.choices,
-        default=charts.TreeMapBranches.CATEGORIES,
+        choices=charts.IncidentBranches.choices,
+        default=charts.IncidentBranches.CATEGORIES,
     )
 
     class Meta:
         icon = 'table'
         template = 'common/blocks/tree_map_chart.html'
-        value_class = charts.TreeMapChartValue
+        value_class = charts.IncidentChartValue
 
     class Media:
         js = ['treeMapChart']

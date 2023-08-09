@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
+import CategoryButtons from './CategoryButtons.jsx'
 import { colors } from '../lib/utilities.js'
 
 // React-animated-dataset uses an older version of
@@ -50,8 +51,6 @@ const textStyle = {
 
 const paddingRect = borderWidth.normal
 const minimumHeightText = 17
-const averageLetterWidth = 8
-const labelHeight = 30
 
 export function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBarHeight) {
 	const totalIncidents = dataset.length
@@ -119,7 +118,9 @@ export function stackDatasetByCategory(
 		endPoint: !isNaN(d[0][1]) ? d[0][1] : d[0][0],
 		numberOfIncidents: incidentsGroupedByCategory[d.key],
 		category: d.key,
-	})).filter((d) => d.numberOfIncidents > 0)  // Only display non-empty groups in the chart.
+	}))
+		// Only display non-empty groups in the chart.
+		.filter((d) => d.numberOfIncidents > 0 || (filterElements.length && allCategories.indexOf(d.category) >= 0))
 
 	return datasetStackedByCategory
 }
@@ -144,6 +145,7 @@ export default function TreeMap({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 	const [selectedElements, setSelectedElements] = useState([])
+	const [buttonsHeight, setButtonsHeight] = useState(0)
 
 	// Because the chart can be rendered horizontally on desktop and vertically on
 	// mobile, we abstract the dimensions below
@@ -152,12 +154,16 @@ export default function TreeMap({
 	const chartWidth = isMobile ? width : height
 	const chartLengthPaddingBefore = isMobile ? paddings.top : paddings.left
 	const chartLengthPaddingAfter = isMobile ? paddings.bottom : paddings.right
-	let chartWidthPaddingBefore = isMobile ? paddings.left : paddings.top
+	const chartWidthPaddingBefore = isMobile ? paddings.left : paddings.top
 	const chartWidthPaddingAfter = isMobile ? paddings.right : paddings.bottom
 	const chartLengthDimension = isMobile ? 'y' : 'x'
 	const chartWidthDimension = isMobile ? 'x' : 'y'
 	const chartLengthTitle = isMobile ? 'height' : 'width'
 	const chartWidthTitle = isMobile ? 'width' : 'height'
+
+	useEffect(() => {
+		if(isMobile) setButtonsHeight(0)
+	})
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -207,23 +213,6 @@ export default function TreeMap({
 		return nextCategories.length === 0 ? null : nextCategories[0].category
 	}
 
-	// Calculate the positions of the rects for the legend
-	const datasetCategoriesLabelsLegend = datasetStackedByCategory.reduce((acc, val) => {
-		let labelStartingX = paddings.left
-		let labelStartingY = 15
-		const labelWidth = val.category.length * averageLetterWidth + 15
-		if (acc.length > 0) {
-			const lastLabel = acc[acc.length - 1]
-			labelStartingX = lastLabel.labelStartingX + lastLabel.labelWidth
-			labelStartingY = lastLabel.labelStartingY
-			if (labelStartingX + labelWidth > width - paddings.right) {
-				labelStartingX = paddings.left
-				labelStartingY += labelHeight
-			}
-		}
-		return [...acc, { ...val, labelStartingX, labelStartingY, labelWidth }]
-	}, [])
-
 	const toggleSelectedCategory = category => {
 		const existingCategoryIndex = selectedElements.indexOf(category)
 		if (existingCategoryIndex >= 0) {
@@ -231,11 +220,6 @@ export default function TreeMap({
 		} else {
 			setSelectedElements([...selectedElements, category])
 		}
-	}
-
-	if (!isMobile) {
-		chartWidthPaddingBefore = datasetCategoriesLabelsLegend[datasetCategoriesLabelsLegend.length - 1]?.labelStartingY
-			+ paddings.top + labelHeight * 1.5
 	}
 
 	if (!width) return null
@@ -311,16 +295,16 @@ export default function TreeMap({
 							tag="rect"
 							init={{
 								opacity: 0,
-								[chartWidthDimension]: chartWidthPaddingBefore,
+								[chartWidthDimension]: chartWidthPaddingBefore + buttonsHeight,
 								[chartLengthDimension]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
 								[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
 								[chartLengthTitle]: 0,
 							}}
 							attrs={{
 								opacity: 1,
-								[chartWidthDimension]: chartWidthPaddingBefore,
+								[chartWidthDimension]: chartWidthPaddingBefore + buttonsHeight,
 								[chartLengthDimension]: (d) => chartLength - lengthScale(d.startingPoint),
-								[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + chartWidthPaddingAfter),
+								[chartWidthTitle]: chartWidth - (chartWidthPaddingBefore + buttonsHeight + chartWidthPaddingAfter),
 								[chartLengthTitle]: (d) => computeBarHeight(d.startingPoint, d.endPoint),
 								fill: (d) =>
 									hoveredElement === d.category || hoveredElement === null
@@ -358,7 +342,7 @@ export default function TreeMap({
 						tag="line"
 						init={{
 							opacity: 0,
-							[`${chartWidthDimension}1`]: chartWidthPaddingBefore - borderWidth.normal / 2,
+							[`${chartWidthDimension}1`]: chartWidthPaddingBefore + buttonsHeight - borderWidth.normal / 2,
 							[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + borderWidth.normal / 2,
 							[`${chartLengthDimension}1`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
 							[`${chartLengthDimension}2`]: isMobile ? chartLength - chartLengthPaddingAfter : 0,
@@ -372,7 +356,7 @@ export default function TreeMap({
 									? 1
 									: 0,
 							display: (d) => (d.startingPoint !== d.endPoint ? null : 'none'),
-							[`${chartWidthDimension}1`]: chartWidthPaddingBefore - (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
+							[`${chartWidthDimension}1`]: chartWidthPaddingBefore + buttonsHeight - (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
 							[`${chartWidthDimension}2`]: chartWidth - chartWidthPaddingAfter + (isHomePageDesktopView ? borderWidth.normal : borderWidth.mobile) / 2,
 							[`${chartLengthDimension}1`]: (d) =>
 								chartLength - lengthScale(d.startingPoint) + computeBarHeight(d.startingPoint, d.endPoint),
@@ -466,54 +450,19 @@ export default function TreeMap({
 						:
 						// X axis and legend only shown on desktop
 						(<>
-							{datasetCategoriesLabelsLegend
-								.sort((a, b) => {
-									const isFirst = hoveredElement === a.category
-									const isSecond = hoveredElement === b.category
-									if (isFirst) return 1
-									else if (isSecond) return -1
-									return 0
-								})
-								.map(d => (
-									<g
-										key={d.category}
-										onMouseLeave={() => {
-											setTooltipPosition({ x: 0, y: 0 })
-											setHoveredElement(null)
-										}}
-										onClick={() => toggleSelectedCategory(d.category)}
-										onMouseEnter={() => setHoveredElement(d.category)}
-										cursor={interactive ? 'pointer' : 'inherit'}
-										pointerEvents={interactive ? "auto" : "none"}
-										tabIndex="0"
-										role="button"
-										aria-pressed={selectedElements.indexOf(d.category) >= 0}
-									>
-										<rect
-											x={d.labelStartingX}
-											y={d.labelStartingY}
-											width={d.labelWidth}
-											height={30}
-											strokeWidth={hoveredElement === d.category ? borderWidth.normal : borderWidth.mobile}
-											stroke={hoveredElement === d.category ? findColor(d.category) : 'black'}
-											fill={hoveredElement === d.category || hoveredElement === null
-												? (d.numberOfIncidents === 0 && hoveredElement !== d.category)
-													? 'white'
-													: findColor(d.category)
-												: 'white'}
-										/>
-										<text
-											x={d.labelStartingX + (d.labelWidth / 2)}
-											y={d.labelStartingY + labelHeight / 2 + 1}
-											textAnchor="middle"
-											dominantBaseline="middle"
-											{...textStyle}
-										>
-											{d.category}
-										</text>
-									</g>
-								)
-							)}
+							<CategoryButtons
+								interactive={interactive}
+								datasetStackedByCategory={datasetStackedByCategory}
+								paddings={paddings}
+								width={width}
+								hoveredElement={hoveredElement}
+								setHoveredElement={setHoveredElement}
+								setButtonsHeight={setButtonsHeight}
+								toggleSelectedCategory={toggleSelectedCategory}
+								selectedElements={selectedElements}
+								findColor={findColor}
+								textStyle={textStyle}
+							/>
 							<AnimatedDataset
 								dataset={datasetStackedByCategory}
 								init={{
