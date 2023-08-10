@@ -2,12 +2,14 @@ import json
 import os
 
 import marshmallow
+import requests
 import structlog
 import mailchimp_marketing
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
@@ -22,6 +24,7 @@ from emails.models import SubscriptionSchema
 from incident.models import IncidentPage, TopicPage
 from .forms import TagMergeForm
 from .utils import subscribe_for_site, MailchimpError
+from .utils.chart_pregenerator.config import settings as pregenerator_settings
 
 
 VERSION_INFO_SHORT_PATH = os.environ.get(
@@ -230,6 +233,30 @@ class MailchimpInterestsView(TemplateView):
 def deploy_info_view(request):
     version_full_text = read_version_info_file(VERSION_INFO_FULL_PATH)
     return HttpResponse(version_full_text, content_type="text/plain")
+
+
+def check_chart_health(request):
+    port = pregenerator_settings.port
+    host = pregenerator_settings.host
+    error_message = ''
+
+    context = {
+        'host': host,
+        'port': port,
+    }
+
+    try:
+        response = requests.get(f'http://{host}:{port}/', timeout=5)
+        context['response'] = response
+    except requests.exceptions.Timeout:
+        error_message = 'Timed out.'
+    except requests.exceptions.TooManyRedirects:
+        error_message = 'Too many redirects'
+    except requests.exceptions.RequestException as e:
+        error_message = f'Request exception: {e}'
+    context['error_message'] = error_message
+
+    return TemplateResponse(request, 'wagtailadmin/check_chart_health.html', context)
 
 
 @never_cache

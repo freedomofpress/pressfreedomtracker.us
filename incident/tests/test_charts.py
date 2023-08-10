@@ -1,11 +1,18 @@
 import json
 from abc import ABCMeta, abstractmethod
+from datetime import date
 from urllib.parse import urlparse, parse_qs
 
 from django.test import TestCase
 from django.urls import reverse
 
 from common.blocks import TreeMapChart
+from common.models.charts import ChartSnapshot
+from common.tests.factories import ChartSnapshotFactory, CategoryPageFactory
+from common.utils.chart_pregenerator.types import (
+    ChartType,
+    SnapshotType,
+)
 from incident.utils import charts
 from incident.choices import ACTORS, STATUS_OF_CHARGES
 
@@ -22,11 +29,38 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
     group_by = NotImplementedField
     expected_branch_field_name = NotImplementedField
 
+    @classmethod
+    def setUpTestData(cls):
+        cls.category = CategoryPageFactory()
+
     def setUp(self):
         self.tree_map_chart_value = TreeMapChart().to_python({
             'description': 'Test Description',
+            'incident_set': {
+                'tag': 'test_tag',
+                'categories': [self.category.title],
+                'lower_date': date(2022, 1, 1),
+                'upper_date': date(2023, 1, 1),
+            },
             'group_by': self.group_by,
         })
+        query = {
+            'filterTags': 'test_tag',
+            'filterCategories': [self.category.title],
+            'dateRange': ['2022-01-01', '2023-01-01'],
+            'branch': self.group_by,
+        }
+        self.snapshot_svg = ChartSnapshot.objects.create(
+            chart_type=ChartType.TREEMAP,
+            snapshot_type=SnapshotType.SVG,
+            chart_svg='<svg />',
+            query=query,
+        )
+        self.snapshot_png = ChartSnapshotFactory(
+            png=True,
+            chart_type=ChartType.TREEMAP,
+            query=query,
+        )
 
     def test_branch_field_name(self):
         self.assertEqual(
@@ -40,6 +74,16 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
         self.assertIn(
             self.expected_branch_field_name,
             qs['fields'][0],
+        )
+
+    def test_png_snapshot_url(self):
+        url = self.tree_map_chart_value.png_snapshot_url()
+        self.assertEqual(url, self.snapshot_png.chart_image.url)
+
+    def test_svg_snapshot(self):
+        self.assertEqual(
+            self.tree_map_chart_value.svg_snapshot(),
+            self.snapshot_svg.chart_svg,
         )
 
 

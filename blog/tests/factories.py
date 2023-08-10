@@ -86,6 +86,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
             'bubble_map_chart',
         ],
     )
+    lead_graphic = factory.Faker('streamfield', fields=['vertical_bar_chart'])
     teaser_text = factory.Faker(
         'paragraph',
         nb_sentences=3,
