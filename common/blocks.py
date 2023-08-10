@@ -13,7 +13,6 @@ from wagtail.images.blocks import ImageChooserBlock
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.models.helpers import get_tags, get_categories
 from common.models.charts import (
-    VerticalBarChartOptionsSchema,
     BubbleMapChartOptionsSchema,
 )
 from common.templatetags.render_as_template import render_as_template
