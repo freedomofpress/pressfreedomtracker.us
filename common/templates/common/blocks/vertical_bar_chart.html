@@ -31,6 +31,15 @@
 		{% if mini_graphic is None %}
 			data-full-size="true"
 		{% endif %}
+		{% if value.group_by and value.branch_field_name %}
+			data-branch-field-name="{{ value.branch_field_name }}"
+		{% endif %}}
+		{% if value.group_by and value.branches %}
+			data-branches="{{ value.branches }}"
+		{% endif %}}
+		{% if value.group_by and value.data_url %}
+			data-url="{{ value.data_url }}"
+		{% endif %}}
 	>
 		{% if mini_graphic is not None %}
 			<svg viewBox="0 0 655 440" width="100%" style="display: block; background-color: #fafafa" />
