@@ -20,13 +20,14 @@ All query parameters are passed in via an urlencoded json string under the `opti
 
 Below are settings that can be specified in the options parameter:
 
-| key                | type     | example                        | default        |
-|--------------------|----------|--------------------------------|----------------|
-| `filterTags`       | string[] | `['wombat']`                   | null           |
-| `filterCategories` | string[] | `['Assault']`                  | null           |
-| `dateRange`        | string[] | `['01-01-2020', '03-01-2020']` | `[null, null]` |
-| `timePeriod`       | string   | `months`                       | `months`       |
-| `branch`           | string   | `categories`                   | `categories`   |
-| `width`            | integer  | 1190                           | 1190           |
-| `height`           | integer  | 800                            | 800            |
-| `mini`             | boolean  | `false`                        | `false`        |
+| key                | type     | example                                           | default                                           |
+|--------------------|----------|---------------------------------------------------|---------------------------------------------------|
+| `filterTags`       | string[] | `['wombat']`                                      | null                                              |
+| `filterCategories` | string[] | `['Assault']`                                     | null                                              |
+| `dateRange`        | string[] | `['01-01-2020', '03-01-2020']`                    | `[null, null]`                                    |
+| `timePeriod`       | string   | `months`                                          | `months`                                          |
+| `branchFieldName`  | string   | `categories`                                      | `categories`                                      |
+| `branches`         | object   | `{ type: "url", value: "/api/edge/categories/" }` | `{ type: "url", value: "/api/edge/categories/" }` |
+| `width`            | integer  | 1190                                              | 1190                                              |
+| `height`           | integer  | 800                                               | 800                                               |
+| `mini`             | boolean  | `false`                                           | `false`                                           |
