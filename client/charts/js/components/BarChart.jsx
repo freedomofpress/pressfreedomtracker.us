@@ -96,7 +96,7 @@ export default function BarChart({
 	)
 
 	const datasetStackedByCategory = stackDatasetByCategory(
-		dataset.map(d => ({ categories: Object.keys(d).join(', ') })),
+		dataset.map(d => ({ [categoryColumn]: Object.keys(d).join(', ') })),
 		[],
 		categoryColumn,
 		categoryDivider,
