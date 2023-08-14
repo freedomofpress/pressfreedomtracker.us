@@ -33,18 +33,21 @@ class BranchingChartValue(ChartValue):
             }
         )
 
+    def branches_json_string(self):
+        """JSON-encoded string containing the ``branches`` data."""
+        return json.dumps(self.branches())
+
     def branches(self):
         """Return a data structure that will instruct our front-end
         React component how to get the branches of the tree map
         chart.
 
-        This should be a JSON-encoded string containing a Javascript
-        object with the keys "type" (indicating what type of value we
-        have), and "value" (containing the actual value).  There are
-        two kinds of values here: a URL, and a list.  The URL tells
-        our front-end component it needs to perform a request to the
-        given URL to get the branches.  The list contains the branches
-        as a JS array.
+        This should be a dictionary with the keys "type" (indicating
+        what type of value we have), and "value" (containing the
+        actual value).  There are two kinds of values here: a URL, and
+        a list.  The URL tells our front-end component it needs to
+        perform a request to the given URL to get the branches.  The
+        list contains the branches as a python list.
 
         """
         group_by = self.get('group_by')
@@ -73,7 +76,7 @@ class BranchingChartValue(ChartValue):
                 ]
             }
 
-        return json.dumps(branches_value)
+        return branches_value
 
 
 class TreeMapChartValue(BranchingChartValue):

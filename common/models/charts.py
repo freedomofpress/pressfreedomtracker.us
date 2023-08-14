@@ -51,7 +51,8 @@ class BubbleMapChartOptionsSchema(BaseChartOptionsSchema):
 
 
 class TreeMapOptionsSchema(BaseChartOptionsSchema):
-    group_by = fields.Str(data_key="branch")
+    branch_field_name = fields.Function(lambda obj: obj.branch_field_name())
+    branches = fields.Function(lambda obj: obj.branches())
 
 
 class ChartSnapshot(models.Model):

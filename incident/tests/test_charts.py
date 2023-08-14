@@ -28,6 +28,7 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
 
     group_by = NotImplementedField
     expected_branch_field_name = NotImplementedField
+    expected_branches = NotImplementedField
 
     @classmethod
     def setUpTestData(cls):
@@ -48,7 +49,8 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
             'filterTags': 'test_tag',
             'filterCategories': [self.category.title],
             'dateRange': ['2022-01-01', '2023-01-01'],
-            'branch': self.group_by,
+            'branches': self.tree_map_chart_value.branches(),
+            'branch_field_name': self.tree_map_chart_value.branch_field_name(),
         }
         self.snapshot_svg = ChartSnapshot.objects.create(
             chart_type=ChartType.TREEMAP,
@@ -66,6 +68,18 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
         self.assertEqual(
             self.tree_map_chart_value.branch_field_name(),
             self.expected_branch_field_name,
+        )
+
+    def test_branches(self):
+        self.assertEqual(
+            self.tree_map_chart_value.branches(),
+            self.expected_branches,
+        )
+
+    def test_branches_json_string(self):
+        self.assertEqual(
+            json.loads(self.tree_map_chart_value.branches_json_string()),
+            self.expected_branches,
         )
 
     def test_data_url_fields_name(self):
@@ -90,46 +104,34 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
 class TestCategoriesTreeMap(TestTreeMapChartValue, TestCase):
     expected_branch_field_name = 'categories'
     group_by = charts.IncidentBranches.CATEGORIES
-
-    def test_branches(self):
-        branches = json.loads(self.tree_map_chart_value.branches())
-        self.assertEqual(branches['type'], 'url')
-        self.assertEqual(
-            branches['value'],
-            reverse(
-                'category-list',
-                kwargs={'version': 'edge'},
-            )
+    expected_branches = {
+        'type': 'url',
+        'value': reverse(
+            'category-list',
+            kwargs={'version': 'edge'},
         )
+    }
 
 
 class TestAssailantTreeMap(TestTreeMapChartValue, TestCase):
     expected_branch_field_name = 'assailant'
     group_by = charts.IncidentBranches.ASSAILANT
-
-    def test_branches(self):
-        expected_branches = {
-            'type': 'list',
-            'value': [
-                {'title': title, 'value': value} for
-                value, title in ACTORS
-            ]
-        }
-        branches = json.loads(self.tree_map_chart_value.branches())
-        self.assertEqual(branches, expected_branches)
+    expected_branches = {
+        'type': 'list',
+        'value': [
+            {'title': title, 'value': value} for
+            value, title in ACTORS
+        ]
+    }
 
 
 class TestChargeStatusTreeMap(TestTreeMapChartValue, TestCase):
     expected_branch_field_name = 'status_of_charges'
     group_by = charts.IncidentBranches.STATUS_OF_CHARGES
-
-    def test_branches(self):
-        expected_branches = {
-            'type': 'list',
-            'value': [
-                {'title': title, 'value': value} for
-                value, title in STATUS_OF_CHARGES
-            ]
-        }
-        branches = json.loads(self.tree_map_chart_value.branches())
-        self.assertEqual(branches, expected_branches)
+    expected_branches = {
+        'type': 'list',
+        'value': [
+            {'title': title, 'value': value} for
+            value, title in STATUS_OF_CHARGES
+        ]
+    }
