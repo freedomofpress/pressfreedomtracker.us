@@ -58,7 +58,7 @@ services:
       DJANGO_HOST: app
     ports:
       - "127.0.0.1:3000:3000"
-    working_dir: /django
+    working_dir: /django/chart_pregenerator
     user: ${UID:?err}
     networks:
       app:

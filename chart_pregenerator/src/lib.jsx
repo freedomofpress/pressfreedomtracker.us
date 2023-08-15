@@ -33,23 +33,23 @@ export const generateBarChartSVG = async (req) => {
 		filterTags: null,
 		filterCategories: [],
 		dateRange: [null, null],
-		branchFieldName: 'categories',
-		branches: { type: "url", value: "/api/edge/categories/" },
+		branchFieldName: null,
+		branches: null,
 		timePeriod: "months",
 		width: chart_width,
 		height: chart_height,
 		mini: false,
 	}
 
-	try { options = {...options, ...JSON.parse(req.query.options)} }
+	try { options = {...options, ...JSON.parse(req?.query?.options || "{}")} }
 	catch (e) { console.error(e) }
 
 	let dataset, branches
 
 	try {
-		let dataKey = ['dataset']
-		let dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories%2C${options.branchFieldName}&format=csv`]
-		let dataParser = [(data) => d3.csvParse(data, d3.autoType)]
+		const dataKey = ['dataset']
+		const dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories${options.branchFieldName ? `%2C${options.branchFieldName}` : ''}&format=csv`]
+		const dataParser = [(data) => d3.csvParse(data, d3.autoType)]
 
 		if (options.branches && options.branches.type === 'url') {
 			dataUrl.push(`${FPF_BASE_URL}${options.branches.value}`)
@@ -72,7 +72,7 @@ export const generateBarChartSVG = async (req) => {
 			.reduce(
 				(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
 				{}
-			) : {}
+			) : undefined
 
 		const Chart = options.mini ? BarChartMini : BarChart;
 
@@ -90,7 +90,7 @@ export const generateBarChartSVG = async (req) => {
 					data={incidentsByAllTime}
 					categoryColumn={options.branchFieldName}
 					categoriesColors={categoriesColorMap}
-					allCategories={Object.keys(categoriesColorMap)}
+					allCategories={categoriesColorMap ? Object.keys(categoriesColorMap) : undefined}
 					x={'date'}
 					y={'count'}
 					xFormat={xFormat}
@@ -120,15 +120,15 @@ export const generateTreemapChartSVG = async (req) => {
 		mini: false,
 	}
 
-	try { options = {...options, ...JSON.parse(req.query.options)} }
+	try { options = {...options, ...JSON.parse(req?.query?.options || "{}")} }
 	catch (e) { console.error(e) }
 
 	let dataset, branches
 
 	try {
-		let dataKey = ['dataset']
-		let dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories%2C${options.branchFieldName}&format=csv`]
-		let dataParser = [(data) => d3.csvParse(data, d3.autoType)]
+		const dataKey = ['dataset']
+		const dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories${options.branchFieldName ? `%2C${options.branchFieldName}` : ''}&format=csv`]
+		const dataParser = [(data) => d3.csvParse(data, d3.autoType)]
 
 		if (options.branches && options.branches.type === 'url') {
 			dataUrl.push(`${FPF_BASE_URL}${options.branches.value}`)
@@ -191,7 +191,7 @@ export const generateUSMapSVG = async (req) => {
 		height: chart_height,
 	}
 
-	try { options = {...options, ...JSON.parse(req.query.options)} }
+	try { options = {...options, ...JSON.parse(req?.query?.options || "{}")} }
 	catch (e) { console.error(e) }
 
 	let dataset
