@@ -11,8 +11,9 @@
 	text-decoration: none
 	z-index: 1
 
-	&:focus
+	&:focus, &:focus-visible
 		outline: $black solid 3px
+		z-index: 2
 
 	&:not([disabled]):hover
 		cursor: pointer
@@ -95,6 +96,14 @@
 		&[disabled]
 			color: $tag-inactive
 			border-color: $tag-inactive
+
+	&-bordered
+		padding: 8px
+		border: 0
+		outline: $black solid 3px
+
+		&:focus, &:focus-visible
+			outline: $black solid 5px
 
 	&-ghost
 		transition: color 0.01s ease-in 0.08s

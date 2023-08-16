@@ -29,11 +29,9 @@ export default function Button({ label, selected, selectable = true, onClick, to
 			/>
 		)}
 		<button
+			className="btn btn-bordered"
 			style={{
-				padding: 8,
-				border: 'none',
 				marginBottom: 3,
-				outline: 'solid 3px black',
 				backgroundColor: selected || (hovered && selectable) ? 'black' : 'white',
 				color: selected || (hovered && selectable) ? 'white' : selectable ? 'black' : 'grey',
 				cursor: selectable ? 'pointer' : 'default',
