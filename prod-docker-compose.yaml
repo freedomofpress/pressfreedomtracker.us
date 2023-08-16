@@ -50,6 +50,8 @@ services:
       DJANGO_APP_NAME: tracker
       DJANGO_JSON_LOG: "yes"
       DJANGO_WHITENOISE: "yes"
+      DJANGO_CHART_HOST: chartgen
+      DJANGO_CHART_PORT: 3000
       # More fake testing keys (see above); generate your own for deployment.
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       RECAPTCHA_PRIVATE_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
