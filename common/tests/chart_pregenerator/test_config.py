@@ -15,6 +15,11 @@ class TestConfig(TestCase):
         with self.assertRaisesRegex(ImproperlyConfigured, 'PORT must be an integer'):
             Settings().validate()
 
+    @override_settings(CHART_PREGENERATOR={'HOST': 'chartgen', 'PORT': 'abc'})
+    def test_noninteger_port(self):
+        with self.assertRaisesRegex(ImproperlyConfigured, 'PORT must be an integer'):
+            Settings().validate()
+
     @override_settings(CHART_PREGENERATOR={'PORT': 3000})
     def test_no_host(self):
         with self.assertRaisesRegex(ImproperlyConfigured, 'HOST must be a string'):

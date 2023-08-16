@@ -202,5 +202,5 @@ WEBPACK_LOADER['DEFAULT']['TIMEOUT'] = 60  # noqa: F405
 
 CHART_PREGENERATOR = {
     'HOST': os.environ.get('DJANGO_CHART_HOST'),
-    'PORT': int(os.environ.get('DJANGO_CHART_PORT')),
+    'PORT': os.environ.get('DJANGO_CHART_PORT'),
 }
