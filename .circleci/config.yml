@@ -84,11 +84,10 @@ jobs:
           command: |
             make dev-init
             docker compose up --detach
-            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
+            curl --output /dev/null --head --fail --retry-all-errors --retry 48 --retry-delay 5 http://localhost:8000
             make dev-tests
             make dev-jest-tests
             make check-migrations
-          no_output_timeout: 5m
 
       - store_artifacts:
           path: htmlcov
@@ -122,8 +121,7 @@ jobs:
           command: |
             make dev-init
             docker compose up --detach
-            while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
-          no_output_timeout: 5m
+            curl --output /dev/null --head --fail --retry-all-errors --retry 48 --retry-delay 5 http://localhost:8000
 
       - run:
           name: Check for JS linting issues
