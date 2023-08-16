@@ -199,8 +199,3 @@ else:
 
 # Prevent endless waiting if problem loading webpack bundles.
 WEBPACK_LOADER['DEFAULT']['TIMEOUT'] = 60  # noqa: F405
-
-CHART_PREGENERATOR = {
-    'HOST': os.environ.get('DJANGO_CHART_HOST'),
-    'PORT': os.environ.get('DJANGO_CHART_PORT'),
-}
