@@ -1,7 +1,12 @@
 ---
-version: "3"
+version: "3.4"
 networks:
   app:
+
+x-chart-pregenerator:
+  host: &chart-host ${NODE_CHART_PREGENERATOR_HOST:-chartgenerator}
+  port: &chart-port ${NODE_CHART_PREGENERATOR_PORT:-3000}
+
 services:
   postgresql:
     image: postgres:13
@@ -24,6 +29,8 @@ services:
       args:
         NPM_VER: 9.6.0
         USERID: 1234
+        CHART_HOST: node-chart-pregenerator
+        CHART_PORT: *chart-port
     image: quay.io/freedomofpress/pressfreedomtrackerus
     depends_on:
       - postgresql
@@ -50,8 +57,8 @@ services:
       DJANGO_APP_NAME: tracker
       DJANGO_JSON_LOG: "yes"
       DJANGO_WHITENOISE: "yes"
-      DJANGO_CHART_HOST: chartgen
-      DJANGO_CHART_PORT: 3000
+      DJANGO_CHART_HOST: node-chart-pregenerator
+      DJANGO_CHART_PORT: *chart-port
       # More fake testing keys (see above); generate your own for deployment.
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       RECAPTCHA_PRIVATE_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe

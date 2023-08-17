@@ -1,7 +1,12 @@
 ---
-version: "3"
+version: "3.4"
 networks:
   app:
+
+x-chart-pregenerator:
+  host: &chart-host ${NODE_CHART_PREGENERATOR_HOST:-chartgenerator}
+  port: &chart-port ${NODE_CHART_PREGENERATOR_PORT:-3000}
+
 services:
   postgresql:
     image: postgres:13
@@ -56,14 +61,16 @@ services:
       - ./:/django
     environment:
       DJANGO_HOST: app
+      PORT: *chart-port
     ports:
-      - "127.0.0.1:3000:3000"
+      - target: *chart-port
+        published: *chart-port
     working_dir: /django/chart_pregenerator
     user: ${UID:?err}
     networks:
       app:
         aliases:
-          - chartgen
+          - *chart-host
 
   django:
     init: true
@@ -90,8 +97,8 @@ services:
       DJANGO_PROFILE: "${DJANGO_PROFILE:-no}"
       PYINSTRUMENT: "${PYINSTRUMENT:-no}"
       SELENIUM_HOST: selenium
-      DJANGO_CHART_HOST: chartgen
-      DJANGO_CHART_PORT: 3000
+      DJANGO_CHART_HOST: node-chart-pregenerator
+      DJANGO_CHART_PORT: *chart-port
     working_dir: /django
     volumes:
       - ./:/django
