@@ -33,3 +33,15 @@ class ChartValue(blocks.StructValue):
             query=options
         )
         return snapshot.chart_image.url
+
+    def png_snapshot_meta_url(self):
+        options = self.options_schema().dump(self)
+        options['mini'] = True
+        options['width'] = 1200
+        options['height'] = 630
+        snapshot = ChartSnapshot.get_or_generate(
+            chart_type=self.chart_type,
+            snapshot_type=SnapshotType.PNG,
+            query=options
+        )
+        return snapshot.chart_image.url

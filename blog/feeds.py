@@ -19,9 +19,9 @@ class BlogIndexPageFeed(Feed):
     def _get_teaser_image(self, obj):
         if obj.teaser_graphic and obj.teaser_graphic[0].block_type == "image":
             return obj.teaser_graphic[0].value.get_rendition('original')
-        elif obj.teaser_graphic[0].block_type == "vertical_bar_chart" or \
+        elif obj.teaser_graphic and (obj.teaser_graphic[0].block_type == "vertical_bar_chart" or \
             obj.teaser_graphic[0].block_type == "tree_map_chart" or \
-            obj.teaser_graphic[0].block_type == "bubble_map_chart":
+            obj.teaser_graphic[0].block_type == "bubble_map_chart"):
             return obj.teaser_graphic[0].value.png_snapshot_mini_url
 
     def _get_categories(self, obj):

@@ -305,8 +305,16 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
     subpage_types = []
 
     def get_meta_image(self):
-        teaser_is_image = self.teaser_graphic and self.teaser_graphic[0] and self.teaser_graphic[0].block_type == "image"
-        return self.teaser_graphic[0].value if teaser_is_image else super(BlogPage, self).get_meta_image()
+        if self.teaser_graphic and self.teaser_graphic[0] and \
+            self.teaser_graphic[0].block_type == "image":
+            return self.teaser_graphic[0].value
+        if self.teaser_graphic and self.teaser_graphic[0] and \
+            (self.teaser_graphic[0].block_type == "vertical_bar_chart" or \
+                self.teaser_graphic[0].block_type == "tree_map_chart" or \
+                self.teaser_graphic[0].block_type == "bubble_map_chart"):
+            # TODO this should be a wagtail image
+            return self.teaser_graphic[0].value.png_snapshot_meta_url()
+        return super(BlogPage, self).get_meta_image()
 
     def get_meta_description(self):
         if self.teaser_text:
