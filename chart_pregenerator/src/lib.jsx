@@ -91,7 +91,7 @@ export const generateBarChartSVG = async (req) => {
 					categoryColumn={options.branchFieldName}
 					categoriesColors={categoriesColorMap}
 					allCategories={categoriesColorMap ? Object.keys(categoriesColorMap) : undefined}
-					x={'date'}
+					x={options.mini ? 'count' : 'date'}
 					y={'count'}
 					xFormat={xFormat}
 					titleLabel={'incidents'}
