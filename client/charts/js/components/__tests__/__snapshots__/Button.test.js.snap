@@ -3,6 +3,7 @@
 exports[`renders Button with mocked data 1`] = `
 <React.Fragment>
   <button
+    className="btn btn-bordered"
     onClick={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
@@ -10,13 +11,10 @@ exports[`renders Button with mocked data 1`] = `
     style={
       {
         "backgroundColor": "white",
-        "border": "none",
         "color": "black",
         "cursor": "pointer",
         "marginBottom": 3,
         "minWidth": 50,
-        "outline": "solid 3px black",
-        "padding": 8,
       }
     }
   >

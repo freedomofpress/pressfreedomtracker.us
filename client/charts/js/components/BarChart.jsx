@@ -93,7 +93,7 @@ export default function BarChart({
 	)
 
 	const datasetStackedByCategory = stackDatasetByCategory(
-		dataset.map(d => ({ categories: Object.keys(d).join(', ') })),
+		dataset.map(d => ({ [categoryColumn]: Object.keys(d).join(', ') })),
 		[],
 		categoryColumn,
 		categoryDivider,
@@ -393,24 +393,20 @@ export default function BarChart({
 						keyFn={(d) => d}
 					/>
 				</g>
-				{stackedData.map((branchBars) => branchBars.map((branchEntry) => (
+				{stackedData.map((branchBars) => branchBars.map((branchEntry, i) => (
 					<DynamicWrapper
+						key={branchBars.key + i}
 						wrapperComponent={
-							<AnimatedDataset
-								dataset={branchEntry.data}
-								tag="a"
-								attrs={{
-									href: d => searchPageURL && d && searchPageURL(d[x]),
-									role: "link",
-									ariaLabel: d => d && `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
-								}}
-								keyFn={(d) => branchBars.key + d.data.index}
+							<a
+								href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
+								role="link"
+								aria-label={`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
 							/>
 						}
 						wrap={searchPageURL}
 					>
 						<AnimatedDataset
-							dataset={searchPageURL ? undefined : branchEntry.data}
+							dataset={[branchEntry.data]}
 							tag="rect"
 							attrs={{
 								x: (d) => xScale(d[x]),
@@ -425,7 +421,7 @@ export default function BarChart({
 								shapeRendering: 'crispEdges',
 							}}
 							duration={250}
-							keyFn={(d) => branchBars.key + d.data.index}
+							keyFn={() => branchBars.key + i}
 							key={branchBars.key}
 						/>
 						<text
