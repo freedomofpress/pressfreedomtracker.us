@@ -152,7 +152,7 @@ export default function TreeMap({
 
 	// Because the chart can be rendered horizontally on desktop and vertically on
 	// mobile, we abstract the dimensions below
-	const isMobile = width < 500
+	const isMobile = width < 500 || searchPageURL
 	const chartLength = isMobile ? height : width
 	const chartWidth = isMobile ? width : height
 	const chartLengthPaddingBefore = isMobile ? paddings.top : paddings.left

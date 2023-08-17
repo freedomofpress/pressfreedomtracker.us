@@ -348,8 +348,8 @@ export default function BarChart({
 		return (
 			<svg
 				ref={setSvgEl}
-				width={width}
-				height={height}
+				width="100%"
+				viewBox={[0, 0, width, height]}
 				style={{
 					marginTop: margins.top,
 					marginBottom: margins.bottom,
@@ -398,24 +398,20 @@ export default function BarChart({
 						keyFn={(d) => d}
 					/>
 				</g>
-				{stackedData.map((branchBars) => branchBars.map((branchEntry) => (
+				{stackedData.map((branchBars) => branchBars.map((branchEntry, i) => (
 					<DynamicWrapper
+						key={branchBars.key + i}
 						wrapperComponent={
-							<Dataset
-								dataset={branchEntry.data}
-								tag="a"
-								attrs={{
-									href: d => searchPageURL && d && searchPageURL(d[x]),
-									role: "link",
-									ariaLabel: d => d && `${xFormat(d[x])}: ${yFormat(d[y])} ${titleLabel}`,
-								}}
-								keyFn={(d) => branchBars.key + d.data.index}
+							<a
+								href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
+								role="link"
+								aria-label={`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
 							/>
 						}
 						wrap={searchPageURL}
 					>
-						<Dataset
-							dataset={searchPageURL ? undefined : branchEntry.data}
+						<AnimatedDataset
+							dataset={[branchEntry.data]}
 							tag="rect"
 							attrs={{
 								x: (d) => xScale(d[x]),
@@ -430,7 +426,7 @@ export default function BarChart({
 								shapeRendering: 'crispEdges',
 							}}
 							duration={250}
-							keyFn={(d) => branchBars.key + d.data.index}
+							keyFn={() => branchBars.key + i}
 							key={branchBars.key}
 						/>
 						<text
