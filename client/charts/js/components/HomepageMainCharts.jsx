@@ -25,6 +25,8 @@ export default function HomepageMainCharts(props) {
 	)
 }
 
+const mobileBreakpoint = 950
+
 function HomepageMainChartsWidth({
 	data: dataset,
 	width,
@@ -46,8 +48,8 @@ function HomepageMainChartsWidth({
 		{}
 	)
 
-	const chartWidth = width > 970 ? width / 3 : width
-	const chartHeight = width > 970 ? 500 : 480
+	const chartWidth = width > mobileBreakpoint ? width / 3 : width
+	const chartHeight = width > mobileBreakpoint ? 500 : 480
 
 	const datasetFiltered = filterDatasetByFiltersApplied(dataset, filtersApplied, currentDate)
 
@@ -83,7 +85,7 @@ function HomepageMainChartsWidth({
 						width={chartWidth}
 						height={chartHeight}
 						id={'homepage-treemap-chart-label'}
-						isHomePageDesktopView={width > 970}
+						isHomePageDesktopView={width > mobileBreakpoint}
 						minimumBarHeight={35}
 						categoryColumn={'categories'}
 						titleLabel={'incidents'}
@@ -120,7 +122,7 @@ function HomepageMainChartsWidth({
 						id={'homepage-bar-chart-label'}
 						width={chartWidth}
 						height={chartHeight}
-						isMobileView={width < 970}
+						isMobileView={width < mobileBreakpoint}
 						searchPageURL={(monthName) =>
 							getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
 						}
