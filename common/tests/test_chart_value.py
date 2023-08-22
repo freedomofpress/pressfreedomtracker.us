@@ -52,7 +52,10 @@ class TestVerticalBarChartValue(TestCase):
 
     def test_png_snapshot_url(self):
         url = self.vbc_value.png_snapshot_url()
-        self.assertEqual(url, self.snapshot_png.chart_image.url)
+        self.assertEqual(
+            url,
+            self.snapshot_png.chart_image.get_rendition('original').url,
+        )
 
     def test_svg_snapshot(self):
         self.assertEqual(
@@ -89,6 +92,14 @@ class TestBubbleMapValue(TestCase):
             chart_type=ChartType.BUBBLE_MAP,
             query=query,
         )
+
+        meta_query = {**query, 'mini': True, 'width': 1200, 'height': 630}
+        self.snapshot_meta_png = ChartSnapshotFactory(
+            png=True,
+            chart_type=ChartType.BUBBLE_MAP,
+            query=meta_query,
+        )
+
         self.snapshot_svg = ChartSnapshotFactory(
             svg=True,
             chart_type=ChartType.BUBBLE_MAP,
@@ -97,7 +108,17 @@ class TestBubbleMapValue(TestCase):
 
     def test_png_snapshot_url(self):
         url = self.bmc_value.png_snapshot_url()
-        self.assertEqual(url, self.snapshot_png.chart_image.url)
+        self.assertEqual(
+            url,
+            self.snapshot_png.chart_image.get_rendition('original').url,
+        )
+
+    def test_png_snapshot_meta_url(self):
+        meta_image = self.bmc_value.png_snapshot_meta()
+        self.assertEqual(
+            meta_image,
+            self.snapshot_meta_png.chart_image,
+        )
 
     def test_svg_snapshot(self):
         self.assertEqual(

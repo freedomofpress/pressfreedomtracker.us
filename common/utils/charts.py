@@ -1,4 +1,3 @@
-import json
 from wagtail import blocks
 
 from common.models.charts import ChartSnapshot
@@ -20,7 +19,7 @@ class ChartValue(blocks.StructValue):
             snapshot_type=SnapshotType.PNG,
             query=self.options_schema().dump(self)
         )
-        return snapshot.chart_image.url
+        return snapshot.chart_image.get_rendition('original').url
 
     def png_snapshot_mini_url(self):
         options = self.options_schema().dump(self)
@@ -34,7 +33,7 @@ class ChartValue(blocks.StructValue):
         )
         return snapshot.chart_image.url
 
-    def png_snapshot_meta_url(self):
+    def png_snapshot_meta(self):
         options = self.options_schema().dump(self)
         options['mini'] = True
         options['width'] = 1200
@@ -44,4 +43,4 @@ class ChartValue(blocks.StructValue):
             snapshot_type=SnapshotType.PNG,
             query=options
         )
-        return snapshot.chart_image.url
+        return snapshot.chart_image

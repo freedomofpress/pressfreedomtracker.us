@@ -1,9 +1,10 @@
+from io import BytesIO
 from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import factory
 from django.db import IntegrityError
-from django.core.files.base import ContentFile
+from django.core.files.images import ImageFile
 from django.test import TestCase
 
 from common.models.charts import ChartSnapshot
@@ -95,7 +96,7 @@ class TestChartSnapshot(TestCase):
             luminosity='bright',
             image_format='png',
         )
-        mock_request_snapshot.return_value = ContentFile(png_output)
+        mock_request_snapshot.return_value = ImageFile(BytesIO(png_output), name='testimg')
 
         query = {'query_param': 'value'}
         snapshot = ChartSnapshotFactory(png=True, query=query)

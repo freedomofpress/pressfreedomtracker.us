@@ -1,7 +1,7 @@
 import json
 import requests
 
-from django.core.files.base import ContentFile
+from django.core.files.images import ImageFile
 
 from .types import (
     SnapshotType,
@@ -14,7 +14,7 @@ class PregenerationException(Exception):
     pass
 
 
-def make_request(*, endpoint, file_format, query):
+def make_request(*, endpoint, file_format, query, stream=False):
     """Internal wrapper function for making a request to the
     pregeneration service."""
     host = settings.host
@@ -24,7 +24,8 @@ def make_request(*, endpoint, file_format, query):
         response = requests.get(
             url,
             timeout=5,
-            params={'options': json.dumps(query)}
+            params={'options': json.dumps(query)},
+            stream=stream,
         )
         response.raise_for_status()
     except requests.exceptions.RequestException:
@@ -50,8 +51,8 @@ def request_snapshot(
         on the chart type being requested, and can be viewed in the
         code for the service itself.
     :return: For SVG snapshots, a string containing the SVG content.
-        For PNG snapshots, a Django `File` object containing the image
-        file content.
+        For PNG snapshots, a Django `ImageFile` object containing the
+        image file content.
 
     """
     if chart_type == ChartType.VERTICAL_BAR:
@@ -67,7 +68,7 @@ def request_snapshot(
         return make_request(endpoint=endpoint, file_format='svg', query=query).text
 
     elif snapshot_type == SnapshotType.PNG:
-        response = make_request(endpoint=endpoint, file_format='png', query=query)
-        return ContentFile(response.content)
+        response = make_request(endpoint=endpoint, file_format='png', query=query, stream=True)
+        return ImageFile(response.raw)
 
     return response

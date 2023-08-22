@@ -307,7 +307,7 @@ class ChartSnapshotFactory(factory.django.DjangoModelFactory):
         )
         png = factory.Trait(
             snapshot_type=SnapshotType.PNG,
-            chart_image=factory.django.ImageField(color='purple')
+            chart_image=factory.SubFactory(CustomImageFactory)
         )
 
     svg = True

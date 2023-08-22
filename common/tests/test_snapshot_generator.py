@@ -1,8 +1,9 @@
 import json
+import xml.etree.ElementTree as ET
 from unittest import mock
 
 import requests
-from django.core.files import File
+from django.core.files.images import ImageFile
 from django.test import TestCase
 
 from common.utils.chart_pregenerator.api import (
@@ -69,8 +70,9 @@ class TestGenerator(TestCase):
             query={},
         )
 
-        # Should begin with an `<svg>` tag
-        self.assertEqual(response[:4], '<svg')
+        # Should contain the appropriate `<svg>` tag
+        xml_tree_root = ET.fromstring(response)
+        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
 
     def test_generates_vertical_bar_chart_pngs(self):
         output = request_snapshot(
@@ -78,7 +80,7 @@ class TestGenerator(TestCase):
             chart_type=ChartType.VERTICAL_BAR,
             query={},
         )
-        self.assertIsInstance(output, File)
+        self.assertIsInstance(output, ImageFile)
 
     def test_generates_tree_map_chart_svgs(self):
         response = request_snapshot(
@@ -87,8 +89,9 @@ class TestGenerator(TestCase):
             query={},
         )
 
-        # Should begin with an `<svg>` tag
-        self.assertEqual(response[:4], '<svg')
+        # Should contain the appropriate `<svg>` tag
+        xml_tree_root = ET.fromstring(response)
+        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
 
     def test_generates_tree_map_chart_pngs(self):
         output = request_snapshot(
@@ -96,7 +99,7 @@ class TestGenerator(TestCase):
             chart_type=ChartType.TREEMAP,
             query={},
         )
-        self.assertIsInstance(output, File)
+        self.assertIsInstance(output, ImageFile)
 
     def test_generates_bubble_map_chart_svgs(self):
         response = request_snapshot(
@@ -105,8 +108,9 @@ class TestGenerator(TestCase):
             query={},
         )
 
-        # Should begin with an `<svg>` tag
-        self.assertEqual(response[:4], '<svg')
+        # Should contain the appropriate `<svg>` tag
+        xml_tree_root = ET.fromstring(response)
+        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
 
     def test_generates_bubble_map_chart_pngs(self):
         output = request_snapshot(
@@ -114,4 +118,4 @@ class TestGenerator(TestCase):
             chart_type=ChartType.BUBBLE_MAP,
             query={},
         )
-        self.assertIsInstance(output, File)
+        self.assertIsInstance(output, ImageFile)
