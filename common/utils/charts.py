@@ -21,7 +21,7 @@ class ChartValue(blocks.StructValue):
         )
         return snapshot.chart_image.get_rendition('original').url
 
-    def png_snapshot_mini_url(self):
+    def png_snapshot_mini(self):
         options = self.options_schema().dump(self)
         options['mini'] = True
         options['width'] = 655
@@ -31,7 +31,10 @@ class ChartValue(blocks.StructValue):
             snapshot_type=SnapshotType.PNG,
             query=options
         )
-        return snapshot.chart_image.url
+        return snapshot.chart_image
+
+    def png_snapshot_mini_url(self):
+        return self.png_snapshot_mini().get_rendition('original').url
 
     def png_snapshot_meta(self):
         options = self.options_schema().dump(self)
