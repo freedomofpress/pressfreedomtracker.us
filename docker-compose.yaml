@@ -68,6 +68,7 @@ services:
       DJANGO_PROFILE: "${DJANGO_PROFILE:-no}"
       PYINSTRUMENT: "${PYINSTRUMENT:-no}"
       SELENIUM_HOST: selenium
+      DJANGO_SETTINGS_MODULE:
     working_dir: /django
     volumes:
       - ./:/django
