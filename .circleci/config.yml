@@ -109,6 +109,10 @@ jobs:
       - store_artifacts:
           path: ~/dockercomposelogs
 
+      - store_test_results:
+          path: test-results
+          when: always
+
   lint:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
