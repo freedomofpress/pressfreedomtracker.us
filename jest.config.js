@@ -11,4 +11,12 @@ module.exports = {
 		'<rootDir>/node_modules/(?!d3|internmap|delaunator|robust-predicates|react-animated-dataset)',
 	],
 	setupFiles: ['<rootDir>/client/common/js/setupTests.js'],
+	reporters: [
+		"default",
+		[ "jest-junit", {
+			suiteName: "jest tests",
+			outputDirectory: "./test-results/jest",
+			outputName: "results.xml",
+		} ],
+	],
 }
