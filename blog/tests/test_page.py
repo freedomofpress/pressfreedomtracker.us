@@ -1,3 +1,4 @@
+import defusedxml.ElementTree as ET
 from wagtail.models import Site, Page
 from django.test import TestCase, Client
 
@@ -47,6 +48,11 @@ class TestPages(TestCase):
             slug='one',
             with_image=True,
         )
+        cls.blog_page2 = BlogPageFactory(
+            parent=cls.index,
+            slug='two',
+            with_teaser_chart=True,
+        )
         cat = CategoryPageFactory()
         IncidentPageFactory(categories=[cat])
 
@@ -60,8 +66,42 @@ class TestPages(TestCase):
 
     def test_get_index_feed_should_succeed(self):
         """get feed should succed."""
-        response = self.client.get('/all-blogs/feed/')
+        response = self.client.get(self.index.url + 'feed/')
+        self.assertEqual(
+            response['content-type'], 'application/rss+xml; charset=utf-8'
+        )
         self.assertEqual(response.status_code, 200)
+
+    def test_rss_feed_has_correct_thumbnails(self):
+        response = self.client.get(self.index.url + 'feed/')
+        root = ET.fromstring(response.content)
+
+        namespaces = {'media': 'http://search.yahoo.com/mrss/'}
+        item1 = root.find(f".//item[title='{self.blog_page.title}']")
+        item2 = root.find(f".//item[title='{self.blog_page2.title}']")
+
+        self.assertIn(
+            self.blog_page.teaser_graphic[0].value.get_rendition("original").url,
+            getattr(
+                item1.find(
+                    'media:thumbnail',
+                    namespaces=namespaces,
+                ),
+                'attrib', {})
+            .get('url'),
+        )
+
+        expected_chart_thumbnail = self.blog_page2.teaser_graphic[0].value.\
+            png_snapshot_mini().get_rendition("original").url
+        self.assertIn(
+            expected_chart_thumbnail,
+            getattr(
+                item2.find(
+                    'media:thumbnail',
+                    namespaces=namespaces,
+                ), 'attrib', {})
+            .get('url')
+        )
 
     def test_get_index_for_unknown_author_should_return_404(self):
         response = self.client.get('/all-blogs/?author=999')

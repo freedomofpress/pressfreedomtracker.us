@@ -22,7 +22,7 @@ class BlogIndexPageFeed(Feed):
         elif obj.teaser_graphic and (obj.teaser_graphic[0].block_type == "vertical_bar_chart" or \
             obj.teaser_graphic[0].block_type == "tree_map_chart" or \
             obj.teaser_graphic[0].block_type == "bubble_map_chart"):
-            return obj.teaser_graphic[0].value.png_snapshot_mini
+            return obj.teaser_graphic[0].value.png_snapshot_mini().get_rendition('original')
 
     def _get_categories(self, obj):
         categories = obj.categories.all().select_related('category')
