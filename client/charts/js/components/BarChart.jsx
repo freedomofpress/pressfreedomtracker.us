@@ -343,8 +343,8 @@ export default function BarChart({
 		return (
 			<svg
 				ref={setSvgEl}
-				width={width}
-				height={height}
+				width="100%"
+				viewBox={[0, 0, width, height]}
 				style={{
 					marginTop: margins.top,
 					marginBottom: margins.bottom,
