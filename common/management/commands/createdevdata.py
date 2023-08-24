@@ -22,7 +22,7 @@ from common.models import (
     SimplePage, SimplePageWithSidebar,
     FooterSettings, SearchSettings,
     GeneralIncidentFilter, IncidentFilterSettings, CategoryPage,
-    CommonTag,
+    CommonTag, CustomImage,
 )
 from common.devdata import (
     PersonPageFactory, CustomImageFactory, OrganizationIndexPageFactory,
@@ -392,6 +392,10 @@ class Command(BaseCommand):
             title='All Incidents',
         )
         number_created = 0
+        teaser_images = cycle(
+            CustomImage.objects.filter(collection__name='Photos')
+        )
+
         for category_keys in cycle(generate_variations()):
             category_pages = []
             kwargs = {'geolocated': geolocated}
@@ -414,6 +418,7 @@ class Command(BaseCommand):
                         parent=incident_index_page,
                         categories=category_pages,
                         tags=0,
+                        teaser_image=next(teaser_images),
                         **kwargs,
                     )
                 number_created += 1
