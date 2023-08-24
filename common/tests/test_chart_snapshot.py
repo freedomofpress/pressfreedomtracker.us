@@ -6,6 +6,7 @@ import factory
 from django.db import IntegrityError
 from django.core.files.images import ImageFile
 from django.test import TestCase
+from wagtail.core.models import Collection
 
 from common.models.charts import ChartSnapshot
 from common.utils.chart_pregenerator.types import (
@@ -67,6 +68,15 @@ class TestChartSnapshot(TestCase):
 
         self.assertFalse(snapshot.is_stale())
 
+    def test_uses_existing_collection_for_images(self):
+        root_collection = Collection.get_first_root_node()
+        collection = Collection(name=ChartSnapshot.COLLECTION_NAME)
+        root_collection.add_child(instance=collection)
+        self.assertEqual(
+            ChartSnapshot.get_or_create_collection(),
+            collection,
+        )
+
     @mock.patch('common.models.charts.request_snapshot')
     def test_invokes_chart_generation_api_for_svgs(self, mock_request_snapshot):
         svg_output = """<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="red" /></svg>"""
@@ -109,6 +119,10 @@ class TestChartSnapshot(TestCase):
         )
         snapshot.refresh_from_db()
         self.assertEqual(snapshot.chart_image.file.read(), png_output)
+        self.assertEqual(
+            snapshot.chart_image.collection.name,
+            ChartSnapshot.COLLECTION_NAME,
+        )
 
     @mock.patch(
         'common.models.charts.request_snapshot',
@@ -152,6 +166,18 @@ class TestChartSnapshot(TestCase):
 
         self.assertIsInstance(snapshot, ChartSnapshot)
         self.assertEqual(snapshot.chart_svg, svg_output)
+
+    @mock.patch(
+        'common.models.charts.request_snapshot',
+        side_effect=PregenerationException,
+    )
+    def test_raises_an_exception_if_cannot_get_snapshot(self, mock_request_snapshot):
+        with self.assertRaisesRegex(Exception, 'Tried to generate chart and failed'):
+            ChartSnapshot.get_or_generate(
+                chart_type=ChartType.TREEMAP,
+                snapshot_type=SnapshotType.SVG,
+                query={'a': 1},
+            )
 
     @mock.patch('common.models.charts.request_snapshot')
     def test_generates_new_rendition_if_existing_one_is_stale(self, mock_request_snapshot):

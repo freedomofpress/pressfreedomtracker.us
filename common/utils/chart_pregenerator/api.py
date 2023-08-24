@@ -70,5 +70,3 @@ def request_snapshot(
     elif snapshot_type == SnapshotType.PNG:
         response = make_request(endpoint=endpoint, file_format='png', query=query, stream=True)
         return ImageFile(response.raw)
-
-    return response

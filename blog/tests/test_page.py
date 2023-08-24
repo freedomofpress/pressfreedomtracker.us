@@ -161,3 +161,18 @@ class TestPages(TestCase):
         # We should no longer have that JS bundle in the response
         response = self.client.get(self.blog_page.url)
         self.assertNotContains(response, 'verticalBarChart')
+
+    def test_get_blog_page_vertical_bar_chart_meta_image(self):
+        self.assertEqual(
+            self.blog_page2.get_meta_image(),
+            self.blog_page2.teaser_graphic[0].value.png_snapshot_meta(),
+        )
+
+    def test_get_blog_page_normal_meta_image(self):
+        self.assertEqual(
+            self.blog_page.get_meta_image(),
+            self.blog_page.teaser_graphic[0].value
+        )
+
+    def test_get_blog_page_absent_meta_image(self):
+        self.assertIsNone(self.blog_page3.get_meta_image())

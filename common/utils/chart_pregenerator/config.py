@@ -17,8 +17,7 @@ class Settings:
 
     def validate(self):
         try:
-            if not isinstance(self.port, int):
-                raise ImproperlyConfigured('PORT must be an integer')
+            self.port
         except (TypeError, ValueError):
             raise ImproperlyConfigured('PORT must be an integer')
         if not isinstance(self.host, str):

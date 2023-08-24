@@ -31,6 +31,14 @@ class TestGenerator(TestCase):
                 query={},
             )
 
+    def test_raises_pregeneration_error_if_chart_type_unknown(self):
+        with self.assertRaises(PregenerationException):
+            request_snapshot(
+                snapshot_type=SnapshotType.SVG,
+                chart_type='unknown chart',
+                query={},
+            )
+
     def test_raises_pregeneration_error_if_service_is_inaccessible(self):
         failed_response = mock.Mock(ok=False, status_code=500)
         failed_response.raise_for_status = mock.Mock(
