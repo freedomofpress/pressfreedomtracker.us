@@ -53,6 +53,10 @@ class TestPages(TestCase):
             slug='two',
             with_teaser_chart=True,
         )
+        cls.blog_page3 = BlogPageFactory(
+            parent=cls.index,
+            slug='three',
+        )
         cat = CategoryPageFactory()
         IncidentPageFactory(categories=[cat])
 

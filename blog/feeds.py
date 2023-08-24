@@ -17,12 +17,18 @@ class BlogIndexPageFeed(Feed):
         super(BlogIndexPageFeed, self).__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
-        if obj.teaser_graphic and obj.teaser_graphic[0].block_type == "image":
-            return obj.teaser_graphic[0].value.get_rendition('original')
-        elif obj.teaser_graphic and (obj.teaser_graphic[0].block_type == "vertical_bar_chart" or \
-            obj.teaser_graphic[0].block_type == "tree_map_chart" or \
-            obj.teaser_graphic[0].block_type == "bubble_map_chart"):
-            return obj.teaser_graphic[0].value.png_snapshot_mini().get_rendition('original')
+        try:
+            teaser_block = obj.teaser_graphic[0]
+            if teaser_block.block_type == "image":
+                return teaser_block.value.get_rendition('original')
+            elif teaser_block.block_type in (
+                "vertical_bar_chart",
+                "tree_map_chart",
+                "bubble_map_chart",
+            ):
+                return teaser_block.value.png_snapshot_mini().get_rendition('original')
+        except IndexError:
+            pass
 
     def _get_categories(self, obj):
         categories = obj.categories.all().select_related('category')
