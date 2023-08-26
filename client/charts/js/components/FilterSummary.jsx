@@ -25,8 +25,8 @@ export default function FilterSidebar() {
 		...restFilters
 	} = Object.fromEntries(searchParams)
 
-	const categories = categoriesStr.split(',').map(d => d.trim())
-	const tags = tagsStr.split(',').map(d => d.trim())
+	const categories = categoriesStr ? categoriesStr.split(',').map(d => d.trim()) : []
+	const tags = tagsStr ? tagsStr.split(',').map(d => d.trim()) : []
 
 	const clearFilter = (filterKey, newFilterValue) => {
 		const url = new URL(window.location);

@@ -132,13 +132,20 @@
 	margin: 0
 	padding: 0
 
+	+desktop-up
+		&:not(:empty)
+			margin-bottom: 32px
+
+	+tablet-down
+		margin-bottom: 8px
+
 	li
 		display: inline-block
-		margin: 2px
+		margin: 2px 2px 2px 0
 		text-transform: capitalize
 
 	button
-		border: none
+		border: 0
 		display: flex
 		align-items: center
 
