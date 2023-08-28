@@ -49,6 +49,7 @@ export default function FilterSidebar() {
 						)}
 						className="btn btn-tag"
 						tabIndex={0}
+						aria-label={`Removes filter: ${category.toLowerCase()}`}
 					>
 						<div className={classNames("category", `category-${symbolMap[category]}`)}></div>
 						<span>{category.toLowerCase()}</span>
@@ -62,6 +63,7 @@ export default function FilterSidebar() {
 						onClick={() => clearFilter("date_lower")}
 						className="btn btn-tag"
 						tabIndex={0}
+						aria-label={`Removes start date: ${date_lower}`}
 					>
 						<span>from: {date_lower}</span>
 						<span className="close-icon" />
@@ -74,6 +76,7 @@ export default function FilterSidebar() {
 						onClick={() => clearFilter("date_upper")}
 						className="btn btn-tag"
 						tabIndex={0}
+						aria-label={`Removes end date: ${date_upper}`}
 					>
 						<span>to: {date_upper}</span>
 						<span className="close-icon" />
@@ -88,6 +91,7 @@ export default function FilterSidebar() {
 						)}
 						className="btn btn-tag"
 						tabIndex={0}
+						aria-label={`Removes tag: ${tag.toLowerCase()}`}
 					>
 						<span>{tag.toLowerCase()}</span>
 						<span className="close-icon" />
@@ -100,6 +104,7 @@ export default function FilterSidebar() {
 						onClick={() => clearFilter(filterKey)}
 						className="btn btn-tag"
 						tabIndex={0}
+						aria-label={`Removes filter: ${restFilters[filterKey].replaceAll("_", " ").toLowerCase()}`}
 					>
 						<span>{restFilters[filterKey].replaceAll("_", " ").toLowerCase()}</span>
 						<span className="close-icon" />
