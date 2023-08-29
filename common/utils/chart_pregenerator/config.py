@@ -9,11 +9,11 @@ class Settings:
 
     @property
     def host(self):
-        return self.settings.get('HOST')
+        return getattr(self.settings, 'HOST', 'node-chart-pregenerator')
 
     @cached_property
     def port(self):
-        return int(self.settings.get('PORT'))
+        return int(getattr(settings, 'PORT', '3000'))
 
     def validate(self):
         try:
