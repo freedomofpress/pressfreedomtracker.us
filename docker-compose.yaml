@@ -62,7 +62,6 @@ services:
     environment:
       DJANGO_HOST: app
       PORT: *chart-port
-      BUILD_ENV: chart-pregenerator
     ports:
       - target: *chart-port
         published: *chart-port
