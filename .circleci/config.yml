@@ -84,7 +84,7 @@ jobs:
           command: |
             make dev-init
             docker compose up --detach
-            curl --output /dev/null --head --fail --retry-all-errors --retry 48 --retry-delay 5 http://localhost:8000
+            curl --output /dev/null --head --fail --retry-all-errors --retry 64 --retry-delay 5 http://localhost:8000
             make dev-tests
             make dev-jest-tests
             make check-migrations
@@ -121,7 +121,7 @@ jobs:
           command: |
             make dev-init
             docker compose up --detach
-            curl --output /dev/null --head --fail --retry-all-errors --retry 48 --retry-delay 5 http://localhost:8000
+            curl --output /dev/null --head --fail --retry-all-errors --retry 64 --retry-delay 5 http://localhost:8000
 
       - run:
           name: Check for JS linting issues
@@ -150,7 +150,7 @@ jobs:
           command: |
             docker compose -f prod-docker-compose.yaml build
             docker compose -f prod-docker-compose.yaml up -d
-            docker run --rm --network tracker_app curlimages/curl:7.80.0 -4 --retry 24 --retry-delay 5 --retry-all-errors http://app:8000/health/ok/
+            docker run --rm --network tracker_app curlimages/curl:7.80.0 -4 --retry 64 --retry-delay 5 --retry-all-errors http://app:8000/health/ok/
             docker compose -f prod-docker-compose.yaml exec django /bin/bash -c "./manage.py createdevdata --no-download"
             docker compose -f prod-docker-compose.yaml exec django pip install --require-hashes -r /django/requirements.txt
             docker compose -f prod-docker-compose.yaml exec django ./scripts/pytest
