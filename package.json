@@ -5,7 +5,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "build": "if [ $BUILD_ENV != \"chart-pregenerator\" ]; then webpack --mode production; fi",
+    "build": "webpack --mode production",
     "start": "webpack watch --mode development --devtool eval-source-map",
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage",
