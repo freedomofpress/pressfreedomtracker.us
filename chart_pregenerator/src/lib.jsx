@@ -2,16 +2,16 @@ import * as d3 from 'd3'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import fetch from 'node-fetch'
-import BarChart from 'tracker/client/charts/js/components/BarChart'
-import BarChartMini from 'tracker/client/charts/js/components/BarChartMini'
-import TreeMap from 'tracker/client/charts/js/components/TreeMap'
-import TreeMapMini from 'tracker/client/charts/js/components/TreeMapMini'
-import USMap from 'tracker/client/charts/js/components/USMap'
-import { processIncidentsTimeData } from 'tracker/client/charts/js/components/IncidentsTimeBarChart'
-import { filterDatasets } from 'tracker/client/charts/js/lib/utilities'
-import { categoriesColors } from 'tracker/client/charts/js/lib/utilities'
-import { loadData } from 'tracker/client/charts/js/components/DataLoader'
-import { groupByCity, groupByState } from "tracker/client/charts/js/lib/utilities"
+import BarChart from '../client/charts/js/components/BarChart'
+import BarChartMini from '../client/charts/js/components/BarChartMini'
+import TreeMap from '../client/charts/js/components/TreeMap'
+import TreeMapMini from '../client/charts/js/components/TreeMapMini'
+import USMap from '../client/charts/js/components/USMap'
+import { processIncidentsTimeData } from '../client/charts/js/components/IncidentsTimeBarChart'
+import { filterDatasets } from '../client/charts/js/lib/utilities'
+import { categoriesColors } from '../client/charts/js/lib/utilities'
+import { loadData } from '../client/charts/js/components/DataLoader'
+import { groupByCity, groupByState } from "../client/charts/js/lib/utilities"
 
 const FPF_BASE_URL = `http://${process.env.DJANGO_HOST || 'localhost'}:8000`
 

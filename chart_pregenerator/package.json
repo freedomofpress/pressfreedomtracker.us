@@ -4,7 +4,7 @@
   "private": true,
   "description": "",
   "scripts": {
-    "build": "npx relative-deps && esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node --loader:.node=copy",
+    "build": "cp ../client ./client && esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node --loader:.node=copy",
     "start": "node ./build/server.js",
     "dev": "node dev.js",
     "test": "jest --passWithNoTests --coverage",
@@ -17,20 +17,16 @@
     "node-fetch": "^3.3.1",
     "react": "^18.2.0",
     "react-animated-dataset": "^0.4.0",
-    "react-dom": "^18.2.0",
-    "tracker": "^0.0.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "babel-jest": "^29.6.2",
     "chokidar": "^3.5.3",
+    "fs-extra": "^11.1.1",
     "jest": "^29.6.2",
     "lodash.debounce": "^4.0.8",
-    "nodemon": "^3.0.1",
-    "relative-deps": "^1.0.7"
-  },
-  "relativeDependencies": {
-    "tracker": ".."
+    "nodemon": "^3.0.1"
   }
 }

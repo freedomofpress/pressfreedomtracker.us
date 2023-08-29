@@ -1,7 +1,7 @@
 const path = require('path')
 const esbuild = require("esbuild")
-const relativeDeps = require("relative-deps")
 const chokidar = require("chokidar")
+const fs = require('fs-extra')
 const debounce = require('lodash.debounce');
 const nodemon = require('nodemon');
 
@@ -16,12 +16,12 @@ const config = {
 
 {
 	(async () => {
-		await relativeDeps.installRelativeDeps()
+		fs.copySync("../client", "./client")
 		await esbuild.build(config)
 
 		const rebuild = debounce(async () => {
 			console.log('\nChanges detected, rebuilding app...');
-			await relativeDeps.installRelativeDeps()
+			fs.copySync("../client", "./client")
 			await esbuild.build(config)
 		}, 2000);
 
