@@ -5,7 +5,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "if [ $BUILD_ENV != \"chart-pregenerator\" ]; then webpack --mode production; fi",
     "start": "webpack watch --mode development --devtool eval-source-map",
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage",
@@ -69,6 +69,5 @@
     "react-modal": "^3.15.1",
     "regenerator-runtime": "^0.13.9",
     "topojson-client": "^3.1.0"
-  },
- "files": ["client/**/*", "build/**/*", "webpack.config.js", "babel.config.js"]
+  }
 }
