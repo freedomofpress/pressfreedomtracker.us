@@ -91,7 +91,7 @@ const ChartDownloader = ({
 							</text>
 						` : ""}
 					` : ""}
-					<svg width="${imageWidth}" height="${imageHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}">
+					<svg width="${imageWidth}" height="${imageHeight}">
 						${svgStringData}
 					</svg>
 				</svg>
