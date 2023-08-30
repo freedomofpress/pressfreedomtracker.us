@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { uniq } from 'lodash'
+import { uniq, debounce } from 'lodash'
 import usStates from '../data/us-states-coordinates.json'
 
 export const monthNames = [
@@ -360,6 +360,8 @@ export function difference(setA, setB) {
   return _difference;
 }
 
-export function trackMatomoEvent(args = []) {
+function trackMatomo(args = []) {
 	if (typeof window._paq === 'object') _paq.push(['trackEvent', ...args]);
 }
+
+export const trackMatomoEvent = debounce(trackMatomo, 1000)
