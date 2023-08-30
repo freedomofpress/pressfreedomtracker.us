@@ -1,8 +1,7 @@
 from .production import *  # noqa: F403, F401
 
 TEST_RUNNER = 'common.test_runner.SeededXMLRunner'
-TEST_OUTPUT_DIR = "/home/gcorn"
-TEST_OUTPUT_FILE_NAME = "app-tests.xml"
+TEST_OUTPUT_DIR = "./test-results"
 TEST_OUTPUT_DESCRIPTIONS = True
 TEST_OUTPUT_VERBOSE = 2
 

@@ -85,7 +85,8 @@ jobs:
             make dev-init
             docker compose up --detach
             while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
-            make dev-tests
+            mkdir -p test-results/{django,jest}
+            DJANGO_SETTINGS_MODULE=tracker.settings.dev-ci make dev-tests
             make dev-jest-tests
             make check-migrations
           no_output_timeout: 5m
@@ -107,6 +108,9 @@ jobs:
 
       - store_artifacts:
           path: ~/dockercomposelogs
+
+      - store_test_results:
+          path: test-results
 
   lint:
     environment:
