@@ -21,6 +21,11 @@
     <section class="formpage-form">
         <form class="form" action="{% pageurl page %}" method="post">
             {% csrf_token %}
+			{% if top_level_error %}
+				<p class="formpage-form__top-level-error">
+					{{ top_level_error }}
+				</p>
+			{% endif %}
             {% for group in page.groups %}
                 <fieldset class="fieldset fieldset--spaced">
                     <h4 class="heading-regular">{{ group.title }}</h4>
