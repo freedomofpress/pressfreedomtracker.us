@@ -10,6 +10,7 @@ import {
 	TOGGLE_PARAMETER_ITEM,
 	SET_PARAMETER,
 } from '../lib/actionTypes'
+import { trackMatomoEvent } from '../lib/utilities'
 
 const margins = {
 	top: 15,
@@ -91,6 +92,8 @@ export default function CategoryFilter({
 			console.log("else")
 		}
 		updateFilters({type: TOGGLE_PARAMETER_ITEM, payload: { item: targetCategory, filterName: 'categories'}})
+		// Fire matomo event
+		trackMatomoEvent(['Filter', 'Categories', 'Change', targetCategory])
 	}
 
 	function handleFilterChange(event) {
@@ -101,6 +104,9 @@ export default function CategoryFilter({
 				value: event.target.value,
 			},
 		})
+
+		// Fire matomo event
+		trackMatomoEvent(['Filter', 'Categories', 'Filter', event.target.name, event.target.value])
 	}
 
 	return (

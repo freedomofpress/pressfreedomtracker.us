@@ -5,6 +5,7 @@ import { FiltersDispatch } from '../lib/context'
 import {
 	SET_PARAMETER,
 } from '../lib/actionTypes'
+import { trackMatomoEvent } from '../lib/utilities'
 
 export default function GeneralFilter({
 	filterDef,
@@ -25,6 +26,8 @@ export default function GeneralFilter({
 				value: event.target.value,
 			},
 		})
+		// Fire matomo event
+		trackMatomoEvent(['Filter', event.target.name, 'Change', event.target.value])
 	}
 
 	return (
