@@ -5,7 +5,7 @@ FROM node:16-alpine@sha256:1908564153449b1c46b329e6ce2307e226bc566294f822f11c5a8
 ENV NPM_CONFIG_LOGLEVEL warn
 
 # Upgrade npm to speicifed version
-ARG NPM_VER
+ARG NPM_VER=9.6.7
 RUN npm install npm@${NPM_VER} --location=global
 
 # Oddly, node-sass requires both python and make to build bindings
