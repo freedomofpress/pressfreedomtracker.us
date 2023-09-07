@@ -5,7 +5,12 @@ import marshmallow
 import structlog
 import mailchimp_marketing
 from django.conf import settings
-from django.http import HttpResponse, JsonResponse
+from django.http import (
+    HttpResponse,
+    JsonResponse,
+    HttpResponseForbidden,
+    Http404,
+)
 from django.middleware.csrf import get_token
 from django.shortcuts import render
 from django.utils.text import capfirst
@@ -21,7 +26,7 @@ from common.models import CommonTag
 from emails.models import SubscriptionSchema
 from incident.models import IncidentPage, TopicPage
 from .forms import TagMergeForm
-from .utils import subscribe_for_site, MailchimpError
+from .utils import subscribe_for_site, MailchimpError, get_page_for_request
 
 
 VERSION_INFO_SHORT_PATH = os.environ.get(
@@ -247,3 +252,17 @@ def health_version(request):
     """Also a health check, but returns the commit short-hash."""
     version_short_text = read_version_info_file(VERSION_INFO_SHORT_PATH)
     return HttpResponse(version_short_text, content_type="text/plain")
+
+
+def csrf_failure(request, reason=""):
+    try:
+        page = get_page_for_request(request)
+    except Http404:
+        return HttpResponseForbidden()
+
+    try:
+        return page.redirect_for_csrf_error(request, reason)
+    except AttributeError:
+        pass
+
+    return HttpResponseForbidden()

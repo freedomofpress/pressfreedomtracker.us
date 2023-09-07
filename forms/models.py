@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_control
+from django.shortcuts import redirect
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.admin.forms import WagtailAdminPageForm
@@ -175,9 +176,25 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
     ]
     base_form_class = ReplyToValidatorForm
 
+    def csrf_failure_key(self):
+        return f'form-csrf-failure-{self.pk}'
+
     @cached_property
     def groups(self):
         return self.field_groups.all()
+
+    def get_form_parameters(self):
+        csrf_failure_initial_data = getattr(self, 'csrf_failure_data', {}).get(
+            'initial_data', {}
+        )
+        initial = {}
+
+        for field in self.get_form_fields():
+            name = field.clean_name
+            if name in csrf_failure_initial_data:
+                initial[name] = csrf_failure_initial_data[name]
+
+        return {'initial': initial}
 
     def get_form_fields(self):
         fields = []
@@ -189,6 +206,8 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
 
     def get_context(self, request, *args, **kwargs):
         context = super(FormPage, self).get_context(request, *args, **kwargs)
+        if getattr(self, 'csrf_failure_data', {}):
+            context['top_level_error'] = 'Submission failed, please try again.'
         if request.GET.get('embed', None):
             context['template_name'] = 'base.chromeless.html'
         else:
@@ -196,6 +215,10 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         return context
 
     def serve(self, request, *args, **kwargs):
+        self.csrf_failure_data = request.session.pop(
+            self.csrf_failure_key(),
+            {},
+        )
         response = super(FormPage, self).serve(request, *args, **kwargs)
         if 'embed' in request.GET:
             response.xframe_options_exempt = True
@@ -221,3 +244,10 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
                     reply_to = [value]
         content = '\n'.join(content)
         send_mail(subject, content, addresses, self.from_address, reply_to=reply_to)
+
+    def redirect_for_csrf_error(self, request, reason):
+        request.session[self.csrf_failure_key()] = {
+            'initial_data': request.POST.dict(),
+            'reason': reason,
+        }
+        return redirect(self.get_url())
