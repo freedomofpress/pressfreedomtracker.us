@@ -6,6 +6,3 @@ class CommonConfig(AppConfig):
 
     def ready(self):
         import common.signals  # noqa: F401
-        from common.utils.chart_pregenerator.config import settings  # noqa: F401
-
-        settings.validate()

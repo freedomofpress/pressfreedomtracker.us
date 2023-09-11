@@ -1,13 +1,13 @@
 import json
 import requests
 
+from django.conf import settings
 from django.core.files.images import ImageFile
 
 from .types import (
     SnapshotType,
     ChartType,
 )
-from .config import settings
 
 
 class PregenerationException(Exception):
@@ -17,8 +17,8 @@ class PregenerationException(Exception):
 def make_request(*, endpoint, file_format, query, stream=False):
     """Internal wrapper function for making a request to the
     pregeneration service."""
-    host = settings.host
-    port = settings.port
+    host = settings.CHART_PREGENERATOR['HOST']
+    port = settings.CHART_PREGENERATOR['PORT']
     url = f'http://{host}:{port}/{endpoint}.{file_format}'
     try:
         response = requests.get(
