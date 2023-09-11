@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: devops/docker/ProdDjangoDockerfile
       args:
-        NPM_VER: 9.6.0
+        NPM_VER: 9.6.7
         USERID: 1234
         CHART_HOST: node-chart-pregenerator
         CHART_PORT: *chart-port

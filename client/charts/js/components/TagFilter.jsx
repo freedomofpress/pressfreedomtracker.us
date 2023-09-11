@@ -7,6 +7,7 @@ import {
 import { FiltersDispatch } from '../lib/context'
 import CheckBoxBar from './CheckBoxBar'
 import AutoComplete from './Autocomplete'
+import { trackMatomoEvent } from '../lib/utilities'
 
 const margins = {
 	top: 10,
@@ -87,6 +88,8 @@ export default function TagFilter({
 									item: tag,
 								}
 							})
+							// Fire matomo event
+							trackMatomoEvent(['Filter', 'Tags', 'Toggle', tag])
 						}}
 					/>
 				)
@@ -110,6 +113,8 @@ export default function TagFilter({
 							item: tag,
 						}
 					})
+					// Fire matomo event
+					trackMatomoEvent(['Filter', 'Tags', 'Select', tag])
 				}}
 			/>
 		</div>

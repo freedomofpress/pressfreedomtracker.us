@@ -229,6 +229,9 @@ MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', '')
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
+
+CSRF_FAILURE_VIEW = 'common.views.csrf_failure'
+
 NOCAPTCHA = True
 
 # django-taggit

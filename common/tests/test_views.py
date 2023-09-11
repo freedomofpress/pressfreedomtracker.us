@@ -5,7 +5,7 @@ import requests
 from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.utils.http import urlencode
-from django.test import TestCase, override_settings
+from django.test import TestCase, override_settings, RequestFactory
 from wagtail.documents.models import Document
 from common.models import CommonTag
 from common.wagtail_hooks import CommonTagAdmin
@@ -22,6 +22,9 @@ from mailchimp_marketing.api_client import ApiClientError
 from emails.devdata import EmailSettingsFactory
 from emails.models import Subscription
 from common.utils import ApiError
+from common.views import csrf_failure
+
+from .factories import SimplePageFactory
 
 User = get_user_model()
 
@@ -439,3 +442,32 @@ class HealthCheckTestCase(TestCase):
         mock_open.side_effect = FileNotFoundError
         self.response = self.client.get('/health/version/')
         self.assertEqual(self.response.status_code, 200)
+
+
+class CsrfFailureTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.site = Site.objects.get(is_default_site=True)
+        cls.page = SimplePageFactory(parent=cls.site.root_page)
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_returns_403_for_non_wagtail_page_objects(self):
+        request = self.factory.post(reverse('wagtailadmin_login'))
+
+        response = csrf_failure(request)
+        self.assertEqual(response.status_code, 403)
+
+    def test_returns_403_for_non_formpage_objects(self):
+        request = self.factory.post(self.page.get_url())
+
+        response = csrf_failure(request)
+        self.assertEqual(response.status_code, 403)
+
+    def test_returns_403_if_site_not_present(self):
+        self.site.delete()
+        request = self.factory.post(self.page.get_url())
+
+        response = csrf_failure(request)
+        self.assertEqual(response.status_code, 403)

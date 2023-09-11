@@ -5,6 +5,7 @@
 {% block body %}
 	{{ block.super }}
 	{% render_bundle 'filterSidebar' 'js' %}
+	{% render_bundle 'filterSummary' 'js' %}
 {% endblock %}
 
 {% block main %}
@@ -90,6 +91,9 @@
 					</div>
 				</details>
 			</div>
+
+			<div class="incident-index__body-header-filters" id="filter-summary"></div>
+
 			<div class="incident-index__column-header incident-index__column-header--incident">Incident</div>
 			<div class="incident-index__column-header incident-index__column-header--incident-details">Incident Details</div>
 			<div class="incident-index__column-header incident-index__column-header--category-details">Category Details</div>

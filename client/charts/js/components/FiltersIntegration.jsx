@@ -19,7 +19,7 @@ import {
 } from '../lib/utilities'
 
 
-function filterReducer(state, {type, payload}) {
+export function filterReducer(state, {type, payload}) {
 	switch (type) {
 		case TOGGLE_PARAMETER_ITEM:
 			let { item } = payload
