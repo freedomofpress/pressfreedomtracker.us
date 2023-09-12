@@ -358,6 +358,6 @@ SPECTACULAR_SETTINGS = {
 }
 
 CHART_PREGENERATOR = {
-    'HOST': os.environ.get('DJANGO_CHART_HOST'),
-    'PORT': os.environ.get('DJANGO_CHART_PORT'),
+    'HOST': os.environ.get('DJANGO_CHART_HOST', 'node-chart-pregenerator'),
+    'PORT': int(os.environ.get('DJANGO_CHART_PORT', '3000')),
 }

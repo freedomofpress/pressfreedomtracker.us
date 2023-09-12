@@ -64,9 +64,5 @@ EXPOSE 8000
 USER gcorn
 RUN /django/devops/scripts/version-file.sh
 
-ARG CHART_HOST
-ARG CHART_PORT
-ENV DJANGO_CHART_HOST=$CHART_HOST
-ENV DJANGO_CHART_PORT=$CHART_PORT
 RUN env DJANGO_DISABLE_DEBUG=1 DJANGO_NO_DB=1 ./manage.py collectstatic -c --noinput
 CMD django-start.sh

@@ -28,7 +28,6 @@ from common.models import CommonTag
 from emails.models import SubscriptionSchema
 from incident.models import IncidentPage, TopicPage
 from .forms import TagMergeForm
-from .utils.chart_pregenerator.config import settings as pregenerator_settings
 from .utils import subscribe_for_site, MailchimpError, get_page_for_request
 
 
@@ -241,8 +240,8 @@ def deploy_info_view(request):
 
 
 def check_chart_health(request):
-    port = pregenerator_settings.port
-    host = pregenerator_settings.host
+    host = settings.CHART_PREGENERATOR['HOST']
+    port = settings.CHART_PREGENERATOR['PORT']
     error_message = ''
 
     context = {

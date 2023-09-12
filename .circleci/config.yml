@@ -83,7 +83,7 @@ jobs:
           name: Ensure we can run dev-env
           command: |
             make dev-init
-            docker compose up --detach
+            docker compose build --progress plain && docker compose up --detach
             curl --output /dev/null --head --fail --retry-all-errors --retry 48 --retry-delay 5 http://localhost:8000
             make dev-tests
             make dev-jest-tests

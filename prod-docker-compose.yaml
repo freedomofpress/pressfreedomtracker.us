@@ -29,8 +29,6 @@ services:
       args:
         NPM_VER: 9.6.7
         USERID: 1234
-        CHART_HOST: node-chart-pregenerator
-        CHART_PORT: *chart-port
     image: quay.io/freedomofpress/pressfreedomtrackerus
     depends_on:
       - postgresql
