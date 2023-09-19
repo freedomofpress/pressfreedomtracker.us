@@ -90,6 +90,11 @@ class ItemSerializer(serializers.Serializer):
     title = serializers.CharField()
 
 
+class MethodologyItemSerializer(serializers.Serializer):
+    label = serializers.CharField()
+    description = serializers.CharField()
+
+
 class CategorySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
@@ -97,6 +102,7 @@ class CategorySerializer(serializers.Serializer):
     plural_name = serializers.CharField()
     slug = serializers.CharField()
     url = serializers.SerializerMethodField()
+    methodology_items = MethodologyItemSerializer(many=True)
 
     @extend_schema_field(OpenApiTypes.URI)
     def get_url(self, obj):
