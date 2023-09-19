@@ -1,8 +1,15 @@
 from drf_spectacular.utils import extend_schema_field
 from drf_spectacular.types import OpenApiTypes
 from rest_framework import serializers
+from wagtail.core.rich_text import expand_db_html
 
 from incident import choices
+
+
+class RichTextCharField(serializers.CharField):
+    def to_representation(self, value):
+        representation = super().to_representation(value)
+        return expand_db_html(representation)
 
 
 @extend_schema_field(OpenApiTypes.STR)
@@ -86,7 +93,7 @@ class ItemSerializer(serializers.Serializer):
 class CategorySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
-    methodology = serializers.CharField()
+    methodology = RichTextCharField()
     plural_name = serializers.CharField()
     slug = serializers.CharField()
     url = serializers.SerializerMethodField()
