@@ -62,6 +62,7 @@ services:
     environment:
       DJANGO_HOST: app
       PORT: *chart-port
+      DEPLOY_ENV: dev
     ports:
       - target: *chart-port
         published: *chart-port
