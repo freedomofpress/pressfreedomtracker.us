@@ -17,3 +17,14 @@ class CategorySerializerTest(TestCase):
             self.category.get_full_url(),
             result.data['url']
         )
+
+    def test_resolves_methodology_links_in_html(self):
+        category_with_link = CategoryPageFactory(
+            parent=self.category.get_parent(),
+            methodology=f"""Click <a id="{self.category.pk}" linktype="page">here</a>."""
+        )
+        result = CategorySerializer(category_with_link)
+        self.assertIn(
+            self.category.url,
+            result.data['methodology'],
+        )
