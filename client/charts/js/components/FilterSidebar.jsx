@@ -45,7 +45,7 @@ export default function FilterSidebar({ serializedFilters, initialDataset = null
 		get: (searchParams, prop) => searchParams.get(prop),
 	})
 
-	let initialFilterParams = decode(urlParams)
+	let initialFilterParams = decode(urlParams, filters)
 
 	return (
 		<FiltersIntegration
