@@ -35,18 +35,6 @@ jobs:
           name: Check Python dependencies for CVEs
           command: make safety
 
-      - run:
-          name: Update bandit to the latest version
-          command: pip install --upgrade bandit
-
-      - run:
-          name: Static code analysis for vulnerabilities
-          command: ./scripts/bandit
-
-      - run:
-          name: Run flake8 tests
-          command: flake8
-
   npm_audit:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
@@ -85,10 +73,27 @@ jobs:
             make dev-init
             docker compose up --detach
             while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
-            make dev-tests
-            make dev-jest-tests
-            make check-migrations
           no_output_timeout: 5m
+
+      - run:
+          name: Run flake8
+          command: make flake8
+
+      - run:
+          name: Validate migrations
+          command: make check-migrations
+
+      - run:
+          name: Static code analysis for vulnerabilities
+          command: make bandit
+
+      - run:
+          name: Run python tests
+          command: make dev-tests
+
+      - run:
+          name: Run JS tests
+          command: make dev-jest-tests
 
       - store_artifacts:
           path: htmlcov
