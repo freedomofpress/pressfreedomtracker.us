@@ -43,9 +43,6 @@ jobs:
     working_directory: ~/tracker
     steps:
       - checkout
-      - check-changed-files-or-halt:
-          pattern: ^package-lock.json$
-
       - run:
           name: Upgrade NPM to consistent version with dev environment
           command: sudo npm install --location=global npm@9.6.7
@@ -198,8 +195,16 @@ workflows:
   version: 2
   tracker_ci:
     jobs:
-      - safety_check
-      - npm_audit
+      - safety_check:
+          filters:
+            branches:
+              only:
+                - develop
+      - npm_audit:
+          filters:
+            branches:
+              only:
+                - develop
       - lint
       - dev
       - prod
