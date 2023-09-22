@@ -15,7 +15,11 @@ const symbolMap = {
 	"Other Incident": "other_incident",
 }
 
-export default function FilterSidebar() {
+export default function FilterSummary({ serializedFilters }) {
+	const categoryFilters = JSON.parse(serializedFilters)
+
+	const idMap = categoryFilters.reduce((acc, val) => ({ ...acc, [val.id]: val.title }), {});
+
 	const searchParams = new URLSearchParams(window.location.search)
 	const {
 		categories: categoriesStr,
@@ -25,7 +29,16 @@ export default function FilterSidebar() {
 		...restFilters
 	} = Object.fromEntries(searchParams)
 
-	const categories = categoriesStr ? categoriesStr.split(',').map(d => d.trim()) : []
+	const categories = [...new Set(
+		(categoriesStr ? categoriesStr.split(',').map(d => d.trim()) : [])
+			.map(category => {
+				if (symbolMap[category]) return category;
+				if (idMap[category]) return idMap[category];
+				return null;
+			})
+			.filter(d => d)
+	)]
+
 	const tags = tagsStr ? tagsStr.split(',').map(d => d.trim()) : []
 
 	const clearFilter = (filterKey, newFilterValue) => {
@@ -50,7 +63,7 @@ export default function FilterSidebar() {
 						className="btn btn-tag"
 						aria-label={`Removes filter: ${category.toLowerCase()}`}
 					>
-						<div className={classNames("category", `category-${symbolMap[category]}`)}></div>
+						{symbolMap[category] && <div className={classNames("category", `category-${symbolMap[category]}`)}></div>}
 						<span>{category.toLowerCase()}</span>
 						<span className="close-icon" />
 					</button>
