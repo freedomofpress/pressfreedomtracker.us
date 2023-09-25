@@ -65,7 +65,7 @@ In case this PR needs any admin changes or run a management command after deploy
 - [ ] Verify that the email signup form in the footer renders and works
 - [ ] Verify that the individual email signup pages work
 
-### If you made changes to "Submit and Incident" form
+### If you made changes to "Submit an Incident" form
 
 - [ ] Verify that the form renders correctly and submit correctly as well
 
