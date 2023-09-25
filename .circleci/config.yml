@@ -35,32 +35,17 @@ jobs:
           name: Check Python dependencies for CVEs
           command: make safety
 
-      - run:
-          name: Update bandit to the latest version
-          command: pip install --upgrade bandit
-
-      - run:
-          name: Static code analysis for vulnerabilities
-          command: ./scripts/bandit
-
-      - run:
-          name: Run flake8 tests
-          command: flake8
-
   npm_audit:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     docker:
-      - image: cimg/node:18.16
+      - image: cimg/node:20.7
     working_directory: ~/tracker
     steps:
       - checkout
-      - check-changed-files-or-halt:
-          pattern: ^package-lock.json$
-
       - run:
           name: Upgrade NPM to consistent version with dev environment
-          command: sudo npm install --location=global npm@9.6.4
+          command: sudo npm install --location=global npm@9.6.7
 
       - run:
           name: Obtain misc resources
@@ -85,10 +70,27 @@ jobs:
             make dev-init
             docker compose up --detach
             while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
-            make dev-tests
-            make dev-jest-tests
-            make check-migrations
           no_output_timeout: 5m
+
+      - run:
+          name: Run flake8
+          command: make flake8
+
+      - run:
+          name: Validate migrations
+          command: make check-migrations
+
+      - run:
+          name: Static code analysis for vulnerabilities
+          command: make bandit
+
+      - run:
+          name: Run python tests
+          command: make dev-tests
+
+      - run:
+          name: Run JS tests
+          command: make dev-jest-tests
 
       - store_artifacts:
           path: htmlcov
@@ -193,8 +195,16 @@ workflows:
   version: 2
   tracker_ci:
     jobs:
-      - safety_check
-      - npm_audit
+      - safety_check:
+          filters:
+            branches:
+              only:
+                - develop
+      - npm_audit:
+          filters:
+            branches:
+              only:
+                - develop
       - lint
       - dev
       - prod

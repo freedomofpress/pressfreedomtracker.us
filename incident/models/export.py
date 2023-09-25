@@ -123,7 +123,7 @@ def _serialize_field(obj, field):
                 val = teaser_image.get_rendition('fill-1330x880').url
     elif field.name == 'slug':
         val = obj.get_full_url()
-    elif type(field) == models.ForeignKey:
+    elif isinstance(field, models.ForeignKey):
         val = getattr(obj, field.name)
         if val:
             val = str(val)
