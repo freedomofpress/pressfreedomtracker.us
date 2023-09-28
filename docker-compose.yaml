@@ -63,8 +63,10 @@ services:
       args:
         USERID: ${UID:?err}
     depends_on:
-      - node
-      - postgresql
+      node:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
     environment:
       DJANGO_CREATEDEVDATA: "${DJANGO_CREATEDEVDATA:-no}"
       DJANGO_DB_PASSWORD: trackerpassword
