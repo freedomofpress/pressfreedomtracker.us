@@ -9,3 +9,4 @@ flake8
 ipdb>=0.13.9
 selenium
 colorama<1
+bandit
