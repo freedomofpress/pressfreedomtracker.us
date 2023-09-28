@@ -80,6 +80,20 @@ class TestFiltering(TestCase):
 
         self.assertQuerysetEqual(incidents, [incident1])
 
+    def test_should_filter_by_search_text_for_stemmable_proper_noun(self):
+        """If the search query includes a proper name that might be
+        stemmed when converted into a TS-vector by the database,
+        e.g. Noblesteed -> nobleste, the text search filter should
+        still be able to locate a document containing the original
+        proper noun."""
+        body_text = "Garth Noblesteed had previously pleaded guilty on April 14, 2023"
+        incident1 = IncidentPageFactory(
+            title='Target',
+            body=[('rich_text', RichText(body_text))],
+        )
+        incidents = IncidentFilter({'search': 'noblesteed'}).get_queryset()
+        self.assertQuerysetEqual(incidents, [incident1])
+
     def test_should_filter_by_search_text_with_null_characters(self):
         """should filter by search text with null characters."""
         incident1 = IncidentPageFactory(
