@@ -15,6 +15,11 @@ services:
       POSTGRES_USER: tracker
       POSTGRES_DB: trackerdb
     user: postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-U", "tracker", "--dbname", "trackerdb"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
     networks:
       app:
         aliases:
