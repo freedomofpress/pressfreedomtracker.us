@@ -75,3 +75,10 @@ class IncidentBranches(TextChoices):
     CATEGORIES = 'CATEGORIES', 'Categories'
     ASSAILANT = 'ASSAILANT', 'Assailant'
     STATUS_OF_CHARGES = 'STATUS_OF_CHARGES', 'Status of Charges'
+
+
+def IncidentBranchesAndTags():
+  """Get tag names and IDs in a form appropriate for model choices"""
+  from common.models import CommonTag  # Avoids circular import
+
+  return IncidentBranches.choices + [(tag.title, tag.title) for tag in CommonTag.objects.all()]
