@@ -1,4 +1,32 @@
-function parseDateRange(urlParams, filterName) {
+function parseCategories(urlParams, filterName, filters) {
+	let params = urlParams[filterName]
+	let result
+	// Set-up object with keys as integer ids, values as titles.
+	let categories = Object.fromEntries(filters.filter(({id}) => id > 0).map(
+		({id, title}) => [id, title]
+	))
+
+	if (params) {
+		result = new Set(params.split(',').map((param) => {
+			// +string evaluates to NaN if string is not numeric
+			if (categories[+param]) {
+				return categories[+param]
+			} else {
+				return param
+			}
+		}))
+	} else {
+		result = new Set()
+	}
+
+	return {
+		enabled: true,
+		type: 'stringset',
+		parameters: result,
+	}
+}
+
+function parseDateRange(urlParams, filterName, filters) {
 	let lowerValue = urlParams[`${filterName}_lower`]
 	let upperValue = urlParams[`${filterName}_upper`]
 	return {
@@ -11,7 +39,7 @@ function parseDateRange(urlParams, filterName) {
 	}
 }
 
-function parseString(urlParams, filterName) {
+function parseString(urlParams, filterName, filters) {
 	return {
 		enabled: false,
 		type: 'string',
@@ -19,7 +47,7 @@ function parseString(urlParams, filterName) {
 	}
 }
 
-function parseStringSet(urlParams, filterName) {
+function parseStringSet(urlParams, filterName, filters) {
 	let params = urlParams[filterName]
 	let result
 	if (params) {
@@ -89,13 +117,13 @@ const queryFields = {
 	third_party_in_possession_of_communications: parseString,
 
 	tags: parseStringSet,
-	categories: parseStringSet,
+	categories: parseCategories,
 }
 
-export function decode(searchParams) {
+export function decode(searchParams, filters) {
 	let r = {}
 	for (const [filterName, parseFn] of Object.entries(queryFields)) {
-		r[filterName] = parseFn(searchParams, filterName)
+		r[filterName] = parseFn(searchParams, filterName, filters)
 	}
 	return r
 }

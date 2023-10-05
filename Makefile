@@ -49,7 +49,7 @@ compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim-bookworm \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --output-file requirements.txt requirements.in && \
@@ -61,7 +61,7 @@ pip-update: ## Uses pip-compile to update requirements.txt for upgrading a speci
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim-bookworm \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file requirements.txt requirements.in && \
@@ -71,7 +71,7 @@ pip-update: ## Uses pip-compile to update requirements.txt for upgrading a speci
 .PHONY: pip-upgrade
 pip-upgrade: ## Uses pip-compile to update all requirements that are not pinned
 # in requirements.in
-	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim-bookworm \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
     pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade --output-file requirements.txt requirements.in && \
@@ -80,7 +80,7 @@ pip-upgrade: ## Uses pip-compile to update all requirements that are not pinned
 .PHONY: pip-dev-upgrade
 pip-dev-upgrade: ## Uses pip-compile to update all dev requirements that are not pinned
 # in dev-requirements.in
-	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim-bookworm \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
     pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade --output-file dev-requirements.txt dev-requirements.in'
@@ -90,7 +90,7 @@ pip-dev-update: ## Uses pip-compile to update dev-requirements.txt for upgrading
 # It is critical that we run pip-compile via the same Python version
 # that we're generating requirements for, otherwise the versions may
 # be resolved differently.
-	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim-bookworm \
 		bash -c 'apt-get update && apt-get install gcc libpq-dev -y && \
 	pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package $(PACKAGE) --output-file dev-requirements.txt dev-requirements.in'
@@ -98,7 +98,7 @@ pip-dev-update: ## Uses pip-compile to update dev-requirements.txt for upgrading
 
 .PHONY: upgrade-pip-tools
 upgrade-pip-tools: ## Update the version of pip-tools used for other pip-related make commands
-	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim \
+	docker run --rm -v "$(DIR):/code" -w /code -it python:3.9-slim-bookworm \
 		bash -c 'pip install pip-tools && \
 		pip-compile --generate-hashes --no-header --allow-unsafe --upgrade-package pip-tools --output-file pip-tools-requirements.txt pip-tools-requirements.in'
 
@@ -128,7 +128,7 @@ stylelint:
 .PHONY: flake8
 flake8: ## Runs flake8 linting in Python3 container.
 	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
-			python:3.9-slim \
+			python:3.9-slim-bookworm \
 			bash -c "pip install -q flake8 && flake8"
 
 .PHONY: check-migrations

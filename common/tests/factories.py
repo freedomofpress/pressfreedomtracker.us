@@ -24,6 +24,7 @@ from common.models import (
     CategoryPage,
     CategoryIncidentFilter,
     ChartSnapshot,
+    CategoryMethodologyItem,
     CommonTag,
     CustomImage,
     SimplePage,
@@ -120,6 +121,14 @@ class TaxonomyCategoryPageFactory(factory.django.DjangoModelFactory):
         model = TaxonomyCategoryPage
 
 
+class MethodologyItemFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = CategoryMethodologyItem
+
+    label = 'Item Label'
+    description = 'Item Description'
+
+
 class CategoryPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = CategoryPage
@@ -186,6 +195,8 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
     viz_type = 'none'
+    methodology_item = factory.RelatedFactory(MethodologyItemFactory, 'page')
+    methodology_item2 = factory.RelatedFactory(MethodologyItemFactory, 'page')
 
     @factory.post_generation
     def incident_filters(self, create, extracted, **kwargs):
