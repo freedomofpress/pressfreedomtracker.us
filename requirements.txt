@@ -39,9 +39,9 @@ defusedxml==0.7.1 \
     --hash=sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69 \
     --hash=sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61
     # via willow
-django==3.2.21 \
-    --hash=sha256:a5de4c484e7b7418e6d3e52a5b8794f0e6b9f9e4ce3c037018cf1c489fa87f3c \
-    --hash=sha256:d31b06c58aa2cd73998ca5966bc3001243d3c4e77ee2d0c479bced124765fd99
+django==3.2.22 \
+    --hash=sha256:83b6d66b06e484807d778263fdc7f9186d4dc1862fcfa6507830446ac6b060ba \
+    --hash=sha256:c5e7b668025a6e06cad9ba6d4de1fd1a21212acebb51ea34abb400c6e4d33430
     # via
     #   -r requirements.in
     #   django-anymail
@@ -632,9 +632,9 @@ uritemplate==4.1.1 \
     --hash=sha256:4346edfc5c3b79f694bccd6d6099a322bbeb628dbf2cd86eea55a456ce5124f0 \
     --hash=sha256:830c08b8d99bdd312ea4ead05994a38e8936266f84b9a7878232db50b044e02e
     # via drf-spectacular
-urllib3==1.26.11 \
-    --hash=sha256:c33ccba33c819596124764c23a97d25f32b28433ba0dedeb77d873a38722c9bc \
-    --hash=sha256:ea6e8fb210b19d950fab93b60c9009226c63a28808bc8386e05301e25883ac0a
+urllib3==2.0.6 \
+    --hash=sha256:7a7c7003b000adf9e7ca2a377c9688bbc54ed41b985789ed576570342a375cd2 \
+    --hash=sha256:b19e1a85d206b56d7df1d5e683df4a7725252a964e3993648dd0fb5a1c157564
     # via
     #   mailchimp-marketing
     #   requests

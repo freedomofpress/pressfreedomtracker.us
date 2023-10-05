@@ -18,12 +18,12 @@ from django.db.models import (
     OuterRef,
     PositiveSmallIntegerField,
     F,
+    Func,
     Q,
     Subquery,
     TextChoices,
     TextField,
 )
-from django.db.models.functions import Concat
 from django.db.models.fields.related import ManyToOneRel
 from django.db.utils import ProgrammingError
 from django.http import QueryDict
@@ -523,9 +523,11 @@ class SearchFilter(Filter):
 
     def filter(self, queryset, value):
         return queryset.annotate(
-            title_and_body_search=Concat(
+            title_and_body_search=Func(
                 F('index_entries__title'),
                 F('index_entries__body'),
+                function='',
+                arg_joiner='||',
             ),
         ).filter(title_and_body_search=SearchQuery(value))
 
