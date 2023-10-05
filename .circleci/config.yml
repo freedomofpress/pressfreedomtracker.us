@@ -59,7 +59,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-2204:2023.04.2
+      image: ubuntu-2204:2023.07.2
     working_directory: ~/tracker
     steps:
       - checkout
@@ -114,7 +114,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-2204:2023.04.2
+      image: ubuntu-2204:2023.07.2
     working_directory: ~/tracker
     steps:
       - checkout
