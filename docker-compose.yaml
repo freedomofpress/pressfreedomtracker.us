@@ -55,13 +55,14 @@ services:
       context: .
       dockerfile: devops/docker/NodeChartPregeneratorDockerfile
       args:
-        NPM_VER: 9.6.0
+        NPM_VER: 9.6.7
         USERID: ${UID:?err}
     volumes:
       - ./:/django
     environment:
       DJANGO_HOST: app
       PORT: *chart-port
+      DEPLOY_ENV: dev
     ports:
       - target: *chart-port
         published: *chart-port
