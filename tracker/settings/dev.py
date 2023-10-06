@@ -36,13 +36,27 @@ structlog.configure(
     cache_logger_on_first_use=cache_logger,
 )
 
+
+def silence_monitoring(record):
+    if 'GET /health/ok/?monitor' in record.getMessage():
+        return False
+    return True
+
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "filters": {
+        "silence_monitoring": {
+            "()": "django.utils.log.CallbackFilter",
+            "callback": silence_monitoring,
+        },
+    },
     "handlers": {
         "normal": {
             "class": "logging.StreamHandler",
             "formatter": "plain_console",
+            "filters": ["silence_monitoring"],
         },
         "null": {
             "class": "logging.NullHandler"
