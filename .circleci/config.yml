@@ -123,8 +123,8 @@ jobs:
           name: Ensure we can run dev-env
           command: |
             make dev-init
-            docker compose up --detach
-            curl --output /dev/null --head --fail --retry-all-errors --retry 48 --retry-delay 5 http://localhost:8000
+            docker compose up --wait
+          no_output_timeout: 5m
 
       - run:
           name: Check for JS linting issues
