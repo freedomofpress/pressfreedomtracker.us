@@ -503,10 +503,18 @@ class VerticalBarChart(blocks.StructBlock):
     group_by = blocks.ChoiceBlock(
         label='Group Incidents By',
         required=False,
-        choices=charts.IncidentBranchesAndTags,
+        choices=charts.IncidentBranches.choices,
         default=None,
         help_text='If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped '
         'by the selected classification.',
+    )
+    group_by_tag = blocks.ChoiceBlock(
+        label='Group Incidents By Tag',
+        required=False,
+        choices=get_tags,
+        default=None,
+        help_text='If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped '
+        'by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.',
     )
 
     class Meta:
