@@ -10,7 +10,7 @@ import {
 	groupByCity,
 	groupByState,
 	countIncidentsOutsideUS,
-	rangeInclusive,
+	rangeInclusive, groupByYearsSorted,
 } from '../lib/utilities'
 
 describe(filterDatasetByTag, () => {
@@ -455,6 +455,27 @@ describe(groupByMonthSorted, () => {
 			{ month: 11, monthName: 'Dec', numberOfIncidents: 0 },
 			{ month: 0, monthName: 'Jan', numberOfIncidents: 0 },
 			{ month: 1, monthName: 'Feb', numberOfIncidents: 0 },
+		])
+	})
+})
+
+describe(groupByYearsSorted, () => {
+	test('groupByYearsSorted test', () => {
+		expect(
+			groupByYearsSorted(
+				[
+					{ date: new Date(Date.UTC(2019, 0, 1)) },
+					{ date: new Date(Date.UTC(2023, 1, 1)) },
+					{ date: new Date(Date.UTC(2024, 2, 1)) },
+				],
+			)
+		).toEqual([
+			{ year: 2019, numberOfIncidents: 1 },
+			{ year: 2020, numberOfIncidents: 0 },
+			{ year: 2021, numberOfIncidents: 0 },
+			{ year: 2022, numberOfIncidents: 0 },
+			{ year: 2023, numberOfIncidents: 1 },
+			{ year: 2024, numberOfIncidents: 1 },
 		])
 	})
 })

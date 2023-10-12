@@ -193,15 +193,21 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 }
 
 export function groupByYearsSorted(dataset) {
-	const datasetGroupedByYear = d3
+	const yearsGrouped = d3
 		.groups(
 			dataset.map((d) => ({ year: d.date.getUTCFullYear() })),
 			(d) => d.year
-		)
+		);
+	// We get all the years so that we don't skip years with 0 incidents
+	const yearsExtent = d3.extent(yearsGrouped, d => d[0])
+	const yearsGroupedMapped = Object.fromEntries(yearsGrouped)
+	const allYearsGrouped = d3.range(yearsExtent[0], yearsExtent[1] + 1)
+		.map(year => [year, yearsGroupedMapped[year] || []])
+
+	const datasetGroupedByYear = allYearsGrouped
 		.map((d) => ({ year: d[0], numberOfIncidents: d[1].length }))
 
-	const datasetGroupedByYearSorted = datasetGroupedByYear.sort((a, b) => a.year - b.year)
-	return datasetGroupedByYearSorted
+	return datasetGroupedByYear.sort((a, b) => a.year - b.year)
 }
 
 export function groupByCity(dataset) {
