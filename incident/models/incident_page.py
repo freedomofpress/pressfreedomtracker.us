@@ -907,7 +907,8 @@ class IncidentPage(MetadataPageMixin, Page):
         InlinePanel(
             'equipment_broken',
             classname='collapsible collapsed',
-            label='Equipment Broken',
+            heading='Equipment Damage',
+            label='Equipment',
         ),
 
         MultiFieldPanel(

@@ -221,7 +221,7 @@ class EquipmentSeized(models.Model):
     )
     equipment = ParentalKey(
         'incident.Equipment',
-        verbose_name='Equipment Seized',
+        verbose_name='Equipment',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
     _autocomplete_model = 'incident.Equipment'
@@ -246,7 +246,7 @@ class EquipmentBroken(models.Model):
     )
     equipment = ParentalKey(
         'incident.Equipment',
-        verbose_name='Equipment Broken',
+        verbose_name='Equipment',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
     _autocomplete_model = 'incident.Equipment'
