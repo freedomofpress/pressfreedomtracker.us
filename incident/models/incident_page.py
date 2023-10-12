@@ -939,7 +939,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Physical Assault',
+            heading='Assault',
             classname='collapsible collapsed',
             children=[
                 FieldPanel('assailant'),
