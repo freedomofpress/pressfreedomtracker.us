@@ -66,14 +66,20 @@ export const generateBarChartSVG = async (req) => {
 	try {
 		// Filter down to the categories and tags and date range we want
 		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
+
+		// if branchFieldName is set but branches is undefined, that means we are filtering a tag
+		const tagBranches = (options.groupByTag)
+			&& [{ title: options.groupByTag }, { title: `not ${options.groupByTag}` }];
+
 		const { incidentsByAllTime, xFormat } = processIncidentsTimeData(
 			filteredDataset, options.timePeriod, options.branchFieldName, options.groupByTag
 		);
-		const categoriesColorMap = branches ? [...(new Set([...branches.map(d => d.title)]))]
-			.reduce(
-				(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
-				{}
-			) : undefined
+		const categoriesColorMap = (tagBranches || branches)
+			? [...(new Set([...(tagBranches || branches).map(d => d.title)]))]
+				.reduce(
+					(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
+					{}
+				) : undefined
 
 		const Chart = options.mini ? BarChartMini : BarChart;
 
