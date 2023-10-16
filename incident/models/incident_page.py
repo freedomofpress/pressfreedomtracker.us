@@ -904,11 +904,16 @@ class IncidentPage(MetadataPageMixin, Page):
             classname='collapsible collapsed',
             label='Equipment Searched or Seized',
         ),
-        InlinePanel(
-            'equipment_broken',
+        MultiFieldPanel(
             classname='collapsible collapsed',
             heading='Equipment Damage',
-            label='Equipment',
+            children=[
+                FieldPanel('actor'),
+                InlinePanel(
+                    'equipment_broken',
+                    label='Equipment',
+                ),
+            ],
         ),
 
         MultiFieldPanel(
@@ -917,7 +922,6 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('status_of_seized_equipment'),
                 FieldPanel('is_search_warrant_obtained'),
-                FieldPanel('actor'),
             ]
         ),
 

@@ -43,7 +43,6 @@ CATEGORIES = {
         'equipment_seized',
         'status_of_seized_equipment',
         'is_search_warrant_obtained',
-        'actor',
     ],
     'assault': [
         'assailant',
@@ -63,6 +62,7 @@ CATEGORIES = {
     ],
     'equipment_damage': [
         'equipment_broken',
+        'actor',
     ],
     'prior_restraint': [
         'status_of_prior_restraint',

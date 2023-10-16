@@ -49,12 +49,12 @@ CATEGORY_FIELD_MAP = {
     ],
     'equipment-damage': [
         ('equipment_broken', 'Equipment Broken'),
+        ('actor', 'Actor who seized equipment'),
     ],
     'equipment-search-seizure-or-damage': [
         ('equipment_seized', 'Equipment Seized'),
         ('status_of_seized_equipment', 'Status of Seized Equipment'),
         ('is_search_warrant_obtained', 'Search Warrant Obtained'),
-        ('actor', 'Actor who seized equipment'),
     ],
     'border-stop': [
         ('border_point', 'Border Point'),
