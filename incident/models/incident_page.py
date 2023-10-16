@@ -898,12 +898,19 @@ class IncidentPage(MetadataPageMixin, Page):
             ]
         ),
 
-        # Not in an MFP because we want their headings to show up.
-        InlinePanel(
-            'equipment_seized',
+        MultiFieldPanel(
+            heading='Equipment Searched or Seized',
             classname='collapsible collapsed',
-            label='Equipment Searched or Seized',
+            children=[
+                FieldPanel('status_of_seized_equipment'),
+                FieldPanel('is_search_warrant_obtained'),
+                InlinePanel(
+                    'equipment_seized',
+                    label='Equipment',
+                ),
+            ],
         ),
+
         MultiFieldPanel(
             classname='collapsible collapsed',
             heading='Equipment Damage',
@@ -914,15 +921,6 @@ class IncidentPage(MetadataPageMixin, Page):
                     label='Equipment',
                 ),
             ],
-        ),
-
-        MultiFieldPanel(
-            heading='Equipment Seizure or Damage',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('status_of_seized_equipment'),
-                FieldPanel('is_search_warrant_obtained'),
-            ]
         ),
 
         MultiFieldPanel(
