@@ -214,7 +214,7 @@ class IncidentPageLinks(Orderable):
         return value
 
 
-class EquipmentSeized(models.Model):
+class EquipmentSeized(Orderable):
     incident = ParentalKey(
         'incident.IncidentPage',
         related_name='equipment_seized',
@@ -231,7 +231,7 @@ class EquipmentSeized(models.Model):
         FieldPanel('quantity'),
     ]
 
-    class Meta:
+    class Meta(Orderable.Meta):
         verbose_name = "Equipment Seized"
 
     @property
@@ -239,7 +239,7 @@ class EquipmentSeized(models.Model):
         return '{0.equipment}: count of {0.quantity}'.format(self)
 
 
-class EquipmentBroken(models.Model):
+class EquipmentBroken(Orderable):
     incident = ParentalKey(
         'incident.IncidentPage',
         related_name='equipment_broken',
@@ -256,7 +256,7 @@ class EquipmentBroken(models.Model):
         FieldPanel('quantity'),
     ]
 
-    class Meta:
+    class Meta(Orderable.Meta):
         verbose_name = 'Equipment Broken'
 
     @property
