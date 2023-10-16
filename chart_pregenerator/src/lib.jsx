@@ -35,6 +35,7 @@ export const generateBarChartSVG = async (req) => {
 		dateRange: [null, null],
 		branchFieldName: null,
 		branches: null,
+		groupByTag: false,
 		timePeriod: "months",
 		width: chart_width,
 		height: chart_height,
@@ -66,7 +67,7 @@ export const generateBarChartSVG = async (req) => {
 		// Filter down to the categories and tags and date range we want
 		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
 		const { incidentsByAllTime, xFormat } = processIncidentsTimeData(
-			filteredDataset, options.timePeriod, options.branchFieldName
+			filteredDataset, options.timePeriod, options.branchFieldName, options.groupByTag
 		);
 		const categoriesColorMap = branches ? [...(new Set([...branches.map(d => d.title)]))]
 			.reduce(

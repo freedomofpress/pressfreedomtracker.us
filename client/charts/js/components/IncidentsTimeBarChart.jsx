@@ -6,7 +6,7 @@ import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
 import { categoriesColors, filterDatasets } from '../lib/utilities'
 
-export function processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName) {
+export function processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName, groupByTag) {
 	// Rollup the incidents
 	const genIncidentsByTime = (dateFn) => filteredDataset.reduce((acc, d) => {
 		const date = dateFn(d.date)
@@ -95,7 +95,7 @@ export default function IncidentsTimeBarChart({
 	const tagBranches = (groupByTag)
 		&& [{ title: groupByTag }, { title: `not ${groupByTag}` }];
 
-	const { incidentsByAllTime, xFormat, showByYears, allTime } = processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName);
+	const { incidentsByAllTime, xFormat, showByYears, allTime } = processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName, groupByTag);
 
 	// Generate a default description for a11y
 	const startYear = d3.utcFormat("%Y")(allTime[0])
