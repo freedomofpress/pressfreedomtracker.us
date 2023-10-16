@@ -30,6 +30,7 @@ function engageCharts() {
 
 		const branchFieldName = chartNode.dataset.branchFieldName
 		const branches = chartNode.dataset.branches && JSON.parse(chartNode.dataset.branches)
+		const groupByTag = chartNode.dataset?.groupByTag
 		let additionalProps = {}
 		if (chartNode.dataset.branches && branches.type == 'list') {
 			additionalProps.branches = branches.value
@@ -63,6 +64,7 @@ function engageCharts() {
 					interactive={interactive}
 					fullSize={fullSize}
 					branchFieldName={branchFieldName}
+					groupByTag={groupByTag}
 					{...additionalProps}
 				/>
 			</DataLoader>

@@ -1,4 +1,5 @@
 import defusedxml.ElementTree as ET
+import wagtail.blocks
 from wagtail.models import Site, Page
 from django.test import TestCase, Client
 
@@ -142,6 +143,21 @@ class TestPages(TestCase):
         org = OrganizationPageFactory()
         response = self.client.get(f'/all-blogs/?organization={org.pk}')
         self.assertNotContains(response, 'Featured')
+
+    def test_get_blog_page_contains_lead_graphic_image_attribution(self):
+        image = CustomImageFactory()
+        self.blog_page.lead_graphic = wagtail.blocks.StreamValue(
+            stream_block=self.blog_page.lead_graphic.stream_block,
+            stream_data=[('image', image)],
+        )
+        self.blog_page.save()
+        expected_attribution = image.attribution
+        response = self.client.get(self.blog_page.url)
+        self.assertContains(
+            response,
+            f'<span class="media-attribution"> — {expected_attribution}</span>',
+            html=True,
+        )
 
     def test_get_blog_page_vertical_bar_chart_additional_js_media(self):
         response = self.client.get(self.blog_page.url)

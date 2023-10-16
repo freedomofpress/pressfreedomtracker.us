@@ -14,8 +14,20 @@ export function processIncidentsTimeData(filteredDataset, timePeriod, branchFiel
 		const dateData = acc[date] || { count: 0 }
 		dateData.count += 1
 
-		if (branchFieldName) {
-			const branchValues = (d[branchFieldName] || "").split(',').map(e => e.trim())
+		if (groupByTag) {
+			// if groupByTag is set, that means we are filtering a tag
+			if (d.tags.indexOf(groupByTag) >= 0) {
+				dateData[groupByTag] = dateData[groupByTag] ? dateData[groupByTag] + 1 : 1
+			} else {
+				const notBranchFieldName = `not ${groupByTag}`;
+				dateData[notBranchFieldName] = dateData[notBranchFieldName] ? dateData[notBranchFieldName] + 1 : 1
+			}
+		}
+		else if (branchFieldName) {
+			const branchValues = (d[branchFieldName] || "")
+				.split(',')
+				.map(e => e.trim())
+				.filter(d => d)
 			branchValues.forEach(branchName => {
 				dateData[branchName] = dateData[branchName] ? dateData[branchName] + 1 : 1
 			})
@@ -74,9 +86,14 @@ export default function IncidentsTimeBarChart({
 	fullSize = true,
 	branchFieldName,
 	branches,
+	groupByTag,
 }) {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
+
+	// if branchFieldName is set but branches is undefined, that means we are filtering a tag
+	const tagBranches = (groupByTag)
+		&& [{ title: groupByTag }, { title: `not ${groupByTag}` }];
 
 	const { incidentsByAllTime, xFormat, showByYears, allTime } = processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName);
 
@@ -86,11 +103,12 @@ export default function IncidentsTimeBarChart({
 	const dateDescription = (startYear === endYear) ? `in ${startYear}` : `from ${startYear} to ${endYear}`
 	const generatedDescription = `Incidents ${dateDescription}`
 
-	const categoriesColorMap = branches && [...(new Set([...branches.map(d => d.title)]))]
-		.reduce(
-			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
-			{}
-		)
+	const categoriesColorMap = (tagBranches || branches ) &&
+		[...(new Set([...(tagBranches || branches).map(d => d.title)]))]
+			.reduce(
+				(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
+				{}
+			)
 
 	return (
 		<ParentSize>
