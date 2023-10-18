@@ -75,6 +75,8 @@ class BranchingChartValue(ChartValue):
                     value, title in STATUS_OF_CHARGES
                 ]
             }
+        else:
+            branches_value = None
 
         return branches_value
 

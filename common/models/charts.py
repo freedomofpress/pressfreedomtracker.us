@@ -46,6 +46,9 @@ class BaseChartOptionsSchema(Schema):
 
 
 class VerticalBarChartOptionsSchema(BaseChartOptionsSchema):
+    branch_field_name = fields.Function(lambda obj: obj.branch_field_name(), data_key='branchFieldName')
+    branches = fields.Function(lambda obj: obj.branches())
+    group_by_tag = fields.Str(data_key='groupByTag')
     time_period = fields.Str(data_key='timePeriod')
 
 
@@ -54,7 +57,7 @@ class BubbleMapChartOptionsSchema(BaseChartOptionsSchema):
 
 
 class TreeMapOptionsSchema(BaseChartOptionsSchema):
-    branch_field_name = fields.Function(lambda obj: obj.branch_field_name())
+    branch_field_name = fields.Function(lambda obj: obj.branch_field_name(), data_key='branchFieldName')
     branches = fields.Function(lambda obj: obj.branches())
 
 
@@ -121,7 +124,8 @@ class ChartSnapshot(models.Model):
             # Generate filename
             img_slug = slugify(
                 '-'.join(
-                    str(v) for v in self.query.values() if v
+                    # limit to the first 12 characters of value so that it doesn't get too long
+                    str(v)[:12] for v in self.query.values() if v
                 )
             )
             base_filename = f'{img_slug}_{self.chart_type}'
