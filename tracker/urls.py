@@ -14,6 +14,7 @@ from emails import urls as emails_urls
 from incident.api.urls import urlpatterns as api_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
+from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path('health/ok/', common_views.health_ok),
     path('health/version/', common_views.health_version),
     path('csrf/', common_views.get_csrf_token, name='csrf_token'),
+    path('sitemap.xml', sitemap),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     path(
         'subscribe_for_site/',
