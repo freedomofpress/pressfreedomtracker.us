@@ -163,7 +163,6 @@ class BaseIncidentSerializer(VariableFieldSerializer):
     is_search_warrant_obtained = serializers.BooleanField()
     actor = serializers.CharField(source='get_actor_display')
     border_point = serializers.CharField()
-    stopped_at_border = serializers.BooleanField()
     target_us_citizenship_status = serializers.CharField(source='get_target_us_citizenship_status_display')
     denial_of_entry = serializers.BooleanField()
     stopped_previously = serializers.BooleanField()

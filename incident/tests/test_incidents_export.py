@@ -91,7 +91,6 @@ class IncidentExportTestCase(TestCase):
             'is_search_warrant_obtained',
             'actor',
             'border_point',
-            'stopped_at_border',
             'target_us_citizenship_status',
             'denial_of_entry',
             'stopped_previously',

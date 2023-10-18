@@ -185,7 +185,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Border stop
     border_point = None
-    stopped_at_border = False
     target_us_citizenship_status = None
     denial_of_entry = False
     stopped_previously = False
@@ -233,7 +232,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         )
         border_stop = factory.Trait(
             border_point='City A',
-            stopped_at_border=False,
             target_us_citizenship_status=factory.Iterator(
                 choices.CITIZENSHIP_STATUS_CHOICES, getter=lambda c: c[0]),
             denial_of_entry=False,

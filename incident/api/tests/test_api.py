@@ -462,7 +462,6 @@ class IncidentAPITest(APITestCase):
                 'is_search_warrant_obtained': inc.is_search_warrant_obtained,
                 'actor': inc.get_actor_display(),
                 'border_point': inc.border_point,
-                'stopped_at_border': inc.stopped_at_border,
                 'target_us_citizenship_status': inc.get_target_us_citizenship_status_display(),
                 'denial_of_entry': inc.denial_of_entry,
                 'stopped_previously': inc.stopped_previously,

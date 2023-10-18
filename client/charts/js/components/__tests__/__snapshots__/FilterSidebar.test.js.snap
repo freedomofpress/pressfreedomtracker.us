@@ -1965,11 +1965,6 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
-      "stopped_at_border": {
-        "enabled": false,
-        "parameters": null,
-        "type": "string",
-      },
       "stopped_previously": {
         "enabled": false,
         "parameters": null,

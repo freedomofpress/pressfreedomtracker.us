@@ -16,7 +16,6 @@ from incident.utils.category_field_values import (
     target_us_citizenship_status_html_val,
     denial_of_entry_html_val,
     stopped_previously_html_val,
-    stopped_at_border_html_val,
     did_authorities_ask_for_device_access_html_val,
     did_authorities_ask_for_social_media_user_html_val,
     did_authorities_ask_for_social_media_pass_html_val,
@@ -58,7 +57,6 @@ CATEGORY_FIELD_MAP = {
     ],
     'border-stop': [
         ('border_point', 'Border Point'),
-        ('stopped_at_border', 'Stopped at border?'),
         ('target_nationality', 'Target Nationality'),
         ('target_us_citizenship_status', 'US Citizenship Status of Target'),
         ('denial_of_entry', 'Denied Entry?'),
@@ -104,7 +102,6 @@ CAT_FIELD_VALUES = {
     'is_search_warrant_obtained': is_search_warrant_obtained_html_val,
     'actor': actor_html_val,
     'border_point': border_point_html_val,
-    'stopped_at_border': stopped_at_border_html_val,
     'target_nationality': target_nationality_html_val,
     'target_us_citizenship_status': target_us_citizenship_status_html_val,
     'denial_of_entry': denial_of_entry_html_val,

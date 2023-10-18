@@ -184,10 +184,6 @@ def denial_of_entry_html_val(page, field, index, category):
     return boolean_html_val(page, field, index, category)
 
 
-def stopped_at_border_html_val(page, field, index, category):
-    return boolean_html_val(page, field, index, category)
-
-
 def stopped_previously_html_val(page, field, index, category):
     return boolean_html_val(page, field, index, category)
 

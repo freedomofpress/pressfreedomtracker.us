@@ -653,10 +653,6 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='Border point'
     )
-    stopped_at_border = models.BooleanField(
-        default=False,
-        verbose_name="Stopped at border?"
-    )
     target_us_citizenship_status = models.CharField(
         choices=choices.CITIZENSHIP_STATUS_CHOICES,
         max_length=255,
@@ -901,7 +897,6 @@ class IncidentPage(MetadataPageMixin, Page):
             classname='collapsible collapsed',
             children=[
                 FieldPanel('border_point'),
-                FieldPanel('stopped_at_border'),
                 FieldPanel('target_us_citizenship_status'),
                 FieldPanel('denial_of_entry'),
                 FieldPanel('stopped_previously'),

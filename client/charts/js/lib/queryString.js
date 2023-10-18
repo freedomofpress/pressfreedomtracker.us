@@ -84,7 +84,6 @@ const queryFields = {
 	charges: parseString,
 	unnecessary_use_of_force: parseString,
 	border_point: parseString,
-	stopped_at_border: parseString,
 	stopped_previously: parseString,
 	target_us_citizenship_status: parseString,
 	denial_of_entry: parseString,

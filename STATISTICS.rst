@@ -123,7 +123,6 @@ Available filters:
 - charged_under_espionage_act
 - denial_of_entry
 - is_search_warrant_obtained
-- stopped_at_border
 - stopped_previously
 - unnecessary_use_of_force
 

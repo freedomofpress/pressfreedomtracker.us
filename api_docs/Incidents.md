@@ -73,7 +73,6 @@ Here is a sample response:
       "is_search_warrant_obtained": false,
       "actor": null,
       "border_point": null,
-      "stopped_at_border": false,
       "target_us_citizenship_status": null,
       "denial_of_entry": false,
       "stopped_previously": false,
@@ -155,7 +154,6 @@ Here is a sample response:
       "is_search_warrant_obtained": false,
       "actor": null,
       "border_point": null,
-      "stopped_at_border": false,
       "target_us_citizenship_status": null,
       "denial_of_entry": false,
       "stopped_previously": false,
@@ -234,7 +232,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `is_search_warrant_obtained`                  | Whether or not a search warrant was obtained for this incident.                                                                                                                         | boolean          |
 | `actor`                                       | A description of the principal actor involved in the incident. Can be one of: `UNKNOWN`, `LAW_ENFORCEMENT`, `PRIVATE_SECURITY`, `POLITICIAN`, `PUBLIC_FIGURE`, or `PRIVATE_INDIVIDUAL`. | string           |
 | `border_point`                                | What border-crossing point a border-stop incident occurred at.                                                                                                                          | string           |
-| `stopped_at_border`                           | If the incident involved a stop at the border.                                                                                                                                          | boolean          |
 | `target_us_citizenship_status`                | The citizenship status of the target of the incident. Can be one of: `US_CITIZEN`, `PERMANENT_RESIDENT`, or `NON_RESIDENT`                                                              | string           |
 | `denial_of_entry`                             | If the incident involved denying entry to the country.                                                                                                                                  | boolean          |
 | `stopped_previously`                          | If the incident targeted someone who had been previously stopped at the border.                                                                                                         | boolean          |

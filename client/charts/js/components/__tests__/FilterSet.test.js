@@ -308,11 +308,6 @@ test('renders FilterSet with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"stopped_at_border": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"stopped_previously": {
 					"enabled": false,
 					"type": "string",

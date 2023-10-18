@@ -25,7 +25,6 @@ CATEGORIES = {
     ],
     'border_stop': [
         'border_point',
-        'stopped_at_border',
         'stopped_previously',
         'target_us_citizenship_status',
         'denial_of_entry',

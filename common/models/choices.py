@@ -45,7 +45,6 @@ FILTER_CHOICES = [
     ('status_of_charges', 'Status of charges'),
     ('status_of_prior_restraint', 'Status of prior restraint'),
     ('status_of_seized_equipment', 'Status of seized equipment'),
-    ('stopped_at_border', 'Stopped at border?'),
     ('stopped_previously', 'Stopped previously?'),
     ('subpoena_statuses', 'Subpoena status'),
     ('subpoena_type', 'Subpoena type'),

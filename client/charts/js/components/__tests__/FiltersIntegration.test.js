@@ -182,11 +182,6 @@ test('renders FiltersIntegration with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"stopped_at_border": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"stopped_previously": {
 					"enabled": false,
 					"type": "string",
@@ -668,11 +663,6 @@ test('renders FiltersIntegration with mocked data', () => {
 							"title": "Border point",
 							"type": "text",
 							"name": "border_point"
-						},
-						{
-							"title": "Stopped at border?",
-							"type": "bool",
-							"name": "stopped_at_border"
 						},
 						{
 							"title": "Stopped previously?",
