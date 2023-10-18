@@ -4,6 +4,7 @@ from django.apps import apps
 from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
+from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 
@@ -29,6 +30,7 @@ urlpatterns = [
     path('health/ok/', common_views.health_ok),
     path('health/version/', common_views.health_version),
     path('csrf/', common_views.get_csrf_token, name='csrf_token'),
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     path(
         'subscribe_for_site/',
         common_views.SubscribeForSite.as_view(),

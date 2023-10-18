@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /all-incidents/?*
+Allow: /all-incidents/?page=*
