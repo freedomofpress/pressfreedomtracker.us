@@ -871,7 +871,6 @@ class IncidentPage(MetadataPageMixin, Page):
                       "incident. Displayed as footnotes."
         ),
 
-
         MultiFieldPanel(
             heading='Arrest/Criminal Charge',
             classname='collapsible collapsed',
@@ -889,34 +888,11 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Legal Case',
+            heading='Assault',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('case_number'),
-                FieldPanel('case_statuses'),
-                FieldPanel('case_type'),
-            ]
-        ),
-
-        # Not in an MFP because we want their headings to show up.
-        InlinePanel(
-            'equipment_seized',
-            classname='collapsible collapsed',
-            label='Equipment Searched or Seized',
-        ),
-        InlinePanel(
-            'equipment_broken',
-            classname='collapsible collapsed',
-            label='Equipment Broken',
-        ),
-
-        MultiFieldPanel(
-            heading='Equipment Seizure or Damage',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('status_of_seized_equipment'),
-                FieldPanel('is_search_warrant_obtained'),
-                FieldPanel('actor'),
+                FieldPanel('assailant'),
+                FieldPanel('was_journalist_targeted'),
             ]
         ),
 
@@ -939,20 +915,62 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Physical Assault',
+            heading='Denial of Access',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('assailant'),
-                FieldPanel('was_journalist_targeted'),
+                AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
             ]
         ),
 
         MultiFieldPanel(
-            heading='Leak Prosecution (incl. Legal Case, Arrest/Detention)',
+            heading='Equipment Damage',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('actor'),
+                InlinePanel(
+                    'equipment_broken',
+                    label='Equipment',
+                ),
+            ],
+        ),
+
+        MultiFieldPanel(
+            heading='Equipment Searched or Seized',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('status_of_seized_equipment'),
+                FieldPanel('is_search_warrant_obtained'),
+                InlinePanel(
+                    'equipment_seized',
+                    label='Equipment',
+                ),
+            ],
+        ),
+
+        MultiFieldPanel(
+            heading='Leak Prosecution',
             classname='collapsible collapsed',
             children=[
                 AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker'),
                 FieldPanel('charged_under_espionage_act'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Legal Case',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('case_number'),
+                FieldPanel('case_statuses'),
+                FieldPanel('case_type'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Prior Restraint',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('status_of_prior_restraint'),
             ]
         ),
 
@@ -966,21 +984,6 @@ class IncidentPage(MetadataPageMixin, Page):
                 InlinePanel('legal_orders', label='Legal Orders'),
                 FieldPanel('third_party_business'),
                 FieldPanel('name_of_business'),
-            ]
-        ),
-        MultiFieldPanel(
-            heading='Prior Restraint (incl. Legal Case)',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('status_of_prior_restraint'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Denial of Access',
-            classname='collapsible collapsed',
-            children=[
-                AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
             ]
         ),
 
