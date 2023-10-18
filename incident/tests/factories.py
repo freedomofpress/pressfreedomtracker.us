@@ -190,7 +190,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     stopped_previously = False
     did_authorities_ask_for_device_access = None
     did_authorities_ask_about_work = None
-    were_devices_searched_or_seized = None
 
     # Physical assault
     assailant = None
@@ -240,9 +239,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
             ),
             did_authorities_ask_about_work=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
-            were_devices_searched_or_seized=factory.Iterator(
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
             ),
         )

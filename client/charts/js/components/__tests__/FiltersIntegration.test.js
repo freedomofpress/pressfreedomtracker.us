@@ -212,11 +212,6 @@ test('renders FiltersIntegration with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"were_devices_searched_or_seized": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"politicians_or_public_figures_involved": {
 					"enabled": false,
 					"type": "string",
@@ -714,11 +709,6 @@ test('renders FiltersIntegration with mocked data', () => {
 							"type": "radio",
 							"name": "did_authorities_ask_about_work"
 						},
-						{
-							"title": "Were devices searched or seized?",
-							"type": "radio",
-							"name": "were_devices_searched_or_seized"
-						}
 					]
 				},
 				{

@@ -327,11 +327,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   "title": "Did authorities ask intrusive questions about journalist's work?",
                   "type": "radio",
                 },
-                {
-                  "name": "were_devices_searched_or_seized",
-                  "title": "Were devices searched or seized?",
-                  "type": "radio",
-                },
               ],
               "id": 5,
               "symbol": "border_stop",
@@ -997,11 +992,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "were_devices_searched_or_seized": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
           }
         }
         filterWithout={
@@ -1053,7 +1043,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "unnecessary_use_of_force": [Function],
             "venue": [Function],
             "was_journalist_targeted": [Function],
-            "were_devices_searched_or_seized": [Function],
           }
         }
         height={333.3333333333333}
@@ -1619,11 +1608,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "were_devices_searched_or_seized": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
         }
       }
       filterWithout={
@@ -1675,7 +1659,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "unnecessary_use_of_force": [Function],
           "venue": [Function],
           "was_journalist_targeted": [Function],
-          "were_devices_searched_or_seized": [Function],
         }
       }
       initialFilterParams={
@@ -1905,11 +1888,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "type": "string",
           },
           "was_journalist_targeted": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "were_devices_searched_or_seized": {
             "enabled": false,
             "parameters": null,
             "type": "string",

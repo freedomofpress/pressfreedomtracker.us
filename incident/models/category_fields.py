@@ -29,7 +29,6 @@ from incident.utils.category_field_values import (
     legal_order_type_html_val,
     status_of_prior_restraint_html_val,
     politicians_or_public_figures_involved_html_val,
-    were_devices_searched_or_seized_html_val,
     legal_orders_html_val,
     legal_order_target_html_val,
     legal_order_venue_html_val,
@@ -61,7 +60,6 @@ CATEGORY_FIELD_MAP = {
         ('stopped_previously', 'Stopped Previously?'),
         ('did_authorities_ask_for_device_access', 'Asked for device access?'),
         ('did_authorities_ask_about_work', 'Asked intrusive questions about work?'),
-        ('were_devices_searched_or_seized', 'Were devices searched or seized?'),
     ],
     'assault': [
         ('assailant', 'Assailant'),
@@ -104,7 +102,6 @@ CAT_FIELD_VALUES = {
     'stopped_previously': stopped_previously_html_val,
     'did_authorities_ask_for_device_access': did_authorities_ask_for_device_access_html_val,
     'did_authorities_ask_about_work': did_authorities_ask_about_work_html_val,
-    'were_devices_searched_or_seized': were_devices_searched_or_seized_html_val,
     'assailant': assailant_html_val,
     'was_journalist_targeted': was_journalist_targeted_html_val,
     'workers_whose_communications_were_obtained': workers_whose_communications_were_obtained_html_val,

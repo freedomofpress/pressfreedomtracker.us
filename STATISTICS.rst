@@ -157,7 +157,6 @@ Boolean "maybe" filters are a special case of choice filters that accept the val
 - did_authorities_ask_for_device_access
 - held_in_contempt
 - was_journalist_targeted
-- were_devices_searched_or_seized
 
 Relation filters
 ++++++++++++++++

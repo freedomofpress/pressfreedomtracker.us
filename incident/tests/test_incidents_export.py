@@ -96,7 +96,6 @@ class IncidentExportTestCase(TestCase):
             'stopped_previously',
             'did_authorities_ask_for_device_access',
             'did_authorities_ask_about_work',
-            'were_devices_searched_or_seized',
             'assailant',
             'was_journalist_targeted',
             'charged_under_espionage_act',

@@ -169,7 +169,6 @@ class BaseIncidentSerializer(VariableFieldSerializer):
 
     did_authorities_ask_for_device_access = serializers.CharField(source='get_did_authorities_ask_for_device_access_display')
     did_authorities_ask_about_work = serializers.CharField(source='get_did_authorities_ask_about_work_display')
-    were_devices_searched_or_seized = serializers.CharField(source='get_were_devices_searched_or_seized_display')
     assailant = serializers.CharField(source='get_assailant_display')
     was_journalist_targeted = serializers.CharField(source='get_was_journalist_targeted_display')
 

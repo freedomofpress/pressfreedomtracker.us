@@ -688,13 +688,6 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='Did authorities ask intrusive questions about journalist\'s work?',
     )
-    were_devices_searched_or_seized = models.CharField(
-        choices=choices.MAYBE_BOOLEAN,
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='Were devices searched or seized?'
-    )
 
     # Physical Assault
     assailant = models.CharField(
@@ -889,7 +882,6 @@ class IncidentPage(MetadataPageMixin, Page):
                 AutocompletePanel('target_nationality', 'incident.Nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
                 FieldPanel('did_authorities_ask_about_work'),
-                FieldPanel('were_devices_searched_or_seized'),
             ]
         ),
 

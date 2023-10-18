@@ -468,7 +468,6 @@ class IncidentAPITest(APITestCase):
                 'target_nationality': [str(e) for e in inc.target_nationality.all()],
                 'did_authorities_ask_for_device_access': inc.get_did_authorities_ask_for_device_access_display(),
                 'did_authorities_ask_about_work': inc.get_did_authorities_ask_about_work_display(),
-                'were_devices_searched_or_seized': inc.get_were_devices_searched_or_seized_display(),
                 'assailant': inc.get_assailant_display(),
                 'was_journalist_targeted': inc.get_was_journalist_targeted_display(),
                 'workers_whose_communications_were_obtained': [str(w) for w in inc.workers_whose_communications_were_obtained.all()],

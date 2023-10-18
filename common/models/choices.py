@@ -58,5 +58,4 @@ FILTER_CHOICES = [
     ('recently_updated', 'Updated in the last'),
     ('venue', 'Venue'),
     ('was_journalist_targeted', 'Was journalist targeted?'),
-    ('were_devices_searched_or_seized', 'Were devices searched or seized?'),
 ]

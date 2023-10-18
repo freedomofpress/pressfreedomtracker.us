@@ -78,7 +78,6 @@ Here is a sample response:
       "stopped_previously": false,
       "did_authorities_ask_for_device_access": null,
       "did_authorities_ask_about_work": null,
-      "were_devices_searched_or_seized": null,
       "assailant": null,
       "was_journalist_targeted": null,
       "charged_under_espionage_act": false,
@@ -157,7 +156,6 @@ Here is a sample response:
       "stopped_previously": false,
       "did_authorities_ask_for_device_access": null,
       "did_authorities_ask_about_work": null,
-      "were_devices_searched_or_seized": null,
       "assailant": null,
       "was_journalist_targeted": null,
       "charged_under_espionage_act": false,
@@ -233,7 +231,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `stopped_previously`                          | If the incident targeted someone who had been previously stopped at the border.                                                                                                         | boolean          |
 | `did_authorities_ask_for_device_access`       | If authorities asked for access to the target's electronic devices during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                            | string           |
 | `did_authorities_ask_about_work`              | If authorities asked about the target's work during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                                                  | string           |
-| `were_devices_searched_or_seized`             | If devices were searched or seized during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                                                            | string           |
 | `assailant`                                   | The type of assailant in an assault incident. Can be one of: `UNKNOWN`, `LAW_ENFORCEMENT`, `PRIVATE_SECURITY`, `POLITICIAN`, `PUBLIC_FIGURE`, or `PRIVATE_INDIVIDUAL`.                  | string           |
 | `was_journalist_targeted`                     | If a journalist was specifically targeted in the incident. Can be one of `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                                                          | string           |
 | `charged_under_espionage_act`                 | If someone was charged under the espionage act as part of the incident.                                                                                                                 | boolean          |

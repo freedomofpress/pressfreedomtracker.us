@@ -338,11 +338,6 @@ test('renders FilterSet with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"were_devices_searched_or_seized": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"politicians_or_public_figures_involved": {
 					"enabled": false,
 					"type": "string",

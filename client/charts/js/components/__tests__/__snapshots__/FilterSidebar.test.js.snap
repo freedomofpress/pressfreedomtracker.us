@@ -2020,11 +2020,6 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
-      "were_devices_searched_or_seized": {
-        "enabled": false,
-        "parameters": null,
-        "type": "string",
-      },
     }
   }
   width={272}

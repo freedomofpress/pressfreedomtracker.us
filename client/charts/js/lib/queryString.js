@@ -90,7 +90,6 @@ const queryFields = {
 	target_nationality: parseString,
 	did_authorities_ask_for_device_access: parseString,
 	did_authorities_ask_about_work: parseString,
-	were_devices_searched_or_seized: parseString,
 	politicians_or_public_figures_involved: parseString,
 	equipment_seized: parseString,
 	status_of_seized_equipment: parseString,
