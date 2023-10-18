@@ -207,11 +207,6 @@ test('renders FiltersIntegration with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"did_authorities_ask_for_social_media_pass": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"did_authorities_ask_about_work": {
 					"enabled": false,
 					"type": "string",
@@ -713,11 +708,6 @@ test('renders FiltersIntegration with mocked data', () => {
 							"title": "Did authorities ask for device access?",
 							"type": "radio",
 							"name": "did_authorities_ask_for_device_access"
-						},
-						{
-							"title": "Did authorities ask for social media password?",
-							"type": "radio",
-							"name": "did_authorities_ask_for_social_media_pass"
 						},
 						{
 							"title": "Did authorities ask intrusive questions about journalist's work?",

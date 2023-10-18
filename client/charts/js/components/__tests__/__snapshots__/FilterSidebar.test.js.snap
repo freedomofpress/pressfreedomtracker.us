@@ -1862,11 +1862,6 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
-      "did_authorities_ask_for_social_media_pass": {
-        "enabled": false,
-        "parameters": null,
-        "type": "string",
-      },
       "equipment_broken": {
         "enabled": false,
         "parameters": null,

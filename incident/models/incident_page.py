@@ -681,13 +681,6 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name="Did authorities ask for device access?"
     )
-    did_authorities_ask_for_social_media_pass = models.CharField(
-        choices=choices.MAYBE_BOOLEAN,
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Did authorities ask for social media password?"
-    )
     did_authorities_ask_about_work = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
@@ -895,7 +888,6 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel('stopped_previously'),
                 AutocompletePanel('target_nationality', 'incident.Nationality'),
                 FieldPanel('did_authorities_ask_for_device_access'),
-                FieldPanel('did_authorities_ask_for_social_media_pass'),
                 FieldPanel('did_authorities_ask_about_work'),
                 FieldPanel('were_devices_searched_or_seized'),
             ]

@@ -327,11 +327,6 @@ test('renders CheckBoxesYear with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"did_authorities_ask_for_social_media_pass": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"did_authorities_ask_about_work": {
 					"enabled": false,
 					"type": "string",

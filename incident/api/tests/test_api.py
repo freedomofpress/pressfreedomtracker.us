@@ -467,7 +467,6 @@ class IncidentAPITest(APITestCase):
                 'stopped_previously': inc.stopped_previously,
                 'target_nationality': [str(e) for e in inc.target_nationality.all()],
                 'did_authorities_ask_for_device_access': inc.get_did_authorities_ask_for_device_access_display(),
-                'did_authorities_ask_for_social_media_pass': inc.get_did_authorities_ask_for_social_media_pass_display(),
                 'did_authorities_ask_about_work': inc.get_did_authorities_ask_about_work_display(),
                 'were_devices_searched_or_seized': inc.get_were_devices_searched_or_seized_display(),
                 'assailant': inc.get_assailant_display(),

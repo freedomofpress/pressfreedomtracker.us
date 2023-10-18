@@ -323,11 +323,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   "type": "radio",
                 },
                 {
-                  "name": "did_authorities_ask_for_social_media_pass",
-                  "title": "Did authorities ask for social media password?",
-                  "type": "radio",
-                },
-                {
                   "name": "did_authorities_ask_about_work",
                   "title": "Did authorities ask intrusive questions about journalist's work?",
                   "type": "radio",
@@ -848,11 +843,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "did_authorities_ask_for_social_media_pass": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
             "equipment_broken": {
               "enabled": false,
               "parameters": null,
@@ -1034,7 +1024,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "detention_status": [Function],
             "did_authorities_ask_about_work": [Function],
             "did_authorities_ask_for_device_access": [Function],
-            "did_authorities_ask_for_social_media_pass": [Function],
             "equipment_broken": [Function],
             "equipment_seized": [Function],
             "filterState": [Function],
@@ -1476,11 +1465,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "did_authorities_ask_for_social_media_pass": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "equipment_broken": {
             "enabled": false,
             "parameters": null,
@@ -1662,7 +1646,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "detention_status": [Function],
           "did_authorities_ask_about_work": [Function],
           "did_authorities_ask_for_device_access": [Function],
-          "did_authorities_ask_for_social_media_pass": [Function],
           "equipment_broken": [Function],
           "equipment_seized": [Function],
           "filterState": [Function],
@@ -1789,11 +1772,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "type": "string",
           },
           "did_authorities_ask_for_device_access": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_for_social_media_pass": {
             "enabled": false,
             "parameters": null,
             "type": "string",

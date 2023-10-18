@@ -14,8 +14,6 @@ FILTER_CHOICES = [
     ('detention_date', 'Detention date'),
     ('did_authorities_ask_for_device_access',
      'Did authorities ask for device access?'),
-    ('did_authorities_ask_for_social_media_pass',
-     'Did authorities ask for social media password?'),
     ('did_authorities_ask_about_work',
      "Did authorities ask intrusive questions about journalist's work?"),
     ('dropped_charges', 'Dropped Charges'),
