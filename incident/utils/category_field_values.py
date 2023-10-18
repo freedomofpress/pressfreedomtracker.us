@@ -192,10 +192,6 @@ def did_authorities_ask_for_device_access_html_val(page, field, index, category)
     return basic_html_val(page, field, index, category)
 
 
-def did_authorities_ask_for_social_media_user_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
 def did_authorities_ask_for_social_media_pass_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 

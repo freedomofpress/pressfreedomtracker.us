@@ -77,7 +77,6 @@ Here is a sample response:
       "denial_of_entry": false,
       "stopped_previously": false,
       "did_authorities_ask_for_device_access": null,
-      "did_authorities_ask_for_social_media_user": null,
       "did_authorities_ask_for_social_media_pass": null,
       "did_authorities_ask_about_work": null,
       "were_devices_searched_or_seized": null,
@@ -158,7 +157,6 @@ Here is a sample response:
       "denial_of_entry": false,
       "stopped_previously": false,
       "did_authorities_ask_for_device_access": null,
-      "did_authorities_ask_for_social_media_user": null,
       "did_authorities_ask_for_social_media_pass": null,
       "did_authorities_ask_about_work": null,
       "were_devices_searched_or_seized": null,
@@ -236,7 +234,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `denial_of_entry`                             | If the incident involved denying entry to the country.                                                                                                                                  | boolean          |
 | `stopped_previously`                          | If the incident targeted someone who had been previously stopped at the border.                                                                                                         | boolean          |
 | `did_authorities_ask_for_device_access`       | If authorities asked for access to the target's electronic devices during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                            | string           |
-| `did_authorities_ask_for_social_media_user`   | If authorities asked for the target's social media username during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                                   | string           |
 | `did_authorities_ask_for_social_media_pass`   | If authorities asked for the target's social media password during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                                   | string           |
 | `did_authorities_ask_about_work`              | If authorities asked about the target's work during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                                                  | string           |
 | `were_devices_searched_or_seized`             | If devices were searched or seized during the incident. Can be one of: `NOTHING`, `JUST_TRUE`, `JUST_FALSE`.                                                                            | string           |

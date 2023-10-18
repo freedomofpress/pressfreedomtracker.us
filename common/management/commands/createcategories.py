@@ -30,7 +30,6 @@ CATEGORIES = {
         'denial_of_entry',
         'target_nationality',
         'did_authorities_ask_for_device_access',
-        'did_authorities_ask_for_social_media_user',
         'did_authorities_ask_for_social_media_pass',
         'did_authorities_ask_about_work',
         'were_devices_searched_or_seized',

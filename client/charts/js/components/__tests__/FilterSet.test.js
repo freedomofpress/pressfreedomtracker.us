@@ -333,11 +333,6 @@ test('renders FilterSet with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"did_authorities_ask_for_social_media_user": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"did_authorities_ask_for_social_media_pass": {
 					"enabled": false,
 					"type": "string",

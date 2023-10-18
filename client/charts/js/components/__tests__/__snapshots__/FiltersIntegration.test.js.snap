@@ -268,11 +268,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   "type": "text",
                 },
                 {
-                  "name": "stopped_at_border",
-                  "title": "Stopped at border?",
-                  "type": "bool",
-                },
-                {
                   "name": "stopped_previously",
                   "title": "Stopped previously?",
                   "type": "bool",
@@ -325,11 +320,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                 {
                   "name": "did_authorities_ask_for_device_access",
                   "title": "Did authorities ask for device access?",
-                  "type": "radio",
-                },
-                {
-                  "name": "did_authorities_ask_for_social_media_user",
-                  "title": "Did authorities ask for social media username?",
                   "type": "radio",
                 },
                 {
@@ -863,11 +853,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "did_authorities_ask_for_social_media_user": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
             "equipment_broken": {
               "enabled": false,
               "parameters": null,
@@ -962,11 +947,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "stopped_at_border": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
             "stopped_previously": {
               "enabled": false,
               "parameters": null,
@@ -1055,7 +1035,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "did_authorities_ask_about_work": [Function],
             "did_authorities_ask_for_device_access": [Function],
             "did_authorities_ask_for_social_media_pass": [Function],
-            "did_authorities_ask_for_social_media_user": [Function],
             "equipment_broken": [Function],
             "equipment_seized": [Function],
             "filterState": [Function],
@@ -1073,7 +1052,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "status_of_charges": [Function],
             "status_of_prior_restraint": [Function],
             "status_of_seized_equipment": [Function],
-            "stopped_at_border": [Function],
             "stopped_previously": [Function],
             "subpoena_statuses": [Function],
             "subpoena_type": [Function],
@@ -1503,11 +1481,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "did_authorities_ask_for_social_media_user": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "equipment_broken": {
             "enabled": false,
             "parameters": null,
@@ -1602,11 +1575,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "stopped_at_border": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "stopped_previously": {
             "enabled": false,
             "parameters": null,
@@ -1695,7 +1663,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "did_authorities_ask_about_work": [Function],
           "did_authorities_ask_for_device_access": [Function],
           "did_authorities_ask_for_social_media_pass": [Function],
-          "did_authorities_ask_for_social_media_user": [Function],
           "equipment_broken": [Function],
           "equipment_seized": [Function],
           "filterState": [Function],
@@ -1713,7 +1680,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "status_of_charges": [Function],
           "status_of_prior_restraint": [Function],
           "status_of_seized_equipment": [Function],
-          "stopped_at_border": [Function],
           "stopped_previously": [Function],
           "subpoena_statuses": [Function],
           "subpoena_type": [Function],
@@ -1832,11 +1798,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "did_authorities_ask_for_social_media_user": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "equipment_broken": {
             "enabled": false,
             "parameters": null,
@@ -1906,11 +1867,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "type": "string",
           },
           "status_of_seized_equipment": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "stopped_at_border": {
             "enabled": false,
             "parameters": null,
             "type": "string",

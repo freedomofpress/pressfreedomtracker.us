@@ -410,12 +410,6 @@ class TestCategoryFieldValuesByField(TestCase):
             CAT_FIELD_VALUES['did_authorities_ask_for_device_access'],
         )
 
-    def test_did_authorities_ask_for_social_media_user(self):
-        self.assert_choices(
-            'did_authorities_ask_for_social_media_user',
-            CAT_FIELD_VALUES['did_authorities_ask_for_social_media_user'],
-        )
-
     def test_did_authorities_ask_for_social_media_pass(self):
         self.assert_choices(
             'did_authorities_ask_for_social_media_pass',

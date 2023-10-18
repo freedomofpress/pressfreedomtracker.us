@@ -190,7 +190,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     stopped_previously = False
     did_authorities_ask_for_device_access = None
     did_authorities_ask_for_social_media_pass = None
-    did_authorities_ask_for_social_media_user = None
     did_authorities_ask_about_work = None
     were_devices_searched_or_seized = None
 
@@ -239,9 +238,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             # did_authorities_ask_for_device_access=factory.Iterator(
             #     choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
             did_authorities_ask_for_device_access=factory.Iterator(
-                choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
-            ),
-            did_authorities_ask_for_social_media_user=factory.Iterator(
                 choices.MAYBE_BOOLEAN, getter=lambda c: c[0]
             ),
             did_authorities_ask_for_social_media_pass=factory.Iterator(

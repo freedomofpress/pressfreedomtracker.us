@@ -89,7 +89,6 @@ const queryFields = {
 	denial_of_entry: parseString,
 	target_nationality: parseString,
 	did_authorities_ask_for_device_access: parseString,
-	did_authorities_ask_for_social_media_user: parseString,
 	did_authorities_ask_for_social_media_pass: parseString,
 	did_authorities_ask_about_work: parseString,
 	were_devices_searched_or_seized: parseString,

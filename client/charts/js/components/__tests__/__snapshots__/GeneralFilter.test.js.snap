@@ -130,11 +130,6 @@ exports[`renders CheckBoxesYear with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "did_authorities_ask_for_social_media_user": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "equipment_broken": {
             "enabled": false,
             "parameters": null,
@@ -225,11 +220,6 @@ exports[`renders CheckBoxesYear with mocked data 1`] = `
             "type": "string",
           },
           "status_of_seized_equipment": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "stopped_at_border": {
             "enabled": false,
             "parameters": null,
             "type": "string",
