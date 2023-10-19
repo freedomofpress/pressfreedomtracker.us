@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /all-incidents/?*
 Allow: /all-incidents/?page=*
+Crawl-delay: 10
 
 Sitemap: https://pressfreedomtracker.us/sitemap.xml
