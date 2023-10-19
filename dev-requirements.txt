@@ -1033,9 +1033,9 @@ urllib3[socks]==2.0.7 \
     #   mailchimp-marketing
     #   requests
     #   selenium
-wagtail==4.1.8 \
-    --hash=sha256:186f65f0607c9e3caadd3d39e8920b7ea4ceb640d5b5a062a07201e7d6001794 \
-    --hash=sha256:a179a940ddd1a67f2a2a985b1c75de2382dbebba5b8e78def30e138d51bbdd21
+wagtail==4.1.9 \
+    --hash=sha256:1394d78d01b7c33dbf7b2412f959196402639c21716ba0da1fe182673d2f15cd \
+    --hash=sha256:60dd18907c4fb2402a2a7d59dc9d0987a3c954a8327927acd32990bb55b0227c
     # via
     #   -r requirements.txt
     #   wagtail-autocomplete
