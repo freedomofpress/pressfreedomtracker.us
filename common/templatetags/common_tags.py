@@ -3,6 +3,7 @@ import hashlib
 from bs4 import BeautifulSoup
 from django import template
 from django.core.cache import cache
+from django.urls import reverse
 from django.utils.html import mark_safe
 from wagtail.templatetags.wagtailcore_tags import richtext
 
@@ -59,6 +60,13 @@ def richtext_aside(value):
     # Setting cache for 1 hour
     cache.set(cache_key, aside_html, 3600)
     return aside_html
+
+
+@register.simple_tag(takes_context=True)
+def get_absolute_url(context, view_name, *args, **kwargs):
+    return context['request'].build_absolute_uri(
+        reverse(view_name, args=args, kwargs=kwargs)
+    )
 
 
 @register.simple_tag

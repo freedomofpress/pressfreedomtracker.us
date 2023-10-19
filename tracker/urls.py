@@ -31,7 +31,7 @@ urlpatterns = [
     path('health/ok/', common_views.health_ok),
     path('health/version/', common_views.health_version),
     path('csrf/', common_views.get_csrf_token, name='csrf_token'),
-    path('sitemap.xml', sitemap),
+    path('sitemap.xml', sitemap, name='sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     path(
         'subscribe_for_site/',
