@@ -1,0 +1,7 @@
+{% load common_tags %}
+User-agent: *
+Disallow: /all-incidents/?*
+Allow: /all-incidents/?page=*
+Crawl-delay: 10
+
+Sitemap: {% get_absolute_url 'sitemap' %}
