@@ -116,4 +116,4 @@ class TestTemplateTags(TestCase):
 
         result = get_absolute_url(context, 'sitemap')
 
-        self.assertEqual(result, 'http://testserver/sitemap.xml')
+        self.assertEqual(result, f'http://{request.get_host()}/sitemap.xml')
