@@ -17,6 +17,8 @@ class BranchingChartValue(ChartValue):
     def branch_field_name(self):
         """Return the name of the field in the dataset that will be
         used to branch/segment the chart."""
+        if self.get('group_by') is None:
+            return None
         return self.get('group_by').lower()
 
     def data_url(self):
