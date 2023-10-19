@@ -214,14 +214,14 @@ class IncidentPageLinks(Orderable):
         return value
 
 
-class EquipmentSeized(models.Model):
+class EquipmentSeized(Orderable):
     incident = ParentalKey(
         'incident.IncidentPage',
         related_name='equipment_seized',
     )
     equipment = ParentalKey(
         'incident.Equipment',
-        verbose_name='Equipment Seized',
+        verbose_name='Equipment',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
     _autocomplete_model = 'incident.Equipment'
@@ -231,7 +231,7 @@ class EquipmentSeized(models.Model):
         FieldPanel('quantity'),
     ]
 
-    class Meta:
+    class Meta(Orderable.Meta):
         verbose_name = "Equipment Seized"
 
     @property
@@ -239,14 +239,14 @@ class EquipmentSeized(models.Model):
         return '{0.equipment}: count of {0.quantity}'.format(self)
 
 
-class EquipmentBroken(models.Model):
+class EquipmentBroken(Orderable):
     incident = ParentalKey(
         'incident.IncidentPage',
         related_name='equipment_broken',
     )
     equipment = ParentalKey(
         'incident.Equipment',
-        verbose_name='Equipment Broken',
+        verbose_name='Equipment',
     )
     quantity = models.PositiveSmallIntegerField(default=1)
     _autocomplete_model = 'incident.Equipment'
@@ -256,7 +256,7 @@ class EquipmentBroken(models.Model):
         FieldPanel('quantity'),
     ]
 
-    class Meta:
+    class Meta(Orderable.Meta):
         verbose_name = 'Equipment Broken'
 
     @property

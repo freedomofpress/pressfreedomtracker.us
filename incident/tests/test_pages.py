@@ -1370,6 +1370,21 @@ class TestTopicPage(WagtailPageTestCase):
             [incident2, incident1]
         )
 
+    def test_topic_page_photo_attribution(self):
+        topic_page = TopicPageFactory(
+            parent=self.home_page,
+            incident_index_page=self.index_page,
+        )
+
+        topic_page.photo = CustomImageFactory()
+        topic_page.save()
+        response = self.client.get(topic_page.url)
+        self.assertContains(
+            response,
+            f'<span class="media-attribution"> — {topic_page.photo.attribution}</span>',
+            html=True,
+        )
+
 
 class IncidentPageQueriesTest(TestCase):
     @classmethod

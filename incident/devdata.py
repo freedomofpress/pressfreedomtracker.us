@@ -410,7 +410,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             status_of_seized_equipment=factory.Iterator(
                 choices.STATUS_OF_SEIZED_EQUIPMENT, getter=lambda c: c[0]),
             is_search_warrant_obtained=factory.Faker('boolean'),
-            actor=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
             equip_search=RelatedFactory(EquipmentSeizedFactory, 'incident'),
         )
         border_stop = factory.Trait(
@@ -469,6 +468,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         )
         equipment_damage = Trait(
             equip_damage=RelatedFactory(EquipmentBrokenFactory, 'incident'),
+            actor=factory.Iterator(choices.ACTORS, getter=itemgetter(0)),
         )
         chilling_statement = Trait()
         other_incident = Trait()

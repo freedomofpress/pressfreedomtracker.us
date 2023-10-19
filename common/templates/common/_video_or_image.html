@@ -19,15 +19,16 @@
 				{% elif image %}
 					{% image image width-910 alt=image.attribution|default:image.title %}
 				{% endif %}
-				{% if caption or image.attribution %}
-						<figcaption class="media-caption">
-				<div class="rich-text">{{ caption|richtext }}</div>
-				{% if image.attribution %}
-					<span
-						class="media-attribution"
-					> — {{ image.attribution }}</span>
-				{% endif %}
-			</figcaption>
+				{% firstof image.attribution image.0.value.attribution as attribution %}
+				{% if caption or attribution %}
+					<figcaption class="media-caption">
+						<div class="rich-text">{{ caption|richtext }}</div>
+						{% if attribution %}
+							<span
+								class="media-attribution"
+							> — {{ attribution }}</span>
+						{% endif %}
+					</figcaption>
 				{% endif %}
 		</figure>
 {% endif %}
