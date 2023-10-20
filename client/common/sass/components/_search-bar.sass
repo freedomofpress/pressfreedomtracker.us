@@ -22,6 +22,7 @@
 	border: 3px solid $black
 	border-top: none
 	padding: 12px 0
+	z-index: 20000
 
 	&--header
 		padding: 0 23px
@@ -31,6 +32,48 @@
 
 	&--category
 		padding: 4px 23px
+		display: block
+		width: 100%
+		text-align: left
+		background: none
+		border: none
+		cursor: pointer
 
 		&:hover
 			background-color: $accent-color
+
+		&--tag-hash
+			display: inline-block
+			padding: 4px
+			margin-right: 8px
+			background-color: black
+			color: $tag-inactive
+
+.search-tag-pill
+	position: absolute
+	top: 3px
+	bottom: 3px
+	left: 20px
+	display: flex
+	align-items: center
+	background-color: $white
+	font-weight: bold
+
+	&--tag-hash
+		color: $gray-text
+		font-weight: normal
+		margin-right: 4px
+		display: inline-block
+
+	&--close
+		border: none
+		background-color: transparent
+		cursor: pointer
+
+		&--icon
+			display: block
+			width: 8px
+			height: 8px
+			background-image: url(../icons/cross.svg)
+			background-size: contain
+
