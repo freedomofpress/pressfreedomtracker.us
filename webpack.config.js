@@ -22,6 +22,7 @@ var common = {
 		charts: __dirname + '/client/charts/js/index.js',
 		filterSidebar: __dirname + '/client/charts/js/filter-sidebar.js',
 		filterSummary: __dirname + '/client/charts/js/filter-summary.js',
+		searchBar: __dirname + '/client/common/js/search-bar.js',
 		verticalBarChart: __dirname + '/client/charts/js/vertical-bar-chart.js',
 		treeMapChart: __dirname + '/client/charts/js/tree-map-chart.js',
 		bubbleMapChart: __dirname + '/client/charts/js/bubble-map-chart.js',

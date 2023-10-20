@@ -1,12 +1,36 @@
 .search-form
 	position: relative
 
+.text-field--search-bar.smart-search-active
+	outline: none
+
 .search-button
 	position: absolute
-	height: calc(100% - 4px)	//border-width for incident is 2px. So subtract 4px from height
-	right: 2px
-	top: 2px
+	height: calc(100% - 6px)	//border-width for incident is 3px. So subtract 6px from height
+	right: 3px
+	top: 3px
 	border: 0
 	margin: 0
 	font-weight: 500
 	background-color: $white
+
+.search-dropdown
+	position: absolute
+	left: 0
+	right: 0
+	background-color: $white
+	border: 3px solid $black
+	border-top: none
+	padding: 12px 0
+
+	&--header
+		padding: 0 23px
+		color: $gray-text
+		font-size: 12px
+		margin-bottom: 6px
+
+	&--category
+		padding: 4px 23px
+
+		&:hover
+			background-color: $accent-color

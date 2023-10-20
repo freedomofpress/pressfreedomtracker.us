@@ -9,7 +9,7 @@ import {
 	filterDatasetByFiltersApplied,
 } from '../lib/utilities.js'
 
-function chooseMostFrequentTags(dataset, numberOfTags) {
+export function chooseMostFrequentTags(dataset, numberOfTags) {
 	const tags = dataset.map((d) => d.tags).filter((d) => d !== null)
 
 	// Any incident having multiple tags is counted once per category
