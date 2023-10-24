@@ -77,6 +77,12 @@ services:
         published: *chart-port
     working_dir: /django/chart_pregenerator
     user: ${UID:?err}
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/"]
+      start_period: 10s
+      interval: 30s
+      timeout: 20s
+      retries: 4
     networks:
       app:
         aliases:
@@ -95,6 +101,8 @@ services:
       node:
         condition: service_healthy
       postgresql:
+        condition: service_healthy
+      node-chart-pregenerator:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8000/health/ok/?monitor"]

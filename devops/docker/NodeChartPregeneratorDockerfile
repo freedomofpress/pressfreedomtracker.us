@@ -5,7 +5,7 @@ ARG NPM_VER=10.2.0
 # Upgrade npm to specified version
 RUN npm install npm@${NPM_VER} --location=global
 
-RUN apk add --no-cache paxctl python3 make g++
+RUN apk add --no-cache paxctl python3 make g++ curl
 RUN paxctl -cm /usr/local/bin/node
 
 # Install fonts
