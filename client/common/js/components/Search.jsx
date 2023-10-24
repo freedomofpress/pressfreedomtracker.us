@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/label-has-associated-control, no-case-declarations */
 import React, { useState } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
@@ -24,6 +24,28 @@ export default function Search({ data = [] }) {
 		setSearchText(text)
 	}
 
+	const handleArrowKeys = (event) => {
+		const currentId = event.target.id
+		switch (event.keyCode) {
+		case 38: // up
+			// select prev tag
+			const allTags = [...document.querySelectorAll('.search-dropdown--tag')].reverse()
+			const currentTagIndex = allTags.findIndex((tagEl) => tagEl.id === currentId)
+			if (allTags[currentTagIndex + 1]) allTags[currentTagIndex + 1].focus()
+			event.preventDefault()
+			break
+		case 40: // down
+			// select next tag
+			const nextEl = document.querySelector(
+				`#${currentId} ~ .search-dropdown--tag, #${currentId} ~ .search-dropdown .search-dropdown--tag`,
+			)
+			if (nextEl) nextEl.focus()
+			event.preventDefault()
+			break
+		default:
+		}
+	}
+
 	const handleSubmit = (event) => {
 		event.preventDefault()
 		if (searchText) {
@@ -35,7 +57,16 @@ export default function Search({ data = [] }) {
 
 	// The base markup is the same as incidents/templates/incident/_search_bar.html
 	return (
-		<form className="search-form" onSubmit={handleSubmit}>
+		<form
+			className="search-form"
+			onSubmit={handleSubmit}
+			onFocus={() => setSearchActive(true)}
+			onBlur={(e) => {
+				if (!e.currentTarget.contains(e.relatedTarget)) {
+					setSearchActive(false)
+				}
+			}}
+		>
 			<label htmlFor="primary-search-bar" className="sr-only">
 				Search incidents by text
 			</label>
@@ -48,8 +79,7 @@ export default function Search({ data = [] }) {
 				className={classNames('text-field--search-bar', searchActive && 'smart-search-active')}
 				name="search"
 				value={searchText}
-				onFocus={() => setSearchActive(true)}
-				onBlur={() => setTimeout(() => setSearchActive(false), 200)}
+				onKeyDown={handleArrowKeys}
 				onChange={(e) => updateSearchText(e.target.value)}
 			/>
 			<button type="submit" className="btn btn-ghost search-button" value="Search">
@@ -59,14 +89,17 @@ export default function Search({ data = [] }) {
 			{searchActive && !selectedTag && !searchText && !!frequentTags.length && (
 				<div className="search-dropdown">
 					<div className="search-dropdown--header">Trending Topics</div>
-					{frequentTags.map((tag) => (
+					{frequentTags.map((tag, i) => (
 						<button
 							type="button"
+							id={`smart-search-form-${i}`}
 							key={tag}
-							className="search-dropdown--category"
+							className="search-dropdown--tag"
 							onClick={() => updateSelectedTag(tag)}
+							onKeyDown={handleArrowKeys}
+							tabIndex="0"
 						>
-							<span className="search-dropdown--category--tag-hash">#</span>
+							<span className="search-dropdown--tag--hash">#</span>
 							{tag}
 						</button>
 					))}

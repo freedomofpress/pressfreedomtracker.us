@@ -31,7 +31,7 @@
 		font-size: 12px
 		margin-bottom: 6px
 
-	&--category
+	&--tag
 		padding: 4px 23px
 		display: block
 		width: 100%
@@ -40,10 +40,11 @@
 		border: 0
 		cursor: pointer
 
-		&:hover
+		&:hover, &:focus
 			background-color: $accent-color
+			outline: none
 
-		&--tag-hash
+		&--hash
 			display: inline-block
 			padding: 4px
 			margin-right: 8px
