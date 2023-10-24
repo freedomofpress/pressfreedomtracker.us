@@ -37,6 +37,9 @@ class TestVerticalBarChartValue(TestCase):
             'filterCategories': [self.category.title],
             'dateRange': ['2022-01-01', '2023-01-01'],
             'timePeriod': 'months',
+            'branchFieldName': None,
+            'branches': None,
+            'groupByTag': None,
         }
 
         self.snapshot_png = ChartSnapshotFactory(
