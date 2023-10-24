@@ -50,7 +50,7 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
             'filterCategories': [self.category.title],
             'dateRange': ['2022-01-01', '2023-01-01'],
             'branches': self.tree_map_chart_value.branches(),
-            'branch_field_name': self.tree_map_chart_value.branch_field_name(),
+            'branchFieldName': self.tree_map_chart_value.branch_field_name(),
         }
         self.snapshot_svg = ChartSnapshot.objects.create(
             chart_type=ChartType.TREEMAP,
