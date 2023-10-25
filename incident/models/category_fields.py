@@ -32,6 +32,7 @@ from incident.utils.category_field_values import (
     legal_orders_html_val,
     legal_order_target_html_val,
     legal_order_venue_html_val,
+    type_of_denial_html_val,
 )
 
 CATEGORY_FIELD_MAP = {
@@ -79,6 +80,7 @@ CATEGORY_FIELD_MAP = {
     ],
     'denial-access': [
         ('politicians_or_public_figures_involved', 'Government agency or public official involved'),
+        ('type_of_denial', 'Type of denial'),
     ],
 }
 
@@ -113,6 +115,7 @@ CAT_FIELD_VALUES = {
     'legal_order_type': legal_order_type_html_val,
     'status_of_prior_restraint': status_of_prior_restraint_html_val,
     'politicians_or_public_figures_involved': politicians_or_public_figures_involved_html_val,
+    'type_of_denial': type_of_denial_html_val,
     'legal_orders': legal_orders_html_val,
     'legal_order_target': legal_order_target_html_val,
     'legal_order_venue': legal_order_venue_html_val,

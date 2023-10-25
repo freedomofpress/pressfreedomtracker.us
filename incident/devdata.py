@@ -457,6 +457,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         )
         denial_of_access = factory.Trait(
             politicians_or_public_figures_involved=random.randint(1, 4),
+            type_of_denial=factory.LazyFunction(
+                lambda: random_choice_list(choices.TypeOfDenial.choices)
+            ),
         )
         equipment_damage = Trait(
             equip_damage=RelatedFactory(EquipmentBrokenFactory, 'incident'),

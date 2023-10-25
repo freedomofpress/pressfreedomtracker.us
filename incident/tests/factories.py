@@ -282,6 +282,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         )
         denial_of_access = factory.Trait(
             politicians_or_public_figures_involved=1,
+            type_of_denial=[choices.TypeOfDenial.OTHER],
         )
         equipment_damage = Trait(
             equip_damage=RelatedFactory(EquipmentBrokenFactory, 'incident'),
