@@ -8,15 +8,15 @@ import TreeMap from '../client/charts/js/components/TreeMap'
 import TreeMapMini from '../client/charts/js/components/TreeMapMini'
 import USMap from '../client/charts/js/components/USMap'
 import { processIncidentsTimeData } from '../client/charts/js/components/IncidentsTimeBarChart'
-import { filterDatasets } from '../client/charts/js/lib/utilities'
-import { categoriesColors } from '../client/charts/js/lib/utilities'
+import {
+	filterDatasets, categoriesColors, groupByCity, groupByState,
+} from '../client/charts/js/lib/utilities'
 import { loadData } from '../client/charts/js/components/DataLoader'
-import { groupByCity, groupByState } from "../client/charts/js/lib/utilities"
 
 const FPF_BASE_URL = `http://${process.env.DJANGO_HOST || 'localhost'}:8000`
 
-const chart_height = 800
-const chart_width = 1190
+const chartHeight = 800
+const chartWidth = 1190
 
 const generateFallbackSVG = (width, height) => `
 	<svg
@@ -26,7 +26,7 @@ const generateFallbackSVG = (width, height) => `
 		width="${width}"
 		height="${height}"
 	/>
-`;
+`
 
 export const generateBarChartSVG = async (req) => {
 	let options = {
@@ -36,16 +36,16 @@ export const generateBarChartSVG = async (req) => {
 		branchFieldName: null,
 		branches: null,
 		groupByTag: false,
-		timePeriod: "months",
-		width: chart_width,
-		height: chart_height,
+		timePeriod: 'months',
+		width: chartWidth,
+		height: chartHeight,
 		mini: false,
 	}
 
-	try { options = {...options, ...JSON.parse(req?.query?.options || "{}")} }
-	catch (e) { console.error(e) }
+	try { options = { ...options, ...JSON.parse(req?.query?.options || '{}') } } catch (e) { console.error(e) }
 
-	let dataset, branches
+	let dataset; let
+		branches
 
 	try {
 		const dataKey = ['dataset']
@@ -54,34 +54,47 @@ export const generateBarChartSVG = async (req) => {
 
 		if (options.branches && options.branches.type === 'url') {
 			dataUrl.push(`${FPF_BASE_URL}${options.branches.value}`)
-			dataKey.push("branches")
+			dataKey.push('branches')
 			dataParser.push(JSON.parse)
 		}
-		({ dataset, branches } = await loadData({ dataUrl, dataKey, dataParser, fetchFn: fetch }))
+		({ dataset, branches } = await loadData({
+			dataUrl, dataKey, dataParser, fetchFn: fetch,
+		}))
 		branches = branches || options.branches?.value
 	}	catch (e) { console.error(e) }
 
-	if (!dataset) return generateFallbackSVG(options.width, options.height);
+	if (!dataset) return generateFallbackSVG(options.width, options.height)
 
 	try {
 		// Filter down to the categories and tags and date range we want
-		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
+		const filteredDataset = filterDatasets(
+			dataset,
+			options.filterCategories,
+			options.filterTags,
+			options.dateRange,
+		)
 
 		// if branchFieldName is set but branches is undefined, that means we are filtering a tag
 		const tagBranches = (options.groupByTag)
-			&& [{ title: options.groupByTag }, { title: `not ${options.groupByTag}` }];
+			&& [{ title: options.groupByTag }, { title: `not ${options.groupByTag}` }]
 
 		const { incidentsByAllTime, xFormat } = processIncidentsTimeData(
-			filteredDataset, options.timePeriod, options.branchFieldName, options.groupByTag
-		);
+			filteredDataset,
+			options.timePeriod,
+			options.branchFieldName,
+			options.groupByTag,
+		)
 		const categoriesColorMap = (tagBranches || branches)
-			? [...(new Set([...(tagBranches || branches).map(d => d.title)]))]
+			? [...(new Set([...(tagBranches || branches).map((d) => d.title)]))]
 				.reduce(
-					(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
-					{}
+					(acc, category, i) => ({
+						...acc,
+						[category]: categoriesColors[i % categoriesColors.length],
+					}),
+					{},
 				) : undefined
 
-		const Chart = options.mini ? BarChartMini : BarChart;
+		const Chart = options.mini ? BarChartMini : BarChart
 
 		return ReactDOMServer.renderToString(
 			<svg
@@ -91,7 +104,7 @@ export const generateBarChartSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
-				style={{ fontFamily: "Arial, sans-serif" }}
+				style={{ fontFamily: 'Arial, sans-serif' }}
 			>
 				<Chart
 					data={incidentsByAllTime}
@@ -99,19 +112,19 @@ export const generateBarChartSVG = async (req) => {
 					categoriesColors={categoriesColorMap}
 					allCategories={categoriesColorMap ? Object.keys(categoriesColorMap) : undefined}
 					x={options.mini ? 'count' : 'date'}
-					y={'count'}
+					y="count"
 					xFormat={xFormat}
-					titleLabel={'incidents'}
+					titleLabel="incidents"
 					width={options.width}
 					height={options.height}
-					disableAnimation={true}
+					disableAnimation
 					isMobileView={false}
 				/>
-			</svg>
+			</svg>,
 		)
 	} catch (e) {
-		console.error(e);
-		return generateFallbackSVG(options.width, options.height);
+		console.error(e)
+		return generateFallbackSVG(options.width, options.height)
 	}
 }
 
@@ -121,16 +134,16 @@ export const generateTreemapChartSVG = async (req) => {
 		filterCategories: [],
 		dateRange: [null, null],
 		branchFieldName: 'categories',
-		branches: { type: "url", value: "/api/edge/categories/" },
-		width: chart_width,
-		height: chart_height,
+		branches: { type: 'url', value: '/api/edge/categories/' },
+		width: chartWidth,
+		height: chartHeight,
 		mini: false,
 	}
 
-	try { options = {...options, ...JSON.parse(req?.query?.options || "{}")} }
-	catch (e) { console.error(e) }
+	try { options = { ...options, ...JSON.parse(req?.query?.options || '{}') } } catch (e) { console.error(e) }
 
-	let dataset, branches
+	let dataset; let
+		branches
 
 	try {
 		const dataKey = ['dataset']
@@ -139,25 +152,35 @@ export const generateTreemapChartSVG = async (req) => {
 
 		if (options.branches && options.branches.type === 'url') {
 			dataUrl.push(`${FPF_BASE_URL}${options.branches.value}`)
-			dataKey.push("branches")
+			dataKey.push('branches')
 			dataParser.push(JSON.parse)
 		}
-		({ dataset, branches } = await loadData({ dataUrl, dataKey, dataParser, fetchFn: fetch }))
+		({ dataset, branches } = await loadData({
+			dataUrl, dataKey, dataParser, fetchFn: fetch,
+		}))
 		branches = branches || options.branches?.value
 	} catch (e) { console.error(e) }
 
-	if (!dataset) return generateFallbackSVG(options.width, options.height);
+	if (!dataset) return generateFallbackSVG(options.width, options.height)
 
 	try {
 		// Filter down to the categories and tags and date range we want
-		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
-		const categoriesColorMap = branches ? [...(new Set([...branches.map(d => d.title)]))]
+		const filteredDataset = filterDatasets(
+			dataset,
+			options.filterCategories,
+			options.filterTags,
+			options.dateRange,
+		)
+		const categoriesColorMap = branches ? [...(new Set([...branches.map((d) => d.title)]))]
 			.reduce(
-				(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
-				{}
+				(acc, category, i) => ({
+					...acc,
+					[category]: categoriesColors[i % categoriesColors.length],
+				}),
+				{},
 			) : {}
 
-		const Chart = options.mini ? TreeMapMini : TreeMap;
+		const Chart = options.mini ? TreeMapMini : TreeMap
 
 		return ReactDOMServer.renderToString(
 			<svg
@@ -167,7 +190,7 @@ export const generateTreemapChartSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
-				style={{ fontFamily: "Arial, sans-serif" }}
+				style={{ fontFamily: 'Arial, sans-serif' }}
 			>
 				<Chart
 					data={filteredDataset}
@@ -177,14 +200,14 @@ export const generateTreemapChartSVG = async (req) => {
 					categoriesColors={categoriesColorMap}
 					allCategories={Object.keys(categoriesColorMap)}
 					minimumBarHeight={35}
-					disableAnimation={true}
+					disableAnimation
 					interactive={false}
 				/>
-			</svg>
+			</svg>,
 		)
 	} catch (e) {
-		console.error(e);
-		return generateFallbackSVG(options.width, options.height);
+		console.error(e)
+		return generateFallbackSVG(options.width, options.height)
 	}
 }
 
@@ -194,12 +217,11 @@ export const generateUSMapSVG = async (req) => {
 		filterCategories: [],
 		dateRange: [null, null],
 		aggregationLocality: 'state',
-		width: chart_width,
-		height: chart_height,
+		width: chartWidth,
+		height: chartHeight,
 	}
 
-	try { options = {...options, ...JSON.parse(req?.query?.options || "{}")} }
-	catch (e) { console.error(e) }
+	try { options = { ...options, ...JSON.parse(req?.query?.options || '{}') } } catch (e) { console.error(e) }
 
 	let dataset
 
@@ -208,25 +230,31 @@ export const generateUSMapSVG = async (req) => {
 			dataUrl: `${FPF_BASE_URL}/api/edge/incidents/homepage_csv/?`,
 			dataKey: 'dataset',
 			dataParser: (data) => d3.csvParse(data, d3.autoType),
-			fetchFn: fetch
+			fetchFn: fetch,
 		}))
 	} catch (e) { console.error(e) }
 
-	if (!dataset) return generateFallbackSVG(options.width, options.height);
+	if (!dataset) return generateFallbackSVG(options.width, options.height)
 
 	try {
 		const aggregationLocalityMap = {
 			state: groupByState,
-			city: groupByCity
+			city: groupByCity,
 		}
 		const aggregationLocalityFnMap = {
-			state: d => d.state,
-			city: d => `${d.city}, ${d.state}`
+			state: (d) => d.state,
+			city: (d) => `${d.city}, ${d.state}`,
 		}
 
 		// Filter down to the categories and tags and date range we want
-		const filteredDataset = filterDatasets(dataset, options.filterCategories, options.filterTags, options.dateRange)
-		const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[options.aggregationLocality](filteredDataset)
+		const filteredDataset = filterDatasets(
+			dataset,
+			options.filterCategories,
+			options.filterTags,
+			options.dateRange,
+		)
+		const datasetAggregatedByGeo = filteredDataset
+			&& aggregationLocalityMap[options.aggregationLocality](filteredDataset)
 
 		return ReactDOMServer.renderToString(
 			<svg
@@ -236,19 +264,19 @@ export const generateUSMapSVG = async (req) => {
 				width={options.width}
 				height={options.height}
 				viewBox={`0 0 ${options.width} ${options.height}`}
-				style={{ fontFamily: "Arial, sans-serif" }}
+				style={{ fontFamily: 'Arial, sans-serif' }}
 			>
 				<USMap
 					data={datasetAggregatedByGeo}
 					aggregationLocality={aggregationLocalityFnMap[options.aggregationLocality]}
 					width={options.width}
 					height={options.height}
-					disableAnimation={true}
+					disableAnimation
 				/>
-			</svg>
+			</svg>,
 		)
 	} catch (e) {
-		console.error(e);
-		return generateFallbackSVG(options.width, options.height);
+		console.error(e)
+		return generateFallbackSVG(options.width, options.height)
 	}
 }

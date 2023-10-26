@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/bar-chart.svg', async (req, res) => {
-	const component = await generateBarChartSVG(req);
+	const component = await generateBarChartSVG(req)
 
 	res.setHeader('Content-Type', 'image/svg+xml')
 	return res.send(component)

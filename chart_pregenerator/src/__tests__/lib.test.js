@@ -1,7 +1,8 @@
-import 'node-fetch';
+/* eslint-disable no-undef */
+import 'node-fetch'
 import { generateBarChartSVG, generateTreemapChartSVG, generateUSMapSVG } from '../lib'
 
-const test_csv = `date,assailant,tags,categories
+const testCsv = `date,assailant,tags,categories
 2023-07-15,,"platypus, storks, tarsier","Arrest / Criminal Charge, Border Stop, Leak Case"
 2023-07-13,politician,"squids, storks, tarsier","Assault, Border Stop, Leak Case"
 2023-07-13,private individual,"mongoose, opossom, oysters","Assault, Equipment Damage, Equipment Search or Seizure"
@@ -20,9 +21,9 @@ const test_csv = `date,assailant,tags,categories
 2023-07-07,,"Important Animals, kangaroo, mongoose, rabbits","Equipment Damage, Equipment Search or Seizure, Prior Restraint"
 2023-07-06,,"aphids, shrews, tarsier","Leak Case, Other Incident, Prior Restraint"
 2023-07-05,,"civet, flamingoes","Border Stop, Equipment Damage"
-2023-07-04,unknown,"octopuses, orchid, tarsier","Assault, Leak Case, Subpoena / Legal Order"`;
+2023-07-04,unknown,"octopuses, orchid, tarsier","Assault, Leak Case, Subpoena / Legal Order"`
 
-const test_categories = `[
+const testCategories = `[
     {
         "id": 4,
         "title": "Arrest / Criminal Charge",
@@ -47,22 +48,25 @@ const test_categories = `[
         "slug": "denial-access",
         "url": "http://localhost:8000/denial-access/"
     }
-]`;
+]`
 
-jest.mock('node-fetch', () => jest.fn((path) => Promise.resolve({ text: () => {
-	if (path === "http://app:8000/api/edge/categories/")
-		return Promise.resolve(test_categories)
-	return Promise.resolve(test_csv)
-}})));
+jest.mock('node-fetch', () => jest.fn((path) => Promise.resolve({
+	text: () => {
+		if (path === 'http://app:8000/api/edge/categories/') return Promise.resolve(testCategories)
+		return Promise.resolve(testCsv)
+	},
+})))
 
 test('renders Bar Chart with dummy data', async () => {
 	expect(await generateBarChartSVG()).toMatchSnapshot()
 })
 
 test('renders Stacked Bar Chart with dummy data', async () => {
-	expect(await generateBarChartSVG({ query: {
-		options: JSON.stringify({"branchFieldName":"assailant","branches":{"type":"list","value":[{"title":"unknown","value":"UNKNOWN"},{"title":"law enforcement","value":"LAW_ENFORCEMENT"},{"title":"private security","value":"PRIVATE_SECURITY"},{"title":"politician","value":"POLITICIAN"},{"title":"public figure","value":"PUBLIC_FIGURE"},{"title":"private individual","value":"PRIVATE_INDIVIDUAL"}]}})
-	}})).toMatchSnapshot()
+	expect(await generateBarChartSVG({
+		query: {
+			options: JSON.stringify({ branchFieldName: 'assailant', branches: { type: 'list', value: [{ title: 'unknown', value: 'UNKNOWN' }, { title: 'law enforcement', value: 'LAW_ENFORCEMENT' }, { title: 'private security', value: 'PRIVATE_SECURITY' }, { title: 'politician', value: 'POLITICIAN' }, { title: 'public figure', value: 'PUBLIC_FIGURE' }, { title: 'private individual', value: 'PRIVATE_INDIVIDUAL' }] } }),
+		},
+	})).toMatchSnapshot()
 })
 
 test('renders Treemap Chart with dummy data', async () => {
@@ -70,9 +74,11 @@ test('renders Treemap Chart with dummy data', async () => {
 })
 
 test('renders grouped Treemap Chart with dummy data', async () => {
-	expect(await generateTreemapChartSVG({ query: {
-			options: JSON.stringify({"branchFieldName":"assailant","branches":{"type":"list","value":[{"title":"unknown","value":"UNKNOWN"},{"title":"law enforcement","value":"LAW_ENFORCEMENT"},{"title":"private security","value":"PRIVATE_SECURITY"},{"title":"politician","value":"POLITICIAN"},{"title":"public figure","value":"PUBLIC_FIGURE"},{"title":"private individual","value":"PRIVATE_INDIVIDUAL"}]}})
-		}})).toMatchSnapshot()
+	expect(await generateTreemapChartSVG({
+		query: {
+			options: JSON.stringify({ branchFieldName: 'assailant', branches: { type: 'list', value: [{ title: 'unknown', value: 'UNKNOWN' }, { title: 'law enforcement', value: 'LAW_ENFORCEMENT' }, { title: 'private security', value: 'PRIVATE_SECURITY' }, { title: 'politician', value: 'POLITICIAN' }, { title: 'public figure', value: 'PUBLIC_FIGURE' }, { title: 'private individual', value: 'PRIVATE_INDIVIDUAL' }] } }),
+		},
+	})).toMatchSnapshot()
 })
 
 test('renders Bubble Map with dummy data', async () => {
