@@ -49,7 +49,7 @@ CATEGORY_FIELD_MAP = {
     ],
     'equipment-damage': [
         ('equipment_broken', 'Equipment Broken'),
-        ('actor', 'Actor who seized equipment'),
+        ('actor', 'Actor'),
     ],
     'equipment-search-seizure-or-damage': [
         ('equipment_seized', 'Equipment Seized'),
