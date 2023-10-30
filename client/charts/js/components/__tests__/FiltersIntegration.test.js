@@ -182,11 +182,6 @@ test('renders FiltersIntegration with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"stopped_at_border": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"stopped_previously": {
 					"enabled": false,
 					"type": "string",
@@ -212,22 +207,7 @@ test('renders FiltersIntegration with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"did_authorities_ask_for_social_media_user": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
-				"did_authorities_ask_for_social_media_pass": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"did_authorities_ask_about_work": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
-				"were_devices_searched_or_seized": {
 					"enabled": false,
 					"type": "string",
 					"parameters": null
@@ -670,11 +650,6 @@ test('renders FiltersIntegration with mocked data', () => {
 							"name": "border_point"
 						},
 						{
-							"title": "Stopped at border?",
-							"type": "bool",
-							"name": "stopped_at_border"
-						},
-						{
 							"title": "Stopped previously?",
 							"type": "bool",
 							"name": "stopped_previously"
@@ -730,25 +705,10 @@ test('renders FiltersIntegration with mocked data', () => {
 							"name": "did_authorities_ask_for_device_access"
 						},
 						{
-							"title": "Did authorities ask for social media username?",
-							"type": "radio",
-							"name": "did_authorities_ask_for_social_media_user"
-						},
-						{
-							"title": "Did authorities ask for social media password?",
-							"type": "radio",
-							"name": "did_authorities_ask_for_social_media_pass"
-						},
-						{
 							"title": "Did authorities ask intrusive questions about journalist's work?",
 							"type": "radio",
 							"name": "did_authorities_ask_about_work"
 						},
-						{
-							"title": "Were devices searched or seized?",
-							"type": "radio",
-							"name": "were_devices_searched_or_seized"
-						}
 					]
 				},
 				{

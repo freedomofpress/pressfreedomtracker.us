@@ -134,12 +134,12 @@ class URLizeFilterTest(TestCase):
         )
 
     def test_choice_field(self):
-        field = IncidentPage._meta.get_field('were_devices_searched_or_seized')
+        field = IncidentPage._meta.get_field('did_authorities_ask_about_work')
         filter_ = IncidentFilter._get_filter(field)
 
         self.assertEqual(
             filter_.as_url_parameters(['JUST_TRUE']),
-            {'were_devices_searched_or_seized': 'JUST_TRUE'}
+            {'did_authorities_ask_about_work': 'JUST_TRUE'}
         )
 
     def test_multichoice_field(self):
