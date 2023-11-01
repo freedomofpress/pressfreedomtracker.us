@@ -96,8 +96,7 @@ class TestPages(TestCase):
             .get('url'),
         )
 
-        expected_chart_thumbnail = self.blog_page2.teaser_graphic[0].value.\
-            png_snapshot_mini().get_rendition("original").url
+        expected_chart_thumbnail = self.blog_page2.teaser_graphic[0].value.svg_snapshot_mini_datauri()
         self.assertIn(
             expected_chart_thumbnail,
             getattr(

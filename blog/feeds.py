@@ -1,5 +1,5 @@
 from urllib.parse import urljoin
-
+from collections import namedtuple
 from django.core.paginator import Paginator
 from django.contrib.syndication.views import Feed
 
@@ -26,7 +26,12 @@ class BlogIndexPageFeed(Feed):
                 "tree_map_chart",
                 "bubble_map_chart",
             ):
-                return teaser_block.value.png_snapshot_mini().get_rendition('original')
+                teaser_svg = namedtuple('teaser_svg', 'url width height')
+                return teaser_svg(
+                    url=teaser_block.value.svg_snapshot_mini_datauri(),
+                    width=655,
+                    height=440,
+                )
         except IndexError:
             pass
 
@@ -105,7 +110,7 @@ class BlogIndexPageFeed(Feed):
         if image:
             return {
                 'teaser_image': {
-                    'url': self._get_complete_url(image.url),
+                    'url': image.url,
                     'width': image.width,
                     'height': image.height,
                 }
