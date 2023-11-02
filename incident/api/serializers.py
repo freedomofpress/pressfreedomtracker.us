@@ -163,16 +163,12 @@ class BaseIncidentSerializer(VariableFieldSerializer):
     is_search_warrant_obtained = serializers.BooleanField()
     actor = serializers.CharField(source='get_actor_display')
     border_point = serializers.CharField()
-    stopped_at_border = serializers.BooleanField()
     target_us_citizenship_status = serializers.CharField(source='get_target_us_citizenship_status_display')
     denial_of_entry = serializers.BooleanField()
     stopped_previously = serializers.BooleanField()
 
     did_authorities_ask_for_device_access = serializers.CharField(source='get_did_authorities_ask_for_device_access_display')
-    did_authorities_ask_for_social_media_user = serializers.CharField(source='get_did_authorities_ask_for_social_media_user_display')
-    did_authorities_ask_for_social_media_pass = serializers.CharField(source='get_did_authorities_ask_for_social_media_pass_display')
     did_authorities_ask_about_work = serializers.CharField(source='get_did_authorities_ask_about_work_display')
-    were_devices_searched_or_seized = serializers.CharField(source='get_were_devices_searched_or_seized_display')
     assailant = serializers.CharField(source='get_assailant_display')
     was_journalist_targeted = serializers.CharField(source='get_was_journalist_targeted_display')
 

@@ -308,11 +308,6 @@ test('renders FilterSet with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"stopped_at_border": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"stopped_previously": {
 					"enabled": false,
 					"type": "string",
@@ -338,22 +333,7 @@ test('renders FilterSet with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"did_authorities_ask_for_social_media_user": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
-				"did_authorities_ask_for_social_media_pass": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"did_authorities_ask_about_work": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
-				"were_devices_searched_or_seized": {
 					"enabled": false,
 					"type": "string",
 					"parameters": null
