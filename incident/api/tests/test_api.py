@@ -389,6 +389,7 @@ class IncidentAPITest(APITestCase):
             border_stop=True,
             assault=True,
             leak_case=True,
+            denial_of_access=True,
             workers_whose_communications_were_obtained=2,
             subpoena=True,
             prior_restraint=True,
@@ -485,7 +486,7 @@ class IncidentAPITest(APITestCase):
                 'current_charges': [str(e) for e in inc.current_charges.all()],
                 'dropped_charges': [str(e) for e in inc.dropped_charges.all()],
                 'politicians_or_public_figures_involved': [str(e) for e in inc.politicians_or_public_figures_involved.all()],
-
+                'type_of_denial': [choices.TypeOfDenial(e).label for e in inc.type_of_denial],
             }
         )
 

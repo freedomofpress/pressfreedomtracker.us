@@ -53,6 +53,7 @@ FILTER_CHOICES = [
     ('third_party_business', 'Third party business'),
     ('date', 'Took place'),
     ('case_type', 'Type of case'),
+    ('type_of_denial', 'Type of denial'),
     ('target_us_citizenship_status', 'US Citizenship Status'),
     ('unnecessary_use_of_force', 'Unnecessary use of force?'),
     ('recently_updated', 'Updated in the last'),
