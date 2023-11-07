@@ -233,6 +233,23 @@ def subpoena_statuses_html_val(page, field, index, category):
     return html
 
 
+def type_of_denial_html_val(page, field, index, category):
+    if not getattr(page, field, index):
+        return ''
+
+    html = []
+    for type_of_denial in getattr(page, field):
+        link = '{}?{}={}'.format(
+            index.get_url(),
+            field,
+            type_of_denial,
+        )
+        value = choices.TypeOfDenial(type_of_denial).label
+        html.append(f'<a href="{link}" class="text-link">{value}</a>')
+    html = ', '.join(html)
+    return html
+
+
 def name_of_business_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 

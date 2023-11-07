@@ -2005,6 +2005,11 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
+      "type_of_denial": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
       "unnecessary_use_of_force": {
         "enabled": false,
         "parameters": null,

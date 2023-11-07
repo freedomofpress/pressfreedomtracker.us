@@ -50,6 +50,13 @@ class LegalOrderVenue(TextChoices):
     FEDERAL = 'FEDERAL', 'Federal'
 
 
+class TypeOfDenial(TextChoices):
+    CHANGE_IN_POLICY = 'CHANGE_IN_POLICY', 'Change in policy or practice'
+    GOVERNMENT_EVENTS = 'GOVERNMENT_EVENTS', 'Government events'
+    PRESS_CREDENTIAL = 'PRESS_CREDENTIAL', 'Press credential or media list'
+    OTHER = 'OTHER', 'Other'
+
+
 MAYBE_BOOLEAN = [
     ('NOTHING', 'unknown'),
     ('JUST_TRUE', 'yes'),

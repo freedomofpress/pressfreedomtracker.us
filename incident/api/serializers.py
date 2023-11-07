@@ -227,6 +227,9 @@ class IncidentSerializer(BaseIncidentSerializer):
     subpoena_statuses = serializers.ListField(
         child=ChoiceField(choices.SUBPOENA_STATUS)
     )
+    type_of_denial = serializers.ListField(
+        child=ChoiceField(choices.TypeOfDenial.choices),
+    )
 
 
 class FlatIncidentSerializer(BaseIncidentSerializer):
@@ -253,6 +256,9 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
 
     subpoena_statuses = FlatListField(
         child=ChoiceField(choices.SUBPOENA_STATUS)
+    )
+    type_of_denial = FlatListField(
+        child=ChoiceField(choices.TypeOfDenial.choices)
     )
 
 

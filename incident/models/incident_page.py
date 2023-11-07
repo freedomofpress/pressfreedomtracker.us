@@ -805,6 +805,14 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='politicians_or_public_incidents',
         verbose_name='Government agency or public official involved',
     )
+    type_of_denial = ChoiceArrayField(
+        models.CharField(
+            max_length=255,
+            choices=choices.TypeOfDenial.choices,
+        ),
+        blank=True,
+        null=True,
+    )
 
     objects = IncidentPageManager()
 
@@ -890,6 +898,7 @@ class IncidentPage(MetadataPageMixin, Page):
             classname='collapsible collapsed',
             children=[
                 AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
+                FieldPanel('type_of_denial'),
             ]
         ),
 

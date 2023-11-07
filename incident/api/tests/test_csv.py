@@ -596,6 +596,7 @@ class IncidentCSVTestCase(TestCase):
             equipment_damage=True,
             arrest=True,
             border_stop=True,
+            denial_of_access=True,
             assault=True,
             leak_case=True,
             workers_whose_communications_were_obtained=2,
@@ -742,6 +743,7 @@ class IncidentCSVTestCase(TestCase):
                 'current_charges': ', '.join([str(e) for e in inc.current_charges.all()]),
                 'dropped_charges': ', '.join([str(e) for e in inc.dropped_charges.all()]),
                 'politicians_or_public_figures_involved': ', '.join([str(e) for e in inc.politicians_or_public_figures_involved.all()]),
+                'type_of_denial': ', '.join([choices.TypeOfDenial(e).label for e in inc.type_of_denial]),
             }
         )
 
@@ -813,6 +815,7 @@ class IncidentCSVTestCase(TestCase):
             'current_charges',
             'dropped_charges',
             'politicians_or_public_figures_involved',
+            'type_of_denial',
             'longitude',
             'latitude',
         }

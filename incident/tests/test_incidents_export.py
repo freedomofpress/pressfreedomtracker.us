@@ -112,6 +112,7 @@ class IncidentExportTestCase(TestCase):
             'target_nationality',
             'workers_whose_communications_were_obtained',
             'politicians_or_public_figures_involved',
+            'type_of_denial',
             'longitude',
             'latitude',
             'legal_orders',
