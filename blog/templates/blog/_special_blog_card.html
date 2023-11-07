@@ -1,8 +1,16 @@
 {% load wagtailcore_tags wagtailimages_tags wagtailimages_tags %}
 
-{% image post.teaser_image scale-100 as tmp_photo %}
 <article class="special-blog-card">
-	<img src="{{ tmp_photo.url }}" alt="{{ post.teaser_image.title }}" width="{{ tmp_photo.width }}" height="{{ tmp_photo.height }}">
+	{% if post.teaser_graphic.0.block_type == "vertical_bar_chart" %}
+		{% include 'common/blocks/vertical_bar_chart.html' with value=post.teaser_graphic.0.value static_graphic=true %}
+	{% elif post.teaser_graphic.0.block_type == "tree_map_chart" %}
+		{% include 'common/blocks/tree_map_chart.html' with value=post.teaser_graphic.0.value static_graphic=true %}
+	{% elif post.teaser_graphic.0.block_type == "bubble_map_chart" %}
+		{% include 'common/blocks/bubble_map_chart.html' with value=post.teaser_graphic.0.value static_graphic=true %}
+	{% else %}
+		{% image post.teaser_graphic.0.value scale-100 as tmp_photo %}
+		<img src="{{ tmp_photo.url }}" alt="{{ post.teaser_graphic.0.title }}" width="{{ tmp_photo.width }}" height="{{ tmp_photo.height }}">
+	{% endif %}
 	<div class="special-blog-card__info">
 		<a class="text-link text-link--card" href="{% pageurl post %}">
 			<h2 class="special-blog-card__title">{{ post.title }}</h2>
