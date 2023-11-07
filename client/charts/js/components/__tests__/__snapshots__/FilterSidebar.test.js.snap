@@ -1912,6 +1912,11 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
+      "mistakenly_released_materials": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
       "politicians_or_public_figures_involved": {
         "enabled": false,
         "parameters": null,

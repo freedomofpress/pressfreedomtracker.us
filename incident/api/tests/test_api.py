@@ -480,6 +480,7 @@ class IncidentAPITest(APITestCase):
                 'legal_order_type': inc.get_legal_order_type_display(),
                 'legal_order_venue': inc.get_legal_order_venue_display(),
                 'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),
+                'mistakenly_released_materials': inc.mistakenly_released_materials,
                 'targeted_journalists': [e.summary for e in inc.targeted_journalists.all()],
                 'targeted_institutions': [str(e) for e in inc.targeted_institutions.all()],
                 'tags': [str(e) for e in inc.tags.all()],

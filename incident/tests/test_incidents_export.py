@@ -105,6 +105,7 @@ class IncidentExportTestCase(TestCase):
             'third_party_business',
             'legal_order_type',
             'status_of_prior_restraint',
+            'mistakenly_released_materials',
             'targeted_journalists',
             'targeted_institutions',
             'tags',
