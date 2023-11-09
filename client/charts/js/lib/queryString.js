@@ -111,6 +111,7 @@ const queryFields = {
 	legal_order_status: parseString,
 	legal_order_information_requested: parseString,
 	third_party_in_possession_of_communications: parseString,
+	type_of_denial: parseString,
 
 	tags: parseStringSet,
 	categories: parseCategories,
