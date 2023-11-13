@@ -1,6 +1,6 @@
 bleach>=4.1.0
 beautifulsoup4
-Django>=3.2.22,<3.3
+Django>=3.2.23,<3.3
 django-anymail
 django-csp>=3.7
 django-modelcluster
@@ -23,7 +23,7 @@ python-json-logger
 structlog
 typing
 typogrify
-wagtail>=4.1.8,<4.2
+wagtail>=4.1.9,<4.2
 wagtail-autocomplete>=0.9.0
 wagtail-factories>=3.1.0
 wagtail-django-recaptcha

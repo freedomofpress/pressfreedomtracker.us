@@ -653,10 +653,6 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='Border point'
     )
-    stopped_at_border = models.BooleanField(
-        default=False,
-        verbose_name="Stopped at border?"
-    )
     target_us_citizenship_status = models.CharField(
         choices=choices.CITIZENSHIP_STATUS_CHOICES,
         max_length=255,
@@ -685,33 +681,12 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name="Did authorities ask for device access?"
     )
-    did_authorities_ask_for_social_media_user = models.CharField(
-        choices=choices.MAYBE_BOOLEAN,
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Did authorities ask for social media username?"
-    )
-    did_authorities_ask_for_social_media_pass = models.CharField(
-        choices=choices.MAYBE_BOOLEAN,
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Did authorities ask for social media password?"
-    )
     did_authorities_ask_about_work = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
         max_length=255,
         blank=True,
         null=True,
         verbose_name='Did authorities ask intrusive questions about journalist\'s work?',
-    )
-    were_devices_searched_or_seized = models.CharField(
-        choices=choices.MAYBE_BOOLEAN,
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='Were devices searched or seized?'
     )
 
     # Physical Assault
@@ -830,6 +805,14 @@ class IncidentPage(MetadataPageMixin, Page):
         related_name='politicians_or_public_incidents',
         verbose_name='Government agency or public official involved',
     )
+    type_of_denial = ChoiceArrayField(
+        models.CharField(
+            max_length=255,
+            choices=choices.TypeOfDenial.choices,
+        ),
+        blank=True,
+        null=True,
+    )
 
     objects = IncidentPageManager()
 
@@ -871,7 +854,6 @@ class IncidentPage(MetadataPageMixin, Page):
                       "incident. Displayed as footnotes."
         ),
 
-
         MultiFieldPanel(
             heading='Arrest/Criminal Charge',
             classname='collapsible collapsed',
@@ -889,6 +871,72 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
+            heading='Assault',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('assailant'),
+                FieldPanel('was_journalist_targeted'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Border Stop/Denial of Entry',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('border_point'),
+                FieldPanel('target_us_citizenship_status'),
+                FieldPanel('denial_of_entry'),
+                FieldPanel('stopped_previously'),
+                AutocompletePanel('target_nationality', 'incident.Nationality'),
+                FieldPanel('did_authorities_ask_for_device_access'),
+                FieldPanel('did_authorities_ask_about_work'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Denial of Access',
+            classname='collapsible collapsed',
+            children=[
+                AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
+                FieldPanel('type_of_denial'),
+            ]
+        ),
+
+        MultiFieldPanel(
+            heading='Equipment Damage',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('actor'),
+                InlinePanel(
+                    'equipment_broken',
+                    label='Equipment',
+                ),
+            ],
+        ),
+
+        MultiFieldPanel(
+            heading='Equipment Searched or Seized',
+            classname='collapsible collapsed',
+            children=[
+                FieldPanel('status_of_seized_equipment'),
+                FieldPanel('is_search_warrant_obtained'),
+                InlinePanel(
+                    'equipment_seized',
+                    label='Equipment',
+                ),
+            ],
+        ),
+
+        MultiFieldPanel(
+            heading='Leak Prosecution',
+            classname='collapsible collapsed',
+            children=[
+                AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker'),
+                FieldPanel('charged_under_espionage_act'),
+            ]
+        ),
+
+        MultiFieldPanel(
             heading='Legal Case',
             classname='collapsible collapsed',
             children=[
@@ -898,61 +946,11 @@ class IncidentPage(MetadataPageMixin, Page):
             ]
         ),
 
-        # Not in an MFP because we want their headings to show up.
-        InlinePanel(
-            'equipment_seized',
-            classname='collapsible collapsed',
-            label='Equipment Searched or Seized',
-        ),
-        InlinePanel(
-            'equipment_broken',
-            classname='collapsible collapsed',
-            label='Equipment Broken',
-        ),
-
         MultiFieldPanel(
-            heading='Equipment Seizure or Damage',
+            heading='Prior Restraint',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('status_of_seized_equipment'),
-                FieldPanel('is_search_warrant_obtained'),
-                FieldPanel('actor'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Border Stop/Denial of Entry',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('border_point'),
-                FieldPanel('stopped_at_border'),
-                FieldPanel('target_us_citizenship_status'),
-                FieldPanel('denial_of_entry'),
-                FieldPanel('stopped_previously'),
-                AutocompletePanel('target_nationality', 'incident.Nationality'),
-                FieldPanel('did_authorities_ask_for_device_access'),
-                FieldPanel('did_authorities_ask_for_social_media_user'),
-                FieldPanel('did_authorities_ask_for_social_media_pass'),
-                FieldPanel('did_authorities_ask_about_work'),
-                FieldPanel('were_devices_searched_or_seized'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Physical Assault',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('assailant'),
-                FieldPanel('was_journalist_targeted'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Leak Prosecution (incl. Legal Case, Arrest/Detention)',
-            classname='collapsible collapsed',
-            children=[
-                AutocompletePanel('workers_whose_communications_were_obtained', 'incident.GovernmentWorker'),
-                FieldPanel('charged_under_espionage_act'),
+                FieldPanel('status_of_prior_restraint'),
             ]
         ),
 
@@ -966,21 +964,6 @@ class IncidentPage(MetadataPageMixin, Page):
                 InlinePanel('legal_orders', label='Legal Orders'),
                 FieldPanel('third_party_business'),
                 FieldPanel('name_of_business'),
-            ]
-        ),
-        MultiFieldPanel(
-            heading='Prior Restraint (incl. Legal Case)',
-            classname='collapsible collapsed',
-            children=[
-                FieldPanel('status_of_prior_restraint'),
-            ]
-        ),
-
-        MultiFieldPanel(
-            heading='Denial of Access',
-            classname='collapsible collapsed',
-            children=[
-                AutocompletePanel('politicians_or_public_figures_involved', 'incident.PoliticianOrPublic'),
             ]
         ),
 

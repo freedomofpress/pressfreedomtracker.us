@@ -1,4 +1,5 @@
 import json
+import math
 import random
 import requests
 import time
@@ -417,7 +418,7 @@ class Command(BaseCommand):
                     MultimediaIncidentPageFactory(
                         parent=incident_index_page,
                         categories=category_pages,
-                        tags=0,
+                        tags=None,
                         teaser_image=next(teaser_images),
                         **kwargs,
                     )
@@ -456,7 +457,11 @@ class Command(BaseCommand):
             ['tarsier', 'lemur', 'loris', 'baboon'],
         ]
         cat_map = {}
-        for incident in IncidentPage.objects.all():
+
+        # Ensure a certain percentage of incidents do not have any
+        # tags applied.
+        num_untagged = math.ceil(number_created / 5)
+        for incident in IncidentPage.objects.all()[num_untagged:]:
             incident.tags.clear()
             cat_ids = [x.category_id for x in incident.categories.all()]
             for cat_id in cat_ids:
@@ -474,10 +479,11 @@ class Command(BaseCommand):
             incident_tag__title='Important Animals',
         )
         tag = topic_page.incident_tag
+        all_tagged_incidents = IncidentPage.objects.exclude(tags=None)
         tag.tagged_items.add(
             *random.sample(
-                list(IncidentPage.objects.all()),
-                min(20, options['max_incidents']),
+                list(all_tagged_incidents),
+                min(20, len(all_tagged_incidents)),
             )
         )
 

@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.test import TestCase, Client
 from unittest.mock import patch
 from wagtail.models import Site, Page
@@ -73,6 +74,15 @@ class TestCategoryPageCacheInvalidation(TestCase):
 
         list_of_arguments = purge_tags_from_cache.call_args[0][0]
         self.assertIn(self.categorypage.get_cache_tag(), list_of_arguments)
+
+    @patch('common.signals.purge_url_from_cache')
+    def test_cache_sitemap_purge_on_new_incident(self, purge_url_from_cache):
+        self.assertFalse(purge_url_from_cache.called)
+
+        # should trigger a cache purge on category page
+        IncidentPageFactory().save_revision().publish()
+
+        purge_url_from_cache.assert_called_with(reverse('sitemap'))
 
     def test_should_purge_all_cache_when_settings_changed(self):
         """Changing any Setting should purge the entire zone.

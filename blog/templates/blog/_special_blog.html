@@ -1,9 +1,24 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-{% image page.lead_image scale-100 as tmp_photo %}
-<div class="special-blog__hero-bg" style="background-image: url('{{ tmp_photo.url }}')">
-	<span class="sr-only">Background hero image of {{ page.lead_image.title }}</span>
-</div>
+{% if page.lead_graphic.0.block_type == "vertical_bar_chart" %}
+	<div class="special-blog__hero-bg padded">
+		{% include 'common/blocks/vertical_bar_chart.html' with value=page.lead_graphic.0.value static_graphic=true %}
+	</div>
+{% elif page.lead_graphic.0.block_type == "tree_map_chart" %}
+	<div class="special-blog__hero-bg padded">
+		{% include 'common/blocks/tree_map_chart.html' with value=page.lead_graphic.0.value static_graphic=true %}
+	</div>
+{% elif page.lead_graphic.0.block_type == "bubble_map_chart" %}
+	<div class="special-blog__hero-bg padded">
+		{% include 'common/blocks/bubble_map_chart.html' with value=page.lead_graphic.0.value static_graphic=true %}
+	</div>
+{% else %}
+	{% image page.lead_graphic.0.value scale-100 as tmp_photo %}
+	<div class="special-blog__hero-bg" style="background-image: url('{{ tmp_photo.url }}')">
+		<span class="sr-only">Background hero image of {{ page.lead_graphic.0.title }}</span>
+	</div>
+{% endif %}
+
 <div class="special-blog__hero">
 	<h1 class="special-blog__hero-title article-title" id="title">{{ page.title }}</h1>
 
@@ -16,9 +31,9 @@
 				{% endif %}
 			</p>
 		{% endif %}
-		{% if page.lead_image.attribution %}
+		{% if page.lead_graphic.0.attribution %}
 			<p class="special-blog__hero-citation">
-				{{ page.lead_image.attribution }}
+				{{ page.lead_graphic.0.attribution }}
 			</p>
 		{% endif %}
 	</div>

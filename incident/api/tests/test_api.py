@@ -389,6 +389,7 @@ class IncidentAPITest(APITestCase):
             border_stop=True,
             assault=True,
             leak_case=True,
+            denial_of_access=True,
             workers_whose_communications_were_obtained=2,
             subpoena=True,
             prior_restraint=True,
@@ -462,16 +463,12 @@ class IncidentAPITest(APITestCase):
                 'is_search_warrant_obtained': inc.is_search_warrant_obtained,
                 'actor': inc.get_actor_display(),
                 'border_point': inc.border_point,
-                'stopped_at_border': inc.stopped_at_border,
                 'target_us_citizenship_status': inc.get_target_us_citizenship_status_display(),
                 'denial_of_entry': inc.denial_of_entry,
                 'stopped_previously': inc.stopped_previously,
                 'target_nationality': [str(e) for e in inc.target_nationality.all()],
                 'did_authorities_ask_for_device_access': inc.get_did_authorities_ask_for_device_access_display(),
-                'did_authorities_ask_for_social_media_user': inc.get_did_authorities_ask_for_social_media_user_display(),
-                'did_authorities_ask_for_social_media_pass': inc.get_did_authorities_ask_for_social_media_pass_display(),
                 'did_authorities_ask_about_work': inc.get_did_authorities_ask_about_work_display(),
-                'were_devices_searched_or_seized': inc.get_were_devices_searched_or_seized_display(),
                 'assailant': inc.get_assailant_display(),
                 'was_journalist_targeted': inc.get_was_journalist_targeted_display(),
                 'workers_whose_communications_were_obtained': [str(w) for w in inc.workers_whose_communications_were_obtained.all()],
@@ -489,7 +486,7 @@ class IncidentAPITest(APITestCase):
                 'current_charges': [str(e) for e in inc.current_charges.all()],
                 'dropped_charges': [str(e) for e in inc.dropped_charges.all()],
                 'politicians_or_public_figures_involved': [str(e) for e in inc.politicians_or_public_figures_involved.all()],
-
+                'type_of_denial': [choices.TypeOfDenial(e).label for e in inc.type_of_denial],
             }
         )
 

@@ -16,7 +16,7 @@ export function processIncidentsTimeData(filteredDataset, timePeriod, branchFiel
 
 		if (groupByTag) {
 			// if groupByTag is set, that means we are filtering a tag
-			if (d.tags.indexOf(groupByTag) >= 0) {
+			if (d.tags?.indexOf(groupByTag) >= 0) {
 				dateData[groupByTag] = dateData[groupByTag] ? dateData[groupByTag] + 1 : 1
 			} else {
 				const notBranchFieldName = `not ${groupByTag}`;

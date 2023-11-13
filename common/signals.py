@@ -1,8 +1,9 @@
 import structlog
 from django.db.models.signals import post_delete, post_save, pre_delete
 from django.dispatch import receiver
+from django.urls import reverse
 from wagtail.signals import page_published
-from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
+from wagtail.contrib.frontend_cache.utils import purge_page_from_cache, purge_url_from_cache
 from wagtail.contrib.settings.models import BaseSiteSetting
 
 from common.models import CategoryPage, SimplePage
@@ -39,6 +40,11 @@ def purge_simple_page_from_frontend_cache(**kwargs):
         )
 
 
+def purge_sitemap_from_frontend_cache(**kwargs):
+    sitemap_url = reverse('sitemap')
+    purge_url_from_cache(sitemap_url)
+
+
 @receiver([pre_delete, post_save])
 def purge_cache_for_settings(sender, **kwargs):
     """
@@ -60,3 +66,7 @@ page_published.connect(purge_simple_page_from_frontend_cache, sender=HomePage)
 post_delete.connect(purge_simple_page_from_frontend_cache, sender=IncidentPage)
 post_delete.connect(purge_simple_page_from_frontend_cache, sender=BlogPage)
 post_delete.connect(purge_simple_page_from_frontend_cache, sender=HomePage)
+
+# Purge sitemap from frontend cache everytime a new page is created or deleted
+page_published.connect(purge_sitemap_from_frontend_cache)
+post_delete.connect(purge_sitemap_from_frontend_cache)

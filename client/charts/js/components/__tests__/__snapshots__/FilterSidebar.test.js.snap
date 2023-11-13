@@ -1862,16 +1862,6 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
-      "did_authorities_ask_for_social_media_pass": {
-        "enabled": false,
-        "parameters": null,
-        "type": "string",
-      },
-      "did_authorities_ask_for_social_media_user": {
-        "enabled": false,
-        "parameters": null,
-        "type": "string",
-      },
       "equipment_broken": {
         "enabled": false,
         "parameters": null,
@@ -1965,11 +1955,6 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
-      "stopped_at_border": {
-        "enabled": false,
-        "parameters": null,
-        "type": "string",
-      },
       "stopped_previously": {
         "enabled": false,
         "parameters": null,
@@ -2020,6 +2005,11 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "parameters": null,
         "type": "string",
       },
+      "type_of_denial": {
+        "enabled": false,
+        "parameters": null,
+        "type": "string",
+      },
       "unnecessary_use_of_force": {
         "enabled": false,
         "parameters": null,
@@ -2031,11 +2021,6 @@ exports[`renders FilterSidebar with mocked data 1`] = `
         "type": "string",
       },
       "was_journalist_targeted": {
-        "enabled": false,
-        "parameters": null,
-        "type": "string",
-      },
-      "were_devices_searched_or_seized": {
         "enabled": false,
         "parameters": null,
         "type": "string",

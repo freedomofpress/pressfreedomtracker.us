@@ -353,15 +353,11 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Border stop
     border_point = None
-    stopped_at_border = False
     target_us_citizenship_status = None
     denial_of_entry = False
     stopped_previously = False
     did_authorities_ask_for_device_access = None
-    did_authorities_ask_for_social_media_pass = None
-    did_authorities_ask_for_social_media_user = None
     did_authorities_ask_about_work = None
-    were_devices_searched_or_seized = None
 
     # Physical assault
     assailant = None
@@ -410,12 +406,10 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             status_of_seized_equipment=factory.Iterator(
                 choices.STATUS_OF_SEIZED_EQUIPMENT, getter=lambda c: c[0]),
             is_search_warrant_obtained=factory.Faker('boolean'),
-            actor=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
             equip_search=RelatedFactory(EquipmentSeizedFactory, 'incident'),
         )
         border_stop = factory.Trait(
             border_point=factory.Faker('city'),
-            stopped_at_border=factory.Faker('boolean'),
             target_us_citizenship_status=factory.Iterator(
                 choices.CITIZENSHIP_STATUS_CHOICES, getter=lambda c: c[0]),
             denial_of_entry=factory.Faker('boolean'),
@@ -423,10 +417,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             # did_authorities_ask_for_device_access=factory.Iterator(
             #     choices.MAYBE_BOOLEAN, getter=lambda c: c[0]),
             did_authorities_ask_for_device_access=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
-            did_authorities_ask_for_social_media_user=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
-            did_authorities_ask_for_social_media_pass=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
             did_authorities_ask_about_work=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
-            were_devices_searched_or_seized=factory.LazyFunction(lambda: random_choice(choices.MAYBE_BOOLEAN)),
         )
         assault = factory.Trait(
             assailant=factory.Iterator(choices.ACTORS, getter=lambda c: c[0]),
@@ -466,9 +457,13 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         )
         denial_of_access = factory.Trait(
             politicians_or_public_figures_involved=random.randint(1, 4),
+            type_of_denial=factory.LazyFunction(
+                lambda: random_choice_list(choices.TypeOfDenial.choices)
+            ),
         )
         equipment_damage = Trait(
             equip_damage=RelatedFactory(EquipmentBrokenFactory, 'incident'),
+            actor=factory.Iterator(choices.ACTORS, getter=itemgetter(0)),
         )
         chilling_statement = Trait()
         other_incident = Trait()

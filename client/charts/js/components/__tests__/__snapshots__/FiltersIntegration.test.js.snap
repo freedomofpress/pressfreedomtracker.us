@@ -268,11 +268,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   "type": "text",
                 },
                 {
-                  "name": "stopped_at_border",
-                  "title": "Stopped at border?",
-                  "type": "bool",
-                },
-                {
                   "name": "stopped_previously",
                   "title": "Stopped previously?",
                   "type": "bool",
@@ -328,23 +323,8 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   "type": "radio",
                 },
                 {
-                  "name": "did_authorities_ask_for_social_media_user",
-                  "title": "Did authorities ask for social media username?",
-                  "type": "radio",
-                },
-                {
-                  "name": "did_authorities_ask_for_social_media_pass",
-                  "title": "Did authorities ask for social media password?",
-                  "type": "radio",
-                },
-                {
                   "name": "did_authorities_ask_about_work",
                   "title": "Did authorities ask intrusive questions about journalist's work?",
-                  "type": "radio",
-                },
-                {
-                  "name": "were_devices_searched_or_seized",
-                  "title": "Were devices searched or seized?",
                   "type": "radio",
                 },
               ],
@@ -858,16 +838,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "did_authorities_ask_for_social_media_pass": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "did_authorities_ask_for_social_media_user": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
             "equipment_broken": {
               "enabled": false,
               "parameters": null,
@@ -962,11 +932,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "stopped_at_border": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
             "stopped_previously": {
               "enabled": false,
               "parameters": null,
@@ -1027,11 +992,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "were_devices_searched_or_seized": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
           }
         }
         filterWithout={
@@ -1054,8 +1014,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "detention_status": [Function],
             "did_authorities_ask_about_work": [Function],
             "did_authorities_ask_for_device_access": [Function],
-            "did_authorities_ask_for_social_media_pass": [Function],
-            "did_authorities_ask_for_social_media_user": [Function],
             "equipment_broken": [Function],
             "equipment_seized": [Function],
             "filterState": [Function],
@@ -1073,7 +1031,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "status_of_charges": [Function],
             "status_of_prior_restraint": [Function],
             "status_of_seized_equipment": [Function],
-            "stopped_at_border": [Function],
             "stopped_previously": [Function],
             "subpoena_statuses": [Function],
             "subpoena_type": [Function],
@@ -1086,7 +1043,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "unnecessary_use_of_force": [Function],
             "venue": [Function],
             "was_journalist_targeted": [Function],
-            "were_devices_searched_or_seized": [Function],
           }
         }
         height={333.3333333333333}
@@ -1498,16 +1454,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "did_authorities_ask_for_social_media_pass": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_for_social_media_user": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "equipment_broken": {
             "enabled": false,
             "parameters": null,
@@ -1602,11 +1548,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "stopped_at_border": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "stopped_previously": {
             "enabled": false,
             "parameters": null,
@@ -1667,11 +1608,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "were_devices_searched_or_seized": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
         }
       }
       filterWithout={
@@ -1694,8 +1630,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "detention_status": [Function],
           "did_authorities_ask_about_work": [Function],
           "did_authorities_ask_for_device_access": [Function],
-          "did_authorities_ask_for_social_media_pass": [Function],
-          "did_authorities_ask_for_social_media_user": [Function],
           "equipment_broken": [Function],
           "equipment_seized": [Function],
           "filterState": [Function],
@@ -1713,7 +1647,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "status_of_charges": [Function],
           "status_of_prior_restraint": [Function],
           "status_of_seized_equipment": [Function],
-          "stopped_at_border": [Function],
           "stopped_previously": [Function],
           "subpoena_statuses": [Function],
           "subpoena_type": [Function],
@@ -1726,7 +1659,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "unnecessary_use_of_force": [Function],
           "venue": [Function],
           "was_journalist_targeted": [Function],
-          "were_devices_searched_or_seized": [Function],
         }
       }
       initialFilterParams={
@@ -1827,16 +1759,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "did_authorities_ask_for_social_media_pass": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_for_social_media_user": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "equipment_broken": {
             "enabled": false,
             "parameters": null,
@@ -1910,11 +1832,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "stopped_at_border": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "stopped_previously": {
             "enabled": false,
             "parameters": null,
@@ -1971,11 +1888,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "type": "string",
           },
           "was_journalist_targeted": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "were_devices_searched_or_seized": {
             "enabled": false,
             "parameters": null,
             "type": "string",

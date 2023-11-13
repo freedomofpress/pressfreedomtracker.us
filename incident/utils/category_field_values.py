@@ -184,27 +184,11 @@ def denial_of_entry_html_val(page, field, index, category):
     return boolean_html_val(page, field, index, category)
 
 
-def stopped_at_border_html_val(page, field, index, category):
-    return boolean_html_val(page, field, index, category)
-
-
 def stopped_previously_html_val(page, field, index, category):
     return boolean_html_val(page, field, index, category)
 
 
 def did_authorities_ask_for_device_access_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
-def did_authorities_ask_for_social_media_user_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
-def did_authorities_ask_for_social_media_pass_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
-def were_devices_searched_or_seized_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 
 
@@ -244,6 +228,23 @@ def subpoena_statuses_html_val(page, field, index, category):
             subpoena_status
         )
         value = dict(choices.SUBPOENA_STATUS).get(subpoena_status).capitalize()
+        html.append(f'<a href="{link}" class="text-link">{value}</a>')
+    html = ', '.join(html)
+    return html
+
+
+def type_of_denial_html_val(page, field, index, category):
+    if not getattr(page, field, index):
+        return ''
+
+    html = []
+    for type_of_denial in getattr(page, field):
+        link = '{}?{}={}'.format(
+            index.get_url(),
+            field,
+            type_of_denial,
+        )
+        value = choices.TypeOfDenial(type_of_denial).label
         html.append(f'<a href="{link}" class="text-link">{value}</a>')
     html = ', '.join(html)
     return html

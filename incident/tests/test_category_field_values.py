@@ -256,6 +256,18 @@ class TestCategoryFieldValuesByField(TestCase):
             CAT_FIELD_VALUES['politicians_or_public_figures_involved'],
         )
 
+    def test_type_of_denial(self):
+        self.incident.type_of_denial = []
+        field_name = 'type_of_denial'
+        render_function = CAT_FIELD_VALUES[field_name]
+        output = render_function(self.incident, field_name, self.index, self.category)
+        self.assertEqual(output, '')
+        for choice_value, choice_name in choices.TypeOfDenial.choices:
+            self.incident.type_of_denial.append(choice_value)
+            output = render_function(self.incident, field_name, self.index, self.category)
+            self.assertIn(choice_name.capitalize(), output)
+            self.assertIn(f'{field_name}={choice_value}', output)
+
     def test_workers_whose_communications_where_obtained(self):
         self.incident.workers_whose_communications_were_obtained = GovernmentWorkerFactory.create_batch(2)
         self.incident.save()
@@ -408,18 +420,6 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assert_choices(
             'did_authorities_ask_for_device_access',
             CAT_FIELD_VALUES['did_authorities_ask_for_device_access'],
-        )
-
-    def test_did_authorities_ask_for_social_media_user(self):
-        self.assert_choices(
-            'did_authorities_ask_for_social_media_user',
-            CAT_FIELD_VALUES['did_authorities_ask_for_social_media_user'],
-        )
-
-    def test_did_authorities_ask_for_social_media_pass(self):
-        self.assert_choices(
-            'did_authorities_ask_for_social_media_pass',
-            CAT_FIELD_VALUES['did_authorities_ask_for_social_media_pass'],
         )
 
     def test_did_authorities_ask_about_work(self):

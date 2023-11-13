@@ -9,6 +9,7 @@ from common.templatetags.common_tags import (
     add_as_string,
     richtext_aside,
     query_transform,
+    get_absolute_url,
 )
 
 
@@ -108,3 +109,11 @@ class TestTemplateTags(TestCase):
         qd = QueryDict(result)
         self.assertEqual(qd['page'], '1')
         self.assertEqual(qd['sort'], 'title')
+
+    def test_get_absolute_url(self):
+        request = RequestFactory().get('/')
+        context = {'request': request}
+
+        result = get_absolute_url(context, 'sitemap')
+
+        self.assertEqual(result, f'http://{request.get_host()}/sitemap.xml')
