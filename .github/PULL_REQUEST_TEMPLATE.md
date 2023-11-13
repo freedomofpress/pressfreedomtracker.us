@@ -59,6 +59,7 @@ In case this PR needs any admin changes or run a management command after deploy
 - [ ] Verify that it renders correctly in individual incident page, if applicable
 - [ ] Verify that it renders correctly in blog index page, if applicable
 - [ ] Verify that it renders correctly in individual blog page, if applicable
+- [ ] Verify that it renders correctly in individual special blog page, if applicable
 
 ### If you made changes to email signup flow
 
