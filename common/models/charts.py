@@ -118,6 +118,7 @@ class ChartSnapshot(models.Model):
             logger.exception('Chart pregeneration failed')
             return
 
+        previous_image = None
         if self.snapshot_type == SnapshotType.SVG:
             self.chart_svg = result
         elif self.snapshot_type == SnapshotType.PNG:
@@ -139,8 +140,13 @@ class ChartSnapshot(models.Model):
                 width=self.query.get('width', self.DEFAULT_WIDTH),
             )
             custom_image.save()
+            previous_image = self.chart_image
             self.chart_image = custom_image
         self.save()
+
+        # Remove previous image
+        if previous_image:
+            previous_image.delete()
 
     @classmethod
     def get_or_create_collection(cls):

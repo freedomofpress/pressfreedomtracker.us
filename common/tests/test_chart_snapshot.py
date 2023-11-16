@@ -7,6 +7,7 @@ from django.db import IntegrityError
 from django.core.files.images import ImageFile
 from django.test import TestCase
 from wagtail.core.models import Collection
+from wagtail.images import get_image_model
 
 from common.models.charts import ChartSnapshot
 from common.utils.chart_pregenerator.types import (
@@ -110,6 +111,7 @@ class TestChartSnapshot(TestCase):
 
         query = {'query_param': 'value'}
         snapshot = ChartSnapshotFactory(png=True, query=query)
+        original_image_id = snapshot.chart_image.pk
         snapshot.generate()
 
         mock_request_snapshot.assert_called_once_with(
@@ -123,6 +125,10 @@ class TestChartSnapshot(TestCase):
             snapshot.chart_image.collection.name,
             ChartSnapshot.COLLECTION_NAME,
         )
+        # Original image should be deleted
+        ImageModel = get_image_model()
+        with self.assertRaises(ImageModel.DoesNotExist):
+            ImageModel.objects.get(pk=original_image_id)
 
     @mock.patch(
         'common.models.charts.request_snapshot',
@@ -201,3 +207,5 @@ class TestChartSnapshot(TestCase):
         )
 
         self.assertEqual(new_snapshot.chart_svg, svg_output)
+
+        # Assert that old rendition is removed.
