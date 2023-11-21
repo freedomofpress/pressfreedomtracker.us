@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control, no-case-declarations */
-import React, { useState } from 'react'
+import React, { useState, createRef } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import { chooseMostFrequentTags } from '../../../charts/js/components/HomepageSelection'
@@ -12,10 +12,12 @@ export default function Search({ data = [] }) {
 	const [searchText, setSearchText] = useState('')
 
 	const frequentTags = chooseMostFrequentTags(data, numberOfTags)
+	const inputRef = createRef()
 
 	const updateSelectedTag = (tag) => {
 		setSearchText('')
 		setSelectedTag(tag)
+		inputRef?.current.focus()
 	}
 
 	const updateSearchText = (text) => {
@@ -72,6 +74,7 @@ export default function Search({ data = [] }) {
 			</label>
 			<input
 				id="primary-search-bar"
+				ref={inputRef}
 				placeholder={!selectedTag ? 'Search incidents' : ''}
 				spellCheck="false"
 				autoComplete="off"
@@ -81,13 +84,32 @@ export default function Search({ data = [] }) {
 				value={searchText}
 				onKeyDown={handleArrowKeys}
 				onChange={(e) => updateSearchText(e.target.value)}
+				role="combobox"
+				aria-haspopup="listbox"
+				aria-controls="search-dropdown"
+				aria-expanded={searchActive && !selectedTag && !searchText && !!frequentTags.length}
 			/>
 			<button type="submit" className="btn btn-ghost search-button" value="Search">
 				Search
 			</button>
 
+			{selectedTag && (
+				<div className="search-tag-pill">
+					<span className="search-tag-pill--tag-hash">#</span>
+					{selectedTag}
+					<button
+						type="button"
+						className="search-tag-pill--close"
+						aria-label="Close"
+						onClick={() => updateSelectedTag(null)}
+					>
+						<i className="search-tag-pill--close--icon" aria-hidden />
+					</button>
+				</div>
+			)}
+
 			{searchActive && !selectedTag && !searchText && !!frequentTags.length && (
-				<div className="search-dropdown">
+				<div className="search-dropdown" id="search-dropdown" role="listbox">
 					<div className="search-dropdown--header">Trending Topics</div>
 					{frequentTags.map((tag, i) => (
 						<button
@@ -97,26 +119,12 @@ export default function Search({ data = [] }) {
 							className="search-dropdown--tag"
 							onClick={() => updateSelectedTag(tag)}
 							onKeyDown={handleArrowKeys}
-							tabIndex="0"
+							tabIndex="-1"
 						>
 							<span className="search-dropdown--tag--hash">#</span>
 							{tag}
 						</button>
 					))}
-				</div>
-			)}
-
-			{selectedTag && (
-				<div className="search-tag-pill">
-					<span className="search-tag-pill--tag-hash">#</span>
-					{selectedTag}
-					<button
-						type="button"
-						className="search-tag-pill--close"
-						onClick={() => updateSelectedTag(null)}
-					>
-						<i className="search-tag-pill--close--icon" />
-					</button>
 				</div>
 			)}
 		</form>
