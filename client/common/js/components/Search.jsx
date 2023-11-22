@@ -14,7 +14,7 @@ export default function Search({ data = [] }) {
 	const frequentTags = chooseMostFrequentTags(data, numberOfTags)
 	const inputRef = createRef()
 
-	const updateSelectedTag = (tag) => {
+	const updateSelectedTag = (tag) => () => {
 		setSearchText('')
 		setSelectedTag(tag)
 		inputRef?.current.focus()
@@ -27,13 +27,13 @@ export default function Search({ data = [] }) {
 	}
 
 	const handleArrowKeys = (event) => {
-		const currentId = event.target.id
+		const currentId = event.target.parentElement?.id || event.target.id
 		switch (event.keyCode) {
 		case 38: // up
 			// select prev tag
 			const allTags = [...document.querySelectorAll('.search-dropdown--tag')].reverse()
 			const currentTagIndex = allTags.findIndex((tagEl) => tagEl.id === currentId)
-			if (allTags[currentTagIndex + 1]) allTags[currentTagIndex + 1].focus()
+			if (allTags[currentTagIndex + 1]) allTags[currentTagIndex + 1].querySelector('button').focus()
 			event.preventDefault()
 			break
 		case 40: // down
@@ -41,7 +41,7 @@ export default function Search({ data = [] }) {
 			const nextEl = document.querySelector(
 				`#${currentId} ~ .search-dropdown--tag, #${currentId} ~ .search-dropdown .search-dropdown--tag`,
 			)
-			if (nextEl) nextEl.focus()
+			if (nextEl) nextEl.querySelector('button').focus()
 			event.preventDefault()
 			break
 		default:
@@ -101,7 +101,7 @@ export default function Search({ data = [] }) {
 						type="button"
 						className="search-tag-pill--close"
 						aria-label="Close"
-						onClick={() => updateSelectedTag(null)}
+						onClick={updateSelectedTag(null)}
 					>
 						<i className="search-tag-pill--close--icon" aria-hidden />
 					</button>
@@ -110,20 +110,25 @@ export default function Search({ data = [] }) {
 
 			{searchActive && !selectedTag && !searchText && !!frequentTags.length && (
 				<div className="search-dropdown" id="search-dropdown" role="listbox">
-					<div className="search-dropdown--header">Trending Topics</div>
+					<ul className="search-dropdown--header">Trending Topics</ul>
 					{frequentTags.map((tag, i) => (
-						<button
-							type="button"
+						<li
 							id={`smart-search-form-${i}`}
 							key={tag}
 							className="search-dropdown--tag"
-							onClick={() => updateSelectedTag(tag)}
-							onKeyDown={handleArrowKeys}
-							tabIndex="-1"
+							role="option"
+							aria-selected={false}
 						>
-							<span className="search-dropdown--tag--hash">#</span>
-							{tag}
-						</button>
+							<button
+								className="search-dropdown--tag--button"
+								type="button"
+								onClick={updateSelectedTag(tag)}
+								onKeyDown={handleArrowKeys}
+							>
+								<span className="search-dropdown--tag--button--hash">#</span>
+								{tag}
+							</button>
+						</li>
 					))}
 				</div>
 			)}

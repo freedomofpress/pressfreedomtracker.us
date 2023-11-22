@@ -32,24 +32,29 @@
 		margin-bottom: 6px
 
 	&--tag
-		padding: 4px 23px
-		display: block
 		width: 100%
-		text-align: left
-		background: none
-		border: 0
-		cursor: pointer
+		list-style: none
 
-		&:hover, &:focus
-			background-color: $accent-color
-			outline: none
+		&--button
+			padding: 4px 23px
+			display: block
+			width: 100%
+			text-align: left
+			background: none
+			border: 0
+			cursor: pointer
+			box-sizing: border-box
 
-		&--hash
-			display: inline-block
-			padding: 4px
-			margin-right: 8px
-			background-color: $black
-			color: $tag-inactive
+			&:hover, &:focus
+				background-color: $accent-color
+				outline: none
+
+			&--hash
+				display: inline-block
+				padding: 4px
+				margin-right: 8px
+				background-color: $black
+				color: $tag-inactive
 
 .search-tag-pill
 	position: absolute
