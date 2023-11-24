@@ -19,6 +19,18 @@ export default function FilterSummary({ serializedFilters }) {
 	const categoryFilters = JSON.parse(serializedFilters)
 
 	const idMap = categoryFilters.reduce((acc, val) => ({ ...acc, [val.id]: val.title }), {});
+	const allFilters = categoryFilters.flatMap(category => category.filters).reduce(
+		(acc, val) => ({...acc, [val.name]: val})
+	)
+
+	const displayText = (filterName, value) => {
+		const filter = allFilters[filterName]
+		if (filter?.type == "bool") {
+			return (value === '1') ? filter.present_summary_name : filter.absent_summary_name
+		} else {
+			return value.replaceAll("_", " ").toLowerCase()
+		}
+	}
 
 	const searchParams = new URLSearchParams(window.location.search)
 	const {
@@ -114,7 +126,7 @@ export default function FilterSummary({ serializedFilters }) {
 						className="btn btn-tag"
 						aria-label={`Removes filter: ${restFilters[filterKey].replaceAll("_", " ").toLowerCase()}`}
 					>
-						<span>{restFilters[filterKey].replaceAll("_", " ").toLowerCase()}</span>
+						<span>{displayText(filterKey, restFilters[filterKey])}</span>
 						<span className="close-icon" />
 					</button>
 				</li>

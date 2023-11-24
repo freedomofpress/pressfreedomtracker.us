@@ -28,6 +28,7 @@ from incident.utils.category_field_values import (
     third_party_business_html_val,
     legal_order_type_html_val,
     status_of_prior_restraint_html_val,
+    mistakenly_released_materials_html_val,
     politicians_or_public_figures_involved_html_val,
     legal_orders_html_val,
     legal_order_target_html_val,
@@ -77,6 +78,7 @@ CATEGORY_FIELD_MAP = {
     ],
     'prior-restraint': [
         ('status_of_prior_restraint', 'Status of Prior Restraint'),
+        ('mistakenly_released_materials', 'Mistakenly Released Materials?'),
     ],
     'denial-access': [
         ('politicians_or_public_figures_involved', 'Government agency or public official involved'),
@@ -114,6 +116,7 @@ CAT_FIELD_VALUES = {
     'third_party_business': third_party_business_html_val,
     'legal_order_type': legal_order_type_html_val,
     'status_of_prior_restraint': status_of_prior_restraint_html_val,
+    'mistakenly_released_materials': mistakenly_released_materials_html_val,
     'politicians_or_public_figures_involved': politicians_or_public_figures_involved_html_val,
     'type_of_denial': type_of_denial_html_val,
     'legal_orders': legal_orders_html_val,

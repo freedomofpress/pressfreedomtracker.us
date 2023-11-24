@@ -343,6 +343,12 @@ class TestCategoryFieldValuesByField(TestCase):
             CAT_FIELD_VALUES['status_of_prior_restraint'],
         )
 
+    def test_mistakenly_released_materials(self):
+        self.assert_boolean(
+            'mistakenly_released_materials',
+            CAT_FIELD_VALUES['mistakenly_released_materials'],
+        )
+
     def test_subpoena_type(self):
         self.assert_choices(
             'subpoena_type',
