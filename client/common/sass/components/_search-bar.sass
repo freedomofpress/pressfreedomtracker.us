@@ -1,12 +1,86 @@
 .search-form
 	position: relative
 
+.text-field--search-bar.smart-search-active
+	outline: none
+
 .search-button
 	position: absolute
-	height: calc(100% - 4px)	//border-width for incident is 2px. So subtract 4px from height
-	right: 2px
-	top: 2px
+	height: calc(100% - 6px)	//border-width for incident is 3px. So subtract 6px from height
+	right: 3px
+	top: 3px
 	border: 0
 	margin: 0
 	font-weight: 500
 	background-color: $white
+
+.search-dropdown
+	position: absolute
+	left: 0
+	right: 0
+	background-color: $white
+	border: 3px solid
+	border-color: $black
+	border-top: 0
+	padding: 12px 0
+	z-index: 20000
+
+	&--header
+		padding: 0 23px
+		color: $gray-text
+		font-size: 12px
+		margin-bottom: 6px
+
+	&--tag
+		width: 100%
+		list-style: none
+
+		&--button
+			padding: 4px 23px
+			display: block
+			width: 100%
+			text-align: left
+			background: none
+			border: 0
+			cursor: pointer
+			box-sizing: border-box
+
+			&:hover, &:focus
+				background-color: $accent-color
+				outline: none
+
+			&--hash
+				display: inline-block
+				padding: 4px
+				margin-right: 8px
+				background-color: $black
+				color: $tag-inactive
+
+.search-tag-pill
+	position: absolute
+	top: 3px
+	bottom: 3px
+	left: 20px
+	display: flex
+	align-items: center
+	background-color: $white
+	font-weight: bold
+
+	&--tag-hash
+		color: $gray-text
+		font-weight: normal
+		margin-right: 4px
+		display: inline-block
+
+	&--close
+		border: 0
+		background-color: transparent
+		cursor: pointer
+
+		&--icon
+			display: block
+			width: 8px
+			height: 8px
+			background-image: url(../icons/cross.svg)
+			background-size: contain
+
