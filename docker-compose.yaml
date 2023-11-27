@@ -59,6 +59,7 @@ services:
       - app
 
   node-chart-pregenerator:
+    read_only: true
     init: true
     build:
       context: .
