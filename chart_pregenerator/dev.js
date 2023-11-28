@@ -18,17 +18,15 @@ const config = {
 // eslint-disable-next-line no-lone-blocks
 {
 	(async () => {
-		fs.copySync('../client', './client')
 		await esbuild.build(config)
 
 		const rebuild = debounce(async () => {
 			console.log('\nChanges detected, rebuilding app...')
-			fs.copySync('../client', './client')
 			await esbuild.build(config)
 		}, 2000)
 
 		chokidar.watch(
-			['../client/**/*.js', '../client/**/*.jsx', './src/**/*.js', './src/**/*.jsx'],
+			['./client/**/*.js', './client/**/*.jsx', './src/**/*.js', './src/**/*.jsx'],
 			{ ignoreInitial: true },
 		)
 			.on('all', () => {

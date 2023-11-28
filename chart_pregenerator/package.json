@@ -4,7 +4,7 @@
   "private": true,
   "description": "",
   "scripts": {
-    "build": "cp ../client ./client && esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node --loader:.node=copy",
+    "build": "esbuild src/server.jsx --bundle --outfile=build/server.js --platform=node --loader:.node=copy",
     "start": "node ./build/server.js",
     "dev": "node dev.js",
     "test": "jest --passWithNoTests --coverage",

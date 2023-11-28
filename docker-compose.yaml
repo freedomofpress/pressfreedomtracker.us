@@ -59,16 +59,16 @@ services:
       - app
 
   node-chart-pregenerator:
-    read_only: true
     init: true
     build:
       context: .
-      dockerfile: devops/docker/NodeChartPregeneratorDockerfile
+      dockerfile: devops/docker/NodeChartPregeneratorDevDockerfile
       args:
         NPM_VER: 9.6.7
         USERID: ${UID:?err}
     volumes:
       - ./:/django
+      - ./client:/opt/chart-pregenerator/client
     environment:
       DJANGO_HOST: app
       PORT: *chart-port
@@ -76,7 +76,6 @@ services:
     ports:
       - target: *chart-port
         published: *chart-port
-    working_dir: /django/chart_pregenerator
     user: ${UID:?err}
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:3000/"]
