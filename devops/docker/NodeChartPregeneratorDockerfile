@@ -19,12 +19,12 @@ ENV NPM_CONFIG_LOGLEVEL warn
 ARG USERID
 RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
 COPY chart_pregenerator /opt/chart-pregenerator
+COPY ./client /opt/chart-pregenerator/client
 RUN chown -R "${USERID}" /opt/chart-pregenerator
 WORKDIR /opt/chart-pregenerator
 USER ${USERID}
 
 RUN npm install
+RUN npm run build
 
-COPY devops/docker/node-chart-pregenerator-start.sh /usr/bin/node-chart-pregenerator-start.sh
-
-CMD [ "/usr/bin/node-chart-pregenerator-start.sh" ]
+CMD ["npm", "run", "start"]
