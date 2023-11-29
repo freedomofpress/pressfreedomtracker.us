@@ -1,4 +1,7 @@
-<div class="search-bar">
+<div
+	class="search-bar"
+	data-tags="{{ data_viz_tags_json|escape }}"
+>
 	<form class="search-form" method="GET" action="{{ action }}">
 		<label for="primary-search-bar" class="sr-only">
 			Search incidents by text
