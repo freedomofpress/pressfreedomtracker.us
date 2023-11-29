@@ -2,7 +2,7 @@
 import React, { useState, createRef } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
-import { chooseMostFrequentTags } from '../../../charts/js/components/HomepageSelection'
+import { chooseTrendingTags } from '../../../charts/js/components/HomepageSelection'
 
 const numberOfTags = 4
 
@@ -12,7 +12,7 @@ export default function Search({ data = [], selectedTags = [] }) {
 	const [searchText, setSearchText] = useState('')
 
 	const frequentTags = (selectedTags && selectedTags.length)
-		? selectedTags : chooseMostFrequentTags(data, numberOfTags)
+		? selectedTags : chooseTrendingTags(data, numberOfTags)
 	const inputRef = createRef()
 
 	const updateSelectedTag = (tag) => () => {
