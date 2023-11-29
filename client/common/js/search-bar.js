@@ -24,6 +24,8 @@ function engageSearchBars() {
 	const searchBars = document.querySelectorAll('.search-bar')
 
 	searchBars.forEach((searchBarNode) => {
+		const selectedTags = searchBarNode.dataset.tags ? JSON.parse(searchBarNode.dataset.tags) : []
+
 		const root = createRoot(searchBarNode)
 		root.render((
 			<DataLoader
@@ -31,7 +33,7 @@ function engageSearchBars() {
 				dataKey={['data']}
 				loadingComponent={false}
 			>
-				<Search />
+				<Search selectedTags={selectedTags} />
 			</DataLoader>
 		))
 	})

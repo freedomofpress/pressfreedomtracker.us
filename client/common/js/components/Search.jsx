@@ -2,16 +2,17 @@
 import React, { useState, createRef } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
-import { chooseMostFrequentTags } from '../../../charts/js/components/HomepageSelection'
+import { chooseTrendingTags } from '../../../charts/js/components/HomepageSelection'
 
 const numberOfTags = 4
 
-export default function Search({ data = [] }) {
+export default function Search({ data = [], selectedTags = [] }) {
 	const [searchActive, setSearchActive] = useState(false)
 	const [selectedTag, setSelectedTag] = useState()
 	const [searchText, setSearchText] = useState('')
 
-	const frequentTags = chooseMostFrequentTags(data, numberOfTags)
+	const frequentTags = (selectedTags && selectedTags.length)
+		? selectedTags : chooseTrendingTags(data, numberOfTags)
 	const inputRef = createRef()
 
 	const updateSelectedTag = (tag) => () => {
@@ -110,7 +111,7 @@ export default function Search({ data = [] }) {
 
 			{searchActive && !selectedTag && !searchText && !!frequentTags.length && (
 				<div className="search-dropdown" id="search-dropdown" role="listbox">
-					<ul className="search-dropdown--header">Trending Topics</ul>
+					<ul className="search-dropdown--header">{(selectedTags && selectedTags.length) ? 'Trending Topics' : 'Frequently Used Tags'}</ul>
 					{frequentTags.map((tag, i) => (
 						<li
 							id={`smart-search-form-${i}`}
@@ -139,8 +140,11 @@ export default function Search({ data = [] }) {
 Search.propTypes = {
 	// eslint-disable-next-line react/forbid-prop-types
 	data: PropTypes.array,
+	// eslint-disable-next-line react/forbid-prop-types
+	selectedTags: PropTypes.array,
 }
 
 Search.defaultProps = {
 	data: [],
+	selectedTags: [],
 }
