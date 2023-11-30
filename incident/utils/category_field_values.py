@@ -270,6 +270,10 @@ def status_of_prior_restraint_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 
 
+def mistakenly_released_materials_html_val(page, field, index, category):
+    return boolean_html_val(page, field, index, category)
+
+
 def politicians_or_public_figures_involved_html_val(page, field, index, category):
     return list_html_val(page, field, index, category)
 

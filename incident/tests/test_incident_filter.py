@@ -21,6 +21,7 @@ from common.tests.factories import CategoryPageFactory
 from incident.models import IncidentPage
 from incident.choices import ARREST_STATUS, STATUS_OF_CHARGES
 from incident.utils.incident_filter import (
+    BooleanFilter,
     IncidentFilter,
     ManyRelationFilter,
     ManyRelationValue,
@@ -239,12 +240,28 @@ class SerializeFilterTest(TestCase):
         })
 
     def test_bool_field(self):
+        filter_ = BooleanFilter(
+            'is_search_warrant_obtained',
+            IncidentPage._meta.get_field('is_search_warrant_obtained'),
+            present_summary_name='Search warrant served',
+        )
+        self.assertEqual(filter_.serialize(), {
+            'title': 'Search warrant obtained?',
+            'type': 'bool',
+            'name': 'is_search_warrant_obtained',
+            'absent_summary_name': 'Search warrant obtained? No',
+            'present_summary_name': 'Search warrant served',
+        })
+
+    def test_bool_field_with_overridden_present_summary(self):
         field = IncidentPage._meta.get_field('is_search_warrant_obtained')
         filter_ = IncidentFilter._get_filter(field)
         self.assertEqual(filter_.serialize(), {
             'title': 'Search warrant obtained?',
             'type': 'bool',
             'name': 'is_search_warrant_obtained',
+            'absent_summary_name': 'No search warrant obtained',
+            'present_summary_name': 'Search warrant obtained',
         })
 
     def test_autocomplete_field(self):

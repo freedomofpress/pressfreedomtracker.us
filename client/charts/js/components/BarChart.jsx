@@ -156,7 +156,7 @@ export default function BarChart({
 						content={
 							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
 								<div>Number of{
-									(hoveredElement?.y && hoveredElement?.y !== 'count') ? ` ${hoveredElement.y.replace('Incident', '')}` : ''
+									(hoveredElement?.y && hoveredElement?.y !== 'count' && hoveredElement?.y !== 'numberOfIncidents') ? ` ${hoveredElement.y.replace('Incident', '')}` : ''
 								} Incidents</div>
 								<div
 									style={{

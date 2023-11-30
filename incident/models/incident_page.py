@@ -797,6 +797,10 @@ class IncidentPage(MetadataPageMixin, Page):
         null=True,
         verbose_name='Status of prior restraint'
     )
+    mistakenly_released_materials = models.BooleanField(
+        default=False,
+        verbose_name="Mistakenly released materials?",
+    )
 
     # Denial of Access
     politicians_or_public_figures_involved = ParentalManyToManyField(
@@ -951,6 +955,7 @@ class IncidentPage(MetadataPageMixin, Page):
             classname='collapsible collapsed',
             children=[
                 FieldPanel('status_of_prior_restraint'),
+                FieldPanel('mistakenly_released_materials'),
             ]
         ),
 
