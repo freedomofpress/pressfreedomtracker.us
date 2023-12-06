@@ -17,9 +17,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 
 
-MIDDLEWARE += [  # noqa: F405
-    'common.middleware.RequestLogMiddleware',
-]
+MIDDLEWARE.insert(3, 'common.middleware.RequestLogMiddleware')  # noqa: F405
 
 
 structlog.configure(
