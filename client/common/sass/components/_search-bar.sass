@@ -25,15 +25,22 @@
 	padding: 12px 0
 	z-index: 20000
 
+	&--wrap
+		padding: 0
+		margin: 0
+
 	&--header
 		padding: 0 23px
 		color: $gray-text
 		font-size: 12px
-		margin-bottom: 6px
+		margin: 6px 0
 
-	&--tag
+	&--tag, &--category
 		width: 100%
 		list-style: none
+
+		&--custom-search
+			font-weight: bold
 
 		&--button
 			padding: 4px 23px
@@ -49,14 +56,26 @@
 				background-color: $accent-color
 				outline: none
 
-			&--hash
+			&--hash, &--category-label
 				display: inline-block
 				padding: 4px
 				margin-right: 8px
 				background-color: $black
-				color: $tag-inactive
+				color: $gray-light
 
-.search-tag-pill
+			&--category-label
+				padding: 4px 8px
+
+			& .category
+				display: inline-block
+	hr
+		background-color: $gray-light
+		height: 2px
+		border: none
+		margin: 24px
+
+
+.search-tag-pill, .search-category-pill
 	position: absolute
 	top: 3px
 	bottom: 3px
@@ -66,11 +85,14 @@
 	background-color: $white
 	font-weight: bold
 
-	&--tag-hash
+	&--tag-hash, &--category-label
 		color: $gray-text
 		font-weight: normal
 		margin-right: 4px
 		display: inline-block
+
+	&--category-label
+		color: $gray-light
 
 	&--close
 		border: 0
