@@ -15,6 +15,8 @@ RUN apk --no-cache add msttcorefonts-installer fontconfig && \
 
 # Make npm output less verbose
 ENV NPM_CONFIG_LOGLEVEL warn
+# Ensure npm can correctly set cache information in ~/.npm
+ENV HOME /home/node
 
 ARG USERID
 RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
