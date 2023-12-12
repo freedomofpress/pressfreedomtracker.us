@@ -23,13 +23,13 @@ Prerequisites
 The installation instructions below assume you have the following software on your machine:
 
 * `docker <https://docs.docker.com/engine/installation/>`_
-* `docker-compose <https://docs.docker.com/compose/install/>`_
+* `docker compose <https://docs.docker.com/compose/install/>`_
 
 Local Development instructions
 ------------------------------
 
 When you want to play with the environment, you will be using
-``docker-compose``. Your guide to understand all the nuances of ``docker-compose``
+``docker compose``. Your guide to understand all the nuances of ``docker compose``
 can be found in the `official docs <https://docs.docker.com/compose/reference/>`_. To start the
 environment, run the following your first run:
 
@@ -39,14 +39,14 @@ environment, run the following your first run:
     make dev-init
 
     # Starts up the environment
-    docker-compose up
+    docker compose up
 
     # Inject development data (also only needs to be run once)
-    docker-compose exec django ./manage.py createdevdata
+    docker compose exec django ./manage.py createdevdata
 
     # NOTE: temporarily not available due to incompatibility with wagtail 2.7
     # Add wagtail inventory to search wagtail pages by block type
-    docker-compose exec django ./manage.py block_inventory
+    docker compose exec django ./manage.py block_inventory
 
 You should be able to hit the web server interface by running ``make open-browser``
 
@@ -58,26 +58,26 @@ by default.  To disable this behavior, run the command with the
 
 .. code:: bash
 
-    docker-compose exec django ./manage.py createdevdata --no-download
+    docker compose exec django ./manage.py createdevdata --no-download
 
 To reset your database back to its initial state, I recommend removing the postgresql docker container and re-running the dev data command.  First, stop your containers by pressing control+c if they are running.  Then run these two commands.
 
 .. code:: bash
 
-    docker-compose rm -f postgresql && docker-compose up --build
-    docker-compose exec django ./manage.py createdevdata
+    docker compose rm -f postgresql && docker compose up --build
+    docker compose exec django ./manage.py createdevdata
 
 To test your frontend code with jest, you can run the following command:
 
 .. code:: bash
 
-    docker-compose exec node npm test
+    docker compose exec node npm test
 
 If tests need to be updated, you can run the following command:
 
 .. code:: bash
 
-    docker-compose exec node npm test-update
+    docker compose exec node npm test-update
 
 Debugging
 ---------
@@ -92,7 +92,7 @@ Second, attach to the running Django container.  This must be done in a shell, a
 
 .. code:: bash
 
-    docker attach $(docker-compose ps -q django)
+    docker attach $(docker compose ps -q django)
 
 Once you have done this, you can load the page that will run the code with your ``import ipdb`` and the debugger will activate in the shell you attached.  To detach from the shell without stopping the container press ``Control+P`` followed by ``Control+Q``.
 
@@ -193,7 +193,7 @@ database manipulation application you'd like to utilize, your settings will be:
 * username - ``tracker``
 * password - ``trackerpassword``
 * dbname - ``trackerdb``
-* the host/port can be determined by running ``docker-compose port postgresql 5432``
+* the host/port can be determined by running ``docker compose port postgresql 5432``
 
 Mimic CI and production environment
 +++++++++++++++++++++++++++++++++++
@@ -203,9 +203,9 @@ reverse nginx proxy, and debug mode off using the following command:
 
 .. code:: bash
 
-    docker-compose -f prod-docker-compose.yaml up
+    docker compose -f prod-docker-compose.yaml up
 
-All subsequent docker-compose files will need that explicit ``-f`` flag pointing
+All subsequent docker compose files will need that explicit ``-f`` flag pointing
 to the production-like compose file.
 
 Database snapshots
@@ -253,7 +253,7 @@ the current status and how you can help.
 Building
 -------------
 
-The development ``docker-compose`` setup includes separate application
+The development ``docker compose`` setup includes separate application
 and Node.js containers for hot-reloading purposes. To build a container
 for production use, run:
 
@@ -264,11 +264,11 @@ for production use, run:
 Running
 -------------
 
-This setup can also be tested locally with `docker-compose` by using:
+This setup can also be tested locally with `docker compose` by using:
 
 .. code:: bash
 
-    docker-compose -f prod-docker-compose.yaml up
+    docker compose -f prod-docker-compose.yaml up
 
 This setup will configure the app with production-like settings. In
 particular, `whitenoise` is used to serve static files.
