@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 from django.urls import reverse, path, include
 from wagtail.contrib.modeladmin.options import (
     ModelAdminGroup,
@@ -37,7 +37,7 @@ from incident.views import (
 @hooks.register('register_admin_urls')
 def incident_admin_search_url():
     return [
-        url(r'^incident-search/$', incident_admin_search_view, name='incident-admin-search'),
+        re_path(r'^incident-search/$', incident_admin_search_view, name='incident-admin-search'),
     ]
 
 

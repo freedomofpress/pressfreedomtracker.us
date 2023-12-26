@@ -1,6 +1,7 @@
 bleach>=4.1.0
 beautifulsoup4
 Django>=4.2.8,<4.3
+djangorestframework>=3.14
 django-anymail
 django-csp>=3.7
 django-modelcluster>=6.1

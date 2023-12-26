@@ -235,7 +235,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         # Could also be:
         # context['incident_count'] = incident_qs.count()
 
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             context['layout_template'] = 'base.ajax.html'
         else:
             context['layout_template'] = 'base.html'
@@ -255,7 +255,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         # simultaneously
         response['Cache-Tag'] = self.get_cache_tag()
 
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             # We don't want the browser to cache the response to an XHR because
             # it gets served with a different layout template. This becomes
             # problematic when a visitor hits the Back button in her browser

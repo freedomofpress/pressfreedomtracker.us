@@ -60,7 +60,7 @@ def incident_admin_search_view(request):
     else:
         form = SearchForm()
 
-    if request.is_ajax():
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return render(request, "wagtailadmin/incidentpages/search_results.html", {
             'pages': pages,
             'query_string': q,

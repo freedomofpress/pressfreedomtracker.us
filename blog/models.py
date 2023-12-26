@@ -140,7 +140,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         # of the blog (including paginated and filtered URLs) simultaneously
         response['Cache-Tag'] = self.get_cache_tag()
 
-        if request.is_ajax():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             # We don't want the browser to cache the response to an XHR because
             # it gets served with a different layout template. This becomes
             # problematic when a visitor hits the Back button in her browser
