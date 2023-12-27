@@ -5,7 +5,7 @@ djangorestframework>=3.14
 django-anymail
 django-csp>=3.7
 django-modelcluster>=6.1
-django-recaptcha
+django-recaptcha<4.0
 django-settings-export
 django-storages[google]
 django-webpack-loader
