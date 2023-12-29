@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
 
+
 @register.simple_tag(takes_context=True)
 def page_table_header_label(context, label=None, parent_page_title=None, **kwargs):
     """
@@ -108,3 +109,30 @@ def table_header_label(
         attrs=attrs_string,
         label=label,
     )
+
+
+@register.simple_tag(takes_context=True)
+def querystring(context, **kwargs):
+    """
+    Print out the current querystring. Any keyword arguments to this template
+    tag will be added to the querystring before it is printed out.
+
+        <a href="/page/{% querystring key='value' %}">
+
+    Will result in something like:
+
+        <a href="/page/?foo=bar&key=value">
+    """
+    request = context["request"]
+    querydict = request.GET.copy()
+    # Can't do querydict.update(kwargs), because QueryDict.update() appends to
+    # the list of values, instead of replacing the values.
+    for key, value in kwargs.items():
+        if value is None:
+            # Remove the key if the value is None
+            querydict.pop(key, None)
+        else:
+            # Set the key otherwise
+            querydict[key] = str(value)
+
+    return "?" + querydict.urlencode()
