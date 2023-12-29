@@ -123,7 +123,7 @@ export default function IncidentsTimeBarChart({
 						tooltipXFormat={d3.utcFormat(showByYears ? "%Y" : "%b %Y")}
 						titleLabel={'incidents'}
 						width={parent.width}
-						height={Math.min(parent.width * (isMobile ? 1.2 : 0.75), 600) * (branchFieldName ? 1.1 : 1)}
+						height={Math.min(parent.width * (isMobile ? 1 : 0.75), 600) * (branchFieldName ? 1.2 : 1)}
 						isMobileView={isMobile}
 						interactive={interactive}
 					/>
