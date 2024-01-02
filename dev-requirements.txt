@@ -909,9 +909,9 @@ rsa==4.8 \
     # via
     #   -r requirements.txt
     #   google-auth
-selenium==4.13.0 \
-    --hash=sha256:3c413a4f1b8af67824703195e3b1c19cfb1c3186c799efa035d55fd59d6dd59f \
-    --hash=sha256:f0f9185c01ae249a321529c4e3aa0edc2a900642e61fdbb76988cd72d2762ece
+selenium==4.16.0 \
+    --hash=sha256:aec71f4e6ed6cb3ec25c9c1b5ed56ae31b6da0a7f17474c7566d303f84e6219f \
+    --hash=sha256:b2e987a445306151f7be0e6dfe2aa72a479c2ac6a91b9d5ef2d6dd4e49ad0435
     # via -r dev-requirements.in
 six==1.16.0 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
