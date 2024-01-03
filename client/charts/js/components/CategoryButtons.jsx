@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import * as d3 from 'd3'
 
+// Takes a best guess at the width of a letter to calculate the width of a button
 const averageLetterWidth = 8
 const labelHeight = 30
 
@@ -41,6 +42,7 @@ export default function CategoryButtons({
 	}, [])
 
 	useEffect(() => {
+		// Calls the function to set the height so the parent component can keep track of it
 		setButtonsHeight(
 			d3.max(datasetCategoriesLabelsLegend, d => d.labelStartingY) + labelHeight * 1.5
 		)
@@ -52,16 +54,17 @@ export default function CategoryButtons({
 		return "white"
 	}
 
-	return (<>
-		{datasetCategoriesLabelsLegend
-			.sort((a, b) => {
-				const isFirst = hoveredElement === a.category
-				const isSecond = hoveredElement === b.category
-				if (isFirst) return 1
-				else if (isSecond) return -1
-				return 0
-			})
-			.map(d => (
+	return (
+		<>
+			{datasetCategoriesLabelsLegend
+				.sort((a, b) => {
+					const isFirst = hoveredElement === a.category
+					const isSecond = hoveredElement === b.category
+					if (isFirst) return 1
+					else if (isSecond) return -1
+					return 0
+				})
+				.map(d => (
 					<g
 						key={d.category}
 						onMouseLeave={() => setHoveredElement(null)}
@@ -77,7 +80,7 @@ export default function CategoryButtons({
 							x={d.labelStartingX}
 							y={d.labelStartingY}
 							width={d.labelWidth}
-							height={30}
+							height={labelHeight}
 							strokeWidth={hoveredElement === d.category ? borderWidth.normal : borderWidth.mobile}
 							stroke={hoveredElement === d.category ? findColor(d.category) : 'black'}
 							fill={fillColor(d)}
@@ -95,5 +98,5 @@ export default function CategoryButtons({
 				)
 			)}
 		</>
-		)
+	)
 };
