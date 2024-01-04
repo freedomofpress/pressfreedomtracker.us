@@ -96,10 +96,11 @@ export default function Search({ data = [], selectedTags = [] }) {
 		}
 	}
 
+	let unselectable = (selectedTag != null || selectedCategory != null)
 	// The base markup is the same as incidents/templates/incident/_search_bar.html
 	return (
 		<form
-			className="search-form"
+			className={classNames("search-form", {'smart-search--unselectable': unselectable})}
 			onSubmit={handleSubmit}
 			onFocus={() => setSearchActive(true)}
 			onBlur={(e) => {
@@ -142,10 +143,11 @@ export default function Search({ data = [], selectedTags = [] }) {
 					<button
 						type="button"
 						className="search-category-pill--close"
-						aria-label="Close"
+						aria-label="Clear"
 						onClick={updateSelectedTag(null)}
 					>
 						<i className="search-tag-pill--close--icon" aria-hidden />
+						Clear
 					</button>
 				</div>
 			)}
@@ -157,10 +159,11 @@ export default function Search({ data = [], selectedTags = [] }) {
 					<button
 						type="button"
 						className="search-tag-pill--close"
-						aria-label="Close"
+						aria-label="Clear"
 						onClick={updateSelectedTag(null)}
 					>
 						<i className="search-tag-pill--close--icon" aria-hidden />
+						Clear
 					</button>
 				</div>
 			)}

@@ -1,8 +1,16 @@
 .search-form
 	position: relative
 
+	input[type="search"]
+		cursor: var(--bar-cursor)
+		background-color: var(--bar-background-color)
+
 .text-field--search-bar.smart-search-active
 	outline: none
+
+.smart-search--unselectable
+	--bar-background-color: #{$tag-inactive-bg}
+	--bar-cursor: default
 
 .search-button
 	position: absolute
@@ -12,7 +20,7 @@
 	border: 0
 	margin: 0
 	font-weight: 500
-	background-color: $white
+	background-color: var(--bar-background-color, $white)
 
 .search-dropdown
 	position: absolute
@@ -82,8 +90,9 @@
 	left: 20px
 	display: flex
 	align-items: center
-	background-color: $white
+	background-color: var(--bar-background-color, $white)
 	font-weight: bold
+	cursor: text
 
 	&--tag-hash, &--category-label
 		color: $gray-text
@@ -98,6 +107,12 @@
 		border: 0
 		background-color: transparent
 		cursor: pointer
+		display: grid
+		grid-template-columns: auto auto
+		gap: 3px
+		place-items: center
+		text-transform: uppercase
+		margin-left: 4px
 
 		&--icon
 			display: block
