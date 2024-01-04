@@ -37,11 +37,12 @@ export default function Search({ data = [], selectedTags = [] }) {
 		inputRef?.current.focus()
 	}
 
-	const updateSelectedCategory = (category) => () => {
-		setSearchText('')
-		setSelectedCategory(category)
-		setSelectedTag(null)
-		inputRef?.current.focus()
+	const performCategorySearch = (category) => {
+		window.location.href = `/all-incidents/?categories=${category}`
+	}
+
+	const performTagSearch = (tag) => {
+		window.location.href = `/all-incidents/?tags=${tag}`
 	}
 
 	const updateSearchText = (text) => {
@@ -211,12 +212,13 @@ export default function Search({ data = [], selectedTags = [] }) {
 												<button
 													className="search-dropdown--category--button"
 													type="button"
-													onClick={updateSelectedCategory(category)}
+													onClick={() => performCategorySearch(category)}
 													onKeyDown={handleArrowKeys}
 												>
 													<span className="search-dropdown--tag--button--category-label">category:</span>
 													<CategoryIcon category={category} />
 													{category}
+													<span className="search-dropdown__go">Go &#8594;</span>
 												</button>
 											</li>
 										))}
@@ -241,11 +243,12 @@ export default function Search({ data = [], selectedTags = [] }) {
 										<button
 											className="search-dropdown--tag--button"
 											type="button"
-											onClick={updateSelectedTag(tag)}
+											onClick={() => performTagSearch(tag)}
 											onKeyDown={handleArrowKeys}
 										>
 											<span className="search-dropdown--tag--button--hash">#</span>
 											{tag}
+											<span className="search-dropdown__go">Go &#8594;</span>
 										</button>
 									</li>
 								))}
