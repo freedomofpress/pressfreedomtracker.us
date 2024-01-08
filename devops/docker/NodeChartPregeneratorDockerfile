@@ -17,12 +17,14 @@ RUN apk --no-cache add msttcorefonts-installer fontconfig && \
 ENV NPM_CONFIG_LOGLEVEL warn
 # Ensure npm can correctly set cache information in ~/.npm
 ENV HOME /home/node
+RUN mkdir -p /home/node/.npm
 
 ARG USERID
 RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
 COPY chart_pregenerator /opt/chart-pregenerator
 COPY ./client /opt/chart-pregenerator/client
 RUN chown -R "${USERID}" /opt/chart-pregenerator
+RUN chown -R "${USERID}" /home/node/.npm
 WORKDIR /opt/chart-pregenerator
 USER ${USERID}
 
