@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0101_create_chart_snapshot'),
+        ('common', '0102_create_chart_snapshot'),
     ]
 
     operations = [
