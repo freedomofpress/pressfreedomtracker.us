@@ -4,7 +4,7 @@ import BarChart from './BarChart'
 import BarChartMini from './BarChartMini'
 import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
-import { categoriesColors, filterDatasets } from '../lib/utilities'
+import { categoriesColors, filterDatasets, tabletMinMainColumn } from '../lib/utilities'
 
 export function processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName, groupByTag) {
 	// Rollup the incidents
@@ -59,8 +59,10 @@ export function processIncidentsTimeData(filteredDataset, timePeriod, branchFiel
 	const xFormat = (date) => {
 		if (showByYears) return timeFormat(date)
 		if (Object.keys(incidentsByYear).length === 1) return d3.utcFormat("%b")(date)
+		// If this is the first item in the list, format with the year
 		if (d3.utcFormat('%m-%Y')(date) === d3.utcFormat('%m-%Y')(allTime[0])
 			|| d3.utcFormat('%m')(date) === '01') return d3.utcFormat("%Y")(date)
+		// Format with the month abbreviation ie Jan, Feb, etc
 		return d3.utcFormat("%b")(date)
 	}
 
@@ -113,6 +115,7 @@ export default function IncidentsTimeBarChart({
 	return (
 		<ParentSize>
 			{(parent) => {
+				const isMobile = parent.width ? parent.width < tabletMinMainColumn : isMobileView
 				const barchart = fullSize ? (
 					<BarChart
 						description={description || generatedDescription}
@@ -126,8 +129,8 @@ export default function IncidentsTimeBarChart({
 						tooltipXFormat={d3.utcFormat(showByYears ? "%Y" : "%b %Y")}
 						titleLabel={'incidents'}
 						width={parent.width}
-						height={Math.min(parent.width * 0.75, 600)}
-						isMobileView={isMobileView}
+						height={Math.min(parent.width * (isMobile ? 1 : 0.75), 600) * (branchFieldName ? 1.2 : 1)}
+						isMobileView={isMobile}
 						interactive={interactive}
 					/>
 				) : (

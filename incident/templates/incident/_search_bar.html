@@ -1,11 +1,14 @@
-<div class="search-bar">
+<div
+	class="search-bar"
+	data-tags="{{ data_viz_tags_json|escape }}"
+>
 	<form class="search-form" method="GET" action="{{ action }}">
 		<label for="primary-search-bar" class="sr-only">
 			Search incidents by text
 		</label>
 		<input
 			id="primary-search-bar"
-			placeholder="{{ placeholder_text|default:"Search incidents by text" }}"
+			placeholder="{{ placeholder_text|default:"Search incidents" }}"
 			spellcheck="false"
 			autocomplete="off"
 			type="search"
@@ -19,3 +22,6 @@
 
 	</form>
 </div>
+
+{% load render_bundle from webpack_loader %}
+{% render_bundle 'searchBar' 'js' %}

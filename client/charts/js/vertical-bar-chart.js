@@ -28,13 +28,15 @@ function engageCharts() {
 		let dataUrl = [url || '/api/edge/incidents/homepage_csv/?']
 		let dataParser = [(data) => d3.csvParse(data, d3.autoType)]
 
+		// Specifies if the tree map needs to be grouped, and the method and key
+		// to group by
 		const branchFieldName = chartNode.dataset.branchFieldName
 		const branches = chartNode.dataset.branches && JSON.parse(chartNode.dataset.branches)
 		const groupByTag = chartNode.dataset?.groupByTag
 		let additionalProps = {}
-		if (chartNode.dataset.branches && branches.type == 'list') {
+		if (chartNode.dataset.branches && branches.type === 'list') {
 			additionalProps.branches = branches.value
-		} else if (chartNode.dataset.branches && branches.type == 'url') {
+		} else if (chartNode.dataset.branches && branches.type === 'url') {
 			dataUrl.push(branches.value)
 			dataKey.push("branches")
 			dataParser.push(JSON.parse)

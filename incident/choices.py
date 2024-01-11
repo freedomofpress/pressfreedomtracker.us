@@ -52,7 +52,7 @@ class LegalOrderVenue(TextChoices):
 
 class TypeOfDenial(TextChoices):
     CHANGE_IN_POLICY = 'CHANGE_IN_POLICY', 'Change in policy or practice'
-    GOVERNMENT_EVENTS = 'GOVERNMENT_EVENTS', 'Government events'
+    GOVERNMENT_EVENTS = 'GOVERNMENT_EVENTS', 'Government event'
     PRESS_CREDENTIAL = 'PRESS_CREDENTIAL', 'Press credential or media list'
     OTHER = 'OTHER', 'Other'
 

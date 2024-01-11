@@ -32,6 +32,15 @@ export const monthIndexes = {
 	Dec: 12,
 }
 
+
+// These values are also set in sass at client/common/sass/_responsive.sass
+export const mobileMax = 768;
+export const tabletMax = 1152;
+export const desktopMax = 1440;
+export const tabletMin = mobileMax + 1;
+export const desktopMin = tabletMax + 1;
+export const tabletMinMainColumn = 500;
+
 export function getFilteredUrl(databasePath, filtersApplied, currentDate, categories) {
 	const categoriesSlugs = categories.reduce((acc, { title, slug }) => ({ ...acc, [title]: slug }), {})
 	const origin = window.location.origin

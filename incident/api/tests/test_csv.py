@@ -101,6 +101,7 @@ class PerformantCSVTestCase(TestCase):
             was_journalist_targeted=choices.MAYBE_BOOLEAN[1][0],
             third_party_business=choices.ThirdPartyBusiness.TRAVEL,
             status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[1][0],
+            mistakenly_released_materials=True,
             equipment_damage=True,
             subpoena=True,
         )
@@ -155,6 +156,7 @@ class PerformantCSVTestCase(TestCase):
             'equipment_seized',
             'status_of_charges',
             'legal_order_venue',
+            'mistakenly_released_materials',
         ]
         url = reverse(
             'incidentpage-list',
@@ -272,6 +274,12 @@ class PerformantCSVTestCase(TestCase):
         self.assertEqual(
             self.result['status_of_prior_restraint'],
             self.incident.get_status_of_prior_restraint_display(),
+        )
+
+    def test_mistakenly_released_materials_is_correct(self):
+        self.assertEqual(
+            self.result['mistakenly_released_materials'],
+            str(self.incident.mistakenly_released_materials),
         )
 
     def test_arresting_authority_is_correct(self):
@@ -737,6 +745,7 @@ class IncidentCSVTestCase(TestCase):
                 'legal_order_type': inc.get_legal_order_type_display(),
                 'legal_order_venue': inc.get_legal_order_venue_display(),
                 'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),
+                'mistakenly_released_materials': str(inc.mistakenly_released_materials),
                 'targeted_journalists': ', '.join([e.summary for e in inc.targeted_journalists.all()]),
                 'targeted_institutions': ', '.join([str(e) for e in inc.targeted_institutions.all()]),
                 'tags': ', '.join([str(e) for e in inc.tags.all()]),
@@ -809,6 +818,7 @@ class IncidentCSVTestCase(TestCase):
             'legal_order_type',
             'legal_order_venue',
             'status_of_prior_restraint',
+            'mistakenly_released_materials',
             'targeted_journalists',
             'targeted_institutions',
             'tags',

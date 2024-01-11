@@ -4,7 +4,7 @@ import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
 import CategoryButtons, { calculateCategoriesLabelsLegend, calculateButtonsHeight } from './CategoryButtons.jsx'
-import { colors } from '../lib/utilities.js'
+import { colors, tabletMinMainColumn } from '../lib/utilities.js'
 
 // React-animated-dataset uses an older version of
 // d3 selection and in order to access some of its
@@ -62,11 +62,9 @@ export function computeMinimumNumberOfIncidents(dataset, chartHeight, minimumBar
 		.range([0, chartHeight - borderWidth.normal - paddings.top - paddings.bottom])
 
 	// totalIncidents + 1 is needed in case there's only one incident (otherwise d3.range(1) => [0])
-	const minimumNumberOfIncidents = d3.min(
+	return d3.min(
 		d3.range(totalIncidents + 1).filter((d) => y(d) > minimumBarHeight)
 	)
-
-	return minimumNumberOfIncidents
 }
 
 export function stackDatasetByCategory(
@@ -114,7 +112,7 @@ export function stackDatasetByCategory(
 	const stack = d3.stack().keys(
 		Object.keys(incidentsGroupedByCategory).sort((a, b) => a.localeCompare(b))
 	)
-	const datasetStackedByCategory = stack([incidentsGroupedByCategoryAdjusted]).map((d) => ({
+	return stack([incidentsGroupedByCategoryAdjusted]).map((d) => ({
 		startingPoint: d[0][0],
 		endPoint: !isNaN(d[0][1]) ? d[0][1] : d[0][0],
 		numberOfIncidents: incidentsGroupedByCategory[d.key],
@@ -122,8 +120,6 @@ export function stackDatasetByCategory(
 	}))
 		// Only display non-empty groups in the chart.
 		.filter((d) => d.numberOfIncidents > 0 || (filterElements.length && allCategories.indexOf(d.category) >= 0))
-
-	return datasetStackedByCategory
 }
 
 export default function TreeMap({
@@ -152,7 +148,7 @@ export default function TreeMap({
 
 	// Because the chart can be rendered horizontally on desktop and vertically on
 	// mobile, we abstract the dimensions below
-	const isMobile = width < 500 || searchPageURL
+	const isMobile = width < tabletMinMainColumn || searchPageURL
 	const chartLength = isMobile ? height : width
 	const chartWidth = isMobile ? width : height
 	const chartLengthPaddingBefore = isMobile ? paddings.top : paddings.left
@@ -174,6 +170,7 @@ export default function TreeMap({
 		minimumBarHeight
 	)
 
+	// Groups the datasets by category, tag, etc
 	const datasetStackedByCategory = stackDatasetByCategory(
 		dataset,
 		selectedElements,
@@ -387,7 +384,7 @@ export default function TreeMap({
 								tag="text"
 								init={{
 									opacity: 0,
-									y: (d) => height - paddings.bottom,
+									y: () => height - paddings.bottom,
 									x: paddings.left + textPaddings.left,
 								}}
 								attrs={{
@@ -419,7 +416,7 @@ export default function TreeMap({
 								dataset={datasetStackedByCategory}
 								init={{
 									opacity: 0,
-									y: (d) => height - paddings.bottom,
+									y: () => height - paddings.bottom,
 									x: width - textPaddings.right - paddings.right,
 								}}
 								tag="text"

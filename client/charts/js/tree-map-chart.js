@@ -27,12 +27,14 @@ function engageCharts() {
 		let dataUrl = [url]
 		let dataParser = [(data) => d3.csvParse(data, d3.autoType)]
 
+		// Specifies if the tree map needs to be grouped, and the method and key
+		// to group by
 		const branchFieldName = chartNode.dataset.branchFieldName
 		const branches = JSON.parse(chartNode.dataset.branches)
 		let additionalProps = {}
-		if (branches.type == 'list') {
+		if (branches.type === 'list') {
 			additionalProps.branches = branches.value
-		} else if (branches.type == 'url') {
+		} else if (branches.type === 'url') {
 			dataUrl.push(branches.value)
 			dataKey.push("branches")
 			dataParser.push(JSON.parse)

@@ -9,8 +9,13 @@ import {
 	filterDatasetByFiltersApplied,
 } from '../lib/utilities.js'
 
-function chooseMostFrequentTags(dataset, numberOfTags) {
-	const tags = dataset.map((d) => d.tags).filter((d) => d !== null)
+export function chooseTrendingTags(dataset, numberOfTags) {
+	const currentDate = new Date();
+	const filterStartDate = (new Date()).setFullYear(currentDate.getFullYear() - 1);
+	const tags = dataset
+		.filter(({ date }) => date >= filterStartDate)
+		.map((d) => d.tags)
+		.filter((d) => d !== null)
 
 	// Any incident having multiple tags is counted once per category
 	const tagsSimplified = tags.flatMap((d) => d.split(',').map((e) => e.trim()))
@@ -32,7 +37,7 @@ function chooseMostFrequentTags(dataset, numberOfTags) {
 export default function HomepageSelection({
 	data: originalDataset,
 	numberOfTags = 5,
-	selectedTags = chooseMostFrequentTags(originalDataset, numberOfTags),
+	selectedTags = chooseTrendingTags(originalDataset, numberOfTags),
 	currentDate = new Date(),
 	filtersApplied,
 	setFiltersApplied,

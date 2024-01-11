@@ -32,6 +32,7 @@ FILTER_CHOICES = [
     ('legal_order_target', 'Legal order target'),
     ('legal_order_type', 'Legal order type'),
     ('legal_order_venue', 'Legal order venue'),
+    ('mistakenly_released_materials', 'Mistakenly released materials?'),
     ('name_of_business', 'Name of business'),
     ('primary_video', 'Primary video'),
     ('release_date', 'Release date'),

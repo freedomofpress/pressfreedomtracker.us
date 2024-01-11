@@ -129,11 +129,51 @@ class BooleanFilter(Filter):
     serialized_type = 'bool'
     openapi_type = OpenApiTypes.BOOL
 
+    def __init__(self, *args, **kwargs):
+        self._present_summary_name = kwargs.pop('present_summary_name', None)
+        self._absent_summary_name = kwargs.pop('absent_summary_name', None)
+        super().__init__(*args, **kwargs)
+
     def value_to_string(self, value):
         if value:
             return '1'
         else:
             return '0'
+
+    @property
+    def absent_summary_name(self):
+        """Name that describes, as a summary, the set of incidents
+        with this filter applied in the negative.  Incidents with this
+        the filtered field set to True will be absent from the result
+        set.
+
+        E.g., "No mistakenly released materials", "Not stopped
+        previously"
+
+        """
+        if self._absent_summary_name:
+            return self._absent_summary_name
+        return f'{self.get_verbose_name()} No'
+
+    @property
+    def present_summary_name(self):
+        """Name that describes, as a summary, the set of incidents
+        with this filter applied in the positive.  Incidents with this
+        the filtered field set to True will be present in the result
+        set.
+
+        E.g., "Mistakenly released materials", "Stopped previously"
+
+        """
+        if self._present_summary_name:
+            return self._present_summary_name
+        return self.get_verbose_name().rstrip('?')
+
+    def serialize(self):
+        serialized = super().serialize()
+        serialized['present_summary_name'] = self.present_summary_name
+        serialized['absent_summary_name'] = self.absent_summary_name
+        return serialized
 
 
 class IntegerFilter(Filter):
@@ -832,6 +872,12 @@ class IncidentFilter(object):
         'state': {'text_fields': ['abbreviation', 'name']},
         'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'},
         'legal_order_type': {'filter_cls': LegalOrderTypeFilter},
+        'mistakenly_released_materials': {'absent_summary_name': 'No mistakenly released materials'},
+        'unnecessary_use_of_force': {'absent_summary_name': 'No unnecessary use of force'},
+        'is_search_warrant_obtained': {'absent_summary_name': 'No search warrant obtained'},
+        'denial_of_entry': {'absent_summary_name': 'Not denied entry'},
+        'stopped_previously': {'absent_summary_name': 'Not stopped previously'},
+        'charged_under_espionage_act': {'absent_summary_name': 'Not charged under espionage act'},
     }
 
     _extra_filters = {

@@ -31,6 +31,7 @@ from incident import choices
 from incident.models.incident_page import IncidentPage
 from incident.models.topic_page import TopicPage
 from incident.models.export import is_exportable, to_row
+from incident.models import IncidentCategorization
 from .factories import (
     IncidentIndexPageFactory,
     IncidentPageFactory,
@@ -1577,4 +1578,55 @@ class IncidentPageTests(TestCase):
         self.assertEqual(
             inc.get_all_targets_for_linking[2].url_arguments,
             f'targeted_institutions={inst.title}'
+        )
+
+
+def create_prior_restraint_incident(
+        *,
+        page_title='Prior restraint incident',
+        status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[0][0],
+        mistakenly_released_materials=True,
+):
+    # Get default site
+    site = Site.objects.get(is_default_site=True)
+
+    # Get the root page
+    root = site.root_page
+
+    category = CategoryPageFactory(
+        slug='prior-restraint',
+        parent=root,
+    )
+
+    incident = IncidentPageFactory(
+        status_of_prior_restraint=status_of_prior_restraint,
+        mistakenly_released_materials=mistakenly_released_materials,
+        parent=root,
+    )
+    IncidentCategorization.objects.create(
+        incident_page=incident,
+        category=category,
+    )
+    return incident
+
+
+class IncidentFieldTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.page = create_prior_restraint_incident()
+
+    def test_shows_mistakenly_released_materials_field(self):
+        response = self.client.get(self.page.url)
+        self.assertContains(
+            response,
+            '<dt class="details-table__label">Mistakenly Released Materials?</dt>',
+            html=True,
+        )
+
+    def test_shows_status_of_prior_restraint_field(self):
+        response = self.client.get(self.page.url)
+        self.assertContains(
+            response,
+            '<dt class="details-table__label">Status of Prior Restraint</dt>',
+            html=True,
         )

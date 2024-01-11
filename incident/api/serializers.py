@@ -180,6 +180,7 @@ class BaseIncidentSerializer(VariableFieldSerializer):
     legal_order_type = serializers.CharField(source='get_legal_order_type_display')
     legal_order_venue = serializers.CharField(source='get_legal_order_venue_display')
     status_of_prior_restraint = serializers.CharField(source='get_status_of_prior_restraint_display')
+    mistakenly_released_materials = serializers.BooleanField()
 
     @extend_schema_field(OpenApiTypes.URI)
     def get_url(self, obj):
@@ -285,6 +286,7 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     stopped_previously = serializers.BooleanField()
     charged_under_espionage_act = serializers.BooleanField()
     name_of_business = serializers.CharField()
+    mistakenly_released_materials = serializers.BooleanField()
 
     # Choice fields -- data is on IncidentPage but choice text
     # requires an annotation
