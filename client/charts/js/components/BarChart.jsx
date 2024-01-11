@@ -338,7 +338,7 @@ export default function BarChart({
 										shapeRendering="crispEdges"
 									>
 										<title>
-											{xFormat(branchEntry.data[x])}: {yFormat(branchEntry.data[y])} {titleLabel}
+											{`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
 										</title>
 									</rect>
 								</DynamicWrapper>
