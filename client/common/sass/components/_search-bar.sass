@@ -1,8 +1,16 @@
 .search-form
 	position: relative
 
+	input[type="search"]
+		cursor: var(--bar-cursor)
+		background-color: var(--bar-background-color)
+
 .text-field--search-bar.smart-search-active
 	outline: none
+
+.smart-search--unselectable
+	--bar-background-color: #{$tag-inactive-bg}
+	--bar-cursor: default
 
 .search-button
 	position: absolute
@@ -12,7 +20,7 @@
 	border: 0
 	margin: 0
 	font-weight: 500
-	background-color: $white
+	background-color: var(--bar-background-color, $white)
 
 .search-dropdown
 	position: absolute
@@ -25,19 +33,29 @@
 	padding: 12px 0
 	z-index: 20000
 
+	&__go
+		margin-left: auto
+
+	&--wrap
+		padding: 0
+		margin: 0
+
 	&--header
 		padding: 0 23px
 		color: $gray-text
 		font-size: 12px
-		margin-bottom: 6px
+		margin: 6px 0
 
-	&--tag
+	&--tag, &--category
 		width: 100%
 		list-style: none
 
+		&--custom-search
+			font-weight: bold
+
 		&--button
 			padding: 4px 23px
-			display: block
+			display: flex
 			width: 100%
 			text-align: left
 			background: none
@@ -49,33 +67,55 @@
 				background-color: $accent-color
 				outline: none
 
-			&--hash
+			&--hash, &--category-label
 				display: inline-block
 				padding: 4px
 				margin-right: 8px
 				background-color: $black
-				color: $tag-inactive
+				color: $gray-light
 
-.search-tag-pill
+			&--category-label
+				padding: 4px 8px
+
+			.category
+				display: inline-block
+	hr
+		background-color: $gray-light
+		height: 2px
+		border: 0
+		margin: 24px
+
+
+.search-tag-pill, .search-category-pill
 	position: absolute
 	top: 3px
 	bottom: 3px
 	left: 20px
 	display: flex
 	align-items: center
-	background-color: $white
+	background-color: var(--bar-background-color, $white)
 	font-weight: bold
+	cursor: text
 
-	&--tag-hash
+	&--tag-hash, &--category-label
 		color: $gray-text
 		font-weight: normal
 		margin-right: 4px
 		display: inline-block
 
+	&--category-label
+		color: $gray-light
+
 	&--close
 		border: 0
 		background-color: transparent
 		cursor: pointer
+		display: grid
+		grid-template-columns: auto auto
+		gap: 3px
+		place-items: center
+		text-transform: uppercase
+		margin-left: 4px
 
 		&--icon
 			display: block
