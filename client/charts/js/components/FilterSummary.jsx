@@ -1,19 +1,5 @@
 import React from 'react'
-import classNames from 'classnames'
-
-const symbolMap = {
-	"Arrest / Criminal Charge": "arrest",
-	"Border Stop": "border_stop",
-	"Denial of Access": "denial_of_access",
-	"Equipment Search or Seizure": "equipment_search",
-	"Assault": "assault",
-	"Leak Case": "leak_case",
-	"Subpoena / Legal Order": "subpoena",
-	"Equipment Damage": "equipment_damage",
-	"Prior Restraint": "prior_restraint",
-	"Chilling Statement": "chilling_statement",
-	"Other Incident": "other_incident",
-}
+import CategoryIcon, { categorySymbolMap } from '../../../common/js/components/categoryIcon'
 
 export default function FilterSummary({ serializedFilters }) {
 	const categoryFilters = JSON.parse(serializedFilters)
@@ -44,7 +30,7 @@ export default function FilterSummary({ serializedFilters }) {
 	const categories = [...new Set(
 		(categoriesStr ? categoriesStr.split(',').map(d => d.trim()) : [])
 			.map(category => {
-				if (symbolMap[category]) return category;
+				if (categorySymbolMap[category]) return category;
 				if (idMap[category]) return idMap[category];
 				return null;
 			})
@@ -75,7 +61,7 @@ export default function FilterSummary({ serializedFilters }) {
 						className="btn btn-tag"
 						aria-label={`Removes filter: ${category.toLowerCase()}`}
 					>
-						{symbolMap[category] && <div className={classNames("category", `category-${symbolMap[category]}`)}></div>}
+						<CategoryIcon category={category} />
 						<span>{category.toLowerCase()}</span>
 						<span className="close-icon" />
 					</button>
