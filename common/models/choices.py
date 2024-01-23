@@ -50,7 +50,7 @@ FILTER_CHOICES = [
     ('targeted_institutions', 'Targeted Institutions'),
     ('targeted_journalists', 'Targeted any of these journalists'),
     ('workers_whose_communications_were_obtained',
-     'Targets whose communications were obtained in leak investigation'),
+     'Alleged recipient of leak'),
     ('third_party_business', 'Third party business'),
     ('date', 'Took place'),
     ('case_type', 'Type of case'),
