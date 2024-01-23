@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, timezone
 import structlog
 from django.db import models
 from django.db.models import Q
-from django.utils.text import slugify
 from marshmallow import Schema, fields
 from wagtail.core.models import Collection
 from wagtail.images import get_image_model_string, get_image_model
@@ -122,19 +121,10 @@ class ChartSnapshot(models.Model):
         if self.snapshot_type == SnapshotType.SVG:
             self.chart_svg = result
         elif self.snapshot_type == SnapshotType.PNG:
-            # Generate filename
-            img_slug = slugify(
-                '-'.join(
-                    # limit to the first 12 characters of value so that it doesn't get too long
-                    str(v)[:12] for v in self.query.values() if v
-                )
-            )
-            base_filename = f'{img_slug}_{self.chart_type}'
-            filename = f'{base_filename}.{self.snapshot_type}'.lower()
-            result.name = filename
-            custom_image = get_image_model().objects.create(
+            custom_image = get_image_model()(
                 file=result,
-                title=base_filename,
+                # Remove the file extension for the title
+                title=result.name.rsplit('.', 1)[0],
                 collection=self.get_or_create_collection(),
                 height=self.query.get('height', self.DEFAULT_HEIGHT),
                 width=self.query.get('width', self.DEFAULT_WIDTH),

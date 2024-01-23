@@ -1,8 +1,11 @@
+import io
 import json
 import requests
 
+import PIL.Image
 from django.conf import settings
 from django.core.files.images import ImageFile
+from django.utils.text import slugify
 
 from .types import (
     SnapshotType,
@@ -69,4 +72,19 @@ def request_snapshot(
 
     elif snapshot_type == SnapshotType.PNG:
         response = make_request(endpoint=endpoint, file_format='png', query=query, stream=True)
-        return ImageFile(response.raw)
+
+        # Generate filename
+        img_slug = slugify(
+            '-'.join(
+                # limit to the first 12 characters of value so that it doesn't get too long
+                str(v)[:12] for v in query.values() if v
+            )
+        )
+        base_filename = f'{img_slug}_{chart_type}'
+        filename = f'{base_filename}.{snapshot_type}'.lower()
+
+        f = io.BytesIO()
+
+        img = PIL.Image.open(response.raw)
+        img.save(f, "PNG")
+        return ImageFile(f, name=filename)
