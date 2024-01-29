@@ -708,7 +708,7 @@ class IncidentPage(MetadataPageMixin, Page):
     # Leak Prosecution
     workers_whose_communications_were_obtained = ParentalManyToManyField(
         'incident.GovernmentWorker',
-        verbose_name='Targets whose communications were obtained in leak investigation',
+        verbose_name='Alleged recipient of leak',
         related_name='incidents',
         blank=True,
     )
