@@ -108,7 +108,7 @@ def incident_admin_search_area():
 class GovernmentWorkerAdmin(MergeAdmin):
     model = GovernmentWorker
     merge_view_class = GovernmentWorkerMergeView
-    menu_label = 'Government Workers'
+    menu_label = 'Alleged Recipients of Leaks'
     menu_icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
