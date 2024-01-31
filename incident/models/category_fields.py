@@ -68,7 +68,7 @@ CATEGORY_FIELD_MAP = {
         ('was_journalist_targeted', 'Was the journalist targeted?'),
     ],
     'leak-case': [
-        ('workers_whose_communications_were_obtained', 'Targets whose Communications Were Obtained'),
+        ('workers_whose_communications_were_obtained', 'Alleged Recipient of Leak'),
         ('charged_under_espionage_act', 'Charged under Espionage Act'),
     ],
     'subpoena': [
