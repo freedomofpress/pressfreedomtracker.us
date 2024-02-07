@@ -31,4 +31,4 @@ USER ${USERID}
 RUN npm install
 RUN npm run build
 
-CMD ["npm", "run", "start"]
+CMD ["node", "./build/server.js"]
