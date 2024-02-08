@@ -14,6 +14,7 @@ A simple service for generating charts and maps into static assets.
 | `/bubble-map.png`    |
 
 ## Query Parameters
+
 All query parameters are passed in via an urlencoded json string under the `options` parameter, for instance:
 
 `http://localhost:3000/treemap-chart.png?options={%22filterCategories%22:[%22Assault%22]}`
