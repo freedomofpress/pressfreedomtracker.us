@@ -7,9 +7,12 @@ from marshmallow import Schema, fields
 from wagtail.core.models import Collection
 from wagtail.images import get_image_model_string, get_image_model
 
+from common.exceptions import (
+    PregenerationException,
+    ChartNotAvailable,
+)
 from common.utils.chart_pregenerator.api import (
     request_snapshot,
-    PregenerationException,
 )
 from common.utils.chart_pregenerator.types import (
     ChartType,
@@ -170,4 +173,4 @@ class ChartSnapshot(models.Model):
                 chart.generate()
             return chart
         else:
-            raise Exception('Tried to generate chart and failed, perhaps return a placeholder image here?')
+            raise ChartNotAvailable

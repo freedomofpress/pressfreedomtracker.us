@@ -14,7 +14,10 @@ from common.utils.chart_pregenerator.types import (
     ChartType,
     SnapshotType,
 )
-from common.utils.chart_pregenerator.api import PregenerationException
+from common.exceptions import (
+    ChartNotAvailable,
+    PregenerationException,
+)
 
 from .factories import ChartSnapshotFactory
 
@@ -175,10 +178,10 @@ class TestChartSnapshot(TestCase):
 
     @mock.patch(
         'common.models.charts.request_snapshot',
-        side_effect=PregenerationException,
+        side_effect=ChartNotAvailable,
     )
     def test_raises_an_exception_if_cannot_get_snapshot(self, mock_request_snapshot):
-        with self.assertRaisesRegex(Exception, 'Tried to generate chart and failed'):
+        with self.assertRaises(ChartNotAvailable):
             ChartSnapshot.get_or_generate(
                 chart_type=ChartType.TREEMAP,
                 snapshot_type=SnapshotType.SVG,

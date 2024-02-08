@@ -18,6 +18,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
 from common.utils import DEFAULT_PAGE_KEY, paginate
+from common.exceptions import ChartNotAvailable
 
 from blog.choices import BlogTemplateType
 from blog.feeds import BlogIndexPageFeed
@@ -321,7 +322,10 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
                     "bubble_map_chart",
                 )
         ):
-            return self.teaser_graphic[0].value.png_snapshot_meta()
+            try:
+                return self.teaser_graphic[0].value.png_snapshot_meta()
+            except ChartNotAvailable:
+                pass
         return super(BlogPage, self).get_meta_image()
 
     def get_meta_description(self):

@@ -7,6 +7,11 @@ from django.conf import settings
 from django.core.files.images import ImageFile
 from django.utils.text import slugify
 
+from common.exceptions import (
+    InvalidChartType,
+    PregenerationAPIFailure,
+)
+
 from .types import (
     SnapshotType,
     ChartType,
@@ -32,7 +37,7 @@ def make_request(*, endpoint, file_format, query, stream=False):
         )
         response.raise_for_status()
     except requests.exceptions.RequestException:
-        raise PregenerationException('Failed to reach pregeneration service')
+        raise PregenerationAPIFailure('Failed to reach pregeneration service')
     return response
 
 
@@ -65,7 +70,7 @@ def request_snapshot(
     elif chart_type == ChartType.BUBBLE_MAP:
         endpoint = 'bubble-map'
     else:
-        raise PregenerationException(f'Unknown chart type {chart_type}')
+        raise InvalidChartType(chart_type)
 
     if snapshot_type == SnapshotType.SVG:
         return make_request(endpoint=endpoint, file_format='svg', query=query).text

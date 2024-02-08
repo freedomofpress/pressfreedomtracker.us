@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.contrib.syndication.views import Feed
 
 from common.feeds import MRSSFeed
+from common.exceptions import ChartNotAvailable
 
 
 class BlogIndexPageFeed(Feed):
@@ -32,8 +33,9 @@ class BlogIndexPageFeed(Feed):
                     width=655,
                     height=440,
                 )
-        except IndexError:
-            pass
+        except (IndexError, ChartNotAvailable):
+            if obj.search_image:
+                return obj.search_image.get_rendition('original')
 
     def _get_categories(self, obj):
         categories = obj.categories.all().select_related('category')

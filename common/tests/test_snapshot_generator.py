@@ -6,9 +6,9 @@ import requests
 from django.core.files.images import ImageFile
 from django.test import TestCase
 
+from common.exceptions import PregenerationException
 from common.utils.chart_pregenerator.api import (
     request_snapshot,
-    PregenerationException,
 )
 from common.utils.chart_pregenerator.types import (
     SnapshotType,
