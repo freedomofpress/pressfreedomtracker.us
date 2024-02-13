@@ -207,9 +207,9 @@ defusedxml==0.7.1 \
     --hash=sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69 \
     --hash=sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61
     # via willow
-django==4.2.8 \
-    --hash=sha256:6cb5dcea9e3d12c47834d32156b8841f533a4493c688e2718cafd51aa430ba6d \
-    --hash=sha256:d69d5e36cc5d9f4eb4872be36c622878afcdce94062716cf3e25bcedcb168b62
+django==4.2.10 \
+    --hash=sha256:a2d4c4d4ea0b6f0895acde632071aff6400bfc331228fc978b05452a0ff3e9f1 \
+    --hash=sha256:b1260ed381b10a11753c73444408e19869f3241fc45c985cd55a30177c789d13
     # via
     #   -r requirements.in
     #   django-anymail
@@ -703,7 +703,9 @@ pillow==10.2.0 \
     --hash=sha256:edca80cbfb2b68d7b56930b84a0e45ae1694aeba0541f798e908a49d66b837f1 \
     --hash=sha256:f379abd2f1e3dddb2b61bc67977a6b5a0a3f7485538bcc6f39ec76163891ee48 \
     --hash=sha256:fe4c15f6c9285dc54ce6553a3ce908ed37c8f3825b5a51a15c91442bb955b868
-    # via wagtail
+    # via
+    #   pillow-heif
+    #   wagtail
 pillow-heif==0.14.0 \
     --hash=sha256:04e2bb02f91fe5b3746f5f7a6207a9f314ecb426631153e857b3a4fa288d2333 \
     --hash=sha256:08c94516d4a73e73fe7eefe5dcc46ab2d99b35d310ab8387e6e0bf86ee961757 \
