@@ -1,11 +1,9 @@
-from django.urls import re_path
 from django.urls import reverse, path, include
 from wagtail.contrib.modeladmin.options import (
     ModelAdminGroup,
     modeladmin_register,
 )
 from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
-from wagtail.admin.search import SearchArea
 from wagtail import hooks
 
 from common.wagtail_hooks import MergeAdmin

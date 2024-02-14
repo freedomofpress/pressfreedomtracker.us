@@ -6,15 +6,12 @@ from datetime import date
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from wagtail.models import Site
-from wagtail.rich_text import RichText
 
 from incident.models import Charge, Nationality, PoliticianOrPublic, Venue, Journalist, Institution, TargetedJournalist, GovernmentWorker, IncidentPage, choices
 from incident.wagtail_hooks import ChargeAdmin, NationalityAdmin, VenueAdmin, PoliticianOrPublicAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin
 from incident.tests.factories import (
     ChargeFactory,
     IncidentPageFactory,
-    IncidentIndexPageFactory,
     TargetedJournalistFactory,
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,

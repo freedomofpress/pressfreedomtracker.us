@@ -1,20 +1,12 @@
 import csv
 from io import StringIO
 
-from django.contrib.postgres.search import SearchQuery, SearchVector
-from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.views.decorators.vary import vary_on_headers
 from django.views.generic import View
 from django.views.generic.edit import FormView
-from wagtail.admin.auth import (
-    user_has_any_page_permission,
-    user_passes_test,
-)
 from wagtail.admin import messages
-from wagtail.admin.forms.search import SearchForm
 
 from common.views import MergeView
 from incident.forms import (
