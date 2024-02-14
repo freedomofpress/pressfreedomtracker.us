@@ -12,7 +12,7 @@ def register_stats_guide_menu_item():
     return MenuItem(
         'Statistics Guide',
         reverse('statistics_guide'),
-        classnames='icon icon-doc-full',
+        classname='icon icon-doc-full',
         order=10000,
     )
 

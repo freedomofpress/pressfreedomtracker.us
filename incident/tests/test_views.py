@@ -24,46 +24,6 @@ from incident.tests.factories import (
 User = get_user_model()
 
 
-class IncidentAdminSearch(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        site = Site.objects.get(is_default_site=True)
-
-        incident_index_page = IncidentIndexPageFactory(
-            parent=site.root_page,
-        )
-
-        cls.incident_page1 = IncidentPageFactory(
-            parent=incident_index_page,
-            title='asdf',
-        )
-        cls.incident_page2 = IncidentPageFactory(
-            parent=incident_index_page,
-            title='zxcv',
-        )
-        cls.incident_page3 = IncidentPageFactory(
-            parent=incident_index_page,
-            title='qwerty',
-            body=[('rich_text', RichText('<p>asdf</p>'))],
-        )
-        cls.user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
-
-    def setUp(self):
-        self.client.force_login(self.user)
-        self.url = reverse('incident-admin-search')
-
-    def test_search_title(self):
-        response = self.client.get(self.url, {'q': 'zxcv'})
-        self.assertEqual(set(response.context['pages']), {self.incident_page2})
-
-    def test_search_title_and_body(self):
-        response = self.client.get(self.url, {'q': 'asdf'})
-        self.assertEqual(
-            set(response.context['pages']),
-            {self.incident_page1, self.incident_page3},
-        )
-
-
 class InstitutionMergeViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):

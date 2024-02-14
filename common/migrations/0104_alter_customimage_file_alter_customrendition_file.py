@@ -7,7 +7,7 @@ import wagtail.images.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0101_update_incident_filters_for_mistakenly_released_mats'),
+        ('common', '0103_auto_20240125_1417'),
     ]
 
     operations = [

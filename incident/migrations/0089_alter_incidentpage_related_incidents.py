@@ -7,7 +7,7 @@ import modelcluster.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('incident', '0086_incidentpage_mistakenly_released_materials'),
+        ('incident', '0088_auto_20240123_1608'),
     ]
 
     operations = [

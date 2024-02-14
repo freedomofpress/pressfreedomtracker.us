@@ -21,7 +21,6 @@ from incident.models import (
 )
 from incident.views import (
     ChargeMergeView,
-    incident_admin_search_view,
     NationalityMergeView,
     PoliticianOrPublicMergeView,
     VenueMergeView,
@@ -32,13 +31,6 @@ from incident.views import (
     LegalOrderImportView,
     LegalOrderImportConfirmView,
 )
-
-
-@hooks.register('register_admin_urls')
-def incident_admin_search_url():
-    return [
-        re_path(r'^incident-search/$', incident_admin_search_view, name='incident-admin-search'),
-    ]
 
 
 @hooks.register('register_admin_urls')
@@ -78,12 +70,12 @@ def register_tools_menu_item():
     legal_order_import_item = MenuItem(
         'Import Legal Orders',
         reverse('import_legal_orders:show_form'),
-        classnames='icon icon-table'
+        classname='icon icon-table'
     )
     mc_groups_item = MenuItem(
         'Mailchimp Groups',
         reverse('mailchimp_interests'),
-        classnames='icon icon-mail',
+        classname='icon icon-mail',
         order=10,
     )
 
@@ -94,15 +86,6 @@ def register_tools_menu_item():
         ],
     )
     return SubmenuMenuItem('Tools', submenu, icon_name='code', order=10000)
-
-
-@hooks.register('register_admin_search_area')
-def incident_admin_search_area():
-    return SearchArea(
-        label='Incidents',
-        url=reverse('incident-admin-search'),
-        order=0,
-    )
 
 
 class GovernmentWorkerAdmin(MergeAdmin):

@@ -41,40 +41,6 @@ from incident.models import (
 from incident.utils.csv import parse_row
 
 
-@vary_on_headers('X-Requested-With')
-@user_passes_test(user_has_any_page_permission)
-def incident_admin_search_view(request):
-    pages = []
-    q = None
-
-    if 'q' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            q = form.cleaned_data['q']
-
-            query = SearchQuery(q)
-            vector = SearchVector('title', 'body')
-            pages = IncidentPage.objects.annotate(search=vector).filter(search=query)
-            paginator = Paginator(pages, per_page=25)
-            pages = paginator.get_page(request.GET.get('p'))
-    else:
-        form = SearchForm()
-
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return render(request, "wagtailadmin/incidentpages/search_results.html", {
-            'pages': pages,
-            'query_string': q,
-            'pagination_query_params': ('q=%s' % q) if q else ''
-        })
-    else:
-        return render(request, "wagtailadmin/incidentpages/search.html", {
-            'search_form': form,
-            'pages': pages,
-            'query_string': q,
-            'pagination_query_params': ('q=%s' % q) if q else ''
-        })
-
-
 class ChargeMergeView(FormView):
     form_class = ChargeMergeForm
     template_name = 'modeladmin/merge_form.html'
