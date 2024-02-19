@@ -21,7 +21,6 @@ class CleanTest(TestCase):
             block.clean({
                 'tweet': EmbedValue('http://www.twitter.com/WagtailCMS/status/1413141835711606786'),
             })
-        print(cm)
         self.assertEqual(cm.exception.block_errors, {'tweet': ValidationError('Please enter a valid Twitter URL.')})
 
     def test_clean_http_naked_twitter_url(self):

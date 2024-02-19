@@ -139,20 +139,6 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         # We set a cache tag here so that elsewhere we can purge all subroutes
         # of the blog (including paginated and filtered URLs) simultaneously
         response['Cache-Tag'] = self.get_cache_tag()
-
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            # We don't want the browser to cache the response to an XHR because
-            # it gets served with a different layout template. This becomes
-            # problematic when a visitor hits the Back button in her browser
-            # and ends up seeing the cached version without any typical layout.
-            #
-            # n.b. This method mutates the response and returns None.
-            patch_cache_control(
-                response,
-                no_cache=True,
-                no_store=True,
-                must_revalidate=True,
-            )
         return response
 
     def get_meta_description(self):
