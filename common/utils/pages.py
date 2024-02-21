@@ -1,4 +1,4 @@
-from wagtail.core.models import Site
+from wagtail.models import Site
 
 
 def get_page_for_request(request):

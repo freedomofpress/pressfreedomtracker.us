@@ -915,6 +915,8 @@ class IncidentFilter(object):
         'detention_status',  # Deprecated field
         # 'dropped_charges',
         # 'current_charges',
+        '_workflow_states',
+        '_specific_workflow_states',
     }
 
     class SortOptions(TextChoices):

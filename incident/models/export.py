@@ -58,6 +58,8 @@ EXCLUDED_FIELDS = {
     'detention_status',  # Deprecated
     '_revisions',
     'latest_revision',
+    '_workflow_states',
+    '_specific_workflow_states',
 }
 
 
