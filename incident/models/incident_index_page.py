@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
-from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from marshmallow import Schema, fields, EXCLUDE
