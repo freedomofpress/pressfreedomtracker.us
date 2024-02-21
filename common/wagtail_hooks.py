@@ -1,8 +1,8 @@
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from django.conf.urls import url
+from django.urls import re_path
 from django.urls import path
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
@@ -89,7 +89,7 @@ class MergeAdmin(ModelAdmin):
     def get_admin_urls_for_registration(self):
         urls = super().get_admin_urls_for_registration()
         return urls + (
-            url(
+            re_path(
                 self.url_helper.get_action_url_pattern('merge'),
                 self.merge_view,
                 name=self.url_helper.get_action_url_name('merge')
@@ -127,7 +127,7 @@ modeladmin_register(CommonTagAdmin)
 @hooks.register('register_admin_urls')
 def urlconf_time():
     return [
-        url(r'^version/?$', deploy_info_view, name='deployinfo'),
+        re_path(r'^version/?$', deploy_info_view, name='deployinfo'),
     ]
 
 

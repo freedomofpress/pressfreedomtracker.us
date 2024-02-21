@@ -1,5 +1,5 @@
-# sha256 for python:3.9.18-slim-bookworm on linux/amd64 as of 2023-09-15
-FROM python:3.9-slim-bookworm@sha256:44b7f161ed03f85e96d423b9916cdc8cb0509fb970fd643bdbc9896d49e1cad0
+# sha256 for python:3.12.2-slim-bookworm on linux/amd64 as of 2024-02-16
+FROM python:3.12.2-slim-bookworm@sha256:f0c6bc1ab7b1ab270bbb612a31a67a7938d6171183ddce9121f04984ab3df44e
 
 RUN apt-get update && apt-get install -y \
     curl \

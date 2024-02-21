@@ -102,6 +102,11 @@ LOGGING = {
     },
 }
 
+try:
+    CSRF_TRUSTED_ORIGINS = os.environ['DJANGO_CSRF_TRUSTED_ORIGINS'].split(' ')
+except KeyError:
+    pass
+
 
 # Domain specific
 #

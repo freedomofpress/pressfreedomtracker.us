@@ -1,20 +1,12 @@
 import csv
 from io import StringIO
 
-from django.contrib.postgres.search import SearchQuery, SearchVector
-from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.views.decorators.vary import vary_on_headers
 from django.views.generic import View
 from django.views.generic.edit import FormView
-from wagtail.admin.auth import (
-    user_has_any_page_permission,
-    user_passes_test,
-)
 from wagtail.admin import messages
-from wagtail.admin.forms.search import SearchForm
 
 from common.views import MergeView
 from incident.forms import (
@@ -39,40 +31,6 @@ from incident.models import (
     LegalOrderUpdate,
 )
 from incident.utils.csv import parse_row
-
-
-@vary_on_headers('X-Requested-With')
-@user_passes_test(user_has_any_page_permission)
-def incident_admin_search_view(request):
-    pages = []
-    q = None
-
-    if 'q' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            q = form.cleaned_data['q']
-
-            query = SearchQuery(q)
-            vector = SearchVector('title', 'body')
-            pages = IncidentPage.objects.annotate(search=vector).filter(search=query)
-            paginator = Paginator(pages, per_page=25)
-            pages = paginator.get_page(request.GET.get('p'))
-    else:
-        form = SearchForm()
-
-    if request.is_ajax():
-        return render(request, "wagtailadmin/incidentpages/search_results.html", {
-            'pages': pages,
-            'query_string': q,
-            'pagination_query_params': ('q=%s' % q) if q else ''
-        })
-    else:
-        return render(request, "wagtailadmin/incidentpages/search.html", {
-            'search_form': form,
-            'pages': pages,
-            'query_string': q,
-            'pagination_query_params': ('q=%s' % q) if q else ''
-        })
 
 
 class ChargeMergeView(FormView):
