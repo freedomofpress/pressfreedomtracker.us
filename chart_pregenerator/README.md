@@ -19,7 +19,7 @@ All query parameters are passed in via an urlencoded json string under the `opti
 
 `http://localhost:3000/treemap-chart.png?options={%22filterCategories%22:[%22Assault%22]}`
 
-Below are settings that can be specified in the options parameter:
+Below  are settings that can be specified in the options parameter:
 
 | key                | type     | example                                           | default        |
 |--------------------|----------|---------------------------------------------------|----------------|
