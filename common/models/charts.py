@@ -4,7 +4,7 @@ import structlog
 from django.db import models
 from django.db.models import Q
 from marshmallow import Schema, fields
-from wagtail.core.models import Collection
+from wagtail.models import Collection
 from wagtail.images import get_image_model_string, get_image_model
 
 from common.exceptions import (

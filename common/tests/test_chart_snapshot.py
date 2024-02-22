@@ -6,7 +6,7 @@ import factory
 from django.db import IntegrityError
 from django.core.files.images import ImageFile
 from django.test import TestCase
-from wagtail.core.models import Collection
+from wagtail.models import Collection
 from wagtail.images import get_image_model
 
 from common.models.charts import ChartSnapshot
