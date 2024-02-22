@@ -570,11 +570,6 @@ class CategoryPage(MetadataPageMixin, Page):
         filters.pop('categories', None)
         context['filtered'] = bool(filters)
 
-        if request.is_ajax():
-            context['layout_template'] = 'base.ajax.html'
-        else:
-            context['layout_template'] = 'base.html'
-
         context['data_items'] = [
             {
                 'label': item.label,

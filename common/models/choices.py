@@ -1,5 +1,7 @@
 FILTER_CHOICES = [
     ('actor', 'Actor'),
+    ('workers_whose_communications_were_obtained',
+     'Alleged recipient of leak'),
     ('arrest_status', 'Arrest status'),
     ('arresting_authority', 'Arresting authority'),
     ('assailant', 'Assailant'),
@@ -49,8 +51,6 @@ FILTER_CHOICES = [
     ('target_nationality', 'Target Nationality'),
     ('targeted_institutions', 'Targeted Institutions'),
     ('targeted_journalists', 'Targeted any of these journalists'),
-    ('workers_whose_communications_were_obtained',
-     'Targets whose communications were obtained in leak investigation'),
     ('third_party_business', 'Third party business'),
     ('date', 'Took place'),
     ('case_type', 'Type of case'),

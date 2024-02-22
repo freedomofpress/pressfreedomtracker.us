@@ -5,7 +5,7 @@ from django import forms
 from django.forms.utils import ErrorList
 
 from wagtail import blocks
-from wagtail.blocks.struct_block import StructBlockValidationError
+from wagtail.blocks import StructBlockValidationError
 from wagtail.rich_text import RichText
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -158,7 +158,7 @@ class TweetEmbedBlock(blocks.StructBlock):
                 errors['tweet'] = ErrorList(['Please enter a valid Twitter URL.'])
 
             if errors:
-                raise StructBlockValidationError(errors)
+                raise StructBlockValidationError(block_errors=errors)
 
         return super().clean(value)
 

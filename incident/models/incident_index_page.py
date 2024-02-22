@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
-from django.utils.cache import patch_cache_control
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 from marshmallow import Schema, fields, EXCLUDE
@@ -235,11 +234,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         # Could also be:
         # context['incident_count'] = incident_qs.count()
 
-        if request.is_ajax():
-            context['layout_template'] = 'base.ajax.html'
-        else:
-            context['layout_template'] = 'base.html'
-
         context['filters'] = get_filter_forms(request, json.loads(context['serialized_filters']))
 
         return context
@@ -254,18 +248,4 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         # of the incident index page (including paginated and filtered URLs)
         # simultaneously
         response['Cache-Tag'] = self.get_cache_tag()
-
-        if request.is_ajax():
-            # We don't want the browser to cache the response to an XHR because
-            # it gets served with a different layout template. This becomes
-            # problematic when a visitor hits the Back button in her browser
-            # and ends up seeing the cached version without any typical layout.
-            #
-            # n.b. This method mutates the response and returns None.
-            patch_cache_control(
-                response,
-                no_cache=True,
-                no_store=True,
-                must_revalidate=True,
-            )
         return response

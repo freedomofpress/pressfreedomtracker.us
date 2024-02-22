@@ -1,7 +1,7 @@
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from django.urls import re_path, path
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper

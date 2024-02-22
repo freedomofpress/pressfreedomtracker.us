@@ -13,7 +13,7 @@ class CleanTest(TestCase):
                 'tweet': EmbedValue('https://youtu.be/C0DPdy98e4c'),
             })
 
-        self.assertEqual(cm.exception.params, {'tweet': ['Please enter a valid Twitter URL.']})
+        self.assertEqual(cm.exception.block_errors, {'tweet': ValidationError('Please enter a valid Twitter URL.')})
 
     def test_clean_http_www_twitter_url(self):
         block = TweetEmbedBlock()
@@ -21,8 +21,7 @@ class CleanTest(TestCase):
             block.clean({
                 'tweet': EmbedValue('http://www.twitter.com/WagtailCMS/status/1413141835711606786'),
             })
-
-        self.assertEqual(cm.exception.params, {'tweet': ['Please enter a valid Twitter URL.']})
+        self.assertEqual(cm.exception.block_errors, {'tweet': ValidationError('Please enter a valid Twitter URL.')})
 
     def test_clean_http_naked_twitter_url(self):
         block = TweetEmbedBlock()
@@ -40,7 +39,7 @@ class CleanTest(TestCase):
                 'tweet': EmbedValue('https://www.twitter.com/WagtailCMS/status/1413141835711606786'),
             })
 
-        self.assertEqual(cm.exception.params, {'tweet': ['Please enter a valid Twitter URL.']})
+        self.assertEqual(cm.exception.block_errors, {'tweet': ValidationError('Please enter a valid Twitter URL.')})
 
     def test_clean_https_naked_twitter_url(self):
         block = TweetEmbedBlock()
