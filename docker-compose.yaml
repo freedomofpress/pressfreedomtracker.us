@@ -72,6 +72,7 @@ services:
       - ./chart_pregenerator/src:/app/src
     environment:
       DJANGO_HOST: app
+      DJANGO_PORT: 8000
       PORT: *chart-port
       DEPLOY_ENV: dev
     ports:

@@ -13,7 +13,7 @@ import {
 } from '../client/charts/js/lib/utilities'
 import { loadData } from '../client/charts/js/components/DataLoader'
 
-const FPF_BASE_URL = `http://${process.env.DJANGO_HOST || 'localhost'}:8000`
+const FPF_BASE_URL = `http://${process.env.DJANGO_HOST || 'localhost'}:${process.env.DJANGO_PORT || '8000'}`
 
 const chartHeight = 800
 const chartWidth = 1190
