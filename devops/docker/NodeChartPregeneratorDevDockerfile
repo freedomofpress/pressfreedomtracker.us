@@ -16,6 +16,7 @@ RUN apk --no-cache add msttcorefonts-installer fontconfig && \
 # Make npm output less verbose
 ENV NPM_CONFIG_LOGLEVEL warn
 
+COPY devops/docker/node-pregenerator-start.sh /usr/bin/node-pregenerator-start.sh
 ARG USERID
 RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
 
@@ -28,4 +29,4 @@ COPY chart_pregenerator/package*.json ./
 COPY chart_pregenerator/dev.js ./
 
 RUN npm ci
-CMD ["npm", "run", "dev"]
+CMD [ "/usr/bin/node-pregenerator-start.sh" ]
