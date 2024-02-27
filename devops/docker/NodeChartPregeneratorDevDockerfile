@@ -27,6 +27,8 @@ USER ${USERID}
 
 COPY chart_pregenerator/package*.json ./
 COPY chart_pregenerator/dev.js ./
+COPY chart_pregenerator/jest.config.js ./
+COPY chart_pregenerator/babel.config.json ./
 
 RUN npm ci
 CMD [ "/usr/bin/node-pregenerator-start.sh" ]
