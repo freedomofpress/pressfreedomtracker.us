@@ -1,9 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const path = require('path')
 const esbuild = require('esbuild')
-const chokidar = require('chokidar')
-const fs = require('fs-extra')
-const debounce = require('lodash.debounce')
 const nodemon = require('nodemon')
 
 const config = {
@@ -13,44 +10,25 @@ const config = {
 	outfile: path.join(process.cwd(), 'build/server.js'),
 	loader: { '.node': 'copy' },
 	plugins: [],
+	logLevel: 'info',
 }
 
 // eslint-disable-next-line no-lone-blocks
 {
 	(async () => {
-		await esbuild.build(config)
+		let ctx = await esbuild.context(config)
+		await ctx.watch()
 
-		const rebuild = debounce(async () => {
-			console.log('\nChanges detected, rebuilding app...')
-			await esbuild.build(config)
-		}, 2000)
-
-		chokidar.watch(
-			['./client/**/*.js', './client/**/*.jsx', './src/**/*.js', './src/**/*.jsx'],
-			{ ignoreInitial: true },
-		)
-			.on('all', () => {
-				rebuild.cancel()
-				rebuild()
-			})
-
-		const runApp = () => {
-			nodemon({
-				script: 'build/server.js',
-				delay: 2000,
-			})
-
-			nodemon.on('start', () => {
-				console.log('App has started')
-			}).on('restart', async () => {
-				console.log('App restarted')
-			}).on('crash', async () => {
-				console.log('App crashed, restarting...')
-				nodemon.emit('quit')
-				runApp()
-			})
-		}
-
-		runApp()
+		nodemon({
+			script: 'build/server.js',
+			legacyWatch: true,
+			delay: 2000,
+			stdin: false,
+		})
+		nodemon.on("start", () => {
+			console.log("App has started")
+		}).on("restart", () => {
+			console.log("App restarted")
+		})
 	})()
 }

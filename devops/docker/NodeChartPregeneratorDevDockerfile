@@ -18,10 +18,14 @@ ENV NPM_CONFIG_LOGLEVEL warn
 
 ARG USERID
 RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
-COPY chart_pregenerator /opt/chart-pregenerator
-RUN chown -R "${USERID}" /opt/chart-pregenerator
-WORKDIR /opt/chart-pregenerator
+
+WORKDIR /app
+
+RUN chown -R "${USERID}" /app
 USER ${USERID}
 
-RUN npm install
+COPY chart_pregenerator/package*.json ./
+COPY chart_pregenerator/dev.js ./
+
+RUN npm ci
 CMD ["npm", "run", "dev"]
