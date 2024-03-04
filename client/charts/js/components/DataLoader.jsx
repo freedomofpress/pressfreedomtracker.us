@@ -7,6 +7,63 @@ function Loader() {
 	return <div>Loading...</div>
 }
 
+export function loadData({ dataUrl, dataParser, dataKey, fetchCache, setFetchCache, fetchFn }) {
+	// Convert singular strings into arrays
+	const dataUrls = (typeof dataUrl === "string" ? [dataUrl] : dataUrl).filter(d => d)
+	const dataKeys = (typeof dataKey === "string" ? [dataKey] : dataKey).filter(d => d)
+	const dataParsers = (typeof dataParser === "function" ? [dataParser] : dataParser).filter(d => d)
+
+	// Make sure that we have arrays
+	if (!Array.isArray(dataUrls) || !Array.isArray(dataKeys) || !Array.isArray(dataParsers))
+		return
+
+	// Only fetch the data endpoints that we have url, key, and parser for
+	const numDataFetchers = Math.min(dataKeys.length, dataUrls.length, dataParsers.length);
+
+	const fetchData = []
+
+	// Generate the promise for fetching data
+	for (let i = 0; i < numDataFetchers; i++) {
+		// Get the url, key, and parser for this entry
+		const dataUrlEntry = dataUrls[i]
+		const dataKeyEntry = dataKeys[i]
+		const dataParserEntry = dataParsers[i]
+
+		// Get the cache key
+		const fetchCacheKey = `${dataKeyEntry}-${dataUrlEntry}-${btoa(dataParserEntry.toString())}`
+
+		// If this data has already been fetched, then simply get it from the cache
+		if (fetchCache && fetchCache[fetchCacheKey]) fetchData.push(Promise.resolve(fetchCache[fetchCacheKey]))
+
+		// Otherwise we load it and save it to the cache
+		else if (fetchFn || fetch) {
+			fetchData.push(
+				(fetchFn || fetch)(dataUrlEntry)
+					.then(response => response.text())
+					.then(text => dataParserEntry(text))
+					.then(data => {
+						if (setFetchCache) setFetchCache({...fetchCache, [fetchCacheKey]: data})
+						return Promise.resolve(data)
+					})
+			)
+		}
+	}
+
+	// Wait for all the data to be loaded (or attempted to be loaded)
+	return Promise.allSettled(fetchData)
+		.then(parsedData => {
+			const data = {}
+
+			// Save each successful response value into the data object
+			parsedData.forEach(({value}, i) => {
+				if (value) data[dataKeys[i]] = value
+			})
+
+			return Promise.resolve(data)
+		}
+	)
+}
+
 function DataLoader({ dataUrl, dataParser, dataKey, loadingComponent, children }) {
 	const [data, setData] = useState({})
 	const [loading, setLoading] = useState(true)
@@ -14,62 +71,15 @@ function DataLoader({ dataUrl, dataParser, dataKey, loadingComponent, children }
 
 	// Every time dataUrl or dataParser changes, fetch new data and parse it
 	useEffect(() => {
-		(() => {
-			setLoading(true)
+		setLoading(true)
 
-			// Convert singular strings into arrays
-			const dataUrls = (typeof dataUrl === "string" ? [dataUrl] : dataUrl).filter(d => d)
-			const dataKeys = (typeof dataKey === "string" ? [dataKey] : dataKey).filter(d => d)
-			const dataParsers = (typeof dataParser === "function" ? [dataParser] : dataParser).filter(d => d)
-
-			// Make sure that we have arrays
-			if (!Array.isArray(dataUrls) || !Array.isArray(dataKeys) || !Array.isArray(dataParsers))
-				return
-
-			// Only fetch the data endpoints that we have url, key, and parser for
-			const numDataFetchers = Math.min(dataKeys.length, dataUrls.length, dataParsers.length);
-
-			const fetchData = []
-
-			// Generate the promise for fetching data
-			for (let i = 0; i < numDataFetchers; i++) {
-				// Get the url, key, and parser for this entry
-				const dataUrlEntry = dataUrls[i]
-				const dataKeyEntry = dataKeys[i]
-				const dataParserEntry = dataParsers[i]
-
-				// Get the cache key
-				const fetchCacheKey = `${dataKeyEntry}-${dataUrlEntry}-${btoa(dataParserEntry.toString())}`
-
-				// If this data has already been fetched, then simply get it from the cache
-				if (fetchCache[fetchCacheKey]) fetchData.push(Promise.resolve(fetchCache[fetchCacheKey]))
-
-				// Otherwise we load it and save it to the cache
-				else fetchData.push(
-					fetch(dataUrlEntry)
-						.then(response => response.text())
-						.then(text => dataParserEntry(text))
-						.then(data => {
-							setFetchCache({...fetchCache, [fetchCacheKey]: data})
-							return Promise.resolve(data)
-						})
-				)
-			}
-
-			// Wait for all the data to be loaded (or attempted to be loaded)
-			Promise.allSettled(fetchData).then(parsedData => {
-				const data = {}
-
-				// Save each successful response value into the data object
-				parsedData.forEach(({ value }, i) => {
-					if (value) data[dataKeys[i]] = value
-				})
-
+		loadData({ dataUrl, dataParser, dataKey, fetchCache, setFetchCache })
+			.then((data) => {
 				// Set the data and unset loading
 				setData(data)
 				setLoading(false)
-			})
-		})()
+			}
+		)
 	}, [dataUrl, dataParser, dataKey])
 
 	// If data hasn't loaded yet, return the loading component instead

@@ -42,6 +42,7 @@ dev-tests: ## Run django tests against developer environment
 .PHONY: dev-jest-tests
 dev-jest-tests: ## Run django tests against developer environment
 	docker compose exec node npm test
+	docker compose exec node-chart-pregenerator npm run test
 
 .PHONY: compile-pip-dependencies
 compile-pip-dependencies: ## Uses pip-compile to update requirements.txt

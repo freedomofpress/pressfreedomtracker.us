@@ -1,9 +1,10 @@
 from urllib.parse import urljoin
-
+from collections import namedtuple
 from django.core.paginator import Paginator
 from django.contrib.syndication.views import Feed
 
 from common.feeds import MRSSFeed
+from common.exceptions import ChartNotAvailable
 
 
 class BlogIndexPageFeed(Feed):
@@ -17,8 +18,24 @@ class BlogIndexPageFeed(Feed):
         super(BlogIndexPageFeed, self).__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
-        if obj.teaser_graphic and obj.teaser_graphic[0].block_type == "image":
-            return obj.teaser_graphic[0].value.get_rendition('original')
+        try:
+            teaser_block = obj.teaser_graphic[0]
+            if teaser_block.block_type == "image":
+                return teaser_block.value.get_rendition('original')
+            elif teaser_block.block_type in (
+                "vertical_bar_chart",
+                "tree_map_chart",
+                "bubble_map_chart",
+            ):
+                teaser_svg = namedtuple('teaser_svg', 'url width height')
+                return teaser_svg(
+                    url=teaser_block.value.svg_snapshot_mini_datauri(),
+                    width=655,
+                    height=440,
+                )
+        except (IndexError, ChartNotAvailable):
+            if obj.search_image:
+                return obj.search_image.get_rendition('original')
 
     def _get_categories(self, obj):
         categories = obj.categories.all().select_related('category')
@@ -95,7 +112,7 @@ class BlogIndexPageFeed(Feed):
         if image:
             return {
                 'teaser_image': {
-                    'url': self._get_complete_url(image.url),
+                    'url': image.url,
                     'width': image.width,
                     'height': image.height,
                 }

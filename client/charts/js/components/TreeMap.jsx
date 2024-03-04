@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
-import CategoryButtons from './CategoryButtons.jsx'
+import CategoryButtons, { calculateCategoriesLabelsLegend, calculateButtonsHeight } from './CategoryButtons.jsx'
 import { colors, tabletMinMainColumn } from '../lib/utilities.js'
 
 // React-animated-dataset uses an older version of
@@ -15,6 +15,7 @@ import { colors, tabletMinMainColumn } from '../lib/utilities.js'
 //
 // This can be removed when RAD is updated to use a newer version
 import { event as d3event } from 'd3-selection'
+import StaticDataset from './StaticDataset'
 
 const margins = {
 	top: 0,
@@ -137,11 +138,13 @@ export default function TreeMap({
 	// it to be downloaded
 	setSvgEl = () => {},
 	interactive = true,
+	disableAnimation = false,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 	const [selectedElements, setSelectedElements] = useState([])
-	const [buttonsHeight, setButtonsHeight] = useState(0)
+
+	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
 	// Because the chart can be rendered horizontally on desktop and vertically on
 	// mobile, we abstract the dimensions below
@@ -156,10 +159,6 @@ export default function TreeMap({
 	const chartWidthDimension = isMobile ? 'x' : 'y'
 	const chartLengthTitle = isMobile ? 'height' : 'width'
 	const chartWidthTitle = isMobile ? 'width' : 'height'
-
-	useEffect(() => {
-		if(isMobile) setButtonsHeight(0)
-	})
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -180,6 +179,9 @@ export default function TreeMap({
 		minimumNumberOfIncidents,
 		allCategories
 	)
+
+	const categoryButtonsLabels = calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width)
+	const buttonsHeight = isMobile ? 0 : calculateButtonsHeight(categoryButtonsLabels)
 
 	const lengthScale = d3
 		.scaleLinear()
@@ -249,7 +251,7 @@ export default function TreeMap({
 					y={tooltipPosition.y}
 				/>
 			)}
-			<div>
+			<>
 				<svg
 					width="100%"
 					aria-labelledby={id}
@@ -274,7 +276,7 @@ export default function TreeMap({
 					/>
 					<DynamicWrapper
 						wrapperComponent={
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								tag="a"
 								attrs={{
@@ -287,7 +289,7 @@ export default function TreeMap({
 						}
 						wrap={interactive && searchPageURL}
 					>
-						<AnimatedDataset
+						<Dataset
 							dataset={(interactive && searchPageURL) ? undefined : datasetStackedByCategory}
 							tag="rect"
 							init={{
@@ -334,7 +336,7 @@ export default function TreeMap({
 							duration={250}
 						/>
 					</DynamicWrapper>
-					<AnimatedDataset
+					<Dataset
 						dataset={datasetStackedByCategory}
 						tag="line"
 						init={{
@@ -377,7 +379,7 @@ export default function TreeMap({
 					{isMobile ?
 						// Text label inside of bars that displays on mobile
 						(<>
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								tag="text"
 								init={{
@@ -410,7 +412,7 @@ export default function TreeMap({
 								keyFn={(d) => d.category}
 								duration={250}
 							/>
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								init={{
 									opacity: 0,
@@ -449,18 +451,15 @@ export default function TreeMap({
 						(<>
 							<CategoryButtons
 								interactive={interactive}
-								datasetStackedByCategory={datasetStackedByCategory}
-								paddings={paddings}
-								width={width}
+								categoryButtonsLabels={categoryButtonsLabels}
 								hoveredElement={hoveredElement}
 								setHoveredElement={setHoveredElement}
-								setButtonsHeight={setButtonsHeight}
 								toggleSelectedCategory={toggleSelectedCategory}
 								selectedElements={selectedElements}
 								findColor={findColor}
 								textStyle={textStyle}
 							/>
-							<AnimatedDataset
+							<Dataset
 								dataset={datasetStackedByCategory}
 								init={{
 									opacity: 0,
@@ -483,7 +482,7 @@ export default function TreeMap({
 						</>)
 					}
 				</svg>
-			</div>
+			</>
 		</>
 	)
 }

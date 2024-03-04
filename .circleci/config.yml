@@ -55,7 +55,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-2204:2023.04.2
+      image: ubuntu-2204:2023.07.2
     working_directory: ~/tracker
     steps:
       - checkout
@@ -64,7 +64,7 @@ jobs:
           name: Ensure we can run dev-env
           command: |
             make dev-init
-            docker compose up --detach
+            docker compose build --progress plain && docker compose up --detach
             while ! curl --output /dev/null --silent --head --fail http://localhost:8000; do sleep 5; done;
           no_output_timeout: 5m
 
@@ -110,7 +110,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     machine:
-      image: ubuntu-2204:2023.04.2
+      image: ubuntu-2204:2023.07.2
     working_directory: ~/tracker
     steps:
       - checkout

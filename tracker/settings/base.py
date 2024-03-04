@@ -359,3 +359,8 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '',
     'SERVE_URLCONF': 'incident.api.urls',
 }
+
+CHART_PREGENERATOR = {
+    'HOST': os.environ.get('DJANGO_CHART_HOST', 'node-chart-pregenerator'),
+    'PORT': int(os.environ.get('DJANGO_CHART_PORT', '3000')),
+}

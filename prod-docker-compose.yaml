@@ -1,7 +1,12 @@
 ---
-version: "3"
+version: "3.4"
 networks:
   app:
+
+x-chart-pregenerator:
+  host: &chart-host ${NODE_CHART_PREGENERATOR_HOST:-chartgenerator}
+  port: &chart-port ${NODE_CHART_PREGENERATOR_PORT:-3000}
+
 services:
   postgresql:
     image: postgres:13
@@ -50,6 +55,8 @@ services:
       DJANGO_APP_NAME: tracker
       DJANGO_JSON_LOG: "yes"
       DJANGO_WHITENOISE: "yes"
+      DJANGO_CHART_HOST: node-chart-pregenerator
+      DJANGO_CHART_PORT: *chart-port
       # More fake testing keys (see above); generate your own for deployment.
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       RECAPTCHA_PRIVATE_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
@@ -59,6 +66,33 @@ services:
       app:
         aliases:
           - app
+
+  node-chart-pregenerator:
+    read_only: true
+    init: true
+    build:
+      context: .
+      dockerfile: devops/docker/NodeChartPregeneratorDockerfile
+      args:
+        NPM_VER: 9.6.7
+        USERID: 1234
+    environment:
+      DJANGO_HOST: app
+      PORT: *chart-port
+      DEPLOY_ENV: dev
+    ports:
+      - target: *chart-port
+        published: *chart-port
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/"]
+      start_period: 10s
+      interval: 30s
+      timeout: 20s
+      retries: 4
+    networks:
+      app:
+        aliases:
+          - *chart-host
 
 volumes:
   fpf-django-static:

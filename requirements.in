@@ -21,6 +21,7 @@ marshmallow
 psycopg2>=2.9.9
 Pygments
 python-json-logger
+pillow>=10.2.0
 structlog
 typing
 typogrify

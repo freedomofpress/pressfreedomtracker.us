@@ -9,7 +9,7 @@ ARG NPM_VER=9.6.7
 # Upgrade npm to speicifed version
 RUN npm install npm@${NPM_VER} --location=global
 
-RUN apk add --no-cache paxctl python3 make g++ jq
+RUN apk add --no-cache paxctl python3 make g++ jq git
 RUN paxctl -cm /usr/local/bin/node
 
 COPY devops/docker/node-start.sh /usr/bin/node-start.sh
