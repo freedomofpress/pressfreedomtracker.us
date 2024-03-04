@@ -1,8 +1,4 @@
 ---
-refs:
-  setup_remote_docker: &setup_remote_docker
-    setup_remote_docker:
-      version: 20.10.18
 version: 2.1
 commands:
   check-changed-files-or-halt:
@@ -145,8 +141,7 @@ jobs:
     working_directory: ~/tracker
     steps:
       - checkout
-
-      - *setup_remote_docker
+      - setup_remote_docker
 
       - run:
           name: Ensure we can run prod-env
