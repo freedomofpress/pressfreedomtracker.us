@@ -24,6 +24,10 @@ jobs:
           command: git clone --depth 1 https://github.com/freedomofpress/fpf-misc-resources.git
 
       - run:
+          name: Install setuptools
+          command: pip install setuptools
+
+      - run:
           name: Install pip dependencies
           command: pip install --no-deps --require-hashes -r dev-requirements.txt
 
