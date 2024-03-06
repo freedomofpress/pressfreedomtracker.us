@@ -1,8 +1,4 @@
 ---
-refs:
-  setup_remote_docker: &setup_remote_docker
-    setup_remote_docker:
-      version: 20.10.18
 version: 2.1
 commands:
   check-changed-files-or-halt:
@@ -18,7 +14,7 @@ jobs:
     environment:
       SETUPTOOLS_USE_DISTUTILS: stdlib
     docker:
-      - image: cimg/python:3.12.1
+      - image: cimg/python:3.11
     working_directory: ~/tracker
     steps:
       - checkout
@@ -26,6 +22,10 @@ jobs:
       - run:
           name: Obtain misc resources
           command: git clone --depth 1 https://github.com/freedomofpress/fpf-misc-resources.git
+
+      - run:
+          name: Install setuptools
+          command: pip install setuptools
 
       - run:
           name: Install pip dependencies
@@ -145,8 +145,7 @@ jobs:
     working_directory: ~/tracker
     steps:
       - checkout
-
-      - *setup_remote_docker
+      - setup_remote_docker
 
       - run:
           name: Ensure we can run prod-env
