@@ -612,7 +612,7 @@ class IncidentPage(MetadataPageMixin, Page):
     case_statuses = ChoiceArrayField(
         models.CharField(
             max_length=255,
-            choices=choices.CASE_STATUS,
+            choices=choices.LegalCaseStatus.choices,
         ),
         blank=True,
         null=True,

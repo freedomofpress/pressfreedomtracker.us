@@ -723,7 +723,7 @@ class IncidentCSVTestCase(TestCase):
                 'unnecessary_use_of_force': str(inc.unnecessary_use_of_force),
                 'case_number': inc.case_number,
                 'case_type': inc.case_type,
-                'case_statuses': ', '.join([dict(choices.CASE_STATUS)[status] for status in inc.case_statuses]),
+                'case_statuses': ', '.join([dict(choices.LegalCaseStatus.choices)[status] for status in inc.case_statuses]),
                 'status_of_seized_equipment': inc.get_status_of_seized_equipment_display(),
                 'is_search_warrant_obtained': str(inc.is_search_warrant_obtained),
                 'actor': inc.get_actor_display(),

@@ -147,13 +147,15 @@ SUBPOENA_STATUS = [
     ('OBJECTED_TO', 'objected to'),
 ]
 
-CASE_STATUS = [
-    ('ONGOING', 'ongoing'),
-    ('SETTLED', 'settled'),
-    ('DISMISSED', 'dismissed'),
-    ('UNKNOWN', 'unknown'),
-    ('APPEALED', 'appealed'),
-]
+
+class LegalCaseStatus(TextChoices):
+    ONGOING = 'ONGOING', 'ongoing'
+    SETTLED = 'SETTLED', 'settled'
+    DISMISSED = 'DISMISSED', 'dismissed'
+    WITHDRAWN = 'WITHDRAWN', 'withdrawn'
+    APPEALED = 'APPEALED', 'appealed'
+    UNKNOWN = 'UNKNOWN', 'unknown'
+
 
 CASE_TYPE = [
     ('CIVIL', 'Civil'),
