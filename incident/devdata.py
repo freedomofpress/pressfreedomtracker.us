@@ -374,7 +374,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Legal case
     case_number = factory.Faker('pystr_format', string_format='{{name}} v. {{name}}')
-    case_statuses = factory.LazyFunction(lambda: random_choice_list(choices.CASE_STATUS))
+    case_statuses = factory.LazyFunction(lambda: random_choice_list(choices.LegalCaseStatus.choices))
 
     class Params:
         geolocated = factory.Trait(
