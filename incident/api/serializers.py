@@ -211,7 +211,7 @@ class IncidentSerializer(BaseIncidentSerializer):
 
     updates = serializers.StringRelatedField(many=True)
     case_statuses = serializers.ListField(
-        child=ChoiceField(choices.CASE_STATUS)
+        child=ChoiceField(choices.LegalCaseStatus.choices)
     )
     workers_whose_communications_were_obtained = serializers.StringRelatedField(many=True)
     target_nationality = serializers.StringRelatedField(many=True)
@@ -241,7 +241,7 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
 
     updates = FlatStringRelatedField()
     case_statuses = FlatListField(
-        child=ChoiceField(choices.CASE_STATUS)
+        child=ChoiceField(choices.LegalCaseStatus.choices)
     )
     workers_whose_communications_were_obtained = FlatStringRelatedField()
     target_nationality = FlatStringRelatedField()
