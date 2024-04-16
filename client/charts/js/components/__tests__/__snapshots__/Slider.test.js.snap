@@ -90,6 +90,7 @@ exports[`renders CheckBoxesYear with mocked data 1`] = `
     cx="Nov"
     cy={400}
     onMouseDown={[Function]}
+    onTouchStart={[Function]}
     r={12}
     style={
       {

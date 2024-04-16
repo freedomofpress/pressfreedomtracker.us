@@ -4,7 +4,7 @@ import { clamp, first, last } from 'lodash'
 
 export default function Slider({ elements, xScale, y, setSliderSelection, sliderSelection, idContainer }) {
 	const onSliderReleaseRef = useRef(null)
-	const onMouseMoveRef = useRef(null)
+	const onMouseOrTouchMoveRef = useRef(null)
 	const [mousePosition, setMousePosition] = useState({ x: null, y: null })
 
 	useEffect(() => {
@@ -13,20 +13,35 @@ export default function Slider({ elements, xScale, y, setSliderSelection, slider
 
 	function stopMovingSlider(event) {
 		window.removeEventListener('mouseup', onSliderReleaseRef.current)
+		window.removeEventListener('touchend', onSliderReleaseRef.current)
 		onSliderReleaseRef.current = null
 
-		window.removeEventListener('mousemove', onMouseMoveRef.current)
-		onMouseMoveRef.current = null
+		window.removeEventListener('mousemove', onMouseOrTouchMoveRef.current)
+		window.removeEventListener('touchmove', onMouseOrTouchMoveRef.current)
+		onMouseOrTouchMoveRef.current = null
 
 		setMousePosition({ x: null, y: null })
 	}
 
-	function followMouse(event) {
+
+	function followMouseOrTouch(event) {
 		const svg = document.getElementById(idContainer)
 		if (svg === null) return
 
 		const dim = svg.getBoundingClientRect()
-		const mouse = { x: event.clientX - dim.left, y: event.clientY - dim.top }
+
+		let x,y;
+		// Mobile
+		if (event.type === 'touchmove'){
+			const touch = event.touches[0] || event.changedTouches[0];
+			x = touch.pageX;
+			y = touch.pageY;
+		// Desktop
+		} else {
+			x = event.clientX
+			y = event.clientY
+		}
+		const mouse = { x: x - dim.left, y: y - dim.top }
 		setMousePosition(mouse)
 
 		const distancesToMouse = elements.map((d) => ({
@@ -74,8 +89,16 @@ export default function Slider({ elements, xScale, y, setSliderSelection, slider
 					window.addEventListener('mouseup', stopMovingSlider)
 					onSliderReleaseRef.current = stopMovingSlider
 
-					window.addEventListener('mousemove', followMouse)
-					onMouseMoveRef.current = followMouse
+					window.addEventListener('mousemove', followMouseOrTouch)
+					onMouseOrTouchMoveRef.current = followMouseOrTouch
+				}}
+				// Mobile
+				onTouchStart={() => {
+					window.addEventListener('touchend', stopMovingSlider)
+					onSliderReleaseRef.current = stopMovingSlider
+
+					window.addEventListener('touchmove', followMouseOrTouch)
+					onMouseOrTouchMoveRef.current = followMouseOrTouch
 				}}
 			/>
 		</>
