@@ -200,6 +200,7 @@ WAGTAILSEARCH_BACKENDS = {
 WAGTAIL_SITE_NAME = "tracker"
 
 WAGTAILIMAGES_IMAGE_MODEL = 'common.CustomImage'
+WAGTAILIMAGES_EXTENSIONS = ["avif", "gif", "jpg", "jpeg", "png", "webp", "svg"]
 
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
