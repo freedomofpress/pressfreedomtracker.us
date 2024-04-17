@@ -6,7 +6,7 @@
 						{% embed video %}
 				{% elif image.0.block_type == "image" %}
 					<div class="primary-banner-media__inner">
-						{% image image.0.value width-910 alt=image.attribution|default:image.0.value.title %}
+						{% image image.0.value width-910 preserve-svg alt=image.attribution|default:image.0.value.title %}
 					</div>
 				{% elif image.0.block_type == "vertical_bar_chart" %}
 					{% include 'common/blocks/vertical_bar_chart.html' with value=image.0.value static_graphic=true %}
@@ -17,7 +17,7 @@
 						{% include 'common/blocks/bubble_map_chart.html' with value=image.0.value static_graphic=true %}
 					</div>
 				{% elif image %}
-					{% image image width-910 alt=image.attribution|default:image.title %}
+					{% image image width-910 preserve-svg alt=image.attribution|default:image.title %}
 				{% endif %}
 				{% firstof image.attribution image.0.value.attribution as attribution %}
 				{% if caption or attribution %}
