@@ -171,6 +171,7 @@ export const generateTreemapChartSVG = async (req) => {
 			options.filterTags,
 			options.dateRange,
 		)
+		console.dir(branches, {depth: null})
 		const categoriesColorMap = branches ? [...(new Set([...branches.map((d) => d.title)]))]
 			.reduce(
 				(acc, category, i) => ({

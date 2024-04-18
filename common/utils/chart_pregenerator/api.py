@@ -3,6 +3,7 @@ import json
 import requests
 
 import PIL.Image
+import structlog
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.utils.text import slugify
@@ -28,6 +29,12 @@ def make_request(*, endpoint, file_format, query, stream=False):
     host = settings.CHART_PREGENERATOR['HOST']
     port = settings.CHART_PREGENERATOR['PORT']
     url = f'http://{host}:{port}/{endpoint}.{file_format}'
+    structlog.contextvars.bind_contextvars(
+        pregeneration_request={
+            'url': url,
+            'options': json.dumps(query),
+        },
+    )
     try:
         response = requests.get(
             url,
