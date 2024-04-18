@@ -437,17 +437,17 @@ googleapis-common-protos==1.62.0 \
     --hash=sha256:4750113612205514f9f6aa4cb00d523a94f3e8c06c5ad2fee466387dc4875f07 \
     --hash=sha256:83f0ece9f94e5672cced82f592d2a5edf527a96ed1794f0bab36d5735c996277
     # via google-api-core
-gunicorn==21.2.0 \
-    --hash=sha256:3213aa5e8c24949e792bcacfc176fef362e7aac80b76c56f6b5122bf350722f0 \
-    --hash=sha256:88ec8bff1d634f98e61b9f65bc4bf3cd918a90806c6f5c48bc5603849ec81033
+gunicorn==22.0.0 \
+    --hash=sha256:350679f91b24062c86e386e198a15438d53a7a8207235a78ba1b53df4c4378d9 \
+    --hash=sha256:4a0b436239ff76fb33f11c07a16482c521a7e09c1ce3cc293c2330afe01bec63
     # via -r requirements.in
 html5lib==1.1 \
     --hash=sha256:0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d \
     --hash=sha256:b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f
     # via wagtail
-idna==3.6 \
-    --hash=sha256:9ecdbbd083b06798ae1e86adcbfe8ab1479cf864e4ee30fe4e46a003d12491ca \
-    --hash=sha256:c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f
+idna==3.7 \
+    --hash=sha256:028ff3aadf0609c1fd278d8ea3089299412a7a8b9bd005dd08b9f8285bcb5cfc \
+    --hash=sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0
     # via requests
 inflection==0.5.1 \
     --hash=sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417 \
@@ -1026,9 +1026,9 @@ soupsieve==2.5 \
     --hash=sha256:5663d5a7b3bfaeee0bc4372e7fc48f9cff4940b3eec54a6451cc5299f1097690 \
     --hash=sha256:eaa337ff55a1579b6549dc679565eac1e3d000563bcb1c8ab0d0fefbc0c2cdc7
     # via beautifulsoup4
-sqlparse==0.4.4 \
-    --hash=sha256:5430a4fe2ac7d0f93e66f1efc6e1338a41884b7ddf2a350cedd20ccc4d9d28f3 \
-    --hash=sha256:d446183e84b8349fa3061f0fe7f06ca94ba65b426946ffebe6e3e8295332420c
+sqlparse==0.5.0 \
+    --hash=sha256:714d0a4932c059d16189f58ef5411ec2287a4360f17cdd0edd2d09d4c5087c93 \
+    --hash=sha256:c204494cd97479d0e39f28c93d46c0b2d5959c7b9ab904762ea6c7af211c8663
     # via django
 structlog==23.2.0 \
     --hash=sha256:16a167e87b9fa7fae9a972d5d12805ef90e04857a93eba479d4be3801a6a1482 \

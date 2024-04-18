@@ -3,7 +3,7 @@
 	<article class="blog-card">
 		<div class="blog-card--inner">
 			{% if photo.0.block_type == "image" %}
-				{% image photo.0.value fill-655x440 as x1 %}
+				{% image photo.0.value fill-655x440 preserve-svg as x1 %}
 				<img
 					class="card-image card-image-{{ size }}"
 					alt="{{ x1.alt }}"
