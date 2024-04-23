@@ -55,6 +55,7 @@ jest.mock('node-fetch', () => jest.fn((path) => Promise.resolve({
 		if (path === 'http://app:8000/api/edge/categories/') return Promise.resolve(testCategories)
 		return Promise.resolve(testCsv)
 	},
+	ok: true,
 })))
 
 test('renders Bar Chart with dummy data', async () => {

@@ -39,7 +39,14 @@ export function loadData({ dataUrl, dataParser, dataKey, fetchCache, setFetchCac
 		else if (fetchFn || fetch) {
 			fetchData.push(
 				(fetchFn || fetch)(dataUrlEntry)
-					.then(response => response.text())
+					.then(response => {
+						if (response.ok) {
+							return response.text()
+						}
+						let message = `Fetch returned ${response.status} status`
+						console.error(message)
+						return Promise.reject(new Error(message))
+					})
 					.then(text => dataParserEntry(text))
 					.then(data => {
 						if (setFetchCache) setFetchCache({...fetchCache, [fetchCacheKey]: data})
