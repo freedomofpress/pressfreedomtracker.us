@@ -21,7 +21,7 @@ if os.environ.get('DJANGO_HOST'):
     ALLOWED_HOSTS += [os.environ['DJANGO_HOST']]  # noqa: F405
 
 
-MIDDLEWARE.insert(3, 'common.middleware.RequestLogMiddleware')  # noqa: F405
+MIDDLEWARE.insert(1, 'common.middleware.RequestLogMiddleware')  # noqa: F405
 
 
 structlog.configure(
