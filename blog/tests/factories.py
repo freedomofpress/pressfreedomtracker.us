@@ -65,6 +65,12 @@ class BlogPageFactory(wagtail_factories.PageFactory):
                 ],
             )
         )
+        with_teaser_chart = factory.Trait(
+            teaser_graphic=factory.Faker(
+                'streamfield',
+                fields=['vertical_bar_chart'],
+            ),
+        )
 
     title = factory.Sequence(
         lambda n: fake.text(random.randint(5, 58))[:-1] + ' ({})'.format(n)
@@ -86,6 +92,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
             'bubble_map_chart',
         ],
     )
+    lead_graphic = factory.Faker('streamfield', fields=['vertical_bar_chart'])
     teaser_text = factory.Faker(
         'paragraph',
         nb_sentences=3,

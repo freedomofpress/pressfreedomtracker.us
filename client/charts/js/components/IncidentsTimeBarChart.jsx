@@ -6,29 +6,7 @@ import ChartDownloader from './ChartDownloader'
 import * as d3 from 'd3'
 import { categoriesColors, filterDatasets, tabletMinMainColumn } from '../lib/utilities'
 
-export default function IncidentsTimeBarChart({
-	dataset,
-	title,
-	description,
-	filterCategories = [], // Array of valid categories or category
-	filterTags = null, // Array or string of valid tags or tag
-	dateRange = [null, null], // Array representing the min and max of dates to show
-	timePeriod,
-	isMobileView = false,
-	creditUrl = '',
-	interactive = true,
-	fullSize = true,
-	branchFieldName,
-	branches,
-	groupByTag,
-}) {
-	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
-
-	// if branchFieldName is set but branches is undefined, that means we are filtering a tag
-	const tagBranches = (groupByTag)
-		&& [{ title: groupByTag }, { title: `not ${groupByTag}` }];
-
+export function processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName, groupByTag) {
 	// Rollup the incidents
 	const genIncidentsByTime = (dateFn) => filteredDataset.reduce((acc, d) => {
 		const date = dateFn(d.date)
@@ -92,6 +70,34 @@ export default function IncidentsTimeBarChart({
 	const incidentsByAllTime = allTime
 		.map((date) => ({ date, ...(incidentsByTime[timeFormat(date)] || { count: 0 }) }))
 		.sort((a, b) => a.date - b.date)
+
+	return { incidentsByAllTime, xFormat, showByYears, allTime }
+}
+
+export default function IncidentsTimeBarChart({
+	dataset,
+	title,
+	description,
+	filterCategories = [], // Array of valid categories or category
+	filterTags = null, // Array or string of valid tags or tag
+	dateRange = [null, null], // Array representing the min and max of dates to show
+	timePeriod,
+	isMobileView = false,
+	creditUrl = '',
+	interactive = true,
+	fullSize = true,
+	branchFieldName,
+	branches,
+	groupByTag,
+}) {
+	// Filter down to the categories and tags and date range we want
+	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
+
+	// if branchFieldName is set but branches is undefined, that means we are filtering a tag
+	const tagBranches = (groupByTag)
+		&& [{ title: groupByTag }, { title: `not ${groupByTag}` }];
+
+	const { incidentsByAllTime, xFormat, showByYears, allTime } = processIncidentsTimeData(filteredDataset, timePeriod, branchFieldName, groupByTag);
 
 	// Generate a default description for a11y
 	const startYear = d3.utcFormat("%Y")(allTime[0])

@@ -1,0 +1,38 @@
+{% extends "wagtailadmin/base.html" %}
+
+{% block titletag %}Chart Health{% endblock %}
+
+{% block content %}
+	<header class="w-header">
+		<div class="row">
+			<div class="left">
+				<div class="col">
+					<h1 class="w-header__title" id="header-title">
+						Chart Health Check
+					</h1>
+				</div>
+			</div>
+			<div class="right"></div>
+		</div>
+	</header>
+	<div class="nice-padding">
+		<p>
+			Contacted chart generation service on host <code>{{ host }}</code> at port <code>{{ port }}</code>.
+		</p>
+
+		{% if response %}
+			<p>
+				Response status: {{ response.status_code }}.
+			</p>
+
+			<p>Response content:</p>
+			{{ response.text|safe  }}
+			<p>End of response content.</p>
+		{% endif %}
+
+		{% if error_message %}
+			<p>Error message: {{ error_message }}</p>
+		{% endif %}
+	</div>
+
+{% endblock %}

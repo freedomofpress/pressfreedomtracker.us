@@ -16,6 +16,10 @@ except ImportError:
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 
+# Include the host used to access Django from the chart pregenerator service
+if os.environ.get('DJANGO_HOST'):
+    ALLOWED_HOSTS += [os.environ['DJANGO_HOST']]  # noqa: F405
+
 
 MIDDLEWARE.insert(1, 'common.middleware.RequestLogMiddleware')  # noqa: F405
 

@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
+import StaticDataset from './StaticDataset'
 import DynamicWrapper from './DynamicWrapper'
 import Slider from './Slider'
 import Tooltip from './Tooltip'
-import CategoryButtons from './CategoryButtons'
+import CategoryButtons, { calculateCategoriesLabelsLegend, calculateButtonsHeight } from './CategoryButtons.jsx'
 import { computeMinimumNumberOfIncidents, stackDatasetByCategory } from './TreeMap'
 
 const margins = {
@@ -80,6 +81,7 @@ export default function BarChart({
 	// it to be downloaded
 	setSvgEl = () => {},
 	interactive = true,
+	disableAnimation = false,
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -88,7 +90,8 @@ export default function BarChart({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [sliderSelection, setSliderSelection] = useState(dataset[0].index)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
-	const [buttonsHeight, setButtonsHeight] = useState(0)
+
+	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -114,6 +117,11 @@ export default function BarChart({
 		minimumNumberOfIncidents,
 		allCategories
 	)
+
+	const categoryButtonsLabels = calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width)
+	const buttonsHeight = isMobileView || !allCategories
+		? 0
+		: calculateButtonsHeight(categoryButtonsLabels)
 
 	const stackedData = d3.stack().keys(allCategories || [y])(dataset)
 
@@ -210,25 +218,18 @@ export default function BarChart({
 					viewBox={[0, 0, width, height]}
 				>
 					{description ? (<desc>{description}</desc>) : null}
-					{
-						// If there are multiple categories, ie a stacked bar chart,
-						// we show the category buttons
-						allCategories && (
-							<CategoryButtons
-								interactive={interactive}
-								datasetStackedByCategory={datasetStackedByCategory}
-								paddings={paddings}
-								width={width}
-								hoveredElement={!hoveredElement?.x && hoveredElement?.y}
-								setHoveredElement={(el) => setHoveredElement(el ? { y: el } : el)}
-								setButtonsHeight={setButtonsHeight}
-								findColor={findColor}
-								textStyle={textStyle}
-							/>
-						)
-					}
+					{allCategories && (
+						<CategoryButtons
+							interactive={interactive}
+							categoryButtonsLabels={categoryButtonsLabels}
+							hoveredElement={!hoveredElement?.x && hoveredElement?.y}
+							setHoveredElement={(el) => setHoveredElement(el ? { y: el } : el)}
+							findColor={findColor}
+							textStyle={textStyle}
+						/>
+					)}
 					<g>
-						<AnimatedDataset
+						<Dataset
 							dataset={gridLines}
 							tag="line"
 							init={{
@@ -249,7 +250,7 @@ export default function BarChart({
 							duration={250}
 							keyFn={(d) => d}
 						/>
-						<AnimatedDataset
+						<Dataset
 							dataset={gridLines}
 							tag="text"
 							init={{
@@ -274,7 +275,7 @@ export default function BarChart({
 						// These are the actual bars that are visibly displayed,
 						// using animatedDataset to allow for load-in animations
 						stackedData.map(branchBars => (
-							<AnimatedDataset
+							<Dataset
 								dataset={branchBars}
 								tag="rect"
 								init={{
@@ -337,14 +338,14 @@ export default function BarChart({
 										shapeRendering="crispEdges"
 									>
 										<title>
-											{xFormat(branchEntry.data[x])}: {yFormat(branchEntry.data[y])} {titleLabel}
+											{`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
 										</title>
 									</rect>
 								</DynamicWrapper>
 							</g>
 						)))
 					}
-					<AnimatedDataset
+					<Dataset
 						dataset={dataset.filter((d, i) => i % xLabelDisplayInterval === 0)}
 						tag="text"
 						init={{
@@ -405,7 +406,7 @@ export default function BarChart({
 					)
 				}
 				<g>
-					<AnimatedDataset
+					<Dataset
 						dataset={gridLines}
 						tag="line"
 						init={{
@@ -424,7 +425,7 @@ export default function BarChart({
 						duration={250}
 						keyFn={(d) => d}
 					/>
-					<AnimatedDataset
+					<Dataset
 						dataset={gridLines}
 						tag="text"
 						init={{

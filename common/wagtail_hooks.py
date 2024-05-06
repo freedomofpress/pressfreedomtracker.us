@@ -1,6 +1,5 @@
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from django.urls import re_path
-from django.urls import path
+from django.urls import re_path, path
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from draftjs_exporter.dom import DOM
@@ -12,7 +11,7 @@ from wagtail.rich_text.pages import PageLinkHandler
 from webpack_loader.utils import get_files
 
 from .models import CommonTag, CategoryPage
-from .views import TagMergeView, deploy_info_view, MailchimpInterestsView
+from .views import TagMergeView, deploy_info_view, MailchimpInterestsView, check_chart_health
 
 
 class CategoryPageLinkHandler(PageLinkHandler):
@@ -128,6 +127,11 @@ modeladmin_register(CommonTagAdmin)
 def urlconf_time():
     return [
         re_path(r'^version/?$', deploy_info_view, name='deployinfo'),
+        path(
+            'check_chart_health/',
+            check_chart_health,
+            name='check_chart_health',
+        ),
     ]
 
 
