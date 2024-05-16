@@ -1,3 +1,5 @@
+import datetime
+
 import factory
 import wagtail_factories
 from wagtail_factories.blocks import BlockFactory
@@ -21,6 +23,7 @@ from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.models import (
     CategoryPage,
     CategoryIncidentFilter,
+    ChartSnapshot,
     CategoryMethodologyItem,
     CommonTag,
     CustomImage,
@@ -30,6 +33,10 @@ from common.models import (
     OrganizationIndexPage,
     TaxonomyCategoryPage,
     TaxonomySettings,
+)
+from common.utils.chart_pregenerator.types import (
+    ChartType,
+    SnapshotType,
 )
 
 
@@ -298,3 +305,24 @@ class CommonTagFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('title',)
 
     title = factory.Sequence(lambda n: f'Tag {n}')
+
+
+class ChartSnapshotFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ChartSnapshot
+
+    class Params:
+        svg = factory.Trait(
+            snapshot_type=SnapshotType.SVG,
+            chart_svg='<svg />',
+        )
+        png = factory.Trait(
+            snapshot_type=SnapshotType.PNG,
+            chart_image=factory.SubFactory(CustomImageFactory)
+        )
+
+    svg = True
+
+    last_generated = datetime.datetime(2023, 1, 1, 0, 0)
+    query = {}
+    chart_type = ChartType.VERTICAL_BAR

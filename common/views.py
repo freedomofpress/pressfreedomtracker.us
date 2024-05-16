@@ -2,6 +2,7 @@ import json
 import os
 
 import marshmallow
+import requests
 import structlog
 import mailchimp_marketing
 from django.conf import settings
@@ -13,6 +14,7 @@ from django.http import (
 )
 from django.middleware.csrf import get_token
 from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import FormView
@@ -235,6 +237,30 @@ class MailchimpInterestsView(TemplateView):
 def deploy_info_view(request):
     version_full_text = read_version_info_file(VERSION_INFO_FULL_PATH)
     return HttpResponse(version_full_text, content_type="text/plain")
+
+
+def check_chart_health(request):
+    host = settings.CHART_PREGENERATOR['HOST']
+    port = settings.CHART_PREGENERATOR['PORT']
+    error_message = ''
+
+    context = {
+        'host': host,
+        'port': port,
+    }
+
+    try:
+        response = requests.get(f'http://{host}:{port}/', timeout=5)
+        context['response'] = response
+    except requests.exceptions.Timeout:
+        error_message = 'Timed out.'
+    except requests.exceptions.TooManyRedirects:
+        error_message = 'Too many redirects'
+    except requests.exceptions.RequestException as e:
+        error_message = f'Request exception: {e}'
+    context['error_message'] = error_message
+
+    return TemplateResponse(request, 'wagtailadmin/check_chart_health.html', context)
 
 
 @never_cache

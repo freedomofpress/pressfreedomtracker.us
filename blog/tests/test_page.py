@@ -1,9 +1,15 @@
+from unittest import mock
+
+import defusedxml.ElementTree as ET
 import wagtail.blocks
 from wagtail.models import Site, Page
 from django.test import TestCase, Client
 
-from common.tests.factories import PersonPageFactory, OrganizationPageFactory, CustomImageFactory
+from common.models.charts import ChartSnapshot
+from common.tests.factories import PersonPageFactory, OrganizationPageFactory, CustomImageFactory, CategoryPageFactory
+from common.exceptions import ChartNotAvailable
 from home.tests.factories import HomePageFactory
+from incident.tests.factories import IncidentPageFactory
 from blog.models import BlogIndexPageFeature
 from .factories import (
     BlogIndexPageFactory,
@@ -40,6 +46,13 @@ class TestPages(TestCase):
             collection__name='Photos',
         )
 
+        cls.search_image = CustomImageFactory.create(
+            file__width=333,
+            file__height=444,
+            file__color='orange',
+            collection__name='Photos',
+        )
+
         cls.index = BlogIndexPageFactory(
             parent=site.root_page, slug='all-blogs')
         cls.blog_page = BlogPageFactory(
@@ -47,6 +60,18 @@ class TestPages(TestCase):
             slug='one',
             with_image=True,
         )
+        cls.blog_page2 = BlogPageFactory(
+            parent=cls.index,
+            slug='two',
+            with_teaser_chart=True,
+            search_image=cls.search_image,
+        )
+        cls.blog_page3 = BlogPageFactory(
+            parent=cls.index,
+            slug='three',
+        )
+        cat = CategoryPageFactory()
+        IncidentPageFactory(categories=[cat])
 
     def setUp(self):
         self.client = Client()
@@ -58,8 +83,74 @@ class TestPages(TestCase):
 
     def test_get_index_feed_should_succeed(self):
         """get feed should succed."""
-        response = self.client.get('/all-blogs/feed/')
+        response = self.client.get(self.index.url + 'feed/')
+        self.assertEqual(
+            response['content-type'], 'application/rss+xml; charset=utf-8'
+        )
         self.assertEqual(response.status_code, 200)
+
+    def test_rss_feed_has_correct_thumbnails(self):
+        response = self.client.get(self.index.url + 'feed/')
+        root = ET.fromstring(response.content)
+
+        namespaces = {'media': 'http://search.yahoo.com/mrss/'}
+        item1 = root.find(f".//item[title='{self.blog_page.title}']")
+        item2 = root.find(f".//item[title='{self.blog_page2.title}']")
+
+        self.assertIn(
+            self.blog_page.teaser_graphic[0].value.get_rendition("original").url,
+            getattr(
+                item1.find(
+                    'media:thumbnail',
+                    namespaces=namespaces,
+                ),
+                'attrib', {})
+            .get('url'),
+        )
+
+        expected_chart_thumbnail = self.blog_page2.teaser_graphic[0].value.svg_snapshot_mini_datauri()
+        self.assertIn(
+            expected_chart_thumbnail,
+            getattr(
+                item2.find(
+                    'media:thumbnail',
+                    namespaces=namespaces,
+                ), 'attrib', {})
+            .get('url')
+        )
+
+    def test_rss_feed_has_correct_if_chart_not_available(self):
+        with mock.patch.object(ChartSnapshot, 'get_or_generate') as get_or_generate:
+            get_or_generate.side_effect = ChartNotAvailable
+            response = self.client.get(self.index.url + 'feed/')
+        root = ET.fromstring(response.content)
+
+        namespaces = {'media': 'http://search.yahoo.com/mrss/'}
+        item1 = root.find(f".//item[title='{self.blog_page.title}']")
+        item2 = root.find(f".//item[title='{self.blog_page2.title}']")
+
+        self.assertIn(
+            self.blog_page.teaser_graphic[0].value.get_rendition("original").url,
+            getattr(
+                item1.find(
+                    'media:thumbnail',
+                    namespaces=namespaces,
+                ),
+                'attrib', {})
+            .get('url'),
+        )
+
+        self.assertIn(
+            # The search image is used as a fallback if the chart
+            # snapshot not available.
+            self.blog_page2.search_image.get_rendition('original').url,
+            getattr(
+                item2.find(
+                    'media:thumbnail',
+                    namespaces=namespaces,
+                ), 'attrib', {})
+            .get('url')
+        )
 
     def test_get_index_for_unknown_author_should_return_404(self):
         response = self.client.get('/all-blogs/?author=999')
@@ -116,16 +207,43 @@ class TestPages(TestCase):
         response = self.client.get(self.blog_page.url)
         self.assertContains(response, 'verticalBarChart')
 
-        # Remove the bar chart from the body -- not sure if there's an
-        # easier way to ensure this!
+        # Remove the bar chart from the body and the lead graphic --
+        # not sure if there's an easier way to ensure this!
         new_body = []
         for item in self.blog_page.body:
             if item.block_type == 'vertical_bar_chart':
                 continue
             new_body.append((item.block_type, item.value))
         self.blog_page.body = new_body
+        self.blog_page.lead_graphic = None
         self.blog_page.save()
 
         # We should no longer have that JS bundle in the response
         response = self.client.get(self.blog_page.url)
         self.assertNotContains(response, 'verticalBarChart')
+
+    def test_get_blog_page_vertical_bar_chart_meta_image(self):
+        self.assertEqual(
+            self.blog_page2.get_meta_image(),
+            self.blog_page2.teaser_graphic[0].value.png_snapshot_meta(),
+        )
+
+    @mock.patch.object(ChartSnapshot, 'get_or_generate')
+    def test_get_blog_page_vertical_bar_chart_meta_image_if_pregeneration_fails(
+            self,
+            mock_snapshot,
+    ):
+        mock_snapshot.side_effect = ChartNotAvailable
+        self.assertEqual(
+            self.blog_page2.get_meta_image(),
+            self.search_image,
+        )
+
+    def test_get_blog_page_normal_meta_image(self):
+        self.assertEqual(
+            self.blog_page.get_meta_image(),
+            self.blog_page.teaser_graphic[0].value
+        )
+
+    def test_get_blog_page_absent_meta_image(self):
+        self.assertIsNone(self.blog_page3.get_meta_image())

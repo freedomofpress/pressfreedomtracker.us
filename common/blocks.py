@@ -12,9 +12,14 @@ from wagtail.images.blocks import ImageChooserBlock
 
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.models.helpers import get_tags, get_categories
+from common.models.charts import (
+    BubbleMapChartOptionsSchema,
+)
 from common.templatetags.render_as_template import render_as_template
 from common.search import get_searchable_content_for_fields
 from common.utils import unescape
+from common.utils.charts import ChartValue
+from common.utils.chart_pregenerator.types import ChartType
 from common.validators import validate_template
 from incident.utils import charts
 
@@ -484,6 +489,11 @@ class SimpleIncidentSet(blocks.StructBlock):
     )
 
 
+class BubbleMapChartValue(ChartValue):
+    options_schema = BubbleMapChartOptionsSchema
+    chart_type = ChartType.BUBBLE_MAP
+
+
 class VerticalBarChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
@@ -520,7 +530,7 @@ class VerticalBarChart(blocks.StructBlock):
     class Meta:
         icon = 'table'
         template = 'common/blocks/vertical_bar_chart.html'
-        value_class = charts.IncidentChartValue
+        value_class = charts.VerticalBarChartValue
 
     class Media:
         js = ['verticalBarChart']
@@ -546,7 +556,7 @@ class TreeMapChart(blocks.StructBlock):
     class Meta:
         icon = 'table'
         template = 'common/blocks/tree_map_chart.html'
-        value_class = charts.IncidentChartValue
+        value_class = charts.TreeMapChartValue
 
     class Media:
         js = ['treeMapChart']
@@ -573,6 +583,7 @@ class BubbleMapChart(blocks.StructBlock):
     class Meta:
         icon = 'table'
         template = 'common/blocks/bubble_map_chart.html'
+        value_class = BubbleMapChartValue
 
     class Media:
         js = ['bubbleMapChart']

@@ -3,15 +3,22 @@ from urllib import parse
 
 from django.db.models import TextChoices
 from django.urls import reverse
-from wagtail import blocks
 
+from common.utils.charts import ChartValue
+from common.utils.chart_pregenerator.types import ChartType
+from common.models.charts import (
+    TreeMapOptionsSchema,
+    VerticalBarChartOptionsSchema,
+)
 from incident.choices import ACTORS, STATUS_OF_CHARGES
 
 
-class IncidentChartValue(blocks.StructValue):
+class BranchingChartValue(ChartValue):
     def branch_field_name(self):
         """Return the name of the field in the dataset that will be
         used to branch/segment the chart."""
+        if self.get('group_by') is None:
+            return None
         return self.get('group_by').lower()
 
     def data_url(self):
@@ -28,18 +35,21 @@ class IncidentChartValue(blocks.StructValue):
             }
         )
 
+    def branches_json_string(self):
+        """JSON-encoded string containing the ``branches`` data."""
+        return json.dumps(self.branches())
+
     def branches(self):
         """Return a data structure that will instruct our front-end
         React component how to get the branches of the tree map
         chart.
 
-        This should be a JSON-encoded string containing a Javascript
-        object with the keys "type" (indicating what type of value we
-        have), and "value" (containing the actual value).  There are
-        two kinds of values here: a URL, and a list.  The URL tells
-        our front-end component it needs to perform a request to the
-        given URL to get the branches.  The list contains the branches
-        as a JS array.
+        This should be a dictionary with the keys "type" (indicating
+        what type of value we have), and "value" (containing the
+        actual value).  There are two kinds of values here: a URL, and
+        a list.  The URL tells our front-end component it needs to
+        perform a request to the given URL to get the branches.  The
+        list contains the branches as a python list.
 
         """
         group_by = self.get('group_by')
@@ -67,8 +77,20 @@ class IncidentChartValue(blocks.StructValue):
                     value, title in STATUS_OF_CHARGES
                 ]
             }
+        else:
+            branches_value = None
 
-        return json.dumps(branches_value)
+        return branches_value
+
+
+class TreeMapChartValue(BranchingChartValue):
+    options_schema = TreeMapOptionsSchema
+    chart_type = ChartType.TREEMAP
+
+
+class VerticalBarChartValue(BranchingChartValue):
+    options_schema = VerticalBarChartOptionsSchema
+    chart_type = ChartType.VERTICAL_BAR
 
 
 class IncidentBranches(TextChoices):

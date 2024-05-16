@@ -17,6 +17,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
 from common.utils import DEFAULT_PAGE_KEY, paginate
+from common.exceptions import ChartNotAvailable
 
 from blog.choices import BlogTemplateType
 from blog.feeds import BlogIndexPageFeed
@@ -290,8 +291,27 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
     subpage_types = []
 
     def get_meta_image(self):
-        teaser_is_image = self.teaser_graphic and self.teaser_graphic[0] and self.teaser_graphic[0].block_type == "image"
-        return self.teaser_graphic[0].value if teaser_is_image else super(BlogPage, self).get_meta_image()
+        if (
+                self.teaser_graphic and
+                self.teaser_graphic[0] and
+                self.teaser_graphic[0].block_type == "image"
+        ):
+            return self.teaser_graphic[0].value
+
+        if (
+                self.teaser_graphic and
+                self.teaser_graphic[0] and
+                self.teaser_graphic[0].block_type in (
+                    "vertical_bar_chart",
+                    "tree_map_chart",
+                    "bubble_map_chart",
+                )
+        ):
+            try:
+                return self.teaser_graphic[0].value.png_snapshot_meta()
+            except ChartNotAvailable:
+                pass
+        return super(BlogPage, self).get_meta_image()
 
     def get_meta_description(self):
         if self.teaser_text:
