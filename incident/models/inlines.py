@@ -16,6 +16,7 @@ from common.blocks import (
     RichTextBlockQuoteBlock,
     RichTextTemplateBlock,
 )
+from common.utils import format_date
 from incident import choices
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 from statistics.blocks import StatisticsBlock
@@ -40,7 +41,6 @@ class IncidentCharge(ClusterableModel):
     ]
 
     def entries_display(self):
-        date_format = '%b. %-d, %Y'
         entries = [
             (self.date, self.get_status_display())
         ] + [
@@ -48,7 +48,7 @@ class IncidentCharge(ClusterableModel):
         ]
 
         return [
-            (date.strftime(date_format), status) for date, status in
+            (format_date(date), status) for date, status in
             sorted(entries, key=lambda item: item[0])
         ]
 
@@ -111,17 +111,15 @@ class LegalOrder(ClusterableModel):
     ]
 
     def entries_display(self):
-        date_format = '%b. %-d, %Y'
-
         update_entries = [
             (
-                update.date.strftime(date_format) if update.date else 'Unknown date',
+                format_date(update.date) if update.date else 'Unknown date',
                 update.get_status_display(),
             )
             for update in self.updates.all()
         ]
         entries = [
-            (self.date.strftime(date_format), self.get_status_display())
+            (format_date(self.date), self.get_status_display())
         ] + update_entries
         return entries
 
