@@ -1063,9 +1063,9 @@ urllib3==2.2.2 \
     #   django-anymail
     #   mailchimp-marketing
     #   requests
-wagtail==5.2.2 \
-    --hash=sha256:48e4c29b72b0e53eb47a3178d6b0f2c699aa284d3f3a2abfd2f04f578f44b55a \
-    --hash=sha256:b469a1b3cb3ab3e0c6a2c6f56b4a7890427609c0c12ca32322e26ab534547211
+wagtail==5.2.6 \
+    --hash=sha256:133ec00787d83ab7fa06255641aa855e7fd75f07d04af473bd98fe782c736595 \
+    --hash=sha256:5497eecf8ffef7996e2ac348e90444deac71e54d3334eca27683c29da8754550
     # via
     #   -r requirements.in
     #   wagtail-autocomplete
