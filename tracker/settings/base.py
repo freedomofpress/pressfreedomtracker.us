@@ -365,3 +365,5 @@ CHART_PREGENERATOR = {
     'HOST': os.environ.get('DJANGO_CHART_HOST', 'node-chart-pregenerator'),
     'PORT': int(os.environ.get('DJANGO_CHART_PORT', '3000')),
 }
+
+WAGTAILEMBEDS_RESPONSIVE_HTML = True

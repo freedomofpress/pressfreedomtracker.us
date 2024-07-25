@@ -155,8 +155,9 @@ export function filterDatasets(
 
 			const isExcludedCategory = filterCategories.length && !incidentCategories.find(c => filterCategoryMap[c])
 			const isExcludedTag = filterTags && !incidentTags.find(c => filterTagsMap[c])
-
-			const [startDate, endDate] = dateRange;
+			const [startDateStr, endDateStr] = dateRange;
+			const startDate = Date.parse(startDateStr)
+			const endDate = Date.parse(endDateStr)
 			const isBeforeStartDate = startDate && date < startDate
 			const isAfterEndDate = endDate && date > endDate
 			const isExcludedDate = isBeforeStartDate || isAfterEndDate
