@@ -148,7 +148,7 @@ class TweetEmbedBlock(blocks.StructBlock):
 
     def clean(self, value):
         errors = {}
-        twitter_url = r'^(http|https):\/\/twitter.com'
+        twitter_url = r'^(http|https):\/\/(twitter|x).com'
         tweet = value.get('tweet')
 
         if tweet:

@@ -367,3 +367,22 @@ CHART_PREGENERATOR = {
 }
 
 WAGTAILEMBEDS_RESPONSIVE_HTML = True
+
+xdotcom = {
+    "endpoint": "https://api.twitter.com/1/statuses/oembed.{format}",
+    "urls": [
+        r"^https?://x\.com/(?:#!)?[^#?/]+/status/.+$",
+    ],
+}
+
+WAGTAILEMBEDS_FINDERS = [
+    {
+        'class': 'wagtail.embeds.finders.oembed',
+        'providers': [xdotcom],
+    },
+
+    # Handles all other oEmbed providers the default way
+    {
+        'class': 'wagtail.embeds.finders.oembed',
+    }
+]
