@@ -49,3 +49,12 @@ class CleanTest(TestCase):
 
         self.assertEqual(cleaned_value['tweet'].url,
                          'https://twitter.com/WagtailCMS/status/1413141835711606786')
+
+    def test_clean_https_naked_x_url(self):
+        block = TweetEmbedBlock()
+
+        cleaned_value = block.clean({
+            'tweet': EmbedValue('https://x.com/WagtailCMS/status/1413141835711606786'),
+        })
+        self.assertEqual(cleaned_value['tweet'].url,
+                         'https://x.com/WagtailCMS/status/1413141835711606786')
