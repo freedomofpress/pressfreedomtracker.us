@@ -15,7 +15,7 @@
 {% else %}
 	{% image page.lead_graphic.0.value scale-100 preserve-svg as tmp_photo %}
 	<div class="special-blog__hero-bg" style="background-image: url('{{ tmp_photo.url }}')">
-		<span class="sr-only">Background hero image of {{ page.lead_graphic.0.title }}</span>
+		<span class="sr-only">Background hero image of {{ page.lead_graphic.0.value.title }}</span>
 	</div>
 {% endif %}
 
