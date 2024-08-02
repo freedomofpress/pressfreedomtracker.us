@@ -15,7 +15,7 @@
 {% else %}
 	{% image page.lead_graphic.0.value scale-100 preserve-svg as tmp_photo %}
 	<div class="special-blog__hero-bg" style="background-image: url('{{ tmp_photo.url }}')">
-		<span class="sr-only">Background hero image of {{ page.lead_graphic.0.title }}</span>
+		<span class="sr-only">Background hero image of {{ page.lead_graphic.0.value.title }}</span>
 	</div>
 {% endif %}
 
@@ -31,11 +31,13 @@
 				{% endif %}
 			</p>
 		{% endif %}
-		{% if page.lead_graphic.0.attribution %}
-			<p class="special-blog__hero-citation">
-				{{ page.lead_graphic.0.attribution }}
-			</p>
-		{% endif %}
+		{% with attribution=page.lead_graphic.0.value.attribution %}
+			{% if attribution %}
+				<p class="special-blog__hero-citation">
+					{{ attribution }}
+				</p>
+			{% endif %}
+		{% endwith %}
 	</div>
 </div>
 
