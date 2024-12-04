@@ -9,6 +9,7 @@ import Flashing from '../../../common/js/components/Flashing'
 import {
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
+	groupByYearsSorted,
 	groupByState,
 	countIncidentsOutsideUS,
 	categoriesColors,
@@ -56,11 +57,28 @@ function HomepageMainChartsWidth({
 	const datasetAggregatedByGeo = groupByState(datasetFiltered)
 	const incidentsOutsideUS = countIncidentsOutsideUS(datasetFiltered)
 
-	const datasetGroupedByMonth = groupByMonthSorted(
-		datasetFiltered,
-		filtersApplied.sixMonths,
-		currentDate
-	)
+
+	const barChartProps = {
+		y: 'numberOfIncidents',
+		titleLabel: 'incidents',
+		id: 'homepage-bar-chart-label',
+		width: chartWidth,
+		height: chartHeight,
+		isMobileView: width < mobileBreakpoint,
+	}
+	if (filtersApplied.allTime) {
+		barChartProps.data = groupByYearsSorted(datasetFiltered)
+		barChartProps.x = 'year'
+		barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year}, currentDate, categories)
+	} else {
+		barChartProps.x = 'monthName'
+		barChartProps.data = groupByMonthSorted(
+			datasetFiltered,
+			filtersApplied.sixMonths,
+			currentDate,
+		)
+		barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+	}
 
 	return (
 		<Flashing flashing={loading}>
@@ -114,19 +132,7 @@ function HomepageMainChartsWidth({
 				</div>
 				<div className={'hpChart'}>
 					<ChartDescription id={'homepage-bar-chart-label'}>Showing the number of journalists targeted per month.</ChartDescription>
-					<BarChart
-						data={datasetGroupedByMonth}
-						x={'monthName'}
-						y={'numberOfIncidents'}
-						titleLabel={'incidents'}
-						id={'homepage-bar-chart-label'}
-						width={chartWidth}
-						height={chartHeight}
-						isMobileView={width < mobileBreakpoint}
-						searchPageURL={(monthName) =>
-							getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
-						}
-					/>
+					<BarChart {...barChartProps} />
 				</div>
 			</div>
 		</Flashing>
