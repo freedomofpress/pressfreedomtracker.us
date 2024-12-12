@@ -63,7 +63,7 @@ services:
       context: .
       dockerfile: devops/docker/NodeChartPregeneratorDevDockerfile
       args:
-        NPM_VER: 9.6.7
+        NPM_VER: 10.9.2
         USERID: ${UID:?err}
     volumes:
       - ./:/django
