@@ -7,7 +7,6 @@ from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from incident.choices import (
     ARREST_STATUS,
-    STATUS_OF_CHARGES,
     LegalOrderType,
     LegalOrderStatus,
 )

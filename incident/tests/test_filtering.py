@@ -18,7 +18,6 @@ from incident import choices
 from incident.choices import (
     ARREST_STATUS,
     DETENTION_STATUS,
-    STATUS_OF_CHARGES,
     STATUS_OF_PRIOR_RESTRAINT,
     STATUS_OF_SEIZED_EQUIPMENT,
     SUBPOENA_STATUS,
