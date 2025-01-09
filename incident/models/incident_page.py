@@ -543,31 +543,12 @@ class IncidentPage(MetadataPageMixin, Page):
         blank=True,
         verbose_name='Arrest status'
     )
-    status_of_charges = models.CharField(
-        choices=choices.STATUS_OF_CHARGES,
-        max_length=255,
-        null=True,
-        blank=True,
-        verbose_name='Status of charges'
-    )
     arresting_authority = models.ForeignKey(
         'incident.LawEnforcementOrganization',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
         help_text='Arresting authority.',
-    )
-    current_charges = ParentalManyToManyField(
-        'incident.Charge',
-        blank=True,
-        related_name='current_charge_incidents',
-        verbose_name='Current Charges',
-    )
-    dropped_charges = ParentalManyToManyField(
-        'incident.Charge',
-        blank=True,
-        related_name='dropped_charge_incidents',
-        verbose_name='Dropped Charges',
     )
     release_date = models.DateField(
         blank=True,
@@ -774,13 +755,6 @@ class IncidentPage(MetadataPageMixin, Page):
         blank=True,
         null=True,
     )
-    legal_order_type = models.CharField(
-        choices=choices.LEGAL_ORDER_TYPE,
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='Legal order type'
-    )
     legal_order_venue = models.CharField(
         choices=choices.LegalOrderVenue.choices,
         max_length=255,
@@ -865,9 +839,6 @@ class IncidentPage(MetadataPageMixin, Page):
                 AutocompletePanel('arresting_authority', target_model='incident.LawEnforcementOrganization'),
                 FieldPanel('arrest_status'),
                 InlinePanel('charges', label='Charges'),
-                FieldPanel('status_of_charges'),
-                AutocompletePanel('current_charges', 'incident.Charge'),
-                AutocompletePanel('dropped_charges', 'incident.Charge'),
                 FieldPanel('detention_date'),
                 FieldPanel('release_date'),
                 FieldPanel('unnecessary_use_of_force'),
@@ -963,7 +934,6 @@ class IncidentPage(MetadataPageMixin, Page):
             heading='Subpoena/Legal Order',
             classname='collapsible collapsed',
             children=[
-                FieldPanel('legal_order_type'),
                 FieldPanel('legal_order_target'),
                 FieldPanel('legal_order_venue'),
                 InlinePanel('legal_orders', label='Legal Orders'),

@@ -172,7 +172,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Detention/arrest
     arrest_status = None
-    status_of_charges = None
     arresting_authority = None
     release_date = None
     detention_date = None
@@ -213,8 +212,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         arrest = factory.Trait(
             arrest_status=factory.Iterator(
                 choices.ARREST_STATUS, getter=lambda c: c[0]),
-            status_of_charges=factory.Iterator(
-                choices.STATUS_OF_CHARGES, getter=lambda c: c[0]),
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
             release_date=datetime.date.today(),
             detention_date=datetime.date.today() - datetime.timedelta(days=3),
@@ -272,8 +269,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             name_of_business='Megacorp Industries',
             third_party_business=factory.Iterator(
                 choices.THIRD_PARTY_BUSINESS, getter=lambda c: c[0]),
-            legal_order_type=factory.Iterator(
-                choices.LEGAL_ORDER_TYPE, getter=lambda c: c[0]),
             legal_order_venue=choices.LegalOrderVenue.STATE,
         )
         prior_restraint = factory.Trait(
@@ -330,32 +325,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             self._prefetched_objects_cache = {
                 'workers_whose_communications_were_obtained': workers
             }
-
-    @factory.post_generation
-    def current_charges(self, create, count):
-        if count is None:
-            return
-        make_charge = getattr(ChargeFactory, 'create' if create else 'build')
-        charges = []
-        for i in range(count):
-            t = make_charge()
-            t.current_charge_incidents.add(self)
-            charges.append(t)
-        if not create:
-            self._prefetched_objects_cache = {'current_charges': charges}
-
-    @factory.post_generation
-    def dropped_charges(self, create, count):
-        if count is None:
-            return
-        make_charge = getattr(ChargeFactory, 'create' if create else 'build')
-        charges = []
-        for i in range(count):
-            t = make_charge()
-            t.dropped_charge_incidents.add(self)
-            charges.append(t)
-        if not create:
-            self._prefetched_objects_cache = {'dropped_charges': charges}
 
     @factory.post_generation
     def target_nationality(self, create, count):

@@ -19,7 +19,7 @@ from common.models import (
 )
 from common.tests.factories import CategoryPageFactory
 from incident.models import IncidentPage
-from incident.choices import ARREST_STATUS, STATUS_OF_CHARGES
+from incident.choices import ARREST_STATUS
 from incident.utils.incident_filter import (
     BooleanFilter,
     IncidentFilter,
@@ -221,13 +221,13 @@ class SerializeFilterTest(TestCase):
         })
 
     def test_choice_field(self):
-        field = IncidentPage._meta.get_field('status_of_charges')
+        field = IncidentPage._meta.get_field('arrest_status')
         filter_ = IncidentFilter._get_filter(field)
         self.assertEqual(filter_.serialize(), {
-            'title': 'Status of charges',
+            'title': 'Arrest status',
             'type': 'choice',
-            'name': 'status_of_charges',
-            'choices': STATUS_OF_CHARGES,
+            'name': 'arrest_status',
+            'choices': ARREST_STATUS,
         })
 
     def test_date_field(self):

@@ -1700,8 +1700,6 @@ class PendingFilterTest(TestCase):
 
         for value, _ in ARREST_STATUS:
             cls.all_incidents.add(IncidentPageFactory(arrest_status=value))
-        for value, _ in STATUS_OF_CHARGES:
-            cls.all_incidents.add(IncidentPageFactory(status_of_charges=value))
         for value, _ in STATUS_OF_SEIZED_EQUIPMENT:
             cls.all_incidents.add(IncidentPageFactory(status_of_seized_equipment=value))
         for value, _ in SUBPOENA_STATUS:
@@ -1723,7 +1721,6 @@ class PendingFilterTest(TestCase):
         values = []
         fields = [
             'arrest_status',
-            'status_of_charges',
             'status_of_seized_equipment',
             'subpoena_statuses',
             'detention_status',
@@ -1740,8 +1737,6 @@ class PendingFilterTest(TestCase):
         self.assertCountEqual(values, [
             ('arrest_status', 'DETAINED_CUSTODY'),
             ('arrest_status', 'ARRESTED_CUSTODY'),
-            ('status_of_charges', 'CHARGES_PENDING'),
-            ('status_of_charges', 'PENDING_APPEAL'),
             ('status_of_seized_equipment', 'CUSTODY'),
             ('status_of_seized_equipment', 'RETURNED_PART'),
             ('subpoena_statuses', ['PENDING']),

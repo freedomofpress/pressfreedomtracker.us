@@ -223,7 +223,7 @@ class GetSerializedFiltersTest(TestCase):
                         'title': 'Status of charges',
                         'type': 'choice',
                         'name': 'status_of_charges',
-                        'choices': STATUS_OF_CHARGES,
+                        'choices': None,
                     }
                 ]
             },

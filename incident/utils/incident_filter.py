@@ -708,8 +708,6 @@ class PendingCasesFilter(BooleanFilter):
     Multi-field filter. Finds incidents with any of the following:
     - arrest_status: DETAINED_CUSTODY
     - arrest_status: ARRESTED_CUSTODY
-    - status_of_charges: CHARGES_PENDING
-    - status_of_charges: PENDING_APPEAL
     - status_of_seized_equipment: CUSTODY
     - status_of_seized_equipment: RETURNED_PART
     - subpoena_status: PENDING
@@ -730,8 +728,6 @@ class PendingCasesFilter(BooleanFilter):
         return queryset.filter(
             Q(arrest_status='DETAINED_CUSTODY') |
             Q(arrest_status='ARRESTED_CUSTODY') |
-            Q(status_of_charges='CHARGES_PENDING') |
-            Q(status_of_charges='PENDING_APPEAL') |
             Q(status_of_seized_equipment='CUSTODY') |
             Q(status_of_seized_equipment='RETURNED_PART') |
             Q(subpoena_statuses__contains=['PENDING']) |
@@ -867,11 +863,9 @@ class IncidentFilter(object):
         },
         'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter, 'text_fields': ['title']},
         'arresting_authority': {'filter_cls': RelationFilter, 'verbose_name': 'Arresting authority'},
-        'status_of_charges': {'filter_cls': StatusOfChargesFilter},
         'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
         'state': {'text_fields': ['abbreviation', 'name']},
         'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'},
-        'legal_order_type': {'filter_cls': LegalOrderTypeFilter},
         'mistakenly_released_materials': {'absent_summary_name': 'No mistakenly released materials'},
         'unnecessary_use_of_force': {'absent_summary_name': 'No unnecessary use of force'},
         'is_search_warrant_obtained': {'absent_summary_name': 'No search warrant obtained'},
@@ -894,7 +888,16 @@ class IncidentFilter(object):
             verbose_name='Legal order status',
             model_field=CharField(),
         ),
-
+        'status_of_charges': StatusOfChargesFilter(
+            name='status_of_charges',
+            verbose_name='Status of charges',
+            model_field=CharField(),
+        ),
+        'legal_order_type': LegalOrderTypeFilter(
+            name='legal_order_type',
+            verbose_name='Legal order type',
+            model_field=CharField(),
+        ),
     }
 
     # IncidentPage fields that cannot be filtered on.
@@ -913,8 +916,6 @@ class IncidentFilter(object):
         'legal_orders',
         'held_in_contempt',  # Deprecated field
         'detention_status',  # Deprecated field
-        # 'dropped_charges',
-        # 'current_charges',
         '_workflow_states',
         '_specific_workflow_states',
     }
