@@ -615,8 +615,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             return
 
         if extracted:
-            for category in extracted:
+            for n, category in enumerate(extracted):
                 IncidentCategorizationFactory(
+                    sort_order=n,
                     incident_page=self,
                     category=category,
                 )
