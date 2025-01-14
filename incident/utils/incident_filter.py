@@ -348,7 +348,10 @@ class ChoiceFilter(Filter):
         return 'choice'
 
     def get_choices(self):
-        return {choice[0] for choice in self.model_field.choices}
+        return {choice[0] for choice in self.get_choice_values_and_labels()}
+
+    def get_choice_values_and_labels(self):
+        return self.model_field.choices
 
     def clean(self, value, strict=False):
         if not value:
@@ -378,7 +381,7 @@ class ChoiceFilter(Filter):
     def serialize(self):
         serialized = super(ChoiceFilter, self).serialize()
         if serialized['type'] == 'choice':
-            serialized['choices'] = self.model_field.choices
+            serialized['choices'] = self.get_choice_values_and_labels()
         return serialized
 
     def get_openapi_enum(self):
@@ -426,8 +429,11 @@ class MultiChoiceFilter(Filter):
             ))
         return value or None
 
+    def get_choice_values_and_labels(self):
+        return self.model_field.base_field.choices
+
     def get_choices(self):
-        return {choice[0] for choice in self.model_field.base_field.choices}
+        return {choice[0] for choice in self.get_choice_values_and_labels()}
 
     def filter(self, queryset, values):
         queryset_initial = queryset
@@ -441,7 +447,7 @@ class MultiChoiceFilter(Filter):
     def serialize(self):
         serialized = super(MultiChoiceFilter, self).serialize()
         if serialized['type'] == 'choice':
-            serialized['choices'] = self.model_field.base_field.choices
+            serialized['choices'] = self.get_choice_values_and_labels()
         return serialized
 
     def get_openapi_enum(self):
@@ -634,8 +640,8 @@ class RelationThroughFilter(ManyRelationFilter):
 
 
 class StatusOfChargesFilter(ChoiceFilter):
-    def get_choices(self):
-        return set({value for value, _ in STATUS_OF_CHARGES})
+    def get_choice_values_and_labels(self):
+        return STATUS_OF_CHARGES
 
     def filter(self, queryset, value):
         return queryset.with_most_recent_status_of_charges().filter(
@@ -644,14 +650,8 @@ class StatusOfChargesFilter(ChoiceFilter):
 
 
 class LegalOrderTypeFilter(ChoiceFilter):
-    def serialize(self):
-        serialized = super().serialize()
-        if serialized['type'] == 'choice':
-            serialized['choices'] = choices.LegalOrderType.choices
-        return serialized
-
-    def get_choices(self):
-        return set(choices.LegalOrderType)
+    def get_choice_values_and_labels(self):
+        return choices.LegalOrderType.choices
 
     def filter(self, queryset, value):
         return queryset.filter(

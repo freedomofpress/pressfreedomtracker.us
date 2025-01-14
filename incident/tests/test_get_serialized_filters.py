@@ -7,6 +7,7 @@ from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from incident.choices import (
     ARREST_STATUS,
+    STATUS_OF_CHARGES,
     LegalOrderType,
     LegalOrderStatus,
 )
@@ -222,7 +223,7 @@ class GetSerializedFiltersTest(TestCase):
                         'title': 'Status of charges',
                         'type': 'choice',
                         'name': 'status_of_charges',
-                        'choices': None,
+                        'choices': STATUS_OF_CHARGES,
                     }
                 ]
             },
