@@ -340,7 +340,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
 
     # Detention/arrest
     arrest_status = None
-    status_of_charges = None
     arresting_authority = None
     release_date = None
     detention_date = None
@@ -511,32 +510,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             }
 
     @factory.post_generation
-    def current_charges(self, create, count):
-        if count is None:
-            return
-        make_charge = getattr(ChargeFactory, 'create' if create else 'build')
-        charges = []
-        for i in range(count):
-            t = make_charge()
-            t.current_charge_incidents.add(self)
-            charges.append(t)
-        if not create:
-            self._prefetched_objects_cache = {'current_charges': charges}
-
-    @factory.post_generation
-    def dropped_charges(self, create, count):
-        if count is None:
-            return
-        make_charge = getattr(ChargeFactory, 'create' if create else 'build')
-        charges = []
-        for i in range(count):
-            t = make_charge()
-            t.dropped_charge_incidents.add(self)
-            charges.append(t)
-        if not create:
-            self._prefetched_objects_cache = {'dropped_charges': charges}
-
-    @factory.post_generation
     def target_nationality(self, create, count):
         if count is None:
             return
@@ -615,8 +588,9 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
             return
 
         if extracted:
-            for category in extracted:
+            for n, category in enumerate(extracted):
                 IncidentCategorizationFactory(
+                    sort_order=n,
                     incident_page=self,
                     category=category,
                 )

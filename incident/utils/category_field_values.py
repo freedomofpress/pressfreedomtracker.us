@@ -89,10 +89,6 @@ def arrest_status_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 
 
-def status_of_charges_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
 def arresting_authority_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     if not getattr(page, field):
@@ -255,10 +251,6 @@ def name_of_business_html_val(page, field, index, category):
 
 
 def third_party_business_html_val(page, field, index, category):
-    return basic_html_val(page, field, index, category)
-
-
-def legal_order_type_html_val(page, field, index, category):
     return basic_html_val(page, field, index, category)
 
 

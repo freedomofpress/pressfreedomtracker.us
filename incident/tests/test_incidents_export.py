@@ -103,7 +103,6 @@ class IncidentExportTestCase(TestCase):
             'subpoena_statuses',
             'name_of_business',
             'third_party_business',
-            'legal_order_type',
             'status_of_prior_restraint',
             'mistakenly_released_materials',
             'targeted_journalists',

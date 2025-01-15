@@ -14,8 +14,6 @@ from incident.devdata import (
 FACTORY_ARGS_BY_FOR_CATEGORY = {
     'arrest': {
         'arrest': True,
-        'current_charges': 2,
-        'dropped_charges': 2,
     }
 }
 
@@ -143,8 +141,6 @@ class Command(BaseCommand):
         factory_argset = {
             'arrest': {
                 'arrest': True,
-                'current_charges': options['current_charges'],
-                'dropped_charges': options['dropped_charges'],
             },
             'border_stop': {
                 'border_stop': True,

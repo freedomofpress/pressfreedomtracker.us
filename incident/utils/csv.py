@@ -10,10 +10,6 @@ from incident.models import (
 )
 
 
-class LegalOrderInfo:
-    legal_order_type: choices.LegalOrderType
-
-
 class CsvError(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args)

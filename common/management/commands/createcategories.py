@@ -17,7 +17,6 @@ CATEGORIES = {
     'arrest': [
         'arrest_status',
         'arresting_authority',
-        'status_of_charges',
         'detention_date',
         'release_date',
         'unnecessary_use_of_force',
@@ -49,7 +48,6 @@ CATEGORIES = {
     ],
     'subpoena': [
         'legal_order_target',
-        'legal_order_type',
         'legal_order_status',
         'legal_order_venue',
         'legal_order_information_requested',

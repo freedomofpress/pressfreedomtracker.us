@@ -131,11 +131,6 @@ class TestCategoryFieldValuesByField(TestCase):
         for legal_order in getattr(self.incident, field_name).all():
             self.assert_link_exists(
                 output,
-                legal_order.get_order_type_display(),
-                {'legal_order_type': legal_order.order_type}
-            )
-            self.assert_link_exists(
-                output,
                 legal_order.get_information_requested_display(),
                 {'legal_order_information_requested': legal_order.information_requested},
             )
@@ -187,12 +182,6 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assert_choices(
             'arrest_status',
             CAT_FIELD_VALUES['arrest_status'],
-        )
-
-    def test_status_of_charges(self):
-        self.assert_choices(
-            'status_of_charges',
-            CAT_FIELD_VALUES['status_of_charges'],
         )
 
     def test_arresting_authority(self):
@@ -323,12 +312,6 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assert_choices(
             'third_party_business',
             CAT_FIELD_VALUES['third_party_business'],
-        )
-
-    def test_legal_order_type(self):
-        self.assert_choices(
-            'legal_order_type',
-            CAT_FIELD_VALUES['legal_order_type'],
         )
 
     def test_legal_order_venue(self):
