@@ -84,8 +84,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             .prefetch_related(
                 'authors',
                 'categories__category',
-                'current_charges',
-                'dropped_charges',
                 'equipment_broken__equipment',
                 'equipment_seized__equipment',
                 'links',

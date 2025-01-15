@@ -141,14 +141,14 @@ class CleanTest(TestCase):
         self.assertEqual(dict(cm.exception), {'params': ['date_lower must be less than or equal to date_upper']})
 
     def test_clean__kwargs__cleans_with_incident_filter__invalid_param_value(self):
-        CategoryPageFactory(incident_filters=['status_of_charges'])
+        CategoryPageFactory(incident_filters=['subpoena_statuses'])
         with self.assertRaises(ValidationError) as cm:
             validate_dataset_params(
                 dataset='kwargs',
-                params='status_of_charges="hello"',
+                params='subpoena_statuses="hello"',
             )
 
-        self.assertEqual(dict(cm.exception), {'params': ['Invalid value for status_of_charges: hello']})
+        self.assertEqual(dict(cm.exception), {'params': ['Invalid value for subpoena_statuses: hello']})
 
     def test_clean__kwargs__cleans_with_incident_filter__variable_param_value(self):
         with self.assertRaises(ValidationError) as cm:
@@ -173,13 +173,13 @@ class CleanTest(TestCase):
 
     def test_clean_kwargs__combine_multiple_errors(self):
         category = CategoryPageFactory(
-            incident_filters=['arrest_status', 'status_of_charges']
+            incident_filters=['arrest_status', 'subpoena_statuses']
         )
 
         with self.assertRaises(ValidationError) as cm:
             validate_dataset_params(
                 dataset='kwargs',
-                params='categories="{}" arrest_status="hello" status_of_charges="puppy"'.format(
+                params='categories="{}" arrest_status="hello" subpoena_statuses="puppy"'.format(
                     category.id,
                 ),
             )
@@ -187,7 +187,7 @@ class CleanTest(TestCase):
         self.assertEqual(
             set(dict(cm.exception)['params']),
             {
-                'Invalid value for status_of_charges: puppy',
+                'Invalid value for subpoena_statuses: puppy',
                 'Invalid value for arrest_status: hello'
             },
         )

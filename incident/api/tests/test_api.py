@@ -397,8 +397,6 @@ class IncidentAPITest(APITestCase):
             journalist_targets=2,
             institution_targets=2,
             teaser_image=image,
-            current_charges=2,
-            dropped_charges=2,
             politicians_or_public_figures_involved=3,
         )
         tags = CommonTagFactory.create_batch(3)
@@ -451,7 +449,6 @@ class IncidentAPITest(APITestCase):
                 'primary_video': inc.primary_video,
                 'image_caption': inc.image_caption,
                 'arrest_status': inc.get_arrest_status_display(),
-                'status_of_charges': inc.get_status_of_charges_display(),
                 'arresting_authority': str(inc.arresting_authority),
                 'release_date': inc.release_date.isoformat(),
                 'detention_date': inc.detention_date.isoformat(),
@@ -477,15 +474,12 @@ class IncidentAPITest(APITestCase):
                 'subpoena_statuses': [dict(choices.SUBPOENA_STATUS)[status] for status in inc.subpoena_statuses],
                 'name_of_business': inc.name_of_business,
                 'third_party_business': inc.get_third_party_business_display(),
-                'legal_order_type': inc.get_legal_order_type_display(),
                 'legal_order_venue': inc.get_legal_order_venue_display(),
                 'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),
                 'mistakenly_released_materials': inc.mistakenly_released_materials,
                 'targeted_journalists': [e.summary for e in inc.targeted_journalists.all()],
                 'targeted_institutions': [str(e) for e in inc.targeted_institutions.all()],
                 'tags': [str(e) for e in inc.tags.all()],
-                'current_charges': [str(e) for e in inc.current_charges.all()],
-                'dropped_charges': [str(e) for e in inc.dropped_charges.all()],
                 'politicians_or_public_figures_involved': [str(e) for e in inc.politicians_or_public_figures_involved.all()],
                 'type_of_denial': [choices.TypeOfDenial(e).label for e in inc.type_of_denial],
             }

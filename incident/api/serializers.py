@@ -152,7 +152,6 @@ class BaseIncidentSerializer(VariableFieldSerializer):
     image_caption = serializers.CharField()
     arresting_authority = serializers.StringRelatedField()
     arrest_status = serializers.CharField(source='get_arrest_status_display')
-    status_of_charges = serializers.CharField(source='get_status_of_charges_display')
     release_date = serializers.DateField()
     detention_date = serializers.DateField()
     unnecessary_use_of_force = serializers.BooleanField()
@@ -177,7 +176,6 @@ class BaseIncidentSerializer(VariableFieldSerializer):
 
     name_of_business = serializers.CharField()
     third_party_business = serializers.CharField(source='get_third_party_business_display')
-    legal_order_type = serializers.CharField(source='get_legal_order_type_display')
     legal_order_venue = serializers.CharField(source='get_legal_order_venue_display')
     status_of_prior_restraint = serializers.CharField(source='get_status_of_prior_restraint_display')
     mistakenly_released_materials = serializers.BooleanField()
@@ -217,8 +215,6 @@ class IncidentSerializer(BaseIncidentSerializer):
     target_nationality = serializers.StringRelatedField(many=True)
     targeted_institutions = serializers.StringRelatedField(many=True)
     tags = serializers.StringRelatedField(many=True)
-    current_charges = serializers.StringRelatedField(many=True)
-    dropped_charges = serializers.StringRelatedField(many=True)
     politicians_or_public_figures_involved = serializers.StringRelatedField(many=True)
 
     authors = SummaryField(many=True, read_only=True)
@@ -247,8 +243,6 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     target_nationality = FlatStringRelatedField()
     targeted_institutions = FlatStringRelatedField()
     tags = FlatStringRelatedField()
-    current_charges = FlatStringRelatedField()
-    dropped_charges = FlatStringRelatedField()
     politicians_or_public_figures_involved = FlatStringRelatedField()
 
     authors = FlatSummaryField()

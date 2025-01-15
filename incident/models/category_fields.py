@@ -1,6 +1,5 @@
 from incident.utils.category_field_values import (
     arrest_status_html_val,
-    status_of_charges_html_val,
     arresting_authority_html_val,
     charges_html_val,
     detention_date_html_val,
@@ -26,7 +25,6 @@ from incident.utils.category_field_values import (
     subpoena_statuses_html_val,
     name_of_business_html_val,
     third_party_business_html_val,
-    legal_order_type_html_val,
     status_of_prior_restraint_html_val,
     mistakenly_released_materials_html_val,
     politicians_or_public_figures_involved_html_val,
@@ -88,7 +86,6 @@ CATEGORY_FIELD_MAP = {
 
 CAT_FIELD_VALUES = {
     'arrest_status': arrest_status_html_val,
-    'status_of_charges': status_of_charges_html_val,
     'arresting_authority': arresting_authority_html_val,
     'charges': charges_html_val,
     'detention_date': detention_date_html_val,
@@ -114,7 +111,6 @@ CAT_FIELD_VALUES = {
     'subpoena_statuses': subpoena_statuses_html_val,
     'name_of_business': name_of_business_html_val,
     'third_party_business': third_party_business_html_val,
-    'legal_order_type': legal_order_type_html_val,
     'status_of_prior_restraint': status_of_prior_restraint_html_val,
     'mistakenly_released_materials': mistakenly_released_materials_html_val,
     'politicians_or_public_figures_involved': politicians_or_public_figures_involved_html_val,

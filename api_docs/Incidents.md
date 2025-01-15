@@ -64,7 +64,6 @@ Here is a sample response:
       "image_caption": "<div class=\"rich-text\">Wait culture case western any size citizen.</div>",
       "arresting_authority": null,
       "arrest_status": null,
-      "status_of_charges": null,
       "release_date": null,
       "detention_date": null,
       "unnecessary_use_of_force": false,
@@ -86,7 +85,6 @@ Here is a sample response:
       "detention_status": null,
       "third_party_in_possession_of_communications": null,
       "third_party_business": null,
-      "legal_order_type": null,
       "status_of_prior_restraint": null,
       "links": [],
       "equipment_seized": [],
@@ -110,8 +108,6 @@ Here is a sample response:
         "The Stevenburgh Tribune 5"
       ],
       "tags": [],
-      "current_charges": [],
-      "dropped_charges": [],
       "politicians_or_public_figures_involved": [],
       "authors": [
         "Diana Gomez",
@@ -142,7 +138,6 @@ Here is a sample response:
       "image_caption": "<div class=\"rich-text\">Over network rate act however seek.</div>",
       "arresting_authority": null,
       "arrest_status": null,
-      "status_of_charges": null,
       "release_date": null,
       "detention_date": null,
       "unnecessary_use_of_force": false,
@@ -164,7 +159,6 @@ Here is a sample response:
       "detention_status": null,
       "third_party_in_possession_of_communications": null,
       "third_party_business": null,
-      "legal_order_type": null,
       "status_of_prior_restraint": null,
       "links": [],
       "equipment_seized": [],
@@ -179,8 +173,6 @@ Here is a sample response:
         "The West Jonathon Tribune 1582"
       ],
       "tags": [],
-      "current_charges": [],
-      "dropped_charges": [],
       "politicians_or_public_figures_involved": [],
       "authors": [],
       "categories": [
@@ -217,7 +209,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `image_caption`                               | The caption of image from the `teaser_image` field.                                                                                                                                     | string           |
 | `arresting_authority`                         | The name of the law-enforcement organization involve in an arrest incident.                                                                                                             | string           |
 | `arrest_status`                               | The status of the arrest in an arrest incident. Can be one of: `UNKNOWN`, `DETAINED_NO_PROCESSING`, `DETAINED_CUSTODY`, `ARRESTED_CUSTODY`, or `ARRESTED_RELEASED`.                     | string           |
-| `status_of_charges`                           | The status of the charges in the incident. Can be one of: `UNKNOWN`, `NOT_CHARGED`, `CHARGES_PENDING`, `CHARGES_DROPPED`, `CONVICTED`, `ACQUITTED`, or `PENDING_APPEAL`.                | string           |
 | `release_date`                                | The date of release for an arrest incident.                                                                                                                                             | date             |
 | `detention_date`                              | The date of detention for an arrest incident.                                                                                                                                           | date             |
 | `unnecessary_use_of_force`                    | If unnecessary force was used in the incident.                                                                                                                                          | boolean          |
@@ -239,7 +230,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `detention_status`                            | The status of the detainee. Can be one of `HELD_IN_CONTEMPT_NO_JAIL`, `IN_JAIL`, or `RELEASED`.                                                                                         | string           |
 | `third_party_in_possession_of_communications` | A description of what third-party possess communications in an incident involving a legal order for a journalist's records.                                                             | string           |
 | `third_party_business`                        | What type of business the above third-party is engaged in. Can be one of: `TELECOM`, `TECH_COMPANY`, `ISP`, `FINANCIAL`, `TRAVEL` or `OTHER`.                                           | string           |
-| `legal_order_type`                            | What type of legal order was involved in the incident. Can be one of: `SUBPOENA`, `2703`, `WARRANT`, `NATIONAL_SECURITY_LETTER`, `FISA` or `OTHER`.                                     | string           |
 | `status_of_prior_restraint`                   | Status of prior restraint related to the incident. Can be one of `PENDING`, `DROPPED`, `STRUCK_DOWN`, `UPHELD`, or `IGNORED`.                                                           | string           |
 | `links`                                       | A collection of links pertaining to the incident.                                                                                                                                       | array of objects |
 | `equipment_seized`                            | What equipment, and how much, was seized during the incident.                                                                                                                           | array of objects |
@@ -250,8 +240,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `target_nationality`                          | Nationalities of targets of the incident.                                                                                                                                               | array of strings |
 | `target_institutions`                         | Institutions targeted during the incident.                                                                                                                                              | array of strings |
 | `tags`                                        | Tags used to classify the incident.                                                                                                                                                     | array of strings |
-| `current_charges`                             | Charges made in legal cases related to the incident.                                                                                                                                    | array of strings |
-| `dropped_charges`                             | Charges made that were later dropped as part of the incident.                                                                                                                           | array of strings |
 | `politicians_or_public_figures_involved`      | Politicians or public figures involved in the incident.                                                                                                                                 | array of strings |
 | `authors`                                     | Authors of the article about the incident on the Press Freedom Tracker website.                                                                                                         | array of strings |
 | `categories`                                  | Categories that the incident is filed-under on the Press Freedom Tracker website.                                                                                                       | array of strings |
