@@ -289,7 +289,6 @@ class PerformantCSVTestCase(TestCase):
         )
 
     def test_status_of_charges_is_correct(self):
-        print(self.result)
         self.assertEqual(
             self.result['status_of_charges'],
             ', '.join(
