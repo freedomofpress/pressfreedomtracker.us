@@ -230,14 +230,15 @@ django==4.2.18 \
     #   djangorestframework
     #   drf-spectacular
     #   drf-spectacular-sidecar
+    #   laces
     #   wagtail
 django-anymail==10.2 \
     --hash=sha256:1f3006d3b16874aaa32976078da6cdc9baa7f5274cf80e3fc51a288887617aaf \
     --hash=sha256:ca273abbc04b5ce06d1f3b3e5f28e2d79331519198fa6d6b5ba1b5aa5eea02f7
     # via -r requirements.in
-django-autocomplete-light==3.9.7 \
-    --hash=sha256:a34f192ac438c4df056dbfd399550799ddc631c4661960134ded924648770373
-    # via wagtail-inventory
+django-autocomplete-light==3.11.0 \
+    --hash=sha256:212576a17e3308ef7ca77e280b86684167916d2091d4b73640f38845d9516328
+    # via -r requirements.in
 django-csp==3.7 \
     --hash=sha256:01443a07723f9a479d498bd7bb63571aaa771e690f64bde515db6cdb76e8041a \
     --hash=sha256:01eda02ad3f10261c74131cdc0b5a6a62b7c7ad4fd017fbefb7a14776e0a9727
@@ -246,9 +247,9 @@ django-filter==23.5 \
     --hash=sha256:67583aa43b91fe8c49f74a832d95f4d8442be628fd4c6d65e9f811f5153a4e5c \
     --hash=sha256:99122a201d83860aef4fe77758b69dda913e874cc5e0eaa50a86b0b18d708400
     # via wagtail
-django-modelcluster==6.1 \
-    --hash=sha256:3b1791638046c73ae7415327cf54bfa0adad9d89d342a5b86d0ec29a2504e067 \
-    --hash=sha256:8ce72635db4b90b34993afda5021ed8676ef94f1d4c607466d0f8d3f676c5b64
+django-modelcluster==6.4 \
+    --hash=sha256:0102d00e6b884721ba21e32edb716548e0dead7880e130aa2e04854bd384a42f \
+    --hash=sha256:839b0ddb4a1a6f5fc7d9f2f029614a84350b41315bdb80a9c8b755baaa2297f2
     # via
     #   -r requirements.in
     #   wagtail
@@ -269,9 +270,9 @@ django-storages[google]==1.14.2 \
     --hash=sha256:1db759346b52ada6c2efd9f23d8241ecf518813eb31db9e2589207174f58f6ad \
     --hash=sha256:51b36af28cc5813b98d5f3dfe7459af638d84428c8df4a03990c7d74d1bea4e5
     # via -r requirements.in
-django-taggit==4.0.0 \
-    --hash=sha256:4d52de9d37245a9b9f98c0ec71fdccf1d2283e38e8866d40a7ae6a3b6787a161 \
-    --hash=sha256:eb800dabef5f0a4e047ab0751f82cf805bc4a9e972037ef12bf519f52cd92480
+django-taggit==6.1.0 \
+    --hash=sha256:ab776264bbc76cb3d7e49e1bf9054962457831bd21c3a42db9138b41956e4cf0 \
+    --hash=sha256:c4d1199e6df34125dd36db5eb0efe545b254dec3980ce5dd80e6bab3e78757c3
     # via wagtail
 django-treebeard==4.7 \
     --hash=sha256:787117995ff985d98e6c2b241ef6b9d37fe8ff7051cd7535c283616a0b5b2645 \
@@ -436,10 +437,6 @@ gunicorn==23.0.0 \
     --hash=sha256:ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d \
     --hash=sha256:f014447a0101dc57e294f6c18ca6b40227a4c90e9bdb586042628030cba004ec
     # via -r requirements.in
-html5lib==1.1 \
-    --hash=sha256:0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d \
-    --hash=sha256:b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f
-    # via wagtail
 idna==3.7 \
     --hash=sha256:028ff3aadf0609c1fd278d8ea3089299412a7a8b9bd005dd08b9f8285bcb5cfc \
     --hash=sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0
@@ -463,6 +460,10 @@ jsonschema-specifications==2023.12.1 \
 l18n==2021.3 \
     --hash=sha256:1956e890d673d17135cc20913253c154f6bc1c00266c22b7d503cc1a5a42d848 \
     --hash=sha256:78495d1df95b6f7dcc694d1ba8994df709c463a1cbac1bf016e1b9a5ce7280b9
+    # via wagtail
+laces==0.1.2 \
+    --hash=sha256:3218e09c1889ae5cf3fc7a82f5bb63ec0c7879889b6a9760bfc42323c694b84d \
+    --hash=sha256:980cdaf9a31e883a2b8198132e2388931a4eb8814f5bfa5d8bba13ff9f657b7c
     # via wagtail
 lxml==4.9.4 \
     --hash=sha256:00e91573183ad273e242db5585b52670eddf92bacad095ce25c1e682da14ed91 \
@@ -826,9 +827,7 @@ python-json-logger==2.0.7 \
 pytz==2023.3.post1 \
     --hash=sha256:7b4fddbeb94a1eba4b557da24f19fdf9db575192544270a9101d8509f9f43d7b \
     --hash=sha256:ce42d816b81b68506614c11e8937d3aa9e41007ceb50bfdcb0749b921bf646c7
-    # via
-    #   django-modelcluster
-    #   l18n
+    # via l18n
 pyyaml==6.0.1 \
     --hash=sha256:04ac92ad1925b2cff1db0cfebffb6ffc43457495c9b3c39d3fcae417d7125dc5 \
     --hash=sha256:062582fca9fabdd2c8b54a3ef1c978d786e0f6b3a1510e0ac93ef59e0ddae2bc \
@@ -1008,8 +1007,6 @@ six==1.16.0 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
     # via
     #   bleach
-    #   django-autocomplete-light
-    #   html5lib
     #   l18n
     #   mailchimp-marketing
     #   python-dateutil
@@ -1058,9 +1055,9 @@ urllib3==2.2.2 \
     #   django-anymail
     #   mailchimp-marketing
     #   requests
-wagtail==5.2.6 \
-    --hash=sha256:133ec00787d83ab7fa06255641aa855e7fd75f07d04af473bd98fe782c736595 \
-    --hash=sha256:5497eecf8ffef7996e2ac348e90444deac71e54d3334eca27683c29da8754550
+wagtail==6.3.2 \
+    --hash=sha256:ac72f7138281ef47360057ebfb835a8eae34048efeed10ca9f4aabbc8f4e4ea5 \
+    --hash=sha256:e4271222bd2498040a60dd5e27228dcd481cc2310aa8fc951f0f4e23d20fbc50
     # via
     #   -r requirements.in
     #   wagtail-autocomplete
@@ -1078,9 +1075,9 @@ wagtail-factories==4.1.0 \
     --hash=sha256:067e3e1a30721a90eaa1514c8214aae7a171490bbedf026eeaa904a2ed9abcd0 \
     --hash=sha256:6abd435518fdf0cdd3d9920acb2abbd9005936d6fecfdf6fdde3e404834d4b0c
     # via -r requirements.in
-wagtail-inventory==2.5 \
-    --hash=sha256:103a88bfa254c7888bcddd9fab452b438c73b2e54f0da92a6ea01d7b175e0b9f \
-    --hash=sha256:37da3fbec65a9f21f420a063beca50326c11191b7d3f1edeb44b04be70c7b0f7
+wagtail-inventory==3.1 \
+    --hash=sha256:112ef112be8f3435c6b6a09dce6bbfa0da3c52249cf5dec9ad5e6af81e0edb51 \
+    --hash=sha256:203748a7eb15191852360682bf01400adeff12c74fb8079ff1c5452295dda524
     # via -r requirements.in
 wagtail-metadata==5.0.0 \
     --hash=sha256:3b9109928bad53306b21b64cf9205d84cbb88fc625bac0a38305bebb9c26e64a \
@@ -1089,16 +1086,14 @@ wagtail-metadata==5.0.0 \
 webencodings==0.5.1 \
     --hash=sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78 \
     --hash=sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923
-    # via
-    #   bleach
-    #   html5lib
+    # via bleach
 whitenoise==6.6.0 \
     --hash=sha256:8998f7370973447fac1e8ef6e8ded2c5209a7b1f67c1012866dbcd09681c3251 \
     --hash=sha256:b1f9db9bf67dc183484d760b99f4080185633136a273a03f6436034a41064146
     # via -r requirements.in
-willow[heif]==1.6.3 \
-    --hash=sha256:143cefd30d3bb816cdff857c454da24991dda35a0315ea795101675e0b14262f \
-    --hash=sha256:f4b17a16c6315864604dadb6cdf2987d0b685e295cca74c6da28b94167a3126e
+willow[heif]==1.9.0 \
+    --hash=sha256:11a13097cffe501898cd434bb5761fb6cdbdb774a7853094cb56a4ba57cbbff7 \
+    --hash=sha256:ffac1406275ae30b60e7c6cbd1245f0bc359d1b5731002b18a712aaf424a5102
     # via
     #   wagtail
     #   willow

@@ -5,7 +5,6 @@ from django.utils.translation import gettext as _
 from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.admin.viewsets.model import ModelViewSet
-from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
 from wagtail import hooks
 from wagtail.rich_text.pages import PageLinkHandler
 from webpack_loader.utils import get_files
@@ -39,39 +38,39 @@ def register_external_link(features):
     features.register_link_type(CategoryPageLinkHandler)
 
 
-class URLHelperWithMerge(AdminURLHelper):
-    @cached_property
-    def merge_url(self):
-        return self.get_action_url('merge')
+# class URLHelperWithMerge(AdminURLHelper):
+#     @cached_property
+#     def merge_url(self):
+#         return self.get_action_url('merge')
 
-    def get_action_url_pattern(self, action):
-        if action in ('create', 'choose_parent', 'index', 'merge'):
-            return self._get_action_url_pattern(action)
-        return self._get_object_specific_action_url_pattern(action)
+#     def get_action_url_pattern(self, action):
+#         if action in ('create', 'choose_parent', 'index', 'merge'):
+#             return self._get_action_url_pattern(action)
+#         return self._get_object_specific_action_url_pattern(action)
 
 
-class ButtonHelperWithMerge(ButtonHelper):
-    merge_button_classnames = []
+# class ButtonHelperWithMerge(ButtonHelper):
+#     merge_button_classnames = []
 
-    def merge_button(self, classnames_add=None, classnames_exclude=None):
-        if classnames_add is None:
-            classnames_add = []
-        if classnames_exclude is None:
-            classnames_exclude = []
-        classnames = self.add_button_classnames + classnames_add
-        cn = self.finalise_classname(classnames, classnames_exclude)
-        return {
-            'url': self.url_helper.merge_url,
-            'label': _('Merge %s') % self.verbose_name,
-            'classname': cn,
-            'title': _('Merge %s') % self.verbose_name,
-        }
+#     def merge_button(self, classnames_add=None, classnames_exclude=None):
+#         if classnames_add is None:
+#             classnames_add = []
+#         if classnames_exclude is None:
+#             classnames_exclude = []
+#         classnames = self.add_button_classnames + classnames_add
+#         cn = self.finalise_classname(classnames, classnames_exclude)
+#         return {
+#             'url': self.url_helper.merge_url,
+#             'label': _('Merge %s') % self.verbose_name,
+#             'classname': cn,
+#             'title': _('Merge %s') % self.verbose_name,
+#         }
 
 
 class MergeAdmin(ModelViewSet):
     exclude_form_fields=[]
-    button_helper_class = ButtonHelperWithMerge
-    url_helper_class = URLHelperWithMerge
+    # button_helper_class = ButtonHelperWithMerge
+    # url_helper_class = URLHelperWithMerge
 
     def merge_view(self, request):
         """
