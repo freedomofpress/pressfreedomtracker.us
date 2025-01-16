@@ -68,7 +68,7 @@ def register_external_link(features):
 
 
 class MergeAdmin(ModelViewSet):
-    exclude_form_fields=[]
+    exclude_form_fields = []
     # button_helper_class = ButtonHelperWithMerge
     # url_helper_class = URLHelperWithMerge
 
