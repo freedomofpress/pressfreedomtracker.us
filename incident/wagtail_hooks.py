@@ -1,8 +1,5 @@
 from django.urls import reverse, path, include
-from wagtail.contrib.modeladmin.options import (
-    ModelAdminGroup,
-    modeladmin_register,
-)
+from wagtail.admin.viewsets.model import ModelViewSetGroup
 from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
 from wagtail import hooks
 
@@ -124,8 +121,6 @@ class ChargeAdmin(MergeAdmin):
     merge_view_class = ChargeMergeView
     menu_label = 'Charges'
     menu_icon = 'edit'
-    add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
     search_fields = ('title',)
 
@@ -174,11 +169,13 @@ class VenueAdmin(MergeAdmin):
     search_fields = ('title',)
 
 
-class IncidentGroup(ModelAdminGroup):
+class IncidentGroup(ModelViewSetGroup):
     menu_label = 'Incident M2Ms'
     menu_icon = 'folder-open-inverse'  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
     items = (ChargeAdmin, LawEnforcementOrganizationAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin)
 
 
-modeladmin_register(IncidentGroup)
+@hooks.register('register_admin_viewset')
+def register_incidentgroup_viewset():
+    return IncidentGroup()

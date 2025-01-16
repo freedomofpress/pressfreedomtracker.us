@@ -717,6 +717,10 @@ class CommonTag(ClusterableModel):
         unique=True,
     )
 
+    @property
+    def incident_count(self):
+        return self.tagged_items.count()
+
     def __str__(self):
         return self.title
 

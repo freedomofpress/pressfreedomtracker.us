@@ -4,8 +4,8 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
+from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper, ButtonHelper
-from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
 from wagtail import hooks
 from wagtail.rich_text.pages import PageLinkHandler
 from webpack_loader.utils import get_files
@@ -68,11 +68,10 @@ class ButtonHelperWithMerge(ButtonHelper):
         }
 
 
-class MergeAdmin(ModelAdmin):
+class MergeAdmin(ModelViewSet):
+    exclude_form_fields=[]
     button_helper_class = ButtonHelperWithMerge
     url_helper_class = URLHelperWithMerge
-
-    index_template_name = 'modeladmin/index_with_merge.html'
 
     def merge_view(self, request):
         """
@@ -103,7 +102,8 @@ class CommonTagAdmin(MergeAdmin):
     model = CommonTag
     merge_view_class = TagMergeView
     menu_label = 'Tags'
-    menu_icon = 'tag'
+    icon = 'tag'
+    add_to_admin_menu = True
     menu_order = 500  # will put in 4th place (000 being 1st, 100 2nd)
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
@@ -112,15 +112,10 @@ class CommonTagAdmin(MergeAdmin):
     inspect_view_enabled = True
     inspect_view_fields = ('title',)
 
-    def incident_count(self, tag):
-        return tag.incident_count
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.with_incident_count()
-
-
-modeladmin_register(CommonTagAdmin)
+@hooks.register("register_admin_viewset")
+def register_viewset():
+    return CommonTagAdmin()
 
 
 @hooks.register('register_admin_urls')
