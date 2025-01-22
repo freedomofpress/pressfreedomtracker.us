@@ -78,7 +78,7 @@ def register_tools_menu_item():
 class GovernmentWorkerAdmin(MergeAdmin):
     model = GovernmentWorker
     menu_label = 'Alleged Recipients of Leaks'
-    menu_icon = 'edit'
+    icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
@@ -88,7 +88,7 @@ class GovernmentWorkerAdmin(MergeAdmin):
 class JournalistAdmin(MergeAdmin):
     model = Journalist
     menu_label = 'Journalist'
-    menu_icon = 'edit'
+    icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
@@ -98,7 +98,7 @@ class JournalistAdmin(MergeAdmin):
 class InstitutionAdmin(MergeAdmin):
     model = Institution
     menu_label = 'Institution'
-    menu_icon = 'edit'
+    icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
@@ -108,7 +108,7 @@ class InstitutionAdmin(MergeAdmin):
 class ChargeAdmin(MergeAdmin):
     model = Charge
     menu_label = 'Charges'
-    menu_icon = 'edit'
+    icon = 'edit'
     list_display = ('title',)
     search_fields = ('title',)
 
@@ -116,7 +116,7 @@ class ChargeAdmin(MergeAdmin):
 class LawEnforcementOrganizationAdmin(MergeAdmin):
     model = LawEnforcementOrganization
     menu_label = 'Law Enforcement Authorities'
-    menu_icon = 'edit'
+    icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
@@ -126,7 +126,7 @@ class LawEnforcementOrganizationAdmin(MergeAdmin):
 class NationalityAdmin(MergeAdmin):
     model = Nationality
     menu_label = 'Nationalities'
-    menu_icon = 'edit'
+    icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
@@ -136,7 +136,7 @@ class NationalityAdmin(MergeAdmin):
 class PoliticianOrPublicAdmin(MergeAdmin):
     model = PoliticianOrPublic
     menu_label = 'Politicians / Public Figures'
-    menu_icon = 'edit'
+    icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
@@ -146,7 +146,7 @@ class PoliticianOrPublicAdmin(MergeAdmin):
 class VenueAdmin(MergeAdmin):
     model = Venue
     menu_label = 'Venues'
-    menu_icon = 'edit'
+    icon = 'edit'
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
     list_display = ('title',)
@@ -155,7 +155,7 @@ class VenueAdmin(MergeAdmin):
 
 class IncidentGroup(ModelViewSetGroup):
     menu_label = 'Incident M2Ms'
-    menu_icon = 'folder-open-inverse'  # change as required
+    icon = 'folder-open-inverse'  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
     items = (ChargeAdmin, LawEnforcementOrganizationAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin)
 

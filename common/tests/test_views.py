@@ -7,15 +7,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.test import TestCase, override_settings, RequestFactory
 from wagtail.documents.models import Document
-from common.models import CommonTag
-from common.wagtail_hooks import CommonTagAdmin
 from django.contrib.auth import get_user_model
-
-from incident.tests.factories import (
-    IncidentIndexPageFactory,
-    IncidentPageFactory,
-    TopicPageFactory,
-)
 from wagtail.models import Site
 from mailchimp_marketing.api_client import ApiClientError
 
