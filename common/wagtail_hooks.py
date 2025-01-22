@@ -10,7 +10,7 @@ from wagtail.rich_text.pages import PageLinkHandler
 from webpack_loader.utils import get_files
 
 from .models import CommonTag, CategoryPage
-from .views import TagMergeView, deploy_info_view, MailchimpInterestsView, check_chart_health
+from .views import deploy_info_view, MailchimpInterestsView, check_chart_health
 
 
 class CategoryPageLinkHandler(PageLinkHandler):
@@ -38,60 +38,8 @@ def register_external_link(features):
     features.register_link_type(CategoryPageLinkHandler)
 
 
-# class URLHelperWithMerge(AdminURLHelper):
-#     @cached_property
-#     def merge_url(self):
-#         return self.get_action_url('merge')
-
-#     def get_action_url_pattern(self, action):
-#         if action in ('create', 'choose_parent', 'index', 'merge'):
-#             return self._get_action_url_pattern(action)
-#         return self._get_object_specific_action_url_pattern(action)
-
-
-# class ButtonHelperWithMerge(ButtonHelper):
-#     merge_button_classnames = []
-
-#     def merge_button(self, classnames_add=None, classnames_exclude=None):
-#         if classnames_add is None:
-#             classnames_add = []
-#         if classnames_exclude is None:
-#             classnames_exclude = []
-#         classnames = self.add_button_classnames + classnames_add
-#         cn = self.finalise_classname(classnames, classnames_exclude)
-#         return {
-#             'url': self.url_helper.merge_url,
-#             'label': _('Merge %s') % self.verbose_name,
-#             'classname': cn,
-#             'title': _('Merge %s') % self.verbose_name,
-#         }
-
-
 class MergeAdmin(ModelViewSet):
     exclude_form_fields = []
-    # button_helper_class = ButtonHelperWithMerge
-    # url_helper_class = URLHelperWithMerge
-
-    def merge_view(self, request):
-        """
-        Instantiates a class-based view to provide 'merge' functionality for
-        the assigned model, or redirect to Wagtail's create view if the
-        assigned model extends 'Page'. The view class used can be overridden by
-        changing the 'create_view_class' attribute.
-        """
-        kwargs = {'model_admin': self}
-        view_class = self.merge_view_class
-        return view_class.as_view(**kwargs)(request)
-
-    def get_admin_urls_for_registration(self):
-        urls = super().get_admin_urls_for_registration()
-        return urls + (
-            re_path(
-                self.url_helper.get_action_url_pattern('merge'),
-                self.merge_view,
-                name=self.url_helper.get_action_url_name('merge')
-            ),
-        )
 
     class Meta:
         abstract = True
@@ -99,7 +47,6 @@ class MergeAdmin(ModelViewSet):
 
 class CommonTagAdmin(MergeAdmin):
     model = CommonTag
-    merge_view_class = TagMergeView
     menu_label = 'Tags'
     icon = 'tag'
     add_to_admin_menu = True
