@@ -698,11 +698,11 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
 class TagQuerySet(models.QuerySet):
     def with_incident_count(self):
         return self.annotate(
-            incident_count=models.Count('tagged_items')
+            count=models.Count('tagged_items')
         )
 
     def unused(self):
-        return self.with_incident_count().filter(incident_count__lte=0)
+        return self.with_incident_count().filter(count__lte=0)
 
 
 class CommonTag(ClusterableModel):
