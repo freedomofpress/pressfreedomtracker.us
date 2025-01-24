@@ -13,3 +13,11 @@ class TestUnusedTags(TestCase):
         used_tag.tagged_items.add(incident)
 
         self.assertEqual(list(CommonTag.objects.unused()), [unused_tag])
+
+    def test_tags_incident_count_property(self):
+        """Should be able to get the correct incident count from the property."""
+        tag = CommonTagFactory()
+        incident = IncidentPageFactory()
+        tag.tagged_items.add(incident)
+
+        self.assertEqual(tag.incident_count, 1)
