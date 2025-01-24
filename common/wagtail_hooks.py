@@ -15,20 +15,21 @@ class CategoryPageLinkHandler(PageLinkHandler):
     """Class to apply CSS to links to CategoryPages in rich text"""
     identifier = 'page'
 
-    @staticmethod
-    def expand_db_attributes(attrs):
-        # Defer to the superclass method for the HTML, then check if
-        # the page we're linking to is a Category page.
-        result = super(CategoryPageLinkHandler, CategoryPageLinkHandler).expand_db_attributes(attrs)
+    @classmethod
+    def expand_db_attributes_many(cls, attrs_list: list[dict]) -> list[str]:
+        links = super().expand_db_attributes_many(attrs_list)
 
-        try:
-            page = CategoryPage.objects.get(pk=attrs['id'])
-            return result.replace(
-                '<a',
-                f'<a class="category category-{page.page_symbol}"',
-            )
-        except CategoryPage.DoesNotExist:
-            return result
+        results = []
+        for link, attrs in zip(links, attrs_list):
+            try:
+                page = CategoryPage.objects.get(pk=attrs['id'])
+                results.append(link.replace(
+                    '<a',
+                    f'<a class="category category-{page.page_symbol}"',
+                ))
+            except CategoryPage.DoesNotExist:
+                results.append(link)
+        return results
 
 
 @hooks.register('register_rich_text_features', order=10)
