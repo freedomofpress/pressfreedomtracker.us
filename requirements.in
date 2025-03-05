@@ -27,7 +27,7 @@ structlog
 typing
 typogrify
 wagtail>=6.3.2,<6.4
-wagtail-autocomplete>=0.11.0
+wagtail-autocomplete>=0.12.0
 wagtail-factories>=4.1.0
 wagtail-django-recaptcha
 wagtail-metadata>=5.0.0
