@@ -54,15 +54,17 @@
 			</ol>
 
 			<dl class="database-card-table__incident-details">
-				{% if incident.latest_update and incident.updates.all.exists %}
-					<div class="database-card-table__row table-{{ details }}">
-						<dt class="database-card-table__label database-card-table__label--bold">Updated on</dt>
-						<dd class="database-card-table__value">
-							<time datetime="{{ incident.latest_update|date:"c" }}">
-								{{ incident.latest_update|date:"F j, Y" }}
-							</time>
-						</dd>
-					</div>
+				{% if incident.updates.all.exists %}
+					{% with latest_update=incident.get_updates_by_desc_date|first %}
+						<div class="database-card-table__row table-{{ details }}">
+							<dt class="database-card-table__label database-card-table__label--bold">Updated on</dt>
+							<dd class="database-card-table__value">
+								<time datetime="{{ latest_update.date|date:"c" }}">
+									{{ latest_update.date|date:"F j, Y" }}
+								</time>
+							</dd>
+						</div>
+					{% endwith %}
 				{% endif %}
 
 				<div class="database-card-table__row table-{{ details }}">
