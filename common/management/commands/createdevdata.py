@@ -159,7 +159,7 @@ class Command(BaseCommand):
         )
 
     def fetch_image(self, width, height, collection):
-        url = f'https://source.unsplash.com/{width}x{height}?animal'
+        url = f'https://picsum.photos/{width}/{height}'
         response = requests.get(url, timeout=5)
         if response and response.content:
             CustomImageFactory(
