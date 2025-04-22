@@ -1,0 +1,283 @@
+---
+name: CI
+
+on:
+  pull_request:
+    types: ["opened", "synchronize"]
+  push:
+    branches: ["prod", "develop"]
+
+env:
+  COMPOSE_FILE_DEV: docker-compose.yaml
+  COMPOSE_FILE_PROD: prod-docker-compose.yaml
+  # See here for valid options:
+  # https://github.com/docker/setup-docker-action?tab=readme-ov-file#inputs.version
+  VERSION_DOCKER: latest
+  # See here for valid options:
+  # https://hub.docker.com/r/curlimages/curl/tags
+  VERSION_CURL: 7.80.0
+  # Must match the version specified in devops/docker/DevDjangoDockerfile
+  VERSION_PYTHON: 3.12.2
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lint-actions:
+    name: Lint:Actions
+    uses: freedomofpress/actionslib/.github/workflows/lint-actions.yaml@main
+
+  build-dev:
+    name: Build:Dev
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Docker
+      uses: docker/setup-docker-action@v4
+      with:
+        version: ${{ env.VERSION_DOCKER }}
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+
+    - name: Create env config
+      run: make dev-init
+
+    - name: Build
+      run: docker compose --file=${{ env.COMPOSE_FILE_DEV }} build
+
+    - name: Export built images
+      run: |
+        mkdir ${{ runner.temp }}/export
+        docker image save --output ${{ runner.temp }}/export/pressfreedomtrackerus-django.tar pressfreedomtrackerus-django
+        docker image save --output ${{ runner.temp }}/export/pressfreedomtrackerus-node.tar pressfreedomtrackerus-node
+        docker image save --output ${{ runner.temp }}/export/pressfreedomtrackerus-node-chart-pregenerator.tar pressfreedomtrackerus-node-chart-pregenerator
+
+    - name: Upload built images
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-dev-${{ github.run_id }}-images
+        path: ${{ runner.temp }}/export
+        if-no-files-found: error
+        overwrite: true
+        retention-days: 1
+
+    outputs:
+      images: build-dev-${{ github.run_id }}-images
+
+  build-prod:
+    name: Build:Prod
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Docker
+      uses: docker/setup-docker-action@v4
+      with:
+        version: ${{ env.VERSION_DOCKER }}
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+        # The build inspects the local git environment for setting build time
+        # parameters and will fail if they aren't available
+        fetch-tags: true
+        fetch-depth: 0
+
+    - name: Build
+      run: docker compose --file=${{ env.COMPOSE_FILE_PROD }} build
+
+    - name: Start
+      run: |
+        docker compose --file=${{ env.COMPOSE_FILE_PROD }} up --detach
+        sleep 5s
+
+    - name: Verify django
+      run: |
+        docker run --pull=missing --rm --network=pressfreedomtrackerus_app docker.io/curlimages/curl:${{ env.VERSION_CURL }} \
+        --ipv4 --retry 24 --retry-delay 5 --retry-all-errors http://django:8000/health/ok/
+
+    - name: Verify database
+      run: |
+        docker compose --file=${{ env.COMPOSE_FILE_PROD }} exec django \
+        /bin/bash -c "./manage.py createdevdata --no-download"
+
+    - name: Verify site skeleton
+      run: |
+        docker compose --file=${{ env.COMPOSE_FILE_PROD }} exec django \
+        pip install --requirement=/django/requirements.txt --require-hashes --no-color --disable-pip-version-check
+
+        docker compose --file=${{ env.COMPOSE_FILE_PROD }} exec django \
+        ./scripts/pytest
+
+    - name: Export logs
+      run: |
+        mkdir --parents ${{ runner.temp }}/logs
+        docker compose --file=${{ env.COMPOSE_FILE_PROD }} logs django >${{ runner.temp }}/logs/django.log
+        docker compose --file=${{ env.COMPOSE_FILE_PROD }} logs postgresql >${{ runner.temp }}/logs/postgresql.log
+        docker compose --file=${{ env.COMPOSE_FILE_PROD }} logs node-chart-pregenerator >${{ runner.temp }}/logs/node-chart-pregenerator.log
+
+    - name: Save logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-prod-${{ github.run_id }}-logs
+        path: ${{ runner.temp }}/logs
+        if-no-files-found: error
+        overwrite: true
+        retention-days: 5
+
+  test-matrix:
+    name: ${{ matrix.test.title }}
+    runs-on: ubuntu-latest
+    needs:
+    - build-dev
+    strategy:
+      matrix:
+        test:
+        - title: Test:Migrations
+          target: check-migrations
+        - title: Test:Python
+          target: dev-tests
+        - title: Test:JavaScript
+          target: dev-jest-tests
+        - title: Lint:Python-Security
+          target: bandit
+        - title: Lint:Python
+          target: flake8
+        - title: Lint:JavaScript
+          target: eslint
+        - title: Lint:Style
+          target: stylelint
+    steps:
+    - name: Install Docker
+      uses: docker/setup-docker-action@v4
+      with:
+        version: ${{ env.VERSION_DOCKER }}
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+
+    - name: Download dev images
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ needs.build-dev.outputs.images }}
+        path: ${{ runner.temp }}/images
+
+    - name: Restore dev images
+      run: |
+        docker image load --input ${{ runner.temp }}/images/pressfreedomtrackerus-django.tar
+        docker image load --input ${{ runner.temp }}/images/pressfreedomtrackerus-node.tar
+        docker image load --input ${{ runner.temp }}/images/pressfreedomtrackerus-node-chart-pregenerator.tar
+
+    - name: Create env config
+      run: make dev-init
+
+    - name: Start
+      run: |
+        docker compose --file=${{ env.COMPOSE_FILE_DEV }} up --detach --pull=missing --no-build
+        sleep 5s
+
+    - name: Make target ${{ matrix.test.target }}
+      run: make ${{ matrix.test.target }}
+
+    - name: Export logs
+      run: |
+        mkdir --parents ${{ runner.temp }}/logs
+        docker compose --file=${{ env.COMPOSE_FILE_DEV }} logs django >${{ runner.temp }}/logs/django.log
+        docker compose --file=${{ env.COMPOSE_FILE_DEV }} logs node >${{ runner.temp }}/logs/node.log
+        docker compose --file=${{ env.COMPOSE_FILE_DEV }} logs postgresql >${{ runner.temp }}/logs/postgresql.log
+        docker compose --file=${{ env.COMPOSE_FILE_DEV }} logs node-chart-pregenerator >${{ runner.temp }}/logs/node-chart-pregenerator.log
+    
+    - name: Save logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-${{ matrix.test.target }}-${{ github.run_id }}-logs
+        path: ${{ runner.temp }}/logs
+        if-no-files-found: error
+        overwrite: true
+        retention-days: 5
+
+    - name: Save HTML coverage
+      uses: actions/upload-artifact@v4
+      if: ${{ matrix.test.target == 'dev-tests' }}
+      with:
+        name: test-${{ matrix.test.target }}-${{ github.run_id }}-htmlcov
+        path: htmlcov
+        if-no-files-found: error
+        overwrite: true
+        retention-days: 5
+
+    - name: Save PyTest coverage
+      uses: actions/upload-artifact@v4
+      if: ${{ matrix.test.target == 'dev-tests'}}
+      with:
+        name: test-${{ matrix.test.target }}-${{ github.run_id }}-pytestcov
+        path: coverage.xml
+        if-no-files-found: error
+        overwrite: true
+        retention-days: 5
+
+    outputs:
+      artifact-pytestcov: test-dev-tests-${{ github.run_id }}-pytestcov
+
+  test-coverage:
+    name: Test:Coverage
+    runs-on: ubuntu-latest
+    needs:
+    - test-matrix
+    permissions:
+      contents: read
+      actions: read
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: true
+        fetch-depth: 0
+    
+    - name: Install Python ${{ env.VERSION_PYTHON }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.VERSION_PYTHON }}
+
+    - name: Configure Job Cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pip
+        key: ${{ runner.os }}-py${{ env.VERSION_PYTHON }}-${{ hashFiles(format('./ci-requirements.txt')) }}
+
+    - name: Install requirements
+      run: |
+        python -m pip install --requirement=ci-requirements.txt --require-hashes --disable-pip-version-check --no-color --no-input
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ needs.test-matrix.outputs.artifact-pytestcov }}
+        path: ${{ runner.temp }}/coverage
+    
+    - name: Compare coverage
+      run: |
+        diff-cover ${{ runner.temp }}/coverage/coverage.xml --compare-branch=origin/develop --fail-under=100
+
+  cleanup:
+    name: Build:Cleanup
+    runs-on: ubuntu-latest
+    needs: 
+    - build-dev
+    - test-matrix
+    if: ${{ needs.build-dev.result == 'success' && always() }}
+    permissions:
+      contents: read
+      actions: write
+    steps:
+    - name: Delete built images
+      uses: freedomofpress/actionslib/act/delete-artifact@main
+      with:
+        artifact: ${{ needs.build-dev.outputs.images }}
+        error-if-absent: 'false'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
