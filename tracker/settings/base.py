@@ -204,6 +204,9 @@ WAGTAILIMAGES_EXTENSIONS = ["avif", "gif", "jpg", "jpeg", "png", "webp", "svg"]
 # The size needs to be set to an integer in units of bytes, e.g. 1 MB should be set to 1 * 1024 * 1024
 WAGTAILIMAGES_MAX_UPLOAD_SIZE = int(os.environ.get('WAGTAILIMAGES_MAX_UPLOAD_SIZE', 10 * 1024 * 1024))
 
+# The size needs to be set in pixels, e.g. 128 megapixels should be set to 128000000
+WAGTAILIMAGES_MAX_IMAGE_PIXELS = int(os.environ.get('WAGTAILIMAGES_MAX_IMAGE_PIXELS', 128000000))
+
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
