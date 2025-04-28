@@ -1,16 +1,19 @@
 .inline-media
-	&.full-width
-		margin-inline: 0
+	width: 100%
+	margin-inline: 0
 
-	&.left
-		float: left
-		margin-bottom: 1em
-		margin-right: 1em
+	+tablet-up
+		&.left
+			margin-bottom: 1em
+			margin-right: 1em
+			float: left
+			max-width: 60%
 
-	&.right
-		float: right
-		margin-bottom: 1em
-		margin-left: 1em
+		&.right
+			margin-bottom: 1em
+			margin-left: 1em
+			float: right
+			max-width: 60%
 
 	&__caption
 		line-height: 1
