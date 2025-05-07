@@ -613,7 +613,7 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         null=True,
         blank=True,
-        verbose_name="Status of seized equipment"
+        verbose_name="Status of equipment"
     )
     is_search_warrant_obtained = models.BooleanField(
         default=False,
