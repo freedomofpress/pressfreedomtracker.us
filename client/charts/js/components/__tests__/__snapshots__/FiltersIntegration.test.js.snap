@@ -382,7 +382,7 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   ],
                   "many": true,
                   "name": "equipment_seized",
-                  "title": "Equipment Seized",
+                  "title": "Equipment Searched or Seized",
                   "type": "autocomplete",
                 },
                 {
@@ -403,9 +403,13 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                       "RETURNED_PART",
                       "returned in part",
                     ],
+                    [
+                      "SEARCHED_WITHOUT_SEIZURE",
+                      "searched without seizure",
+                    ],
                   ],
                   "name": "status_of_seized_equipment",
-                  "title": "Status of seized equipment",
+                  "title": "Status of equipment",
                   "type": "choice",
                 },
                 {

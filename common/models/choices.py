@@ -18,7 +18,7 @@ FILTER_CHOICES = [
     ('did_authorities_ask_about_work',
      "Did authorities ask intrusive questions about journalist's work?"),
     ('equipment_broken', 'Equipment Broken'),
-    ('equipment_seized', 'Equipment Seized'),
+    ('equipment_seized', 'Equipment Searched or Seized'),
     ('politicians_or_public_figures_involved',
      'Government agency or public official involved'),
     ('tags', 'Has any of these tags'),

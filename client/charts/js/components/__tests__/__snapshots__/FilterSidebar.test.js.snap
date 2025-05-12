@@ -1406,7 +1406,7 @@ exports[`renders FilterSidebar with mocked data 1`] = `
             ],
             "many": true,
             "name": "equipment_seized",
-            "title": "Equipment Seized",
+            "title": "Equipment Searched or Seized",
             "type": "autocomplete",
           },
           {
@@ -1427,9 +1427,13 @@ exports[`renders FilterSidebar with mocked data 1`] = `
                 "RETURNED_PART",
                 "returned in part",
               ],
+              [
+                "SEARCHED_OR_SEIZED",
+                "searched or seized",
+              ],
             ],
             "name": "status_of_seized_equipment",
-            "title": "Status of seized equipment",
+            "title": "Status of equipment",
             "type": "choice",
           },
           {
