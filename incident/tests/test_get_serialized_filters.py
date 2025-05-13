@@ -136,7 +136,7 @@ class GetSerializedFiltersTest(TestCase):
                         'choices': [c.title for c in charges],
                     },
                     {
-                        'title': 'Equipment Seized',
+                        'title': 'Equipment Searched or Seized',
                         'type': 'autocomplete',
                         'name': 'equipment_seized',
                         'autocomplete_type': 'incident.Equipment',

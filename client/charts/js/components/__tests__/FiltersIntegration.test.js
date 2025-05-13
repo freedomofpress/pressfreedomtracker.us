@@ -746,7 +746,7 @@ test('renders FiltersIntegration with mocked data', () => {
 					"symbol": "equipment_search",
 					"filters": [
 						{
-							"title": "Equipment Seized",
+							"title": "Equipment Searched or Seized",
 							"type": "autocomplete",
 							"name": "equipment_seized",
 							"autocomplete_type": "incident.Equipment",
@@ -768,7 +768,7 @@ test('renders FiltersIntegration with mocked data', () => {
 							"many": true
 						},
 						{
-							"title": "Status of seized equipment",
+							"title": "Status of equipment",
 							"type": "choice",
 							"name": "status_of_seized_equipment",
 							"choices": [
@@ -787,7 +787,12 @@ test('renders FiltersIntegration with mocked data', () => {
 								[
 									"RETURNED_PART",
 									"returned in part"
+								],
+								[
+									"SEARCHED_WITHOUT_SEIZURE",
+									"searched without seizure"
 								]
+
 							]
 						},
 						{

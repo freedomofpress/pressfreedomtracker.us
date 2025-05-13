@@ -203,7 +203,7 @@ class SerializeFilterTest(TestCase):
         field = IncidentPage._meta.get_field('equipment_seized')
         filter_ = IncidentFilter._get_filter(field)
         self.assertEqual(filter_.serialize(), {
-            'title': 'Equipment Seized',
+            'title': 'Equipment Searched or Seized',
             'type': 'autocomplete',
             'autocomplete_type': 'incident.Equipment',
             'name': 'equipment_seized',
