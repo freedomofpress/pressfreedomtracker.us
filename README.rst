@@ -77,7 +77,7 @@ If tests need to be updated, you can run the following command:
 
 .. code:: bash
 
-    docker compose exec node npm test-update
+    docker compose exec node npm run test-update
 
 Debugging
 ---------
