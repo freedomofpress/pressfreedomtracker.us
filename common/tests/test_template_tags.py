@@ -10,6 +10,7 @@ from common.templatetags.common_tags import (
     lookup,
     query_transform,
     richtext_aside,
+    to_json,
 )
 
 
@@ -117,3 +118,7 @@ class TestTemplateTags(TestCase):
         result = get_absolute_url(context, 'sitemap')
 
         self.assertEqual(result, f'http://{request.get_host()}/sitemap.xml')
+
+    def test_to_json(self):
+        obj = ['A', 'B', 'C']
+        self.assertEqual(to_json(obj), '["A", "B", "C"]')

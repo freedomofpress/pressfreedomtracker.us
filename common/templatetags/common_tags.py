@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 from django import template
 from django.core.cache import cache
@@ -131,3 +132,8 @@ def add_as_string(value, arg):
             return value + arg
         except Exception:
             return ''
+
+
+@register.filter
+def to_json(obj):
+    return json.dumps(obj)
