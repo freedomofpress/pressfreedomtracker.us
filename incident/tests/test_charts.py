@@ -1,20 +1,20 @@
 import json
 from abc import ABCMeta, abstractmethod
 from datetime import date
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 
 from django.test import TestCase
 from django.urls import reverse
 
 from common.blocks import TreeMapChart
 from common.models.charts import ChartSnapshot
-from common.tests.factories import ChartSnapshotFactory, CategoryPageFactory
+from common.tests.factories import CategoryPageFactory, ChartSnapshotFactory
 from common.utils.chart_pregenerator.types import (
     ChartType,
     SnapshotType,
 )
-from incident.utils import charts
 from incident.choices import ACTORS, STATUS_OF_CHARGES
+from incident.utils import charts
 
 
 @property

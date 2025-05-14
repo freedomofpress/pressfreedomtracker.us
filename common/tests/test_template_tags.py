@@ -2,14 +2,14 @@ import hashlib
 from unittest import mock
 
 from django.http import QueryDict
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory, TestCase
 
 from common.templatetags.common_tags import (
-    lookup,
     add_as_string,
-    richtext_aside,
-    query_transform,
     get_absolute_url,
+    lookup,
+    query_transform,
+    richtext_aside,
 )
 
 

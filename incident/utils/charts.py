@@ -4,12 +4,12 @@ from urllib import parse
 from django.db.models import TextChoices
 from django.urls import reverse
 
-from common.utils.charts import ChartValue
-from common.utils.chart_pregenerator.types import ChartType
 from common.models.charts import (
     TreeMapOptionsSchema,
     VerticalBarChartOptionsSchema,
 )
+from common.utils.chart_pregenerator.types import ChartType
+from common.utils.charts import ChartValue
 from incident.choices import ACTORS, STATUS_OF_CHARGES
 
 

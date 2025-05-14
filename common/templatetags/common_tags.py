@@ -1,11 +1,15 @@
-import bleach
 import hashlib
-from bs4 import BeautifulSoup
+
 from django import template
 from django.core.cache import cache
 from django.urls import reverse
 from django.utils.html import mark_safe
+
 from wagtail.templatetags.wagtailcore_tags import richtext
+
+import bleach
+from bs4 import BeautifulSoup
+
 
 register = template.Library()
 

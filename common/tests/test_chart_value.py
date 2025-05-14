@@ -2,13 +2,13 @@ from datetime import date
 
 from django.test import TestCase
 
-from common.tests.factories import (
-    ChartSnapshotFactory,
-    CategoryPageFactory,
-)
 from common.blocks import (
-    VerticalBarChart,
     BubbleMapChart,
+    VerticalBarChart,
+)
+from common.tests.factories import (
+    CategoryPageFactory,
+    ChartSnapshotFactory,
 )
 from common.utils.chart_pregenerator.types import (
     ChartType,
