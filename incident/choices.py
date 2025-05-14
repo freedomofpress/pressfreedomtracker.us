@@ -90,6 +90,7 @@ STATUS_OF_SEIZED_EQUIPMENT = [
     ('CUSTODY', 'in custody'),
     ('RETURNED_FULL', 'returned in full'),
     ('RETURNED_PART', 'returned in part'),
+    ('SEARCHED_WITHOUT_SEIZURE', 'searched without seizure'),
 ]
 
 

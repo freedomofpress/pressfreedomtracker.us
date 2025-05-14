@@ -230,7 +230,7 @@ class EquipmentSeized(Orderable):
     ]
 
     class Meta(Orderable.Meta):
-        verbose_name = "Equipment Seized"
+        verbose_name = "Equipment Searched or Seized"
 
     @property
     def summary(self):
