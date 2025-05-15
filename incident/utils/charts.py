@@ -23,7 +23,7 @@ class BranchingChartValue(ChartValue):
 
     def data_url(self):
         """Return the URL to be used to fetch primary data set for the chart."""
-        fields = {'categories', 'tags', 'date'}
+        fields = {'categories', 'tags', 'date', 'state'}
         fields.add(self.get('group_by').lower())
         return reverse(
             'incidentpage-list',
