@@ -65,6 +65,8 @@ export const generateBarChartSVG = async (req) => {
 
 	if (!dataset) return generateFallbackSVG(options.width, options.height)
 
+	const filterStates = new Set(options.filterStates)
+
 	try {
 		// Filter down to the categories and tags and date range we want
 		const filteredDataset = filterDatasets(
@@ -72,6 +74,7 @@ export const generateBarChartSVG = async (req) => {
 			options.filterCategories,
 			options.filterTags,
 			options.dateRange,
+			filterStates,
 		)
 
 		// if branchFieldName is set but branches is undefined, that means we are filtering a tag
@@ -163,6 +166,8 @@ export const generateTreemapChartSVG = async (req) => {
 
 	if (!dataset) return generateFallbackSVG(options.width, options.height)
 
+	const filterStates = new Set(options.filterStates)
+
 	try {
 		// Filter down to the categories and tags and date range we want
 		const filteredDataset = filterDatasets(
@@ -170,6 +175,7 @@ export const generateTreemapChartSVG = async (req) => {
 			options.filterCategories,
 			options.filterTags,
 			options.dateRange,
+			filterStates,
 		)
 		console.dir(branches, {depth: null})
 		const categoriesColorMap = branches ? [...(new Set([...branches.map((d) => d.title)]))]
@@ -247,12 +253,15 @@ export const generateUSMapSVG = async (req) => {
 			city: (d) => `${d.city}, ${d.state}`,
 		}
 
+		const filterStates = new Set(options.filterStates)
+
 		// Filter down to the categories and tags and date range we want
 		const filteredDataset = filterDatasets(
 			dataset,
 			options.filterCategories,
 			options.filterTags,
 			options.dateRange,
+			filterStates,
 		)
 		const datasetAggregatedByGeo = filteredDataset
 			&& aggregationLocalityMap[options.aggregationLocality](filteredDataset)

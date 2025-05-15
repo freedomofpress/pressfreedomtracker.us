@@ -15,6 +15,7 @@ export default ({
 	description,
 	filterCategories = [], // Array of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
+	filterStates = new Set(),
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	aggregationLocality = 'state', // Whether to group incidents by state or city
 	isMobileView = false,
@@ -27,7 +28,7 @@ export default ({
 	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
 
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
+	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange, filterStates)
 	const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[aggregationLocality](filteredDataset)
 	const incidentsOutsideUS = countIncidentsOutsideUS(filteredDataset)
 

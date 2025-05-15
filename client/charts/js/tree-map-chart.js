@@ -14,6 +14,7 @@ function engageCharts() {
 		const filterTag = chartNode.dataset?.tag
 		const lowerValue= chartNode.dataset?.lowerDate
 		const upperValue = chartNode.dataset?.upperDate
+		const filterStates = new Set(JSON.parse(chartNode.dataset?.states || '[]'))
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
 		const interactive = !!chartNode.dataset?.interactive
@@ -56,6 +57,7 @@ function engageCharts() {
 				<TreeMapChart
 					filterCategories={filterCategories}
 					filterTags={filterTag}
+					filterStates={filterStates}
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
 					description={description}
