@@ -42,12 +42,14 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
                 'categories': [self.category.title],
                 'lower_date': date(2022, 1, 1),
                 'upper_date': date(2023, 1, 1),
+                'states': ['AK'],
             },
             'group_by': self.group_by,
         })
         query = {
             'filterTags': 'test_tag',
             'filterCategories': [self.category.title],
+            'filterStates': ['AK'],
             'dateRange': ['2022-01-01', '2023-01-01'],
             'branches': self.tree_map_chart_value.branches(),
             'branchFieldName': self.tree_map_chart_value.branch_field_name(),

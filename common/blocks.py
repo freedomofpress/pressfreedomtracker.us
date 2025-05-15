@@ -15,7 +15,7 @@ from common.choices import BACKGROUND_COLOR_CHOICES
 from common.models.charts import (
     BubbleMapChartOptionsSchema,
 )
-from common.models.helpers import get_categories, get_tags
+from common.models.helpers import get_categories, get_states, get_tags
 from common.search import get_searchable_content_for_fields
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape
@@ -487,6 +487,12 @@ class SimpleIncidentSet(blocks.StructBlock):
         label='Filter by Date, upper bound',
         required=False,
         help_text='If set, no incidents after this date will be included.',
+    )
+    states = blocks.MultipleChoiceBlock(
+        label='Filter by State',
+        required=False,
+        choices=get_states,
+        help_text='If selected, only incidents in the chosen states will be included.',
     )
 
 

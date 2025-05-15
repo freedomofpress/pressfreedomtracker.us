@@ -37,6 +37,11 @@ class BaseChartOptionsSchema(Schema):
     date_range = fields.Method('get_date_range', data_key='dateRange')
     width = fields.Int()
     height = fields.Int()
+    states = fields.List(
+        fields.Str(),
+        data_key='filterStates',
+        attribute='incident_set.states',
+    )
 
     def get_date_range(self, obj):
         lower = obj.get('incident_set', {}).get('lower_date', None)
