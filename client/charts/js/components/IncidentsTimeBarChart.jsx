@@ -80,6 +80,7 @@ export default function IncidentsTimeBarChart({
 	description,
 	filterCategories = [], // Array of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
+	filterStates = new Set(), // Set of valid state abbreviations
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	timePeriod,
 	isMobileView = false,
@@ -91,7 +92,7 @@ export default function IncidentsTimeBarChart({
 	groupByTag,
 }) {
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
+	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange, filterStates)
 
 	// if branchFieldName is set but branches is undefined, that means we are filtering a tag
 	const tagBranches = (groupByTag)

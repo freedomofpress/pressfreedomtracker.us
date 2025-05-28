@@ -1,20 +1,20 @@
 import json
 from abc import ABCMeta, abstractmethod
 from datetime import date
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 
 from django.test import TestCase
 from django.urls import reverse
 
 from common.blocks import TreeMapChart
 from common.models.charts import ChartSnapshot
-from common.tests.factories import ChartSnapshotFactory, CategoryPageFactory
+from common.tests.factories import CategoryPageFactory, ChartSnapshotFactory
 from common.utils.chart_pregenerator.types import (
     ChartType,
     SnapshotType,
 )
-from incident.utils import charts
 from incident.choices import ACTORS, STATUS_OF_CHARGES
+from incident.utils import charts
 
 
 @property
@@ -42,12 +42,14 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
                 'categories': [self.category.title],
                 'lower_date': date(2022, 1, 1),
                 'upper_date': date(2023, 1, 1),
+                'states': ['AK'],
             },
             'group_by': self.group_by,
         })
         query = {
             'filterTags': 'test_tag',
             'filterCategories': [self.category.title],
+            'filterStates': ['AK'],
             'dateRange': ['2022-01-01', '2023-01-01'],
             'branches': self.tree_map_chart_value.branches(),
             'branchFieldName': self.tree_map_chart_value.branch_field_name(),

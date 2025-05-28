@@ -1,11 +1,16 @@
-import bleach
 import hashlib
-from bs4 import BeautifulSoup
+import json
+
 from django import template
 from django.core.cache import cache
 from django.urls import reverse
 from django.utils.html import mark_safe
+
 from wagtail.templatetags.wagtailcore_tags import richtext
+
+import bleach
+from bs4 import BeautifulSoup
+
 
 register = template.Library()
 
@@ -127,3 +132,8 @@ def add_as_string(value, arg):
             return value + arg
         except Exception:
             return ''
+
+
+@register.filter
+def to_json(obj):
+    return json.dumps(obj)

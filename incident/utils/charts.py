@@ -4,12 +4,12 @@ from urllib import parse
 from django.db.models import TextChoices
 from django.urls import reverse
 
-from common.utils.charts import ChartValue
-from common.utils.chart_pregenerator.types import ChartType
 from common.models.charts import (
     TreeMapOptionsSchema,
     VerticalBarChartOptionsSchema,
 )
+from common.utils.chart_pregenerator.types import ChartType
+from common.utils.charts import ChartValue
 from incident.choices import ACTORS, STATUS_OF_CHARGES
 
 
@@ -23,7 +23,7 @@ class BranchingChartValue(ChartValue):
 
     def data_url(self):
         """Return the URL to be used to fetch primary data set for the chart."""
-        fields = {'categories', 'tags', 'date'}
+        fields = {'categories', 'tags', 'date', 'state'}
         fields.add(self.get('group_by').lower())
         return reverse(
             'incidentpage-list',

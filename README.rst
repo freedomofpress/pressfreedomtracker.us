@@ -7,8 +7,21 @@
 U.S. Press Freedom Tracker
 ==========================
 
-.. image:: https://circleci.com/gh/freedomofpress/pressfreedomtracker.us.svg?style=svg
-    :target: https://circleci.com/gh/freedomofpress/pressfreedomtracker.us
+.. |prodCI| image:: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml/badge.svg?branch=prod&event=push
+    :target: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml?query=branch%3Aprod
+    :alt: Production CI
+
+.. |developCI| image:: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml/badge.svg?branch=develop&event=push
+    :target: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml?query=branch%3Adevelop
+    :alt: Develop CI
+
++---------------------------+
+| CI Status                 |
++=============+=============+
+| ``prod``    | |prodCI|    |
++-------------+-------------+
+| ``develop`` | |developCI| |
++-------------+-------------+
 
 
 This is the code that powers the U.S. Press Freedom Tracker website. It is built with Wagtail and served at `pressfreedomtracker.us <https://pressfreedomtracker.us/>`_.

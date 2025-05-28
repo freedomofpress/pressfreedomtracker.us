@@ -2,13 +2,13 @@ from datetime import date
 
 from django.test import TestCase
 
-from common.tests.factories import (
-    ChartSnapshotFactory,
-    CategoryPageFactory,
-)
 from common.blocks import (
-    VerticalBarChart,
     BubbleMapChart,
+    VerticalBarChart,
+)
+from common.tests.factories import (
+    CategoryPageFactory,
+    ChartSnapshotFactory,
 )
 from common.utils.chart_pregenerator.types import (
     ChartType,
@@ -27,6 +27,7 @@ class TestVerticalBarChartValue(TestCase):
                 'categories': [self.category.title],
                 'lower_date': date(2022, 1, 1),
                 'upper_date': date(2023, 1, 1),
+                'states': ['AK'],
             },
             'time_period': 'months',
             'description': 'Test description',
@@ -36,6 +37,7 @@ class TestVerticalBarChartValue(TestCase):
             'filterTags': 'test_tag',
             'filterCategories': [self.category.title],
             'dateRange': ['2022-01-01', '2023-01-01'],
+            'filterStates': ['AK'],
             'timePeriod': 'months',
             'branchFieldName': None,
             'branches': None,
@@ -77,6 +79,7 @@ class TestBubbleMapValue(TestCase):
             'incident_set': {
                 'tag': 'test_tag',
                 'categories': [self.category.title],
+                'states': ['AK'],
                 'lower_date': date(2022, 1, 1),
                 'upper_date': date(2023, 1, 1),
             },
@@ -87,6 +90,7 @@ class TestBubbleMapValue(TestCase):
         query = {
             'filterTags': 'test_tag',
             'filterCategories': [self.category.title],
+            'filterStates': ['AK'],
             'dateRange': ['2022-01-01', '2023-01-01'],
             'aggregationLocality': 'state',
         }

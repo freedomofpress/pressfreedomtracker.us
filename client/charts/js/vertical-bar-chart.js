@@ -14,6 +14,7 @@ function engageCharts() {
 		const filterTag = chartNode.dataset?.tag
 		const lowerValue= chartNode.dataset?.lowerDate
 		const upperValue = chartNode.dataset?.upperDate
+		const filterStates = new Set(JSON.parse(chartNode.dataset?.states || '[]'))
 		const timePeriod = chartNode.dataset?.timePeriod
 		const title = chartNode.dataset?.title
 		const description = chartNode.dataset?.description
@@ -58,6 +59,7 @@ function engageCharts() {
 				<IncidentsTimeBarChart
 					filterCategories={filterCategories}
 					filterTags={filterTag}
+					filterStates={filterStates}
 					dateRange={[filterLowerDate, filterUpperDate]}
 					title={title}
 					description={description}
