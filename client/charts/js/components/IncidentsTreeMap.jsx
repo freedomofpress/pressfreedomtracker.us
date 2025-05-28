@@ -11,6 +11,7 @@ export default ({
 	description,
 	filterCategories = [], // Array of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
+	filterStates = new Set(),
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	isMobileView = false,
 	creditUrl = '',
@@ -21,7 +22,7 @@ export default ({
 	fullSize = true,
 }) => {
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange)
+	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange, filterStates)
 
 	const categoriesColorMap = [...(new Set([...branches.map(d => d.title)]))]
 		.reduce(

@@ -1,8 +1,9 @@
 from django.test import TestCase
 
 from common.models import helpers
+from incident.models import State
 
-from .factories import CommonTagFactory, CategoryPageFactory
+from .factories import CategoryPageFactory, CommonTagFactory
 
 
 class TestGetTags(TestCase):
@@ -26,4 +27,12 @@ class TestGetCategories(TestCase):
         self.assertEqual(
             helpers.get_categories(),
             [(cat.title, cat.title) for cat in self.cats]
+        )
+
+
+class TestGetStates(TestCase):
+    def test_get_states_returns_states_as_choices(self):
+        self.assertEqual(
+            helpers.get_states(),
+            [(state.abbreviation, state.name) for state in State.objects.order_by('name')]
         )

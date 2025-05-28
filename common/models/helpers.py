@@ -13,3 +13,12 @@ def get_categories():
         (page.title, page.title) for page
         in CategoryPage.objects.order_by('title').live()
     ]
+
+
+def get_states():
+    """Get state names and abbreviations in a form appropriate for model choices"""
+    from incident.models import State  # Avoids circular import
+
+    return [
+        (state.abbreviation, state.name) for state in State.objects.order_by('name')
+    ]

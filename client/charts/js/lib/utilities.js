@@ -137,6 +137,7 @@ export function filterDatasets(
 	filterCategories = [], // Array of valid categories or category
 	filterTags = null, // Array or string of valid tags or tag
 	dateRange = [null, null], // Array representing the min and max of dates to show
+	filterStates = new Set(),
 ) {
 	// Remove empty strings from filterCategories
 	filterCategories = filterCategories.filter(d => d)
@@ -149,7 +150,7 @@ export function filterDatasets(
 
 	// Filter down to the categories and tags and date range we want
 	return dataset
-		.filter(({ categories, tags, date }) => {
+		.filter(({ categories, tags, date, state }) => {
 			const incidentCategories = categories ? categories.split(',').map(d => d.trim()) : []
 			const incidentTags = tags ? tags.split(',').map(d => d.trim()) : []
 
@@ -161,8 +162,9 @@ export function filterDatasets(
 			const isBeforeStartDate = startDate && date < startDate
 			const isAfterEndDate = endDate && date > endDate
 			const isExcludedDate = isBeforeStartDate || isAfterEndDate
+			const isExcludedState = filterStates.size > 0 && !filterStates.has(state)
 
-			return !isExcludedCategory && !isExcludedTag && !isExcludedDate
+			return !isExcludedCategory && !isExcludedTag && !isExcludedDate && !isExcludedState
 		})
 		.map(({ date, ...restProps }) => ({ ...restProps, date: d3.utcMonth.floor(date) }))
 }

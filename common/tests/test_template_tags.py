@@ -2,14 +2,15 @@ import hashlib
 from unittest import mock
 
 from django.http import QueryDict
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory, TestCase
 
 from common.templatetags.common_tags import (
-    lookup,
     add_as_string,
-    richtext_aside,
-    query_transform,
     get_absolute_url,
+    lookup,
+    query_transform,
+    richtext_aside,
+    to_json,
 )
 
 
@@ -117,3 +118,7 @@ class TestTemplateTags(TestCase):
         result = get_absolute_url(context, 'sitemap')
 
         self.assertEqual(result, f'http://{request.get_host()}/sitemap.xml')
+
+    def test_to_json(self):
+        obj = ['A', 'B', 'C']
+        self.assertEqual(to_json(obj), '["A", "B", "C"]')

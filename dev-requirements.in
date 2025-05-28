@@ -11,3 +11,4 @@ selenium
 colorama<1
 defusedxml
 bandit
+ruff
