@@ -421,7 +421,7 @@ test('renders FiltersIntegration with mocked data', () => {
 							"many": true
 						},
 						{
-							"title": "Targeted Institutions",
+							"title": "Targeted institutions",
 							"type": "autocomplete",
 							"name": "targeted_institutions",
 							"autocomplete_type": "incident.Institution",
@@ -655,7 +655,7 @@ test('renders FiltersIntegration with mocked data', () => {
 							"name": "stopped_previously"
 						},
 						{
-							"title": "US Citizenship Status",
+							"title": "US citizenship status",
 							"type": "choice",
 							"name": "target_us_citizenship_status",
 							"choices": [
@@ -679,7 +679,7 @@ test('renders FiltersIntegration with mocked data', () => {
 							"name": "denial_of_entry"
 						},
 						{
-							"title": "Target Nationality",
+							"title": "Target nationality",
 							"type": "autocomplete",
 							"name": "target_nationality",
 							"autocomplete_type": "incident.Nationality",
@@ -746,7 +746,7 @@ test('renders FiltersIntegration with mocked data', () => {
 					"symbol": "equipment_search",
 					"filters": [
 						{
-							"title": "Equipment Searched or Seized",
+							"title": "Equipment searched or seized",
 							"type": "autocomplete",
 							"name": "equipment_seized",
 							"autocomplete_type": "incident.Equipment",
@@ -884,7 +884,7 @@ test('renders FiltersIntegration with mocked data', () => {
 					"symbol": "leak_case",
 					"filters": [
 						{
-							"title": "Charged under espionage act?",
+							"title": "Charged under Espionage Act?",
 							"type": "bool",
 							"name": "charged_under_espionage_act"
 						}
@@ -1049,7 +1049,7 @@ test('renders FiltersIntegration with mocked data', () => {
 					"symbol": "equipment_damage",
 					"filters": [
 						{
-							"title": "Equipment Broken",
+							"title": "Equipment broken",
 							"type": "autocomplete",
 							"name": "equipment_broken",
 							"autocomplete_type": "incident.Equipment",

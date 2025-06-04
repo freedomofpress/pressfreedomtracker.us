@@ -113,7 +113,7 @@ class GetSerializedFiltersTest(TestCase):
                         'choices': [leo.title for leo in leos],
                     },
                     {
-                        'title': 'Target Nationality',
+                        'title': 'Target nationality',
                         'many': True,
                         'type': 'autocomplete',
                         'autocomplete_type': 'incident.Nationality',
@@ -136,7 +136,7 @@ class GetSerializedFiltersTest(TestCase):
                         'choices': [c.title for c in charges],
                     },
                     {
-                        'title': 'Equipment Searched or Seized',
+                        'title': 'Equipment searched or seized',
                         'type': 'autocomplete',
                         'name': 'equipment_seized',
                         'autocomplete_type': 'incident.Equipment',
