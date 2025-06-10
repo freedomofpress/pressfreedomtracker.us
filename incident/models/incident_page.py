@@ -514,7 +514,7 @@ class IncidentPage(MetadataPageMixin, Page):
     targeted_institutions = ParentalManyToManyField(
         'incident.Institution',
         blank=True,
-        verbose_name='Targeted Institutions',
+        verbose_name='Targeted institutions',
         related_name='institutions_incidents',
     )
 
@@ -639,7 +639,7 @@ class IncidentPage(MetadataPageMixin, Page):
         max_length=255,
         blank=True,
         null=True,
-        verbose_name="US Citizenship Status"
+        verbose_name="US citizenship status"
     )
     denial_of_entry = models.BooleanField(
         default=False,
@@ -653,7 +653,7 @@ class IncidentPage(MetadataPageMixin, Page):
         'incident.Nationality',
         blank=True,
         related_name='nationality_incidents',
-        verbose_name='Target Nationality',
+        verbose_name='Target nationality',
     )
     did_authorities_ask_for_device_access = models.CharField(
         choices=choices.MAYBE_BOOLEAN,
@@ -695,7 +695,7 @@ class IncidentPage(MetadataPageMixin, Page):
     )
     charged_under_espionage_act = models.BooleanField(
         default=False,
-        verbose_name="Charged under espionage act?"
+        verbose_name="Charged under Espionage Act?"
     )
 
     # Subpoena of Journalism
@@ -813,7 +813,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel('exact_date_unknown'),
                 FieldPanel('city'),
                 AutocompletePanel('state', target_model='incident.State'),
-                InlinePanel('targeted_journalists', label='Targeted Journalists'),
+                InlinePanel('targeted_journalists', label='Targeted journalists'),
                 AutocompletePanel('targeted_institutions', 'incident.Institution'),
                 AutocompletePanel('tags', 'common.CommonTag'),
                 InlinePanel('categories', label='Incident categories', min_num=1),
@@ -890,7 +890,7 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
 
         MultiFieldPanel(
-            heading='Equipment Searched or Seized',
+            heading='Equipment searched or seized',
             classname='collapsible collapsed',
             children=[
                 FieldPanel('status_of_seized_equipment'),
@@ -936,7 +936,7 @@ class IncidentPage(MetadataPageMixin, Page):
             children=[
                 FieldPanel('legal_order_target'),
                 FieldPanel('legal_order_venue'),
-                InlinePanel('legal_orders', label='Legal Orders'),
+                InlinePanel('legal_orders', label='Legal orders'),
                 FieldPanel('third_party_business'),
                 FieldPanel('name_of_business'),
             ]

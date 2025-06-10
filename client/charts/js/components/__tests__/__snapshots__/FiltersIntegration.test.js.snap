@@ -288,7 +288,7 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                     ],
                   ],
                   "name": "target_us_citizenship_status",
-                  "title": "US Citizenship Status",
+                  "title": "US citizenship status",
                   "type": "choice",
                 },
                 {
@@ -314,7 +314,7 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   ],
                   "many": true,
                   "name": "target_nationality",
-                  "title": "Target Nationality",
+                  "title": "Target nationality",
                   "type": "autocomplete",
                 },
                 {
@@ -382,7 +382,7 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   ],
                   "many": true,
                   "name": "equipment_seized",
-                  "title": "Equipment Searched or Seized",
+                  "title": "Equipment searched or seized",
                   "type": "autocomplete",
                 },
                 {
@@ -502,7 +502,7 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "filters": [
                 {
                   "name": "charged_under_espionage_act",
-                  "title": "Charged under espionage act?",
+                  "title": "Charged under Espionage Act?",
                   "type": "bool",
                 },
               ],
@@ -684,7 +684,7 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
                   ],
                   "many": true,
                   "name": "equipment_broken",
-                  "title": "Equipment Broken",
+                  "title": "Equipment broken",
                   "type": "autocomplete",
                 },
               ],
@@ -1283,7 +1283,7 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               ],
               "many": true,
               "name": "targeted_institutions",
-              "title": "Targeted Institutions",
+              "title": "Targeted institutions",
               "type": "autocomplete",
             },
             {

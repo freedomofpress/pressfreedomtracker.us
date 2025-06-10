@@ -501,7 +501,7 @@ class CategoryFieldValues(TestCase):
 
     def test_should_get_basic_category_fields(self):
         arrest_details = self.category_details[self.category1]
-        self.assertEqual(arrest_details[0]['name'], 'Arrest Status')
+        self.assertEqual(arrest_details[0]['name'], 'Arrest status')
         self.assertIn(self.incident.arrest_status, arrest_details[0]['html'])
 
     def test_should_get_list_category_fields(self):
@@ -521,14 +521,14 @@ class CategoryFieldValues(TestCase):
 
     def test_should_get_equipment_list_category_fields(self):
         equipment_damage_details = self.category_details[self.category2]
-        self.assertEqual(equipment_damage_details[0]['name'], 'Equipment Broken')
+        self.assertEqual(equipment_damage_details[0]['name'], 'Equipment broken')
         for equipment_broken in self.incident.equipment_broken.all():
             self.assertIn(equipment_broken.equipment.name, equipment_damage_details[0]['html'])
 
     def test_should_get_date_category_fields(self):
         arrest_details = self.category_details[self.category1]
 
-        self.assertEqual(arrest_details[3]['name'], 'Detention Date')
+        self.assertEqual(arrest_details[3]['name'], 'Detention date')
         self.assertIn(self.incident.detention_date.isoformat(), arrest_details[3]['html'])
 
     def test_should_get_boolean_category_fields(self):

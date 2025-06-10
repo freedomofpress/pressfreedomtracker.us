@@ -376,7 +376,7 @@ exports[`renders CheckBoxesYear with mocked data 1`] = `
             ],
             "many": true,
             "name": "targeted_institutions",
-            "title": "Targeted Institutions",
+            "title": "Targeted institutions",
             "type": "autocomplete",
           },
           {

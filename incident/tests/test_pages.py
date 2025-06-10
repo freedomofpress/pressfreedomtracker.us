@@ -1619,7 +1619,7 @@ class IncidentFieldTest(TestCase):
         response = self.client.get(self.page.url)
         self.assertContains(
             response,
-            '<dt class="details-table__label">Mistakenly Released Materials?</dt>',
+            '<dt class="details-table__label">Mistakenly released materials?</dt>',
             html=True,
         )
 
@@ -1627,6 +1627,6 @@ class IncidentFieldTest(TestCase):
         response = self.client.get(self.page.url)
         self.assertContains(
             response,
-            '<dt class="details-table__label">Status of Prior Restraint</dt>',
+            '<dt class="details-table__label">Status of prior restraint</dt>',
             html=True,
         )

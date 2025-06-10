@@ -46,8 +46,8 @@ class GovernmentWorker(ClusterableModel):
 
     class Meta:
         ordering = ['title']
-        verbose_name = 'Alleged Recipient of Leak'
-        verbose_name_plural = 'Alleged Recipients of Leaks'
+        verbose_name = 'Alleged recipient of leak'
+        verbose_name_plural = 'Alleged recipients of leaks'
 
 
 class LawEnforcementOrganization(ClusterableModel):
