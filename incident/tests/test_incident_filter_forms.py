@@ -140,7 +140,7 @@ class FilterFormTest(TestCase):
         item = {
             'filters': [
                 {
-                    'title': 'Target US Citizenship status',
+                    'title': 'Target US citizenship status',
                     'type': 'choice',
                     'name': name,
                     'choices': choices

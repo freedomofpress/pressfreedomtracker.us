@@ -74,7 +74,7 @@ test('renders CheckBoxesYear with mocked data', () => {
 						"many": true
 					},
 					{
-						"title": "Targeted Institutions",
+						"title": "Targeted institutions",
 						"type": "autocomplete",
 						"name": "targeted_institutions",
 						"autocomplete_type": "incident.Institution",

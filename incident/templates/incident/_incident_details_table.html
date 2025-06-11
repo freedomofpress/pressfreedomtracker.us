@@ -5,7 +5,7 @@
 		{% if last_updated and incident.updates.all.exists %}
 		<div class="details-table__row">
 			<dt class="details-table__label details-table__label--bold">
-				Updated On
+				Updated on
 			</dt>
 			<dd class="details-table__value">
 				{{ last_updated|date:"F j, Y" }}
@@ -16,7 +16,7 @@
 
 	<div class="details-table__row">
 		<dt class="details-table__label details-table__label--bold">
-			Date of Incident
+			Date of incident
 		</dt>
 		<dd class="details-table__value">
 			<a href="{% if incident.get_parent %}{% pageurl incident.get_parent %}?date_lower={{ incident.date|date:'Y-m-d' }}&date_upper={{ incident.date|date:'Y-m-d' }}{% endif %}" class="text-link">
@@ -73,7 +73,7 @@
 	{% if incident.case_statuses|length > 0 %}
 	<div class="details-table__row">
 		<dt class="details-table__label details-table__label--bold">
-			Case Status
+			Case status
 		</dt>
 		<dd class="details-table__value">
 			{% for case_status in incident.case_statuses %}
