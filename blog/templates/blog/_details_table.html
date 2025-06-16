@@ -13,16 +13,17 @@
 		</div>
 		{% endif %}
 
-		{% if blog.author %}
+		{% if blog.author or blog.organization %}
 		<div class="details-table__row">
 			<dt class="details-table__label details-table__label--bold">
 				Written by
 			</dt>
 			<dd class="details-table__value">
-				<a href="{% pageurl blog.get_parent %}?author={{ blog.author.pk }}" class="text-link">{{ blog.author.title }}</a>
-
+				{% if blog.author %}
+					<a href="{% pageurl blog.get_parent %}?author={{ blog.author.pk }}" class="text-link">{{ blog.author.title }}</a>
+				{% endif %}
+				{% if blog.author and blog.organization %}from{% endif %}
 				{% if blog.organization %}
-					from
 					<a href="{% pageurl blog.get_parent %}?organization={{ blog.organization.pk }}" class="text-link">{{ blog.organization.title }}</a>
 				{% endif %}
 			</dd>
