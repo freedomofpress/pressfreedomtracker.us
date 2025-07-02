@@ -27,7 +27,7 @@ const defaultPaddings = {
 
 const markerSize = {
 	min: 5,
-	max: 30,
+	max: 60,
 }
 
 const markerBorder = {
@@ -52,16 +52,16 @@ export default function USMap({
 	searchPageURL,
 	aggregationLocality = d => d.state,
 	addBottomBorder,
-  	overridePaddings = {},
+	overridePaddings = {},
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
-	setSvgEl = () => {},
+	setSvgEl = () => { },
 	interactive = true,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 
-  	const paddings = {...defaultPaddings, ...overridePaddings}
+	const paddings = { ...defaultPaddings, ...overridePaddings }
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -72,8 +72,8 @@ export default function USMap({
 	const hasLatLon = ({ latitude, longitude }) => latitude && longitude
 
 	// Scale markers size depending on the number of incidents in a city
-	const markerScale = d3.scaleSqrt().domain([0, 30]).range([markerSize.min, markerSize.max])
-
+	const values = dataset.map((d) => d.numberOfIncidents);
+	const markerScale = d3.scaleSqrt().domain([0, d3.max(values)]).range([markerSize.min, markerSize.max])
 	if (!width) return null
 
 	return (
@@ -106,7 +106,7 @@ export default function USMap({
 				viewBox={`0 0 ${width} ${height}`}
 				aria-labelledby={id}
 				ref={setSvgEl}
-				style={{display: 'block'}}
+				style={{ display: 'block' }}
 			>
 				{description ? (<desc>{description}</desc>) : null}
 				<svg
@@ -148,8 +148,8 @@ export default function USMap({
 							fill={hoveredElement === null
 								? '#E07A5F'
 								: hoveredElement === `${aggregationLocality(d)}`
-								? '#E07A5F'
-								: 'white'
+									? '#E07A5F'
+									: 'white'
 							}
 							stroke={'black'}
 							strokeWidth={hoveredElement === `${aggregationLocality(d)}` ? markerBorder.hover : markerBorder.normal}
@@ -272,16 +272,14 @@ export default function USMap({
 								stroke: 'black',
 								fill: 'white',
 								strokeWidth: 1,
-								transform: `translate(${
-									hoveredElement === 'Abroad' ? width - paddings.arrow : width - paddings.arrow - 50
-								},${
-									height -
+								transform: `translate(${hoveredElement === 'Abroad' ? width - paddings.arrow : width - paddings.arrow - 50
+									},${height -
 									paddings.bottom -
 									markerBorder.grid -
 									paddings.text -
 									(width > 400 ? 14 : 12) +
 									1
-								})`,
+									})`,
 								opacity: hoveredElement === 'Abroad' ? 1 : 0,
 								pointerEvents: 'none',
 							}}
@@ -329,16 +327,14 @@ export default function USMap({
 								stroke: '#8F8F8F',
 								fill: 'white',
 								strokeWidth: 1,
-								transform: `translate(${
-									width - paddings.arrowSmall + 3 + (hoveredElement === 'Abroad' ? 150 : 0)
-								},${
-									height -
+								transform: `translate(${width - paddings.arrowSmall + 3 + (hoveredElement === 'Abroad' ? 150 : 0)
+									},${height -
 									paddings.bottom -
 									markerBorder.grid -
 									paddings.text -
 									(width > 400 ? 14 : 12) +
 									3
-								})`,
+									})`,
 								opacity: hoveredElement === 'Abroad' ? 0 : 1,
 								pointerEvents: 'none',
 							}}
@@ -415,15 +411,15 @@ export default function USMap({
 					</g>
 				)}
 
-			  	{addBottomBorder ? (
-				  <line
-					x1={0}
-					x2={width}
-					y1={height - paddings.bottom}
-					y2={height - paddings.bottom}
-					style={{ stroke: 'black', strokeWidth: markerBorder.grid }}
-					shapeRendering="crispEdges"
-				  />
+				{addBottomBorder ? (
+					<line
+						x1={0}
+						x2={width}
+						y1={height - paddings.bottom}
+						y2={height - paddings.bottom}
+						style={{ stroke: 'black', strokeWidth: markerBorder.grid }}
+						shapeRendering="crispEdges"
+					/>
 				) : null}
 			</svg>
 		</>
