@@ -86,6 +86,9 @@ class ChargeUpdate(models.Model):
 
 
 class LegalOrder(ClusterableModel):
+    class Meta:
+        ordering = ['pk']
+
     incident_page = ParentalKey(
         'incident.IncidentPage',
         related_name='legal_orders',
