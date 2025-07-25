@@ -157,6 +157,19 @@ class BlogIndexPageFeature(Orderable):
     ]
 
 
+class BlogAuthor(Orderable):
+    parent_page = ParentalKey('BlogPage', related_name='authors')
+    author = models.ForeignKey('wagtailcore.Page', on_delete=models.CASCADE, related_name='+')
+
+    @property
+    def summary(self):
+        return self.author.title
+
+    panels = [
+        FieldPanel('author')
+    ]
+
+
 class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
     publication_datetime = models.DateTimeField(
         help_text='Past or future date of publication'
@@ -281,6 +294,11 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ),
         PageChooserPanel('organization', 'common.OrganizationPage'),
         PageChooserPanel('author', 'common.PersonPage'),
+        InlinePanel(
+            'authors',
+            label='Authors',
+            help_text='Author pages must already exist.'
+        ),
     ]
 
     settings_panels = Page.settings_panels + [
