@@ -264,15 +264,6 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         related_name='blog_posts',
     )
 
-    author = models.ForeignKey(
-        # Likely a PersonPage
-        'wagtailcore.Page',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-    )
-
     content_panels = Page.content_panels + [
         FieldPanel('publication_datetime'),
         FieldPanel('body'),
@@ -293,7 +284,6 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
             ]
         ),
         PageChooserPanel('organization', 'common.OrganizationPage'),
-        PageChooserPanel('author', 'common.PersonPage'),
         InlinePanel(
             'authors',
             label='Authors',
