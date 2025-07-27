@@ -42,7 +42,7 @@ class BlogFilter(object):
     def filter(self, blog_pages):
         """Filter a queryset of blog pages according to author or organization or blog_type."""
         field_pairs = [
-            ('author', self.author),
+            ('authors', self.author),
             ('organization', self.organization),
             ('blog_type', self.blog_type),
         ]

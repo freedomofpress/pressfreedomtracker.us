@@ -72,7 +72,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
         'date_time_this_month', after_now=False, before_now=True, tzinfo=timezone.utc
     )
     first_published_at = factory.LazyAttribute(lambda o: o.publication_datetime)
-    author = factory.SubFactory(PersonPageFactory)
+    authors = factory.RelatedFactoryList(PersonPageFactory, 'blog', size=2)
     organization = factory.SubFactory(OrganizationPageFactory)
 
     @factory.post_generation
