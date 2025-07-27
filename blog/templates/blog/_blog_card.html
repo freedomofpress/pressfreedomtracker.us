@@ -34,10 +34,12 @@
 						{{ post.publication_datetime|date:"F j, Y" }}
 					</time>
 				</dd>
-				{% if post.author %}
+				{% if post.authors %}
 					<dt>Written by</dt>
 					<dd>
-						{{ post.author.title }}
+						{% for author in post.authors.all %}
+							{{ author.summary }}{% if not forloop.last %}, {% endif %}
+						{% endfor %}
 					</dd>
 				{% endif %}
 			</dl>

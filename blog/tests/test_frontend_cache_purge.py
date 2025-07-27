@@ -14,7 +14,7 @@ class TestBlogIndexPageCachePurge(TestCase):
         site = Site.objects.get()
         self.index = BlogIndexPageFactory(
             parent=site.root_page, slug='blog')
-        self.author = PersonPageFactory()
+        self.authors = PersonPageFactory.create_batch(2, parent=self.index)
 
     def test_cache_tag_index(self):
         "Response from BlogIndexPage should include Cache-Tag header"

@@ -26,8 +26,10 @@
 		{% if page.publication_datetime %}
 			<p class="special-blog__hero-meta">
 				<span class="special-blog__hero-date">{{ page.publication_datetime|date:"F j, Y" }}</span>
-				{% if page.author %}
-					<span class="special-blog__hero-author"> — {{ page.author }}</span>
+				{% if page.authors %}
+					{% for author in page.authors.all %}
+						<span class="special-blog__hero-author"> — {{ author.summary }}{% if not forloop.last %}, {% endif %}</span>
+					{% endfor %}
 				{% endif %}
 			</p>
 		{% endif %}
