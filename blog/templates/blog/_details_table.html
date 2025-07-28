@@ -21,7 +21,7 @@
 			<dd class="details-table__value">
 				{% if blog.authors %}
 					{% for author in blog.authors.all %}
-						<a href="{% pageurl blog.get_parent %}?author={{ author.pk }}" class="text-link">{{ author.summary }}</a>{% if not forloop.last %}, {% endif %}
+						<a href="{% pageurl blog.get_parent %}?author={{ author.author.pk }}" class="text-link">{{ author.summary }}</a>{% if not forloop.last %}, {% endif %}
 					{% endfor %}
 				{% endif %}
 				{% if blog.authors and blog.organization %}from{% endif %}

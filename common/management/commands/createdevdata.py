@@ -268,21 +268,30 @@ class Command(BaseCommand):
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
+<<<<<<< HEAD
             author=author1,
+=======
+>>>>>>> e63d5534 (fix fitlering)
             authors=[author1],
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
+<<<<<<< HEAD
             author=author2,
+=======
+>>>>>>> e63d5534 (fix fitlering)
             authors=[author2],
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
+<<<<<<< HEAD
             author=author3,
+=======
+>>>>>>> e63d5534 (fix fitlering)
             authors=[author3],
         )
 
@@ -291,7 +300,10 @@ class Command(BaseCommand):
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
+<<<<<<< HEAD
             author=author1,
+=======
+>>>>>>> e63d5534 (fix fitlering)
             authors=[author1],
             blog_type=BlogTemplateType.NEWSLETTER
         )
@@ -301,7 +313,10 @@ class Command(BaseCommand):
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
+<<<<<<< HEAD
             author=author2,
+=======
+>>>>>>> e63d5534 (fix fitlering)
             authors=[author2],
             blog_type=BlogTemplateType.SPECIAL
         )

@@ -1,5 +1,6 @@
 import random
 from datetime import timezone
+from blog.devdata import BlogAuthorFactory
 from faker import Faker
 
 import factory
