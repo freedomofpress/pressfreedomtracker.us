@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from django.test import TestCase, Client
+from common.tests.factories import PersonPageFactory
 from wagtail.models import Site
 
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
@@ -13,7 +14,7 @@ class TestBlogIndexPageCachePurge(TestCase):
         site = Site.objects.get()
         self.index = BlogIndexPageFactory(
             parent=site.root_page, slug='blog')
-        # self.authors = BlogAuthorFactory.create_batch(2, parent=self.index)
+        self.author = PersonPageFactory()
 
     def test_cache_tag_index(self):
         "Response from BlogIndexPage should include Cache-Tag header"
@@ -27,7 +28,7 @@ class TestBlogIndexPageCachePurge(TestCase):
 
         """
 
-        response = self.client.get('/blog/?author={}'.format(self.authors.first().author.pk))
+        response = self.client.get('/blog/?author={}'.format(self.author.pk))
         self.assertEqual(response['Cache-Tag'], 'blog-index-{}'.format(self.index.pk))
 
     @patch('blog.signals.purge_page_from_cache')
