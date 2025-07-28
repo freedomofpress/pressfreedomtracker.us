@@ -32,7 +32,7 @@ class BlogFilter(object):
         Arguments:
         organization -- an integer id of an OrganizationPage
         author -- an integer id of a PersonPage
-
+        blog_type -- a BlogTemplateType enum value, or None to not filter by type
         """
 
         self.organization = organization

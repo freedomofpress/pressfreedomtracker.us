@@ -33,6 +33,13 @@ class BlogIndexPageFactory(wagtail_factories.PageFactory):
             body=factory.Faker('streamfield', fields=['bare_image', 'raw_html', 'rich_text'])
         )
 
+class BlogAuthorFactory(wagtail_factories.PageFactory):
+    class Meta:
+        model = BlogAuthor
+
+    parent_page = factory.SubFactory(BlogIndexPageFactory)
+    author = factory.SubFactory(PersonPageFactory)
+
 
 class BlogPageFactory(wagtail_factories.PageFactory):
     class Meta:
@@ -72,7 +79,6 @@ class BlogPageFactory(wagtail_factories.PageFactory):
         'date_time_this_month', after_now=False, before_now=True, tzinfo=timezone.utc
     )
     first_published_at = factory.LazyAttribute(lambda o: o.publication_datetime)
-    authors = factory.RelatedFactoryList(PersonPageFactory, 'blog', size=2)
     organization = factory.SubFactory(OrganizationPageFactory)
 
     @factory.post_generation
