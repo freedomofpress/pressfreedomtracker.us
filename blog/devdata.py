@@ -6,10 +6,7 @@ import factory
 import wagtail_factories
 
 from blog.models import BlogAuthor, BlogPage, BlogIndexPage
-from common.tests.factories import (
-    PersonPageFactory,
-    OrganizationPageFactory,
-)
+from common.tests.factories import OrganizationPageFactory
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
 
@@ -32,13 +29,6 @@ class BlogIndexPageFactory(wagtail_factories.PageFactory):
         with_image = factory.Trait(
             body=factory.Faker('streamfield', fields=['bare_image', 'raw_html', 'rich_text'])
         )
-
-class BlogAuthorFactory(wagtail_factories.PageFactory):
-    class Meta:
-        model = BlogAuthor
-
-    parent_page = factory.SubFactory(BlogIndexPageFactory)
-    author = factory.SubFactory(PersonPageFactory)
 
 
 class BlogPageFactory(wagtail_factories.PageFactory):

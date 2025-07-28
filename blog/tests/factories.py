@@ -1,16 +1,12 @@
 import random
 from datetime import timezone
-from blog.devdata import BlogAuthorFactory
 from faker import Faker
 
 import factory
 import wagtail_factories
 
 from blog.models import BlogAuthor, BlogPage, BlogIndexPage
-from common.tests.factories import (
-    PersonPageFactory,
-    OrganizationPageFactory,
-)
+from common.tests.factories import OrganizationPageFactory
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
 
@@ -103,7 +99,6 @@ class BlogPageFactory(wagtail_factories.PageFactory):
         'date_time_this_month', after_now=False, before_now=True, tzinfo=timezone.utc
     )
     first_published_at = factory.LazyAttribute(lambda o: o.publication_datetime)
-    authors = factory.RelatedFactoryList(PersonPageFactory, 'blog', size=2)
     organization = factory.SubFactory(OrganizationPageFactory)
 
     @factory.post_generation

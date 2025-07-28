@@ -51,7 +51,7 @@ class TestFiltering(TestCase):
 
     def test_should_filter_blog_pages_by_author(self):
         """BlogFilter should filter BlogPages by author"""
-        filters = BlogFilter(organization=None, author=self.post1.authors[0].author.pk, blog_type=None)
+        filters = BlogFilter(organization=None, author=1, blog_type=None)
         found = filters.filter(BlogPage.objects)
         self.assertEqual(set(found), {self.post1})
 
