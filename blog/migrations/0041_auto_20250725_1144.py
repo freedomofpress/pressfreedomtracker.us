@@ -19,5 +19,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-         migrations.RunPython(populate_authors, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(populate_authors, reverse_code=migrations.RunPython.noop),
     ]
