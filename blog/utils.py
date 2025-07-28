@@ -47,5 +47,4 @@ class BlogFilter(object):
             ('blog_type', self.blog_type),
         ]
         kwargs = {field: value for field, value in field_pairs if value}
-
         return blog_pages.filter(**kwargs)

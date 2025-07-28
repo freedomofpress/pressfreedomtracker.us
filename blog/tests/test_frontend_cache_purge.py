@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
 from django.test import TestCase, Client
-from common.tests.factories import PersonPageFactory
 from wagtail.models import Site
 
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
+from common.tests.factories import PersonPageFactory
 
 
 class TestBlogIndexPageCachePurge(TestCase):

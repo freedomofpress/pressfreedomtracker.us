@@ -92,7 +92,6 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
 
         post_filters = BlogFilter.from_querystring(request.GET)
-        print(f'Post filters: {post_filters}')
         entry_qs = post_filters.filter(self.get_posts())
 
         if request.GET.get('author'):
