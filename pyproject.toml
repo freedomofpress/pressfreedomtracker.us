@@ -10,6 +10,7 @@ select = [
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
+known-first-party = ["statistics"]
 section-order = [
     # the default, plus our Django and Wagtail sections
     "future",
