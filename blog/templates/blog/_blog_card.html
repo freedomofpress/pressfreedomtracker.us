@@ -34,7 +34,7 @@
 						{{ post.publication_datetime|date:"F j, Y" }}
 					</time>
 				</dd>
-				{% if post.authors %}
+				{% if post.authors.count %}
 					<dt>Written by</dt>
 					<dd>
 						{% for author in post.authors.all %}
