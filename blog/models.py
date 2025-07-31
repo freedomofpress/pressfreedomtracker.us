@@ -159,7 +159,7 @@ class BlogIndexPageFeature(Orderable):
 
 class BlogAuthor(Orderable):
     parent_page = ParentalKey('BlogPage', related_name='authors')
-    author = models.ForeignKey('wagtailcore.Page', on_delete=models.CASCADE, related_name='+')
+    author = models.ForeignKey('common.PersonPage', on_delete=models.CASCADE, related_name='+')
 
     @property
     def summary(self):

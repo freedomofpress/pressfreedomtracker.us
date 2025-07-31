@@ -107,9 +107,6 @@ class BlogPageFactory(wagtail_factories.PageFactory):
 
     @factory.post_generation
     def authors(self, create, extracted, **kwargs):
-        if not create:
-            return
-
         if extracted:
             for author in extracted:
                 BlogAuthorFactory(
