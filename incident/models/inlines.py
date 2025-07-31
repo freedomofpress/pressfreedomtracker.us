@@ -1,24 +1,26 @@
 from django.db import models
-from modelcluster.models import ClusterableModel
-from modelcluster.fields import ParentalKey
+
+from wagtail import blocks
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
 )
-from wagtail import blocks
 from wagtail.fields import StreamField
-from wagtail.models import Orderable
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.models import Orderable
+
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
+from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 from common.blocks import (
     AlignedCaptionedEmbedBlock,
-    TweetEmbedBlock,
     RichTextBlockQuoteBlock,
     RichTextTemplateBlock,
+    TweetEmbedBlock,
 )
 from common.utils import format_date
 from incident import choices
-from wagtailautocomplete.edit_handlers import AutocompletePanel
 from statistics.blocks import StatisticsBlock
 
 
@@ -84,6 +86,9 @@ class ChargeUpdate(models.Model):
 
 
 class LegalOrder(ClusterableModel):
+    class Meta:
+        ordering = ['pk']
+
     incident_page = ParentalKey(
         'incident.IncidentPage',
         related_name='legal_orders',
