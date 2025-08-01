@@ -252,7 +252,6 @@ class TestPages(TestCase):
         author = PersonPageFactory(title='A Person')
         blog_page = BlogPageFactory(
             parent=self.index,
-            author=author,
             authors=[author],
         )
         self.assertEqual(
