@@ -12,16 +12,16 @@
 					>
 					{% if incident.recently_updated %}
 						{% with latest_update=incident.get_updates_by_desc_date|first %}
-							<a href="{% pageurl incident %}#update-{{ latest_update.id }}" class="btn recently-updated-badge recently-updated-badge--floating">
+							<span class="btn recently-updated-badge recently-updated-badge--floating">
 								Recently updated
-							</a>
+							</span>
 						{% endwith %}
 					{% endif %}
 				</div>
 			{% endif %}
 
 			<h3 class="card-title card-title-{{ size }}">
-				<a class="text-link text-link--card" href="{% pageurl incident %}">
+				<a class="text-link text-link--card"   href="{% pageurl incident %}">
 					{{ incident.title }}
 				</a>
 			</h3>
