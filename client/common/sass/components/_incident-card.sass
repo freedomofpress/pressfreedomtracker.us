@@ -11,6 +11,9 @@
 		+mobile-down
 			padding-top: 0.5rem
 
+			.incident-card__image-wrapper
+				display: none
+
 			&.closed &__show-more,
 			&.open &__show-more
 				display: flex
@@ -35,24 +38,19 @@
 				background-image: url(../icons/plus.svg)
 				background-repeat: no-repeat
 				margin-left: 0.5rem
-			.incident-card__image-wrapper:first-of-type
-				display: none
-			.incident-card__image-wrapper:last-of-type
-				display: block
 
 			&.closed
-				.incident-card__image-wrapper:last-of-type
-					display: none
-
 				.incident-card__categories,
 				.database-card-table__incident-details,
 				.tag-list
 					display: none
 
 			&.open
+				.incident-card__image-wrapper--expanded
+					display: block
+
 				.incident-card--inner .incident-card__categories,
-				.incident-card--inner .database-card-table__incident-details,
-				.incident-card--inner .card-image-collapsible:last-of-type
+				.incident-card--inner .database-card-table__incident-details
 					display: block
 
 				.incident-card--inner .tag-list
@@ -67,7 +65,7 @@
 
 	&__image-wrapper
 		position: relative
-		&:last-of-type
+		&--expanded
 			display: none
 
 	&--inner

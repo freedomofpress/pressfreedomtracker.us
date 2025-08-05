@@ -3,7 +3,7 @@
 	<article class="incident-card incident-card-{{ size }}">
 		<div class="incident-card--inner">
 			{% if photo %}
-				<div class="incident-card__image-wrapper">
+				<div class="incident-card__image-wrapper incident-card__image-wrapper--preview">
 					{% image photo fill-665x440 preserve-svg as x1 %}
 					<img
 						class="card-image card-image-{{ size }}"
@@ -46,7 +46,7 @@
 
 			{% if photo and size == 'collapsible' %}
 
-				<div class="incident-card__image-wrapper">
+				<div class="incident-card__image-wrapper incident-card__image-wrapper--expanded">
 					{% image photo fill-665x440 preserve-svg as x1 %}
 					<img
 						class="card-image card-image-{{ size }}"
