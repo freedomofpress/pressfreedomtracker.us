@@ -3,12 +3,21 @@
 	<article class="incident-card incident-card-{{ size }}">
 		<div class="incident-card--inner">
 			{% if photo %}
-				{% image photo fill-665x440 preserve-svg as x1 %}
-				<img
-					class="card-image card-image-{{ size }}"
-					alt="{{ x1.alt }}"
-					src="{{ x1.url }}"
-				>
+				<div class="incident-card__image-wrapper">
+					{% image photo fill-665x440 preserve-svg as x1 %}
+					<img
+						class="card-image card-image-{{ size }}"
+						alt="{{ x1.alt }}"
+						src="{{ x1.url }}"
+					>
+					{% if incident.recently_updated %}
+						{% with latest_update=incident.get_updates_by_desc_date|first %}
+							<a href="{% pageurl incident %}#update-{{ latest_update.id }}" class="btn recently-updated-badge recently-updated-badge--floating">
+								Recently updated
+							</a>
+						{% endwith %}
+					{% endif %}
+				</div>
 			{% endif %}
 
 			<h3 class="card-title card-title-{{ size }}">
@@ -25,16 +34,26 @@
 					<span class="incident-card-collapsible__toggle-button-text"></span>
 					<div class="incident-card-collapsible__toggle-icon"></div>
 				</button>
+				{% if incident.recently_updated %}
+					{% with latest_update=incident.get_updates_by_desc_date|first %}
+						<a href="{% pageurl incident %}#update-{{ latest_update.id }}" class="btn recently-updated-badge recently-updated-badge--inline">
+							Recently updated
+						</a>
+					{% endwith %}
+				{% endif %}
 			</div>
 			{% endif %}
 
 			{% if photo and size == 'collapsible' %}
-				{% image photo fill-665x440 preserve-svg as x1 %}
-				<img
-					class="card-image card-image-{{ size }}"
-					alt="{{ x1.alt }}"
-					src="{{ x1.url }}"
-				>
+
+				<div class="incident-card__image-wrapper">
+					{% image photo fill-665x440 preserve-svg as x1 %}
+					<img
+						class="card-image card-image-{{ size }}"
+						alt="{{ x1.alt }}"
+						src="{{ x1.url }}"
+					>
+				</div>
 			{% endif %}
 
 			{% if not photo %}

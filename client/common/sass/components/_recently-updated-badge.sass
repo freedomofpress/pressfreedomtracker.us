@@ -1,0 +1,33 @@
+.recently-updated-badge
+	background: black
+	color: white
+	width: fit-content
+	height: fit-content
+	font-weight: 400
+	display: inline-flex
+	align-items: center
+	gap: 6px
+	text-decoration: none
+
+	// base styles, some can be overwritten by --arrow
+	&::before
+		content: ''
+		width: 11px
+		height: 11px
+		flex-shrink: 0
+		background: white
+		border-radius: 50%
+
+	&--arrow
+		&::before
+			background: transparent
+			background-image: url('../icons/line-arrow-down-white.svg')
+			background-size: contain
+			background-repeat: no-repeat
+			height: 14px
+
+	&--floating
+		position: absolute
+		bottom: 8px
+		right: 8px
+

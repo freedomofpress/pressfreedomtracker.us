@@ -4,7 +4,7 @@
 	padding-top: 2rem
 
 	&-collapsible
-		.card-image-collapsible:last-of-type
+		.incident-card__image-wrapper:last-of-type
 			display: none
 
 		&__show-more
@@ -15,31 +15,35 @@
 
 			&.closed &__show-more,
 			&.open &__show-more
-				display: block
+				display: flex
+				gap: 6px
+				margin: 0.5rem 0
 
 			&__toggle-button
-				margin: 0.5rem 0
-				text-decoration: underline
 				display: flex
 				align-items: center
+				color: black
 				background: none
-				border: 0
-				padding: 0
+				border: 2px solid black
+				padding: 8px 10px
+				font-size: $font-size-small-p
+				cursor: pointer
 
 			&__toggle-icon
-				width: 0.8rem
-				height: 0.8rem
+				width: 1rem
+				height: 1rem
 				background-size: contain
 				background-color: transparent
 				background-image: url(../icons/plus.svg)
 				background-repeat: no-repeat
 				margin-left: 0.5rem
-
-			.card-image-collapsible:last-of-type
+			.incident-card__image-wrapper:first-of-type
+				display: none
+			.incident-card__image-wrapper:last-of-type
 				display: block
 
 			&.closed
-				.card-image-collapsible:last-of-type
+				.incident-card__image-wrapper:last-of-type
 					display: none
 
 				.incident-card__categories,
@@ -62,6 +66,9 @@
 	&__categories
 		list-style-type: none
 		padding: 0
+
+	&__image-wrapper
+		position: relative
 
 	&--inner
 		+tablet-up
