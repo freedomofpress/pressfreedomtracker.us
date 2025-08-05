@@ -4,8 +4,6 @@
 	padding-top: 2rem
 
 	&-collapsible
-		.incident-card__image-wrapper:last-of-type
-			display: none
 
 		&__show-more
 			display: none
@@ -69,6 +67,8 @@
 
 	&__image-wrapper
 		position: relative
+		&:last-of-type
+			display: none
 
 	&--inner
 		+tablet-up
