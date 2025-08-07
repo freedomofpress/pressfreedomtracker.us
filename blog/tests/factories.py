@@ -5,7 +5,7 @@ from faker import Faker
 import factory
 import wagtail_factories
 
-from blog.models import BlogPage, BlogIndexPage
+from blog.models import BlogAuthor, BlogPage, BlogIndexPage
 from common.tests.factories import (
     PersonPageFactory,
     OrganizationPageFactory,
@@ -104,3 +104,20 @@ class BlogPageFactory(wagtail_factories.PageFactory):
     first_published_at = factory.LazyAttribute(lambda o: o.publication_datetime)
     author = factory.SubFactory(PersonPageFactory)
     organization = factory.SubFactory(OrganizationPageFactory)
+
+    @factory.post_generation
+    def authors(self, create, extracted, **kwargs):
+        if extracted:
+            for author in extracted:
+                BlogAuthorFactory(
+                    parent_page=self,
+                    author=author,
+                )
+
+
+class BlogAuthorFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = BlogAuthor
+
+    parent_page = factory.SubFactory(BlogPageFactory)
+    author = factory.SubFactory(wagtail_factories.PageFactory)

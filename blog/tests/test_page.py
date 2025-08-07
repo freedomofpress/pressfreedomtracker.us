@@ -247,3 +247,15 @@ class TestPages(TestCase):
 
     def test_get_blog_page_absent_meta_image(self):
         self.assertIsNone(self.blog_page3.get_meta_image())
+
+    def test_simple_summary(self):
+        author = PersonPageFactory(title='A Person')
+        blog_page = BlogPageFactory(
+            parent=self.index,
+            author=author,
+            authors=[author],
+        )
+        self.assertEqual(
+            blog_page.authors.first().summary,
+            'A Person'
+        )
