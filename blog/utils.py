@@ -32,7 +32,7 @@ class BlogFilter(object):
         Arguments:
         organization -- an integer id of an OrganizationPage
         author -- an integer id of a PersonPage
-
+        blog_type -- a BlogTemplateType enum value, or None to not filter by type
         """
 
         self.organization = organization
@@ -42,7 +42,7 @@ class BlogFilter(object):
     def filter(self, blog_pages):
         """Filter a queryset of blog pages according to author or organization or blog_type."""
         field_pairs = [
-            ('author', self.author),
+            ('authors__author__pk', self.author),
             ('organization', self.organization),
             ('blog_type', self.blog_type),
         ]
