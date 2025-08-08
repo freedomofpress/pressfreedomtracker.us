@@ -254,6 +254,20 @@ helpful to restore your snapshot from develop, so that the migrations
 for the new branch, which were presumably based off of develop, will
 have a clean starting point.
 
+
+Managing content
+=============
+
+Wagtail
+-------------
+The Wagtail interface can be accessed at the ``/admin`` route. By default, the credentials are:
+
+* username - ``test``
+* password - ``test``
+
+Note: these are the same django superuser credentials which can be used at ``/django-admin``.
+
+
 Deployment
 =============
 
