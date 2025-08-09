@@ -255,11 +255,8 @@ for the new branch, which were presumably based off of develop, will
 have a clean starting point.
 
 
-Managing content
+Managing CMS Content
 =============
-
-Wagtail
--------------
 
 You can log in to the Wagtail interface at ``/admin`` with the following credentials:
 
