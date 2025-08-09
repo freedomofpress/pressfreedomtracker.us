@@ -260,12 +260,11 @@ Managing content
 
 Wagtail
 -------------
-The Wagtail interface can be accessed at the ``/admin`` route. By default, the credentials are:
+
+You can log in to the Wagtail interface at ``/admin`` with the following credentials:
 
 * username - ``test``
 * password - ``test``
-
-Note: these are the same django superuser credentials which can be used at ``/django-admin``.
 
 
 Deployment
