@@ -1,14 +1,18 @@
+from django.urls import path, re_path
+
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from django.urls import re_path, path
-from draftjs_exporter.dom import DOM
-from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
-from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail import hooks
+from wagtail.admin.rich_text.converters.html_to_contentstate import (
+    InlineEntityElementHandler,
+)
+from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.rich_text.pages import PageLinkHandler
+
+from draftjs_exporter.dom import DOM
 from webpack_loader.utils import get_files
 
-from .models import CommonTag, CategoryPage
-from .views import deploy_info_view, MailchimpInterestsView, check_chart_health
+from .models import CategoryPage, CommonTag
+from .views import MailchimpInterestsView, check_chart_health, deploy_info_view
 
 
 class CategoryPageLinkHandler(PageLinkHandler):

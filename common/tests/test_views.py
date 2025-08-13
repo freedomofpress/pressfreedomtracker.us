@@ -1,22 +1,25 @@
 import json
 from unittest import mock
 
-import requests
+from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils.http import urlencode
-from django.test import TestCase, override_settings, RequestFactory
+
 from wagtail.documents.models import Document
-from django.contrib.auth import get_user_model
 from wagtail.models import Site
+
+import requests
 from mailchimp_marketing.api_client import ApiClientError
 
-from emails.devdata import EmailSettingsFactory
-from emails.models import Subscription
 from common.utils import ApiError
 from common.views import csrf_failure
+from emails.devdata import EmailSettingsFactory
+from emails.models import Subscription
 
 from .factories import SimplePageFactory
+
 
 User = get_user_model()
 

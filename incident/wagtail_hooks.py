@@ -1,22 +1,23 @@
-from django.urls import reverse, path, include
-from wagtail.admin.viewsets.model import ModelViewSetGroup
-from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
+from django.urls import include, path, reverse
+
 from wagtail import hooks
+from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
+from wagtail.admin.viewsets.model import ModelViewSetGroup
 
 from common.wagtail_hooks import MergeAdmin
 from incident.models import (
-    Journalist,
     Charge,
+    GovernmentWorker,
+    Institution,
+    Journalist,
+    LawEnforcementOrganization,
     Nationality,
     PoliticianOrPublic,
     Venue,
-    Institution,
-    LawEnforcementOrganization,
-    GovernmentWorker,
 )
 from incident.views import (
-    LegalOrderImportView,
     LegalOrderImportConfirmView,
+    LegalOrderImportView,
 )
 
 
