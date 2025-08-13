@@ -3,15 +3,17 @@ from django.test import TestCase
 from blog.tests.factories import BlogPageFactory, BlogIndexPageFactory
 from blog.utils import BlogFilter
 from blog.models import BlogPage
+from common.tests.factories import PersonPageFactory
 
 
 class TestFiltering(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.index = BlogIndexPageFactory()
-        cls.post1 = BlogPageFactory()
-        cls.post2 = BlogPageFactory()
-        cls.post3 = BlogPageFactory(blog_type="newsletter")
+        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=cls.index)
+        cls.post1 = BlogPageFactory(authors=[author1])
+        cls.post2 = BlogPageFactory(authors=[author2])
+        cls.post3 = BlogPageFactory(authors=[author3], blog_type="newsletter")
 
     def test_should_parse_query_string_objects(self):
         """BlogFilter should parse dict-like querystring objects"""
@@ -51,7 +53,7 @@ class TestFiltering(TestCase):
 
     def test_should_filter_blog_pages_by_author(self):
         """BlogFilter should filter BlogPages by author"""
-        filters = BlogFilter(organization=None, author=self.post1.author.pk, blog_type=None)
+        filters = BlogFilter(organization=None, author=self.post1.authors.first().author.pk, blog_type=None)
         found = filters.filter(BlogPage.objects)
         self.assertEqual(set(found), {self.post1})
 

@@ -17,8 +17,10 @@
 		</a>
 		<p class="special-blog-card__metadata">
 			{{ post.publication_datetime|date:"F j, Y" }}
-			{% if post.author %}
-				— {{ post.author }}
+			{% if post.authors.count %}
+				{% for author in post.authors.all %}
+					— {{ author.summary }}{% if not forloop.last %}, {% endif %}
+				{% endfor %}
 			{% endif %}
 		</p>
 		<p>{{ post.teaser_text }}</p>
