@@ -6,13 +6,14 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.admin.rich_text.converters.html_to_contentstate import (
     InlineEntityElementHandler,
 )
+from wagtail.admin.ui.tables import Column
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.rich_text.pages import PageLinkHandler
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 
 from draftjs_exporter.dom import DOM
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 from webpack_loader.utils import get_files
 
 from .models import CategoryPage, CommonTag
@@ -162,6 +163,13 @@ class SearchStatEntityElementHandler(InlineEntityElementHandler):
         }
 
 
+class TagCountColumn(Column):
+    """Represents the number of items tagged with this tag."""
+
+    def get_value(self, instance):
+        return TaggedItem.objects.filter(tag=instance).count()
+
+
 class TagsSnippetViewSet(SnippetViewSet):
     panels = [FieldPanel("name")]  # only show the name field
     model = Tag
@@ -169,7 +177,7 @@ class TagsSnippetViewSet(SnippetViewSet):
     add_to_settings_menu = True
     menu_label = "Image Tags"
     menu_order = 800
-    list_display = ["name", "slug"]
+    list_display = ["name", "slug", TagCountColumn("count")]
     search_fields = ("name",)
 
 
