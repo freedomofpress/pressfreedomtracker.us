@@ -2,13 +2,17 @@ from django.urls import path, re_path
 
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail import hooks
+from wagtail.admin.panels import FieldPanel
 from wagtail.admin.rich_text.converters.html_to_contentstate import (
     InlineEntityElementHandler,
 )
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.rich_text.pages import PageLinkHandler
+from wagtail.snippets.models import register_snippet
+from wagtail.snippets.views.snippets import SnippetViewSet
 
 from draftjs_exporter.dom import DOM
+from taggit.models import Tag
 from webpack_loader.utils import get_files
 
 from .models import CategoryPage, CommonTag
@@ -156,3 +160,17 @@ class SearchStatEntityElementHandler(InlineEntityElementHandler):
         return {
             k.replace('data-', '').replace('-', '_'): v for k, v in attrs.items()
         }
+
+
+class TagsSnippetViewSet(SnippetViewSet):
+    panels = [FieldPanel("name")]  # only show the name field
+    model = Tag
+    icon = "tag"
+    add_to_settings_menu = True
+    menu_label = "Image Tags"
+    menu_order = 800
+    list_display = ["name", "slug"]
+    search_fields = ("name",)
+
+
+register_snippet(TagsSnippetViewSet)
