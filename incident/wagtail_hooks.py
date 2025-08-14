@@ -158,7 +158,16 @@ class IncidentGroup(ModelViewSetGroup):
     menu_label = 'Incident M2Ms'
     icon = 'folder-open-inverse'  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
-    items = (ChargeAdmin, LawEnforcementOrganizationAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin)
+    items = (
+        ChargeAdmin,
+        LawEnforcementOrganizationAdmin,
+        NationalityAdmin,
+        PoliticianOrPublicAdmin,
+        VenueAdmin,
+        JournalistAdmin,
+        InstitutionAdmin,
+        GovernmentWorkerAdmin,
+    )
 
 
 @hooks.register('register_admin_viewset')
