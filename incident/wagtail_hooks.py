@@ -4,7 +4,7 @@ from wagtail import hooks
 from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
 from wagtail.admin.viewsets.model import ModelViewSetGroup
 
-from common.wagtail_hooks import MergeAdmin
+from common.wagtail_hooks import CommonTagAdmin, MergeAdmin
 from incident.models import (
     Charge,
     GovernmentWorker,
@@ -160,6 +160,7 @@ class IncidentGroup(ModelViewSetGroup):
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
     items = (
         ChargeAdmin,
+        CommonTagAdmin,
         LawEnforcementOrganizationAdmin,
         NationalityAdmin,
         PoliticianOrPublicAdmin,

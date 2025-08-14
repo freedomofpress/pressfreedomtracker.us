@@ -50,9 +50,8 @@ class MergeAdmin(ModelViewSet):
 
 class CommonTagAdmin(MergeAdmin):
     model = CommonTag
-    menu_label = 'Tags'
+    menu_label = 'Incident Tags'
     icon = 'tag'
-    add_to_admin_menu = True
     menu_order = 400  # will put in 4th place (000 being 1st, 100 2nd)
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
@@ -60,11 +59,6 @@ class CommonTagAdmin(MergeAdmin):
     search_fields = ('title',)
     inspect_view_enabled = True
     inspect_view_fields = ('title',)
-
-
-@hooks.register("register_admin_viewset")
-def register_viewset():
-    return CommonTagAdmin()
 
 
 @hooks.register('register_admin_urls')
