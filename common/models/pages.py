@@ -733,6 +733,7 @@ class CommonTag(ClusterableModel):
 
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_comma(value)
         return kls.objects.create(title=value)
 
     title = models.CharField(
