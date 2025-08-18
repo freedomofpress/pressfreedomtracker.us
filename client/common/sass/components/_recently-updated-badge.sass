@@ -1,13 +1,14 @@
 .recently-updated-badge
-	background: $black
-	color: $white
-	width: fit-content
-	height: fit-content
-	font-weight: 400
 	display: inline-flex
 	align-items: center
 	gap: 6px
+	width: fit-content
+	height: fit-content
+	background: $black
+	color: $white
+	font-weight: 400
 	text-decoration: none
+	outline-offset: 2px
 
 	// base styles, some can be overwritten by --arrow
 	&::before
@@ -20,11 +21,11 @@
 
 	&--arrow
 		&::before
+			height: 14px
 			background: transparent
 			background-image: url('../icons/line-arrow-down-white.svg')
 			background-size: contain
 			background-repeat: no-repeat
-			height: 14px
 
 	&--floating
 		position: absolute
