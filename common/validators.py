@@ -38,6 +38,11 @@ def validate_image_format(value):
             )
 
 
+def validate_disallow_comma(value, field_name=None):
+    if ',' in value:
+        raise ValidationError(f'{field_name if field_name else 'This'} field doesn\'t support the "," character.')
+
+
 @deconstructible
 class TemplateValidator(object):
     disallowed_tags = [
