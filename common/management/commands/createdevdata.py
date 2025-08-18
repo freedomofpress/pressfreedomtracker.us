@@ -268,19 +268,19 @@ class Command(BaseCommand):
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
-            author=author1,
+            authors=[author1],
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
-            author=author2,
+            authors=[author2],
         )
         BlogPageFactory.create_batch(
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
-            author=author3,
+            authors=[author3, author1],
         )
 
         # newsletter pages
@@ -288,7 +288,7 @@ class Command(BaseCommand):
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
-            author=author1,
+            authors=[author1],
             blog_type=BlogTemplateType.NEWSLETTER
         )
 
@@ -297,7 +297,7 @@ class Command(BaseCommand):
             10,
             parent=blog_index_page,
             organization__parent=org_index_page,
-            author=author2,
+            authors=[author2],
             blog_type=BlogTemplateType.SPECIAL
         )
 

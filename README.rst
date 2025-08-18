@@ -254,6 +254,16 @@ helpful to restore your snapshot from develop, so that the migrations
 for the new branch, which were presumably based off of develop, will
 have a clean starting point.
 
+
+Managing CMS Content
+=============
+
+You can log in to the Wagtail interface at ``/admin`` with the following credentials:
+
+* username - ``test``
+* password - ``test``
+
+
 Deployment
 =============
 
