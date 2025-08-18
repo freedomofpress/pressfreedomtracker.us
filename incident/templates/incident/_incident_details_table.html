@@ -1,18 +1,20 @@
 {% load wagtailcore_tags case_tags %}
 
 <dl class="details-table__incident-details" aria-labelledby="incident-details-title">
-	{% with incident.latest_update as last_updated %}
-		{% if last_updated and incident.updates.all.exists %}
-		<div class="details-table__row">
-			<dt class="details-table__label details-table__label--bold">
-				Updated on
-			</dt>
-			<dd class="details-table__value">
-				{{ last_updated|date:"F j, Y" }}
-			</dd>
-		</div>
-		{% endif %}
-	{% endwith %}
+	{% if incident.updates.all.exists %}
+		{% with latest_update=incident.get_updates_by_desc_date|first %}
+			<div class="details-table__row">
+				<dt class="details-table__label details-table__label--bold">
+					Updated on
+				</dt>
+				<dd class="details-table__value">
+					<time datetime="{{ latest_update.date|date:"c" }}">
+						{{ latest_update.date|date:"F j, Y" }}
+					</time>
+				</dd>
+			</div>
+		{% endwith %}
+	{% endif %}
 
 	<div class="details-table__row">
 		<dt class="details-table__label details-table__label--bold">

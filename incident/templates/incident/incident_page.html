@@ -10,6 +10,13 @@
 
 	<section class="incident-tags">
 		{% include 'incident/_incident_tags.html' with incident=page %}
+		{% if page.recently_updated %}
+			{% with latest_update=page.get_updates_by_desc_date|first %}
+				<a href="#update-{{ latest_update.id }}" class="btn recently-updated-badge recently-updated-badge--arrow">
+					Recently updated
+				</a>
+			{% endwith %}
+		{% endif %}
 	</section>
 
 	<article class="article-content">
