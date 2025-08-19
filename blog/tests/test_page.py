@@ -1,20 +1,25 @@
 from unittest import mock
 
-import defusedxml.ElementTree as ET
-import wagtail.blocks
-from wagtail.models import Site, Page
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 
-from common.models.charts import ChartSnapshot
-from common.tests.factories import PersonPageFactory, OrganizationPageFactory, CustomImageFactory, CategoryPageFactory
+import wagtail.blocks
+from wagtail.models import Page, Site
+
+import defusedxml.ElementTree as ET
+
+from blog.models import BlogIndexPageFeature
 from common.exceptions import ChartNotAvailable
+from common.models.charts import ChartSnapshot
+from common.tests.factories import (
+    CategoryPageFactory,
+    CustomImageFactory,
+    OrganizationPageFactory,
+    PersonPageFactory,
+)
 from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory
-from blog.models import BlogIndexPageFeature
-from .factories import (
-    BlogIndexPageFactory,
-    BlogPageFactory
-)
+
+from .factories import BlogIndexPageFactory, BlogPageFactory
 
 
 class TestPages(TestCase):
