@@ -1,6 +1,7 @@
 from unittest import mock
 
 from django.test import Client, TestCase
+from django.urls import reverse
 
 import wagtail.blocks
 from wagtail.models import Page, Site
@@ -165,6 +166,26 @@ class TestPages(TestCase):
         author = PersonPageFactory(title='A Person')
         response = self.client.get(f'/all-blogs/?author={author.pk}')
         self.assertContains(response, author.title)
+
+    def test_get_person_page_does_not_raise_error(self):
+        author = PersonPageFactory(title='A Person', parent=self.index)
+        response = self.client.get(author.get_url())
+        self.assertRedirects(
+            response,
+            self.index.get_url() + f'?author={author.pk}'
+        )
+
+    def test_person_pages_not_in_sitemap(self):
+        author = PersonPageFactory(title='A Person', parent=self.index)
+        response = self.client.get(reverse('sitemap'))
+        author_url = author.get_url()
+        self.assertNotContains(response, author_url)
+
+    def test_get_author_raises_404_if_no_index(self):
+        author = PersonPageFactory(title='A Person', parent=self.home_page)
+        self.index.delete()
+        response = self.client.get(author.get_url())
+        self.assertEqual(response.status_code, 404)
 
     def test_get_index_for_author_should_not_contain_featured_blogs(self):
         BlogIndexPageFeature.objects.create(

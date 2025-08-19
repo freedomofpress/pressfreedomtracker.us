@@ -249,6 +249,23 @@ class PersonPage(Page):
     bio = RichTextField(blank=True, null=True)
     website = models.URLField(blank=True)
 
+    def get_sitemap_urls(*args, **kwargs):
+        return []
+
+    def serve(self, request):
+        from blog.models import BlogIndexPage
+        try:
+            blog_index = BlogIndexPage.objects.get()
+        except BlogIndexPage.DoesNotExist:
+            # This site has no blog index page. Fall back to 404
+            raise Http404()
+
+        base_url = blog_index.get_url(request=request)
+        query_string = urlencode({'author': self.pk})
+        return redirect(
+            f'{base_url}?{query_string}'
+        )
+
     content_panels = Page.content_panels + [
         FieldPanel('bio'),
         FieldPanel('website'),
