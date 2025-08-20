@@ -4,8 +4,6 @@
 	padding-top: 2rem
 
 	&-collapsible
-		.card-image-collapsible:last-of-type
-			display: none
 
 		&__show-more
 			display: none
@@ -13,44 +11,46 @@
 		+mobile-down
 			padding-top: 0.5rem
 
+			.incident-card__image-wrapper
+				display: none
+
 			&.closed &__show-more,
 			&.open &__show-more
-				display: block
+				display: flex
+				gap: 8px
+				margin: 0.5rem 0
 
 			&__toggle-button
-				margin: 0.5rem 0
-				text-decoration: underline
 				display: flex
 				align-items: center
+				color: black
 				background: none
-				border: 0
-				padding: 0
+				border: 2px solid black
+				padding: 8px 10px
+				font-size: $font-size-small-p
+				cursor: pointer
 
 			&__toggle-icon
-				width: 0.8rem
-				height: 0.8rem
+				width: 1rem
+				height: 1rem
 				background-size: contain
 				background-color: transparent
 				background-image: url(../icons/plus.svg)
 				background-repeat: no-repeat
 				margin-left: 0.5rem
 
-			.card-image-collapsible:last-of-type
-				display: block
-
 			&.closed
-				.card-image-collapsible:last-of-type
-					display: none
-
 				.incident-card__categories,
 				.database-card-table__incident-details,
 				.tag-list
 					display: none
 
 			&.open
+				.incident-card__image-wrapper--expanded
+					display: block
+
 				.incident-card--inner .incident-card__categories,
-				.incident-card--inner .database-card-table__incident-details,
-				.incident-card--inner .card-image-collapsible:last-of-type
+				.incident-card--inner .database-card-table__incident-details
 					display: block
 
 				.incident-card--inner .tag-list
@@ -62,6 +62,11 @@
 	&__categories
 		list-style-type: none
 		padding: 0
+
+	&__image-wrapper
+		position: relative
+		&--expanded
+			display: none
 
 	&--inner
 		+tablet-up

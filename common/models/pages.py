@@ -1,57 +1,59 @@
 import json
-from urllib.parse import urlencode
 from datetime import datetime
+from urllib.parse import urlencode
 
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.http import Http404
 from django.shortcuts import redirect
+from django.template.defaultfilters import truncatewords
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.module_loading import import_string
-from django.template.defaultfilters import truncatewords
+
+from wagtail import blocks
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
-    PageChooserPanel,
     MultiFieldPanel,
+    PageChooserPanel,
 )
-from wagtail import blocks
-from wagtail.models import Page, Orderable, Site
 from wagtail.fields import RichTextField, StreamField
-from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
-from wagtailinventory.helpers import get_page_blocks
+from wagtail.models import Orderable, Page, Site
+
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
+from wagtailinventory.helpers import get_page_blocks
+from wagtailmetadata.models import MetadataPageMixin as OriginalMetadataPageMixin
 
+# Import statistics tags so that statistics dataset choices are populated
+import statistics.templatetags.statistics_tags  # noqa: F401
 from common.blocks import (
+    AlignedCaptionedEmbedBlock,
+    AlignedCaptionedImageBlock,
+    EmailSignupBlock,
     Heading1,
     Heading2,
     Heading3,
+    InfoTableBlock,
     LogoListBlock,
+    RichTextBlockQuoteBlock,
     StyledTextBlock,
     StyledTextTemplateBlock,
-    AlignedCaptionedImageBlock,
-    AlignedCaptionedEmbedBlock,
     TweetEmbedBlock,
-    RichTextBlockQuoteBlock,
-    EmailSignupBlock,
-    InfoTableBlock,
 )
-from common.choices import CATEGORY_SYMBOL_CHOICES, CATEGORY_CHART_CHOICES
+from common.choices import CATEGORY_CHART_CHOICES, CATEGORY_SYMBOL_CHOICES
 from common.models.settings import SocialSharingSEOSettings
+from common.templatetags.render_as_template import render_as_template
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
+    unescape,
 )
-from common.templatetags.render_as_template import render_as_template
-from common.utils import unescape
 from common.validators import validate_template
 from statistics.registry import get_numbers_choices, get_numbers_default
 from statistics.validators import validate_dataset_params
-# Import statistics tags so that statistics dataset choices are populated
-import statistics.templatetags.statistics_tags  # noqa: F401
 
 from .choices import FILTER_CHOICES
 
@@ -246,6 +248,23 @@ class PersonPage(Page):
 
     bio = RichTextField(blank=True, null=True)
     website = models.URLField(blank=True)
+
+    def get_sitemap_urls(*args, **kwargs):
+        return []
+
+    def serve(self, request):
+        from blog.models import BlogIndexPage
+        try:
+            blog_index = BlogIndexPage.objects.get()
+        except BlogIndexPage.DoesNotExist:
+            # This site has no blog index page. Fall back to 404
+            raise Http404()
+
+        base_url = blog_index.get_url(request=request)
+        query_string = urlencode({'author': self.pk})
+        return redirect(
+            f'{base_url}?{query_string}'
+        )
 
     content_panels = Page.content_panels + [
         FieldPanel('bio'),
@@ -479,8 +498,11 @@ class CategoryPage(MetadataPageMixin, Page):
 
     def get_context(self, request, *args, **kwargs):
         # placed here to avoid circular dependency
-        from incident.utils.incident_filter import IncidentFilter, get_serialized_filters
         from common.models.settings import SearchSettings
+        from incident.utils.incident_filter import (
+            IncidentFilter,
+            get_serialized_filters,
+        )
 
         context = super(CategoryPage, self).get_context(request, *args, **kwargs)
 
