@@ -1949,7 +1949,7 @@ class RelationThroughTest(TestCase):
 
     def test_filter_should_filter_by_multiple_journalists(self):
         incidents = IncidentFilter({
-            'targeted_journalists': '{}|{}'.format(self.tj1.journalist.pk, self.tj3.journalist.pk),
+            'targeted_journalists': '{} AND {}'.format(self.tj1.journalist.pk, self.tj3.journalist.pk),
         }).get_queryset()
 
         self.assertQuerysetEqual(incidents, [self.multi_journalist_incident])
@@ -2146,8 +2146,8 @@ class TargetedInstitutionsFilterTest(TestCase):
         with_all_target.save()
 
         incident_filter = IncidentFilter(
-            # {'targeted_institutions': f'{inst1.pk}|{inst2.title}'},
-            {'targeted_institutions': f'{inst1.pk}|{inst2.title}'},
+            # {'targeted_institutions': f'{inst1.pk} AND {inst2.title}'},
+            {'targeted_institutions': f'{inst1.pk} AND {inst2.title}'},
         )
         incident_filter.clean()
 
@@ -2157,7 +2157,7 @@ class TargetedInstitutionsFilterTest(TestCase):
         )
 
         incident_filter = IncidentFilter(
-            {'targeted_institutions': f'{inst1.title}|{inst2.pk}'},
+            {'targeted_institutions': f'{inst1.title} AND {inst2.pk}'},
         )
         incident_filter.clean()
         self.assertQuerysetEqual(

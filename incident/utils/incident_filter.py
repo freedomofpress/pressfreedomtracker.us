@@ -485,7 +485,7 @@ class ManyRelationFilter(Filter):
         if isinstance(value, int):
             return ManyRelationValue(pks=[value])
         else:
-            values = [x.replace('\x00', '') for x in value.split('|')]
+            values = [x.replace('\x00', '') for x in value.split(' AND ')]
         invalid_values = []
 
         value = ManyRelationValue()
