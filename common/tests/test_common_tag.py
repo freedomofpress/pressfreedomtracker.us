@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from common.models import CommonTag
-from common.validators import validate_disallow_comma
 from .factories import CommonTagFactory
 from incident.tests.factories import IncidentPageFactory
 
