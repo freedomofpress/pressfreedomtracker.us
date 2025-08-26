@@ -90,9 +90,9 @@ const ChartDownloader = ({
 	const downloadImage = () => {
 		if (svgEl) {
 
-			const TITLE_FONT_SIZE = 44
-			const PADDING = 10
+			const TITLE_FONT_SIZE = 80
 			const CREDIT_FONT_SIZE = 24
+			const PADDING = 10
 
 			const titleLineHeight = TITLE_FONT_SIZE * 1.2
 			const creditLineHeight = CREDIT_FONT_SIZE * 1.2
