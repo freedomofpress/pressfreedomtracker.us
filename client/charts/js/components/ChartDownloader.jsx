@@ -91,11 +91,11 @@ const ChartDownloader = ({
 		if (svgEl) {
 
 			const TITLE_FONT_SIZE = 44
-			const PADDING = 20
+			const PADDING = 10
 			const CREDIT_FONT_SIZE = 24
 
-			const titleLineHeight = TITLE_FONT_SIZE * 1.3
-			const creditLineHeight = CREDIT_FONT_SIZE * 1.3
+			const titleLineHeight = TITLE_FONT_SIZE * 1.2
+			const creditLineHeight = CREDIT_FONT_SIZE * 1.2
 
 			const titleMaxWidth = imageWidth - (PADDING * 2)
 
