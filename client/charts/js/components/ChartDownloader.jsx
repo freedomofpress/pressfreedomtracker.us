@@ -91,42 +91,45 @@ const ChartDownloader = ({
 		if (svgEl) {
 
 			const TITLE_FONT_SIZE = 44
-			const TITLE_PADDING = 10
+			const PADDING = 20
 			const CREDIT_FONT_SIZE = 24
-			const titleLineHeight = TITLE_FONT_SIZE * 1.2
-			const titleMaxWidth = imageWidth - TITLE_PADDING
+
+			const titleLineHeight = TITLE_FONT_SIZE * 1.3
+			const creditLineHeight = CREDIT_FONT_SIZE * 1.3
+
+			const titleMaxWidth = imageWidth - (PADDING * 2)
 
 			// Wrap the title text
 			const titleLines = wrapText(chartTitle, titleMaxWidth, TITLE_FONT_SIZE)
 			const numberOfTitleLines = titleLines.length
 
-			// Adjust spacing for title, # of lines, credits, etc
-			const chartTitleOffset = chartTitle ? (numberOfTitleLines * titleLineHeight) + TITLE_PADDING : 0
-			const chartMetaOffset = showCredit ? (creditUrl ? (CREDIT_FONT_SIZE * 2) : CREDIT_FONT_SIZE) : 0
-
-			// Calculate the final dimensions of our downloaded image
+			// Get element heights and calculate final dimensions
+			const titleAreaHeight = chartTitle ? (numberOfTitleLines * titleLineHeight) + PADDING : 0
+			const creditAreaHeight = showCredit ?
+				(creditUrl ? (creditLineHeight * 2) : creditLineHeight) + PADDING : 0
 			const { width: svgWidth, height: svgHeight } = svgEl.getBoundingClientRect()
-			const imageHeight = ((svgHeight / svgWidth) * imageWidth)
-			const totalImageHeight = imageHeight + chartTitleOffset + chartMetaOffset
+			const chartImageHeight = ((svgHeight / svgWidth) * imageWidth)
+			const totalImageHeight = titleAreaHeight + chartImageHeight + creditAreaHeight
 
-			// Get offset positions for credits
-			const chartCreditOffset = chartTitleOffset + imageHeight + TITLE_PADDING
-			const chartCreditUrlOffset = chartTitleOffset + imageHeight + TITLE_PADDING + CREDIT_FONT_SIZE
+			// Get offset positions
+			const titleStartY = titleLineHeight
+			const chartStartY = titleAreaHeight
+			const creditStartY = titleAreaHeight + chartImageHeight + (creditLineHeight * 0.8) // 0.8 to position at baseline
 
 			// Create an offscreen canvas for rendering
 			const canvas = new OffscreenCanvas(imageWidth, totalImageHeight)
 			const ctx = canvas.getContext('2d')
 
-
 			// Generate the title text elements with line breaks
 			const titleTextElements = titleLines.map((line, index) => {
-				return `<tspan x="5" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`
+				if (index === 0) {
+					return `<tspan x="${PADDING}">${escapeXml(line)}</tspan>`
+				} else {
+					return `<tspan x="${PADDING}" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`
+				}
 			}).join('\n')
 
-			// Get the SVG as a raw string, and wrap it in another svg that provides
-			// the background white, title, logo, and url
 			const svgStringData = new XMLSerializer().serializeToString(svgEl)
-			console.log(titleTextElements)
 			const scaledSvgString = `
 				<svg
 					width="${imageWidth}"
@@ -141,21 +144,21 @@ const ChartDownloader = ({
 						fill="white"
 					/>
 					${chartTitle ? `
-					<text x="5" y="5" font-size="${TITLE_FONT_SIZE}">
-						${chartTitle ? titleTextElements : ''}
+					<text x="${PADDING}" y="${titleStartY}" font-size="${TITLE_FONT_SIZE}" >
+						${titleTextElements}
 					</text>
 					` : ""}
 					${showCredit ? `
-						<text x="5" y="${chartCreditOffset}" font-size="${CREDIT_FONT_SIZE}">
-							Source: U.S. Press Freedom Tracker Database
+						<text x="${PADDING}" y="${creditStartY}" font-size="${CREDIT_FONT_SIZE}">
+							<tspan>Source: U.S. Press Freedom Tracker Database</tspan>
+							${creditUrl ? `
+								<tspan x="${PADDING}" dy="${creditLineHeight}" fill="#767676">
+									${creditUrl}
+								</tspan>
+							` : ""}
 						</text>
-						${creditUrl ? `
-							<text x="5" y="${chartCreditUrlOffset}" font-size="${CREDIT_FONT_SIZE}" fill="#CCCCCC">
-								${creditUrl}
-							</text>
-						` : ""}
 					` : ""}
-					<svg x="0" y="${chartTitleOffset}" width="${imageWidth}" height="${imageHeight}">
+					<svg x="0" y="${chartStartY}" width="${imageWidth}" height="${chartImageHeight}">
 						${svgStringData}
 					</svg>
 				</svg>
