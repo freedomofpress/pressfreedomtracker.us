@@ -12,7 +12,7 @@ import { Canvg } from 'canvg'
 const wrapText = (text, maxWidth, fontSize) => {
 	if (!text) return []
 
-	// Approximate rough character width based on height
+	// Approximate character width based on height
 	const avgCharWidth = fontSize * 0.5
 	const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth)
 
