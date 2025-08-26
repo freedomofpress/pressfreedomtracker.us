@@ -90,33 +90,37 @@ const ChartDownloader = ({
 	const downloadImage = () => {
 		if (svgEl) {
 
-			const FONT_SIZE = 48
+			const TITLE_FONT_SIZE = 44
 			const TITLE_PADDING = 10
-			const titleLineHeight = FONT_SIZE * 1.2
-			const titleMaxWidth = imageWidth - TITLE_PADDING // 5pt padding
+			const CREDIT_FONT_SIZE = 24
+			const titleLineHeight = TITLE_FONT_SIZE * 1.2
+			const titleMaxWidth = imageWidth - TITLE_PADDING
 
 			// Wrap the title text
-			const titleLines = wrapText(chartTitle, titleMaxWidth, FONT_SIZE)
+			const titleLines = wrapText(chartTitle, titleMaxWidth, TITLE_FONT_SIZE)
 			const numberOfTitleLines = titleLines.length
 
 			// Adjust spacing for title, # of lines, credits, etc
 			const chartTitleOffset = chartTitle ? (numberOfTitleLines * titleLineHeight) + TITLE_PADDING : 0
-			const chartMetaOffset = showCredit ? (creditUrl ? 48 : 24) : 0
+			const chartMetaOffset = showCredit ? (creditUrl ? (CREDIT_FONT_SIZE * 2) : CREDIT_FONT_SIZE) : 0
 
 			// Calculate the final dimensions of our downloaded image
 			const { width: svgWidth, height: svgHeight } = svgEl.getBoundingClientRect()
 			const imageHeight = ((svgHeight / svgWidth) * imageWidth)
 			const totalImageHeight = imageHeight + chartTitleOffset + chartMetaOffset
 
+			// Get offset positions for credits
+			const chartCreditOffset = chartTitleOffset + imageHeight + TITLE_PADDING
+			const chartCreditUrlOffset = chartTitleOffset + imageHeight + TITLE_PADDING + CREDIT_FONT_SIZE
+
 			// Create an offscreen canvas for rendering
 			const canvas = new OffscreenCanvas(imageWidth, totalImageHeight)
 			const ctx = canvas.getContext('2d')
 
+
 			// Generate the title text elements with line breaks
 			const titleTextElements = titleLines.map((line, index) => {
-				// Start from the top of the viewBox (which is -chartTitleOffset)
-				// and work our way down
-				return `<tspan  x="5" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`
+				return `<tspan x="5" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`
 			}).join('\n')
 
 			// Get the SVG as a raw string, and wrap it in another svg that provides
@@ -127,31 +131,31 @@ const ChartDownloader = ({
 				<svg
 					width="${imageWidth}"
 					height="${totalImageHeight}"
-					viewBox="0 ${-chartTitleOffset} ${imageWidth} ${totalImageHeight}"
+					viewBox="0 0 ${imageWidth} ${totalImageHeight}"
 				>
 					<rect
 						x="0"
-						y="${-chartTitleOffset}"
+						y="0"
 						width="${imageWidth}"
 						height="${totalImageHeight}"
 						fill="white"
 					/>
 					${chartTitle ? `
-					<text x="5" y="${chartTitleOffset}" font-size="${FONT_SIZE}">
+					<text x="5" y="5" font-size="${TITLE_FONT_SIZE}">
 						${chartTitle ? titleTextElements : ''}
 					</text>
 					` : ""}
 					${showCredit ? `
-						<text x="5" y="${imageHeight + 14}" font-size="24">
+						<text x="5" y="${chartCreditOffset}" font-size="${CREDIT_FONT_SIZE}">
 							Source: U.S. Press Freedom Tracker Database
 						</text>
 						${creditUrl ? `
-							<text x="5" y="${imageHeight + 42}" font-size="24" fill="#CCCCCC">
+							<text x="5" y="${chartCreditUrlOffset}" font-size="${CREDIT_FONT_SIZE}" fill="#CCCCCC">
 								${creditUrl}
 							</text>
 						` : ""}
 					` : ""}
-					<svg width="${imageWidth}" height="${imageHeight}">
+					<svg x="0" y="${chartTitleOffset}" width="${imageWidth}" height="${imageHeight}">
 						${svgStringData}
 					</svg>
 				</svg>
