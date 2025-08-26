@@ -90,16 +90,17 @@ const ChartDownloader = ({
 	const downloadImage = () => {
 		if (svgEl) {
 
-			const titleFontSize = 48
-			const titleLineHeight = titleFontSize * 1.2
-			const titleMaxWidth = imageWidth - 10 // 5pt padding
+			const FONT_SIZE = 48
+			const TITLE_PADDING = 10
+			const titleLineHeight = FONT_SIZE * 1.2
+			const titleMaxWidth = imageWidth - TITLE_PADDING // 5pt padding
 
 			// Wrap the title text
-			const titleLines = wrapText(chartTitle, titleMaxWidth, titleFontSize)
+			const titleLines = wrapText(chartTitle, titleMaxWidth, FONT_SIZE)
 			const numberOfTitleLines = titleLines.length
 
 			// Adjust spacing for title, # of lines, credits, etc
-			const chartTitleOffset = chartTitle ? (numberOfTitleLines * titleLineHeight) + 10 : 0
+			const chartTitleOffset = chartTitle ? (numberOfTitleLines * titleLineHeight) + TITLE_PADDING : 0
 			const chartMetaOffset = showCredit ? (creditUrl ? 48 : 24) : 0
 
 			// Calculate the final dimensions of our downloaded image
@@ -115,13 +116,13 @@ const ChartDownloader = ({
 			const titleTextElements = titleLines.map((line, index) => {
 				// Start from the top of the viewBox (which is -chartTitleOffset)
 				// and work our way down
-				const yPosition = -chartTitleOffset + ((index + 1) * titleLineHeight) - 10
-				return `<text x="5" y="${yPosition}" font-size="${titleFontSize}">${escapeXml(line)}</text>`
+				return `<tspan  x="5" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`
 			}).join('\n')
 
 			// Get the SVG as a raw string, and wrap it in another svg that provides
 			// the background white, title, logo, and url
 			const svgStringData = new XMLSerializer().serializeToString(svgEl)
+			console.log(titleTextElements)
 			const scaledSvgString = `
 				<svg
 					width="${imageWidth}"
@@ -135,7 +136,11 @@ const ChartDownloader = ({
 						height="${totalImageHeight}"
 						fill="white"
 					/>
-					${chartTitle ? titleTextElements : ''}
+					${chartTitle ? `
+					<text x="5" y="${chartTitleOffset}" font-size="${FONT_SIZE}">
+						${chartTitle ? titleTextElements : ''}
+					</text>
+					` : ""}
 					${showCredit ? `
 						<text x="5" y="${imageHeight + 14}" font-size="24">
 							Source: U.S. Press Freedom Tracker Database
