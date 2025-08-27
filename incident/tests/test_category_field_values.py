@@ -4,6 +4,7 @@ import urllib.parse
 from functools import partial
 
 from bs4 import BeautifulSoup
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.text import capfirst
 from django.utils.html import strip_tags
@@ -11,6 +12,15 @@ from django.utils.html import strip_tags
 from common.tests.factories import CategoryPageFactory
 from incident.models import CAT_FIELD_VALUES, IncidentPage
 from incident.models import choices
+from incident.models import (
+    Equipment,
+    Journalist,
+    Institution,
+    GovernmentWorker,
+    Charge,
+    Nationality,
+    PoliticianOrPublic,
+)
 from incident.tests.factories import (
     IncidentPageFactory,
     IncidentIndexPageFactory,
@@ -177,6 +187,19 @@ class TestCategoryFieldValuesByField(TestCase):
             'No',
             {field_name: '0'},
         )
+
+    def assert_validation(self, model_name):
+        with self.assertRaises(ValidationError):
+            model_name.autocomplete_create('hello AND world')
+
+    def test_validation_autocomplete_field_creation(self):
+        self.assert_validation(Equipment)
+        self.assert_validation(Journalist)
+        self.assert_validation(Institution)
+        self.assert_validation(GovernmentWorker)
+        self.assert_validation(Charge)
+        self.assert_validation(Nationality)
+        self.assert_validation(PoliticianOrPublic)
 
     def test_arrest_status(self):
         self.assert_choices(

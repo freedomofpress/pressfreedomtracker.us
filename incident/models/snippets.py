@@ -1,4 +1,5 @@
 from django.db import models
+from common.validators import validate_disallow_AND
 from modelcluster.models import ClusterableModel
 from wagtail.admin.panels import FieldPanel, FieldRowPanel
 from wagtail.snippets.models import register_snippet
@@ -8,6 +9,7 @@ from wagtail.snippets.models import register_snippet
 class Equipment(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_AND(value)
         return kls.objects.create(name=value)
 
     autocomplete_search_field = 'name'
@@ -15,6 +17,7 @@ class Equipment(ClusterableModel):
     name = models.CharField(
         max_length=255,
         unique=True,
+        validators=[validate_disallow_AND],
     )
 
     panels = [

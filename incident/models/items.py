@@ -1,5 +1,6 @@
 from django.db import models
 
+from common.validators import validate_disallow_AND
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from wagtail.models import Orderable
@@ -9,9 +10,10 @@ from wagtailautocomplete.edit_handlers import AutocompletePanel
 class Journalist(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_AND(value)
         return kls.objects.create(title=value)
 
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, validators=[validate_disallow_AND])
 
     class Meta:
         ordering = ['title']
@@ -23,9 +25,10 @@ class Journalist(ClusterableModel):
 class Institution(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_AND(value)
         return kls.objects.create(title=value)
 
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255, unique=True, validators=[validate_disallow_AND])
 
     class Meta:
         ordering = ['title']
@@ -37,9 +40,10 @@ class Institution(ClusterableModel):
 class GovernmentWorker(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_AND(value)
         return kls.objects.create(title=value)
 
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255, unique=True, validators=[validate_disallow_AND])
 
     def __str__(self):
         return self.title
@@ -91,11 +95,13 @@ class TargetedJournalist(Orderable):
 class Charge(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_AND(value)
         return kls.objects.create(title=value)
 
     title = models.CharField(
         max_length=255,
         unique=True,
+        validators=[validate_disallow_AND],
     )
 
     def __str__(self):
@@ -108,11 +114,13 @@ class Charge(ClusterableModel):
 class Nationality(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_AND(value)
         return kls.objects.create(title=value)
 
     title = models.CharField(
         max_length=255,
         unique=True,
+        validators=[validate_disallow_AND],
     )
 
     def __str__(self):
@@ -126,11 +134,13 @@ class Nationality(ClusterableModel):
 class PoliticianOrPublic(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_AND(value)
         return kls.objects.create(title=value)
 
     title = models.CharField(
         max_length=255,
         unique=True,
+        validators=[validate_disallow_AND],
     )
 
     def __str__(self):
