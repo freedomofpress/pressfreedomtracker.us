@@ -51,7 +51,7 @@ from common.utils import (
     paginate,
     unescape,
 )
-from common.validators import validate_template
+from common.validators import validate_disallow_comma, validate_template
 from statistics.registry import get_numbers_choices, get_numbers_default
 from statistics.validators import validate_dataset_params
 
@@ -495,6 +495,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
     def clean(self):
         self.description = unescape(self.description)
+        validate_disallow_comma(self.title, 'Category page title')
 
     def get_context(self, request, *args, **kwargs):
         # placed here to avoid circular dependency
@@ -732,11 +733,13 @@ class CommonTag(ClusterableModel):
 
     @classmethod
     def autocomplete_create(kls, value):
+        validate_disallow_comma(value)
         return kls.objects.create(title=value)
 
     title = models.CharField(
         max_length=255,
         unique=True,
+        validators=[validate_disallow_comma],
     )
 
     @property
