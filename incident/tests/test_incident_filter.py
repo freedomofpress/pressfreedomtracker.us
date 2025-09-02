@@ -4,6 +4,7 @@ from unittest import mock
 from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
+from common.models.pages import CommonTag
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
@@ -22,6 +23,7 @@ from incident.models import IncidentPage
 from incident.choices import ARREST_STATUS
 from incident.utils.incident_filter import (
     BooleanFilter,
+    CommaSeparatedFilter,
     IncidentFilter,
     ManyRelationFilter,
     ManyRelationValue,
@@ -454,4 +456,17 @@ class CleanTest(TestCase):
         self.assertEqual(
             [str(error) for error in cm.exception],
             ['Invalid value for venue: ???'],
+        )
+
+    def test_param_for_commaseparated_filter(self):
+        fltr = CommaSeparatedFilter('tags', CommonTag)
+
+        self.assertIsNone(fltr.clean(''))
+
+        with self.assertRaises(ValidationError) as cm:
+            fltr.clean('???', strict=True)
+
+        self.assertEqual(
+            [str(error) for error in cm.exception],
+            ['Invalid value for tags: ???'],
         )

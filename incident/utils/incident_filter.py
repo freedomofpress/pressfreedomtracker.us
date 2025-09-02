@@ -485,7 +485,7 @@ class ManyRelationFilter(Filter):
         if isinstance(value, int):
             return ManyRelationValue(pks=[value])
         else:
-            values = [x.replace('\x00', '') for x in value.split(',')]
+            values = [x.replace('\x00', '') for x in value.split(' AND ')]
         invalid_values = []
 
         value = ManyRelationValue()
@@ -561,6 +561,35 @@ class ManyRelationFilter(Filter):
         return ','.join(
             str(item) for item in itertools.chain(value.pks, value.strings)
         )
+
+
+class CommaSeparatedFilter(ManyRelationFilter):
+    def clean(self, value, strict=False):
+        if not value:
+            return None
+        if isinstance(value, int):
+            return ManyRelationValue(pks=[value])
+        else:
+            values = [x.replace('\x00', '') for x in value.split(',')]
+        invalid_values = []
+
+        value = ManyRelationValue()
+        for v in values:
+            try:
+                value.pks.append(int(v))
+            except ValueError:
+                if self.text_fields:
+                    value.strings.append(v)
+                else:
+                    invalid_values.append(v)
+
+        if invalid_values and strict:
+            raise ValidationError('Invalid value{} for {}: {}'.format(
+                's' if len(invalid_values) != 1 else '',
+                self.name,
+                ','.join(invalid_values),
+            ))
+        return value
 
 
 class SearchFilter(Filter):
@@ -848,12 +877,16 @@ def get_openapi_parameters():
 
 class IncidentFilter(object):
     filter_overrides = {
-        'categories': {'lookup': 'categories__category', 'text_fields': ['title']},
+        'categories': {
+            'lookup': 'categories__category',
+            'filter_cls': CommaSeparatedFilter,
+            'text_fields': ['title']
+        },
         'date': {'fuzzy': True, 'verbose_name': 'took place'},
         'city': {'lookup': 'city__iexact'},
         'equipment_seized': {'lookup': 'equipment_seized__equipment', 'text_fields': ['name']},
         'equipment_broken': {'lookup': 'equipment_broken__equipment', 'text_fields': ['name']},
-        'tags': {'verbose_name': 'Has any of these tags'},
+        'tags': {'verbose_name': 'Has any of these tags', 'filter_cls': CommaSeparatedFilter},
         'subpoena_statuses': {'verbose_name': 'Subpoena status'},
         'targeted_journalists': {
             'verbose_name': 'Targeted any of these journalists',

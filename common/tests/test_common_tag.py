@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from common.models import CommonTag
@@ -21,3 +22,7 @@ class TestUnusedTags(TestCase):
         tag.tagged_items.add(incident)
 
         self.assertEqual(tag.incident_count, 1)
+
+    def test_validation_autocomplete_tag_creation(self):
+        with self.assertRaises(ValidationError):
+            CommonTag.autocomplete_create('hello,world')
