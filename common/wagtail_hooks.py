@@ -1,14 +1,23 @@
+from django.urls import path, re_path
+
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
-from django.urls import re_path, path
-from draftjs_exporter.dom import DOM
-from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
-from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail import hooks
+from wagtail.admin.panels import FieldPanel
+from wagtail.admin.rich_text.converters.html_to_contentstate import (
+    InlineEntityElementHandler,
+)
+from wagtail.admin.ui.tables import Column
+from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.rich_text.pages import PageLinkHandler
+from wagtail.snippets.models import register_snippet
+from wagtail.snippets.views.snippets import SnippetViewSet
+
+from draftjs_exporter.dom import DOM
+from taggit.models import Tag, TaggedItem
 from webpack_loader.utils import get_files
 
-from .models import CommonTag, CategoryPage
-from .views import deploy_info_view, MailchimpInterestsView, check_chart_health
+from .models import CategoryPage, CommonTag
+from .views import MailchimpInterestsView, check_chart_health, deploy_info_view
 
 
 class CategoryPageLinkHandler(PageLinkHandler):
@@ -46,9 +55,8 @@ class MergeAdmin(ModelViewSet):
 
 class CommonTagAdmin(MergeAdmin):
     model = CommonTag
-    menu_label = 'Tags'
+    menu_label = 'Incident Tags'
     icon = 'tag'
-    add_to_admin_menu = True
     menu_order = 400  # will put in 4th place (000 being 1st, 100 2nd)
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
     exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
@@ -56,11 +64,6 @@ class CommonTagAdmin(MergeAdmin):
     search_fields = ('title',)
     inspect_view_enabled = True
     inspect_view_fields = ('title',)
-
-
-@hooks.register("register_admin_viewset")
-def register_viewset():
-    return CommonTagAdmin()
 
 
 @hooks.register('register_admin_urls')
@@ -158,3 +161,24 @@ class SearchStatEntityElementHandler(InlineEntityElementHandler):
         return {
             k.replace('data-', '').replace('-', '_'): v for k, v in attrs.items()
         }
+
+
+class TagCountColumn(Column):
+    """Represents the number of items tagged with this tag."""
+
+    def get_value(self, instance):
+        return TaggedItem.objects.filter(tag=instance).count()
+
+
+class TagsSnippetViewSet(SnippetViewSet):
+    panels = [FieldPanel("name")]  # only show the name field
+    model = Tag
+    icon = "tag"
+    add_to_settings_menu = True
+    menu_label = "Image Tags"
+    menu_order = 800
+    list_display = ["name", "slug", TagCountColumn("tagged item count")]
+    search_fields = ("name",)
+
+
+register_snippet(TagsSnippetViewSet)

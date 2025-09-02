@@ -1,22 +1,23 @@
-from django.urls import reverse, path, include
-from wagtail.admin.viewsets.model import ModelViewSetGroup
-from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
-from wagtail import hooks
+from django.urls import include, path, reverse
 
-from common.wagtail_hooks import MergeAdmin
+from wagtail import hooks
+from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
+from wagtail.admin.viewsets.model import ModelViewSetGroup
+
+from common.wagtail_hooks import CommonTagAdmin, MergeAdmin
 from incident.models import (
-    Journalist,
     Charge,
+    GovernmentWorker,
+    Institution,
+    Journalist,
+    LawEnforcementOrganization,
     Nationality,
     PoliticianOrPublic,
     Venue,
-    Institution,
-    LawEnforcementOrganization,
-    GovernmentWorker,
 )
 from incident.views import (
-    LegalOrderImportView,
     LegalOrderImportConfirmView,
+    LegalOrderImportView,
 )
 
 
@@ -157,7 +158,17 @@ class IncidentGroup(ModelViewSetGroup):
     menu_label = 'Incident M2Ms'
     icon = 'folder-open-inverse'  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
-    items = (ChargeAdmin, LawEnforcementOrganizationAdmin, NationalityAdmin, PoliticianOrPublicAdmin, VenueAdmin, JournalistAdmin, InstitutionAdmin, GovernmentWorkerAdmin)
+    items = (
+        ChargeAdmin,
+        CommonTagAdmin,
+        LawEnforcementOrganizationAdmin,
+        NationalityAdmin,
+        PoliticianOrPublicAdmin,
+        VenueAdmin,
+        JournalistAdmin,
+        InstitutionAdmin,
+        GovernmentWorkerAdmin,
+    )
 
 
 @hooks.register('register_admin_viewset')
