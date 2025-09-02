@@ -9,9 +9,11 @@ from django.utils.http import urlencode
 
 from wagtail.documents.models import Document
 from wagtail.models import Site
+from wagtail.test.utils import WagtailTestUtils
 
 import requests
 from mailchimp_marketing.api_client import ApiClientError
+from taggit.models import Tag
 
 from common.utils import ApiError
 from common.views import csrf_failure
@@ -343,3 +345,19 @@ class CsrfFailureTestCase(TestCase):
 
         response = csrf_failure(request)
         self.assertEqual(response.status_code, 403)
+
+
+class TestTagAdmin(TestCase, WagtailTestUtils):
+    @classmethod
+    def setUpTestData(cls):
+        Tag.objects.create(name="Coffee", slug="coffee")
+
+    def setUp(self):
+        self.login()
+
+    def get_admin_response(self):
+        return self.client.get(reverse("wagtailsnippets_taggit_tag:list"))
+
+    def test_contains_count_column(self):
+        response = self.get_admin_response()
+        self.assertContains(response, "Tagged item count")

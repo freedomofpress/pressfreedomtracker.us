@@ -177,7 +177,7 @@ class TagsSnippetViewSet(SnippetViewSet):
     add_to_settings_menu = True
     menu_label = "Image Tags"
     menu_order = 800
-    list_display = ["name", "slug", TagCountColumn("count")]
+    list_display = ["name", "slug", TagCountColumn("tagged item count")]
     search_fields = ("name",)
 
 
