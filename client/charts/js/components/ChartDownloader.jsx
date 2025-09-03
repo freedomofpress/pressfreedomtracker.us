@@ -3,6 +3,44 @@ import classNames from 'classnames'
 import { Canvg } from 'canvg'
 
 /**
+ * Helper function to wrap text into multiple lines
+ * @param text - The text to wrap
+ * @param maxWidth - Maximum width in pixels
+ * @param fontSize - Font size in pixels
+ * @returns {string[]} Array of text lines
+ */
+const wrapText = (text, maxWidth, fontSize) => {
+	if (!text) return []
+
+	// Approximate character width based on height
+	const avgCharWidth = fontSize * 0.5
+	const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth)
+
+	const words = text.split(' ')
+	const lines = []
+	let currentLine = ''
+
+	for (const word of words) {
+		const testLine = currentLine ? `${currentLine} ${word}` : word
+
+		if (testLine.length <= maxCharsPerLine) {
+			currentLine = testLine
+		} else {
+			if (currentLine) {
+				lines.push(currentLine)
+			}
+			currentLine = word
+		}
+	}
+
+	if (currentLine) {
+		lines.push(currentLine)
+	}
+
+	return lines
+}
+
+/**
  * ChartDownloader Wrapper Component
  *
  * This wrapper component wraps a child component which allows a child component to "bind"
@@ -51,47 +89,76 @@ const ChartDownloader = ({
 
 	const downloadImage = () => {
 		if (svgEl) {
-			// Adjust spacing for title, credits, etc
-			const chartTitleOffset = chartTitle ? 48 : 0
-			const chartMetaOffset = showCredit ? (creditUrl ? 48 : 24) : 0
 
-			// Calculate the final dimensions of our downloaded image
+			const TITLE_FONT_SIZE = 80
+			const CREDIT_FONT_SIZE = 24
+			const PADDING = 10
+
+			const titleLineHeight = TITLE_FONT_SIZE * 1.2
+			const creditLineHeight = CREDIT_FONT_SIZE * 1.2
+
+			const titleMaxWidth = imageWidth - (PADDING * 2)
+
+			// Wrap the title text
+			const titleLines = wrapText(chartTitle, titleMaxWidth, TITLE_FONT_SIZE)
+			const numberOfTitleLines = titleLines.length
+
+			// Get element heights and calculate final dimensions
+			const titleAreaHeight = chartTitle ? (numberOfTitleLines * titleLineHeight) + PADDING : 0
+			const creditAreaHeight = showCredit ?
+				(creditUrl ? (creditLineHeight * 2) : creditLineHeight) + PADDING : 0
 			const { width: svgWidth, height: svgHeight } = svgEl.getBoundingClientRect()
-			const imageHeight = ((svgHeight / svgWidth) * imageWidth)
-			const totalImageHeight = imageHeight + chartTitleOffset + chartMetaOffset
+			const chartImageHeight = ((svgHeight / svgWidth) * imageWidth)
+			const totalImageHeight = titleAreaHeight + chartImageHeight + creditAreaHeight
+
+			// Get offset positions
+			const titleStartY = titleLineHeight
+			const chartStartY = titleAreaHeight
+			const creditStartY = titleAreaHeight + chartImageHeight + (creditLineHeight * 0.8) // 0.8 to position at baseline
 
 			// Create an offscreen canvas for rendering
 			const canvas = new OffscreenCanvas(imageWidth, totalImageHeight)
 			const ctx = canvas.getContext('2d')
 
-			// Get the SVG as a raw string, and wrap it in another svg that provides
-			// the background white, title, logo, and url
+			// Generate the title text elements with line breaks
+			const titleTextElements = titleLines.map((line, index) => {
+				if (index === 0) {
+					return `<tspan x="${PADDING}">${escapeXml(line)}</tspan>`
+				} else {
+					return `<tspan x="${PADDING}" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`
+				}
+			}).join('\n')
+
 			const svgStringData = new XMLSerializer().serializeToString(svgEl)
 			const scaledSvgString = `
 				<svg
 					width="${imageWidth}"
 					height="${totalImageHeight}"
-					viewBox="0 ${-chartTitleOffset} ${imageWidth} ${totalImageHeight}"
+					viewBox="0 0 ${imageWidth} ${totalImageHeight}"
 				>
 					<rect
 						x="0"
-						y="${-chartTitleOffset}"
+						y="0"
 						width="${imageWidth}"
 						height="${totalImageHeight}"
 						fill="white"
 					/>
-					<text x="5" y="0" font-size="48">${chartTitle}</text>
-					${showCredit ? `
-						<text x="5" y="${imageHeight + 14}" font-size="24">
-							Source: U.S. Press Freedom Tracker Database
-						</text>
-						${creditUrl ? `
-							<text x="5" y="${imageHeight + 42}" font-size="24" fill="#CCCCCC">
-								${creditUrl}
-							</text>
-						` : ""}
+					${chartTitle ? `
+					<text x="${PADDING}" y="${titleStartY}" font-size="${TITLE_FONT_SIZE}" >
+						${titleTextElements}
+					</text>
 					` : ""}
-					<svg width="${imageWidth}" height="${imageHeight}">
+					${showCredit ? `
+						<text x="${PADDING}" y="${creditStartY}" font-size="${CREDIT_FONT_SIZE}">
+							<tspan>Source: U.S. Press Freedom Tracker Database</tspan>
+							${creditUrl ? `
+								<tspan x="${PADDING}" dy="${creditLineHeight}" fill="#767676">
+									${creditUrl}
+								</tspan>
+							` : ""}
+						</text>
+					` : ""}
+					<svg x="0" y="${chartStartY}" width="${imageWidth}" height="${chartImageHeight}">
 						${svgStringData}
 					</svg>
 				</svg>
@@ -111,6 +178,14 @@ const ChartDownloader = ({
 					URL.revokeObjectURL(downloadUrl)
 				})
 		}
+	}
+
+	// Escape text for safe use in SVG with browser textContent escaping
+	const escapeXml = (text) => {
+		if (!text) return ''
+		const div = document.createElement('div')
+		div.textContent = text
+		return div.innerHTML
 	}
 
 	// Clone children with the added data prop and return it
