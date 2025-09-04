@@ -20,7 +20,7 @@ import '../../sass/HomepageMainCharts.sass'
 
 export default function HomepageMainCharts(props) {
 	return (
-		<ParentSize>
+		<ParentSize debounceTime={0}>
 			{(parent) => <HomepageMainChartsWidth {...props} width={parent.width} />}
 		</ParentSize>
 	)
