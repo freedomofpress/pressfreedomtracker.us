@@ -509,7 +509,7 @@ export default function HexbinUSMap({
 								d: 'M6 0.999999L12 7L6 13',
 								stroke: 'black',
 								fill: 'white',
-								strokeWidth: hexBorder.legend,
+								strokeWidth: 1,
 								transform: `translate(${hoveredElement === 'Abroad' ? width - paddings.arrow : width - paddings.arrow - 50
 									},${height -
 									paddings.bottom -
@@ -564,7 +564,7 @@ export default function HexbinUSMap({
 								d: 'M4 1L8 5L4 9',
 								stroke: '#8F8F8F',
 								fill: 'white',
-								strokeWidth: hexBorder.legend,
+								strokeWidth: 1,
 								transform: `translate(${width - paddings.arrowSmall + 3 + (hoveredElement === 'Abroad' ? 150 : 0)
 									},${height -
 									paddings.bottom -
@@ -660,6 +660,7 @@ export default function HexbinUSMap({
 					/>
 				) : null}
 			</svg>
+
 		</>
 	)
 }
