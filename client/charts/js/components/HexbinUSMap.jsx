@@ -209,7 +209,6 @@ export default function HexbinUSMap({
 				ref={setSvgEl}
 				style={{ display: 'block' }}
 			>
-				<title id={`${id}-title`}>United States Hexbin Map showing incidents by state</title>
 				{description ? (<desc id={`${id}-desc`}>{description}</desc>) : null}
 
 				{/* Render hexagons for each state */}
