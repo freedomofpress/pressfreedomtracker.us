@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import * as d3 from 'd3'
+import PropTypes from 'prop-types'
 import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
@@ -104,24 +105,31 @@ export default function HexbinUSMap({
 		}
 	}
 
-	const updateTooltipPosition = (mouseEvent) => {
-		setTooltipPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY })
+	const updateTooltipPosition = (MouseEvent) => {
+		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
 
-	// Create a mapping from state names to hexbin coordinates
-	const stateToHexbin = {}
-	hexbinCoordinates.forEach(state => {
-		const stateName = state.state.replace(/\s*\([^)]*\)/, '')
-		stateToHexbin[stateName] = state
-		stateToHexbin[state.state] = state
-		stateToHexbin[state.acronym] = state
-	})
+	// Normalize state names for matching
+	const normalizeStateName = (name) => {
+		if (!name) return ''
+		return name.replace(/\s*\([^)]*\)/, '').toLowerCase().trim()
+	}
 
-	// Scale incident values to hexagon colors
-	const values = dataset.map((d) => d.numberOfIncidents)
-	const maxIncidents = d3.max(values) || 1
+	// Create data lookup map and calculate max incidents
+	const dataLookup = useMemo(() => {
+		const lookup = new Map()
+		dataset.forEach(d => {
+			const locality = normalizeStateName(aggregationLocality(d))
+			lookup.set(locality, d)
+		})
+		return lookup
+	}, [dataset, aggregationLocality])
+
+	const maxIncidents = useMemo(() =>
+		d3.max(dataset, d => d.numberOfIncidents) || 1
+	, [dataset])
+
 	const currentScheme = colorSchemes[colorScheme]
-
 	const colorScale = currentScheme.type === 'interpolate'
 		? d3.scaleSequential(currentScheme.scale).domain([0, maxIncidents])
 		: d3.scaleQuantize(currentScheme.scale).domain([0, maxIncidents])
@@ -129,6 +137,8 @@ export default function HexbinUSMap({
 	// Hexagon dimensions
 	const hexWidth = Math.sqrt(3)
 	const hexHeight = 2
+	const hexVerticalSpacing = 0.75 // vertical overlap for tessellation
+	const hexTopPadding = 0.25
 
 	// Calculate bounds
 	const minX = d3.min(hexbinCoordinates, d => d.x)
@@ -138,7 +148,7 @@ export default function HexbinUSMap({
 
 	// Grid dimensions
 	const gridWidth = (maxX - minX + 1) * hexWidth
-	const gridHeight = (maxY - minY + 1) * hexHeight * 0.75 + hexHeight * 0.25
+	const gridHeight = (maxY - minY + 1) * hexHeight * hexVerticalSpacing + hexHeight * hexTopPadding
 
 	const availableWidth = width - margins.left - margins.right - paddings.left - paddings.right
 	const availableHeight = height - paddings.bottom - paddings.top - paddings.map
@@ -149,21 +159,19 @@ export default function HexbinUSMap({
 	const offsetX = (availableWidth - gridWidth * scale) / 2 + margins.left + paddings.left
 	const offsetY = (availableHeight - gridHeight * scale) / 2 + margins.top + paddings.top
 
-	// Generate flat-top hexagon path
-	const generateHexPath = (radius) => {
+	// Generate pointy-top hexagon path
+	const hexPath = useMemo(() => {
 		const angles = []
 		for (let i = 0; i < 6; i++) {
-			// Flat-top: start at 30°
+			// Pointy-top: start at 30°
 			angles.push((Math.PI / 6) + (i * Math.PI / 3))
 		}
 		const points = angles.map(angle => [
-			radius * Math.cos(angle),
-			radius * Math.sin(angle)
+			scaledHexRadius * Math.cos(angle),
+			scaledHexRadius * Math.sin(angle)
 		])
 		return `M${points.map(p => p.join(',')).join('L')}Z`
-	}
-
-	const hexPath = generateHexPath(scaledHexRadius)
+	}, [scaledHexRadius])
 
 	if (!width) return null
 
@@ -177,29 +185,14 @@ export default function HexbinUSMap({
 							<div
 								style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}
 							>
-								{(() => {
-									const dataPoint = dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement)
-									const hexState = hexbinCoordinates.find(state => {
-										const stateName = state.state.replace(/\s*\([^)]*\)/, '')
-										return stateName === hoveredElement ||
-											   state.acronym === hoveredElement ||
-											   state.state === hoveredElement
-									})
-
-									const incidents = dataPoint ? (dataPoint.numberOfIncidents || 0) : 0
-									const fillColor = incidents > 0 ? colorScale(incidents) : '#f0f0f0'
-
-									return (
-										<>
-											<div style={{ borderLeft: `solid 3px ${fillColor}`, paddingLeft: 3 }}>
-												{hoveredElement}
-											</div>
-											<div>
-												{incidents}
-											</div>
-										</>
-									)
-								})()}
+								<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
+									{hoveredElement}
+								</div>
+								<div>
+									{dataset.filter((d) => `${aggregationLocality(d)}` === hoveredElement).length !== 0
+										? dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement).numberOfIncidents
+										: 0}
+								</div>
 							</div>
 						</div>
 					}
@@ -222,27 +215,18 @@ export default function HexbinUSMap({
 				{/* Render hexagons for each state */}
 				<g role="list" aria-label="US states with incident data">
 					{hexbinCoordinates.map((hexState) => {
-						// Find matching data for this state
-						const dataPoint = dataset.find(d => {
-							const locality = `${aggregationLocality(d)}`.toLowerCase()
-							const stateName = hexState.state.replace(/\s*\([^)]*\)/, '').toLowerCase()
-							const stateAcronym = hexState.acronym.toLowerCase()
-
-							// Exact matches only
-							return locality === stateName ||
-								   locality === stateAcronym ||
-								   locality === hexState.state.toLowerCase()
-						})
-
-						// Show all states, even if they have no data (0 incidents)
+						// Find matching data for this state using lookup map
+						const normalizedName = normalizeStateName(hexState.state)
+						const stateAcronym = hexState.acronym.toLowerCase()
+						const dataPoint = dataLookup.get(normalizedName) || dataLookup.get(stateAcronym)
 
 						// Calculate hex position using proper tessellation
 						const col = hexState.x - minX
 						const row = hexState.y - minY
 
-						// Flat-top hex tessellation: odd rows offset by half width
+						// Pointy-top hex tessellation: odd rows offset by half width
 						const hexX = offsetX + col * hexWidth * scale + (row % 2 === 1 ? (hexWidth * 0.5) * scale : 0)
-						const hexY = offsetY + row * hexHeight * 0.75 * scale
+						const hexY = offsetY + row * hexHeight * hexVerticalSpacing * scale
 
 						const incidents = dataPoint ? (dataPoint.numberOfIncidents || 0) : 0
 						const fillColor = incidents > 0 ? colorScale(incidents) : '#f0f0f0'
@@ -325,7 +309,7 @@ export default function HexbinUSMap({
 					})}
 				</g>
 
-				{/* Color scheme buttons */}
+				{/* TESTING ONLY: Color scheme buttons */}
 				{interactive && (
 					<g transform="translate(20, 20)">
 						{Object.entries(colorSchemes).map((entry, index) => {
@@ -336,18 +320,17 @@ export default function HexbinUSMap({
 							const buttonY = Math.floor(index / buttonsPerRow) * 22
 
 							return (
-								<g key={key}>
+								<g
+									key={key}
+									onClick={() => setColorScheme(key)}
+									style={{ cursor: 'pointer' }}
+								>
 									<rect
 										x={buttonX}
 										y={buttonY}
 										width={85}
 										height={18}
-										fill={isSelected ? '#E07A5F' : '#f0f0f0'}
-										stroke={isSelected ? '#333' : '#ccc'}
-										strokeWidth={1}
-										rx={2}
-										style={{ cursor: 'pointer' }}
-										onClick={() => setColorScheme(key)}
+										fill={isSelected ? '#000' : '#f0f0f0'}
 									/>
 									<text
 										x={buttonX + 42.5}
@@ -356,7 +339,6 @@ export default function HexbinUSMap({
 										fontSize="10"
 										fontFamily="var(--font-base)"
 										fill={isSelected ? 'white' : '#333'}
-										style={{ cursor: 'pointer', pointerEvents: 'none' }}
 									>
 										{scheme.name}
 									</text>
@@ -368,16 +350,16 @@ export default function HexbinUSMap({
 
 				{/* Color scale legend */}
 				{maxIncidents > 0 && (
-					<g transform={`translate(${width - 120}, ${height - 120})`}>
+					<g transform={`translate(${width - 120}, ${height - 120})`} role="img" aria-label="Color scale legend">
 						<text
 							x={0}
 							y={0}
 							fontSize="12"
 							fontFamily="var(--font-base)"
 							fill="#333"
-							className="sr-only"
+							className='sr-only'
 						>
-							Number of Incidents (Legend)
+							Legend: Number of incidents
 						</text>
 						<defs>
 							<linearGradient id={`${id}-gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
