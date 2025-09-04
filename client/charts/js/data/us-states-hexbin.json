@@ -1,0 +1,308 @@
+[
+  {
+    "state": "Alaska (AK)",
+    "acronym": "AK",
+    "x": 1,
+    "y": 0
+  },
+  {
+    "state": "Maine (ME)",
+    "acronym": "ME",
+    "x": 12,
+    "y": 0
+  },
+  {
+    "state": "Vermont (VT)",
+    "acronym": "VT",
+    "x": 10,
+    "y": 1
+  },
+  {
+    "state": "New Hampshire (NH)",
+    "acronym": "NH",
+    "x": 11,
+    "y": 1
+  },
+  {
+    "state": "Washington (WA)",
+    "acronym": "WA",
+    "x": 2,
+    "y": 2
+  },
+  {
+    "state": "Montana (MT)",
+    "acronym": "MT",
+    "x": 3,
+    "y": 2
+  },
+  {
+    "state": "North Dakota (ND)",
+    "acronym": "ND",
+    "x": 4,
+    "y": 2
+  },
+  {
+    "state": "Minnesota (MN)",
+    "acronym": "MN",
+    "x": 5,
+    "y": 2
+  },
+  {
+    "state": "Wisconsin (WI)",
+    "acronym": "WI",
+    "x": 6,
+    "y": 2
+  },
+  {
+    "state": "Michigan (MI)",
+    "acronym": "MI",
+    "x": 8,
+    "y": 2
+  },
+  {
+    "state": "New York (NY)",
+    "acronym": "NY",
+    "x": 10,
+    "y": 2
+  },
+  {
+    "state": "Massachusetts (MA)",
+    "acronym": "MA",
+    "x": 11,
+    "y": 2
+  },
+  {
+    "state": "Rhode Island (RI)",
+    "acronym": "RI",
+    "x": 12,
+    "y": 2
+  },
+  {
+    "state": "Idaho (ID)",
+    "acronym": "ID",
+    "x": 2,
+    "y": 3
+  },
+  {
+    "state": "Wyoming (WY)",
+    "acronym": "WY",
+    "x": 3,
+    "y": 3
+  },
+  {
+    "state": "South Dakota (SD)",
+    "acronym": "SD",
+    "x": 4,
+    "y": 3
+  },
+  {
+    "state": "Iowa (IA)",
+    "acronym": "IA",
+    "x": 5,
+    "y": 3
+  },
+  {
+    "state": "Illinois (IL)",
+    "acronym": "IL",
+    "x": 6,
+    "y": 3
+  },
+  {
+    "state": "Indiana (IN)",
+    "acronym": "IN",
+    "x": 7,
+    "y": 3
+  },
+  {
+    "state": "Ohio (OH)",
+    "acronym": "OH",
+    "x": 8,
+    "y": 3
+  },
+  {
+    "state": "Pennsylvania (PA)",
+    "acronym": "PA",
+    "x": 9,
+    "y": 3
+  },
+  {
+    "state": "New Jersey (NJ)",
+    "acronym": "NJ",
+    "x": 10,
+    "y": 3
+  },
+  {
+    "state": "Connecticut (CT)",
+    "acronym": "CT",
+    "x": 11,
+    "y": 3
+  },
+  {
+    "state": "Oregon (OR)",
+    "acronym": "OR",
+    "x": 2,
+    "y": 4
+  },
+  {
+    "state": "Nevada (NV)",
+    "acronym": "NV",
+    "x": 3,
+    "y": 4
+  },
+  {
+    "state": "Colorado (CO)",
+    "acronym": "CO",
+    "x": 4,
+    "y": 4
+  },
+  {
+    "state": "Nebraska (NE)",
+    "acronym": "NE",
+    "x": 5,
+    "y": 4
+  },
+  {
+    "state": "Missouri (MO)",
+    "acronym": "MO",
+    "x": 6,
+    "y": 4
+  },
+  {
+    "state": "Kentucky (KY)",
+    "acronym": "KY",
+    "x": 7,
+    "y": 4
+  },
+  {
+    "state": "West Virginia (WV)",
+    "acronym": "WV",
+    "x": 8,
+    "y": 4
+  },
+  {
+    "state": "Virginia (VA)",
+    "acronym": "VA",
+    "x": 9,
+    "y": 4
+  },
+  {
+    "state": "Maryland (MD)",
+    "acronym": "MD",
+    "x": 10,
+    "y": 4
+  },
+  {
+    "state": "Delaware (DE)",
+    "acronym": "DE",
+    "x": 11,
+    "y": 4
+  },
+  {
+    "state": "California (CA)",
+    "acronym": "CA",
+    "x": 2,
+    "y": 5
+  },
+  {
+    "state": "Utah (UT)",
+    "acronym": "UT",
+    "x": 3,
+    "y": 5
+  },
+  {
+    "state": "New Mexico (NM)",
+    "acronym": "NM",
+    "x": 4,
+    "y": 5
+  },
+  {
+    "state": "Kansas (KS)",
+    "acronym": "KS",
+    "x": 5,
+    "y": 5
+  },
+  {
+    "state": "Arkansas (AR)",
+    "acronym": "AR",
+    "x": 6,
+    "y": 5
+  },
+  {
+    "state": "Tennessee (TN)",
+    "acronym": "TN",
+    "x": 7,
+    "y": 5
+  },
+  {
+    "state": "North Carolina (NC)",
+    "acronym": "NC",
+    "x": 8,
+    "y": 5
+  },
+  {
+    "state": "South Carolina (SC)",
+    "acronym": "SC",
+    "x": 9,
+    "y": 5
+  },
+  {
+    "state": "District of Columbia (DC)",
+    "acronym": "DC",
+    "x": 10,
+    "y": 5
+  },
+  {
+    "state": "Arizona (AZ)",
+    "acronym": "AZ",
+    "x": 4,
+    "y": 6
+  },
+  {
+    "state": "Oklahoma (OK)",
+    "acronym": "OK",
+    "x": 5,
+    "y": 6
+  },
+  {
+    "state": "Louisiana (LA)",
+    "acronym": "LA",
+    "x": 6,
+    "y": 6
+  },
+  {
+    "state": "Mississippi (MS)",
+    "acronym": "MS",
+    "x": 7,
+    "y": 6
+  },
+  {
+    "state": "Alabama (AL)",
+    "acronym": "AL",
+    "x": 8,
+    "y": 6
+  },
+  {
+    "state": "Georgia (GA)",
+    "acronym": "GA",
+    "x": 9,
+    "y": 6
+  },
+  {
+    "state": "Hawaii (HI)",
+    "acronym": "HI",
+    "x": 0,
+    "y": 7
+  },
+  {
+    "state": "Texas (TX)",
+    "acronym": "TX",
+    "x": 5,
+    "y": 7
+  },
+  {
+    "state": "Florida (FL)",
+    "acronym": "FL",
+    "x": 8,
+    "y": 7
+  }
+]
