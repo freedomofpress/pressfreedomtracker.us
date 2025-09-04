@@ -52,8 +52,57 @@ export default function HexbinUSMap({
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+	const [colorScheme, setColorScheme] = useState('interpolateReds')
 
 	const paddings = { ...defaultPaddings, ...overridePaddings }
+
+	const colorSchemes = {
+		interpolateReds: {
+			name: 'Reds',
+			scale: d3.interpolateReds,
+			type: 'interpolate'
+		},
+		interpolateYlOrRd: {
+			name: 'YlOrRd',
+			scale: d3.interpolateYlOrRd,
+			type: 'interpolate'
+		},
+		schemeOrRd: {
+			name: 'OrRd (9)',
+			scale: d3.schemeOrRd[9],
+			type: 'scheme'
+		},
+		schemeYlOrRd: {
+			name: 'YlOrRd (9)',
+			scale: d3.schemeYlOrRd[9],
+			type: 'scheme'
+		},
+		schemeYlOrBr: {
+			name: 'YlOrBr (9)',
+			scale: d3.schemeYlOrBr[9],
+			type: 'scheme'
+		},
+		interpolateRdPu: {
+			name: 'RdPu',
+			scale: d3.interpolateRdPu,
+			type: 'interpolate'
+		},
+		interpolatePurples: {
+			name: 'Purples',
+			scale: d3.interpolatePurples,
+			type: 'interpolate'
+		},
+		interpolateBuPu: {
+			name: 'BuPu',
+			scale: d3.interpolateBuPu,
+			type: 'interpolate'
+		},
+		interpolatePuRd: {
+			name: 'PuRd',
+			scale: d3.interpolatePuRd,
+			type: 'interpolate'
+		}
+	}
 
 	const updateTooltipPosition = (mouseEvent) => {
 		setTooltipPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY })
@@ -71,12 +120,13 @@ export default function HexbinUSMap({
 	// Scale incident values to hexagon colors
 	const values = dataset.map((d) => d.numberOfIncidents)
 	const maxIncidents = d3.max(values) || 1
-	const colorScale = d3.scaleSequential(d3.interpolateReds).domain([0, maxIncidents])
+	const currentScheme = colorSchemes[colorScheme]
+
+	const colorScale = currentScheme.type === 'interpolate'
+		? d3.scaleSequential(currentScheme.scale).domain([0, maxIncidents])
+		: d3.scaleQuantize(currentScheme.scale).domain([0, maxIncidents])
 
 	// Hexagon dimensions
-	const hexRadius = hexagonSize
-	const hexWidth = hexRadius * Math.sqrt(3)
-	const hexHeight = hexRadius * 2
 	const hexWidth = Math.sqrt(3)
 	const hexHeight = 2
 
@@ -277,6 +327,46 @@ export default function HexbinUSMap({
 				</g>
 
 				{/* Color scheme buttons */}
+				{interactive && (
+					<g transform="translate(20, 20)">
+						{Object.entries(colorSchemes).map((entry, index) => {
+							const [key, scheme] = entry
+							const isSelected = colorScheme === key
+							const buttonsPerRow = 3
+							const buttonX = (index % buttonsPerRow) * 90
+							const buttonY = Math.floor(index / buttonsPerRow) * 22
+
+							return (
+								<g key={key}>
+									<rect
+										x={buttonX}
+										y={buttonY}
+										width={85}
+										height={18}
+										fill={isSelected ? '#E07A5F' : '#f0f0f0'}
+										stroke={isSelected ? '#333' : '#ccc'}
+										strokeWidth={1}
+										rx={2}
+										style={{ cursor: 'pointer' }}
+										onClick={() => setColorScheme(key)}
+									/>
+									<text
+										x={buttonX + 42.5}
+										y={buttonY + 12}
+										textAnchor="middle"
+										fontSize="10"
+										fontFamily="var(--font-base)"
+										fill={isSelected ? 'white' : '#333'}
+										style={{ cursor: 'pointer', pointerEvents: 'none' }}
+									>
+										{scheme.name}
+									</text>
+								</g>
+							)
+						})}
+					</g>
+				)}
+
 				{/* Color scale legend */}
 				{maxIncidents > 0 && (
 					<g transform={`translate(${width - 150}, 20)`}>
@@ -291,7 +381,18 @@ export default function HexbinUSMap({
 						</text>
 						<defs>
 							<linearGradient id={`${id}-gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
-								<stop offset="100%" style={{ stopColor: colorScale(maxIncidents), stopOpacity: 1 }} />
+								<stop offset="0%" style={{
+									stopColor: currentScheme.type === 'interpolate'
+										? currentScheme.scale(0)
+										: currentScheme.scale[0],
+									stopOpacity: 1
+								}} />
+								<stop offset="100%" style={{
+									stopColor: currentScheme.type === 'interpolate'
+										? currentScheme.scale(1)
+										: currentScheme.scale[currentScheme.scale.length - 1],
+									stopOpacity: 1
+								}} />
 							</linearGradient>
 						</defs>
 						<rect
