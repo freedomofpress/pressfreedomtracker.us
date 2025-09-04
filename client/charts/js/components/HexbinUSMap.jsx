@@ -5,6 +5,8 @@ import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
 import hexbinCoordinates from '../data/us-states-hexbin.json'
 
+const SCALE_FACTOR = 0.95
+
 const margins = {
 	top: 20,
 	left: 0,
@@ -14,7 +16,7 @@ const margins = {
 
 const defaultPaddings = {
 	left: 0,
-	right: 40,
+	right: 0,
 	bottom: 40,
 	top: 0,
 	text: 5,
@@ -31,7 +33,6 @@ const hexBorder = {
 	legend: 2,
 }
 
-const hexagonSize = 1
 
 export default function HexbinUSMap({
 	data: dataset,
@@ -76,6 +77,8 @@ export default function HexbinUSMap({
 	const hexRadius = hexagonSize
 	const hexWidth = hexRadius * Math.sqrt(3)
 	const hexHeight = hexRadius * 2
+	const hexWidth = Math.sqrt(3)
+	const hexHeight = 2
 
 	// Calculate bounds
 	const minX = d3.min(hexbinCoordinates, d => d.x)
@@ -90,8 +93,8 @@ export default function HexbinUSMap({
 	const availableWidth = width - margins.left - margins.right - paddings.left - paddings.right
 	const availableHeight = height - paddings.bottom - paddings.top - paddings.map
 
-	const scale = Math.min(availableWidth / gridWidth, availableHeight / gridHeight) * 0.90
-	const scaledHexRadius = hexRadius * scale
+	const scale = Math.min(availableWidth / gridWidth, availableHeight / gridHeight) * SCALE_FACTOR
+	const scaledHexRadius = scale
 
 	const offsetX = (availableWidth - gridWidth * scale) / 2 + margins.left + paddings.left
 	const offsetY = (availableHeight - gridHeight * scale) / 2 + margins.top + paddings.top
@@ -112,6 +115,7 @@ export default function HexbinUSMap({
 
 	const hexPath = generateHexPath(scaledHexRadius)
 
+
 	if (!width) return null
 
 	return (
@@ -124,27 +128,29 @@ export default function HexbinUSMap({
 							<div
 								style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}
 							>
-								<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
-									{hoveredElement}
-								</div>
-								<div>
-									{(() => {
-										const dataPoint = dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement)
-										const hexState = hexbinCoordinates.find(state => {
-											const stateName = state.state.replace(/\s*\([^)]*\)/, '')
-											return stateName === hoveredElement || 
-												   state.acronym === hoveredElement ||
-												   state.state === hoveredElement
-										})
-										
-										if (dataPoint) {
-											return dataPoint.numberOfIncidents || 0
-										} else if (hexState) {
-											return 0
-										}
-										return ''
-									})()}
-								</div>
+								{(() => {
+									const dataPoint = dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement)
+									const hexState = hexbinCoordinates.find(state => {
+										const stateName = state.state.replace(/\s*\([^)]*\)/, '')
+										return stateName === hoveredElement ||
+											   state.acronym === hoveredElement ||
+											   state.state === hoveredElement
+									})
+
+									const incidents = dataPoint ? (dataPoint.numberOfIncidents || 0) : 0
+									const fillColor = incidents > 0 ? colorScale(incidents) : '#f0f0f0'
+
+									return (
+										<>
+											<div style={{ borderLeft: `solid 3px ${fillColor}`, paddingLeft: 3 }}>
+												{hoveredElement}
+											</div>
+											<div>
+												{incidents}
+											</div>
+										</>
+									)
+								})()}
 							</div>
 						</div>
 					}
@@ -173,14 +179,10 @@ export default function HexbinUSMap({
 							const stateName = hexState.state.replace(/\s*\([^)]*\)/, '').toLowerCase()
 							const stateAcronym = hexState.acronym.toLowerCase()
 
-							// Exact matches first
+							// Exact matches only
 							return locality === stateName ||
 								   locality === stateAcronym ||
-								   locality === hexState.state.toLowerCase() ||
-								   // More careful substring matching
-								   (locality.includes(stateName) && stateName.length > 3) ||
-								   // Only match acronyms if they appear as whole words
-								   new RegExp(`\\b${stateAcronym}\\b`).test(locality)
+								   locality === hexState.state.toLowerCase()
 						})
 
 						// Show all states, even if they have no data (0 incidents)
@@ -195,9 +197,10 @@ export default function HexbinUSMap({
 
 						const incidents = dataPoint ? (dataPoint.numberOfIncidents || 0) : 0
 						const fillColor = incidents > 0 ? colorScale(incidents) : '#f0f0f0'
-						const stateName = dataPoint ? `${aggregationLocality(dataPoint)}` : hexState.state.replace(/\s*\([^)]*\)/, '')
-						const strokeColor = hoveredElement === stateName ? '#000' : '#333'
-						const strokeWidth = hoveredElement === stateName ? hexBorder.hover : hexBorder.normal
+						const stateName = dataPoint ? `${aggregationLocality(dataPoint)}` : hexState.state
+						const isHovered = hoveredElement === stateName
+						const strokeColor = '#000'
+						const strokeWidth = isHovered ? hexBorder.hover : hexBorder.normal
 
 						return (
 							<g key={hexState.acronym}>
@@ -212,7 +215,9 @@ export default function HexbinUSMap({
 									wrap={interactive && searchPageURL && dataPoint}
 								>
 									<g
-										style={{ cursor: (interactive && searchPageURL && dataPoint) ? 'pointer' : 'inherit' }}
+										style={{
+											cursor: (interactive && searchPageURL && dataPoint) ? 'pointer' : 'inherit',
+										}}
 										onMouseMove={updateTooltipPosition}
 										onMouseEnter={() => {
 											setHoveredElement(stateName)
@@ -271,6 +276,7 @@ export default function HexbinUSMap({
 					})}
 				</g>
 
+				{/* Color scheme buttons */}
 				{/* Color scale legend */}
 				{maxIncidents > 0 && (
 					<g transform={`translate(${width - 150}, 20)`}>
@@ -285,7 +291,6 @@ export default function HexbinUSMap({
 						</text>
 						<defs>
 							<linearGradient id={`${id}-gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
-								<stop offset="0%" style={{ stopColor: colorScale(0), stopOpacity: 1 }} />
 								<stop offset="100%" style={{ stopColor: colorScale(maxIncidents), stopOpacity: 1 }} />
 							</linearGradient>
 						</defs>
