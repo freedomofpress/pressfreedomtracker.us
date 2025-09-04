@@ -165,7 +165,6 @@ export default function HexbinUSMap({
 
 	const hexPath = generateHexPath(scaledHexRadius)
 
-
 	if (!width) return null
 
 	return (
@@ -369,28 +368,25 @@ export default function HexbinUSMap({
 
 				{/* Color scale legend */}
 				{maxIncidents > 0 && (
-					<g transform={`translate(${width - 150}, 20)`}>
+					<g transform={`translate(${width - 120}, ${height - 120})`}>
 						<text
 							x={0}
 							y={0}
 							fontSize="12"
 							fontFamily="var(--font-base)"
 							fill="#333"
+							className="sr-only"
 						>
-							Incidents
+							Number of Incidents (Legend)
 						</text>
 						<defs>
 							<linearGradient id={`${id}-gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
 								<stop offset="0%" style={{
-									stopColor: currentScheme.type === 'interpolate'
-										? currentScheme.scale(0)
-										: currentScheme.scale[0],
+									stopColor: colorScale(0),
 									stopOpacity: 1
 								}} />
 								<stop offset="100%" style={{
-									stopColor: currentScheme.type === 'interpolate'
-										? currentScheme.scale(1)
-										: currentScheme.scale[currentScheme.scale.length - 1],
+									stopColor: colorScale(maxIncidents),
 									stopOpacity: 1
 								}} />
 							</linearGradient>
