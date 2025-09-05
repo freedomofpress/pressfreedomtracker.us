@@ -29,7 +29,7 @@ const defaultPaddings = {
 
 const hexBorder = {
 	normal: 2.5,
-	hover: 5,
+	hover: 4,
 	frame: 5,
 	legend: 2,
 }
@@ -54,60 +54,223 @@ export default function HexbinUSMap({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 	const [colorScheme, setColorScheme] = useState('interpolateReds')
+	const [discreteSize, setDiscreteSize] = useState(9)
+	const [showDebugControls, setShowDebugControls] = useState(true)
+	const [showAllSchemes, setShowAllSchemes] = useState(false)
 
 	const paddings = { ...defaultPaddings, ...overridePaddings }
 
 	const colorSchemes = {
-		interpolateReds: {
-			name: 'Reds',
-			scale: d3.interpolateReds,
-			type: 'interpolate'
+		// Single-hue schemes
+		interpolateBlues: {
+			name: 'Blues',
+			scale: d3.interpolateBlues,
+			type: 'interpolate',
+			isDefault: true
 		},
-		interpolateYlOrRd: {
-			name: 'YlOrRd',
-			scale: d3.interpolateYlOrRd,
-			type: 'interpolate'
+		interpolateGreens: {
+			name: 'Greens',
+			scale: d3.interpolateGreens,
+			type: 'interpolate',
+			isDefault: true
 		},
-		schemeOrRd: {
-			name: 'OrRd (9)',
-			scale: d3.schemeOrRd[9],
-			type: 'scheme'
+		interpolateGreys: {
+			name: 'Greys',
+			scale: d3.interpolateGreys,
+			type: 'interpolate',
+			isDefault: true
 		},
-		schemeYlOrRd: {
-			name: 'YlOrRd (9)',
-			scale: d3.schemeYlOrRd[9],
-			type: 'scheme'
-		},
-		schemeYlOrBr: {
-			name: 'YlOrBr (9)',
-			scale: d3.schemeYlOrBr[9],
-			type: 'scheme'
-		},
-		interpolateRdPu: {
-			name: 'RdPu',
-			scale: d3.interpolateRdPu,
-			type: 'interpolate'
+		interpolateOranges: {
+			name: 'Oranges',
+			scale: d3.interpolateOranges,
+			type: 'interpolate',
+			isDefault: true
 		},
 		interpolatePurples: {
 			name: 'Purples',
 			scale: d3.interpolatePurples,
-			type: 'interpolate'
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateReds: {
+			name: 'Reds',
+			scale: d3.interpolateReds,
+			type: 'interpolate',
+			isDefault: true
+		},
+		// Sequential multi-hue schemes
+		interpolateBuGn: {
+			name: 'BuGn',
+			scale: d3.interpolateBuGn,
+			type: 'interpolate',
+			isDefault: true
 		},
 		interpolateBuPu: {
 			name: 'BuPu',
 			scale: d3.interpolateBuPu,
-			type: 'interpolate'
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateGnBu: {
+			name: 'GnBu',
+			scale: d3.interpolateGnBu,
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateOrRd: {
+			name: 'OrRd',
+			scale: d3.interpolateOrRd,
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolatePuBuGn: {
+			name: 'PuBuGn',
+			scale: d3.interpolatePuBuGn,
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolatePuBu: {
+			name: 'PuBu',
+			scale: d3.interpolatePuBu,
+			type: 'interpolate',
+			isDefault: true
 		},
 		interpolatePuRd: {
 			name: 'PuRd',
 			scale: d3.interpolatePuRd,
-			type: 'interpolate'
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateRdPu: {
+			name: 'RdPu',
+			scale: d3.interpolateRdPu,
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateYlGnBu: {
+			name: 'YlGnBu',
+			scale: d3.interpolateYlGnBu,
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateYlGn: {
+			name: 'YlGn',
+			scale: d3.interpolateYlGn,
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateYlOrBr: {
+			name: 'YlOrBr',
+			scale: d3.interpolateYlOrBr,
+			type: 'interpolate',
+			isDefault: true
+		},
+		interpolateYlOrRd: {
+			name: 'YlOrRd',
+			scale: d3.interpolateYlOrRd,
+			type: 'interpolate',
+			isDefault: true
+		},
+		// Discrete schemes
+		schemeBlues: {
+			name: 'Blues (d)',
+			scale: d3.schemeBlues,
+			type: 'discrete'
+		},
+		schemeGreens: {
+			name: 'Greens (d)',
+			scale: d3.schemeGreens,
+			type: 'discrete'
+		},
+		schemeGreys: {
+			name: 'Greys (d)',
+			scale: d3.schemeGreys,
+			type: 'discrete'
+		},
+		schemeOranges: {
+			name: 'Oranges (d)',
+			scale: d3.schemeOranges,
+			type: 'discrete'
+		},
+		schemePurples: {
+			name: 'Purples (d)',
+			scale: d3.schemePurples,
+			type: 'discrete'
+		},
+		schemeReds: {
+			name: 'Reds (d)',
+			scale: d3.schemeReds,
+			type: 'discrete'
+		},
+		schemeBuGn: {
+			name: 'BuGn (d)',
+			scale: d3.schemeBuGn,
+			type: 'discrete'
+		},
+		schemeBuPu: {
+			name: 'BuPu (d)',
+			scale: d3.schemeBuPu,
+			type: 'discrete'
+		},
+		schemeGnBu: {
+			name: 'GnBu (d)',
+			scale: d3.schemeGnBu,
+			type: 'discrete'
+		},
+		schemeOrRd: {
+			name: 'OrRd (d)',
+			scale: d3.schemeOrRd,
+			type: 'discrete'
+		},
+		schemePuBuGn: {
+			name: 'PuBuGn (d)',
+			scale: d3.schemePuBuGn,
+			type: 'discrete'
+		},
+		schemePuBu: {
+			name: 'PuBu (d)',
+			scale: d3.schemePuBu,
+			type: 'discrete'
+		},
+		schemePuRd: {
+			name: 'PuRd (d)',
+			scale: d3.schemePuRd,
+			type: 'discrete'
+		},
+		schemeRdPu: {
+			name: 'RdPu (d)',
+			scale: d3.schemeRdPu,
+			type: 'discrete'
+		},
+		schemeYlGnBu: {
+			name: 'YlGnBu (d)',
+			scale: d3.schemeYlGnBu,
+			type: 'discrete'
+		},
+		schemeYlGn: {
+			name: 'YlGn (d)',
+			scale: d3.schemeYlGn,
+			type: 'discrete'
+		},
+		schemeYlOrBr: {
+			name: 'YlOrBr (d)',
+			scale: d3.schemeYlOrBr,
+			type: 'discrete'
+		},
+		schemeYlOrRd: {
+			name: 'YlOrRd (d)',
+			scale: d3.schemeYlOrRd,
+			type: 'discrete'
 		}
 	}
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
+
+	const allSchemes = Object.entries(colorSchemes).filter(([key, scheme]) =>
+		showAllSchemes || (scheme.isDefault && scheme.type !== 'discrete')
+	)
 
 	// Normalize state names for matching
 	const normalizeStateName = (name) => {
@@ -132,6 +295,8 @@ export default function HexbinUSMap({
 	const currentScheme = colorSchemes[colorScheme]
 	const colorScale = currentScheme.type === 'interpolate'
 		? d3.scaleSequential(currentScheme.scale).domain([0, maxIncidents])
+		: currentScheme.type === 'discrete'
+		? d3.scaleQuantize(currentScheme.scale[discreteSize]).domain([0, maxIncidents])
 		: d3.scaleQuantize(currentScheme.scale).domain([0, maxIncidents])
 
 	// Hexagon dimensions
@@ -228,11 +393,12 @@ export default function HexbinUSMap({
 						const hexY = offsetY + row * hexHeight * hexVerticalSpacing * scale
 
 						const incidents = dataPoint ? (dataPoint.numberOfIncidents || 0) : 0
-						const fillColor = incidents > 0 ? colorScale(incidents) : '#f0f0f0'
+						const fillColor = incidents > 0 ? colorScale(incidents) : 'white'
 						const stateName = dataPoint ? `${aggregationLocality(dataPoint)}` : hexState.state
 						const isHovered = hoveredElement === stateName
-						const strokeColor = '#000'
+						const strokeColor = incidents > 0 || isHovered ? '#000' : '#ccc'
 						const strokeWidth = isHovered ? hexBorder.hover : hexBorder.normal
+						const textColor = incidents > 0 ? (incidents > maxIncidents * 0.6 ? 'white' : 'black') : '#767676'
 
 						return (
 							<g key={hexState.acronym}>
@@ -242,6 +408,8 @@ export default function HexbinUSMap({
 											href={searchPageURL && dataPoint && searchPageURL(dataPoint.usCode)}
 											role="link"
 											aria-label={`${stateName}: ${incidents} incidents`}
+											style={{
+												mixBlendMode: incidents === 0 ? 'darken' : 'normal'}}
 										/>
 									}
 									wrap={interactive && searchPageURL && dataPoint}
@@ -257,20 +425,6 @@ export default function HexbinUSMap({
 										onMouseLeave={() => {
 											setHoveredElement(null)
 										}}
-										onFocus={() => {
-											setHoveredElement(stateName)
-										}}
-										onBlur={() => {
-											setHoveredElement(null)
-										}}
-										onKeyDown={(e) => {
-											if (e.key === 'Enter' || e.key === ' ') {
-												e.preventDefault()
-												if (interactive && searchPageURL && dataPoint) {
-													window.location.href = searchPageURL(dataPoint.usCode)
-												}
-											}
-										}}
 									>
 										<path
 											d={hexPath}
@@ -280,7 +434,6 @@ export default function HexbinUSMap({
 											strokeWidth={strokeWidth}
 											role="listitem"
 											aria-label={`${stateName}: ${incidents} ${incidents === 1 ? 'incident' : 'incidents'}`}
-											tabIndex={interactive ? "0" : undefined}
 										/>
 										<text
 											x={hexX}
@@ -290,13 +443,13 @@ export default function HexbinUSMap({
 											fontSize={scaledHexRadius * 0.55}
 											fontFamily="var(--font-base)"
 											fontWeight="700"
-											fill={incidents > maxIncidents * 0.6 ? 'white' : 'black'}
+											fill={textColor}
 											pointerEvents="none"
 											aria-hidden="true"
 											style={{
 												WebkitFontSmoothing: 'antialiased',
 												MozOsxFontSmoothing: 'grayscale',
-												textRendering: 'optimizeLegibility'
+												textRendering: 'optimizeLegibility',
 											}}
 										>
 											{hexState.acronym}
@@ -311,12 +464,71 @@ export default function HexbinUSMap({
 				{/* TESTING ONLY: Color scheme buttons */}
 				{interactive && (
 					<g transform="translate(20, 20)">
-						{Object.entries(colorSchemes).map((entry, index) => {
+						{/* toggle hide/show */}
+						<g
+							onClick={() => setShowDebugControls(!showDebugControls)}
+							style={{ cursor: 'pointer' }}
+						>
+							<rect
+								x={0}
+								y={0}
+								width={80}
+								height={16}
+								fill="#333"
+							/>
+							<text
+								x={40}
+								y={10}
+								textAnchor="middle"
+								fontSize="9"
+								fontFamily="var(--font-base)"
+								fill="white"
+							>
+								{showDebugControls ? 'Hide Debug' : 'Show Debug'}
+							</text>
+						</g>
+
+						{/* toggle default/all color schemes */}
+						{showDebugControls && (
+							<g
+								onClick={() => setShowAllSchemes(!showAllSchemes)}
+								style={{ cursor: 'pointer' }}
+							>
+								<rect
+									x={85}
+									y={0}
+									width={75}
+									height={16}
+									fill="#666"
+								/>
+								<text
+									x={122.5}
+									y={10}
+									textAnchor="middle"
+									fontSize="9"
+									fontFamily="var(--font-base)"
+									fill="white"
+								>
+									{showAllSchemes ? 'Hide All' : 'Show All'}
+								</text>
+							</g>
+						)}
+					</g>
+				)}
+
+				{/* color schemes */}
+				{interactive && showDebugControls && (
+					<g transform="translate(20, 45)">
+						{allSchemes.map((entry, index) => {
 							const [key, scheme] = entry
 							const isSelected = colorScheme === key
-							const buttonsPerRow = 3
-							const buttonX = (index % buttonsPerRow) * 90
-							const buttonY = Math.floor(index / buttonsPerRow) * 22
+							const buttonsPerRow = 6
+							const buttonWidth = 50
+							const buttonHeight = 16
+							const buttonSpacing = 52
+							const rowSpacing = 18
+							const buttonX = (index % buttonsPerRow) * buttonSpacing
+							const buttonY = Math.floor(index / buttonsPerRow) * rowSpacing
 
 							return (
 								<g
@@ -327,15 +539,15 @@ export default function HexbinUSMap({
 									<rect
 										x={buttonX}
 										y={buttonY}
-										width={85}
-										height={18}
+										width={buttonWidth}
+										height={buttonHeight}
 										fill={isSelected ? '#000' : '#f0f0f0'}
 									/>
 									<text
-										x={buttonX + 42.5}
-										y={buttonY + 12}
+										x={buttonX + buttonWidth / 2}
+										y={buttonY + buttonHeight / 2 + 3}
 										textAnchor="middle"
-										fontSize="10"
+										fontSize="9"
 										fontFamily="var(--font-base)"
 										fill={isSelected ? 'white' : '#333'}
 									>
@@ -344,10 +556,52 @@ export default function HexbinUSMap({
 								</g>
 							)
 						})}
+
+						{/* size control for discrete themes */}
+						{showAllSchemes && (
+							<g transform="translate(330, 0)">
+							{[3, 4, 5, 6, 7, 8, 9].map((size, index) => {
+								const isSelected = discreteSize === size
+								const isDiscreteScheme = currentScheme.type === 'discrete'
+								const buttonX = 0
+								const buttonY = index * 18
+
+								return (
+									<g
+										key={size}
+										onClick={() => setDiscreteSize(size)}
+										style={{
+											cursor: 'pointer',
+											opacity: isDiscreteScheme ? 1 : 0.3
+										}}
+									>
+										<rect
+											x={buttonX}
+											y={buttonY}
+											width={25}
+											height={16}
+											fill={isSelected && isDiscreteScheme ? '#000' : '#f0f0f0'}
+											stroke="#999"
+										/>
+										<text
+											x={buttonX + 12.5}
+											y={buttonY + 10}
+											textAnchor="middle"
+											fontSize="9"
+											fontFamily="var(--font-base)"
+											fill={isSelected && isDiscreteScheme ? 'white' : '#333'}
+										>
+											{size}
+										</text>
+									</g>
+								)
+							})}
+						</g>
+						)}
 					</g>
 				)}
 
-				{/* Color scale legend */}
+				{/* legend */}
 				{maxIncidents > 0 && (
 					<g transform={`translate(${width - 120}, ${height - 120})`} role="img" aria-label="Color scale legend">
 						<text
