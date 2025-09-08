@@ -51,3 +51,4 @@ test-results
 
 # local settings
 tracker/settings/local.py
+.DS_Store
