@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react'
 import * as d3 from 'd3'
-import PropTypes from 'prop-types'
 import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
@@ -230,17 +229,15 @@ export default function HexbinUSMap({
 	const currentScheme = colorSchemes[colorScheme]
 	let colorScale
 	switch (scaleType) {
-		case 'log':
-			colorScale = d3.scaleSequentialLog(currentScheme.scale).domain([1, Math.max(maxIncidents, 2)])
+
+		case 'pow50':
+			colorScale = d3.scaleSequentialPow(currentScheme.scale).exponent(0.50).domain([0, maxIncidents])
 			break
-		case 'pow':
+		case 'pow75':
 			colorScale = d3.scaleSequentialPow(currentScheme.scale).exponent(0.75).domain([0, maxIncidents])
 			break
-		case 'symlog':
-			colorScale = d3.scaleSequentialSymlog(currentScheme.scale).domain([0, maxIncidents])
-			break
-		case 'sqrt':
-			colorScale = d3.scaleSequentialSqrt(currentScheme.scale).domain([0, maxIncidents])
+		case 'pow125':
+			colorScale = d3.scaleSequentialPow(currentScheme.scale).exponent(1.25).domain([0, maxIncidents])
 			break
 		default: // 'seq'
 			colorScale = d3.scaleSequential(currentScheme.scale).domain([0, maxIncidents])
@@ -440,10 +437,9 @@ export default function HexbinUSMap({
 							<g transform="translate(85, 0)">
 							{[
 								{ key: 'seq', name: 'seq' },
-								{ key: 'log', name: 'log' },
-								{ key: 'pow', name: 'pow' },
-								{ key: 'symlog', name: 'symlog' },
-								{ key: 'sqrt', name: 'sqrt' }
+								{ key: 'pow50', name: 'pow (.50)' },
+								{ key: 'pow75', name: 'pow (.75)' },
+								{ key: 'pow125', name: 'pow (1.25)' },
 							].map((scale, index) => {
 								const isSelected = scaleType === scale.key
 								const buttonX = index * 42
