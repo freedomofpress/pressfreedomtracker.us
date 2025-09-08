@@ -54,9 +54,8 @@ export default function HexbinUSMap({
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
 	const [colorScheme, setColorScheme] = useState('interpolateReds')
-	const [discreteSize, setDiscreteSize] = useState(9)
 	const [showDebugControls, setShowDebugControls] = useState(true)
-	const [showAllSchemes, setShowAllSchemes] = useState(false)
+	const [scaleType, setScaleType] = useState('seq')
 
 	const paddings = { ...defaultPaddings, ...overridePaddings }
 
@@ -127,7 +126,6 @@ export default function HexbinUSMap({
 			name: 'PuBuGn',
 			scale: d3.interpolatePuBuGn,
 			type: 'interpolate',
-			isDefault: true
 		},
 		interpolatePuBu: {
 			name: 'PuBu',
@@ -171,96 +169,33 @@ export default function HexbinUSMap({
 			type: 'interpolate',
 			isDefault: true
 		},
-		// Discrete schemes
-		schemeBlues: {
-			name: 'Blues (d)',
-			scale: d3.schemeBlues,
-			type: 'discrete'
+		customWhiteYellowOrangeRed: {
+			name: 'W-Y-O-R',
+			scale: (t) => {
+				if (t < 0.33) {
+					return d3.interpolateRgb('#ffffff', '#ffff00')(t * 3)
+				} else if (t < 0.66) {
+					return d3.interpolateRgb('#ffff00', '#ff8c00')((t - 0.33) * 3)
+				} else {
+					return d3.interpolateRgb('#ff8c00', '#ff0000')((t - 0.66) * 3)
+				}
+			},
+			type: 'interpolate',
+			isDefault: true
 		},
-		schemeGreens: {
-			name: 'Greens (d)',
-			scale: d3.schemeGreens,
-			type: 'discrete'
-		},
-		schemeGreys: {
-			name: 'Greys (d)',
-			scale: d3.schemeGreys,
-			type: 'discrete'
-		},
-		schemeOranges: {
-			name: 'Oranges (d)',
-			scale: d3.schemeOranges,
-			type: 'discrete'
-		},
-		schemePurples: {
-			name: 'Purples (d)',
-			scale: d3.schemePurples,
-			type: 'discrete'
-		},
-		schemeReds: {
-			name: 'Reds (d)',
-			scale: d3.schemeReds,
-			type: 'discrete'
-		},
-		schemeBuGn: {
-			name: 'BuGn (d)',
-			scale: d3.schemeBuGn,
-			type: 'discrete'
-		},
-		schemeBuPu: {
-			name: 'BuPu (d)',
-			scale: d3.schemeBuPu,
-			type: 'discrete'
-		},
-		schemeGnBu: {
-			name: 'GnBu (d)',
-			scale: d3.schemeGnBu,
-			type: 'discrete'
-		},
-		schemeOrRd: {
-			name: 'OrRd (d)',
-			scale: d3.schemeOrRd,
-			type: 'discrete'
-		},
-		schemePuBuGn: {
-			name: 'PuBuGn (d)',
-			scale: d3.schemePuBuGn,
-			type: 'discrete'
-		},
-		schemePuBu: {
-			name: 'PuBu (d)',
-			scale: d3.schemePuBu,
-			type: 'discrete'
-		},
-		schemePuRd: {
-			name: 'PuRd (d)',
-			scale: d3.schemePuRd,
-			type: 'discrete'
-		},
-		schemeRdPu: {
-			name: 'RdPu (d)',
-			scale: d3.schemeRdPu,
-			type: 'discrete'
-		},
-		schemeYlGnBu: {
-			name: 'YlGnBu (d)',
-			scale: d3.schemeYlGnBu,
-			type: 'discrete'
-		},
-		schemeYlGn: {
-			name: 'YlGn (d)',
-			scale: d3.schemeYlGn,
-			type: 'discrete'
-		},
-		schemeYlOrBr: {
-			name: 'YlOrBr (d)',
-			scale: d3.schemeYlOrBr,
-			type: 'discrete'
-		},
-		schemeYlOrRd: {
-			name: 'YlOrRd (d)',
-			scale: d3.schemeYlOrRd,
-			type: 'discrete'
+		customGreenBluePurple: {
+			name: 'G-B-P',
+			scale: (t) => {
+				if (t < 0.33) {
+					return d3.interpolateRgb('#F7FBF0', '#B9DFBE')(t * 3)
+				} else if (t < 0.66) {
+					return d3.interpolateRgb('#B9DFBE', '#4B8DBB')((t - 0.33) * 3)
+				} else {
+					return d3.interpolateRgb('#4B8DBB', '#460848')((t - 0.66) * 3)
+				}
+			},
+			type: 'interpolate',
+			isDefault: true
 		}
 	}
 
@@ -269,7 +204,7 @@ export default function HexbinUSMap({
 	}
 
 	const allSchemes = Object.entries(colorSchemes).filter(([key, scheme]) =>
-		showAllSchemes || (scheme.isDefault && scheme.type !== 'discrete')
+		scheme.isDefault && scheme.type === 'interpolate'
 	)
 
 	// Normalize state names for matching
@@ -293,11 +228,24 @@ export default function HexbinUSMap({
 	, [dataset])
 
 	const currentScheme = colorSchemes[colorScheme]
-	const colorScale = currentScheme.type === 'interpolate'
-		? d3.scaleSequential(currentScheme.scale).domain([0, maxIncidents])
-		: currentScheme.type === 'discrete'
-		? d3.scaleQuantize(currentScheme.scale[discreteSize]).domain([0, maxIncidents])
-		: d3.scaleQuantize(currentScheme.scale).domain([0, maxIncidents])
+	let colorScale
+	switch (scaleType) {
+		case 'log':
+			colorScale = d3.scaleSequentialLog(currentScheme.scale).domain([1, Math.max(maxIncidents, 2)])
+			break
+		case 'pow':
+			colorScale = d3.scaleSequentialPow(currentScheme.scale).exponent(0.75).domain([0, maxIncidents])
+			break
+		case 'symlog':
+			colorScale = d3.scaleSequentialSymlog(currentScheme.scale).domain([0, maxIncidents])
+			break
+		case 'sqrt':
+			colorScale = d3.scaleSequentialSqrt(currentScheme.scale).domain([0, maxIncidents])
+			break
+		default: // 'seq'
+			colorScale = d3.scaleSequential(currentScheme.scale).domain([0, maxIncidents])
+			break
+	}
 
 	// Hexagon dimensions
 	const hexWidth = Math.sqrt(3)
@@ -398,7 +346,7 @@ export default function HexbinUSMap({
 						const isHovered = hoveredElement === stateName
 						const strokeColor = incidents > 0 || isHovered ? '#000' : '#ccc'
 						const strokeWidth = isHovered ? hexBorder.hover : hexBorder.normal
-						const textColor = incidents > 0 ? (incidents > maxIncidents * 0.6 ? 'white' : 'black') : '#767676'
+						const textColor = incidents > 0 ? (incidents > maxIncidents * 0.55 ? 'white' : 'black') : '#767676'
 
 						return (
 							<g key={hexState.acronym}>
@@ -484,34 +432,51 @@ export default function HexbinUSMap({
 								fontFamily="var(--font-base)"
 								fill="white"
 							>
-								{showDebugControls ? 'Hide Debug' : 'Show Debug'}
+								{showDebugControls ? 'hide colors' : 'show colors'}
 							</text>
 						</g>
 
-						{/* toggle default/all color schemes */}
 						{showDebugControls && (
-							<g
-								onClick={() => setShowAllSchemes(!showAllSchemes)}
-								style={{ cursor: 'pointer' }}
-							>
-								<rect
-									x={85}
-									y={0}
-									width={75}
-									height={16}
-									fill="#666"
-								/>
-								<text
-									x={122.5}
-									y={10}
-									textAnchor="middle"
-									fontSize="9"
-									fontFamily="var(--font-base)"
-									fill="white"
-								>
-									{showAllSchemes ? 'Hide All' : 'Show All'}
-								</text>
-							</g>
+							<g transform="translate(85, 0)">
+							{[
+								{ key: 'seq', name: 'seq' },
+								{ key: 'log', name: 'log' },
+								{ key: 'pow', name: 'pow' },
+								{ key: 'symlog', name: 'symlog' },
+								{ key: 'sqrt', name: 'sqrt' }
+							].map((scale, index) => {
+								const isSelected = scaleType === scale.key
+								const buttonX = index * 42
+								const buttonY = 0
+
+								return (
+									<g
+										key={scale.key}
+										onClick={() => setScaleType(scale.key)}
+										style={{ cursor: 'pointer' }}
+									>
+										<rect
+											x={buttonX}
+											y={buttonY}
+											width={40}
+											height={16}
+											fill={isSelected ? '#000' : '#f0f0f0'}
+											stroke="#999"
+										/>
+										<text
+											x={buttonX + 20}
+											y={buttonY + 10}
+											textAnchor="middle"
+											fontSize="9"
+											fontFamily="var(--font-base)"
+											fill={isSelected ? 'white' : '#333'}
+										>
+											{scale.name}
+										</text>
+									</g>
+								)
+							})}
+						</g>
 						)}
 					</g>
 				)}
@@ -557,47 +522,7 @@ export default function HexbinUSMap({
 							)
 						})}
 
-						{/* size control for discrete themes */}
-						{showAllSchemes && (
-							<g transform="translate(330, 0)">
-							{[3, 4, 5, 6, 7, 8, 9].map((size, index) => {
-								const isSelected = discreteSize === size
-								const isDiscreteScheme = currentScheme.type === 'discrete'
-								const buttonX = 0
-								const buttonY = index * 18
 
-								return (
-									<g
-										key={size}
-										onClick={() => setDiscreteSize(size)}
-										style={{
-											cursor: 'pointer',
-											opacity: isDiscreteScheme ? 1 : 0.3
-										}}
-									>
-										<rect
-											x={buttonX}
-											y={buttonY}
-											width={25}
-											height={16}
-											fill={isSelected && isDiscreteScheme ? '#000' : '#f0f0f0'}
-											stroke="#999"
-										/>
-										<text
-											x={buttonX + 12.5}
-											y={buttonY + 10}
-											textAnchor="middle"
-											fontSize="9"
-											fontFamily="var(--font-base)"
-											fill={isSelected && isDiscreteScheme ? 'white' : '#333'}
-										>
-											{size}
-										</text>
-									</g>
-								)
-							})}
-						</g>
-						)}
 					</g>
 				)}
 
@@ -616,14 +541,20 @@ export default function HexbinUSMap({
 						</text>
 						<defs>
 							<linearGradient id={`${id}-gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
-								<stop offset="0%" style={{
-									stopColor: colorScale(0),
-									stopOpacity: 1
-								}} />
-								<stop offset="100%" style={{
-									stopColor: colorScale(maxIncidents),
-									stopOpacity: 1
-								}} />
+								{Array.from({ length: 11 }, (_, i) => {
+									const value = (i / 10) * maxIncidents
+									const offset = `${i * 10}%`
+									return (
+										<stop
+											key={i}
+											offset={offset}
+											style={{
+												stopColor: colorScale(value),
+												stopOpacity: 1
+											}}
+										/>
+									)
+								})}
 							</linearGradient>
 						</defs>
 						<rect
