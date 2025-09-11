@@ -568,8 +568,7 @@ class IncidentPage(MetadataPageMixin, Page):
     detention_date = models.DateField(
         blank=True,
         null=True,
-        help_text='This field will default to the date field if not specified.',
-        verbose_name="Detention date"
+        verbose_name="Detention date",
     )
     unnecessary_use_of_force = models.BooleanField(
         default=False,
