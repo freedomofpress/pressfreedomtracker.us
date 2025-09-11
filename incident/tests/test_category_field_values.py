@@ -546,7 +546,7 @@ class CategoryFieldValues(TestCase):
 
     def test_should_get_equipment_list_category_fields(self):
         equipment_damage_details = self.category_details[self.category2]
-        self.assertEqual(equipment_damage_details[0]['name'], 'Equipment broken')
+        self.assertEqual(equipment_damage_details[0]['name'], 'Equipment damaged')
         for equipment_broken in self.incident.equipment_broken.all():
             self.assertIn(equipment_broken.equipment.name, equipment_damage_details[0]['html'])
 

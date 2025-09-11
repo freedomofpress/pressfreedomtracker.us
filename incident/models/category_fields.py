@@ -45,7 +45,7 @@ CATEGORY_FIELD_MAP = {
         ('unnecessary_use_of_force', 'Unnecessary use of force?'),
     ],
     'equipment-damage': [
-        ('equipment_broken', 'Equipment broken'),
+        ('equipment_broken', 'Equipment damaged'),
         ('actor', 'Actor'),
     ],
     'equipment-search-seizure-or-damage': [
