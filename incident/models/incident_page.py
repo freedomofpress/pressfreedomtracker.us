@@ -3,6 +3,8 @@ import datetime
 import uuid
 
 from django import forms
+from django.contrib.postgres.aggregates import ArrayAgg, StringAgg
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models import (
     Case,
@@ -14,48 +16,56 @@ from django.db.models import (
     Value,
     When,
 )
-from django.db.models.functions import ExtractDay, Cast, Trunc, TruncMonth, Coalesce, Concat
+from django.db.models.functions import (
+    Cast,
+    Coalesce,
+    Concat,
+    ExtractDay,
+    Trunc,
+    TruncMonth,
+)
+from django.template.defaultfilters import truncatewords
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
-from django.template.defaultfilters import truncatewords
-from modelcluster.fields import ParentalManyToManyField, ParentalKey
-from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.aggregates import ArrayAgg, StringAgg
-from psycopg2.extras import DateRange
+
+from wagtail import blocks
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
     MultiFieldPanel,
 )
-from wagtail import blocks
-from wagtail.fields import StreamField, RichTextField
-from wagtail.models import Page, Orderable, PageManager, PageQuerySet
+from wagtail.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.models import Orderable, Page, PageManager, PageQuerySet
 from wagtail.search import index
+
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from psycopg2.extras import DateRange
 from wagtailautocomplete.edit_handlers import AutocompletePanel
+
 from common.blocks import (
-    RichTextBlockQuoteBlock,
     AlignedCaptionedEmbedBlock,
     AlignedCaptionedImageBlock,
-    TweetEmbedBlock,
-    RichTextTemplateBlock,
     PullQuoteBlock,
+    RichTextBlockQuoteBlock,
+    RichTextTemplateBlock,
+    TweetEmbedBlock,
 )
 from common.models import MetadataPageMixin
+from geonames.cities import get_city_coords
 from incident import choices
-from incident.models.category_fields import CATEGORY_FIELD_MAP, CAT_FIELD_VALUES
+from incident.circuits import CIRCUITS_BY_STATE
+from incident.models.category_fields import CAT_FIELD_VALUES, CATEGORY_FIELD_MAP
 from incident.models.inlines import (
-    IncidentPageUpdates,
     ChargeUpdate,
     IncidentCharge,
+    IncidentPageUpdates,
     LegalOrder,
     LegalOrderUpdate,
 )
 from incident.models.items import TargetedJournalist
-from incident.circuits import CIRCUITS_BY_STATE
-from incident.utils.db import CurrentDate, MakeDateRange, Left
+from incident.utils.db import CurrentDate, Left, MakeDateRange
 from statistics.blocks import StatisticsBlock
-from geonames.cities import get_city_coords
 
 
 class IncidentAuthor(Orderable):
