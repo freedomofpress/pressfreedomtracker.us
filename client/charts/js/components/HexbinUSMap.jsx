@@ -5,7 +5,8 @@ import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
 import hexbinCoordinates from '../data/us-states-hexbin.json'
 
-const SCALE_FACTOR = 0.95
+const SCALE_FACTOR = 0.95 // Scales the map size
+const CONTRAST_THRESHOLD = 0.675; // Flip text color at 61.5% of data range
 
 const margins = {
 	top: 20,
@@ -52,159 +53,12 @@ export default function HexbinUSMap({
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
-	const [colorScheme, setColorScheme] = useState('interpolateReds')
-	const [showDebugControls, setShowDebugControls] = useState(true)
-	const [scaleType, setScaleType] = useState('seq')
 
 	const paddings = { ...defaultPaddings, ...overridePaddings }
-
-	const colorSchemes = {
-		// Single-hue schemes
-		interpolateBlues: {
-			name: 'Blues',
-			scale: d3.interpolateBlues,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateGreens: {
-			name: 'Greens',
-			scale: d3.interpolateGreens,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateGreys: {
-			name: 'Greys',
-			scale: d3.interpolateGreys,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateOranges: {
-			name: 'Oranges',
-			scale: d3.interpolateOranges,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolatePurples: {
-			name: 'Purples',
-			scale: d3.interpolatePurples,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateReds: {
-			name: 'Reds',
-			scale: d3.interpolateReds,
-			type: 'interpolate',
-			isDefault: true
-		},
-		// Sequential multi-hue schemes
-		interpolateBuGn: {
-			name: 'BuGn',
-			scale: d3.interpolateBuGn,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateBuPu: {
-			name: 'BuPu',
-			scale: d3.interpolateBuPu,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateGnBu: {
-			name: 'GnBu',
-			scale: d3.interpolateGnBu,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateOrRd: {
-			name: 'OrRd',
-			scale: d3.interpolateOrRd,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolatePuBuGn: {
-			name: 'PuBuGn',
-			scale: d3.interpolatePuBuGn,
-			type: 'interpolate',
-		},
-		interpolatePuBu: {
-			name: 'PuBu',
-			scale: d3.interpolatePuBu,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolatePuRd: {
-			name: 'PuRd',
-			scale: d3.interpolatePuRd,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateRdPu: {
-			name: 'RdPu',
-			scale: d3.interpolateRdPu,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateYlGnBu: {
-			name: 'YlGnBu',
-			scale: d3.interpolateYlGnBu,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateYlGn: {
-			name: 'YlGn',
-			scale: d3.interpolateYlGn,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateYlOrBr: {
-			name: 'YlOrBr',
-			scale: d3.interpolateYlOrBr,
-			type: 'interpolate',
-			isDefault: true
-		},
-		interpolateYlOrRd: {
-			name: 'YlOrRd',
-			scale: d3.interpolateYlOrRd,
-			type: 'interpolate',
-			isDefault: true
-		},
-		customWhiteYellowOrangeRed: {
-			name: 'W-Y-O-R',
-			scale: (t) => {
-				if (t < 0.33) {
-					return d3.interpolateRgb('#ffffff', '#ffff00')(t * 3)
-				} else if (t < 0.66) {
-					return d3.interpolateRgb('#ffff00', '#ff8c00')((t - 0.33) * 3)
-				} else {
-					return d3.interpolateRgb('#ff8c00', '#ff0000')((t - 0.66) * 3)
-				}
-			},
-			type: 'interpolate',
-			isDefault: true
-		},
-		customGreenBluePurple: {
-			name: 'G-B-P',
-			scale: (t) => {
-				if (t < 0.33) {
-					return d3.interpolateRgb('#F7FBF0', '#B9DFBE')(t * 3)
-				} else if (t < 0.66) {
-					return d3.interpolateRgb('#B9DFBE', '#4B8DBB')((t - 0.33) * 3)
-				} else {
-					return d3.interpolateRgb('#4B8DBB', '#460848')((t - 0.66) * 3)
-				}
-			},
-			type: 'interpolate',
-			isDefault: true
-		}
-	}
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
-
-	const allSchemes = Object.entries(colorSchemes).filter(([key, scheme]) =>
-		scheme.isDefault && scheme.type === 'interpolate'
-	)
 
 	// Normalize state names for matching
 	const normalizeStateName = (name) => {
@@ -226,23 +80,19 @@ export default function HexbinUSMap({
 		d3.max(dataset, d => d.numberOfIncidents) || 1
 	, [dataset])
 
-	const currentScheme = colorSchemes[colorScheme]
-	let colorScale
-	switch (scaleType) {
 
-		case 'pow50':
-			colorScale = d3.scaleSequentialPow(currentScheme.scale).exponent(0.50).domain([0, maxIncidents])
-			break
-		case 'pow75':
-			colorScale = d3.scaleSequentialPow(currentScheme.scale).exponent(0.75).domain([0, maxIncidents])
-			break
-		case 'pow125':
-			colorScale = d3.scaleSequentialPow(currentScheme.scale).exponent(1.25).domain([0, maxIncidents])
-			break
-		default: // 'seq'
-			colorScale = d3.scaleSequential(currentScheme.scale).domain([0, maxIncidents])
-			break
-	}
+	// This creates a compound transformation:
+	// 1. Custom color breaks for fine-tuned color distribution
+	const COLOR_BREAKS = [0, 0.1, 0.275, 0.65, 1];
+	// 2. Power scale (0.85 exponent) applied to the color mapping for visual emphasis
+	const COLOR_SCALE_EXPONENT = 0.85
+
+	const colorScaleInterpolator = d3.scaleLinear()
+		.domain(COLOR_BREAKS)
+		.range(['#ffffff', '#F9E3C0', '#FFAA6D', '#ff5e00', '#842100'])
+		.interpolate(d3.interpolateLab)
+
+	const colorScale = d3.scaleSequentialPow(colorScaleInterpolator).exponent(COLOR_SCALE_EXPONENT).domain([0, maxIncidents])
 
 	// Hexagon dimensions
 	const hexWidth = Math.sqrt(3)
@@ -287,29 +137,33 @@ export default function HexbinUSMap({
 
 	return (
 		<>
-			{hoveredElement && interactive && hoveredElement !== 'Abroad' && (
-				<Tooltip
-					content={
-						<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
-							<div>Number of Incidents</div>
-							<div
-								style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}
-							>
-								<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
-									{hoveredElement}
-								</div>
-								<div>
-									{dataset.filter((d) => `${aggregationLocality(d)}` === hoveredElement).length !== 0
-										? dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement).numberOfIncidents
-										: 0}
+			{hoveredElement && interactive && hoveredElement !== 'Abroad' && (() => {
+				const dataPoint = dataset.find((d) => `${aggregationLocality(d)}` === hoveredElement)
+				const incidents = dataPoint ? (dataPoint.numberOfIncidents || 0) : 0
+				const tooltipColor = incidents > 0 ? colorScale(incidents) : '#ccc'
+
+				return (
+					<Tooltip
+						content={
+							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
+								<div>Number of Incidents</div>
+								<div
+									style={{ display: 'flex', justifyContent: 'space-between', gap: 15, marginTop: 8 }}
+								>
+									<div style={{ borderLeft: `solid 3px ${tooltipColor}`, paddingLeft: 3 }}>
+										{hoveredElement}
+									</div>
+									<div>
+										{incidents}
+									</div>
 								</div>
 							</div>
-						</div>
-					}
-					x={tooltipPosition.x}
-					y={tooltipPosition.y}
-				/>
-			)}
+						}
+						x={tooltipPosition.x}
+						y={tooltipPosition.y}
+					/>
+				)
+			})()}
 			<svg
 				width="100%"
 				viewBox={`0 0 ${width} ${height}`}
@@ -343,7 +197,7 @@ export default function HexbinUSMap({
 						const isHovered = hoveredElement === stateName
 						const strokeColor = incidents > 0 || isHovered ? '#000' : '#ccc'
 						const strokeWidth = isHovered ? hexBorder.hover : hexBorder.normal
-						const textColor = incidents > 0 ? (incidents > maxIncidents * 0.55 ? 'white' : 'black') : '#767676'
+						const textColor = incidents > 0 ? (incidents > maxIncidents * CONTRAST_THRESHOLD ? '#fff' : '#000') : '#767676'
 
 						return (
 							<g key={hexState.acronym}>
@@ -395,6 +249,7 @@ export default function HexbinUSMap({
 												WebkitFontSmoothing: 'antialiased',
 												MozOsxFontSmoothing: 'grayscale',
 												textRendering: 'optimizeLegibility',
+												textShadow: '0px 0px 2px rgba(255,255,255,0.25)',
 											}}
 										>
 											{hexState.acronym}
@@ -406,121 +261,6 @@ export default function HexbinUSMap({
 					})}
 				</g>
 
-				{/* TESTING ONLY: Color scheme buttons */}
-				{interactive && (
-					<g transform="translate(20, 20)">
-						{/* toggle hide/show */}
-						<g
-							onClick={() => setShowDebugControls(!showDebugControls)}
-							style={{ cursor: 'pointer' }}
-						>
-							<rect
-								x={0}
-								y={0}
-								width={80}
-								height={16}
-								fill="#333"
-							/>
-							<text
-								x={40}
-								y={10}
-								textAnchor="middle"
-								fontSize="9"
-								fontFamily="var(--font-base)"
-								fill="white"
-							>
-								{showDebugControls ? 'hide colors' : 'show colors'}
-							</text>
-						</g>
-
-						{showDebugControls && (
-							<g transform="translate(85, 0)">
-							{[
-								{ key: 'seq', name: 'seq' },
-								{ key: 'pow50', name: 'pow (.50)' },
-								{ key: 'pow75', name: 'pow (.75)' },
-								{ key: 'pow125', name: 'pow (1.25)' },
-							].map((scale, index) => {
-								const isSelected = scaleType === scale.key
-								const buttonX = index * 42
-								const buttonY = 0
-
-								return (
-									<g
-										key={scale.key}
-										onClick={() => setScaleType(scale.key)}
-										style={{ cursor: 'pointer' }}
-									>
-										<rect
-											x={buttonX}
-											y={buttonY}
-											width={40}
-											height={16}
-											fill={isSelected ? '#000' : '#f0f0f0'}
-											stroke="#999"
-										/>
-										<text
-											x={buttonX + 20}
-											y={buttonY + 10}
-											textAnchor="middle"
-											fontSize="9"
-											fontFamily="var(--font-base)"
-											fill={isSelected ? 'white' : '#333'}
-										>
-											{scale.name}
-										</text>
-									</g>
-								)
-							})}
-						</g>
-						)}
-					</g>
-				)}
-
-				{/* color schemes */}
-				{interactive && showDebugControls && (
-					<g transform="translate(20, 45)">
-						{allSchemes.map((entry, index) => {
-							const [key, scheme] = entry
-							const isSelected = colorScheme === key
-							const buttonsPerRow = 6
-							const buttonWidth = 50
-							const buttonHeight = 16
-							const buttonSpacing = 52
-							const rowSpacing = 18
-							const buttonX = (index % buttonsPerRow) * buttonSpacing
-							const buttonY = Math.floor(index / buttonsPerRow) * rowSpacing
-
-							return (
-								<g
-									key={key}
-									onClick={() => setColorScheme(key)}
-									style={{ cursor: 'pointer' }}
-								>
-									<rect
-										x={buttonX}
-										y={buttonY}
-										width={buttonWidth}
-										height={buttonHeight}
-										fill={isSelected ? '#000' : '#f0f0f0'}
-									/>
-									<text
-										x={buttonX + buttonWidth / 2}
-										y={buttonY + buttonHeight / 2 + 3}
-										textAnchor="middle"
-										fontSize="9"
-										fontFamily="var(--font-base)"
-										fill={isSelected ? 'white' : '#333'}
-									>
-										{scheme.name}
-									</text>
-								</g>
-							)
-						})}
-
-
-					</g>
-				)}
 
 				{/* legend */}
 				{maxIncidents > 0 && (
@@ -571,6 +311,39 @@ export default function HexbinUSMap({
 						>
 							0
 						</text>
+						{(() => {
+							// Calculate 1/3 and 2/3 data values
+							const oneThirdValue = Math.round(maxIncidents / 3)
+							const twoThirdsValue = Math.round((maxIncidents * 2) / 3)
+							// Calculate positions on the scaled legend gradient
+							const oneThirdPosition = Math.pow(oneThirdValue / maxIncidents, COLOR_SCALE_EXPONENT) * 100
+							const twoThirdsPosition = Math.pow(twoThirdsValue / maxIncidents, COLOR_SCALE_EXPONENT) * 100
+
+							return (
+								<>
+									<text
+										x={oneThirdPosition}
+										y={32}
+										fontSize="10"
+										fontFamily="var(--font-base)"
+										fill="#333"
+										textAnchor="middle"
+									>
+										{oneThirdValue}
+									</text>
+									<text
+										x={twoThirdsPosition}
+										y={32}
+										fontSize="10"
+										fontFamily="var(--font-base)"
+										fill="#333"
+										textAnchor="middle"
+									>
+										{twoThirdsValue}
+									</text>
+								</>
+							)
+						})()}
 						<text
 							x={100}
 							y={32}
