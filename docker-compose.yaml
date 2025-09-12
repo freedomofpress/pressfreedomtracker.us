@@ -46,6 +46,7 @@ services:
       args:
         NPM_VER: 9.6.7
         USERID: ${UID:?err}
+    image: localhost/pressfreedomtracker-us-node
     volumes:
       - ./:/django
     working_dir: /django
@@ -65,6 +66,7 @@ services:
       args:
         NPM_VER: 10.9.2
         USERID: ${UID:?err}
+    image: localhost/pressfreedomtracker-us-node-chart-pregenerator
     volumes:
       - ./:/django
       - ./client:/app/client
@@ -98,6 +100,7 @@ services:
       dockerfile: devops/docker/DevDjangoDockerfile
       args:
         USERID: ${UID:?err}
+    image: localhost/pressfreedomtracker-us-django
     depends_on:
       node:
         condition: service_healthy
