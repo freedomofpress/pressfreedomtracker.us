@@ -81,10 +81,8 @@ export default function HexbinUSMap({
 	, [dataset])
 
 
-	// This creates a compound transformation:
-	// 1. Custom color breaks
+	// Adjust color mapping for visual emphasis:
 	const COLOR_BREAKS = [0, 0.1, 0.275, 0.65, 1];
-	// 2. Power scale applied to color mapping for visual emphasis
 	const COLOR_SCALE_EXPONENT = 0.85
 
 	const colorScaleInterpolator = d3.scaleLinear()
