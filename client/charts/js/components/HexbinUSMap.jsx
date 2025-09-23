@@ -9,7 +9,7 @@ const SCALE_FACTOR = 0.95 // Scales the map size
 const CONTRAST_THRESHOLD = 0.675; // Flip text color at 61.5% of data range
 
 const margins = {
-	top: 20,
+	top: 0,
 	left: 0,
 	right: 0,
 	bottom: 0,
@@ -18,8 +18,8 @@ const margins = {
 const defaultPaddings = {
 	left: 0,
 	right: 0,
-	bottom: 40,
-	top: 0,
+	bottom: 40, // matches other homepage vizzes to align bottom
+	top: 22, // adjusted to avoid map cropping at various sizes
 	text: 5,
 	map: 0,
 	textRight: 10,
@@ -82,9 +82,9 @@ export default function HexbinUSMap({
 
 
 	// This creates a compound transformation:
-	// 1. Custom color breaks for fine-tuned color distribution
+	// 1. Custom color breaks
 	const COLOR_BREAKS = [0, 0.1, 0.275, 0.65, 1];
-	// 2. Power scale (0.85 exponent) applied to the color mapping for visual emphasis
+	// 2. Power scale applied to color mapping for visual emphasis
 	const COLOR_SCALE_EXPONENT = 0.85
 
 	const colorScaleInterpolator = d3.scaleLinear()
