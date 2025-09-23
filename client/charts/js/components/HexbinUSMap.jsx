@@ -5,8 +5,8 @@ import DynamicWrapper from './DynamicWrapper'
 import Tooltip from './Tooltip'
 import hexbinCoordinates from '../data/us-states-hexbin.json'
 
-const SCALE_FACTOR = 0.95 // Scales the map size
-const CONTRAST_THRESHOLD = 0.675; // Flip text color at 61.5% of data range
+const SCALE_FACTOR = 0.95 // Scale the map size
+const CONTRAST_THRESHOLD = 0.675; // Invert text when data is above 67% of the color scale
 
 const margins = {
 	top: 0,
@@ -18,8 +18,8 @@ const margins = {
 const defaultPaddings = {
 	left: 0,
 	right: 0,
-	bottom: 40, // matches other homepage vizzes to align bottom
-	top: 22, // adjusted to avoid map cropping at various sizes
+	bottom: 40, // Align bottom borders with other homepage vizzes
+	top: 22, // Adjust to avoid map cropping at various sizes
 	text: 5,
 	map: 0,
 	textRight: 10,
@@ -81,7 +81,7 @@ export default function HexbinUSMap({
 	, [dataset])
 
 
-	// Adjust color mapping for visual emphasis:
+	// Tweak color mapping for visual emphasis:
 	const COLOR_BREAKS = [0, 0.1, 0.275, 0.65, 1];
 	const COLOR_SCALE_EXPONENT = 0.85
 
@@ -310,10 +310,13 @@ export default function HexbinUSMap({
 							0
 						</text>
 						{(() => {
-							// Calculate 1/3 and 2/3 data values
+							// We're using a non-linear scale. Adding accurately-positioned
+							// values to the legend makes that more obvious.
+
+							// First, find the values of 1/3 and 2/3 of the max:
 							const oneThirdValue = Math.round(maxIncidents / 3)
-							const twoThirdsValue = Math.round((maxIncidents * 2) / 3)
-							// Calculate positions on the scaled legend gradient
+							const twoThirdsValue = Math.round((maxIncidents / 3) * 2)
+							// Then place at correct points on the legend:
 							const oneThirdPosition = Math.pow(oneThirdValue / maxIncidents, COLOR_SCALE_EXPONENT) * 100
 							const twoThirdsPosition = Math.pow(twoThirdsValue / maxIncidents, COLOR_SCALE_EXPONENT) * 100
 
