@@ -606,7 +606,6 @@ class HexbinMapChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
 
-
     description = blocks.TextBlock(
         required=True,
         help_text='Description for assistive technology users. '
@@ -622,4 +621,3 @@ class HexbinMapChart(blocks.StructBlock):
 
     class Media:
         js = ['hexbinMapChart']
-
