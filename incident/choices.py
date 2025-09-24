@@ -156,6 +156,7 @@ class LegalCaseStatus(TextChoices):
     WITHDRAWN = 'WITHDRAWN', 'withdrawn'
     APPEALED = 'APPEALED', 'appealed'
     UNKNOWN = 'UNKNOWN', 'unknown'
+    VERDICT_ISSUED = 'VERDICT_ISSUED', 'verdict issued'
 
 
 CASE_TYPE = [

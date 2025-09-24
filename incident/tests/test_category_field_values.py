@@ -3,36 +3,38 @@ import re
 import urllib.parse
 from functools import partial
 
-from bs4 import BeautifulSoup
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from django.utils.text import capfirst
 from django.utils.html import strip_tags
+from django.utils.text import capfirst
+
+from bs4 import BeautifulSoup
 
 from common.tests.factories import CategoryPageFactory
-from incident.models import CAT_FIELD_VALUES, IncidentPage
-from incident.models import choices
 from incident.models import (
-    Equipment,
-    Journalist,
-    Institution,
-    GovernmentWorker,
+    CAT_FIELD_VALUES,
     Charge,
+    Equipment,
+    GovernmentWorker,
+    IncidentPage,
+    Institution,
+    Journalist,
     Nationality,
     PoliticianOrPublic,
+    choices,
 )
 from incident.tests.factories import (
-    IncidentPageFactory,
-    IncidentIndexPageFactory,
-    IncidentChargeFactory,
-    IncidentChargeWithUpdatesFactory,
     EquipmentBrokenFactory,
     EquipmentSeizedFactory,
-    LawEnforcementOrganizationFactory,
-    NationalityFactory,
     GovernmentWorkerFactory,
-    PoliticianOrPublicFactory,
+    IncidentChargeFactory,
+    IncidentChargeWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
+    LawEnforcementOrganizationFactory,
     LegalOrderFactory,
+    NationalityFactory,
+    PoliticianOrPublicFactory,
 )
 
 
@@ -544,7 +546,7 @@ class CategoryFieldValues(TestCase):
 
     def test_should_get_equipment_list_category_fields(self):
         equipment_damage_details = self.category_details[self.category2]
-        self.assertEqual(equipment_damage_details[0]['name'], 'Equipment broken')
+        self.assertEqual(equipment_damage_details[0]['name'], 'Equipment damaged')
         for equipment_broken in self.incident.equipment_broken.all():
             self.assertIn(equipment_broken.equipment.name, equipment_damage_details[0]['html'])
 
