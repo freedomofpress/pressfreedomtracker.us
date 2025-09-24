@@ -210,6 +210,10 @@ export default function HexbinUSMap({
 											href={searchPageURL && dataPoint && searchPageURL(dataPoint.usCode)}
 											role="link"
 											aria-label={`${stateName}: ${incidents} incidents`}
+											style={{
+												mixBlendMode: 'darken' }
+											}
+
 										/>
 									}
 									wrap={interactive && searchPageURL && dataPoint}
@@ -265,7 +269,7 @@ export default function HexbinUSMap({
 
 				{/* legend */}
 				{maxIncidents > 0 && (
-					<g transform={`translate(${width - 120}, ${height - 120})`} role="img" aria-label="Color scale legend">
+					<g transform={`translate(${width - 120}, ${height - 120})`} role="img" aria-label="Legend: Color scale">
 						<text
 							x={0}
 							y={0}
@@ -274,7 +278,7 @@ export default function HexbinUSMap({
 							fill="#333"
 							className='sr-only'
 						>
-							Legend: Number of incidents
+							Number of incidents
 						</text>
 						<defs>
 							<linearGradient id={`${id}-gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
