@@ -65,6 +65,10 @@ class BubbleMapChartOptionsSchema(BaseChartOptionsSchema):
     group_by = fields.Str(data_key='aggregationLocality')
 
 
+class HexbinMapChartOptionsSchema(BaseChartOptionsSchema):
+    group_by = fields.Str(data_key='aggregationLocality')
+
+
 class TreeMapOptionsSchema(BaseChartOptionsSchema):
     branch_field_name = fields.Function(lambda obj: obj.branch_field_name(), data_key='branchFieldName')
     branches = fields.Function(lambda obj: obj.branches())

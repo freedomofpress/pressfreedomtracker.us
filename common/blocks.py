@@ -14,6 +14,7 @@ import bleach
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.models.charts import (
     BubbleMapChartOptionsSchema,
+    HexbinMapChartOptionsSchema
 )
 from common.models.helpers import get_categories, get_states, get_tags
 from common.search import get_searchable_content_for_fields
@@ -569,6 +570,11 @@ class TreeMapChart(blocks.StructBlock):
         js = ['treeMapChart']
 
 
+class HexbinMapChartValue(ChartValue):
+    options_schema = HexbinMapChartOptionsSchema
+    chart_type = ChartType.BUBBLE_MAP
+
+
 class BubbleMapChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
@@ -594,3 +600,26 @@ class BubbleMapChart(blocks.StructBlock):
 
     class Media:
         js = ['bubbleMapChart']
+
+
+class HexbinMapChart(blocks.StructBlock):
+    title = blocks.CharBlock(required=False)
+    incident_set = SimpleIncidentSet()
+
+
+    description = blocks.TextBlock(
+        required=True,
+        help_text='Description for assistive technology users. '
+        'If the chart is demonstrating a specific trend, try to include that, '
+        'e.g., "Bar chart showing a decreasing number of assaults over the '
+        'course of 2023."',
+    )
+
+    class Meta:
+        icon = 'table'
+        template = 'common/blocks/hexbin_map_chart.html'
+        value_class = HexbinMapChartValue
+
+    class Media:
+        js = ['hexbinMapChart']
+

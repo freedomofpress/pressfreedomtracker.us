@@ -38,6 +38,7 @@ from common.blocks import (
     VerticalBarChart,
     TreeMapChart,
     BubbleMapChart,
+    HexbinMapChart
 )
 
 
