@@ -175,7 +175,12 @@ export default function HexbinUSMap({
 
 				{/* Render hexagons for each state */}
 				<g role="list" aria-label="US states with incident data">
-					{hexbinCoordinates.map((hexState) => {
+					{hexbinCoordinates.sort((a, b) => {
+							// Sort states with data to back so they render after empty states in the DOM. This Ensures
+							// light-gray borders don't render over black borders as canvg doesn't support blend modes.
+							const getIncidents = (hexState) => (dataLookup.get(normalizeStateName(hexState.state)) || dataLookup.get(hexState.acronym.toLowerCase()))?.numberOfIncidents || 0
+							return (getIncidents(a) > 0) - (getIncidents(b) > 0)
+						}).map((hexState) => {
 						// Find matching data for this state using lookup map
 						const normalizedName = normalizeStateName(hexState.state)
 						const stateAcronym = hexState.acronym.toLowerCase()
@@ -205,8 +210,6 @@ export default function HexbinUSMap({
 											href={searchPageURL && dataPoint && searchPageURL(dataPoint.usCode)}
 											role="link"
 											aria-label={`${stateName}: ${incidents} incidents`}
-											style={{
-												mixBlendMode: incidents === 0 ? 'darken' : 'normal'}}
 										/>
 									}
 									wrap={interactive && searchPageURL && dataPoint}
