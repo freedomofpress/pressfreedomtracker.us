@@ -203,6 +203,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('vertical_bar_chart', VerticalBarChart()),
         ('tree_map_chart', TreeMapChart()),
         ('bubble_map_chart', BubbleMapChart()),
+        ('hexbin_map_chart', HexbinMapChart()),
     ], use_json_field=True)
 
     introduction = models.TextField(
@@ -218,6 +219,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('vertical_bar_chart', VerticalBarChart()),
         ('tree_map_chart', TreeMapChart()),
         ('bubble_map_chart', BubbleMapChart()),
+        ('hexbin_map_chart', HexbinMapChart()),
     ], use_json_field=True, blank=True, default=[], max_num=1)
 
     teaser_graphic = StreamField([
@@ -225,6 +227,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('vertical_bar_chart', VerticalBarChart()),
         ('tree_map_chart', TreeMapChart()),
         ('bubble_map_chart', BubbleMapChart()),
+        ('hexbin_map_chart', HexbinMapChart()),
     ], use_json_field=True, blank=True, default=[], max_num=1)
 
     # Note: The following fields are deprecated in favor for lead_graphic and teaser_graphic,

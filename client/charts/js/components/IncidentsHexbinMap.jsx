@@ -3,7 +3,8 @@ import {
 	filterDatasets,
 	groupByState,
 	groupByCity,
-	countIncidentsOutsideUS
+	countIncidentsOutsideUS,
+	getFilteredUrl
 } from '../lib/utilities'
 import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
@@ -35,7 +36,7 @@ export default ({
 	return (
 		<ParentSize>
 			{(parent) => {
-				const hexbinUSMap = (
+				const usmap = (
 					<HexbinUSMap
 						data={datasetAggregatedByGeo}
 						description={description}
@@ -45,6 +46,7 @@ export default ({
 						height={fullSize ? (parent.width * 0.7) : 440}
 						overridePaddings={{ map: 0, bottom: 0 }}
 						interactive={interactive}
+						id="hexbin-map-chart"
 					/>
 				);
 
@@ -54,9 +56,9 @@ export default ({
 						creditUrl={creditUrl}
 						downloadFileName={title ? `${title}.png` : 'chart.png'}
 					>
-						{hexbinUSMap}
+						{usmap}
 					</ChartDownloader>
-				) : hexbinUSMap
+				) : usmap
 			}}
 		</ParentSize>
 	)

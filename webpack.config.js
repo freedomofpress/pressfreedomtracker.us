@@ -26,6 +26,7 @@ var common = {
 		verticalBarChart: __dirname + '/client/charts/js/vertical-bar-chart.js',
 		treeMapChart: __dirname + '/client/charts/js/tree-map-chart.js',
 		bubbleMapChart: __dirname + '/client/charts/js/bubble-map-chart.js',
+		hexbinMapChart: __dirname + '/client/charts/js/hexbin-map-chart.js',
 	},
 
 	output: {

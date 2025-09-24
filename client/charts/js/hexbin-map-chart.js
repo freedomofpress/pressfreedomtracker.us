@@ -1,11 +1,11 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
-import DataLoader from "./components/DataLoader"
+import HexbinMapChart from './components/IncidentsHexbinMap'
+import DataLoader from "../../charts/js/components/DataLoader"
 import * as d3 from 'd3'
-import HexbinUSMap from "./components/HexbinUSMap"
 
 function engageCharts() {
-	const charts = document.querySelectorAll('.chart-bubble-map:not(.engaged)')
+	const charts = document.querySelectorAll('.chart-hexbin-map:not(.engaged)')
 	charts.forEach((chartNode) => {
 		chartNode.classList.add('engaged')
 		let root = createRoot(chartNode)
@@ -37,7 +37,7 @@ function engageCharts() {
 					/>
 				)}
 			>
-				<HexbinUSMap
+				<HexbinMapChart
 					filterCategories={filterCategories}
 					filterTags={filterTag}
 					filterStates={filterStates}
