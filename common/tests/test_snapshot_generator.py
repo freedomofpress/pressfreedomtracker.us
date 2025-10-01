@@ -82,6 +82,17 @@ class TestGenerator(TestCase):
         xml_tree_root = ET.fromstring(response)
         self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
 
+    def test_generates_hexbin_map_chart_svgs(self):
+        response = request_snapshot(
+            snapshot_type=SnapshotType.SVG,
+            chart_type=ChartType.HEXBIN_MAP,
+            query={},
+        )
+
+        # Should contain the appropriate `<svg>` tag
+        xml_tree_root = ET.fromstring(response)
+        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
+
     def test_generates_vertical_bar_chart_pngs(self):
         output = request_snapshot(
             snapshot_type=SnapshotType.PNG,
