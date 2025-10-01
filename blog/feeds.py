@@ -26,6 +26,7 @@ class BlogIndexPageFeed(Feed):
                 "vertical_bar_chart",
                 "tree_map_chart",
                 "bubble_map_chart",
+                "hexbin_map_chart",
             ):
                 teaser_svg = namedtuple('teaser_svg', 'url width height')
                 return teaser_svg(

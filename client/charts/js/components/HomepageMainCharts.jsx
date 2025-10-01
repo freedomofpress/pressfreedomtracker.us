@@ -1,7 +1,7 @@
 import React from 'react'
 import { ParentSize } from '@visx/responsive'
 import TreeMap from './TreeMap'
-import USMap from './USMap'
+import HexbinUSMap from './HexbinUSMap'
 import BarChart from './BarChart'
 import HomepageSelection from './HomepageSelection'
 import ChartDescription from "./ChartDescription"
@@ -20,7 +20,7 @@ import '../../sass/HomepageMainCharts.sass'
 
 export default function HomepageMainCharts(props) {
 	return (
-		<ParentSize>
+		<ParentSize debounceTime={0}>
 			{(parent) => <HomepageMainChartsWidth {...props} width={parent.width} />}
 		</ParentSize>
 	)
@@ -118,7 +118,7 @@ function HomepageMainChartsWidth({
 					<ChartDescription id={'homepage-usmap-chart-label'}>
 						Showing incidents distribution in the U.S. Incidents are grouped by state.
 					</ChartDescription>
-					<USMap
+					<HexbinUSMap
 						data={datasetAggregatedByGeo}
 						incidentsOutsideUS={incidentsOutsideUS}
 						width={chartWidth}
