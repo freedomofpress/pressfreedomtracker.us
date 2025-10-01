@@ -50,6 +50,7 @@ export default function HexbinUSMap({
 	// it to be downloaded
 	setSvgEl = () => { },
 	interactive = true,
+	fullSize = true, // false for thumbnails/mini graphics
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -197,7 +198,7 @@ export default function HexbinUSMap({
 						const incidents = dataPoint ? (dataPoint.numberOfIncidents || 0) : 0
 						const fillColor = incidents > 0 ? colorScale(incidents) : 'white'
 						const stateName = dataPoint ? `${aggregationLocality(dataPoint)}` : hexState.state
-						const isHovered = hoveredElement === stateName
+						const isHovered = interactive && hoveredElement === stateName
 						const strokeColor = incidents > 0 || isHovered ? '#000' : '#ccc'
 						const strokeWidth = isHovered ? hexBorder.hover : hexBorder.normal
 						const textColor = incidents > 0 ? (incidents > maxIncidents * CONTRAST_THRESHOLD ? '#fff' : '#000') : '#767676'
@@ -267,8 +268,8 @@ export default function HexbinUSMap({
 				</g>
 
 
-				{/* legend */}
-				{maxIncidents > 0 && (
+				{/* legend - hidden for thumbnails */}
+				{maxIncidents > 0 && fullSize && (
 					<g transform={`translate(${width - 120}, ${height - 120})`} role="img" aria-label="Legend: Color scale">
 						<text
 							x={0}

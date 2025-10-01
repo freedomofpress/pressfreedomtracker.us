@@ -7,9 +7,10 @@ import BarChartMini from '../client/charts/js/components/BarChartMini'
 import TreeMap from '../client/charts/js/components/TreeMap'
 import TreeMapMini from '../client/charts/js/components/TreeMapMini'
 import USMap from '../client/charts/js/components/USMap'
+import HexbinUSMap from '../client/charts/js/components/HexbinUSMap'
 import { processIncidentsTimeData } from '../client/charts/js/components/IncidentsTimeBarChart'
 import {
-	filterDatasets, categoriesColors, groupByCity, groupByState,
+	filterDatasets, categoriesColors, groupByCity, groupByState, countIncidentsOutsideUS,
 } from '../client/charts/js/lib/utilities'
 import { loadData } from '../client/charts/js/components/DataLoader'
 
@@ -282,6 +283,75 @@ export const generateUSMapSVG = async (req) => {
 					width={options.width}
 					height={options.height}
 					disableAnimation
+				/>
+			</svg>,
+		)
+	} catch (e) {
+		console.error(e)
+		return generateFallbackSVG(options.width, options.height)
+	}
+}
+
+
+export const generateHexbinUSMapSVG = async (req) => {
+	let options = {
+		filterTags: null,
+		filterCategories: [],
+		dateRange: [null, null],
+		aggregationLocality: 'state',
+		width: chartWidth,
+		height: chartHeight,
+	}
+
+	try { options = { ...options, ...JSON.parse(req?.query?.options || '{}') } } catch (e) { console.error(e) }
+
+	let dataset
+
+	try {
+		({ dataset } = await loadData({
+			dataUrl: `${FPF_BASE_URL}/api/edge/incidents/homepage_csv/?`,
+			dataKey: 'dataset',
+			dataParser: (data) => d3.csvParse(data, d3.autoType),
+			fetchFn: fetch,
+		}))
+	} catch (e) { console.error(e) }
+
+	if (!dataset) return generateFallbackSVG(options.width, options.height)
+
+	try {
+		const filterStates = new Set(options.filterStates)
+
+		// Filter down to the categories and tags and date range we want
+		const filteredDataset = filterDatasets(
+			dataset,
+			options.filterCategories,
+			options.filterTags,
+			options.dateRange,
+			filterStates,
+		)
+		const datasetAggregatedByGeo = filteredDataset && groupByState(filteredDataset) // Hexbin maps are always state-level
+		const incidentsOutsideUS = countIncidentsOutsideUS(filteredDataset)
+
+		return ReactDOMServer.renderToString(
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				xmlnsXlink="http://www.w3.org/1999/xlink"
+				version="1.1"
+				width={options.width}
+				height={options.height}
+				viewBox={`0 0 ${options.width} ${options.height}`}
+				style={{ fontFamily: 'Arial, sans-serif' }}
+			>
+				<HexbinUSMap
+					data={datasetAggregatedByGeo}
+					aggregationLocality={d => d.state}
+					incidentsOutsideUS={incidentsOutsideUS}
+					width={options.width}
+					height={options.height}
+					id="hexbin-pregeneration"
+					interactive={false}
+					fullSize={options.mini !== true}
+					addBottomBorder={false}
 				/>
 			</svg>,
 		)

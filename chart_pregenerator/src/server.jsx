@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import express from 'express'
 import { Resvg } from '@resvg/resvg-js'
-import { generateBarChartSVG, generateTreemapChartSVG, generateUSMapSVG } from './lib'
+import { generateBarChartSVG, generateHexbinUSMapSVG, generateTreemapChartSVG, generateUSMapSVG } from './lib'
 
 const PORT = process.env.PORT || 3000
 const app = express()
@@ -54,6 +54,23 @@ app.get('/bubble-map.svg', async (req, res) => {
 
 app.get('/bubble-map.png', async (req, res) => {
 	const component = await generateUSMapSVG(req)
+
+	const resvg = new Resvg(component, { font: { defaultFontFamily: 'Arial' } })
+	const pngData = resvg.render()
+	const pngBuffer = pngData.asPng()
+	res.setHeader('Content-Type', 'image/png')
+	return res.send(pngBuffer)
+})
+
+app.get('/hexbin-map.svg', async (req, res) => {
+	const component = await generateHexbinUSMapSVG(req)
+
+	res.setHeader('Content-Type', 'image/svg+xml')
+	return res.send(component)
+})
+
+app.get('/hexbin-map.png', async (req, res) => {
+	const component = await generateHexbinUSMapSVG(req)
 
 	const resvg = new Resvg(component, { font: { defaultFontFamily: 'Arial' } })
 	const pngData = resvg.render()

@@ -570,11 +570,6 @@ class TreeMapChart(blocks.StructBlock):
         js = ['treeMapChart']
 
 
-class HexbinMapChartValue(ChartValue):
-    options_schema = HexbinMapChartOptionsSchema
-    chart_type = ChartType.BUBBLE_MAP
-
-
 class BubbleMapChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
@@ -600,6 +595,11 @@ class BubbleMapChart(blocks.StructBlock):
 
     class Media:
         js = ['bubbleMapChart']
+
+
+class HexbinMapChartValue(ChartValue):
+    options_schema = HexbinMapChartOptionsSchema
+    chart_type = ChartType.HEXBIN_MAP
 
 
 class HexbinMapChart(blocks.StructBlock):
