@@ -52,5 +52,5 @@ test-results
 # local settings
 tracker/settings/local.py
 
-# OS Files
+# OS files
 .DS_Store
