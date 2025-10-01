@@ -7,6 +7,8 @@
 		{% include 'common/blocks/tree_map_chart.html' with value=post.teaser_graphic.0.value static_graphic=true %}
 	{% elif post.teaser_graphic.0.block_type == "bubble_map_chart" %}
 		{% include 'common/blocks/bubble_map_chart.html' with value=post.teaser_graphic.0.value static_graphic=true %}
+	{% elif post.teaser_graphic.0.block_type == "hexbin_map_chart" %}
+		{% include 'common/blocks/hexbin_map_chart.html' with value=post.teaser_graphic.0.value static_graphic=true %}
 	{% else %}
 		{% image post.teaser_graphic.0.value scale-100 preserve-svg as tmp_photo %}
 		<img src="{{ tmp_photo.url }}" alt="{{ post.teaser_graphic.0.title }}" width="{{ tmp_photo.width }}" height="{{ tmp_photo.height }}">

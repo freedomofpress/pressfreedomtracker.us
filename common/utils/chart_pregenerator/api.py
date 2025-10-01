@@ -76,6 +76,8 @@ def request_snapshot(
         endpoint = 'treemap-chart'
     elif chart_type == ChartType.BUBBLE_MAP:
         endpoint = 'bubble-map'
+    elif chart_type == ChartType.HEXBIN_MAP:
+        endpoint = 'hexbin-map'
     else:
         raise InvalidChartType(chart_type)
 
