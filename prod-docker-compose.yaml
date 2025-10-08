@@ -76,6 +76,7 @@ services:
       args:
         NPM_VER: 9.6.7
         USERID: 1234
+    image: quay.io/freedomofpress/pft-chart-pregenerator
     environment:
       DJANGO_HOST: app
       PORT: *chart-port
