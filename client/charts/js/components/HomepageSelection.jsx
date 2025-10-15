@@ -103,16 +103,16 @@ export default function HomepageSelection({
 		return true
 	}
 
-	function isTimeButtonSelectable(year){
-		   if(year === 'the past six months'){
-				return isLastSixMonthsSelectable(originalDataset, currentDate)
-		   }
-		   else if(year === 'all time'){
-				return true
-		   }
-		   else{
-				return isYearSelectable(originalDataset, year)
-		   }
+	function isTimeButtonSelectable(year) {
+		if (year === 'the past six months') {
+			return isLastSixMonthsSelectable(originalDataset, currentDate)
+		}
+		else if (year === 'all time') {
+			return true
+		}
+		else {
+			return isYearSelectable(originalDataset, year)
+		}
 	}
 
 	return (
@@ -129,7 +129,7 @@ export default function HomepageSelection({
 			/>
 			<ButtonsRow
 				label="from"
-				buttonLabels={['the past six months'].concat(years).concat(['all time'])}
+				buttonLabels={['the past six months'].concat(['all time']).concat(years)}
 				defaultSelection={'the past six months'}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
