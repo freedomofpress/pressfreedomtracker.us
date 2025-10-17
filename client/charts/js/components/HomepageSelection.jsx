@@ -5,7 +5,7 @@ import ButtonsRow from './ButtonsRow'
 import {
 	filterDatasetByTag,
 	filterDatasetByYear,
-	filterDatasetByLastSixMonths,
+	filterDatasetByLastSevenDays,
 	filterDatasetByFiltersApplied,
 } from '../lib/utilities.js'
 
@@ -55,7 +55,7 @@ export default function HomepageSelection({
 		const newFiltersToApply = {
 			tag: tag,
 			year: filtersApplied.year,
-			sixMonths: filtersApplied.sixMonths,
+			sevenDays: filtersApplied.sevenDays,
 		}
 		setFiltersApplied(newFiltersToApply)
 	}
@@ -63,8 +63,8 @@ export default function HomepageSelection({
 	function updateSelectedYear(label) {
 		const newFiltersToApply = {
 			tag: filtersApplied.tag,
-			year: (label === 'the past six months') || (label === 'all time') ? null : label,
-			sixMonths: label === 'the past six months',
+			year: (label === 'last 7 days') || (label === 'all time') ? null : label,
+			sevenDays: label === 'last 7 days',
 			allTime: label === 'all time'
 		}
 
@@ -75,7 +75,7 @@ export default function HomepageSelection({
 		return (
 			filterDatasetByFiltersApplied(
 				originalDataset,
-				{ tag: tag, year: filtersApplied.year, sixMonths: filtersApplied.sixMonths, allTime: filtersApplied.allTime },
+				{ tag: tag, year: filtersApplied.year, sevenDays: filtersApplied.sevenDays, allTime: filtersApplied.allTime },
 				currentDate
 			).length > 0
 		)
@@ -91,10 +91,10 @@ export default function HomepageSelection({
 		return true
 	}
 
-	function isLastSixMonthsSelectable(originalDataset, currentDate) {
+	function isLastSSevenDaysSelectable(originalDataset, currentDate) {
 		if (filtersApplied.tag !== null) {
 			return (
-				filterDatasetByLastSixMonths(
+				filterDatasetByLastSevenDays(
 					filterDatasetByTag(originalDataset, filtersApplied.tag),
 					currentDate
 				).length > 0
@@ -104,8 +104,8 @@ export default function HomepageSelection({
 	}
 
 	function isTimeButtonSelectable(year) {
-		if (year === 'the past six months') {
-			return isLastSixMonthsSelectable(originalDataset, currentDate)
+		if (year === 'last 7 days') {
+			return isLastSSevenDaysSelectable(originalDataset, currentDate)
 		}
 		else if (year === 'all time') {
 			return true
@@ -129,9 +129,9 @@ export default function HomepageSelection({
 			/>
 			<ButtonsRow
 				label="from"
-				buttonLabels={['the past six months'].concat(['all time'])}
+				buttonLabels={['last 7 days'].concat(['all time'])}
 				dropDownLabels={years}
-				defaultSelection={'the past six months'}
+				defaultSelection={'last 7 days'}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
 			/>

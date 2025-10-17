@@ -56,11 +56,11 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 
 	if (filtersApplied.monthName !== undefined) {
 		const monthNumber = monthIndexes[filtersApplied.monthName]
-		const year = !filtersApplied.sixMonths
+		const year = !filtersApplied.sevenDays
 			? filtersApplied.year
 			: currentDate.getUTCMonth() > 6 || monthNumber <= 6
-			? currentDate.getUTCFullYear()
-			: currentDate.getUTCFullYear() - 1
+				? currentDate.getUTCFullYear()
+				: currentDate.getUTCFullYear() - 1
 		const paddedMonthNumber = String(monthNumber).padStart(2, '0')
 		const firstDayMonth = `${year}-${paddedMonthNumber}-01`
 		const lastDayMonth = `${year}-${paddedMonthNumber}-${new Date(year, monthNumber, 0).getDate()}`
@@ -75,7 +75,7 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 		parameters.push(`date_lower=${filtersApplied.year}-01-01&date_upper=${filtersApplied.year}-12-31`)
 	}
 
-	if (filtersApplied.sixMonths && filtersApplied.monthName === undefined) {
+	if (filtersApplied.sevenDays && filtersApplied.monthName === undefined) {
 		const currentMonth = currentDate.getUTCMonth()
 		const currentYear = currentDate.getUTCFullYear()
 
@@ -109,10 +109,10 @@ export function filterDatasetByYear(dataset, year) {
 	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
-// Filter to the last six months, inclusive on the *currentDate* end
-export function filterDatasetByLastSixMonths(dataset, currentDate) {
-	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
-	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
+// Filter to the last Last 7 days, inclusive on the *currentDate* end
+export function filterDatasetByLastSevenDays(dataset, currentDate) {
+	const sevenDaysAgo = d3.utcDay.offset(currentDate, -7)
+	return dataset.filter(d => +d.date > +sevenDaysAgo && +d.date <= +currentDate)
 }
 
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
@@ -124,12 +124,12 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 		filtersApplied.year !== null
 			? filterDatasetByYear(datasetFilteredByTag, filtersApplied.year)
 			: datasetFilteredByTag
-	const datasetFilteredBySixMonths =
-		filtersApplied.sixMonths !== false
-			? filterDatasetByLastSixMonths(datasetFilteredByYear, currentDate)
+	const datasetFilteredBySevenDays =
+		filtersApplied.sevenDays !== false
+			? filterDatasetByLastSevenDays(datasetFilteredByYear, currentDate)
 			: datasetFilteredByYear
 
-	return datasetFilteredBySixMonths
+	return datasetFilteredBySevenDays
 }
 
 export function filterDatasets(
@@ -144,9 +144,9 @@ export function filterDatasets(
 
 	// Create maps so that we don't have to do n^2 lookup times
 	const filterCategoryMap = (Array.isArray(filterCategories) ? filterCategories : [filterCategories])
-		.reduce((acc, val) => ({...acc, [val]: true}), {})
+		.reduce((acc, val) => ({ ...acc, [val]: true }), {})
 	const filterTagsMap = (Array.isArray(filterTags) ? filterTags : [filterTags])
-		.reduce((acc, val) => ({...acc, [val]: true}), {})
+		.reduce((acc, val) => ({ ...acc, [val]: true }), {})
 
 	// Filter down to the categories and tags and date range we want
 	return dataset
@@ -169,7 +169,7 @@ export function filterDatasets(
 		.map(({ date, ...restProps }) => ({ ...restProps, date: d3.utcMonth.floor(date) }))
 }
 
-export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
+export function groupByMonthSorted(dataset, isLastSevenDays, currentDate) {
 	const datasetGroupedByMonth = d3
 		.groups(
 			dataset.map((d) => ({ month: d.date.getUTCMonth() })),
@@ -184,22 +184,22 @@ export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 			: monthNames.slice(currentMonth - 5, currentMonth + 1)
 
 	// If yearly selection, we sort the array by month
-	// If last six months selection, we sort the array based on the last six months
-	const datasetGroupedByMonthSorted = isLastSixMonths
+	// If last seven days selection, we sort the array based on the last seven days
+	const datasetGroupedByMonthSorted = isLastSevenDays
 		? monthsConsidered
-				.map((d) =>
-					datasetGroupedByMonth.filter((e) => e.monthName === d).length === 0
-						? { month: monthIndexes[d] - 1, monthName: d, numberOfIncidents: 0 }
-						: datasetGroupedByMonth.filter((e) => e.monthName === d)
-				)
-				.flat()
+			.map((d) =>
+				datasetGroupedByMonth.filter((e) => e.monthName === d).length === 0
+					? { month: monthIndexes[d] - 1, monthName: d, numberOfIncidents: 0 }
+					: datasetGroupedByMonth.filter((e) => e.monthName === d)
+			)
+			.flat()
 		: monthNames
-				.map((d) =>
-					datasetGroupedByMonth.filter((e) => e.monthName === d).length === 0
-						? { month: monthIndexes[d] - 1, monthName: d, numberOfIncidents: 0 }
-						: datasetGroupedByMonth.filter((e) => e.monthName === d)
-				)
-				.flat()
+			.map((d) =>
+				datasetGroupedByMonth.filter((e) => e.monthName === d).length === 0
+					? { month: monthIndexes[d] - 1, monthName: d, numberOfIncidents: 0 }
+					: datasetGroupedByMonth.filter((e) => e.monthName === d)
+			)
+			.flat()
 
 	return datasetGroupedByMonthSorted
 }
@@ -365,17 +365,17 @@ export function isDateValid(date) {
 // Return a range of numbers, including both start and stop terms.
 // rangeInclusive(0, 4, 1)  --> [0, 1, 2, 3, 4]
 export function rangeInclusive(start, stop, step) {
-	return Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
+	return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
 }
 
 
 // Return a new set with elements of set A that are not in set B
 export function difference(setA, setB) {
-  const _difference = new Set(setA);
-  for (const elem of setB) {
-    _difference.delete(elem);
-  }
-  return _difference;
+	const _difference = new Set(setA);
+	for (const elem of setB) {
+		_difference.delete(elem);
+	}
+	return _difference;
 }
 
 function trackMatomo(args = []) {
