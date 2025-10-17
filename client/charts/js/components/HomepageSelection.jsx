@@ -129,7 +129,8 @@ export default function HomepageSelection({
 			/>
 			<ButtonsRow
 				label="from"
-				buttonLabels={['the past six months'].concat(['all time']).concat(years)}
+				buttonLabels={['the past six months'].concat(['all time'])}
+				dropDownLabels={years}
 				defaultSelection={'the past six months'}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
