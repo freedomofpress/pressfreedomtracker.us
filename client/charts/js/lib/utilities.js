@@ -56,7 +56,7 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 
 	if (filtersApplied.monthName !== undefined) {
 		const monthNumber = monthIndexes[filtersApplied.monthName]
-		const year = !filtersApplied.sevenDays
+		const year = !filtersApplied.sixMonths
 			? filtersApplied.year
 			: currentDate.getUTCMonth() > 6 || monthNumber <= 6
 				? currentDate.getUTCFullYear()
@@ -75,7 +75,7 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 		parameters.push(`date_lower=${filtersApplied.year}-01-01&date_upper=${filtersApplied.year}-12-31`)
 	}
 
-	if (filtersApplied.sevenDays && filtersApplied.monthName === undefined) {
+	if (filtersApplied.sixMonths && filtersApplied.monthName === undefined) {
 		const currentMonth = currentDate.getUTCMonth()
 		const currentYear = currentDate.getUTCFullYear()
 
@@ -109,10 +109,10 @@ export function filterDatasetByYear(dataset, year) {
 	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
-// Filter to the last Last 7 days, inclusive on the *currentDate* end
-export function filterDatasetByLastSevenDays(dataset, currentDate) {
-	const sevenDaysAgo = d3.utcDay.offset(currentDate, -7)
-	return dataset.filter(d => +d.date > +sevenDaysAgo && +d.date <= +currentDate)
+// Filter to the last Last 6 months, inclusive on the *currentDate* end
+export function filterDatasetByLastSixMonths(dataset, currentDate) {
+	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
+	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
 }
 
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
@@ -124,12 +124,12 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 		filtersApplied.year !== null
 			? filterDatasetByYear(datasetFilteredByTag, filtersApplied.year)
 			: datasetFilteredByTag
-	const datasetFilteredBySevenDays =
-		filtersApplied.sevenDays !== false
-			? filterDatasetByLastSevenDays(datasetFilteredByYear, currentDate)
+	const datasetFilteredBySixMonths =
+		filtersApplied.sixMonths !== false
+			? filterDatasetByLastSixMonths(datasetFilteredByYear, currentDate)
 			: datasetFilteredByYear
 
-	return datasetFilteredBySevenDays
+	return datasetFilteredBySixMonths
 }
 
 export function filterDatasets(
@@ -169,7 +169,7 @@ export function filterDatasets(
 		.map(({ date, ...restProps }) => ({ ...restProps, date: d3.utcMonth.floor(date) }))
 }
 
-export function groupByMonthSorted(dataset, isLastSevenDays, currentDate) {
+export function groupByMonthSorted(dataset, isLastSixMonths, currentDate) {
 	const datasetGroupedByMonth = d3
 		.groups(
 			dataset.map((d) => ({ month: d.date.getUTCMonth() })),
@@ -184,8 +184,8 @@ export function groupByMonthSorted(dataset, isLastSevenDays, currentDate) {
 			: monthNames.slice(currentMonth - 5, currentMonth + 1)
 
 	// If yearly selection, we sort the array by month
-	// If last seven days selection, we sort the array based on the last seven days
-	const datasetGroupedByMonthSorted = isLastSevenDays
+	// If last six months selection, we sort the array based on the last six months
+	const datasetGroupedByMonthSorted = isLastSixMonths
 		? monthsConsidered
 			.map((d) =>
 				datasetGroupedByMonth.filter((e) => e.monthName === d).length === 0

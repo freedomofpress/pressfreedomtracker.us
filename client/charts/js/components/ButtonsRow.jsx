@@ -42,7 +42,6 @@ export default function ButtonsRow({
 							selectedButton === buttonLabel
 						}
 						onClick={() => {
-							console.log(typeof buttonLabel)
 							changeSelectedButton(buttonLabel)
 						}}
 						selectable={isButtonSelectable(buttonLabel)}

@@ -40,7 +40,7 @@ function HomepageMainChartsWidth({
 	const [filtersApplied, setFiltersApplied] = React.useState({
 		tag: null,
 		year: null,
-		sevenDays: true,
+		sixMonths: true,
 		allTime: null
 	})
 
@@ -74,7 +74,7 @@ function HomepageMainChartsWidth({
 		barChartProps.x = 'monthName'
 		barChartProps.data = groupByMonthSorted(
 			datasetFiltered,
-			filtersApplied.sevenDays,
+			filtersApplied.sixMonths,
 			currentDate,
 		)
 		barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
