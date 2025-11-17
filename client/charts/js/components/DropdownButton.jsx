@@ -21,9 +21,10 @@ export default function DropdownButton({ selected, selectable = true, onChange }
 				fontFamily: textStyle.fontFamily,
 				fontSize: textStyle.fontSize,
 				fontWeight: textStyle.fontWeight,
-				padding: '8px',
-				borderRadius: 0, // Changed from 4 to 0 for sharp corners
-				appearance: 'none',
+				padding: '10.9px',
+				position: 'relative',
+				top: '0.25px',
+				borderRadius: 0
 			}}
 			onMouseDown={(e) => {
 				if (selectable) {
