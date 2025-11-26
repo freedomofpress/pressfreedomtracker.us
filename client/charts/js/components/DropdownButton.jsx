@@ -11,7 +11,7 @@ export default function DropdownButton({ selected, selectable = true, onChange }
 
 	return (
 		<select
-			className="btn btn-bordered"
+			className='btn btn-bordered btn-select'
 			style={{
 				marginBottom: 3,
 				backgroundColor: selected || (hovered && selectable) ? 'black' : 'white',
@@ -21,11 +21,10 @@ export default function DropdownButton({ selected, selectable = true, onChange }
 				fontFamily: textStyle.fontFamily,
 				fontSize: textStyle.fontSize,
 				fontWeight: textStyle.fontWeight,
-				padding: '10.9px',
 				position: 'relative',
-				top: '0.25px',
-				borderRadius: 0
-			}}
+				borderRadius: 0,
+			}
+			}
 			onMouseDown={(e) => {
 				if (selectable) {
 					onChange(e.target.value)
@@ -45,12 +44,14 @@ export default function DropdownButton({ selected, selectable = true, onChange }
 			disabled={!selectable}
 			value={selected}
 		>
-			{Array.isArray(selectable) &&
+			{
+				Array.isArray(selectable) &&
 				selectable.map((option) => (
 					<option key={option} value={option}>
 						{option}
 					</option>
-				))}
-		</select>
+				))
+			}
+		</select >
 	)
 }
