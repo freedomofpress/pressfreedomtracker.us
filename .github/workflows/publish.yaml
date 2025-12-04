@@ -65,5 +65,5 @@ jobs:
         USERID=1001
         NPM_VER=10.9.2
       tags: ${{ needs.prepare.outputs.tags }}
-      registry: localhost/pressfreedomtracker-us-chartgen
+      registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
 
