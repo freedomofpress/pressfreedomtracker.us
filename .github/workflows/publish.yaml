@@ -10,31 +10,9 @@ permissions:
   actions: read
 
 jobs:
-  prepare:
-    name: Prepare
-    runs-on: ubuntu-latest
-    steps:
-    - name: Determine tags
-      id: tags
-      env:
-        BRANCH: ${{ github.ref_name }}
-        SHA: ${{ github.sha }}
-      run: |
-        export TAGS="$BRANCH;$BRANCH-${SHA:0:7}"
-
-        if [ "$BRANCH" = "prod" ]; then
-            export TAGS="$TAGS;latest"
-        fi
-
-        echo "tags=$TAGS" >>$GITHUB_OUTPUT
-    outputs:
-        tags: ${{ steps.tags.outputs.tags }}
-
   build-django:
     name: Build:Django
     uses: freedomofpress/actionslib/.github/workflows/oci-build.yaml@main
-    needs:
-    - prepare
     permissions:
       contents: read
       actions: read
@@ -45,15 +23,14 @@ jobs:
       build-args: |
         USERID=1000
         NPM_VER=9.6.7
-      tags: ${{ needs.prepare.outputs.tags }}
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us
       requires-deep-history: true
+      default-branch: prod
+      add-branch-tags: true
 
   build-chartgen:
     name: Build:Chartgen
     uses: freedomofpress/actionslib/.github/workflows/oci-build.yaml@main
-    needs:
-    - prepare
     permissions:
       contents: read
       actions: read
@@ -64,6 +41,7 @@ jobs:
       build-args: |
         USERID=1001
         NPM_VER=10.9.2
-      tags: ${{ needs.prepare.outputs.tags }}
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
+      default-branch: prod
+      add-branch-tags: true
 
