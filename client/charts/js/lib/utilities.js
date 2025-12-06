@@ -109,7 +109,7 @@ export function filterDatasetByYear(dataset, year) {
 	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
-// Filter to the last Last 6 months, inclusive on the *currentDate* end
+// Filter to the last six months, inclusive on the *currentDate* end
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
 	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
 	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
