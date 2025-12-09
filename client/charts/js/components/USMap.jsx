@@ -71,12 +71,18 @@ export default function USMap({
 		let x = MouseEvent.clientX
 		let y = MouseEvent.clientY
 
+		// If tooltip would extend beyond the right edge of the window,
+		// position it to the left of the cursor instead
 		if (x + tooltipWidth + padding > window.innerWidth) {
 			x = x - tooltipWidth
 		}
+		// If tooltip would extend beyond the bottom edge of the window,
+		// center it vertically relative to the cursor
 		if (y + tooltipHeight + padding > window.innerHeight) {
 			y = y - tooltipHeight / 2
 		}
+		// If tooltip would extend beyond the top edge of the window,
+		// position it below the cursor instead
 		if (y < tooltipHeight) {
 			y = y + tooltipHeight + padding
 		}
