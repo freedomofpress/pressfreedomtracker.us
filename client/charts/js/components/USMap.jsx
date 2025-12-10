@@ -64,7 +64,29 @@ export default function USMap({
 	const paddings = { ...defaultPaddings, ...overridePaddings }
 
 	const updateTooltipPosition = (MouseEvent) => {
-		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
+		const tooltipWidth = 175 // approximate width of the tooltip in px
+		const tooltipHeight = 50 // approximate height of the tooltip in px
+		const padding = 10 // padding from the mouse pointer
+
+		let x = MouseEvent.clientX
+		let y = MouseEvent.clientY
+
+		// If tooltip would extend beyond the right edge of the window,
+		// position it to the left of the cursor instead
+		if (x + tooltipWidth + padding > window.innerWidth) {
+			x = x - tooltipWidth
+		}
+		// If tooltip would extend beyond the bottom edge of the window,
+		// center it vertically relative to the cursor
+		if (y + tooltipHeight + padding > window.innerHeight) {
+			y = y - tooltipHeight / 2
+		}
+		// If tooltip would extend beyond the top edge of the window,
+		// position it below the cursor instead
+		if (y < tooltipHeight) {
+			y = y + tooltipHeight + padding
+		}
+		setTooltipPosition({ x: x, y: y })
 	}
 
 	const path = d3.geoPath()

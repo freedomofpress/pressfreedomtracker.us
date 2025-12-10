@@ -69,7 +69,7 @@ function HomepageMainChartsWidth({
 	if (filtersApplied.allTime) {
 		barChartProps.data = groupByYearsSorted(datasetFiltered)
 		barChartProps.x = 'year'
-		barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year}, currentDate, categories)
+		barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year }, currentDate, categories)
 	} else {
 		barChartProps.x = 'monthName'
 		barChartProps.data = groupByMonthSorted(
