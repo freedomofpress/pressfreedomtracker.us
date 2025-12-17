@@ -228,3 +228,7 @@ def csrf_failure(request, reason=""):
         pass
 
     return HttpResponseForbidden()
+
+
+def too_many_requests(request):
+    return TemplateResponse(request, '429.html', {})
