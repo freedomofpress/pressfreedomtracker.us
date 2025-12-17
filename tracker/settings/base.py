@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'wagtailinventory',
+    'wagtail_honeypot',
 
     'django.contrib.admin',
     'django.contrib.auth',
