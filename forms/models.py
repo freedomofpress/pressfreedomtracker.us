@@ -14,13 +14,16 @@ from wagtail.admin.panels import (
     HelpPanel,
     InlinePanel,
     MultiFieldPanel,
+    ObjectList,
+    TabbedInterface,
 )
 from wagtail.contrib.forms.models import AbstractFormField
 from wagtail.fields import RichTextField
-from wagtail.models import Orderable
+from wagtail.models import Orderable, Page
 
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
+from wagtail_honeypot.models import HoneypotFormMixin, HoneypotFormSubmissionMixin
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 from common.models import MetadataPageMixin
@@ -128,7 +131,12 @@ class FieldGroup(ClusterableModel, Orderable):
 
 
 @method_decorator(cache_control(private=True), name='serve')
-class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
+class FormPage(
+        MetadataPageMixin,
+        HoneypotFormMixin,
+        HoneypotFormSubmissionMixin,
+        WagtailCaptchaEmailForm,
+):
     intro = RichTextField(blank=True)
     form_intro = models.TextField(
         blank=True,
@@ -152,6 +160,13 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         null=True,
         help_text='Optional: text for the page outro',
     )
+
+    honeypot_panels = [
+        MultiFieldPanel(
+            [FieldPanel("honeypot")],
+            heading="Reduce Form Spam",
+        )
+    ]
 
     content_panels = [
         HelpPanel(heading='Note', content='Forms can be embedded in an iframe by a third-party website. '
@@ -179,6 +194,15 @@ class FormPage(MetadataPageMixin, WagtailCaptchaEmailForm):
         ], "Outro"),
     ]
     base_form_class = ReplyToValidatorForm
+
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(content_panels, heading="Content"),
+            ObjectList(honeypot_panels, heading="Honeypot"),
+            ObjectList(Page.promote_panels, heading="Promote"),
+            ObjectList(Page.settings_panels, heading="Settings", classname="settings"),
+        ]
+    )
 
     def csrf_failure_key(self):
         return f'form-csrf-failure-{self.pk}'
