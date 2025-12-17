@@ -12,11 +12,13 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 from __future__ import absolute_import, unicode_literals
 
-import sys
+import logging
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 
-import logging
+
 logger = logging.getLogger(__name__)
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -1,27 +1,31 @@
 from collections import defaultdict
 
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.views.decorators.cache import cache_control
-from django.shortcuts import redirect
-from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
+
 from wagtail.admin.forms import WagtailAdminPageForm
 from wagtail.admin.panels import (
-    FieldPanel, FieldRowPanel,
-    InlinePanel, MultiFieldPanel,
+    FieldPanel,
+    FieldRowPanel,
     HelpPanel,
+    InlinePanel,
+    MultiFieldPanel,
 )
-from wagtail.models import Orderable
-from wagtail.fields import RichTextField
 from wagtail.contrib.forms.models import AbstractFormField
+from wagtail.fields import RichTextField
+from wagtail.models import Orderable
+
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
+from common.models import MetadataPageMixin
 from forms.choices import FIELD_GROUP_TEMPLATE_CHOICES
 from forms.email import send_mail
-from common.models import MetadataPageMixin
 
 
 class ReplyToValidatorForm(WagtailAdminPageForm):

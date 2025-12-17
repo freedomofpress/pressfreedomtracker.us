@@ -2,20 +2,26 @@ from __future__ import absolute_import, unicode_literals
 
 from django.apps import apps
 from django.conf import settings
-from django.urls import include, path, re_path
 from django.contrib import admin
+from django.urls import include, path, re_path
 from django.views.generic import TemplateView
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
+from wagtail import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.contrib.sitemaps.views import sitemap
+from wagtail.documents import urls as wagtaildocs_urls
+
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 
 from charts.urls import urlpatterns as chart_urls
 from common import views as common_views
 from emails import urls as emails_urls
 from incident.api.urls import urlpatterns as api_urls
-from wagtail.admin import urls as wagtailadmin_urls
-from wagtail import urls as wagtail_urls
-from wagtail.contrib.sitemaps.views import sitemap
-from wagtail.documents import urls as wagtaildocs_urls
 
 
 urlpatterns = [
