@@ -25,7 +25,6 @@ jobs:
         NPM_VER=9.6.7
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us
       requires-deep-history: true
-      default-branch: prod
       add-branch-tags: true
 
   build-chartgen:
@@ -42,6 +41,5 @@ jobs:
         USERID=1001
         NPM_VER=10.9.2
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
-      default-branch: prod
       add-branch-tags: true
 
