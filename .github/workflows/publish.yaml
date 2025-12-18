@@ -37,7 +37,7 @@ jobs:
       packages: write
     with:
       context: '.'
-      containerfile: devops/docker/NodeChartPregeneratorDevDockerfile
+      containerfile: devops/docker/NodeChartPregeneratorDockerfile
       build-args: |
         USERID=1001
         NPM_VER=10.9.2
