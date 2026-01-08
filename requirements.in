@@ -18,7 +18,7 @@ factory_boy>=3.2.0
 gunicorn
 Jinja2>=3.1.6
 mailchimp_marketing>=3.0.66
-marshmallow
+marshmallow>=3.26.2,<4
 psycopg2>=2.9.9
 Pygments
 python-json-logger
