@@ -93,9 +93,16 @@ export default function USMap({
 	const projection = d3.geoAlbersUsa().scale(1280).translate([480, 300])
 	const hasLatLon = ({ latitude, longitude }) => latitude && longitude
 
-	// Scale markers size depending on the number of incidents in a city
-	const values = dataset.map((d) => d.numberOfIncidents);
-	const markerScale = d3.scaleSqrt().domain([0, d3.max(values)]).range([markerSize.min, markerSize.max])
+	// Scale markers size depending on the number of incidents in a city/state
+	const markerScale = d3.scaleSqrt().domain([0, d3.max(dataset, d => d.numberOfIncidents)]).range([markerSize.min, markerSize.max])
+
+	// Make markers for incidents < 5 smaller
+	const getMarkerRadius = (numIncidents) => {
+		if (numIncidents < 5) {
+			return markerScale(numIncidents) * 0.6
+		}
+		return markerScale(numIncidents)
+	}
 	if (!width) return null
 
 	return (
@@ -166,7 +173,7 @@ export default function USMap({
 							opacity={1}
 							cx={projection([d.longitude, d.latitude])[0]}
 							cy={projection([d.longitude, d.latitude])[1]}
-							r={markerScale(d.numberOfIncidents)}
+							r={getMarkerRadius(d.numberOfIncidents)}
 							fill={hoveredElement === null
 								? '#E07A5F'
 								: hoveredElement === `${aggregationLocality(d)}`
@@ -194,7 +201,7 @@ export default function USMap({
 									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									cx={projection([d.longitude, d.latitude])[0]}
 									cy={projection([d.longitude, d.latitude])[1]}
-									r={markerScale(d.numberOfIncidents) + 5}
+									r={getMarkerRadius(d.numberOfIncidents) + 5}
 									style={{ opacity: 0, cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit' }}
 									onMouseMove={updateTooltipPosition}
 									onMouseEnter={(mouseEvent) => {
