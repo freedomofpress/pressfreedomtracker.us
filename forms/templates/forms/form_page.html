@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags honeypot_tags static %}
+
+{% block css %}
+	{{ block.super }}
+	<link rel="stylesheet" href="{% static 'css/honeypot.css' %}">
+	<script src="{% static 'js/honeypot.js' %}"></script>
+{% endblock %}
 
 {% block main %}
     <h1 class="page-title">{{ page.title }}</h1>
@@ -21,6 +27,7 @@
     <section class="formpage-form">
         <form class="form" action="{% pageurl page %}" method="post">
             {% csrf_token %}
+			{% honeypot_fields page.honeypot %}
 			{% if top_level_error %}
 				<p class="formpage-form__top-level-error">
 					{{ top_level_error }}

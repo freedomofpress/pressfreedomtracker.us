@@ -1,27 +1,30 @@
 import json
 import os
 
-import marshmallow
-import requests
-import structlog
-import mailchimp_marketing
 from django.conf import settings
 from django.http import (
-    HttpResponse,
-    JsonResponse,
-    HttpResponseForbidden,
     Http404,
+    HttpResponse,
+    HttpResponseForbidden,
+    JsonResponse,
 )
 from django.middleware.csrf import get_token
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.views.decorators.cache import never_cache
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView, View
+
 from wagtail.documents.views.serve import serve as wagtail_serve
 from wagtail.models import Site
 
+import mailchimp_marketing
+import marshmallow
+import requests
+import structlog
+
 from emails.models import SubscriptionSchema
-from .utils import subscribe_for_site, MailchimpError, get_page_for_request
+
+from .utils import MailchimpError, get_page_for_request, subscribe_for_site
 
 
 VERSION_INFO_SHORT_PATH = os.environ.get(
@@ -225,3 +228,7 @@ def csrf_failure(request, reason=""):
         pass
 
     return HttpResponseForbidden()
+
+
+def too_many_requests(request):
+    return TemplateResponse(request, '429.html', {})
