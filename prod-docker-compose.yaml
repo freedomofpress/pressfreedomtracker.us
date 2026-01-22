@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: devops/docker/ProdDjangoDockerfile
       args:
-        NPM_VER: 9.6.7
+        NPM_VER: 11.8.0
         USERID: 1234
     image: quay.io/freedomofpress/pressfreedomtrackerus
     depends_on:
@@ -74,7 +74,7 @@ services:
       context: .
       dockerfile: devops/docker/NodeChartPregeneratorDockerfile
       args:
-        NPM_VER: 9.6.7
+        NPM_VER: 11.8.0
         USERID: 1234
     image: quay.io/freedomofpress/pft-chart-pregenerator
     environment:

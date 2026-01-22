@@ -44,7 +44,7 @@ services:
       context: .
       dockerfile: devops/docker/NodeDockerfile
       args:
-        NPM_VER: 9.6.7
+        NPM_VER: 11.8.0
         USERID: ${UID:?err}
     image: localhost/pressfreedomtracker-us-node
     volumes:
@@ -64,7 +64,7 @@ services:
       context: .
       dockerfile: devops/docker/NodeChartPregeneratorDevDockerfile
       args:
-        NPM_VER: 10.9.2
+        NPM_VER: 11.8.0
         USERID: ${UID:?err}
     image: localhost/pressfreedomtracker-us-node-chart-pregenerator
     volumes:
