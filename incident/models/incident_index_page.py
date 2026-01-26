@@ -214,7 +214,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             request,
             incident_qs,
             page_key=DEFAULT_PAGE_KEY,
-            per_page=8,
+            per_page=20,
             orphans=5
         )
 
