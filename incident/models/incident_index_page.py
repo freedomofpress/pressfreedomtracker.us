@@ -1,25 +1,32 @@
+import copy
 import csv
 import json
-import copy
 from typing import TYPE_CHECKING
 
 from django.db import models
-from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
-from marshmallow import Schema, fields, EXCLUDE
-from wagtail.admin.panels import FieldPanel
-from wagtail.models import Page, Site
-from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 
-from common.utils import DEFAULT_PAGE_KEY, paginate, Echo
+from wagtail.admin.panels import FieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
+from wagtail.models import Page, Site
+
+from marshmallow import EXCLUDE, Schema, fields
+
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
-from incident.models.export import to_row, is_exportable, to_json
+from common.utils import DEFAULT_PAGE_KEY, Echo, paginate
+from incident.feeds import IncidentIndexPageFeed
+from incident.models.export import is_exportable, to_json, to_row
 from incident.models.incident_page import IncidentPage
 from incident.utils.forms import get_filter_forms
-from incident.utils.incident_filter import IncidentFilter, ManyRelationValue, get_serialized_filters
-from incident.feeds import IncidentIndexPageFeed
+from incident.utils.incident_filter import (
+    IncidentFilter,
+    ManyRelationValue,
+    get_serialized_filters,
+)
+
 
 if TYPE_CHECKING:
     from django.http import HttpRequest  # noqa: F401
@@ -207,7 +214,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             request,
             incident_qs,
             page_key=DEFAULT_PAGE_KEY,
-            per_page=8,
+            per_page=20,
             orphans=5
         )
 
