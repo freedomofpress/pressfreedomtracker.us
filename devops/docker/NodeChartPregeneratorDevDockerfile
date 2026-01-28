@@ -1,5 +1,5 @@
-# sha256 as of 2023-09-08
-FROM node:20.8.0-alpine@sha256:80cc2c520781c1a4681e59df6791d81a432a6cb3da0c385d8d62e9f16acf8e5f
+# sha256 as of 2026-01-22
+FROM node:20-alpine@sha256:3960ed74dfe320a67bf8da9555b6bade25ebda2b22b6081d2f60fd7d5d430e9c
 
 ARG NPM_VER=10.9.2
 # Upgrade npm to specified version
