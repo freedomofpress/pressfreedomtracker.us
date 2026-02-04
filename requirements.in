@@ -1,6 +1,6 @@
 bleach>=4.1.0
 beautifulsoup4
-Django>=4.2.26,<4.3
+Django>=4.2.28,<4.3
 djangorestframework>=3.14
 django-anymail
 django-autocomplete-light
@@ -26,7 +26,7 @@ pillow>=10.2.0
 structlog
 typing
 typogrify
-wagtail>=6.3.2,<6.4
+wagtail>=6.3.6,<6.4
 wagtail-autocomplete>=0.12.0
 wagtail-factories>=4.1.0
 wagtail-django-recaptcha
