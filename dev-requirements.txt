@@ -312,9 +312,9 @@ defusedxml==0.7.1 \
     #   -r dev-requirements.in
     #   -r requirements.txt
     #   willow
-django==4.2.27 \
-    --hash=sha256:b865fbe0f4a3d1ee36594c5efa42b20db3c8bbb10dff0736face1c6e4bda5b92 \
-    --hash=sha256:f393a394053713e7d213984555c5b7d3caeee78b2ccb729888a0774dff6c11a8
+django==4.2.28 \
+    --hash=sha256:49a23c1b83ef31525f8d71a57b040f91d34660edb3f086280a8519855655ed3c \
+    --hash=sha256:a4b9cd881991add394cafa8bb3b11ad1742d1e1470ba99c3ef53dc540316ccfe
     # via
     #   -r requirements.txt
     #   django-anymail
@@ -1467,9 +1467,9 @@ urllib3[socks]==2.6.3 \
     #   mailchimp-marketing
     #   requests
     #   selenium
-wagtail==6.3.2 \
-    --hash=sha256:ac72f7138281ef47360057ebfb835a8eae34048efeed10ca9f4aabbc8f4e4ea5 \
-    --hash=sha256:e4271222bd2498040a60dd5e27228dcd481cc2310aa8fc951f0f4e23d20fbc50
+wagtail==6.3.6 \
+    --hash=sha256:53831f6febd7c00b572ca6494bda7de8dd28e10e648d56c721e8e8a61aba0515 \
+    --hash=sha256:edc5eef5d8ee84a51db2875cfda83c3f2bc0f0060f6ae2b7e59d636f803e6f70
     # via
     #   -r requirements.txt
     #   wagtail-autocomplete
@@ -1514,9 +1514,9 @@ whitenoise==6.6.0 \
     --hash=sha256:8998f7370973447fac1e8ef6e8ded2c5209a7b1f67c1012866dbcd09681c3251 \
     --hash=sha256:b1f9db9bf67dc183484d760b99f4080185633136a273a03f6436034a41064146
     # via -r requirements.txt
-willow[heif]==1.9.0 \
-    --hash=sha256:11a13097cffe501898cd434bb5761fb6cdbdb774a7853094cb56a4ba57cbbff7 \
-    --hash=sha256:ffac1406275ae30b60e7c6cbd1245f0bc359d1b5731002b18a712aaf424a5102
+willow[heif]==1.11.0 \
+    --hash=sha256:0a4388dbf18726eef8f27449659047689c39b7023045ca5a8a75410d3864ee6f \
+    --hash=sha256:70292b2d0cd2d5bb4076f0b3d61308aeaa0b225f3970d00752f08a8fd386c3d1
     # via
     #   -r requirements.txt
     #   wagtail
