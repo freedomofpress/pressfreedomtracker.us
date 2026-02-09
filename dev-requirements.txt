@@ -42,12 +42,6 @@ bleach==6.1.0 \
     --hash=sha256:0a31f1837963c41d46bbf1331b8778e1308ea0791db03cc4e7357b97cf42a8fe \
     --hash=sha256:3225f354cfc436b9789c66c4ee030194bee0568fbf9cbdad3bc8b5c26c5f12b6
     # via -r requirements.txt
-cachetools==5.3.2 \
-    --hash=sha256:086ee420196f7b2ab9ca2db2520aca326318b68fe5ba8bc4d49cca91add450f2 \
-    --hash=sha256:861f35a13a451f94e301ce2bec7cac63e881232ccce7ed67fab9b5df4d3beaa1
-    # via
-    #   -r requirements.txt
-    #   google-auth
 certifi==2024.7.4 \
     --hash=sha256:5a1e7645bc0ec61a09e26c36f6106dd4cf40c6db3a1fb6352b0244e7fb057c7b \
     --hash=sha256:c198e21b1289c2ab85ee4e67bb4b4ef3ead0892059901a8d5b622f24a1101e90
@@ -299,6 +293,7 @@ cryptography==44.0.1 \
     # via
     #   -r requirements.txt
     #   django-anymail
+    #   google-auth
 decorator==5.1.1 \
     --hash=sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330 \
     --hash=sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186
@@ -479,9 +474,9 @@ google-api-core==2.29.0 \
     #   -r requirements.txt
     #   google-cloud-core
     #   google-cloud-storage
-google-auth==2.25.2 \
-    --hash=sha256:42f707937feb4f5e5a39e6c4f343a17300a459aaf03141457ba505812841cc40 \
-    --hash=sha256:473a8dfd0135f75bb79d878436e568f2695dce456764bf3a02b6f8c540b1d256
+google-auth==2.48.0 \
+    --hash=sha256:2e2a537873d449434252a9632c28bfc268b0adb1e53f9fb62afc5333a975903f \
+    --hash=sha256:4f7e706b0cd3208a3d940a19a822c37a476ddba5450156c3e6624a71f7c841ce
     # via
     #   -r requirements.txt
     #   google-api-core
