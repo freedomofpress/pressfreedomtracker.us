@@ -1,7 +1,14 @@
 module.exports = {
 	"extends": "airbnb",
 
-	"ignorePatterns": ["client/statistics/js/searchstats.js", "client/charts/"],
+	"ignorePatterns": [
+		"client/statistics/js/searchstats.js",
+		"client/charts/",
+		"client/common/js/curlify.js",
+		"client/common/js/draftail_curlify.js",
+		"*.config.js",
+		"*.test.js"
+	],
 
 	"plugins": [
 		"react"
