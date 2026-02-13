@@ -29,7 +29,7 @@ from incident.utils import charts
 class RichTextTemplateBlock(blocks.RichTextBlock):
     def __init__(self, editor=None, **kwargs):
         if not editor:
-            editor='num-incident-full-features'
+            editor = 'num-incident-full-features'
         super().__init__(
             editor=editor,
             **kwargs,
