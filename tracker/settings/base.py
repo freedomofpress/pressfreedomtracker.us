@@ -215,6 +215,92 @@ WAGTAILIMAGES_MAX_IMAGE_PIXELS = int(os.environ.get('WAGTAILIMAGES_MAX_IMAGE_PIX
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = 'https://pressfreedomtracker.us'
 
+# Named group of wagtail rich text features
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    'default': {
+        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
+        'OPTIONS': {
+            'features': [
+                'bold',
+                'italic',
+                'h2',
+                'h3',
+                'h4',
+                'ol',
+                'ul',
+                'hr',
+                'link',
+                'document-link',
+                'image',
+                'embed',
+                'code',
+                'curlify',
+            ],
+        }
+    },
+    'emphasis-only': {
+        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
+        'OPTIONS': {
+            'features': [
+                'bold',
+                'italic',
+                'link',
+                'curlify',
+            ],
+        }
+    },
+    'emphasis-with-list': {
+        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
+        'OPTIONS': {
+            'features': [
+                'bold',
+                'italic',
+                'link',
+                'ol',
+                'ul',
+                'curlify',
+            ],
+        }
+    },
+    'num-incident-full-features': {
+        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
+        'OPTIONS': {
+            'features': [
+                'h1',
+                'h2',
+                'h3',
+                'h4',
+                'h5',
+                'h6',
+                'bold',
+                'italic',
+                'ol',
+                'ul',
+                'hr',
+                'link',
+                'document-link',
+                'image',
+                'embed',
+                'code',
+                'numincidents',  # Enhanced incident stats entry
+                'curlify',
+            ],
+        }
+    },
+    'num-incident-emphasis-features': {
+        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
+        'OPTIONS': {
+            'features': [
+                'bold',
+                'italic',
+                'link',
+                'numincidents',
+                'curlify',
+            ],
+        }
+    },
+}
+
 
 # Django-webpack configuration
 WEBPACK_LOADER = {  # noqa: W605

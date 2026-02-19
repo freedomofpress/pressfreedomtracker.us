@@ -19,6 +19,7 @@ var common = {
 	entry: {
 		common: __dirname + '/client/common/js/common.js',
 		statistics: __dirname + '/client/statistics/js/searchstats.js',
+		draftail: __dirname + '/client/common/js/draftail_curlify.js',
 		charts: __dirname + '/client/charts/js/index.js',
 		filterSidebar: __dirname + '/client/charts/js/filter-sidebar.js',
 		filterSummary: __dirname + '/client/charts/js/filter-summary.js',

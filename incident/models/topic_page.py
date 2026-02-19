@@ -118,7 +118,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         null=True
     )
     description = RichTextField(
-        features=['bold', 'italic', 'link'],
+        editor='emphasis-only',
         blank=True
     )
     text_align = models.CharField(
@@ -130,7 +130,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         help_text='Color of header text, for legibility against the background.'
     )
     photo_caption = RichTextField(
-        features=['bold', 'italic', 'link'],
+        editor='emphasis-only',
         blank=True
     )
     photo_credit = models.TextField(blank=True)
@@ -167,7 +167,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     sidebar = StreamField([
         ('heading_2', common.blocks.Heading2()),
         ('rich_text', common.blocks.RichTextTemplateBlock(
-            features=['bold', 'italic', 'link', 'ol', 'ul'],
+            editor='emphasis-with-list',
             icon='doc-full',
             label='Rich Text',
         )),

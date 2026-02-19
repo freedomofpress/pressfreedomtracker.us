@@ -147,7 +147,7 @@ class SiteSettings(BaseSiteSetting):
         null=True,
         help_text="If set an alert banner will appear on the site with this message",
         validators=[validate_template],
-        features=['bold', 'italic', 'link', 'numincidents'],
+        editor='num-incident-emphasis-features',
         verbose_name='Banner Content'
     )
     homepage_only = models.BooleanField(

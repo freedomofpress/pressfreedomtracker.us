@@ -6,6 +6,7 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.admin.rich_text.converters.html_to_contentstate import (
     InlineEntityElementHandler,
 )
+from wagtail.admin.rich_text.editors.draftail.features import PluginFeature
 from wagtail.admin.ui.tables import Column
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.rich_text.pages import PageLinkHandler
@@ -145,6 +146,25 @@ def mailchimp_urls():
             name='mailchimp_interests',
         )
     ]
+
+
+@hooks.register('register_rich_text_features')
+def register_curlify(features):
+    feature_name = 'curlify'
+    features.default_features.append(feature_name)
+
+    features.register_editor_plugin(
+        'draftail',
+        feature_name,
+        PluginFeature(
+            {
+                'type': feature_name,
+            },
+            js=[
+                get_files('draftail', extension='js')[0]['url'],
+            ],
+        ),
+    )
 
 
 class SearchStatEntityElementHandler(InlineEntityElementHandler):

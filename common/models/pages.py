@@ -276,24 +276,7 @@ class PersonPage(Page):
 class QuickFact(Orderable):
     page = ParentalKey('common.CategoryPage', related_name='quick_facts')
     body = RichTextField(
-        features=[
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'bold',
-            'italic',
-            'ol',
-            'ul',
-            'hr',
-            'link',
-            'document-link',
-            'image',
-            'embed',
-            'numincidents',  # Enhanced incident stats entry
-        ],
+        editor='num-incident-full-features',
         validators=[validate_template],
     )
     link_url = models.URLField(blank=True)
@@ -375,24 +358,7 @@ def get_year_choices(start_year=2017):
 
 class CategoryPage(MetadataPageMixin, Page):
     description = RichTextField(
-        features=[
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'bold',
-            'italic',
-            'ol',
-            'ul',
-            'hr',
-            'link',
-            'document-link',
-            'image',
-            'embed',
-            'numincidents',  # Enhanced incident stats entry
-        ],
+        editor='num-incident-full-features',
         blank=True,
         validators=[validate_template],
     )
