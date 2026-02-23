@@ -26,3 +26,7 @@ class TestUnusedTags(TestCase):
     def test_validation_autocomplete_tag_creation(self):
         with self.assertRaises(ValidationError):
             CommonTag.autocomplete_create('hello,world')
+
+        CommonTag.autocomplete_create('tag')
+        with self.assertRaises(ValidationError):
+            CommonTag.autocomplete_create('tag')
