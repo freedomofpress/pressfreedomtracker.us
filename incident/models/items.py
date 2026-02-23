@@ -11,7 +11,10 @@ class Journalist(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(max_length=255, validators=[validate_disallow_AND])
 
@@ -26,7 +29,10 @@ class Institution(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(max_length=255, unique=True, validators=[validate_disallow_AND])
 
@@ -41,7 +47,10 @@ class GovernmentWorker(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(max_length=255, unique=True, validators=[validate_disallow_AND])
 
@@ -57,7 +66,10 @@ class GovernmentWorker(ClusterableModel):
 class LawEnforcementOrganization(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(max_length=255, unique=True)
 
@@ -96,7 +108,10 @@ class Charge(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(
         max_length=255,
@@ -115,7 +130,10 @@ class Nationality(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(
         max_length=255,
@@ -135,7 +153,10 @@ class PoliticianOrPublic(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(
         max_length=255,
@@ -155,7 +176,10 @@ class PoliticianOrPublic(ClusterableModel):
 class Venue(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     title = models.CharField(
         max_length=255,

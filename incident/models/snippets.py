@@ -10,7 +10,10 @@ class Equipment(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
-        return kls.objects.create(name=value)
+        instance = kls(name=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     autocomplete_search_field = 'name'
 
@@ -37,7 +40,10 @@ class Equipment(ClusterableModel):
 class State(ClusterableModel):
     @classmethod
     def autocomplete_create(kls, value):
-        return kls.objects.create(name=value)
+        instance = kls(name=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
     autocomplete_search_field = 'name'
 
