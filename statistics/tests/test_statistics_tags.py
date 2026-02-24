@@ -6,9 +6,9 @@ from django.template import (
 )
 from django.test import TestCase
 
+from common.templatetags.render_as_template import render_as_template
 from common.tests.factories import CategoryPageFactory
 from common.validators import TemplateValidator
-from common.templatetags.render_as_template import render_as_template
 from incident.tests.factories import (
     IncidentPageFactory,
     InstitutionFactory,

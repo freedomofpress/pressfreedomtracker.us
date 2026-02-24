@@ -1,7 +1,8 @@
-import factory
-import wagtail_factories
 from wagtail import blocks
 from wagtail.rich_text import RichText
+
+import factory
+import wagtail_factories
 
 from common.blocks import (
     Heading1,
@@ -11,14 +12,14 @@ from common.blocks import (
 )
 from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.models import (
-    CategoryPage,
     CategoryIncidentFilter,
+    CategoryPage,
     CommonTag,
     CustomImage,
-    SimplePage,
-    PersonPage,
-    OrganizationPage,
     OrganizationIndexPage,
+    OrganizationPage,
+    PersonPage,
+    SimplePage,
     SiteSettings,
     TaxonomyCategoryPage,
     TaxonomySettings,
