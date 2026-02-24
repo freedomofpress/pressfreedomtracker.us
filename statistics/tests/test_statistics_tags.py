@@ -195,7 +195,7 @@ class TestIncidentsInMultiValue(TestCase):
         self.pending = "PENDING"
         self.dropped = "DROPPED"
         self.category = CategoryPageFactory(
-            title="Subpoena / Legal Order",
+            title="Subpoena/Legal Order",
             incident_filters=["subpoena_statuses"],
         )
         self.validator = TemplateValidator()

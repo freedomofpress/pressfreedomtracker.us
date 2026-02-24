@@ -137,7 +137,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
 
     class Params:
         arrest = factory.Trait(
-            title="Arrest / Criminal Charge",
+            title="Arrest/Criminal Charge",
             plural_name="Arrests and Criminal Charges",
             slug="arrest-criminal-charge",
         )
@@ -163,7 +163,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
             title="Leak Case", plural_name="Leak Cases", slug="leak-case"
         )
         subpoena = factory.Trait(
-            title="Subpoena / Legal Order",
+            title="Subpoena/Legal Order",
             plural_name="Subpoenas and Legal Orders",
             slug="subpoena",
         )
