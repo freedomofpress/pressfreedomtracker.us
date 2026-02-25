@@ -27,28 +27,11 @@ from incident.utils import charts
 
 
 class RichTextTemplateBlock(blocks.RichTextBlock):
-    def __init__(self, features=None, **kwargs):
-        if not features:
-            features = [
-                'h1',
-                'h2',
-                'h3',
-                'h4',
-                'h5',
-                'h6',
-                'bold',
-                'italic',
-                'ol',
-                'ul',
-                'hr',
-                'link',
-                'document-link',
-                'image',
-                'embed',
-                'numincidents',  # Enhanced incident stats entry
-            ]
+    def __init__(self, editor=None, **kwargs):
+        if not editor:
+            editor = 'num-incident-full-features'
         super().__init__(
-            features=features,
+            editor=editor,
             **kwargs,
         )
 
@@ -173,23 +156,7 @@ class TweetEmbedBlock(blocks.StructBlock):
 
 
 class AsideBlock(blocks.StructBlock):
-    text = blocks.RichTextBlock(
-        features=[
-            'bold',
-            'italic',
-            'h2',
-            'h3',
-            'h4',
-            'ol',
-            'ul',
-            'hr',
-            'embed',
-            'link',
-            'document-link',
-            'image',
-            'code',
-        ],
-    )
+    text = blocks.RichTextBlock()
 
     class Meta:
         template = 'common/blocks/aside_block.html'
@@ -216,23 +183,7 @@ class StyledTextBlock(blocks.StructBlock):
         ('serif', 'Serif'),
     )
 
-    text = blocks.RichTextBlock(
-        features=[
-            'bold',
-            'italic',
-            'h2',
-            'h3',
-            'h4',
-            'ol',
-            'ul',
-            'hr',
-            'embed',
-            'link',
-            'document-link',
-            'image',
-            'code',
-        ],
-    )
+    text = blocks.RichTextBlock()
 
     # These fields are assumed to be deprecated and are left for legacy purposes
     # The template does not use the values of these fields
@@ -248,24 +199,7 @@ class StyledTextBlock(blocks.StructBlock):
 
 
 class StyledTextTemplateBlock(StyledTextBlock):
-    text = RichTextTemplateBlock(
-        features=[
-            'bold',
-            'italic',
-            'h2',
-            'h3',
-            'h4',
-            'ol',
-            'ul',
-            'hr',
-            'embed',
-            'link',
-            'document-link',
-            'image',
-            'code',
-            'numincidents',  # Enhanced incident stats entry
-        ],
-    )
+    text = RichTextTemplateBlock(editor='num-incident-full-features')
 
     def get_context(self, *args, **kwargs):
         context = super(StyledTextTemplateBlock, self).get_context(*args, **kwargs)

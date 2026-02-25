@@ -19,8 +19,11 @@ from incident.models import (
     IncidentPage,
     Institution,
     Journalist,
+    LawEnforcementOrganization,
     Nationality,
     PoliticianOrPublic,
+    State,
+    Venue,
     choices,
 )
 from incident.tests.factories import (
@@ -190,18 +193,37 @@ class TestCategoryFieldValuesByField(TestCase):
             {field_name: '0'},
         )
 
-    def assert_validation(self, model_name):
+    def assert_and_validation(self, model_name):
         with self.assertRaises(ValidationError):
             model_name.autocomplete_create('hello AND world')
 
+    def assert_duplicate_validation(self, model_name):
+        model_name.autocomplete_create('title')
+        with self.assertRaises(ValidationError):
+            model_name.autocomplete_create('title')
+
     def test_validation_autocomplete_field_creation(self):
-        self.assert_validation(Equipment)
-        self.assert_validation(Journalist)
-        self.assert_validation(Institution)
-        self.assert_validation(GovernmentWorker)
-        self.assert_validation(Charge)
-        self.assert_validation(Nationality)
-        self.assert_validation(PoliticianOrPublic)
+        self.assert_and_validation(Equipment)
+        self.assert_and_validation(Journalist)
+        self.assert_and_validation(Institution)
+        self.assert_and_validation(GovernmentWorker)
+        self.assert_and_validation(Charge)
+        self.assert_and_validation(Nationality)
+        self.assert_and_validation(PoliticianOrPublic)
+
+        self.assert_duplicate_validation(Equipment)
+        self.assert_duplicate_validation(State)
+        self.assert_duplicate_validation(Institution)
+        self.assert_duplicate_validation(GovernmentWorker)
+        self.assert_duplicate_validation(LawEnforcementOrganization)
+        self.assert_duplicate_validation(Charge)
+        self.assert_duplicate_validation(Nationality)
+        self.assert_duplicate_validation(PoliticianOrPublic)
+        self.assert_duplicate_validation(Venue)
+
+        # Journalist is not unique, so calling same thing should not raise any error
+        Journalist.autocomplete_create('title')
+        self.assertEqual(Journalist.autocomplete_create('title').title, 'title')
 
     def test_arrest_status(self):
         self.assert_choices(

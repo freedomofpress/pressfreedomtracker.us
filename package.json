@@ -65,6 +65,7 @@
     "react-dom": "^18.2.0",
     "react-modal": "^3.15.1",
     "regenerator-runtime": "^0.13.9",
-    "topojson-client": "^3.1.0"
+    "topojson-client": "^3.1.0",
+    "smartquotes": "^2.3.2"
   }
 }
