@@ -1157,18 +1157,18 @@ class IncidentPage(MetadataPageMixin, Page):
 
     def get_meta_image(self):
         return (
-            self.teaser_image or
             self.search_image or
+            self.teaser_image or
             (self.get_main_category() and self.get_main_category().default_image) or
             self._get_ssssettings().default_image
         )
 
     def get_meta_description(self):
-        if self.teaser:
-            return self.teaser
-
         if self.search_description:
             return self.search_description
+
+        if self.teaser:
+            return self.teaser
 
         return truncatewords(
             strip_tags(self.body.render_as_block()),
