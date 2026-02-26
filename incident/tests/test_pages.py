@@ -1580,6 +1580,54 @@ class IncidentPageTests(TestCase):
             f'targeted_institutions={inst.title}'
         )
 
+    def test_get_meta_image(self):
+        search_image = CustomImageFactory.create(
+            file__width=333,
+            file__height=444,
+            file__color='orange',
+            collection__name='Photos',
+        )
+        tease_image = CustomImageFactory.create(
+            file__width=333,
+            file__height=444,
+            file__color='green',
+            collection__name='Photos',
+        )
+        inc1 = IncidentPageFactory(
+            parent=self.incident_index,
+            teaser_image=tease_image,
+        )
+        inc2 = IncidentPageFactory(
+            parent=self.incident_index,
+            search_image=search_image,
+        )
+        self.assertEqual(
+            inc1.get_meta_image(),
+            inc1.teaser_image
+        )
+        self.assertEqual(
+            inc2.get_meta_image(),
+            inc2.search_image
+        )
+
+    def test_get_meta_description(self):
+        inc1 = IncidentPageFactory(
+            parent=self.incident_index,
+            search_description='test description 1',
+        )
+        inc2 = IncidentPageFactory(
+            parent=self.incident_index,
+            teaser='test description 2',
+        )
+        self.assertEqual(
+            inc1.get_meta_description(),
+            inc1.search_description
+        )
+        self.assertEqual(
+            inc2.get_meta_description(),
+            inc2.teaser
+        )
+
 
 def create_prior_restraint_incident(
         *,
