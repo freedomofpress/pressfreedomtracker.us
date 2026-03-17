@@ -87,11 +87,29 @@ class AlignedCaptionedImageBlock(blocks.StructBlock):
         help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
     )
     alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
+    content_warning = blocks.ListBlock(
+        blocks.CharBlock(
+            label='Warning text',
+            help_text='Warning text shown on the button above blurred media',
+            default='This image may be disturbing. Tap or click to reveal.',
+            required=True,
+        ),
+        min_num=0,
+        max_num=1,
+        default=[],
+        label='Add content warning'
+    )
 
     def get_searchable_content(self, value):
         return get_searchable_content_for_fields(
             value, self.child_blocks, ['caption']
         )
+
+    def get_context(self, value, **kwargs):
+        context = super(AlignedCaptionedImageBlock, self).get_context(value, **kwargs)
+        if value['content_warning']:
+            value['content_warning'] = value['content_warning'][0]
+        return context
 
     class Meta:
         template = 'common/blocks/aligned_captioned_image.html'
