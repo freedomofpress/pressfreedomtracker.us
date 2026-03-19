@@ -528,3 +528,5 @@ WAGTAILEMBEDS_FINDERS = [
         "class": "wagtail.embeds.finders.oembed",
     },
 ]
+
+GOOGLE_SHEETS_CREDS = os.environ.get("GOOGLE_SHEETS_CREDS", "")

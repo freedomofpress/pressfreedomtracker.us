@@ -134,6 +134,7 @@ services:
       MAILCHIMP_API_KEY:
       NEWSLETTER_REPLY_TO:
       NEWSLETTER_FROM_NAME:
+      GOOGLE_SHEETS_CREDS:
     working_dir: /django
     volumes:
       - ./:/django
