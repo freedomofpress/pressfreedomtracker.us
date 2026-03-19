@@ -27,3 +27,24 @@
 		{% endwith %}
 	</ul>
 </section>
+{% if prepub_sync_completed_at %}
+	<section class="panel nice-padding" style="font-size: 1.5em; line-height: 1.6">
+		<p><strong>Prepublication Incidents Sync</strong>
+			<br>
+			Completed at: {{ prepub_sync_completed_at|date:"SHORT_DATETIME_FORMAT" }}
+			{% if not prepub_sync_extended_message %}
+				<br>
+				{{ prepub_sync_message }}
+			{% endif %}
+		</p>
+		{% if prepub_sync_extended_message %}
+			<p>
+				Sync did not succeed.
+			</p>
+			<details>
+				<summary>Details</summary>
+				{{ prepub_sync_message }}
+			</details>
+		{% endif %}
+	</section>
+{% endif %}
