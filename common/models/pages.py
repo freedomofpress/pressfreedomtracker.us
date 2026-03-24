@@ -38,7 +38,7 @@ from common.blocks import (
     Heading2,
     Heading3,
     InfoTableBlock,
-    InstagramBlock,
+    InstagramEmbedBlock,
     LogoListBlock,
     RichTextBlockQuoteBlock,
     StyledTextBlock,
@@ -611,7 +611,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
-        ('instagram', InstagramBlock()),
+        ('instagram', InstagramEmbedBlock()),
         ('bluesky', BlueskyEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
@@ -659,7 +659,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
-        ('instagram', InstagramBlock()),
+        ('instagram', InstagramEmbedBlock()),
         ('bluesky', BlueskyEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(

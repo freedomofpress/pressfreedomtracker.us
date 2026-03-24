@@ -144,16 +144,16 @@ class AlignedCaptionedEmbedBlock(blocks.StructBlock):
 class BlueskyEmbedBlock(blocks.StructBlock):
     embed_html = blocks.TextBlock(
         required=True,
-        help_text="Paste the full Bluesky embed code, including <blockquote> and <script>."
+        help_text="Paste the full Bluesky embed code, including &lt;blockquote&gt; and &lt;script&gt;."
     )
 
     class Meta:
-        icon = "link"
+        icon = "pick"
         label = "Bluesky embed"
         template = "common/blocks/bluesky_embed.html"
 
 
-class InstagramBlock(blocks.StructBlock):
+class InstagramEmbedBlock(blocks.StructBlock):
     def validate_instagram_url(value):
         if "instagram.com" not in value:
             raise StructBlockValidationError("Must be an Instagram URL")
@@ -290,7 +290,7 @@ class TabbedBlock(blocks.ListBlock):
                     ('raw_html', blocks.RawHTMLBlock()),
                     ('rich_text', blocks.RichTextBlock()),
                     ('tweet', TweetEmbedBlock()),
-                    ('instagram', InstagramBlock()),
+                    ('instagram', InstagramEmbedBlock()),
                     ('bluesky', BlueskyEmbedBlock()),
                 ])),
             ]),

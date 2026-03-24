@@ -162,7 +162,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
         ('rich_text', blocks.RichTextBlock()),
         ('tweet', common.blocks.TweetEmbedBlock()),
-        ('instagram', common.blocks.InstagramBlock()),
+        ('instagram', common.blocks.InstagramEmbedBlock()),
+        ('bluesky', common.blocks.BlueskyEmbedBlock()),
         ('tabs', common.blocks.TabbedBlock()),
     ], blank=True, use_json_field=True)
     sidebar = StreamField([
@@ -173,7 +174,8 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             label='Rich Text',
         )),
         ('tweet', common.blocks.TweetEmbedBlock()),
-        ('instagram', common.blocks.InstagramBlock()),
+        ('instagram', common.blocks.InstagramEmbedBlock()),
+        ('bluesky', common.blocks.BlueskyEmbedBlock()),
         ('stat_table', common.blocks.StatTableBlock()),
         ('button', common.blocks.ButtonBlock()),
     ], blank=True, use_json_field=True)

@@ -29,7 +29,7 @@ from common.blocks import (
     Heading1,
     Heading2,
     Heading3,
-    InstagramBlock,
+    InstagramEmbedBlock,
     StyledTextBlock,
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock,
@@ -50,7 +50,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
-        ('instagram', InstagramBlock()),
+        ('instagram', InstagramEmbedBlock()),
         ('bluesky', BlueskyEmbedBlock()),
     ], use_json_field=True)
 
@@ -193,7 +193,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
-        ('instagram', InstagramBlock()),
+        ('instagram', InstagramEmbedBlock()),
         ('bluesky', BlueskyEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
