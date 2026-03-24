@@ -173,7 +173,7 @@ class IncidentPageUpdates(models.Model):
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
-         ('instagram', InstagramBlock()),
+        ('instagram', InstagramBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),

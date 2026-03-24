@@ -278,7 +278,7 @@ class TabbedBlock(blocks.ListBlock):
                     ('raw_html', blocks.RawHTMLBlock()),
                     ('rich_text', blocks.RichTextBlock()),
                     ('tweet', TweetEmbedBlock()),
-                     ('instagram', InstagramBlock()),
+                    ('instagram', InstagramBlock()),
                 ])),
             ]),
             template='common/blocks/tabbed_block.html',
