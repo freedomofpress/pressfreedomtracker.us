@@ -9,6 +9,7 @@
 		{% block main %}{% endblock %}
 	</main>
 	{% include "common/_footer.html" %}
+	<script async src="https://www.instagram.com/embed.js"></script>
 	{% if django_settings.ANALYTICS_ENABLED %}
 		<script type="text/javascript" src="{% static 'js/piwik.js' %}"></script>
 		<noscript><p><img src="https://analytics.freedom.press/piwik.php?idsite=5" style="border:0;" alt="" /></p></noscript>

@@ -28,6 +28,7 @@ from common.blocks import (
     Heading1,
     Heading2,
     Heading3,
+    InstagramBlock,
     StyledTextBlock,
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock,
@@ -47,7 +48,8 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
-        ('tweet', TweetEmbedBlock())
+        ('tweet', TweetEmbedBlock()),
+        ('instagram', InstagramBlock()),
     ], use_json_field=True)
 
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
@@ -189,6 +191,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
+        ('instagram', InstagramBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),

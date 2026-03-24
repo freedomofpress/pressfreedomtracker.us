@@ -141,6 +141,19 @@ class AlignedCaptionedEmbedBlock(blocks.StructBlock):
         label = 'Video'
 
 
+class InstagramBlock(blocks.StructBlock):
+    def validate_instagram_url(value):
+        if "instagram.com" not in value:
+            raise forms.ValidationError("Must be an Instagram URL")
+
+    url = blocks.URLBlock(validators=[validate_instagram_url])
+
+    class Meta:
+        icon = "media"
+        label = "Instagram"
+        template = "common/blocks/instagram_embed.html"
+
+
 class TweetEmbedBlock(blocks.StructBlock):
     tweet = EmbedBlock()
 
@@ -265,6 +278,7 @@ class TabbedBlock(blocks.ListBlock):
                     ('raw_html', blocks.RawHTMLBlock()),
                     ('rich_text', blocks.RichTextBlock()),
                     ('tweet', TweetEmbedBlock()),
+                     ('instagram', InstagramBlock()),
                 ])),
             ]),
             template='common/blocks/tabbed_block.html',

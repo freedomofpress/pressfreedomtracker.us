@@ -348,9 +348,10 @@ CSP_SCRIPT_SRC = (
     "https://www.gstatic.com/recaptcha/",
     # For Wagtail Admin
     "'unsafe-inline'",
-    # For Twitter Widgets
+    # For Social Widgets
     "'unsafe-eval'",
     "https://platform.twitter.com",
+    "https://www.instagram.com",
     # Observable Notebooks
     "https://cdn.jsdelivr.net",
     "https://api.observablehq.com",
@@ -364,8 +365,9 @@ CSP_STYLE_SRC = (
 )
 CSP_FRAME_SRC = (
     "'self'",
-    # For Twitter Widgets
+    # For Social Widgets
     "https://platform.twitter.com",
+    "https://www.instagram.com",
     # For recaptcha
     "https://www.google.com/recaptcha/",
     "https://recaptcha.google.com/recaptcha/",
@@ -379,15 +381,19 @@ CSP_CONNECT_SRC = [
     # Observable Notebooks
     "https://cdn.jsdelivr.net",
     "https://static.observableusercontent.com/",
+    # For Social Widgets
+    "https://www.instagram.com"
 ]
 CSP_IMG_SRC = [
     "'self'",
     "https://analytics.freedom.press",
-    # For Twitter Widgets
+    # For Social Widgets
     "https://platform.twitter.com",
     "https://syndication.twitter.com",
     "https://pbs.twimg.com",
     "https://ton.twimg.com",
+    "https://www.instagram.com",
+    "https://scontent.cdninstagram.com",
     "data:",
     'https://cdn.jsdelivr.net',
 ]
