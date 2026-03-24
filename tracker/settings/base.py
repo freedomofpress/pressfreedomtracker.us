@@ -352,6 +352,7 @@ CSP_SCRIPT_SRC = (
     "'unsafe-eval'",
     "https://platform.twitter.com",
     "https://www.instagram.com",
+    "https://embed.bsky.app",
     # Observable Notebooks
     "https://cdn.jsdelivr.net",
     "https://api.observablehq.com",
@@ -368,6 +369,7 @@ CSP_FRAME_SRC = (
     # For Social Widgets
     "https://platform.twitter.com",
     "https://www.instagram.com",
+    "https://embed.bsky.app",
     # For recaptcha
     "https://www.google.com/recaptcha/",
     "https://recaptcha.google.com/recaptcha/",

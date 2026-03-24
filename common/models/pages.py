@@ -32,6 +32,7 @@ import statistics.templatetags.statistics_tags  # noqa: F401
 from common.blocks import (
     AlignedCaptionedEmbedBlock,
     AlignedCaptionedImageBlock,
+    BlueskyEmbedBlock,
     EmailSignupBlock,
     Heading1,
     Heading2,
@@ -611,6 +612,7 @@ class SimplePage(MetadataPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
         ('instagram', InstagramBlock()),
+        ('bluesky', BlueskyEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),
@@ -658,6 +660,7 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
         ('instagram', InstagramBlock()),
+        ('bluesky', BlueskyEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),

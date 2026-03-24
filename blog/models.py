@@ -25,6 +25,7 @@ from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
 from common.models import PersonPage, OrganizationPage, MetadataPageMixin, MediaPageMixin
 from common.blocks import (
+    BlueskyEmbedBlock,
     Heading1,
     Heading2,
     Heading3,
@@ -50,6 +51,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
         ('instagram', InstagramBlock()),
+        ('bluesky', BlueskyEmbedBlock()),
     ], use_json_field=True)
 
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
@@ -192,6 +194,7 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
         ('instagram', InstagramBlock()),
+        ('bluesky', BlueskyEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),

@@ -15,6 +15,7 @@ from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 from common.blocks import (
     AlignedCaptionedEmbedBlock,
+    BlueskyEmbedBlock,
     InstagramBlock,
     RichTextBlockQuoteBlock,
     RichTextTemplateBlock,
@@ -174,6 +175,7 @@ class IncidentPageUpdates(models.Model):
         ('raw_html', blocks.RawHTMLBlock()),
         ('tweet', TweetEmbedBlock()),
         ('instagram', InstagramBlock()),
+        ('bluesky', BlueskyEmbedBlock()),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('video', AlignedCaptionedEmbedBlock()),
         ('statistics', StatisticsBlock()),
