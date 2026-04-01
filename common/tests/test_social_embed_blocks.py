@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from wagtail.embeds.blocks import EmbedValue
 
-from common.blocks import TweetEmbedBlock
+from common.blocks import InstagramEmbedBlock, TweetEmbedBlock
 
 
 class CleanTest(TestCase):
@@ -58,3 +58,31 @@ class CleanTest(TestCase):
         })
         self.assertEqual(cleaned_value['tweet'].url,
                          'https://x.com/WagtailCMS/status/1413141835711606786')
+
+    def test_validate_instagram_url_valid(self):
+        block = InstagramEmbedBlock()
+        cleaned_value = block.clean({
+            'url': 'https://instagram.com/p/C0DPdy98e4c',
+        })
+        self.assertEqual(cleaned_value['url'], 'https://instagram.com/p/C0DPdy98e4c')
+
+    def test_validate_instagram_url_with_www(self):
+        block = InstagramEmbedBlock()
+        cleaned_value = block.clean({
+            'url': 'https://www.instagram.com/p/C0DPdy98e4c',
+        })
+        self.assertEqual(cleaned_value['url'], 'https://www.instagram.com/p/C0DPdy98e4c')
+
+    def test_validate_instagram_url_non_instagram(self):
+        block = InstagramEmbedBlock()
+        with self.assertRaises(ValidationError):
+            block.clean({
+                'url': 'https://twitter.com/WagtailCMS/status/1413141835711606786',
+            })
+
+    def test_validate_instagram_url_empty_string(self):
+        block = InstagramEmbedBlock()
+        with self.assertRaises(ValidationError):
+            block.clean({
+                'url': '',
+            })
