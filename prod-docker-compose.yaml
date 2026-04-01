@@ -53,6 +53,7 @@ services:
       DJANGO_DB_HOST: db
       DJANGO_XMLTEST_OUTPUT: "yes"
       DJANGO_APP_NAME: tracker
+      DJANGO_ONION_HOSTNAME: pfts5wyphb5x.onion
       DJANGO_JSON_LOG: "yes"
       DJANGO_WHITENOISE: "yes"
       DJANGO_CHART_HOST: node-chart-pregenerator
