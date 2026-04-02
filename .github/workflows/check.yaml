@@ -110,19 +110,19 @@ jobs:
         fetch-depth: 0
 
     - name: Download dev django image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-dev-django.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
 
     - name: Download dev node image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-dev-node.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
 
     - name: Download dev chartgen image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-dev-chartgen.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
@@ -225,7 +225,7 @@ jobs:
         python -m pip install --requirement=ci-requirements.txt --require-hashes --disable-pip-version-check --no-color --no-input
 
     - name: Download coverage artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.test.outputs.artifact-pytestcov }}
         path: ${{ runner.temp }}/coverage
@@ -252,13 +252,13 @@ jobs:
         persist-credentials: false
 
     - name: Download django image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-prod-django.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
 
     - name: Download chartgen image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-prod-chartgen.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
