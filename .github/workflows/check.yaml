@@ -104,7 +104,7 @@ jobs:
         version: ${{ env.VERSION_DOCKER }}
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         persist-credentials: true
         fetch-depth: 0
@@ -203,7 +203,7 @@ jobs:
       actions: read
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         persist-credentials: true
         fetch-depth: 0
@@ -247,7 +247,7 @@ jobs:
         version: ${{ env.VERSION_DOCKER }}
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         persist-credentials: false
 
