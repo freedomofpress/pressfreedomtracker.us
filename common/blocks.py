@@ -142,10 +142,7 @@ class AlignedCaptionedEmbedBlock(blocks.StructBlock):
 
 
 class BlueskyEmbedBlock(blocks.StructBlock):
-    embed_html = blocks.TextBlock(
-        required=True,
-        help_text="Paste the full Bluesky embed code, including &lt;blockquote&gt; and &lt;script&gt;."
-    )
+    bluesky_post = EmbedBlock()
 
     class Meta:
         icon = "pick"

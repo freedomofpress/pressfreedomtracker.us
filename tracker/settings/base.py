@@ -477,11 +477,17 @@ xdotcom = {
         r"^https?://x\.com/(?:#!)?[^#?/]+/status/.+$",
     ],
 }
+bluesky = {
+    "endpoint": "https://embed.bsky.app/oembed",
+    "urls": [
+        r"^https?://bsky\.app/profile/[^#?/]+/post/.+$",
+    ],
+}
 
 WAGTAILEMBEDS_FINDERS = [
     {
         'class': 'wagtail.embeds.finders.oembed',
-        'providers': [xdotcom],
+        'providers': [xdotcom, bluesky],
     },
 
     # Handles all other oEmbed providers the default way
