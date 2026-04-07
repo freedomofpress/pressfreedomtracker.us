@@ -99,30 +99,30 @@ jobs:
         - stylelint
     steps:
     - name: Install Docker
-      uses: docker/setup-docker-action@v4
+      uses: docker/setup-docker-action@v5
       with:
         version: ${{ env.VERSION_DOCKER }}
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         persist-credentials: true
         fetch-depth: 0
 
     - name: Download dev django image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-dev-django.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
 
     - name: Download dev node image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-dev-node.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
 
     - name: Download dev chartgen image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-dev-chartgen.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
@@ -171,7 +171,7 @@ jobs:
         docker compose --file="$COMPOSE_FILE_DEV" logs node
 
     - name: Save HTML coverage
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: ${{ matrix.target == 'dev-tests' }}
       with:
         name: test-${{ matrix.target }}-${{ github.run_id }}-htmlcov
@@ -181,7 +181,7 @@ jobs:
         retention-days: 5
 
     - name: Save PyTest coverage
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: ${{ matrix.target == 'dev-tests'}}
       with:
         name: test-${{ matrix.target }}-${{ github.run_id }}-pytestcov
@@ -203,18 +203,18 @@ jobs:
       actions: read
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         persist-credentials: true
         fetch-depth: 0
     
     - name: Install Python ${{ env.VERSION_PYTHON }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ env.VERSION_PYTHON }}
 
     - name: Configure Job Cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ~/.cache/pip
@@ -225,7 +225,7 @@ jobs:
         python -m pip install --requirement=ci-requirements.txt --require-hashes --disable-pip-version-check --no-color --no-input
 
     - name: Download coverage artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.test.outputs.artifact-pytestcov }}
         path: ${{ runner.temp }}/coverage
@@ -242,23 +242,23 @@ jobs:
     - build-prod-chartgen
     steps:
     - name: Install Docker
-      uses: docker/setup-docker-action@v4
+      uses: docker/setup-docker-action@v5
       with:
         version: ${{ env.VERSION_DOCKER }}
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         persist-credentials: false
 
     - name: Download django image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-prod-django.outputs.artifact-name }}
         path: ${{ runner.temp }}/images
 
     - name: Download chartgen image
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ needs.build-prod-chartgen.outputs.artifact-name }}
         path: ${{ runner.temp }}/images

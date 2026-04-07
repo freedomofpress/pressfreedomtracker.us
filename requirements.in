@@ -1,5 +1,6 @@
 bleach>=4.1.0
 beautifulsoup4
+cryptography>=46.0.6
 Django>=4.2.29,<4.3
 djangorestframework>=3.14
 django-anymail
@@ -23,6 +24,7 @@ psycopg2>=2.9.9
 Pygments
 python-json-logger
 pillow>=10.2.0
+requests>=2.33.1
 structlog
 typing
 typogrify
