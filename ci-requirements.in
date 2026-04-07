@@ -1,3 +1,4 @@
 diff-cover>=8.0.3
 pytest
 pytest-testinfra
+pygments>=2.20.0
