@@ -10,6 +10,9 @@
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage"
   },
+  "overrides": {
+    "brace-expansion": "^5.0.5"
+  },
   "dependencies": {
     "@resvg/resvg-js": "^2.4.1",
     "@visx/responsive": "^3.0.0",
