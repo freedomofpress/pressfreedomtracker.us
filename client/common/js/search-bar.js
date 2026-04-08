@@ -1,4 +1,3 @@
-import React from 'react'
 import { createRoot } from 'react-dom/client'
 import Search from './components/Search'
 import DataLoader from '../../charts/js/components/DataLoader'
@@ -23,10 +22,12 @@ function engageSearchBars() {
 	const searchBars = document.querySelectorAll('.search-bar')
 
 	searchBars.forEach((searchBarNode) => {
-		const selectedTags = searchBarNode.dataset.tags ? JSON.parse(searchBarNode.dataset.tags) : []
+		const selectedTags = searchBarNode.dataset.tags
+			? JSON.parse(searchBarNode.dataset.tags)
+			: []
 
 		const root = createRoot(searchBarNode)
-		root.render((
+		root.render(
 			<DataLoader
 				dataUrl={[`/api/edge/incidents/homepage_csv/?${params.toString()}`]}
 				dataKey={['data']}
@@ -34,7 +35,7 @@ function engageSearchBars() {
 			>
 				<Search selectedTags={selectedTags} />
 			</DataLoader>
-		))
+		)
 	})
 }
 

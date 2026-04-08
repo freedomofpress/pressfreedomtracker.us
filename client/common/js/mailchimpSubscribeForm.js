@@ -15,24 +15,27 @@ function submit(event) {
 	}
 	form.classList.add('submitting')
 
-	fetch(csrfUrl).then((response) => {
-		return response.text()
-	}).then((csrfToken) => {
-		return fetch(url, {
-			method: 'post',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				'X-CSRFToken': csrfToken,
-			},
-			body: formDataJsonString,
+	fetch(csrfUrl)
+		.then((response) => {
+			return response.text()
 		})
-	}).then((response) => {
-		if (response.status >= 200 && response.status <= 299) {
-			return response.json()
-		}
-		throw Error(response.statusText)
-	})
+		.then((csrfToken) => {
+			return fetch(url, {
+				method: 'post',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrfToken,
+				},
+				body: formDataJsonString,
+			})
+		})
+		.then((response) => {
+			if (response.status >= 200 && response.status <= 299) {
+				return response.json()
+			}
+			throw Error(response.statusText)
+		})
 		.then((jsonResponse) => {
 			if (jsonResponse.success) {
 				form.classList.remove('submitting')

@@ -37,7 +37,10 @@ export function showMoreTable(e) {
 	e.target.innerText = newText
 	e.target.dataset.visible = newVisible.toString()
 	e.target.setAttribute('aria-expanded', newVisible.toString())
-	e.target.getAttribute('aria-controls').split(' ').forEach((id) => {
-		document.getElementById(id).dataset.visible = newVisible.toString()
-	})
+	e.target
+		.getAttribute('aria-controls')
+		.split(' ')
+		.forEach((id) => {
+			document.getElementById(id).dataset.visible = newVisible.toString()
+		})
 }

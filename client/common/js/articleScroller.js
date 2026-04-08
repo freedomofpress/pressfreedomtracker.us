@@ -6,8 +6,12 @@ class ArticleScroller {
 		this.articleParent.classList.add('article-carousel__items--flex')
 		scrollerElement.classList.add('article-carousel__scroller--visible')
 
-		this.scrollNextBtn = scrollerElement.querySelector('.article-carousel__scroller--button-next')
-		this.scrollPrevBtn = scrollerElement.querySelector('.article-carousel__scroller--button-prev')
+		this.scrollNextBtn = scrollerElement.querySelector(
+			'.article-carousel__scroller--button-next'
+		)
+		this.scrollPrevBtn = scrollerElement.querySelector(
+			'.article-carousel__scroller--button-prev'
+		)
 
 		this.articles = this.articleParent.querySelectorAll('li')
 		this.perArticleWidth = this.articles[0].getBoundingClientRect().width
@@ -40,8 +44,10 @@ class ArticleScroller {
 	}
 
 	nextExists() {
-		return (this.articleParent.scrollWidth - this.articleParent.scrollLeft)
-			> this.articleParent.clientWidth
+		return (
+			this.articleParent.scrollWidth - this.articleParent.scrollLeft >
+			this.articleParent.clientWidth
+		)
 	}
 
 	updateNextPrevButtons() {

@@ -43,7 +43,9 @@ class ArticleLoader {
 
 	handleScroll() {
 		if (this.fetches < ArticleLoader.NUM_AUTO_FETCHES) {
-			const elm = this.parentElm.querySelector('.js-article-loading-item:last-child')
+			const elm = this.parentElm.querySelector(
+				'.js-article-loading-item:last-child'
+			)
 			if (isElementVisible(elm)) {
 				this.getNextPage()
 			}
@@ -94,12 +96,9 @@ class ArticleLoader {
 		for (let i = 0; i < items.length; i += 1) {
 			items[i].classList.add('animation-fade-in')
 			items[i].classList.add(`animation-fade-in--${i + 1}`)
-			items[i].querySelector(
-				'.incident-database-card__details-toggle',
-			)?.addEventListener(
-				'click',
-				showMoreTable,
-			)
+			items[i]
+				.querySelector('.incident-database-card__details-toggle')
+				?.addEventListener('click', showMoreTable)
 			fragment.appendChild(items[i])
 		}
 
@@ -129,7 +128,9 @@ class ArticleLoader {
 			return
 		}
 
-		const cameFromClick = event && event.target.className.indexOf('js-article-loading-next-link') !== -1
+		const cameFromClick =
+			event &&
+			event.target.className.indexOf('js-article-loading-next-link') !== -1
 		if (!cameFromClick && !this.nextLinkElm) {
 			return
 		}
@@ -151,7 +152,7 @@ class ArticleLoader {
 				const urlParams = new URLSearchParams(window.location.search)
 				urlParams.set(
 					'endpage',
-					urlParams.has('endpage') ? parseInt(urlParams.get('endpage')) + 1 : 2,
+					urlParams.has('endpage') ? parseInt(urlParams.get('endpage')) + 1 : 2
 				)
 				window.history.replaceState(null, null, '?' + urlParams.toString())
 			})
