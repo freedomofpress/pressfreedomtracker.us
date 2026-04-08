@@ -3,6 +3,7 @@ const { globalIgnores } = require('eslint/config')
 const js = require('@eslint/js')
 const react = require('eslint-plugin-react')
 const reactHooks = require('eslint-plugin-react-hooks')
+const globals = require('globals')
 
 module.exports = [
 	js.configs.recommended,
@@ -26,11 +27,7 @@ module.exports = [
 			sourceType: 'module',
 
 			globals: {
-				window: true,
-				HTMLInputElement: true,
-				FormData: true,
-				fetch: true,
-				document: true,
+				...globals.browser,
 				module: 'readonly',
 			},
 
