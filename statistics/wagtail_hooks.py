@@ -1,5 +1,4 @@
-from django.urls import re_path
-from django.urls import reverse
+from django.urls import path, reverse
 
 from wagtail import hooks
 from wagtail.admin.menu import MenuItem
@@ -20,5 +19,5 @@ def register_stats_guide_menu_item():
 @hooks.register("register_admin_urls")
 def urlconf_time():
     return [
-        re_path(r"^stats_guide/$", stats_guide_view, name="statistics_guide"),
+        path("stats_guide/", stats_guide_view, name="statistics_guide"),
     ]
