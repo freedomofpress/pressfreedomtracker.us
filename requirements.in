@@ -1,7 +1,7 @@
 bleach>=4.1.0
 beautifulsoup4
-Django>=4.2.29,<4.3
 cryptography>=46.0.7
+Django>=4.2.30,<4.3
 djangorestframework>=3.14
 django-anymail
 django-autocomplete-light
