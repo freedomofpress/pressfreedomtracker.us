@@ -142,7 +142,12 @@ class AlignedCaptionedEmbedBlock(blocks.StructBlock):
 
 
 class BlueskyEmbedBlock(blocks.StructBlock):
-    bluesky_post = EmbedBlock()
+    bluesky_post = EmbedBlock(
+        help_text=(
+            "Link to a Bluesky post, "
+            "copied by using the Share button and Copy link to post."
+        )
+    )
 
     class Meta:
         icon = "pick"
@@ -155,7 +160,10 @@ class InstagramEmbedBlock(blocks.StructBlock):
         if "instagram.com" not in value:
             raise forms.ValidationError("Must be an Instagram URL")
 
-    url = blocks.URLBlock(validators=[validate_instagram_url])
+    url = blocks.URLBlock(
+        validators=[validate_instagram_url],
+        help_text="URL to an Instagram post, copied from the browser's URL bar",
+    )
 
     class Meta:
         icon = "pick"
