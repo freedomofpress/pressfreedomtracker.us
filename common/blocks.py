@@ -157,7 +157,7 @@ class BlueskyEmbedBlock(blocks.StructBlock):
 
 class InstagramEmbedBlock(blocks.StructBlock):
     def validate_instagram_url(value):
-        if "instagram.com" not in value:
+        if not re.match(r"^https://(?:www\.)?instagram\.com/", value):
             raise forms.ValidationError("Must be an Instagram URL")
 
     url = blocks.URLBlock(
