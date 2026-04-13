@@ -10,9 +10,8 @@
  *
  * Example usage:
  *
- *     <cw-image>
- *         <label for="field-id">Field Name</label>
- *         <input type="text" id="field-id" />
+ *     <cw-image data-warning-text="This image may be disturbing. Click to view.">
+ *         <img src="https://example.com/image.jpg" alt="Example Image">
  *     </cw-image>
  */
 class ContentWarningImage extends HTMLElement {
