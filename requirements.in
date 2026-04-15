@@ -1,6 +1,8 @@
 beautifulsoup4
 bleach>=4.1.0
 cryptography>=46.0.7
+Django>=5.2.13,<6.0
+djangorestframework>=3.14
 django-anymail
 django-autocomplete-light
 django-csp>=3.7
@@ -10,7 +12,6 @@ django-settings-export
 django-storages[google]>=1.14.6
 django-webpack-loader
 django-widget-tweaks==1.4.12
-Django>=4.2.30,<4.3
 djangorestframework-csv
 djangorestframework>=3.14
 docutils
