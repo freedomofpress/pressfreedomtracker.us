@@ -107,7 +107,7 @@ class AlignedCaptionedImageBlock(blocks.StructBlock):
 
     def get_context(self, value, **kwargs):
         context = super(AlignedCaptionedImageBlock, self).get_context(value, **kwargs)
-        if value['content_warning']:
+        if value['content_warning'] and type(value['content_warning']) == blocks.list_block.ListValue:
             value['content_warning'] = value['content_warning'][0]
         return context
 
