@@ -18,6 +18,10 @@ quote_type = single
 charset = utf-8
 indent_style = tab
 
+# Newlines in an included HTML file can add unwanted spaces
+[*.{html,svg}]
+insert_final_newline = false
+
 # PEP 8 Compliant
 [*.py]
 indent_style = space
