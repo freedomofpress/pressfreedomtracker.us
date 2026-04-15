@@ -1,4 +1,10 @@
 {% load wagtailimages_tags %}
 
 {% image value width-828 preserve-svg as my_image %}
-<img src="{{ my_image.url }}" width="{{ my_image.width }}" height="{{ my_image.height }}" alt="{% if my_image.image.attribution %}{{ my_image.image.attribution }}{% else %}{{ my_image.image.title }}{% endif %}">
+{% if content_warning %}
+<cw-image data-warning-text="{{ content_warning }}">
+{% endif %}
+  <img src="{{ my_image.url }}" width="{{ my_image.width }}" height="{{ my_image.height }}" alt="{% if my_image.image.attribution %}{{ my_image.image.attribution }}{% else %}{{ my_image.image.title }}{% endif %}">
+{% if content_warning.0 %}
+</cw-image>
+{% endif %}

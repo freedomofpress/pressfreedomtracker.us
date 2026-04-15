@@ -24,7 +24,7 @@ else
     export PORT=8000
 fi
 
-export DJANGO_URL="http://$(docker-compose -f ${DOCKER_COMPOSE_FILE} port ${CONTAINER} ${PORT})"
+export DJANGO_URL="http://$(docker compose -f ${DOCKER_COMPOSE_FILE} port ${CONTAINER} ${PORT})"
 
 # Are we on Linux?
 if [[ "${PLATFORM}" == *"linux"* ]]; then

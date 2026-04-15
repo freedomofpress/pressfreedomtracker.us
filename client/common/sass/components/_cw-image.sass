@@ -1,0 +1,21 @@
+.cw-image-container
+	display: grid
+	grid-template-areas: "image"
+	place-items: center
+
+	.btn
+		display: none
+		padding: 0.25rem 0.5rem
+		max-width: 85%
+
+
+	&.blurred
+		img
+			grid-area: image
+			clip-path: border-box
+			filter: blur(50px)
+
+		.btn
+			grid-area: image
+			display: block
+

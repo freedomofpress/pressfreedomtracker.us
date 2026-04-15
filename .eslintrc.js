@@ -38,6 +38,8 @@ module.exports = {
 		"fetch": true,
 		"document": true,
 		"import": true,
+		"HTMLElement": true,
+		"customElements": true,
 	},
 
 	"rules": {

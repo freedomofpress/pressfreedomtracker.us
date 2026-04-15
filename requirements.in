@@ -1,7 +1,7 @@
 bleach>=4.1.0
 beautifulsoup4
-cryptography>=46.0.6
-Django>=4.2.29,<4.3
+cryptography>=46.0.7
+Django>=4.2.30,<4.3
 djangorestframework>=3.14
 django-anymail
 django-autocomplete-light
@@ -21,9 +21,9 @@ Jinja2>=3.1.6
 mailchimp_marketing>=3.0.66
 marshmallow>=3.26.2,<4
 psycopg2>=2.9.9
-Pygments
+Pygments>=2.20.0
 python-json-logger
-pillow>=10.2.0
+pillow>=12.2.0
 requests>=2.33.1
 structlog
 typing
