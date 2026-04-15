@@ -42,4 +42,3 @@ jobs:
         NPM_VER=10.9.2
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
       add-branch-tags: true
-
