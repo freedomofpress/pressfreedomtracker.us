@@ -14,7 +14,7 @@ import bleach
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.models.charts import (
     BubbleMapChartOptionsSchema,
-    HexbinMapChartOptionsSchema
+    HexbinMapChartOptionsSchema,
 )
 from common.models.helpers import get_categories, get_states, get_tags
 from common.search import get_searchable_content_for_fields
@@ -107,7 +107,7 @@ class AlignedCaptionedImageBlock(blocks.StructBlock):
 
     def get_context(self, value, **kwargs):
         context = super(AlignedCaptionedImageBlock, self).get_context(value, **kwargs)
-        if value['content_warning']:
+        if value['content_warning'] and isinstance(value['content_warning'], blocks.list_block.ListValue):
             value['content_warning'] = value['content_warning'][0]
         return context
 
