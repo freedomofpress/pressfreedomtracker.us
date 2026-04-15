@@ -485,11 +485,15 @@ bluesky = {
 }
 
 WAGTAILEMBEDS_FINDERS = [
+    # Custom Instagram finder
+    {
+        'class': 'common.embeds.InstagramEmbedFinder',
+    },
+
     {
         'class': 'wagtail.embeds.finders.oembed',
         'providers': [xdotcom, bluesky],
     },
-
     # Handles all other oEmbed providers the default way
     {
         'class': 'wagtail.embeds.finders.oembed',

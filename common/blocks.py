@@ -156,13 +156,10 @@ class BlueskyEmbedBlock(blocks.StructBlock):
 
 
 class InstagramEmbedBlock(blocks.StructBlock):
-    def validate_instagram_url(value):
-        if not re.match(r"^https://(?:www\.)?instagram\.com/", value):
-            raise forms.ValidationError("Must be an Instagram URL")
-
-    url = blocks.URLBlock(
-        validators=[validate_instagram_url],
-        help_text="URL to an Instagram post, copied from the browser's URL bar",
+    instagram_post = EmbedBlock(
+        help_text=(
+            "Link to an Instagram post, copied by using the … button and Copy Link."
+        )
     )
 
     class Meta:
