@@ -3,9 +3,9 @@ name: CI
 
 on:
   pull_request:
-    types: ["opened", "synchronize"]
+    types: ['opened', 'synchronize']
   push:
-    branches: ["prod", "develop"]
+    branches: ['prod', 'develop']
 
 env:
   COMPOSE_FILE_DEV: docker-compose.yaml
@@ -84,111 +84,111 @@ jobs:
     name: Test:${{ matrix.target }}
     runs-on: ubuntu-latest
     needs:
-    - build-dev-django
-    - build-dev-node
-    - build-dev-chartgen
+      - build-dev-django
+      - build-dev-node
+      - build-dev-chartgen
     strategy:
       matrix:
         target:
-        - check-migrations
-        - dev-tests
-        - dev-jest-tests
-        - flake8
-        - bandit
-        - eslint
-        - stylelint
+          - check-migrations
+          - dev-tests
+          - dev-jest-tests
+          - flake8
+          - bandit
+          - eslint
+          - stylelint
     steps:
-    - name: Install Docker
-      uses: docker/setup-docker-action@v5
-      with:
-        version: ${{ env.VERSION_DOCKER }}
+      - name: Install Docker
+        uses: docker/setup-docker-action@v5
+        with:
+          version: ${{ env.VERSION_DOCKER }}
 
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        persist-credentials: true
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+          fetch-depth: 0
 
-    - name: Download dev django image
-      uses: actions/download-artifact@v8
-      with:
-        name: ${{ needs.build-dev-django.outputs.artifact-name }}
-        path: ${{ runner.temp }}/images
+      - name: Download dev django image
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-dev-django.outputs.artifact-name }}
+          path: ${{ runner.temp }}/images
 
-    - name: Download dev node image
-      uses: actions/download-artifact@v8
-      with:
-        name: ${{ needs.build-dev-node.outputs.artifact-name }}
-        path: ${{ runner.temp }}/images
+      - name: Download dev node image
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-dev-node.outputs.artifact-name }}
+          path: ${{ runner.temp }}/images
 
-    - name: Download dev chartgen image
-      uses: actions/download-artifact@v8
-      with:
-        name: ${{ needs.build-dev-chartgen.outputs.artifact-name }}
-        path: ${{ runner.temp }}/images
+      - name: Download dev chartgen image
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-dev-chartgen.outputs.artifact-name }}
+          path: ${{ runner.temp }}/images
 
-    - name: Restore dev images
-      env:
-        DJANGO_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-dev-django.outputs.artifact-image }}
-        DJANGO_IMAGE_URL: ${{ needs.build-dev-django.outputs.image-url }}
-        NODE_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-dev-node.outputs.artifact-image }}
-        NODE_IMAGE_URL: ${{ needs.build-dev-node.outputs.image-url }}
-        CHARTGEN_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-dev-chartgen.outputs.artifact-image }}
-        CHARTGEN_IMAGE_URL: ${{ needs.build-dev-chartgen.outputs.image-url }}
-      run: |
-        docker image load --input "$DJANGO_LOAD_FILE"
-        docker image load --input "$NODE_LOAD_FILE"
-        docker image load --input "$CHARTGEN_LOAD_FILE"
+      - name: Restore dev images
+        env:
+          DJANGO_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-dev-django.outputs.artifact-image }}
+          DJANGO_IMAGE_URL: ${{ needs.build-dev-django.outputs.image-url }}
+          NODE_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-dev-node.outputs.artifact-image }}
+          NODE_IMAGE_URL: ${{ needs.build-dev-node.outputs.image-url }}
+          CHARTGEN_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-dev-chartgen.outputs.artifact-image }}
+          CHARTGEN_IMAGE_URL: ${{ needs.build-dev-chartgen.outputs.image-url }}
+        run: |
+          docker image load --input "$DJANGO_LOAD_FILE"
+          docker image load --input "$NODE_LOAD_FILE"
+          docker image load --input "$CHARTGEN_LOAD_FILE"
 
-        # These tags need to match whatever is specified in the dev compose file
-        docker image tag "$DJANGO_IMAGE_URL" localhost/pressfreedomtracker-us-django
-        docker image tag "$NODE_IMAGE_URL" localhost/pressfreedomtracker-us-node
-        docker image tag "$CHARTGEN_IMAGE_URL" localhost/pressfreedomtracker-us-node-chart-pregenerator
+          # These tags need to match whatever is specified in the dev compose file
+          docker image tag "$DJANGO_IMAGE_URL" localhost/pressfreedomtracker-us-django
+          docker image tag "$NODE_IMAGE_URL" localhost/pressfreedomtracker-us-node
+          docker image tag "$CHARTGEN_IMAGE_URL" localhost/pressfreedomtracker-us-node-chart-pregenerator
 
-    - name: Create env config
-      run: make dev-init
+      - name: Create env config
+        run: make dev-init
 
-    - name: Start
-      run: |
-        docker compose --file="$COMPOSE_FILE_DEV" up --detach --pull=missing --no-build
+      - name: Start
+        run: |
+          docker compose --file="$COMPOSE_FILE_DEV" up --detach --pull=missing --no-build
 
-        # Check for failed services and error if any are found
-        sleep 5
-        if [[ $(docker compose --file="$COMPOSE_FILE_DEV" ps --status='[restarting, dead, exited]' --format=json) ]]; then
-          echo "ERROR: One or more services failed to start"
-          docker compose --file="$COMPOSE_FILE_DEV" ps
-          exit 1
-        fi
+          # Check for failed services and error if any are found
+          sleep 5
+          if [[ $(docker compose --file="$COMPOSE_FILE_DEV" ps --status='[restarting, dead, exited]' --format=json) ]]; then
+            echo "ERROR: One or more services failed to start"
+            docker compose --file="$COMPOSE_FILE_DEV" ps
+            exit 1
+          fi
 
-    - name: Make target '${{ matrix.target }}'
-      run: make ${{ matrix.target }}
+      - name: Make target '${{ matrix.target }}'
+        run: make ${{ matrix.target }}
 
-    - name: Collect logs on failure
-      if: ${{ failure() }}
-      run: |
-        docker compose --file="$COMPOSE_FILE_DEV" logs django
-        docker compose --file="$COMPOSE_FILE_DEV" logs node-chart-pregenerator
-        docker compose --file="$COMPOSE_FILE_DEV" logs node
+      - name: Collect logs on failure
+        if: ${{ failure() }}
+        run: |
+          docker compose --file="$COMPOSE_FILE_DEV" logs django
+          docker compose --file="$COMPOSE_FILE_DEV" logs node-chart-pregenerator
+          docker compose --file="$COMPOSE_FILE_DEV" logs node
 
-    - name: Save HTML coverage
-      uses: actions/upload-artifact@v7
-      if: ${{ matrix.target == 'dev-tests' }}
-      with:
-        name: test-${{ matrix.target }}-${{ github.run_id }}-htmlcov
-        path: htmlcov
-        if-no-files-found: error
-        overwrite: true
-        retention-days: 5
+      - name: Save HTML coverage
+        uses: actions/upload-artifact@v7
+        if: ${{ matrix.target == 'dev-tests' }}
+        with:
+          name: test-${{ matrix.target }}-${{ github.run_id }}-htmlcov
+          path: htmlcov
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 5
 
-    - name: Save PyTest coverage
-      uses: actions/upload-artifact@v7
-      if: ${{ matrix.target == 'dev-tests'}}
-      with:
-        name: test-${{ matrix.target }}-${{ github.run_id }}-pytestcov
-        path: coverage.xml
-        if-no-files-found: error
-        overwrite: true
-        retention-days: 5
+      - name: Save PyTest coverage
+        uses: actions/upload-artifact@v7
+        if: ${{ matrix.target == 'dev-tests'}}
+        with:
+          name: test-${{ matrix.target }}-${{ github.run_id }}-pytestcov
+          path: coverage.xml
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 5
 
     outputs:
       artifact-pytestcov: test-dev-tests-${{ github.run_id }}-pytestcov
@@ -197,174 +197,174 @@ jobs:
     name: Test:coverage
     runs-on: ubuntu-latest
     needs:
-    - test
+      - test
     permissions:
       contents: read
       actions: read
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        persist-credentials: true
-        fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+          fetch-depth: 0
 
-    - name: Install Python ${{ env.VERSION_PYTHON }}
-      uses: actions/setup-python@v6
-      with:
-        python-version: ${{ env.VERSION_PYTHON }}
+      - name: Install Python ${{ env.VERSION_PYTHON }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.VERSION_PYTHON }}
 
-    - name: Configure Job Cache
-      uses: actions/cache@v5
-      with:
-        path: |
-          ~/.cache/pip
-        key: ${{ runner.os }}-py${{ env.VERSION_PYTHON }}-${{ hashFiles('./ci-requirements.txt') }}
+      - name: Configure Job Cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cache/pip
+          key: ${{ runner.os }}-py${{ env.VERSION_PYTHON }}-${{ hashFiles('./ci-requirements.txt') }}
 
-    - name: Install requirements
-      run: |
-        python -m pip install --requirement=ci-requirements.txt --require-hashes --disable-pip-version-check --no-color --no-input
+      - name: Install requirements
+        run: |
+          python -m pip install --requirement=ci-requirements.txt --require-hashes --disable-pip-version-check --no-color --no-input
 
-    - name: Download coverage artifact
-      uses: actions/download-artifact@v8
-      with:
-        name: ${{ needs.test.outputs.artifact-pytestcov }}
-        path: ${{ runner.temp }}/coverage
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.test.outputs.artifact-pytestcov }}
+          path: ${{ runner.temp }}/coverage
 
-    - name: Compare coverage
-      run: |
-        diff-cover ${{ runner.temp }}/coverage/coverage.xml --compare-branch=origin/develop --fail-under=100
+      - name: Compare coverage
+        run: |
+          diff-cover ${{ runner.temp }}/coverage/coverage.xml --compare-branch=origin/develop --fail-under=100
 
   test-prod:
     name: Test:production
     runs-on: ubuntu-latest
     needs:
-    - build-prod-django
-    - build-prod-chartgen
+      - build-prod-django
+      - build-prod-chartgen
     steps:
-    - name: Install Docker
-      uses: docker/setup-docker-action@v5
-      with:
-        version: ${{ env.VERSION_DOCKER }}
+      - name: Install Docker
+        uses: docker/setup-docker-action@v5
+        with:
+          version: ${{ env.VERSION_DOCKER }}
 
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        persist-credentials: false
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
-    - name: Download django image
-      uses: actions/download-artifact@v8
-      with:
-        name: ${{ needs.build-prod-django.outputs.artifact-name }}
-        path: ${{ runner.temp }}/images
+      - name: Download django image
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-prod-django.outputs.artifact-name }}
+          path: ${{ runner.temp }}/images
 
-    - name: Download chartgen image
-      uses: actions/download-artifact@v8
-      with:
-        name: ${{ needs.build-prod-chartgen.outputs.artifact-name }}
-        path: ${{ runner.temp }}/images
+      - name: Download chartgen image
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-prod-chartgen.outputs.artifact-name }}
+          path: ${{ runner.temp }}/images
 
-    - name: Restore prod image
-      env:
-        DJANGO_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-prod-django.outputs.artifact-image }}
-        DJANGO_IMAGE_URL: ${{ needs.build-prod-django.outputs.image-url }}
-        CHARTGEN_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-prod-chartgen.outputs.artifact-image }}
-        CHARTGEN_IMAGE_URL: ${{ needs.build-prod-chartgen.outputs.image-url }}
-      run: |
-        docker image load --input "$DJANGO_LOAD_FILE"
-        docker image load --input "$CHARTGEN_LOAD_FILE"
+      - name: Restore prod image
+        env:
+          DJANGO_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-prod-django.outputs.artifact-image }}
+          DJANGO_IMAGE_URL: ${{ needs.build-prod-django.outputs.image-url }}
+          CHARTGEN_LOAD_FILE: ${{ runner.temp }}/images/${{ needs.build-prod-chartgen.outputs.artifact-image }}
+          CHARTGEN_IMAGE_URL: ${{ needs.build-prod-chartgen.outputs.image-url }}
+        run: |
+          docker image load --input "$DJANGO_LOAD_FILE"
+          docker image load --input "$CHARTGEN_LOAD_FILE"
 
-        # This tag needs to match whatever is in the prod compose file
-        docker image tag "$DJANGO_IMAGE_URL" quay.io/freedomofpress/pressfreedomtrackerus
-        docker image tag "$CHARTGEN_IMAGE_URL" quay.io/freedomofpress/pft-chart-pregenerator
+          # This tag needs to match whatever is in the prod compose file
+          docker image tag "$DJANGO_IMAGE_URL" quay.io/freedomofpress/pressfreedomtrackerus
+          docker image tag "$CHARTGEN_IMAGE_URL" quay.io/freedomofpress/pft-chart-pregenerator
 
-    - name: Start
-      run: |
-        docker compose --file="$COMPOSE_FILE_PROD" up --detach
+      - name: Start
+        run: |
+          docker compose --file="$COMPOSE_FILE_PROD" up --detach
 
-        # Check for failed services and error if any are found
-        sleep 5
-        if [[ $(docker compose --file="$COMPOSE_FILE_PROD" ps --status='[restarting, dead, exited]' --format=json) ]]; then
-          echo "ERROR: One or more services failed to start"
-          docker compose --file="$COMPOSE_FILE_PROD" ps
-          exit 1
-        fi
+          # Check for failed services and error if any are found
+          sleep 5
+          if [[ $(docker compose --file="$COMPOSE_FILE_PROD" ps --status='[restarting, dead, exited]' --format=json) ]]; then
+            echo "ERROR: One or more services failed to start"
+            docker compose --file="$COMPOSE_FILE_PROD" ps
+            exit 1
+          fi
 
-    - name: Verify django
-      run: |
-        docker run --pull=missing --rm --network=pressfreedomtrackerus_app docker.io/curlimages/curl:latest \
-        --ipv4 --retry 24 --retry-delay 5 --retry-all-errors http://django:8000/health/ok/
+      - name: Verify django
+        run: |
+          docker run --pull=missing --rm --network=pressfreedomtrackerus_app docker.io/curlimages/curl:latest \
+          --ipv4 --retry 24 --retry-delay 5 --retry-all-errors http://django:8000/health/ok/
 
-    - name: Verify database
-      run: |
-        docker compose --file="$COMPOSE_FILE_PROD" exec django \
-        /bin/bash -c "./manage.py createdevdata --no-download"
+      - name: Verify database
+        run: |
+          docker compose --file="$COMPOSE_FILE_PROD" exec django \
+          /bin/bash -c "./manage.py createdevdata --no-download"
 
-    - name: Verify site skeleton
-      run: |
-        docker compose --file="$COMPOSE_FILE_PROD" exec django \
-        pip install --requirement=/django/requirements.txt --require-hashes --no-color --disable-pip-version-check
+      - name: Verify site skeleton
+        run: |
+          docker compose --file="$COMPOSE_FILE_PROD" exec django \
+          pip install --requirement=/django/requirements.txt --require-hashes --no-color --disable-pip-version-check
 
-        docker compose --file="$COMPOSE_FILE_PROD" exec django \
-        ./scripts/pytest
+          docker compose --file="$COMPOSE_FILE_PROD" exec django \
+          ./scripts/pytest
 
-    - name: Collect logs on failure
-      if: ${{ failure() }}
-      run: |
-        docker compose --file="$COMPOSE_FILE_PROD" logs django
-        docker compose --file="$COMPOSE_FILE_PROD" logs node-chart-pregenerator
+      - name: Collect logs on failure
+        if: ${{ failure() }}
+        run: |
+          docker compose --file="$COMPOSE_FILE_PROD" logs django
+          docker compose --file="$COMPOSE_FILE_PROD" logs node-chart-pregenerator
 
   cleanup:
     name: Cleanup
     runs-on: ubuntu-latest
     needs:
-    - build-dev-django
-    - build-dev-node
-    - build-dev-chartgen
-    - build-prod-django
-    - build-prod-chartgen
-    - test
-    - test-prod
+      - build-dev-django
+      - build-dev-node
+      - build-dev-chartgen
+      - build-prod-django
+      - build-prod-chartgen
+      - test
+      - test-prod
     if: ${{ always() }}
     permissions:
       contents: read
       actions: write
     steps:
-    - name: Delete dev django image
-      if: ${{ needs.build-dev-django.result == 'success' && always() }}
-      uses: freedomofpress/actionslib/act/delete-artifact@main
-      with:
-        artifact: ${{ needs.build-dev-django.outputs.artifact-name }}
-        error-if-absent: 'false'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete dev django image
+        if: ${{ needs.build-dev-django.result == 'success' && always() }}
+        uses: freedomofpress/actionslib/act/delete-artifact@main
+        with:
+          artifact: ${{ needs.build-dev-django.outputs.artifact-name }}
+          error-if-absent: 'false'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Delete dev node image
-      if: ${{ needs.build-dev-node.result == 'success' && always() }}
-      uses: freedomofpress/actionslib/act/delete-artifact@main
-      with:
-        artifact: ${{ needs.build-dev-node.outputs.artifact-name }}
-        error-if-absent: 'false'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete dev node image
+        if: ${{ needs.build-dev-node.result == 'success' && always() }}
+        uses: freedomofpress/actionslib/act/delete-artifact@main
+        with:
+          artifact: ${{ needs.build-dev-node.outputs.artifact-name }}
+          error-if-absent: 'false'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Delete dev chartgen image
-      if: ${{ needs.build-dev-chartgen.result == 'success' && always() }}
-      uses: freedomofpress/actionslib/act/delete-artifact@main
-      with:
-        artifact: ${{ needs.build-dev-chartgen.outputs.artifact-name }}
-        error-if-absent: 'false'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete dev chartgen image
+        if: ${{ needs.build-dev-chartgen.result == 'success' && always() }}
+        uses: freedomofpress/actionslib/act/delete-artifact@main
+        with:
+          artifact: ${{ needs.build-dev-chartgen.outputs.artifact-name }}
+          error-if-absent: 'false'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Delete prod django image
-      if: ${{ needs.build-prod-django.result == 'success' && always() }}
-      uses: freedomofpress/actionslib/act/delete-artifact@main
-      with:
-        artifact: ${{ needs.build-prod-django.outputs.artifact-name }}
-        error-if-absent: 'false'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete prod django image
+        if: ${{ needs.build-prod-dejango.result == 'success' && always() }}
+        uses: freedomofpress/actionslib/act/delete-artifact@main
+        with:
+          artifact: ${{ needs.build-prod-django.outputs.artifact-name }}
+          error-if-absent: 'false'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Delete prod chartgen image
-      if: ${{ needs.build-prod-chartgen.result == 'success' && always() }}
-      uses: freedomofpress/actionslib/act/delete-artifact@main
-      with:
-        artifact: ${{ needs.build-prod-chartgen.outputs.artifact-name }}
-        error-if-absent: 'false'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete prod chartgen image
+        if: ${{ needs.build-prod-chartgen.result == 'success' && always() }}
+        uses: freedomofpress/actionslib/act/delete-artifact@main
+        with:
+          artifact: ${{ needs.build-prod-chartgen.outputs.artifact-name }}
+          error-if-absent: 'false'
+          github-token: ${{ secrets.GITHUB_TOKEN }}

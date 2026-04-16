@@ -11,7 +11,7 @@ services:
     image: postgres:14
     init: true
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - ./:/django:ro
     environment:
@@ -20,7 +20,8 @@ services:
       POSTGRES_DB: trackerdb
     user: postgres
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-U", "tracker", "--dbname", "trackerdb"]
+      test:
+        ['CMD', 'pg_isready', '-q', '-U', 'tracker', '--dbname', 'trackerdb']
       timeout: 45s
       interval: 10s
       retries: 10
@@ -32,7 +33,7 @@ services:
   selenium:
     image: selenium/standalone-firefox-debug:latest
     ports:
-      - "127.0.0.1::5900"
+      - '127.0.0.1::5900'
     networks:
       app:
         aliases:
@@ -81,7 +82,7 @@ services:
         published: *chart-port
     user: ${UID:?err}
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:3000/"]
+      test: ['CMD', 'curl', '--fail', 'http://localhost:3000/']
       start_period: 10s
       interval: 10s
       timeout: 20s
@@ -109,23 +110,24 @@ services:
       node-chart-pregenerator:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8000/health/ok/?monitor"]
+      test:
+        ['CMD', 'curl', '--fail', 'http://localhost:8000/health/ok/?monitor']
       start_period: 10s
       interval: 30s
       timeout: 20s
       retries: 4
     environment:
       DJANGO_ALLOWED_HOSTS: app localhost
-      DJANGO_CREATEDEVDATA: "${DJANGO_CREATEDEVDATA:-no}"
+      DJANGO_CREATEDEVDATA: '${DJANGO_CREATEDEVDATA:-no}'
       DJANGO_DB_PASSWORD: trackerpassword
       DJANGO_DB_USER: tracker
       DJANGO_DB_NAME: trackerdb
       DJANGO_DB_PORT: 5432
       DJANGO_DB_HOST: db
-      DJANGO_XMLTEST_OUTPUT: "yes"
+      DJANGO_XMLTEST_OUTPUT: 'yes'
       DEPLOY_ENV: dev
-      DJANGO_PROFILE: "${DJANGO_PROFILE:-no}"
-      PYINSTRUMENT: "${PYINSTRUMENT:-no}"
+      DJANGO_PROFILE: '${DJANGO_PROFILE:-no}'
+      PYINSTRUMENT: '${PYINSTRUMENT:-no}'
       SELENIUM_HOST: selenium
       DJANGO_CHART_HOST: node-chart-pregenerator
       DJANGO_CHART_PORT: *chart-port
@@ -133,7 +135,7 @@ services:
     volumes:
       - ./:/django
     ports:
-      - "127.0.0.1:8000:8000"
+      - '127.0.0.1:8000:8000'
     networks:
       app:
         aliases:
