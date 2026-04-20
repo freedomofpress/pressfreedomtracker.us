@@ -13,8 +13,10 @@ from wagtail.admin.panels import (
 from wagtail import blocks
 from wagtail.fields import StreamField, RichTextField
 from wagtail.models import Page, Orderable
+from wagtail.permission_policies.base import ModelPermissionPolicy
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
+from wagtail_newsletter.models import NewsletterPageMixin
 
 from common.utils import DEFAULT_PAGE_KEY, paginate
 from common.exceptions import ChartNotAvailable
@@ -180,7 +182,7 @@ class BlogAuthor(Orderable):
     panels = [FieldPanel("author")]
 
 
-class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
+class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
     publication_datetime = models.DateTimeField(
         help_text="Past or future date of publication"
     )
@@ -328,6 +330,29 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
 
     parent_page_types = ["blog.BlogIndexPage"]
     subpage_types = []
+    newsletter_template = "blog/blog_page_newsletter.html"
+
+    class Meta:
+        permissions = [
+            ('save_campaign_blogpage', 'Can save campaign'),
+            ('send_test_email_blogpage', 'Can send test email'),
+            ('send_campaign_blogpage', 'Can send campaign'),
+            ('schedule_campaign_blogpage', 'Can schedule campaign'),
+            ('unschedule_campaign_blogpage', 'Can unschedule campaign'),
+            ('get_report_blogpage', 'Can get report'),
+            ('access_newsletter_tab_blogpage', 'Can access newsletter tab'),
+        ]
+
+    def has_newsletter_permission(self, user, action):
+        permission_policy = ModelPermissionPolicy(type(self))
+        return permission_policy.user_has_permission(user, action)
+
+    @classmethod
+    def get_newsletter_panels(cls):
+        panels = [panel.clone() for panel in super().get_newsletter_panels()]
+        for panel in panels:
+            panel.permission = "blog.access_newsletter_tab_blogpage"
+        return panels
 
     def get_meta_image(self):
         if (

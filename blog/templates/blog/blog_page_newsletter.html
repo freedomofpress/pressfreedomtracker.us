@@ -1,0 +1,49 @@
+{% load newsletter_richtext mrml from wagtail_newsletter %}
+{% load image from wagtailimages_tags %}
+
+{% mrml %}
+<mjml>
+    <mj-body>
+		<mj-section>
+			<mj-column>
+				<mj-text
+					align="center"
+					font-size="20px"
+				>
+					{{ page.title }}
+				</mj-text>
+			</mj-column>
+		</mj-section>
+		<mj-section>
+			<mj-column>
+				<mj-text>
+					<p>
+						{% for author in page.authors.all %}
+						  {{ author.summary }}{% if not forloop.last %}, {% endif %}
+					  {% endfor %}
+					</p>
+					<p>{{ page.publication_datetime|date:"F j, Y" }}</p>
+				</mj-text>
+			</mj-column>
+		</mj-section>
+		<mj-section>
+      {% if page.lead_graphic %}
+			  {% image page.lead_graphic fill-1920x1080 preserve-svg as header_image %}
+        <mj-column>
+          <mj-image src="{{ header_image.full_url }}" alt="{{ header_image.alt }}" />
+        </mj-column>
+      {% endif %}
+
+		</mj-section>
+		<mj-section>
+			<mj-column border-top="solid 1px black">
+				{% for block in page.body %}
+					{% if block.block_type == "text" %}
+						<mj-text line-height="1.5">{{ block.value.text|newsletter_richtext }}</mj-text>
+					{% endif %}
+				{% endfor %}
+			</mj-column>
+		</mj-section>
+    </mj-body>
+</mjml>
+{% endmrml %}
