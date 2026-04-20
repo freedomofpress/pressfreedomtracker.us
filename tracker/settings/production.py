@@ -176,12 +176,22 @@ if os.environ.get("GS_BUCKET_NAME"):
     GS_STATIC_PATH = os.environ.get("GS_STATIC_PATH", "static")
     GS_FILE_OVERWRITE = os.environ.get("GS_FILE_OVERWRITE") == "True"
 
-    DEFAULT_FILE_STORAGE = "common.storage.MediaStorage"
+    STORAGES["default"] = {  # noqa: F405
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "OPTIONS": {
+            "location": GS_MEDIA_PATH,
+            "default_acl": "publicRead",
+        },
+    }
 
-    # Only whitenoise currently works. In the future, we might choose to
-    # upload static files to a bucket on build instead.
     if "GS_STORE_STATIC" in os.environ:
-        STATICFILES_STORAGE = "common.storage.StaticStorage"
+        STORAGES["staticfiles"] = {  # noqa: F405
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+            "OPTIONS": {
+                "location": GS_STATIC_PATH,
+                "default_acl": "publicRead",
+            },
+        }
 else:
     if "DJANGO_WHITENOISE" not in os.environ:
         STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT")
