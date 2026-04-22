@@ -18,6 +18,8 @@ import logging
 import os
 import sys
 
+from csp.constants import SELF, UNSAFE_EVAL, UNSAFE_INLINE
+
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +88,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "drf_spectacular_sidecar",
+    "csp",
 ]
 
 MIDDLEWARE = [
@@ -349,82 +352,84 @@ NOCAPTCHA = True
 TAGGIT_CASE_INSENSITIVE = True
 
 # Content Security Policy
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_BASE_URI = ("'self'",)
-CSP_FORM_ACTION = ("'self'",)
-CSP_FRAME_ANCESTORS = ("'self'",)
-CSP_SCRIPT_SRC = (
-    "'self'",
-    "https://analytics.freedom.press",
-    "https://www.google.com/recaptcha/",
-    "https://www.gstatic.com/recaptcha/",
-    # For Wagtail Admin
-    "'unsafe-inline'",
-    # For Social Widgets
-    "'unsafe-eval'",
-    "https://platform.twitter.com",
-    "https://www.instagram.com",
-    "https://embed.bsky.app",
-    # Observable Notebooks
-    "https://cdn.jsdelivr.net",
-    "https://api.observablehq.com",
-    "https://bundle.run",
-)
-CSP_STYLE_SRC = (
-    "'self'",
-    # For Wagtail Admin and Twitter Widgets.
-    "'unsafe-inline'",
-    "https://cdn.jsdelivr.net",
-)
-CSP_FRAME_SRC = (
-    "'self'",
-    # For Social Widgets
-    "https://platform.twitter.com",
-    "https://www.instagram.com",
-    "https://embed.bsky.app",
-    # For recaptcha
-    "https://www.google.com/recaptcha/",
-    "https://recaptcha.google.com/recaptcha/",
-    "https://www.youtube.com",
-)
-CSP_CONNECT_SRC = [
-    "'self'",
-    "https://analytics.freedom.press",
-    # For Wagtail Admin
-    "https://releases.wagtail.io/latest.txt",
-    # Observable Notebooks
-    "https://cdn.jsdelivr.net",
-    "https://static.observableusercontent.com/",
-    # For Social Widgets
-    "https://www.instagram.com",
-]
-CSP_IMG_SRC = [
-    "'self'",
-    "https://analytics.freedom.press",
-    # For Social Widgets
-    "https://platform.twitter.com",
-    "https://syndication.twitter.com",
-    "https://pbs.twimg.com",
-    "https://ton.twimg.com",
-    "https://www.instagram.com",
-    "https://scontent.cdninstagram.com",
-    "data:",
-    "https://cdn.jsdelivr.net",
-]
-CSP_OBJECT_SRC = ["'self'"]
-CSP_MEDIA_SRC = ["'self'"]
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "base-uri": (SELF,),
+        "connect-src": [
+            SELF,
+            "https://analytics.freedom.press",
+            # For Wagtail Admin
+            "https://releases.wagtail.io/latest.txt",
+            # Observable Notebooks
+            "https://cdn.jsdelivr.net",
+            "https://static.observableusercontent.com/",
+            # For Social Widgets
+            "https://www.instagram.com",
+        ],
+        "default-src": (SELF,),
+        "form-action": (SELF,),
+        "frame-ancestors": (SELF,),
+        "frame-src": (
+            SELF,
+            # For Social Widgets
+            "https://platform.twitter.com",
+            "https://www.instagram.com",
+            "https://embed.bsky.app",
+            # For recaptcha
+            "https://www.google.com/recaptcha/",
+            "https://recaptcha.google.com/recaptcha/",
+            "https://www.youtube.com",
+        ),
+        "img-src": [
+            SELF,
+            "https://analytics.freedom.press",
+            # For Social Widgets
+            "https://platform.twitter.com",
+            "https://syndication.twitter.com",
+            "https://pbs.twimg.com",
+            "https://ton.twimg.com",
+            "https://www.instagram.com",
+            "https://scontent.cdninstagram.com",
+            "data:",
+            "https://cdn.jsdelivr.net",
+        ],
+        "media-src": [SELF],
+        "object-src": [SELF],
+        # Report URI must be a string, not a tuple.
+        "report-uri": os.environ.get(
+            "DJANGO_CSP_REPORT_URI",
+            "https://freedomofpress.report-uri.com/r/d/csp/enforce",
+        ),
+        "script-src": (
+            SELF,
+            "https://analytics.freedom.press",
+            "https://www.google.com/recaptcha/",
+            "https://www.gstatic.com/recaptcha/",
+            # For Wagtail Admin
+            UNSAFE_INLINE,
+            # For Social Widgets
+            UNSAFE_EVAL,
+            "https://platform.twitter.com",
+            "https://www.instagram.com",
+            "https://embed.bsky.app",
+            # Observable Notebooks
+            "https://cdn.jsdelivr.net",
+            "https://api.observablehq.com",
+            "https://bundle.run",
+        ),
+        "style-src": (
+            SELF,
+            # For Wagtail Admin and Twitter Widgets.
+            UNSAFE_INLINE,
+            "https://cdn.jsdelivr.net",
+        ),
+    }
+}
 
-if os.environ.get("DJANGO_CSP_MEDIA_ORIGINS"):
-    csp_media_origins = os.environ["DJANGO_CSP_MEDIA_ORIGINS"].split()
-    CSP_MEDIA_SRC.extend(csp_media_origins)  # video files
-    CSP_IMG_SRC.extend(csp_media_origins)
-    CSP_OBJECT_SRC.extend(csp_media_origins)
-    CSP_CONNECT_SRC.extend(csp_media_origins)
+csp_media_origins = os.environ.get("DJANGO_CSP_MEDIA_ORIGINS", "").split()
+for directive in ("media-src", "img-src", "object-src", "connect-src"):
+    CONTENT_SECURITY_POLICY["DIRECTIVES"][directive].extend(csp_media_origins)
 
-# Report URI must be a string, not a tuple.
-CSP_REPORT_URI = os.environ.get(
-    "DJANGO_CSP_REPORT_URI", "https://freedomofpress.report-uri.com/r/d/csp/enforce"
-)
 
 # Logging
 #
