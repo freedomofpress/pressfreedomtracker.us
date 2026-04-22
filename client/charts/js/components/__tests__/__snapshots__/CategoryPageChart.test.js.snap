@@ -27,7 +27,7 @@ exports[`renders CategoryPageChart with mocked data 1`] = `
           className="chartDescription"
           id="category-page-chart-label"
         >
-          Number of
+          Number of 
           test
            incidents per year.
         </div>
