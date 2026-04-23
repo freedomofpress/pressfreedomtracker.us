@@ -354,7 +354,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Delete prod django image
-      if: ${{ needs.build-prod-dejango.result == 'success' && always() }}
+      if: ${{ needs.build-prod-django.result == 'success' && always() }}
       uses: freedomofpress/actionslib/act/delete-artifact@main
       with:
         artifact: ${{ needs.build-prod-django.outputs.artifact-name }}
