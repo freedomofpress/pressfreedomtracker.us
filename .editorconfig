@@ -5,12 +5,22 @@ root = true
 
 [*]
 end_of_line = lf
+charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{html,js,sass,scss,css,php,svg,jsx}]
+[*.{yaml,yml}]
+indent_style = space
+indent_size = 2
+quote_type = single
+
+[*.{html,sass,js,jsx,scss,css,php,svg}]
 charset = utf-8
 indent_style = tab
+
+# Newlines in an included HTML file can add unwanted spaces
+[*.{html,svg}]
+insert_final_newline = false
 
 # PEP 8 Compliant
 [*.py]

@@ -1,14 +1,14 @@
 -r requirements.txt
+bandit
 beautifulsoup4
+colorama<1
 coverage>=5.5
+defusedxml
 django-cprofile-middleware>=1.0.5
-pyinstrument>=4.4.0
 django-debug-toolbar>=3.2.4
 django-silk>=5.0.3
 flake8
 ipdb>=0.13.9
-selenium
-colorama<1
-defusedxml
-bandit
+pyinstrument>=4.4.0
 ruff
+selenium

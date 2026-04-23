@@ -3,7 +3,7 @@ name: Publish
 
 on:
   push:
-    branches: ["develop", "prod"]
+    branches: ['develop', 'prod']
 
 permissions:
   contents: read
@@ -18,7 +18,7 @@ jobs:
       actions: read
       packages: write
     with:
-      context: "."
+      context: '.'
       containerfile: devops/docker/ProdDjangoDockerfile
       build-args: |
         USERID=1000
@@ -42,4 +42,3 @@ jobs:
         NPM_VER=10.9.2
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
       add-branch-tags: true
-
