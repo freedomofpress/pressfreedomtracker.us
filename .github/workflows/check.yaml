@@ -93,7 +93,7 @@ jobs:
           - check-migrations
           - dev-tests
           - dev-jest-tests
-          - flake8
+          - ruff
           - bandit
           - eslint
           - stylelint
