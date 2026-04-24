@@ -19,41 +19,34 @@ class IncidentIndexPageFeed(Feed):
 
     def _get_teaser_image(self, obj):
         if obj.teaser_image:
-            return obj.teaser_image.get_rendition('original')
+            return obj.teaser_image.get_rendition("original")
 
     def _get_categories(self, obj):
-        categories = obj.categories.all().select_related('category')
+        categories = obj.categories.all().select_related("category")
         return [inline.category for inline in categories]
 
     def _get_complete_url(self, path):
-        return urljoin(
-            self.incident_index_page.get_site().root_url,
-            path
-        )
+        return urljoin(self.incident_index_page.get_site().root_url, path)
 
     def _get_cleaned_feed(self, text):
         # Strip control characters that return error from Django
-        return re.sub(
-            r'[\x00-\x08\x0B-\x0C\x0E-\x1F]',
-            '',
-            text
-        )
+        return re.sub(r"[\x00-\x08\x0B-\x0C\x0E-\x1F]", "", text)
 
     def get_object(self, request, *args, **kwargs):
-        self.page = int(request.GET.get('p', 1))
+        self.page = int(request.GET.get("p", 1))
         incidents = self.incident_index_page.get_incidents()
 
         if self.incident_index_page.feed_limit != 0:
-            incidents = incidents[:self.incident_index_page.feed_limit]
+            incidents = incidents[: self.incident_index_page.feed_limit]
 
         self.paginator = Paginator(incidents, self.feed_per_page)
         self.last_page = self.paginator.page_range.stop - 1
         return super(IncidentIndexPageFeed, self).get_object(request, *args, **kwargs)
 
     def title(self):
-        return '{}: {}'.format(
+        return "{}: {}".format(
             self.incident_index_page.get_site().site_name,
-            self.incident_index_page.title
+            self.incident_index_page.title,
         )
 
     def link(self):
@@ -64,7 +57,8 @@ class IncidentIndexPageFeed(Feed):
 
     def feed_url(self):
         return self._get_complete_url(
-            self.incident_index_page.url + self.incident_index_page.reverse_subpage('feed')
+            self.incident_index_page.url
+            + self.incident_index_page.reverse_subpage("feed")
         )
 
     def feed_guid(self):
@@ -72,8 +66,8 @@ class IncidentIndexPageFeed(Feed):
 
     def feed_extra_kwargs(self, obj):
         return {
-            'page': self.page,
-            'last_page': self.last_page,
+            "page": self.page,
+            "last_page": self.last_page,
         }
 
     def items(self):
@@ -107,10 +101,10 @@ class IncidentIndexPageFeed(Feed):
         image = self._get_teaser_image(obj)
         if image:
             return {
-                'teaser_image': {
-                    'url': self._get_complete_url(image.url),
-                    'width': image.width,
-                    'height': image.height,
+                "teaser_image": {
+                    "url": self._get_complete_url(image.url),
+                    "width": image.width,
+                    "height": image.height,
                 }
             }
         return {}

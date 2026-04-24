@@ -4,11 +4,11 @@ from django.db import migrations
 
 
 def copy_subpoena_status_to_multi_choice(apps, schema_editor):
-    '''
+    """
     We can't import the Post model directly as it may be a newer
     version than this migration expects. We use the historical version.
-    '''
-    IncidentPage = apps.get_model('incident', 'IncidentPage')
+    """
+    IncidentPage = apps.get_model("incident", "IncidentPage")
     for incident in IncidentPage.objects.all():
         if incident.subpoena_status:
             incident.subpoena_statuses = [incident.subpoena_status]
@@ -16,9 +16,8 @@ def copy_subpoena_status_to_multi_choice(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0037_incidentpage_subpoena_statuses'),
+        ("incident", "0037_incidentpage_subpoena_statuses"),
     ]
 
     operations = [

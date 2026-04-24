@@ -1,13 +1,13 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
-DEFAULT_PAGE_KEY = 'page'
+DEFAULT_PAGE_KEY = "page"
 
 
 def paginate(request, items, page_key=DEFAULT_PAGE_KEY, per_page=20, orphans=10):
     try:
         page_number = int(request.GET.get(page_key, 1))
-        endpage = int(request.GET.get('endpage', 1))
+        endpage = int(request.GET.get("endpage", 1))
     except ValueError:
         page_number = 1
         endpage = 1

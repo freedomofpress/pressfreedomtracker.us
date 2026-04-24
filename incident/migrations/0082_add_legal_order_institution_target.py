@@ -4,20 +4,36 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0081_auto_20230425_2054'),
+        ("incident", "0081_auto_20230425_2054"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='legal_order_target',
-            field=models.CharField(blank=True, choices=[('JOURNALIST', 'Journalist'), ('THIRD_PARTY', 'Third-party'), ('INSTITUTION', 'Institution')], max_length=255, null=True),
+            model_name="incidentpage",
+            name="legal_order_target",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("JOURNALIST", "Journalist"),
+                    ("THIRD_PARTY", "Third-party"),
+                    ("INSTITUTION", "Institution"),
+                ],
+                max_length=255,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='legalorder',
-            name='information_requested',
-            field=models.CharField(choices=[('TESTIMONY_ABOUT_SOURCE', 'testimony about confidential source'), ('OTHER_TESTIMONY', 'other testimony'), ('JOURNALIST_COMMUNICATIONS', 'communications or work product'), ('OTHER', 'other')], max_length=1000),
+            model_name="legalorder",
+            name="information_requested",
+            field=models.CharField(
+                choices=[
+                    ("TESTIMONY_ABOUT_SOURCE", "testimony about confidential source"),
+                    ("OTHER_TESTIMONY", "other testimony"),
+                    ("JOURNALIST_COMMUNICATIONS", "communications or work product"),
+                    ("OTHER", "other"),
+                ],
+                max_length=1000,
+            ),
         ),
     ]

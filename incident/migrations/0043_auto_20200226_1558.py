@@ -4,18 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0042_copy_uncategorized_targets_to_gov_workers'),
+        ("incident", "0042_copy_uncategorized_targets_to_gov_workers"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='incidentpageupdates',
+            name="incidentpageupdates",
             options={},
         ),
         migrations.AddIndex(
-            model_name='incidentpageupdates',
-            index=models.Index(fields=['page', '-date'], name='incident_in_page_id_163ef6_idx'),
+            model_name="incidentpageupdates",
+            index=models.Index(
+                fields=["page", "-date"], name="incident_in_page_id_163ef6_idx"
+            ),
         ),
     ]

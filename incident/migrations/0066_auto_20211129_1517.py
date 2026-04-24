@@ -5,20 +5,36 @@ import incident.models.incident_page
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0065_add_latitude_and_longitude'),
+        ("incident", "0065_add_latitude_and_longitude"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='case_number',
-            field=models.CharField(blank=True, max_length=1024, null=True, verbose_name='Case number'),
+            model_name="incidentpage",
+            name="case_number",
+            field=models.CharField(
+                blank=True, max_length=1024, null=True, verbose_name="Case number"
+            ),
         ),
         migrations.AddField(
-            model_name='incidentpage',
-            name='case_statuses',
-            field=incident.models.incident_page.ChoiceArrayField(base_field=models.CharField(choices=[('ONGOING', 'ongoing'), ('SETTLED', 'settled'), ('DISMISSED', 'dismissed'), ('UNKNOWN', 'unknown'), ('APPEALED', 'appealed')], max_length=255), blank=True, null=True, size=None, verbose_name='Legal case statuses'),
+            model_name="incidentpage",
+            name="case_statuses",
+            field=incident.models.incident_page.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("ONGOING", "ongoing"),
+                        ("SETTLED", "settled"),
+                        ("DISMISSED", "dismissed"),
+                        ("UNKNOWN", "unknown"),
+                        ("APPEALED", "appealed"),
+                    ],
+                    max_length=255,
+                ),
+                blank=True,
+                null=True,
+                size=None,
+                verbose_name="Legal case statuses",
+            ),
         ),
     ]

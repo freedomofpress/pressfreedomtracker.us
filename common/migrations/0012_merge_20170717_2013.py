@@ -6,11 +6,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0011_dataitem'),
-        ('common', '0011_remove_categorypage_description'),
+        ("common", "0011_dataitem"),
+        ("common", "0011_remove_categorypage_description"),
     ]
 
-    operations = [
-    ]
+    operations = []

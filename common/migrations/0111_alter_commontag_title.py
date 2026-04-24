@@ -5,15 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0110_alter_categoryincidentfilter_incident_filter_and_more'),
+        ("common", "0110_alter_categoryincidentfilter_incident_filter_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='commontag',
-            name='title',
-            field=models.CharField(max_length=255, unique=True, validators=[common.validators.validate_disallow_comma]),
+            model_name="commontag",
+            name="title",
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+                validators=[common.validators.validate_disallow_comma],
+            ),
         ),
     ]

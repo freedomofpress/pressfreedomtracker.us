@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('forms', '0001_initial'),
+        ("forms", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='formpage',
-            name='button_text',
+            model_name="formpage",
+            name="button_text",
             field=models.CharField(blank=True, max_length=30, null=True),
         ),
     ]

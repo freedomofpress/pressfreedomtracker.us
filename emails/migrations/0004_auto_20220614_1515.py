@@ -4,24 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('emails', '0003_add_mailchimp_fields'),
+        ("emails", "0003_add_mailchimp_fields"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='mailchimpgroup',
-            name='category_id',
+            model_name="mailchimpgroup",
+            name="category_id",
         ),
         migrations.AddField(
-            model_name='mailchimpgroup',
-            name='audience_id',
-            field=models.CharField(help_text='Mailchimp audience associated with this group.', max_length=100),
+            model_name="mailchimpgroup",
+            name="audience_id",
+            field=models.CharField(
+                help_text="Mailchimp audience associated with this group.",
+                max_length=100,
+            ),
         ),
         migrations.AlterField(
-            model_name='mailchimpgroup',
-            name='group_id',
-            field=models.CharField(help_text='Mailchimp group identifier.', max_length=100),
+            model_name="mailchimpgroup",
+            name="group_id",
+            field=models.CharField(
+                help_text="Mailchimp group identifier.", max_length=100
+            ),
         ),
     ]

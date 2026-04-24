@@ -5,15 +5,27 @@ import incident.models.incident_page
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0086_incidentpage_mistakenly_released_materials'),
+        ("incident", "0086_incidentpage_mistakenly_released_materials"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='type_of_denial',
-            field=incident.models.incident_page.ChoiceArrayField(base_field=models.CharField(choices=[('CHANGE_IN_POLICY', 'Change in policy or practice'), ('GOVERNMENT_EVENTS', 'Government event'), ('PRESS_CREDENTIAL', 'Press credential or media list'), ('OTHER', 'Other')], max_length=255), blank=True, null=True, size=None),
+            model_name="incidentpage",
+            name="type_of_denial",
+            field=incident.models.incident_page.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("CHANGE_IN_POLICY", "Change in policy or practice"),
+                        ("GOVERNMENT_EVENTS", "Government event"),
+                        ("PRESS_CREDENTIAL", "Press credential or media list"),
+                        ("OTHER", "Other"),
+                    ],
+                    max_length=255,
+                ),
+                blank=True,
+                null=True,
+                size=None,
+            ),
         ),
     ]

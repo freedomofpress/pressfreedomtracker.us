@@ -6,15 +6,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0020_auto_20170720_1539'),
+        ("common", "0020_auto_20170720_1539"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='categorypage',
-            name='page_color',
-            field=models.CharField(choices=[('eastern-blue', 'Eastern Blue'), ('gamboge', 'Gamboge'), ('green-apple', 'Green Apple'), ('green', 'Green'), ('sunshine', 'Sunshine'), ('pink', 'Pink'), ('red', 'Red'), ('royal-blue', 'Royal Blue'), ('teal', 'Teal'), ('violet', 'Violet'), ('yellow', 'Yellow'), ('dark-gray', 'Dark Gray')], default='eastern-blue', max_length=255),
+            model_name="categorypage",
+            name="page_color",
+            field=models.CharField(
+                choices=[
+                    ("eastern-blue", "Eastern Blue"),
+                    ("gamboge", "Gamboge"),
+                    ("green-apple", "Green Apple"),
+                    ("green", "Green"),
+                    ("sunshine", "Sunshine"),
+                    ("pink", "Pink"),
+                    ("red", "Red"),
+                    ("royal-blue", "Royal Blue"),
+                    ("teal", "Teal"),
+                    ("violet", "Violet"),
+                    ("yellow", "Yellow"),
+                    ("dark-gray", "Dark Gray"),
+                ],
+                default="eastern-blue",
+                max_length=255,
+            ),
         ),
     ]

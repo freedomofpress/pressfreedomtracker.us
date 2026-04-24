@@ -10,15 +10,146 @@ import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0068_adds_pull_quote_block'),
+        ("incident", "0068_adds_pull_quote_block"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='body',
-            field=wagtail.fields.StreamField([('rich_text', common.blocks.RichTextTemplateBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock(template='common/blocks/image_block.html')), ('aligned_image', wagtail.blocks.StructBlock([('image', wagtail.images.blocks.ImageChooserBlock()), ('caption', wagtail.blocks.RichTextBlock(help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.', required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))], label='Aligned, Captioned Image')), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('tweet', wagtail.blocks.StructBlock([('tweet', wagtail.embeds.blocks.EmbedBlock())])), ('blockquote', wagtail.blocks.StructBlock([('text', wagtail.blocks.RichTextBlock()), ('source_text', wagtail.blocks.RichTextBlock(required=False)), ('source_url', wagtail.blocks.URLBlock(help_text='Source text will link to this url.', required=False))])), ('pull_quote', wagtail.blocks.StructBlock([('text', wagtail.blocks.TextBlock())])), ('video', wagtail.blocks.StructBlock([('video', wagtail.embeds.blocks.EmbedBlock()), ('caption', wagtail.blocks.RichTextBlock(help_text='Video description displayed below the video.', required=False)), ('attribution', wagtail.blocks.CharBlock(help_text='Organization / Director.', max_length=255, required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))])), ('statistics', wagtail.blocks.StructBlock([('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))]))]),
+            model_name="incidentpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                [
+                    (
+                        "rich_text",
+                        common.blocks.RichTextTemplateBlock(
+                            icon="doc-full", label="Rich Text"
+                        ),
+                    ),
+                    (
+                        "image",
+                        wagtail.images.blocks.ImageChooserBlock(
+                            template="common/blocks/image_block.html"
+                        ),
+                    ),
+                    (
+                        "aligned_image",
+                        wagtail.blocks.StructBlock(
+                            [
+                                ("image", wagtail.images.blocks.ImageChooserBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(
+                                        help_text="Image description displayed below the image. Organization/Photographer can be set via the image attribution.",
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            ],
+                            label="Aligned, Captioned Image",
+                        ),
+                    ),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    (
+                        "tweet",
+                        wagtail.blocks.StructBlock(
+                            [("tweet", wagtail.embeds.blocks.EmbedBlock())]
+                        ),
+                    ),
+                    (
+                        "blockquote",
+                        wagtail.blocks.StructBlock(
+                            [
+                                ("text", wagtail.blocks.RichTextBlock()),
+                                (
+                                    "source_text",
+                                    wagtail.blocks.RichTextBlock(required=False),
+                                ),
+                                (
+                                    "source_url",
+                                    wagtail.blocks.URLBlock(
+                                        help_text="Source text will link to this url.",
+                                        required=False,
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    (
+                        "pull_quote",
+                        wagtail.blocks.StructBlock(
+                            [("text", wagtail.blocks.TextBlock())]
+                        ),
+                    ),
+                    (
+                        "video",
+                        wagtail.blocks.StructBlock(
+                            [
+                                ("video", wagtail.embeds.blocks.EmbedBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(
+                                        help_text="Video description displayed below the video.",
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "attribution",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Organization / Director.",
+                                        max_length=255,
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    (
+                        "statistics",
+                        wagtail.blocks.StructBlock(
+                            [
+                                (
+                                    "visualization",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_visualization_choices
+                                    ),
+                                ),
+                                (
+                                    "dataset",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_stats_choices
+                                    ),
+                                ),
+                                (
+                                    "params",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
+                                        required=False,
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
         ),
     ]

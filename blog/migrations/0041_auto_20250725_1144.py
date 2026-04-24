@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     def populate_authors(apps, _):
         BlogPage = apps.get_model("blog", "BlogPage")
         BlogAuthor = apps.get_model("blog", "BlogAuthor")
@@ -15,7 +14,7 @@ class Migration(migrations.Migration):
                 BlogAuthor.objects.get_or_create(parent_page=page, author=page.author)
 
     dependencies = [
-        ('blog', '0040_blogauthor'),
+        ("blog", "0040_blogauthor"),
     ]
 
     operations = [

@@ -4,20 +4,25 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0035_auto_20220303_1908'),
+        ("home", "0035_auto_20220303_1908"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='homepage',
-            name='categories_body',
-            field=models.TextField(blank=True, help_text='Paragraph of extra information about categories'),
+            model_name="homepage",
+            name="categories_body",
+            field=models.TextField(
+                blank=True, help_text="Paragraph of extra information about categories"
+            ),
         ),
         migrations.AddField(
-            model_name='homepage',
-            name='categories_label',
-            field=models.CharField(default='Learn More About Our Categories', help_text='Title displayed above categories', max_length=255),
+            model_name="homepage",
+            name="categories_label",
+            field=models.CharField(
+                default="Learn More About Our Categories",
+                help_text="Title displayed above categories",
+                max_length=255,
+            ),
         ),
     ]

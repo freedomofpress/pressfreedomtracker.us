@@ -4,15 +4,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0090_sitesettings_citation_contact_page'),
+        ("common", "0090_sitesettings_citation_contact_page"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='categorypage',
-            name='page_symbol',
-            field=models.CharField(choices=[('arrest', 'Arrest Icon'), ('border_stop', 'Border Stop Icon'), ('chilling_statement', 'Chilling Statement Icon'), ('denial_of_access', 'Denial of Access Icon'), ('equipment_damage', 'Equipment Damage Icon'), ('equipment_search', 'Equipment Search Icon'), ('leak_case', 'Leak Case Icon'), ('other_incident', 'Other Incidents Icon'), ('assault', 'Assault Icon'), ('prior_restraint', 'Prior Restraint Icon'), ('subpoena', 'Subpoena Icon')], default='other_incident', help_text='Please check the styleguide to associate the icons with their name', max_length=255),
+            model_name="categorypage",
+            name="page_symbol",
+            field=models.CharField(
+                choices=[
+                    ("arrest", "Arrest Icon"),
+                    ("border_stop", "Border Stop Icon"),
+                    ("chilling_statement", "Chilling Statement Icon"),
+                    ("denial_of_access", "Denial of Access Icon"),
+                    ("equipment_damage", "Equipment Damage Icon"),
+                    ("equipment_search", "Equipment Search Icon"),
+                    ("leak_case", "Leak Case Icon"),
+                    ("other_incident", "Other Incidents Icon"),
+                    ("assault", "Assault Icon"),
+                    ("prior_restraint", "Prior Restraint Icon"),
+                    ("subpoena", "Subpoena Icon"),
+                ],
+                default="other_incident",
+                help_text="Please check the styleguide to associate the icons with their name",
+                max_length=255,
+            ),
         ),
     ]

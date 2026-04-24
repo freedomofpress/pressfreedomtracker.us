@@ -26,13 +26,13 @@ def first_block_of(blocks, type):
 def richtext_inline(value):
     "Returns HTML-formatted rich text stripped of block level elements"
     text = richtext(value)
-    return mark_safe(bleach.clean(
-        text,
-        strip=True,
-        tags={
-            'a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong', 'span'
-        }
-    ))
+    return mark_safe(
+        bleach.clean(
+            text,
+            strip=True,
+            tags={"a", "abbr", "acronym", "b", "code", "em", "i", "strong", "span"},
+        )
+    )
 
 
 @register.filter
@@ -42,20 +42,20 @@ def richtext_aside(value):
 
     # Implicit cache invalidation happens based on the string
     html_str_hash = hashlib.md5(
-        html_str.encode('UTF-8'),
+        html_str.encode("UTF-8"),
         usedforsecurity=False,
     ).hexdigest()
     cache_key = f"aside_html_cache_{html_str_hash}"
     if cache_key in cache:
         return cache.get(cache_key)
 
-    soup = BeautifulSoup(html_str, 'html.parser')
-    block_elems = soup.select('[data-block-key]')
+    soup = BeautifulSoup(html_str, "html.parser")
+    block_elems = soup.select("[data-block-key]")
     for elem in block_elems:
         if elem.string:
-            elem.string.wrap(soup.new_tag('span'))
+            elem.string.wrap(soup.new_tag("span"))
         elif len(elem.contents):
-            new_span = soup.new_tag('span')
+            new_span = soup.new_tag("span")
             for content in reversed(elem.contents):
                 new_span.insert(0, content.extract())
             elem.append(new_span)
@@ -69,7 +69,7 @@ def richtext_aside(value):
 
 @register.simple_tag(takes_context=True)
 def get_absolute_url(context, view_name, *args, **kwargs):
-    return context['request'].build_absolute_uri(
+    return context["request"].build_absolute_uri(
         reverse(view_name, args=args, kwargs=kwargs)
     )
 
@@ -105,14 +105,11 @@ def comma_separated_pks(model_list, modifier):
     Primarily intended for filtering.
     """
     if modifier:
-        pks = [
-            str(getattr(model, modifier).pk)
-            for model in model_list
-        ]
+        pks = [str(getattr(model, modifier).pk) for model in model_list]
     else:
         pks = [str(model.pk) for model in model_list]
 
-    return ','.join(pks)
+    return ",".join(pks)
 
 
 @register.filter
@@ -120,7 +117,7 @@ def lookup(d, key):
     try:
         return d[key]
     except Exception:
-        return ''
+        return ""
 
 
 @register.filter(is_safe=False)
@@ -131,7 +128,7 @@ def add_as_string(value, arg):
         try:
             return value + arg
         except Exception:
-            return ''
+            return ""
 
 
 @register.filter

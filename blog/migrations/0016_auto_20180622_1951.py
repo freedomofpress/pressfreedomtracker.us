@@ -7,15 +7,20 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0015_auto_20180208_0024'),
+        ("blog", "0015_auto_20180208_0024"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='organization',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='blog_posts', to='wagtailcore.Page'),
+            model_name="blogpage",
+            name="organization",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="blog_posts",
+                to="wagtailcore.Page",
+            ),
         ),
     ]

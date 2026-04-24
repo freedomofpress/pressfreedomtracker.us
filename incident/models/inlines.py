@@ -27,51 +27,49 @@ from statistics.blocks import StatisticsBlock
 
 
 class IncidentCharge(ClusterableModel):
-    incident_page = ParentalKey('incident.IncidentPage', related_name='charges')
-    charge = ParentalKey('incident.Charge', related_name='incidents')
+    incident_page = ParentalKey("incident.IncidentPage", related_name="charges")
+    charge = ParentalKey("incident.Charge", related_name="incidents")
     date = models.DateField()
     status = models.CharField(
         choices=choices.STATUS_OF_CHARGES,
         max_length=1000,
     )
-    notes = models.TextField(default='', blank=True)
+    notes = models.TextField(default="", blank=True)
 
     panels = [
-        AutocompletePanel('charge'),
-        FieldPanel('date'),
-        FieldPanel('status'),
-        FieldPanel('notes'),
-        InlinePanel('updates', label='Updates'),
+        AutocompletePanel("charge"),
+        FieldPanel("date"),
+        FieldPanel("status"),
+        FieldPanel("notes"),
+        InlinePanel("updates", label="Updates"),
     ]
 
     def entries_display(self):
-        entries = [
-            (self.date, self.get_status_display())
-        ] + [
+        entries = [(self.date, self.get_status_display())] + [
             (update.date, update.get_status_display()) for update in self.updates.all()
         ]
 
         return [
-            (format_date(date), status) for date, status in
-            sorted(entries, key=lambda item: item[0])
+            (format_date(date), status)
+            for date, status in sorted(entries, key=lambda item: item[0])
         ]
 
     @property
     def summary(self):
-        if update := self.updates.order_by('-date').first():
+        if update := self.updates.order_by("-date").first():
             status = update.get_status_display()
             date = update.date
         else:
             status = self.get_status_display()
             date = self.date
 
-        return f'{self.charge.title} ({status} as of {date})'
+        return f"{self.charge.title} ({status} as of {date})"
 
 
 class ChargeUpdate(models.Model):
     incident_charge = ParentalKey(
         IncidentCharge,
-        related_name='updates',
+        related_name="updates",
         on_delete=models.CASCADE,
     )
     date = models.DateField()
@@ -79,26 +77,25 @@ class ChargeUpdate(models.Model):
         choices=choices.STATUS_OF_CHARGES,
         max_length=1000,
     )
-    notes = models.TextField(default='', blank=True)
+    notes = models.TextField(default="", blank=True)
     panels = [
-        FieldPanel('date'),
-        FieldPanel('status'),
-        FieldPanel('notes'),
+        FieldPanel("date"),
+        FieldPanel("status"),
+        FieldPanel("notes"),
     ]
 
 
 class LegalOrder(ClusterableModel):
     class Meta:
-        ordering = ['pk']
+        ordering = ["pk"]
 
     incident_page = ParentalKey(
-        'incident.IncidentPage',
-        related_name='legal_orders',
+        "incident.IncidentPage",
+        related_name="legal_orders",
     )
 
     order_type = models.CharField(
-        max_length=1000,
-        choices=choices.LegalOrderType.choices
+        max_length=1000, choices=choices.LegalOrderType.choices
     )
 
     information_requested = models.CharField(
@@ -110,47 +107,46 @@ class LegalOrder(ClusterableModel):
     date = models.DateField()
 
     panels = [
-        FieldPanel('order_type'),
-        FieldPanel('information_requested'),
-        FieldPanel('status'),
-        FieldPanel('date'),
-        InlinePanel('updates', label='Updates'),
+        FieldPanel("order_type"),
+        FieldPanel("information_requested"),
+        FieldPanel("status"),
+        FieldPanel("date"),
+        InlinePanel("updates", label="Updates"),
     ]
 
     def entries_display(self):
         update_entries = [
             (
-                format_date(update.date) if update.date else 'Unknown date',
+                format_date(update.date) if update.date else "Unknown date",
                 update.get_status_display(),
             )
             for update in self.updates.all()
         ]
-        entries = [
-            (format_date(self.date), self.get_status_display())
-        ] + update_entries
+        entries = [(format_date(self.date), self.get_status_display())] + update_entries
         return entries
 
     @property
     def summary(self):
         """Summary of a legal order, used in the CSV export feature."""
-        date_text_template = ' as of {date}'
+        date_text_template = " as of {date}"
         if update := self.updates.last():
             status = update.get_status_display()
-            date_text = date_text_template.format(date=update.date) \
-                if update.date else ''
+            date_text = (
+                date_text_template.format(date=update.date) if update.date else ""
+            )
         else:
             status = self.status.label
             date_text = date_text_template.format(date=self.date)
         info = self.information_requested.label
         order_type = self.order_type.label
 
-        return f'{order_type} for {info} ({status}{date_text})'
+        return f"{order_type} for {info} ({status}{date_text})"
 
 
 class LegalOrderUpdate(Orderable):
     legal_order = ParentalKey(
         LegalOrder,
-        related_name='updates',
+        related_name="updates",
         on_delete=models.CASCADE,
     )
     date = models.DateField(blank=True, null=True)
@@ -159,46 +155,46 @@ class LegalOrderUpdate(Orderable):
         choices=choices.LegalOrderStatus.choices,
     )
 
-    panels = [
-        FieldPanel('date'),
-        FieldPanel('status')
-    ]
+    panels = [FieldPanel("date"), FieldPanel("status")]
 
 
 class IncidentPageUpdates(models.Model):
-    page = ParentalKey('incident.IncidentPage', related_name='updates')
+    page = ParentalKey("incident.IncidentPage", related_name="updates")
     title = models.CharField(max_length=255)
     date = models.DateTimeField()
-    body = StreamField([
-        ('rich_text', RichTextTemplateBlock(icon='doc-full', label='Rich Text')),
-        ('image', ImageChooserBlock()),
-        ('raw_html', blocks.RawHTMLBlock()),
-        ('tweet', TweetEmbedBlock(group="Social Media")),
-        ('instagram', InstagramEmbedBlock(group="Social Media")),
-        ('bluesky', BlueskyEmbedBlock(group="Social Media")),
-        ('blockquote', RichTextBlockQuoteBlock()),
-        ('video', AlignedCaptionedEmbedBlock()),
-        ('statistics', StatisticsBlock()),
-    ], use_json_field=True)
+    body = StreamField(
+        [
+            ("rich_text", RichTextTemplateBlock(icon="doc-full", label="Rich Text")),
+            ("image", ImageChooserBlock()),
+            ("raw_html", blocks.RawHTMLBlock()),
+            ("tweet", TweetEmbedBlock(group="Social Media")),
+            ("instagram", InstagramEmbedBlock(group="Social Media")),
+            ("bluesky", BlueskyEmbedBlock(group="Social Media")),
+            ("blockquote", RichTextBlockQuoteBlock()),
+            ("video", AlignedCaptionedEmbedBlock()),
+            ("statistics", StatisticsBlock()),
+        ],
+        use_json_field=True,
+    )
 
     panels = [
-        FieldPanel('title'),
-        FieldPanel('date'),
-        FieldPanel('body'),
+        FieldPanel("title"),
+        FieldPanel("date"),
+        FieldPanel("body"),
     ]
 
     def __str__(self):
-        return '({}) {}'.format(self.date, self.title)
+        return "({}) {}".format(self.date, self.title)
 
     class Meta:
         indexes = [
-            models.Index(fields=['page', '-date']),
+            models.Index(fields=["page", "-date"]),
         ]
 
 
 class IncidentCategorization(Orderable):
-    incident_page = ParentalKey('incident.IncidentPage', related_name='categories')
-    category = ParentalKey('common.CategoryPage', related_name='incidents')
+    incident_page = ParentalKey("incident.IncidentPage", related_name="categories")
+    category = ParentalKey("common.CategoryPage", related_name="incidents")
 
     @property
     def summary(self):
@@ -209,33 +205,33 @@ class IncidentCategorization(Orderable):
 
 
 class IncidentPageLinks(Orderable):
-    page = ParentalKey('incident.IncidentPage', related_name='links')
+    page = ParentalKey("incident.IncidentPage", related_name="links")
     title = models.CharField(max_length=255, null=False, blank=False)
     url = models.URLField(max_length=1024, blank=False)
     publication = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        value = '{} ({})'.format(self.title, self.url)
+        value = "{} ({})".format(self.title, self.url)
         if self.publication:
-            value += ' via {}'.format(self.publication)
+            value += " via {}".format(self.publication)
         return value
 
 
 class EquipmentSeized(Orderable):
     incident = ParentalKey(
-        'incident.IncidentPage',
-        related_name='equipment_seized',
+        "incident.IncidentPage",
+        related_name="equipment_seized",
     )
     equipment = ParentalKey(
-        'incident.Equipment',
-        verbose_name='Equipment',
+        "incident.Equipment",
+        verbose_name="Equipment",
     )
     quantity = models.PositiveSmallIntegerField(default=1)
-    _autocomplete_model = 'incident.Equipment'
+    _autocomplete_model = "incident.Equipment"
 
     panels = [
-        AutocompletePanel('equipment', target_model='incident.Equipment'),
-        FieldPanel('quantity'),
+        AutocompletePanel("equipment", target_model="incident.Equipment"),
+        FieldPanel("quantity"),
     ]
 
     class Meta(Orderable.Meta):
@@ -243,29 +239,29 @@ class EquipmentSeized(Orderable):
 
     @property
     def summary(self):
-        return '{0.equipment}: count of {0.quantity}'.format(self)
+        return "{0.equipment}: count of {0.quantity}".format(self)
 
 
 class EquipmentBroken(Orderable):
     incident = ParentalKey(
-        'incident.IncidentPage',
-        related_name='equipment_broken',
+        "incident.IncidentPage",
+        related_name="equipment_broken",
     )
     equipment = ParentalKey(
-        'incident.Equipment',
-        verbose_name='Equipment',
+        "incident.Equipment",
+        verbose_name="Equipment",
     )
     quantity = models.PositiveSmallIntegerField(default=1)
-    _autocomplete_model = 'incident.Equipment'
+    _autocomplete_model = "incident.Equipment"
 
     panels = [
-        AutocompletePanel('equipment', target_model='incident.Equipment'),
-        FieldPanel('quantity'),
+        AutocompletePanel("equipment", target_model="incident.Equipment"),
+        FieldPanel("quantity"),
     ]
 
     class Meta(Orderable.Meta):
-        verbose_name = 'Equipment broken'
+        verbose_name = "Equipment broken"
 
     @property
     def summary(self):
-        return '{0.equipment}: count of {0.quantity}'.format(self)
+        return "{0.equipment}: count of {0.quantity}".format(self)

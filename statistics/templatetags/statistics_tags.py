@@ -23,7 +23,7 @@ def num_incidents(**kwargs):
         incident_filter.clean(strict=True)
     except ValidationError:
         # Don't return an incorrect number if params are invalid.
-        return ''
+        return ""
     return incident_filter.get_queryset().count()
 
 
@@ -37,9 +37,13 @@ def num_institution_targets(**kwargs):
     try:
         incident_filter.clean(strict=True)
     except ValidationError:
-        return ''
+        return ""
     queryset = incident_filter.get_queryset()
-    return Institution.objects.filter(institutions_incidents__in=queryset).distinct().count()
+    return (
+        Institution.objects.filter(institutions_incidents__in=queryset)
+        .distinct()
+        .count()
+    )
 
 
 @statistics.number
@@ -52,12 +56,16 @@ def num_journalist_targets(**kwargs):
     try:
         incident_filter.clean(strict=True)
     except ValidationError:
-        return ''
+        return ""
     queryset = incident_filter.get_queryset()
     tj_queryset = TargetedJournalist.objects.filter(incident__in=queryset)
-    return Journalist.objects.filter(
-        targeted_incidents__in=tj_queryset,
-    ).distinct().count()
+    return (
+        Journalist.objects.filter(
+            targeted_incidents__in=tj_queryset,
+        )
+        .distinct()
+        .count()
+    )
 
 
 @statistics.number
@@ -78,22 +86,30 @@ def num_targets(**kwargs):
         incident_filter.clean(strict=True)
     except ValidationError:
         # Don't return an incorrect number if params are invalid.
-        return ''
+        return ""
     queryset = incident_filter.get_queryset()
 
     journalist_queryset = TargetedJournalist.objects.filter(incident__in=queryset)
-    journalist_count = Journalist.objects.filter(
-        targeted_incidents__in=journalist_queryset,
-    ).distinct().count()
+    journalist_count = (
+        Journalist.objects.filter(
+            targeted_incidents__in=journalist_queryset,
+        )
+        .distinct()
+        .count()
+    )
 
-    institution_count = Institution.objects.filter(institutions_incidents__in=queryset).distinct().count()
+    institution_count = (
+        Institution.objects.filter(institutions_incidents__in=queryset)
+        .distinct()
+        .count()
+    )
     return journalist_count + institution_count
 
 
-@tag_validator(register, 'num_targets')
-@tag_validator(register, 'num_institution_targets')
-@tag_validator(register, 'num_journalist_targets')
-@tag_validator(register, 'num_incidents')
+@tag_validator(register, "num_targets")
+@tag_validator(register, "num_institution_targets")
+@tag_validator(register, "num_journalist_targets")
+@tag_validator(register, "num_incidents")
 def validate_filter_kwargs(parser, token):
     """Return the count of incidents matching the given filter parameters"""
     from incident.utils.incident_filter import IncidentFilter
@@ -101,15 +117,13 @@ def validate_filter_kwargs(parser, token):
     bits = token.split_contents()
     tag_name, bits = bits[0], bits[1:]
 
-    if len(bits) >= 2 and bits[-2] == 'as':
+    if len(bits) >= 2 and bits[-2] == "as":
         bits = bits[:-2]
 
     try:
         kwargs = parse_kwargs(bits)
     except ValueError as exc:
-        raise template.TemplateSyntaxError(
-            '{}: {}'.format(tag_name, str(exc))
-        )
+        raise template.TemplateSyntaxError("{}: {}".format(tag_name, str(exc)))
 
     incident_filter = IncidentFilter(kwargs)
     incident_filter.clean(strict=True)
@@ -125,15 +139,16 @@ def incidents_in_year_range_by_month(start_year, end_year):
 
     """
     from incident.models.incident_page import IncidentPage
+
     data = (
-        IncidentPage.objects
-        .filter(
+        IncidentPage.objects.filter(
             live=True,
             date__year__gte=start_year,
             date__year__lte=end_year,
         )
-        .annotate(month=TruncMonth('date'))
-        .values('month')
-        .annotate(c=Count('*')).order_by('month')
+        .annotate(month=TruncMonth("date"))
+        .values("month")
+        .annotate(c=Count("*"))
+        .order_by("month")
     )
-    return [(i['month'].strftime('%B %Y'), i['c']) for i in data]
+    return [(i["month"].strftime("%B %Y"), i["c"]) for i in data]

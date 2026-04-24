@@ -35,29 +35,31 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
         cls.category = CategoryPageFactory()
 
     def setUp(self):
-        self.tree_map_chart_value = TreeMapChart().to_python({
-            'description': 'Test Description',
-            'incident_set': {
-                'tag': 'test_tag',
-                'categories': [self.category.title],
-                'lower_date': date(2022, 1, 1),
-                'upper_date': date(2023, 1, 1),
-                'states': ['AK'],
-            },
-            'group_by': self.group_by,
-        })
+        self.tree_map_chart_value = TreeMapChart().to_python(
+            {
+                "description": "Test Description",
+                "incident_set": {
+                    "tag": "test_tag",
+                    "categories": [self.category.title],
+                    "lower_date": date(2022, 1, 1),
+                    "upper_date": date(2023, 1, 1),
+                    "states": ["AK"],
+                },
+                "group_by": self.group_by,
+            }
+        )
         query = {
-            'filterTags': 'test_tag',
-            'filterCategories': [self.category.title],
-            'filterStates': ['AK'],
-            'dateRange': ['2022-01-01', '2023-01-01'],
-            'branches': self.tree_map_chart_value.branches(),
-            'branchFieldName': self.tree_map_chart_value.branch_field_name(),
+            "filterTags": "test_tag",
+            "filterCategories": [self.category.title],
+            "filterStates": ["AK"],
+            "dateRange": ["2022-01-01", "2023-01-01"],
+            "branches": self.tree_map_chart_value.branches(),
+            "branchFieldName": self.tree_map_chart_value.branch_field_name(),
         }
         self.snapshot_svg = ChartSnapshot.objects.create(
             chart_type=ChartType.TREEMAP,
             snapshot_type=SnapshotType.SVG,
-            chart_svg='<svg />',
+            chart_svg="<svg />",
             query=query,
         )
         self.snapshot_png = ChartSnapshotFactory(
@@ -89,14 +91,14 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
         qs = parse_qs(url.query)
         self.assertIn(
             self.expected_branch_field_name,
-            qs['fields'][0],
+            qs["fields"][0],
         )
 
     def test_png_snapshot_url(self):
         url = self.tree_map_chart_value.png_snapshot_url()
         self.assertEqual(
             url,
-            self.snapshot_png.chart_image.get_rendition('original').url,
+            self.snapshot_png.chart_image.get_rendition("original").url,
         )
 
     def test_svg_snapshot(self):
@@ -107,36 +109,32 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
 
 
 class TestCategoriesTreeMap(TestTreeMapChartValue, TestCase):
-    expected_branch_field_name = 'categories'
+    expected_branch_field_name = "categories"
     group_by = charts.IncidentBranches.CATEGORIES
     expected_branches = {
-        'type': 'url',
-        'value': reverse(
-            'category-list',
-            kwargs={'version': 'edge'},
-        )
+        "type": "url",
+        "value": reverse(
+            "category-list",
+            kwargs={"version": "edge"},
+        ),
     }
 
 
 class TestAssailantTreeMap(TestTreeMapChartValue, TestCase):
-    expected_branch_field_name = 'assailant'
+    expected_branch_field_name = "assailant"
     group_by = charts.IncidentBranches.ASSAILANT
     expected_branches = {
-        'type': 'list',
-        'value': [
-            {'title': title, 'value': value} for
-            value, title in ACTORS
-        ]
+        "type": "list",
+        "value": [{"title": title, "value": value} for value, title in ACTORS],
     }
 
 
 class TestChargeStatusTreeMap(TestTreeMapChartValue, TestCase):
-    expected_branch_field_name = 'status_of_charges'
+    expected_branch_field_name = "status_of_charges"
     group_by = charts.IncidentBranches.STATUS_OF_CHARGES
     expected_branches = {
-        'type': 'list',
-        'value': [
-            {'title': title, 'value': value} for
-            value, title in STATUS_OF_CHARGES
-        ]
+        "type": "list",
+        "value": [
+            {"title": title, "value": value} for value, title in STATUS_OF_CHARGES
+        ],
     }

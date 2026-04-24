@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0036_incidentpage_suppress_footer'),
-        ('home', '0022_auto_20190318_2031'),
+        ("incident", "0036_incidentpage_suppress_footer"),
+        ("home", "0022_auto_20190318_2031"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='HomePageIncidents',
-            new_name='HomePageFeature',
+            old_name="HomePageIncidents",
+            new_name="HomePageFeature",
         ),
     ]

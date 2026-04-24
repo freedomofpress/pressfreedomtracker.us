@@ -13,18 +13,15 @@ class CategorySerializerTest(TestCase):
 
     def test_successfully_serializes_category_page_urls(self):
         result = CategorySerializer(self.category)
-        self.assertEqual(
-            self.category.get_full_url(),
-            result.data['url']
-        )
+        self.assertEqual(self.category.get_full_url(), result.data["url"])
 
     def test_resolves_methodology_links_in_html(self):
         category_with_link = CategoryPageFactory(
             parent=self.category.get_parent(),
-            methodology=f"""Click <a id="{self.category.pk}" linktype="page">here</a>."""
+            methodology=f"""Click <a id="{self.category.pk}" linktype="page">here</a>.""",
         )
         result = CategorySerializer(category_with_link)
         self.assertIn(
             self.category.url,
-            result.data['methodology'],
+            result.data["methodology"],
         )

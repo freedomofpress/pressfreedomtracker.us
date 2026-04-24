@@ -6,32 +6,32 @@ from django.db import migrations
 
 
 OLD_TO_NEW = {
-    'blue': 'eastern-blue',
-    'purple': 'violet',
-    'dark-gray': 'dark-gray',
-    'orange': 'gamboge',
-    'white': 'white',
-    'green': 'green',
+    "blue": "eastern-blue",
+    "purple": "violet",
+    "dark-gray": "dark-gray",
+    "orange": "gamboge",
+    "white": "white",
+    "green": "green",
 }
 
 
 NEW_TO_OLD = {
-    'eastern-blue': 'blue',
-    'gamboge': 'orange',
-    'green-apple': 'dark-gray',
-    'green': 'green',
-    'sunshine': 'dark-gray',
-    'pink': 'purple',
-    'red': 'dark-gray',
-    'royal-blue': 'dark-gray',
-    'teal': 'eastern-blue',
-    'violet': 'purple',
-    'yellow': 'dark-gray',
+    "eastern-blue": "blue",
+    "gamboge": "orange",
+    "green-apple": "dark-gray",
+    "green": "green",
+    "sunshine": "dark-gray",
+    "pink": "purple",
+    "red": "dark-gray",
+    "royal-blue": "dark-gray",
+    "teal": "eastern-blue",
+    "violet": "purple",
+    "yellow": "dark-gray",
 }
 
 
 def update_statbox_colors(apps, schema_editor):
-    StatBox = apps.get_model('home', 'StatBox')
+    StatBox = apps.get_model("home", "StatBox")
     stat_boxes = StatBox.objects.all()
     for box in stat_boxes:
         box.color = OLD_TO_NEW[box.color]
@@ -39,7 +39,7 @@ def update_statbox_colors(apps, schema_editor):
 
 
 def undo_update_statbox_colors(apps, schema_editor):
-    StatBox = apps.get_model('home', 'StatBox')
+    StatBox = apps.get_model("home", "StatBox")
     stat_boxes = StatBox.objects.all()
     for box in stat_boxes:
         box.color = NEW_TO_OLD[box.color]
@@ -47,11 +47,12 @@ def undo_update_statbox_colors(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0010_auto_20170719_2347'),
+        ("home", "0010_auto_20170719_2347"),
     ]
 
     operations = [
-        migrations.RunPython(update_statbox_colors, undo_update_statbox_colors, elidable=True)
+        migrations.RunPython(
+            update_statbox_colors, undo_update_statbox_colors, elidable=True
+        )
     ]

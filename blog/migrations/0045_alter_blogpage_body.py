@@ -7,15 +7,377 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0044_alter_blogpage_body_alter_blogpage_lead_graphic_and_more'),
+        ("blog", "0044_alter_blogpage_body_alter_blogpage_lead_graphic_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='body',
-            field=wagtail.fields.StreamField([('text', 5), ('aside', 6), ('image', 10), ('raw_html', 11), ('tweet', 13), ('blockquote', 16), ('list', 18), ('video', 21), ('heading_1', 23), ('heading_2', 23), ('heading_3', 23), ('button', 26), ('statistics', 30), ('vertical_bar_chart', 42), ('tree_map_chart', 44), ('bubble_map_chart', 46), ('hexbin_map_chart', 47)], block_lookup={0: ('wagtail.blocks.RichTextBlock', (), {}), 1: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('white', 'White'), ('eastern-blue', 'Eastern Blue'), ('gamboge', 'Gamboge'), ('green', 'Green'), ('pink', 'Pink'), ('red', 'Red'), ('royal-blue', 'Royal Blue'), ('teal', 'Teal'), ('violet', 'Violet'), ('dark-gray', 'Dark Gray')]}), 2: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('left', 'Left'), ('center', 'Center'), ('right', 'Right')]}), 3: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('small', 'Small'), ('normal', 'Normal'), ('large', 'Large'), ('jumbo', 'Jumbo')]}), 4: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('sans-serif', 'Sans Serif'), ('serif', 'Serif')]}), 5: ('wagtail.blocks.StructBlock', [[('text', 0), ('background_color', 1), ('text_align', 2), ('font_size', 3), ('font_family', 4)]], {'label': 'Text', 'template': 'common/blocks/styled_text_full_bleed.html'}), 6: ('wagtail.blocks.StructBlock', [[('text', 0)]], {}), 7: ('wagtail.images.blocks.ImageChooserBlock', (), {}), 8: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Image description displayed below the image. Organization/Photographer can be set via the image attribution.', 'required': False}), 9: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]}), 10: ('wagtail.blocks.StructBlock', [[('image', 7), ('caption', 8), ('alignment', 9)]], {}), 11: ('wagtail.blocks.RawHTMLBlock', (), {}), 12: ('wagtail.embeds.blocks.EmbedBlock', (), {}), 13: ('wagtail.blocks.StructBlock', [[('tweet', 12)]], {}), 14: ('wagtail.blocks.RichTextBlock', (), {'required': False}), 15: ('wagtail.blocks.URLBlock', (), {'help_text': 'Source text will link to this url.', 'required': False}), 16: ('wagtail.blocks.StructBlock', [[('text', 0), ('source_text', 14), ('source_url', 15)]], {}), 17: ('wagtail.blocks.CharBlock', (), {'label': 'List Item'}), 18: ('wagtail.blocks.ListBlock', (17,), {'template': 'common/blocks/list_block_columns.html'}), 19: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Video description displayed below the video.', 'required': False}), 20: ('wagtail.blocks.CharBlock', (), {'help_text': 'Organization / Director.', 'max_length': 255, 'required': False}), 21: ('wagtail.blocks.StructBlock', [[('video', 12), ('caption', 19), ('attribution', 20), ('alignment', 9)]], {}), 22: ('wagtail.blocks.CharBlock', (), {}), 23: ('wagtail.blocks.StructBlock', [[('content', 22)]], {}), 24: ('wagtail.blocks.TextBlock', (), {'required': True}), 25: ('wagtail.blocks.URLBlock', (), {'required': True}), 26: ('wagtail.blocks.StructBlock', [[('text', 24), ('url', 25)]], {}), 27: ('wagtail.blocks.ChoiceBlock', [], {'choices': statistics.registry.get_visualization_choices}), 28: ('wagtail.blocks.ChoiceBlock', [], {'choices': statistics.registry.get_stats_choices}), 29: ('wagtail.blocks.CharBlock', (), {'help_text': 'Whitespace-separated list of arguments to be passed to the statistics function', 'required': False}), 30: ('wagtail.blocks.StructBlock', [[('visualization', 27), ('dataset', 28), ('params', 29)]], {}), 31: ('wagtail.blocks.CharBlock', (), {'required': False}), 32: ('wagtail.blocks.MultipleChoiceBlock', [], {'choices': common.models.helpers.get_categories, 'help_text': 'If selected, incidents belonging to any of the selected categories will be included.', 'label': 'Filter by Category', 'required': False}), 33: ('wagtail.blocks.ChoiceBlock', [], {'choices': common.models.helpers.get_tags, 'help_text': 'If selected, only incidents with the chosen tag will be included.', 'label': 'Filter by Tag', 'required': False}), 34: ('wagtail.blocks.DateBlock', (), {'help_text': 'If set, no incidents before this date will be included.', 'label': 'Filter by Date, lower bound', 'required': False}), 35: ('wagtail.blocks.DateBlock', (), {'help_text': 'If set, no incidents after this date will be included.', 'label': 'Filter by Date, upper bound', 'required': False}), 36: ('wagtail.blocks.MultipleChoiceBlock', [], {'choices': common.models.helpers.get_states, 'help_text': 'If selected, only incidents in the chosen states will be included.', 'label': 'Filter by State', 'required': False}), 37: ('wagtail.blocks.StructBlock', [[('categories', 32), ('tag', 33), ('lower_date', 34), ('upper_date', 35), ('states', 36)]], {}), 38: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('months', 'Months'), ('years', 'Years')], 'help_text': 'Choose whether to display bars aggregated by months or years. If not provided, will default to months if there is less than two years of data, years if there is more than two years of data.', 'label': 'Display by', 'required': False}), 39: ('wagtail.blocks.TextBlock', (), {'help_text': 'Description for assistive technology users. If the chart is demonstrating a specific trend, try to include that, e.g., "Bar chart showing a decreasing number of assaults over the course of 2023."', 'required': True}), 40: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('CATEGORIES', 'Categories'), ('ASSAILANT', 'Assailant'), ('STATUS_OF_CHARGES', 'Status of Charges')], 'help_text': 'If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped by the selected classification.', 'label': 'Group Incidents By', 'required': False}), 41: ('wagtail.blocks.ChoiceBlock', [], {'choices': common.models.helpers.get_tags, 'help_text': 'If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.', 'label': 'Group Incidents By Tag', 'required': False}), 42: ('wagtail.blocks.StructBlock', [[('title', 31), ('incident_set', 37), ('time_period', 38), ('description', 39), ('group_by', 40), ('group_by_tag', 41)]], {}), 43: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('CATEGORIES', 'Categories'), ('ASSAILANT', 'Assailant'), ('STATUS_OF_CHARGES', 'Status of Charges')], 'label': 'Group Incidents By'}), 44: ('wagtail.blocks.StructBlock', [[('title', 31), ('incident_set', 37), ('description', 39), ('group_by', 43)]], {}), 45: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('state', 'State'), ('city', 'City')], 'help_text': 'Choose whether to group by city or by state', 'label': 'Group Incidents by'}), 46: ('wagtail.blocks.StructBlock', [[('title', 31), ('incident_set', 37), ('group_by', 45), ('description', 39)]], {}), 47: ('wagtail.blocks.StructBlock', [[('title', 31), ('incident_set', 37), ('description', 39)]], {})}),
+            model_name="blogpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                [
+                    ("text", 5),
+                    ("aside", 6),
+                    ("image", 10),
+                    ("raw_html", 11),
+                    ("tweet", 13),
+                    ("blockquote", 16),
+                    ("list", 18),
+                    ("video", 21),
+                    ("heading_1", 23),
+                    ("heading_2", 23),
+                    ("heading_3", 23),
+                    ("button", 26),
+                    ("statistics", 30),
+                    ("vertical_bar_chart", 42),
+                    ("tree_map_chart", 44),
+                    ("bubble_map_chart", 46),
+                    ("hexbin_map_chart", 47),
+                ],
+                block_lookup={
+                    0: ("wagtail.blocks.RichTextBlock", (), {}),
+                    1: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("white", "White"),
+                                ("eastern-blue", "Eastern Blue"),
+                                ("gamboge", "Gamboge"),
+                                ("green", "Green"),
+                                ("pink", "Pink"),
+                                ("red", "Red"),
+                                ("royal-blue", "Royal Blue"),
+                                ("teal", "Teal"),
+                                ("violet", "Violet"),
+                                ("dark-gray", "Dark Gray"),
+                            ]
+                        },
+                    ),
+                    2: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("left", "Left"),
+                                ("center", "Center"),
+                                ("right", "Right"),
+                            ]
+                        },
+                    ),
+                    3: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("small", "Small"),
+                                ("normal", "Normal"),
+                                ("large", "Large"),
+                                ("jumbo", "Jumbo"),
+                            ]
+                        },
+                    ),
+                    4: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {"choices": [("sans-serif", "Sans Serif"), ("serif", "Serif")]},
+                    ),
+                    5: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("text", 0),
+                                ("background_color", 1),
+                                ("text_align", 2),
+                                ("font_size", 3),
+                                ("font_family", 4),
+                            ]
+                        ],
+                        {
+                            "label": "Text",
+                            "template": "common/blocks/styled_text_full_bleed.html",
+                        },
+                    ),
+                    6: ("wagtail.blocks.StructBlock", [[("text", 0)]], {}),
+                    7: ("wagtail.images.blocks.ImageChooserBlock", (), {}),
+                    8: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Image description displayed below the image. Organization/Photographer can be set via the image attribution.",
+                            "required": False,
+                        },
+                    ),
+                    9: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("left", "Left"),
+                                ("right", "Right"),
+                                ("full-width", "Full Width"),
+                            ]
+                        },
+                    ),
+                    10: (
+                        "wagtail.blocks.StructBlock",
+                        [[("image", 7), ("caption", 8), ("alignment", 9)]],
+                        {},
+                    ),
+                    11: ("wagtail.blocks.RawHTMLBlock", (), {}),
+                    12: ("wagtail.embeds.blocks.EmbedBlock", (), {}),
+                    13: ("wagtail.blocks.StructBlock", [[("tweet", 12)]], {}),
+                    14: ("wagtail.blocks.RichTextBlock", (), {"required": False}),
+                    15: (
+                        "wagtail.blocks.URLBlock",
+                        (),
+                        {
+                            "help_text": "Source text will link to this url.",
+                            "required": False,
+                        },
+                    ),
+                    16: (
+                        "wagtail.blocks.StructBlock",
+                        [[("text", 0), ("source_text", 14), ("source_url", 15)]],
+                        {},
+                    ),
+                    17: ("wagtail.blocks.CharBlock", (), {"label": "List Item"}),
+                    18: (
+                        "wagtail.blocks.ListBlock",
+                        (17,),
+                        {"template": "common/blocks/list_block_columns.html"},
+                    ),
+                    19: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Video description displayed below the video.",
+                            "required": False,
+                        },
+                    ),
+                    20: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Organization / Director.",
+                            "max_length": 255,
+                            "required": False,
+                        },
+                    ),
+                    21: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("video", 12),
+                                ("caption", 19),
+                                ("attribution", 20),
+                                ("alignment", 9),
+                            ]
+                        ],
+                        {},
+                    ),
+                    22: ("wagtail.blocks.CharBlock", (), {}),
+                    23: ("wagtail.blocks.StructBlock", [[("content", 22)]], {}),
+                    24: ("wagtail.blocks.TextBlock", (), {"required": True}),
+                    25: ("wagtail.blocks.URLBlock", (), {"required": True}),
+                    26: (
+                        "wagtail.blocks.StructBlock",
+                        [[("text", 24), ("url", 25)]],
+                        {},
+                    ),
+                    27: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {"choices": statistics.registry.get_visualization_choices},
+                    ),
+                    28: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {"choices": statistics.registry.get_stats_choices},
+                    ),
+                    29: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Whitespace-separated list of arguments to be passed to the statistics function",
+                            "required": False,
+                        },
+                    ),
+                    30: (
+                        "wagtail.blocks.StructBlock",
+                        [[("visualization", 27), ("dataset", 28), ("params", 29)]],
+                        {},
+                    ),
+                    31: ("wagtail.blocks.CharBlock", (), {"required": False}),
+                    32: (
+                        "wagtail.blocks.MultipleChoiceBlock",
+                        [],
+                        {
+                            "choices": common.models.helpers.get_categories,
+                            "help_text": "If selected, incidents belonging to any of the selected categories will be included.",
+                            "label": "Filter by Category",
+                            "required": False,
+                        },
+                    ),
+                    33: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": common.models.helpers.get_tags,
+                            "help_text": "If selected, only incidents with the chosen tag will be included.",
+                            "label": "Filter by Tag",
+                            "required": False,
+                        },
+                    ),
+                    34: (
+                        "wagtail.blocks.DateBlock",
+                        (),
+                        {
+                            "help_text": "If set, no incidents before this date will be included.",
+                            "label": "Filter by Date, lower bound",
+                            "required": False,
+                        },
+                    ),
+                    35: (
+                        "wagtail.blocks.DateBlock",
+                        (),
+                        {
+                            "help_text": "If set, no incidents after this date will be included.",
+                            "label": "Filter by Date, upper bound",
+                            "required": False,
+                        },
+                    ),
+                    36: (
+                        "wagtail.blocks.MultipleChoiceBlock",
+                        [],
+                        {
+                            "choices": common.models.helpers.get_states,
+                            "help_text": "If selected, only incidents in the chosen states will be included.",
+                            "label": "Filter by State",
+                            "required": False,
+                        },
+                    ),
+                    37: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("categories", 32),
+                                ("tag", 33),
+                                ("lower_date", 34),
+                                ("upper_date", 35),
+                                ("states", 36),
+                            ]
+                        ],
+                        {},
+                    ),
+                    38: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [("months", "Months"), ("years", "Years")],
+                            "help_text": "Choose whether to display bars aggregated by months or years. If not provided, will default to months if there is less than two years of data, years if there is more than two years of data.",
+                            "label": "Display by",
+                            "required": False,
+                        },
+                    ),
+                    39: (
+                        "wagtail.blocks.TextBlock",
+                        (),
+                        {
+                            "help_text": 'Description for assistive technology users. If the chart is demonstrating a specific trend, try to include that, e.g., "Bar chart showing a decreasing number of assaults over the course of 2023."',
+                            "required": True,
+                        },
+                    ),
+                    40: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("CATEGORIES", "Categories"),
+                                ("ASSAILANT", "Assailant"),
+                                ("STATUS_OF_CHARGES", "Status of Charges"),
+                            ],
+                            "help_text": "If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped by the selected classification.",
+                            "label": "Group Incidents By",
+                            "required": False,
+                        },
+                    ),
+                    41: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": common.models.helpers.get_tags,
+                            "help_text": "If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.",
+                            "label": "Group Incidents By Tag",
+                            "required": False,
+                        },
+                    ),
+                    42: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("title", 31),
+                                ("incident_set", 37),
+                                ("time_period", 38),
+                                ("description", 39),
+                                ("group_by", 40),
+                                ("group_by_tag", 41),
+                            ]
+                        ],
+                        {},
+                    ),
+                    43: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("CATEGORIES", "Categories"),
+                                ("ASSAILANT", "Assailant"),
+                                ("STATUS_OF_CHARGES", "Status of Charges"),
+                            ],
+                            "label": "Group Incidents By",
+                        },
+                    ),
+                    44: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("title", 31),
+                                ("incident_set", 37),
+                                ("description", 39),
+                                ("group_by", 43),
+                            ]
+                        ],
+                        {},
+                    ),
+                    45: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [("state", "State"), ("city", "City")],
+                            "help_text": "Choose whether to group by city or by state",
+                            "label": "Group Incidents by",
+                        },
+                    ),
+                    46: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("title", 31),
+                                ("incident_set", 37),
+                                ("group_by", 45),
+                                ("description", 39),
+                            ]
+                        ],
+                        {},
+                    ),
+                    47: (
+                        "wagtail.blocks.StructBlock",
+                        [[("title", 31), ("incident_set", 37), ("description", 39)]],
+                        {},
+                    ),
+                },
+            ),
         ),
     ]

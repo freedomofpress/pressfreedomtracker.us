@@ -5,16 +5,22 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0041_group_collection_permissions_verbose_name_plural'),
-        ('common', '0069_auto_20200226_1558'),
+        ("wagtailcore", "0041_group_collection_permissions_verbose_name_plural"),
+        ("common", "0069_auto_20200226_1558"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='searchsettings',
-            name='data_download_page',
-            field=models.ForeignKey(blank=True, help_text='Page linked to by the "Download the data" link at the bottom of the search filters. If a page is selected here, then the link will redirect to it with the search querystring intact. If this field is blank, the link will be a direct download of the CSV data requested.', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='wagtailcore.Page'),
+            model_name="searchsettings",
+            name="data_download_page",
+            field=models.ForeignKey(
+                blank=True,
+                help_text='Page linked to by the "Download the data" link at the bottom of the search filters. If a page is selected here, then the link will redirect to it with the search querystring intact. If this field is blank, the link will be a direct download of the CSV data requested.',
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="+",
+                to="wagtailcore.Page",
+            ),
         ),
     ]

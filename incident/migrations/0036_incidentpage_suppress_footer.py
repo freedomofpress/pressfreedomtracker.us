@@ -4,7 +4,7 @@ from django.db import migrations, models
 
 
 def migrate_suppress_incident_footer(apps, schema_editor):
-    IncidentPage = apps.get_model('incident', 'IncidentPage')
+    IncidentPage = apps.get_model("incident", "IncidentPage")
     incidents_with_footer = IncidentPage.objects.filter(
         body__contains="catalogues press freedom violations in the United States."
     )
@@ -14,16 +14,19 @@ def migrate_suppress_incident_footer(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0035_incidentpage_primary_video'),
+        ("incident", "0035_incidentpage_primary_video"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='suppress_footer',
-            field=models.BooleanField(default=False, help_text='This field will suppress call to action text. If body already contains cta, can check this field.', verbose_name='Suppress Footer Call to Action'),
+            model_name="incidentpage",
+            name="suppress_footer",
+            field=models.BooleanField(
+                default=False,
+                help_text="This field will suppress call to action text. If body already contains cta, can check this field.",
+                verbose_name="Suppress Footer Call to Action",
+            ),
         ),
         migrations.RunPython(migrate_suppress_incident_footer, elidable=True),
     ]

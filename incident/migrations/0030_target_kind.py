@@ -6,15 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0029_auto_20180622_1951'),
+        ("incident", "0029_auto_20180622_1951"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='target',
-            name='kind',
-            field=models.CharField(blank=True, choices=[('JOURNALIST', 'Journalist'), ('INSTITUTION', 'Institution')], max_length=255, null=True),
+            model_name="target",
+            name="kind",
+            field=models.CharField(
+                blank=True,
+                choices=[("JOURNALIST", "Journalist"), ("INSTITUTION", "Institution")],
+                max_length=255,
+                null=True,
+            ),
         ),
     ]

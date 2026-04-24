@@ -13,12 +13,12 @@ class IncidentSummaryAPIPost(TestCase):
     def setUpTestData(cls):
         site = Site.objects.get(is_default_site=True)
         root_page = site.root_page
-        cls.incident_index = IncidentIndexPageFactory.build(slug='incidents')
+        cls.incident_index = IncidentIndexPageFactory.build(slug="incidents")
         root_page.add_child(instance=cls.incident_index)
 
     def setUp(self):
         url = self.incident_index.get_full_url() + self.incident_index.reverse_subpage(
-            'summary', args=()
+            "summary", args=()
         )
         self.response = self.client.post(url)
 
@@ -32,7 +32,7 @@ class IncidentSummaryAPIGet(TestCase):
     def setUpTestData(cls):
         site = Site.objects.get(is_default_site=True)
         root_page = site.root_page
-        cls.incident_index = IncidentIndexPageFactory.build(slug='incidents')
+        cls.incident_index = IncidentIndexPageFactory.build(slug="incidents")
         root_page.add_child(instance=cls.incident_index)
 
         category1 = CategoryPageFactory()
@@ -50,22 +50,23 @@ class IncidentSummaryAPIGet(TestCase):
         cls.category = category1
 
     def setUp(self):
-        base_url = self.incident_index.get_full_url() + self.incident_index.reverse_subpage(
-            'summary', args=()
+        base_url = (
+            self.incident_index.get_full_url()
+            + self.incident_index.reverse_subpage("summary", args=())
         )
-        query_string = parse.urlencode({'categories': self.category.pk})
-        url = '{base}?{query_string}'.format(base=base_url, query_string=query_string)
+        query_string = parse.urlencode({"categories": self.category.pk})
+        url = "{base}?{query_string}".format(base=base_url, query_string=query_string)
         self.response = self.client.get(url)
-        self.response_data = json.loads(self.response.content.decode('utf-8'))
+        self.response_data = json.loads(self.response.content.decode("utf-8"))
 
     def test_response_code_success(self):
         self.assertEqual(self.response.status_code, 200)
 
     def test_total_incidents(self):
-        self.assertEqual(self.response_data['total'], 2)
+        self.assertEqual(self.response_data["total"], 2)
 
     def test_total_journalists(self):
-        self.assertEqual(self.response_data['journalists'], 2)
+        self.assertEqual(self.response_data["journalists"], 2)
 
     def test_total_institutions(self):
-        self.assertEqual(self.response_data['institutions'], 4)
+        self.assertEqual(self.response_data["institutions"], 4)

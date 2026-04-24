@@ -15,7 +15,7 @@ class Equipment(ClusterableModel):
         instance.save()
         return instance
 
-    autocomplete_search_field = 'name'
+    autocomplete_search_field = "name"
 
     name = models.CharField(
         max_length=255,
@@ -24,9 +24,11 @@ class Equipment(ClusterableModel):
     )
 
     panels = [
-        FieldRowPanel([
-            FieldPanel('name'),
-        ])
+        FieldRowPanel(
+            [
+                FieldPanel("name"),
+            ]
+        )
     ]
 
     def autocomplete_label(self):
@@ -45,7 +47,7 @@ class State(ClusterableModel):
         instance.save()
         return instance
 
-    autocomplete_search_field = 'name'
+    autocomplete_search_field = "name"
 
     name = models.CharField(
         max_length=255,
@@ -59,10 +61,12 @@ class State(ClusterableModel):
     )
 
     panels = [
-        FieldRowPanel([
-            FieldPanel('name'),
-            FieldPanel('abbreviation'),
-        ]),
+        FieldRowPanel(
+            [
+                FieldPanel("name"),
+                FieldPanel("abbreviation"),
+            ]
+        ),
     ]
 
     def autocomplete_label(self):
@@ -70,5 +74,5 @@ class State(ClusterableModel):
 
     def __str__(self):
         if self.abbreviation:
-            return '{} ({})'.format(self.name, self.abbreviation)
+            return "{} ({})".format(self.name, self.abbreviation)
         return self.name

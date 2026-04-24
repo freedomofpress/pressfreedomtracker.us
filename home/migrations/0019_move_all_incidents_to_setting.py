@@ -9,7 +9,7 @@ from wagtail.models import Site
 
 
 def move_all_incidents_to_setting(apps, schema_editor):
-    HomePage = apps.get_model('home', 'HomePage')
+    HomePage = apps.get_model("home", "HomePage")
     site = Site.objects.get(is_default_site=True)
     search_settings = SearchSettings.for_site(site)
     try:
@@ -22,12 +22,13 @@ def move_all_incidents_to_setting(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0018_auto_20180205_2333'),
-        ('common', '0030_searchsettings'),
+        ("home", "0018_auto_20180205_2333"),
+        ("common", "0030_searchsettings"),
     ]
 
     operations = [
-        migrations.RunPython(move_all_incidents_to_setting, migrations.RunPython.noop, elidable=True),
+        migrations.RunPython(
+            move_all_incidents_to_setting, migrations.RunPython.noop, elidable=True
+        ),
     ]

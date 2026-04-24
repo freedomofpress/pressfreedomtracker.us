@@ -4,31 +4,41 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
-    replaces = [('emails', '0004_auto_20220614_1515'), ('emails', '0005_set_default_value_for_mailchimp_groups')]
+    replaces = [
+        ("emails", "0004_auto_20220614_1515"),
+        ("emails", "0005_set_default_value_for_mailchimp_groups"),
+    ]
 
     dependencies = [
-        ('emails', '0003_add_mailchimp_fields'),
+        ("emails", "0003_add_mailchimp_fields"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='mailchimpgroup',
-            name='category_id',
+            model_name="mailchimpgroup",
+            name="category_id",
         ),
         migrations.AlterField(
-            model_name='mailchimpgroup',
-            name='group_id',
-            field=models.CharField(help_text='Mailchimp group identifier.', max_length=100),
+            model_name="mailchimpgroup",
+            name="group_id",
+            field=models.CharField(
+                help_text="Mailchimp group identifier.", max_length=100
+            ),
         ),
         migrations.AddField(
-            model_name='mailchimpgroup',
-            name='audience_id',
-            field=models.CharField(default='', help_text='Mailchimp audience associated with this group.', max_length=100),
+            model_name="mailchimpgroup",
+            name="audience_id",
+            field=models.CharField(
+                default="",
+                help_text="Mailchimp audience associated with this group.",
+                max_length=100,
+            ),
         ),
         migrations.AlterField(
-            model_name='mailchimpgroup',
-            name='group_id',
-            field=models.CharField(default='', help_text='Mailchimp group identifier.', max_length=100),
+            model_name="mailchimpgroup",
+            name="group_id",
+            field=models.CharField(
+                default="", help_text="Mailchimp group identifier.", max_length=100
+            ),
         ),
     ]

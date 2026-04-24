@@ -4,15 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0062_auto_20210610_1426'),
+        ("incident", "0062_auto_20210610_1426"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentindexpage',
-            name='feed_per_page',
-            field=models.PositiveIntegerField(default=20, help_text='Maximum number of incidents to be included per page in the syndication feed.'),
+            model_name="incidentindexpage",
+            name="feed_per_page",
+            field=models.PositiveIntegerField(
+                default=20,
+                help_text="Maximum number of incidents to be included per page in the syndication feed.",
+            ),
         ),
     ]

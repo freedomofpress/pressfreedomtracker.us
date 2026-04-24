@@ -6,14 +6,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0023_auto_20180215_2149'),
+        ("incident", "0023_auto_20180215_2149"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='equipmentseized',
-            options={'verbose_name': 'Equipment Seized'},
+            name="equipmentseized",
+            options={"verbose_name": "Equipment Seized"},
         ),
     ]

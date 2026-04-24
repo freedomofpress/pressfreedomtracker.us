@@ -49,22 +49,23 @@ from .factories import (
 
 
 class TestPages(TestCase):
-    """Incident Index Page """
+    """Incident Index Page"""
+
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        cls.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=cls.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': cls.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": cls.home_page,
+            },
         )
         if not created:
             site.root_page = cls.home_page
@@ -74,68 +75,65 @@ class TestPages(TestCase):
         cls.search_settings = SearchSettings.for_site(site)
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=incident_filter_settings,
-            incident_filter='state',
+            incident_filter="state",
         )
-        cls.index = IncidentIndexPageFactory(
-            parent=site.root_page, slug='incidents')
-        cls.incident = IncidentPageFactory(parent=cls.index, slug='one')
+        cls.index = IncidentIndexPageFactory(parent=site.root_page, slug="incidents")
+        cls.incident = IncidentPageFactory(parent=cls.index, slug="one")
 
     def setUp(self):
         self.client = Client()
 
     def test_get_index_should_succeed(self):
         """get index should succed."""
-        response = self.client.get('/incidents/')
+        response = self.client.get("/incidents/")
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_filters(self):
         """get index with filters should succeed."""
         response = self.client.get(
-            '/incidents/?search=text&date_upper=2017-01-01&categories=1,2'
+            "/incidents/?search=text&date_upper=2017-01-01&categories=1,2"
         )
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_malformed_filters(self):
         """get index should succeed with malformed filters."""
-        response = self.client.get(
-            '/incidents/?date_upper=aaa&date_lower=2011-54-39'
-        )
+        response = self.client.get("/incidents/?date_upper=aaa&date_lower=2011-54-39")
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_blank_category_filters(self):
         """get index should succeed blank with a category filter."""
-        response = self.client.get('/incidents/?categories=')
+        response = self.client.get("/incidents/?categories=")
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_illegal_date_range(self):
         """get index should succeed with malformed filters."""
         response = self.client.get(
-            '/incidents/?date_upper=2011-01-01&date_lower=2012-01-01'
+            "/incidents/?date_upper=2011-01-01&date_lower=2012-01-01"
         )
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_invalid_foreign_key(self):
         """get index should succeed with a noninteger foreign key reference."""
-        response = self.client.get('/incidents/?state=NONINTEGER_VALUE')
+        response = self.client.get("/incidents/?state=NONINTEGER_VALUE")
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_noninteger_page_number(self):
         """get index should succeed with a noninteger foreign key reference."""
-        response = self.client.get('/incidents/?page=abc')
+        response = self.client.get("/incidents/?page=abc")
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_succeed_with_noninteger_endpage_number(self):
         """get index should succeed with a noninteger foreign key reference."""
-        response = self.client.get('/incidents/?endpage=abc')
+        response = self.client.get("/incidents/?endpage=abc")
         self.assertEqual(response.status_code, 200)
 
     def test_get_incident_page_should_succeed(self):
-        response = self.client.get('/incidents/one/')
+        response = self.client.get("/incidents/one/")
         self.assertEqual(response.status_code, 200)
 
     def test_get_index_should_not_include_learn_more_link(self):
         response = self.client.get(self.index.get_url())
-        self.assertNotContains(response, 'Learn more')
+        self.assertNotContains(response, "Learn more")
 
     def test_get_index_should_include_learn_more_link_if_page_specified(self):
         url = self.index.get_url()
@@ -147,19 +145,19 @@ class TestPages(TestCase):
 
 class TestIncidentIndexPageContext(TestCase):
     def setUp(self):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        self.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': self.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": self.home_page,
+            },
         )
         if not created:
             site.root_page = self.home_page
@@ -168,60 +166,57 @@ class TestIncidentIndexPageContext(TestCase):
         self.settings = IncidentFilterSettings.for_site(site)
         self.search_settings = SearchSettings.for_site(site)
         self.site = site
-        self.index = IncidentIndexPageFactory(
-            parent=site.root_page, slug='incidents')
+        self.index = IncidentIndexPageFactory(parent=site.root_page, slug="incidents")
 
     def test_includes_export_path(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         context = self.index.get_context(request)
         self.assertEqual(
-            context['export_path'],
-            self.index.get_url() + self.index.reverse_subpage('export_view')
+            context["export_path"],
+            self.index.get_url() + self.index.reverse_subpage("export_view"),
         )
 
     def test_includes_total_incident_count(self):
         IncidentPageFactory.create_batch(3, parent=self.index)
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         context = self.index.get_context(request)
-        self.assertEqual(context['all_incident_count'], 3)
+        self.assertEqual(context["all_incident_count"], 3)
 
     def test_includes_filtered_export_path(self):
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=self.settings,
-            incident_filter='city',
+            incident_filter="city",
         )
 
-        request = RequestFactory().get('/?city=Albuquerque')
+        request = RequestFactory().get("/?city=Albuquerque")
         context = self.index.get_context(request)
         expected_path = (
-            self.index.get_url() +
-            self.index.reverse_subpage('export_view') +
-            '?city=Albuquerque'
+            self.index.get_url()
+            + self.index.reverse_subpage("export_view")
+            + "?city=Albuquerque"
         )
-        self.assertEqual(context['filtered_export_path'], expected_path)
+        self.assertEqual(context["filtered_export_path"], expected_path)
 
     def test_includes_search_value(self):
-        search_query = 'delicious treats'
-        request = RequestFactory().get(
-            '/?' + parse.urlencode({'search': search_query})
-        )
+        search_query = "delicious treats"
+        request = RequestFactory().get("/?" + parse.urlencode({"search": search_query}))
         context = self.index.get_context(request)
-        self.assertEqual(context['search_value'], search_query)
+        self.assertEqual(context["search_value"], search_query)
 
     def test_does_not_include_learn_more_path_if_page_not_in_settings(self):
         self.search_settings.learn_more_page = None
         self.search_settings.save()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         context = self.index.get_context(request)
-        self.assertNotIn('learn_more_path', context)
+        self.assertNotIn("learn_more_path", context)
 
     def test_includes_learn_more_path_if_page_in_settings(self):
         self.search_settings.learn_more_page = self.home_page
         self.search_settings.save()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         context = self.index.get_context(request)
         self.assertEqual(
-            context['learn_more_path'],
+            context["learn_more_path"],
             self.home_page.get_url(),
         )
 
@@ -235,235 +230,222 @@ class TestFilteredExportPath(TestCase):
 
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=cls.settings,
-            incident_filter='is_search_warrant_obtained',
+            incident_filter="is_search_warrant_obtained",
         )
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=cls.settings,
-            incident_filter='status_of_seized_equipment',
+            incident_filter="status_of_seized_equipment",
         )
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=cls.settings,
-            incident_filter='targeted_institutions',
+            incident_filter="targeted_institutions",
         )
 
     def setUp(self):
         self.client = Client()
 
     def test_date_filter_lower(self):
-        request = RequestFactory().get('/?date_lower=2022-01-01')
+        request = RequestFactory().get("/?date_lower=2022-01-01")
         context = self.index.get_context(request)
 
         expected_path = (
-            self.index.get_url() +
-            self.index.reverse_subpage('export_view') +
-            '?date_lower=2022-01-01'
+            self.index.get_url()
+            + self.index.reverse_subpage("export_view")
+            + "?date_lower=2022-01-01"
         )
         self.assertEqual(
-            context['filtered_export_path'],
+            context["filtered_export_path"],
             expected_path,
         )
 
     def test_date_filter_upper(self):
-        request = RequestFactory().get('/?date_upper=2022-01-01')
+        request = RequestFactory().get("/?date_upper=2022-01-01")
         context = self.index.get_context(request)
 
         expected_path = (
-            self.index.get_url() +
-            self.index.reverse_subpage('export_view') +
-            '?date_upper=2022-01-01'
+            self.index.get_url()
+            + self.index.reverse_subpage("export_view")
+            + "?date_upper=2022-01-01"
         )
         self.assertEqual(
-            context['filtered_export_path'],
+            context["filtered_export_path"],
             expected_path,
         )
 
     def test_date_filter_both(self):
-        request = RequestFactory().get('/?date_upper=2022-01-01&date_lower=2021-05-05')
+        request = RequestFactory().get("/?date_upper=2022-01-01&date_lower=2021-05-05")
         context = self.index.get_context(request)
 
         expected_path = (
-            self.index.get_url() +
-            self.index.reverse_subpage('export_view') +
-            '?date_lower=2021-05-05&date_upper=2022-01-01'
+            self.index.get_url()
+            + self.index.reverse_subpage("export_view")
+            + "?date_lower=2021-05-05&date_upper=2022-01-01"
         )
         self.assertEqual(
-            context['filtered_export_path'],
+            context["filtered_export_path"],
             expected_path,
         )
 
     def test_boolean_filter(self):
-        request = RequestFactory().get('/?is_search_warrant_obtained=1')
+        request = RequestFactory().get("/?is_search_warrant_obtained=1")
         context = self.index.get_context(request)
 
         expected_path = (
-            self.index.get_url() +
-            self.index.reverse_subpage('export_view') +
-            '?is_search_warrant_obtained=1'
+            self.index.get_url()
+            + self.index.reverse_subpage("export_view")
+            + "?is_search_warrant_obtained=1"
         )
         self.assertEqual(
-            context['filtered_export_path'],
+            context["filtered_export_path"],
             expected_path,
         )
 
     def test_choice_filter(self):
-        request = RequestFactory().get('/?status_of_seized_equipment=RETURNED_FULL')
+        request = RequestFactory().get("/?status_of_seized_equipment=RETURNED_FULL")
         context = self.index.get_context(request)
 
         expected_path = (
-            self.index.get_url() +
-            self.index.reverse_subpage('export_view') +
-            '?status_of_seized_equipment=RETURNED_FULL'
+            self.index.get_url()
+            + self.index.reverse_subpage("export_view")
+            + "?status_of_seized_equipment=RETURNED_FULL"
         )
         self.assertEqual(
-            context['filtered_export_path'],
+            context["filtered_export_path"],
             expected_path,
         )
 
     def test_many_relation_filter(self):
-        request = RequestFactory().get('/?targeted_institutions=1,New York Times')
+        request = RequestFactory().get("/?targeted_institutions=1,New York Times")
         context = self.index.get_context(request)
 
         expected_path = (
-            self.index.get_url() +
-            self.index.reverse_subpage('export_view') +
-            '?targeted_institutions=1%2CNew+York+Times'
+            self.index.get_url()
+            + self.index.reverse_subpage("export_view")
+            + "?targeted_institutions=1%2CNew+York+Times"
         )
         self.assertEqual(
-            context['filtered_export_path'],
+            context["filtered_export_path"],
             expected_path,
         )
 
 
 class TestExportPage(TestCase):
     """CSV Exports"""
+
     @classmethod
     def setUpTestData(cls):
         cls.client = Client()
 
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        cls.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=cls.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': cls.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": cls.home_page,
+            },
         )
         if not created:
             site.root_page = cls.home_page
             site.save()
 
-        cls.index = IncidentIndexPageFactory(
-            parent=site.root_page, slug='incidents')
+        cls.index = IncidentIndexPageFactory(parent=site.root_page, slug="incidents")
 
     def test_export_should_succeed(self):
         """request should succeed."""
-        response = self.client.get(
-            '/incidents/export/'
-        )
+        response = self.client.get("/incidents/export/")
         self.assertEqual(response.status_code, 200)
 
     def test_export_should_include_headers(self):
-        """ should include headers"""
-        response = self.client.get(
-            '/incidents/export/'
-        )
+        """should include headers"""
+        response = self.client.get("/incidents/export/")
         content_lines = list(response.streaming_content)
         expected_headers = [
-            field.name for field in IncidentPage._meta.get_fields()
+            field.name
+            for field in IncidentPage._meta.get_fields()
             if is_exportable(field)
         ]
         self.assertEqual(
-            content_lines[0].decode('utf-8'),
-            ','.join(expected_headers) + '\r\n',
+            content_lines[0].decode("utf-8"),
+            ",".join(expected_headers) + "\r\n",
         )
 
     def test_export_should_include_incidents_only_live_incidents(self):
         """should include only live incidents."""
-        inc = IncidentPageFactory(parent=self.index, title='Live incident')
-        IncidentPageFactory(
-            parent=self.index,
-            title='Unpublished incident',
-            live=False
-        )
-        response = self.client.get(
-            '/incidents/export/'
-        )
+        inc = IncidentPageFactory(parent=self.index, title="Live incident")
+        IncidentPageFactory(parent=self.index, title="Unpublished incident", live=False)
+        response = self.client.get("/incidents/export/")
 
         content_lines = list(response.streaming_content)
-        reader = csv.reader(line.decode('utf-8') for line in content_lines)
+        reader = csv.reader(line.decode("utf-8") for line in content_lines)
         next(reader)  # skip the header row
         csv_line = next(reader)
         # Last elem in these lists is GenericRelatedObjectManager which will have different
         # IDs
         self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
-            self.assertNotIn('Unpublished incident', line.decode('utf-8'))
+            self.assertNotIn("Unpublished incident", line.decode("utf-8"))
 
 
 class TestFeedsPage(WagtailPageTestCase):
     """RSS Feeds Page"""
+
     @classmethod
     def setUpTestData(cls):
         cls.client = Client()
 
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        cls.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=cls.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': cls.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": cls.home_page,
+            },
         )
         if not created:
             site.root_page = cls.home_page
             site.save()
 
         cls.category = CategoryPageFactory(parent=cls.home_page)
-        cls.index = IncidentIndexPageFactory(
-            parent=site.root_page, slug='incidents')
+        cls.index = IncidentIndexPageFactory(parent=site.root_page, slug="incidents")
         IncidentPageFactory(parent=cls.index)
 
     def test_feed_should_succeed(self):
         """request should succeed."""
-        response = self.client.get(
-            '/incidents/feed/'
-        )
+        response = self.client.get("/incidents/feed/")
         self.assertEqual(response.status_code, 200)
 
     def test_feed_should_have_content(self):
         """request should succeed."""
-        IncidentPageFactory(parent=self.index, title='The Incident')
-        response = self.client.get(
-            '/incidents/feed/'
-        )
+        IncidentPageFactory(parent=self.index, title="The Incident")
+        response = self.client.get("/incidents/feed/")
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'The Incident')
+        self.assertContains(response, "The Incident")
 
     def test_feed_should_strip_unserializable_character(self):
         """request should succeed with unserializable chars."""
         IncidentPageFactory(
             parent=self.index,
-            title='The Unserializable Character Incident',
-            body=wagtail_factories.StreamFieldFactory({
-                'rich_text': rich_text('<p>Lorem \x00 dolor sit amet</p>'),
-                'raw_html': '<p>Lorem \x00 ipsum dolor sit amet</p>',
-            })
+            title="The Unserializable Character Incident",
+            body=wagtail_factories.StreamFieldFactory(
+                {
+                    "rich_text": rich_text("<p>Lorem \x00 dolor sit amet</p>"),
+                    "raw_html": "<p>Lorem \x00 ipsum dolor sit amet</p>",
+                }
+            ),
         )
-        response = self.client.get(
-            '/incidents/feed/'
-        )
+        response = self.client.get("/incidents/feed/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "The Unserializable Character Incident")
 
@@ -475,16 +457,18 @@ class GetRelatedIncidentsTest(TestCase):
         site = Site.objects.get()
         self.index = IncidentIndexPageFactory(
             parent=site.root_page,
-            slug='incidents',
+            slug="incidents",
         )
         self.category = CategoryPageFactory()
 
     def test_related_incidents_sorted_by_date(self):
         IncidentPageFactory(parent=self.index)
 
-        related_incident_old = IncidentPageFactory(parent=self.index, date='2016-01-01')
-        related_incident_new = IncidentPageFactory(parent=self.index, date='2020-01-01')
-        related_incident_recent = IncidentPageFactory(parent=self.index, date='2019-01-01')
+        related_incident_old = IncidentPageFactory(parent=self.index, date="2016-01-01")
+        related_incident_new = IncidentPageFactory(parent=self.index, date="2020-01-01")
+        related_incident_recent = IncidentPageFactory(
+            parent=self.index, date="2019-01-01"
+        )
 
         incident = IncidentPageFactory(
             parent=self.index,
@@ -506,7 +490,9 @@ class GetRelatedIncidentsTest(TestCase):
         IncidentPageFactory(parent=self.index)
         tag = CommonTagFactory()
         related_incident = IncidentPageFactory(parent=self.index)
-        tagged_incident = IncidentPageFactory(parent=self.index, categories=[self.category], tags=[tag])
+        tagged_incident = IncidentPageFactory(
+            parent=self.index, categories=[self.category], tags=[tag]
+        )
         incident = IncidentPageFactory(
             parent=self.index,
             categories=[self.category],
@@ -521,7 +507,9 @@ class GetRelatedIncidentsTest(TestCase):
         IncidentPageFactory(parent=self.index)
         tag = CommonTagFactory()
         related_incident = IncidentPageFactory(parent=self.index)
-        tagged_incident = IncidentPageFactory(parent=self.index, categories=[self.category], tags=[tag])
+        tagged_incident = IncidentPageFactory(
+            parent=self.index, categories=[self.category], tags=[tag]
+        )
         incident = IncidentPageFactory(
             parent=self.index,
             categories=[self.category],
@@ -537,7 +525,9 @@ class GetRelatedIncidentsTest(TestCase):
         # Related incidents should only be included once, for being related
         # and not a second time for being in the same category.
         IncidentPageFactory(parent=self.index)
-        related_incident = IncidentPageFactory(parent=self.index, categories=[self.category])
+        related_incident = IncidentPageFactory(
+            parent=self.index, categories=[self.category]
+        )
         incident = IncidentPageFactory(
             parent=self.index,
             categories=[self.category],
@@ -561,28 +551,28 @@ class GetRelatedIncidentsTest(TestCase):
         )
 
         closely_related = IncidentPageFactory(
-            title='Closely',
+            title="Closely",
             state=state,
             parent=self.index,
             tags=[tag1, tag2, tag3],
             categories=[self.category],
         )
         somewhat_related = IncidentPageFactory(
-            title='Somewhat',
+            title="Somewhat",
             state=state,
             parent=self.index,
             tags=[tag1, tag3],
             categories=[self.category],
         )
         slightly_related = IncidentPageFactory(
-            title='Slightly',
+            title="Slightly",
             state=state,
             parent=self.index,
             tags=[tag2, tag4],
-            categories=[self.category]
+            categories=[self.category],
         )
         IncidentPageFactory(
-            title='Not related',
+            title="Not related",
             state=None,
             parent=self.index,
             tags=[tag4],
@@ -592,8 +582,7 @@ class GetRelatedIncidentsTest(TestCase):
         related_incidents = subject.get_related_incidents()
 
         self.assertEqual(
-            related_incidents,
-            [closely_related, somewhat_related, slightly_related]
+            related_incidents, [closely_related, somewhat_related, slightly_related]
         )
 
     def test_get_related_incidents__ordered_by_descending_date(self):
@@ -601,34 +590,36 @@ class GetRelatedIncidentsTest(TestCase):
         tag2 = CommonTagFactory()
         tag3 = CommonTagFactory()
 
-        subject = IncidentPageFactory(parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category])
+        subject = IncidentPageFactory(
+            parent=self.index, tags=[tag1, tag2, tag3], categories=[self.category]
+        )
 
         closely_related_old = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
             state=None,
             categories=[self.category],
-            date='2016-01-01',
+            date="2016-01-01",
         )
         closely_related_new = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
             state=None,
             categories=[self.category],
-            date='2020-01-01',
+            date="2020-01-01",
         )
         closely_related_recent = IncidentPageFactory(
             parent=self.index,
             tags=[tag1, tag2, tag3],
             state=None,
             categories=[self.category],
-            date='2019-01-01',
+            date="2019-01-01",
         )
         related_incidents = subject.get_related_incidents()
 
         self.assertEqual(
             related_incidents,
-            [closely_related_new, closely_related_recent, closely_related_old]
+            [closely_related_new, closely_related_recent, closely_related_old],
         )
 
     def test_get_related_incidents__using_location(self):
@@ -642,47 +633,47 @@ class GetRelatedIncidentsTest(TestCase):
             parent=self.index,
             tags=[tag1, tag2, tag3],
             categories=[self.category],
-            city='Albuquerque',
+            city="Albuquerque",
             state=state,
         )
         close = IncidentPageFactory(
-            title='Close',
+            title="Close",
             parent=self.index,
             tags=[tag2],
             categories=[self.category],
-            city='Albuquerque',
+            city="Albuquerque",
             state=state,
         )
         nearby = IncidentPageFactory(
-            title='Nearby',
+            title="Nearby",
             parent=self.index,
             tags=[tag3],
             categories=[self.category],
-            city='Santa Fe',
+            city="Santa Fe",
             state=state,
         )
         far = IncidentPageFactory(
-            title='Far',
+            title="Far",
             parent=self.index,
             tags=[tag1],
             categories=[self.category],
-            city='Denver',
+            city="Denver",
             state=other_state,
         )
         nearby_no_tag_overlap = IncidentPageFactory(
-            title='Nearby, no tag overlap',
+            title="Nearby, no tag overlap",
             parent=self.index,
             tags=[tag4],
             categories=[self.category],
-            city='Santa Fe',
+            city="Santa Fe",
             state=state,
         )
         IncidentPageFactory(
-            title='No relation',
+            title="No relation",
             parent=self.index,
             tags=[tag4],
             categories=[self.category],
-            city='Denver',
+            city="Denver",
             state=other_state,
         )
         related_incidents = subject.get_related_incidents()
@@ -696,7 +687,7 @@ class RecentChargeStatusesMethod(TestCase):
         site = Site.objects.get()
         cls.index = IncidentIndexPageFactory(
             parent=site.root_page,
-            slug='incidents',
+            slug="incidents",
         )
 
         cls.incident1, cls.incident2, cls.incident3 = IncidentPageFactory.create_batch(
@@ -706,80 +697,82 @@ class RecentChargeStatusesMethod(TestCase):
 
         IncidentChargeWithUpdatesFactory(
             incident_page=cls.incident1,
-            status='UNKNOWN',
-            date='2022-01-01',
-            update1__status='CHARGES_PENDING',
-            update1__date='2022-01-02',
-            update2__status='CONVICTED',
-            update2__date='2022-01-03',
-            update3__status='PENDING_APPEAL',
-            update3__date='2022-01-04',
+            status="UNKNOWN",
+            date="2022-01-01",
+            update1__status="CHARGES_PENDING",
+            update1__date="2022-01-02",
+            update2__status="CONVICTED",
+            update2__date="2022-01-03",
+            update3__status="PENDING_APPEAL",
+            update3__date="2022-01-04",
         )
 
         IncidentChargeWithUpdatesFactory(
             incident_page=cls.incident1,
-            status='NOT_CHARGED',
-            date='2018-01-01',
-            update1__status='ACQUITTED',
-            update1__date='2019-01-02',
-            update2__status='PENDING_APPEAL',
-            update2__date='2020-01-03',
-            update3__status='UNKNOWN',
-            update3__date='2021-01-04',
+            status="NOT_CHARGED",
+            date="2018-01-01",
+            update1__status="ACQUITTED",
+            update1__date="2019-01-02",
+            update2__status="PENDING_APPEAL",
+            update2__date="2020-01-03",
+            update3__status="UNKNOWN",
+            update3__date="2021-01-04",
         )
 
         IncidentChargeFactory(
             incident_page=cls.incident2,
-            date='2022-01-01',
-            status='CONVICTED',
+            date="2022-01-01",
+            status="CONVICTED",
         )
         IncidentChargeWithUpdatesFactory(
             incident_page=cls.incident2,
-            status='NOT_CHARGED',
-            date='2018-01-01',
-            update1__status='ACQUITTED',
-            update1__date='2019-01-02',
-            update2__status='PENDING_APPEAL',
-            update2__date='2020-01-03',
-            update3__status='UNKNOWN',
-            update3__date='2021-01-04',
+            status="NOT_CHARGED",
+            date="2018-01-01",
+            update1__status="ACQUITTED",
+            update1__date="2019-01-02",
+            update2__status="PENDING_APPEAL",
+            update2__date="2020-01-03",
+            update3__status="UNKNOWN",
+            update3__date="2021-01-04",
         )
 
         IncidentChargeWithUpdatesFactory(
             incident_page=cls.incident3,
-            status='NOT_CHARGED',
-            date='2022-01-01',
-            update1__status='ACQUITTED',
-            update1__date='2019-01-02',
-            update2__status='PENDING_APPEAL',
-            update2__date='2020-01-03',
-            update3__status='UNKNOWN',
-            update3__date='2021-01-04',
+            status="NOT_CHARGED",
+            date="2022-01-01",
+            update1__status="ACQUITTED",
+            update1__date="2019-01-02",
+            update2__status="PENDING_APPEAL",
+            update2__date="2020-01-03",
+            update3__status="UNKNOWN",
+            update3__date="2021-01-04",
         )
 
     def test_returns_the_most_recent_statuses_on_all_charges(self):
-        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(pk=self.incident1.pk)
+        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(
+            pk=self.incident1.pk
+        )
 
         self.assertEqual(
             set(incident.most_recent_charge_statuses),
-            set(['PENDING_APPEAL', 'UNKNOWN'])
+            set(["PENDING_APPEAL", "UNKNOWN"]),
         )
 
     def test_returns_the_most_recent_statuses_without_updates(self):
-        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(pk=self.incident2.pk)
-
-        self.assertEqual(
-            incident.most_recent_charge_statuses,
-            ['CONVICTED', 'UNKNOWN']
+        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(
+            pk=self.incident2.pk
         )
 
-    def test_returns_the_most_recent_statuses_if_base_status_more_recent_than_updates(self):
-        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(pk=self.incident3.pk)
+        self.assertEqual(incident.most_recent_charge_statuses, ["CONVICTED", "UNKNOWN"])
 
-        self.assertEqual(
-            incident.most_recent_charge_statuses,
-            ['NOT_CHARGED']
+    def test_returns_the_most_recent_statuses_if_base_status_more_recent_than_updates(
+        self,
+    ):
+        incident = IncidentPage.objects.with_most_recent_status_of_charges().get(
+            pk=self.incident3.pk
         )
+
+        self.assertEqual(incident.most_recent_charge_statuses, ["NOT_CHARGED"])
 
 
 class RecentLegalOrderStatusesMethod(TestCase):
@@ -790,119 +783,120 @@ class RecentLegalOrderStatusesMethod(TestCase):
             parent=site.root_page,
         )
 
-        cls.incident1, cls.incident2, cls.incident3, cls.incident4 = \
+        cls.incident1, cls.incident2, cls.incident3, cls.incident4 = (
             IncidentPageFactory.create_batch(
                 4,
                 parent=cls.index,
             )
+        )
 
         LegalOrderWithUpdatesFactory(
             incident_page=cls.incident1,
             status=choices.LegalOrderStatus.UNKNOWN,
-            date='2022-01-01',
+            date="2022-01-01",
             update1__status=choices.LegalOrderStatus.PENDING,
-            update1__date='2022-01-02',
+            update1__date="2022-01-02",
             update2__status=choices.LegalOrderStatus.IGNORED,
-            update2__date='2022-01-03',
+            update2__date="2022-01-03",
             update3__status=choices.LegalOrderStatus.DROPPED,
-            update3__date='2022-01-04',
+            update3__date="2022-01-04",
         )
         LegalOrderWithUpdatesFactory(
             incident_page=cls.incident1,
             status=choices.LegalOrderStatus.UNKNOWN,
-            date='2022-01-01',
+            date="2022-01-01",
             update1__status=choices.LegalOrderStatus.UPHELD,
-            update1__date='2021-11-09',
+            update1__date="2021-11-09",
             update2__status=choices.LegalOrderStatus.CARRIED_OUT,
-            update2__date='2022-06-06',
+            update2__date="2022-06-06",
             update3__status=choices.LegalOrderStatus.QUASHED,
-            update3__date='2023-12-04',
+            update3__date="2023-12-04",
         )
 
         LegalOrderFactory(
             incident_page=cls.incident2,
             status=choices.LegalOrderStatus.PENDING,
-            date='2022-01-01',
+            date="2022-01-01",
         )
         LegalOrderWithUpdatesFactory(
             incident_page=cls.incident2,
             status=choices.LegalOrderStatus.UNKNOWN,
-            date='2022-01-01',
+            date="2022-01-01",
             update1__status=choices.LegalOrderStatus.UPHELD,
-            update1__date='2021-11-09',
+            update1__date="2021-11-09",
             update2__status=choices.LegalOrderStatus.CARRIED_OUT,
-            update2__date='2022-06-06',
+            update2__date="2022-06-06",
             update3__status=choices.LegalOrderStatus.QUASHED,
-            update3__date='2023-12-04',
+            update3__date="2023-12-04",
         )
 
         LegalOrderWithUpdatesFactory(
             incident_page=cls.incident3,
             status=choices.LegalOrderStatus.UNKNOWN,
-            date='2023-01-01',
+            date="2023-01-01",
             update1__status=choices.LegalOrderStatus.UPHELD,
-            update1__date='2021-11-09',
+            update1__date="2021-11-09",
             update2__status=choices.LegalOrderStatus.CARRIED_OUT,
-            update2__date='2022-06-06',
+            update2__date="2022-06-06",
             update3__status=choices.LegalOrderStatus.QUASHED,
-            update3__date='2022-12-04',
+            update3__date="2022-12-04",
         )
 
         LegalOrderWithUpdatesFactory(
             incident_page=cls.incident4,
             status=choices.LegalOrderStatus.UNKNOWN,
-            date='2023-01-01',
+            date="2023-01-01",
             update1__status=choices.LegalOrderStatus.UPHELD,
-            update1__date='2021-11-09',
+            update1__date="2021-11-09",
             update2__status=choices.LegalOrderStatus.CARRIED_OUT,
-            update2__date='2022-06-06',
+            update2__date="2022-06-06",
             update3__status=choices.LegalOrderStatus.PARTIALLY_UPHELD,
             update3__date=None,
         )
 
     def test_returns_most_recent_status_on_all_legal_orders(self):
-        incident = IncidentPage.objects \
-            .with_most_recent_status_of_legal_orders().get(
-                pk=self.incident1.pk
-            )
+        incident = IncidentPage.objects.with_most_recent_status_of_legal_orders().get(
+            pk=self.incident1.pk
+        )
         self.assertEqual(
             set(incident.most_recent_legal_order_statuses),
-            set([
-                choices.LegalOrderStatus.DROPPED,
-                choices.LegalOrderStatus.QUASHED,
-            ])
+            set(
+                [
+                    choices.LegalOrderStatus.DROPPED,
+                    choices.LegalOrderStatus.QUASHED,
+                ]
+            ),
         )
 
     def test_returns_the_most_recent_statuses_without_updates(self):
-        incident = IncidentPage.objects \
-            .with_most_recent_status_of_legal_orders().get(
-                pk=self.incident2.pk
-            )
+        incident = IncidentPage.objects.with_most_recent_status_of_legal_orders().get(
+            pk=self.incident2.pk
+        )
         self.assertEqual(
             set(incident.most_recent_legal_order_statuses),
-            set([
-                choices.LegalOrderStatus.PENDING,
-                choices.LegalOrderStatus.QUASHED,
-            ])
+            set(
+                [
+                    choices.LegalOrderStatus.PENDING,
+                    choices.LegalOrderStatus.QUASHED,
+                ]
+            ),
         )
 
     def test_handles_base_status_more_recent_than_updates(self):
         """if the base status is more recent than all status updates,
         it returns updated status for that legal order"""
-        incident = IncidentPage.objects \
-            .with_most_recent_status_of_legal_orders().get(
-                pk=self.incident3.pk
-            )
+        incident = IncidentPage.objects.with_most_recent_status_of_legal_orders().get(
+            pk=self.incident3.pk
+        )
         self.assertEqual(
             incident.most_recent_legal_order_statuses,
             [choices.LegalOrderStatus.QUASHED],
         )
 
     def test_handles_latest_updates_with_unknown_dates(self):
-        incident = IncidentPage.objects \
-            .with_most_recent_status_of_legal_orders().get(
-                pk=self.incident4.pk
-            )
+        incident = IncidentPage.objects.with_most_recent_status_of_legal_orders().get(
+            pk=self.incident4.pk
+        )
         self.assertEqual(
             incident.most_recent_legal_order_statuses,
             [choices.LegalOrderStatus.PARTIALLY_UPHELD],
@@ -915,7 +909,7 @@ class RecentlyUpdatedMethod(TestCase):
         site = Site.objects.get()
         cls.index = IncidentIndexPageFactory(
             parent=site.root_page,
-            slug='incidents',
+            slug="incidents",
         )
 
         cls.inc1, cls.inc2, cls.inc3 = IncidentPageFactory.create_batch(
@@ -955,8 +949,7 @@ class RecentlyUpdatedMethod(TestCase):
             page=self.inc1,
             date=timezone.now() - timedelta(days=15),
         )
-        incident = IncidentPage.objects.with_most_recent_update() \
-            .get(pk=self.inc1.pk)
+        incident = IncidentPage.objects.with_most_recent_update().get(pk=self.inc1.pk)
 
         self.assertEqual(incident.latest_update, update1.date)
 
@@ -966,7 +959,7 @@ class GetIncidentUpdatesTest(TestCase):
         site = Site.objects.get()
         self.index = IncidentIndexPageFactory(
             parent=site.root_page,
-            slug='incidents',
+            slug="incidents",
         )
 
     def test_get_incident_updates_sorted_by_asc_date(self):
@@ -988,7 +981,7 @@ class GetIncidentUpdatesTest(TestCase):
 
         self.assertEqual(
             list(incident_updates),
-            [incident_update3, incident_update1, incident_update2]
+            [incident_update3, incident_update1, incident_update2],
         )
 
     def test_get_incident_updates_sorted_by_desc_date(self):
@@ -1010,21 +1003,21 @@ class GetIncidentUpdatesTest(TestCase):
 
         self.assertEqual(
             list(incident_updates),
-            [incident_update2, incident_update1, incident_update3]
+            [incident_update2, incident_update1, incident_update3],
         )
 
 
 class IncidentPageDateRangeFilter(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.incident1 = IncidentPageFactory(date='2022-01-14')
-        cls.incident2 = IncidentPageFactory(date='2022-02-14')
-        cls.incident3 = IncidentPageFactory(date='2022-03-14')
+        cls.incident1 = IncidentPageFactory(date="2022-01-14")
+        cls.incident2 = IncidentPageFactory(date="2022-02-14")
+        cls.incident3 = IncidentPageFactory(date="2022-03-14")
 
     def test_filters_by_date_range(self):
         incidents = IncidentPage.objects.fuzzy_date_filter(
-            lower='2022-02-01',
-            upper='2022-03-01',
+            lower="2022-02-01",
+            upper="2022-03-01",
         )
         self.assertEqual(set(incidents), {self.incident2})
 
@@ -1037,27 +1030,27 @@ class IncidentPageDateRangeFilter(TestCase):
 
     def test_filters_by_date_range_unbounded_above(self):
         incidents = IncidentPage.objects.fuzzy_date_filter(
-            lower='2022-02-01',
+            lower="2022-02-01",
         )
         self.assertEqual(set(incidents), {self.incident2, self.incident3})
 
     def test_filters_by_date_range_unbounded_below(self):
         incidents = IncidentPage.objects.fuzzy_date_filter(
-            upper='2022-02-28',
+            upper="2022-02-28",
         )
         self.assertEqual(set(incidents), {self.incident2, self.incident1})
 
     def test_filters_by_date_range_with_boundary_points_included(self):
         incidents = IncidentPage.objects.fuzzy_date_filter(
-            lower='2022-01-14',
-            upper='2022-02-14',
+            lower="2022-01-14",
+            upper="2022-02-14",
         )
         self.assertEqual(set(incidents), {self.incident2, self.incident1})
 
     def test_validates_dates_passed_to_it(self):
         with self.assertRaises(ValueError):
             IncidentPage.objects.fuzzy_date_filter(
-                lower='QWERTY',
+                lower="QWERTY",
             )
 
 
@@ -1065,19 +1058,19 @@ class IncidentPageFuzzyDateRangeFilter(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.incident1 = IncidentPageFactory(
-            title='January',
+            title="January",
             exact_date_unknown=True,
-            date='2022-01-14',
+            date="2022-01-14",
         )
         cls.incident2 = IncidentPageFactory(
-            title='February',
+            title="February",
             exact_date_unknown=True,
-            date='2022-02-14',
+            date="2022-02-14",
         )
         cls.incident3 = IncidentPageFactory(
-            title='March',
+            title="March",
             exact_date_unknown=True,
-            date='2022-03-14',
+            date="2022-03-14",
         )
 
     def test_filters_inexact_dates_by_any_day_in_same_month(self):
@@ -1088,7 +1081,7 @@ class IncidentPageFuzzyDateRangeFilter(TestCase):
             with self.subTest(day):
                 incidents = IncidentPage.objects.fuzzy_date_filter(
                     lower=day,
-                    upper='2022-03-05',
+                    upper="2022-03-05",
                 )
                 self.assertEqual(set(incidents), {self.incident2, self.incident3})
 
@@ -1097,19 +1090,19 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
     def setUp(self):
         super().setUp()
         self.login()
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        self.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': self.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": self.home_page,
+            },
         )
         if not created:
             site.root_page = self.home_page
@@ -1126,89 +1119,120 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
         incident_page = IncidentPageFactory(parent=self.category)
 
-        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(incident_page.pk,))
+        preview_url = reverse(
+            "wagtailadmin_pages:preview_on_edit", args=(incident_page.pk,)
+        )
         response = self.client.post(
             preview_url,
-            nested_form_data({
-                'title': 'The Incident',
-                'slug': 'the-incident',
-                'date': '2019-04-16',
-                'body': streamfield([
-                    ('raw_html', '<p>Lorem ipsum dolor sit amet</p>'),
-                    ('rich_text', rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag))),
-                ]),
-                'state': 'null',
-                'targets': 'null',
-                'targeted_institutions': 'null',
-                'targeted_journalists': inline_formset([]),
-                'tags': 'null',
-                'charges': inline_formset([]),
-                'legal_orders': inline_formset([]),
-                'arresting_authority': 'null',
-                'venue': 'null',
-                'target_nationality': 'null',
-                'targets_whose_communications_were_obtained': 'null',
-                'workers_whose_communications_were_obtained': 'null',
-                'politicians_or_public_figures_involved': 'null',
-                'related_incidents': 'null',
-                'updates': inline_formset([]),
-                'links': inline_formset([]),
-                'categories': inline_formset([
-                    {'category': str(self.category.pk)},
-                ]),
-                'authors': inline_formset([
-                    {'author': str(self.author.pk)},
-                ]),
-                'equipment_seized': inline_formset([]),
-                'equipment_broken': inline_formset([]),
-            })
+            nested_form_data(
+                {
+                    "title": "The Incident",
+                    "slug": "the-incident",
+                    "date": "2019-04-16",
+                    "body": streamfield(
+                        [
+                            ("raw_html", "<p>Lorem ipsum dolor sit amet</p>"),
+                            (
+                                "rich_text",
+                                rich_text(
+                                    "<p>Lorem {} dolor sit amet</p>".format(stats_tag)
+                                ),
+                            ),
+                        ]
+                    ),
+                    "state": "null",
+                    "targets": "null",
+                    "targeted_institutions": "null",
+                    "targeted_journalists": inline_formset([]),
+                    "tags": "null",
+                    "charges": inline_formset([]),
+                    "legal_orders": inline_formset([]),
+                    "arresting_authority": "null",
+                    "venue": "null",
+                    "target_nationality": "null",
+                    "targets_whose_communications_were_obtained": "null",
+                    "workers_whose_communications_were_obtained": "null",
+                    "politicians_or_public_figures_involved": "null",
+                    "related_incidents": "null",
+                    "updates": inline_formset([]),
+                    "links": inline_formset([]),
+                    "categories": inline_formset(
+                        [
+                            {"category": str(self.category.pk)},
+                        ]
+                    ),
+                    "authors": inline_formset(
+                        [
+                            {"author": str(self.author.pk)},
+                        ]
+                    ),
+                    "equipment_seized": inline_formset([]),
+                    "equipment_broken": inline_formset([]),
+                }
+            ),
         )
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
-            response.content.decode(),
-            {'is_valid': True, 'is_available': True}
+            response.content.decode(), {"is_valid": True, "is_available": True}
         )
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page'], incident_page)
+        self.assertEqual(response.context["page"], incident_page)
 
     def test_can_create_incident_page(self):
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
-        self.assertCanCreate(self.index_page, IncidentPage, nested_form_data({
-            'title': 'The Incident',
-            'slug': 'the-incident',
-            'date': '2019-04-16',
-            'body': streamfield([
-                ('raw_html', '<p>Lorem ipsum dolor sit amet</p>'),
-                ('rich_text', rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag))),
-            ]),
-            'state': 'null',
-            'targets': 'null',
-            'targeted_institutions': 'null',
-            'targeted_journalists': inline_formset([]),
-            'tags': 'null',
-            'charges': inline_formset([]),
-            'legal_orders': inline_formset([]),
-            'arresting_authority': 'null',
-            'venue': 'null',
-            'target_nationality': 'null',
-            'targets_whose_communications_were_obtained': 'null',
-            'workers_whose_communications_were_obtained': 'null',
-            'politicians_or_public_figures_involved': 'null',
-            'related_incidents': 'null',
-            'updates': inline_formset([]),
-            'links': inline_formset([]),
-            'categories': inline_formset([
-                {'category': str(self.category.pk)},
-            ]),
-            'authors': inline_formset([
-                {'author': str(self.author.pk)},
-            ]),
-            'equipment_seized': inline_formset([]),
-            'equipment_broken': inline_formset([]),
-        }))
+        self.assertCanCreate(
+            self.index_page,
+            IncidentPage,
+            nested_form_data(
+                {
+                    "title": "The Incident",
+                    "slug": "the-incident",
+                    "date": "2019-04-16",
+                    "body": streamfield(
+                        [
+                            ("raw_html", "<p>Lorem ipsum dolor sit amet</p>"),
+                            (
+                                "rich_text",
+                                rich_text(
+                                    "<p>Lorem {} dolor sit amet</p>".format(stats_tag)
+                                ),
+                            ),
+                        ]
+                    ),
+                    "state": "null",
+                    "targets": "null",
+                    "targeted_institutions": "null",
+                    "targeted_journalists": inline_formset([]),
+                    "tags": "null",
+                    "charges": inline_formset([]),
+                    "legal_orders": inline_formset([]),
+                    "arresting_authority": "null",
+                    "venue": "null",
+                    "target_nationality": "null",
+                    "targets_whose_communications_were_obtained": "null",
+                    "workers_whose_communications_were_obtained": "null",
+                    "politicians_or_public_figures_involved": "null",
+                    "related_incidents": "null",
+                    "updates": inline_formset([]),
+                    "links": inline_formset([]),
+                    "categories": inline_formset(
+                        [
+                            {"category": str(self.category.pk)},
+                        ]
+                    ),
+                    "authors": inline_formset(
+                        [
+                            {"author": str(self.author.pk)},
+                        ]
+                    ),
+                    "equipment_seized": inline_formset([]),
+                    "equipment_broken": inline_formset([]),
+                }
+            ),
+        )
 
-        incident_page = IncidentPage.objects.get(slug='the-incident')
+        incident_page = IncidentPage.objects.get(slug="the-incident")
         response = self.client.get(incident_page.url)
         self.assertEqual(response.status_code, 200)
 
@@ -1216,19 +1240,19 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
 class TestTopicPage(WagtailPageTestCase):
     def setUp(self):
         self.login()
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        self.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': self.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": self.home_page,
+            },
         )
         if not created:
             site.root_page = self.home_page
@@ -1244,84 +1268,171 @@ class TestTopicPage(WagtailPageTestCase):
     def test_can_create_topic_page(self):
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
 
-        form_data = nested_form_data({
-            'title': 'Vampires',
-            'slug': 'vampires',
-            'superheading': 'The Children of the Night',
-            'description': rich_text('<p>Creatures feeding on vital essence.</p>'),
-            'text_align': 'bottom-center',
-            'text_color': 'black',
-            'photo_caption': rich_text('<p>Possibly some fangs.</p>'),
-            'photo_credit': 'Professor Abraham Van Helsing',
-            'photo_credit_link': 'https://example.com',
-            'content': streamfield([
-                ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
-                ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
-                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
-            ]),
-            'sidebar': streamfield([
-                ('heading_2', nested_form_data({'content': 'Vampire Sightings 2020'})),
-                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
-                ('button', nested_form_data({
-                    'text': 'Donate blood',
-                    'url': 'https://example.com',
-                })),
-                ('stat_table', streamfield([
-                    ('value', nested_form_data({'header': 'Garlic Supplies', 'value': '6 heads'})),
-                    ('value', nested_form_data({'header': 'Recent attacks', 'value': stats_tag})),
-                ])),
-            ]),
-            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk}),
-            'incident_index_page': self.index_page.pk,
-            'incidents_per_module': 4,
-            'layout': 'by_category',
-        })
+        form_data = nested_form_data(
+            {
+                "title": "Vampires",
+                "slug": "vampires",
+                "superheading": "The Children of the Night",
+                "description": rich_text("<p>Creatures feeding on vital essence.</p>"),
+                "text_align": "bottom-center",
+                "text_color": "black",
+                "photo_caption": rich_text("<p>Possibly some fangs.</p>"),
+                "photo_credit": "Professor Abraham Van Helsing",
+                "photo_credit_link": "https://example.com",
+                "content": streamfield(
+                    [
+                        (
+                            "heading_2",
+                            nested_form_data({"content": "What is a Vampire?"}),
+                        ),
+                        (
+                            "raw_html",
+                            '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>',
+                        ),
+                        ("rich_text", rich_text("<p><i>Lorem ipsum</i></p>")),
+                    ]
+                ),
+                "sidebar": streamfield(
+                    [
+                        (
+                            "heading_2",
+                            nested_form_data({"content": "Vampire Sightings 2020"}),
+                        ),
+                        ("rich_text", rich_text("<p><i>Lorem ipsum</i></p>")),
+                        (
+                            "button",
+                            nested_form_data(
+                                {
+                                    "text": "Donate blood",
+                                    "url": "https://example.com",
+                                }
+                            ),
+                        ),
+                        (
+                            "stat_table",
+                            streamfield(
+                                [
+                                    (
+                                        "value",
+                                        nested_form_data(
+                                            {
+                                                "header": "Garlic Supplies",
+                                                "value": "6 heads",
+                                            }
+                                        ),
+                                    ),
+                                    (
+                                        "value",
+                                        nested_form_data(
+                                            {
+                                                "header": "Recent attacks",
+                                                "value": stats_tag,
+                                            }
+                                        ),
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ]
+                ),
+                "incident_tag": json.dumps(
+                    {"title": self.tag.title, "pk": self.tag.pk}
+                ),
+                "incident_index_page": self.index_page.pk,
+                "incidents_per_module": 4,
+                "layout": "by_category",
+            }
+        )
 
         self.assertCanCreate(self.home_page, TopicPage, form_data)
-        topic_page = TopicPage.objects.get(slug='vampires')
+        topic_page = TopicPage.objects.get(slug="vampires")
         response = self.client.get(topic_page.url)
         self.assertEqual(response.status_code, 200)
 
     def test_can_preview_topic_page(self):
         topic_page = TopicPageFactory(
-            parent=self.home_page,
-            incident_index_page=self.index_page
+            parent=self.home_page, incident_index_page=self.index_page
         )
-        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(topic_page.pk,))
+        preview_url = reverse(
+            "wagtailadmin_pages:preview_on_edit", args=(topic_page.pk,)
+        )
 
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
-        form_data = nested_form_data({
-            'title': 'Vampires',
-            'slug': 'vampires',
-            'superheading': 'The Children of the Night',
-            'description': rich_text('<p>Creatures feeding on vital essence.</p>'),
-            'text_align': 'bottom-center',
-            'text_color': 'black',
-            'photo_caption': rich_text('<p>Possibly some fangs.</p>'),
-            'photo_credit': 'Professor Abraham Van Helsing',
-            'photo_credit_link': 'https://example.com',
-            'content': streamfield([
-                ('heading_2', nested_form_data({'content': 'What is a Vampire?'})),
-                ('raw_html', '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>'),
-                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
-            ]),
-            'sidebar': streamfield([
-                ('heading_2', nested_form_data({'content': 'Vampire Sightings 2020'})),
-                ('rich_text', rich_text('<p><i>Lorem ipsum</i></p>')),
-                ('button', nested_form_data({
-                    'text': 'Donate blood',
-                    'url': 'https://example.com',
-                })),
-                ('stat_table', streamfield([
-                    ('value', nested_form_data({'header': 'Garlic Supplies', 'value': '6 heads'})),
-                    ('value', nested_form_data({'header': 'Recent attacks', 'value': stats_tag})),
-                ])),
-            ]),
-            'incident_tag': json.dumps({'title': self.tag.title, 'pk': self.tag.pk}),
-            'incident_index_page': self.index_page.pk,
-            'incidents_per_module': 4,
-            'layout': 'by_category',
-        })
+        form_data = nested_form_data(
+            {
+                "title": "Vampires",
+                "slug": "vampires",
+                "superheading": "The Children of the Night",
+                "description": rich_text("<p>Creatures feeding on vital essence.</p>"),
+                "text_align": "bottom-center",
+                "text_color": "black",
+                "photo_caption": rich_text("<p>Possibly some fangs.</p>"),
+                "photo_credit": "Professor Abraham Van Helsing",
+                "photo_credit_link": "https://example.com",
+                "content": streamfield(
+                    [
+                        (
+                            "heading_2",
+                            nested_form_data({"content": "What is a Vampire?"}),
+                        ),
+                        (
+                            "raw_html",
+                            '<figure><img src="/media/example.jpg"><figcaption>A vampire at sunset</figcaption></figure>',
+                        ),
+                        ("rich_text", rich_text("<p><i>Lorem ipsum</i></p>")),
+                    ]
+                ),
+                "sidebar": streamfield(
+                    [
+                        (
+                            "heading_2",
+                            nested_form_data({"content": "Vampire Sightings 2020"}),
+                        ),
+                        ("rich_text", rich_text("<p><i>Lorem ipsum</i></p>")),
+                        (
+                            "button",
+                            nested_form_data(
+                                {
+                                    "text": "Donate blood",
+                                    "url": "https://example.com",
+                                }
+                            ),
+                        ),
+                        (
+                            "stat_table",
+                            streamfield(
+                                [
+                                    (
+                                        "value",
+                                        nested_form_data(
+                                            {
+                                                "header": "Garlic Supplies",
+                                                "value": "6 heads",
+                                            }
+                                        ),
+                                    ),
+                                    (
+                                        "value",
+                                        nested_form_data(
+                                            {
+                                                "header": "Recent attacks",
+                                                "value": stats_tag,
+                                            }
+                                        ),
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ]
+                ),
+                "incident_tag": json.dumps(
+                    {"title": self.tag.title, "pk": self.tag.pk}
+                ),
+                "incident_index_page": self.index_page.pk,
+                "incidents_per_module": 4,
+                "layout": "by_category",
+            }
+        )
 
         response = self.client.post(
             preview_url,
@@ -1329,46 +1440,56 @@ class TestTopicPage(WagtailPageTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
-            response.content.decode(),
-            {'is_valid': True, 'is_available': True}
+            response.content.decode(), {"is_valid": True, "is_available": True}
         )
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page'], topic_page)
+        self.assertEqual(response.context["page"], topic_page)
 
     def test_sorts_incidents_by_incident_date_descending(self):
         topic_page = TopicPageFactory(
-            parent=self.home_page,
-            incident_index_page=self.index_page
+            parent=self.home_page, incident_index_page=self.index_page
         )
-        incident1 = IncidentPageFactory(date=date(2020, 1, 2), tags=[topic_page.incident_tag])
-        incident2 = IncidentPageFactory(date=date(2020, 1, 3), tags=[topic_page.incident_tag])
-        incident3 = IncidentPageFactory(date=date(2020, 1, 1), tags=[topic_page.incident_tag])
+        incident1 = IncidentPageFactory(
+            date=date(2020, 1, 2), tags=[topic_page.incident_tag]
+        )
+        incident2 = IncidentPageFactory(
+            date=date(2020, 1, 3), tags=[topic_page.incident_tag]
+        )
+        incident3 = IncidentPageFactory(
+            date=date(2020, 1, 1), tags=[topic_page.incident_tag]
+        )
 
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
 
         self.assertEqual(
-            list(topic_page.get_context(request)['entries_page']),
-            [incident2, incident1, incident3]
+            list(topic_page.get_context(request)["entries_page"]),
+            [incident2, incident1, incident3],
         )
 
     def test_filters_incidents_by_date_range(self):
         topic_page = TopicPageFactory(
             parent=self.home_page,
             incident_index_page=self.index_page,
-            start_date='2021-01-15',
-            end_date='2021-02-15',
+            start_date="2021-01-15",
+            end_date="2021-02-15",
         )
         IncidentPageFactory(date=date(2021, 1, 2), tags=[topic_page.incident_tag])
-        incident1 = IncidentPageFactory(date=date(2021, 1, 2), exact_date_unknown=True, tags=[topic_page.incident_tag])
-        incident2 = IncidentPageFactory(date=date(2021, 2, 3), tags=[topic_page.incident_tag])
+        incident1 = IncidentPageFactory(
+            date=date(2021, 1, 2),
+            exact_date_unknown=True,
+            tags=[topic_page.incident_tag],
+        )
+        incident2 = IncidentPageFactory(
+            date=date(2021, 2, 3), tags=[topic_page.incident_tag]
+        )
         IncidentPageFactory(date=date(2021, 3, 4), tags=[topic_page.incident_tag])
 
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
 
         self.assertEqual(
-            list(topic_page.get_context(request)['entries_page']),
-            [incident2, incident1]
+            list(topic_page.get_context(request)["entries_page"]),
+            [incident2, incident1],
         )
 
     def test_topic_page_photo_attribution(self):
@@ -1398,11 +1519,13 @@ class IncidentPageQueriesTest(TestCase):
         image = CustomImageFactory.create(
             file__width=800,
             file__height=600,
-            file__color='red',
+            file__color="red",
         )
 
         author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
-        cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(3, parent=root_page)
+        cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(
+            3, parent=root_page
+        )
 
         incidents = IncidentPageFactory.create_batch(
             50,
@@ -1434,7 +1557,7 @@ class IncidentPageQueriesTest(TestCase):
 
             # Pre-generate renditions to avoid INSERT queries that we
             # don't want to count.
-            incident.teaser_image.get_rendition('fill-1330x880')
+            incident.teaser_image.get_rendition("fill-1330x880")
 
     def test_api_selects_and_prefetches(self):
         # 1 base query, plus 20 prefetches.
@@ -1455,68 +1578,59 @@ class IncidentPageTests(TestCase):
     def test_computes_unique_date(self):
         incident1 = IncidentPage(
             date=date(2020, 6, 16),
-            title='Test Incident 1',
+            title="Test Incident 1",
         )
         incident2 = IncidentPage(
             date=date(2020, 6, 16),
-            title='Test Incident 2',
+            title="Test Incident 2",
         )
         self.incident_index.add_child(instance=incident1)
         self.incident_index.add_child(instance=incident2)
 
-        UNIQUE_DATE_FORMAT = r'\d{4}-\d{2}-\d{2}-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+        UNIQUE_DATE_FORMAT = r"\d{4}-\d{2}-\d{2}-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
 
-        self.assertRegex(
-            incident1.unique_date,
-            UNIQUE_DATE_FORMAT
-        )
+        self.assertRegex(incident1.unique_date, UNIQUE_DATE_FORMAT)
 
-        self.assertRegex(
-            incident2.unique_date,
-            UNIQUE_DATE_FORMAT
-        )
+        self.assertRegex(incident2.unique_date, UNIQUE_DATE_FORMAT)
 
-        self.assertNotEqual(
-            incident1.unique_date,
-            incident2.unique_date
-        )
+        self.assertNotEqual(incident1.unique_date, incident2.unique_date)
 
     def test_looks_up_latitude_longitude_from_city_and_state(self):
-        incident_index = IncidentIndexPageFactory.build(title='A title')
+        incident_index = IncidentIndexPageFactory.build(title="A title")
         self.site.root_page.add_child(instance=incident_index)
 
         united_states = Country.objects.create(
             isocode=1,
-            iso='US',
-            iso3='USA',
-            fips='US',
-            name='United States',
-            capital='Washington',
+            iso="US",
+            iso3="USA",
+            fips="US",
+            name="United States",
+            capital="Washington",
             geonameid=1,
         )
 
         Region.objects.create(
             isocode=united_states,
-            regcode='AK2',
-            name='Alaska 2',
+            regcode="AK2",
+            name="Alaska 2",
             geonameid=1,
         )
         state = StateFactory(
-            name='Alaska 2',
-            abbreviation='AK2',
+            name="Alaska 2",
+            abbreviation="AK2",
         )
 
         geoname = GeoName.objects.create(
             geonameid=1,
-            name='City X',
+            name="City X",
             latitude=1.0,
             longitude=2.0,
             isocode=united_states,
-            regcode='AK2',
+            regcode="AK2",
         )
         incident = IncidentPage(
             date=date.today(),
-            title='Incident with Geodata',
+            title="Incident with Geodata",
             city=geoname.name,
             state=state,
         )
@@ -1532,17 +1646,17 @@ class IncidentPageTests(TestCase):
         inc.targeted_institutions = [inst]
         inc.save()
         tj1 = TargetedJournalistFactory(
-            journalist__title='Alex Aardvark',
+            journalist__title="Alex Aardvark",
             institution=None,
             incident=inc,
         )
         tj2 = TargetedJournalistFactory(
-            journalist__title='Benny Bird',
+            journalist__title="Benny Bird",
             incident=inc,
         )
         self.assertEqual(
             inc.get_all_targets_for_display,
-            f'{tj1.journalist.title}, {tj2.journalist.title} ({tj2.institution.title}), {inst.title}'
+            f"{tj1.journalist.title}, {tj2.journalist.title} ({tj2.institution.title}), {inst.title}",
         )
 
     def test_gets_unified_list_of_all_targets_as_objects(self):
@@ -1553,45 +1667,45 @@ class IncidentPageTests(TestCase):
         inc.targeted_institutions = [inst]
         inc.save()
         TargetedJournalistFactory(
-            journalist__title='Alex Aardvark',
+            journalist__title="Alex Aardvark",
             institution=None,
             incident=inc,
         )
         tj2 = TargetedJournalistFactory(
-            journalist__title='Benny Bird',
+            journalist__title="Benny Bird",
             incident=inc,
         )
-        self.assertEqual(inc.get_all_targets_for_linking[0].text, 'Alex Aardvark')
+        self.assertEqual(inc.get_all_targets_for_linking[0].text, "Alex Aardvark")
         self.assertEqual(
             inc.get_all_targets_for_linking[0].url_arguments,
-            'targeted_journalists=Alex Aardvark'
+            "targeted_journalists=Alex Aardvark",
         )
         self.assertEqual(
             inc.get_all_targets_for_linking[1].text,
-            f'Benny Bird ({tj2.institution.title})',
+            f"Benny Bird ({tj2.institution.title})",
         )
         self.assertEqual(
             inc.get_all_targets_for_linking[1].url_arguments,
-            'targeted_journalists=Benny Bird'
+            "targeted_journalists=Benny Bird",
         )
         self.assertEqual(inc.get_all_targets_for_linking[2].text, inst.title)
         self.assertEqual(
             inc.get_all_targets_for_linking[2].url_arguments,
-            f'targeted_institutions={inst.title}'
+            f"targeted_institutions={inst.title}",
         )
 
     def test_get_meta_image(self):
         search_image = CustomImageFactory.create(
             file__width=333,
             file__height=444,
-            file__color='orange',
-            collection__name='Photos',
+            file__color="orange",
+            collection__name="Photos",
         )
         tease_image = CustomImageFactory.create(
             file__width=333,
             file__height=444,
-            file__color='green',
-            collection__name='Photos',
+            file__color="green",
+            collection__name="Photos",
         )
         inc1 = IncidentPageFactory(
             parent=self.incident_index,
@@ -1601,39 +1715,27 @@ class IncidentPageTests(TestCase):
             parent=self.incident_index,
             search_image=search_image,
         )
-        self.assertEqual(
-            inc1.get_meta_image(),
-            inc1.teaser_image
-        )
-        self.assertEqual(
-            inc2.get_meta_image(),
-            inc2.search_image
-        )
+        self.assertEqual(inc1.get_meta_image(), inc1.teaser_image)
+        self.assertEqual(inc2.get_meta_image(), inc2.search_image)
 
     def test_get_meta_description(self):
         inc1 = IncidentPageFactory(
             parent=self.incident_index,
-            search_description='test description 1',
+            search_description="test description 1",
         )
         inc2 = IncidentPageFactory(
             parent=self.incident_index,
-            teaser='test description 2',
+            teaser="test description 2",
         )
-        self.assertEqual(
-            inc1.get_meta_description(),
-            inc1.search_description
-        )
-        self.assertEqual(
-            inc2.get_meta_description(),
-            inc2.teaser
-        )
+        self.assertEqual(inc1.get_meta_description(), inc1.search_description)
+        self.assertEqual(inc2.get_meta_description(), inc2.teaser)
 
 
 def create_prior_restraint_incident(
-        *,
-        page_title='Prior restraint incident',
-        status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[0][0],
-        mistakenly_released_materials=True,
+    *,
+    page_title="Prior restraint incident",
+    status_of_prior_restraint=choices.STATUS_OF_PRIOR_RESTRAINT[0][0],
+    mistakenly_released_materials=True,
 ):
     # Get default site
     site = Site.objects.get(is_default_site=True)
@@ -1642,7 +1744,7 @@ def create_prior_restraint_incident(
     root = site.root_page
 
     category = CategoryPageFactory(
-        slug='prior-restraint',
+        slug="prior-restraint",
         parent=root,
     )
 

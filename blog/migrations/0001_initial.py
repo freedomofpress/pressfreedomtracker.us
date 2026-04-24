@@ -10,38 +10,108 @@ import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('wagtailcore', '0033_remove_golive_expiry_help_text'),
+        ("wagtailcore", "0033_remove_golive_expiry_help_text"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BlogIndexPage',
+            name="BlogIndexPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('body', wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock())))),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                (
+                    "body",
+                    wagtail.fields.StreamField(
+                        (
+                            (
+                                "rich_text",
+                                wagtail.blocks.RichTextBlock(
+                                    icon="doc-full", label="Rich Text"
+                                ),
+                            ),
+                            ("image", wagtail.images.blocks.ImageChooserBlock()),
+                            ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                        )
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.CreateModel(
-            name='BlogPage',
+            name="BlogPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('publication_datetime', models.DateTimeField(help_text='Past or future date of publication')),
-                ('body', wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock())))),
-                ('teaser_text', wagtail.fields.RichTextField(blank=True, null=True)),
-                ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailcore.Page')),
-                ('organization', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailcore.Page')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                (
+                    "publication_datetime",
+                    models.DateTimeField(
+                        help_text="Past or future date of publication"
+                    ),
+                ),
+                (
+                    "body",
+                    wagtail.fields.StreamField(
+                        (
+                            (
+                                "rich_text",
+                                wagtail.blocks.RichTextBlock(
+                                    icon="doc-full", label="Rich Text"
+                                ),
+                            ),
+                            ("image", wagtail.images.blocks.ImageChooserBlock()),
+                            ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                        )
+                    ),
+                ),
+                ("teaser_text", wagtail.fields.RichTextField(blank=True, null=True)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                (
+                    "organization",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="wagtailcore.Page",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
     ]

@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0096_add_verdict_issued_status_choice'),
+        ("incident", "0096_add_verdict_issued_status_choice"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='detention_date',
-            field=models.DateField(blank=True, null=True, verbose_name='Detention date'),
+            model_name="incidentpage",
+            name="detention_date",
+            field=models.DateField(
+                blank=True, null=True, verbose_name="Detention date"
+            ),
         ),
     ]

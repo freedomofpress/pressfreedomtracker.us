@@ -7,26 +7,42 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0006_remove_incidentpage_state'),
+        ("incident", "0006_remove_incidentpage_state"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='State',
+            name="State",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
-                ('abbreviation', models.CharField(blank=True, max_length=10, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                (
+                    "abbreviation",
+                    models.CharField(blank=True, max_length=10, null=True),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='incidentpage',
-            name='state',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='incident.State', help_text='Full name of the state. Abbreviations can be added in the Snippets editor.'),
+            model_name="incidentpage",
+            name="state",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="incident.State",
+                help_text="Full name of the state. Abbreviations can be added in the Snippets editor.",
+            ),
         ),
     ]

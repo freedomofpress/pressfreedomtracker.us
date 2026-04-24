@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0034_incidentauthor'),
+        ("incident", "0034_incidentauthor"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='primary_video',
-            field=models.URLField(blank=True, help_text='YouTube or Vimeo URL', null=True),
+            model_name="incidentpage",
+            name="primary_video",
+            field=models.URLField(
+                blank=True, help_text="YouTube or Vimeo URL", null=True
+            ),
         ),
     ]

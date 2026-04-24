@@ -7,15 +7,18 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0002_auto_20170517_1445'),
+        ("home", "0002_auto_20170517_1445"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='homepage',
-            name='about',
-            field=wagtail.fields.RichTextField(blank=True, help_text='Headings and line breaks will be stripped', null=True),
+            model_name="homepage",
+            name="about",
+            field=wagtail.fields.RichTextField(
+                blank=True,
+                help_text="Headings and line breaks will be stripped",
+                null=True,
+            ),
         ),
     ]

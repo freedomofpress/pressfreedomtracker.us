@@ -5,15 +5,30 @@ import incident.models.incident_page
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0036_incidentpage_suppress_footer'),
+        ("incident", "0036_incidentpage_suppress_footer"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='subpoena_statuses',
-            field=incident.models.incident_page.ChoiceArrayField(base_field=models.CharField(choices=[('PENDING', 'pending'), ('DROPPED', 'dropped'), ('QUASHED', 'quashed'), ('UPHELD', 'upheld'), ('CARRIED_OUT', 'carried out'), ('IGNORED', 'ignored')], max_length=255), blank=True, null=True, size=None, verbose_name='Subpoena statuses'),
+            model_name="incidentpage",
+            name="subpoena_statuses",
+            field=incident.models.incident_page.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("PENDING", "pending"),
+                        ("DROPPED", "dropped"),
+                        ("QUASHED", "quashed"),
+                        ("UPHELD", "upheld"),
+                        ("CARRIED_OUT", "carried out"),
+                        ("IGNORED", "ignored"),
+                    ],
+                    max_length=255,
+                ),
+                blank=True,
+                null=True,
+                size=None,
+                verbose_name="Subpoena statuses",
+            ),
         ),
     ]

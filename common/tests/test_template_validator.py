@@ -7,20 +7,20 @@ from common.validators import TemplateValidator
 class TemplateValidatorTest(TestCase):
     def test_empty_template(self):
         validator = TemplateValidator()
-        value = ''
+        value = ""
         validator(value)
 
     def test_syntax_error(self):
         validator = TemplateValidator()
-        value = '{{ }}'
+        value = "{{ }}"
         with self.assertRaises(ValidationError) as cm:
             validator(value)
 
-        self.assertEqual(cm.exception.message, 'Empty variable tag on line 1')
+        self.assertEqual(cm.exception.message, "Empty variable tag on line 1")
 
     def test_invalid_tag_syntax(self):
         validator = TemplateValidator()
-        value = '{% now %}'
+        value = "{% now %}"
         with self.assertRaises(ValidationError) as cm:
             validator(value)
 
@@ -33,8 +33,10 @@ class TemplateValidatorTest(TestCase):
 
     def test_disallowed_builtin_tag(self):
         validator = TemplateValidator()
-        value = '{% load statistics_tags %}'
-        expected_msg = '{} tags are not allowed'.format(', '.join(TemplateValidator.disallowed_tags))
+        value = "{% load statistics_tags %}"
+        expected_msg = "{} tags are not allowed".format(
+            ", ".join(TemplateValidator.disallowed_tags)
+        )
         with self.assertRaises(ValidationError) as cm:
             validator(value)
 
@@ -42,7 +44,7 @@ class TemplateValidatorTest(TestCase):
 
     def test_allows_statistics_tag(self):
         validator = TemplateValidator()
-        value = '{% num_incidents %}'
+        value = "{% num_incidents %}"
         validator(value)
 
     def test_should_unescape_html_quotations(self):

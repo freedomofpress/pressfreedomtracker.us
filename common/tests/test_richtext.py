@@ -14,7 +14,7 @@ class RichTextCategoryPageLinksTests(TestCase):
 
         self.category = CategoryPageFactory(
             parent=self.home_page,
-            page_symbol='arrest',
+            page_symbol="arrest",
         )
 
     def test_applies_category_specific_css_class(self):
@@ -27,4 +27,4 @@ class RichTextCategoryPageLinksTests(TestCase):
 
     def test_leaves_non_category_links_unchanged(self):
         raw = f'<a id="{self.home_page.pk}" linktype="page">Home</a>'
-        self.assertNotIn('category', richtext(raw))
+        self.assertNotIn("category", richtext(raw))

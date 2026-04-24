@@ -7,24 +7,59 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0066_auto_20200212_1734'),
+        ("common", "0066_auto_20200212_1734"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FooterLogos',
+            name="FooterLogos",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('logo_url', models.CharField(blank=True, help_text='A URL or path for this logo to link to.', max_length=255)),
-                ('footer', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='footer_logos', to='common.FooterSettings')),
-                ('logo_image', models.ForeignKey(blank=True, help_text='A white logo with a transparent background, ideally PNG format', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', validators=[common.validators.validate_image_format])),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                (
+                    "logo_url",
+                    models.CharField(
+                        blank=True,
+                        help_text="A URL or path for this logo to link to.",
+                        max_length=255,
+                    ),
+                ),
+                (
+                    "footer",
+                    modelcluster.fields.ParentalKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="footer_logos",
+                        to="common.FooterSettings",
+                    ),
+                ),
+                (
+                    "logo_image",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="A white logo with a transparent background, ideally PNG format",
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="common.CustomImage",
+                        validators=[common.validators.validate_image_format],
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-                'ordering': ['sort_order'],
+                "abstract": False,
+                "ordering": ["sort_order"],
             },
         ),
     ]

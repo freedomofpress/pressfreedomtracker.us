@@ -5,76 +5,130 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Country',
+            name="Country",
             fields=[
-                ('isocode', models.IntegerField(primary_key=True, serialize=False)),
-                ('iso', models.CharField(max_length=2)),
-                ('iso3', models.CharField(max_length=3)),
-                ('fips', models.TextField(null=True)),
-                ('name', models.TextField(null=True)),
-                ('capital', models.TextField(null=True)),
-                ('geonameid', models.BigIntegerField(null=True)),
+                ("isocode", models.IntegerField(primary_key=True, serialize=False)),
+                ("iso", models.CharField(max_length=2)),
+                ("iso3", models.CharField(max_length=3)),
+                ("fips", models.TextField(null=True)),
+                ("name", models.TextField(null=True)),
+                ("capital", models.TextField(null=True)),
+                ("geonameid", models.BigIntegerField(null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='District',
+            name="District",
             fields=[
-                ('name', models.TextField(null=True)),
-                ('geonameid', models.BigIntegerField(primary_key=True, serialize=False)),
-                ('isocode', models.IntegerField()),
-                ('regcode', models.TextField()),
-                ('discode', models.TextField()),
+                ("name", models.TextField(null=True)),
+                (
+                    "geonameid",
+                    models.BigIntegerField(primary_key=True, serialize=False),
+                ),
+                ("isocode", models.IntegerField()),
+                ("regcode", models.TextField()),
+                ("discode", models.TextField()),
             ],
         ),
         migrations.CreateModel(
-            name='Region',
+            name="Region",
             fields=[
-                ('regcode', models.TextField()),
-                ('name', models.TextField(null=True)),
-                ('geonameid', models.BigIntegerField(primary_key=True, serialize=False)),
-                ('isocode', models.ForeignKey(db_column='isocode', on_delete=django.db.models.deletion.PROTECT, to='geonames.Country')),
+                ("regcode", models.TextField()),
+                ("name", models.TextField(null=True)),
+                (
+                    "geonameid",
+                    models.BigIntegerField(primary_key=True, serialize=False),
+                ),
+                (
+                    "isocode",
+                    models.ForeignKey(
+                        db_column="isocode",
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="geonames.Country",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='GeoName',
+            name="GeoName",
             fields=[
-                ('geonameid', models.BigIntegerField(primary_key=True, serialize=False)),
-                ('name', models.TextField(null=True)),
-                ('latitude', models.FloatField(null=True)),
-                ('longitude', models.FloatField(null=True)),
-                ('regcode', models.TextField(null=True)),
-                ('discode', models.TextField(null=True)),
-                ('population', models.BigIntegerField(null=True)),
-                ('elevation', models.BigIntegerField(null=True)),
-                ('isocode', models.ForeignKey(db_column='isocode', null=True, on_delete=django.db.models.deletion.PROTECT, to='geonames.Country')),
+                (
+                    "geonameid",
+                    models.BigIntegerField(primary_key=True, serialize=False),
+                ),
+                ("name", models.TextField(null=True)),
+                ("latitude", models.FloatField(null=True)),
+                ("longitude", models.FloatField(null=True)),
+                ("regcode", models.TextField(null=True)),
+                ("discode", models.TextField(null=True)),
+                ("population", models.BigIntegerField(null=True)),
+                ("elevation", models.BigIntegerField(null=True)),
+                (
+                    "isocode",
+                    models.ForeignKey(
+                        db_column="isocode",
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="geonames.Country",
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='district',
-            constraint=models.UniqueConstraint(fields=('isocode', 'regcode', 'discode'), name='unique_district_and_region'),
+            model_name="district",
+            constraint=models.UniqueConstraint(
+                fields=("isocode", "regcode", "discode"),
+                name="unique_district_and_region",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='region',
-            constraint=models.UniqueConstraint(fields=('isocode', 'regcode'), name='unique_country_and_region'),
+            model_name="region",
+            constraint=models.UniqueConstraint(
+                fields=("isocode", "regcode"), name="unique_country_and_region"
+            ),
         ),
         migrations.RunSQL(
-            sql=[("ALTER TABLE geonames_district ADD CONSTRAINT fk_district_region_1 FOREIGN KEY (isocode, regcode) REFERENCES geonames_region(isocode, regcode)", [])],
-            reverse_sql=[("ALTER TABLE geonames_district DROP CONSTRAINT fk_district_region_1", [])],
+            sql=[
+                (
+                    "ALTER TABLE geonames_district ADD CONSTRAINT fk_district_region_1 FOREIGN KEY (isocode, regcode) REFERENCES geonames_region(isocode, regcode)",
+                    [],
+                )
+            ],
+            reverse_sql=[
+                (
+                    "ALTER TABLE geonames_district DROP CONSTRAINT fk_district_region_1",
+                    [],
+                )
+            ],
         ),
         migrations.RunSQL(
-            sql=[("ALTER TABLE geonames_geoname ADD CONSTRAINT fk_geoname_region_1 FOREIGN KEY (isocode, regcode) REFERENCES geonames_region(isocode, regcode)", [])],
-            reverse_sql=[("ALTER TABLE geonames_geoname DROP CONSTRAINT fk_geoname_region_1", [])],
+            sql=[
+                (
+                    "ALTER TABLE geonames_geoname ADD CONSTRAINT fk_geoname_region_1 FOREIGN KEY (isocode, regcode) REFERENCES geonames_region(isocode, regcode)",
+                    [],
+                )
+            ],
+            reverse_sql=[
+                ("ALTER TABLE geonames_geoname DROP CONSTRAINT fk_geoname_region_1", [])
+            ],
         ),
         migrations.RunSQL(
-            sql=[("ALTER TABLE geonames_geoname ADD CONSTRAINT fk_geoname_district_1 FOREIGN KEY (isocode, regcode, discode) REFERENCES geonames_district(isocode, regcode, discode)", [])],
-            reverse_sql=[("ALTER TABLE geonames_geoname DROP CONSTRAINT fk_geoname_district_1", [])],
+            sql=[
+                (
+                    "ALTER TABLE geonames_geoname ADD CONSTRAINT fk_geoname_district_1 FOREIGN KEY (isocode, regcode, discode) REFERENCES geonames_district(isocode, regcode, discode)",
+                    [],
+                )
+            ],
+            reverse_sql=[
+                (
+                    "ALTER TABLE geonames_geoname DROP CONSTRAINT fk_geoname_district_1",
+                    [],
+                )
+            ],
         ),
     ]

@@ -8,20 +8,71 @@ import wagtail.embeds.blocks
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0051_topicpage'),
+        ("incident", "0051_topicpage"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='topicpage',
-            name='content',
-            field=wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('rich_text', wagtail.blocks.RichTextBlock()), ('tweet', wagtail.blocks.StructBlock([('tweet', wagtail.embeds.blocks.EmbedBlock())]))], blank=True),
+            model_name="topicpage",
+            name="content",
+            field=wagtail.fields.StreamField(
+                [
+                    (
+                        "heading_2",
+                        wagtail.blocks.StructBlock(
+                            [("content", wagtail.blocks.CharBlock())]
+                        ),
+                    ),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    ("rich_text", wagtail.blocks.RichTextBlock()),
+                    (
+                        "tweet",
+                        wagtail.blocks.StructBlock(
+                            [("tweet", wagtail.embeds.blocks.EmbedBlock())]
+                        ),
+                    ),
+                ],
+                blank=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='topicpage',
-            name='sidebar',
-            field=wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('rich_text', common.blocks.RichTextTemplateBlock(features=['bold', 'italic', 'link', 'ol', 'ul'], icon='doc-full', label='Rich Text')), ('tweet', wagtail.blocks.StructBlock([('tweet', wagtail.embeds.blocks.EmbedBlock())])), ('stat_table', common.blocks.StatTableBlock()), ('button', wagtail.blocks.StructBlock([('text', wagtail.blocks.TextBlock(required=True)), ('url', wagtail.blocks.URLBlock(required=True))]))], blank=True),
+            model_name="topicpage",
+            name="sidebar",
+            field=wagtail.fields.StreamField(
+                [
+                    (
+                        "heading_2",
+                        wagtail.blocks.StructBlock(
+                            [("content", wagtail.blocks.CharBlock())]
+                        ),
+                    ),
+                    (
+                        "rich_text",
+                        common.blocks.RichTextTemplateBlock(
+                            features=["bold", "italic", "link", "ol", "ul"],
+                            icon="doc-full",
+                            label="Rich Text",
+                        ),
+                    ),
+                    (
+                        "tweet",
+                        wagtail.blocks.StructBlock(
+                            [("tweet", wagtail.embeds.blocks.EmbedBlock())]
+                        ),
+                    ),
+                    ("stat_table", common.blocks.StatTableBlock()),
+                    (
+                        "button",
+                        wagtail.blocks.StructBlock(
+                            [
+                                ("text", wagtail.blocks.TextBlock(required=True)),
+                                ("url", wagtail.blocks.URLBlock(required=True)),
+                            ]
+                        ),
+                    ),
+                ],
+                blank=True,
+            ),
         ),
     ]

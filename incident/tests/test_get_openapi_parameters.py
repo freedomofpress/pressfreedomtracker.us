@@ -39,10 +39,10 @@ class GetOpenApiParametersTest(TestCase):
             self.assertEqual(actual, expected)
 
     def test_get_openapi_params_general_and_category_fields(self):
-        CategoryPageFactory(incident_filters=['arrest_status'])
+        CategoryPageFactory(incident_filters=["arrest_status"])
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=self.settings,
-            incident_filter='city',
+            incident_filter="city",
         )
 
         params = get_openapi_parameters()
@@ -50,17 +50,17 @@ class GetOpenApiParametersTest(TestCase):
         expected_params = itertools.chain(
             SearchFilter().openapi_parameters(),
             IncidentFilter._get_filter(
-                IncidentPage._meta.get_field('city')
+                IncidentPage._meta.get_field("city")
             ).openapi_parameters(),
             IncidentFilter._get_filter(
-                IncidentPage._meta.get_field('arrest_status')
-            ).openapi_parameters()
+                IncidentPage._meta.get_field("arrest_status")
+            ).openapi_parameters(),
         )
 
         for actual, expected in zip(params, expected_params):
             self.assertEqual(actual, expected)
 
-    @mock.patch('common.models.CategoryPage')
+    @mock.patch("common.models.CategoryPage")
     def test_returns_empty_list_if_db_error(self, MockCategoryPage):
         MockCategoryPage.objects.live.side_effect = ProgrammingError
         self.assertEqual(get_openapi_parameters(), [])

@@ -7,19 +7,24 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0030_searchsettings'),
+        ("common", "0030_searchsettings"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='searchsettings',
-            options={'verbose_name': 'Incident search'},
+            name="searchsettings",
+            options={"verbose_name": "Incident search"},
         ),
         migrations.AlterField(
-            model_name='searchsettings',
-            name='search_page',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='incident.IncidentIndexPage'),
+            model_name="searchsettings",
+            name="search_page",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="incident.IncidentIndexPage",
+            ),
         ),
     ]

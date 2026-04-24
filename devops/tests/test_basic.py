@@ -1,7 +1,3 @@
-import subprocess
-import pytest
-
-
 def test_mainpage(host):
     """
     Basic test to make sure home-page is coming up.

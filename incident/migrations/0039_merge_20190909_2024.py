@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0036_incidentpage_suppress_footer'),
-        ('incident', '0038_merge_20190723_1834'),
+        ("incident", "0036_incidentpage_suppress_footer"),
+        ("incident", "0038_merge_20190723_1834"),
     ]
 
-    operations = [
-    ]
+    operations = []

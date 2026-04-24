@@ -6,18 +6,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0041_auto_20180223_1750'),
-        ('home', '0021_auto_20180215_0208'),
-        ('forms', '0004_auto_20180215_0208'),
-        ('blog', '0015_auto_20180208_0024'),
-        ('incident', '0026_auto_20180222_2226'),
-        ('menus', '0001_initial'),
-        ('emails', '0002_emailsettings'),
-        ('wagtailforms', '0001_initial'),
-        ('wagtailredirects', '0001_initial'),
-        ('wagtailcore', '0040_page_draft_title'),
+        ("common", "0041_auto_20180223_1750"),
+        ("home", "0021_auto_20180215_0208"),
+        ("forms", "0004_auto_20180215_0208"),
+        ("blog", "0015_auto_20180208_0024"),
+        ("incident", "0026_auto_20180222_2226"),
+        ("menus", "0001_initial"),
+        ("emails", "0002_emailsettings"),
+        ("wagtailforms", "0001_initial"),
+        ("wagtailredirects", "0001_initial"),
+        ("wagtailcore", "0040_page_draft_title"),
     ]
 
     operations = [

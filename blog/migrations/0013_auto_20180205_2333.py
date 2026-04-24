@@ -6,16 +6,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0012_blogindexpage_feed_limit'),
+        ("blog", "0012_blogindexpage_feed_limit"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='link_to_original_post',
-            field=models.URLField(blank=True, default=''),
+            model_name="blogpage",
+            name="link_to_original_post",
+            field=models.URLField(blank=True, default=""),
             preserve_default=False,
         ),
     ]

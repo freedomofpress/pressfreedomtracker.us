@@ -13,8 +13,8 @@ class StyleguideTestCase(TestCase):
         CustomImageFactory.create(
             file__width=800,
             file__height=600,
-            file__color='green',
-            collection__name='Photos',
+            file__color="green",
+            collection__name="Photos",
         )
         IncidentPageFactory()
 
@@ -27,5 +27,5 @@ class StyleguideTestCase(TestCase):
         CustomImage.objects.all().delete()
 
     def test_styleguide_url_returns_200_status(self):
-        self.response = self.client.get(reverse('styleguide'))
+        self.response = self.client.get(reverse("styleguide"))
         self.assertEqual(self.response.status_code, 200)

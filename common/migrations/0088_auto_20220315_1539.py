@@ -4,20 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0087_statisticsitem_link'),
+        ("common", "0087_statisticsitem_link"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='categorymethodologyitem',
-            name='description',
+            model_name="categorymethodologyitem",
+            name="description",
             field=models.TextField(),
         ),
         migrations.AlterField(
-            model_name='statisticsitem',
-            name='link',
-            field=models.URLField(blank=True, help_text='Link to the filtered incident database page, showing incidents related to this filter', null=True),
+            model_name="statisticsitem",
+            name="link",
+            field=models.URLField(
+                blank=True,
+                help_text="Link to the filtered incident database page, showing incidents related to this filter",
+                null=True,
+            ),
         ),
     ]

@@ -12,14 +12,13 @@ class TestBlogIndexPageCachePurge(TestCase):
         self.client = Client()
 
         site = Site.objects.get()
-        self.index = BlogIndexPageFactory(
-            parent=site.root_page, slug='blog')
+        self.index = BlogIndexPageFactory(parent=site.root_page, slug="blog")
         self.author = PersonPageFactory()
 
     def test_cache_tag_index(self):
         "Response from BlogIndexPage should include Cache-Tag header"
-        response = self.client.get('/blog/')
-        self.assertEqual(response['Cache-Tag'], 'blog-index-{}'.format(self.index.pk))
+        response = self.client.get("/blog/")
+        self.assertEqual(response["Cache-Tag"], "blog-index-{}".format(self.index.pk))
 
     def test_cache_tag_subpath(self):
         """
@@ -28,10 +27,10 @@ class TestBlogIndexPageCachePurge(TestCase):
 
         """
 
-        response = self.client.get('/blog/?author={}'.format(self.author.pk))
-        self.assertEqual(response['Cache-Tag'], 'blog-index-{}'.format(self.index.pk))
+        response = self.client.get("/blog/?author={}".format(self.author.pk))
+        self.assertEqual(response["Cache-Tag"], "blog-index-{}".format(self.index.pk))
 
-    @patch('blog.signals.purge_page_from_cache')
+    @patch("blog.signals.purge_page_from_cache")
     def test_cache_invalidated_on_new_incident(self, purge_page_from_cache):
         """
         BlogIndexPage should be purged from cache upon new BlogPage creation
@@ -43,7 +42,7 @@ class TestBlogIndexPageCachePurge(TestCase):
 
         purge_page_from_cache.assert_called_with(self.index)
 
-    @patch('blog.signals.purge_tags_from_cache')
+    @patch("blog.signals.purge_tags_from_cache")
     def test_cache_tag_purge_on_new_blog(self, purge_tags_from_cache):
         self.assertFalse(purge_tags_from_cache.called)
 

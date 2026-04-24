@@ -4,12 +4,12 @@ from django.db import migrations
 
 
 def copy_affiliation(apps, schema_editor):
-    """Copy incident affiliations to """
-    IncidentPage = apps.get_model('incident', 'IncidentPage')
-    Institution = apps.get_model('incident', 'Institution')
+    """Copy incident affiliations to"""
+    IncidentPage = apps.get_model("incident", "IncidentPage")
+    Institution = apps.get_model("incident", "Institution")
 
-    for incident in IncidentPage.objects.order_by('pk'):
-        if incident.affiliation and incident.affiliation != 'Independent':
+    for incident in IncidentPage.objects.order_by("pk"):
+        if incident.affiliation and incident.affiliation != "Independent":
             inst, _ = Institution.objects.get_or_create(title=incident.affiliation)
 
             targeted_journos = incident.targeted_journalists.all()
@@ -24,9 +24,8 @@ def copy_affiliation(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0044_auto_20200306_1646'),
+        ("incident", "0044_auto_20200306_1646"),
     ]
 
     operations = [

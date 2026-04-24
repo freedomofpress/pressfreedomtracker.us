@@ -6,15 +6,18 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0028_auto_20200413_2029'),
+        ("home", "0028_auto_20200413_2029"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='statbox',
-            name='page',
-            field=modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='statboxes', to='wagtailcore.Page'),
+            model_name="statbox",
+            name="page",
+            field=modelcluster.fields.ParentalKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="statboxes",
+                to="wagtailcore.Page",
+            ),
         ),
     ]

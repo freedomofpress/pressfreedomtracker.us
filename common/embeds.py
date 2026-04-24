@@ -8,7 +8,7 @@ from wagtail.embeds.finders.base import EmbedFinder
 # Instagram URL matcher that will match a URL to a post with or without a trailing
 # slash. The capture group lets us strip any querystring parameters we might be
 # given.
-INSTAGRAM_URL_RE = re.compile(r'(https?://(www\.)?instagram\.com/p/[\w-]+)/?')
+INSTAGRAM_URL_RE = re.compile(r"(https?://(www\.)?instagram\.com/p/[\w-]+)/?")
 
 
 class InstagramEmbedFinder(EmbedFinder):
@@ -19,13 +19,16 @@ class InstagramEmbedFinder(EmbedFinder):
         # Get the match group as the URL to avoid querystring parameters. The group
         # should be present because find_embed is called after accept() validation.
         clean_url = INSTAGRAM_URL_RE.match(url).group(1)
-        html = render_to_string('common/embeds/instagram.html', {
-            'url': clean_url,
-        })
+        html = render_to_string(
+            "common/embeds/instagram.html",
+            {
+                "url": clean_url,
+            },
+        )
         return {
-            'provider_name': 'Instagram',
-            'type': 'rich',
-            'html': html,
-            'width': max_width,
-            'height': max_height,
+            "provider_name": "Instagram",
+            "type": "rich",
+            "html": html,
+            "width": max_width,
+            "height": max_height,
         }

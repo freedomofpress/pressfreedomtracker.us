@@ -5,20 +5,587 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0114_alter_simplepage_body_and_more'),
+        ("common", "0114_alter_simplepage_body_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='simplepage',
-            name='body',
-            field=wagtail.fields.StreamField([('text', 5), ('image', 11), ('raw_html', 12), ('tweet', 14), ('instagram', 16), ('bluesky', 18), ('blockquote', 22), ('list', 24), ('logo_list', 25), ('video', 28), ('heading_1', 30), ('heading_2', 30), ('heading_3', 30), ('email_signup', 33), ('info_table', 54)], block_lookup={0: ('common.blocks.RichTextTemplateBlock', (), {'editor': 'num-incident-full-features'}), 1: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('white', 'White'), ('eastern-blue', 'Eastern Blue'), ('gamboge', 'Gamboge'), ('green', 'Green'), ('pink', 'Pink'), ('red', 'Red'), ('royal-blue', 'Royal Blue'), ('teal', 'Teal'), ('violet', 'Violet'), ('dark-gray', 'Dark Gray')]}), 2: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('left', 'Left'), ('center', 'Center'), ('right', 'Right')]}), 3: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('small', 'Small'), ('normal', 'Normal'), ('large', 'Large'), ('jumbo', 'Jumbo')]}), 4: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('sans-serif', 'Sans Serif'), ('serif', 'Serif')]}), 5: ('wagtail.blocks.StructBlock', [[('text', 0), ('background_color', 1), ('text_align', 2), ('font_size', 3), ('font_family', 4)]], {'label': 'Text', 'template': 'common/blocks/styled_text_full_bleed.html'}), 6: ('wagtail.images.blocks.ImageChooserBlock', (), {}), 7: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Image description displayed below the image. Organization/Photographer can be set via the image attribution.', 'required': False}), 8: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]}), 9: ('wagtail.blocks.CharBlock', (), {'default': 'This image may be disturbing. Tap or click to reveal.', 'help_text': 'Warning text shown on the button above blurred media', 'label': 'Warning text', 'required': True}), 10: ('wagtail.blocks.ListBlock', (9,), {'default': [], 'label': 'Add content warning', 'max_num': 1, 'min_num': 0}), 11: ('wagtail.blocks.StructBlock', [[('image', 6), ('caption', 7), ('alignment', 8), ('content_warning', 10)]], {}), 12: ('wagtail.blocks.RawHTMLBlock', (), {}), 13: ('wagtail.embeds.blocks.EmbedBlock', (), {}), 14: ('wagtail.blocks.StructBlock', [[('tweet', 13)]], {'group': 'Social Media'}), 15: ('wagtail.embeds.blocks.EmbedBlock', (), {'help_text': 'Link to an Instagram post, copied by using the … button and Copy Link.'}), 16: ('wagtail.blocks.StructBlock', [[('instagram_post', 15)]], {'group': 'Social Media'}), 17: ('wagtail.embeds.blocks.EmbedBlock', (), {'help_text': 'Link to a Bluesky post, copied by using the Share button and Copy link to post.'}), 18: ('wagtail.blocks.StructBlock', [[('bluesky_post', 17)]], {'group': 'Social Media'}), 19: ('wagtail.blocks.RichTextBlock', (), {}), 20: ('wagtail.blocks.RichTextBlock', (), {'required': False}), 21: ('wagtail.blocks.URLBlock', (), {'help_text': 'Source text will link to this url.', 'required': False}), 22: ('wagtail.blocks.StructBlock', [[('text', 19), ('source_text', 20), ('source_url', 21)]], {}), 23: ('wagtail.blocks.CharBlock', (), {'label': 'List Item'}), 24: ('wagtail.blocks.ListBlock', (23,), {'template': 'common/blocks/list_block_columns.html'}), 25: ('common.blocks.LogoListBlock', (), {}), 26: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Video description displayed below the video.', 'required': False}), 27: ('wagtail.blocks.CharBlock', (), {'help_text': 'Organization / Director.', 'max_length': 255, 'required': False}), 28: ('wagtail.blocks.StructBlock', [[('video', 13), ('caption', 26), ('attribution', 27), ('alignment', 8)]], {}), 29: ('wagtail.blocks.CharBlock', (), {}), 30: ('wagtail.blocks.StructBlock', [[('content', 29)]], {}), 31: ('wagtail.blocks.CharBlock', (), {'help_text': 'Defaults to sitewide setting', 'label': 'Call to action text', 'required': False}), 32: ('wagtail.blocks.CharBlock', (), {'help_text': 'To be displayed after a successful signup. Defaults to sitewide setting', 'label': 'Success text', 'required': False}), 33: ('wagtail.blocks.StructBlock', [[('text', 31), ('success_text', 32)]], {}), 34: ('wagtail.blocks.CharBlock', (), {'help_text': 'Heading of the info table'}), 35: ('wagtail.blocks.CharBlock', (), {'help_text': 'Label to be displayed for row link, e.g. "Read the bio", "Contact us", "Visit the page", etc.'}), 36: ('wagtail.blocks.PageChooserBlock', (), {}), 37: ('wagtail.blocks.CharBlock', (), {'help_text': 'Optional: defaults to page title', 'required': False}), 38: ('wagtail.blocks.StructBlock', [[('page', 36), ('title', 37), ('description', 29)]], {'icon': 'list-ul', 'label': 'Table row'}), 39: ('wagtail.blocks.ListBlock', (38,), {}), 40: ('wagtail.blocks.StructBlock', [[('cta_label', 35), ('table_data', 39)]], {}), 41: ('wagtail.blocks.EmailBlock', (), {}), 42: ('wagtail.blocks.StructBlock', [[('title', 29), ('email', 41)]], {'icon': 'list-ul', 'label': 'Table row'}), 43: ('wagtail.blocks.ListBlock', (42,), {}), 44: ('wagtail.blocks.StructBlock', [[('cta_label', 35), ('table_data', 43)]], {}), 45: ('wagtail.images.blocks.ImageChooserBlock', (), {'required': False}), 46: ('wagtail.blocks.URLBlock', (), {}), 47: ('wagtail.blocks.StructBlock', [[('image', 45), ('title', 29), ('url', 46)]], {'icon': 'list-ul', 'label': 'Table row'}), 48: ('wagtail.blocks.ListBlock', (47,), {}), 49: ('wagtail.blocks.StructBlock', [[('cta_label', 35), ('table_data', 48)]], {}), 50: ('wagtail.blocks.StructBlock', [[('title', 29), ('description', 29)]], {'icon': 'list-ul', 'label': 'Table row'}), 51: ('wagtail.blocks.ListBlock', (50,), {}), 52: ('wagtail.blocks.StructBlock', [[('table_data', 51)]], {}), 53: ('wagtail.blocks.StreamBlock', [[('page_links', 40), ('email_addresses', 44), ('external_links', 49), ('plain_text', 52)]], {'icon': 'list-ul', 'label': 'Table type', 'max_num': 1}), 54: ('wagtail.blocks.StructBlock', [[('heading', 34), ('table', 53)]], {})}),
+            model_name="simplepage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                [
+                    ("text", 5),
+                    ("image", 11),
+                    ("raw_html", 12),
+                    ("tweet", 14),
+                    ("instagram", 16),
+                    ("bluesky", 18),
+                    ("blockquote", 22),
+                    ("list", 24),
+                    ("logo_list", 25),
+                    ("video", 28),
+                    ("heading_1", 30),
+                    ("heading_2", 30),
+                    ("heading_3", 30),
+                    ("email_signup", 33),
+                    ("info_table", 54),
+                ],
+                block_lookup={
+                    0: (
+                        "common.blocks.RichTextTemplateBlock",
+                        (),
+                        {"editor": "num-incident-full-features"},
+                    ),
+                    1: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("white", "White"),
+                                ("eastern-blue", "Eastern Blue"),
+                                ("gamboge", "Gamboge"),
+                                ("green", "Green"),
+                                ("pink", "Pink"),
+                                ("red", "Red"),
+                                ("royal-blue", "Royal Blue"),
+                                ("teal", "Teal"),
+                                ("violet", "Violet"),
+                                ("dark-gray", "Dark Gray"),
+                            ]
+                        },
+                    ),
+                    2: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("left", "Left"),
+                                ("center", "Center"),
+                                ("right", "Right"),
+                            ]
+                        },
+                    ),
+                    3: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("small", "Small"),
+                                ("normal", "Normal"),
+                                ("large", "Large"),
+                                ("jumbo", "Jumbo"),
+                            ]
+                        },
+                    ),
+                    4: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {"choices": [("sans-serif", "Sans Serif"), ("serif", "Serif")]},
+                    ),
+                    5: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("text", 0),
+                                ("background_color", 1),
+                                ("text_align", 2),
+                                ("font_size", 3),
+                                ("font_family", 4),
+                            ]
+                        ],
+                        {
+                            "label": "Text",
+                            "template": "common/blocks/styled_text_full_bleed.html",
+                        },
+                    ),
+                    6: ("wagtail.images.blocks.ImageChooserBlock", (), {}),
+                    7: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Image description displayed below the image. Organization/Photographer can be set via the image attribution.",
+                            "required": False,
+                        },
+                    ),
+                    8: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("left", "Left"),
+                                ("right", "Right"),
+                                ("full-width", "Full Width"),
+                            ]
+                        },
+                    ),
+                    9: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "default": "This image may be disturbing. Tap or click to reveal.",
+                            "help_text": "Warning text shown on the button above blurred media",
+                            "label": "Warning text",
+                            "required": True,
+                        },
+                    ),
+                    10: (
+                        "wagtail.blocks.ListBlock",
+                        (9,),
+                        {
+                            "default": [],
+                            "label": "Add content warning",
+                            "max_num": 1,
+                            "min_num": 0,
+                        },
+                    ),
+                    11: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("image", 6),
+                                ("caption", 7),
+                                ("alignment", 8),
+                                ("content_warning", 10),
+                            ]
+                        ],
+                        {},
+                    ),
+                    12: ("wagtail.blocks.RawHTMLBlock", (), {}),
+                    13: ("wagtail.embeds.blocks.EmbedBlock", (), {}),
+                    14: (
+                        "wagtail.blocks.StructBlock",
+                        [[("tweet", 13)]],
+                        {"group": "Social Media"},
+                    ),
+                    15: (
+                        "wagtail.embeds.blocks.EmbedBlock",
+                        (),
+                        {
+                            "help_text": "Link to an Instagram post, copied by using the … button and Copy Link."
+                        },
+                    ),
+                    16: (
+                        "wagtail.blocks.StructBlock",
+                        [[("instagram_post", 15)]],
+                        {"group": "Social Media"},
+                    ),
+                    17: (
+                        "wagtail.embeds.blocks.EmbedBlock",
+                        (),
+                        {
+                            "help_text": "Link to a Bluesky post, copied by using the Share button and Copy link to post."
+                        },
+                    ),
+                    18: (
+                        "wagtail.blocks.StructBlock",
+                        [[("bluesky_post", 17)]],
+                        {"group": "Social Media"},
+                    ),
+                    19: ("wagtail.blocks.RichTextBlock", (), {}),
+                    20: ("wagtail.blocks.RichTextBlock", (), {"required": False}),
+                    21: (
+                        "wagtail.blocks.URLBlock",
+                        (),
+                        {
+                            "help_text": "Source text will link to this url.",
+                            "required": False,
+                        },
+                    ),
+                    22: (
+                        "wagtail.blocks.StructBlock",
+                        [[("text", 19), ("source_text", 20), ("source_url", 21)]],
+                        {},
+                    ),
+                    23: ("wagtail.blocks.CharBlock", (), {"label": "List Item"}),
+                    24: (
+                        "wagtail.blocks.ListBlock",
+                        (23,),
+                        {"template": "common/blocks/list_block_columns.html"},
+                    ),
+                    25: ("common.blocks.LogoListBlock", (), {}),
+                    26: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Video description displayed below the video.",
+                            "required": False,
+                        },
+                    ),
+                    27: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Organization / Director.",
+                            "max_length": 255,
+                            "required": False,
+                        },
+                    ),
+                    28: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("video", 13),
+                                ("caption", 26),
+                                ("attribution", 27),
+                                ("alignment", 8),
+                            ]
+                        ],
+                        {},
+                    ),
+                    29: ("wagtail.blocks.CharBlock", (), {}),
+                    30: ("wagtail.blocks.StructBlock", [[("content", 29)]], {}),
+                    31: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Defaults to sitewide setting",
+                            "label": "Call to action text",
+                            "required": False,
+                        },
+                    ),
+                    32: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "To be displayed after a successful signup. Defaults to sitewide setting",
+                            "label": "Success text",
+                            "required": False,
+                        },
+                    ),
+                    33: (
+                        "wagtail.blocks.StructBlock",
+                        [[("text", 31), ("success_text", 32)]],
+                        {},
+                    ),
+                    34: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {"help_text": "Heading of the info table"},
+                    ),
+                    35: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": 'Label to be displayed for row link, e.g. "Read the bio", "Contact us", "Visit the page", etc.'
+                        },
+                    ),
+                    36: ("wagtail.blocks.PageChooserBlock", (), {}),
+                    37: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Optional: defaults to page title",
+                            "required": False,
+                        },
+                    ),
+                    38: (
+                        "wagtail.blocks.StructBlock",
+                        [[("page", 36), ("title", 37), ("description", 29)]],
+                        {"icon": "list-ul", "label": "Table row"},
+                    ),
+                    39: ("wagtail.blocks.ListBlock", (38,), {}),
+                    40: (
+                        "wagtail.blocks.StructBlock",
+                        [[("cta_label", 35), ("table_data", 39)]],
+                        {},
+                    ),
+                    41: ("wagtail.blocks.EmailBlock", (), {}),
+                    42: (
+                        "wagtail.blocks.StructBlock",
+                        [[("title", 29), ("email", 41)]],
+                        {"icon": "list-ul", "label": "Table row"},
+                    ),
+                    43: ("wagtail.blocks.ListBlock", (42,), {}),
+                    44: (
+                        "wagtail.blocks.StructBlock",
+                        [[("cta_label", 35), ("table_data", 43)]],
+                        {},
+                    ),
+                    45: (
+                        "wagtail.images.blocks.ImageChooserBlock",
+                        (),
+                        {"required": False},
+                    ),
+                    46: ("wagtail.blocks.URLBlock", (), {}),
+                    47: (
+                        "wagtail.blocks.StructBlock",
+                        [[("image", 45), ("title", 29), ("url", 46)]],
+                        {"icon": "list-ul", "label": "Table row"},
+                    ),
+                    48: ("wagtail.blocks.ListBlock", (47,), {}),
+                    49: (
+                        "wagtail.blocks.StructBlock",
+                        [[("cta_label", 35), ("table_data", 48)]],
+                        {},
+                    ),
+                    50: (
+                        "wagtail.blocks.StructBlock",
+                        [[("title", 29), ("description", 29)]],
+                        {"icon": "list-ul", "label": "Table row"},
+                    ),
+                    51: ("wagtail.blocks.ListBlock", (50,), {}),
+                    52: ("wagtail.blocks.StructBlock", [[("table_data", 51)]], {}),
+                    53: (
+                        "wagtail.blocks.StreamBlock",
+                        [
+                            [
+                                ("page_links", 40),
+                                ("email_addresses", 44),
+                                ("external_links", 49),
+                                ("plain_text", 52),
+                            ]
+                        ],
+                        {"icon": "list-ul", "label": "Table type", "max_num": 1},
+                    ),
+                    54: (
+                        "wagtail.blocks.StructBlock",
+                        [[("heading", 34), ("table", 53)]],
+                        {},
+                    ),
+                },
+            ),
         ),
         migrations.AlterField(
-            model_name='simplepagewithsidebar',
-            name='body',
-            field=wagtail.fields.StreamField([('text', 5), ('image', 11), ('raw_html', 12), ('tweet', 14), ('instagram', 16), ('bluesky', 18), ('blockquote', 21), ('list', 23), ('logo_list', 24), ('video', 27), ('heading_1', 29), ('heading_2', 29), ('heading_3', 29), ('email_signup', 32)], block_lookup={0: ('wagtail.blocks.RichTextBlock', (), {}), 1: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('white', 'White'), ('eastern-blue', 'Eastern Blue'), ('gamboge', 'Gamboge'), ('green', 'Green'), ('pink', 'Pink'), ('red', 'Red'), ('royal-blue', 'Royal Blue'), ('teal', 'Teal'), ('violet', 'Violet'), ('dark-gray', 'Dark Gray')]}), 2: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('left', 'Left'), ('center', 'Center'), ('right', 'Right')]}), 3: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('small', 'Small'), ('normal', 'Normal'), ('large', 'Large'), ('jumbo', 'Jumbo')]}), 4: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('sans-serif', 'Sans Serif'), ('serif', 'Serif')]}), 5: ('wagtail.blocks.StructBlock', [[('text', 0), ('background_color', 1), ('text_align', 2), ('font_size', 3), ('font_family', 4)]], {'label': 'Text'}), 6: ('wagtail.images.blocks.ImageChooserBlock', (), {}), 7: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Image description displayed below the image. Organization/Photographer can be set via the image attribution.', 'required': False}), 8: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]}), 9: ('wagtail.blocks.CharBlock', (), {'default': 'This image may be disturbing. Tap or click to reveal.', 'help_text': 'Warning text shown on the button above blurred media', 'label': 'Warning text', 'required': True}), 10: ('wagtail.blocks.ListBlock', (9,), {'default': [], 'label': 'Add content warning', 'max_num': 1, 'min_num': 0}), 11: ('wagtail.blocks.StructBlock', [[('image', 6), ('caption', 7), ('alignment', 8), ('content_warning', 10)]], {}), 12: ('wagtail.blocks.RawHTMLBlock', (), {}), 13: ('wagtail.embeds.blocks.EmbedBlock', (), {}), 14: ('wagtail.blocks.StructBlock', [[('tweet', 13)]], {'group': 'Social Media'}), 15: ('wagtail.embeds.blocks.EmbedBlock', (), {'help_text': 'Link to an Instagram post, copied by using the … button and Copy Link.'}), 16: ('wagtail.blocks.StructBlock', [[('instagram_post', 15)]], {'group': 'Social Media'}), 17: ('wagtail.embeds.blocks.EmbedBlock', (), {'help_text': 'Link to a Bluesky post, copied by using the Share button and Copy link to post.'}), 18: ('wagtail.blocks.StructBlock', [[('bluesky_post', 17)]], {'group': 'Social Media'}), 19: ('wagtail.blocks.RichTextBlock', (), {'required': False}), 20: ('wagtail.blocks.URLBlock', (), {'help_text': 'Source text will link to this url.', 'required': False}), 21: ('wagtail.blocks.StructBlock', [[('text', 0), ('source_text', 19), ('source_url', 20)]], {}), 22: ('wagtail.blocks.CharBlock', (), {'label': 'List Item'}), 23: ('wagtail.blocks.ListBlock', (22,), {'template': 'common/blocks/list_block_columns.html'}), 24: ('common.blocks.LogoListBlock', (), {}), 25: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Video description displayed below the video.', 'required': False}), 26: ('wagtail.blocks.CharBlock', (), {'help_text': 'Organization / Director.', 'max_length': 255, 'required': False}), 27: ('wagtail.blocks.StructBlock', [[('video', 13), ('caption', 25), ('attribution', 26), ('alignment', 8)]], {}), 28: ('wagtail.blocks.CharBlock', (), {}), 29: ('wagtail.blocks.StructBlock', [[('content', 28)]], {}), 30: ('wagtail.blocks.CharBlock', (), {'help_text': 'Defaults to sitewide setting', 'label': 'Call to action text', 'required': False}), 31: ('wagtail.blocks.CharBlock', (), {'help_text': 'To be displayed after a successful signup. Defaults to sitewide setting', 'label': 'Success text', 'required': False}), 32: ('wagtail.blocks.StructBlock', [[('text', 30), ('success_text', 31)]], {})}),
+            model_name="simplepagewithsidebar",
+            name="body",
+            field=wagtail.fields.StreamField(
+                [
+                    ("text", 5),
+                    ("image", 11),
+                    ("raw_html", 12),
+                    ("tweet", 14),
+                    ("instagram", 16),
+                    ("bluesky", 18),
+                    ("blockquote", 21),
+                    ("list", 23),
+                    ("logo_list", 24),
+                    ("video", 27),
+                    ("heading_1", 29),
+                    ("heading_2", 29),
+                    ("heading_3", 29),
+                    ("email_signup", 32),
+                ],
+                block_lookup={
+                    0: ("wagtail.blocks.RichTextBlock", (), {}),
+                    1: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("white", "White"),
+                                ("eastern-blue", "Eastern Blue"),
+                                ("gamboge", "Gamboge"),
+                                ("green", "Green"),
+                                ("pink", "Pink"),
+                                ("red", "Red"),
+                                ("royal-blue", "Royal Blue"),
+                                ("teal", "Teal"),
+                                ("violet", "Violet"),
+                                ("dark-gray", "Dark Gray"),
+                            ]
+                        },
+                    ),
+                    2: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("left", "Left"),
+                                ("center", "Center"),
+                                ("right", "Right"),
+                            ]
+                        },
+                    ),
+                    3: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("small", "Small"),
+                                ("normal", "Normal"),
+                                ("large", "Large"),
+                                ("jumbo", "Jumbo"),
+                            ]
+                        },
+                    ),
+                    4: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {"choices": [("sans-serif", "Sans Serif"), ("serif", "Serif")]},
+                    ),
+                    5: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("text", 0),
+                                ("background_color", 1),
+                                ("text_align", 2),
+                                ("font_size", 3),
+                                ("font_family", 4),
+                            ]
+                        ],
+                        {"label": "Text"},
+                    ),
+                    6: ("wagtail.images.blocks.ImageChooserBlock", (), {}),
+                    7: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Image description displayed below the image. Organization/Photographer can be set via the image attribution.",
+                            "required": False,
+                        },
+                    ),
+                    8: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("left", "Left"),
+                                ("right", "Right"),
+                                ("full-width", "Full Width"),
+                            ]
+                        },
+                    ),
+                    9: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "default": "This image may be disturbing. Tap or click to reveal.",
+                            "help_text": "Warning text shown on the button above blurred media",
+                            "label": "Warning text",
+                            "required": True,
+                        },
+                    ),
+                    10: (
+                        "wagtail.blocks.ListBlock",
+                        (9,),
+                        {
+                            "default": [],
+                            "label": "Add content warning",
+                            "max_num": 1,
+                            "min_num": 0,
+                        },
+                    ),
+                    11: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("image", 6),
+                                ("caption", 7),
+                                ("alignment", 8),
+                                ("content_warning", 10),
+                            ]
+                        ],
+                        {},
+                    ),
+                    12: ("wagtail.blocks.RawHTMLBlock", (), {}),
+                    13: ("wagtail.embeds.blocks.EmbedBlock", (), {}),
+                    14: (
+                        "wagtail.blocks.StructBlock",
+                        [[("tweet", 13)]],
+                        {"group": "Social Media"},
+                    ),
+                    15: (
+                        "wagtail.embeds.blocks.EmbedBlock",
+                        (),
+                        {
+                            "help_text": "Link to an Instagram post, copied by using the … button and Copy Link."
+                        },
+                    ),
+                    16: (
+                        "wagtail.blocks.StructBlock",
+                        [[("instagram_post", 15)]],
+                        {"group": "Social Media"},
+                    ),
+                    17: (
+                        "wagtail.embeds.blocks.EmbedBlock",
+                        (),
+                        {
+                            "help_text": "Link to a Bluesky post, copied by using the Share button and Copy link to post."
+                        },
+                    ),
+                    18: (
+                        "wagtail.blocks.StructBlock",
+                        [[("bluesky_post", 17)]],
+                        {"group": "Social Media"},
+                    ),
+                    19: ("wagtail.blocks.RichTextBlock", (), {"required": False}),
+                    20: (
+                        "wagtail.blocks.URLBlock",
+                        (),
+                        {
+                            "help_text": "Source text will link to this url.",
+                            "required": False,
+                        },
+                    ),
+                    21: (
+                        "wagtail.blocks.StructBlock",
+                        [[("text", 0), ("source_text", 19), ("source_url", 20)]],
+                        {},
+                    ),
+                    22: ("wagtail.blocks.CharBlock", (), {"label": "List Item"}),
+                    23: (
+                        "wagtail.blocks.ListBlock",
+                        (22,),
+                        {"template": "common/blocks/list_block_columns.html"},
+                    ),
+                    24: ("common.blocks.LogoListBlock", (), {}),
+                    25: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Video description displayed below the video.",
+                            "required": False,
+                        },
+                    ),
+                    26: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Organization / Director.",
+                            "max_length": 255,
+                            "required": False,
+                        },
+                    ),
+                    27: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("video", 13),
+                                ("caption", 25),
+                                ("attribution", 26),
+                                ("alignment", 8),
+                            ]
+                        ],
+                        {},
+                    ),
+                    28: ("wagtail.blocks.CharBlock", (), {}),
+                    29: ("wagtail.blocks.StructBlock", [[("content", 28)]], {}),
+                    30: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Defaults to sitewide setting",
+                            "label": "Call to action text",
+                            "required": False,
+                        },
+                    ),
+                    31: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "To be displayed after a successful signup. Defaults to sitewide setting",
+                            "label": "Success text",
+                            "required": False,
+                        },
+                    ),
+                    32: (
+                        "wagtail.blocks.StructBlock",
+                        [[("text", 30), ("success_text", 31)]],
+                        {},
+                    ),
+                },
+            ),
         ),
     ]

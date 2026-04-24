@@ -5,30 +5,50 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0054_auto_20180326_2254'),
+        ("common", "0054_auto_20180326_2254"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customimage',
-            name='file_hash',
+            model_name="customimage",
+            name="file_hash",
             field=models.CharField(blank=True, editable=False, max_length=40),
         ),
         migrations.AlterField(
-            model_name='categorypage',
-            name='search_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', verbose_name='Search image'),
+            model_name="categorypage",
+            name="search_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+                verbose_name="Search image",
+            ),
         ),
         migrations.AlterField(
-            model_name='simplepage',
-            name='search_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', verbose_name='Search image'),
+            model_name="simplepage",
+            name="search_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+                verbose_name="Search image",
+            ),
         ),
         migrations.AlterField(
-            model_name='simplepagewithsidebar',
-            name='search_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', verbose_name='Search image'),
+            model_name="simplepagewithsidebar",
+            name="search_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+                verbose_name="Search image",
+            ),
         ),
     ]

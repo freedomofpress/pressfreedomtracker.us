@@ -21,23 +21,23 @@ from incident.views import (
 )
 
 
-@hooks.register('register_admin_urls')
+@hooks.register("register_admin_urls")
 def incident_legal_order_import_url():
     return [
         path(
-            'legal_orders/',
+            "legal_orders/",
             include(
                 (
                     [
                         path(
-                            'import/',
+                            "import/",
                             LegalOrderImportView.as_view(),
-                            name='show_form',
+                            name="show_form",
                         ),
                         path(
-                            'confirm/',
+                            "confirm/",
                             LegalOrderImportConfirmView.as_view(),
-                            name='confirm',
+                            name="confirm",
                         ),
                         # path(
                         #     'success/',
@@ -45,25 +45,25 @@ def incident_legal_order_import_url():
                         #     name='success',
                         # ),
                     ],
-                    'import_legal_orders',
+                    "import_legal_orders",
                 ),
-                namespace='import_legal_orders',
-            )
+                namespace="import_legal_orders",
+            ),
         ),
     ]
 
 
-@hooks.register('register_admin_menu_item')
+@hooks.register("register_admin_menu_item")
 def register_tools_menu_item():
     legal_order_import_item = MenuItem(
-        'Import Legal Orders',
-        reverse('import_legal_orders:show_form'),
-        classname='icon icon-table'
+        "Import Legal Orders",
+        reverse("import_legal_orders:show_form"),
+        classname="icon icon-table",
     )
     mc_groups_item = MenuItem(
-        'Mailchimp Groups',
-        reverse('mailchimp_interests'),
-        classname='icon icon-mail',
+        "Mailchimp Groups",
+        reverse("mailchimp_interests"),
+        classname="icon icon-mail",
         order=10,
     )
 
@@ -73,90 +73,104 @@ def register_tools_menu_item():
             mc_groups_item,
         ],
     )
-    return SubmenuMenuItem('Tools', submenu, icon_name='code', order=10000)
+    return SubmenuMenuItem("Tools", submenu, icon_name="code", order=10000)
 
 
 class GovernmentWorkerAdmin(MergeAdmin):
     model = GovernmentWorker
-    menu_label = 'Alleged Recipients of Leaks'
-    icon = 'edit'
+    menu_label = "Alleged Recipients of Leaks"
+    icon = "edit"
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class JournalistAdmin(MergeAdmin):
     model = Journalist
-    menu_label = 'Journalist'
-    icon = 'edit'
+    menu_label = "Journalist"
+    icon = "edit"
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class InstitutionAdmin(MergeAdmin):
     model = Institution
-    menu_label = 'Institution'
-    icon = 'edit'
+    menu_label = "Institution"
+    icon = "edit"
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class ChargeAdmin(MergeAdmin):
     model = Charge
-    menu_label = 'Charges'
-    icon = 'edit'
-    list_display = ('title',)
-    search_fields = ('title',)
+    menu_label = "Charges"
+    icon = "edit"
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class LawEnforcementOrganizationAdmin(MergeAdmin):
     model = LawEnforcementOrganization
-    menu_label = 'Law Enforcement Authorities'
-    icon = 'edit'
+    menu_label = "Law Enforcement Authorities"
+    icon = "edit"
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class NationalityAdmin(MergeAdmin):
     model = Nationality
-    menu_label = 'Nationalities'
-    icon = 'edit'
+    menu_label = "Nationalities"
+    icon = "edit"
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class PoliticianOrPublicAdmin(MergeAdmin):
     model = PoliticianOrPublic
-    menu_label = 'Politicians / Public Figures'
-    icon = 'edit'
+    menu_label = "Politicians / Public Figures"
+    icon = "edit"
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class VenueAdmin(MergeAdmin):
     model = Venue
-    menu_label = 'Venues'
-    icon = 'edit'
+    menu_label = "Venues"
+    icon = "edit"
     add_to_settings_menu = False  # or True to add your model to the Settings sub-menu
-    exclude_from_explorer = False  # or True to exclude pages of this type from Wagtail's explorer view
-    list_display = ('title',)
-    search_fields = ('title',)
+    exclude_from_explorer = (
+        False  # or True to exclude pages of this type from Wagtail's explorer view
+    )
+    list_display = ("title",)
+    search_fields = ("title",)
 
 
 class IncidentGroup(ModelViewSetGroup):
-    menu_label = 'Incident M2Ms'
-    icon = 'folder-open-inverse'  # change as required
+    menu_label = "Incident M2Ms"
+    icon = "folder-open-inverse"  # change as required
     menu_order = 600  # will put in 7th place (000 being 1st, 100 2nd)
     items = (
         ChargeAdmin,
@@ -171,6 +185,6 @@ class IncidentGroup(ModelViewSetGroup):
     )
 
 
-@hooks.register('register_admin_viewset')
+@hooks.register("register_admin_viewset")
 def register_incidentgroup_viewset():
     return IncidentGroup()

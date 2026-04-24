@@ -17,22 +17,26 @@ class BranchingChartValue(ChartValue):
     def branch_field_name(self):
         """Return the name of the field in the dataset that will be
         used to branch/segment the chart."""
-        if self.get('group_by') is None:
+        if self.get("group_by") is None:
             return None
-        return self.get('group_by').lower()
+        return self.get("group_by").lower()
 
     def data_url(self):
         """Return the URL to be used to fetch primary data set for the chart."""
-        fields = {'categories', 'tags', 'date', 'state'}
-        fields.add(self.get('group_by').lower())
-        return reverse(
-            'incidentpage-list',
-            kwargs={'version': 'edge'},
-        ) + '?' + parse.urlencode(
-            {
-                'fields': ','.join(fields),
-                'format': 'csv',
-            }
+        fields = {"categories", "tags", "date", "state"}
+        fields.add(self.get("group_by").lower())
+        return (
+            reverse(
+                "incidentpage-list",
+                kwargs={"version": "edge"},
+            )
+            + "?"
+            + parse.urlencode(
+                {
+                    "fields": ",".join(fields),
+                    "format": "csv",
+                }
+            )
         )
 
     def branches_json_string(self):
@@ -52,30 +56,27 @@ class BranchingChartValue(ChartValue):
         list contains the branches as a python list.
 
         """
-        group_by = self.get('group_by')
+        group_by = self.get("group_by")
         if group_by == IncidentBranches.CATEGORIES:
             branches_value = {
-                'type': 'url',
-                'value': reverse(
-                    'category-list',
-                    kwargs={'version': 'edge'},
-                )
+                "type": "url",
+                "value": reverse(
+                    "category-list",
+                    kwargs={"version": "edge"},
+                ),
             }
         elif group_by == IncidentBranches.ASSAILANT:
             branches_value = {
-                'type': 'list',
-                'value': [
-                    {'title': title, 'value': value} for
-                    value, title in ACTORS
-                ]
+                "type": "list",
+                "value": [{"title": title, "value": value} for value, title in ACTORS],
             }
         elif group_by == IncidentBranches.STATUS_OF_CHARGES:
             branches_value = {
-                'type': 'list',
-                'value': [
-                    {'title': title, 'value': value} for
-                    value, title in STATUS_OF_CHARGES
-                ]
+                "type": "list",
+                "value": [
+                    {"title": title, "value": value}
+                    for value, title in STATUS_OF_CHARGES
+                ],
             }
         else:
             branches_value = None
@@ -94,6 +95,6 @@ class VerticalBarChartValue(BranchingChartValue):
 
 
 class IncidentBranches(TextChoices):
-    CATEGORIES = 'CATEGORIES', 'Categories'
-    ASSAILANT = 'ASSAILANT', 'Assailant'
-    STATUS_OF_CHARGES = 'STATUS_OF_CHARGES', 'Status of Charges'
+    CATEGORIES = "CATEGORIES", "Categories"
+    ASSAILANT = "ASSAILANT", "Assailant"
+    STATUS_OF_CHARGES = "STATUS_OF_CHARGES", "Status of Charges"

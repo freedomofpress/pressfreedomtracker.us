@@ -6,15 +6,19 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0030_homepage_content'),
+        ("home", "0030_homepage_content"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='statbox',
-            name='value',
-            field=wagtail.fields.RichTextField(blank=True, help_text='Primary text for this stat box.  Line breaks will be removed.', null=True, validators=[common.validators.TemplateValidator()]),
+            model_name="statbox",
+            name="value",
+            field=wagtail.fields.RichTextField(
+                blank=True,
+                help_text="Primary text for this stat box.  Line breaks will be removed.",
+                null=True,
+                validators=[common.validators.TemplateValidator()],
+            ),
         ),
     ]

@@ -7,20 +7,19 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0003_datetime_to_datefield'),
+        ("incident", "0003_datetime_to_datefield"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='image_attribution',
+            model_name="incidentpage",
+            name="image_attribution",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='incidentpage',
-            name='image_caption',
+            model_name="incidentpage",
+            name="image_caption",
             field=wagtail.fields.RichTextField(blank=True, max_length=255, null=True),
         ),
     ]

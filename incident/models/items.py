@@ -19,7 +19,7 @@ class Journalist(ClusterableModel):
     title = models.CharField(max_length=255, validators=[validate_disallow_AND])
 
     class Meta:
-        ordering = ['title']
+        ordering = ["title"]
 
     def __str__(self):
         return self.title
@@ -34,10 +34,12 @@ class Institution(ClusterableModel):
         instance.save()
         return instance
 
-    title = models.CharField(max_length=255, unique=True, validators=[validate_disallow_AND])
+    title = models.CharField(
+        max_length=255, unique=True, validators=[validate_disallow_AND]
+    )
 
     class Meta:
-        ordering = ['title']
+        ordering = ["title"]
 
     def __str__(self):
         return self.title
@@ -52,15 +54,17 @@ class GovernmentWorker(ClusterableModel):
         instance.save()
         return instance
 
-    title = models.CharField(max_length=255, unique=True, validators=[validate_disallow_AND])
+    title = models.CharField(
+        max_length=255, unique=True, validators=[validate_disallow_AND]
+    )
 
     def __str__(self):
         return self.title
 
     class Meta:
-        ordering = ['title']
-        verbose_name = 'Alleged recipient of leak'
-        verbose_name_plural = 'Alleged recipients of leaks'
+        ordering = ["title"]
+        verbose_name = "Alleged recipient of leak"
+        verbose_name_plural = "Alleged recipients of leaks"
 
 
 class LawEnforcementOrganization(ClusterableModel):
@@ -77,30 +81,39 @@ class LawEnforcementOrganization(ClusterableModel):
         return self.title
 
     class Meta:
-        ordering = ['title']
-        verbose_name = 'Law enforcement organization'
-        verbose_name_plural = 'Law enforcement organizations'
+        ordering = ["title"]
+        verbose_name = "Law enforcement organization"
+        verbose_name_plural = "Law enforcement organizations"
 
 
 class TargetedJournalist(Orderable):
-    incident = ParentalKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='targeted_journalists')
+    incident = ParentalKey(
+        "incident.IncidentPage",
+        on_delete=models.CASCADE,
+        related_name="targeted_journalists",
+    )
 
-    journalist = models.ForeignKey(Journalist, on_delete=models.CASCADE, related_name='targeted_incidents')
+    journalist = models.ForeignKey(
+        Journalist, on_delete=models.CASCADE, related_name="targeted_incidents"
+    )
 
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, null=True, blank=True)
+    institution = models.ForeignKey(
+        Institution, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     @property
     def summary(self):
         journalist = self.journalist.title
         if self.institution:
-            return '{journalist} ({institution})'.format(
-                journalist=journalist, institution=self.institution.title,
+            return "{journalist} ({institution})".format(
+                journalist=journalist,
+                institution=self.institution.title,
             )
         return journalist
 
     panels = [
-        AutocompletePanel('journalist', 'incident.Journalist'),
-        AutocompletePanel('institution', 'incident.Institution'),
+        AutocompletePanel("journalist", "incident.Journalist"),
+        AutocompletePanel("institution", "incident.Institution"),
     ]
 
 
@@ -123,7 +136,7 @@ class Charge(ClusterableModel):
         return self.title
 
     class Meta:
-        ordering = ['title']
+        ordering = ["title"]
 
 
 class Nationality(ClusterableModel):
@@ -145,8 +158,8 @@ class Nationality(ClusterableModel):
         return self.title
 
     class Meta:
-        ordering = ['title']
-        verbose_name_plural = 'nationalities'
+        ordering = ["title"]
+        verbose_name_plural = "nationalities"
 
 
 class PoliticianOrPublic(ClusterableModel):
@@ -168,9 +181,9 @@ class PoliticianOrPublic(ClusterableModel):
         return self.title
 
     class Meta:
-        ordering = ['title']
-        verbose_name = 'Politician or public figure'
-        verbose_name_plural = 'politicians or public figures'
+        ordering = ["title"]
+        verbose_name = "Politician or public figure"
+        verbose_name_plural = "politicians or public figures"
 
 
 class Venue(ClusterableModel):
@@ -190,4 +203,4 @@ class Venue(ClusterableModel):
         return self.title
 
     class Meta:
-        ordering = ['title']
+        ordering = ["title"]

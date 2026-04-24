@@ -5,20 +5,29 @@ import wagtail.images.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0103_auto_20240125_1417'),
+        ("common", "0103_auto_20240125_1417"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='customimage',
-            name='file',
-            field=wagtail.images.models.WagtailImageField(height_field='height', upload_to=wagtail.images.models.get_upload_to, verbose_name='file', width_field='width'),
+            model_name="customimage",
+            name="file",
+            field=wagtail.images.models.WagtailImageField(
+                height_field="height",
+                upload_to=wagtail.images.models.get_upload_to,
+                verbose_name="file",
+                width_field="width",
+            ),
         ),
         migrations.AlterField(
-            model_name='customrendition',
-            name='file',
-            field=wagtail.images.models.WagtailImageField(height_field='height', storage=wagtail.images.models.get_rendition_storage, upload_to=wagtail.images.models.get_rendition_upload_to, width_field='width'),
+            model_name="customrendition",
+            name="file",
+            field=wagtail.images.models.WagtailImageField(
+                height_field="height",
+                storage=wagtail.images.models.get_rendition_storage,
+                upload_to=wagtail.images.models.get_rendition_upload_to,
+                width_field="width",
+            ),
         ),
     ]

@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0071_auto_20200408_1938'),
-        ('common', '0070_searchsettings_data_download_page'),
+        ("common", "0071_auto_20200408_1938"),
+        ("common", "0070_searchsettings_data_download_page"),
     ]
 
-    operations = [
-    ]
+    operations = []

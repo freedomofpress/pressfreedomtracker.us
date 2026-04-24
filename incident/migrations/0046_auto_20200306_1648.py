@@ -5,15 +5,19 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0045_copy_affiliation_to_institutions'),
+        ("incident", "0045_copy_affiliation_to_institutions"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='targeted_institutions',
-            field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='institutions_incidents', to='incident.Institution', verbose_name='Targeted Institutions'),
+            model_name="incidentpage",
+            name="targeted_institutions",
+            field=modelcluster.fields.ParentalManyToManyField(
+                blank=True,
+                related_name="institutions_incidents",
+                to="incident.Institution",
+                verbose_name="Targeted Institutions",
+            ),
         ),
     ]

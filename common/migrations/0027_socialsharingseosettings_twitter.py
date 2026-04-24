@@ -6,15 +6,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0026_auto_20170802_0938'),
+        ("common", "0026_auto_20170802_0938"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='socialsharingseosettings',
-            name='twitter',
-            field=models.CharField(blank=True, help_text='Your Twitter username', max_length=255, null=True),
+            model_name="socialsharingseosettings",
+            name="twitter",
+            field=models.CharField(
+                blank=True, help_text="Your Twitter username", max_length=255, null=True
+            ),
         ),
     ]

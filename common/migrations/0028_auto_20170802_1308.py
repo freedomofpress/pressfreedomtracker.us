@@ -7,15 +7,21 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0027_socialsharingseosettings_twitter'),
+        ("common", "0027_socialsharingseosettings_twitter"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='socialsharingseosettings',
-            name='default_image',
-            field=models.ForeignKey(blank=True, help_text="Default image for pages that don't have another logical image for social sharing", null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+            model_name="socialsharingseosettings",
+            name="default_image",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Default image for pages that don't have another logical image for social sharing",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+            ),
         ),
     ]

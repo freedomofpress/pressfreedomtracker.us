@@ -6,16 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0017_statbox_querystring'),
+        ("home", "0017_statbox_querystring"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='statbox',
-            name='external_link',
-            field=models.URLField(blank=True, default='', help_text='This link will not be used if there is an internal link set.'),
+            model_name="statbox",
+            name="external_link",
+            field=models.URLField(
+                blank=True,
+                default="",
+                help_text="This link will not be used if there is an internal link set.",
+            ),
             preserve_default=False,
         ),
     ]

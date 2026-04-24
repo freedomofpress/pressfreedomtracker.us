@@ -6,11 +6,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0004_add_image_caption'),
-        ('incident', '0003_incidentpagelinks'),
+        ("incident", "0004_add_image_caption"),
+        ("incident", "0003_incidentpagelinks"),
     ]
 
-    operations = [
-    ]
+    operations = []

@@ -5,45 +5,70 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0094_legal_orders_default_sort_by_id'),
+        ("incident", "0094_legal_orders_default_sort_by_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='charge',
-            name='title',
-            field=models.CharField(max_length=255, unique=True, validators=[common.validators.validate_disallow_AND]),
+            model_name="charge",
+            name="title",
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+                validators=[common.validators.validate_disallow_AND],
+            ),
         ),
         migrations.AlterField(
-            model_name='equipment',
-            name='name',
-            field=models.CharField(max_length=255, unique=True, validators=[common.validators.validate_disallow_AND]),
+            model_name="equipment",
+            name="name",
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+                validators=[common.validators.validate_disallow_AND],
+            ),
         ),
         migrations.AlterField(
-            model_name='governmentworker',
-            name='title',
-            field=models.CharField(max_length=255, unique=True, validators=[common.validators.validate_disallow_AND]),
+            model_name="governmentworker",
+            name="title",
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+                validators=[common.validators.validate_disallow_AND],
+            ),
         ),
         migrations.AlterField(
-            model_name='institution',
-            name='title',
-            field=models.CharField(max_length=255, unique=True, validators=[common.validators.validate_disallow_AND]),
+            model_name="institution",
+            name="title",
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+                validators=[common.validators.validate_disallow_AND],
+            ),
         ),
         migrations.AlterField(
-            model_name='journalist',
-            name='title',
-            field=models.CharField(max_length=255, validators=[common.validators.validate_disallow_AND]),
+            model_name="journalist",
+            name="title",
+            field=models.CharField(
+                max_length=255, validators=[common.validators.validate_disallow_AND]
+            ),
         ),
         migrations.AlterField(
-            model_name='nationality',
-            name='title',
-            field=models.CharField(max_length=255, unique=True, validators=[common.validators.validate_disallow_AND]),
+            model_name="nationality",
+            name="title",
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+                validators=[common.validators.validate_disallow_AND],
+            ),
         ),
         migrations.AlterField(
-            model_name='politicianorpublic',
-            name='title',
-            field=models.CharField(max_length=255, unique=True, validators=[common.validators.validate_disallow_AND]),
+            model_name="politicianorpublic",
+            name="title",
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+                validators=[common.validators.validate_disallow_AND],
+            ),
         ),
     ]

@@ -17,7 +17,7 @@ class ShortcutsPanelTest(WagtailPageTestCase):
     @classmethod
     def setUpTestData(cls):
         site = Site.objects.get(is_default_site=True)
-        root_page = Page.objects.get(slug='home')
+        root_page = Page.objects.get(slug="home")
         search_settings = SearchSettings.for_site(site)
 
         index = IncidentIndexPageFactory(parent=root_page)
@@ -28,12 +28,12 @@ class ShortcutsPanelTest(WagtailPageTestCase):
         super().setUp()
         self.login()
 
-    @hooks.register_temporarily('construct_homepage_panels', add_shortcuts_panel)
+    @hooks.register_temporarily("construct_homepage_panels", add_shortcuts_panel)
     def test_image_shortcut(self):
-        response = self.client.get(reverse('wagtailadmin_home'))
-        self.assertContains(response, 'Add a new image')
+        response = self.client.get(reverse("wagtailadmin_home"))
+        self.assertContains(response, "Add a new image")
 
-    @hooks.register_temporarily('construct_homepage_panels', add_shortcuts_panel)
+    @hooks.register_temporarily("construct_homepage_panels", add_shortcuts_panel)
     def test_incident_shortcut(self):
-        response = self.client.get(reverse('wagtailadmin_home'))
-        self.assertContains(response, 'Add a new incident')
+        response = self.client.get(reverse("wagtailadmin_home"))
+        self.assertContains(response, "Add a new incident")

@@ -6,15 +6,31 @@ import incident.models.incident_page
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0095_alter_charge_title_alter_equipment_name_and_more'),
+        ("incident", "0095_alter_charge_title_alter_equipment_name_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='case_statuses',
-            field=incident.models.incident_page.ChoiceArrayField(base_field=models.CharField(choices=[('ONGOING', 'ongoing'), ('SETTLED', 'settled'), ('DISMISSED', 'dismissed'), ('WITHDRAWN', 'withdrawn'), ('APPEALED', 'appealed'), ('UNKNOWN', 'unknown'), ('VERDICT_ISSUED', 'verdict issued')], max_length=255), blank=True, null=True, size=None, verbose_name='Legal case statuses'),
+            model_name="incidentpage",
+            name="case_statuses",
+            field=incident.models.incident_page.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("ONGOING", "ongoing"),
+                        ("SETTLED", "settled"),
+                        ("DISMISSED", "dismissed"),
+                        ("WITHDRAWN", "withdrawn"),
+                        ("APPEALED", "appealed"),
+                        ("UNKNOWN", "unknown"),
+                        ("VERDICT_ISSUED", "verdict issued"),
+                    ],
+                    max_length=255,
+                ),
+                blank=True,
+                null=True,
+                size=None,
+                verbose_name="Legal case statuses",
+            ),
         ),
     ]

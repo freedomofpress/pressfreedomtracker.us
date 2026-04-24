@@ -4,15 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0069_alter_incidentpage_body'),
+        ("incident", "0069_alter_incidentpage_body"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='introduction',
-            field=models.TextField(blank=True, help_text='Optional: introduction displayed above the image.'),
+            model_name="incidentpage",
+            name="introduction",
+            field=models.TextField(
+                blank=True,
+                help_text="Optional: introduction displayed above the image.",
+            ),
         ),
     ]

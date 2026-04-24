@@ -67,16 +67,16 @@ class BaseSidebarPageMixin(models.Model):
     """
 
     sidebar_menu = models.ForeignKey(
-        'menus.Menu',
+        "menus.Menu",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+',
-        help_text='If left empty, page will use parent\'s sidebar menu'
+        related_name="+",
+        help_text="If left empty, page will use parent's sidebar menu",
     )
 
     settings_panels = [
-        FieldPanel('sidebar_menu'),
+        FieldPanel("sidebar_menu"),
     ]
 
     def get_sidebar_menu(self):
@@ -148,6 +148,7 @@ class MediaPageMixin:
     data or its StreamField blocks.
 
     """
+
     @property
     def page_js(self):
         """Can be overridden if the page always needs a particular JS bundle"""
@@ -170,30 +171,28 @@ class MediaPageMixin:
         # If the page is a home page, loop through all the panels and posts to see if
         # there is a chart as the primary image
         try:
-            for blog_post in self.featured_blog_posts.select_related('page'):
+            for blog_post in self.featured_blog_posts.select_related("page"):
                 block_cls_names = block_cls_names + get_page_blocks(blog_post.page)
         except Exception:
             pass
 
         for block_cls_name in block_cls_names:
             block_cls = import_string(block_cls_name)
-            if hasattr(block_cls, 'Media') and hasattr(
-                    block_cls.Media, media_type
-            ):
+            if hasattr(block_cls, "Media") and hasattr(block_cls.Media, media_type):
                 media.extend(getattr(block_cls.Media, media_type))
         return media
 
     @property
     def media_js(self):
         """Returns the JS bundle names required by the page and its StreamField blocks."""
-        return sorted(set(self.page_js + self.streamfield_media('js')))
+        return sorted(set(self.page_js + self.streamfield_media("js")))
 
 
 class OrganizationIndexPage(Page):
-    subpage_types = ['common.OrganizationPage']
+    subpage_types = ["common.OrganizationPage"]
     content_panels = Page.content_panels
 
-    subpage_types = ['common.OrganizationPage']
+    subpage_types = ["common.OrganizationPage"]
 
     preview_modes = []
 
@@ -204,21 +203,21 @@ class OrganizationIndexPage(Page):
 class OrganizationPage(Page):
     website = models.URLField(blank=True)
     logo = models.ForeignKey(
-        'common.CustomImage',
+        "common.CustomImage",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name="+",
     )
     description = RichTextField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
-        FieldPanel('description'),
-        FieldPanel('website'),
-        FieldPanel('logo'),
+        FieldPanel("description"),
+        FieldPanel("website"),
+        FieldPanel("logo"),
     ]
 
-    parent_page_types = ['common.OrganizationIndexPage']
+    parent_page_types = ["common.OrganizationIndexPage"]
     preview_modes = []
 
     def serve(self, request):
@@ -236,16 +235,18 @@ class OrganizationPage(Page):
         except IndexError:
             # This organization has no blog posts. Fall back to 404
             raise Http404()
-        return redirect('{}?organization={}'.format(blog_index.get_url(request=request), self.pk))
+        return redirect(
+            "{}?organization={}".format(blog_index.get_url(request=request), self.pk)
+        )
 
 
 class PersonPage(Page):
     photo = models.ForeignKey(
-        'common.CustomImage',
+        "common.CustomImage",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name="+",
     )
 
     bio = RichTextField(blank=True, null=True)
@@ -256,6 +257,7 @@ class PersonPage(Page):
 
     def serve(self, request):
         from blog.models import BlogIndexPage
+
         try:
             blog_index = BlogIndexPage.objects.get()
         except BlogIndexPage.DoesNotExist:
@@ -263,22 +265,20 @@ class PersonPage(Page):
             raise Http404()
 
         base_url = blog_index.get_url(request=request)
-        query_string = urlencode({'author': self.pk})
-        return redirect(
-            f'{base_url}?{query_string}'
-        )
+        query_string = urlencode({"author": self.pk})
+        return redirect(f"{base_url}?{query_string}")
 
     content_panels = Page.content_panels + [
-        FieldPanel('bio'),
-        FieldPanel('website'),
-        FieldPanel('photo'),
+        FieldPanel("bio"),
+        FieldPanel("website"),
+        FieldPanel("photo"),
     ]
 
 
 class QuickFact(Orderable):
-    page = ParentalKey('common.CategoryPage', related_name='quick_facts')
+    page = ParentalKey("common.CategoryPage", related_name="quick_facts")
     body = RichTextField(
-        editor='num-incident-full-features',
+        editor="num-incident-full-features",
         validators=[validate_template],
     )
     link_url = models.URLField(blank=True)
@@ -288,7 +288,7 @@ class QuickFact(Orderable):
 
 
 class StatisticsItem(Orderable):
-    page = ParentalKey('common.CategoryPage', related_name='statistics_items')
+    page = ParentalKey("common.CategoryPage", related_name="statistics_items")
     label = models.CharField(max_length=255)
     dataset = models.CharField(
         max_length=255,
@@ -299,18 +299,18 @@ class StatisticsItem(Orderable):
         max_length=255,
         null=True,
         blank=True,
-        help_text='Whitespace-separated list of arguments to be passed to the statistics function',
+        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
     )
     link = models.URLField(
         null=True,
         blank=True,
-        help_text='Link to the filtered incident database page, showing incidents related to this filter',
+        help_text="Link to the filtered incident database page, showing incidents related to this filter",
     )
     panels = [
-        FieldPanel('label'),
-        FieldPanel('dataset'),
-        FieldPanel('params'),
-        FieldPanel('link'),
+        FieldPanel("label"),
+        FieldPanel("dataset"),
+        FieldPanel("params"),
+        FieldPanel("link"),
     ]
 
     def clean(self):
@@ -318,16 +318,16 @@ class StatisticsItem(Orderable):
 
 
 class TaxonomyCategoryPage(Orderable):
-    taxonomy_setting = ParentalKey('common.TaxonomySettings', related_name='categories')
-    category = ParentalKey('common.CategoryPage', related_name='taxonomy_settings')
+    taxonomy_setting = ParentalKey("common.TaxonomySettings", related_name="categories")
+    category = ParentalKey("common.CategoryPage", related_name="taxonomy_settings")
 
     panels = [
-        PageChooserPanel('category', 'common.CategoryPage'),
+        PageChooserPanel("category", "common.CategoryPage"),
     ]
 
 
 class CategoryIncidentFilter(Orderable):
-    category = ParentalKey('common.CategoryPage', related_name='incident_filters')
+    category = ParentalKey("common.CategoryPage", related_name="incident_filters")
     incident_filter = models.CharField(
         choices=FILTER_CHOICES,
         max_length=255,
@@ -336,134 +336,141 @@ class CategoryIncidentFilter(Orderable):
 
     def clean(self):
         from common.models.settings import GeneralIncidentFilter
-        if GeneralIncidentFilter.objects.filter(incident_filter=self.incident_filter).exists():
-            raise ValidationError({
-                'incident_filter': '"{}" is already in use in general filters'.format(
-                    self.get_incident_filter_display(),
-                ),
-            })
+
+        if GeneralIncidentFilter.objects.filter(
+            incident_filter=self.incident_filter
+        ).exists():
+            raise ValidationError(
+                {
+                    "incident_filter": '"{}" is already in use in general filters'.format(
+                        self.get_incident_filter_display(),
+                    ),
+                }
+            )
 
 
 class CategoryMethodologyItem(Orderable):
-    page = ParentalKey('common.CategoryPage', related_name='methodology_items')
+    page = ParentalKey("common.CategoryPage", related_name="methodology_items")
     label = models.CharField(max_length=255)
     description = models.TextField()
     panels = [
-        FieldPanel('label'),
-        FieldPanel('description'),
+        FieldPanel("label"),
+        FieldPanel("description"),
     ]
 
 
 def get_year_choices(start_year=2017):
-    return tuple([(None, "----")]) + tuple((x, x) for x in range(start_year, datetime.today().year + 1))
+    return tuple([(None, "----")]) + tuple(
+        (x, x) for x in range(start_year, datetime.today().year + 1)
+    )
 
 
 class CategoryPage(MetadataPageMixin, Page):
     description = RichTextField(
-        editor='num-incident-full-features',
+        editor="num-incident-full-features",
         blank=True,
         validators=[validate_template],
     )
     methodology = RichTextField(
         blank=True,
         null=True,
-        help_text='Detailed description of how we track the data for this particular category.'
+        help_text="Detailed description of how we track the data for this particular category.",
     )
 
     # Data Viz Configuration
     viz_type = models.CharField(
         max_length=255,
         choices=CATEGORY_CHART_CHOICES,
-        default='none',
-        help_text='The type of chart shown in the category page. By default, no chart is shown.'
+        default="none",
+        help_text="The type of chart shown in the category page. By default, no chart is shown.",
     )
     viz_data_start = models.PositiveIntegerField(
-        'Start Year',
+        "Start Year",
         blank=True,
         null=True,
     )
     viz_data_end = models.PositiveIntegerField(
-        'End Year',
+        "End Year",
         blank=True,
         null=True,
     )
     blog_index_page = models.ForeignKey(
-        'blog.BlogIndexPage',
+        "blog.BlogIndexPage",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+',
-        help_text='This blog will be linked from the category page.'
+        related_name="+",
+        help_text="This blog will be linked from the category page.",
     )
     default_image = models.ForeignKey(
-        'common.CustomImage',
+        "common.CustomImage",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+',
-        help_text='Default SEO image for the incidents within this category'
+        related_name="+",
+        help_text="Default SEO image for the incidents within this category",
     )
     plural_name = models.CharField(max_length=255, null=True, blank=True)
     page_symbol = models.CharField(
         max_length=255,
         choices=CATEGORY_SYMBOL_CHOICES,
-        default='other_incident',
-        help_text='Please check the styleguide to associate the icons with their name'
+        default="other_incident",
+        help_text="Please check the styleguide to associate the icons with their name",
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel('description'),
-        FieldPanel('default_image', heading='Default SEO image for incidents'),
-        InlinePanel('quick_facts', label='Quick Facts'),
-        InlinePanel('statistics_items', label='Statistics'),
+        FieldPanel("description"),
+        FieldPanel("default_image", heading="Default SEO image for incidents"),
+        InlinePanel("quick_facts", label="Quick Facts"),
+        InlinePanel("statistics_items", label="Statistics"),
         MultiFieldPanel(
             [
-                FieldPanel('methodology'),
+                FieldPanel("methodology"),
                 InlinePanel(
-                    'methodology_items',
-                    label='Methodology Items',
-                    help_text='Describe the different fields in this particular category and how the data related to that is tracked.',
+                    "methodology_items",
+                    label="Methodology Items",
+                    help_text="Describe the different fields in this particular category and how the data related to that is tracked.",
                 ),
             ],
-            'Methodology'
+            "Methodology",
         ),
         MultiFieldPanel(
             [
-                FieldPanel('viz_type'),
+                FieldPanel("viz_type"),
                 FieldPanel(
-                    'viz_data_start',
+                    "viz_data_start",
                     classname="year_field",
-                    widget=forms.Select(choices=get_year_choices(2017))
+                    widget=forms.Select(choices=get_year_choices(2017)),
                 ),
                 FieldPanel(
-                    'viz_data_end',
+                    "viz_data_end",
                     classname="year_field",
-                    widget=forms.Select(choices=get_year_choices(2017))
+                    widget=forms.Select(choices=get_year_choices(2017)),
                 ),
             ],
-            'Data Visualization',
-            classname='collapsible',
+            "Data Visualization",
+            classname="collapsible",
         ),
-        InlinePanel('featured_incidents', heading="Featured Incidents", max_num=6),
+        InlinePanel("featured_incidents", heading="Featured Incidents", max_num=6),
         MultiFieldPanel(
             [
-                PageChooserPanel('blog_index_page', 'blog.BlogIndexPage'),
-                InlinePanel('featured_blogs', max_num=6),
+                PageChooserPanel("blog_index_page", "blog.BlogIndexPage"),
+                InlinePanel("featured_blogs", max_num=6),
             ],
-            'Featured Blog Posts',
-            classname='collapsible',
+            "Featured Blog Posts",
+            classname="collapsible",
         ),
-        InlinePanel('incident_filters', label='Fields to include in filters'),
+        InlinePanel("incident_filters", label="Fields to include in filters"),
     ]
 
     settings_panels = Page.settings_panels + [
-        FieldPanel('plural_name'),
-        FieldPanel('page_symbol'),
+        FieldPanel("plural_name"),
+        FieldPanel("page_symbol"),
     ]
 
     def clean(self):
         self.description = unescape(self.description)
-        validate_disallow_comma(self.title, 'Category page title')
+        validate_disallow_comma(self.title, "Category page title")
 
     def get_context(self, request, *args, **kwargs):
         # placed here to avoid circular dependency
@@ -476,103 +483,109 @@ class CategoryPage(MetadataPageMixin, Page):
         context = super(CategoryPage, self).get_context(request, *args, **kwargs)
 
         # request.is_preview is not necessarily set
-        if getattr(request, 'is_preview', False):
-            context['total_incidents'] = 'NOT AVAILABLE IN PREVIEW'
+        if getattr(request, "is_preview", False):
+            context["total_incidents"] = "NOT AVAILABLE IN PREVIEW"
         else:
-            context['total_incidents'] = self.incidents.filter(
+            context["total_incidents"] = self.incidents.filter(
                 incident_page__live=True,
             ).count()
 
         data = request.GET.copy()
-        data['categories'] = str(self.id)
+        data["categories"] = str(self.id)
         incident_filter = IncidentFilter(data)
-        context['serialized_filters'] = json.dumps(get_serialized_filters())
-        context['incident_qs'] = urlencode(data)
+        context["serialized_filters"] = json.dumps(get_serialized_filters())
+        context["incident_qs"] = urlencode(data)
 
-        context['featured_blog_posts'] = [
-            f.page for f in self.featured_blogs.select_related('page')
+        context["featured_blog_posts"] = [
+            f.page for f in self.featured_blogs.select_related("page")
         ]
-        context['featured_incident_pages'] = [
-            f.page for f in self.featured_incidents.select_related(
-                'page',
-                'page__teaser_image',
+        context["featured_incident_pages"] = [
+            f.page
+            for f in self.featured_incidents.select_related(
+                "page",
+                "page__teaser_image",
             )
         ]
 
         # Hard code the date and month. The state
-        context['viz_data_start'] = f"{self.viz_data_start}-01-01"
-        context['viz_data_end'] = f"{self.viz_data_end}-12-31"
+        context["viz_data_start"] = f"{self.viz_data_start}-01-01"
+        context["viz_data_end"] = f"{self.viz_data_end}-12-31"
 
-        context['methodology'] = {
-            'description': self.methodology,
-            'data_items': [
+        context["methodology"] = {
+            "description": self.methodology,
+            "data_items": [
                 {
-                    'label': item.label,
-                    'description': item.description,
-                } for item in self.methodology_items.all()
-            ]
+                    "label": item.label,
+                    "description": item.description,
+                }
+                for item in self.methodology_items.all()
+            ],
         }
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
-            context['export_path'] = search_settings.data_download_page.get_url()
+            context["export_path"] = search_settings.data_download_page.get_url()
         elif search_settings.search_page:
-            context['export_path'] = search_settings.search_page.get_url() + search_settings.search_page.reverse_subpage('export_view')
+            context["export_path"] = (
+                search_settings.search_page.get_url()
+                + search_settings.search_page.reverse_subpage("export_view")
+            )
         else:
-            context['export_path'] = None
+            context["export_path"] = None
 
-        incident_qs = incident_filter.get_queryset() \
-            .with_most_recent_update() \
-            .select_related('teaser_image', 'state', 'arresting_authority') \
+        incident_qs = (
+            incident_filter.get_queryset()
+            .with_most_recent_update()
+            .select_related("teaser_image", "state", "arresting_authority")
             .prefetch_related(
-                'authors',
-                'categories__category',
-                'equipment_broken__equipment',
-                'equipment_seized__equipment',
-                'links',
-                'politicians_or_public_figures_involved',
-                'tags',
-                'target_nationality',
-                'targeted_institutions',
-                'targeted_journalists',
-                'teaser_image__renditions',
-                'updates',
-                'venue',
-                'workers_whose_communications_were_obtained',
+                "authors",
+                "categories__category",
+                "equipment_broken__equipment",
+                "equipment_seized__equipment",
+                "links",
+                "politicians_or_public_figures_involved",
+                "tags",
+                "target_nationality",
+                "targeted_institutions",
+                "targeted_journalists",
+                "teaser_image__renditions",
+                "updates",
+                "venue",
+                "workers_whose_communications_were_obtained",
+            )
         )
 
         paginator, entries = paginate(
-            request,
-            incident_qs,
-            page_key=DEFAULT_PAGE_KEY,
-            per_page=8,
-            orphans=5
+            request, incident_qs, page_key=DEFAULT_PAGE_KEY, per_page=8, orphans=5
         )
 
-        context['recent_incidents'] = incident_qs
-        context['entries_page'] = entries
-        context['paginator'] = paginator
+        context["recent_incidents"] = incident_qs
+        context["entries_page"] = entries
+        context["paginator"] = paginator
 
         #  check if filters other than category are applied
         filters = dict(request.GET)
-        filters.pop('page', None)
-        filters.pop('categories', None)
-        context['filtered'] = bool(filters)
+        filters.pop("page", None)
+        filters.pop("categories", None)
+        context["filtered"] = bool(filters)
 
-        context['data_items'] = [
+        context["data_items"] = [
             {
-                'label': item.label,
-                'value': render_as_template('{{% {tag_name}{params} %}}'.format(
-                    tag_name=item.dataset,
-                    params=' ' + item.params if item.params else '',
-                )),
-                'link': item.link,
-            } for item in self.statistics_items.all()
+                "label": item.label,
+                "value": render_as_template(
+                    "{{% {tag_name}{params} %}}".format(
+                        tag_name=item.dataset,
+                        params=" " + item.params if item.params else "",
+                    )
+                ),
+                "link": item.link,
+            }
+            for item in self.statistics_items.all()
         ]
         return context
 
     def get_cache_tag(self):
-        return 'category-page-{}'.format(self.pk)
+        return "category-page-{}".format(self.pk)
 
     def serve(self, request, *args, **kwargs):
         """
@@ -583,54 +596,71 @@ class CategoryPage(MetadataPageMixin, Page):
         """
 
         response = super(CategoryPage, self).serve(request, *args, **kwargs)
-        response['Cache-Tag'] = self.get_cache_tag()
+        response["Cache-Tag"] = self.get_cache_tag()
         return response
 
 
 class FeaturedCategoryIncident(Orderable):
-    category_page = ParentalKey('common.CategoryPage', related_name='featured_incidents')
-    page = models.ForeignKey('incident.IncidentPage', on_delete=models.CASCADE, related_name='+')
+    category_page = ParentalKey(
+        "common.CategoryPage", related_name="featured_incidents"
+    )
+    page = models.ForeignKey(
+        "incident.IncidentPage", on_delete=models.CASCADE, related_name="+"
+    )
 
     panels = [
-        FieldPanel('page'),
+        FieldPanel("page"),
     ]
 
 
 class FeaturedCategoryBlog(Orderable):
-    category_page = ParentalKey('common.CategoryPage', related_name='featured_blogs')
-    page = models.ForeignKey('blog.BlogPage', on_delete=models.CASCADE, related_name='+')
+    category_page = ParentalKey("common.CategoryPage", related_name="featured_blogs")
+    page = models.ForeignKey(
+        "blog.BlogPage", on_delete=models.CASCADE, related_name="+"
+    )
 
     panels = [
-        FieldPanel('page'),
+        FieldPanel("page"),
     ]
 
 
 class SimplePage(MetadataPageMixin, Page):
-    body = StreamField([
-        ('text', StyledTextTemplateBlock(label='Text', template='common/blocks/styled_text_full_bleed.html')),
-        ('image', AlignedCaptionedImageBlock()),
-        ('raw_html', blocks.RawHTMLBlock()),
-        ('tweet', TweetEmbedBlock(group="Social Media")),
-        ('instagram', InstagramEmbedBlock(group="Social Media")),
-        ('bluesky', BlueskyEmbedBlock(group="Social Media")),
-        ('blockquote', RichTextBlockQuoteBlock()),
-        ('list', blocks.ListBlock(
-            blocks.CharBlock(label="List Item"),
-            template='common/blocks/list_block_columns.html'
-        )),
-        ('logo_list', LogoListBlock()),
-        ('video', AlignedCaptionedEmbedBlock()),
-        ('heading_1', Heading1()),
-        ('heading_2', Heading2()),
-        ('heading_3', Heading3()),
-        ('email_signup', EmailSignupBlock()),
-        ('info_table', InfoTableBlock()),
-    ], use_json_field=True)
+    body = StreamField(
+        [
+            (
+                "text",
+                StyledTextTemplateBlock(
+                    label="Text", template="common/blocks/styled_text_full_bleed.html"
+                ),
+            ),
+            ("image", AlignedCaptionedImageBlock()),
+            ("raw_html", blocks.RawHTMLBlock()),
+            ("tweet", TweetEmbedBlock(group="Social Media")),
+            ("instagram", InstagramEmbedBlock(group="Social Media")),
+            ("bluesky", BlueskyEmbedBlock(group="Social Media")),
+            ("blockquote", RichTextBlockQuoteBlock()),
+            (
+                "list",
+                blocks.ListBlock(
+                    blocks.CharBlock(label="List Item"),
+                    template="common/blocks/list_block_columns.html",
+                ),
+            ),
+            ("logo_list", LogoListBlock()),
+            ("video", AlignedCaptionedEmbedBlock()),
+            ("heading_1", Heading1()),
+            ("heading_2", Heading2()),
+            ("heading_3", Heading3()),
+            ("email_signup", EmailSignupBlock()),
+            ("info_table", InfoTableBlock()),
+        ],
+        use_json_field=True,
+    )
 
     sidebar_content = StreamField(
         [
-            ('heading', Heading2()),
-            ('rich_text', blocks.RichTextBlock()),
+            ("heading", Heading2()),
+            ("rich_text", blocks.RichTextBlock()),
         ],
         default=None,
         blank=True,
@@ -639,43 +669,46 @@ class SimplePage(MetadataPageMixin, Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel('body'),
-        FieldPanel('sidebar_content')
+        FieldPanel("body"),
+        FieldPanel("sidebar_content"),
     ]
 
     def get_meta_description(self):
         if self.search_description:
             return self.search_description
 
-        return truncatewords(
-            strip_tags(self.body.render_as_block()),
-            20
-        )
+        return truncatewords(strip_tags(self.body.render_as_block()), 20)
 
 
 class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
-    body = StreamField([
-        ('text', StyledTextBlock(label='Text')),
-        ('image', AlignedCaptionedImageBlock()),
-        ('raw_html', blocks.RawHTMLBlock()),
-        ('tweet', TweetEmbedBlock(group="Social Media")),
-        ('instagram', InstagramEmbedBlock(group="Social Media")),
-        ('bluesky', BlueskyEmbedBlock(group="Social Media")),
-        ('blockquote', RichTextBlockQuoteBlock()),
-        ('list', blocks.ListBlock(
-            blocks.CharBlock(label="List Item"),
-            template='common/blocks/list_block_columns.html'
-        )),
-        ('logo_list', LogoListBlock()),
-        ('video', AlignedCaptionedEmbedBlock()),
-        ('heading_1', Heading1()),
-        ('heading_2', Heading2()),
-        ('heading_3', Heading3()),
-        ('email_signup', EmailSignupBlock()),
-    ], use_json_field=True)
+    body = StreamField(
+        [
+            ("text", StyledTextBlock(label="Text")),
+            ("image", AlignedCaptionedImageBlock()),
+            ("raw_html", blocks.RawHTMLBlock()),
+            ("tweet", TweetEmbedBlock(group="Social Media")),
+            ("instagram", InstagramEmbedBlock(group="Social Media")),
+            ("bluesky", BlueskyEmbedBlock(group="Social Media")),
+            ("blockquote", RichTextBlockQuoteBlock()),
+            (
+                "list",
+                blocks.ListBlock(
+                    blocks.CharBlock(label="List Item"),
+                    template="common/blocks/list_block_columns.html",
+                ),
+            ),
+            ("logo_list", LogoListBlock()),
+            ("video", AlignedCaptionedEmbedBlock()),
+            ("heading_1", Heading1()),
+            ("heading_2", Heading2()),
+            ("heading_3", Heading3()),
+            ("email_signup", EmailSignupBlock()),
+        ],
+        use_json_field=True,
+    )
 
     content_panels = Page.content_panels + [
-        FieldPanel('body'),
+        FieldPanel("body"),
     ]
 
     settings_panels = Page.settings_panels + BaseSidebarPageMixin.settings_panels
@@ -684,17 +717,12 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         if self.search_description:
             return self.search_description
 
-        return truncatewords(
-            strip_tags(self.body.render_as_block()),
-            20
-        )
+        return truncatewords(strip_tags(self.body.render_as_block()), 20)
 
 
 class TagQuerySet(models.QuerySet):
     def with_incident_count(self):
-        return self.annotate(
-            count=models.Count('tagged_items')
-        )
+        return self.annotate(count=models.Count("tagged_items"))
 
     def unused(self):
         return self.with_incident_count().filter(count__lte=0)
@@ -725,4 +753,4 @@ class CommonTag(ClusterableModel):
         return self.title
 
     class Meta:
-        ordering = ['title']
+        ordering = ["title"]

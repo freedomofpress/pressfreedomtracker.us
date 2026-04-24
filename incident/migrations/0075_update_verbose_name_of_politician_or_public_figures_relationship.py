@@ -5,15 +5,19 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0074_update_streamfields_to_use_json_type'),
+        ("incident", "0074_update_streamfields_to_use_json_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='politicians_or_public_figures_involved',
-            field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='politicians_or_public_incidents', to='incident.PoliticianOrPublic', verbose_name='Government agency or public official involved'),
+            model_name="incidentpage",
+            name="politicians_or_public_figures_involved",
+            field=modelcluster.fields.ParentalManyToManyField(
+                blank=True,
+                related_name="politicians_or_public_incidents",
+                to="incident.PoliticianOrPublic",
+                verbose_name="Government agency or public official involved",
+            ),
         ),
     ]

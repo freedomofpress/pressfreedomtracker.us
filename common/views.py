@@ -47,7 +47,7 @@ def read_version_info_file(p):
 
     """
     try:
-        with open(p, 'r') as f:
+        with open(p, "r") as f:
             return f.read()
     except FileNotFoundError:
         return "<file not found at {}>".format(p)
@@ -58,40 +58,45 @@ def read_version_info_file(p):
 # instead of downloading them and then opening them separately.
 def serve(*args, **kwargs):
     response = wagtail_serve(*args, **kwargs)
-    if response.get('content-disposition', '')[:10] == 'attachment':
-        response['content-disposition'] = 'inline' + response['content-disposition'][10:]
+    if response.get("content-disposition", "")[:10] == "attachment":
+        response["content-disposition"] = (
+            "inline" + response["content-disposition"][10:]
+        )
 
     return response
 
 
 class SubscribeForSite(View):
     def post(self, request):
-        if request.content_type == 'application/json':
+        if request.content_type == "application/json":
             try:
                 data = SubscriptionSchema().loads(request.body)
             except json.JSONDecodeError:
-                logger.warning('JSON could not be decoded', json=request.body)
+                logger.warning("JSON could not be decoded", json=request.body)
                 return HttpResponse(status=400)
             except marshmallow.ValidationError as e:
-                logger.warning('Invalid Mailchimp data received', error_message=str(e))
+                logger.warning("Invalid Mailchimp data received", error_message=str(e))
                 return HttpResponse(status=400)
             try:
                 site = Site.find_for_request(request)
                 subscribe_for_site(site, data)
             except MailchimpError as err:
                 logger.warning(
-                    'Error communicating with Mailchimp',
-                    mailchimp_error=getattr(err, 'text', str(err)),
-                    mailchimp_status_code=getattr(err, 'status_code', '<none>'),
+                    "Error communicating with Mailchimp",
+                    mailchimp_error=getattr(err, "text", str(err)),
+                    mailchimp_status_code=getattr(err, "status_code", "<none>"),
                 )
                 return JsonResponse(
                     {
-                        'success': False,
-                        'message': 'Error communicating with Mailchimp',
+                        "success": False,
+                        "message": "Error communicating with Mailchimp",
                     }
                 )
-            return JsonResponse({'success': True})
-        elif request.content_type == 'application/x-www-form-urlencoded' or request.content_type == 'multipart/form-data':
+            return JsonResponse({"success": True})
+        elif (
+            request.content_type == "application/x-www-form-urlencoded"
+            or request.content_type == "multipart/form-data"
+        ):
             try:
                 data = SubscriptionSchema().load(
                     request.POST,
@@ -100,73 +105,71 @@ class SubscribeForSite(View):
             except marshmallow.ValidationError:
                 return render(
                     request,
-                    'common/_subscribe_error.html',
-                    {'error_message': 'Invalid data submitted'}
+                    "common/_subscribe_error.html",
+                    {"error_message": "Invalid data submitted"},
                 )
             try:
                 site = Site.find_for_request(request)
                 subscribe_for_site(site, data)
             except MailchimpError as err:
                 logger.warning(
-                    'Error communicating with Mailchimp',
-                    mailchimp_error=getattr(err, 'text', str(err)),
-                    mailchimp_status_code=getattr(err, 'status_code', '<none>'),
+                    "Error communicating with Mailchimp",
+                    mailchimp_error=getattr(err, "text", str(err)),
+                    mailchimp_status_code=getattr(err, "status_code", "<none>"),
                 )
                 return render(
                     request,
-                    'common/_subscribe_error.html',
-                    {'error_message': 'An internal error occurred'}
+                    "common/_subscribe_error.html",
+                    {"error_message": "An internal error occurred"},
                 )
             return render(
                 request,
-                'common/_subscribe_thanks.html',
+                "common/_subscribe_thanks.html",
             )
         else:
             return HttpResponse(status=400)
 
 
 class MailchimpInterestsView(TemplateView):
-    template_name = 'wagtailadmin/mailchimp_interests.html'
+    template_name = "wagtailadmin/mailchimp_interests.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        if not getattr(settings, 'MAILCHIMP_API_KEY', None):
-            context['error'] = 'Mailchimp API key not found'
+        if not getattr(settings, "MAILCHIMP_API_KEY", None):
+            context["error"] = "Mailchimp API key not found"
             return context
 
         try:
             client = mailchimp_marketing.Client()
-            client.set_config(
-                {'api_key': settings.MAILCHIMP_API_KEY}
-            )
+            client.set_config({"api_key": settings.MAILCHIMP_API_KEY})
 
             table_data = []
             response = client.lists.get_all_lists()
-            for lst in response.get('lists', []):
-                response = client.lists.get_list_interest_categories(lst['id'])
+            for lst in response.get("lists", []):
+                response = client.lists.get_list_interest_categories(lst["id"])
 
-                for category in response.get('categories', []):
+                for category in response.get("categories", []):
                     response = client.lists.list_interest_category_interests(
-                        lst['id'],
-                        category['id'],
+                        lst["id"],
+                        category["id"],
                     )
 
-                    for interest in response['interests']:
+                    for interest in response["interests"]:
                         table_data.append(
                             (
-                                lst.get('name'),
-                                lst.get('id'),
-                                category.get('title'),
-                                interest.get('name'),
-                                interest.get('id'),
+                                lst.get("name"),
+                                lst.get("id"),
+                                category.get("title"),
+                                interest.get("name"),
+                                interest.get("id"),
                             )
                         )
         except mailchimp_marketing.api_client.ApiClientError as err:
-            context['error'] = f'Error connecting to Mailchimp: {err.text}'
+            context["error"] = f"Error connecting to Mailchimp: {err.text}"
             return context
 
-        context['table_data'] = table_data
+        context["table_data"] = table_data
         return context
 
 
@@ -176,32 +179,32 @@ def deploy_info_view(request):
 
 
 def check_chart_health(request):
-    host = settings.CHART_PREGENERATOR['HOST']
-    port = settings.CHART_PREGENERATOR['PORT']
-    error_message = ''
+    host = settings.CHART_PREGENERATOR["HOST"]
+    port = settings.CHART_PREGENERATOR["PORT"]
+    error_message = ""
 
     context = {
-        'host': host,
-        'port': port,
+        "host": host,
+        "port": port,
     }
 
     try:
-        response = requests.get(f'http://{host}:{port}/', timeout=5)
-        context['response'] = response
+        response = requests.get(f"http://{host}:{port}/", timeout=5)
+        context["response"] = response
     except requests.exceptions.Timeout:
-        error_message = 'Timed out.'
+        error_message = "Timed out."
     except requests.exceptions.TooManyRedirects:
-        error_message = 'Too many redirects'
+        error_message = "Too many redirects"
     except requests.exceptions.RequestException as e:
-        error_message = f'Request exception: {e}'
-    context['error_message'] = error_message
+        error_message = f"Request exception: {e}"
+    context["error_message"] = error_message
 
-    return TemplateResponse(request, 'wagtailadmin/check_chart_health.html', context)
+    return TemplateResponse(request, "wagtailadmin/check_chart_health.html", context)
 
 
 @never_cache
 def get_csrf_token(request):
-    return HttpResponse(get_token(request), content_type='text/plain')
+    return HttpResponse(get_token(request), content_type="text/plain")
 
 
 @never_cache
@@ -231,4 +234,4 @@ def csrf_failure(request, reason=""):
 
 
 def too_many_requests(request):
-    return TemplateResponse(request, '429.html', {})
+    return TemplateResponse(request, "429.html", {})

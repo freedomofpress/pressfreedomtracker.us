@@ -4,15 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0111_alter_commontag_title'),
+        ("common", "0111_alter_commontag_title"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='chartsnapshot',
-            name='chart_type',
-            field=models.CharField(choices=[('VERTICAL_BAR', 'Vertical Bar Chart'), ('TREEMAP', 'Treemap'), ('BUBBLE_MAP', 'Bubble Map'), ('HEXBIN_MAP', 'Hexbin Map')], max_length=255),
+            model_name="chartsnapshot",
+            name="chart_type",
+            field=models.CharField(
+                choices=[
+                    ("VERTICAL_BAR", "Vertical Bar Chart"),
+                    ("TREEMAP", "Treemap"),
+                    ("BUBBLE_MAP", "Bubble Map"),
+                    ("HEXBIN_MAP", "Hexbin Map"),
+                ],
+                max_length=255,
+            ),
         ),
     ]

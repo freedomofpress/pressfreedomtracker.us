@@ -5,15 +5,31 @@ import incident.models.incident_page
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0059_auto_20201214_1546'),
+        ("incident", "0059_auto_20201214_1546"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='subpoena_statuses',
-            field=incident.models.incident_page.ChoiceArrayField(base_field=models.CharField(choices=[('UNKNOWN', 'unknown'), ('PENDING', 'pending'), ('DROPPED', 'dropped'), ('QUASHED', 'quashed'), ('UPHELD', 'upheld'), ('CARRIED_OUT', 'carried out'), ('IGNORED', 'ignored')], max_length=255), blank=True, null=True, size=None, verbose_name='Subpoena statuses'),
+            model_name="incidentpage",
+            name="subpoena_statuses",
+            field=incident.models.incident_page.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("UNKNOWN", "unknown"),
+                        ("PENDING", "pending"),
+                        ("DROPPED", "dropped"),
+                        ("QUASHED", "quashed"),
+                        ("UPHELD", "upheld"),
+                        ("CARRIED_OUT", "carried out"),
+                        ("IGNORED", "ignored"),
+                    ],
+                    max_length=255,
+                ),
+                blank=True,
+                null=True,
+                size=None,
+                verbose_name="Subpoena statuses",
+            ),
         ),
     ]

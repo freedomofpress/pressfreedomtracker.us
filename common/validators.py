@@ -22,6 +22,7 @@ def tag_validator(library, tag_name):
 
         tag._validate = validate
         return func
+
     return dec
 
 
@@ -32,40 +33,44 @@ def validate_image_format(value):
         pass
     else:
         logo_image_filename = logo_image.file.name.lower().strip()
-        if logo_image_filename.endswith('jpg') or logo_image_filename.endswith('jpeg'):
+        if logo_image_filename.endswith("jpg") or logo_image_filename.endswith("jpeg"):
             raise ValidationError(
-                'Please upload a non JPEG format image for footer logos',
+                "Please upload a non JPEG format image for footer logos",
             )
 
 
 def validate_disallow_delimiter(value, delimiter, field_name):
     if delimiter in value:
-        raise ValidationError(f'{field_name if field_name else 'This'} field doesn\'t support the "," character.')
+        raise ValidationError(
+            f'{field_name if field_name else "This"} field doesn\'t support the "," character.'
+        )
 
 
 def validate_disallow_comma(value, field_name=None):
-    validate_disallow_delimiter(value, ',', field_name)
+    validate_disallow_delimiter(value, ",", field_name)
 
 
 def validate_disallow_AND(value, field_name=None):
-    validate_disallow_delimiter(value, ' AND ', field_name)
+    validate_disallow_delimiter(value, " AND ", field_name)
 
 
 @deconstructible
 class TemplateValidator(object):
     disallowed_tags = [
-        'load',
-        'extends',
-        'include',
-        'debug',
-        'csrf_token',
+        "load",
+        "extends",
+        "include",
+        "debug",
+        "csrf_token",
     ]
     libraries = Engine.default_builtins + [
-        'statistics.templatetags.statistics_tags',
+        "statistics.templatetags.statistics_tags",
     ]
 
     def _disallowed_tag(self, *args, **kwargs):
-        raise TemplateSyntaxError('{} tags are not allowed'.format(', '.join(self.disallowed_tags)))
+        raise TemplateSyntaxError(
+            "{} tags are not allowed".format(", ".join(self.disallowed_tags))
+        )
 
     def __call__(self, value):
         # Try to parse the template looking for syntax errors.
@@ -87,7 +92,7 @@ class TemplateValidator(object):
         # should only raise template syntax errors for syntax errors,
         # not incorrect params - but here we want to catch both.)
         for tag, compile_func in parser.tags.items():
-            if hasattr(compile_func, '_validate'):
+            if hasattr(compile_func, "_validate"):
                 parser.tags[tag] = compile_func._validate
 
         try:

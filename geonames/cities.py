@@ -1,7 +1,7 @@
 from .models import GeoName
 
 
-def get_city_coords(city=None, state=None, iso3='USA'):
+def get_city_coords(city=None, state=None, iso3="USA"):
     """Returns a tuple of (latitude, longitude) values for the given city
     and state.
 
@@ -20,10 +20,8 @@ def get_city_coords(city=None, state=None, iso3='USA'):
         return city_coords
 
     latlong = GeoName.objects.filter(
-        name__iexact=city,
-        regcode=state,
-        isocode__iso3=iso3
-    ).values_list('latitude', 'longitude')
+        name__iexact=city, regcode=state, isocode__iso3=iso3
+    ).values_list("latitude", "longitude")
 
     if latlong:
         city_coords = latlong[0]

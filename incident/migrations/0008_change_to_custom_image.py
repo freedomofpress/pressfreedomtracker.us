@@ -7,7 +7,7 @@ import django.db.models.deletion
 
 
 def migrate_image_attribution(apps, schema_editor):
-    IncidentPage = apps.get_model('incident', 'IncidentPage')
+    IncidentPage = apps.get_model("incident", "IncidentPage")
     for page in IncidentPage.objects.all():
         if not page.image_attribution or not page.teaser_image:
             continue
@@ -17,24 +17,27 @@ def migrate_image_attribution(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0007_auto_20170627_2234'),
+        ("incident", "0007_auto_20170627_2234"),
         # This dependency was explicitly added.
-        ('common', '0006_change_to_custom_image'),
+        ("common", "0006_change_to_custom_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='teaser_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+            model_name="incidentpage",
+            name="teaser_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+            ),
         ),
-
         migrations.RunPython(migrate_image_attribution, elidable=True),
-
         migrations.RemoveField(
-            model_name='incidentpage',
-            name='image_attribution',
+            model_name="incidentpage",
+            name="image_attribution",
         ),
     ]
