@@ -1,12 +1,12 @@
 [tool.ruff]
 target-version = "py312"
+exclude = [
+    "node_modules",
+    "molecule",
+]
 
 [tool.ruff.lint]
-select = [
-    # isort
-    "I",
-    "F4",  # unused imports: https://docs.astral.sh/ruff/rules/#pyflakes-f
-]
+ignore = ["E501", "E266"]
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
