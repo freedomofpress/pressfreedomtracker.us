@@ -125,11 +125,14 @@ eslint:
 stylelint:
 	docker compose exec node npm run stylelint
 
-.PHONY: flake8
-flake8: ## Runs flake8 linting in Python3 container.
-	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
+.PHONY: lint
+lint: ruff
+
+.PHONY: ruff
+ruff: ## Runs ruff linting in Python3 container.
+	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_ruff --rm \
 			python:3.12.2-slim-bookworm \
-			bash -c "pip install -q flake8 && flake8"
+			bash -c "pip install -q ruff && ruff"
 
 .PHONY: check-migrations
 check-migrations: ## Check for ungenerated migrations
