@@ -132,7 +132,7 @@ lint: ruff
 ruff: ## Runs ruff linting in Python3 container.
 	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_ruff --rm \
 			python:3.12.2-slim-bookworm \
-			bash -c "pip install -q ruff && ruff"
+			bash -c "pip install -q ruff && ruff check"
 
 .PHONY: check-migrations
 check-migrations: ## Check for ungenerated migrations
