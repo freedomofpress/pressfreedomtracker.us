@@ -13,6 +13,8 @@
     "stylelint": "stylelint client/**/*.sass"
   },
   "overrides": {
+    "brace-expansion@<1.1.13": "^1.1.13",
+    "brace-expansion@>=2.0.0 <2.0.3": "^2.0.3",
     "lodash": "^4.18.0"
   },
   "author": "Harris Lapiroff <harris@littleweaverweb.com>",
