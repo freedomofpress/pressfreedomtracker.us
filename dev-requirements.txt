@@ -342,7 +342,6 @@ cryptography==46.0.7 \
     --hash=sha256:ffca7aa1d00cf7d6469b988c581598f2259e46215e0140af408966a24cf086ce
     # via
     #   -r requirements.txt
-    #   django-anymail
     #   google-auth
 decorator==5.1.1 \
     --hash=sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330 \
@@ -380,9 +379,9 @@ django==5.2.13 \
     #   drf-spectacular-sidecar
     #   laces
     #   wagtail
-django-anymail==10.2 \
-    --hash=sha256:1f3006d3b16874aaa32976078da6cdc9baa7f5274cf80e3fc51a288887617aaf \
-    --hash=sha256:ca273abbc04b5ce06d1f3b3e5f28e2d79331519198fa6d6b5ba1b5aa5eea02f7
+django-anymail==15.0 \
+    --hash=sha256:23d8ab6589afe8cc1ae7665c26879814ad192f4c3ed837a2a1868b0a056869e0 \
+    --hash=sha256:64d33dd1084bfc8e4e12245f56629be40aa0b0498fc7fc7544d87b9b2048be1e
     # via -r requirements.txt
 django-autocomplete-light==3.11.0 \
     --hash=sha256:212576a17e3308ef7ca77e280b86684167916d2091d4b73640f38845d9516328
@@ -642,6 +641,7 @@ idna==3.7 \
     --hash=sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0
     # via
     #   -r requirements.txt
+    #   django-anymail
     #   requests
     #   trio
 inflection==0.5.1 \
