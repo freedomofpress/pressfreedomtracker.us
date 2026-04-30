@@ -1,17 +1,17 @@
 import operator
 
+from django import forms
 from django.test import RequestFactory, TestCase
 from django.utils.text import capfirst
-from django import forms
 
-from incident.utils.forms import (
-    FilterForm,
-    get_filter_forms,
-    Datalist,
-    DatalistField,
-)
 from incident.choices import MAYBE_BOOLEAN
 from incident.tests.factories import LawEnforcementOrganizationFactory
+from incident.utils.forms import (
+    Datalist,
+    DatalistField,
+    FilterForm,
+    get_filter_forms,
+)
 
 
 def capitalize_choice_labels(choices):

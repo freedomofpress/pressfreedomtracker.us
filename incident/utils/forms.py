@@ -1,8 +1,8 @@
 import operator
 
 from django import forms
-from django.utils.text import capfirst
 from django.apps import apps
+from django.utils.text import capfirst
 
 from incident import choices
 

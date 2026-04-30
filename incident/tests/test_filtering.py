@@ -5,15 +5,15 @@ from django.core.exceptions import ValidationError
 from django.http import QueryDict
 from django.test import TestCase
 from django.utils import timezone
+
+from wagtail.embeds.blocks import EmbedValue
 from wagtail.models import Site
 from wagtail.rich_text import RichText
-from wagtail.embeds.blocks import EmbedValue
 
 from common.blocks import ALIGNMENT_CHOICES
 from common.models import CategoryPage
-from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
+from common.models.settings import GeneralIncidentFilter, IncidentFilterSettings
 from common.tests.factories import CategoryPageFactory
-from incident.tests import factories
 from incident import choices
 from incident.choices import (
     ARREST_STATUS,
@@ -22,24 +22,25 @@ from incident.choices import (
     STATUS_OF_SEIZED_EQUIPMENT,
     SUBPOENA_STATUS,
 )
+from incident.tests import factories
 from incident.tests.factories import (
     ChargeFactory,
-    EquipmentSeizedFactory,
     EquipmentBrokenFactory,
-    IncidentPageFactory,
-    IncidentPageWithBodyFactory,
-    IncidentUpdateWithBodyFactory,
-    IncidentIndexPageFactory,
-    IncidentUpdateFactory,
-    InexactDateIncidentPageFactory,
-    StateFactory,
-    InstitutionFactory,
-    JournalistFactory,
-    TargetedJournalistFactory,
-    LawEnforcementOrganizationFactory,
-    NationalityFactory,
+    EquipmentSeizedFactory,
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
+    IncidentPageWithBodyFactory,
+    IncidentUpdateFactory,
+    IncidentUpdateWithBodyFactory,
+    InexactDateIncidentPageFactory,
+    InstitutionFactory,
+    JournalistFactory,
+    LawEnforcementOrganizationFactory,
+    NationalityFactory,
+    StateFactory,
+    TargetedJournalistFactory,
 )
 from incident.utils.incident_filter import (
     IncidentFilter,
