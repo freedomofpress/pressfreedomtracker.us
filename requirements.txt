@@ -279,6 +279,7 @@ django==5.2.13 \
     #   django-storages
     #   django-taggit
     #   django-treebeard
+    #   django-widget-tweaks
     #   djangorestframework
     #   drf-spectacular
     #   drf-spectacular-sidecar
@@ -335,9 +336,9 @@ django-webpack-loader==3.2.3 \
     --hash=sha256:81092499af8e0c9b3a0bad21324aca6e2ad786133b19248dae213eb9661a17f7 \
     --hash=sha256:d070bfe8ea5bd6ed48810a8d247204bb7f672573bdb6a7b589f6b75998a45993
     # via -r requirements.in
-django-widget-tweaks==1.4.12 \
-    --hash=sha256:9bfc5c705684754a83cc81da328b39ad1b80f32bd0f4340e2a810cbab4b0c00e \
-    --hash=sha256:fe6b17d5d595c63331f300917980db2afcf71f240ab9341b954aea8f45d25b9a
+django-widget-tweaks==1.5.1 \
+    --hash=sha256:084acc9eeb5a3208f2670522de6284287973e54d54488ce6d402f4b99bc5f452 \
+    --hash=sha256:3f5080f8365740fc1c14607498c975cbfed896dd0c40e1b563095716ee31e3b5
     # via -r requirements.in
 djangorestframework==3.17.1 \
     --hash=sha256:a6def5f447fe78ff853bff1d47a3c59bf38f5434b031780b351b0c73a62db1a5 \

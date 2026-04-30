@@ -11,7 +11,7 @@ django-recaptcha<4.0
 django-settings-export
 django-storages[google]>=1.14.6
 django-webpack-loader
-django-widget-tweaks==1.4.12
+django-widget-tweaks
 djangorestframework-csv
 djangorestframework>=3.14
 docutils
