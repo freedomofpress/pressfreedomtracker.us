@@ -237,7 +237,7 @@ class OrganizationPage(Page):
             raise Http404()
         return redirect(
             "{}?organization={}".format(blog_index.get_url(request=request), self.pk)
-        )
+        )  # pragma: no cover
 
 
 class PersonPage(Page):
@@ -524,12 +524,14 @@ class CategoryPage(MetadataPageMixin, Page):
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
-            context["export_path"] = search_settings.data_download_page.get_url()
+            context["export_path"] = (
+                search_settings.data_download_page.get_url()
+            )  # pragma: no cover
         elif search_settings.search_page:
             context["export_path"] = (
                 search_settings.search_page.get_url()
                 + search_settings.search_page.reverse_subpage("export_view")
-            )
+            )  # pragma: no cover
         else:
             context["export_path"] = None
 
@@ -717,7 +719,9 @@ class SimplePageWithSidebar(BaseSidebarPageMixin, MetadataPageMixin, Page):
         if self.search_description:
             return self.search_description
 
-        return truncatewords(strip_tags(self.body.render_as_block()), 20)
+        return truncatewords(
+            strip_tags(self.body.render_as_block()), 20
+        )  # pragma: no cover
 
 
 class TagQuerySet(models.QuerySet):

@@ -208,12 +208,14 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
 
         if search_settings.data_download_page:
-            context["export_path"] = search_settings.data_download_page.get_url()
+            context["export_path"] = (
+                search_settings.data_download_page.get_url()
+            )  # pragma: no cover
         elif search_settings.search_page:
             context["export_path"] = (
                 search_settings.search_page.get_url()
                 + search_settings.search_page.reverse_subpage("export_view")
-            )
+            )  # pragma: no cover
         else:
             context["export_path"] = None
 

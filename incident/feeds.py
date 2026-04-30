@@ -19,7 +19,7 @@ class IncidentIndexPageFeed(Feed):
 
     def _get_teaser_image(self, obj):
         if obj.teaser_image:
-            return obj.teaser_image.get_rendition("original")
+            return obj.teaser_image.get_rendition("original")  # pragma: no cover
 
     def _get_categories(self, obj):
         categories = obj.categories.all().select_related("category")

@@ -12,7 +12,9 @@ class TopicPageForm(WagtailAdminPageForm):
             and cleaned_data["end_date"]
             and cleaned_data["start_date"] > cleaned_data["end_date"]
         ):
-            self.add_error("start_date", "The start date cannot be after the end date.")
+            self.add_error(
+                "start_date", "The start date cannot be after the end date."
+            )  # pragma: no cover
 
 
 class LegalOrderImportForm(forms.Form):

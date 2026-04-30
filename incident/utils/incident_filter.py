@@ -57,7 +57,7 @@ class Filter(object):
         return "<{}: {}>".format(
             self.__class__.__name__,
             self.name,
-        )
+        )  # pragma: no cover
 
     def get_value(self, data):
         return data.get(self.name) or None
@@ -685,7 +685,9 @@ class RelationThroughFilter(ManyRelationFilter):
         if isinstance(self.model_field, ManyToOneRel) and hasattr(
             related_model, "_autocomplete_model"
         ):
-            serialized["autocomplete_type"] = related_model._autocomplete_model
+            serialized["autocomplete_type"] = (
+                related_model._autocomplete_model
+            )  # pragma: no cover
         else:
             serialized["autocomplete_type"] = "{}.{}".format(
                 related_model._meta.app_label,

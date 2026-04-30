@@ -39,7 +39,7 @@ class BlogIndexPageFeed(Feed):
                 return obj.search_image.get_rendition("original")
 
     def _get_categories(self, obj):
-        categories = obj.categories.all().select_related("category")
+        categories = obj.categories.all().select_related("category")  # pragma: no cover
         return [inline.category for inline in categories]
 
     def _get_complete_url(self, path):

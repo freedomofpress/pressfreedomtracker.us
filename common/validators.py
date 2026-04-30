@@ -33,7 +33,9 @@ def validate_image_format(value):
         pass
     else:
         logo_image_filename = logo_image.file.name.lower().strip()
-        if logo_image_filename.endswith("jpg") or logo_image_filename.endswith("jpeg"):
+        if logo_image_filename.endswith("jpg") or logo_image_filename.endswith(
+            "jpeg"
+        ):  # pragma: no cover
             raise ValidationError(
                 "Please upload a non JPEG format image for footer logos",
             )

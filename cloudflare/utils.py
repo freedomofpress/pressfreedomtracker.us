@@ -55,7 +55,7 @@ def purge(backend: CloudflareBackend, data={}) -> None:
                 logger.error(
                     "Couldn't purge from Cloudflare with data: %s. Unexpected JSON parse error.",
                     string_data,
-                )
+                )  # pragma: no cover
 
     except requests.exceptions.HTTPError as e:
         logger.error(

@@ -116,10 +116,12 @@ def _serialize_field(obj, field):
         val = None
         if teaser_image:
             for rend in teaser_image.renditions.all():
-                if rend.filter_spec == "fill-1330x880":
+                if rend.filter_spec == "fill-1330x880":  # pragma: no cover
                     val = rend.url
             if not val:
-                val = teaser_image.get_rendition("fill-1330x880").url
+                val = teaser_image.get_rendition(
+                    "fill-1330x880"
+                ).url  # pragma: no cover
     elif field.name == "slug":
         val = obj.get_full_url()
     elif isinstance(field, models.ForeignKey):

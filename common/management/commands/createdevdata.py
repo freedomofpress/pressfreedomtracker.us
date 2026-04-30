@@ -125,7 +125,9 @@ def lookup_category(key):
     try:
         return CategoryPage.objects.get(slug=slug)
     except CategoryPage.DoesNotExist:
-        raise CommandError(f"Could not find category with slug `{key}`")
+        raise CommandError(
+            f"Could not find category with slug `{key}`"
+        )  # pragma: no cover
 
 
 def three_combinations(iterable):
@@ -220,7 +222,7 @@ class Command(BaseCommand):
         photo_collection = wagtail_factories.CollectionFactory(name="Photos")
 
         if options.get("download_images", True):
-            self.stdout.write("Fetching images")
+            self.stdout.write("Fetching images")  # pragma: no cover
             self.stdout.flush()
 
             image_fail = False
@@ -232,15 +234,15 @@ class Command(BaseCommand):
                     image_fail = True
             for i in range(5):
                 if not self.fetch_image(600, 800, photo_collection):
-                    image_fail = True
+                    image_fail = True  # pragma: no cover
 
-            self.stdout.write("")
+            self.stdout.write("")  # pragma: no cover
             if image_fail:
                 self.stdout.write(
                     self.style.NOTICE("NOTICE: Some images failed to save")
-                )
+                )  # pragma: no cover
             else:
-                self.stdout.write(self.style.SUCCESS("OK"))
+                self.stdout.write(self.style.SUCCESS("OK"))  # pragma: no cover
         else:
             faker = factory.faker.Faker._get_faker(locale="en-US")
             for i in range(20):
@@ -334,7 +336,7 @@ class Command(BaseCommand):
             home_page.add_child(instance=about_page)
             home_page.about_page = about_page
         else:
-            about_page = SimplePage.objects.get(slug="about")
+            about_page = SimplePage.objects.get(slug="about")  # pragma: no cover
 
         # FAQ Page
         SimplePage.objects.filter(

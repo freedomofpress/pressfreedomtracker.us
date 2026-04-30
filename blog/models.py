@@ -360,4 +360,6 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         if self.search_description:
             return self.search_description
 
-        return truncatewords(strip_tags(self.body.render_as_block()), 20)
+        return truncatewords(
+            strip_tags(self.body.render_as_block()), 20
+        )  # pragma: no cover

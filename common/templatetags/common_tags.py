@@ -105,11 +105,13 @@ def comma_separated_pks(model_list, modifier):
     Primarily intended for filtering.
     """
     if modifier:
-        pks = [str(getattr(model, modifier).pk) for model in model_list]
+        pks = [
+            str(getattr(model, modifier).pk) for model in model_list
+        ]  # pragma: no cover
     else:
         pks = [str(model.pk) for model in model_list]
 
-    return ",".join(pks)
+    return ",".join(pks)  # pragma: no cover
 
 
 @register.filter

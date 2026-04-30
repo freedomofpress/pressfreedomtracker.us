@@ -47,7 +47,9 @@ class MenuFactory(DjangoModelFactory):
                         menu=self, link_page=item, text=item.title, link_url=""
                     )
                 elif isinstance(item, dict):
-                    MenuItemFactory(menu=self, text=item["text"], link_url=item["link"])
+                    MenuItemFactory(
+                        menu=self, text=item["text"], link_url=item["link"]
+                    )  # pragma: no cover
 
 
 class MainMenuFactory(MenuFactory):

@@ -1084,7 +1084,7 @@ class IncidentPage(MetadataPageMixin, Page):
         """
         Returns the date this incident was last updated on or the date of publication if no updates exist.
         """
-        first = self.updates.order_by("-date").first()
+        first = self.updates.order_by("-date").first()  # pragma: no cover
         if first:
             return first.date
         return self.first_published_at

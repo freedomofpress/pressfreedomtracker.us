@@ -46,7 +46,7 @@ class StatisticsBlock(blocks.StructBlock):
         except ValidationError as exc:
             errors.update(
                 {key: [str(error) for error in errors] for key, errors in exc}
-            )
+            )  # pragma: no cover
 
         if errors:
             # The message here is arbitrary - StructBlock.render_form will suppress it

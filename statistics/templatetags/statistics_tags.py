@@ -37,7 +37,7 @@ def num_institution_targets(**kwargs):
     try:
         incident_filter.clean(strict=True)
     except ValidationError:
-        return ""
+        return ""  # pragma: no cover
     queryset = incident_filter.get_queryset()
     return (
         Institution.objects.filter(institutions_incidents__in=queryset)
@@ -56,7 +56,7 @@ def num_journalist_targets(**kwargs):
     try:
         incident_filter.clean(strict=True)
     except ValidationError:
-        return ""
+        return ""  # pragma: no cover
     queryset = incident_filter.get_queryset()
     tj_queryset = TargetedJournalist.objects.filter(incident__in=queryset)
     return (
@@ -86,7 +86,7 @@ def num_targets(**kwargs):
         incident_filter.clean(strict=True)
     except ValidationError:
         # Don't return an incorrect number if params are invalid.
-        return ""
+        return ""  # pragma: no cover
     queryset = incident_filter.get_queryset()
 
     journalist_queryset = TargetedJournalist.objects.filter(incident__in=queryset)

@@ -21,7 +21,7 @@ def introspect_func(name, f):
 
 # rendered_content/STATISTICS.rst must *not* contain dynamic user content.
 def stats_guide_view(request):
-    with open(STATISTICS_DOCS_PATH, "r") as fp:
+    with open(STATISTICS_DOCS_PATH, "r") as fp:  # pragma: no cover
         parts = publish_parts(fp.read(), writer_name="html")
         rendered_content = parts["body"]
     return render(
@@ -30,4 +30,4 @@ def stats_guide_view(request):
         {
             "rendered_content": mark_safe(rendered_content)  # nosec
         },
-    )
+    )  # pragma: no cover

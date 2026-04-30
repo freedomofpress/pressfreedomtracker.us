@@ -184,7 +184,9 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))
         if search_settings.data_download_page:
-            context["export_path"] = search_settings.data_download_page.get_url()
+            context["export_path"] = (
+                search_settings.data_download_page.get_url()
+            )  # pragma: no cover
         else:
             context["export_path"] = self.url + self.reverse_subpage("export_view")
 

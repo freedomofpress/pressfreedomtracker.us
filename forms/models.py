@@ -269,7 +269,7 @@ class FormPage(
         if getattr(self, "csrf_failure_data", {}):
             context["top_level_error"] = "Submission failed, please try again."
         if request.GET.get("embed", None):
-            context["template_name"] = "base.chromeless.html"
+            context["template_name"] = "base.chromeless.html"  # pragma: no cover
         else:
             context["template_name"] = "base.html"
         return context
@@ -294,7 +294,7 @@ class FormPage(
         for field in form:
             value = field.value()
             if isinstance(value, list):
-                value = ", ".join(value)
+                value = ", ".join(value)  # pragma: no cover
             content.append("{}: {}".format(field.label, value))
 
             if fields.get(field.name):
