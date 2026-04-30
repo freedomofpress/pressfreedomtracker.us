@@ -331,9 +331,9 @@ django-treebeard==4.7 \
     --hash=sha256:787117995ff985d98e6c2b241ef6b9d37fe8ff7051cd7535c283616a0b5b2645 \
     --hash=sha256:c751a3f924158c288fea89afc25a7151979faf01bf11fdc7be3b858099dfa56d
     # via wagtail
-django-webpack-loader==3.0.0 \
-    --hash=sha256:61b8f571c3a1fdf9eb4b9935cd046f24673bf5aba005c07c8c30c074aa09dde6 \
-    --hash=sha256:74d0fa6eda788b84b1ab828c2e7efce8414b05eef0a4eb2bf27d311a50e0a4ed
+django-webpack-loader==3.2.3 \
+    --hash=sha256:81092499af8e0c9b3a0bad21324aca6e2ad786133b19248dae213eb9661a17f7 \
+    --hash=sha256:d070bfe8ea5bd6ed48810a8d247204bb7f672573bdb6a7b589f6b75998a45993
     # via -r requirements.in
 django-widget-tweaks==1.4.12 \
     --hash=sha256:9bfc5c705684754a83cc81da328b39ad1b80f32bd0f4340e2a810cbab4b0c00e \
