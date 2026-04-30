@@ -25,9 +25,11 @@ from blog.utils import BlogFilter
 from statistics.blocks import StatisticsBlock
 from common.models import PersonPage, OrganizationPage, MetadataPageMixin, MediaPageMixin
 from common.blocks import (
+    BlueskyEmbedBlock,
     Heading1,
     Heading2,
     Heading3,
+    InstagramEmbedBlock,
     StyledTextBlock,
     AlignedCaptionedImageBlock,
     AlignedCaptionedEmbedBlock,
@@ -47,7 +49,9 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         ('rich_text', blocks.RichTextBlock(icon='doc-full', label='Rich Text')),
         ('image', ImageChooserBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
-        ('tweet', TweetEmbedBlock())
+        ('tweet', TweetEmbedBlock(group="Social Media")),
+        ('instagram', InstagramEmbedBlock(group="Social Media")),
+        ('bluesky', BlueskyEmbedBlock(group="Social Media")),
     ], use_json_field=True)
 
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
@@ -188,7 +192,9 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('aside', AsideBlock()),
         ('image', AlignedCaptionedImageBlock()),
         ('raw_html', blocks.RawHTMLBlock()),
-        ('tweet', TweetEmbedBlock()),
+        ('tweet', TweetEmbedBlock(group="Social Media")),
+        ('instagram', InstagramEmbedBlock(group="Social Media")),
+        ('bluesky', BlueskyEmbedBlock(group="Social Media")),
         ('blockquote', RichTextBlockQuoteBlock()),
         ('list', blocks.ListBlock(
             blocks.CharBlock(label="List Item"),
@@ -200,10 +206,10 @@ class BlogPage(MetadataPageMixin, MediaPageMixin, Page):
         ('heading_3', Heading3()),
         ('button', ButtonBlock()),
         ('statistics', StatisticsBlock()),
-        ('vertical_bar_chart', VerticalBarChart()),
-        ('tree_map_chart', TreeMapChart()),
-        ('bubble_map_chart', BubbleMapChart()),
-        ('hexbin_map_chart', HexbinMapChart()),
+        ('vertical_bar_chart', VerticalBarChart(group="Charts")),
+        ('tree_map_chart', TreeMapChart(group="Charts")),
+        ('bubble_map_chart', BubbleMapChart(group="Charts")),
+        ('hexbin_map_chart', HexbinMapChart(group="Charts")),
     ], use_json_field=True)
 
     introduction = models.TextField(

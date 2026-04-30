@@ -141,6 +141,33 @@ class AlignedCaptionedEmbedBlock(blocks.StructBlock):
         label = 'Video'
 
 
+class BlueskyEmbedBlock(blocks.StructBlock):
+    bluesky_post = EmbedBlock(
+        help_text=(
+            "Link to a Bluesky post, "
+            "copied by using the Share button and Copy link to post."
+        )
+    )
+
+    class Meta:
+        icon = "pick"
+        label = "Bluesky embed"
+        template = "common/blocks/bluesky_embed.html"
+
+
+class InstagramEmbedBlock(blocks.StructBlock):
+    instagram_post = EmbedBlock(
+        help_text=(
+            "Link to an Instagram post, copied by using the … button and Copy Link."
+        )
+    )
+
+    class Meta:
+        icon = "pick"
+        label = "Instagram"
+        template = "common/blocks/instagram_embed.html"
+
+
 class TweetEmbedBlock(blocks.StructBlock):
     tweet = EmbedBlock()
 
@@ -265,6 +292,8 @@ class TabbedBlock(blocks.ListBlock):
                     ('raw_html', blocks.RawHTMLBlock()),
                     ('rich_text', blocks.RichTextBlock()),
                     ('tweet', TweetEmbedBlock()),
+                    ('instagram', InstagramEmbedBlock()),
+                    ('bluesky', BlueskyEmbedBlock()),
                 ])),
             ]),
             template='common/blocks/tabbed_block.html',
