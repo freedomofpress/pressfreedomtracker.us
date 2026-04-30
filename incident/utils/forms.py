@@ -80,7 +80,9 @@ class FilterForm(forms.Form):
                         )
                         title = getattr(choice, title_field)
                         autocomplete_choices.append(title)
-                    kwargs["choices"] = autocomplete_choices
+                    kwargs["choices"] = [
+                        (choice, choice) for choice in autocomplete_choices
+                    ]
                     kwargs["list_name"] = f"{name}__choices"
 
                 if _type == "date":
