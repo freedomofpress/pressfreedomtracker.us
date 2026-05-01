@@ -11,15 +11,51 @@ import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0001_initial'),
+        ("blog", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='body',
-            field=wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('statistics', wagtail.blocks.StructBlock((('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            model_name="blogpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                (
+                    (
+                        "rich_text",
+                        wagtail.blocks.RichTextBlock(
+                            icon="doc-full", label="Rich Text"
+                        ),
+                    ),
+                    ("image", wagtail.images.blocks.ImageChooserBlock()),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    (
+                        "statistics",
+                        wagtail.blocks.StructBlock(
+                            (
+                                (
+                                    "visualization",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.blocks.get_visualization_choices
+                                    ),
+                                ),
+                                (
+                                    "dataset",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_stats_choices
+                                    ),
+                                ),
+                                (
+                                    "params",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
+                                        required=False,
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            ),
         ),
     ]

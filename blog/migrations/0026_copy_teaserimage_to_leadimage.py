@@ -5,17 +5,16 @@ from django.db import migrations
 
 def copy_teaserimage_to_leadimage(apps, schema_editor):
     """Copy teaser_image to lead_image for blog pages"""
-    BlogPage = apps.get_model('blog', 'BlogPage')
+    BlogPage = apps.get_model("blog", "BlogPage")
 
-    for blog_page in BlogPage.objects.order_by('pk'):
+    for blog_page in BlogPage.objects.order_by("pk"):
         blog_page.lead_image = blog_page.teaser_image
         blog_page.save()
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0025_auto_20220816_1700'),
+        ("blog", "0025_auto_20220816_1700"),
     ]
 
     operations = [

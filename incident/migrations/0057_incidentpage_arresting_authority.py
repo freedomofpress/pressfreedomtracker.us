@@ -4,15 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0056_auto_20200714_1116'),
+        ("incident", "0056_auto_20200714_1116"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='arresting_authority',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Arresting authority'),
+            model_name="incidentpage",
+            name="arresting_authority",
+            field=models.CharField(
+                blank=True,
+                max_length=255,
+                null=True,
+                verbose_name="Arresting authority",
+            ),
         ),
     ]

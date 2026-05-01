@@ -30,43 +30,46 @@ class EmailSettings(BaseSiteSetting, ClusterableModel):
         max_length=255,
         blank=False,
         null=False,
-        default='Sign up to receive emails from Press Freedom Tracker',
+        default="Sign up to receive emails from Press Freedom Tracker",
     )
     success_text = models.CharField(
         max_length=255,
         blank=False,
         null=False,
-        default='Thanks for signing up!',
+        default="Thanks for signing up!",
     )
     mailchimp_collect_name = models.BooleanField(
-        verbose_name='Enable name field',
-        help_text='If checked, collect full name information in Mailchimp form',
+        verbose_name="Enable name field",
+        help_text="If checked, collect full name information in Mailchimp form",
         default=False,
     )
 
     panels = [
-        FieldPanel('signup_prompt'),
-        FieldPanel('success_text'),
+        FieldPanel("signup_prompt"),
+        FieldPanel("success_text"),
         MultiFieldPanel(
             [
-                HelpPanel(heading='Mailchimp', content=format_lazy(
-                    """Valid Mailchimp Audience and Group IDs can be looked up in the <a href="{}">Audience and Group List</a>.""",
-                    reverse_lazy('mailchimp_interests')
-                )),
+                HelpPanel(
+                    heading="Mailchimp",
+                    content=format_lazy(
+                        """Valid Mailchimp Audience and Group IDs can be looked up in the <a href="{}">Audience and Group List</a>.""",
+                        reverse_lazy("mailchimp_interests"),
+                    ),
+                ),
                 InlinePanel(
-                    'mailchimp_groups',
-                    label='Group for signups',
+                    "mailchimp_groups",
+                    label="Group for signups",
                     max_num=1,
                 ),
-                FieldPanel('mailchimp_collect_name'),
+                FieldPanel("mailchimp_collect_name"),
             ],
-            heading='Mailchimp',
-            classname='collapsible',
+            heading="Mailchimp",
+            classname="collapsible",
         ),
     ]
 
     class Meta:
-        verbose_name = 'Email Signups'
+        verbose_name = "Email Signups"
 
 
 @dataclass
@@ -87,15 +90,15 @@ class SubscriptionSchema(Schema):
 class MailchimpGroup(models.Model):
     page = ParentalKey(
         EmailSettings,
-        related_name='mailchimp_groups',
+        related_name="mailchimp_groups",
     )
     audience_id = models.CharField(
         max_length=100,
-        help_text='Mailchimp audience associated with this group.',
-        default='',
+        help_text="Mailchimp audience associated with this group.",
+        default="",
     )
     group_id = models.CharField(
         max_length=100,
-        help_text='Mailchimp group identifier.',
-        default='',
+        help_text="Mailchimp group identifier.",
+        default="",
     )

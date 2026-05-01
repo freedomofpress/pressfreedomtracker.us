@@ -6,19 +6,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0014_incidentpage_display_date_month_only'),
+        ("incident", "0014_incidentpage_display_date_month_only"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='incidentpage',
-            name='display_date_month_only',
+            model_name="incidentpage",
+            name="display_date_month_only",
         ),
         migrations.AddField(
-            model_name='incidentpage',
-            name='exact_date_unknown',
-            field=models.BooleanField(default=False, help_text='If checked, only the month and year of the incident will be displayed. The date above will be used in filtering by date.'),
+            model_name="incidentpage",
+            name="exact_date_unknown",
+            field=models.BooleanField(
+                default=False,
+                help_text="If checked, only the month and year of the incident will be displayed. The date above will be used in filtering by date.",
+            ),
         ),
     ]

@@ -20,7 +20,7 @@ from incident.tests.factories import (
 
 
 class JournalistAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -28,34 +28,37 @@ class JournalistAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('journalist-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("journalist-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('journalist-detail', args=(self.version, self.journalist.pk)),
-            HTTP_ACCEPT='application/json',
+            reverse("journalist-detail", args=(self.version, self.journalist.pk)),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('journalist-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("journalist-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.journalist.title,
-            'id': self.journalist.pk,
-        })
+        self.assertEqual(
+            data,
+            {
+                "title": self.journalist.title,
+                "id": self.journalist.pk,
+            },
+        )
 
 
 class InstitutionAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -63,34 +66,37 @@ class InstitutionAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('institution-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("institution-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('institution-detail', args=(self.version, self.institution.pk)),
-            HTTP_ACCEPT='application/json',
+            reverse("institution-detail", args=(self.version, self.institution.pk)),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('institution-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("institution-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.institution.title,
-            'id': self.institution.pk,
-        })
+        self.assertEqual(
+            data,
+            {
+                "title": self.institution.title,
+                "id": self.institution.pk,
+            },
+        )
 
 
 class GovernmentWorkerAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -98,34 +104,37 @@ class GovernmentWorkerAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('governmentworker-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("governmentworker-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('governmentworker-detail', args=(self.version, self.worker.pk)),
-            HTTP_ACCEPT='application/json',
+            reverse("governmentworker-detail", args=(self.version, self.worker.pk)),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('governmentworker-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("governmentworker-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.worker.title,
-            'id': self.worker.pk,
-        })
+        self.assertEqual(
+            data,
+            {
+                "title": self.worker.title,
+                "id": self.worker.pk,
+            },
+        )
 
 
 class ChargeAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -133,34 +142,37 @@ class ChargeAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('charge-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("charge-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('charge-detail', args=(self.version, self.charge.pk)),
-            HTTP_ACCEPT='application/json',
+            reverse("charge-detail", args=(self.version, self.charge.pk)),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('charge-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("charge-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.charge.title,
-            'id': self.charge.pk,
-        })
+        self.assertEqual(
+            data,
+            {
+                "title": self.charge.title,
+                "id": self.charge.pk,
+            },
+        )
 
 
 class NationalityAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -168,34 +180,37 @@ class NationalityAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('nationality-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("nationality-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('nationality-detail', args=(self.version, self.nationality.pk)),
-            HTTP_ACCEPT='application/json',
+            reverse("nationality-detail", args=(self.version, self.nationality.pk)),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('nationality-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("nationality-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.nationality.title,
-            'id': self.nationality.pk,
-        })
+        self.assertEqual(
+            data,
+            {
+                "title": self.nationality.title,
+                "id": self.nationality.pk,
+            },
+        )
 
 
 class PoliticianAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -203,43 +218,8 @@ class PoliticianAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('politicianorpublic-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_retrieve_api_requests_are_successful(self):
-        response = self.client.get(
-            reverse('politicianorpublic-detail', args=(self.version, self.politician.pk,)),
-            HTTP_ACCEPT='application/json',
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_result_attributes(self):
-        response = self.client.get(
-            reverse('politicianorpublic-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
-        )
-        data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.politician.title,
-            'id': self.politician.pk,
-        })
-
-
-class VenueAPITest(APITestCase):
-    version = 'edge'
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.venue = factories.VenueFactory()
-
-    def test_list_api_requests_are_successful(self):
-        response = self.client.get(
-            reverse('venue-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("politicianorpublic-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
@@ -247,28 +227,75 @@ class VenueAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse(
-                'venue-detail',
-                args=(self.version, self.venue.pk),
+                "politicianorpublic-detail",
+                args=(
+                    self.version,
+                    self.politician.pk,
+                ),
             ),
-            HTTP_ACCEPT='application/json',
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('venue-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("politicianorpublic-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
-        self.assertEqual(data, {
-            'title': self.venue.title,
-            'id': self.venue.pk,
-        })
+        self.assertEqual(
+            data,
+            {
+                "title": self.politician.title,
+                "id": self.politician.pk,
+            },
+        )
+
+
+class VenueAPITest(APITestCase):
+    version = "edge"
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.venue = factories.VenueFactory()
+
+    def test_list_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse("venue-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_retrieve_api_requests_are_successful(self):
+        response = self.client.get(
+            reverse(
+                "venue-detail",
+                args=(self.version, self.venue.pk),
+            ),
+            HTTP_ACCEPT="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_result_attributes(self):
+        response = self.client.get(
+            reverse("venue-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
+        )
+        data = response.json()[0]
+        self.assertEqual(
+            data,
+            {
+                "title": self.venue.title,
+                "id": self.venue.pk,
+            },
+        )
 
 
 class EquipmentAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -276,34 +303,37 @@ class EquipmentAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('equipment-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("equipment-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('equipment-detail', args=(self.version, self.equipment.pk)),
-            HTTP_ACCEPT='application/json',
+            reverse("equipment-detail", args=(self.version, self.equipment.pk)),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('equipment-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("equipment-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
-        self.assertEqual(data, {
-            'name': self.equipment.name,
-            'id': self.equipment.pk,
-        })
+        self.assertEqual(
+            data,
+            {
+                "name": self.equipment.name,
+                "id": self.equipment.pk,
+            },
+        )
 
 
 class CategoryAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -316,8 +346,8 @@ class CategoryAPITest(APITestCase):
 
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('category-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("category-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
@@ -325,40 +355,44 @@ class CategoryAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse(
-                'category-detail',
+                "category-detail",
                 args=(self.version, self.category.pk),
             ),
-            HTTP_ACCEPT='application/json',
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('category-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("category-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         data = response.json()[0]
-        self.assertEqual(data, {
-            'id': self.category.pk,
-            'title': self.category.title,
-            'slug': self.category.slug,
-            'url': self.category.get_full_url(),
-            'methodology': self.category.methodology,
-            'plural_name': self.category.plural_name,
-            'methodology_items': [
-                {
-                    'label': item.label,
-                    'description': item.description,
-                } for item in self.category.methodology_items.all()
-            ],
-        })
+        self.assertEqual(
+            data,
+            {
+                "id": self.category.pk,
+                "title": self.category.title,
+                "slug": self.category.slug,
+                "url": self.category.get_full_url(),
+                "methodology": self.category.methodology,
+                "plural_name": self.category.plural_name,
+                "methodology_items": [
+                    {
+                        "label": item.label,
+                        "description": item.description,
+                    }
+                    for item in self.category.methodology_items.all()
+                ],
+            },
+        )
         self.assertEqual(response.status_code, 200)
 
 
 class IncidentAPITest(APITestCase):
-    version = 'edge'
+    version = "edge"
 
     @classmethod
     def setUpTestData(cls):
@@ -370,18 +404,20 @@ class IncidentAPITest(APITestCase):
         image = CustomImageFactory.create(
             file__width=800,
             file__height=600,
-            file__color='green',
+            file__color="green",
         )
 
         author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
-        cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(3, parent=root_page)
+        cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(
+            3, parent=root_page
+        )
 
         cls.incident = IncidentPageFactory(
             parent=cls.incident_index,
             authors=[author1, author2],
             state=StateFactory(),
-            introduction='Introduction',
-            teaser='Teaser',
+            introduction="Introduction",
+            teaser="Teaser",
             categories=[cls.cat1, cls.cat2],
             equipment_search=True,
             equipment_damage=True,
@@ -407,16 +443,16 @@ class IncidentAPITest(APITestCase):
 
     def test_api_requests_are_successful(self):
         response = self.client.get(
-            reverse('incidentpage-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("incidentpage-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
     def test_result_attributes(self):
         response = self.client.get(
-            reverse('incidentpage-list', kwargs={'version': self.version}),
-            HTTP_ACCEPT='application/json',
+            reverse("incidentpage-list", kwargs={"version": self.version}),
+            HTTP_ACCEPT="application/json",
         )
         data = response.json()[0]
         inc = self.incident
@@ -425,64 +461,102 @@ class IncidentAPITest(APITestCase):
         self.assertEqual(
             data,
             {
-                'title': inc.title,
-                'url': inc.get_full_url(),
-                'first_published_at': inc.first_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-                'last_published_at': inc.last_published_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-                'latest_revision_created_at': inc.latest_revision_created_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-                'authors': [author.author.title for author in inc.authors.all()],
-                'updates': [str(update) for update in inc.updates.all()],
-                'categories': [cat.category.title for cat in inc.categories.all()],
-                'links': [{'title': link.title, 'url': link.url, 'publication': link.publication} for link in inc.links.all()],
-                'equipment_seized': [{'equipment': e.equipment.name, 'quantity': e.quantity} for e in inc.equipment_seized.all()],
-                'equipment_broken': [{'equipment': e.equipment.name, 'quantity': e.quantity} for e in inc.equipment_broken.all()],
-                'date': inc.date.isoformat(),
-                'exact_date_unknown': inc.exact_date_unknown,
-                'city': inc.city,
-                'state': {'name': inc.state.name, 'abbreviation': inc.state.abbreviation},
-                'latitude': inc.latitude,
-                'longitude': inc.longitude,
-                'introduction': str(inc.introduction),
-                'teaser': str(inc.teaser),
-                'body': str(inc.body),
-                'teaser_image': inc.teaser_image.get_rendition('fill-1330x880').url,
-                'primary_video': inc.primary_video,
-                'image_caption': inc.image_caption,
-                'arrest_status': inc.get_arrest_status_display(),
-                'arresting_authority': str(inc.arresting_authority),
-                'release_date': inc.release_date.isoformat(),
-                'detention_date': inc.detention_date.isoformat(),
-                'unnecessary_use_of_force': inc.unnecessary_use_of_force,
-                'case_number': inc.case_number,
-                'case_type': inc.case_type,
-                'case_statuses': [dict(choices.LegalCaseStatus.choices)[status] for status in inc.case_statuses],
-                'status_of_seized_equipment': inc.get_status_of_seized_equipment_display(),
-                'is_search_warrant_obtained': inc.is_search_warrant_obtained,
-                'actor': inc.get_actor_display(),
-                'border_point': inc.border_point,
-                'target_us_citizenship_status': inc.get_target_us_citizenship_status_display(),
-                'denial_of_entry': inc.denial_of_entry,
-                'stopped_previously': inc.stopped_previously,
-                'target_nationality': [str(e) for e in inc.target_nationality.all()],
-                'did_authorities_ask_for_device_access': inc.get_did_authorities_ask_for_device_access_display(),
-                'did_authorities_ask_about_work': inc.get_did_authorities_ask_about_work_display(),
-                'assailant': inc.get_assailant_display(),
-                'was_journalist_targeted': inc.get_was_journalist_targeted_display(),
-                'workers_whose_communications_were_obtained': [str(w) for w in inc.workers_whose_communications_were_obtained.all()],
-                'charged_under_espionage_act': inc.charged_under_espionage_act,
-                'subpoena_type': inc.get_subpoena_type_display(),
-                'subpoena_statuses': [dict(choices.SUBPOENA_STATUS)[status] for status in inc.subpoena_statuses],
-                'name_of_business': inc.name_of_business,
-                'third_party_business': inc.get_third_party_business_display(),
-                'legal_order_venue': inc.get_legal_order_venue_display(),
-                'status_of_prior_restraint': inc.get_status_of_prior_restraint_display(),
-                'mistakenly_released_materials': inc.mistakenly_released_materials,
-                'targeted_journalists': [e.summary for e in inc.targeted_journalists.all()],
-                'targeted_institutions': [str(e) for e in inc.targeted_institutions.all()],
-                'tags': [str(e) for e in inc.tags.all()],
-                'politicians_or_public_figures_involved': [str(e) for e in inc.politicians_or_public_figures_involved.all()],
-                'type_of_denial': [choices.TypeOfDenial(e).label for e in inc.type_of_denial],
-            }
+                "title": inc.title,
+                "url": inc.get_full_url(),
+                "first_published_at": inc.first_published_at.strftime(
+                    "%Y-%m-%dT%H:%M:%S.%fZ"
+                ),
+                "last_published_at": inc.last_published_at.strftime(
+                    "%Y-%m-%dT%H:%M:%S.%fZ"
+                ),
+                "latest_revision_created_at": inc.latest_revision_created_at.strftime(
+                    "%Y-%m-%dT%H:%M:%S.%fZ"
+                ),
+                "authors": [author.author.title for author in inc.authors.all()],
+                "updates": [str(update) for update in inc.updates.all()],
+                "categories": [cat.category.title for cat in inc.categories.all()],
+                "links": [
+                    {
+                        "title": link.title,
+                        "url": link.url,
+                        "publication": link.publication,
+                    }
+                    for link in inc.links.all()
+                ],
+                "equipment_seized": [
+                    {"equipment": e.equipment.name, "quantity": e.quantity}
+                    for e in inc.equipment_seized.all()
+                ],
+                "equipment_broken": [
+                    {"equipment": e.equipment.name, "quantity": e.quantity}
+                    for e in inc.equipment_broken.all()
+                ],
+                "date": inc.date.isoformat(),
+                "exact_date_unknown": inc.exact_date_unknown,
+                "city": inc.city,
+                "state": {
+                    "name": inc.state.name,
+                    "abbreviation": inc.state.abbreviation,
+                },
+                "latitude": inc.latitude,
+                "longitude": inc.longitude,
+                "introduction": str(inc.introduction),
+                "teaser": str(inc.teaser),
+                "body": str(inc.body),
+                "teaser_image": inc.teaser_image.get_rendition("fill-1330x880").url,
+                "primary_video": inc.primary_video,
+                "image_caption": inc.image_caption,
+                "arrest_status": inc.get_arrest_status_display(),
+                "arresting_authority": str(inc.arresting_authority),
+                "release_date": inc.release_date.isoformat(),
+                "detention_date": inc.detention_date.isoformat(),
+                "unnecessary_use_of_force": inc.unnecessary_use_of_force,
+                "case_number": inc.case_number,
+                "case_type": inc.case_type,
+                "case_statuses": [
+                    dict(choices.LegalCaseStatus.choices)[status]
+                    for status in inc.case_statuses
+                ],
+                "status_of_seized_equipment": inc.get_status_of_seized_equipment_display(),
+                "is_search_warrant_obtained": inc.is_search_warrant_obtained,
+                "actor": inc.get_actor_display(),
+                "border_point": inc.border_point,
+                "target_us_citizenship_status": inc.get_target_us_citizenship_status_display(),
+                "denial_of_entry": inc.denial_of_entry,
+                "stopped_previously": inc.stopped_previously,
+                "target_nationality": [str(e) for e in inc.target_nationality.all()],
+                "did_authorities_ask_for_device_access": inc.get_did_authorities_ask_for_device_access_display(),
+                "did_authorities_ask_about_work": inc.get_did_authorities_ask_about_work_display(),
+                "assailant": inc.get_assailant_display(),
+                "was_journalist_targeted": inc.get_was_journalist_targeted_display(),
+                "workers_whose_communications_were_obtained": [
+                    str(w) for w in inc.workers_whose_communications_were_obtained.all()
+                ],
+                "charged_under_espionage_act": inc.charged_under_espionage_act,
+                "subpoena_type": inc.get_subpoena_type_display(),
+                "subpoena_statuses": [
+                    dict(choices.SUBPOENA_STATUS)[status]
+                    for status in inc.subpoena_statuses
+                ],
+                "name_of_business": inc.name_of_business,
+                "third_party_business": inc.get_third_party_business_display(),
+                "legal_order_venue": inc.get_legal_order_venue_display(),
+                "status_of_prior_restraint": inc.get_status_of_prior_restraint_display(),
+                "mistakenly_released_materials": inc.mistakenly_released_materials,
+                "targeted_journalists": [
+                    e.summary for e in inc.targeted_journalists.all()
+                ],
+                "targeted_institutions": [
+                    str(e) for e in inc.targeted_institutions.all()
+                ],
+                "tags": [str(e) for e in inc.tags.all()],
+                "politicians_or_public_figures_involved": [
+                    str(e) for e in inc.politicians_or_public_figures_involved.all()
+                ],
+                "type_of_denial": [
+                    choices.TypeOfDenial(e).label for e in inc.type_of_denial
+                ],
+            },
         )
 
     def test_filtering(self):
@@ -491,21 +565,21 @@ class IncidentAPITest(APITestCase):
             categories=[self.cat2],
         )
         response = self.client.get(
-            reverse('incidentpage-list', kwargs={'version': self.version}),
-            {'categories': str(self.cat1.pk)},
-            HTTP_ACCEPT='application/json',
+            reverse("incidentpage-list", kwargs={"version": self.version}),
+            {"categories": str(self.cat1.pk)},
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(len(response.json()), 1)
 
     def test_dynamic_fields(self):
         response = self.client.get(
-            reverse('incidentpage-list', kwargs={'version': self.version}),
-            {'fields': 'city,state'},
-            HTTP_ACCEPT='application/json',
+            reverse("incidentpage-list", kwargs={"version": self.version}),
+            {"fields": "city,state"},
+            HTTP_ACCEPT="application/json",
         )
 
         self.assertEqual(
             list(response.json()[0].keys()),
-            ['city', 'state'],
+            ["city", "state"],
         )

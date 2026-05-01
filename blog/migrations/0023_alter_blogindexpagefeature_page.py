@@ -5,15 +5,16 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0022_blogindexpagefeature'),
+        ("blog", "0022_blogindexpagefeature"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogindexpagefeature',
-            name='page',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='blog.blogpage'),
+            model_name="blogindexpagefeature",
+            name="page",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="blog.blogpage"
+            ),
         ),
     ]

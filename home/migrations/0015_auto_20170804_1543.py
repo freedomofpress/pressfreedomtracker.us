@@ -6,15 +6,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0014_homepage_search_image'),
+        ("home", "0014_homepage_search_image"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='statbox',
-            old_name='link',
-            new_name='internal_link',
+            model_name="statbox",
+            old_name="link",
+            new_name="internal_link",
         ),
     ]

@@ -8,9 +8,9 @@ class EmailSignupSnippetViewSet(SnippetViewSet):
     model = EmailSignup
     add_to_admin_menu = True
     list_display = (
-        'id',
-        'email_address',
-        'signup_time',
+        "id",
+        "email_address",
+        "signup_time",
     )
 
 

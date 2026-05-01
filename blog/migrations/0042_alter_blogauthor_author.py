@@ -5,16 +5,19 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0110_alter_categoryincidentfilter_incident_filter_and_more'),
-        ('blog', '0041_auto_20250725_1144'),
+        ("common", "0110_alter_categoryincidentfilter_incident_filter_and_more"),
+        ("blog", "0041_auto_20250725_1144"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogauthor',
-            name='author',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='common.personpage'),
+            model_name="blogauthor",
+            name="author",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="+",
+                to="common.personpage",
+            ),
         ),
     ]

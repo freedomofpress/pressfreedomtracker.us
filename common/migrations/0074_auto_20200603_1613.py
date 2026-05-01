@@ -6,20 +6,29 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0073_sitesettings_incident_sidebar_note'),
+        ("common", "0073_sitesettings_incident_sidebar_note"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='banner_content',
-            field=wagtail.fields.RichTextField(blank=True, help_text='If set an alert banner will appear on the site with this message', null=True, validators=[common.validators.TemplateValidator()], verbose_name='Banner Content'),
+            model_name="sitesettings",
+            name="banner_content",
+            field=wagtail.fields.RichTextField(
+                blank=True,
+                help_text="If set an alert banner will appear on the site with this message",
+                null=True,
+                validators=[common.validators.TemplateValidator()],
+                verbose_name="Banner Content",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='homepage_only',
-            field=models.BooleanField(default=True, help_text='Show banner <em>only</em> on homepage (if not set, will show sitewide)', verbose_name='Homepage Only'),
+            model_name="sitesettings",
+            name="homepage_only",
+            field=models.BooleanField(
+                default=True,
+                help_text="Show banner <em>only</em> on homepage (if not set, will show sitewide)",
+                verbose_name="Homepage Only",
+            ),
         ),
     ]

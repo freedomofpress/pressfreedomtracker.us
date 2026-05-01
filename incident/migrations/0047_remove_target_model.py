@@ -4,21 +4,20 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0046_auto_20200306_1648'),
+        ("incident", "0046_auto_20200306_1648"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='incidentpage',
-            name='targets',
+            model_name="incidentpage",
+            name="targets",
         ),
         migrations.RemoveField(
-            model_name='incidentpage',
-            name='targets_whose_communications_were_obtained',
+            model_name="incidentpage",
+            name="targets_whose_communications_were_obtained",
         ),
         migrations.DeleteModel(
-            name='Target',
+            name="Target",
         ),
     ]

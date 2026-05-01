@@ -5,15 +5,18 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0102_create_chart_snapshot'),
+        ("common", "0102_create_chart_snapshot"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='chartsnapshot',
-            name='chart_image',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='common.customimage'),
+            model_name="chartsnapshot",
+            name="chart_image",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="common.customimage",
+            ),
         ),
     ]

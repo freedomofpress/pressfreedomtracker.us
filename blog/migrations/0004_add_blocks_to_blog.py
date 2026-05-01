@@ -15,14 +15,14 @@ from wagtail.blocks import StreamValue
 
 def richtext_to_styledtext(block):
     return {
-        'type': 'text',
-        'value': {
-            'text': block['value'],
-            'font_family': 'sans-serif',
-            'background_color': 'white',
-            'text_align': 'left',
-            'font_size': 'normal',
-        }
+        "type": "text",
+        "value": {
+            "text": block["value"],
+            "font_family": "sans-serif",
+            "background_color": "white",
+            "text_align": "left",
+            "font_size": "normal",
+        },
     }
 
 
@@ -31,7 +31,7 @@ def get_stream_data(page, mapper):
     mapped = False
 
     for block in page.body.stream_data:
-        if block['type'] == 'rich_text' and isinstance(block['value'], str):
+        if block["type"] == "rich_text" and isinstance(block["value"], str):
             styletext_block = mapper(block)
             stream_data.append(styletext_block)
             mapped = True
@@ -43,7 +43,7 @@ def get_stream_data(page, mapper):
 
 
 def change_rich_text_to_styled_text(apps, schema_editor):
-    BlogPage = apps.get_model('blog.BlogPage')
+    BlogPage = apps.get_model("blog.BlogPage")
 
     for page in BlogPage.objects.all():
         stream_data, mapped = get_stream_data(page, richtext_to_styledtext)
@@ -55,24 +55,347 @@ def change_rich_text_to_styled_text(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0003_auto_20170711_1815'),
+        ("blog", "0003_auto_20170711_1815"),
     ]
 
     operations = [
         # Add new fields, keep RichTextBlock
         migrations.AlterField(
-            model_name='blogpage',
-            name='body',
-            field=wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('text', wagtail.blocks.StructBlock((('text', wagtail.blocks.RichTextBlock()), ('background_color', wagtail.blocks.ChoiceBlock(choices=[('blue', 'Blue'), ('green', 'Green'), ('purple', 'Purple'), ('orange', 'Orange'), ('dark-gray', 'Dark Gray'), ('white', 'White')])), ('text_align', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('center', 'Center'), ('right', 'Right')])), ('font_size', wagtail.blocks.ChoiceBlock(choices=[('small', 'Small'), ('normal', 'Normal'), ('large', 'Large'), ('jumbo', 'Jumbo')])), ('font_family', wagtail.blocks.ChoiceBlock(choices=[('sans-serif', 'Sans Serif'), ('serif', 'Serif')]))), label='Text', template='common/blocks/styled_text_full_bleed.html')), ('image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('caption', wagtail.blocks.RichTextBlock(required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))))), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('blockquote', wagtail.blocks.BlockQuoteBlock()), ('list', wagtail.blocks.ListBlock(wagtail.blocks.CharBlock(label='List Item'), template='common/blocks/list_block_columns.html')), ('video', wagtail.blocks.StructBlock((('video', wagtail.embeds.blocks.EmbedBlock()), ('caption', wagtail.blocks.RichTextBlock(required=False)), ('attribution', wagtail.blocks.CharBlock(max_length=255, required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))))), ('heading_1', wagtail.blocks.StructBlock((('content', wagtail.blocks.CharBlock()),))), ('heading_2', wagtail.blocks.StructBlock((('content', wagtail.blocks.CharBlock()),))), ('heading_3', wagtail.blocks.StructBlock((('content', wagtail.blocks.CharBlock()),))), ('statistics', wagtail.blocks.StructBlock((('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            model_name="blogpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                (
+                    (
+                        "rich_text",
+                        wagtail.blocks.RichTextBlock(
+                            icon="doc-full", label="Rich Text"
+                        ),
+                    ),
+                    (
+                        "text",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("text", wagtail.blocks.RichTextBlock()),
+                                (
+                                    "background_color",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("blue", "Blue"),
+                                            ("green", "Green"),
+                                            ("purple", "Purple"),
+                                            ("orange", "Orange"),
+                                            ("dark-gray", "Dark Gray"),
+                                            ("white", "White"),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "text_align",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("center", "Center"),
+                                            ("right", "Right"),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "font_size",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("small", "Small"),
+                                            ("normal", "Normal"),
+                                            ("large", "Large"),
+                                            ("jumbo", "Jumbo"),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "font_family",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("sans-serif", "Sans Serif"),
+                                            ("serif", "Serif"),
+                                        ]
+                                    ),
+                                ),
+                            ),
+                            label="Text",
+                            template="common/blocks/styled_text_full_bleed.html",
+                        ),
+                    ),
+                    (
+                        "image",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("image", wagtail.images.blocks.ImageChooserBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(required=False),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    ("blockquote", wagtail.blocks.BlockQuoteBlock()),
+                    (
+                        "list",
+                        wagtail.blocks.ListBlock(
+                            wagtail.blocks.CharBlock(label="List Item"),
+                            template="common/blocks/list_block_columns.html",
+                        ),
+                    ),
+                    (
+                        "video",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("video", wagtail.embeds.blocks.EmbedBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(required=False),
+                                ),
+                                (
+                                    "attribution",
+                                    wagtail.blocks.CharBlock(
+                                        max_length=255, required=False
+                                    ),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                    (
+                        "heading_1",
+                        wagtail.blocks.StructBlock(
+                            (("content", wagtail.blocks.CharBlock()),)
+                        ),
+                    ),
+                    (
+                        "heading_2",
+                        wagtail.blocks.StructBlock(
+                            (("content", wagtail.blocks.CharBlock()),)
+                        ),
+                    ),
+                    (
+                        "heading_3",
+                        wagtail.blocks.StructBlock(
+                            (("content", wagtail.blocks.CharBlock()),)
+                        ),
+                    ),
+                    (
+                        "statistics",
+                        wagtail.blocks.StructBlock(
+                            (
+                                (
+                                    "visualization",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.blocks.get_visualization_choices
+                                    ),
+                                ),
+                                (
+                                    "dataset",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_stats_choices
+                                    ),
+                                ),
+                                (
+                                    "params",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
+                                        required=False,
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            ),
         ),
         # Migrate RichTextBlock to StyledTextBlock
         migrations.RunPython(change_rich_text_to_styled_text, elidable=True),
         # Remove RichTextBlock
         migrations.AlterField(
-            model_name='blogpage',
-            name='body',
-            field=wagtail.fields.StreamField((('text', wagtail.blocks.StructBlock((('text', wagtail.blocks.RichTextBlock()), ('background_color', wagtail.blocks.ChoiceBlock(choices=[('blue', 'Blue'), ('green', 'Green'), ('purple', 'Purple'), ('orange', 'Orange'), ('dark-gray', 'Dark Gray'), ('white', 'White')])), ('text_align', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('center', 'Center'), ('right', 'Right')])), ('font_size', wagtail.blocks.ChoiceBlock(choices=[('small', 'Small'), ('normal', 'Normal'), ('large', 'Large'), ('jumbo', 'Jumbo')])), ('font_family', wagtail.blocks.ChoiceBlock(choices=[('sans-serif', 'Sans Serif'), ('serif', 'Serif')]))), label='Text', template='common/blocks/styled_text_full_bleed.html')), ('image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('caption', wagtail.blocks.RichTextBlock(required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))))), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('blockquote', wagtail.blocks.BlockQuoteBlock()), ('list', wagtail.blocks.ListBlock(wagtail.blocks.CharBlock(label='List Item'), template='common/blocks/list_block_columns.html')), ('video', wagtail.blocks.StructBlock((('video', wagtail.embeds.blocks.EmbedBlock()), ('caption', wagtail.blocks.RichTextBlock(required=False)), ('attribution', wagtail.blocks.CharBlock(max_length=255, required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))))), ('heading_1', wagtail.blocks.StructBlock((('content', wagtail.blocks.CharBlock()),))), ('heading_2', wagtail.blocks.StructBlock((('content', wagtail.blocks.CharBlock()),))), ('heading_3', wagtail.blocks.StructBlock((('content', wagtail.blocks.CharBlock()),))), ('statistics', wagtail.blocks.StructBlock((('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            model_name="blogpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                (
+                    (
+                        "text",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("text", wagtail.blocks.RichTextBlock()),
+                                (
+                                    "background_color",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("blue", "Blue"),
+                                            ("green", "Green"),
+                                            ("purple", "Purple"),
+                                            ("orange", "Orange"),
+                                            ("dark-gray", "Dark Gray"),
+                                            ("white", "White"),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "text_align",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("center", "Center"),
+                                            ("right", "Right"),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "font_size",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("small", "Small"),
+                                            ("normal", "Normal"),
+                                            ("large", "Large"),
+                                            ("jumbo", "Jumbo"),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "font_family",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("sans-serif", "Sans Serif"),
+                                            ("serif", "Serif"),
+                                        ]
+                                    ),
+                                ),
+                            ),
+                            label="Text",
+                            template="common/blocks/styled_text_full_bleed.html",
+                        ),
+                    ),
+                    (
+                        "image",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("image", wagtail.images.blocks.ImageChooserBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(required=False),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    ("blockquote", wagtail.blocks.BlockQuoteBlock()),
+                    (
+                        "list",
+                        wagtail.blocks.ListBlock(
+                            wagtail.blocks.CharBlock(label="List Item"),
+                            template="common/blocks/list_block_columns.html",
+                        ),
+                    ),
+                    (
+                        "video",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("video", wagtail.embeds.blocks.EmbedBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(required=False),
+                                ),
+                                (
+                                    "attribution",
+                                    wagtail.blocks.CharBlock(
+                                        max_length=255, required=False
+                                    ),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                    (
+                        "heading_1",
+                        wagtail.blocks.StructBlock(
+                            (("content", wagtail.blocks.CharBlock()),)
+                        ),
+                    ),
+                    (
+                        "heading_2",
+                        wagtail.blocks.StructBlock(
+                            (("content", wagtail.blocks.CharBlock()),)
+                        ),
+                    ),
+                    (
+                        "heading_3",
+                        wagtail.blocks.StructBlock(
+                            (("content", wagtail.blocks.CharBlock()),)
+                        ),
+                    ),
+                    (
+                        "statistics",
+                        wagtail.blocks.StructBlock(
+                            (
+                                (
+                                    "visualization",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.blocks.get_visualization_choices
+                                    ),
+                                ),
+                                (
+                                    "dataset",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_stats_choices
+                                    ),
+                                ),
+                                (
+                                    "params",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
+                                        required=False,
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            ),
         ),
     ]

@@ -6,16 +6,17 @@ from django.db import migrations
 
 
 def set_order_to_none(apps, schema_editor):
-    IncidentCategorization = apps.get_model('incident', 'IncidentCategorization')
+    IncidentCategorization = apps.get_model("incident", "IncidentCategorization")
     IncidentCategorization.objects.filter(sort_order__isnull=True).update(sort_order=0)
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0026_auto_20180222_2226'),
+        ("incident", "0026_auto_20180222_2226"),
     ]
 
     operations = [
-        migrations.RunPython(set_order_to_none, migrations.RunPython.noop, elidable=True),
+        migrations.RunPython(
+            set_order_to_none, migrations.RunPython.noop, elidable=True
+        ),
     ]

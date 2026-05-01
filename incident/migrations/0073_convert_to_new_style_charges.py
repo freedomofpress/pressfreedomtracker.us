@@ -2701,12 +2701,14 @@ CHARGE_DATA = {
 
 
 def convert_charges(apps, schema_editor):
-    IncidentPage = apps.get_model('incident', 'IncidentPage')
-    IncidentCharge = apps.get_model('incident', 'IncidentCharge')
-    ChargeUpdate = apps.get_model('incident', 'ChargeUpdate')
-    Charge = apps.get_model('incident', 'Charge')
+    IncidentPage = apps.get_model("incident", "IncidentPage")
+    IncidentCharge = apps.get_model("incident", "IncidentCharge")
+    ChargeUpdate = apps.get_model("incident", "ChargeUpdate")
+    Charge = apps.get_model("incident", "Charge")
 
-    for page in IncidentPage.objects.prefetch_related('current_charges', 'dropped_charges'):
+    for page in IncidentPage.objects.prefetch_related(
+        "current_charges", "dropped_charges"
+    ):
         if page.slug in CHARGE_DATA:
             for info in CHARGE_DATA[page.slug]:
                 charge, _ = Charge.objects.get_or_create(title=info.charge_title)
@@ -2726,20 +2728,21 @@ def convert_charges(apps, schema_editor):
                     )
 
         else:
-            all_charges = itertools.chain(page.dropped_charges.all(), page.current_charges.all())
+            all_charges = itertools.chain(
+                page.dropped_charges.all(), page.current_charges.all()
+            )
             for charge in all_charges:
                 IncidentCharge.objects.get_or_create(
                     incident_page=page,
                     charge=charge,
                     date=page.date,
-                    status='CHARGES_PENDING',
+                    status="CHARGES_PENDING",
                 )
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0072_auto_20220915_2121'),
+        ("incident", "0072_auto_20220915_2121"),
     ]
 
     operations = [

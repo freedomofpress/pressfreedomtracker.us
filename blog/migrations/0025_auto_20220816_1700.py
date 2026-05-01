@@ -6,21 +6,31 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0091_alter_categorypage_page_symbol'),
-        ('blog', '0024_blogpage_introduction'),
+        ("common", "0091_alter_categorypage_page_symbol"),
+        ("blog", "0024_blogpage_introduction"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpage',
-            name='lead_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.customimage'),
+            model_name="blogpage",
+            name="lead_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.customimage",
+            ),
         ),
         migrations.AlterField(
-            model_name='blogpage',
-            name='image_caption',
-            field=wagtail.fields.RichTextField(blank=True, help_text='Image description displayed below the lead image. Organization/Photographer can be set via the image attribution.', max_length=255, null=True),
+            model_name="blogpage",
+            name="image_caption",
+            field=wagtail.fields.RichTextField(
+                blank=True,
+                help_text="Image description displayed below the lead image. Organization/Photographer can be set via the image attribution.",
+                max_length=255,
+                null=True,
+            ),
         ),
     ]

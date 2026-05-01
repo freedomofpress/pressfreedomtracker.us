@@ -21,27 +21,29 @@ class TestVerticalBarChartValue(TestCase):
         cls.category = CategoryPageFactory()
 
     def setUp(self):
-        self.vbc_value = VerticalBarChart().to_python({
-            'incident_set': {
-                'tag': 'test_tag',
-                'categories': [self.category.title],
-                'lower_date': date(2022, 1, 1),
-                'upper_date': date(2023, 1, 1),
-                'states': ['AK'],
-            },
-            'time_period': 'months',
-            'description': 'Test description',
-        })
+        self.vbc_value = VerticalBarChart().to_python(
+            {
+                "incident_set": {
+                    "tag": "test_tag",
+                    "categories": [self.category.title],
+                    "lower_date": date(2022, 1, 1),
+                    "upper_date": date(2023, 1, 1),
+                    "states": ["AK"],
+                },
+                "time_period": "months",
+                "description": "Test description",
+            }
+        )
 
         query = {
-            'filterTags': 'test_tag',
-            'filterCategories': [self.category.title],
-            'dateRange': ['2022-01-01', '2023-01-01'],
-            'filterStates': ['AK'],
-            'timePeriod': 'months',
-            'branchFieldName': None,
-            'branches': None,
-            'groupByTag': None,
+            "filterTags": "test_tag",
+            "filterCategories": [self.category.title],
+            "dateRange": ["2022-01-01", "2023-01-01"],
+            "filterStates": ["AK"],
+            "timePeriod": "months",
+            "branchFieldName": None,
+            "branches": None,
+            "groupByTag": None,
         }
 
         self.snapshot_png = ChartSnapshotFactory(
@@ -59,7 +61,7 @@ class TestVerticalBarChartValue(TestCase):
         url = self.vbc_value.png_snapshot_url()
         self.assertEqual(
             url,
-            self.snapshot_png.chart_image.get_rendition('original').url,
+            self.snapshot_png.chart_image.get_rendition("original").url,
         )
 
     def test_svg_snapshot(self):
@@ -75,24 +77,26 @@ class TestBubbleMapValue(TestCase):
         cls.category = CategoryPageFactory()
 
     def setUp(self):
-        self.bmc_value = BubbleMapChart().to_python({
-            'incident_set': {
-                'tag': 'test_tag',
-                'categories': [self.category.title],
-                'states': ['AK'],
-                'lower_date': date(2022, 1, 1),
-                'upper_date': date(2023, 1, 1),
-            },
-            'group_by': 'state',
-            'description': 'Test description',
-        })
+        self.bmc_value = BubbleMapChart().to_python(
+            {
+                "incident_set": {
+                    "tag": "test_tag",
+                    "categories": [self.category.title],
+                    "states": ["AK"],
+                    "lower_date": date(2022, 1, 1),
+                    "upper_date": date(2023, 1, 1),
+                },
+                "group_by": "state",
+                "description": "Test description",
+            }
+        )
 
         query = {
-            'filterTags': 'test_tag',
-            'filterCategories': [self.category.title],
-            'filterStates': ['AK'],
-            'dateRange': ['2022-01-01', '2023-01-01'],
-            'aggregationLocality': 'state',
+            "filterTags": "test_tag",
+            "filterCategories": [self.category.title],
+            "filterStates": ["AK"],
+            "dateRange": ["2022-01-01", "2023-01-01"],
+            "aggregationLocality": "state",
         }
         self.snapshot_png = ChartSnapshotFactory(
             png=True,
@@ -100,7 +104,7 @@ class TestBubbleMapValue(TestCase):
             query=query,
         )
 
-        meta_query = {**query, 'mini': True, 'width': 1200, 'height': 630}
+        meta_query = {**query, "mini": True, "width": 1200, "height": 630}
         self.snapshot_meta_png = ChartSnapshotFactory(
             png=True,
             chart_type=ChartType.BUBBLE_MAP,
@@ -117,7 +121,7 @@ class TestBubbleMapValue(TestCase):
         url = self.bmc_value.png_snapshot_url()
         self.assertEqual(
             url,
-            self.snapshot_png.chart_image.get_rendition('original').url,
+            self.snapshot_png.chart_image.get_rendition("original").url,
         )
 
     def test_png_snapshot_meta_url(self):

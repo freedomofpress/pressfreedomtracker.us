@@ -38,69 +38,84 @@ class ReplyToValidatorForm(WagtailAdminPageForm):
         reply_to_fields = []
         reply_to_forms = []
         labels = defaultdict(list)
-        for group in self.formsets['field_groups'].forms:
-            for form in group.formsets['form_fields'].forms:
+        for group in self.formsets["field_groups"].forms:
+            for form in group.formsets["form_fields"].forms:
                 if form.is_valid():
                     cleaned_form_data = form.clean()
-                    labels[cleaned_form_data.get('label')].append(form)
-                    reply_to_field = cleaned_form_data.get('use_as_reply_to')
+                    labels[cleaned_form_data.get("label")].append(form)
+                    reply_to_field = cleaned_form_data.get("use_as_reply_to")
 
                     if reply_to_field:
-                        reply_to_fields.append(cleaned_form_data.get('label'))
+                        reply_to_fields.append(cleaned_form_data.get("label"))
                         reply_to_forms.append(form)
 
         for label, forms in labels.items():
             if len(forms) > 1:
                 for form in forms:
-                    form.add_error('label', f'There is another field with the label {label}, please change one of them.')
+                    form.add_error(
+                        "label",
+                        f"There is another field with the label {label}, please change one of them.",
+                    )
 
         if len(reply_to_fields) > 1:
             for form in reply_to_forms:
-                form.add_error('use_as_reply_to', 'Only one field per form may have this option enabled.')
-            raise ValidationError('Multiple fields with "Use as reply to" checked: {}'.format(', '.join(reply_to_fields)))
+                form.add_error(
+                    "use_as_reply_to",
+                    "Only one field per form may have this option enabled.",
+                )
+            raise ValidationError(
+                'Multiple fields with "Use as reply to" checked: {}'.format(
+                    ", ".join(reply_to_fields)
+                )
+            )
 
         return cleaned_data
 
 
 class GroupedFormField(AbstractFormField):
     class Meta(AbstractFormField.Meta):
-        ordering = ['sort_order']
+        ordering = ["sort_order"]
         constraints = [
             models.UniqueConstraint(
-                fields=['group'],
+                fields=["group"],
                 condition=models.Q(use_as_reply_to=True),
-                name='only_one_reply_to_form_field',
+                name="only_one_reply_to_form_field",
             )
         ]
 
-    group = ParentalKey('FieldGroup', on_delete=models.CASCADE, related_name='form_fields')
+    group = ParentalKey(
+        "FieldGroup", on_delete=models.CASCADE, related_name="form_fields"
+    )
 
     placeholder = models.CharField(
         max_length=255,
         blank=True,
         null=True,
-        help_text='Optional: placeholder for the field',
+        help_text="Optional: placeholder for the field",
     )
     append_to_subject = models.BooleanField(
         default=False,
-        help_text='Add the contents of this field to the subject of the email sent by this from.  All fields with this checked will be appended.',
+        help_text="Add the contents of this field to the subject of the email sent by this from.  All fields with this checked will be appended.",
     )
     use_as_reply_to = models.BooleanField(
         default=False,
-        help_text='Use the contents of this field as the Reply-To header of the email sent by this from.  Only one field per form can have this checked.',
+        help_text="Use the contents of this field as the Reply-To header of the email sent by this from.  Only one field per form can have this checked.",
     )
 
     panels = AbstractFormField.panels + [
-        FieldPanel('placeholder'),
-        FieldPanel('append_to_subject'),
-        FieldPanel('use_as_reply_to'),
+        FieldPanel("placeholder"),
+        FieldPanel("append_to_subject"),
+        FieldPanel("use_as_reply_to"),
     ]
 
 
 class FieldGroup(ClusterableModel, Orderable):
     class Meta:
-        ordering = ['sort_order']
-    page = ParentalKey('FormPage', on_delete=models.CASCADE, related_name='field_groups')
+        ordering = ["sort_order"]
+
+    page = ParentalKey(
+        "FormPage", on_delete=models.CASCADE, related_name="field_groups"
+    )
 
     title = models.CharField(
         max_length=255,
@@ -109,20 +124,22 @@ class FieldGroup(ClusterableModel, Orderable):
         max_length=255,
         blank=True,
         null=True,
-        help_text='Optional: description for the field group',
+        help_text="Optional: description for the field group",
     )
     template = models.CharField(
         max_length=20,
         choices=FIELD_GROUP_TEMPLATE_CHOICES,
         default=FIELD_GROUP_TEMPLATE_CHOICES[0][0],
-        help_text='Select template used to display this field group',
+        help_text="Select template used to display this field group",
     )
 
     panels = [
-        FieldPanel('title'),
-        FieldPanel('description'),
-        FieldPanel('template'),
-        InlinePanel('form_fields', label="Form field", classname='full-width nested-inline'),
+        FieldPanel("title"),
+        FieldPanel("description"),
+        FieldPanel("template"),
+        InlinePanel(
+            "form_fields", label="Form field", classname="full-width nested-inline"
+        ),
     ]
 
     @cached_property
@@ -130,18 +147,18 @@ class FieldGroup(ClusterableModel, Orderable):
         return self.form_fields.all()
 
 
-@method_decorator(cache_control(private=True), name='serve')
+@method_decorator(cache_control(private=True), name="serve")
 class FormPage(
-        MetadataPageMixin,
-        HoneypotFormMixin,
-        HoneypotFormSubmissionMixin,
-        WagtailCaptchaEmailForm,
+    MetadataPageMixin,
+    HoneypotFormMixin,
+    HoneypotFormSubmissionMixin,
+    WagtailCaptchaEmailForm,
 ):
     intro = RichTextField(blank=True)
     form_intro = models.TextField(
         blank=True,
         null=True,
-        help_text='Optional: short intro for the form',
+        help_text="Optional: short intro for the form",
     )
     thank_you_text = RichTextField(blank=True)
     button_text = models.CharField(
@@ -153,12 +170,12 @@ class FormPage(
         max_length=255,
         blank=True,
         null=True,
-        help_text='Optional: title for the page outro',
+        help_text="Optional: title for the page outro",
     )
     outro_text = RichTextField(
         blank=True,
         null=True,
-        help_text='Optional: text for the page outro',
+        help_text="Optional: text for the page outro",
     )
 
     honeypot_panels = [
@@ -168,31 +185,46 @@ class FormPage(
         )
     ]
 
-    content_panels = [
-        HelpPanel(heading='Note', content='Forms can be embedded in an iframe by a third-party website. '
-                  'Append <code>?embed=t</code> to any FormPage URL to request the embeddable version. '
-                  'You can copy the code below and replace <code>[[URL TO FORM]]</code> with the full link to this form page.'
-                  '<textarea style="font-size: 1em; color: black; font-family: monospace; border: 0; padding: 0.5em">'
-                  '<iframe src="[[URL TO FORM]]?embed=t" width="100%" height="60vh"></iframe>'
-                  '</textarea>'),
-    ] + WagtailCaptchaEmailForm.content_panels + [
-        FieldPanel('intro'),
-        FieldPanel('form_intro'),
-        InlinePanel('field_groups', label="Field group"),
-        FieldPanel('thank_you_text'),
-        FieldPanel('button_text'),
-        MultiFieldPanel([
-            FieldRowPanel([
-                FieldPanel('from_address', classname="col6"),
-                FieldPanel('to_address', classname="col6"),
-            ]),
-            FieldPanel('subject'),
-        ], "Email"),
-        MultiFieldPanel([
-            FieldPanel('outro_title'),
-            FieldPanel('outro_text'),
-        ], "Outro"),
-    ]
+    content_panels = (
+        [
+            HelpPanel(
+                heading="Note",
+                content="Forms can be embedded in an iframe by a third-party website. "
+                "Append <code>?embed=t</code> to any FormPage URL to request the embeddable version. "
+                "You can copy the code below and replace <code>[[URL TO FORM]]</code> with the full link to this form page."
+                '<textarea style="font-size: 1em; color: black; font-family: monospace; border: 0; padding: 0.5em">'
+                '<iframe src="[[URL TO FORM]]?embed=t" width="100%" height="60vh"></iframe>'
+                "</textarea>",
+            ),
+        ]
+        + WagtailCaptchaEmailForm.content_panels
+        + [
+            FieldPanel("intro"),
+            FieldPanel("form_intro"),
+            InlinePanel("field_groups", label="Field group"),
+            FieldPanel("thank_you_text"),
+            FieldPanel("button_text"),
+            MultiFieldPanel(
+                [
+                    FieldRowPanel(
+                        [
+                            FieldPanel("from_address", classname="col6"),
+                            FieldPanel("to_address", classname="col6"),
+                        ]
+                    ),
+                    FieldPanel("subject"),
+                ],
+                "Email",
+            ),
+            MultiFieldPanel(
+                [
+                    FieldPanel("outro_title"),
+                    FieldPanel("outro_text"),
+                ],
+                "Outro",
+            ),
+        ]
+    )
     base_form_class = ReplyToValidatorForm
 
     edit_handler = TabbedInterface(
@@ -205,15 +237,15 @@ class FormPage(
     )
 
     def csrf_failure_key(self):
-        return f'form-csrf-failure-{self.pk}'
+        return f"form-csrf-failure-{self.pk}"
 
     @cached_property
     def groups(self):
         return self.field_groups.all()
 
     def get_form_parameters(self):
-        csrf_failure_initial_data = getattr(self, 'csrf_failure_data', {}).get(
-            'initial_data', {}
+        csrf_failure_initial_data = getattr(self, "csrf_failure_data", {}).get(
+            "initial_data", {}
         )
         initial = {}
 
@@ -222,7 +254,7 @@ class FormPage(
             if name in csrf_failure_initial_data:
                 initial[name] = csrf_failure_initial_data[name]
 
-        return {'initial': initial}
+        return {"initial": initial}
 
     def get_form_fields(self):
         fields = []
@@ -234,12 +266,12 @@ class FormPage(
 
     def get_context(self, request, *args, **kwargs):
         context = super(FormPage, self).get_context(request, *args, **kwargs)
-        if getattr(self, 'csrf_failure_data', {}):
-            context['top_level_error'] = 'Submission failed, please try again.'
-        if request.GET.get('embed', None):
-            context['template_name'] = 'base.chromeless.html'
+        if getattr(self, "csrf_failure_data", {}):
+            context["top_level_error"] = "Submission failed, please try again."
+        if request.GET.get("embed", None):
+            context["template_name"] = "base.chromeless.html"  # pragma: no cover
         else:
-            context['template_name'] = 'base.html'
+            context["template_name"] = "base.html"
         return context
 
     def serve(self, request, *args, **kwargs):
@@ -248,13 +280,13 @@ class FormPage(
             {},
         )
         response = super(FormPage, self).serve(request, *args, **kwargs)
-        if 'embed' in request.GET:
+        if "embed" in request.GET:
             response.xframe_options_exempt = True
         return response
 
     def send_mail(self, form):
         fields = {x.clean_name: x for x in self.get_form_fields()}
-        addresses = [x.strip() for x in self.to_address.split(',')]
+        addresses = [x.strip() for x in self.to_address.split(",")]
         content = []
         reply_to = []
         subject = self.subject
@@ -262,20 +294,20 @@ class FormPage(
         for field in form:
             value = field.value()
             if isinstance(value, list):
-                value = ', '.join(value)
-            content.append('{}: {}'.format(field.label, value))
+                value = ", ".join(value)  # pragma: no cover
+            content.append("{}: {}".format(field.label, value))
 
             if fields.get(field.name):
                 if fields.get(field.name).append_to_subject and value:
-                    subject = '{0} - {1}'.format(subject, field.value())
+                    subject = "{0} - {1}".format(subject, field.value())
                 if fields.get(field.name).use_as_reply_to and value:
                     reply_to = [value]
-        content = '\n'.join(content)
+        content = "\n".join(content)
         send_mail(subject, content, addresses, self.from_address, reply_to=reply_to)
 
     def redirect_for_csrf_error(self, request, reason):
         request.session[self.csrf_failure_key()] = {
-            'initial_data': request.POST.dict(),
-            'reason': reason,
+            "initial_data": request.POST.dict(),
+            "reason": reason,
         }
         return redirect(self.get_url())

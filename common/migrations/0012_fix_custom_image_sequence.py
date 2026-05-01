@@ -16,11 +16,8 @@ def reverse(*args):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0011_remove_categorypage_description'),
+        ("common", "0011_remove_categorypage_description"),
     ]
 
-    operations = [
-        migrations.RunPython(forward, reverse, elidable=True)
-    ]
+    operations = [migrations.RunPython(forward, reverse, elidable=True)]

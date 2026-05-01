@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0037_dataviztag'),
+        ("home", "0037_dataviztag"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='homepage',
-            name='viz_data_end',
-            field=models.DateField(blank=True, null=True, verbose_name='End Date'),
+            model_name="homepage",
+            name="viz_data_end",
+            field=models.DateField(blank=True, null=True, verbose_name="End Date"),
         ),
         migrations.AddField(
-            model_name='homepage',
-            name='viz_data_start',
-            field=models.DateField(blank=True, null=True, verbose_name='Start Date'),
+            model_name="homepage",
+            name="viz_data_start",
+            field=models.DateField(blank=True, null=True, verbose_name="Start Date"),
         ),
     ]

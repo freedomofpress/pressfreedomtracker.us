@@ -8,7 +8,7 @@ from blog.tests.factories import BlogPageFactory
 
 
 class StyleguideView(TemplateView):
-    template_name = 'styleguide/index.html'
+    template_name = "styleguide/index.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -20,20 +20,19 @@ class StyleguideView(TemplateView):
         for category_value, category_name in CATEGORY_SYMBOL_CHOICES:
             all_categories.append(
                 CategoryPageFactory.build(
-                    page_symbol=category_value,
-                    **{category_value: True}
+                    page_symbol=category_value, **{category_value: True}
                 )
             )
 
-        context['category'] = CategoryPage.objects.first()
-        context['all_categories'] = all_categories
-        context['category_symbols'] = CATEGORY_SYMBOL_CHOICES
-        context['incident'] = inc
+        context["category"] = CategoryPage.objects.first()
+        context["all_categories"] = all_categories
+        context["category_symbols"] = CATEGORY_SYMBOL_CHOICES
+        context["incident"] = inc
 
         blog_page = BlogPageFactory.build(with_image=True)
-        context['blog_page'] = blog_page
+        context["blog_page"] = blog_page
 
         blog_pages = BlogPageFactory.build_batch(3, with_image=True)
-        context['blog_pages'] = blog_pages
+        context["blog_pages"] = blog_pages
 
         return context

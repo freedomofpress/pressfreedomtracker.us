@@ -6,15 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0016_statbox_external_link'),
+        ("home", "0016_statbox_external_link"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='statbox',
-            name='querystring',
-            field=models.CharField(blank=True, help_text="Append a querystring to the internal link. Should start with '?'", max_length=1000, null=True),
+            model_name="statbox",
+            name="querystring",
+            field=models.CharField(
+                blank=True,
+                help_text="Append a querystring to the internal link. Should start with '?'",
+                max_length=1000,
+                null=True,
+            ),
         ),
     ]

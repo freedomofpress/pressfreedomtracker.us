@@ -6,15 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0019_incidentindexpage_feed_limit'),
+        ("incident", "0019_incidentindexpage_feed_limit"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='teaser',
-            field=models.TextField(blank=True, help_text='This field is optional and overrides the default teaser text.', max_length=384, null=True),
+            model_name="incidentpage",
+            name="teaser",
+            field=models.TextField(
+                blank=True,
+                help_text="This field is optional and overrides the default teaser text.",
+                max_length=384,
+                null=True,
+            ),
         ),
     ]

@@ -4,25 +4,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0092_auto_20220831_2113'),
+        ("common", "0092_auto_20220831_2113"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='categorypage',
-            name='viz_data_end',
-            field=models.PositiveIntegerField(blank=True, null=True, verbose_name='End Year'),
+            model_name="categorypage",
+            name="viz_data_end",
+            field=models.PositiveIntegerField(
+                blank=True, null=True, verbose_name="End Year"
+            ),
         ),
         migrations.AddField(
-            model_name='categorypage',
-            name='viz_data_start',
-            field=models.PositiveIntegerField(blank=True, null=True, verbose_name='Start Year'),
+            model_name="categorypage",
+            name="viz_data_start",
+            field=models.PositiveIntegerField(
+                blank=True, null=True, verbose_name="Start Year"
+            ),
         ),
         migrations.AddField(
-            model_name='categorypage',
-            name='viz_type',
-            field=models.CharField(choices=[('none', 'No Chart'), ('bar', 'Bar Chart')], default='none', help_text='The type of chart shown in the category page. By default, no chart is shown.', max_length=255),
+            model_name="categorypage",
+            name="viz_type",
+            field=models.CharField(
+                choices=[("none", "No Chart"), ("bar", "Bar Chart")],
+                default="none",
+                help_text="The type of chart shown in the category page. By default, no chart is shown.",
+                max_length=255,
+            ),
         ),
     ]

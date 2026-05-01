@@ -8,15 +8,33 @@ import wagtail.embeds.blocks
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0055_topicpage_incidents_per_module'),
+        ("incident", "0055_topicpage_incidents_per_module"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='topicpage',
-            name='content',
-            field=wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('rich_text', wagtail.blocks.RichTextBlock()), ('tweet', wagtail.blocks.StructBlock([('tweet', wagtail.embeds.blocks.EmbedBlock())])), ('tabs', common.blocks.TabbedBlock())], blank=True),
+            model_name="topicpage",
+            name="content",
+            field=wagtail.fields.StreamField(
+                [
+                    (
+                        "heading_2",
+                        wagtail.blocks.StructBlock(
+                            [("content", wagtail.blocks.CharBlock())]
+                        ),
+                    ),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    ("rich_text", wagtail.blocks.RichTextBlock()),
+                    (
+                        "tweet",
+                        wagtail.blocks.StructBlock(
+                            [("tweet", wagtail.embeds.blocks.EmbedBlock())]
+                        ),
+                    ),
+                    ("tabs", common.blocks.TabbedBlock()),
+                ],
+                blank=True,
+            ),
         ),
     ]

@@ -5,21 +5,33 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0078_referenceindex'),
-        ('common', '0096_update_verbose_name_of_politician_or_public_figures_relationship'),
+        ("wagtailcore", "0078_referenceindex"),
+        (
+            "common",
+            "0096_update_verbose_name_of_politician_or_public_figures_relationship",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='donation_page',
-            field=models.URLField(blank=True, help_text='Page linked by "Donate" button in newsletter and other pages'),
+            model_name="sitesettings",
+            name="donation_page",
+            field=models.URLField(
+                blank=True,
+                help_text='Page linked by "Donate" button in newsletter and other pages',
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='newsletter_subscription_page',
-            field=models.ForeignKey(blank=True, help_text='Page linked by the "Sign up to the Newsletter" link in the monthly newsletter pages.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailcore.page'),
+            model_name="sitesettings",
+            name="newsletter_subscription_page",
+            field=models.ForeignKey(
+                blank=True,
+                help_text='Page linked by the "Sign up to the Newsletter" link in the monthly newsletter pages.',
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="wagtailcore.page",
+            ),
         ),
     ]

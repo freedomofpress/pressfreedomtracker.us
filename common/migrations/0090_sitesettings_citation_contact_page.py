@@ -5,16 +5,22 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0066_collection_management_permissions'),
-        ('common', '0089_searchsettings_learn_more_page'),
+        ("wagtailcore", "0066_collection_management_permissions"),
+        ("common", "0089_searchsettings_learn_more_page"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='citation_contact_page',
-            field=models.ForeignKey(blank=True, help_text='Page linked by the "Contact Us" link in the footer citation note.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailcore.page'),
+            model_name="sitesettings",
+            name="citation_contact_page",
+            field=models.ForeignKey(
+                blank=True,
+                help_text='Page linked by the "Contact Us" link in the footer citation note.',
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="wagtailcore.page",
+            ),
         ),
     ]

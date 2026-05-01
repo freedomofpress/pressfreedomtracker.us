@@ -6,23 +6,23 @@ from django.db import migrations
 
 
 COLORS = CATEGORY_COLOR_CHOICES = [
-    'eastern-blue',
-    'gamboge',
-    'green-apple',
-    'green',
-    'sunshine',
-    'pink',
-    'red',
-    'royal-blue',
-    'teal',
-    'violet',
-    'yellow',
+    "eastern-blue",
+    "gamboge",
+    "green-apple",
+    "green",
+    "sunshine",
+    "pink",
+    "red",
+    "royal-blue",
+    "teal",
+    "violet",
+    "yellow",
 ]
 
 
 def assign_arbitrary_colors(apps, schema_editor):
-    CategoryPage = apps.get_model('common', 'CategoryPage')
-    categories = CategoryPage.objects.all().order_by('?')
+    CategoryPage = apps.get_model("common", "CategoryPage")
+    categories = CategoryPage.objects.all().order_by("?")
     for i, page in enumerate(categories):
         page.page_color = CATEGORY_COLOR_CHOICES[i % len(CATEGORY_COLOR_CHOICES)]
         page.save()
@@ -33,11 +33,8 @@ def noop(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0018_auto_20170719_2347'),
+        ("common", "0018_auto_20170719_2347"),
     ]
 
-    operations = [
-        migrations.RunPython(assign_arbitrary_colors, noop, elidable=True)
-    ]
+    operations = [migrations.RunPython(assign_arbitrary_colors, noop, elidable=True)]

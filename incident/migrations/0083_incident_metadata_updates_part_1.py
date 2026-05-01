@@ -6,38 +6,45 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0082_add_legal_order_institution_target'),
+        ("incident", "0082_add_legal_order_institution_target"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='equipmentbroken',
-            options={'ordering': ['sort_order'], 'verbose_name': 'Equipment Broken'},
+            name="equipmentbroken",
+            options={"ordering": ["sort_order"], "verbose_name": "Equipment Broken"},
         ),
         migrations.AlterModelOptions(
-            name='equipmentseized',
-            options={'ordering': ['sort_order'], 'verbose_name': 'Equipment Seized'},
+            name="equipmentseized",
+            options={"ordering": ["sort_order"], "verbose_name": "Equipment Seized"},
         ),
         migrations.AddField(
-            model_name='equipmentbroken',
-            name='sort_order',
+            model_name="equipmentbroken",
+            name="sort_order",
             field=models.IntegerField(blank=True, editable=False, null=True),
         ),
         migrations.AddField(
-            model_name='equipmentseized',
-            name='sort_order',
+            model_name="equipmentseized",
+            name="sort_order",
             field=models.IntegerField(blank=True, editable=False, null=True),
         ),
         migrations.AlterField(
-            model_name='equipmentbroken',
-            name='equipment',
-            field=modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, to='incident.equipment', verbose_name='Equipment'),
+            model_name="equipmentbroken",
+            name="equipment",
+            field=modelcluster.fields.ParentalKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="incident.equipment",
+                verbose_name="Equipment",
+            ),
         ),
         migrations.AlterField(
-            model_name='equipmentseized',
-            name='equipment',
-            field=modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, to='incident.equipment', verbose_name='Equipment'),
+            model_name="equipmentseized",
+            name="equipment",
+            field=modelcluster.fields.ParentalKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="incident.equipment",
+                verbose_name="Equipment",
+            ),
         ),
     ]

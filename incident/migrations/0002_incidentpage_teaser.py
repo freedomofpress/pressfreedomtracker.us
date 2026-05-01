@@ -7,15 +7,19 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0001_initial'),
+        ("incident", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='teaser',
-            field=wagtail.fields.RichTextField(blank=True, help_text='This field is optional and overrides the default teaser text.', null=True, max_length=384),
+            model_name="incidentpage",
+            name="teaser",
+            field=wagtail.fields.RichTextField(
+                blank=True,
+                help_text="This field is optional and overrides the default teaser text.",
+                null=True,
+                max_length=384,
+            ),
         ),
     ]

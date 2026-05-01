@@ -5,16 +5,22 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0024_blogpage_introduction'),
-        ('common', '0085_alter_categorypage_methodology'),
+        ("blog", "0024_blogpage_introduction"),
+        ("common", "0085_alter_categorypage_methodology"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='categorypage',
-            name='blog_index_page',
-            field=models.ForeignKey(blank=True, help_text='This blog will be linked from the category page.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='blog.blogindexpage'),
+            model_name="categorypage",
+            name="blog_index_page",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="This blog will be linked from the category page.",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="blog.blogindexpage",
+            ),
         ),
     ]

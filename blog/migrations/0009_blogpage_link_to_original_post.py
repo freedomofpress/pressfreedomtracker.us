@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0008_auto_20170720_1539'),
+        ("blog", "0008_auto_20170720_1539"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpage',
-            name='link_to_original_post',
+            model_name="blogpage",
+            name="link_to_original_post",
             field=models.URLField(blank=True, null=True),
         ),
     ]

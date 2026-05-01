@@ -8,49 +8,101 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0031_auto_20190321_1836'),
+        ("incident", "0031_auto_20190321_1836"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Institution',
+            name="Institution",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255, unique=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Journalist',
+            name="Journalist",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='TargetedJournalist',
+            name="TargetedJournalist",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('incident', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='targeted_journalists', to='incident.IncidentPage')),
-                ('institution', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='incident.Institution')),
-                ('journalist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='incident.Journalist')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                (
+                    "incident",
+                    modelcluster.fields.ParentalKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="targeted_journalists",
+                        to="incident.IncidentPage",
+                    ),
+                ),
+                (
+                    "institution",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="incident.Institution",
+                    ),
+                ),
+                (
+                    "journalist",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="incident.Journalist",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['sort_order'],
-                'abstract': False,
+                "ordering": ["sort_order"],
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='incidentpage',
-            name='targeted_institutions',
-            field=models.ManyToManyField(blank=True, related_name='institutions_incidents', to='incident.Institution', verbose_name='Targeted Institutions'),
+            model_name="incidentpage",
+            name="targeted_institutions",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="institutions_incidents",
+                to="incident.Institution",
+                verbose_name="Targeted Institutions",
+            ),
         ),
     ]

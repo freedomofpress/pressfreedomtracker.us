@@ -22,7 +22,7 @@ class TestGenerator(TestCase):
     def setUpTestData(cls):
         IncidentPageFactory()
 
-    @mock.patch('requests.get', side_effect=requests.exceptions.Timeout)
+    @mock.patch("requests.get", side_effect=requests.exceptions.Timeout)
     def test_raises_pregeneration_error_if_service_is_down(self, mock_get):
         with self.assertRaises(PregenerationException):
             request_snapshot(
@@ -35,7 +35,7 @@ class TestGenerator(TestCase):
         with self.assertRaises(PregenerationException):
             request_snapshot(
                 snapshot_type=SnapshotType.SVG,
-                chart_type='unknown chart',
+                chart_type="unknown chart",
                 query={},
             )
 
@@ -45,7 +45,7 @@ class TestGenerator(TestCase):
             side_effect=requests.exceptions.HTTPError
         )
 
-        with mock.patch('requests.get', return_value=failed_response):
+        with mock.patch("requests.get", return_value=failed_response):
             with self.assertRaises(PregenerationException):
                 request_snapshot(
                     snapshot_type=SnapshotType.SVG,
@@ -53,12 +53,9 @@ class TestGenerator(TestCase):
                     query={},
                 )
 
-    @mock.patch('requests.get')
+    @mock.patch("requests.get")
     def test_converts_query_to_json_options(self, mock_get):
-        query = {
-            'filterTags': 'tag1',
-            'timePeriod': 'months'
-        }
+        query = {"filterTags": "tag1", "timePeriod": "months"}
 
         request_snapshot(
             snapshot_type=SnapshotType.SVG,
@@ -67,8 +64,8 @@ class TestGenerator(TestCase):
         )
         first_call = mock_get.call_args_list[0]
         self.assertEqual(
-            first_call.kwargs['params'],
-            {'options': json.dumps(query)},
+            first_call.kwargs["params"],
+            {"options": json.dumps(query)},
         )
 
     def test_generates_vertical_bar_chart_svgs(self):
@@ -80,7 +77,7 @@ class TestGenerator(TestCase):
 
         # Should contain the appropriate `<svg>` tag
         xml_tree_root = ET.fromstring(response)
-        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
+        self.assertEqual(xml_tree_root.tag, "{http://www.w3.org/2000/svg}svg")
 
     def test_generates_hexbin_map_chart_svgs(self):
         response = request_snapshot(
@@ -91,7 +88,7 @@ class TestGenerator(TestCase):
 
         # Should contain the appropriate `<svg>` tag
         xml_tree_root = ET.fromstring(response)
-        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
+        self.assertEqual(xml_tree_root.tag, "{http://www.w3.org/2000/svg}svg")
 
     def test_generates_vertical_bar_chart_pngs(self):
         output = request_snapshot(
@@ -110,7 +107,7 @@ class TestGenerator(TestCase):
 
         # Should contain the appropriate `<svg>` tag
         xml_tree_root = ET.fromstring(response)
-        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
+        self.assertEqual(xml_tree_root.tag, "{http://www.w3.org/2000/svg}svg")
 
     def test_generates_tree_map_chart_pngs(self):
         output = request_snapshot(
@@ -129,7 +126,7 @@ class TestGenerator(TestCase):
 
         # Should contain the appropriate `<svg>` tag
         xml_tree_root = ET.fromstring(response)
-        self.assertEqual(xml_tree_root.tag, '{http://www.w3.org/2000/svg}svg')
+        self.assertEqual(xml_tree_root.tag, "{http://www.w3.org/2000/svg}svg")
 
     def test_generates_bubble_map_chart_pngs(self):
         output = request_snapshot(

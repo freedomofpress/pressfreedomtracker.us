@@ -7,15 +7,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0020_remove_homepage_incident_index_page'),
+        ("home", "0020_remove_homepage_incident_index_page"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='statbox',
-            name='value',
-            field=models.CharField(max_length=1000, validators=[common.validators.TemplateValidator()]),
+            model_name="statbox",
+            name="value",
+            field=models.CharField(
+                max_length=1000, validators=[common.validators.TemplateValidator()]
+            ),
         ),
     ]

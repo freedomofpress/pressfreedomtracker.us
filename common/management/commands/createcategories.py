@@ -14,80 +14,78 @@ from home.tests.factories import HomePageFactory
 CATEGORIES = {
     # Note: the keys in this dictionary must match the parameter names
     # on the CategoryPageFactory class.
-    'arrest': [
-        'arrest_status',
-        'arresting_authority',
-        'detention_date',
-        'release_date',
-        'unnecessary_use_of_force',
-        'charges',
+    "arrest": [
+        "arrest_status",
+        "arresting_authority",
+        "detention_date",
+        "release_date",
+        "unnecessary_use_of_force",
+        "charges",
     ],
-    'border_stop': [
-        'border_point',
-        'stopped_previously',
-        'target_us_citizenship_status',
-        'denial_of_entry',
-        'target_nationality',
-        'did_authorities_ask_for_device_access',
-        'did_authorities_ask_about_work',
+    "border_stop": [
+        "border_point",
+        "stopped_previously",
+        "target_us_citizenship_status",
+        "denial_of_entry",
+        "target_nationality",
+        "did_authorities_ask_for_device_access",
+        "did_authorities_ask_about_work",
     ],
-    'denial_of_access': [
-        'politicians_or_public_figures_involved',
+    "denial_of_access": [
+        "politicians_or_public_figures_involved",
     ],
-    'equipment_search': [
-        'equipment_seized',
-        'status_of_seized_equipment',
-        'is_search_warrant_obtained',
+    "equipment_search": [
+        "equipment_seized",
+        "status_of_seized_equipment",
+        "is_search_warrant_obtained",
     ],
-    'assault': [
-        'assailant',
-        'was_journalist_targeted',
+    "assault": [
+        "assailant",
+        "was_journalist_targeted",
     ],
-    'leak_case': [
-        'charged_under_espionage_act',
+    "leak_case": [
+        "charged_under_espionage_act",
     ],
-    'subpoena': [
-        'legal_order_target',
-        'legal_order_status',
-        'legal_order_venue',
-        'legal_order_information_requested',
-        'third_party_business',
-        'third_party_in_possession_of_communications',
+    "subpoena": [
+        "legal_order_target",
+        "legal_order_status",
+        "legal_order_venue",
+        "legal_order_information_requested",
+        "third_party_business",
+        "third_party_in_possession_of_communications",
     ],
-    'equipment_damage': [
-        'equipment_broken',
-        'actor',
+    "equipment_damage": [
+        "equipment_broken",
+        "actor",
     ],
-    'prior_restraint': [
-        'status_of_prior_restraint',
+    "prior_restraint": [
+        "status_of_prior_restraint",
     ],
-    'chilling_statement': [],
-    'other_incident': [],
+    "chilling_statement": [],
+    "other_incident": [],
 }
 
 
 class Command(BaseCommand):
-    help = 'Creates categories appropriate for development'
+    help = "Creates categories appropriate for development"
 
     @transaction.atomic
     def handle(self, *args, **options):
         # Remove default wagtail home page, it's not needed.
-        Page.objects.filter(slug='home').delete()
+        Page.objects.filter(slug="home").delete()
 
-        root_page = Page.objects.get(slug='root')
+        root_page = Page.objects.get(slug="root")
         home_page = HomePageFactory(
             parent=root_page,
             about=make_html_string(),
         )
         DevelopmentSiteFactory(root_page=home_page)
 
-        self.stdout.write('Creating categories', ending='')
+        self.stdout.write("Creating categories", ending="")
         for trait, filters in CATEGORIES.items():
             CategoryPageFactory(
-                parent=home_page,
-                incident_filters=filters,
-                **{trait: True}
+                parent=home_page, incident_filters=filters, **{trait: True}
             )
-            self.stdout.write('.', ending='')
+            self.stdout.write(".", ending="")
 
-        self.stdout.write('')
+        self.stdout.write("")

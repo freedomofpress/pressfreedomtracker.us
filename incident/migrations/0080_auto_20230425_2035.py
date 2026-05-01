@@ -4,20 +4,45 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0079_alter_incidentpage_name_of_business'),
+        ("incident", "0079_alter_incidentpage_name_of_business"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='legalorder',
-            name='status',
-            field=models.CharField(choices=[('UNKNOWN', 'unknown'), ('PENDING', 'pending'), ('DROPPED', 'dropped'), ('QUASHED', 'quashed'), ('UPHELD', 'upheld'), ('PARTIALLY_UPHELD', 'partially upheld'), ('CARRIED_OUT', 'carried out'), ('IGNORED', 'ignored'), ('OBJECTED_TO', 'objected to')], max_length=1000),
+            model_name="legalorder",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("UNKNOWN", "unknown"),
+                    ("PENDING", "pending"),
+                    ("DROPPED", "dropped"),
+                    ("QUASHED", "quashed"),
+                    ("UPHELD", "upheld"),
+                    ("PARTIALLY_UPHELD", "partially upheld"),
+                    ("CARRIED_OUT", "carried out"),
+                    ("IGNORED", "ignored"),
+                    ("OBJECTED_TO", "objected to"),
+                ],
+                max_length=1000,
+            ),
         ),
         migrations.AlterField(
-            model_name='legalorderupdate',
-            name='status',
-            field=models.CharField(choices=[('UNKNOWN', 'unknown'), ('PENDING', 'pending'), ('DROPPED', 'dropped'), ('QUASHED', 'quashed'), ('UPHELD', 'upheld'), ('PARTIALLY_UPHELD', 'partially upheld'), ('CARRIED_OUT', 'carried out'), ('IGNORED', 'ignored'), ('OBJECTED_TO', 'objected to')], max_length=1000),
+            model_name="legalorderupdate",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("UNKNOWN", "unknown"),
+                    ("PENDING", "pending"),
+                    ("DROPPED", "dropped"),
+                    ("QUASHED", "quashed"),
+                    ("UPHELD", "upheld"),
+                    ("PARTIALLY_UPHELD", "partially upheld"),
+                    ("CARRIED_OUT", "carried out"),
+                    ("IGNORED", "ignored"),
+                    ("OBJECTED_TO", "objected to"),
+                ],
+                max_length=1000,
+            ),
         ),
     ]

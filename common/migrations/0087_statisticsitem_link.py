@@ -4,15 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0086_categorypage_blog_index_page'),
+        ("common", "0086_categorypage_blog_index_page"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='statisticsitem',
-            name='link',
-            field=models.CharField(blank=True, help_text='Link to the filtered incident database page, showing incidents related to this filter', max_length=255, null=True),
+            model_name="statisticsitem",
+            name="link",
+            field=models.CharField(
+                blank=True,
+                help_text="Link to the filtered incident database page, showing incidents related to this filter",
+                max_length=255,
+                null=True,
+            ),
         ),
     ]

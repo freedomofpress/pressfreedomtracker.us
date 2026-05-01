@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0004_footersettings'),
+        ("common", "0004_footersettings"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='categorypage',
-            name='plural_name',
+            model_name="categorypage",
+            name="plural_name",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

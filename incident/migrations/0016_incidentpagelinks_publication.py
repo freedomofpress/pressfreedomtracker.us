@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0015_auto_20170721_2119'),
+        ("incident", "0015_auto_20170721_2119"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpagelinks',
-            name='publication',
+            model_name="incidentpagelinks",
+            name="publication",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

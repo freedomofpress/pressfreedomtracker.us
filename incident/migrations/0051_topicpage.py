@@ -9,34 +9,149 @@ import wagtailmetadata.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0041_group_collection_permissions_verbose_name_plural'),
-        ('common', '0074_auto_20200603_1613'),
-        ('incident', '0050_remove_incidentpageupdates_sort_order'),
+        ("wagtailcore", "0041_group_collection_permissions_verbose_name_plural"),
+        ("common", "0074_auto_20200603_1613"),
+        ("incident", "0050_remove_incidentpageupdates_sort_order"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TopicPage',
+            name="TopicPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('superheading', models.TextField(blank=True, help_text='Text that appears above the title in the heading block', null=True)),
-                ('description', wagtail.fields.RichTextField(blank=True)),
-                ('text_align', models.CharField(choices=[('top-center', 'Top Center'), ('bottom-center', 'Bottom Center'), ('top-left', 'Top Left'), ('bottom-left', 'Bottom Left')], default='bottom-center', help_text='Alignment of the full header text within the header image', max_length=255)),
-                ('text_color', models.CharField(choices=[('white', 'White'), ('black', 'Black')], default='white', help_text='Color of header text, for legibility against the background.', max_length=255)),
-                ('photo_caption', wagtail.fields.RichTextField(blank=True)),
-                ('photo_credit', models.TextField(blank=True)),
-                ('photo_credit_link', models.URLField(blank=True, null=True)),
-                ('content', wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('rich_text', wagtail.blocks.RichTextBlock())], blank=True)),
-                ('sidebar', wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('rich_text', common.blocks.RichTextTemplateBlock(features=['bold', 'italic', 'link', 'ol', 'ul'], icon='doc-full', label='Rich Text')), ('stat_table', common.blocks.StatTableBlock()), ('button', wagtail.blocks.StructBlock([('text', wagtail.blocks.TextBlock(required=True)), ('url', wagtail.blocks.URLBlock(required=True))]))], blank=True)),
-                ('incident_tag', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='common.CommonTag')),
-                ('photo', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage')),
-                ('search_image', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', verbose_name='Search image')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                (
+                    "superheading",
+                    models.TextField(
+                        blank=True,
+                        help_text="Text that appears above the title in the heading block",
+                        null=True,
+                    ),
+                ),
+                ("description", wagtail.fields.RichTextField(blank=True)),
+                (
+                    "text_align",
+                    models.CharField(
+                        choices=[
+                            ("top-center", "Top Center"),
+                            ("bottom-center", "Bottom Center"),
+                            ("top-left", "Top Left"),
+                            ("bottom-left", "Bottom Left"),
+                        ],
+                        default="bottom-center",
+                        help_text="Alignment of the full header text within the header image",
+                        max_length=255,
+                    ),
+                ),
+                (
+                    "text_color",
+                    models.CharField(
+                        choices=[("white", "White"), ("black", "Black")],
+                        default="white",
+                        help_text="Color of header text, for legibility against the background.",
+                        max_length=255,
+                    ),
+                ),
+                ("photo_caption", wagtail.fields.RichTextField(blank=True)),
+                ("photo_credit", models.TextField(blank=True)),
+                ("photo_credit_link", models.URLField(blank=True, null=True)),
+                (
+                    "content",
+                    wagtail.fields.StreamField(
+                        [
+                            (
+                                "heading_2",
+                                wagtail.blocks.StructBlock(
+                                    [("content", wagtail.blocks.CharBlock())]
+                                ),
+                            ),
+                            ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                            ("rich_text", wagtail.blocks.RichTextBlock()),
+                        ],
+                        blank=True,
+                    ),
+                ),
+                (
+                    "sidebar",
+                    wagtail.fields.StreamField(
+                        [
+                            (
+                                "heading_2",
+                                wagtail.blocks.StructBlock(
+                                    [("content", wagtail.blocks.CharBlock())]
+                                ),
+                            ),
+                            (
+                                "rich_text",
+                                common.blocks.RichTextTemplateBlock(
+                                    features=["bold", "italic", "link", "ol", "ul"],
+                                    icon="doc-full",
+                                    label="Rich Text",
+                                ),
+                            ),
+                            ("stat_table", common.blocks.StatTableBlock()),
+                            (
+                                "button",
+                                wagtail.blocks.StructBlock(
+                                    [
+                                        (
+                                            "text",
+                                            wagtail.blocks.TextBlock(required=True),
+                                        ),
+                                        ("url", wagtail.blocks.URLBlock(required=True)),
+                                    ]
+                                ),
+                            ),
+                        ],
+                        blank=True,
+                    ),
+                ),
+                (
+                    "incident_tag",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="common.CommonTag",
+                    ),
+                ),
+                (
+                    "photo",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="common.CustomImage",
+                    ),
+                ),
+                (
+                    "search_image",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="common.CustomImage",
+                        verbose_name="Search image",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=(wagtailmetadata.models.MetadataMixin, 'wagtailcore.page', models.Model),
+            bases=(
+                wagtailmetadata.models.MetadataMixin,
+                "wagtailcore.page",
+                models.Model,
+            ),
         ),
     ]

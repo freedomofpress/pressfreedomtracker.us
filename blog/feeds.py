@@ -21,14 +21,14 @@ class BlogIndexPageFeed(Feed):
         try:
             teaser_block = obj.teaser_graphic[0]
             if teaser_block.block_type == "image":
-                return teaser_block.value.get_rendition('original')
+                return teaser_block.value.get_rendition("original")
             elif teaser_block.block_type in (
                 "vertical_bar_chart",
                 "tree_map_chart",
                 "bubble_map_chart",
                 "hexbin_map_chart",
             ):
-                teaser_svg = namedtuple('teaser_svg', 'url width height')
+                teaser_svg = namedtuple("teaser_svg", "url width height")
                 return teaser_svg(
                     url=teaser_block.value.svg_snapshot_mini_datauri(),
                     width=655,
@@ -36,33 +36,29 @@ class BlogIndexPageFeed(Feed):
                 )
         except (IndexError, ChartNotAvailable):
             if obj.search_image:
-                return obj.search_image.get_rendition('original')
+                return obj.search_image.get_rendition("original")
 
     def _get_categories(self, obj):
-        categories = obj.categories.all().select_related('category')
+        categories = obj.categories.all().select_related("category")  # pragma: no cover
         return [inline.category for inline in categories]
 
     def _get_complete_url(self, path):
-        return urljoin(
-            self.blog_index_page.get_site().root_url,
-            path
-        )
+        return urljoin(self.blog_index_page.get_site().root_url, path)
 
     def get_object(self, request, *args, **kwargs):
-        self.page = int(request.GET.get('p', 1))
+        self.page = int(request.GET.get("p", 1))
         posts = self.blog_index_page.get_posts()
 
         if self.blog_index_page.feed_limit != 0:
-            posts = posts[:self.blog_index_page.feed_limit]
+            posts = posts[: self.blog_index_page.feed_limit]
 
         self.paginator = Paginator(posts, self.feed_per_page)
         self.last_page = self.paginator.page_range.stop - 1
         return super(BlogIndexPageFeed, self).get_object(request, *args, **kwargs)
 
     def title(self):
-        return '{}: {}'.format(
-            self.blog_index_page.get_site().site_name,
-            self.blog_index_page.title
+        return "{}: {}".format(
+            self.blog_index_page.get_site().site_name, self.blog_index_page.title
         )
 
     def link(self):
@@ -73,7 +69,7 @@ class BlogIndexPageFeed(Feed):
 
     def feed_url(self):
         return self._get_complete_url(
-            self.blog_index_page.url + self.blog_index_page.reverse_subpage('feed')
+            self.blog_index_page.url + self.blog_index_page.reverse_subpage("feed")
         )
 
     def feed_guid(self):
@@ -81,8 +77,8 @@ class BlogIndexPageFeed(Feed):
 
     def feed_extra_kwargs(self, obj):
         return {
-            'page': self.page,
-            'last_page': self.last_page,
+            "page": self.page,
+            "last_page": self.last_page,
         }
 
     def items(self):
@@ -112,10 +108,10 @@ class BlogIndexPageFeed(Feed):
         image = self._get_teaser_image(obj)
         if image:
             return {
-                'teaser_image': {
-                    'url': image.url,
-                    'width': image.width,
-                    'height': image.height,
+                "teaser_image": {
+                    "url": image.url,
+                    "width": image.width,
+                    "height": image.height,
                 }
             }
         return {}

@@ -6,24 +6,52 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('emails', '0002_emailsettings'),
+        ("emails", "0002_emailsettings"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='emailsettings',
-            name='mailchimp_collect_name',
-            field=models.BooleanField(default=False, help_text='If checked, collect full name information in Mailchimp form', verbose_name='Enable name field'),
+            model_name="emailsettings",
+            name="mailchimp_collect_name",
+            field=models.BooleanField(
+                default=False,
+                help_text="If checked, collect full name information in Mailchimp form",
+                verbose_name="Enable name field",
+            ),
         ),
         migrations.CreateModel(
-            name='MailchimpGroup',
+            name="MailchimpGroup",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('category_id', models.IntegerField(help_text='First number in the "name" field from the signup form input line.')),
-                ('group_id', models.IntegerField(help_text='Second number in the "name" field from the signup form input line.')),
-                ('page', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='mailchimp_groups', to='emails.EmailSettings')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "category_id",
+                    models.IntegerField(
+                        help_text='First number in the "name" field from the signup form input line.'
+                    ),
+                ),
+                (
+                    "group_id",
+                    models.IntegerField(
+                        help_text='Second number in the "name" field from the signup form input line.'
+                    ),
+                ),
+                (
+                    "page",
+                    modelcluster.fields.ParentalKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="mailchimp_groups",
+                        to="emails.EmailSettings",
+                    ),
+                ),
             ],
         ),
     ]

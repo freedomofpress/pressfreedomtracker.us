@@ -4,15 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0075_legal_orders_and_updates'),
+        ("incident", "0075_legal_orders_and_updates"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='legal_order_venue',
-            field=models.CharField(blank=True, choices=[('STATE', 'State'), ('FEDERAL', 'Federal')], max_length=255, null=True, verbose_name='Legal order venue'),
+            model_name="incidentpage",
+            name="legal_order_venue",
+            field=models.CharField(
+                blank=True,
+                choices=[("STATE", "State"), ("FEDERAL", "Federal")],
+                max_length=255,
+                null=True,
+                verbose_name="Legal order venue",
+            ),
         ),
     ]

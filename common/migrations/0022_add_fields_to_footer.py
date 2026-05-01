@@ -7,21 +7,26 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0039_collectionviewrestriction'),
-        ('common', '0021_auto_20170720_1551'),
+        ("wagtailcore", "0039_collectionviewrestriction"),
+        ("common", "0021_auto_20170720_1551"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='footersettings',
-            name='partner_logo_link',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailcore.Page'),
+            model_name="footersettings",
+            name="partner_logo_link",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="wagtailcore.Page",
+            ),
         ),
         migrations.AddField(
-            model_name='footersettings',
-            name='partner_logo_text',
+            model_name="footersettings",
+            name="partner_logo_text",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
     ]

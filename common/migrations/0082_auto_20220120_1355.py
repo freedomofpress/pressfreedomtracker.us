@@ -4,19 +4,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0081_adds_index_entries'),
+        ("common", "0081_adds_index_entries"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='categorypage',
-            name='page_color',
+            model_name="categorypage",
+            name="page_color",
         ),
         migrations.AddField(
-            model_name='categorypage',
-            name='page_symbol',
-            field=models.CharField(choices=[('arrest', 'Arrest Icon'), ('border_stop', 'Border Stop Icon'), ('chilling_statement', 'Chilling Statement Icon'), ('denial_of_access', 'Denial of Access Icon'), ('equipment_damage', 'Equipment Damage Icon'), ('equipment_search', 'Equipment Search Icon'), ('leak_case', 'Leak Case Icon'), ('other_incident', 'Other Incidents Icon'), ('physical_attack', 'Physical Attack Icon'), ('prior_restraint', 'Prior Restraint Icon'), ('subpoena', 'Subpoena Icon')], default='other_incident', help_text='Please check the styleguide to associate the icons with their name', max_length=255),
+            model_name="categorypage",
+            name="page_symbol",
+            field=models.CharField(
+                choices=[
+                    ("arrest", "Arrest Icon"),
+                    ("border_stop", "Border Stop Icon"),
+                    ("chilling_statement", "Chilling Statement Icon"),
+                    ("denial_of_access", "Denial of Access Icon"),
+                    ("equipment_damage", "Equipment Damage Icon"),
+                    ("equipment_search", "Equipment Search Icon"),
+                    ("leak_case", "Leak Case Icon"),
+                    ("other_incident", "Other Incidents Icon"),
+                    ("physical_attack", "Physical Attack Icon"),
+                    ("prior_restraint", "Prior Restraint Icon"),
+                    ("subpoena", "Subpoena Icon"),
+                ],
+                default="other_incident",
+                help_text="Please check the styleguide to associate the icons with their name",
+                max_length=255,
+            ),
         ),
     ]

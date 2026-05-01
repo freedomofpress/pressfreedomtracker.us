@@ -4,19 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('forms', '0009_auto_20220222_0331'),
+        ("forms", "0009_auto_20220222_0331"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='fieldgroup',
-            options={'ordering': ['sort_order']},
+            name="fieldgroup",
+            options={"ordering": ["sort_order"]},
         ),
         migrations.AlterField(
-            model_name='fieldgroup',
-            name='template',
-            field=models.CharField(choices=[('default', 'Default'), ('date_single', 'Single date')], default='default', help_text='Select template used to display this field group', max_length=20),
+            model_name="fieldgroup",
+            name="template",
+            field=models.CharField(
+                choices=[("default", "Default"), ("date_single", "Single date")],
+                default="default",
+                help_text="Select template used to display this field group",
+                max_length=20,
+            ),
         ),
     ]

@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0023_alter_blogindexpagefeature_page'),
+        ("blog", "0023_alter_blogindexpagefeature_page"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpage',
-            name='introduction',
-            field=models.TextField(blank=True, help_text='Optional: introduction displayed above the image/video.', null=True),
+            model_name="blogpage",
+            name="introduction",
+            field=models.TextField(
+                blank=True,
+                help_text="Optional: introduction displayed above the image/video.",
+                null=True,
+            ),
         ),
     ]

@@ -4,24 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0080_auto_20230425_2035'),
+        ("incident", "0080_auto_20230425_2035"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='legalorderupdate',
-            options={'ordering': ['sort_order']},
+            name="legalorderupdate",
+            options={"ordering": ["sort_order"]},
         ),
         migrations.AddField(
-            model_name='legalorderupdate',
-            name='sort_order',
+            model_name="legalorderupdate",
+            name="sort_order",
             field=models.IntegerField(blank=True, editable=False, null=True),
         ),
         migrations.AlterField(
-            model_name='legalorderupdate',
-            name='date',
+            model_name="legalorderupdate",
+            name="date",
             field=models.DateField(blank=True, null=True),
         ),
     ]

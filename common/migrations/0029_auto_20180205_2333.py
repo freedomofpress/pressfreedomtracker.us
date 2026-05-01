@@ -6,28 +6,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0028_auto_20170802_1308'),
+        ("common", "0028_auto_20170802_1308"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='organizationpage',
-            name='website',
-            field=models.URLField(blank=True, default=''),
+            model_name="organizationpage",
+            name="website",
+            field=models.URLField(blank=True, default=""),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='personpage',
-            name='website',
-            field=models.URLField(blank=True, default=''),
+            model_name="personpage",
+            name="website",
+            field=models.URLField(blank=True, default=""),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='quickfact',
-            name='link_url',
-            field=models.URLField(blank=True, default=''),
+            model_name="quickfact",
+            name="link_url",
+            field=models.URLField(blank=True, default=""),
             preserve_default=False,
         ),
     ]

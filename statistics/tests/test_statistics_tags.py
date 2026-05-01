@@ -20,18 +20,19 @@ from statistics.templatetags.statistics_tags import (
 
 
 class NumIncidentsTest(TestCase):
-    """Test that num_incidents tag """
+    """Test that num_incidents tag"""
+
     @classmethod
     def setUpTestData(cls):
         cls.category = CategoryPageFactory()
         cls.incident = IncidentPageFactory(
-            title='hello',
+            title="hello",
             date=datetime.date(2017, 1, 1),
             categories=[cls.category],
             state=None,
         )
         cls.old_incident = IncidentPageFactory(
-            title='goodbye',
+            title="goodbye",
             date=datetime.date(2016, 1, 1),
             state=None,
         )
@@ -41,7 +42,7 @@ class NumIncidentsTest(TestCase):
 
     def test_gets_no_kwargs(self):
         """Not valid template tag"""
-        template_string = '{% num_incidents 200 %}'
+        template_string = "{% num_incidents 200 %}"
         with self.assertRaises(TemplateSyntaxError):
             render_as_template(template_string)
         with self.assertRaises(ValidationError):
@@ -49,71 +50,77 @@ class NumIncidentsTest(TestCase):
 
     def test_gets_no_args(self):
         """Not valid template tag"""
-        template_string = '{% num_incidents %}'
+        template_string = "{% num_incidents %}"
         self.validator(template_string)
         result = render_as_template(template_string)
-        self.assertEqual(result, '2')
+        self.assertEqual(result, "2")
 
     def test_gets_valid_search(self):
         """Valid template tag with constant search param"""
         template_string = '{% num_incidents search="hello" %}'
         self.validator(template_string)
         result = render_as_template(template_string)
-        self.assertEqual(result, '1')
+        self.assertEqual(result, "1")
 
     def test_gets_variable_param(self):
         """Valid template tag with missing variable search param"""
-        template_string = '{% num_incidents search=hello %}'
+        template_string = "{% num_incidents search=hello %}"
         with self.assertRaises(ValidationError):
             self.validator(template_string)
         result = render_as_template(template_string)
-        self.assertEqual(result, '2')
+        self.assertEqual(result, "2")
 
     def test_manyrelationfilter_gets_integer_id(self):
         """Valid template tag with integer id instead of string"""
-        template_string = '{{% num_incidents categories={} %}}'.format(self.category.id)
+        template_string = "{{% num_incidents categories={} %}}".format(self.category.id)
         self.validator(template_string)
         result = render_as_template(template_string)
-        self.assertEqual(result, '1')
+        self.assertEqual(result, "1")
 
     def test_relationfilter_gets_integer_id(self):
         """Valid template tag with integer id instead of string"""
-        template_string = '{% num_incidents state=1 %}'
+        template_string = "{% num_incidents state=1 %}"
         self.validator(template_string)
         result = render_as_template(template_string)
-        self.assertEqual(result, '0')
+        self.assertEqual(result, "0")
 
     def test_gets_invalid_dates(self):
         """Valid tag but not valid params"""
-        template_string = '{% num_incidents date_lower="2018-01-01" date_upper="2017-01-01" %}'
+        template_string = (
+            '{% num_incidents date_lower="2018-01-01" date_upper="2017-01-01" %}'
+        )
         result = render_as_template(template_string)
-        self.assertEqual(result, '')
+        self.assertEqual(result, "")
         with self.assertRaises(ValidationError):
             self.validator(template_string)
 
     def test_gets_valid_dates(self):
         """Valid tag but not valid params"""
-        template_string = '{% num_incidents date_lower="2015-06-01" date_upper="2016-06-01" %}'
+        template_string = (
+            '{% num_incidents date_lower="2015-06-01" date_upper="2016-06-01" %}'
+        )
         self.validator(template_string)
         result = render_as_template(template_string)
-        self.assertEqual(result, '1')
+        self.assertEqual(result, "1")
 
 
 class NumTargetsTest(TestCase):
     def setUp(self):
-        self.custody = 'CUSTODY'
-        self.returned_full = 'RETURNED_FULL'
+        self.custody = "CUSTODY"
+        self.returned_full = "RETURNED_FULL"
         self.category = CategoryPageFactory(
-            title='Equipment Search or Seizure',
-            incident_filters=['status_of_seized_equipment'],
+            title="Equipment Search or Seizure",
+            incident_filters=["status_of_seized_equipment"],
         )
         self.validator = TemplateValidator()
 
     def test_invalid_args_validated(self):
         # Matched incident page
-        template_string = '{{% num_targets categories={} status_of_seized_equipment={} %}}'.format(
-            str(self.category.id),
-            self.custody,
+        template_string = (
+            "{{% num_targets categories={} status_of_seized_equipment={} %}}".format(
+                str(self.category.id),
+                self.custody,
+            )
         )
         with self.assertRaises(ValidationError):
             self.validator(template_string)
@@ -132,13 +139,15 @@ class NumTargetsTest(TestCase):
             institution_targets=5,
             journalist_targets=0,
         )
-        template_string = '{{% num_targets categories={} status_of_seized_equipment="{}" %}}'.format(
-            str(self.category.id),
-            self.custody,
+        template_string = (
+            '{{% num_targets categories={} status_of_seized_equipment="{}" %}}'.format(
+                str(self.category.id),
+                self.custody,
+            )
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '3')
+        self.assertEqual(rendered, "3")
 
     def test_target_count__combined(self):
         IncidentPageFactory(
@@ -151,52 +160,55 @@ class NumTargetsTest(TestCase):
             institution_targets=5,
             journalist_targets=0,
         )
-        template_string = '{{% num_targets categories={} %}}'.format(
+        template_string = "{{% num_targets categories={} %}}".format(
             str(self.category.id),
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '8')
+        self.assertEqual(rendered, "8")
 
     def test_target_count__combined_kinds(self):
         IncidentPageFactory(
-            title='x1',
+            title="x1",
             categories=[self.category],
             institution_targets=2,
             journalist_targets=0,
         )
         IncidentPageFactory(
-            title='x2',
+            title="x2",
             categories=[self.category],
             institution_targets=0,
             journalist_targets=2,
         )
-        template_string = '{{% num_targets categories={} %}}'.format(
+        template_string = "{{% num_targets categories={} %}}".format(
             str(self.category.id),
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '4')
+        self.assertEqual(rendered, "4")
 
 
 class TestIncidentsInMultiValue(TestCase):
-    """ Test that incidents with MultiValueFilter work """
+    """Test that incidents with MultiValueFilter work"""
+
     def setUp(self):
-        self.pending = 'PENDING'
-        self.dropped = 'DROPPED'
+        self.pending = "PENDING"
+        self.dropped = "DROPPED"
         self.category = CategoryPageFactory(
-            title='Subpoena / Legal Order',
-            incident_filters=['subpoena_statuses'],
+            title="Subpoena / Legal Order",
+            incident_filters=["subpoena_statuses"],
         )
         self.validator = TemplateValidator()
 
     def test_invalid_args_validated(self):
         # Matched incident page
-        template_string = '{{% num_journalist_targets categories={} subpoena_statuses={} %}}'.format(
-            str(self.category.id),
-            self.pending,
+        template_string = (
+            "{{% num_journalist_targets categories={} subpoena_statuses={} %}}".format(
+                str(self.category.id),
+                self.pending,
+            )
         )
-        with self.assertRaisesRegex(ValidationError, 'wrapped in quotation marks'):
+        with self.assertRaisesRegex(ValidationError, "wrapped in quotation marks"):
             self.validator(template_string)
 
     def test_target_count__filtered(self):
@@ -217,7 +229,7 @@ class TestIncidentsInMultiValue(TestCase):
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '3')
+        self.assertEqual(rendered, "3")
 
     def test_target_multiple_choice(self):
         IncidentPageFactory(
@@ -237,25 +249,25 @@ class TestIncidentsInMultiValue(TestCase):
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '8')
+        self.assertEqual(rendered, "8")
 
 
 class NumInstitutionTargetsTest(TestCase):
     def setUp(self):
-        self.custody = 'CUSTODY'
-        self.returned_full = 'RETURNED_FULL'
+        self.custody = "CUSTODY"
+        self.returned_full = "RETURNED_FULL"
         self.category = CategoryPageFactory(
-            title='Equipment Search or Seizure',
-            incident_filters=['status_of_seized_equipment'],
+            title="Equipment Search or Seizure",
+            incident_filters=["status_of_seized_equipment"],
         )
         self.validator = TemplateValidator()
 
     def test_invalid_args_should_raise_validation_error(self):
-        template_string = '{{% num_institution_targets categories={} status_of_seized_equipment={} %}}'.format(
+        template_string = "{{% num_institution_targets categories={} status_of_seized_equipment={} %}}".format(
             str(self.category.pk),
             self.custody,
         )
-        with self.assertRaisesRegex(ValidationError, 'wrapped in quotation marks'):
+        with self.assertRaisesRegex(ValidationError, "wrapped in quotation marks"):
             self.validator(template_string)
 
     def test_target_count__filtered(self):
@@ -276,7 +288,7 @@ class NumInstitutionTargetsTest(TestCase):
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '3')
+        self.assertEqual(rendered, "3")
 
     def test_target_count__combined(self):
         IncidentPageFactory(
@@ -287,12 +299,12 @@ class NumInstitutionTargetsTest(TestCase):
             categories=[self.category],
             institution_targets=5,
         )
-        template_string = '{{% num_institution_targets categories={} %}}'.format(
+        template_string = "{{% num_institution_targets categories={} %}}".format(
             str(self.category.id),
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '8')
+        self.assertEqual(rendered, "8")
 
     def test_target_count__deduped(self):
         inst1 = InstitutionFactory()
@@ -311,30 +323,30 @@ class NumInstitutionTargetsTest(TestCase):
         incident2.targeted_institutions = [inst1]
         incident2.save()
 
-        template_string = '{{% num_institution_targets categories={} %}}'.format(
+        template_string = "{{% num_institution_targets categories={} %}}".format(
             str(self.category.id),
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '2')
+        self.assertEqual(rendered, "2")
 
 
 class NumJournalistTargetsTest(TestCase):
     def setUp(self):
-        self.custody = 'CUSTODY'
-        self.returned_full = 'RETURNED_FULL'
+        self.custody = "CUSTODY"
+        self.returned_full = "RETURNED_FULL"
         self.category = CategoryPageFactory(
-            title='Equipment Search or Seizure',
-            incident_filters=['status_of_seized_equipment'],
+            title="Equipment Search or Seizure",
+            incident_filters=["status_of_seized_equipment"],
         )
         self.validator = TemplateValidator()
 
     def test_invalid_args_should_raise_validation_error(self):
-        template_string = '{{% num_journalist_targets categories={} status_of_seized_equipment={} %}}'.format(
+        template_string = "{{% num_journalist_targets categories={} status_of_seized_equipment={} %}}".format(
             str(self.category.pk),
             self.custody,
         )
-        with self.assertRaisesRegex(ValidationError, 'wrapped in quotation marks'):
+        with self.assertRaisesRegex(ValidationError, "wrapped in quotation marks"):
             self.validator(template_string)
 
     def test_target_count__filtered(self):
@@ -353,7 +365,7 @@ class NumJournalistTargetsTest(TestCase):
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '1')
+        self.assertEqual(rendered, "1")
 
     def test_target_count__combined(self):
         TargetedJournalistFactory.create_batch(
@@ -362,12 +374,12 @@ class NumJournalistTargetsTest(TestCase):
             incident__status_of_seized_equipment=self.returned_full,
         )
 
-        template_string = '{{% num_journalist_targets categories={} %}}'.format(
+        template_string = "{{% num_journalist_targets categories={} %}}".format(
             str(self.category.id),
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '5')
+        self.assertEqual(rendered, "5")
 
     def test_target_count__deduped(self):
         tj = TargetedJournalistFactory(
@@ -381,16 +393,17 @@ class NumJournalistTargetsTest(TestCase):
             journalist=tj.journalist,
         )
 
-        template_string = '{{% num_journalist_targets categories={} %}}'.format(
+        template_string = "{{% num_journalist_targets categories={} %}}".format(
             str(self.category.id),
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
-        self.assertEqual(rendered, '2')
+        self.assertEqual(rendered, "2")
 
 
 class TestIncidentsInYearRangeByMonth(TestCase):
-    """Test that incidents_in_year_range_by_month tag """
+    """Test that incidents_in_year_range_by_month tag"""
+
     @classmethod
     def setUpTestData(cls):
         IncidentPageFactory(date=datetime.date(2017, 1, 1))

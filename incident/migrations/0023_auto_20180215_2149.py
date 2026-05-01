@@ -6,20 +6,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0022_add_verbose_names'),
+        ("incident", "0022_add_verbose_names"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='denial_of_entry',
-            field=models.BooleanField(default=False, verbose_name='Denied entry?'),
+            model_name="incidentpage",
+            name="denial_of_entry",
+            field=models.BooleanField(default=False, verbose_name="Denied entry?"),
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='stopped_previously',
-            field=models.BooleanField(default=False, verbose_name='Stopped previously?'),
+            model_name="incidentpage",
+            name="stopped_previously",
+            field=models.BooleanField(
+                default=False, verbose_name="Stopped previously?"
+            ),
         ),
     ]

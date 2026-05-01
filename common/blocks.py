@@ -29,7 +29,7 @@ from incident.utils import charts
 class RichTextTemplateBlock(blocks.RichTextBlock):
     def __init__(self, editor=None, **kwargs):
         if not editor:
-            editor = 'num-incident-full-features'
+            editor = "num-incident-full-features"
         super().__init__(
             editor=editor,
             **kwargs,
@@ -50,33 +50,33 @@ class Heading1(blocks.StructBlock):
     content = blocks.CharBlock()
 
     class Meta:
-        template = 'common/blocks/heading_1.html'
-        icon = 'title'
-        label = 'Heading 1'
+        template = "common/blocks/heading_1.html"
+        icon = "title"
+        label = "Heading 1"
 
 
 class Heading2(blocks.StructBlock):
     content = blocks.CharBlock()
 
     class Meta:
-        template = 'common/blocks/heading_2.html'
-        icon = 'title'
-        label = 'Heading 2'
+        template = "common/blocks/heading_2.html"
+        icon = "title"
+        label = "Heading 2"
 
 
 class Heading3(blocks.StructBlock):
     content = blocks.CharBlock()
 
     class Meta:
-        template = 'common/blocks/heading_3.html'
-        icon = 'title'
-        label = 'Heading 3'
+        template = "common/blocks/heading_3.html"
+        icon = "title"
+        label = "Heading 3"
 
 
 ALIGNMENT_CHOICES = (
-    ('left', 'Left'),
-    ('right', 'Right'),
-    ('full-width', 'Full Width'),
+    ("left", "Left"),
+    ("right", "Right"),
+    ("full-width", "Full Width"),
 )
 
 
@@ -84,61 +84,60 @@ class AlignedCaptionedImageBlock(blocks.StructBlock):
     image = ImageChooserBlock()
     caption = blocks.RichTextBlock(
         required=False,
-        help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.'
+        help_text="Image description displayed below the image. Organization/Photographer can be set via the image attribution.",
     )
     alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
     content_warning = blocks.ListBlock(
         blocks.CharBlock(
-            label='Warning text',
-            help_text='Warning text shown on the button above blurred media',
-            default='This image may be disturbing. Tap or click to reveal.',
+            label="Warning text",
+            help_text="Warning text shown on the button above blurred media",
+            default="This image may be disturbing. Tap or click to reveal.",
             required=True,
         ),
         min_num=0,
         max_num=1,
         default=[],
-        label='Add content warning'
+        label="Add content warning",
     )
 
     def get_searchable_content(self, value):
-        return get_searchable_content_for_fields(
-            value, self.child_blocks, ['caption']
-        )
+        return get_searchable_content_for_fields(value, self.child_blocks, ["caption"])
 
     def get_context(self, value, **kwargs):
         context = super(AlignedCaptionedImageBlock, self).get_context(value, **kwargs)
-        if value['content_warning'] and isinstance(value['content_warning'], blocks.list_block.ListValue):
-            value['content_warning'] = value['content_warning'][0]
+        if value["content_warning"] and isinstance(
+            value["content_warning"], blocks.list_block.ListValue
+        ):
+            value["content_warning"] = value["content_warning"][0]
         return context
 
     class Meta:
-        template = 'common/blocks/aligned_captioned_image.html'
-        icon = 'image'
-        label = 'Image'
+        template = "common/blocks/aligned_captioned_image.html"
+        icon = "image"
+        label = "Image"
 
 
 class AlignedCaptionedEmbedBlock(blocks.StructBlock):
     video = EmbedBlock()
     caption = blocks.RichTextBlock(
-        required=False,
-        help_text='Video description displayed below the video.'
+        required=False, help_text="Video description displayed below the video."
     )
     attribution = blocks.CharBlock(
-        max_length=255,
-        required=False,
-        help_text='Organization / Director.'
+        max_length=255, required=False, help_text="Organization / Director."
     )
     alignment = blocks.ChoiceBlock(choices=ALIGNMENT_CHOICES)
 
     def get_searchable_content(self, value):
         return get_searchable_content_for_fields(
-            value, self.child_blocks, ['caption', 'attribution'],
+            value,
+            self.child_blocks,
+            ["caption", "attribution"],
         )
 
     class Meta:
-        template = 'common/blocks/aligned_captioned_embed.html'
-        icon = 'media'
-        label = 'Video'
+        template = "common/blocks/aligned_captioned_embed.html"
+        icon = "media"
+        label = "Video"
 
 
 class BlueskyEmbedBlock(blocks.StructBlock):
@@ -172,20 +171,20 @@ class TweetEmbedBlock(blocks.StructBlock):
     tweet = EmbedBlock()
 
     class Meta:
-        template = 'common/blocks/tweet_embed.html'
-        icon = 'pick'
-        label = 'Tweet'
+        template = "common/blocks/tweet_embed.html"
+        icon = "pick"
+        label = "Tweet"
 
     def clean(self, value):
         errors = {}
-        twitter_url = r'^(http|https):\/\/(twitter|x).com'
-        tweet = value.get('tweet')
+        twitter_url = r"^(http|https):\/\/(twitter|x).com"
+        tweet = value.get("tweet")
 
         if tweet:
             valid = re.match(twitter_url, tweet.url)
 
             if not valid:
-                errors['tweet'] = ErrorList(['Please enter a valid Twitter URL.'])
+                errors["tweet"] = ErrorList(["Please enter a valid Twitter URL."])
 
             if errors:
                 raise StructBlockValidationError(block_errors=errors)
@@ -193,7 +192,7 @@ class TweetEmbedBlock(blocks.StructBlock):
         return super().clean(value)
 
     def get_searchable_content(self, value):
-        tweet_content = value.get('tweet', None)
+        tweet_content = value.get("tweet", None)
         if tweet_content and tweet_content.html:
             return [bleach.clean(tweet_content.html, strip=True, tags={})]
         else:
@@ -204,104 +203,120 @@ class AsideBlock(blocks.StructBlock):
     text = blocks.RichTextBlock()
 
     class Meta:
-        template = 'common/blocks/aside_block.html'
-        icon = 'doc-full-inverse'
-        label = 'Aside'
+        template = "common/blocks/aside_block.html"
+        icon = "doc-full-inverse"
+        label = "Aside"
 
 
 class StyledTextBlock(blocks.StructBlock):
     TEXT_ALIGN_CHOICES = (
-        ('left', 'Left'),
-        ('center', 'Center'),
-        ('right', 'Right'),
+        ("left", "Left"),
+        ("center", "Center"),
+        ("right", "Right"),
     )
 
     FONT_SIZE_CHOICES = (
-        ('small', 'Small'),
-        ('normal', 'Normal'),
-        ('large', 'Large'),
-        ('jumbo', 'Jumbo'),
+        ("small", "Small"),
+        ("normal", "Normal"),
+        ("large", "Large"),
+        ("jumbo", "Jumbo"),
     )
 
     FONT_FAMILY_CHOICES = (
-        ('sans-serif', 'Sans Serif'),
-        ('serif', 'Serif'),
+        ("sans-serif", "Sans Serif"),
+        ("serif", "Serif"),
     )
 
     text = blocks.RichTextBlock()
 
     # These fields are assumed to be deprecated and are left for legacy purposes
     # The template does not use the values of these fields
-    background_color = blocks.ChoiceBlock(choices=BACKGROUND_COLOR_CHOICES, default='white')
-    text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default='left')
-    font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default='normal')
-    font_family = blocks.ChoiceBlock(choices=FONT_FAMILY_CHOICES, default='sans-serif')
+    background_color = blocks.ChoiceBlock(
+        choices=BACKGROUND_COLOR_CHOICES, default="white"
+    )
+    text_align = blocks.ChoiceBlock(choices=TEXT_ALIGN_CHOICES, default="left")
+    font_size = blocks.ChoiceBlock(choices=FONT_SIZE_CHOICES, default="normal")
+    font_family = blocks.ChoiceBlock(choices=FONT_FAMILY_CHOICES, default="sans-serif")
 
     class Meta:
-        template = 'common/blocks/styled_text.html'
-        icon = 'doc-full'
-        label = 'Styled Text Block'
+        template = "common/blocks/styled_text.html"
+        icon = "doc-full"
+        label = "Styled Text Block"
 
 
 class StyledTextTemplateBlock(StyledTextBlock):
-    text = RichTextTemplateBlock(editor='num-incident-full-features')
+    text = RichTextTemplateBlock(editor="num-incident-full-features")
 
     def get_context(self, *args, **kwargs):
         context = super(StyledTextTemplateBlock, self).get_context(*args, **kwargs)
-        context['render_as_template'] = True
+        context["render_as_template"] = True
         return context
 
 
 class LogoListBlock(blocks.ListBlock):
     def __init__(self, **kwargs):
         super(LogoListBlock, self).__init__(
-            blocks.StructBlock([
-                ('logo', ImageChooserBlock(required=True)),
-                ('url', blocks.URLBlock(required=False)),
-            ]),
-            template='common/blocks/logo_list_block.html',
-            **kwargs
+            blocks.StructBlock(
+                [
+                    ("logo", ImageChooserBlock(required=True)),
+                    ("url", blocks.URLBlock(required=False)),
+                ]
+            ),
+            template="common/blocks/logo_list_block.html",
+            **kwargs,
         )
 
     class Meta:
-        icon = 'list-ul'
+        icon = "list-ul"
 
 
 class StatTableBlock(blocks.ListBlock):
     def __init__(self, **kwargs):
         super(StatTableBlock, self).__init__(
-            blocks.StructBlock([
-                ('header', blocks.TextBlock(required=True)),
-                ('value', blocks.CharBlock(required=True, validators=[validate_template])),
-            ]),
-            template='common/blocks/stat_table_block.html',
-            **kwargs
+            blocks.StructBlock(
+                [
+                    ("header", blocks.TextBlock(required=True)),
+                    (
+                        "value",
+                        blocks.CharBlock(required=True, validators=[validate_template]),
+                    ),
+                ]
+            ),
+            template="common/blocks/stat_table_block.html",
+            **kwargs,
         )
 
     class Meta:
-        icon = 'list-ul'
+        icon = "list-ul"
 
 
 class TabbedBlock(blocks.ListBlock):
     def __init__(self, **kwargs):
         super(TabbedBlock, self).__init__(
-            blocks.StructBlock([
-                ('header', blocks.TextBlock(required=True)),
-                ('value', blocks.StreamBlock([
-                    ('heading_2', Heading2()),
-                    ('raw_html', blocks.RawHTMLBlock()),
-                    ('rich_text', blocks.RichTextBlock()),
-                    ('tweet', TweetEmbedBlock()),
-                    ('instagram', InstagramEmbedBlock()),
-                    ('bluesky', BlueskyEmbedBlock()),
-                ])),
-            ]),
-            template='common/blocks/tabbed_block.html',
-            **kwargs
+            blocks.StructBlock(
+                [
+                    ("header", blocks.TextBlock(required=True)),
+                    (
+                        "value",
+                        blocks.StreamBlock(
+                            [
+                                ("heading_2", Heading2()),
+                                ("raw_html", blocks.RawHTMLBlock()),
+                                ("rich_text", blocks.RichTextBlock()),
+                                ("tweet", TweetEmbedBlock()),
+                                ("instagram", InstagramEmbedBlock()),
+                                ("bluesky", BlueskyEmbedBlock()),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            template="common/blocks/tabbed_block.html",
+            **kwargs,
         )
 
     class Meta:
-        icon = 'list-ul'
+        icon = "list-ul"
 
 
 class ButtonBlock(blocks.StructBlock):
@@ -309,16 +324,18 @@ class ButtonBlock(blocks.StructBlock):
     url = blocks.URLBlock(required=True)
 
     class Meta:
-        template = 'common/blocks/button.html'
+        template = "common/blocks/button.html"
 
 
 class RichTextBlockQuoteBlock(blocks.StructBlock):
     text = blocks.RichTextBlock()
     source_text = blocks.RichTextBlock(required=False)
-    source_url = blocks.URLBlock(required=False, help_text="Source text will link to this url.")
+    source_url = blocks.URLBlock(
+        required=False, help_text="Source text will link to this url."
+    )
 
     class Meta:
-        template = 'common/blocks/blockquote.html'
+        template = "common/blocks/blockquote.html"
         icon = "openquote"
 
 
@@ -326,26 +343,26 @@ class PullQuoteBlock(blocks.StructBlock):
     text = blocks.TextBlock()
 
     class Meta:
-        template = 'common/blocks/pull_quote_block.html'
+        template = "common/blocks/pull_quote_block.html"
         icon = "openquote"
 
 
 class EmailSignupBlock(blocks.StructBlock):
     text = blocks.CharBlock(
-        label='Call to action text',
-        help_text='Defaults to sitewide setting',
-        required=False
+        label="Call to action text",
+        help_text="Defaults to sitewide setting",
+        required=False,
     )
     success_text = blocks.CharBlock(
-        label='Success text',
-        help_text='To be displayed after a successful signup. Defaults to sitewide setting',
-        required=False
+        label="Success text",
+        help_text="To be displayed after a successful signup. Defaults to sitewide setting",
+        required=False,
     )
 
     class Meta:
-        template = 'common/blocks/emails_signup.html'
-        icon = 'form'
-        label = 'Newsletter Signup'
+        template = "common/blocks/emails_signup.html"
+        icon = "form"
+        label = "Newsletter Signup"
 
 
 class AbstractInfoTableCTABlock(blocks.StructBlock):
@@ -358,123 +375,137 @@ class AbstractInfoTableCTABlock(blocks.StructBlock):
 
 
 class InfoTableBlockPage(AbstractInfoTableCTABlock):
-    table_data = blocks.ListBlock(blocks.StructBlock(
-        [
-            ('page', blocks.PageChooserBlock()),
-            ('title', blocks.CharBlock(
-                help_text='Optional: defaults to page title',
-                required=False,
-            )),
-            ('description', blocks.CharBlock()),
-        ],
-        icon='list-ul',
-        label='Table row'
-    ))
+    table_data = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("page", blocks.PageChooserBlock()),
+                (
+                    "title",
+                    blocks.CharBlock(
+                        help_text="Optional: defaults to page title",
+                        required=False,
+                    ),
+                ),
+                ("description", blocks.CharBlock()),
+            ],
+            icon="list-ul",
+            label="Table row",
+        )
+    )
 
     class Meta:
-        template = 'common/blocks/info_table/_page.html'
-        icon = 'doc-full'
+        template = "common/blocks/info_table/_page.html"
+        icon = "doc-full"
 
 
 class InfoTableBlockEmail(AbstractInfoTableCTABlock):
-    table_data = blocks.ListBlock(blocks.StructBlock(
-        [
-            ('title', blocks.CharBlock()),
-            ('email', blocks.EmailBlock()),
-        ],
-        icon='list-ul',
-        label='Table row'
-    ))
+    table_data = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("title", blocks.CharBlock()),
+                ("email", blocks.EmailBlock()),
+            ],
+            icon="list-ul",
+            label="Table row",
+        )
+    )
 
     class Meta:
-        template = 'common/blocks/info_table/_email.html'
-        icon = 'mail'
+        template = "common/blocks/info_table/_email.html"
+        icon = "mail"
 
 
 class InfoTableBlockURL(AbstractInfoTableCTABlock):
-    table_data = blocks.ListBlock(blocks.StructBlock(
-        [
-            ('image', ImageChooserBlock(
-                required=False,
-            )),
-            ('title', blocks.CharBlock()),
-            ('url', blocks.URLBlock()),
-        ],
-        icon='list-ul',
-        label='Table row'
-    ))
+    table_data = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                (
+                    "image",
+                    ImageChooserBlock(
+                        required=False,
+                    ),
+                ),
+                ("title", blocks.CharBlock()),
+                ("url", blocks.URLBlock()),
+            ],
+            icon="list-ul",
+            label="Table row",
+        )
+    )
 
     class Meta:
-        template = 'common/blocks/info_table/_url.html'
-        icon = 'site'
+        template = "common/blocks/info_table/_url.html"
+        icon = "site"
 
 
 class InfoTableBlockText(blocks.StructBlock):
-    table_data = blocks.ListBlock(blocks.StructBlock(
-        [
-            ('title', blocks.CharBlock()),
-            ('description', blocks.CharBlock()),
-        ],
-        icon='list-ul',
-        label='Table row',
-    ))
+    table_data = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("title", blocks.CharBlock()),
+                ("description", blocks.CharBlock()),
+            ],
+            icon="list-ul",
+            label="Table row",
+        )
+    )
 
     class Meta:
-        template = 'common/blocks/info_table/_text.html'
-        icon = 'pilcrow'
+        template = "common/blocks/info_table/_text.html"
+        icon = "pilcrow"
 
 
 class InfoTableBlock(blocks.StructBlock):
     heading = blocks.CharBlock(
-        help_text='Heading of the info table',
+        help_text="Heading of the info table",
     )
     table = blocks.StreamBlock(
         [
-            ('page_links', InfoTableBlockPage()),
-            ('email_addresses', InfoTableBlockEmail()),
-            ('external_links', InfoTableBlockURL()),
-            ('plain_text', InfoTableBlockText()),
+            ("page_links", InfoTableBlockPage()),
+            ("email_addresses", InfoTableBlockEmail()),
+            ("external_links", InfoTableBlockURL()),
+            ("plain_text", InfoTableBlockText()),
         ],
         max_num=1,
-        icon='list-ul',
-        label='Table type'
+        icon="list-ul",
+        label="Table type",
     )
 
     class Meta:
-        template = 'common/blocks/info_table.html'
-        icon = 'list-ul'
-        label = 'Info table'
+        template = "common/blocks/info_table.html"
+        icon = "list-ul"
+        label = "Info table"
 
 
 class SimpleIncidentSet(blocks.StructBlock):
     categories = blocks.MultipleChoiceBlock(
-        label='Filter by Category',
+        label="Filter by Category",
         required=False,
         widget=forms.CheckboxSelectMultiple,
         choices=get_categories,
-        help_text='If selected, incidents belonging to any of the selected categories will be included.',
+        help_text="If selected, incidents belonging to any of the selected categories will be included.",
     )
     tag = blocks.ChoiceBlock(
-        label='Filter by Tag',
+        label="Filter by Tag",
         required=False,
         choices=get_tags,
-        help_text='If selected, only incidents with the chosen tag will be included.'
+        help_text="If selected, only incidents with the chosen tag will be included.",
     )
     lower_date = blocks.DateBlock(
-        label='Filter by Date, lower bound',
+        label="Filter by Date, lower bound",
         required=False,
-        help_text='If set, no incidents before this date will be included.',
+        help_text="If set, no incidents before this date will be included.",
     )
     upper_date = blocks.DateBlock(
-        label='Filter by Date, upper bound',
+        label="Filter by Date, upper bound",
         required=False,
-        help_text='If set, no incidents after this date will be included.',
+        help_text="If set, no incidents after this date will be included.",
     )
     states = blocks.MultipleChoiceBlock(
-        label='Filter by State',
+        label="Filter by State",
         required=False,
         choices=get_states,
-        help_text='If selected, only incidents in the chosen states will be included.',
+        help_text="If selected, only incidents in the chosen states will be included.",
     )
 
 
@@ -487,42 +518,42 @@ class VerticalBarChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
     time_period = blocks.ChoiceBlock(
-        label='Display by',
+        label="Display by",
         required=False,
-        choices=[('months', 'Months'), ('years', 'Years')],
-        help_text='Choose whether to display bars aggregated by months or years. If not provided, will default to months if there is less than two years of data, years if there is more than two years of data.'
+        choices=[("months", "Months"), ("years", "Years")],
+        help_text="Choose whether to display bars aggregated by months or years. If not provided, will default to months if there is less than two years of data, years if there is more than two years of data.",
     )
     description = blocks.TextBlock(
         required=True,
-        help_text='Description for assistive technology users. '
-        'If the chart is demonstrating a specific trend, try to include that, '
+        help_text="Description for assistive technology users. "
+        "If the chart is demonstrating a specific trend, try to include that, "
         'e.g., "Bar chart showing a decreasing number of assaults over the '
         'course of 2023."',
     )
     group_by = blocks.ChoiceBlock(
-        label='Group Incidents By',
+        label="Group Incidents By",
         required=False,
         choices=charts.IncidentBranches.choices,
         default=None,
-        help_text='If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped '
-        'by the selected classification.',
+        help_text="If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped "
+        "by the selected classification.",
     )
     group_by_tag = blocks.ChoiceBlock(
-        label='Group Incidents By Tag',
+        label="Group Incidents By Tag",
         required=False,
         choices=get_tags,
         default=None,
-        help_text='If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped '
-        'by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.',
+        help_text="If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped "
+        "by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.",
     )
 
     class Meta:
-        icon = 'table'
-        template = 'common/blocks/vertical_bar_chart.html'
+        icon = "table"
+        template = "common/blocks/vertical_bar_chart.html"
         value_class = charts.VerticalBarChartValue
 
     class Media:
-        js = ['verticalBarChart']
+        js = ["verticalBarChart"]
 
 
 class TreeMapChart(blocks.StructBlock):
@@ -530,52 +561,52 @@ class TreeMapChart(blocks.StructBlock):
     incident_set = SimpleIncidentSet()
     description = blocks.TextBlock(
         required=True,
-        help_text='Description for assistive technology users. '
-        'If the chart is demonstrating a specific trend, try to include that, '
+        help_text="Description for assistive technology users. "
+        "If the chart is demonstrating a specific trend, try to include that, "
         'e.g., "Bar chart showing a decreasing number of assaults over the '
         'course of 2023."',
     )
     group_by = blocks.ChoiceBlock(
-        label='Group Incidents By',
+        label="Group Incidents By",
         required=True,
         choices=charts.IncidentBranches.choices,
         default=charts.IncidentBranches.CATEGORIES,
     )
 
     class Meta:
-        icon = 'table'
-        template = 'common/blocks/tree_map_chart.html'
+        icon = "table"
+        template = "common/blocks/tree_map_chart.html"
         value_class = charts.TreeMapChartValue
 
     class Media:
-        js = ['treeMapChart']
+        js = ["treeMapChart"]
 
 
 class BubbleMapChart(blocks.StructBlock):
     title = blocks.CharBlock(required=False)
     incident_set = SimpleIncidentSet()
     group_by = blocks.ChoiceBlock(
-        label='Group Incidents by',
+        label="Group Incidents by",
         required=True,
-        choices=[('state', 'State'), ('city', 'City')],
-        help_text='Choose whether to group by city or by state'
+        choices=[("state", "State"), ("city", "City")],
+        help_text="Choose whether to group by city or by state",
     )
 
     description = blocks.TextBlock(
         required=True,
-        help_text='Description for assistive technology users. '
-        'If the chart is demonstrating a specific trend, try to include that, '
+        help_text="Description for assistive technology users. "
+        "If the chart is demonstrating a specific trend, try to include that, "
         'e.g., "Bar chart showing a decreasing number of assaults over the '
         'course of 2023."',
     )
 
     class Meta:
-        icon = 'table'
-        template = 'common/blocks/bubble_map_chart.html'
+        icon = "table"
+        template = "common/blocks/bubble_map_chart.html"
         value_class = BubbleMapChartValue
 
     class Media:
-        js = ['bubbleMapChart']
+        js = ["bubbleMapChart"]
 
 
 class HexbinMapChartValue(ChartValue):
@@ -589,16 +620,16 @@ class HexbinMapChart(blocks.StructBlock):
 
     description = blocks.TextBlock(
         required=True,
-        help_text='Description for assistive technology users. '
-        'If the chart is demonstrating a specific trend, try to include that, '
+        help_text="Description for assistive technology users. "
+        "If the chart is demonstrating a specific trend, try to include that, "
         'e.g., "Bar chart showing a decreasing number of assaults over the '
         'course of 2023."',
     )
 
     class Meta:
-        icon = 'table'
-        template = 'common/blocks/hexbin_map_chart.html'
+        icon = "table"
+        template = "common/blocks/hexbin_map_chart.html"
         value_class = HexbinMapChartValue
 
     class Media:
-        js = ['hexbinMapChart']
+        js = ["hexbinMapChart"]

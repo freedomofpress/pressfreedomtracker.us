@@ -6,15 +6,28 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0072_merge_20200429_1556'),
+        ("common", "0072_merge_20200429_1556"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='incident_sidebar_note',
-            field=wagtail.fields.StreamField([('heading', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('rich_text', wagtail.blocks.RichTextBlock())], blank=True, default=None, help_text='Note that appears in the sidebar of incident pages, incident index pages, and category pages.', null=True),
+            model_name="sitesettings",
+            name="incident_sidebar_note",
+            field=wagtail.fields.StreamField(
+                [
+                    (
+                        "heading",
+                        wagtail.blocks.StructBlock(
+                            [("content", wagtail.blocks.CharBlock())]
+                        ),
+                    ),
+                    ("rich_text", wagtail.blocks.RichTextBlock()),
+                ],
+                blank=True,
+                default=None,
+                help_text="Note that appears in the sidebar of incident pages, incident index pages, and category pages.",
+                null=True,
+            ),
         ),
     ]

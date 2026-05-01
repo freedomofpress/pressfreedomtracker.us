@@ -11,20 +11,61 @@ import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0011_add_states'),
+        ("incident", "0011_add_states"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='image_caption',
-            field=wagtail.fields.RichTextField(blank=True, help_text='Image description displayed below the image. Organization/Photographer can be set via the image attribution.', max_length=255, null=True),
+            model_name="incidentpage",
+            name="image_caption",
+            field=wagtail.fields.RichTextField(
+                blank=True,
+                help_text="Image description displayed below the image. Organization/Photographer can be set via the image attribution.",
+                max_length=255,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='incidentpageupdates',
-            name='body',
-            field=wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('statistics', wagtail.blocks.StructBlock((('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            model_name="incidentpageupdates",
+            name="body",
+            field=wagtail.fields.StreamField(
+                (
+                    (
+                        "rich_text",
+                        wagtail.blocks.RichTextBlock(
+                            icon="doc-full", label="Rich Text"
+                        ),
+                    ),
+                    ("image", wagtail.images.blocks.ImageChooserBlock()),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    (
+                        "statistics",
+                        wagtail.blocks.StructBlock(
+                            (
+                                (
+                                    "visualization",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.blocks.get_visualization_choices
+                                    ),
+                                ),
+                                (
+                                    "dataset",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_stats_choices
+                                    ),
+                                ),
+                                (
+                                    "params",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
+                                        required=False,
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            ),
         ),
     ]

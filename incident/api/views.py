@@ -31,18 +31,30 @@ from incident.api.serializers import (
     CSVIncidentSerializer,
 )
 from incident import models
-from incident.utils.incident_filter import IncidentFilter, get_openapi_parameters, DateFilter
+from incident.utils.incident_filter import (
+    IncidentFilter,
+    get_openapi_parameters,
+    DateFilter,
+)
 
 if TYPE_CHECKING:
     from django.http import HttpResponse
 
 
 class HomePageCSVRenderer(CSVRenderer):
-    header = ['date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary']
+    header = [
+        "date",
+        "city",
+        "state__abbreviation",
+        "latitude",
+        "longitude",
+        "category_summary",
+        "tag_summary",
+    ]
     labels = {
-        'state__abbreviation': 'state',
-        'category_summary': 'categories',
-        'tag_summary': 'tags',
+        "state__abbreviation": "state",
+        "category_summary": "categories",
+        "tag_summary": "tags",
     }
 
 
@@ -54,7 +66,7 @@ class HeaderCursorPagination(CursorPagination):
     def paginate_queryset(self, queryset, request, view=None):
         self.use_envelope = False
         self.request = request
-        if str(request.GET.get('envelope')).lower() == '1':
+        if str(request.GET.get("envelope")).lower() == "1":
             self.use_envelope = True
         return super().paginate_queryset(queryset, request, view)
 
@@ -65,50 +77,58 @@ class HeaderCursorPagination(CursorPagination):
 
         links = []
         for url, label in (
-                (first_url, 'first'),
-                (previous_url, 'prev'),
-                (next_url, 'next'),
+            (first_url, "first"),
+            (previous_url, "prev"),
+            (next_url, "next"),
         ):
             if url is not None:
                 links.append('<{}>; rel="{}"'.format(url, label))
-        headers = {'Link': ', '.join(links)} if links else {}
+        headers = {"Link": ", ".join(links)} if links else {}
 
         if self.use_envelope:
-            return Response(collections.OrderedDict([
-                ('first', first_url),
-                ('next', next_url),
-                ('previous', previous_url),
-                ('results', data)
-            ]), headers=headers)
+            return Response(
+                collections.OrderedDict(
+                    [
+                        ("first", first_url),
+                        ("next", next_url),
+                        ("previous", previous_url),
+                        ("results", data),
+                    ]
+                ),
+                headers=headers,
+            )
         return Response(data, headers=headers)
 
 
 class IncidentCursorPagination(HeaderCursorPagination):
     page_size = 25
-    page_size_query_param = 'limit'
-    ordering = '-unique_date'
+    page_size_query_param = "limit"
+    ordering = "-unique_date"
 
 
 class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IncidentSerializer
-    renderer_classes = tuple(api_settings.DEFAULT_RENDERER_CLASSES) + (PaginatedCSVRenderer,)
+    renderer_classes = tuple(api_settings.DEFAULT_RENDERER_CLASSES) + (
+        PaginatedCSVRenderer,
+    )
     pagination_class = IncidentCursorPagination
 
     @extend_schema(
-        parameters=get_openapi_parameters() + [
+        parameters=get_openapi_parameters()
+        + [
             OpenApiParameter(
-                name='fields',
+                name="fields",
                 type={
-                    'type': 'array',
-                    'items': {
-                        'type': 'string',
-                        'enum': list(IncidentSerializer().fields),
-                    }
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": list(IncidentSerializer().fields),
+                    },
                 },
                 location=OpenApiParameter.QUERY,
                 required=False,
-                description='Specify which incident fields are given on the result data.',
-                style='form',
+                description="Specify which incident fields are given on the result data.",
+                style="form",
                 explode=False,
             )
         ]
@@ -116,29 +136,31 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, *args, **kwargs):
         return super().list(*args, **kwargs)
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
     @cached_property
     def csv_format_is_requested(self):
-        return getattr(self.request, 'accepted_renderer', None) and \
-            self.request.accepted_renderer.format == 'csv'
+        return (
+            getattr(self.request, "accepted_renderer", None)
+            and self.request.accepted_renderer.format == "csv"
+        )
 
     @cached_property
     def requested_fields(self):
-        if fields := self.request.GET.get('fields'):
-            return set(map(str.strip, fields.split(',')))
+        if fields := self.request.GET.get("fields"):
+            return set(map(str.strip, fields.split(",")))
         return set()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['requested_fields'] = self.requested_fields
+        context["requested_fields"] = self.requested_fields
         return context
 
     @cached_property
@@ -154,8 +176,8 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         # according to request's query-string parameters.  In the
         # homepage_csv action, this set is pre-determined and not
         # affected by the request, in that case we skip this step.
-        if self.action != 'homepage_csv':
-            context['header'] = list(self.get_serializer().fields.keys())
+        if self.action != "homepage_csv":
+            context["header"] = list(self.get_serializer().fields.keys())
         return context
 
     def get_serializer_class(self):
@@ -168,7 +190,10 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         return super().get_serializer_class()
 
     def paginate_queryset(self, queryset):
-        if getattr(self.request, 'accepted_renderer', None) and self.request.accepted_renderer.format == 'csv':
+        if (
+            getattr(self.request, "accepted_renderer", None)
+            and self.request.accepted_renderer.format == "csv"
+        ):
             return None
         return super().paginate_queryset(queryset)
 
@@ -176,26 +201,26 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         incident_filter = IncidentFilter(self.request.GET)
         if self.csv_format_is_requested and self.can_apply_csv_serializer:
             annotated_fields = {
-                'categories': 'category_summary',
-                'tags': 'tag_summary',
-                'links': 'link_summary',
-                'equipment_broken': 'equipment_broken_summary',
-                'equipment_seized': 'equipment_seized_summary',
-                'status_of_charges': 'status_of_charges_summary',
-                'arresting_authority': 'arresting_authority_title',
-                'status_of_seized_equipment': 'status_of_seized_equipment_display',
-                'arrest_status': 'arrest_status_display',
-                'actor': 'actor_display',
-                'target_us_citizenship_status': 'target_us_citizenship_status_display',
-                'did_authorities_ask_for_device_access': 'did_authorities_ask_for_device_access_display',
-                'did_authorities_ask_about_work': 'did_authorities_ask_about_work_display',
-                'assailant': 'assailant_display',
-                'was_journalist_targeted': 'was_journalist_targeted_display',
-                'third_party_business': 'third_party_business_display',
-                'status_of_prior_restraint': 'status_of_prior_restraint_display',
-                'url': 'url',
-                'state': 'state_abbreviation',
-                'legal_order_venue': 'legal_order_venue_display',
+                "categories": "category_summary",
+                "tags": "tag_summary",
+                "links": "link_summary",
+                "equipment_broken": "equipment_broken_summary",
+                "equipment_seized": "equipment_seized_summary",
+                "status_of_charges": "status_of_charges_summary",
+                "arresting_authority": "arresting_authority_title",
+                "status_of_seized_equipment": "status_of_seized_equipment_display",
+                "arrest_status": "arrest_status_display",
+                "actor": "actor_display",
+                "target_us_citizenship_status": "target_us_citizenship_status_display",
+                "did_authorities_ask_for_device_access": "did_authorities_ask_for_device_access_display",
+                "did_authorities_ask_about_work": "did_authorities_ask_about_work_display",
+                "assailant": "assailant_display",
+                "was_journalist_targeted": "was_journalist_targeted_display",
+                "third_party_business": "third_party_business_display",
+                "status_of_prior_restraint": "status_of_prior_restraint_display",
+                "url": "url",
+                "state": "state_abbreviation",
+                "legal_order_venue": "legal_order_venue_display",
             }
             result_fields = []
             annotations = []
@@ -204,26 +229,27 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
             serializer = self.get_serializer()
             valid_fields = requested_fields.intersection(set(serializer.fields))
             for field in valid_fields:
-                result_fields.append(
-                    annotated_fields.get(field, field)
-                )
+                result_fields.append(annotated_fields.get(field, field))
             annotations = {
-                v for k, v in annotated_fields.items()
-                if k in requested_fields
+                v for k, v in annotated_fields.items() if k in requested_fields
             }
-            return incident_filter.get_queryset()\
-                .for_csv(annotations, self.request)\
+            return (
+                incident_filter.get_queryset()
+                .for_csv(annotations, self.request)
                 .values(*result_fields)
+            )
 
         incidents = incident_filter.get_queryset()
 
         return incidents.with_most_recent_update().with_public_associations()
 
-    @action(detail=False, renderer_classes=[HomePageCSVRenderer], url_name='homepage_csv')
+    @action(
+        detail=False, renderer_classes=[HomePageCSVRenderer], url_name="homepage_csv"
+    )
     def homepage_csv(self, request, version=None):
         date_filter = DateFilter(
-            'date',
-            models.IncidentPage._meta.get_field('date'),
+            "date",
+            models.IncidentPage._meta.get_field("date"),
             fuzzy=True,
         )
         value = date_filter.get_value(request.GET)
@@ -232,30 +258,51 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
         except ValidationError:
             return Response([], status=status.HTTP_400_BAD_REQUEST)
 
-        tag_summary = models.IncidentPage.objects.only('tags').annotate(
-            tag_summary=StringAgg(
-                'tags__title',
-                delimiter=', ',
-                ordering=('tags__title',)
+        tag_summary = (
+            models.IncidentPage.objects.only("tags")
+            .annotate(
+                tag_summary=StringAgg(
+                    "tags__title", delimiter=", ", ordering=("tags__title",)
+                )
             )
-        ).filter(pk=OuterRef('pk'))
-        category_summary = models.IncidentPage.objects.only('categories').annotate(
-            category_summary=StringAgg(
-                'categories__category__title',
-                delimiter=', ',
-                ordering=('categories__category__title',)
+            .filter(pk=OuterRef("pk"))
+        )
+        category_summary = (
+            models.IncidentPage.objects.only("categories")
+            .annotate(
+                category_summary=StringAgg(
+                    "categories__category__title",
+                    delimiter=", ",
+                    ordering=("categories__category__title",),
+                )
             )
-        ).filter(pk=OuterRef('pk'))
+            .filter(pk=OuterRef("pk"))
+        )
 
-        incidents = models.IncidentPage.objects.live().only('date', 'city', 'state', 'latitude', 'longitude').annotate(
-            tag_summary=Subquery(tag_summary.values('tag_summary'), output_field=CharField()),
-            category_summary=Subquery(category_summary.values('category_summary'), output_field=CharField()),
+        incidents = (
+            models.IncidentPage.objects.live()
+            .only("date", "city", "state", "latitude", "longitude")
+            .annotate(
+                tag_summary=Subquery(
+                    tag_summary.values("tag_summary"), output_field=CharField()
+                ),
+                category_summary=Subquery(
+                    category_summary.values("category_summary"),
+                    output_field=CharField(),
+                ),
+            )
         )
         if cleaned_value is not None:
             incidents = date_filter.filter(incidents, cleaned_value)
 
         incidents = incidents.values(
-            'date', 'city', 'state__abbreviation', 'latitude', 'longitude', 'category_summary', 'tag_summary'
+            "date",
+            "city",
+            "state__abbreviation",
+            "latitude",
+            "longitude",
+            "category_summary",
+            "tag_summary",
         )
 
         incidents = list(incidents)  # CSV Renderer requires a list
@@ -266,12 +313,12 @@ class JournalistViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Journalist.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -280,12 +327,12 @@ class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Institution.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -294,12 +341,12 @@ class GovernmentWorkerViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.GovernmentWorker.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -308,12 +355,12 @@ class ChargeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Charge.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -322,12 +369,12 @@ class NationalityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Nationality.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -336,12 +383,12 @@ class PoliticianOrPublicViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.PoliticianOrPublic.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -350,12 +397,12 @@ class VenueViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Venue.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -364,12 +411,12 @@ class EquipmentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Equipment.objects.all()
     serializer_class = EquipmentSerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response
 
@@ -378,11 +425,11 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CategoryPage.objects.all()
     serializer_class = CategorySerializer
 
-    def dispatch(self, *args, **kwargs) -> 'HttpResponse':
+    def dispatch(self, *args, **kwargs) -> "HttpResponse":
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
-        response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Methods'] = 'GET,OPTIONS,HEAD'
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
 
         return response

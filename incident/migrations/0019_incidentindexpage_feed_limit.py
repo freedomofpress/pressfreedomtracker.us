@@ -6,15 +6,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0018_incidentindexpage_search_image'),
+        ("incident", "0018_incidentindexpage_search_image"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentindexpage',
-            name='feed_limit',
-            field=models.PositiveIntegerField(default=1000, help_text='Maximum number of incidents to be included in the syndication feed. 0 for unlimited.'),
+            model_name="incidentindexpage",
+            name="feed_limit",
+            field=models.PositiveIntegerField(
+                default=1000,
+                help_text="Maximum number of incidents to be included in the syndication feed. 0 for unlimited.",
+            ),
         ),
     ]

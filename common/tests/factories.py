@@ -49,7 +49,7 @@ class AlignedCaptionedImageBlockFactory(wagtail_factories.StructBlockFactory):
     image = factory.SubFactory(
         wagtail_factories.blocks.ImageChooserBlockFactory,
     )
-    caption = RichText('Caption')
+    caption = RichText("Caption")
     alignment = ALIGNMENT_CHOICES[0][0]
 
     class Meta:
@@ -64,24 +64,24 @@ class TweetEmbedBlockFactory(wagtail_factories.StructBlockFactory):
 
 
 class RichTextBlockQuoteBlockFactory(wagtail_factories.StructBlockFactory):
-    text = RichText('Quote content')
-    source_text = RichText('Name of source')
-    source_url = 'https://freedom.press'
+    text = RichText("Quote content")
+    source_text = RichText("Name of source")
+    source_url = "https://freedom.press"
 
     class Meta:
         model = RichTextBlockQuoteBlock
 
 
 class PullQuoteBlockFactory(wagtail_factories.StructBlockFactory):
-    text = 'Text of Quote'
+    text = "Text of Quote"
 
     class Meta:
         model = PullQuoteBlock
 
 
 class AlignedCaptionedEmbedBlockFactory(wagtail_factories.StructBlockFactory):
-    caption = RichText('Embed caption')
-    attribution = 'Attribution of embed'
+    caption = RichText("Embed caption")
+    attribution = "Attribution of embed"
     video = factory.SubFactory(wagtail_factories.blocks.CharBlockFactory)
     alignment = ALIGNMENT_CHOICES[0][0]
 
@@ -91,8 +91,9 @@ class AlignedCaptionedEmbedBlockFactory(wagtail_factories.StructBlockFactory):
 
 class DevelopmentSiteFactory(wagtail_factories.SiteFactory):
     class Meta:
-        django_get_or_create = ('is_default_site',)
-    site_name = 'Press Freedom Tracker (Dev)'
+        django_get_or_create = ("is_default_site",)
+
+    site_name = "Press Freedom Tracker (Dev)"
     port = 8000
     is_default_site = True
     root_page = None
@@ -108,7 +109,7 @@ class CategoryIncidentFilterFactory(factory.django.DjangoModelFactory):
 class TaxonomySettingsFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = TaxonomySettings
-        django_get_or_create = ('site',)
+        django_get_or_create = ("site",)
 
     site = factory.SubFactory(DevelopmentSiteFactory)
 
@@ -125,8 +126,8 @@ class MethodologyItemFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CategoryMethodologyItem
 
-    label = 'Item Label'
-    description = 'Item Description'
+    label = "Item Label"
+    description = "Item Description"
 
 
 class CategoryPageFactory(wagtail_factories.PageFactory):
@@ -135,68 +136,64 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
 
     class Params:
         arrest = factory.Trait(
-            title='Arrest / Criminal Charge',
-            plural_name='Arrests and Criminal Charges',
-            slug='arrest-criminal-charge'
+            title="Arrest / Criminal Charge",
+            plural_name="Arrests and Criminal Charges",
+            slug="arrest-criminal-charge",
         )
         border_stop = factory.Trait(
-            title='Border Stop',
-            plural_name='Border Stops',
-            slug='border-stop'
+            title="Border Stop", plural_name="Border Stops", slug="border-stop"
         )
         denial_of_access = factory.Trait(
-            title='Denial of Access',
-            plural_name='Denials of Access',
-            slug='denial-access',
+            title="Denial of Access",
+            plural_name="Denials of Access",
+            slug="denial-access",
         )
         equipment_search = factory.Trait(
-            title='Equipment Search or Seizure',
-            plural_name='Equipment Searches, Seizures and Damage',
-            slug='equipment-search-seizure-or-damage',
+            title="Equipment Search or Seizure",
+            plural_name="Equipment Searches, Seizures and Damage",
+            slug="equipment-search-seizure-or-damage",
         )
         assault = factory.Trait(
-            title='Assault',
-            plural_name='Assaults',
-            slug='assault',
+            title="Assault",
+            plural_name="Assaults",
+            slug="assault",
         )
         leak_case = factory.Trait(
-            title='Leak Case',
-            plural_name='Leak Cases',
-            slug='leak-case'
+            title="Leak Case", plural_name="Leak Cases", slug="leak-case"
         )
         subpoena = factory.Trait(
-            title='Subpoena / Legal Order',
-            plural_name='Subpoenas and Legal Orders',
-            slug='subpoena'
+            title="Subpoena / Legal Order",
+            plural_name="Subpoenas and Legal Orders",
+            slug="subpoena",
         )
         equipment_damage = factory.Trait(
-            title='Equipment Damage',
-            plural_name='Equipment Damages',
-            slug='equipment-damage',
+            title="Equipment Damage",
+            plural_name="Equipment Damages",
+            slug="equipment-damage",
         )
         other_incident = factory.Trait(
-            title='Other Incident',
-            plural_name='Other Incidents',
-            slug='other-incident',
+            title="Other Incident",
+            plural_name="Other Incidents",
+            slug="other-incident",
         )
         chilling_statement = factory.Trait(
-            title='Chilling Statement',
-            plural_name='Chilling Statements',
-            slug='chilling-statement',
+            title="Chilling Statement",
+            plural_name="Chilling Statements",
+            slug="chilling-statement",
         )
         prior_restraint = factory.Trait(
-            title='Prior Restraint',
-            plural_name='Prior Restraints',
-            slug='prior-restraint',
+            title="Prior Restraint",
+            plural_name="Prior Restraints",
+            slug="prior-restraint",
         )
 
-    title = factory.Sequence(lambda n: 'Category {n}'.format(n=n))
+    title = factory.Sequence(lambda n: "Category {n}".format(n=n))
     methodology = RichText("Methodology")
-    taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, 'category')
+    taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, "category")
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
-    viz_type = 'none'
-    methodology_item = factory.RelatedFactory(MethodologyItemFactory, 'page')
-    methodology_item2 = factory.RelatedFactory(MethodologyItemFactory, 'page')
+    viz_type = "none"
+    methodology_item = factory.RelatedFactory(MethodologyItemFactory, "page")
+    methodology_item2 = factory.RelatedFactory(MethodologyItemFactory, "page")
 
     @factory.post_generation
     def incident_filters(self, create, extracted, **kwargs):
@@ -204,17 +201,19 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
             return
 
         if extracted:
-            CategoryIncidentFilter.objects.bulk_create([
-                CategoryIncidentFilter(
-                    category=self,
-                    incident_filter=incident_filter,
-                )
-                for incident_filter in extracted
-            ])
+            CategoryIncidentFilter.objects.bulk_create(
+                [
+                    CategoryIncidentFilter(
+                        category=self,
+                        incident_filter=incident_filter,
+                    )
+                    for incident_filter in extracted
+                ]
+            )
 
 
 class CustomImageFactory(wagtail_factories.ImageFactory):
-    attribution = factory.Sequence(lambda n: f'Attribution {n}')
+    attribution = factory.Sequence(lambda n: f"Attribution {n}")
 
     class Meta:
         model = CustomImage
@@ -224,9 +223,9 @@ class PersonPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = PersonPage
 
-    title = factory.Sequence(lambda n: f'Person {n}')
+    title = factory.Sequence(lambda n: f"Person {n}")
     bio = RichText("Bio")
-    website = 'https://freedom.press'
+    website = "https://freedom.press"
     photo = None
 
 
@@ -234,17 +233,17 @@ class OrganizationIndexPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = OrganizationIndexPage
 
-    title = 'All Organizations'
+    title = "All Organizations"
 
 
 class OrganizationPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = OrganizationPage
 
-    title = factory.Sequence(lambda n: f'Organization {n}')
-    slug = factory.Sequence(lambda n: 'organization-{n}'.format(n=n))
-    website = 'https://freedom.press'
-    description = 'Organization Description'
+    title = factory.Sequence(lambda n: f"Organization {n}")
+    slug = factory.Sequence(lambda n: "organization-{n}".format(n=n))
+    website = "https://freedom.press"
+    description = "Organization Description"
 
 
 class SimplePageFactory(wagtail_factories.PageFactory):
@@ -302,9 +301,9 @@ class StyledTextBlockFactory(wagtail_factories.StructBlockFactory):
 class CommonTagFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CommonTag
-        django_get_or_create = ('title',)
+        django_get_or_create = ("title",)
 
-    title = factory.Sequence(lambda n: f'Tag {n}')
+    title = factory.Sequence(lambda n: f"Tag {n}")
 
 
 class ChartSnapshotFactory(factory.django.DjangoModelFactory):
@@ -314,11 +313,11 @@ class ChartSnapshotFactory(factory.django.DjangoModelFactory):
     class Params:
         svg = factory.Trait(
             snapshot_type=SnapshotType.SVG,
-            chart_svg='<svg />',
+            chart_svg="<svg />",
         )
         png = factory.Trait(
             snapshot_type=SnapshotType.PNG,
-            chart_image=factory.SubFactory(CustomImageFactory)
+            chart_image=factory.SubFactory(CustomImageFactory),
         )
 
     svg = True

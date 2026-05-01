@@ -12,5 +12,5 @@ class TestPruneUnusedTags(TestCase):
         incident = IncidentPageFactory()
         used_tag.tagged_items.add(incident)
 
-        call_command('prune_unused_tags')
+        call_command("prune_unused_tags")
         self.assertEqual(list(CommonTag.objects.all()), [used_tag])

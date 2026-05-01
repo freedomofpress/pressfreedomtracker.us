@@ -7,15 +7,19 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0033_auto_20190429_1627'),
+        ("incident", "0033_auto_20190429_1627"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='targeted_institutions',
-            field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='institutions_incidents', to='incident.Institution', verbose_name='Targeted Institutions'),
+            model_name="incidentpage",
+            name="targeted_institutions",
+            field=modelcluster.fields.ParentalManyToManyField(
+                blank=True,
+                related_name="institutions_incidents",
+                to="incident.Institution",
+                verbose_name="Targeted Institutions",
+            ),
         ),
     ]

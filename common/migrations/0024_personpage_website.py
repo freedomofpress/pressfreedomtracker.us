@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0023_simplepage_sidebar_content'),
+        ("common", "0023_simplepage_sidebar_content"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='personpage',
-            name='website',
+            model_name="personpage",
+            name="website",
             field=models.URLField(blank=True, null=True),
         ),
     ]

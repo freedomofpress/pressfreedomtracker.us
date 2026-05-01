@@ -6,15 +6,162 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0098_alter_topicpage_sidebar'),
+        ("incident", "0098_alter_topicpage_sidebar"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='body',
-            field=wagtail.fields.StreamField([('rich_text', 0), ('image', 1), ('aligned_image', 7), ('raw_html', 8), ('tweet', 10), ('blockquote', 14), ('pull_quote', 16), ('video', 19), ('statistics', 23)], block_lookup={0: ('common.blocks.RichTextTemplateBlock', (), {'icon': 'doc-full', 'label': 'Rich Text'}), 1: ('wagtail.images.blocks.ImageChooserBlock', (), {'template': 'common/blocks/image_block.html'}), 2: ('wagtail.images.blocks.ImageChooserBlock', (), {}), 3: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Image description displayed below the image. Organization/Photographer can be set via the image attribution.', 'required': False}), 4: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]}), 5: ('wagtail.blocks.CharBlock', (), {'default': 'This image may be disturbing. Tap or click to reveal.', 'help_text': 'Warning text shown on the button above blurred media', 'label': 'Warning text', 'required': True}), 6: ('wagtail.blocks.ListBlock', (5,), {'default': [], 'label': 'Add content warning', 'max_num': 1, 'min_num': 0}), 7: ('wagtail.blocks.StructBlock', [[('image', 2), ('caption', 3), ('alignment', 4), ('content_warning', 6)]], {'label': 'Aligned, Captioned Image'}), 8: ('wagtail.blocks.RawHTMLBlock', (), {}), 9: ('wagtail.embeds.blocks.EmbedBlock', (), {}), 10: ('wagtail.blocks.StructBlock', [[('tweet', 9)]], {}), 11: ('wagtail.blocks.RichTextBlock', (), {}), 12: ('wagtail.blocks.RichTextBlock', (), {'required': False}), 13: ('wagtail.blocks.URLBlock', (), {'help_text': 'Source text will link to this url.', 'required': False}), 14: ('wagtail.blocks.StructBlock', [[('text', 11), ('source_text', 12), ('source_url', 13)]], {}), 15: ('wagtail.blocks.TextBlock', (), {}), 16: ('wagtail.blocks.StructBlock', [[('text', 15)]], {}), 17: ('wagtail.blocks.RichTextBlock', (), {'help_text': 'Video description displayed below the video.', 'required': False}), 18: ('wagtail.blocks.CharBlock', (), {'help_text': 'Organization / Director.', 'max_length': 255, 'required': False}), 19: ('wagtail.blocks.StructBlock', [[('video', 9), ('caption', 17), ('attribution', 18), ('alignment', 4)]], {}), 20: ('wagtail.blocks.ChoiceBlock', [], {'choices': statistics.registry.get_visualization_choices}), 21: ('wagtail.blocks.ChoiceBlock', [], {'choices': statistics.registry.get_stats_choices}), 22: ('wagtail.blocks.CharBlock', (), {'help_text': 'Whitespace-separated list of arguments to be passed to the statistics function', 'required': False}), 23: ('wagtail.blocks.StructBlock', [[('visualization', 20), ('dataset', 21), ('params', 22)]], {})}),
+            model_name="incidentpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                [
+                    ("rich_text", 0),
+                    ("image", 1),
+                    ("aligned_image", 7),
+                    ("raw_html", 8),
+                    ("tweet", 10),
+                    ("blockquote", 14),
+                    ("pull_quote", 16),
+                    ("video", 19),
+                    ("statistics", 23),
+                ],
+                block_lookup={
+                    0: (
+                        "common.blocks.RichTextTemplateBlock",
+                        (),
+                        {"icon": "doc-full", "label": "Rich Text"},
+                    ),
+                    1: (
+                        "wagtail.images.blocks.ImageChooserBlock",
+                        (),
+                        {"template": "common/blocks/image_block.html"},
+                    ),
+                    2: ("wagtail.images.blocks.ImageChooserBlock", (), {}),
+                    3: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Image description displayed below the image. Organization/Photographer can be set via the image attribution.",
+                            "required": False,
+                        },
+                    ),
+                    4: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {
+                            "choices": [
+                                ("left", "Left"),
+                                ("right", "Right"),
+                                ("full-width", "Full Width"),
+                            ]
+                        },
+                    ),
+                    5: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "default": "This image may be disturbing. Tap or click to reveal.",
+                            "help_text": "Warning text shown on the button above blurred media",
+                            "label": "Warning text",
+                            "required": True,
+                        },
+                    ),
+                    6: (
+                        "wagtail.blocks.ListBlock",
+                        (5,),
+                        {
+                            "default": [],
+                            "label": "Add content warning",
+                            "max_num": 1,
+                            "min_num": 0,
+                        },
+                    ),
+                    7: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("image", 2),
+                                ("caption", 3),
+                                ("alignment", 4),
+                                ("content_warning", 6),
+                            ]
+                        ],
+                        {"label": "Aligned, Captioned Image"},
+                    ),
+                    8: ("wagtail.blocks.RawHTMLBlock", (), {}),
+                    9: ("wagtail.embeds.blocks.EmbedBlock", (), {}),
+                    10: ("wagtail.blocks.StructBlock", [[("tweet", 9)]], {}),
+                    11: ("wagtail.blocks.RichTextBlock", (), {}),
+                    12: ("wagtail.blocks.RichTextBlock", (), {"required": False}),
+                    13: (
+                        "wagtail.blocks.URLBlock",
+                        (),
+                        {
+                            "help_text": "Source text will link to this url.",
+                            "required": False,
+                        },
+                    ),
+                    14: (
+                        "wagtail.blocks.StructBlock",
+                        [[("text", 11), ("source_text", 12), ("source_url", 13)]],
+                        {},
+                    ),
+                    15: ("wagtail.blocks.TextBlock", (), {}),
+                    16: ("wagtail.blocks.StructBlock", [[("text", 15)]], {}),
+                    17: (
+                        "wagtail.blocks.RichTextBlock",
+                        (),
+                        {
+                            "help_text": "Video description displayed below the video.",
+                            "required": False,
+                        },
+                    ),
+                    18: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Organization / Director.",
+                            "max_length": 255,
+                            "required": False,
+                        },
+                    ),
+                    19: (
+                        "wagtail.blocks.StructBlock",
+                        [
+                            [
+                                ("video", 9),
+                                ("caption", 17),
+                                ("attribution", 18),
+                                ("alignment", 4),
+                            ]
+                        ],
+                        {},
+                    ),
+                    20: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {"choices": statistics.registry.get_visualization_choices},
+                    ),
+                    21: (
+                        "wagtail.blocks.ChoiceBlock",
+                        [],
+                        {"choices": statistics.registry.get_stats_choices},
+                    ),
+                    22: (
+                        "wagtail.blocks.CharBlock",
+                        (),
+                        {
+                            "help_text": "Whitespace-separated list of arguments to be passed to the statistics function",
+                            "required": False,
+                        },
+                    ),
+                    23: (
+                        "wagtail.blocks.StructBlock",
+                        [[("visualization", 20), ("dataset", 21), ("params", 22)]],
+                        {},
+                    ),
+                },
+            ),
         ),
     ]

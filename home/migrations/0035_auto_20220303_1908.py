@@ -4,28 +4,27 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0034_auto_20220303_1725'),
+        ("home", "0034_auto_20220303_1725"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='statbox',
-            name='internal_link',
+            model_name="statbox",
+            name="internal_link",
         ),
         migrations.RemoveField(
-            model_name='statbox',
-            name='page',
+            model_name="statbox",
+            name="page",
         ),
         migrations.RemoveField(
-            model_name='homepage',
-            name='statboxes_label',
+            model_name="homepage",
+            name="statboxes_label",
         ),
         migrations.DeleteModel(
-            name='HomePageFeature',
+            name="HomePageFeature",
         ),
         migrations.DeleteModel(
-            name='StatBox',
+            name="StatBox",
         ),
     ]

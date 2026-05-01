@@ -8,21 +8,26 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0008_delete_tag'),
-        ('blog', '0002_auto_20170628_2202'),
+        ("common", "0008_delete_tag"),
+        ("blog", "0002_auto_20170628_2202"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpage',
-            name='image_caption',
+            model_name="blogpage",
+            name="image_caption",
             field=wagtail.fields.RichTextField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='blogpage',
-            name='teaser_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+            model_name="blogpage",
+            name="teaser_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+            ),
         ),
     ]

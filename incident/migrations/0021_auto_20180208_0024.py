@@ -7,18 +7,19 @@ from django.utils.html import strip_tags
 
 
 def strip_teaser_richtext(apps, schema_editor):
-    IncidentPage = apps.get_model('incident.IncidentPage')
+    IncidentPage = apps.get_model("incident.IncidentPage")
     for page in IncidentPage.objects.filter(teaser__isnull=False):
         page.teaser = strip_tags(page.teaser)
         page.save()
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0020_auto_20180206_0124'),
+        ("incident", "0020_auto_20180206_0124"),
     ]
 
     operations = [
-        migrations.RunPython(strip_teaser_richtext, migrations.RunPython.noop, elidable=True),
+        migrations.RunPython(
+            strip_teaser_richtext, migrations.RunPython.noop, elidable=True
+        ),
     ]

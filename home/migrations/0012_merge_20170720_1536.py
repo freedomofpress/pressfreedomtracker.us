@@ -6,11 +6,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0011_change_statbox_colors'),
-        ('home', '0010_homepage_change_filters_message'),
+        ("home", "0011_change_statbox_colors"),
+        ("home", "0010_homepage_change_filters_message"),
     ]
 
-    operations = [
-    ]
+    operations = []

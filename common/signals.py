@@ -3,7 +3,10 @@ from django.db.models.signals import post_delete, post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
 from wagtail.signals import page_published
-from wagtail.contrib.frontend_cache.utils import purge_page_from_cache, purge_url_from_cache
+from wagtail.contrib.frontend_cache.utils import (
+    purge_page_from_cache,
+    purge_url_from_cache,
+)
 from wagtail.contrib.settings.models import BaseSiteSetting
 
 from common.models import CategoryPage, SimplePage
@@ -41,7 +44,7 @@ def purge_simple_page_from_frontend_cache(**kwargs):
 
 
 def purge_sitemap_from_frontend_cache(**kwargs):
-    sitemap_url = reverse('sitemap')
+    sitemap_url = reverse("sitemap")
     purge_url_from_cache(sitemap_url)
 
 

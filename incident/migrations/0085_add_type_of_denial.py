@@ -5,15 +5,27 @@ import incident.models.incident_page
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0084_remove_some_border_stop_metadata'),
+        ("incident", "0084_remove_some_border_stop_metadata"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='type_of_denial',
-            field=incident.models.incident_page.ChoiceArrayField(base_field=models.CharField(choices=[('CHANGE_IN_POLICY', 'Change in policy or practice'), ('GOVERNMENT_EVENTS', 'Government events'), ('PRESS_CREDENTIAL', 'Press credential or media list'), ('OTHER', 'Other')], max_length=255), blank=True, null=True, size=None),
+            model_name="incidentpage",
+            name="type_of_denial",
+            field=incident.models.incident_page.ChoiceArrayField(
+                base_field=models.CharField(
+                    choices=[
+                        ("CHANGE_IN_POLICY", "Change in policy or practice"),
+                        ("GOVERNMENT_EVENTS", "Government events"),
+                        ("PRESS_CREDENTIAL", "Press credential or media list"),
+                        ("OTHER", "Other"),
+                    ],
+                    max_length=255,
+                ),
+                blank=True,
+                null=True,
+                size=None,
+            ),
         ),
     ]

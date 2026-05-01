@@ -7,9 +7,11 @@ class Statistics(object):
     def statistic(self, store, name=None, fn=None):
         """Register a statistics function as usable elsewhere on the site"""
         if name is None and fn is None:
+
             def decorator(fn):
                 self.statistic(store, name, fn)
                 return fn
+
             return decorator
 
         if name is not None and fn is None:
@@ -47,7 +49,7 @@ def get_numbers_default():
         choices = iter(numbers.keys())
         return next(choices)
     else:
-        return ''
+        return ""
 
 
 def get_maps():
@@ -68,7 +70,7 @@ def get_stats():
 
 def get_stats_choices():
     return [
-        (name, '{} ({})'.format(name, 'Map' if name in MAPS else 'Number'))
+        (name, "{} ({})".format(name, "Map" if name in MAPS else "Number"))
         for name in get_stats().keys()
     ]
 

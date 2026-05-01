@@ -7,22 +7,45 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0039_collectionviewrestriction'),
-        ('common', '0029_auto_20180205_2333'),
+        ("wagtailcore", "0039_collectionviewrestriction"),
+        ("common", "0029_auto_20180205_2333"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SearchSettings',
+            name="SearchSettings",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('search_page', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailcore.Page')),
-                ('site', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, to='wagtailcore.Site')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "search_page",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                (
+                    "site",
+                    models.OneToOneField(
+                        editable=False,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="wagtailcore.Site",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Search',
+                "verbose_name": "Search",
             },
         ),
     ]
