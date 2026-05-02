@@ -354,7 +354,7 @@ TAGGIT_CASE_INSENSITIVE = True
 # Content Security Policy
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
-        "base-uri": (SELF,),
+        "base-uri": [SELF],
         "connect-src": [
             SELF,
             "https://analytics.freedom.press",
@@ -366,9 +366,9 @@ CONTENT_SECURITY_POLICY = {
             # For Social Widgets
             "https://www.instagram.com",
         ],
-        "default-src": (SELF,),
-        "form-action": (SELF,),
-        "frame-ancestors": (SELF,),
+        "default-src": [SELF],
+        "form-action": [SELF],
+        "frame-ancestors": [SELF],
         "frame-src": (
             SELF,
             # For Social Widgets
