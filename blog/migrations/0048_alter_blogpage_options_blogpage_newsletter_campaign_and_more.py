@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtail_newsletter', '0001_initial'),
-        ('blog', '0046_alter_blogpage_body'),
+        ('blog', '0047_add_bluesky_instagram_social_media_embeds'),
     ]
 
     operations = [
