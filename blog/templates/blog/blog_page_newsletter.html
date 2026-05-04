@@ -37,6 +37,7 @@
 				padding: 16px 20px;
 				display: block;
 			}
+			.aside a { color: #ffffff; }
 			.blockquote {
 				border-left: 4px solid #C1C1C1;
 				padding-left: 16px;
@@ -295,6 +296,20 @@
 						<mj-text>
 							<a href="{{ block.value.tweet.url }}" class="link-external">
 								View post on X/Twitter &rarr;
+							</a>
+						</mj-text>
+
+					{% elif block.block_type == "bluesky" %}
+						<mj-text>
+							<a href="{{ block.value.bluesky_post.url }}" class="link-external">
+								View post on Bluesky &rarr;
+							</a>
+						</mj-text>
+
+					{% elif block.block_type == "instagram" %}
+						<mj-text>
+							<a href="{{ block.value.instagram_post.url }}" class="link-external">
+								View post on Instagram &rarr;
 							</a>
 						</mj-text>
 
