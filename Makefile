@@ -134,6 +134,10 @@ ruff: ## Runs ruff linting in Python3 container.
 			python:3.12.2-slim-bookworm \
 			bash -c "pip install -q ruff && ruff check"
 
+.PHONY: ruff
+ruff: ## Runs ruff linter/formatter.
+	@docker compose run --rm django ruff check .
+
 .PHONY: check-migrations
 check-migrations: ## Check for ungenerated migrations
 	docker compose exec -T django /bin/bash -c "./manage.py makemigrations --dry-run --check"

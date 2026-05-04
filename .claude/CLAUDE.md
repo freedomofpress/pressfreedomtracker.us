@@ -18,11 +18,12 @@
 
 ## Tech Stack
 - Python 3.12, Django 4.2+, Wagtail 6.3+
-- PostgreSQL 13
+- PostgreSQL 14
 - Django REST Framework + drf-spectacular (OpenAPI docs)
 - Webpack 5, Babel, React 18, D3 v7, Jest 29 (frontend)
 - ESLint (airbnb config), Stylelint (sass-guidelines)
-- Ruff (import sorting/unused imports), Flake8 (PEP8), Bandit (security)
+- Ruff (primary linter)
+- Bandit (security)
 - structlog for logging
 
 ## Development
@@ -44,7 +45,7 @@
 - Tests live in `tests/` subdirectories within each Django app (e.g., `incident/tests/`)
 
 ## Linting and Code Quality
-- `make flake8` — PEP8 checks
+- `make ruff` — linter/formatter
 - `make bandit` — security static analysis
 - `make eslint` — JavaScript linting (airbnb config)
 - `make stylelint` — SCSS linting (sass-guidelines config)
