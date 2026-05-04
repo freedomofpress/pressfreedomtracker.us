@@ -355,6 +355,9 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
             panel.permission = "blog.access_newsletter_tab_blogpage"
         return panels
 
+    def get_base_url(self):
+        return self.get_site().root_url
+
     def get_meta_image(self):
         if (
             self.teaser_graphic
