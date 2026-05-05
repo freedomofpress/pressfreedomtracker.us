@@ -1,10 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 
-import sys
 import os
-import structlog
 import socket
 import struct
+import sys
+
+import structlog
+
 from .base import *  # noqa: F403, F401
 
 
@@ -205,7 +207,7 @@ if "DJANGO_NO_DB" in os.environ:
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "ENGINE": "django.db.backends.postgresql",
             "NAME": os.environ["DJANGO_DB_NAME"],
             "USER": os.environ["DJANGO_DB_USER"],
             "PASSWORD": os.environ["DJANGO_DB_PASSWORD"],

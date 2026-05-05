@@ -1,21 +1,21 @@
 import operator
 
+from django import forms
 from django.test import RequestFactory, TestCase
 from django.utils.text import capfirst
-from django import forms
 
-from incident.utils.forms import (
-    FilterForm,
-    get_filter_forms,
-    Datalist,
-    DatalistField,
-)
 from incident.choices import MAYBE_BOOLEAN
 from incident.tests.factories import LawEnforcementOrganizationFactory
+from incident.utils.forms import (
+    Datalist,
+    DatalistField,
+    FilterForm,
+    get_filter_forms,
+)
 
 
 def capitalize_choice_labels(choices):
-    return [[x[0], capfirst(x[1])] for x in choices]
+    return [(x[0], capfirst(x[1])) for x in choices]
 
 
 class FilterFormTest(TestCase):
@@ -75,7 +75,7 @@ class FilterFormTest(TestCase):
     def test_filter_type_checkbox(self):
         request = RequestFactory().get("/")
         name = "categories"
-        choices = [[37, "Chilling Statement"]]
+        choices = [(37, "Chilling Statement")]
         capitalized = capitalize_choice_labels(choices)
         item = {
             "filters": [
@@ -126,9 +126,9 @@ class FilterFormTest(TestCase):
         request = RequestFactory().get("/")
         name = "target_us_citizenship_status"
         choices = [
-            ["US_CITIZEN", "U.S. citizen"],
-            ["PERMANENT_RESIDENT", "U.S. permanent resident (green card)"],
-            ["NON_RESIDENT", "U.S. non-resident"],
+            ("US_CITIZEN", "U.S. citizen"),
+            ("PERMANENT_RESIDENT", "U.S. permanent resident (green card)"),
+            ("NON_RESIDENT", "U.S. non-resident"),
         ]
         expected = [("", "------")] + choices
         item = {
@@ -154,8 +154,8 @@ class FilterFormTest(TestCase):
         leo2 = LawEnforcementOrganizationFactory.create(title="Org 2")
 
         expected_choices = [
-            leo1.title,
-            leo2.title,
+            (leo1.title, leo1.title),
+            (leo2.title, leo2.title),
         ]
         item = {
             "filters": [
@@ -198,9 +198,9 @@ class FilterFormTest(TestCase):
         request = RequestFactory().get("/")
         name = "categories"
         choices = [
-            [12, "Prior Restraint"],
-            [37, "Chilling Statement"],
-            [38, "Other Incident"],
+            (12, "Prior Restraint"),
+            (37, "Chilling Statement"),
+            (38, "Other Incident"),
         ]
 
         serialized_filters = [

@@ -5,15 +5,15 @@ from django.core.exceptions import ValidationError
 from django.http import QueryDict
 from django.test import TestCase
 from django.utils import timezone
+
+from wagtail.embeds.blocks import EmbedValue
 from wagtail.models import Site
 from wagtail.rich_text import RichText
-from wagtail.embeds.blocks import EmbedValue
 
 from common.blocks import ALIGNMENT_CHOICES
 from common.models import CategoryPage
-from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
+from common.models.settings import GeneralIncidentFilter, IncidentFilterSettings
 from common.tests.factories import CategoryPageFactory
-from incident.tests import factories
 from incident import choices
 from incident.choices import (
     ARREST_STATUS,
@@ -22,24 +22,25 @@ from incident.choices import (
     STATUS_OF_SEIZED_EQUIPMENT,
     SUBPOENA_STATUS,
 )
+from incident.tests import factories
 from incident.tests.factories import (
     ChargeFactory,
-    EquipmentSeizedFactory,
     EquipmentBrokenFactory,
-    IncidentPageFactory,
-    IncidentPageWithBodyFactory,
-    IncidentUpdateWithBodyFactory,
-    IncidentIndexPageFactory,
-    IncidentUpdateFactory,
-    InexactDateIncidentPageFactory,
-    StateFactory,
-    InstitutionFactory,
-    JournalistFactory,
-    TargetedJournalistFactory,
-    LawEnforcementOrganizationFactory,
-    NationalityFactory,
+    EquipmentSeizedFactory,
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
+    IncidentPageWithBodyFactory,
+    IncidentUpdateFactory,
+    IncidentUpdateWithBodyFactory,
+    InexactDateIncidentPageFactory,
+    InstitutionFactory,
+    JournalistFactory,
+    LawEnforcementOrganizationFactory,
+    NationalityFactory,
+    StateFactory,
+    TargetedJournalistFactory,
 )
 from incident.utils.incident_filter import (
     IncidentFilter,
@@ -84,7 +85,7 @@ class TestFiltering(TestCase):
 
         incidents = IncidentFilter({"search": "mango"}).get_queryset()
 
-        self.assertQuerysetEqual(incidents, [incident1])
+        self.assertQuerySetEqual(incidents, [incident1])
 
     def test_should_filter_by_search_text_for_stemmable_proper_noun(self):
         """If the search query includes a proper name that might be
@@ -98,7 +99,7 @@ class TestFiltering(TestCase):
             body=[("rich_text", RichText(body_text))],
         )
         incidents = IncidentFilter({"search": "noblesteed"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [incident1])
+        self.assertQuerySetEqual(incidents, [incident1])
 
     def test_should_filter_by_search_text_with_null_characters(self):
         """should filter by search text with null characters."""
@@ -111,7 +112,7 @@ class TestFiltering(TestCase):
 
         incidents = IncidentFilter(QueryDict("search=eggplant%00")).get_queryset()
 
-        self.assertQuerysetEqual(incidents, [incident1])
+        self.assertQuerySetEqual(incidents, [incident1])
 
     def test_sorting_by_invalid_value_adds_errors(self):
         incident_filter = IncidentFilter(QueryDict.fromkeys(["sort"], value="INVALID"))
@@ -228,7 +229,7 @@ class TestFiltering(TestCase):
                 categories=f"{category2.pk},{category3.pk}",
             )
         ).get_queryset()
-        self.assertQuerysetEqual([], incidents)
+        self.assertQuerySetEqual([], incidents)
 
     def test_should_filter_by_all_categories_given_positive(self):
         """should combine multiple categories using AND logic."""
@@ -245,7 +246,7 @@ class TestFiltering(TestCase):
                 categories=f"{category1.pk},{category3.pk}",
             )
         ).get_queryset()
-        self.assertQuerysetEqual(incidents, [incident1])
+        self.assertQuerySetEqual(incidents, [incident1])
 
     def test_should_filter_by_category_name(self):
         category1 = CategoryPageFactory(title="Eukarya")
@@ -259,7 +260,7 @@ class TestFiltering(TestCase):
         incidents = IncidentFilter(
             {"categories": f"{category1.title},{category2.title}"}
         ).get_queryset()
-        self.assertQuerysetEqual(incidents, [incident3, incident4])
+        self.assertQuerySetEqual(incidents, [incident3, incident4])
 
     def test_should_filter_by_char_field(self):
         """should filter via a field that is a char field"""
@@ -330,7 +331,7 @@ class TestFiltering(TestCase):
                 charges=str(charge.pk),
             )
         ).get_queryset()
-        self.assertQuerysetEqual(incidents, [target1, target2])
+        self.assertQuerySetEqual(incidents, [target1, target2])
 
     def test_should_filter_charges_by_title_as_one_field(self):
         """Filter should filter charges by title as if current and dropped charges are a single field"""
@@ -358,7 +359,7 @@ class TestFiltering(TestCase):
             )
         ).get_queryset()
 
-        self.assertQuerysetEqual(incidents, [target1, target2])
+        self.assertQuerySetEqual(incidents, [target1, target2])
 
     def test_should_filter_incidents_by_most_recent_charge_status(self):
         category = CategoryPageFactory(
@@ -398,7 +399,7 @@ class TestFiltering(TestCase):
             )
         ).get_queryset(strict=True)
 
-        self.assertQuerysetEqual(incidents, [target1])
+        self.assertQuerySetEqual(incidents, [target1])
 
     def test_filters_by_charge_update_status_for_same_date_updates(self):
         """ChargeUpdates should have priority when filtering by status
@@ -434,7 +435,7 @@ class TestFiltering(TestCase):
             )
         ).get_queryset(strict=True)
 
-        self.assertQuerysetEqual(incidents, [])
+        self.assertQuerySetEqual(incidents, [])
 
         incidents = IncidentFilter(
             dict(
@@ -442,7 +443,7 @@ class TestFiltering(TestCase):
                 status_of_charges=desired_status,
             )
         ).get_queryset(strict=True)
-        self.assertQuerysetEqual(incidents, [target1])
+        self.assertQuerySetEqual(incidents, [target1])
 
 
 class TestBooleanFiltering(TestCase):
@@ -590,83 +591,83 @@ class TestSearchFiltering(TestCase):
 
     def test_introduction_is_searched(self):
         incidents = IncidentFilter({"search": "avocado"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_teaser_is_searched(self):
         incidents = IncidentFilter({"search": "lemon"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_teaser_image_attribution_is_searched(self):
         incidents = IncidentFilter({"search": "cherry"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_image_caption_is_searched(self):
         incidents = IncidentFilter({"search": "banana"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_city_is_searched(self):
         incidents = IncidentFilter({"search": "pomelo"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_state_name_is_searched(self):
         incidents = IncidentFilter({"search": "lime"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_rich_text_body_content_is_searched(self):
         incidents = IncidentFilter({"search": "mango"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_body_image_captions_are_searched(self):
         incidents = IncidentFilter({"search": "apple"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_body_image_alignments_are_not_searched(self):
         incidents = IncidentFilter({"search": "full"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [])
+        self.assertQuerySetEqual(incidents, [])
 
     def test_body_tweet_embeds_are_searched(self):
         incidents = IncidentFilter({"search": "restrict"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_unreachable_body_tweet_embeds_are_not_searched(self):
         incidents = IncidentFilter({"search": "nonexistent"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [])
+        self.assertQuerySetEqual(incidents, [])
 
     def test_body_blockquote_texts_are_searched(self):
         incidents = IncidentFilter({"search": "pear"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_body_blockquote_source_texts_are_searched(self):
         incidents = IncidentFilter({"search": "plum"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_body_blockquote_source_urls_are_not_searched(self):
         incidents = IncidentFilter({"search": "bread"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [])
+        self.assertQuerySetEqual(incidents, [])
 
     def test_body_blockquote_source_urls_are_searched(self):
         incidents = IncidentFilter({"search": "apricot"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_body_video_embed_captions_are_searched(self):
         incidents = IncidentFilter({"search": "fig"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_body_video_embed_attributions_are_searched(self):
         incidents = IncidentFilter({"search": "guava"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_body_video_embed_alignments_are_not_searched(self):
         incidents = IncidentFilter({"search": "right"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [])
+        self.assertQuerySetEqual(incidents, [])
 
     def test_update_titles_are_searched(self):
         incidents = IncidentFilter({"search": "coconut"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
     def test_update_bodies_are_searched(self):
         incidents = IncidentFilter({"search": "strawberry"}).get_queryset()
-        self.assertQuerysetEqual(incidents, [self.incident1])
+        self.assertQuerySetEqual(incidents, [self.incident1])
 
 
 class TestAllFiltersAtOnce:
@@ -2167,7 +2168,7 @@ class RelationThroughTest(TestCase):
             }
         ).get_queryset()
 
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incidents,
             [self.tj1.incident, self.multi_journalist_incident],
         )
@@ -2179,7 +2180,7 @@ class RelationThroughTest(TestCase):
             }
         ).get_queryset()
 
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incidents,
             [self.tj1.incident, self.multi_journalist_incident],
         )
@@ -2193,7 +2194,7 @@ class RelationThroughTest(TestCase):
             }
         ).get_queryset()
 
-        self.assertQuerysetEqual(incidents, [self.multi_journalist_incident])
+        self.assertQuerySetEqual(incidents, [self.multi_journalist_incident])
 
 
 class RecentlyUpdatedFilterTest(TestCase):
@@ -2326,7 +2327,7 @@ class TargetedInstitutionsFilterTest(TestCase):
         incident_filter.clean()
 
         incidents = incident_filter.get_queryset()
-        self.assertQuerysetEqual(incidents, [with_institution1_target])
+        self.assertQuerySetEqual(incidents, [with_institution1_target])
 
     def test_targeted_institution_filtering_by_title(self):
         inst1 = InstitutionFactory()
@@ -2390,7 +2391,7 @@ class TargetedInstitutionsFilterTest(TestCase):
         )
         incident_filter.clean()
 
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incident_filter.get_queryset(),
             [with_all_target],
         )
@@ -2399,7 +2400,7 @@ class TargetedInstitutionsFilterTest(TestCase):
             {"targeted_institutions": f"{inst1.title} AND {inst2.pk}"},
         )
         incident_filter.clean()
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incident_filter.get_queryset(),
             [with_all_target],
             ordered=False,
@@ -2451,7 +2452,7 @@ class LegalOrderTypeFilterTest(TestCase):
             }
         ).get_queryset(strict=True)
 
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incidents,
             [self.legal_order1.incident_page],
         )
@@ -2481,7 +2482,7 @@ class LegalOrderInformationFilterTest(TestCase):
             }
         ).get_queryset(strict=True)
 
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incidents,
             [self.legal_order1.incident_page],
         )
@@ -2527,7 +2528,7 @@ class LegalOrderStatusFilterTest(TestCase):
             }
         ).get_queryset(strict=True)
 
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incidents,
             [self.legal_order1.incident_page, self.legal_order3.incident_page],
         )
@@ -2546,7 +2547,7 @@ class LegalOrderStatusFilterTest(TestCase):
             }
         ).get_queryset(strict=True)
 
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             incidents,
             [
                 self.legal_order1.incident_page,
