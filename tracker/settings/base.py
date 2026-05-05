@@ -369,7 +369,7 @@ CONTENT_SECURITY_POLICY = {
         "default-src": [SELF],
         "form-action": [SELF],
         "frame-ancestors": [SELF],
-        "frame-src": (
+        "frame-src": [
             SELF,
             # For Social Widgets
             "https://platform.twitter.com",
@@ -379,7 +379,7 @@ CONTENT_SECURITY_POLICY = {
             "https://www.google.com/recaptcha/",
             "https://recaptcha.google.com/recaptcha/",
             "https://www.youtube.com",
-        ),
+        ],
         "img-src": [
             SELF,
             "https://analytics.freedom.press",
@@ -400,7 +400,7 @@ CONTENT_SECURITY_POLICY = {
             "DJANGO_CSP_REPORT_URI",
             "https://freedomofpress.report-uri.com/r/d/csp/enforce",
         ),
-        "script-src": (
+        "script-src": [
             SELF,
             "https://analytics.freedom.press",
             "https://www.google.com/recaptcha/",
@@ -416,13 +416,13 @@ CONTENT_SECURITY_POLICY = {
             "https://cdn.jsdelivr.net",
             "https://api.observablehq.com",
             "https://bundle.run",
-        ),
-        "style-src": (
+        ],
+        "style-src": [
             SELF,
             # For Wagtail Admin and Twitter Widgets.
             UNSAFE_INLINE,
             "https://cdn.jsdelivr.net",
-        ),
+        ],
     }
 }
 
