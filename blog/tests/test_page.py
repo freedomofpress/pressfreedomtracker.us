@@ -243,6 +243,12 @@ class TestPages(TestCase):
         response = self.client.get(self.blog_page.url)
         self.assertNotContains(response, "verticalBarChart")
 
+    def test_get_blog_page_base_url(self):
+        self.assertEqual(
+            self.blog_page2.get_base_url(),
+            self.home_page.get_site().root_url
+        )
+
     def test_get_blog_page_vertical_bar_chart_meta_image(self):
         self.assertEqual(
             self.blog_page2.get_meta_image(),
