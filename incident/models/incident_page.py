@@ -40,7 +40,7 @@ from wagtail.models import Orderable, Page, PageManager, PageQuerySet
 from wagtail.search import index
 
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from psycopg2.extras import DateRange
+from psycopg.types.range import Range
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 from common.blocks import (
@@ -484,7 +484,7 @@ class IncidentQuerySet(PageQuerySet):
         upper -- the lower bound of the date (which is included in the range). If `None`, then the range is unbounded below.
 
         """
-        target_range = DateRange(
+        target_range = Range(
             lower=datetime.date.fromisoformat(str(lower))
             if lower is not None
             else None,

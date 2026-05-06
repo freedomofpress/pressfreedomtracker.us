@@ -32,7 +32,7 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
-from psycopg2.extras import DateRange
+from psycopg.types.range import Range
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Site
 
@@ -310,7 +310,7 @@ class DateFilter(Filter):
 
         return queryset.filter(
             **{
-                "{0}__contained_by".format(self.lookup): DateRange(
+                "{0}__contained_by".format(self.lookup): Range(
                     lower=lower_date, upper=upper_date, bounds="[]"
                 )
             }
@@ -1322,7 +1322,7 @@ class IncidentFilter(object):
 
         # Add counts for this year and this month if non-zero
         incidents_this_year = queryset.filter(
-            date__contained_by=DateRange(
+            date__contained_by=Range(
                 TODAY.replace(month=1, day=1),
                 TODAY.replace(month=12, day=31),
                 bounds="[]",
