@@ -17,7 +17,7 @@
 - Requirements: `requirements.txt`, `dev-requirements.txt`, `ci-requirements.txt` (compiled from `.in` files via pip-compile)
 
 ## Tech Stack
-- Python 3.12, Django 5.2+, Wagtail 6.3+
+- Python 3.14, Django 5.2+, Wagtail 6.3+
 - PostgreSQL 14
 - Django REST Framework + drf-spectacular (OpenAPI docs)
 - Webpack 5, Babel, React 18, D3 v7, Jest 29 (frontend)
