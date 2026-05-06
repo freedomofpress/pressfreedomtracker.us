@@ -23,7 +23,7 @@ lxml>=6.1.0
 mailchimp_marketing>=3.0.66
 marshmallow>=3.26.2,<4
 pillow>=12.2.0
-psycopg2>=2.9.9
+psycopg[c]
 Pygments>=2.20.0
 python-json-logger
 requests>=2.33.1
