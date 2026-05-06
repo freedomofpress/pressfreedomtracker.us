@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/local_settings.py)",
+      "Read(**/freedompress/settings/local.py)",
+      "Read(**/*.db)",
+      "Read(**/*.sqlite3)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
+      "Edit(**/local_settings.py)",
+      "Edit(**/freedompress/settings/local.py)",
+      "Edit(**/*.db)",
+      "Edit(**/*.sqlite3)",
+      "Write(**/.env)",
+      "Write(**/.env.*)",
+      "Write(**/local_settings.py)",
+      "Write(**/freedompress/settings/local.py)",
+      "Write(**/*.db)",
+      "Write(**/*.sqlite3)"
+    ]
+  }
+}

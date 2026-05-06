@@ -42,7 +42,7 @@ from incident.choices import STATUS_OF_CHARGES
 
 
 class Filter(object):
-    serialized_type = 'text'
+    serialized_type = "text"
     openapi_type = OpenApiTypes.STR
     openapi_style = None
     openapi_explode = None
@@ -54,10 +54,10 @@ class Filter(object):
         self.verbose_name = verbose_name
 
     def __repr__(self):
-        return '<{}: {}>'.format(
+        return "<{}: {}>".format(
             self.__class__.__name__,
             self.name,
-        )
+        )  # pragma: no cover
 
     def get_value(self, data):
         return data.get(self.name) or None
@@ -67,14 +67,14 @@ class Filter(object):
         return self._lookup or self.name
 
     def clean(self, value, strict=False):
-        return self.model_field.to_python(value.replace('\x00', ''))
+        return self.model_field.to_python(value.replace("\x00", ""))
 
     def get_allowed_parameters(self):
         return {self.name}
 
     def get_query_arguments(self, value):
         """Returns the give value as a Django Q-object appropriate for the
-filtering query."""
+        filtering query."""
         return Q(**{self.lookup: value})
 
     def filter(self, queryset, value):
@@ -90,9 +90,9 @@ filtering query."""
 
     def serialize(self):
         serialized = {
-            'title': capfirst(self.get_verbose_name()),
-            'type': self.serialized_type,
-            'name': self.name,
+            "title": capfirst(self.get_verbose_name()),
+            "type": self.serialized_type,
+            "name": self.name,
         }
         return serialized
 
@@ -102,8 +102,8 @@ filtering query."""
     def openapi_parameters(self):
         description = getattr(
             self,
-            'openapi_description',
-            f'Filter by "{capfirst(self.get_verbose_name())}"'
+            "openapi_description",
+            f'Filter by "{capfirst(self.get_verbose_name())}"',
         )
         return [
             OpenApiParameter(
@@ -126,19 +126,19 @@ filtering query."""
 
 
 class BooleanFilter(Filter):
-    serialized_type = 'bool'
+    serialized_type = "bool"
     openapi_type = OpenApiTypes.BOOL
 
     def __init__(self, *args, **kwargs):
-        self._present_summary_name = kwargs.pop('present_summary_name', None)
-        self._absent_summary_name = kwargs.pop('absent_summary_name', None)
+        self._present_summary_name = kwargs.pop("present_summary_name", None)
+        self._absent_summary_name = kwargs.pop("absent_summary_name", None)
         super().__init__(*args, **kwargs)
 
     def value_to_string(self, value):
         if value:
-            return '1'
+            return "1"
         else:
-            return '0'
+            return "0"
 
     @property
     def absent_summary_name(self):
@@ -153,7 +153,7 @@ class BooleanFilter(Filter):
         """
         if self._absent_summary_name:
             return self._absent_summary_name
-        return f'{self.get_verbose_name()} No'
+        return f"{self.get_verbose_name()} No"
 
     @property
     def present_summary_name(self):
@@ -167,31 +167,33 @@ class BooleanFilter(Filter):
         """
         if self._present_summary_name:
             return self._present_summary_name
-        return self.get_verbose_name().rstrip('?')
+        return self.get_verbose_name().rstrip("?")
 
     def serialize(self):
         serialized = super().serialize()
-        serialized['present_summary_name'] = self.present_summary_name
-        serialized['absent_summary_name'] = self.absent_summary_name
+        serialized["present_summary_name"] = self.present_summary_name
+        serialized["absent_summary_name"] = self.absent_summary_name
         return serialized
 
 
 class IntegerFilter(Filter):
-    serialized_type = 'int'
+    serialized_type = "int"
     openapi_type = OpenApiTypes.INT
 
 
 class RelationFilter(Filter):
-    serialized_type = 'autocomplete'
+    serialized_type = "autocomplete"
 
     @property
     def openapi_type(self):
         if self.text_fields:
-            return {'oneOf': [{'type': 'string'}, {'type': 'integer'}]}
+            return {"oneOf": [{"type": "string"}, {"type": "integer"}]}
         else:
             return OpenApiTypes.INT
 
-    def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
+    def __init__(
+        self, name, model_field, lookup=None, verbose_name=None, text_fields=[]
+    ):
         self.text_fields = text_fields
         super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
@@ -200,7 +202,8 @@ class RelationFilter(Filter):
             return super().get_query_arguments(value)
         else:
             arguments = [
-                Q(**{f'{self.name}__{field}__iexact': value}) for field in self.text_fields
+                Q(**{f"{self.name}__{field}__iexact": value})
+                for field in self.text_fields
             ]
             # Combine all filters using OR operator, if there are no valid
             # filters, perform no filtering with empty Q().
@@ -208,7 +211,7 @@ class RelationFilter(Filter):
 
     def clean(self, value, strict=False):
         if value and isinstance(value, str):
-            value = value.replace('\x00', '')
+            value = value.replace("\x00", "")
         try:
             return int(value)
         except ValueError:
@@ -230,31 +233,35 @@ class RelationFilter(Filter):
     def serialize(self):
         serialized = super(RelationFilter, self).serialize()
         related_model = self.model_field.remote_field.model
-        serialized['autocomplete_type'] = '{}.{}'.format(
+        serialized["autocomplete_type"] = "{}.{}".format(
             related_model._meta.app_label,
             related_model.__name__,
         )
         choices = []
-        app_label, model_name = serialized['autocomplete_type'].split('.')
+        app_label, model_name = serialized["autocomplete_type"].split(".")
         autocomplete_model = apps.get_model(app_label, model_name)
         for choice in autocomplete_model.objects.all():
-            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            title_field = getattr(
+                autocomplete_model, "autocomplete_search_field", "title"
+            )
             choices.append(getattr(choice, title_field))
-        serialized['choices'] = choices
-        serialized['many'] = False
+        serialized["choices"] = choices
+        serialized["many"] = False
         return serialized
 
 
 class DateFilter(Filter):
-    serialized_type = 'date'
+    serialized_type = "date"
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None, fuzzy=False):
         self.fuzzy = fuzzy
-        super(DateFilter, self).__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
+        super(DateFilter, self).__init__(
+            name, model_field, lookup=lookup, verbose_name=verbose_name
+        )
 
     def get_value(self, data):
-        start = data.get('{}_lower'.format(self.name)) or None
-        end = data.get('{}_upper'.format(self.name)) or None
+        start = data.get("{}_lower".format(self.name)) or None
+        end = data.get("{}_upper".format(self.name)) or None
         return start, end
 
     def get_verbose_name(self):
@@ -266,19 +273,21 @@ class DateFilter(Filter):
         start, end = value
 
         if start:
-            start = start.replace('\x00', '')
+            start = start.replace("\x00", "")
         if end:
-            end = end.replace('\x00', '')
+            end = end.replace("\x00", "")
         start = self.model_field.to_python(start)
         end = self.model_field.to_python(end)
 
         if start and end and start > end:
             value = None
             if strict:
-                raise ValidationError('{}_lower must be less than or equal to {}_upper'.format(
-                    self.name,
-                    self.name,
-                ))
+                raise ValidationError(
+                    "{}_lower must be less than or equal to {}_upper".format(
+                        self.name,
+                        self.name,
+                    )
+                )
         elif start or end:
             value = (start, end)
         else:
@@ -288,7 +297,7 @@ class DateFilter(Filter):
         return value
 
     def get_allowed_parameters(self):
-        return {'{}_lower'.format(self.name), '{}_upper'.format(self.name)}
+        return {"{}_lower".format(self.name), "{}_upper".format(self.name)}
 
     def filter(self, queryset, value):
         lower_date, upper_date = value
@@ -299,13 +308,13 @@ class DateFilter(Filter):
         if self.fuzzy:
             return queryset.fuzzy_date_filter(lower=lower_date, upper=upper_date)
 
-        return queryset.filter(**{
-            '{0}__contained_by'.format(self.lookup): DateRange(
-                lower=lower_date,
-                upper=upper_date,
-                bounds='[]'
-            )
-        })
+        return queryset.filter(
+            **{
+                "{0}__contained_by".format(self.lookup): DateRange(
+                    lower=lower_date, upper=upper_date, bounds="[]"
+                )
+            }
+        )
 
     def openapi_parameters(self):
         verbose_model_name = self.model_field.verbose_name
@@ -313,14 +322,14 @@ class DateFilter(Filter):
         upper_description = f'Filter by "{verbose_model_name} is before"'
         return [
             OpenApiParameter(
-                name=f'{self.name}_lower',
+                name=f"{self.name}_lower",
                 type=OpenApiTypes.DATE,
                 location=OpenApiParameter.QUERY,
                 required=False,
                 description=lower_description,
             ),
             OpenApiParameter(
-                name=f'{self.name}_upper',
+                name=f"{self.name}_upper",
                 type=OpenApiTypes.DATE,
                 location=OpenApiParameter.QUERY,
                 required=False,
@@ -332,9 +341,9 @@ class DateFilter(Filter):
         result = {}
         lower_date, upper_date = value
         if lower_date:
-            result[f'{self.name}_lower'] = self.value_to_string(lower_date)
+            result[f"{self.name}_lower"] = self.value_to_string(lower_date)
         if upper_date:
-            result[f'{self.name}_upper'] = self.value_to_string(upper_date)
+            result[f"{self.name}_upper"] = self.value_to_string(upper_date)
 
         return result
 
@@ -343,9 +352,9 @@ class ChoiceFilter(Filter):
     @property
     def serialized_type(self):
         choices = self.get_choices()
-        if 'JUST_TRUE' in choices:
-            return 'radio'
-        return 'choice'
+        if "JUST_TRUE" in choices:
+            return "radio"
+        return "choice"
 
     def get_choices(self):
         return {choice[0] for choice in self.get_choice_values_and_labels()}
@@ -356,7 +365,7 @@ class ChoiceFilter(Filter):
     def clean(self, value, strict=False):
         if not value:
             return None
-        values = [x.replace('\x00', '') for x in value.split(',')]
+        values = [x.replace("\x00", "") for x in value.split(",")]
         value = []
         invalid_values = []
         choices = self.get_choices()
@@ -368,49 +377,51 @@ class ChoiceFilter(Filter):
                 invalid_values.append(v)
 
         if invalid_values and strict:
-            raise ValidationError('Invalid value{} for {}: {}'.format(
-                's' if len(invalid_values) != 1 else '',
-                self.name,
-                ','.join(invalid_values),
-            ))
+            raise ValidationError(
+                "Invalid value{} for {}: {}".format(
+                    "s" if len(invalid_values) != 1 else "",
+                    self.name,
+                    ",".join(invalid_values),
+                )
+            )
         return value or None
 
     def filter(self, queryset, value):
-        return queryset.filter(**{'{}__in'.format(self.lookup): value})
+        return queryset.filter(**{"{}__in".format(self.lookup): value})
 
     def serialize(self):
         serialized = super(ChoiceFilter, self).serialize()
-        if serialized['type'] == 'choice':
-            serialized['choices'] = self.get_choice_values_and_labels()
+        if serialized["type"] == "choice":
+            serialized["choices"] = self.get_choice_values_and_labels()
         return serialized
 
     def get_openapi_enum(self):
         return self.get_choices()
 
     def value_to_string(self, value):
-        return ','.join(value)
+        return ",".join(value)
 
 
 class MultiChoiceFilter(Filter):
-    serialized_type = 'choice'
-    openapi_style = 'form'
+    serialized_type = "choice"
+    openapi_style = "form"
     openapi_explode = False
 
     @property
     def openapi_type(self):
         return {
-            'type': 'array',
-            'items': {
-                'type': 'string',
-                'enum': self.get_choices(),
-            }
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": self.get_choices(),
+            },
         }
 
     def clean(self, value, strict=False):
         choices = self.get_choices()
         if not value:
             return None
-        values = [x.replace('\x00', '') for x in value.split(',')]
+        values = [x.replace("\x00", "") for x in value.split(",")]
         value = []
         invalid_values = []
         choices = self.get_choices()
@@ -422,11 +433,13 @@ class MultiChoiceFilter(Filter):
                 invalid_values.append(v)
 
         if invalid_values and strict:
-            raise ValidationError('Invalid value{} for {}: {}'.format(
-                's' if len(invalid_values) != 1 else '',
-                self.name,
-                ','.join(invalid_values),
-            ))
+            raise ValidationError(
+                "Invalid value{} for {}: {}".format(
+                    "s" if len(invalid_values) != 1 else "",
+                    self.name,
+                    ",".join(invalid_values),
+                )
+            )
         return value or None
 
     def get_choice_values_and_labels(self):
@@ -439,22 +452,26 @@ class MultiChoiceFilter(Filter):
         queryset_initial = queryset
         for key, value in enumerate(values):
             if key == 0:
-                queryset = queryset_initial.filter(**{'{}__contains'.format(self.lookup): [value]})
+                queryset = queryset_initial.filter(
+                    **{"{}__contains".format(self.lookup): [value]}
+                )
             else:
-                queryset |= queryset_initial.filter(**{'{}__contains'.format(self.lookup): [value]})
+                queryset |= queryset_initial.filter(
+                    **{"{}__contains".format(self.lookup): [value]}
+                )
         return queryset.distinct()
 
     def serialize(self):
         serialized = super(MultiChoiceFilter, self).serialize()
-        if serialized['type'] == 'choice':
-            serialized['choices'] = self.get_choice_values_and_labels()
+        if serialized["type"] == "choice":
+            serialized["choices"] = self.get_choice_values_and_labels()
         return serialized
 
     def get_openapi_enum(self):
         return self.get_choices()
 
     def value_to_string(self, value):
-        return ','.join(value)
+        return ",".join(value)
 
 
 @dataclasses.dataclass(eq=True, frozen=True)
@@ -467,15 +484,17 @@ class ManyRelationValue:
 
 
 class ManyRelationFilter(Filter):
-    serialized_type = 'autocomplete'
-    openapi_style = 'form'
+    serialized_type = "autocomplete"
+    openapi_style = "form"
     openapi_explode = False
     openapi_type = {
-        'type': 'array',
-        'items': {'oneOf': [{'type': 'string'}, {'type': 'integer'}]},
+        "type": "array",
+        "items": {"oneOf": [{"type": "string"}, {"type": "integer"}]},
     }
 
-    def __init__(self, name, model_field, lookup=None, verbose_name=None, text_fields=[]):
+    def __init__(
+        self, name, model_field, lookup=None, verbose_name=None, text_fields=[]
+    ):
         self.text_fields = text_fields
         super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
@@ -485,7 +504,7 @@ class ManyRelationFilter(Filter):
         if isinstance(value, int):
             return ManyRelationValue(pks=[value])
         else:
-            values = [x.replace('\x00', '') for x in value.split(' AND ')]
+            values = [x.replace("\x00", "") for x in value.split(" AND ")]
         invalid_values = []
 
         value = ManyRelationValue()
@@ -499,11 +518,13 @@ class ManyRelationFilter(Filter):
                     invalid_values.append(v)
 
         if invalid_values and strict:
-            raise ValidationError('Invalid value{} for {}: {}'.format(
-                's' if len(invalid_values) != 1 else '',
-                self.name,
-                ','.join(invalid_values),
-            ))
+            raise ValidationError(
+                "Invalid value{} for {}: {}".format(
+                    "s" if len(invalid_values) != 1 else "",
+                    self.name,
+                    ",".join(invalid_values),
+                )
+            )
         return value
 
     def filter(self, queryset, value):
@@ -519,48 +540,49 @@ class ManyRelationFilter(Filter):
                     functools.reduce(
                         operator.or_,
                         [
-                            Q(**{f'{self.lookup}__{field}': term}) for field in self.text_fields
-                        ]
+                            Q(**{f"{self.lookup}__{field}": term})
+                            for field in self.text_fields
+                        ],
                     )
                 )
         if value.pks:
-            qs.extend(
-                [Q(**{self.lookup: pk}) for pk in value.pks]
-            )
+            qs.extend([Q(**{self.lookup: pk}) for pk in value.pks])
         return qs
 
     def get_verbose_name(self):
         if self.verbose_name:
             return self.verbose_name
-        if hasattr(self.model_field, 'verbose_name'):
+        if hasattr(self.model_field, "verbose_name"):
             return self.model_field.verbose_name
         return self.model_field.related_model._meta.verbose_name
 
     def serialize(self):
         serialized = super(ManyRelationFilter, self).serialize()
         related_model = self.model_field.remote_field.model
-        if isinstance(self.model_field, ManyToOneRel) and hasattr(related_model, '_autocomplete_model'):
-            serialized['autocomplete_type'] = related_model._autocomplete_model
+        if isinstance(self.model_field, ManyToOneRel) and hasattr(
+            related_model, "_autocomplete_model"
+        ):
+            serialized["autocomplete_type"] = related_model._autocomplete_model
         else:
-            serialized['autocomplete_type'] = '{}.{}'.format(
+            serialized["autocomplete_type"] = "{}.{}".format(
                 related_model._meta.app_label,
                 related_model.__name__,
             )
 
         choices = []
-        app_label, model_name = serialized['autocomplete_type'].split('.')
+        app_label, model_name = serialized["autocomplete_type"].split(".")
         autocomplete_model = apps.get_model(app_label, model_name)
         for choice in autocomplete_model.objects.all():
-            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            title_field = getattr(
+                autocomplete_model, "autocomplete_search_field", "title"
+            )
             choices.append(getattr(choice, title_field))
-        serialized['choices'] = choices
-        serialized['many'] = True
+        serialized["choices"] = choices
+        serialized["many"] = True
         return serialized
 
     def value_to_string(self, value):
-        return ','.join(
-            str(item) for item in itertools.chain(value.pks, value.strings)
-        )
+        return ",".join(str(item) for item in itertools.chain(value.pks, value.strings))
 
 
 class CommaSeparatedFilter(ManyRelationFilter):
@@ -570,7 +592,7 @@ class CommaSeparatedFilter(ManyRelationFilter):
         if isinstance(value, int):
             return ManyRelationValue(pks=[value])
         else:
-            values = [x.replace('\x00', '') for x in value.split(',')]
+            values = [x.replace("\x00", "") for x in value.split(",")]
         invalid_values = []
 
         value = ManyRelationValue()
@@ -584,25 +606,29 @@ class CommaSeparatedFilter(ManyRelationFilter):
                     invalid_values.append(v)
 
         if invalid_values and strict:
-            raise ValidationError('Invalid value{} for {}: {}'.format(
-                's' if len(invalid_values) != 1 else '',
-                self.name,
-                ','.join(invalid_values),
-            ))
+            raise ValidationError(
+                "Invalid value{} for {}: {}".format(
+                    "s" if len(invalid_values) != 1 else "",
+                    self.name,
+                    ",".join(invalid_values),
+                )
+            )
         return value
 
 
 class SearchFilter(Filter):
     def __init__(self):
-        super(SearchFilter, self).__init__('search', CharField(verbose_name='search terms'))
+        super(SearchFilter, self).__init__(
+            "search", CharField(verbose_name="search terms")
+        )
 
     def filter(self, queryset, value):
         return queryset.annotate(
             title_and_body_search=Func(
-                F('index_entries__title'),
-                F('index_entries__body'),
-                function='',
-                arg_joiner='||',
+                F("index_entries__title"),
+                F("index_entries__body"),
+                function="",
+                arg_joiner="||",
             ),
         ).filter(title_and_body_search=SearchQuery(value))
 
@@ -611,13 +637,9 @@ class ChargesFilter(ManyRelationFilter):
     def get_query_arguments(self, value):
         qs = []
         if value.pks:
-            qs.extend(
-                [Q(charges__charge=pk) for pk in value.pks]
-            )
+            qs.extend([Q(charges__charge=pk) for pk in value.pks])
         if value.strings:
-            qs.extend(
-                [Q(charges__charge__title=title) for title in value.strings]
-            )
+            qs.extend([Q(charges__charge__title=title) for title in value.strings])
         return qs
 
     def serialize(self):
@@ -629,42 +651,60 @@ class ChargesFilter(ManyRelationFilter):
         choices = []
 
         for choice in Charge.objects.all():
-            title_field = getattr(Charge, 'autocomplete_search_field', 'title')
+            title_field = getattr(Charge, "autocomplete_search_field", "title")
             choices.append(getattr(choice, title_field))
-        serialized['choices'] = choices
+        serialized["choices"] = choices
 
-        serialized['autocomplete_type'] = 'incident.Charge'
+        serialized["autocomplete_type"] = "incident.Charge"
         return serialized
 
 
 class RelationThroughFilter(ManyRelationFilter):
-    def __init__(self, name, model_field, relation, lookup=None, verbose_name=None, text_fields=[]):
-        lookup = model_field.name + '__' + relation
-        super(RelationThroughFilter, self).__init__(name, model_field, lookup, verbose_name, text_fields)
+    def __init__(
+        self,
+        name,
+        model_field,
+        relation,
+        lookup=None,
+        verbose_name=None,
+        text_fields=[],
+    ):
+        lookup = model_field.name + "__" + relation
+        super(RelationThroughFilter, self).__init__(
+            name, model_field, lookup, verbose_name, text_fields
+        )
         self.relation = relation
 
     def serialize(self):
         serialized = super(ManyRelationFilter, self).serialize()
 
-        related_model = self.model_field.remote_field.model._meta.get_field(self.relation).target_field.model
+        related_model = self.model_field.remote_field.model._meta.get_field(
+            self.relation
+        ).target_field.model
 
-        if isinstance(self.model_field, ManyToOneRel) and hasattr(related_model, '_autocomplete_model'):
-            serialized['autocomplete_type'] = related_model._autocomplete_model
+        if isinstance(self.model_field, ManyToOneRel) and hasattr(
+            related_model, "_autocomplete_model"
+        ):
+            serialized["autocomplete_type"] = (
+                related_model._autocomplete_model
+            )  # pragma: no cover
         else:
-            serialized['autocomplete_type'] = '{}.{}'.format(
+            serialized["autocomplete_type"] = "{}.{}".format(
                 related_model._meta.app_label,
                 related_model.__name__,
             )
 
         choices = []
-        app_label, model_name = serialized['autocomplete_type'].split('.')
+        app_label, model_name = serialized["autocomplete_type"].split(".")
         autocomplete_model = apps.get_model(app_label, model_name)
         for choice in autocomplete_model.objects.all():
-            title_field = getattr(autocomplete_model, 'autocomplete_search_field', 'title')
+            title_field = getattr(
+                autocomplete_model, "autocomplete_search_field", "title"
+            )
             choices.append(getattr(choice, title_field))
-        serialized['choices'] = choices
+        serialized["choices"] = choices
 
-        serialized['many'] = True
+        serialized["many"] = True
         return serialized
 
 
@@ -683,32 +723,28 @@ class LegalOrderTypeFilter(ChoiceFilter):
         return choices.LegalOrderType.choices
 
     def filter(self, queryset, value):
-        return queryset.filter(
-            Q(legal_orders__order_type__in=value)
-        )
+        return queryset.filter(Q(legal_orders__order_type__in=value))
 
 
 class LegalOrderInformationFilter(ChoiceFilter):
     def serialize(self):
         serialized = super().serialize()
-        if serialized['type'] == 'choice':
-            serialized['choices'] = choices.InformationRequested.choices
+        if serialized["type"] == "choice":
+            serialized["choices"] = choices.InformationRequested.choices
         return serialized
 
     def get_choices(self):
         return set(choices.InformationRequested)
 
     def filter(self, queryset, value):
-        return queryset.filter(
-            Q(legal_orders__information_requested__in=value)
-        )
+        return queryset.filter(Q(legal_orders__information_requested__in=value))
 
 
 class LegalOrderStatusFilter(ChoiceFilter):
     def serialize(self):
         serialized = super().serialize()
-        if serialized['type'] == 'choice':
-            serialized['choices'] = choices.LegalOrderStatus.choices
+        if serialized["type"] == "choice":
+            serialized["choices"] = choices.LegalOrderStatus.choices
         return serialized
 
     def get_choices(self):
@@ -743,6 +779,7 @@ class PendingCasesFilter(BooleanFilter):
     - detention_status: IN_JAIL
     - status_of_prior_restraint: PENDING
     """
+
     def __init__(self, name, verbose_name=None):
         super(PendingCasesFilter, self).__init__(
             name=name,
@@ -755,18 +792,18 @@ class PendingCasesFilter(BooleanFilter):
             return queryset
 
         return queryset.filter(
-            Q(arrest_status='DETAINED_CUSTODY') |
-            Q(arrest_status='ARRESTED_CUSTODY') |
-            Q(status_of_seized_equipment='CUSTODY') |
-            Q(status_of_seized_equipment='RETURNED_PART') |
-            Q(subpoena_statuses__contains=['PENDING']) |
-            Q(detention_status='IN_JAIL') |
-            Q(status_of_prior_restraint='PENDING')
+            Q(arrest_status="DETAINED_CUSTODY")
+            | Q(arrest_status="ARRESTED_CUSTODY")
+            | Q(status_of_seized_equipment="CUSTODY")
+            | Q(status_of_seized_equipment="RETURNED_PART")
+            | Q(subpoena_statuses__contains=["PENDING"])
+            | Q(detention_status="IN_JAIL")
+            | Q(status_of_prior_restraint="PENDING")
         )
 
 
 class RecentlyUpdatedFilter(IntegerFilter):
-    openapi_description = 'Include only incidents updated in the last N days'
+    openapi_description = "Include only incidents updated in the last N days"
 
     def __init__(self, name, verbose_name=None):
         super(RecentlyUpdatedFilter, self).__init__(
@@ -777,7 +814,7 @@ class RecentlyUpdatedFilter(IntegerFilter):
 
     def serialize(self):
         serialized = super(RecentlyUpdatedFilter, self).serialize()
-        serialized['units'] = 'days'
+        serialized["units"] = "days"
         return serialized
 
     def filter(self, queryset, value):
@@ -789,11 +826,19 @@ class TargetedInstitutionsFilter(ManyRelationFilter):
         qs = []
         if value.pks:
             qs.extend(
-                [Q(targeted_journalists__institution=pk) | Q(targeted_institutions=pk) for pk in value.pks]
+                [
+                    Q(targeted_journalists__institution=pk)
+                    | Q(targeted_institutions=pk)
+                    for pk in value.pks
+                ]
             )
         if value.strings:
             qs.extend(
-                [Q(targeted_journalists__institution__title=title) | Q(targeted_institutions__title=title) for title in value.strings]
+                [
+                    Q(targeted_journalists__institution__title=title)
+                    | Q(targeted_institutions__title=title)
+                    for title in value.strings
+                ]
             )
         return qs
 
@@ -814,16 +859,15 @@ def get_serialized_filters(request=None):
             Site.objects.get(is_default_site=True)
         )
     taxonomy_categories = taxonomy_settings.categories.prefetch_related(
-        'category__incident_filters'
+        "category__incident_filters"
     )
 
     return [
         {
-            'id': -1,
-            'title': 'General',
-            'filters': [
-                SearchFilter().serialize()
-            ] + [
+            "id": -1,
+            "title": "General",
+            "filters": [SearchFilter().serialize()]
+            + [
                 available_filters[obj.incident_filter].serialize()
                 for obj in general_incident_filters
                 if obj.incident_filter in available_filters
@@ -831,11 +875,11 @@ def get_serialized_filters(request=None):
         },
     ] + [
         {
-            'id': page.category.id,
-            'title': page.category.title,
-            'url': page.category.url,
-            'symbol': page.category.page_symbol,
-            'filters': [
+            "id": page.category.id,
+            "title": page.category.title,
+            "url": page.category.url,
+            "symbol": page.category.page_symbol,
+            "filters": [
                 available_filters[obj.incident_filter].serialize()
                 for obj in page.category.incident_filters.all()
                 if obj.incident_filter in available_filters
@@ -847,26 +891,26 @@ def get_serialized_filters(request=None):
 
 def get_openapi_parameters():
     from common.models import CategoryPage, GeneralIncidentFilter
+
     try:
         available_filters = IncidentFilter.get_available_filters()
         general_incident_filters = GeneralIncidentFilter.objects.all()
         category_incident_filters = [
-            page.incident_filters.all() for page in
-            CategoryPage.objects.live().prefetch_related('incident_filters')
+            page.incident_filters.all()
+            for page in CategoryPage.objects.live().prefetch_related("incident_filters")
         ]
 
-        filters = itertools.chain(
-            general_incident_filters,
-            *category_incident_filters
-        )
+        filters = itertools.chain(general_incident_filters, *category_incident_filters)
 
-        return list(itertools.chain(
-            SearchFilter().openapi_parameters(),
-            *(
-                available_filters[fltr.incident_filter].openapi_parameters()
-                for fltr in filters
-                if fltr.incident_filter in available_filters
-            ))
+        return list(
+            itertools.chain(
+                SearchFilter().openapi_parameters(),
+                *(
+                    available_filters[fltr.incident_filter].openapi_parameters()
+                    for fltr in filters
+                    if fltr.incident_filter in available_filters
+                ),
+            )
         )
     except ProgrammingError:
         # This branch handles the case of the database not being
@@ -877,58 +921,91 @@ def get_openapi_parameters():
 
 class IncidentFilter(object):
     filter_overrides = {
-        'categories': {
-            'lookup': 'categories__category',
-            'filter_cls': CommaSeparatedFilter,
-            'text_fields': ['title']
+        "categories": {
+            "lookup": "categories__category",
+            "filter_cls": CommaSeparatedFilter,
+            "text_fields": ["title"],
         },
-        'date': {'fuzzy': True, 'verbose_name': 'took place'},
-        'city': {'lookup': 'city__iexact'},
-        'equipment_seized': {'lookup': 'equipment_seized__equipment', 'text_fields': ['name']},
-        'equipment_broken': {'lookup': 'equipment_broken__equipment', 'text_fields': ['name']},
-        'tags': {'verbose_name': 'Has any of these tags', 'filter_cls': CommaSeparatedFilter},
-        'subpoena_statuses': {'verbose_name': 'Subpoena status'},
-        'targeted_journalists': {
-            'verbose_name': 'Targeted any of these journalists',
-            'filter_cls': RelationThroughFilter,
-            'relation': 'journalist',
-            'text_fields': ['title'],
+        "date": {"fuzzy": True, "verbose_name": "took place"},
+        "city": {"lookup": "city__iexact"},
+        "equipment_seized": {
+            "lookup": "equipment_seized__equipment",
+            "text_fields": ["name"],
         },
-        'targeted_institutions': {'filter_cls': TargetedInstitutionsFilter, 'text_fields': ['title']},
-        'arresting_authority': {'filter_cls': RelationFilter, 'verbose_name': 'Arresting authority'},
-        'venue': {'filter_cls': RelationFilter, 'verbose_name': 'venue'},
-        'state': {'text_fields': ['abbreviation', 'name']},
-        'charges': {'filter_cls': ChargesFilter, 'text_fields': ['title'], 'verbose_name': 'Charges'},
-        'mistakenly_released_materials': {'absent_summary_name': 'No mistakenly released materials'},
-        'unnecessary_use_of_force': {'absent_summary_name': 'No unnecessary use of force'},
-        'is_search_warrant_obtained': {'absent_summary_name': 'No search warrant obtained'},
-        'denial_of_entry': {'absent_summary_name': 'Not denied entry'},
-        'stopped_previously': {'absent_summary_name': 'Not stopped previously'},
-        'charged_under_espionage_act': {'absent_summary_name': 'Not charged under espionage act'},
+        "equipment_broken": {
+            "lookup": "equipment_broken__equipment",
+            "text_fields": ["name"],
+        },
+        "tags": {
+            "verbose_name": "Has any of these tags",
+            "filter_cls": CommaSeparatedFilter,
+        },
+        "subpoena_statuses": {"verbose_name": "Subpoena status"},
+        "targeted_journalists": {
+            "verbose_name": "Targeted any of these journalists",
+            "filter_cls": RelationThroughFilter,
+            "relation": "journalist",
+            "text_fields": ["title"],
+        },
+        "targeted_institutions": {
+            "filter_cls": TargetedInstitutionsFilter,
+            "text_fields": ["title"],
+        },
+        "arresting_authority": {
+            "filter_cls": RelationFilter,
+            "verbose_name": "Arresting authority",
+        },
+        "venue": {"filter_cls": RelationFilter, "verbose_name": "venue"},
+        "state": {"text_fields": ["abbreviation", "name"]},
+        "charges": {
+            "filter_cls": ChargesFilter,
+            "text_fields": ["title"],
+            "verbose_name": "Charges",
+        },
+        "mistakenly_released_materials": {
+            "absent_summary_name": "No mistakenly released materials"
+        },
+        "unnecessary_use_of_force": {
+            "absent_summary_name": "No unnecessary use of force"
+        },
+        "is_search_warrant_obtained": {
+            "absent_summary_name": "No search warrant obtained"
+        },
+        "denial_of_entry": {"absent_summary_name": "Not denied entry"},
+        "stopped_previously": {"absent_summary_name": "Not stopped previously"},
+        "charged_under_espionage_act": {
+            "absent_summary_name": "Not charged under espionage act"
+        },
     }
 
     _extra_filters = {
-        'circuits': CircuitsFilter(name='circuits', model_field=CharField(verbose_name='circuits')),
-        'pending_cases': PendingCasesFilter(name='pending_cases', verbose_name='Show only pending cases'),
-        'recently_updated': RecentlyUpdatedFilter(name='recently_updated', verbose_name='Updated in the last'),
-        'legal_order_information_requested': LegalOrderInformationFilter(
-            name='legal_order_information_requested',
-            verbose_name='Information requested in legal order',
+        "circuits": CircuitsFilter(
+            name="circuits", model_field=CharField(verbose_name="circuits")
+        ),
+        "pending_cases": PendingCasesFilter(
+            name="pending_cases", verbose_name="Show only pending cases"
+        ),
+        "recently_updated": RecentlyUpdatedFilter(
+            name="recently_updated", verbose_name="Updated in the last"
+        ),
+        "legal_order_information_requested": LegalOrderInformationFilter(
+            name="legal_order_information_requested",
+            verbose_name="Information requested in legal order",
             model_field=CharField(),
         ),
-        'legal_order_status': LegalOrderStatusFilter(
-            name='legal_order_status',
-            verbose_name='Legal order status',
+        "legal_order_status": LegalOrderStatusFilter(
+            name="legal_order_status",
+            verbose_name="Legal order status",
             model_field=CharField(),
         ),
-        'status_of_charges': StatusOfChargesFilter(
-            name='status_of_charges',
-            verbose_name='Status of charges',
+        "status_of_charges": StatusOfChargesFilter(
+            name="status_of_charges",
+            verbose_name="Status of charges",
             model_field=CharField(),
         ),
-        'legal_order_type': LegalOrderTypeFilter(
-            name='legal_order_type',
-            verbose_name='Legal order type',
+        "legal_order_type": LegalOrderTypeFilter(
+            name="legal_order_type",
+            verbose_name="Legal order type",
             model_field=CharField(),
         ),
     }
@@ -937,26 +1014,26 @@ class IncidentFilter(object):
     # RichTextFields, TextFields, and StreamFields can never be filtered on,
     # regardless of whether they're in this list or not.
     exclude_fields = {
-        'page_ptr',
-        'exact_date_unknown',
-        'teaser_image',
-        'related_incidents',
-        'updates',
-        'search_image',
-        'longitude',
-        'latitude',
-        '_revisions',
-        'legal_orders',
-        'held_in_contempt',  # Deprecated field
-        'detention_status',  # Deprecated field
-        '_workflow_states',
-        '_specific_workflow_states',
+        "page_ptr",
+        "exact_date_unknown",
+        "teaser_image",
+        "related_incidents",
+        "updates",
+        "search_image",
+        "longitude",
+        "latitude",
+        "_revisions",
+        "legal_orders",
+        "held_in_contempt",  # Deprecated field
+        "detention_status",  # Deprecated field
+        "_workflow_states",
+        "_specific_workflow_states",
     }
 
     class SortOptions(TextChoices):
-        RECENTLY_UPDATED = 'RECENTLY_UPDATED', 'Recently updated'
-        NEWEST_DATE = 'NEWEST', 'Newest incident date'
-        OLDEST_DATE = 'OLDEST', 'Oldest incident date'
+        RECENTLY_UPDATED = "RECENTLY_UPDATED", "Recently updated"
+        NEWEST_DATE = "NEWEST", "Newest incident date"
+        OLDEST_DATE = "OLDEST", "Oldest incident date"
 
     def __init__(self, data):
         self.data = data
@@ -991,42 +1068,42 @@ class IncidentFilter(object):
     @classmethod
     def _get_filter(cls, model_field):
         kwargs = {
-            'filter_cls': Filter,
-            'name': model_field.name,
-            'model_field': model_field,
+            "filter_cls": Filter,
+            "name": model_field.name,
+            "model_field": model_field,
         }
 
         from incident.models import ChoiceArrayField
 
         if isinstance(model_field, (ManyToManyField, ManyToOneRel)):
-            kwargs['filter_cls'] = ManyRelationFilter
+            kwargs["filter_cls"] = ManyRelationFilter
             try:
-                model_field.related_model._meta.get_field('title')
+                model_field.related_model._meta.get_field("title")
             except FieldDoesNotExist:
                 pass
             else:
-                kwargs['text_fields'] = ['title']
+                kwargs["text_fields"] = ["title"]
         elif isinstance(model_field, ForeignKey):
-            kwargs['filter_cls'] = RelationFilter
+            kwargs["filter_cls"] = RelationFilter
             try:
-                model_field.related_model._meta.get_field('title')
+                model_field.related_model._meta.get_field("title")
             except FieldDoesNotExist:
                 pass
             else:
-                kwargs['text_fields'] = ['title']
+                kwargs["text_fields"] = ["title"]
         elif isinstance(model_field, DateField):
-            kwargs['filter_cls'] = DateFilter
+            kwargs["filter_cls"] = DateFilter
         elif model_field.choices:
-            kwargs['filter_cls'] = ChoiceFilter
+            kwargs["filter_cls"] = ChoiceFilter
         elif isinstance(model_field, ChoiceArrayField):
-            kwargs['filter_cls'] = MultiChoiceFilter
+            kwargs["filter_cls"] = MultiChoiceFilter
         elif isinstance(model_field, BooleanField):
-            kwargs['filter_cls'] = BooleanFilter
+            kwargs["filter_cls"] = BooleanFilter
 
         if model_field.name in cls.filter_overrides:
             kwargs.update(cls.filter_overrides[model_field.name])
 
-        filter_cls = kwargs.pop('filter_cls')
+        filter_cls = kwargs.pop("filter_cls")
         return filter_cls(**kwargs)
 
     def _clean_filter(self, filter_, strict):
@@ -1042,7 +1119,12 @@ class IncidentFilter(object):
         raises a ValidationError for errors; otherwise the fields with errors
         are simply ignored.
         """
-        from common.models import CategoryPage, GeneralIncidentFilter, CategoryIncidentFilter
+        from common.models import (
+            CategoryPage,
+            GeneralIncidentFilter,
+            CategoryIncidentFilter,
+        )
+
         self.cleaned_data = {}
         errors = []
 
@@ -1051,7 +1133,7 @@ class IncidentFilter(object):
         self.search_filter = SearchFilter()
 
         available_filters = IncidentFilter.get_available_filters()
-        categories_filter = available_filters.pop('categories')
+        categories_filter = available_filters.pop("categories")
 
         self.filters = [
             categories_filter,
@@ -1059,7 +1141,7 @@ class IncidentFilter(object):
         ]
 
         # Extract sort choice from data.
-        sort_data = self.data.get('sort')
+        sort_data = self.data.get("sort")
         if sort_data:
             try:
                 self.sort = self.SortOptions(sort_data)
@@ -1077,14 +1159,12 @@ class IncidentFilter(object):
         except ValidationError as exc:
             errors.append(exc)
 
-        category_data = self.cleaned_data.get('categories')
+        category_data = self.cleaned_data.get("categories")
 
         if category_data:
             qs = []
             if category_data.pks:
-                qs.append(
-                    Q(category__id__in=category_data.pks)
-                )
+                qs.append(Q(category__id__in=category_data.pks))
             if category_data.strings:
                 qs.append(Q(category__title__in=category_data.strings))
             # Combine string and primary key data using OR operator,
@@ -1094,21 +1174,30 @@ class IncidentFilter(object):
 
             enabled_filter_set_categories = CategoryIncidentFilter.objects.filter(
                 qs
-            ).values_list('incident_filter', flat=True)
+            ).values_list("incident_filter", flat=True)
         else:
             enabled_filter_set_categories = CategoryIncidentFilter.objects.values_list(
-                'incident_filter',
+                "incident_filter",
                 flat=True,
             )
 
         # Collect filters from general settings.
         enabled_filter_set_general = GeneralIncidentFilter.objects.filter(
             incident_filter__in=available_filters.keys(),
-        ).values_list('incident_filter', flat=True)
+        ).values_list("incident_filter", flat=True)
 
-        self.filters.extend([v for k, v in available_filters.items() if k in set(
-            itertools.chain(enabled_filter_set_general, enabled_filter_set_categories)
-        )])
+        self.filters.extend(
+            [
+                v
+                for k, v in available_filters.items()
+                if k
+                in set(
+                    itertools.chain(
+                        enabled_filter_set_general, enabled_filter_set_categories
+                    )
+                )
+            ]
+        )
 
         # Clean collected filters.
         for f in self.filters:
@@ -1120,7 +1209,7 @@ class IncidentFilter(object):
         # If strict is true, validate that all given filters are valid
         # and raise ValidationError if there are any errors.
         if strict:
-            allowed_parameters = {'sort'}
+            allowed_parameters = {"sort"}
             for f in self.filters:
                 allowed_parameters |= f.get_allowed_parameters()
 
@@ -1132,29 +1221,44 @@ class IncidentFilter(object):
             params_requiring_category = set(self.data) & disallowed_parameters
             if params_requiring_category:
                 filters_requiring_category = {
-                    f for f in available_filters.values()
+                    f
+                    for f in available_filters.values()
                     if f.get_allowed_parameters() & params_requiring_category
                 }
 
                 for f in filters_requiring_category:
-                    category = CategoryPage.objects.live().filter(
-                        incident_filters__incident_filter=f.name,
-                    ).first()
+                    category = (
+                        CategoryPage.objects.live()
+                        .filter(
+                            incident_filters__incident_filter=f.name,
+                        )
+                        .first()
+                    )
                     if category:
-                        errors.append('{} filter only available when filtering on the following category: {} ({})'.format(
-                            f.name,
-                            category.title,
-                            category.id,
-                        ))
+                        errors.append(
+                            "{} filter only available when filtering on the following category: {} ({})".format(
+                                f.name,
+                                category.title,
+                                category.id,
+                            )
+                        )
                     else:
-                        errors.append('{} filter only available when filtering on a category which provides it (but no category currently does)'.format(f.name))
+                        errors.append(
+                            "{} filter only available when filtering on a category which provides it (but no category currently does)".format(
+                                f.name
+                            )
+                        )
 
-            invalid_parameters = set(self.data) - allowed_parameters - params_requiring_category
+            invalid_parameters = (
+                set(self.data) - allowed_parameters - params_requiring_category
+            )
             if invalid_parameters:
-                errors.append('Invalid parameter{} provided: {}'.format(
-                    's' if len(invalid_parameters) != 1 else '',
-                    ','.join(invalid_parameters),
-                ))
+                errors.append(
+                    "Invalid parameter{} provided: {}".format(
+                        "s" if len(invalid_parameters) != 1 else "",
+                        ",".join(invalid_parameters),
+                    )
+                )
 
             if errors:
                 raise ValidationError(errors)
@@ -1162,6 +1266,7 @@ class IncidentFilter(object):
     def _get_queryset(self, strict=False):
         # Prevent circular imports
         from incident.models.incident_page import IncidentPage
+
         if self.cleaned_data is None:
             self.clean(strict=strict)
 
@@ -1182,7 +1287,7 @@ class IncidentFilter(object):
         if self.cleaned_data is None:
             self.clean(strict=strict)
 
-        querydict = QueryDict('', mutable=True)
+        querydict = QueryDict("", mutable=True)
         for f in self.filters:
             cleaned_value = self.cleaned_data.get(f.name)
             if cleaned_value is not None:
@@ -1191,13 +1296,13 @@ class IncidentFilter(object):
 
     def _sort_queryset(self, queryset):
         if self.sort == self.SortOptions.OLDEST_DATE:
-            return queryset.order_by('date', 'path')
+            return queryset.order_by("date", "path")
         elif self.sort == self.SortOptions.RECENTLY_UPDATED:
             return queryset.with_most_recent_update().order_by(
-                F('latest_update').desc(nulls_last=True)
+                F("latest_update").desc(nulls_last=True)
             )
         else:
-            return queryset.order_by('-date', 'path')
+            return queryset.order_by("-date", "path")
 
     def get_summary(self):
         """
@@ -1209,51 +1314,59 @@ class IncidentFilter(object):
 
         """
         from incident.models.items import Institution, TargetedJournalist, Journalist
+
         queryset = self._get_queryset()
 
         TODAY = date.today()
         THIS_YEAR = TODAY.year
 
         # Add counts for this year and this month if non-zero
-        incidents_this_year = queryset.filter(date__contained_by=DateRange(
-            TODAY.replace(month=1, day=1),
-            TODAY.replace(month=12, day=31),
-            bounds='[]'
-        ))
+        incidents_this_year = queryset.filter(
+            date__contained_by=DateRange(
+                TODAY.replace(month=1, day=1),
+                TODAY.replace(month=12, day=31),
+                bounds="[]",
+            )
+        )
 
         incidents_this_month = queryset.filter(
             date__month=TODAY.month,
             date__year=TODAY.year,
         )
 
-        incident_ids = list(queryset.values_list('pk', flat=True))
+        incident_ids = list(queryset.values_list("pk", flat=True))
         num_this_year = incidents_this_year.count()
         num_this_month = incidents_this_month.count()
 
         tj_queryset = TargetedJournalist.objects.filter(incident__in=incident_ids)
         tj_inst_queryset = tj_queryset.filter(
-            institution_id=OuterRef('pk')
-        ).values_list('institution_id', flat=True)
+            institution_id=OuterRef("pk")
+        ).values_list("institution_id", flat=True)
 
         summary = (
-            ('Total Results', len(incident_ids)),
-            ('Journalists affected', Journalist.objects.filter(targeted_incidents__in=tj_queryset).distinct().count()),
-            ('Institutions affected', Institution.objects.filter(
-                Q(institutions_incidents__in=incident_ids) | Q(id__in=Subquery(tj_inst_queryset))
-            ).distinct().count()),
+            ("Total Results", len(incident_ids)),
+            (
+                "Journalists affected",
+                Journalist.objects.filter(targeted_incidents__in=tj_queryset)
+                .distinct()
+                .count(),
+            ),
+            (
+                "Institutions affected",
+                Institution.objects.filter(
+                    Q(institutions_incidents__in=incident_ids)
+                    | Q(id__in=Subquery(tj_inst_queryset))
+                )
+                .distinct()
+                .count(),
+            ),
         )
 
         if num_this_year > 0:
-            summary = summary + ((
-                'Results in {}'.format(THIS_YEAR),
-                num_this_year
-            ),)
+            summary = summary + (("Results in {}".format(THIS_YEAR), num_this_year),)
 
         if num_this_month > 0:
-            summary = summary + ((
-                'Results in {0:%B}'.format(TODAY),
-                num_this_month
-            ),)
+            summary = summary + (("Results in {0:%B}".format(TODAY), num_this_month),)
 
         return summary
 
@@ -1262,6 +1375,7 @@ class FilterChoicesIterator(object):
     """
     Helper class to get around circular imports.
     """
+
     def __iter__(self):
         filter_choices = [
             (name, capfirst(filter_.get_verbose_name()))
@@ -1269,6 +1383,6 @@ class FilterChoicesIterator(object):
         ]
         filter_choices.sort(key=lambda item: item[1])
         for field, verbose_name in filter_choices:
-            if field == 'categories':
+            if field == "categories":
                 continue
             yield field, verbose_name

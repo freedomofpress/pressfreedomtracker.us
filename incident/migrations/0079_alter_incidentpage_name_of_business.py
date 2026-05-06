@@ -4,15 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0078_rename_third_party_in_possession_of_communications_incidentpage_name_of_business'),
+        (
+            "incident",
+            "0078_rename_third_party_in_possession_of_communications_incidentpage_name_of_business",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='name_of_business',
-            field=models.CharField(blank=True, help_text='Name of the business targeted by legal order. This field is only displayed if the legal order target is set to "Third Party"', max_length=512, null=True, verbose_name='Name of business'),
+            model_name="incidentpage",
+            name="name_of_business",
+            field=models.CharField(
+                blank=True,
+                help_text='Name of the business targeted by legal order. This field is only displayed if the legal order target is set to "Third Party"',
+                max_length=512,
+                null=True,
+                verbose_name="Name of business",
+            ),
         ),
     ]

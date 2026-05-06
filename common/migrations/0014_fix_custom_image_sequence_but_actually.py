@@ -6,15 +6,20 @@ from django.db import connection, migrations
 
 
 def forward(apps, schema_editor):
-    CustomImage = apps.get_model('common.CustomImage')
+    CustomImage = apps.get_model("common.CustomImage")
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM pg_get_serial_sequence(%s, 'id')", (CustomImage._meta.db_table,))
+        cursor.execute(
+            "SELECT * FROM pg_get_serial_sequence(%s, 'id')",
+            (CustomImage._meta.db_table,),
+        )
         sequence_name = cursor.fetchone()[0]
         cursor.execute("SELECT MAX(id) FROM {}".format(CustomImage._meta.db_table))  # nosec
         new_value = cursor.fetchone()[0]
         # This might be a totally new database.
         if new_value:
-            cursor.execute("ALTER SEQUENCE {} RESTART WITH %s".format(sequence_name), (new_value,))  # nosec
+            cursor.execute(
+                "ALTER SEQUENCE {} RESTART WITH %s".format(sequence_name), (new_value,)
+            )  # nosec
 
 
 def reverse(*args):
@@ -23,9 +28,8 @@ def reverse(*args):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0013_merge_20170718_1410'),
+        ("common", "0013_merge_20170718_1410"),
     ]
 
     operations = [

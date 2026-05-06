@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0049_remove_incidentpage_affiliation'),
+        ("incident", "0049_remove_incidentpage_affiliation"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='incidentpageupdates',
-            name='sort_order',
+            model_name="incidentpageupdates",
+            name="sort_order",
         ),
     ]

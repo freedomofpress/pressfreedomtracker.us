@@ -11,8 +11,8 @@ def forward(apps, schema_editor):
     one that appears in a queryset should be the default
     """
 
-    IncidentIndexPage = apps.get_model('incident', 'IncidentIndexPage')
-    TopicPage = apps.get_model('incident', 'TopicPage')
+    IncidentIndexPage = apps.get_model("incident", "IncidentIndexPage")
+    TopicPage = apps.get_model("incident", "TopicPage")
     try:
         default_index_page = IncidentIndexPage.objects.all()[0]
         TopicPage.objects.all().update(incident_index_page=default_index_page)
@@ -21,9 +21,8 @@ def forward(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0053_topicpage_additions'),
+        ("incident", "0053_topicpage_additions"),
     ]
 
     operations = [
@@ -31,8 +30,12 @@ class Migration(migrations.Migration):
         migrations.RunPython(forward, migrations.RunPython.noop, elidable=True),
         # Make incident_index_page non-nullable
         migrations.AlterField(
-            model_name='topicpage',
-            name='incident_index_page',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='+', to='incident.IncidentIndexPage'),
+            model_name="topicpage",
+            name="incident_index_page",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="+",
+                to="incident.IncidentIndexPage",
+            ),
         ),
     ]

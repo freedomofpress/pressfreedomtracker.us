@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('forms', '0011_auto_20221110_2050'),
+        ("forms", "0011_auto_20221110_2050"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='formpage',
-            name='honeypot',
-            field=models.BooleanField(default=False, verbose_name='Honeypot Enabled'),
+            model_name="formpage",
+            name="honeypot",
+            field=models.BooleanField(default=False, verbose_name="Honeypot Enabled"),
         ),
     ]

@@ -18,19 +18,19 @@ class TestFiltering(TestCase):
     def test_should_parse_query_string_objects(self):
         """BlogFilter should parse dict-like querystring objects"""
         get_query = {
-            'author': '1',
-            'organization': '2',
-            'type': 'newsletter',
+            "author": "1",
+            "organization": "2",
+            "type": "newsletter",
         }
         filters = BlogFilter.from_querystring(get_query)
         self.assertEqual(filters.author, 1)
         self.assertEqual(filters.organization, 2)
-        self.assertEqual(filters.blog_type, 'newsletter')
+        self.assertEqual(filters.blog_type, "newsletter")
 
     def test_should_ignore_absent_data(self):
         """BlogFilter should set absent filter values to None"""
         get_query = {
-            'author': '1',
+            "author": "1",
         }
         filters = BlogFilter.from_querystring(get_query)
         self.assertIsNone(filters.organization)
@@ -38,7 +38,7 @@ class TestFiltering(TestCase):
     def test_should_ignore_unparsable_data(self):
         """BlogFilter should set invalid data to None"""
         get_query = {
-            'author': 'AAA',
+            "author": "AAA",
         }
         filters = BlogFilter.from_querystring(get_query)
         self.assertIsNone(filters.author)
@@ -46,20 +46,26 @@ class TestFiltering(TestCase):
     def test_should_ignore_unparsable_data_for_blog_type(self):
         """BlogFilter should set invalid blog_type data to None"""
         get_query = {
-            'type': 'AAA',
+            "type": "AAA",
         }
         filters = BlogFilter.from_querystring(get_query)
         self.assertIsNone(filters.blog_type)
 
     def test_should_filter_blog_pages_by_author(self):
         """BlogFilter should filter BlogPages by author"""
-        filters = BlogFilter(organization=None, author=self.post1.authors.first().author.pk, blog_type=None)
+        filters = BlogFilter(
+            organization=None,
+            author=self.post1.authors.first().author.pk,
+            blog_type=None,
+        )
         found = filters.filter(BlogPage.objects)
         self.assertEqual(set(found), {self.post1})
 
     def test_should_filter_blog_pages_by_organization(self):
         """BlogFilter should filter BlogPages by organization"""
-        filters = BlogFilter(organization=self.post2.organization, author=None, blog_type=None)
+        filters = BlogFilter(
+            organization=self.post2.organization, author=None, blog_type=None
+        )
         found = filters.filter(BlogPage.objects)
         self.assertEqual(set(found), {self.post2})
 

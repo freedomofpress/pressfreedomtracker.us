@@ -4,19 +4,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0091_remove_incidentpage_current_charges_and_more'),
+        ("incident", "0091_remove_incidentpage_current_charges_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='equipmentseized',
-            options={'ordering': ['sort_order'], 'verbose_name': 'Equipment Searched or Seized'},
+            name="equipmentseized",
+            options={
+                "ordering": ["sort_order"],
+                "verbose_name": "Equipment Searched or Seized",
+            },
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='status_of_seized_equipment',
-            field=models.CharField(blank=True, choices=[('UNKNOWN', 'unknown'), ('CUSTODY', 'in custody'), ('RETURNED_FULL', 'returned in full'), ('RETURNED_PART', 'returned in part'), ('SEARCHED_WITHOUT_SEIZURE', 'searched without seizure')], max_length=255, null=True, verbose_name='Status of equipment'),
+            model_name="incidentpage",
+            name="status_of_seized_equipment",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("UNKNOWN", "unknown"),
+                    ("CUSTODY", "in custody"),
+                    ("RETURNED_FULL", "returned in full"),
+                    ("RETURNED_PART", "returned in part"),
+                    ("SEARCHED_WITHOUT_SEIZURE", "searched without seizure"),
+                ],
+                max_length=255,
+                null=True,
+                verbose_name="Status of equipment",
+            ),
         ),
     ]

@@ -11,128 +11,271 @@ import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('wagtailcore', '0033_remove_golive_expiry_help_text'),
+        ("wagtailcore", "0033_remove_golive_expiry_help_text"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CategoryPage',
+            name="CategoryPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('description', wagtail.fields.RichTextField(blank=True, null=True)),
-                ('methodology', wagtail.fields.RichTextField(blank=True, null=True)),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                ("description", wagtail.fields.RichTextField(blank=True, null=True)),
+                ("methodology", wagtail.fields.RichTextField(blank=True, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.CreateModel(
-            name='OrganizationIndexPage',
+            name="OrganizationIndexPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.CreateModel(
-            name='OrganizationPage',
+            name="OrganizationPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('website', models.URLField(blank=True, null=True)),
-                ('description', wagtail.fields.RichTextField(blank=True, null=True)),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                ("website", models.URLField(blank=True, null=True)),
+                ("description", wagtail.fields.RichTextField(blank=True, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.CreateModel(
-            name='PersonPage',
+            name="PersonPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('bio', wagtail.fields.RichTextField(blank=True, null=True)),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                ("bio", wagtail.fields.RichTextField(blank=True, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.CreateModel(
-            name='QuickFact',
+            name="QuickFact",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('body', wagtail.fields.RichTextField()),
-                ('link_url', models.URLField(blank=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                ("body", wagtail.fields.RichTextField()),
+                ("link_url", models.URLField(blank=True, null=True)),
             ],
             options={
-                'abstract': False,
-                'ordering': ['sort_order'],
-            },
-        ),
-        migrations.CreateModel(
-            name='SimplePage',
-            fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('body', wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock())))),
-            ],
-            options={
-                'abstract': False,
-            },
-            bases=('wagtailcore.page',),
-        ),
-        migrations.CreateModel(
-            name='SimplePageWithSidebar',
-            fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('body', wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock())))),
-            ],
-            options={
-                'abstract': False,
-            },
-            bases=('wagtailcore.page', models.Model),
-        ),
-        migrations.CreateModel(
-            name='Tag',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='TaxonomyCategoryPage',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('category', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='taxonomy_settings', to='common.CategoryPage')),
-            ],
-            options={
-                'abstract': False,
-                'ordering': ['sort_order'],
+                "abstract": False,
+                "ordering": ["sort_order"],
             },
         ),
         migrations.CreateModel(
-            name='TaxonomySettings',
+            name="SimplePage",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('site', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, to='wagtailcore.Site')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                (
+                    "body",
+                    wagtail.fields.StreamField(
+                        (
+                            (
+                                "rich_text",
+                                wagtail.blocks.RichTextBlock(
+                                    icon="doc-full", label="Rich Text"
+                                ),
+                            ),
+                            ("image", wagtail.images.blocks.ImageChooserBlock()),
+                            ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                        )
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Taxonomy',
+                "abstract": False,
+            },
+            bases=("wagtailcore.page",),
+        ),
+        migrations.CreateModel(
+            name="SimplePageWithSidebar",
+            fields=[
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.Page",
+                    ),
+                ),
+                (
+                    "body",
+                    wagtail.fields.StreamField(
+                        (
+                            (
+                                "rich_text",
+                                wagtail.blocks.RichTextBlock(
+                                    icon="doc-full", label="Rich Text"
+                                ),
+                            ),
+                            ("image", wagtail.images.blocks.ImageChooserBlock()),
+                            ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                        )
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+            bases=("wagtailcore.page", models.Model),
+        ),
+        migrations.CreateModel(
+            name="Tag",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="TaxonomyCategoryPage",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                (
+                    "category",
+                    modelcluster.fields.ParentalKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="taxonomy_settings",
+                        to="common.CategoryPage",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+                "ordering": ["sort_order"],
+            },
+        ),
+        migrations.CreateModel(
+            name="TaxonomySettings",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "site",
+                    models.OneToOneField(
+                        editable=False,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="wagtailcore.Site",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Taxonomy",
             },
         ),
         migrations.AddField(
-            model_name='taxonomycategorypage',
-            name='taxonomy_setting',
-            field=modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='common.TaxonomySettings'),
+            model_name="taxonomycategorypage",
+            name="taxonomy_setting",
+            field=modelcluster.fields.ParentalKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="categories",
+                to="common.TaxonomySettings",
+            ),
         ),
     ]

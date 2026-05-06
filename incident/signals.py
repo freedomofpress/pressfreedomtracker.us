@@ -8,7 +8,7 @@ from cloudflare.utils import purge_tags_from_cache
 from incident.models import IncidentPage, IncidentIndexPage
 
 
-logger = structlog.get_logger('wagtail.frontendcache')
+logger = structlog.get_logger("wagtail.frontendcache")
 
 
 def purge_incident_from_frontend_cache_for_category(
@@ -39,24 +39,13 @@ def purge_incident_index_from_frontend_cache(**kwargs):
 
 # IncidentPage cache
 page_published.connect(
-    purge_incident_from_frontend_cache_for_category,
-    sender=CategoryPage
+    purge_incident_from_frontend_cache_for_category, sender=CategoryPage
 )
 post_delete.connect(
-    purge_incident_from_frontend_cache_for_category,
-    sender=CategoryPage
+    purge_incident_from_frontend_cache_for_category, sender=CategoryPage
 )
 
 # IncidentIndexPage cache
-page_published.connect(
-    purge_incident_index_from_frontend_cache,
-    sender=CategoryPage
-)
-page_published.connect(
-    purge_incident_index_from_frontend_cache,
-    sender=IncidentPage
-)
-post_delete.connect(
-    purge_incident_index_from_frontend_cache,
-    sender=IncidentPage
-)
+page_published.connect(purge_incident_index_from_frontend_cache, sender=CategoryPage)
+page_published.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)
+post_delete.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)

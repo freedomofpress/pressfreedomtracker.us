@@ -7,77 +7,92 @@ def basic_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     value = getattr(page, field)
     if not value:
-        return ''
+        return ""
 
     # If has a get_display function associated with the field, use that
     # else use just the field value
     display_value = value
-    if hasattr(page, f'get_{field}_display'):
-        display_value = getattr(page, 'get_{}_display'.format(field))()
+    if hasattr(page, f"get_{field}_display"):
+        display_value = getattr(page, "get_{}_display".format(field))()
 
-    return render_to_string('incident/category_field/_basic_field.html', {
-        'page': page,
-        'field': field,
-        'value': value,
-        'display_value': display_value,
-        'index': index,
-        'category': category.title,
-    })
+    return render_to_string(
+        "incident/category_field/_basic_field.html",
+        {
+            "page": page,
+            "field": field,
+            "value": value,
+            "display_value": display_value,
+            "index": index,
+            "category": category.title,
+        },
+    )
 
 
 def boolean_html_val(page, field, index, category):
     value = getattr(page, field, index)
-    display_value = 'Yes' if value else 'No'
+    display_value = "Yes" if value else "No"
 
-    return render_to_string('incident/category_field/_basic_field.html', {
-        'page': page,
-        'field': field,
-        'index': index,
-        'value': '1' if value else '0',
-        'display_value': display_value
-    })
+    return render_to_string(
+        "incident/category_field/_basic_field.html",
+        {
+            "page": page,
+            "field": field,
+            "index": index,
+            "value": "1" if value else "0",
+            "display_value": display_value,
+        },
+    )
 
 
 def list_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
-        return ''
+        return ""
 
-    return render_to_string('incident/category_field/_list_field.html', {
-        'page': page,
-        'index': index,
-        'field': field,
-        'items': items,
-    })
+    return render_to_string(
+        "incident/category_field/_list_field.html",
+        {
+            "page": page,
+            "index": index,
+            "field": field,
+            "items": items,
+        },
+    )
 
 
 def equipments_list_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
-        return ''
+        return ""
 
-    return render_to_string('incident/category_field/_equipment_list_field.html', {
-        'page': page,
-        'index': index,
-        'field': field,
-        'items': items,
-    })
+    return render_to_string(
+        "incident/category_field/_equipment_list_field.html",
+        {
+            "page": page,
+            "index": index,
+            "field": field,
+            "items": items,
+        },
+    )
 
 
 def date_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     value = getattr(page, field)
     if not value:
-        return ''
+        return ""
 
-    return render_to_string('incident/category_field/_date_field.html', {
-        'page': page,
-        'index': index,
-        'field': field,
-        'value': value,
-    })
+    return render_to_string(
+        "incident/category_field/_date_field.html",
+        {
+            "page": page,
+            "index": index,
+            "field": field,
+            "value": value,
+        },
+    )
 
 
 # Handle all the different category fields html values individually
@@ -92,13 +107,9 @@ def arrest_status_html_val(page, field, index, category):
 def arresting_authority_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     if not getattr(page, field):
-        return ''
+        return ""
 
-    link = '{}?{}={}'.format(
-        index.get_url(),
-        field,
-        getattr(page, field).title
-    )
+    link = "{}?{}={}".format(index.get_url(), field, getattr(page, field).title)
     value = getattr(page, field).title
 
     return f'<a href="{link}" class="text-link">{value}</a>'
@@ -108,28 +119,34 @@ def legal_orders_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
-        return ''
+        return ""
 
-    return render_to_string('incident/category_field/_legal_order_list_field.html', {
-        'page': page,
-        'index': index,
-        'field': field,
-        'items': items,
-    })
+    return render_to_string(
+        "incident/category_field/_legal_order_list_field.html",
+        {
+            "page": page,
+            "index": index,
+            "field": field,
+            "items": items,
+        },
+    )
 
 
 def charges_html_val(page, field, index, category):
     # If no value for the attribute, return blank
     items = getattr(page, field).all()
     if not items:
-        return ''
+        return ""
 
-    return render_to_string('incident/category_field/_charge_list_field.html', {
-        'page': page,
-        'index': index,
-        'field': field,
-        'items': items,
-    })
+    return render_to_string(
+        "incident/category_field/_charge_list_field.html",
+        {
+            "page": page,
+            "index": index,
+            "field": field,
+            "items": items,
+        },
+    )
 
 
 def detention_date_html_val(page, field, index, category):
@@ -214,35 +231,31 @@ def subpoena_type_html_val(page, field, index, category):
 
 def subpoena_statuses_html_val(page, field, index, category):
     if not getattr(page, field, index):
-        return ''
+        return ""
 
     html = []
     for subpoena_status in getattr(page, field):
-        link = '{}?{}={}'.format(
-            index.get_url(),
-            field,
-            subpoena_status
-        )
+        link = "{}?{}={}".format(index.get_url(), field, subpoena_status)
         value = dict(choices.SUBPOENA_STATUS).get(subpoena_status).capitalize()
         html.append(f'<a href="{link}" class="text-link">{value}</a>')
-    html = ', '.join(html)
+    html = ", ".join(html)
     return html
 
 
 def type_of_denial_html_val(page, field, index, category):
     if not getattr(page, field, index):
-        return ''
+        return ""
 
     html = []
     for type_of_denial in getattr(page, field):
-        link = '{}?{}={}'.format(
+        link = "{}?{}={}".format(
             index.get_url(),
             field,
             type_of_denial,
         )
         value = choices.TypeOfDenial(type_of_denial).label
         html.append(f'<a href="{link}" class="text-link">{value}</a>')
-    html = ', '.join(html)
+    html = ", ".join(html)
     return html
 
 
@@ -273,20 +286,22 @@ def politicians_or_public_figures_involved_html_val(page, field, index, category
 def legal_order_target_html_val(page, field, index, category):
     target = page.legal_order_target
     if not target:
-        return ''
-    if target in (choices.LegalOrderTarget.JOURNALIST, choices.LegalOrderTarget.INSTITUTION):
+        return ""
+    if target in (
+        choices.LegalOrderTarget.JOURNALIST,
+        choices.LegalOrderTarget.INSTITUTION,
+    ):
         return basic_html_val(page, field, index, category)
     elif target == choices.LegalOrderTarget.THIRD_PARTY:
         return render_to_string(
-            'incident/category_field/_legal_order_target_third_party.html',
+            "incident/category_field/_legal_order_target_third_party.html",
             {
-                'page': page,
-                'index': index,
-                'target': target,
-
-                'third_party_business': page.third_party_business,
-                'category': category.title,
+                "page": page,
+                "index": index,
+                "target": target,
+                "third_party_business": page.third_party_business,
+                "category": category.title,
                 # 'field': field,
                 # 'items': items,
-            }
+            },
         )

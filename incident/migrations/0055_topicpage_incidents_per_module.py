@@ -5,15 +5,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0054_topicpage_additions_2'),
+        ("incident", "0054_topicpage_additions_2"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='topicpage',
-            name='incidents_per_module',
-            field=models.PositiveIntegerField(default=4, help_text='Maximum incidents per category module in category layout', validators=[django.core.validators.MaxValueValidator(10), django.core.validators.MinValueValidator(3)]),
+            model_name="topicpage",
+            name="incidents_per_module",
+            field=models.PositiveIntegerField(
+                default=4,
+                help_text="Maximum incidents per category module in category layout",
+                validators=[
+                    django.core.validators.MaxValueValidator(10),
+                    django.core.validators.MinValueValidator(3),
+                ],
+            ),
         ),
     ]

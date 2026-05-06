@@ -18,6 +18,8 @@ import logging
 import os
 import sys
 
+from csp.constants import SELF, UNSAFE_EVAL, UNSAFE_INLINE
+
 
 logger = logging.getLogger(__name__)
 
@@ -35,84 +37,94 @@ ENABLE_DEBUG_TOOLBAR = False
 # Application definition
 
 INSTALLED_APPS = [
-    'blog',
-    'charts',
-    'common',
-    'forms',
-    'incident',
-    'statistics',
-    'menus',
-    'styleguide',
-    'dashboard',
-    'home',
-    'emails',
-    'geonames',
-
-    'cloudflare',  # Only really needs to be registered for the test runner
-    'build',  # App for static output
-
-    'captcha',
-    'wagtailcaptcha',
-
-    'wagtail.contrib.settings',
-    'wagtail.contrib.routable_page',
-    'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
-    'wagtail.embeds',
-    'wagtail.sites',
-    'wagtail.users',
-    'wagtail.snippets',
-    'wagtail.documents',
-    'wagtail.images',
-    'wagtail.search',
-    'wagtail.admin',
-    'wagtail',
-
-    'modelcluster',
-    'taggit',
-    'typogrify',
-    'wagtailmetadata',
-    'webpack_loader',
-    'wagtailautocomplete',
-    'widget_tweaks',
-    'dal',
-    'dal_select2',
-    'wagtailinventory',
-    'wagtail_honeypot',
-
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.humanize',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sitemaps',
-    'rest_framework',
-    'drf_spectacular',
-    'drf_spectacular_sidecar',
+    "blog",
+    "charts",
+    "common",
+    "forms",
+    "incident",
+    "statistics",
+    "menus",
+    "styleguide",
+    "dashboard",
+    "home",
+    "emails",
+    "geonames",
+    "cloudflare",  # Only really needs to be registered for the test runner
+    "build",  # App for static output
+    "captcha",
+    "wagtailcaptcha",
+    "wagtail.contrib.settings",
+    "wagtail.contrib.routable_page",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail",
+    "modelcluster",
+    "taggit",
+    "typogrify",
+    "wagtailmetadata",
+    "webpack_loader",
+    "wagtailautocomplete",
+    "widget_tweaks",
+    "dal",
+    "dal_select2",
+    "wagtailinventory",
+    "wagtail_honeypot",
+    'wagtail_newsletter',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.humanize",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
+    "rest_framework",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
+    "csp",
 ]
 
 MIDDLEWARE = [
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
 ]
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Must be directly after SecurityMiddleware
-if os.environ.get('DJANGO_WHITENOISE'):
-    MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
+if os.environ.get("DJANGO_WHITENOISE"):
+    MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
+    STORAGES["staticfiles"] = {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
 
-MIDDLEWARE.extend([
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-
-    # Middleware for content security policy
-    'csp.middleware.CSPMiddleware',
-])
+MIDDLEWARE.extend(
+    [
+        "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+        # Middleware for content security policy
+        "csp.middleware.CSPMiddleware",
+    ]
+)
 
 
 # Django HTTP settings
@@ -127,41 +139,41 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 
 # Make the deployment's onion service name available to templates
-ONION_HOSTNAME = os.environ.get('DJANGO_ONION_HOSTNAME')
+ONION_HOSTNAME = os.environ.get("DJANGO_ONION_HOSTNAME")
 
 
-ROOT_URLCONF = 'tracker.urls'
+ROOT_URLCONF = "tracker.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(PROJECT_DIR, 'templates'),
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            os.path.join(PROJECT_DIR, "templates"),
         ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django_settings_export.settings_export',
-                'wagtail.contrib.settings.context_processors.settings',
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "django_settings_export.settings_export",
+                "wagtail.contrib.settings.context_processors.settings",
             ],
-            'builtins': ['statistics.templatetags.statistics_tags'],
+            "builtins": ["statistics.templatetags.statistics_tags"],
         },
     },
 ]
 
-WSGI_APPLICATION = 'tracker.wsgi.application'
+WSGI_APPLICATION = "tracker.wsgi.application"
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -174,26 +186,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_DIR, 'static'),
+    os.path.join(PROJECT_DIR, "static"),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "/static/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 
 # Search Backend
 
 WAGTAILSEARCH_BACKENDS = {
-    'default': {
-        'BACKEND': 'wagtail.search.backends.database',
+    "default": {
+        "BACKEND": "wagtail.search.backends.database",
     },
 }
 
@@ -202,115 +214,119 @@ WAGTAIL_GRAVATAR_PROVIDER_URL = None
 
 WAGTAIL_SITE_NAME = "tracker"
 
-WAGTAILIMAGES_IMAGE_MODEL = 'common.CustomImage'
+WAGTAILIMAGES_IMAGE_MODEL = "common.CustomImage"
 WAGTAILIMAGES_EXTENSIONS = ["avif", "gif", "jpg", "jpeg", "png", "webp", "svg"]
 
 # The size needs to be set to an integer in units of bytes, e.g. 1 MB should be set to 1 * 1024 * 1024
-WAGTAILIMAGES_MAX_UPLOAD_SIZE = int(os.environ.get('WAGTAILIMAGES_MAX_UPLOAD_SIZE', 10 * 1024 * 1024))
+WAGTAILIMAGES_MAX_UPLOAD_SIZE = int(
+    os.environ.get("WAGTAILIMAGES_MAX_UPLOAD_SIZE", 10 * 1024 * 1024)
+)
 
 # The size needs to be set in pixels, e.g. 128 megapixels should be set to 128000000
-WAGTAILIMAGES_MAX_IMAGE_PIXELS = int(os.environ.get('WAGTAILIMAGES_MAX_IMAGE_PIXELS', 128000000))
+WAGTAILIMAGES_MAX_IMAGE_PIXELS = int(
+    os.environ.get("WAGTAILIMAGES_MAX_IMAGE_PIXELS", 128000000)
+)
 
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = 'https://pressfreedomtracker.us'
+WAGTAILADMIN_BASE_URL = "https://pressfreedomtracker.us"
 
 # Named group of wagtail rich text features
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
-    'default': {
-        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
-        'OPTIONS': {
-            'features': [
-                'bold',
-                'italic',
-                'h2',
-                'h3',
-                'h4',
-                'ol',
-                'ul',
-                'hr',
-                'link',
-                'document-link',
-                'image',
-                'embed',
-                'code',
-                'curlify',
+    "default": {
+        "WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea",
+        "OPTIONS": {
+            "features": [
+                "bold",
+                "italic",
+                "h2",
+                "h3",
+                "h4",
+                "ol",
+                "ul",
+                "hr",
+                "link",
+                "document-link",
+                "image",
+                "embed",
+                "code",
+                "curlify",
             ],
-        }
+        },
     },
-    'emphasis-only': {
-        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
-        'OPTIONS': {
-            'features': [
-                'bold',
-                'italic',
-                'link',
-                'curlify',
+    "emphasis-only": {
+        "WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea",
+        "OPTIONS": {
+            "features": [
+                "bold",
+                "italic",
+                "link",
+                "curlify",
             ],
-        }
+        },
     },
-    'emphasis-with-list': {
-        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
-        'OPTIONS': {
-            'features': [
-                'bold',
-                'italic',
-                'link',
-                'ol',
-                'ul',
-                'curlify',
+    "emphasis-with-list": {
+        "WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea",
+        "OPTIONS": {
+            "features": [
+                "bold",
+                "italic",
+                "link",
+                "ol",
+                "ul",
+                "curlify",
             ],
-        }
+        },
     },
-    'num-incident-full-features': {
-        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
-        'OPTIONS': {
-            'features': [
-                'h1',
-                'h2',
-                'h3',
-                'h4',
-                'h5',
-                'h6',
-                'bold',
-                'italic',
-                'ol',
-                'ul',
-                'hr',
-                'link',
-                'document-link',
-                'image',
-                'embed',
-                'code',
-                'numincidents',  # Enhanced incident stats entry
-                'curlify',
+    "num-incident-full-features": {
+        "WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea",
+        "OPTIONS": {
+            "features": [
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "h6",
+                "bold",
+                "italic",
+                "ol",
+                "ul",
+                "hr",
+                "link",
+                "document-link",
+                "image",
+                "embed",
+                "code",
+                "numincidents",  # Enhanced incident stats entry
+                "curlify",
             ],
-        }
+        },
     },
-    'num-incident-emphasis-features': {
-        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
-        'OPTIONS': {
-            'features': [
-                'bold',
-                'italic',
-                'link',
-                'numincidents',
-                'curlify',
+    "num-incident-emphasis-features": {
+        "WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea",
+        "OPTIONS": {
+            "features": [
+                "bold",
+                "italic",
+                "link",
+                "numincidents",
+                "curlify",
             ],
-        }
+        },
     },
 }
 
 
 # Django-webpack configuration
 WEBPACK_LOADER = {  # noqa: W605
-    'DEFAULT': {
-        'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'bundles/',  # must end with slash
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    "DEFAULT": {
+        "CACHE": not DEBUG,
+        "BUNDLE_DIR_NAME": "bundles/",  # must end with slash
+        "POLL_INTERVAL": 0.1,
+        "TIMEOUT": None,
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     }
 }
 
@@ -319,17 +335,21 @@ ANALYTICS_ENABLED = False
 
 # Export analytics settings for use in site templates
 SETTINGS_EXPORT = [
-    'ANALYTICS_ENABLED',
+    "ANALYTICS_ENABLED",
 ]
 # Prevent template variable name collision with wagtail settings
-SETTINGS_EXPORT_VARIABLE_NAME = 'django_settings'
+SETTINGS_EXPORT_VARIABLE_NAME = "django_settings"
 
-MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', '')
+MAILCHIMP_API_KEY = os.environ.get("MAILCHIMP_API_KEY", "")
 
-RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
-RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
+WAGTAIL_NEWSLETTER_MAILCHIMP_API_KEY = MAILCHIMP_API_KEY
+WAGTAIL_NEWSLETTER_FROM_NAME = os.environ.get("NEWSLETTER_FROM_NAME", "U.S. Press Freedom Tracker")
+WAGTAIL_NEWSLETTER_REPLY_TO = os.environ.get("NEWSLETTER_REPLY_TO", "newsletter@pressfreedomtracker.us")
 
-CSRF_FAILURE_VIEW = 'common.views.csrf_failure'
+RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY", "")
+RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY", "")
+
+CSRF_FAILURE_VIEW = "common.views.csrf_failure"
 
 NOCAPTCHA = True
 
@@ -337,73 +357,84 @@ NOCAPTCHA = True
 TAGGIT_CASE_INSENSITIVE = True
 
 # Content Security Policy
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_BASE_URI = ("'self'",)
-CSP_FORM_ACTION = ("'self'",)
-CSP_FRAME_ANCESTORS = ("'self'",)
-CSP_SCRIPT_SRC = (
-    "'self'",
-    "https://analytics.freedom.press",
-    "https://www.google.com/recaptcha/",
-    "https://www.gstatic.com/recaptcha/",
-    # For Wagtail Admin
-    "'unsafe-inline'",
-    # For Twitter Widgets
-    "'unsafe-eval'",
-    "https://platform.twitter.com",
-    # Observable Notebooks
-    "https://cdn.jsdelivr.net",
-    "https://api.observablehq.com",
-    "https://bundle.run",
-)
-CSP_STYLE_SRC = (
-    "'self'",
-    # For Wagtail Admin and Twitter Widgets.
-    "'unsafe-inline'",
-    'https://cdn.jsdelivr.net',
-)
-CSP_FRAME_SRC = (
-    "'self'",
-    # For Twitter Widgets
-    "https://platform.twitter.com",
-    # For recaptcha
-    "https://www.google.com/recaptcha/",
-    "https://recaptcha.google.com/recaptcha/",
-    "https://www.youtube.com",
-)
-CSP_CONNECT_SRC = [
-    "'self'",
-    "https://analytics.freedom.press",
-    # For Wagtail Admin
-    "https://releases.wagtail.io/latest.txt",
-    # Observable Notebooks
-    "https://cdn.jsdelivr.net",
-    "https://static.observableusercontent.com/",
-]
-CSP_IMG_SRC = [
-    "'self'",
-    "https://analytics.freedom.press",
-    # For Twitter Widgets
-    "https://platform.twitter.com",
-    "https://syndication.twitter.com",
-    "https://pbs.twimg.com",
-    "https://ton.twimg.com",
-    "data:",
-    'https://cdn.jsdelivr.net',
-]
-CSP_OBJECT_SRC = ["'self'"]
-CSP_MEDIA_SRC = ["'self'"]
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "base-uri": [SELF],
+        "connect-src": [
+            SELF,
+            "https://analytics.freedom.press",
+            # For Wagtail Admin
+            "https://releases.wagtail.io/latest.txt",
+            # Observable Notebooks
+            "https://cdn.jsdelivr.net",
+            "https://static.observableusercontent.com/",
+            # For Social Widgets
+            "https://www.instagram.com",
+        ],
+        "default-src": [SELF],
+        "form-action": [SELF],
+        "frame-ancestors": [SELF],
+        "frame-src": [
+            SELF,
+            # For Social Widgets
+            "https://platform.twitter.com",
+            "https://www.instagram.com",
+            "https://embed.bsky.app",
+            # For recaptcha
+            "https://www.google.com/recaptcha/",
+            "https://recaptcha.google.com/recaptcha/",
+            "https://www.youtube.com",
+        ],
+        "img-src": [
+            SELF,
+            "https://analytics.freedom.press",
+            # For Social Widgets
+            "https://platform.twitter.com",
+            "https://syndication.twitter.com",
+            "https://pbs.twimg.com",
+            "https://ton.twimg.com",
+            "https://www.instagram.com",
+            "https://scontent.cdninstagram.com",
+            "data:",
+            "https://cdn.jsdelivr.net",
+        ],
+        "media-src": [SELF],
+        "object-src": [SELF],
+        # Report URI must be a string, not a tuple.
+        "report-uri": os.environ.get(
+            "DJANGO_CSP_REPORT_URI",
+            "https://freedomofpress.report-uri.com/r/d/csp/enforce",
+        ),
+        "script-src": [
+            SELF,
+            "https://analytics.freedom.press",
+            "https://www.google.com/recaptcha/",
+            "https://www.gstatic.com/recaptcha/",
+            # For Wagtail Admin
+            UNSAFE_INLINE,
+            # For Social Widgets
+            UNSAFE_EVAL,
+            "https://platform.twitter.com",
+            "https://www.instagram.com",
+            "https://embed.bsky.app",
+            # Observable Notebooks
+            "https://cdn.jsdelivr.net",
+            "https://api.observablehq.com",
+            "https://bundle.run",
+        ],
+        "style-src": [
+            SELF,
+            # For Wagtail Admin and Twitter Widgets.
+            UNSAFE_INLINE,
+            "https://cdn.jsdelivr.net",
+        ],
+    }
+}
 
-if os.environ.get("DJANGO_CSP_MEDIA_ORIGINS"):
-    csp_media_origins = os.environ["DJANGO_CSP_MEDIA_ORIGINS"].split()
-    CSP_MEDIA_SRC.extend(csp_media_origins)  # video files
-    CSP_IMG_SRC.extend(csp_media_origins)
-    CSP_OBJECT_SRC.extend(csp_media_origins)
-    CSP_CONNECT_SRC.extend(csp_media_origins)
+csp_media_origins = os.environ.get("DJANGO_CSP_MEDIA_ORIGINS", "").split()
+for directive in ("media-src", "img-src", "object-src", "connect-src"):
+    CONTENT_SECURITY_POLICY["DIRECTIVES"][directive].extend(csp_media_origins)
 
-# Report URI must be a string, not a tuple.
-CSP_REPORT_URI = os.environ.get('DJANGO_CSP_REPORT_URI',
-                                'https://freedomofpress.report-uri.com/r/d/csp/enforce')
 
 # Logging
 #
@@ -435,30 +466,30 @@ if log_dir:
     }
 
 
-TEST_RUNNER = 'common.test_runner.SeededDiscoveryRunner'
+TEST_RUNNER = "common.test_runner.SeededDiscoveryRunner"
 RANDOM_SEED = 876394101
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 WAGTAILADMIN_COMMENTS_ENABLED = False
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
 }
 
 SPECTACULAR_SETTINGS = {
-    'SWAGGER_UI_DIST': 'SIDECAR',
-    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
-    'REDOC_DIST': 'SIDECAR',
-    'TITLE': 'Press Freedom Tracker API',
-    'DESCRIPTION': 'Programmatic access to up-to-date data.',
-    'VERSION': '',
-    'SERVE_URLCONF': 'incident.api.urls',
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+    "TITLE": "Press Freedom Tracker API",
+    "DESCRIPTION": "Programmatic access to up-to-date data.",
+    "VERSION": "",
+    "SERVE_URLCONF": "incident.api.urls",
 }
 
 CHART_PREGENERATOR = {
-    'HOST': os.environ.get('DJANGO_CHART_HOST', 'node-chart-pregenerator'),
-    'PORT': int(os.environ.get('DJANGO_CHART_PORT', '3000')),
+    "HOST": os.environ.get("DJANGO_CHART_HOST", "node-chart-pregenerator"),
+    "PORT": int(os.environ.get("DJANGO_CHART_PORT", "3000")),
 }
 
 WAGTAILEMBEDS_RESPONSIVE_HTML = True
@@ -469,15 +500,24 @@ xdotcom = {
         r"^https?://x\.com/(?:#!)?[^#?/]+/status/.+$",
     ],
 }
+bluesky = {
+    "endpoint": "https://embed.bsky.app/oembed",
+    "urls": [
+        r"^https?://bsky\.app/profile/[^#?/]+/post/.+$",
+    ],
+}
 
 WAGTAILEMBEDS_FINDERS = [
+    # Custom Instagram finder
     {
-        'class': 'wagtail.embeds.finders.oembed',
-        'providers': [xdotcom],
+        "class": "common.embeds.InstagramEmbedFinder",
     },
-
+    {
+        "class": "wagtail.embeds.finders.oembed",
+        "providers": [xdotcom, bluesky],
+    },
     # Handles all other oEmbed providers the default way
     {
-        'class': 'wagtail.embeds.finders.oembed',
-    }
+        "class": "wagtail.embeds.finders.oembed",
+    },
 ]

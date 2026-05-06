@@ -8,24 +8,47 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0033_remove_golive_expiry_help_text'),
-        ('menus', '0001_initial'),
-        ('common', '0003_auto_20170517_1445'),
+        ("wagtailcore", "0033_remove_golive_expiry_help_text"),
+        ("menus", "0001_initial"),
+        ("common", "0003_auto_20170517_1445"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FooterSettings',
+            name="FooterSettings",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('body', wagtail.fields.RichTextField(blank=True, null=True)),
-                ('menu', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='menus.Menu')),
-                ('site', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, to='wagtailcore.Site')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("body", wagtail.fields.RichTextField(blank=True, null=True)),
+                (
+                    "menu",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="menus.Menu",
+                    ),
+                ),
+                (
+                    "site",
+                    models.OneToOneField(
+                        editable=False,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="wagtailcore.Site",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Site Footer',
+                "verbose_name": "Site Footer",
             },
         ),
     ]

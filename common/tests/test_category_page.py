@@ -24,40 +24,46 @@ class ContextTest(TestCase):
         category1 = CategoryPageFactory()
         category2 = CategoryPageFactory()
         incident1 = IncidentPageFactory(categories=[category1])
-        IncidentPageFactory(title='Not relevant', categories=[category2])
+        IncidentPageFactory(title="Not relevant", categories=[category2])
 
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
 
         context = category1.get_context(request)
 
-        self.assertEqual(set(context['entries_page']), {incident1})
+        self.assertEqual(set(context["entries_page"]), {incident1})
 
     def test_unpaginated_recent_incidents(self):
         category1 = CategoryPageFactory()
         category2 = CategoryPageFactory()
-        incident3 = IncidentPageFactory(categories=[category1], date='2022-01-01')
-        incident1 = IncidentPageFactory(categories=[category1], date='2022-03-01')
-        incident2 = IncidentPageFactory(categories=[category1], date='2022-02-01')
-        IncidentPageFactory(title='Not relevant', categories=[category2])
+        incident3 = IncidentPageFactory(categories=[category1], date="2022-01-01")
+        incident1 = IncidentPageFactory(categories=[category1], date="2022-03-01")
+        incident2 = IncidentPageFactory(categories=[category1], date="2022-02-01")
+        IncidentPageFactory(title="Not relevant", categories=[category2])
 
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
 
         context = category1.get_context(request)
 
-        self.assertEqual(list(context['recent_incidents']), [incident1, incident2, incident3])
+        self.assertEqual(
+            list(context["recent_incidents"]), [incident1, incident2, incident3]
+        )
 
     def test_incidents_filtered_by_category__and_choice(self):
-        category1 = CategoryPageFactory(incident_filters=['arrest_status'])
+        category1 = CategoryPageFactory(incident_filters=["arrest_status"])
         category2 = CategoryPageFactory()
-        incident1 = IncidentPageFactory(categories=[category1], arrest_status='DETAINED_NO_PROCESSING')
-        IncidentPageFactory(title='Not choice', categories=[category1], arrest_status='UNKNOWN')
-        IncidentPageFactory(title='Not category', categories=[category2])
+        incident1 = IncidentPageFactory(
+            categories=[category1], arrest_status="DETAINED_NO_PROCESSING"
+        )
+        IncidentPageFactory(
+            title="Not choice", categories=[category1], arrest_status="UNKNOWN"
+        )
+        IncidentPageFactory(title="Not category", categories=[category2])
 
-        request = RequestFactory().get('/', {'arrest_status': 'DETAINED_NO_PROCESSING'})
+        request = RequestFactory().get("/", {"arrest_status": "DETAINED_NO_PROCESSING"})
 
         context = category1.get_context(request)
 
-        self.assertEqual(set(context['entries_page']), {incident1})
+        self.assertEqual(set(context["entries_page"]), {incident1})
 
     def test_filtered__has_filter(self):
         """
@@ -65,12 +71,9 @@ class ContextTest(TestCase):
         are present
         """
         category_page = CategoryPageFactory()
-        request = RequestFactory().get(
-            '/',
-            {'arrest_status': 'DETAINED_NO_PROCESSING'}
-        )
+        request = RequestFactory().get("/", {"arrest_status": "DETAINED_NO_PROCESSING"})
         context = category_page.get_context(request)
-        self.assertTrue(context['filtered'])
+        self.assertTrue(context["filtered"])
 
     def test_filtered__no_filter(self):
         """
@@ -78,9 +81,9 @@ class ContextTest(TestCase):
         are present
         """
         category_page = CategoryPageFactory()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         context = category_page.get_context(request)
-        self.assertFalse(context['filtered'])
+        self.assertFalse(context["filtered"])
 
     def test_filtered__ignore_page(self):
         """
@@ -88,9 +91,9 @@ class ContextTest(TestCase):
         a filter, since it is just a pagination implementation detail
         """
         category_page = CategoryPageFactory()
-        request = RequestFactory().get('/', {'page': '2'})
+        request = RequestFactory().get("/", {"page": "2"})
         context = category_page.get_context(request)
-        self.assertFalse(context['filtered'])
+        self.assertFalse(context["filtered"])
 
     def test_filtered__ignore_categories(self):
         """
@@ -99,9 +102,9 @@ class ContextTest(TestCase):
         already and the `category` querystring entry is redundant
         """
         category_page = CategoryPageFactory()
-        request = RequestFactory().get('/', {'categories': '1'})
+        request = RequestFactory().get("/", {"categories": "1"})
         context = category_page.get_context(request)
-        self.assertFalse(context['filtered'])
+        self.assertFalse(context["filtered"])
 
 
 class IncidentFilterTest(TestCase):
@@ -132,11 +135,11 @@ class IncidentFilterTest(TestCase):
         """
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=self.settings,
-            incident_filter='state',
+            incident_filter="state",
         )
         incident_filter = CategoryIncidentFilter(
             category=self.category,
-            incident_filter='arrest_status',
+            incident_filter="arrest_status",
         )
         incident_filter.clean()
 
@@ -148,12 +151,12 @@ class IncidentFilterTest(TestCase):
         """
         GeneralIncidentFilter.objects.create(
             incident_filter_settings=self.settings,
-            incident_filter='arrest_status',
+            incident_filter="arrest_status",
         )
 
         incident_filter = CategoryIncidentFilter(
             category=self.category,
-            incident_filter='arrest_status',
+            incident_filter="arrest_status",
         )
 
         with self.assertRaises(ValidationError):
@@ -162,19 +165,19 @@ class IncidentFilterTest(TestCase):
 
 class CategoryPageTest(TestCase):
     def setUp(self):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        self.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        self.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=self.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': self.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": self.home_page,
+            },
         )
         if not created:
             site.root_page = self.home_page
@@ -182,7 +185,7 @@ class CategoryPageTest(TestCase):
 
         self.category_page = CategoryPageFactory(
             parent=self.home_page,
-            incident_filters=['arrest_status'],
+            incident_filters=["arrest_status"],
         )
 
     def test_get_page_should_succeed(self):
@@ -191,57 +194,65 @@ class CategoryPageTest(TestCase):
 
     def test_view_draft_should_succeed(self):
         self.category_page.save_revision().publish()
-        self.category_page.title = 'XYZ'
+        self.category_page.title = "XYZ"
         self.category_page.save_revision()
 
-        user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+        user = User.objects.create_superuser(
+            username="test", password="test", email="test@test.com"
+        )
         self.client.force_login(user)
-        draft_url = reverse('wagtailadmin_pages:view_draft', args=(self.category_page.pk,))
+        draft_url = reverse(
+            "wagtailadmin_pages:view_draft", args=(self.category_page.pk,)
+        )
         response = self.client.get(draft_url)
         self.assertEqual(response.status_code, 200)
 
     def test_preview_page_should_succeed(self):
         self.category_page.save_revision().publish()
-        self.category_page.title = 'XYZ'
+        self.category_page.title = "XYZ"
         self.category_page.save_revision()
 
-        user = User.objects.create_superuser(username='test', password='test', email='test@test.com')
+        user = User.objects.create_superuser(
+            username="test", password="test", email="test@test.com"
+        )
         self.client.force_login(user)
-        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(self.category_page.pk,))
+        preview_url = reverse(
+            "wagtailadmin_pages:preview_on_edit", args=(self.category_page.pk,)
+        )
 
         post_data = {
-            'slug': self.category_page.slug,
-            'title': 'ABC',
-            'methodology': '{}',
-            'quick_facts-TOTAL_FORMS': 0,
-            'quick_facts-INITIAL_FORMS': 0,
-            'quick_facts-MIN_NUM_FORMS': 0,
-            'quick_facts-MAX_NUM_FORMS': 1000,
-            'statistics_items-TOTAL_FORMS': 0,
-            'statistics_items-INITIAL_FORMS': 0,
-            'statistics_items-MIN_NUM_FORMS': 0,
-            'statistics_items-MAX_NUM_FORMS': 1000,
-            'featured_incidents-TOTAL_FORMS': 0,
-            'featured_incidents-INITIAL_FORMS': 0,
-            'featured_incidents-MIN_NUM_FORMS': 0,
-            'featured_incidents-MAX_NUM_FORMS': 1000,
-            'featured_blogs-TOTAL_FORMS': 0,
-            'featured_blogs-INITIAL_FORMS': 0,
-            'featured_blogs-MIN_NUM_FORMS': 0,
-            'featured_blogs-MAX_NUM_FORMS': 1000,
-            'methodology_items-TOTAL_FORMS': 0,
-            'methodology_items-INITIAL_FORMS': 0,
-            'methodology_items-MIN_NUM_FORMS': 0,
-            'methodology_items-MAX_NUM_FORMS': 1000,
-            'incident_filters-TOTAL_FORMS': 0,
-            'incident_filters-INITIAL_FORMS': 0,
-            'incident_filters-MIN_NUM_FORMS': 0,
-            'incident_filters-MAX_NUM_FORMS': 1000,
-            'incident_filters-0-incident_filter': 'arrest_status',
-            'incident_filters-0-id': 1,
-            'incident_filters-0-ORDER': 1,
-            'page_symbol': 'arrest',
-            'viz_type': 'none'
+            "slug": self.category_page.slug,
+            "title": "ABC",
+            "methodology": "{}",
+            "quick_facts-TOTAL_FORMS": 0,
+            "quick_facts-INITIAL_FORMS": 0,
+            "quick_facts-MIN_NUM_FORMS": 0,
+            "quick_facts-MAX_NUM_FORMS": 1000,
+            "statistics_items-TOTAL_FORMS": 0,
+            "statistics_items-INITIAL_FORMS": 0,
+            "statistics_items-MIN_NUM_FORMS": 0,
+            "statistics_items-MAX_NUM_FORMS": 1000,
+            "featured_incidents-TOTAL_FORMS": 0,
+            "featured_incidents-INITIAL_FORMS": 0,
+            "featured_incidents-MIN_NUM_FORMS": 0,
+            "featured_incidents-MAX_NUM_FORMS": 1000,
+            "featured_blogs-TOTAL_FORMS": 0,
+            "featured_blogs-INITIAL_FORMS": 0,
+            "featured_blogs-MIN_NUM_FORMS": 0,
+            "featured_blogs-MAX_NUM_FORMS": 1000,
+            "methodology_items-TOTAL_FORMS": 0,
+            "methodology_items-INITIAL_FORMS": 0,
+            "methodology_items-MIN_NUM_FORMS": 0,
+            "methodology_items-MAX_NUM_FORMS": 1000,
+            "incident_filters-TOTAL_FORMS": 0,
+            "incident_filters-INITIAL_FORMS": 0,
+            "incident_filters-MIN_NUM_FORMS": 0,
+            "incident_filters-MAX_NUM_FORMS": 1000,
+            "incident_filters-0-incident_filter": "arrest_status",
+            "incident_filters-0-id": 1,
+            "incident_filters-0-ORDER": 1,
+            "page_symbol": "arrest",
+            "viz_type": "none",
         }
 
         response = self.client.post(
@@ -250,31 +261,30 @@ class CategoryPageTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
-            response.content.decode(),
-            {'is_valid': True, 'is_available': True}
+            response.content.decode(), {"is_valid": True, "is_available": True}
         )
 
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page'], self.category_page)
+        self.assertEqual(response.context["page"], self.category_page)
 
 
 class CategoryPageMethodologyStatisticsTest(WagtailPageTestCase):
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
+        Page.objects.filter(slug="home").delete()
+        root_page = Page.objects.get(title="Root")
+        cls.home_page = HomePageFactory.build(parent=None, slug="home")
         root_page.add_child(instance=cls.home_page)
 
         site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': cls.home_page,
-            }
+                "site_name": "Test site",
+                "hostname": "testserver",
+                "port": "1111",
+                "root_page": cls.home_page,
+            },
         )
         if not created:
             site.root_page = cls.home_page
@@ -282,21 +292,23 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTestCase):
         CategoryPageFactory(
             parent=cls.home_page,
             # Needed to apply an "city" filter below
-            incident_filters=['city'],
+            incident_filters=["city"],
         )
         stats_tag = '{% num_incidents city="Albuquerque" %}'
         cls.page_data = {
-            'title': 'Test Category',
-            'slug': 'test-category',
-            'methodology': rich_text('<p>Lorem {} dolor sit amet</p>'.format(stats_tag)),
-            'page_symbol': 'arrest',
-            'viz_type': 'none',
-            'quick_facts': inline_formset([]),
-            'statistics_items': inline_formset([]),
-            'featured_incidents': inline_formset([]),
-            'featured_blogs': inline_formset([]),
-            'methodology_items': inline_formset([]),
-            'incident_filters': inline_formset([]),
+            "title": "Test Category",
+            "slug": "test-category",
+            "methodology": rich_text(
+                "<p>Lorem {} dolor sit amet</p>".format(stats_tag)
+            ),
+            "page_symbol": "arrest",
+            "viz_type": "none",
+            "quick_facts": inline_formset([]),
+            "statistics_items": inline_formset([]),
+            "featured_incidents": inline_formset([]),
+            "featured_blogs": inline_formset([]),
+            "methodology_items": inline_formset([]),
+            "incident_filters": inline_formset([]),
         }
 
     def setUp(self):
@@ -309,23 +321,19 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTestCase):
             CategoryPage,
             nested_form_data(self.page_data),
         )
-        category = CategoryPage.objects.get(slug='test-category')
+        category = CategoryPage.objects.get(slug="test-category")
         response = self.client.get(category.url)
         self.assertEqual(response.status_code, 200)
 
     def test_can_preview_category_page(self):
         category = CategoryPageFactory(parent=self.home_page)
-        preview_url = reverse('wagtailadmin_pages:preview_on_edit', args=(category.pk,))
-        response = self.client.post(
-            preview_url,
-            nested_form_data(self.page_data)
-        )
+        preview_url = reverse("wagtailadmin_pages:preview_on_edit", args=(category.pk,))
+        response = self.client.post(preview_url, nested_form_data(self.page_data))
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
-            response.content.decode(),
-            {'is_valid': True, 'is_available': True}
+            response.content.decode(), {"is_valid": True, "is_available": True}
         )
 
         response = self.client.get(preview_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['page'], category)
+        self.assertEqual(response.context["page"], category)

@@ -17,10 +17,10 @@ class BlogFilter(object):
     def from_querystring(cls, query):
         """Parse a dict-like querystring object and return a `BlogFilter` for
         those values"""
-        author_id = string_to_int_or_none(query.get('author'))
-        organization_id = string_to_int_or_none(query.get('organization'))
+        author_id = string_to_int_or_none(query.get("author"))
+        organization_id = string_to_int_or_none(query.get("organization"))
         try:
-            blog_type = BlogTemplateType(query.get('type'))
+            blog_type = BlogTemplateType(query.get("type"))
         except ValueError:
             blog_type = None
 
@@ -42,9 +42,9 @@ class BlogFilter(object):
     def filter(self, blog_pages):
         """Filter a queryset of blog pages according to author or organization or blog_type."""
         field_pairs = [
-            ('authors__author__pk', self.author),
-            ('organization', self.organization),
-            ('blog_type', self.blog_type),
+            ("authors__author__pk", self.author),
+            ("organization", self.organization),
+            ("blog_type", self.blog_type),
         ]
         kwargs = {field: value for field, value in field_pairs if value}
         return blog_pages.filter(**kwargs)

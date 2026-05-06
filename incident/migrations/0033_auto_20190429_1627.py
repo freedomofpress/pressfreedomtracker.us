@@ -14,30 +14,29 @@ def copy_targets(apps, schema_editor):
 
     """
 
-    IncidentPage = apps.get_model('incident', 'IncidentPage')
-    Journalist = apps.get_model('incident', 'Journalist')
-    TargetedJournalist = apps.get_model('incident', 'TargetedJournalist')
-    Institution = apps.get_model('incident', 'Institution')
+    IncidentPage = apps.get_model("incident", "IncidentPage")
+    Journalist = apps.get_model("incident", "Journalist")
+    TargetedJournalist = apps.get_model("incident", "TargetedJournalist")
+    Institution = apps.get_model("incident", "Institution")
 
     for incident in IncidentPage.objects.all():
         for target in incident.targets.all():
-            if target.kind == 'JOURNALIST':
+            if target.kind == "JOURNALIST":
                 journalist, _ = Journalist.objects.get_or_create(title=target.title)
                 TargetedJournalist.objects.create(
                     incident=incident,
                     journalist=journalist,
                     institution=None,
                 )
-            elif target.kind == 'INSTITUTION':
+            elif target.kind == "INSTITUTION":
                 inst, _ = Institution.objects.get_or_create(title=target.title)
                 incident.targeted_institutions.add(inst)
                 incident.save()
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0032_auto_20190429_1621'),
+        ("incident", "0032_auto_20190429_1621"),
     ]
 
     operations = [

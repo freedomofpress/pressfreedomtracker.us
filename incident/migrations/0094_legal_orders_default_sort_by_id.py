@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0093_alter_equipmentbroken_options_and_more'),
+        ("incident", "0093_alter_equipmentbroken_options_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='legalorder',
-            options={'ordering': ['pk']},
+            name="legalorder",
+            options={"ordering": ["pk"]},
         ),
     ]

@@ -29,8 +29,8 @@ class CreateDevDataTestCase(TestCase):
             50,
             file__width=1,
             file__height=1,
-            file__color='red',
-            collection__name='Photos',
+            file__color="red",
+            collection__name="Photos",
         )
 
     def setUp(self):
@@ -41,28 +41,28 @@ class CreateDevDataTestCase(TestCase):
     def test_createdevdata_works(self):
         """The createdevdata command successfully creates pages"""
         # Write stdout to /dev/null so as not to clutter the output from the tests
-        with open(os.devnull, 'w') as devnull:
+        with open(os.devnull, "w") as devnull:
             management.call_command(
-                'createdevdata',
-                '--no-download',
-                '--max-incidents=25',
+                "createdevdata",
+                "--no-download",
+                "--max-incidents=25",
                 stdout=devnull,
             )
 
     def test_createdevdata_geolocated(self):
-        with open(os.devnull, 'w') as devnull:
+        with open(os.devnull, "w") as devnull:
             management.call_command(
-                'createdevdata',
-                '--no-download',
-                '--geolocated',
-                '--max-incidents=3',
+                "createdevdata",
+                "--no-download",
+                "--geolocated",
+                "--max-incidents=3",
                 stdout=devnull,
             )
 
-    @mock.patch('requests.get')
+    @mock.patch("requests.get")
     def test_createdevdata_fetch_images(self, mock_requests):
         mock_response = mock_requests.return_value
-        mock_response.content = ''
-        photo_collection = wagtail_factories.CollectionFactory(name='Photos')
+        mock_response.content = ""
+        photo_collection = wagtail_factories.CollectionFactory(name="Photos")
         Command().fetch_image(200, 200, photo_collection)
-        self.assertEqual(mock_requests.call_args.kwargs['timeout'], 5)
+        self.assertEqual(mock_requests.call_args.kwargs["timeout"], 5)

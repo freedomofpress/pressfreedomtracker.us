@@ -5,27 +5,40 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0057_incidentpage_arresting_authority'),
+        ("incident", "0057_incidentpage_arresting_authority"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='LawEnforcementOrganization',
+            name="LawEnforcementOrganization",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255, unique=True)),
             ],
             options={
-                'ordering': ['title'],
-                'verbose_name': 'Law enforcement organization',
-                'verbose_name_plural': 'Law enforcement organizations',
+                "ordering": ["title"],
+                "verbose_name": "Law enforcement organization",
+                "verbose_name_plural": "Law enforcement organizations",
             },
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='arresting_authority',
-            field=models.ForeignKey(blank=True, help_text='Arresting authority.', null=True, on_delete=django.db.models.deletion.SET_NULL, to='incident.LawEnforcementOrganization'),
+            model_name="incidentpage",
+            name="arresting_authority",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Arresting authority.",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="incident.LawEnforcementOrganization",
+            ),
         ),
     ]

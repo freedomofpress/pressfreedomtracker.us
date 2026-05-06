@@ -8,24 +8,31 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('common', '0001_initial'),
-        ('incident', '0001_initial'),
-        ('taggit', '0002_auto_20150616_2121'),
+        ("common", "0001_initial"),
+        ("incident", "0001_initial"),
+        ("taggit", "0002_auto_20150616_2121"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='tag',
-            name='content_object',
-            field=modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='tagged_items', to='incident.IncidentPage'),
+            model_name="tag",
+            name="content_object",
+            field=modelcluster.fields.ParentalKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tagged_items",
+                to="incident.IncidentPage",
+            ),
         ),
         migrations.AddField(
-            model_name='tag',
-            name='tag',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='common_tag_items', to='taggit.Tag'),
+            model_name="tag",
+            name="tag",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="common_tag_items",
+                to="taggit.Tag",
+            ),
         ),
     ]

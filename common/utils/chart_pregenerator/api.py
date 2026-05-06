@@ -26,32 +26,32 @@ class PregenerationException(Exception):
 def make_request(*, endpoint, file_format, query, stream=False):
     """Internal wrapper function for making a request to the
     pregeneration service."""
-    host = settings.CHART_PREGENERATOR['HOST']
-    port = settings.CHART_PREGENERATOR['PORT']
-    url = f'http://{host}:{port}/{endpoint}.{file_format}'
+    host = settings.CHART_PREGENERATOR["HOST"]
+    port = settings.CHART_PREGENERATOR["PORT"]
+    url = f"http://{host}:{port}/{endpoint}.{file_format}"
     structlog.contextvars.bind_contextvars(
         pregeneration_request={
-            'url': url,
-            'options': json.dumps(query),
+            "url": url,
+            "options": json.dumps(query),
         },
     )
     try:
         response = requests.get(
             url,
             timeout=5,
-            params={'options': json.dumps(query)},
+            params={"options": json.dumps(query)},
             stream=stream,
         )
         response.raise_for_status()
     except requests.exceptions.RequestException:
-        raise PregenerationAPIFailure('Failed to reach pregeneration service')
+        raise PregenerationAPIFailure("Failed to reach pregeneration service")
     return response
 
 
 def request_snapshot(
-        snapshot_type: SnapshotType,
-        chart_type: ChartType,
-        query,
+    snapshot_type: SnapshotType,
+    chart_type: ChartType,
+    query,
 ):
     """Request a static image of a given chart type for a given data query.
 
@@ -71,31 +71,35 @@ def request_snapshot(
 
     """
     if chart_type == ChartType.VERTICAL_BAR:
-        endpoint = 'bar-chart'
+        endpoint = "bar-chart"
     elif chart_type == ChartType.TREEMAP:
-        endpoint = 'treemap-chart'
+        endpoint = "treemap-chart"
     elif chart_type == ChartType.BUBBLE_MAP:
-        endpoint = 'bubble-map'
+        endpoint = "bubble-map"
     elif chart_type == ChartType.HEXBIN_MAP:
-        endpoint = 'hexbin-map'
+        endpoint = "hexbin-map"
     else:
         raise InvalidChartType(chart_type)
 
     if snapshot_type == SnapshotType.SVG:
-        return make_request(endpoint=endpoint, file_format='svg', query=query).text
+        return make_request(endpoint=endpoint, file_format="svg", query=query).text
 
     elif snapshot_type == SnapshotType.PNG:
-        response = make_request(endpoint=endpoint, file_format='png', query=query, stream=True)
+        response = make_request(
+            endpoint=endpoint, file_format="png", query=query, stream=True
+        )
 
         # Generate filename
         img_slug = slugify(
-            '-'.join(
+            "-".join(
                 # limit to the first 12 characters of value so that it doesn't get too long
-                str(v)[:12] for v in query.values() if v
+                str(v)[:12]
+                for v in query.values()
+                if v
             )
         )
-        base_filename = f'{img_slug}_{chart_type}'
-        filename = f'{base_filename}.{snapshot_type}'.lower()
+        base_filename = f"{img_slug}_{chart_type}"
+        filename = f"{base_filename}.{snapshot_type}".lower()
 
         f = io.BytesIO()
 

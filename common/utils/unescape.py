@@ -10,13 +10,13 @@ def unescape(content):
     becomes
     `&quot;Hello {% num_incidents categories='1' %} worlds!&quot;`
     """
-    tag_re = re.compile('({%.*?%})')
-    body = ''
+    tag_re = re.compile("({%.*?%})")
+    body = ""
     position = 0
     for match in tag_re.finditer(content):
         start, end = match.span()
         body += content[position:start]
         body += html.unescape(content[start:end])
         position = end
-    body += content[position:len(content)]
+    body += content[position : len(content)]
     return body

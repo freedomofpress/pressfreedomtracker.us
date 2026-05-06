@@ -10,8 +10,8 @@ def get_categories():
     from common.models import CategoryPage  # Avoids circular import
 
     return [
-        (page.title, page.title) for page
-        in CategoryPage.objects.order_by('title').live()
+        (page.title, page.title)
+        for page in CategoryPage.objects.order_by("title").live()
     ]
 
 
@@ -20,5 +20,5 @@ def get_states():
     from incident.models import State  # Avoids circular import
 
     return [
-        (state.abbreviation, state.name) for state in State.objects.order_by('name')
+        (state.abbreviation, state.name) for state in State.objects.order_by("name")
     ]

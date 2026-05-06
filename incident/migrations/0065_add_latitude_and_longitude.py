@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0064_topic_page_start_date_end_date'),
+        ("incident", "0064_topic_page_start_date_end_date"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='incidentpage',
-            name='latitude',
+            model_name="incidentpage",
+            name="latitude",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='incidentpage',
-            name='longitude',
+            model_name="incidentpage",
+            name="longitude",
             field=models.FloatField(blank=True, null=True),
         ),
     ]

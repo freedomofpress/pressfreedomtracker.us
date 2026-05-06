@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0103_chart_image_to_wagtail_image'),
-        ('common', '0104_alter_customimage_file_alter_customrendition_file'),
+        ("common", "0103_chart_image_to_wagtail_image"),
+        ("common", "0104_alter_customimage_file_alter_customrendition_file"),
     ]
 
-    operations = [
-    ]
+    operations = []

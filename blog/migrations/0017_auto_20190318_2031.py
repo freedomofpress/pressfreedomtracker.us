@@ -5,20 +5,33 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0016_auto_20180622_1951'),
+        ("blog", "0016_auto_20180622_1951"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogindexpage',
-            name='search_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', verbose_name='Search image'),
+            model_name="blogindexpage",
+            name="search_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+                verbose_name="Search image",
+            ),
         ),
         migrations.AlterField(
-            model_name='blogpage',
-            name='search_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage', verbose_name='Search image'),
+            model_name="blogpage",
+            name="search_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+                verbose_name="Search image",
+            ),
         ),
     ]

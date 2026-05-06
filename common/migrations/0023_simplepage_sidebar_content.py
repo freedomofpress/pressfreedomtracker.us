@@ -8,15 +8,25 @@ import wagtail.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0022_add_fields_to_footer'),
+        ("common", "0022_add_fields_to_footer"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='simplepage',
-            name='sidebar_content',
-            field=wagtail.fields.StreamField((('heading', wagtail.blocks.StructBlock((('content', wagtail.blocks.CharBlock()),))), ('rich_text', wagtail.blocks.RichTextBlock())), default=None),
+            model_name="simplepage",
+            name="sidebar_content",
+            field=wagtail.fields.StreamField(
+                (
+                    (
+                        "heading",
+                        wagtail.blocks.StructBlock(
+                            (("content", wagtail.blocks.CharBlock()),)
+                        ),
+                    ),
+                    ("rich_text", wagtail.blocks.RichTextBlock()),
+                ),
+                default=None,
+            ),
         ),
     ]

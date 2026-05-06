@@ -13,20 +13,161 @@ import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0012_caption_attribution_helptext'),
+        ("incident", "0012_caption_attribution_helptext"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='body',
-            field=wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('blockquote', common.blocks.RichTextBlockQuoteBlock()), ('video', wagtail.blocks.StructBlock((('video', wagtail.embeds.blocks.EmbedBlock()), ('caption', wagtail.blocks.RichTextBlock(help_text='Video description displayed below the video.', required=False)), ('attribution', wagtail.blocks.CharBlock(help_text='Organization / Director.', max_length=255, required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))))), ('statistics', wagtail.blocks.StructBlock((('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            model_name="incidentpage",
+            name="body",
+            field=wagtail.fields.StreamField(
+                (
+                    (
+                        "rich_text",
+                        wagtail.blocks.RichTextBlock(
+                            icon="doc-full", label="Rich Text"
+                        ),
+                    ),
+                    ("image", wagtail.images.blocks.ImageChooserBlock()),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    ("blockquote", common.blocks.RichTextBlockQuoteBlock()),
+                    (
+                        "video",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("video", wagtail.embeds.blocks.EmbedBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(
+                                        help_text="Video description displayed below the video.",
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "attribution",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Organization / Director.",
+                                        max_length=255,
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                    (
+                        "statistics",
+                        wagtail.blocks.StructBlock(
+                            (
+                                (
+                                    "visualization",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.blocks.get_visualization_choices
+                                    ),
+                                ),
+                                (
+                                    "dataset",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_stats_choices
+                                    ),
+                                ),
+                                (
+                                    "params",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
+                                        required=False,
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            ),
         ),
         migrations.AlterField(
-            model_name='incidentpageupdates',
-            name='body',
-            field=wagtail.fields.StreamField((('rich_text', wagtail.blocks.RichTextBlock(icon='doc-full', label='Rich Text')), ('image', wagtail.images.blocks.ImageChooserBlock()), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('blockquote', common.blocks.RichTextBlockQuoteBlock()), ('video', wagtail.blocks.StructBlock((('video', wagtail.embeds.blocks.EmbedBlock()), ('caption', wagtail.blocks.RichTextBlock(help_text='Video description displayed below the video.', required=False)), ('attribution', wagtail.blocks.CharBlock(help_text='Organization / Director.', max_length=255, required=False)), ('alignment', wagtail.blocks.ChoiceBlock(choices=[('left', 'Left'), ('right', 'Right'), ('full-width', 'Full Width')]))))), ('statistics', wagtail.blocks.StructBlock((('visualization', wagtail.blocks.ChoiceBlock(choices=statistics.blocks.get_visualization_choices)), ('dataset', wagtail.blocks.ChoiceBlock(choices=statistics.registry.get_stats_choices)), ('params', wagtail.blocks.CharBlock(help_text='Whitespace-separated list of arguments to be passed to the statistics function', required=False))))))),
+            model_name="incidentpageupdates",
+            name="body",
+            field=wagtail.fields.StreamField(
+                (
+                    (
+                        "rich_text",
+                        wagtail.blocks.RichTextBlock(
+                            icon="doc-full", label="Rich Text"
+                        ),
+                    ),
+                    ("image", wagtail.images.blocks.ImageChooserBlock()),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    ("blockquote", common.blocks.RichTextBlockQuoteBlock()),
+                    (
+                        "video",
+                        wagtail.blocks.StructBlock(
+                            (
+                                ("video", wagtail.embeds.blocks.EmbedBlock()),
+                                (
+                                    "caption",
+                                    wagtail.blocks.RichTextBlock(
+                                        help_text="Video description displayed below the video.",
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "attribution",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Organization / Director.",
+                                        max_length=255,
+                                        required=False,
+                                    ),
+                                ),
+                                (
+                                    "alignment",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=[
+                                            ("left", "Left"),
+                                            ("right", "Right"),
+                                            ("full-width", "Full Width"),
+                                        ]
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                    (
+                        "statistics",
+                        wagtail.blocks.StructBlock(
+                            (
+                                (
+                                    "visualization",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.blocks.get_visualization_choices
+                                    ),
+                                ),
+                                (
+                                    "dataset",
+                                    wagtail.blocks.ChoiceBlock(
+                                        choices=statistics.registry.get_stats_choices
+                                    ),
+                                ),
+                                (
+                                    "params",
+                                    wagtail.blocks.CharBlock(
+                                        help_text="Whitespace-separated list of arguments to be passed to the statistics function",
+                                        required=False,
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            ),
         ),
     ]

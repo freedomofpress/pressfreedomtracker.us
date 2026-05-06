@@ -6,15 +6,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0011_blogindexpage_about_blog_title'),
+        ("blog", "0011_blogindexpage_about_blog_title"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogindexpage',
-            name='feed_limit',
-            field=models.PositiveIntegerField(default=20, help_text='Maximum number of posts to be included in the syndication feed. 0 for unlimited.'),
+            model_name="blogindexpage",
+            name="feed_limit",
+            field=models.PositiveIntegerField(
+                default=20,
+                help_text="Maximum number of posts to be included in the syndication feed. 0 for unlimited.",
+            ),
         ),
     ]

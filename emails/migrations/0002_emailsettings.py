@@ -7,23 +7,46 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtailcore', '0039_collectionviewrestriction'),
-        ('emails', '0001_initial'),
+        ("wagtailcore", "0039_collectionviewrestriction"),
+        ("emails", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EmailSettings',
+            name="EmailSettings",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('signup_prompt', models.CharField(default='Sign up to receive emails from Press Freedom Tracker', max_length=255)),
-                ('success_text', models.CharField(default='Thanks for signing up!', max_length=255)),
-                ('site', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, to='wagtailcore.Site')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "signup_prompt",
+                    models.CharField(
+                        default="Sign up to receive emails from Press Freedom Tracker",
+                        max_length=255,
+                    ),
+                ),
+                (
+                    "success_text",
+                    models.CharField(default="Thanks for signing up!", max_length=255),
+                ),
+                (
+                    "site",
+                    models.OneToOneField(
+                        editable=False,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="wagtailcore.Site",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Email Signups',
+                "verbose_name": "Email Signups",
             },
         ),
     ]

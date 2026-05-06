@@ -6,25 +6,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0002_incidentpage_teaser'),
+        ("incident", "0002_incidentpage_teaser"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='date',
+            model_name="incidentpage",
+            name="date",
             field=models.DateField(),
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='detention_date',
-            field=models.DateField(blank=True, help_text='This field will default to the date field if not specified.', null=True),
+            model_name="incidentpage",
+            name="detention_date",
+            field=models.DateField(
+                blank=True,
+                help_text="This field will default to the date field if not specified.",
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='release_date',
+            model_name="incidentpage",
+            name="release_date",
             field=models.DateField(blank=True, null=True),
         ),
     ]

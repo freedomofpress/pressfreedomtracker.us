@@ -7,21 +7,32 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0025_socialsharingseosettings'),
-        ('blog', '0009_blogpage_link_to_original_post'),
+        ("common", "0025_socialsharingseosettings"),
+        ("blog", "0009_blogpage_link_to_original_post"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogindexpage',
-            name='search_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+            model_name="blogindexpage",
+            name="search_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+            ),
         ),
         migrations.AddField(
-            model_name='blogpage',
-            name='search_image',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+            model_name="blogpage",
+            name="search_image",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+            ),
         ),
     ]

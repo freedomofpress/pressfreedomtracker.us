@@ -13,8 +13,7 @@ class TestGetTags(TestCase):
 
     def test_get_tag_returns_tags_as_choices(self):
         self.assertEqual(
-            helpers.get_tags(),
-            [(tag.title, tag.title) for tag in self.tags]
+            helpers.get_tags(), [(tag.title, tag.title) for tag in self.tags]
         )
 
 
@@ -25,8 +24,7 @@ class TestGetCategories(TestCase):
 
     def test_get_categories_returns_categories_as_choices(self):
         self.assertEqual(
-            helpers.get_categories(),
-            [(cat.title, cat.title) for cat in self.cats]
+            helpers.get_categories(), [(cat.title, cat.title) for cat in self.cats]
         )
 
 
@@ -34,5 +32,8 @@ class TestGetStates(TestCase):
     def test_get_states_returns_states_as_choices(self):
         self.assertEqual(
             helpers.get_states(),
-            [(state.abbreviation, state.name) for state in State.objects.order_by('name')]
+            [
+                (state.abbreviation, state.name)
+                for state in State.objects.order_by("name")
+            ],
         )

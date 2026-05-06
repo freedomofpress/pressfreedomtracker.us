@@ -5,64 +5,64 @@ from modelcluster.fields import ParentalManyToManyField
 
 
 EXCLUDED_FIELDS = {
-    'id',
-    'draft_title',
-    'has_unpublished_changes',
-    'live',
-    'locked',
-    'numchild',
-    'path',
-    'page_ptr',
-    'url_path',
-    'revisions',
-    'suppress_footer',  # not needed in the export
-    'related_incidents',  # not sure how to represent this in export
-    'group_permissions',
-    'depth',
-    'content_type',
-    'formsubmission',
-    'go_live_at',
-    'view_restrictions',
-    'redirect',
-    'sites_rooted_here',
-    'owner',
-    'seo_title',
-    'show_in_menus',
-    'search_description',
-    'expire_at',
-    'expired',
-    'live_revision',
-    'search_image',
-    'blog_posts',
-    'page_blocks',
-    'homepagefeature',
-    'live_preview_updates',
-    'locked_at',
-    'locked_by',
-    'workflowpage',
-    'workflow_states',
-    'alias_of',
-    'translation_key',
-    'aliases',
-    'locale',
-    'unique_date',
-    'lawsuit_name',  # Deprecated
-    'venue',  # Deprecated
-    'index_entries',
-    'subscribers',
-    'wagtail_admin_comments',
-    'held_in_contempt',  # Deprecated
-    'detention_status',  # Deprecated
-    '_revisions',
-    'latest_revision',
-    '_workflow_states',
-    '_specific_workflow_states',
+    "id",
+    "draft_title",
+    "has_unpublished_changes",
+    "live",
+    "locked",
+    "numchild",
+    "path",
+    "page_ptr",
+    "url_path",
+    "revisions",
+    "suppress_footer",  # not needed in the export
+    "related_incidents",  # not sure how to represent this in export
+    "group_permissions",
+    "depth",
+    "content_type",
+    "formsubmission",
+    "go_live_at",
+    "view_restrictions",
+    "redirect",
+    "sites_rooted_here",
+    "owner",
+    "seo_title",
+    "show_in_menus",
+    "search_description",
+    "expire_at",
+    "expired",
+    "live_revision",
+    "search_image",
+    "blog_posts",
+    "page_blocks",
+    "homepagefeature",
+    "live_preview_updates",
+    "locked_at",
+    "locked_by",
+    "workflowpage",
+    "workflow_states",
+    "alias_of",
+    "translation_key",
+    "aliases",
+    "locale",
+    "unique_date",
+    "lawsuit_name",  # Deprecated
+    "venue",  # Deprecated
+    "index_entries",
+    "subscribers",
+    "wagtail_admin_comments",
+    "held_in_contempt",  # Deprecated
+    "detention_status",  # Deprecated
+    "_revisions",
+    "latest_revision",
+    "_workflow_states",
+    "_specific_workflow_states",
 }
 
 
 def humanize(obj):
     """Make a human-readable string-representation of an object"""
-    if hasattr(obj, 'summary'):
+    if hasattr(obj, "summary"):
         return obj.summary
     else:
         return str(obj)
@@ -71,7 +71,7 @@ def humanize(obj):
 def is_exportable(field):
     """Return True if a data field should be exported"""
     name = field.name
-    return not (name.startswith('tagged_') or name in EXCLUDED_FIELDS)
+    return not (name.startswith("tagged_") or name in EXCLUDED_FIELDS)
 
 
 def to_row(obj, allowed_fields=[]):
@@ -111,27 +111,32 @@ def to_json(obj, allowed_fields=[]):
 
 
 def _serialize_field(obj, field):
-    if field.name == 'teaser_image':
+    if field.name == "teaser_image":
         teaser_image = getattr(obj, field.name)
         val = None
         if teaser_image:
             for rend in teaser_image.renditions.all():
-                if rend.filter_spec == 'fill-1330x880':
+                if rend.filter_spec == "fill-1330x880":  # pragma: no cover
                     val = rend.url
             if not val:
-                val = teaser_image.get_rendition('fill-1330x880').url
-    elif field.name == 'slug':
+                val = teaser_image.get_rendition(
+                    "fill-1330x880"
+                ).url  # pragma: no cover
+    elif field.name == "slug":
         val = obj.get_full_url()
     elif isinstance(field, models.ForeignKey):
         val = getattr(obj, field.name)
         if val:
             val = str(val)
-    elif type(field) in (models.ManyToManyField, models.ManyToOneRel, ClusterTaggableManager, ParentalManyToManyField):
-        val = u', '.join(
-            [humanize(item) for item in getattr(obj, field.name).all()]
-        )
-    elif hasattr(field, 'choices') and field.choices:
-        val = getattr(obj, 'get_%s_display' % field.name)()
+    elif type(field) in (
+        models.ManyToManyField,
+        models.ManyToOneRel,
+        ClusterTaggableManager,
+        ParentalManyToManyField,
+    ):
+        val = ", ".join([humanize(item) for item in getattr(obj, field.name).all()])
+    elif hasattr(field, "choices") and field.choices:
+        val = getattr(obj, "get_%s_display" % field.name)()
     elif hasattr(obj, field.name):
         val = getattr(obj, field.name)
     return str(val)

@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class BlogConfig(AppConfig):
-    name = 'blog'
+    name = "blog"
 
     def ready(self):
         import blog.signals  # noqa: F401

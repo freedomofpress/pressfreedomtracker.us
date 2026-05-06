@@ -5,42 +5,70 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0092_alter_equipmentseized_options_and_more'),
+        ("incident", "0092_alter_equipmentseized_options_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='equipmentbroken',
-            options={'ordering': ['sort_order'], 'verbose_name': 'Equipment broken'},
+            name="equipmentbroken",
+            options={"ordering": ["sort_order"], "verbose_name": "Equipment broken"},
         ),
         migrations.AlterModelOptions(
-            name='equipmentseized',
-            options={'ordering': ['sort_order'], 'verbose_name': 'Equipment searched or seized'},
+            name="equipmentseized",
+            options={
+                "ordering": ["sort_order"],
+                "verbose_name": "Equipment searched or seized",
+            },
         ),
         migrations.AlterModelOptions(
-            name='governmentworker',
-            options={'ordering': ['title'], 'verbose_name': 'Alleged recipient of leak', 'verbose_name_plural': 'Alleged recipients of leaks'},
+            name="governmentworker",
+            options={
+                "ordering": ["title"],
+                "verbose_name": "Alleged recipient of leak",
+                "verbose_name_plural": "Alleged recipients of leaks",
+            },
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='charged_under_espionage_act',
-            field=models.BooleanField(default=False, verbose_name='Charged under Espionage Act?'),
+            model_name="incidentpage",
+            name="charged_under_espionage_act",
+            field=models.BooleanField(
+                default=False, verbose_name="Charged under Espionage Act?"
+            ),
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='target_nationality',
-            field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='nationality_incidents', to='incident.nationality', verbose_name='Target nationality'),
+            model_name="incidentpage",
+            name="target_nationality",
+            field=modelcluster.fields.ParentalManyToManyField(
+                blank=True,
+                related_name="nationality_incidents",
+                to="incident.nationality",
+                verbose_name="Target nationality",
+            ),
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='target_us_citizenship_status',
-            field=models.CharField(blank=True, choices=[('US_CITIZEN', 'U.S. citizen'), ('PERMANENT_RESIDENT', 'U.S. permanent resident (green card)'), ('NON_RESIDENT', 'U.S. non-resident')], max_length=255, null=True, verbose_name='US citizenship status'),
+            model_name="incidentpage",
+            name="target_us_citizenship_status",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("US_CITIZEN", "U.S. citizen"),
+                    ("PERMANENT_RESIDENT", "U.S. permanent resident (green card)"),
+                    ("NON_RESIDENT", "U.S. non-resident"),
+                ],
+                max_length=255,
+                null=True,
+                verbose_name="US citizenship status",
+            ),
         ),
         migrations.AlterField(
-            model_name='incidentpage',
-            name='targeted_institutions',
-            field=modelcluster.fields.ParentalManyToManyField(blank=True, related_name='institutions_incidents', to='incident.institution', verbose_name='Targeted institutions'),
+            model_name="incidentpage",
+            name="targeted_institutions",
+            field=modelcluster.fields.ParentalManyToManyField(
+                blank=True,
+                related_name="institutions_incidents",
+                to="incident.institution",
+                verbose_name="Targeted institutions",
+            ),
         ),
     ]

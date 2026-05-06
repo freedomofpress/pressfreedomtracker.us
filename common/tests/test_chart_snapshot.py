@@ -51,14 +51,14 @@ class TestChartSnapshot(TestCase):
     def test_validates_uniqueness_of_types(self):
         ChartSnapshotFactory(
             svg=True,
-            query={'a': 1},
+            query={"a": 1},
         )
 
         # Should succeed
-        ChartSnapshotFactory(svg=True, query={'a': 2})
+        ChartSnapshotFactory(svg=True, query={"a": 2})
 
         with self.assertRaises(IntegrityError):
-            ChartSnapshotFactory(svg=True, query={'a': 1})
+            ChartSnapshotFactory(svg=True, query={"a": 1})
 
     def test_considers_old_snapshots_stale(self):
         old_datetime = datetime.now(tz=timezone.utc) - timedelta(days=90)
@@ -81,12 +81,12 @@ class TestChartSnapshot(TestCase):
             collection,
         )
 
-    @mock.patch('common.models.charts.request_snapshot')
+    @mock.patch("common.models.charts.request_snapshot")
     def test_invokes_chart_generation_api_for_svgs(self, mock_request_snapshot):
         svg_output = """<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="red" /></svg>"""
         mock_request_snapshot.return_value = svg_output
 
-        query = {'query_param': 'value'}
+        query = {"query_param": "value"}
         snapshot = ChartSnapshotFactory(svg=True, query=query)
         snapshot.generate()
 
@@ -98,21 +98,23 @@ class TestChartSnapshot(TestCase):
         snapshot.refresh_from_db()
         self.assertEqual(snapshot.chart_svg, svg_output)
 
-    @mock.patch('common.models.charts.request_snapshot')
+    @mock.patch("common.models.charts.request_snapshot")
     def test_invokes_chart_generation_api_for_pngs(self, mock_request_snapshot):
         # Kind of a sideways way to get a `faker` instance via
         # `factory` -- prevents us from having a strict dependency
         # there.
-        faker = factory.faker.Faker._get_faker(locale='en-US')
+        faker = factory.faker.Faker._get_faker(locale="en-US")
         png_output = faker.image(
             size=(2, 2),
-            hue='purple',
-            luminosity='bright',
-            image_format='png',
+            hue="purple",
+            luminosity="bright",
+            image_format="png",
         )
-        mock_request_snapshot.return_value = ImageFile(BytesIO(png_output), name='testimg')
+        mock_request_snapshot.return_value = ImageFile(
+            BytesIO(png_output), name="testimg"
+        )
 
-        query = {'query_param': 'value'}
+        query = {"query_param": "value"}
         snapshot = ChartSnapshotFactory(png=True, query=query)
         original_image_id = snapshot.chart_image.pk
         snapshot.generate()
@@ -134,7 +136,7 @@ class TestChartSnapshot(TestCase):
             ImageModel.objects.get(pk=original_image_id)
 
     @mock.patch(
-        'common.models.charts.request_snapshot',
+        "common.models.charts.request_snapshot",
         side_effect=PregenerationException,
     )
     def test_does_not_update_data_if_generation_api_errors(self, mock_request_snapshot):
@@ -144,25 +146,25 @@ class TestChartSnapshot(TestCase):
         snapshot.refresh_from_db()
         self.assertEqual(snapshot.chart_svg, old_svg)
 
-    @mock.patch('common.models.charts.request_snapshot')
+    @mock.patch("common.models.charts.request_snapshot")
     def test_does_not_generate_new_rendition_if_one_exists(self, mock_request_snapshot):
         original_snapshot = ChartSnapshotFactory(
             last_generated=datetime.now(tz=timezone.utc) - timedelta(hours=3),
             svg=True,
             chart_type=ChartType.TREEMAP,
-            query={'a': 1},
+            query={"a": 1},
         )
 
         new_snapshot = ChartSnapshot.get_or_generate(
             chart_type=ChartType.TREEMAP,
             snapshot_type=SnapshotType.SVG,
-            query={'a': 1},
+            query={"a": 1},
         )
 
         mock_request_snapshot.assert_not_called()
         self.assertEqual(original_snapshot, new_snapshot)
 
-    @mock.patch('common.models.charts.request_snapshot')
+    @mock.patch("common.models.charts.request_snapshot")
     def test_generates_new_rendition_if_one_does_not_exist(self, mock_request_snapshot):
         svg_output = """<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="blue" /></svg>"""
         mock_request_snapshot.return_value = svg_output
@@ -170,14 +172,14 @@ class TestChartSnapshot(TestCase):
         snapshot = ChartSnapshot.get_or_generate(
             chart_type=ChartType.TREEMAP,
             snapshot_type=SnapshotType.SVG,
-            query={'a': 1},
+            query={"a": 1},
         )
 
         self.assertIsInstance(snapshot, ChartSnapshot)
         self.assertEqual(snapshot.chart_svg, svg_output)
 
     @mock.patch(
-        'common.models.charts.request_snapshot',
+        "common.models.charts.request_snapshot",
         side_effect=ChartNotAvailable,
     )
     def test_raises_an_exception_if_cannot_get_snapshot(self, mock_request_snapshot):
@@ -185,11 +187,13 @@ class TestChartSnapshot(TestCase):
             ChartSnapshot.get_or_generate(
                 chart_type=ChartType.TREEMAP,
                 snapshot_type=SnapshotType.SVG,
-                query={'a': 1},
+                query={"a": 1},
             )
 
-    @mock.patch('common.models.charts.request_snapshot')
-    def test_generates_new_rendition_if_existing_one_is_stale(self, mock_request_snapshot):
+    @mock.patch("common.models.charts.request_snapshot")
+    def test_generates_new_rendition_if_existing_one_is_stale(
+        self, mock_request_snapshot
+    ):
         svg_output = """<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="green" /></svg>"""
         mock_request_snapshot.return_value = svg_output
 
@@ -197,7 +201,7 @@ class TestChartSnapshot(TestCase):
         ChartSnapshotFactory(
             svg=True,
             chart_type=ChartType.TREEMAP,
-            query={'a': 1},
+            query={"a": 1},
         )
         # Need to get around `auto_now` to simulate a stale snapshot
         # with the `update` method that does not trigger it.
@@ -206,7 +210,7 @@ class TestChartSnapshot(TestCase):
         new_snapshot = ChartSnapshot.get_or_generate(
             chart_type=ChartType.TREEMAP,
             snapshot_type=SnapshotType.SVG,
-            query={'a': 1},
+            query={"a": 1},
         )
 
         self.assertEqual(new_snapshot.chart_svg, svg_output)

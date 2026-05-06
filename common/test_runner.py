@@ -11,11 +11,12 @@ class WithSeedMixin(object):
     factory objects.
 
     """
+
     def setup_test_environment(self):
         seed = settings.RANDOM_SEED
         if seed:
             factory.random.reseed_random(seed)
-            print(f'Using seed: {seed}')
+            print(f"Using seed: {seed}")
         super().setup_test_environment()
 
 

@@ -4,22 +4,25 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0047_remove_target_model'),
+        ("incident", "0047_remove_target_model"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='governmentworker',
-            options={'ordering': ['title'], 'verbose_name': 'Government employee or contractor', 'verbose_name_plural': 'Government employees or contractors'},
+            name="governmentworker",
+            options={
+                "ordering": ["title"],
+                "verbose_name": "Government employee or contractor",
+                "verbose_name_plural": "Government employees or contractors",
+            },
         ),
         migrations.AlterModelOptions(
-            name='institution',
-            options={'ordering': ['title']},
+            name="institution",
+            options={"ordering": ["title"]},
         ),
         migrations.AlterModelOptions(
-            name='journalist',
-            options={'ordering': ['title']},
+            name="journalist",
+            options={"ordering": ["title"]},
         ),
     ]

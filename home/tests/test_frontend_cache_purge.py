@@ -6,7 +6,7 @@ from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory
 
 
-@patch('home.signals.purge_page_from_cache')
+@patch("home.signals.purge_page_from_cache")
 class TestHomePageCacheInvalidation(TestCase):
     """
     To some extent this test case is just testing django's signals functionality
@@ -21,7 +21,7 @@ class TestHomePageCacheInvalidation(TestCase):
 
     def setUp(self):
         site = Site.objects.get()
-        self.homepage = HomePageFactory(parent=site.root_page, slug='home')
+        self.homepage = HomePageFactory(parent=site.root_page, slug="home")
 
     def test_cache_invalidated_on_new_incident(self, purge_page_from_cache):
         self.assertFalse(purge_page_from_cache.called)

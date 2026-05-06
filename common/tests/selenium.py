@@ -12,7 +12,7 @@ from wagtail.models import Page, Site, Locale
 from home.models import HomePage
 
 
-SELENIUM_HOST = os.environ['SELENIUM_HOST']
+SELENIUM_HOST = os.environ["SELENIUM_HOST"]
 HOST_IP = socket.gethostbyname(socket.gethostname())
 
 
@@ -33,7 +33,7 @@ class SeleniumTest(StaticLiveServerTestCase):
         )
         options.profile = firefox_profile
         cls.browser = webdriver.Remote(
-            command_executor=f'http://{SELENIUM_HOST}:4444/wd/hub',
+            command_executor=f"http://{SELENIUM_HOST}:4444/wd/hub",
             options=options,
         )
 
@@ -67,16 +67,18 @@ class SeleniumTest(StaticLiveServerTestCase):
         """Create basic site and page data that is expected to exist by
         wagtail but is removed during the database flush."""
         root = Page.objects.create(
-            title='Root',
-            path='0001',
+            title="Root",
+            path="0001",
             depth=1,
         )
 
-        root_page = root.add_child(instance=HomePage(
-            title='Home',
-            path='00010001',
-            depth=2,
-        ))
+        root_page = root.add_child(
+            instance=HomePage(
+                title="Home",
+                path="00010001",
+                depth=2,
+            )
+        )
 
         Site.objects.create(
             hostname=HOST_IP.rstrip(),
@@ -88,10 +90,12 @@ class SeleniumTest(StaticLiveServerTestCase):
     def setUp(self):
         super().setUp()
 
-        Locale.objects.get_or_create(language_code='en')
+        Locale.objects.get_or_create(language_code="en")
 
         try:
-            original_default_site = Site.objects.get(is_default_site=True, hostname='localhost')
+            original_default_site = Site.objects.get(
+                is_default_site=True, hostname="localhost"
+            )
             original_default_site.hostname = HOST_IP.rstrip()
             original_default_site.save()
         except Site.DoesNotExist:
@@ -105,14 +109,19 @@ class SeleniumTest(StaticLiveServerTestCase):
         for db_name in self._databases_names(include_mirrors=False):
             # Flush the database
             inhibit_post_migrate = (
-                self.available_apps is not None or
-                (   # Inhibit the post_migrate signal when using serialized
+                self.available_apps is not None
+                or (  # Inhibit the post_migrate signal when using serialized
                     # rollback to avoid trying to recreate the serialized data.
-                    self.serialized_rollback and
-                    hasattr(connections[db_name], '_test_serialized_contents')
+                    self.serialized_rollback
+                    and hasattr(connections[db_name], "_test_serialized_contents")
                 )
             )
-            call_command('flush', verbosity=0, interactive=False,
-                         database=db_name, reset_sequences=False,
-                         allow_cascade=True,
-                         inhibit_post_migrate=inhibit_post_migrate)
+            call_command(
+                "flush",
+                verbosity=0,
+                interactive=False,
+                database=db_name,
+                reset_sequences=False,
+                allow_cascade=True,
+                inhibit_post_migrate=inhibit_post_migrate,
+            )

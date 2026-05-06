@@ -5,15 +5,21 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0077_customimage_slug'),
+        ("common", "0077_customimage_slug"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='categorypage',
-            name='default_image',
-            field=models.ForeignKey(blank=True, help_text='Default SEO image for the incidents within this category', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='common.CustomImage'),
+            model_name="categorypage",
+            name="default_image",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Default SEO image for the incidents within this category",
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="common.CustomImage",
+            ),
         ),
     ]

@@ -17,7 +17,7 @@ class CsrfFailureTestCase(TestCase):
     def test_csrf_failure_redirects_to_original_form_page(self):
         submission_data = {}
         for field in self.form_page.get_form_fields():
-            submission_data[field.clean_name] = 'value'
+            submission_data[field.clean_name] = "value"
         response = self.csrf_client.post(
             self.form_page.get_url(),
             data=submission_data,
@@ -29,8 +29,8 @@ class CsrfFailureTestCase(TestCase):
             self.form_page.get_url(),
         )
         self.assertEqual(
-            response.context['top_level_error'],
-            'Submission failed, please try again.',
+            response.context["top_level_error"],
+            "Submission failed, please try again.",
         )
-        form = response.context['form']
+        form = response.context["form"]
         self.assertEqual(form.initial, submission_data)

@@ -4,15 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0094_update_streamfields_to_use_json_type'),
+        ("common", "0094_update_streamfields_to_use_json_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='statisticsitem',
-            name='dataset',
-            field=models.CharField(choices=[('num_incidents', 'num_incidents'), ('num_institution_targets', 'num_institution_targets'), ('num_journalist_targets', 'num_journalist_targets'), ('num_targets', 'num_targets')], default='num_incidents', max_length=255),
+            model_name="statisticsitem",
+            name="dataset",
+            field=models.CharField(
+                choices=[
+                    ("num_incidents", "num_incidents"),
+                    ("num_institution_targets", "num_institution_targets"),
+                    ("num_journalist_targets", "num_journalist_targets"),
+                    ("num_targets", "num_targets"),
+                ],
+                default="num_incidents",
+                max_length=255,
+            ),
         ),
     ]

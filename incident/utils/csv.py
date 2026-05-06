@@ -13,7 +13,7 @@ from incident.models import (
 class CsvError(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
-        self.column_name = kwargs.get('column_name')
+        self.column_name = kwargs.get("column_name")
 
 
 class ChoiceNotFound(CsvError):
@@ -69,14 +69,12 @@ class ColumnSet:
         result = Result.ok({})
         for spec in self.specs:
             try:
-                result = result.join(
-                    spec.get_value(row, column_prefix, column_suffix)
-                )
+                result = result.join(spec.get_value(row, column_prefix, column_suffix))
             except CsvError as err:
                 result = result.join(
-                    Result.fail([
-                        CsvDataProblem(message=err, column_name=err.column_name)
-                    ])
+                    Result.fail(
+                        [CsvDataProblem(message=err, column_name=err.column_name)]
+                    )
                 )
 
         return result
@@ -90,14 +88,14 @@ class DateColumn:
     def get_value(self, row, prefix=None, suffix=None):
         key = self.name
         if prefix:
-            key = f'{prefix}{key}'
+            key = f"{prefix}{key}"
         if suffix:
-            key = f'{key}{suffix}'
+            key = f"{key}{suffix}"
         try:
             row_value = row[key]
         except KeyError:
             if self.required:
-                raise ColumnNotFound('Column not found', column_name=key)
+                raise ColumnNotFound("Column not found", column_name=key)
             else:
                 return Result.ok(None)
 
@@ -107,9 +105,7 @@ class DateColumn:
             formatted_date = date.fromisoformat(row_value).isoformat()
             return Result.ok(formatted_date)
         except ValueError as err:
-            return Result.fail([
-                CsvDataProblem(message=err, column_name=key)
-            ])
+            return Result.fail([CsvDataProblem(message=err, column_name=key)])
 
 
 class ChoiceColumn:
@@ -120,30 +116,30 @@ class ChoiceColumn:
     def get_value(self, row, prefix=None, suffix=None):
         key = self.name
         if prefix:
-            key = f'{prefix}{key}'
+            key = f"{prefix}{key}"
         if suffix:
-            key = f'{key}{suffix}'
+            key = f"{key}{suffix}"
         try:
             row_value = row[key]
         except KeyError:
-            raise ColumnNotFound('Column not found', column_name=key)
+            raise ColumnNotFound("Column not found", column_name=key)
 
         for value, label in self.choice_type.choices:
             if label.casefold() == row_value.casefold():
                 return Result.ok(self.choice_type(value))
-        legal_choices = ', '.join(self.choice_type.labels)
+        legal_choices = ", ".join(self.choice_type.labels)
         raise ChoiceNotFound(
-            f'{row_value} is invalid input for {self.choice_type}, choices are: {legal_choices}',
+            f"{row_value} is invalid input for {self.choice_type}, choices are: {legal_choices}",
             column_name=key,
         )
 
 
 class EnumeratedColumns:
     def __init__(
-            self,
-            prefix_format: typing.Optional[str],
-            suffix_format: typing.Optional[str],
-            column_set: ColumnSet,
+        self,
+        prefix_format: typing.Optional[str],
+        suffix_format: typing.Optional[str],
+        column_set: ColumnSet,
     ):
         self.prefix_format = prefix_format
         self.suffix_format = suffix_format
@@ -155,13 +151,16 @@ class EnumeratedColumns:
 
         for i in itertools.count(1):
             prefix = (
-                column_prefix if column_prefix else '' +
-                self.prefix_format if self.prefix_format else ''
+                column_prefix
+                if column_prefix
+                else "" + self.prefix_format
+                if self.prefix_format
+                else ""
             ).format(
                 i=i,
             )
 
-            suffix = (self.suffix_format if self.suffix_format else '').format(
+            suffix = (self.suffix_format if self.suffix_format else "").format(
                 i=i,
             )
 
@@ -170,17 +169,13 @@ class EnumeratedColumns:
             # sequence is considered finished and we can return.
             row_subset = row
             if self.suffix_format:
-                row_subset = {
-                    k: v for k, v in row_subset.items() if k.endswith(suffix)
-                }
+                row_subset = {k: v for k, v in row_subset.items() if k.endswith(suffix)}
             if self.prefix_format:
                 row_subset = {
                     k: v for k, v in row_subset.items() if k.startswith(prefix)
                 }
             # Only consider rows with nonempty values
-            row_subset = {
-                k: v for k, v in row_subset.items() if v
-            }
+            row_subset = {k: v for k, v in row_subset.items() if v}
             if not row_subset:
                 break
 
@@ -214,47 +209,66 @@ def parse_row(row):
 
     cset = ColumnSet(
         specs=[
-            ColumnSpec('venue', ChoiceColumn('venue', choices.LegalOrderVenue)),
-            ColumnSpec('target', ChoiceColumn('target', choices.LegalOrderTarget)),
+            ColumnSpec("venue", ChoiceColumn("venue", choices.LegalOrderVenue)),
+            ColumnSpec("target", ChoiceColumn("target", choices.LegalOrderTarget)),
             ColumnSpec(
-                'legal_orders',
+                "legal_orders",
                 EnumeratedColumns(
-                    prefix_format='legal_order{i}_',
+                    prefix_format="legal_order{i}_",
                     suffix_format=None,
-                    column_set=ColumnSet([
-                        ColumnSpec('type', ChoiceColumn('type', choices.LegalOrderType)),
-                        ColumnSpec(
-                            'information_requested',
-                            ChoiceColumn(
-                                'information_requested',
-                                choices.InformationRequested,
+                    column_set=ColumnSet(
+                        [
+                            ColumnSpec(
+                                "type", ChoiceColumn("type", choices.LegalOrderType)
                             ),
-                        ),
-                        ColumnSpec('statuses', EnumeratedColumns(
-                            column_set=ColumnSet([
-                                ColumnSpec('status', ChoiceColumn('status', choices.LegalOrderStatus)),
-                                ColumnSpec('date', DateColumn('date', required=False)),
-                            ]),
-                            prefix_format=None,  # no prefix for these
-                            suffix_format='{i}',
-                        ))
-                    ])
-                )
-            )
+                            ColumnSpec(
+                                "information_requested",
+                                ChoiceColumn(
+                                    "information_requested",
+                                    choices.InformationRequested,
+                                ),
+                            ),
+                            ColumnSpec(
+                                "statuses",
+                                EnumeratedColumns(
+                                    column_set=ColumnSet(
+                                        [
+                                            ColumnSpec(
+                                                "status",
+                                                ChoiceColumn(
+                                                    "status", choices.LegalOrderStatus
+                                                ),
+                                            ),
+                                            ColumnSpec(
+                                                "date",
+                                                DateColumn("date", required=False),
+                                            ),
+                                        ]
+                                    ),
+                                    prefix_format=None,  # no prefix for these
+                                    suffix_format="{i}",
+                                ),
+                            ),
+                        ]
+                    ),
+                ),
+            ),
         ]
     )
 
-    slug = urlparse(row['slug']).path.strip('/').split('/')[-1]
+    slug = urlparse(row["slug"]).path.strip("/").split("/")[-1]
     try:
         incident = IncidentPage.objects.get(slug=slug)
     except IncidentPage.DoesNotExist:
         result = result.join(
-            Result.fail([
-                CsvDataProblem(
-                    message=f'Could not locate incident at {row["slug"]}',
-                    column_name='slug',
-                )
-            ])
+            Result.fail(
+                [
+                    CsvDataProblem(
+                        message=f"Could not locate incident at {row['slug']}",
+                        column_name="slug",
+                    )
+                ]
+            )
         )
     result = result.join(cset.evaluate(row))
     if result.success:

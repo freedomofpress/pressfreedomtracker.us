@@ -25,11 +25,11 @@ class IncidentFilterTest(TestCase):
         """
         CategoryIncidentFilter.objects.create(
             category=self.category,
-            incident_filter='state',
+            incident_filter="state",
         )
         incident_filter = GeneralIncidentFilter(
             incident_filter_settings=self.settings,
-            incident_filter='arrest_status',
+            incident_filter="arrest_status",
         )
         incident_filter.clean()
 
@@ -40,12 +40,12 @@ class IncidentFilterTest(TestCase):
         """
         CategoryIncidentFilter.objects.create(
             category=self.category,
-            incident_filter='arrest_status',
+            incident_filter="arrest_status",
         )
 
         incident_filter = GeneralIncidentFilter(
             incident_filter_settings=self.settings,
-            incident_filter='arrest_status',
+            incident_filter="arrest_status",
         )
 
         with self.assertRaises(ValidationError):

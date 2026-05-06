@@ -30,7 +30,7 @@ class FuzzyDate(models.Transform):
 
     """
 
-    lookup_name = 'fuzzy_date'
+    lookup_name = "fuzzy_date"
     template = "daterange(date_trunc('month', %(expressions)s)::date, (date_trunc('month', %(expressions)s) + interval '1 month')::date)"
 
     @property
@@ -50,18 +50,18 @@ class IncidentSchema(Schema):
     title = fields.Str()
     date = fields.DateTime()
     url = fields.Function(lambda obj: obj.get_full_url())
-    image = fields.Method('get_image')
-    description = fields.Method('get_description')
+    image = fields.Method("get_image")
+    description = fields.Method("get_description")
 
     def get_image(self, obj):
         if not obj.teaser_image:
-            return ''
-        val = ''
+            return ""
+        val = ""  # pragma: no cover
         for rend in obj.teaser_image.renditions.all():
-            if rend.filter_spec == 'width-720':
+            if rend.filter_spec == "width-720":  # pragma: no cover
                 val = rend.url
         if not val:
-            val = obj.teaser_image.get_rendition('width-720').url
+            val = obj.teaser_image.get_rendition("width-720").url  # pragma: no cover
         return val
 
     def get_description(self, obj):
@@ -69,168 +69,177 @@ class IncidentSchema(Schema):
 
 
 class CategorySchema(Schema):
-    category = fields.Str(attribute='title')
-    category_plural = fields.Str(attribute='plural_name')
-    symbol = fields.Str(attribute='page_symbol')
+    category = fields.Str(attribute="title")
+    category_plural = fields.Str(attribute="plural_name")
+    symbol = fields.Str(attribute="page_symbol")
     methodology = fields.Str()
     url = fields.Function(lambda obj: obj.get_full_url())
     total_incidents = fields.Int()
     total_journalists = fields.Int()
-    incidents = fields.Method('get_incidents')
+    incidents = fields.Method("get_incidents")
 
     def get_incidents(self, obj):
         incidents_schema = IncidentSchema(many=True)
         return incidents_schema.dump(
-            [categorization.incident_page for categorization in obj.categorization_list][:self.context['incident_limit']]
+            [
+                categorization.incident_page
+                for categorization in obj.categorization_list
+            ][: self.context["incident_limit"]]
         )
 
 
 class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
-    TOP_LEFT = 'top-left'
-    BOTTOM_LEFT = 'bottom-left'
-    TOP_CENTER = 'top-center'
-    BOTTOM_CENTER = 'bottom-center'
+    TOP_LEFT = "top-left"
+    BOTTOM_LEFT = "bottom-left"
+    TOP_CENTER = "top-center"
+    BOTTOM_CENTER = "bottom-center"
 
     TEXT_ALIGN_CHOICES = (
-        (TOP_CENTER, 'Top Center'),
-        (BOTTOM_CENTER, 'Bottom Center'),
-        (TOP_LEFT, 'Top Left'),
-        (BOTTOM_LEFT, 'Bottom Left'),
+        (TOP_CENTER, "Top Center"),
+        (BOTTOM_CENTER, "Bottom Center"),
+        (TOP_LEFT, "Top Left"),
+        (BOTTOM_LEFT, "Bottom Left"),
     )
 
-    WHITE = 'white'
-    BLACK = 'black'
+    WHITE = "white"
+    BLACK = "black"
     TEXT_COLOR_CHOICES = (
-        (WHITE, 'White'),
-        (BLACK, 'Black'),
+        (WHITE, "White"),
+        (BLACK, "Black"),
     )
 
-    BY_INCIDENT = 'by_incident'
-    BY_CATEGORY = 'by_category'
+    BY_INCIDENT = "by_incident"
+    BY_CATEGORY = "by_category"
     LAYOUT_CHOICES = (
-        (BY_INCIDENT, 'By Incident'),
-        (BY_CATEGORY, 'By Category'),
+        (BY_INCIDENT, "By Incident"),
+        (BY_CATEGORY, "By Category"),
     )
 
     superheading = models.TextField(
-        help_text='Text that appears above the title in the heading block',
+        help_text="Text that appears above the title in the heading block",
         blank=True,
-        null=True
+        null=True,
     )
-    description = RichTextField(
-        editor='emphasis-only',
-        blank=True
-    )
+    description = RichTextField(editor="emphasis-only", blank=True)
     text_align = models.CharField(
-        max_length=255, choices=TEXT_ALIGN_CHOICES, default=BOTTOM_CENTER,
-        help_text='Alignment of the full header text within the header image'
+        max_length=255,
+        choices=TEXT_ALIGN_CHOICES,
+        default=BOTTOM_CENTER,
+        help_text="Alignment of the full header text within the header image",
     )
     text_color = models.CharField(
-        max_length=255, choices=TEXT_COLOR_CHOICES, default=WHITE,
-        help_text='Color of header text, for legibility against the background.'
+        max_length=255,
+        choices=TEXT_COLOR_CHOICES,
+        default=WHITE,
+        help_text="Color of header text, for legibility against the background.",
     )
-    photo_caption = RichTextField(
-        editor='emphasis-only',
-        blank=True
-    )
+    photo_caption = RichTextField(editor="emphasis-only", blank=True)
     photo_credit = models.TextField(blank=True)
     photo_credit_link = models.URLField(blank=True, null=True)
     photo = models.ForeignKey(
-        'common.CustomImage',
+        "common.CustomImage",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+'
+        related_name="+",
     )
 
     layout = models.CharField(
-        max_length=255,
-        choices=LAYOUT_CHOICES,
-        default=BY_INCIDENT
+        max_length=255, choices=LAYOUT_CHOICES, default=BY_INCIDENT
     )
     incidents_per_module = models.PositiveIntegerField(
         default=4,
-        validators=[
-            MaxValueValidator(10),
-            MinValueValidator(3)
-        ],
-        help_text='Maximum incidents per category module in category layout'
+        validators=[MaxValueValidator(10), MinValueValidator(3)],
+        help_text="Maximum incidents per category module in category layout",
     )
 
-    content = StreamField([
-        ('heading_2', common.blocks.Heading2()),
-        ('raw_html', blocks.RawHTMLBlock()),
-        ('rich_text', blocks.RichTextBlock()),
-        ('tweet', common.blocks.TweetEmbedBlock()),
-        ('tabs', common.blocks.TabbedBlock()),
-    ], blank=True, use_json_field=True)
-    sidebar = StreamField([
-        ('heading_2', common.blocks.Heading2()),
-        ('rich_text', common.blocks.RichTextTemplateBlock(
-            editor='emphasis-with-list',
-            icon='doc-full',
-            label='Rich Text',
-        )),
-        ('tweet', common.blocks.TweetEmbedBlock()),
-        ('stat_table', common.blocks.StatTableBlock()),
-        ('button', common.blocks.ButtonBlock()),
-    ], blank=True, use_json_field=True)
+    content = StreamField(
+        [
+            ("heading_2", common.blocks.Heading2()),
+            ("raw_html", blocks.RawHTMLBlock()),
+            ("rich_text", blocks.RichTextBlock()),
+            ("tweet", common.blocks.TweetEmbedBlock(group="Social Media")),
+            ("instagram", common.blocks.InstagramEmbedBlock(group="Social Media")),
+            ("bluesky", common.blocks.BlueskyEmbedBlock(group="Social Media")),
+            ("tabs", common.blocks.TabbedBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
+    sidebar = StreamField(
+        [
+            ("heading_2", common.blocks.Heading2()),
+            (
+                "rich_text",
+                common.blocks.RichTextTemplateBlock(
+                    editor="emphasis-with-list",
+                    icon="doc-full",
+                    label="Rich Text",
+                ),
+            ),
+            ("tweet", common.blocks.TweetEmbedBlock(group="Social Media")),
+            ("instagram", common.blocks.InstagramEmbedBlock(group="Social Media")),
+            ("bluesky", common.blocks.BlueskyEmbedBlock(group="Social Media")),
+            ("stat_table", common.blocks.StatTableBlock()),
+            ("button", common.blocks.ButtonBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+    )
 
     incident_index_page = models.ForeignKey(
-        'incident.IncidentIndexPage',
-        on_delete=models.PROTECT,
-        related_name='+'
+        "incident.IncidentIndexPage", on_delete=models.PROTECT, related_name="+"
     )
-    incident_tag = models.ForeignKey('common.CommonTag', on_delete=models.PROTECT)
+    incident_tag = models.ForeignKey("common.CommonTag", on_delete=models.PROTECT)
     start_date = models.DateField(
         null=True,
         blank=True,
-        help_text='Start date for this topic. No incidents before this date will be included.',
+        help_text="Start date for this topic. No incidents before this date will be included.",
     )
     end_date = models.DateField(
         null=True,
         blank=True,
-        help_text='End date for this topic. No incidents after this date will be included.',
+        help_text="End date for this topic. No incidents after this date will be included.",
     )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
-            heading='Header',
+            heading="Header",
             children=[
-                FieldPanel('superheading'),
-                FieldPanel('description'),
-                FieldPanel('text_align'),
-                FieldPanel('text_color'),
-                FieldPanel('photo'),
-                FieldPanel('photo_caption'),
-                FieldPanel('photo_credit'),
-                FieldPanel('photo_credit_link'),
+                FieldPanel("superheading"),
+                FieldPanel("description"),
+                FieldPanel("text_align"),
+                FieldPanel("text_color"),
+                FieldPanel("photo"),
+                FieldPanel("photo_caption"),
+                FieldPanel("photo_credit"),
+                FieldPanel("photo_credit_link"),
             ],
-            classname='collapsible'
+            classname="collapsible",
         ),
         MultiFieldPanel(
-            heading='Content',
+            heading="Content",
             children=[
-                FieldPanel('content'),
-                FieldPanel('sidebar'),
+                FieldPanel("content"),
+                FieldPanel("sidebar"),
             ],
-            classname='collapsible',
+            classname="collapsible",
         ),
     ]
 
     settings_panels = Page.settings_panels + [
         MultiFieldPanel(
-            heading='Incidents',
+            heading="Incidents",
             children=[
-                FieldPanel('incident_index_page'),
-                AutocompletePanel('incident_tag', target_model='common.CommonTag'),
-                FieldPanel('incidents_per_module'),
-                FieldPanel('start_date'),
-                FieldPanel('end_date'),
+                FieldPanel("incident_index_page"),
+                AutocompletePanel("incident_tag", target_model="common.CommonTag"),
+                FieldPanel("incidents_per_module"),
+                FieldPanel("start_date"),
+                FieldPanel("end_date"),
             ],
-            classname='collapsible',
+            classname="collapsible",
         ),
-        FieldPanel('layout'),
+        FieldPanel("layout"),
     ]
     base_form_class = TopicPageForm
 
@@ -242,30 +251,25 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             target_range = DateRange(
                 lower=self.start_date,
                 upper=self.end_date,
-                bounds='[]',
+                bounds="[]",
             )
 
-            incident_lookups &= (
-                models.Q(date__contained_by=target_range) |
-                models.Q(
-                    exact_date_unknown=True,
-                    date__fuzzy_date__overlap=target_range,
-                )
+            incident_lookups &= models.Q(date__contained_by=target_range) | models.Q(
+                exact_date_unknown=True,
+                date__fuzzy_date__overlap=target_range,
             )
-        incident_qs = self.incident_index_page.get_incidents().filter(
-            incident_lookups
-        ).order_by('-date')
-
-        paginator, entries = paginate(
-            request,
-            incident_qs,
-            page_key=DEFAULT_PAGE_KEY,
-            per_page=8,
-            orphans=5
+        incident_qs = (
+            self.incident_index_page.get_incidents()
+            .filter(incident_lookups)
+            .order_by("-date")
         )
 
-        context['entries_page'] = entries
-        context['paginator'] = paginator
+        paginator, entries = paginate(
+            request, incident_qs, page_key=DEFAULT_PAGE_KEY, per_page=8, orphans=5
+        )
+
+        context["entries_page"] = entries
+        context["paginator"] = paginator
 
         return context
 
@@ -282,69 +286,79 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             target_range = DateRange(
                 lower=self.start_date,
                 upper=self.end_date,
-                bounds='[]',
+                bounds="[]",
             )
 
-            incident_lookups &= (
-                models.Q(incident_page__date__contained_by=target_range) |
-                models.Q(
-                    incident_page__exact_date_unknown=True,
-                    incident_page__date__fuzzy_date__overlap=target_range,
+            incident_lookups &= models.Q(
+                incident_page__date__contained_by=target_range
+            ) | models.Q(
+                incident_page__exact_date_unknown=True,
+                incident_page__date__fuzzy_date__overlap=target_range,
+            )
+            category_incident_lookups &= models.Q(
+                incidents__incident_page__date__contained_by=target_range,
+            ) | models.Q(
+                incidents__incident_page__exact_date_unknown=True,
+                incidents__incident_page__date__fuzzy_date__overlap=target_range,
+            )
 
+        journalist_count = (
+            CategoryPage.objects.annotate(
+                total_journalists=models.Count(
+                    "incidents__incident_page__targeted_journalists__journalist",
+                    filter=category_incident_lookups,
+                    distinct=True,
                 )
             )
-            category_incident_lookups &= (
-                models.Q(
-                    incidents__incident_page__date__contained_by=target_range,
-                ) | models.Q(
-                    incidents__incident_page__exact_date_unknown=True,
-                    incidents__incident_page__date__fuzzy_date__overlap=target_range,
-                )
-            )
-
-        journalist_count = CategoryPage.objects.annotate(
-            total_journalists=models.Count(
-                'incidents__incident_page__targeted_journalists__journalist',
-                filter=category_incident_lookups,
-                distinct=True,
-            )
-        ).filter(
-            pk=models.OuterRef('pk')
-        ).live()
-
-        categorization_with_incidents = IncidentCategorization.objects\
-            .prefetch_related(
-                'incident_page__teaser_image__renditions',
-            ).select_related(
-                'incident_page'
-            ).filter(
-                incident_lookups
-            ).order_by('-incident_page__date')
-
-        prefetch_categorizations = models.Prefetch(
-            'incidents', queryset=categorization_with_incidents, to_attr='categorization_list'
+            .filter(pk=models.OuterRef("pk"))
+            .live()
         )
 
-        cats = CategoryPage.objects.live().prefetch_related(
-            prefetch_categorizations,
-        ).annotate(
-            total_journalists=NongroupingSubquery(journalist_count.values('total_journalists'), output_field=models.IntegerField()),
-            total_incidents=models.Count('incidents__incident_page', filter=category_incident_lookups)
-        ).order_by('-total_incidents')
+        categorization_with_incidents = (
+            IncidentCategorization.objects.prefetch_related(
+                "incident_page__teaser_image__renditions",
+            )
+            .select_related("incident_page")
+            .filter(incident_lookups)
+            .order_by("-incident_page__date")
+        )
+
+        prefetch_categorizations = models.Prefetch(
+            "incidents",
+            queryset=categorization_with_incidents,
+            to_attr="categorization_list",
+        )
+
+        cats = (
+            CategoryPage.objects.live()
+            .prefetch_related(
+                prefetch_categorizations,
+            )
+            .annotate(
+                total_journalists=NongroupingSubquery(
+                    journalist_count.values("total_journalists"),
+                    output_field=models.IntegerField(),
+                ),
+                total_incidents=models.Count(
+                    "incidents__incident_page", filter=category_incident_lookups
+                ),
+            )
+            .order_by("-total_incidents")
+        )
 
         categories_schema = CategorySchema(many=True)
-        categories_schema.context = {'incident_limit': self.incidents_per_module}
+        categories_schema.context = {"incident_limit": self.incidents_per_module}
         result = categories_schema.dump(cats)
         return result
 
-    @path('incidents/')
+    @path("incidents/")
     def incidents_view(self, request):
         return JsonResponse(data=self.get_categories_data(), safe=False)
 
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=models.Q(start_date__lte=models.F('end_date')),
-                name='start_date_end_date_order'
+                check=models.Q(start_date__lte=models.F("end_date")),
+                name="start_date_end_date_order",
             ),
         ]

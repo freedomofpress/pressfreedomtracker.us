@@ -5,15 +5,18 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('geonames', '0001_initial'),
+        ("geonames", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='district',
-            name='isocode',
-            field=models.ForeignKey(db_column='isocode', on_delete=django.db.models.deletion.PROTECT, to='geonames.Country'),
+            model_name="district",
+            name="isocode",
+            field=models.ForeignKey(
+                db_column="isocode",
+                on_delete=django.db.models.deletion.PROTECT,
+                to="geonames.Country",
+            ),
         ),
     ]

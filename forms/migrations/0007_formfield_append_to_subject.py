@@ -4,15 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('forms', '0006_auto_20200812_1626'),
+        ("forms", "0006_auto_20200812_1626"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='formfield',
-            name='append_to_subject',
-            field=models.BooleanField(default=False, help_text='Add the contents of this field to the subject of the email sent by this from.  All fields with this checked will be appended.'),
+            model_name="formfield",
+            name="append_to_subject",
+            field=models.BooleanField(
+                default=False,
+                help_text="Add the contents of this field to the subject of the email sent by this from.  All fields with this checked will be appended.",
+            ),
         ),
     ]

@@ -21,24 +21,26 @@ def validate_dataset_params(dataset, params):
     elif dataset in NUMBERS:
         fn = NUMBERS[dataset]
     else:
-        raise ValidationError(f'Dataset {dataset!r} not found')
+        raise ValidationError(f"Dataset {dataset!r} not found")
 
     params = list(smart_split(params))
 
     signature = inspect.signature(fn)
-    has_kwargs = any(param.kind == Parameter.VAR_KEYWORD for param in signature.parameters.values())
+    has_kwargs = any(
+        param.kind == Parameter.VAR_KEYWORD for param in signature.parameters.values()
+    )
 
     if has_kwargs:
         try:
             data = parse_kwargs(params)
         except ValueError as exc:
-            errors['params'] = [str(exc)]
+            errors["params"] = [str(exc)]
         else:
             incident_filter = IncidentFilter(data)
             try:
                 incident_filter.clean(strict=True)
             except ValidationError as exc:
-                errors['params'] = [str(error) for error in exc]
+                errors["params"] = [str(error) for error in exc]
     else:
         positional_keyword_params = [
             param
@@ -55,13 +57,21 @@ def validate_dataset_params(dataset, params):
         max_param_count = len(positional_keyword_params)
 
         if param_count < min_param_count:
-            errors['params'] = ['At least {} parameter{} must be supplied for this dataset'.format(min_param_count, 's' if min_param_count != 1 else '')]
+            errors["params"] = [
+                "At least {} parameter{} must be supplied for this dataset".format(
+                    min_param_count, "s" if min_param_count != 1 else ""
+                )
+            ]
 
         if param_count > max_param_count:
             if max_param_count == 0:
-                errors['params'] = ['No parameters may be supplied for this dataset']
+                errors["params"] = ["No parameters may be supplied for this dataset"]
             else:
-                errors['params'] = ['At most {} parameter{} may be supplied for this dataset'.format(max_param_count, 's' if max_param_count != 1 else '')]
+                errors["params"] = [
+                    "At most {} parameter{} may be supplied for this dataset".format(
+                        max_param_count, "s" if max_param_count != 1 else ""
+                    )
+                ]
 
     if errors:
         raise ValidationError(errors)

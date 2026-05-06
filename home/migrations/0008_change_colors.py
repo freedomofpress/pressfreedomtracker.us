@@ -6,15 +6,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0007_auto_20170704_1506'),
+        ("home", "0007_auto_20170704_1506"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='statbox',
-            name='color',
-            field=models.CharField(choices=[('blue', 'Blue'), ('green', 'Green'), ('purple', 'Purple'), ('orange', 'Orange'), ('dark-gray', 'Dark Gray'), ('white', 'White')], max_length=7),
+            model_name="statbox",
+            name="color",
+            field=models.CharField(
+                choices=[
+                    ("blue", "Blue"),
+                    ("green", "Green"),
+                    ("purple", "Purple"),
+                    ("orange", "Orange"),
+                    ("dark-gray", "Dark Gray"),
+                    ("white", "White"),
+                ],
+                max_length=7,
+            ),
         ),
     ]

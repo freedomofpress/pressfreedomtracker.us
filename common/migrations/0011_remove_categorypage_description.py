@@ -6,14 +6,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0010_add_custom_embed_block'),
+        ("common", "0010_add_custom_embed_block"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='categorypage',
-            name='description',
+            model_name="categorypage",
+            name="description",
         ),
     ]

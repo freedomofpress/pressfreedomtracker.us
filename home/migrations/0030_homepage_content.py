@@ -8,15 +8,33 @@ import wagtail.embeds.blocks
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0029_auto_20200624_1855'),
+        ("home", "0029_auto_20200624_1855"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='homepage',
-            name='content',
-            field=wagtail.fields.StreamField([('heading_2', wagtail.blocks.StructBlock([('content', wagtail.blocks.CharBlock())])), ('raw_html', wagtail.blocks.RawHTMLBlock()), ('rich_text', wagtail.blocks.RichTextBlock()), ('tweet', wagtail.blocks.StructBlock([('tweet', wagtail.embeds.blocks.EmbedBlock())])), ('tabs', common.blocks.TabbedBlock())], blank=True),
+            model_name="homepage",
+            name="content",
+            field=wagtail.fields.StreamField(
+                [
+                    (
+                        "heading_2",
+                        wagtail.blocks.StructBlock(
+                            [("content", wagtail.blocks.CharBlock())]
+                        ),
+                    ),
+                    ("raw_html", wagtail.blocks.RawHTMLBlock()),
+                    ("rich_text", wagtail.blocks.RichTextBlock()),
+                    (
+                        "tweet",
+                        wagtail.blocks.StructBlock(
+                            [("tweet", wagtail.embeds.blocks.EmbedBlock())]
+                        ),
+                    ),
+                    ("tabs", common.blocks.TabbedBlock()),
+                ],
+                blank=True,
+            ),
         ),
     ]

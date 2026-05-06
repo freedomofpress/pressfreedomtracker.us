@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0107_alter_categoryincidentfilter_incident_filter_and_more'),
+        ("common", "0107_alter_categoryincidentfilter_incident_filter_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customimage',
-            name='description',
-            field=models.CharField(blank=True, default='', max_length=255, verbose_name='description'),
+            model_name="customimage",
+            name="description",
+            field=models.CharField(
+                blank=True, default="", max_length=255, verbose_name="description"
+            ),
         ),
     ]

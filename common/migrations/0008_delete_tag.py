@@ -6,12 +6,11 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0007_add_common_tag'),
-        ('incident', '0009_change_tags_to_m2ms'),
+        ("common", "0007_add_common_tag"),
+        ("incident", "0009_change_tags_to_m2ms"),
     ]
 
     operations = [
-        migrations.DeleteModel('Tag'),
+        migrations.DeleteModel("Tag"),
     ]

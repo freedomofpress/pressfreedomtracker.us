@@ -34,7 +34,7 @@ ci-tests: ## Runs testinfra against a pre-running CI container (useful for debug
 .PHONY: dev-tests
 dev-tests: ## Run django tests against developer environment
 	docker compose exec django /bin/bash -ec \
-		"coverage run ./manage.py test --noinput --failfast; \
+		"coverage run ./manage.py test --noinput ; \
 		coverage html ; \
 		coverage xml ; \
 		coverage report"
@@ -125,11 +125,18 @@ eslint:
 stylelint:
 	docker compose exec node npm run stylelint
 
-.PHONY: flake8
-flake8: ## Runs flake8 linting in Python3 container.
-	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_flake8 --rm \
+.PHONY: lint
+lint: ruff
+
+.PHONY: ruff
+ruff: ## Runs ruff linting in Python3 container.
+	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_ruff --rm \
 			python:3.12.2-slim-bookworm \
-			bash -c "pip install -q flake8 && flake8"
+			bash -c "pip install -q ruff && ruff check"
+
+.PHONY: ruff
+ruff: ## Runs ruff linter/formatter.
+	@docker compose run --rm django ruff check .
 
 .PHONY: check-migrations
 check-migrations: ## Check for ungenerated migrations

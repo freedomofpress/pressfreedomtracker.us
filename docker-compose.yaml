@@ -131,6 +131,9 @@ services:
       SELENIUM_HOST: selenium
       DJANGO_CHART_HOST: node-chart-pregenerator
       DJANGO_CHART_PORT: *chart-port
+      MAILCHIMP_API_KEY:
+      NEWSLETTER_REPLY_TO:
+      NEWSLETTER_FROM_NAME:
     working_dir: /django
     volumes:
       - ./:/django

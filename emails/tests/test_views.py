@@ -54,7 +54,7 @@ class EmailSignupThrottleTest(TestCase):
             with self.subTest(i=i):
                 response = self.client.post(
                     reverse("email-signup-create"),
-                    {"email_address": f'hello{i}@example.com'},
+                    {"email_address": f"hello{i}@example.com"},
                 )
                 self.assertEqual(response.status_code, 200)
         response = self.client.post(
@@ -64,15 +64,15 @@ class EmailSignupThrottleTest(TestCase):
         self.assertEqual(response.status_code, 429)
 
     def test_throttling_using_cloudflare_headers(self):
-        ip1 = '1.1.1.1'
-        ip2 = '2.2.2.2'
+        ip1 = "1.1.1.1"
+        ip2 = "2.2.2.2"
 
         for i in range(40):
             with self.subTest(i=i):
                 ip = ip1 if i % 2 == 0 else ip2
                 response = self.client.post(
                     reverse("email-signup-create"),
-                    {"email_address": f'hello{i}@example.com'},
+                    {"email_address": f"hello{i}@example.com"},
                     HTTP_CF_CONNECTING_IP=ip,
                 )
                 self.assertEqual(response.status_code, 200)

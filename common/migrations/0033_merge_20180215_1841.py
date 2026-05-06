@@ -6,11 +6,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0030_incidentfieldcategorypage'),
-        ('common', '0032_auto_20180206_0048'),
+        ("common", "0030_incidentfieldcategorypage"),
+        ("common", "0032_auto_20180206_0048"),
     ]
 
-    operations = [
-    ]
+    operations = []

@@ -8,20 +8,29 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0046_rename_statistics_item'),
+        ("common", "0046_rename_statistics_item"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='statisticsitem',
-            name='page',
-            field=modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='statistics_items', to='common.CategoryPage'),
+            model_name="statisticsitem",
+            name="page",
+            field=modelcluster.fields.ParentalKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="statistics_items",
+                to="common.CategoryPage",
+            ),
         ),
         migrations.AlterField(
-            model_name='statisticsitem',
-            name='data_point',
-            field=models.CharField(choices=[('num_incidents', 'num_incidents'), ('num_targets', 'num_targets')], max_length=255),
+            model_name="statisticsitem",
+            name="data_point",
+            field=models.CharField(
+                choices=[
+                    ("num_incidents", "num_incidents"),
+                    ("num_targets", "num_targets"),
+                ],
+                max_length=255,
+            ),
         ),
     ]

@@ -6,39 +6,119 @@ import modelcluster.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0071_alter_incidentpage_introduction'),
+        ("incident", "0071_alter_incidentpage_introduction"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incidentpage',
-            name='arrest_status',
-            field=models.CharField(blank=True, choices=[('UNKNOWN', 'unknown'), ('DETAINED_NO_PROCESSING', 'detained and released without being processed'), ('DETAINED_CUSTODY', 'detained and still in custody'), ('ARRESTED_CUSTODY', 'arrested and still in custody'), ('ARRESTED_RELEASED', 'arrested and released'), ('CHARGED_WITHOUT_ARREST', 'charged without arrest')], max_length=255, null=True, verbose_name='Arrest status'),
+            model_name="incidentpage",
+            name="arrest_status",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("UNKNOWN", "unknown"),
+                    (
+                        "DETAINED_NO_PROCESSING",
+                        "detained and released without being processed",
+                    ),
+                    ("DETAINED_CUSTODY", "detained and still in custody"),
+                    ("ARRESTED_CUSTODY", "arrested and still in custody"),
+                    ("ARRESTED_RELEASED", "arrested and released"),
+                    ("CHARGED_WITHOUT_ARREST", "charged without arrest"),
+                ],
+                max_length=255,
+                null=True,
+                verbose_name="Arrest status",
+            ),
         ),
         migrations.CreateModel(
-            name='IncidentCharge',
+            name="IncidentCharge",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('status', models.CharField(choices=[('UNKNOWN', 'unknown'), ('NOT_CHARGED', 'not charged'), ('CHARGES_PENDING', 'charges pending'), ('CHARGES_DROPPED', 'charges dropped'), ('CONVICTED', 'convicted'), ('ACQUITTED', 'acquitted'), ('PENDING_APPEAL', 'pending appeal')], max_length=1000)),
-                ('notes', models.TextField(blank=True, default='')),
-                ('charge', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='incidents', to='incident.charge')),
-                ('incident_page', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='charges', to='incident.incidentpage')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("UNKNOWN", "unknown"),
+                            ("NOT_CHARGED", "not charged"),
+                            ("CHARGES_PENDING", "charges pending"),
+                            ("CHARGES_DROPPED", "charges dropped"),
+                            ("CONVICTED", "convicted"),
+                            ("ACQUITTED", "acquitted"),
+                            ("PENDING_APPEAL", "pending appeal"),
+                        ],
+                        max_length=1000,
+                    ),
+                ),
+                ("notes", models.TextField(blank=True, default="")),
+                (
+                    "charge",
+                    modelcluster.fields.ParentalKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="incidents",
+                        to="incident.charge",
+                    ),
+                ),
+                (
+                    "incident_page",
+                    modelcluster.fields.ParentalKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="charges",
+                        to="incident.incidentpage",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='ChargeUpdate',
+            name="ChargeUpdate",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('status', models.CharField(choices=[('UNKNOWN', 'unknown'), ('NOT_CHARGED', 'not charged'), ('CHARGES_PENDING', 'charges pending'), ('CHARGES_DROPPED', 'charges dropped'), ('CONVICTED', 'convicted'), ('ACQUITTED', 'acquitted'), ('PENDING_APPEAL', 'pending appeal')], max_length=1000)),
-                ('notes', models.TextField(blank=True, default='')),
-                ('incident_charge', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='updates', to='incident.incidentcharge')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("UNKNOWN", "unknown"),
+                            ("NOT_CHARGED", "not charged"),
+                            ("CHARGES_PENDING", "charges pending"),
+                            ("CHARGES_DROPPED", "charges dropped"),
+                            ("CONVICTED", "convicted"),
+                            ("ACQUITTED", "acquitted"),
+                            ("PENDING_APPEAL", "pending appeal"),
+                        ],
+                        max_length=1000,
+                    ),
+                ),
+                ("notes", models.TextField(blank=True, default="")),
+                (
+                    "incident_charge",
+                    modelcluster.fields.ParentalKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="updates",
+                        to="incident.incidentcharge",
+                    ),
+                ),
             ],
         ),
     ]

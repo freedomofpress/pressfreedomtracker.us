@@ -26,7 +26,6 @@ def convert_venue_to_jurisdiction(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("incident", "0009_change_tags_to_m2ms")]
 
     operations = [
