@@ -64,6 +64,7 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
 
     recent_incidents_count = models.PositiveIntegerField(
         default=8,
+        null=True,
         help_text="Number of recent incidents to display",
     )
 

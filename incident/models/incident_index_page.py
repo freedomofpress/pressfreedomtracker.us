@@ -47,11 +47,13 @@ class SummarySchema(Schema):
 class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     feed_limit = models.PositiveIntegerField(
         default=1000,
+        null=True,
         help_text="Maximum number of incidents to be included in the "
         "syndication feed. 0 for unlimited.",
     )
     feed_per_page = models.PositiveIntegerField(
         default=20,
+        null=True,
         help_text="Maximum number of incidents to be included per page "
         "in the syndication feed.",
     )
