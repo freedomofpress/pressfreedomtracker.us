@@ -214,6 +214,8 @@ WAGTAIL_GRAVATAR_PROVIDER_URL = None
 
 WAGTAIL_SITE_NAME = "tracker"
 
+WAGTAILSNIPPETS_MENU_SHOW_ALL = True
+
 WAGTAILIMAGES_IMAGE_MODEL = "common.CustomImage"
 WAGTAILIMAGES_EXTENSIONS = ["avif", "gif", "jpg", "jpeg", "png", "webp", "svg"]
 
