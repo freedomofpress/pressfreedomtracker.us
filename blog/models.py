@@ -184,7 +184,8 @@ class BlogAuthor(Orderable):
 
 class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
     publication_datetime = models.DateTimeField(
-        help_text="Past or future date of publication"
+        help_text="Past or future date of publication",
+        null=True,
     )
 
     blog_type = models.CharField(
