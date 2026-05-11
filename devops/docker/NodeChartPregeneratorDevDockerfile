@@ -3,10 +3,13 @@ FROM node:26.1.0-trixie@sha256:f6f9fae352b319e817eec5efc7721b3f06bc53104f2f800d0
 
 ARG USERID
 
-# Install fonts
-RUN apk --no-cache add msttcorefonts-installer fontconfig && \
-    update-ms-fonts && \
-    fc-cache -f
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        fontconfig \
+        ttf-mscorefonts-installer \
+    && fc-cache -f \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY devops/docker/node-pregenerator-start.sh /usr/bin/node-pregenerator-start.sh
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node

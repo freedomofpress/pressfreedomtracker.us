@@ -1,10 +1,15 @@
 # sha256 as of 2026-05-11
 FROM node:26.1.0-trixie@sha256:f6f9fae352b319e817eec5efc7721b3f06bc53104f2f800d0f778f3915835804
 
-# Install fonts
-RUN apk --no-cache add msttcorefonts-installer fontconfig && \
-    update-ms-fonts && \
-    fc-cache -f
+ARG USERID
+
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        fontconfig \
+        ttf-mscorefonts-installer \
+    && fc-cache -f \
+    && rm -rf /var/lib/apt/lists/*
 
 # Ensure npm can correctly set cache information in ~/.npm
 ENV HOME /home/node
