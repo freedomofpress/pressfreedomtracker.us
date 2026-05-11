@@ -3,8 +3,10 @@ FROM node:26.1.0-trixie@sha256:f6f9fae352b319e817eec5efc7721b3f06bc53104f2f800d0
 
 ARG USERID
 
-RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
-    apt-get update && \
+RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware" > /etc/apt/sources.list
+RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
+
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         fontconfig \
         ttf-mscorefonts-installer \
