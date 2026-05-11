@@ -1,21 +1,15 @@
-# sha256 as of 2026-06-18
-FROM node:22-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS node-assets
+# sha256 as of 2026-05-11
+FROM node:26.1.0-trixie@sha256:f6f9fae352b319e817eec5efc7721b3f06bc53104f2f800d0f778f3915835804
 
-
-RUN apk add --no-cache paxctl python3 make g++ curl
-RUN paxctl -cm /usr/local/bin/node
+ARG USERID
 
 # Install fonts
 RUN apk --no-cache add msttcorefonts-installer fontconfig && \
     update-ms-fonts && \
     fc-cache -f
 
-# Make npm output less verbose
-ENV NPM_CONFIG_LOGLEVEL warn
-
 COPY devops/docker/node-pregenerator-start.sh /usr/bin/node-pregenerator-start.sh
-ARG USERID
-RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
+RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 
 WORKDIR /app
 
