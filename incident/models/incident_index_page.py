@@ -148,6 +148,16 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def export_view_OPTIONS(self, request: "HttpRequest") -> HttpResponse:
         return HttpResponse()
 
+    def handle_options_request(self, request, *args, **kwargs):
+        """
+        Override Wagtail's default OPTIONS handling to add CORS headers,
+        required for cross-origin access to the export API endpoint.
+        """
+        response = super().handle_options_request(request, *args, **kwargs)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
+        return response
+
     @path("summary/")
     @method_decorator(require_http_methods(["GET"]))
     def summary(self, request):
