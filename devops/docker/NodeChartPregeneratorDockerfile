@@ -14,7 +14,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Ensure npm can correctly set cache information in ~/.npm
-ENV HOME /home/node
+ENV HOME=/home/node
 RUN mkdir -p /home/node/.npm
 
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
