@@ -1,8 +1,13 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+import structlog
+
 from incident.models import PrepublicationIncidentSync
 from incident.utils.sync_prepubs import sync_prepubs, PrepubSource
+
+
+logger = structlog.get_logger()
 
 
 class Command(BaseCommand):
@@ -33,8 +38,17 @@ class Command(BaseCommand):
             message = f"Prepub sync failed: {e}"
             status = PrepublicationIncidentSync.Status.FAILED
             self.stdout.write(f"Prepub sync failed: {e}")
+            logger.exception("Prepub sync failed")
             raise
 
+        structlog.contextvars.bind_contextvars(
+            sync_prepubs_message=message,
+            sync_prepubs_status=status.name,
+        )
+        if status == PrepublicationIncidentSync.Status.SUCCESS:
+            logger.info("Prepublication sync succeeded")
+        else:
+            logger.warning("Prepublication sync did not succeed")
         sync = PrepublicationIncidentSync.objects.first()
         if not sync:
             PrepublicationIncidentSync.objects.create(
