@@ -57,6 +57,7 @@ export default function USMap({
 	// it to be downloaded
 	setSvgEl = () => { },
 	interactive = true,
+	fullSize = true,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -215,6 +216,91 @@ export default function USMap({
 							</DynamicWrapper>
 						))}
 					</g>
+					{fullSize && (() => {
+						const values = dataset.filter(hasLatLon).map(d => d.numberOfIncidents).filter(v => v > 0)
+						if (values.length === 0) return null
+						const maxValue = d3.max(values)
+						const minValue = d3.min(values)
+						if (!maxValue) return null
+						const maxR = getMarkerRadius(maxValue)
+						const minR = getMarkerRadius(minValue)
+						const baseline = 520
+						const centerX = 870
+						const labelX = centerX + maxR + 6
+						const showMin = minValue !== maxValue
+						return (
+							<g
+								role="img"
+								aria-label={`Legend: dot size represents number of incidents, ranging from ${minValue} to ${maxValue}`}
+								style={{ pointerEvents: 'none' }}
+							>
+								<text
+									x={labelX}
+									y={baseline - 2 * maxR - 16}
+									fontSize={11}
+									fontFamily="var(--font-base)"
+									fill="#333"
+									fontWeight={500}
+								>
+									Incidents
+								</text>
+								<circle
+									cx={centerX}
+									cy={baseline - maxR}
+									r={maxR}
+									fill="#E07A5F"
+									stroke="black"
+									strokeWidth={markerBorder.normal}
+								/>
+								<line
+									x1={centerX}
+									x2={labelX - 2}
+									y1={baseline - 2 * maxR}
+									y2={baseline - 2 * maxR}
+									stroke="black"
+									strokeWidth={0.5}
+								/>
+								<text
+									x={labelX}
+									y={baseline - 2 * maxR + 4}
+									fontSize={16}
+									fontFamily="var(--font-base)"
+									fill="#333"
+								>
+									{maxValue.toLocaleString()}
+								</text>
+								{showMin && (
+									<>
+										<circle
+											cx={centerX}
+											cy={baseline - minR}
+											r={minR}
+											fill="#E07A5F"
+											stroke="black"
+											strokeWidth={markerBorder.normal}
+										/>
+										<line
+											x1={centerX}
+											x2={labelX - 2}
+											y1={baseline - 2 * minR}
+											y2={baseline - 2 * minR}
+											stroke="black"
+											strokeWidth={0.5}
+										/>
+										<text
+											x={labelX}
+											y={baseline - 2 * minR + 4}
+											fontSize={16}
+											fontFamily="var(--font-base)"
+											fill="#333"
+										>
+											{minValue.toLocaleString()}
+										</text>
+									</>
+								)}
+							</g>
+						)
+					})()}
 				</svg>
 
 				{incidentsOutsideUS && searchPageURL && (

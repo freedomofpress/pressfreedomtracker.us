@@ -45,6 +45,7 @@ export default ({
 						height={fullSize ? (parent.width * 0.7) : 440}
 						overridePaddings={{ map: 0, bottom: 0 }}
 						interactive={interactive}
+						fullSize={fullSize}
 					/>
 				);
 
