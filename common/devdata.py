@@ -91,66 +91,77 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
             plural_name="Arrests and Criminal Charges",
             slug="arrest-criminal-charge",
             page_symbol="arrest",
+            google_sheets_name="Arrest",
         )
         border_stop = factory.Trait(
             title="Border Stop",
             plural_name="Border Stops",
             slug="border-stop",
             page_symbol="border_stop",
+            google_sheets_name="Border Stop",
         )
         denial_of_access = factory.Trait(
             title="Denial of Access",
             plural_name="Denials of Access",
             slug="denial-access",
             page_symbol="denial_of_access",
+            google_sheets_name="Denial of Access",
         )
         equipment_search = factory.Trait(
             title="Equipment Search or Seizure",
             plural_name="Equipment Searches, Seizures and Damage",
             slug="equipment-search-seizure-or-damage",
             page_symbol="equipment_search",
+            google_sheets_name="Equipment Search/Seizure",
         )
         assault = factory.Trait(
             title="Assault",
             plural_name="Assaults",
             slug="assault",
             page_symbol="assault",
+            google_sheets_name="Assault",
         )
         leak_case = factory.Trait(
             title="Leak Case",
             plural_name="Leak Cases",
             slug="leak-case",
             page_symbol="leak_case",
+            google_sheets_name="Leak Case",
         )
         subpoena = factory.Trait(
             title="Subpoena/Legal Order",
             plural_name="Subpoenas and Legal Orders",
             slug="subpoena",
             page_symbol="subpoena",
+            google_sheets_name="Subpoena/Legal Order",
         )
         equipment_damage = factory.Trait(
             title="Equipment Damage",
             plural_name="Equipment Damages",
             slug="equipment-damage",
             page_symbol="equipment_damage",
+            google_sheets_name="Equipment Damage",
         )
         other_incident = factory.Trait(
             title="Other Incident",
             plural_name="Other Incidents",
             slug="other-incident",
             page_symbol="other_incident",
+            google_sheets_name="Other",
         )
         chilling_statement = factory.Trait(
             title="Chilling Statement",
             plural_name="Chilling Statements",
             slug="chilling-statement",
             page_symbol="chilling_statement",
+            google_sheets_name="Chilling Statement",
         )
         prior_restraint = factory.Trait(
             title="Prior Restraint",
             plural_name="Prior Restraints",
             slug="prior-restraint",
             page_symbol="prior_restraint",
+            google_sheets_name="Prior Restraint",
         )
 
     methodology_text = factory.Faker("paragraph", nb_sentences=5)
