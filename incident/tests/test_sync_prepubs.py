@@ -29,6 +29,28 @@ class TestSyncPrepubs(TestCase):
 
     data = [
         [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Post-publication",
+        ],
+        [
             "Team",
             "Type",
             "Author",
@@ -162,6 +184,8 @@ class TestSyncPrepubs(TestCase):
         *,
         google_sheets_credentials=None,
         document_id="1",
+        sheet_name="2026 Editorial Tracking",
+        header_row_index=1,
         google_api_version="v4",
     ):
         if google_sheets_credentials is None:
@@ -169,6 +193,8 @@ class TestSyncPrepubs(TestCase):
         return PrepubSource(
             google_sheets_credentials=google_sheets_credentials,
             document_id=document_id,
+            sheet_name=sheet_name,
+            header_row_index=header_row_index,
             google_api_version=google_api_version,
         )
 
@@ -249,7 +275,7 @@ class TestSyncPrepubs(TestCase):
                 .values()
                 .get(
                     spreadsheetId=source.document_id,
-                    range="A2:Z5299",
+                    range=source.sheet_name,
                 ),
             ]
         )

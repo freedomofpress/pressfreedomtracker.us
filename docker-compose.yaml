@@ -135,6 +135,8 @@ services:
       NEWSLETTER_REPLY_TO:
       NEWSLETTER_FROM_NAME:
       PREPUB_GOOGLE_SHEETS_CREDS:
+      PREPUB_HEADER_ROW_INDEX:
+      PREPUB_SHEET_NAME:
       PREPUB_DOCUMENT_ID:
     working_dir: /django
     volumes:

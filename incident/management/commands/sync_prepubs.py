@@ -17,6 +17,8 @@ class Command(BaseCommand):
             source = PrepubSource(
                 google_sheets_credentials=config["GOOGLE_SHEETS_CREDS"],
                 document_id=config["DOCUMENT_ID"],
+                header_row_index=int(config["HEADER_ROW_INDEX"]),
+                sheet_name=config["SHEET_NAME"],
                 google_api_version=config["GOOGLE_API_VERSION"],
             )
         else:

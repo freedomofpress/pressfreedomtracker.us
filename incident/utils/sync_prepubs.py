@@ -18,6 +18,8 @@ from incident.models import (
 class PrepubSource:
     google_sheets_credentials: str
     document_id: str
+    sheet_name: str
+    header_row_index: int
     google_api_version: str
 
 
@@ -38,7 +40,7 @@ def fetch_sheet_data(source: PrepubSource):
         sheet.values()
         .get(
             spreadsheetId=source.document_id,
-            range="A2:Z5299",
+            range=source.sheet_name,
         )
         .execute()
     )
@@ -51,7 +53,8 @@ def sync_prepubs(source: PrepubSource):
     prepubs = []
     prepub_categories = []
     errors = []
-    header = values[0]
+    header = values[source.header_row_index]
+    data_start_index = source.header_row_index + 1
 
     idx_status = header.index("Status")
     idx_type = header.index("Type")
@@ -61,16 +64,15 @@ def sync_prepubs(source: PrepubSource):
     idx_categories = header.index("Categories")
     idx_incident_date = header.index("Incident Date")
 
-    rest = values[1:]
+    rest = values[data_start_index:]
 
     for i, row in enumerate(rest):
         # When displaying the row number in output messages, that
         # number should reference the row in the original Google
         # sheet, so it can be debugged by a person who can look at
-        # that document manually.  We must add 3 here since we are
-        # skipping one for the header and also only looking at cells
-        # in the range A2 and below, and `i` starts at 0.
-        row_number = i + 3
+        # that document manually.  We add 1 here to convert from
+        # zero-based Python iterators to one-based Google Sheets rows.
+        row_number = i + data_start_index + 1
 
         if (
             row[idx_status] == "Published"
