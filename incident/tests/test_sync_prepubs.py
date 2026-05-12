@@ -2,7 +2,7 @@ import datetime
 import json
 from unittest import mock
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from wagtail.models import Site
 
@@ -14,6 +14,7 @@ from incident.models import (
     PrepublicationIncidentSync,
 )
 from incident.utils.sync_prepubs import (
+    PrepubSource,
     authenticate_service,
     fetch_sheet_data,
     sync_prepubs,
@@ -156,6 +157,21 @@ class TestSyncPrepubs(TestCase):
         site.root_page.add_child(instance=cls.category_prior_restraint)
         site.root_page.add_child(instance=cls.category_equipment)
 
+    def create_source(
+        self,
+        *,
+        google_sheets_credentials=None,
+        document_id="1",
+        google_api_version="v4",
+    ):
+        if google_sheets_credentials is None:
+            google_sheets_credentials = json.dumps({"private_key": "fake"})
+        return PrepubSource(
+            google_sheets_credentials=google_sheets_credentials,
+            document_id=document_id,
+            google_api_version=google_api_version,
+        )
+
     def create_row(
         self,
         *,
@@ -197,16 +213,16 @@ class TestSyncPrepubs(TestCase):
             "4",
         ]
 
-    @override_settings(GOOGLE_SHEETS_CREDS=FAKE_CREDENTIALS)
     @mock.patch("incident.utils.sync_prepubs.build")
     @mock.patch("incident.utils.sync_prepubs.Credentials")
     def test_authenticate_service(self, mock_credentials, mock_build):
         creds = "creds"
         mock_credentials.from_service_account_info.return_value = creds
-        authenticate_service()
+        source = self.create_source()
+        authenticate_service(source)
 
         mock_credentials.from_service_account_info.assert_called_once_with(
-            json.loads(FAKE_CREDENTIALS),
+            json.loads(source.google_sheets_credentials),
             scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"],
         )
 
@@ -222,7 +238,8 @@ class TestSyncPrepubs(TestCase):
         mock_service.return_value.spreadsheets().values().get().execute.return_value = {
             "values": ["test"]
         }
-        sheet_data = fetch_sheet_data()
+        source = self.create_source()
+        sheet_data = fetch_sheet_data(source)
 
         self.assertEqual(sheet_data, ["test"])
         mock_service.assert_has_calls(
@@ -231,7 +248,7 @@ class TestSyncPrepubs(TestCase):
                 .spreadsheets()
                 .values()
                 .get(
-                    spreadsheetId="1PeMPpol5d0MrF0KH36ZviN7Z4PipK6ZeSDh9AlJ3-eA",
+                    spreadsheetId=source.document_id,
                     range="A2:Z5299",
                 ),
             ]
@@ -242,7 +259,7 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data + [
             self.create_row(incident_date="Jan 01, 2024")
         ]
-        _, message = sync_prepubs()
+        _, message = sync_prepubs(self.create_source())
 
         self.assertIn(
             'Row 6: Invalid date "Jan 01, 2024"',
@@ -254,7 +271,7 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data + [
             self.create_row(city="Invalid City", state="IV")
         ]
-        _, message = sync_prepubs()
+        _, message = sync_prepubs(self.create_source())
         self.assertIn(
             'Row 6: Invalid location "Invalid City, IV"',
             message,
@@ -265,7 +282,7 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data + [
             self.create_row(city="Washington, D.C.", state="")
         ]
-        sync_prepubs()
+        sync_prepubs(self.create_source())
         PrepublicationIncident.objects.prefetch_related(
             "categorizations__category",
         ).get(location__name="Washington", location__regcode="DC")
@@ -273,7 +290,7 @@ class TestSyncPrepubs(TestCase):
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
     def test_sync_prepubs_invalid_category(self, mock_fetch):
         mock_fetch.return_value = self.data + [self.create_row(categories="Invalid")]
-        status, message = sync_prepubs()
+        status, message = sync_prepubs(self.create_source())
         self.assertEqual(status, PrepublicationIncidentSync.Status.INVALID_DATA)
         self.assertIn(
             'Row 6: Invalid category "Invalid"',
@@ -285,7 +302,7 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data + [
             self.create_row(categories="Invalid", city="Invalid")
         ]
-        status, message = sync_prepubs()
+        status, message = sync_prepubs(self.create_source())
         self.assertEqual(status, PrepublicationIncidentSync.Status.INVALID_DATA)
 
         # Category error should take precedence.
@@ -302,7 +319,7 @@ class TestSyncPrepubs(TestCase):
                 categories="Prior Restraint, Equipment Search/Seizure",
             )
         ]
-        status, _ = sync_prepubs()
+        status, _ = sync_prepubs(self.create_source())
         self.assertEqual(status, PrepublicationIncidentSync.Status.SUCCESS)
 
         prepub = PrepublicationIncident.objects.prefetch_related(
@@ -332,7 +349,7 @@ class TestSyncPrepubs(TestCase):
                 state="",
             )
         ]
-        status, _ = sync_prepubs()
+        status, _ = sync_prepubs(self.create_source())
         self.assertEqual(status, PrepublicationIncidentSync.Status.SUCCESS)
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
@@ -350,7 +367,7 @@ class TestSyncPrepubs(TestCase):
         )
 
         mock_fetch.return_value = self.data
-        sync_prepubs()
+        sync_prepubs(self.create_source())
 
         prepub = PrepublicationIncident.objects.prefetch_related(
             "categorizations__category",
@@ -390,6 +407,6 @@ class TestSyncPrepubs(TestCase):
         PrepublicationIncidentCategory.objects.get(pk=existing_prepub_category.pk)
 
         mock_fetch.return_value = self.data + [self.create_row(categories="Invalid")]
-        sync_prepubs()
+        sync_prepubs(self.create_source())
         PrepublicationIncident.objects.get(pk=existing_prepub.pk)
         PrepublicationIncidentCategory.objects.get(pk=existing_prepub_category.pk)

@@ -1,7 +1,6 @@
 import json
+from dataclasses import dataclass
 from datetime import datetime
-
-from django.conf import settings
 
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -15,26 +14,30 @@ from incident.models import (
 )
 
 
-SPREADSHEET_ID = "1PeMPpol5d0MrF0KH36ZviN7Z4PipK6ZeSDh9AlJ3-eA"
+@dataclass
+class PrepubSource:
+    google_sheets_credentials: str
+    document_id: str
+    google_api_version: str
 
 
-def authenticate_service():
-    account_info = json.loads(settings.GOOGLE_SHEETS_CREDS)
+def authenticate_service(source: PrepubSource):
+    account_info = json.loads(source.google_sheets_credentials)
 
     creds = Credentials.from_service_account_info(
         account_info,
         scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"],
     )
 
-    return build("sheets", "v4", credentials=creds)
+    return build("sheets", source.google_api_version, credentials=creds)
 
 
-def fetch_sheet_data():
-    sheet = authenticate_service().spreadsheets()
+def fetch_sheet_data(source: PrepubSource):
+    sheet = authenticate_service(source).spreadsheets()
     result = (
         sheet.values()
         .get(
-            spreadsheetId=SPREADSHEET_ID,
+            spreadsheetId=source.document_id,
             range="A2:Z5299",
         )
         .execute()
@@ -42,8 +45,8 @@ def fetch_sheet_data():
     return result.get("values", [])
 
 
-def sync_prepubs():
-    values = fetch_sheet_data()
+def sync_prepubs(source: PrepubSource):
+    values = fetch_sheet_data(source)
 
     prepubs = []
     prepub_categories = []

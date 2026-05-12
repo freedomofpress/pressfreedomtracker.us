@@ -529,4 +529,13 @@ WAGTAILEMBEDS_FINDERS = [
     },
 ]
 
-GOOGLE_SHEETS_CREDS = os.environ.get("GOOGLE_SHEETS_CREDS", "")
+if all(
+    name in os.environ for name in ("PREPUB_GOOGLE_SHEETS_CREDS", "PREPUB_DOCUMENT_ID")
+):
+    PREPUBLICATION_SOURCES = {
+        "default": {
+            "GOOGLE_SHEETS_CREDS": os.environ["PREPUB_GOOGLE_SHEETS_CREDS"],
+            "DOCUMENT_ID": os.environ["PREPUB_DOCUMENT_ID"],
+            "GOOGLE_API_VERSION": os.getenv("PREPUB_GOOGLE_API_VERSION", "v4"),
+        }
+    }
