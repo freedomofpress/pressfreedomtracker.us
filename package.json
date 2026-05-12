@@ -13,6 +13,7 @@
     "stylelint": "stylelint client/**/*.sass"
   },
   "overrides": {
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "brace-expansion@<1.1.13": "^1.1.13",
     "brace-expansion@>=2.0.0 <2.0.3": "^2.0.3",
     "lodash": "^4.18.0"
