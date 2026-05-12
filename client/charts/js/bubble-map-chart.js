@@ -1,8 +1,29 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import BubbleMapChart from './components/IncidentsBubbleMap'
-import DataLoader from "../../charts/js/components/DataLoader"
 import * as d3 from 'd3'
+
+function StaticCsvBubbleMap({ fullSize, ...props }) {
+	const [dataset, setDataset] = useState(null)
+
+	useEffect(() => {
+		import('./data/incidents.csv.js')
+			.then(({ csv }) => setDataset(d3.csvParse(csv, d3.autoType)))
+			.catch((err) => console.error(err))
+	}, [])
+
+	if (!dataset) {
+		return (
+			<svg
+				viewBox="0 0 655 440"
+				width="100%"
+				style={{ display: fullSize ? 'none' : 'block', backgroundColor: '#fafafa' }}
+			/>
+		)
+	}
+
+	return <BubbleMapChart dataset={dataset} fullSize={fullSize} {...props} />
+}
 
 function engageCharts() {
 	const charts = document.querySelectorAll('.chart-bubble-map:not(.engaged)')
@@ -25,31 +46,18 @@ function engageCharts() {
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
 
 		root.render((
-			<DataLoader
-				dataUrl={[`/api/edge/incidents/homepage_csv/?`]}
-				dataKey={['dataset']}
-				dataParser={[(data) => d3.csvParse(data, d3.autoType)]}
-				loadingComponent={(
-					<svg
-						viewBox="0 0 655 440"
-						width="100%"
-						style={{ display: fullSize ? 'none' : 'block', backgroundColor: '#fafafa' }}
-					/>
-				)}
-			>
-				<BubbleMapChart
-					filterCategories={filterCategories}
-					filterTags={filterTag}
-					filterStates={filterStates}
-					dateRange={[filterLowerDate, filterUpperDate]}
-					aggregationLocality={groupBy}
-					title={title}
-					description={description}
-					creditUrl={chartNode.baseURI}
-					interactive={interactive}
-					fullSize={fullSize}
-				/>
-			</DataLoader>
+			<StaticCsvBubbleMap
+				filterCategories={filterCategories}
+				filterTags={filterTag}
+				filterStates={filterStates}
+				dateRange={[filterLowerDate, filterUpperDate]}
+				aggregationLocality={groupBy}
+				title={title}
+				description={description}
+				creditUrl={chartNode.baseURI}
+				interactive={interactive}
+				fullSize={fullSize}
+			/>
 		))
 	})
 }
