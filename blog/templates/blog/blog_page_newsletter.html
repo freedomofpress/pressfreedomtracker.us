@@ -418,9 +418,27 @@
 		<mj-section background-color="#000000" css-class="footer">
 			<mj-column>
 				<mj-text align="center" padding-bottom="24px">
-					<a href="https://bsky.app/profile/pressfreedomtracker.us" style="display:inline-block; margin:0 16px; text-decoration:none;">{% include 'common/bluesky.svg' %}</a>
-					<a href="https://x.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">{% include 'common/x.svg' %}</a>
-					<a href="https://instagram.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">{% include 'common/instagram.svg' %}</a>
+					<a href="https://bsky.app/profile/pressfreedomtracker.us" style="display:inline-block; margin:0 16px; text-decoration:none;">
+						<img
+							src="{{ page.get_base_url }}{% static 'logos/bluesky.png' %}"
+							alt="U.S. Press Freedom Tracker on Bluesky"
+							width="24px"
+						/>
+					</a>
+					<a href="https://x.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
+						<img
+							src="{{ page.get_base_url }}{% static 'logos/x.png' %}"
+							alt="U.S. Press Freedom Tracker on Bluesky"
+							width="24px"
+						/>
+					</a>
+					<a href="https://instagram.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
+						<img
+							src="{{ page.get_base_url }}{% static 'logos/instagram.png' %}"
+							alt="U.S. Press Freedom Tracker on Bluesky"
+							width="24px"
+						/>
+					</a>
 				</mj-text>
 				<mj-text align="center" color="#ffffff" font-size="14px" font-family="'Roboto Mono', monospace" line-height="1.6">
 					<p>&copy; Copyright Freedom of the Press Foundation</p>
