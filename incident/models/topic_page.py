@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.postgres.fields import DateRangeField
 from django.http import JsonResponse
 from marshmallow import Schema, fields
-from psycopg2.extras import DateRange
+from psycopg.types.range import Range
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 from wagtail.admin.panels import (
     FieldPanel,
@@ -248,7 +248,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         incident_lookups = models.Q(tags=self.incident_tag)
         if self.start_date or self.end_date:
-            target_range = DateRange(
+            target_range = Range(
                 lower=self.start_date,
                 upper=self.end_date,
                 bounds="[]",
@@ -283,7 +283,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
             incidents__incident_page__live=True,
         )
         if self.start_date or self.end_date:
-            target_range = DateRange(
+            target_range = Range(
                 lower=self.start_date,
                 upper=self.end_date,
                 bounds="[]",
