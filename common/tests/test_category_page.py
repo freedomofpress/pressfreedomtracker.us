@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.test import TestCase, RequestFactory
-from wagtail.models import Site, Page
+from wagtail.models import Site
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import (
     inline_formset,
@@ -14,7 +14,6 @@ from common.models.pages import CategoryIncidentFilter, CategoryPage
 from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from common.models.choices import FILTER_CHOICES
-from home.tests.factories import HomePageFactory
 from incident.utils.incident_filter import IncidentFilter
 from incident.tests.factories import IncidentPageFactory
 
@@ -165,23 +164,11 @@ class IncidentFilterTest(TestCase):
 
 class CategoryPageTest(TestCase):
     def setUp(self):
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        self.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=self.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": self.home_page,
-            },
-        )
-        if not created:
-            site.root_page = self.home_page
-            site.save()
+        # Get the root home page
+        self.home_page = site.root_page
 
         self.category_page = CategoryPageFactory(
             parent=self.home_page,
@@ -272,23 +259,12 @@ class CategoryPageTest(TestCase):
 class CategoryPageMethodologyStatisticsTest(WagtailPageTestCase):
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        cls.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=cls.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": cls.home_page,
-            },
-        )
-        if not created:
-            site.root_page = cls.home_page
-            site.save()
+        # Get the root home page
+        cls.home_page = site.root_page
+
         CategoryPageFactory(
             parent=cls.home_page,
             # Needed to apply an "city" filter below

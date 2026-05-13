@@ -6,7 +6,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 import wagtail.blocks
-from wagtail.models import Page, Site
+from wagtail.models import Site
 
 import defusedxml.ElementTree as ET
 
@@ -20,7 +20,6 @@ from common.tests.factories import (
     OrganizationPageFactory,
     PersonPageFactory,
 )
-from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory
 
 from .factories import BlogIndexPageFactory, BlogPageFactory
@@ -31,23 +30,11 @@ class TestPages(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        cls.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=cls.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": cls.home_page,
-            },
-        )
-        if not created:
-            site.root_page = cls.home_page
-            site.save()
+        # Get the root home page
+        cls.home_page = site.root_page
 
         CustomImageFactory.create(
             file__width=800,
@@ -293,23 +280,8 @@ class TestPages(TestCase):
 class TestBlogPageNewsletterPermission(TestCase):
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
-        root_page.add_child(instance=cls.home_page)
-
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': cls.home_page,
-            }
-        )
-        if not created:
-            site.root_page = cls.home_page
-            site.save()
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
         cls.index = BlogIndexPageFactory(parent=site.root_page, slug='all-blogs')
         cls.blog_page = BlogPageFactory(parent=cls.index, slug='blog')
