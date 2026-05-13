@@ -53,27 +53,15 @@ class TestPages(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        cls.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=cls.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": cls.home_page,
-            },
-        )
-        if not created:
-            site.root_page = cls.home_page
-            site.save()
+        # Get the root home page
+        cls.home_page = site.root_page
 
         incident_filter_settings = IncidentFilterSettings.for_site(site)
         cls.search_settings = SearchSettings.for_site(site)
-        GeneralIncidentFilter.objects.create(
+        GeneralIncidentFilter.objects.get_or_create(
             incident_filter_settings=incident_filter_settings,
             incident_filter="state",
         )
@@ -167,6 +155,9 @@ class TestIncidentIndexPageContext(TestCase):
         self.search_settings = SearchSettings.for_site(site)
         self.site = site
         self.index = IncidentIndexPageFactory(parent=site.root_page, slug="incidents")
+
+    def tearDown(self):
+        self.site.clear_site_root_paths_cache()
 
     def test_includes_export_path(self):
         request = RequestFactory().get("/")
@@ -336,23 +327,11 @@ class TestExportPage(TestCase):
     def setUpTestData(cls):
         cls.client = Client()
 
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        cls.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=cls.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": cls.home_page,
-            },
-        )
-        if not created:
-            site.root_page = cls.home_page
-            site.save()
+        # Get the root home page
+        cls.home_page = site.root_page
 
         cls.index = IncidentIndexPageFactory(parent=site.root_page, slug="incidents")
 
@@ -1115,6 +1094,9 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
             parent=self.home_page,
         )
 
+    def tearDown(self):
+        self.site.clear_site_root_paths_cache()
+
     def test_can_preview_incident_page(self):
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
         incident_page = IncidentPageFactory(parent=self.category)
@@ -1264,6 +1246,9 @@ class TestTopicPage(WagtailPageTestCase):
         self.index_page = IncidentIndexPageFactory(
             parent=self.home_page,
         )
+
+    def tearDown(self):
+        self.site.clear_site_root_paths_cache()
 
     def test_can_create_topic_page(self):
         stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)

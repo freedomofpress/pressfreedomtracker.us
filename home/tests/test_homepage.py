@@ -26,7 +26,7 @@ class HomePageTest(TestCase):
         self.home_page.blog_index_page = self.blog_index_page
         self.home_page.save()
 
-        site, created = Site.objects.get_or_create(
+        self.site, created = Site.objects.get_or_create(
             is_default_site=True,
             defaults={
                 "site_name": "Test site",
@@ -36,8 +36,11 @@ class HomePageTest(TestCase):
             },
         )
         if not created:
-            site.root_page = self.home_page
-            site.save()
+            self.site.root_page = self.home_page
+            self.site.save()
+
+    def tearDown(self):
+        self.site.clear_site_root_paths_cache()
 
     def test_get_home_should_succeed(self):
         response = self.client.get("/")

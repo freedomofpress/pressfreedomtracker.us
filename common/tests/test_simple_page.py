@@ -1,5 +1,5 @@
 from django.urls import reverse
-from wagtail.models import Site, Page
+from wagtail.models import Site
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import (
     nested_form_data,
@@ -9,30 +9,17 @@ from wagtail.test.utils.form_data import (
 
 from common.models import SimplePage
 from common.tests.factories import CategoryPageFactory, SimplePageFactory
-from home.tests.factories import HomePageFactory
 
 
 class SimplePageStatisticsTagsTestCase(WagtailPageTestCase):
     def setUp(self):
         super().setUp()
         self.login()
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        self.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=self.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": self.home_page,
-            },
-        )
-        if not created:
-            site.root_page = self.home_page
-            site.save()
+        # Get the root home page
+        self.home_page = site.root_page
 
         self.site = site
         self.category = CategoryPageFactory(parent=self.home_page)
