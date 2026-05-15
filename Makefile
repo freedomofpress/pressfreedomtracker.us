@@ -146,11 +146,6 @@ check-migrations: ## Check for ungenerated migrations
 bandit: ## Runs bandit static code analysis in Python3 container.
 	@docker compose run --rm django ./scripts/bandit
 
-.PHONY: safety
-safety: ## Runs `safety check` to check python dependencies for vulnerabilities
-# Upgrade safety to ensure we are using the latest version.
-	pip install --upgrade safety && ./scripts/safety_check.py
-
 .PHONY: prod-push
 prod-push: ## Publishes prod container image to registry
 	docker tag $(REMOTE_IMAGE):latest $(REMOTE_IMAGE):$(GIT_REV)-$(GIT_BR)
