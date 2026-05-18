@@ -14,6 +14,7 @@ from blog.models import BlogIndexPageFeature
 from blog.wagtail_hooks import register_permissions
 from common.exceptions import ChartNotAvailable
 from common.models.charts import ChartSnapshot
+from common.templatetags.common_tags import first_block_of
 from common.tests.factories import (
     CategoryPageFactory,
     CustomImageFactory,
@@ -242,6 +243,22 @@ class TestPages(TestCase):
         # We should no longer have that JS bundle in the response
         response = self.client.get(self.blog_page.url)
         self.assertNotContains(response, "verticalBarChart")
+
+    def test_get_blog_page_newsletter_intro(self):
+        newsletter_intro = first_block_of(self.blog_page.body, "text")
+        self.assertEqual(
+            str(self.blog_page.newsletter_intro()),
+            str(newsletter_intro)
+        )
+
+    def test_get_blog_page_newsletter_body(self):
+        newsletter_body = self.blog_page.body
+        newsletter_intro = self.blog_page.newsletter_intro()
+        newsletter_body.remove(newsletter_intro)
+        self.assertEqual(
+            str(self.blog_page.newsletter_body()),
+            str(newsletter_body)
+        )
 
     def test_get_blog_page_base_url(self):
         self.assertEqual(

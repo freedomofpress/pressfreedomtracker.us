@@ -49,6 +49,7 @@ from common.blocks import (
     BubbleMapChart,
     HexbinMapChart,
 )
+from common.templatetags.common_tags import first_block_of
 
 
 class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
@@ -357,6 +358,26 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
 
     def get_base_url(self):
         return self.get_site().root_url
+
+    def newsletter_intro(self):
+        """Returns the newsletter intro text for this page."""
+        if not self.body:
+            return None
+        rich_text_block = first_block_of(self.body, "text")
+        if not rich_text_block:
+            return None
+        return rich_text_block
+
+    def newsletter_body(self):
+        """Returns the newsletter intro text for this page."""
+        if not self.body:
+            return None
+        body = self.body
+        rich_text_block = first_block_of(self.body, "text")
+        if not rich_text_block:
+            return body
+        body.remove(rich_text_block)
+        return body
 
     def get_meta_image(self):
         if (

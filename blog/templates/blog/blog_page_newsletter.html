@@ -100,7 +100,9 @@
 				letter-spacing: -0.03em;
 				line-height: 1;
 				margin: 0 0 16px 0;
+				text-transform: uppercase;
 			}
+			.page-title a { text-decoration: none; }
 			@media (min-width: 768px) {
 				.header { padding: 20px 40px; }
 				.body { padding: 32px 40px; }
@@ -121,6 +123,7 @@
 					width="200px"
 					align="left"
 					padding="0"
+					href="https://freedom.press"
 				/>
 			</mj-column>
 		</mj-section>
@@ -151,16 +154,7 @@
 		<mj-section background-color="#ffffff" css-class="body">
 			<mj-column>
 				<mj-text>
-					<h1 class="page-title">{{ page.title }}</h1>
-					<p class="meta">
-						{% for blog_author in page.authors.all %}
-							<a href="{% fullpageurl blog_author.author %}">{{ blog_author.author.title }}</a>{% if not forloop.last %}, {% endif %}
-						{% endfor %}
-						{% if page.authors.all %}
-							&nbsp;&bull;&nbsp;
-						{% endif %}
-						<time datetime="{{ page.publication_datetime|date:'c' }}">{{ page.publication_datetime|date:"F j, Y" }}</time>
-					</p>
+					<h1 class="page-title"><a href="{{ page.get_base_url }}">The U.S. Press<br/>Freedom Tracker</a></h1>
 				</mj-text>
 			</mj-column>
 		</mj-section>
@@ -169,9 +163,7 @@
 		{% if page.introduction or page.lead_graphic %}
 			<mj-section background-color="#fffef0" css-class="intro">
 				<mj-column>
-					{% if page.introduction %}
-						<mj-text padding-bottom="24px">{{ page.introduction }}</mj-text>
-					{% endif %}
+					<mj-text padding-bottom="24px">{{ page.newsletter_intro }}</mj-text>
 					{% for lead_item in page.lead_graphic %}
 						{% if lead_item.block_type == "image" %}
 							<figure>
@@ -204,7 +196,7 @@
 		<!-- BODY -->
 		<mj-section background-color="#ffffff" css-class="body">
 			<mj-column>
-				{% for block in page.body %}
+				{% for block in page.newsletter_body %}
 					{% if block.block_type == "text" %}
 						<mj-text>{{ block.value.text|newsletter_richtext }}</mj-text>
 
