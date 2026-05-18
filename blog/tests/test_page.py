@@ -5,6 +5,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import Client, TestCase
 from django.urls import reverse
 
+import factory
+
 import wagtail.blocks
 from wagtail.models import Site
 
@@ -251,6 +253,22 @@ class TestPages(TestCase):
             str(newsletter_intro)
         )
 
+        # Blog page without richtext
+        blog_page4 = BlogPageFactory(
+            parent=self.index,
+            slug="four",
+            body=factory.Faker(
+                "streamfield",
+                fields=[
+                    "heading1",
+                    "heading2",
+                    "heading3",
+                ],
+            ),
+        )
+        newsletter_intro = blog_page4.newsletter_intro()
+        self.assertIsNone(newsletter_intro)
+
     def test_get_blog_page_newsletter_body(self):
         newsletter_body = self.blog_page.body
         newsletter_intro = self.blog_page.newsletter_intro()
@@ -258,6 +276,24 @@ class TestPages(TestCase):
         self.assertEqual(
             str(self.blog_page.newsletter_body()),
             str(newsletter_body)
+        )
+
+        # Blog page without richtext
+        blog_page5 = BlogPageFactory(
+            parent=self.index,
+            slug="five",
+            body=factory.Faker(
+                "streamfield",
+                fields=[
+                    "heading1",
+                    "heading2",
+                    "heading3",
+                ],
+            ),
+        )
+        self.assertEqual(
+            str(blog_page5.newsletter_body()),
+            str(blog_page5.body)
         )
 
     def test_get_blog_page_base_url(self):
