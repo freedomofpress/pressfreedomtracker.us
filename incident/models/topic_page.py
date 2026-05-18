@@ -362,7 +362,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=models.Q(start_date__lte=models.F("end_date")),
+                condition=models.Q(start_date__lte=models.F("end_date")),
                 name="start_date_end_date_order",
             ),
         ]
