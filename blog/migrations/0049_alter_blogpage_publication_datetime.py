@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('blog', '0048_alter_blogpage_options_blogpage_newsletter_campaign_and_more'),
+        ("blog", "0048_alter_blogpage_options_blogpage_newsletter_campaign_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='blogpage',
-            name='publication_datetime',
-            field=models.DateTimeField(help_text='Past or future date of publication', null=True),
+            model_name="blogpage",
+            name="publication_datetime",
+            field=models.DateTimeField(
+                help_text="Past or future date of publication", null=True
+            ),
         ),
     ]

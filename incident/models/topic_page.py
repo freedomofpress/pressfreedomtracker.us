@@ -194,7 +194,11 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
         null=True,
         related_name="+",
     )
-    incident_tag = models.ForeignKey("common.CommonTag", on_delete=models.PROTECT, null=True,)
+    incident_tag = models.ForeignKey(
+        "common.CommonTag",
+        on_delete=models.PROTECT,
+        null=True,
+    )
     start_date = models.DateField(
         null=True,
         blank=True,
