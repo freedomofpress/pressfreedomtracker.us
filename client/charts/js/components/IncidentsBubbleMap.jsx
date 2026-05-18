@@ -23,6 +23,7 @@ export default ({
 	categories,
 	interactive = true,
 	fullSize,
+	domainMax,
 }) => {
 	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
 	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
@@ -46,6 +47,7 @@ export default ({
 						overridePaddings={{ map: 0, bottom: 0 }}
 						interactive={interactive}
 						fullSize={fullSize}
+						domainMax={domainMax}
 					/>
 				);
 

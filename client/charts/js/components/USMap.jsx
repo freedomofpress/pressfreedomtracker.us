@@ -58,6 +58,7 @@ export default function USMap({
 	setSvgEl = () => { },
 	interactive = true,
 	fullSize = true,
+	domainMax,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -94,10 +95,18 @@ export default function USMap({
 	const projection = d3.geoAlbersUsa().scale(1280).translate([480, 300])
 	const hasLatLon = ({ latitude, longitude }) => latitude && longitude
 
-	// Scale markers size depending on the number of incidents in a city/state
-	const markerScale = d3.scaleSqrt().domain([0, d3.max(dataset, d => d.numberOfIncidents)]).range([markerSize.min, markerSize.max])
 
-	// Make markers for incidents < 5 smaller
+	// `domainMax` (optional) allows editors to set the value markerSize.max represents,
+	// clamping anything values above it to that size.
+	const scaleDomainMax = domainMax || d3.max(dataset, d => d.numberOfIncidents) || 1
+
+	// Scale markers size depending on the number of incidents in a city/state.
+	const markerScale = d3.scaleSqrt()
+		.domain([0, scaleDomainMax])
+		.range([markerSize.min, markerSize.max])
+		.clamp(true)
+
+	// Scale the smallest markers down further
 	const getMarkerRadius = (numIncidents) => {
 		if (numIncidents < 5) {
 			return markerScale(numIncidents) * 0.6
