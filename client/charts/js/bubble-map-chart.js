@@ -41,6 +41,8 @@ function engageCharts() {
 		const description = chartNode.dataset?.description
 		const interactive = !!chartNode.dataset?.interactive
 		const fullSize = !!chartNode.dataset?.fullSize
+		const domainMaxAttr = chartNode.dataset?.domainMax
+		const domainMax = domainMaxAttr ? parseInt(domainMaxAttr, 10) : null
 
 		const filterUpperDate = upperValue ? new Date(upperValue) : null
 		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
@@ -57,6 +59,7 @@ function engageCharts() {
 				creditUrl={chartNode.baseURI}
 				interactive={interactive}
 				fullSize={fullSize}
+				domainMax={domainMax}
 			/>
 		))
 	})
