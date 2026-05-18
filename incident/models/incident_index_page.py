@@ -47,11 +47,13 @@ class SummarySchema(Schema):
 class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     feed_limit = models.PositiveIntegerField(
         default=1000,
+        null=True,
         help_text="Maximum number of incidents to be included in the "
         "syndication feed. 0 for unlimited.",
     )
     feed_per_page = models.PositiveIntegerField(
         default=20,
+        null=True,
         help_text="Maximum number of incidents to be included per page "
         "in the syndication feed.",
     )
@@ -145,6 +147,16 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     def export_view_OPTIONS(self, request: "HttpRequest") -> HttpResponse:
         return HttpResponse()
+
+    def handle_options_request(self, request, *args, **kwargs):
+        """
+        Override Wagtail's default OPTIONS handling to add CORS headers,
+        required for cross-origin access to the export API endpoint.
+        """
+        response = super().handle_options_request(request, *args, **kwargs)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
+        return response
 
     @path("summary/")
     @method_decorator(require_http_methods(["GET"]))

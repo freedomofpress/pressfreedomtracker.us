@@ -84,7 +84,7 @@ class ChartSnapshot(models.Model):
     DEFAULT_HEIGHT = 800
     DEFAULT_WIDTH = 1190
 
-    last_generated = models.DateTimeField(auto_now=True)
+    last_generated = models.DateTimeField(auto_now=True, null=True)
     chart_type = models.CharField(
         max_length=255,
         choices=ChartType.choices,

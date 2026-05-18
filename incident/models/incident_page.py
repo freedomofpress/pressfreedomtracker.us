@@ -516,7 +516,7 @@ IncidentPageManager = PageManager.from_queryset(IncidentQuerySet)
 
 
 class IncidentPage(MetadataPageMixin, Page):
-    date = models.DateField()
+    date = models.DateField(null=True)
     unique_date = models.TextField(unique=True)
 
     exact_date_unknown = models.BooleanField(
