@@ -105,7 +105,7 @@ class ChartSnapshot(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=(
+                condition=(
                     Q(snapshot_type=SnapshotType.SVG, chart_svg__isnull=False)
                     | (
                         Q(

@@ -5,30 +5,48 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('wagtail_newsletter', '0001_initial'),
-        ('blog', '0047_add_bluesky_instagram_social_media_embeds'),
+        ("wagtail_newsletter", "0001_initial"),
+        ("blog", "0047_add_bluesky_instagram_social_media_embeds"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='blogpage',
-            options={'permissions': [('save_campaign_blogpage', 'Can save campaign'), ('send_test_email_blogpage', 'Can send test email'), ('send_campaign_blogpage', 'Can send campaign'), ('schedule_campaign_blogpage', 'Can schedule campaign'), ('unschedule_campaign_blogpage', 'Can unschedule campaign'), ('get_report_blogpage', 'Can get report'), ('access_newsletter_tab_blogpage', 'Can access newsletter tab')]},
+            name="blogpage",
+            options={
+                "permissions": [
+                    ("save_campaign_blogpage", "Can save campaign"),
+                    ("send_test_email_blogpage", "Can send test email"),
+                    ("send_campaign_blogpage", "Can send campaign"),
+                    ("schedule_campaign_blogpage", "Can schedule campaign"),
+                    ("unschedule_campaign_blogpage", "Can unschedule campaign"),
+                    ("get_report_blogpage", "Can get report"),
+                    ("access_newsletter_tab_blogpage", "Can access newsletter tab"),
+                ]
+            },
         ),
         migrations.AddField(
-            model_name='blogpage',
-            name='newsletter_campaign',
+            model_name="blogpage",
+            name="newsletter_campaign",
             field=models.CharField(blank=True, max_length=1000),
         ),
         migrations.AddField(
-            model_name='blogpage',
-            name='newsletter_recipients',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='wagtail_newsletter.newsletterrecipients'),
+            model_name="blogpage",
+            name="newsletter_recipients",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="wagtail_newsletter.newsletterrecipients",
+            ),
         ),
         migrations.AddField(
-            model_name='blogpage',
-            name='newsletter_subject',
-            field=models.CharField(blank=True, help_text='Subject for the newsletter. Defaults to page title if blank.', max_length=1000),
+            model_name="blogpage",
+            name="newsletter_subject",
+            field=models.CharField(
+                blank=True,
+                help_text="Subject for the newsletter. Defaults to page title if blank.",
+                max_length=1000,
+            ),
         ),
     ]

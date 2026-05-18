@@ -29,7 +29,7 @@ class JournalistAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("journalist-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -37,7 +37,7 @@ class JournalistAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse("journalist-detail", args=(self.version, self.journalist.pk)),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -45,7 +45,7 @@ class JournalistAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("journalist-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -67,7 +67,7 @@ class InstitutionAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("institution-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -75,7 +75,7 @@ class InstitutionAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse("institution-detail", args=(self.version, self.institution.pk)),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -83,7 +83,7 @@ class InstitutionAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("institution-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -105,7 +105,7 @@ class GovernmentWorkerAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("governmentworker-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -113,7 +113,7 @@ class GovernmentWorkerAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse("governmentworker-detail", args=(self.version, self.worker.pk)),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -121,7 +121,7 @@ class GovernmentWorkerAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("governmentworker-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -143,7 +143,7 @@ class ChargeAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("charge-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -151,7 +151,7 @@ class ChargeAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse("charge-detail", args=(self.version, self.charge.pk)),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -159,7 +159,7 @@ class ChargeAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("charge-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -181,7 +181,7 @@ class NationalityAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("nationality-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -189,7 +189,7 @@ class NationalityAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse("nationality-detail", args=(self.version, self.nationality.pk)),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -197,7 +197,7 @@ class NationalityAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("nationality-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -219,7 +219,7 @@ class PoliticianAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("politicianorpublic-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -233,7 +233,7 @@ class PoliticianAPITest(APITestCase):
                     self.politician.pk,
                 ),
             ),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -241,7 +241,7 @@ class PoliticianAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("politicianorpublic-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -263,7 +263,7 @@ class VenueAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("venue-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -274,7 +274,7 @@ class VenueAPITest(APITestCase):
                 "venue-detail",
                 args=(self.version, self.venue.pk),
             ),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -282,7 +282,7 @@ class VenueAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("venue-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -304,7 +304,7 @@ class EquipmentAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("equipment-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -312,7 +312,7 @@ class EquipmentAPITest(APITestCase):
     def test_retrieve_api_requests_are_successful(self):
         response = self.client.get(
             reverse("equipment-detail", args=(self.version, self.equipment.pk)),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -320,7 +320,7 @@ class EquipmentAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("equipment-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         self.assertEqual(
@@ -347,7 +347,7 @@ class CategoryAPITest(APITestCase):
     def test_list_api_requests_are_successful(self):
         response = self.client.get(
             reverse("category-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -358,7 +358,7 @@ class CategoryAPITest(APITestCase):
                 "category-detail",
                 args=(self.version, self.category.pk),
             ),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -366,7 +366,7 @@ class CategoryAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("category-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         data = response.json()[0]
@@ -444,7 +444,7 @@ class IncidentAPITest(APITestCase):
     def test_api_requests_are_successful(self):
         response = self.client.get(
             reverse("incidentpage-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(response.status_code, 200)
@@ -452,7 +452,7 @@ class IncidentAPITest(APITestCase):
     def test_result_attributes(self):
         response = self.client.get(
             reverse("incidentpage-list", kwargs={"version": self.version}),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
         data = response.json()[0]
         inc = self.incident
@@ -567,7 +567,7 @@ class IncidentAPITest(APITestCase):
         response = self.client.get(
             reverse("incidentpage-list", kwargs={"version": self.version}),
             {"categories": str(self.cat1.pk)},
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(len(response.json()), 1)
@@ -576,7 +576,7 @@ class IncidentAPITest(APITestCase):
         response = self.client.get(
             reverse("incidentpage-list", kwargs={"version": self.version}),
             {"fields": "city,state"},
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
         )
 
         self.assertEqual(
