@@ -96,8 +96,8 @@ export default function USMap({
 	const hasLatLon = ({ latitude, longitude }) => latitude && longitude
 
 
-	// `domainMax` (optional) allows editors to set the value markerSize.max represents,
-	// clamping anything values above it to that size.
+	// `domainMax` allows editors to fix which value the largest marker should represent,
+	//  which also clamps/flattens any higher values to that size.
 	const scaleDomainMax = domainMax || d3.max(dataset, d => d.numberOfIncidents) || 1
 
 	// Scale markers size depending on the number of incidents in a city/state.
