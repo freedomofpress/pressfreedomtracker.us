@@ -1,3 +1,4 @@
+import copy
 from unittest import mock
 
 from django.contrib.auth.models import User, Permission
@@ -270,10 +271,10 @@ class TestPages(TestCase):
         self.assertIsNone(newsletter_intro)
 
     def test_get_blog_page_newsletter_body(self):
-        newsletter_body = self.blog_page.body
-        newsletter_intro = self.blog_page.newsletter_intro()
+        newsletter_body = copy.deepcopy(self.blog_page.body)
+        newsletter_intro = first_block_of(newsletter_body, "text")
         newsletter_body.remove(newsletter_intro)
-        self.assertEqual(
+        self.assertHTMLEqual(
             str(self.blog_page.newsletter_body()),
             str(newsletter_body)
         )

@@ -1,3 +1,5 @@
+import copy
+
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils.html import strip_tags
@@ -372,8 +374,8 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
         """Returns the newsletter body text for this page."""
         if not self.body: # pragma: no cover
             return None
-        body = self.body
-        rich_text_block = first_block_of(self.body, "text")
+        body = copy.deepcopy(self.body)
+        rich_text_block = first_block_of(body, "text")
         if not rich_text_block:
             return body
         body.remove(rich_text_block)
