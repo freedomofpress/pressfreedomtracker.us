@@ -157,7 +157,7 @@ export default function USMap({
 						marginRight: margins.right,
 						marginLeft: margins.left,
 					}}
-					viewBox={[0, 0, 1080, 610]}
+					viewBox={fullSize ? [0, 0, 1080, 610] : [0, 0, 975, 610]}
 				>
 					<g>
 						{topojson.feature(us, us.objects.nation).features.map((d, i) => (
