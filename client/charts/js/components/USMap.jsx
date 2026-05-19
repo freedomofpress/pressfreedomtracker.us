@@ -232,11 +232,11 @@ export default function USMap({
 						const maxValue = d3.max(values)
 						const minValue = d3.min(values)
 						if (!maxValue) return null
-						const maxR = getMarkerRadius(maxValue)
-						const minR = getMarkerRadius(minValue)
-						const baseline = 460
-						const centerX = 975
-						const labelRightX = 1075
+						const maxMarkerRadius = getMarkerRadius(maxValue)
+						const minMarkerRadius = getMarkerRadius(minValue)
+						const baselineY = 460 // Y height of legend
+						const centerX = 975 // The center of the legend bubbles, within viewBox
+						const labelRightX = 1075 // The right edge of label text, within viewBox
 						const numberCharWidth = 9.6 // Approx px per char at fontSize 16
 						const isMaxClamped = domainMax && domainMax > 0 && maxValue > domainMax
 						const displayMaxValue = isMaxClamped ? domainMax : maxValue
@@ -246,7 +246,7 @@ export default function USMap({
 						const minLabelText = minValue.toLocaleString()
 						// If min and max clamp to the same radius, the min entry
 						// is redundant — collapse to a single bubble.
-						const showMin = minValue !== maxValue && minR !== maxR
+						const showMin = minValue !== maxValue && minMarkerRadius !== maxMarkerRadius
 						const lineEndForLabel = (text) => labelRightX - text.length * numberCharWidth - 2
 						return (
 							<g
@@ -256,7 +256,7 @@ export default function USMap({
 							>
 								<text
 									x={labelRightX}
-									y={baseline - 2 * maxR - 16}
+									y={baselineY - 2 * maxMarkerRadius - 16}
 									fontSize={15}
 									fontFamily="var(--font-base)"
 									fill="#333"
@@ -267,24 +267,24 @@ export default function USMap({
 								</text>
 								<circle
 									cx={centerX}
-									cy={baseline - maxR}
-									r={maxR}
+									cy={baselineY - maxMarkerRadius}
+									r={maxMarkerRadius}
 									fill="#fff"
 									fillOpacity={0.75}
-									stroke="black"
-									strokeWidth={markerBorder.normal - 1}
+									stroke="#333"
+									strokeWidth={markerBorder.normal - 2}
 								/>
 								<line
 									x1={centerX}
 									x2={lineEndForLabel(maxLabelText)}
-									y1={baseline - 2 * maxR}
-									y2={baseline - 2 * maxR}
-									stroke="black"
+									y1={baselineY - 2 * maxMarkerRadius}
+									y2={baselineY - 2 * maxMarkerRadius}
+									stroke="#333"
 									strokeWidth={0.5}
 								/>
 								<text
 									x={labelRightX}
-									y={baseline - 2 * maxR + 4}
+									y={baselineY - 2 * maxMarkerRadius + 4}
 									fontSize={16}
 									fontFamily="var(--font-base)"
 									fontWeight={500}
@@ -297,24 +297,24 @@ export default function USMap({
 									<>
 										<circle
 											cx={centerX}
-											cy={baseline - minR}
-											r={minR}
+											cy={baselineY - minMarkerRadius}
+											r={minMarkerRadius}
 											fill="#fff"
 											fillOpacity={0.75}
-											stroke="black"
-											strokeWidth={markerBorder.normal - 1}
+											stroke="#333"
+											strokeWidth={markerBorder.normal - 2}
 										/>
 										<line
 											x1={centerX}
 											x2={lineEndForLabel(minLabelText)}
-											y1={baseline - 2 * minR}
-											y2={baseline - 2 * minR}
-											stroke="black"
+											y1={baselineY - 2 * minMarkerRadius}
+											y2={baselineY - 2 * minMarkerRadius}
+											stroke="#333"
 											strokeWidth={0.5}
 										/>
 										<text
 											x={labelRightX}
-											y={baseline - 2 * minR + 4}
+											y={baselineY - 2 * minMarkerRadius + 4}
 											fontSize={16}
 											fontFamily="var(--font-base)"
 											fontWeight={500}
