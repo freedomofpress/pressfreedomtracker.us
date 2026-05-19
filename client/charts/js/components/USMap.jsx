@@ -150,7 +150,7 @@ export default function USMap({
 						marginRight: margins.right,
 						marginLeft: margins.left,
 					}}
-					viewBox={fullSize ? [0, 0, 1080, 610] : [0, 0, 975, 610]}
+					viewBox={fullSize ? [0, 0, 1070, 610] : [0, 0, 975, 610]}
 				>
 					<g>
 						{topojson.feature(us, us.objects.nation).features.map((d, i) => (
@@ -228,8 +228,8 @@ export default function USMap({
 						const maxMarkerRadius = markerScale(maxValue)
 						const minMarkerRadius = markerScale(minValue)
 						const baselineY = 460 // Y height of legend
-						const centerX = 975 // The center of the legend bubbles, within viewBox
-						const labelRightX = 1075 // The right edge of label text, within viewBox
+						const centerX = 965 // The center of the legend bubbles, within viewBox
+						const labelRightX = 1065 // The right edge of label text, within viewBox
 						const numberCharWidth = 9.6 // Approx px per char at fontSize 16
 						const isMaxClamped = domainMax && domainMax > 0 && maxValue > domainMax
 						const displayMaxValue = isMaxClamped ? domainMax : maxValue
@@ -263,9 +263,8 @@ export default function USMap({
 									cy={baselineY - maxMarkerRadius}
 									r={maxMarkerRadius}
 									fill="#fff"
-									fillOpacity={0.75}
 									stroke="#333"
-									strokeWidth={markerBorder.normal - 2}
+									strokeWidth={markerBorder.normal - 1}
 								/>
 								<line
 									x1={centerX}
@@ -293,9 +292,8 @@ export default function USMap({
 											cy={baselineY - minMarkerRadius}
 											r={minMarkerRadius}
 											fill="#fff"
-											fillOpacity={0.75}
 											stroke="#333"
-											strokeWidth={markerBorder.normal - 2}
+											strokeWidth={markerBorder.normal - 1}
 										/>
 										<line
 											x1={centerX}
