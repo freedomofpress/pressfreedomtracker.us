@@ -369,7 +369,7 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
         return rich_text_block
 
     def newsletter_body(self):
-        """Returns the newsletter intro text for this page."""
+        """Returns the newsletter body text for this page."""
         if not self.body: # pragma: no cover
             return None
         body = self.body

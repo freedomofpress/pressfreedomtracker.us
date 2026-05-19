@@ -160,7 +160,7 @@
 		</mj-section>
 
 		<!-- INTRODUCTION & LEAD GRAPHIC -->
-		{% if page.introduction or page.lead_graphic %}
+		{% if page.newsletter_intro or page.lead_graphic %}
 			<mj-section background-color="#fffef0" css-class="intro">
 				<mj-column>
 					<mj-text padding-bottom="24px">{{ page.newsletter_intro }}</mj-text>
@@ -420,14 +420,14 @@
 					<a href="https://x.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
 						<img
 							src="{{ page.get_base_url }}{% static 'logos/x.png' %}"
-							alt="U.S. Press Freedom Tracker on Bluesky"
+							alt="U.S. Press Freedom Tracker on X"
 							width="24px"
 						/>
 					</a>
 					<a href="https://instagram.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
 						<img
 							src="{{ page.get_base_url }}{% static 'logos/instagram.png' %}"
-							alt="U.S. Press Freedom Tracker on Bluesky"
+							alt="U.S. Press Freedom Tracker on Instagram"
 							width="24px"
 						/>
 					</a>
