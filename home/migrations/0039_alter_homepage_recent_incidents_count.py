@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0038_auto_20220325_1859'),
+        ("home", "0038_auto_20220325_1859"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='homepage',
-            name='recent_incidents_count',
-            field=models.PositiveIntegerField(default=8, help_text='Number of recent incidents to display', null=True),
+            model_name="homepage",
+            name="recent_incidents_count",
+            field=models.PositiveIntegerField(
+                default=8, help_text="Number of recent incidents to display", null=True
+            ),
         ),
     ]

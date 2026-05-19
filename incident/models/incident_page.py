@@ -168,7 +168,7 @@ class IncidentQuerySet(PageQuerySet):
                 IncidentPage.objects.only("tags")
                 .annotate(
                     tag_summary=StringAgg(
-                        "tags__title", delimiter=", ", ordering=("tags__title",)
+                        "tags__title", delimiter=", ", order_by=("tags__title",)
                     )
                 )
                 .filter(pk=OuterRef("pk"))
@@ -246,7 +246,7 @@ class IncidentQuerySet(PageQuerySet):
                     category_summary=StringAgg(
                         "categories__category__title",
                         delimiter=", ",
-                        ordering=("categories__category__title",),
+                        order_by=("categories__category__title",),
                     )
                 )
                 .filter(pk=OuterRef("pk"))

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0115_add_bluesky_instagram_social_media_embeds'),
+        ("common", "0115_add_bluesky_instagram_social_media_embeds"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='chartsnapshot',
-            name='last_generated',
+            model_name="chartsnapshot",
+            name="last_generated",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
     ]

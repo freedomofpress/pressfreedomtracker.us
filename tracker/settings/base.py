@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     "dal_select2",
     "wagtailinventory",
     "wagtail_honeypot",
-    'wagtail_newsletter',
+    "wagtail_newsletter",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -177,7 +177,6 @@ TIME_ZONE = "UTC"
 
 USE_I18N = True
 
-USE_L10N = True
 
 USE_TZ = True
 
@@ -345,8 +344,12 @@ SETTINGS_EXPORT_VARIABLE_NAME = "django_settings"
 MAILCHIMP_API_KEY = os.environ.get("MAILCHIMP_API_KEY", "")
 
 WAGTAIL_NEWSLETTER_MAILCHIMP_API_KEY = MAILCHIMP_API_KEY
-WAGTAIL_NEWSLETTER_FROM_NAME = os.environ.get("NEWSLETTER_FROM_NAME", "U.S. Press Freedom Tracker")
-WAGTAIL_NEWSLETTER_REPLY_TO = os.environ.get("NEWSLETTER_REPLY_TO", "newsletter@pressfreedomtracker.us")
+WAGTAIL_NEWSLETTER_FROM_NAME = os.environ.get(
+    "NEWSLETTER_FROM_NAME", "U.S. Press Freedom Tracker"
+)
+WAGTAIL_NEWSLETTER_REPLY_TO = os.environ.get(
+    "NEWSLETTER_REPLY_TO", "newsletter@pressfreedomtracker.us"
+)
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY", "")
 RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY", "")

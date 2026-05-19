@@ -335,13 +335,13 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
 
     class Meta:
         permissions = [
-            ('save_campaign_blogpage', 'Can save campaign'),
-            ('send_test_email_blogpage', 'Can send test email'),
-            ('send_campaign_blogpage', 'Can send campaign'),
-            ('schedule_campaign_blogpage', 'Can schedule campaign'),
-            ('unschedule_campaign_blogpage', 'Can unschedule campaign'),
-            ('get_report_blogpage', 'Can get report'),
-            ('access_newsletter_tab_blogpage', 'Can access newsletter tab'),
+            ("save_campaign_blogpage", "Can save campaign"),
+            ("send_test_email_blogpage", "Can send test email"),
+            ("send_campaign_blogpage", "Can send campaign"),
+            ("schedule_campaign_blogpage", "Can schedule campaign"),
+            ("unschedule_campaign_blogpage", "Can unschedule campaign"),
+            ("get_report_blogpage", "Can get report"),
+            ("access_newsletter_tab_blogpage", "Can access newsletter tab"),
         ]
 
     def has_newsletter_permission(self, user, action):

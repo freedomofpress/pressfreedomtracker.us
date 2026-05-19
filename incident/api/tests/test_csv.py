@@ -168,10 +168,7 @@ class PerformantCSVTestCase(TestCase):
         )
 
         with self.assertNumQueries(3):
-            self.response = self.client.get(
-                url,
-                HTTP_ACCEPT="text/csv",
-            )
+            self.response = self.client.get(url, headers={"accept": "text/csv"})
         content_lines = self.response.content.splitlines()
         reader = csv.reader(line.decode("utf-8") for line in content_lines)
 
@@ -333,7 +330,7 @@ class HomePageCSVTestCase(TestCase):
                 "incidentpage-homepage_csv",
                 kwargs={"version": "edge"},
             ),
-            HTTP_ACCEPT="text/csv",
+            headers={"accept": "text/csv"},
         )
         content_lines = self.response.content.splitlines()
         reader = csv.reader(line.decode("utf-8") for line in content_lines)
@@ -416,7 +413,7 @@ class FilteredHomePageCSVTestCase(TestCase):
                 "date_lower": "2022-01-15",
                 "date_upper": "2022-02-15",
             },
-            HTTP_ACCEPT="text/csv",
+            headers={"accept": "text/csv"},
         )
         content_lines = self.response.content.splitlines()
         reader = csv.reader(line.decode("utf-8") for line in content_lines)
@@ -451,7 +448,7 @@ class InvalidFilterHomePageCSVTestCase(TestCase):
             {
                 "date_lower": "INVALID_DATE",
             },
-            HTTP_ACCEPT="text/csv",
+            headers={"accept": "text/csv"},
         )
         self.assertEqual(self.response.status_code, 400)
 
@@ -461,7 +458,7 @@ class InvalidFilterHomePageCSVTestCase(TestCase):
             {
                 "date_upper": "INVALID_DATE",
             },
-            HTTP_ACCEPT="text/csv",
+            headers={"accept": "text/csv"},
         )
         self.assertEqual(self.response.status_code, 400)
 
@@ -472,7 +469,7 @@ class InvalidFilterHomePageCSVTestCase(TestCase):
                 "date_lower": "INVALID_DATE",
                 "date_upper": "INVALID_DATE",
             },
-            HTTP_ACCEPT="text/csv",
+            headers={"accept": "text/csv"},
         )
         self.assertEqual(self.response.status_code, 400)
 
@@ -525,7 +522,7 @@ class FilteredPerformantCSVTestCase(TestCase):
                 kwargs={"version": "edge"},
             ),
             data={"fields": ",".join(fields), **filters},
-            HTTP_ACCEPT="text/csv",
+            headers={"accept": "text/csv"},
         )
         content_lines = response.content.splitlines()
         reader = csv.reader(line.decode("utf-8") for line in content_lines)

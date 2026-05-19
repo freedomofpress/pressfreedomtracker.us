@@ -274,7 +274,7 @@ class TestPages(TestCase):
             parent=self.index,
             authors=[author],
         )
-        self.assertEqual(blog_page.authors.first().summary, 'A Person')
+        self.assertEqual(blog_page.authors.first().summary, "A Person")
 
 
 class TestBlogPageNewsletterPermission(TestCase):
@@ -283,30 +283,36 @@ class TestBlogPageNewsletterPermission(TestCase):
         # Get default site
         site = Site.objects.get(is_default_site=True)
 
-        cls.index = BlogIndexPageFactory(parent=site.root_page, slug='all-blogs')
-        cls.blog_page = BlogPageFactory(parent=cls.index, slug='blog')
+        cls.index = BlogIndexPageFactory(parent=site.root_page, slug="all-blogs")
+        cls.blog_page = BlogPageFactory(parent=cls.index, slug="blog")
 
-        cls.user_with_perm = User.objects.create_user('user_with_perm', password='pass')
+        cls.user_with_perm = User.objects.create_user("user_with_perm", password="pass")
         content_type = ContentType.objects.get_for_model(cls.blog_page)
         perm = Permission.objects.get(
             content_type=content_type,
-            codename='access_newsletter_tab_blogpage',
+            codename="access_newsletter_tab_blogpage",
         )
         cls.user_with_perm.user_permissions.add(perm)
 
-        cls.user_without_perm = User.objects.create_user('user_without_perm', password='pass')
+        cls.user_without_perm = User.objects.create_user(
+            "user_without_perm", password="pass"
+        )
 
     def test_has_newsletter_permission_returns_true_for_user_with_permission(self):
         user = User.objects.get(pk=self.user_with_perm.pk)
-        self.assertTrue(self.blog_page.has_newsletter_permission(user, 'access_newsletter_tab'))
+        self.assertTrue(
+            self.blog_page.has_newsletter_permission(user, "access_newsletter_tab")
+        )
 
     def test_has_newsletter_permission_returns_false_for_user_without_permission(self):
         self.assertFalse(
-            self.blog_page.has_newsletter_permission(self.user_without_perm, 'access_newsletter_tab')
+            self.blog_page.has_newsletter_permission(
+                self.user_without_perm, "access_newsletter_tab"
+            )
         )
 
 
 class TestRegisterPermissionsHook(TestCase):
     def test_register_permissions_returns_blog_permissions(self):
-        codenames = list(register_permissions().values_list('codename', flat=True))
-        self.assertIn('access_newsletter_tab_blogpage', codenames)
+        codenames = list(register_permissions().values_list("codename", flat=True))
+        self.assertIn("access_newsletter_tab_blogpage", codenames)
