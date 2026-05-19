@@ -106,13 +106,6 @@ export default function USMap({
 		.range([markerSize.min, markerSize.max])
 		.clamp(true)
 
-	// Scale the smallest markers down further
-	const getMarkerRadius = (numIncidents) => {
-		if (numIncidents < 5) {
-			return markerScale(numIncidents) * 0.6
-		}
-		return markerScale(numIncidents)
-	}
 	if (!width) return null
 
 	return (
@@ -183,7 +176,7 @@ export default function USMap({
 							opacity={1}
 							cx={projection([d.longitude, d.latitude])[0]}
 							cy={projection([d.longitude, d.latitude])[1]}
-							r={getMarkerRadius(d.numberOfIncidents)}
+							r={markerScale(d.numberOfIncidents)}
 							fill={hoveredElement === null
 								? '#E07A5F'
 								: hoveredElement === `${aggregationLocality(d)}`
@@ -211,7 +204,7 @@ export default function USMap({
 									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									cx={projection([d.longitude, d.latitude])[0]}
 									cy={projection([d.longitude, d.latitude])[1]}
-									r={getMarkerRadius(d.numberOfIncidents) + 5}
+									r={markerScale(d.numberOfIncidents) + 5}
 									style={{ opacity: 0, cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit' }}
 									onMouseMove={updateTooltipPosition}
 									onMouseEnter={(mouseEvent) => {
@@ -232,8 +225,8 @@ export default function USMap({
 						const maxValue = d3.max(values)
 						const minValue = d3.min(values)
 						if (!maxValue) return null
-						const maxMarkerRadius = getMarkerRadius(maxValue)
-						const minMarkerRadius = getMarkerRadius(minValue)
+						const maxMarkerRadius = markerScale(maxValue)
+						const minMarkerRadius = markerScale(minValue)
 						const baselineY = 460 // Y height of legend
 						const centerX = 975 // The center of the legend bubbles, within viewBox
 						const labelRightX = 1075 // The right edge of label text, within viewBox
