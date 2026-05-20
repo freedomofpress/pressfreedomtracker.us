@@ -249,14 +249,14 @@ export default function USMap({
 							>
 								<text
 									x={labelRightX}
-									y={baselineY - 2 * maxMarkerRadius - 16}
-									fontSize={15}
+									y={baselineY - 2 * maxMarkerRadius - 22}
+									fontSize={16}
 									fontFamily="var(--font-base)"
 									fill="#333"
 									fontWeight={500}
 									textAnchor="end"
 								>
-									# of incidents
+									No. of incidents
 								</text>
 								<circle
 									cx={centerX}
