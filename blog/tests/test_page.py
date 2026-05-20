@@ -1,3 +1,4 @@
+import copy
 from unittest import mock
 
 from django.contrib.auth.models import User, Permission
@@ -5,8 +6,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import Client, TestCase
 from django.urls import reverse
 
+import factory
+
 import wagtail.blocks
-from wagtail.models import Page, Site
+from wagtail.models import Site
 
 import defusedxml.ElementTree as ET
 
@@ -14,13 +17,13 @@ from blog.models import BlogIndexPageFeature
 from blog.wagtail_hooks import register_permissions
 from common.exceptions import ChartNotAvailable
 from common.models.charts import ChartSnapshot
+from common.templatetags.common_tags import first_block_of
 from common.tests.factories import (
     CategoryPageFactory,
     CustomImageFactory,
     OrganizationPageFactory,
     PersonPageFactory,
 )
-from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory
 
 from .factories import BlogIndexPageFactory, BlogPageFactory
@@ -31,23 +34,11 @@ class TestPages(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        cls.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=cls.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": cls.home_page,
-            },
-        )
-        if not created:
-            site.root_page = cls.home_page
-            site.save()
+        # Get the root home page
+        cls.home_page = site.root_page
 
         CustomImageFactory.create(
             file__width=800,
@@ -256,6 +247,62 @@ class TestPages(TestCase):
         response = self.client.get(self.blog_page.url)
         self.assertNotContains(response, "verticalBarChart")
 
+    def test_get_blog_page_newsletter_intro(self):
+        newsletter_intro = first_block_of(self.blog_page.body, "text")
+        self.assertEqual(
+            str(self.blog_page.newsletter_intro()),
+            str(newsletter_intro)
+        )
+
+        # Blog page without richtext
+        blog_page4 = BlogPageFactory(
+            parent=self.index,
+            slug="four",
+            body=factory.Faker(
+                "streamfield",
+                fields=[
+                    "heading1",
+                    "heading2",
+                    "heading3",
+                ],
+            ),
+        )
+        newsletter_intro = blog_page4.newsletter_intro()
+        self.assertIsNone(newsletter_intro)
+
+    def test_get_blog_page_newsletter_body(self):
+        newsletter_body = copy.deepcopy(self.blog_page.body)
+        newsletter_intro = first_block_of(newsletter_body, "text")
+        newsletter_body.remove(newsletter_intro)
+        self.assertHTMLEqual(
+            str(self.blog_page.newsletter_body()),
+            str(newsletter_body)
+        )
+
+        # Blog page without richtext
+        blog_page5 = BlogPageFactory(
+            parent=self.index,
+            slug="five",
+            body=factory.Faker(
+                "streamfield",
+                fields=[
+                    "heading1",
+                    "heading2",
+                    "heading3",
+                ],
+            ),
+        )
+        self.assertEqual(
+            str(blog_page5.newsletter_body()),
+            str(blog_page5.body)
+        )
+
+    def test_get_blog_page_base_url(self):
+        self.assertEqual(
+            self.blog_page2.get_base_url(),
+            self.home_page.get_site().root_url
+        )
+
     def test_get_blog_page_vertical_bar_chart_meta_image(self):
         self.assertEqual(
             self.blog_page2.get_meta_image(),
@@ -287,54 +334,45 @@ class TestPages(TestCase):
             parent=self.index,
             authors=[author],
         )
-        self.assertEqual(blog_page.authors.first().summary, 'A Person')
+        self.assertEqual(blog_page.authors.first().summary, "A Person")
 
 
 class TestBlogPageNewsletterPermission(TestCase):
     @classmethod
     def setUpTestData(cls):
-        Page.objects.filter(slug='home').delete()
-        root_page = Page.objects.get(title='Root')
-        cls.home_page = HomePageFactory.build(parent=None, slug='home')
-        root_page.add_child(instance=cls.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                'site_name': 'Test site',
-                'hostname': 'testserver',
-                'port': '1111',
-                'root_page': cls.home_page,
-            }
-        )
-        if not created:
-            site.root_page = cls.home_page
-            site.save()
+        cls.index = BlogIndexPageFactory(parent=site.root_page, slug="all-blogs")
+        cls.blog_page = BlogPageFactory(parent=cls.index, slug="blog")
 
-        cls.index = BlogIndexPageFactory(parent=site.root_page, slug='all-blogs')
-        cls.blog_page = BlogPageFactory(parent=cls.index, slug='blog')
-
-        cls.user_with_perm = User.objects.create_user('user_with_perm', password='pass')
+        cls.user_with_perm = User.objects.create_user("user_with_perm", password="pass")
         content_type = ContentType.objects.get_for_model(cls.blog_page)
         perm = Permission.objects.get(
             content_type=content_type,
-            codename='access_newsletter_tab_blogpage',
+            codename="access_newsletter_tab_blogpage",
         )
         cls.user_with_perm.user_permissions.add(perm)
 
-        cls.user_without_perm = User.objects.create_user('user_without_perm', password='pass')
+        cls.user_without_perm = User.objects.create_user(
+            "user_without_perm", password="pass"
+        )
 
     def test_has_newsletter_permission_returns_true_for_user_with_permission(self):
         user = User.objects.get(pk=self.user_with_perm.pk)
-        self.assertTrue(self.blog_page.has_newsletter_permission(user, 'access_newsletter_tab'))
+        self.assertTrue(
+            self.blog_page.has_newsletter_permission(user, "access_newsletter_tab")
+        )
 
     def test_has_newsletter_permission_returns_false_for_user_without_permission(self):
         self.assertFalse(
-            self.blog_page.has_newsletter_permission(self.user_without_perm, 'access_newsletter_tab')
+            self.blog_page.has_newsletter_permission(
+                self.user_without_perm, "access_newsletter_tab"
+            )
         )
 
 
 class TestRegisterPermissionsHook(TestCase):
     def test_register_permissions_returns_blog_permissions(self):
-        codenames = list(register_permissions().values_list('codename', flat=True))
-        self.assertIn('access_newsletter_tab_blogpage', codenames)
+        codenames = list(register_permissions().values_list("codename", flat=True))
+        self.assertIn("access_newsletter_tab_blogpage", codenames)

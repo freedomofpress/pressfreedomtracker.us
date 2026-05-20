@@ -149,6 +149,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     )
     incidents_per_module = models.PositiveIntegerField(
         default=4,
+        null=True,
         validators=[MaxValueValidator(10), MinValueValidator(3)],
         help_text="Maximum incidents per category module in category layout",
     )
@@ -188,9 +189,16 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     )
 
     incident_index_page = models.ForeignKey(
-        "incident.IncidentIndexPage", on_delete=models.PROTECT, related_name="+"
+        "incident.IncidentIndexPage",
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="+",
     )
-    incident_tag = models.ForeignKey("common.CommonTag", on_delete=models.PROTECT)
+    incident_tag = models.ForeignKey(
+        "common.CommonTag",
+        on_delete=models.PROTECT,
+        null=True,
+    )
     start_date = models.DateField(
         null=True,
         blank=True,
@@ -358,7 +366,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=models.Q(start_date__lte=models.F("end_date")),
+                condition=models.Q(start_date__lte=models.F("end_date")),
                 name="start_date_end_date_order",
             ),
         ]

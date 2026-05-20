@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="topicpage",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     start_date__lte=django.db.models.expressions.F("end_date")
                 ),
                 name="start_date_end_date_order",

@@ -195,7 +195,7 @@ class SubscribeForSiteViewTest(TestCase):
     def test_ajax_subscribe_view_for_invalid_json_yields_400(self):
         self.response = self.client.post(
             reverse("subscribe_for_site"),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
             content_type="application/json",
             data="invalid-json",
         )
@@ -204,7 +204,7 @@ class SubscribeForSiteViewTest(TestCase):
     def test_ajax_subscribe_view_with_missing_email_yields_400(self):
         self.response = self.client.post(
             reverse("subscribe_for_site"),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
             content_type="application/json",
             data=json.dumps({"vegetable": "radish"}),
         )
@@ -215,7 +215,7 @@ class SubscribeForSiteViewTest(TestCase):
         email = "test3@example.com"
         self.response = self.client.post(
             reverse("subscribe_for_site"),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json"},
             content_type="application/json",
             data=json.dumps({"email": email}),
         )
@@ -230,10 +230,9 @@ class SubscribeForSiteViewTest(TestCase):
         mock_subscribe.side_effect = ApiError(text="error", status_code=404)
         response = self.client.post(
             reverse("subscribe_for_site"),
-            HTTP_ACCEPT="application/json",
+            headers={"accept": "application/json", "cf-connecting-ip": "8.8.8.8"},
             content_type="application/json",
             data=json.dumps({"email": "test4@example.com"}),
-            HTTP_CF_CONNECTING_IP="8.8.8.8",
         )
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.json()["success"])
@@ -244,7 +243,7 @@ class SubscribeForSiteViewTest(TestCase):
         response = self.client.post(
             reverse("subscribe_for_site"),
             {"email": "test4@example.com"},
-            HTTP_ACCEPT="text/html",
+            headers={"accept": "text/html"},
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "common/_subscribe_error.html")
@@ -259,7 +258,7 @@ class SubscribeForSiteViewTest(TestCase):
         self.response = self.client.post(
             reverse("subscribe_for_site"),
             {"email": email},
-            HTTP_ACCEPT="text/html",
+            headers={"accept": "text/html"},
         )
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "common/_subscribe_thanks.html")
@@ -273,7 +272,9 @@ class SubscribeForSiteViewTest(TestCase):
         self.response = self.client.post(
             reverse("subscribe_for_site"),
             {"email": email},
-            HTTP_ACCEPT="text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            headers={
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+            },
         )
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "common/_subscribe_thanks.html")
@@ -286,7 +287,7 @@ class SubscribeForSiteViewTest(TestCase):
         self.response = self.client.post(
             reverse("subscribe_for_site"),
             {"email": email},
-            HTTP_ACCEPT="*/*",
+            headers={"accept": "*/*"},
             content_type="text/html",
         )
         self.assertEqual(self.response.status_code, 400)
@@ -295,7 +296,7 @@ class SubscribeForSiteViewTest(TestCase):
         response = self.client.post(
             reverse("subscribe_for_site"),
             {"vegetable": "radish"},
-            HTTP_ACCEPT="text/html",
+            headers={"accept": "text/html"},
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn(

@@ -24,6 +24,9 @@ class GetSerializedFiltersTest(TestCase):
         self.site = Site.objects.get(is_default_site=True)
         self.settings = IncidentFilterSettings.for_site(self.site)
 
+    def tearDown(self):
+        self.site.clear_site_root_paths_cache()
+
     def test_serialize_general__search_only(self):
         request = RequestFactory().get("/")
         serialized = get_serialized_filters(request)

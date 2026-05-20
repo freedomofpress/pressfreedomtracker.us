@@ -1,49 +1,458 @@
 {% load newsletter_richtext mrml from wagtail_newsletter %}
-{% load image from wagtailimages_tags %}
+{% load wagtailsettings_tags wagtailcore_tags wagtailimages_tags %}
+{% load static %}
+{% load get_embed %}
+{% get_settings use_default_site=True %}
 
 {% mrml %}
 <mjml>
-    <mj-body>
-		<mj-section>
+	<mj-head>
+		<mj-attributes>
+			<mj-all padding="0" />
+			<mj-text font-size="18px" line-height="1.5" font-family="'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif" color="#000000" />
+			<mj-button font-size="16px" font-weight="500" border-radius="0px" color="#000000" font-family="'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif" />
+		</mj-attributes>
+		<mj-style inline="inline">
+			a { color: #000000; text-decoration: underline; }
+			h1, h2, h3, h4, h5, h6 {
+				font-family: 'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+				margin: 1rem 0;
+				line-height: 1.2;
+			}
+			h2 { font-size: 28px; }
+			h3 { font-size: 22px; }
+			h4 { font-size: 18px; }
+			.header { padding: 16px 24px; }
+			.body { padding: 24px; }
+			.intro {
+				padding: 24px;
+				border-top: 2px solid #000000;
+			}
+			.footer { padding: 32px 24px; }
+			.footer a { color: #ffffff; text-decoration: underline; }
+			.meta { font-size: 13px; color: #757575; font-family: 'Roboto Mono', monospace; }
+			.meta a { color: #757575; }
+			.aside {
+				background-color: #000000;
+				color: #ffffff;
+				padding: 16px 20px;
+				display: block;
+			}
+			.aside a { color: #ffffff; }
+			.blockquote {
+				border-left: 4px solid #C1C1C1;
+				padding-left: 16px;
+				margin: 0 0 0 8px;
+				font-style: italic;
+				display: block;
+			}
+			.blockquote cite {
+				display: block;
+				font-style: normal;
+				text-transform: uppercase;
+				margin-top: 8px;
+				color: #757575;
+			}
+			.pullquote {
+				font-size: 28px;
+				font-weight: 700;
+				line-height: 1.1;
+				border-top: 4px solid #000000;
+				border-bottom: 4px solid #000000;
+				padding: 20px 0;
+				display: block;
+			}
+			.video-link { display: inline-block; text-decoration: none; line-height: 0; }
+			.video-wrapper { display: inline-block; position: relative; width: 75%; }
+			.video-thumbnail { display: block; width: 100%; height: auto; }
+			.video-placeholder { background-color: #23242C; width: 100%; padding-top: 56.25%; }
+			.video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; background: rgba(0,0,0,0.65); border-radius: 50%; text-align: center; line-height: 72px; color: white; font-size: 28px; }
+			figure { margin: 0; padding: 0; }
+			.image-caption {
+				background-color: #000000;
+				color: #ffffff;
+				padding: 8px 12px;
+				font-size: 12px;
+				font-family: 'Roboto Mono', monospace;
+			}
+			.image-caption a { color: #F2FC67; }
+			.btn {
+				display: inline-block;
+				background-color: #ffffff;
+				color: #000000;
+				border: 3px solid #000000;
+				padding: 8px 16px;
+				text-decoration: none;
+				font-weight: 500;
+			}
+			.link-external {
+				display: block;
+				border: 2px solid #C1C1C1;
+				padding: 12px 16px;
+				color: #000000;
+				text-decoration: none;
+				font-family: 'Roboto Mono', monospace;
+				font-size: 14px;
+			}
+			.list-block ul { padding-left: 20px; margin: 8px 0; }
+			.list-block li { margin-bottom: 8px; }
+			.title-accent {
+				background-color: #F2FC67;
+				padding: 24px;
+			}
+			.page-title {
+				font-size: 48px;
+				font-weight: 400;
+				letter-spacing: -0.03em;
+				line-height: 1;
+				margin: 0 0 16px 0;
+				text-transform: uppercase;
+			}
+			.page-title a { text-decoration: none; }
+			@media (min-width: 768px) {
+				.header { padding: 20px 40px; }
+				.body { padding: 32px 40px; }
+				.intro { padding: 32px 40px; }
+				.footer { padding: 48px 40px; }
+				.page-title { font-size: 60px; }
+			}
+		</mj-style>
+	</mj-head>
+	<mj-body background-color="#333333" width="600px">
+
+		<!-- HEADER -->
+		<mj-section background-color="#000000" css-class="header">
 			<mj-column>
-				<mj-text
-					align="center"
-					font-size="20px"
-				>
-					{{ page.title }}
-				</mj-text>
+				<mj-image
+					src="{{ page.get_base_url }}{% static 'logos/fpf_full.png' %}"
+					alt="Freedom of the Press Foundation"
+					width="200px"
+					align="left"
+					padding="0"
+					href="https://freedom.press"
+				/>
 			</mj-column>
 		</mj-section>
-		<mj-section>
+
+		<!-- DONATE BUTTON -->
+		{% if settings.common.SiteSettings.donation_page %}
+			<mj-section background-color="#ffffff" css-class="header">
+				<mj-column>
+					<mj-button
+						background-color="#F2FC67"
+						color="#000000"
+						border="3px solid #000000"
+						font-size="16px"
+						font-weight="400"
+						line-height="1"
+						text-transform="uppercase"
+						inner-padding="14px 32px"
+						width="100%"
+						href="{{ settings.common.SiteSettings.donation_page }}"
+					>
+						Donate to the Tracker
+					</mj-button>
+				</mj-column>
+			</mj-section>
+		{% endif %}
+
+		<!-- TITLE & META -->
+		<mj-section background-color="#ffffff" css-class="body">
 			<mj-column>
 				<mj-text>
-					<p>
-						{% for author in page.authors.all %}
-						  {{ author.summary }}{% if not forloop.last %}, {% endif %}
-					  {% endfor %}
-					</p>
-					<p>{{ page.publication_datetime|date:"F j, Y" }}</p>
+					<h1 class="page-title"><a href="{{ page.get_base_url }}">The U.S. Press<br/>Freedom Tracker</a></h1>
 				</mj-text>
 			</mj-column>
 		</mj-section>
-		<mj-section>
-      {% if page.lead_graphic %}
-			  {% image page.lead_graphic fill-1920x1080 preserve-svg as header_image %}
-        <mj-column>
-          <mj-image src="{{ header_image.full_url }}" alt="{{ header_image.alt }}" />
-        </mj-column>
-      {% endif %}
 
-		</mj-section>
-		<mj-section>
-			<mj-column border-top="solid 1px black">
-				{% for block in page.body %}
+		<!-- INTRODUCTION & LEAD GRAPHIC -->
+		{% if page.newsletter_intro or page.lead_graphic %}
+			<mj-section background-color="#fffef0" css-class="intro">
+				<mj-column>
+					<mj-text padding-bottom="24px">{{ page.newsletter_intro }}</mj-text>
+					{% for lead_item in page.lead_graphic %}
+						{% if lead_item.block_type == "image" %}
+							<figure>
+								{% image lead_item.value width-600 as lead_img %}
+								<mj-image
+									src="{{ lead_img.full_url }}"
+									alt="{{ lead_img.alt }}"
+									padding="0"
+								/>
+								{% if page.image_caption %}
+									<figcaption class="image-caption">
+										<mj-text color="#ffffff" font-size="12px" font-family="'Roboto Mono', monospace" padding="8px 12px">
+											{{ page.image_caption|richtext }}
+										</mj-text>
+									</figcaption>
+								{% endif %}
+							</figure>
+						{% else %}
+							<mj-text>
+								<a href="{% fullpageurl page %}" class="link-external">
+									View interactive chart on the website &rarr;
+								</a>
+							</mj-text>
+						{% endif %}
+					{% endfor %}
+				</mj-column>
+			</mj-section>
+		{% endif %}
+
+		<!-- BODY -->
+		<mj-section background-color="#ffffff" css-class="body">
+			<mj-column>
+				{% for block in page.newsletter_body %}
 					{% if block.block_type == "text" %}
-						<mj-text line-height="1.5">{{ block.value.text|newsletter_richtext }}</mj-text>
+						<mj-text>{{ block.value.text|newsletter_richtext }}</mj-text>
+
+					{% elif block.block_type == "aside" %}
+						<mj-text padding="0">
+							<div class="aside">{{ block.value.text|newsletter_richtext }}</div>
+						</mj-text>
+
+					{% elif block.block_type == "image" %}
+						<figure>
+							{% image block.value.image width-600 as block_img %}
+							<mj-image
+								src="{{ block_img.full_url }}"
+								alt="{{ block_img.alt }}"
+								padding="0"
+							/>
+							{% if block.value.caption or block.value.image.credit %}
+								<figcaption class="image-caption">
+									<mj-text color="#ffffff" font-size="12px" font-family="'Roboto Mono', monospace" padding="8px 12px">
+										{% if block.value.caption %}
+											<p>{{ block.value.caption|richtext }}</p>
+										{% endif %}
+										{% if block.value.image.credit %}
+											<p>
+												{% if block.value.image.credit_url %}
+													<a href="{{ block.value.image.credit_url }}">{{ block.value.image.credit }}</a>
+												{% else %}
+													{{ block.value.image.credit }}
+												{% endif %}
+											</p>
+										{% endif %}
+									</mj-text>
+								</figcaption>
+							{% endif %}
+						</figure>
+
+					{% elif block.block_type == "blockquote" %}
+						<mj-text>
+							<blockquote class="blockquote"{% if block.value.source_url %} cite="{{ block.value.source_url }}"{% endif %}>
+								{{ block.value.text|newsletter_richtext }}
+								{% if block.value.source_text %}
+									<cite>
+										{% if block.value.source_url %}
+											<a href="{{ block.value.source_url }}">{{ block.value.source_text|newsletter_richtext }}</a>
+										{% else %}
+											{{ block.value.source_text|newsletter_richtext }}
+										{% endif %}
+									</cite>
+								{% endif %}
+							</blockquote>
+						</mj-text>
+
+					{% elif block.block_type == "heading_1" %}
+						<h2>{{ block.value.content }}</h2>
+
+					{% elif block.block_type == "heading_2" %}
+						<h3>{{ block.value.content }}</h3>
+
+					{% elif block.block_type == "heading_3" %}
+						<h4>{{ block.value.content }}</h4>
+
+					{% elif block.block_type == "list" %}
+						<mj-text>
+							<div class="list-block">
+								<ul>
+									{% for item in block.value %}
+										<li>{{ item }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</mj-text>
+
+					{% elif block.block_type == "button" %}
+						<mj-button
+							background-color="#ffffff"
+							color="#000000"
+							border="3px solid #000000"
+							inner-padding="8px 24px"
+							align="left"
+							href="{{ block.value.url }}"
+						>
+							{{ block.value.text }}
+						</mj-button>
+
+					{% elif block.block_type == "raw_html" %}
+						<mj-raw>{{ block.value }}</mj-raw>
+
+					{% elif block.block_type == "tweet" %}
+						<mj-text>
+							<a href="{{ block.value.tweet.url }}" class="link-external">
+								View post on X/Twitter &rarr;
+							</a>
+						</mj-text>
+
+					{% elif block.block_type == "bluesky" %}
+						<mj-text>
+							<a href="{{ block.value.bluesky_post.url }}" class="link-external">
+								View post on Bluesky &rarr;
+							</a>
+						</mj-text>
+
+					{% elif block.block_type == "instagram" %}
+						<mj-text>
+							<a href="{{ block.value.instagram_post.url }}" class="link-external">
+								View post on Instagram &rarr;
+							</a>
+						</mj-text>
+
+					{% elif block.block_type == "video" %}
+						{% get_embed block.value.video.url as embed_data %}
+						<mj-text align="center">
+							<a target="_blank" href="{{ block.value.video.url }}" class="video-link">
+								<div class="video-wrapper">
+									{% if embed_data.thumbnail_url %}
+										<img src="{{ embed_data.thumbnail_url }}" alt="{% if embed_data.title %}{{ embed_data.title }}{% else %}Open video in a new tab{% endif %}" class="video-thumbnail" />
+									{% else %}
+										<div class="video-placeholder"></div>
+									{% endif %}
+									<span class="video-play">&#9654;</span>
+								</div>
+							</a>
+							{% if block.value.caption %}
+								<p class="meta">{{ block.value.caption|richtext }}</p>
+							{% endif %}
+						</mj-text>
+
+					{% elif block.block_type == "statistics" %}
+						<mj-text>
+							<a href="{% fullpageurl page %}" class="link-external">
+								View statistics on the website &rarr;
+							</a>
+						</mj-text>
+
+					{% elif block.block_type == "vertical_bar_chart" or block.block_type == "tree_map_chart" or block.block_type == "bubble_map_chart" or block.block_type == "hexbin_map_chart" %}
+						<mj-text>
+							{% if block.value.title %}
+								<p><strong>{{ block.value.title }}</strong></p>
+							{% endif %}
+							<a href="{% fullpageurl page %}" class="link-external">
+								View interactive chart on the website &rarr;
+							</a>
+						</mj-text>
 					{% endif %}
 				{% endfor %}
 			</mj-column>
 		</mj-section>
-    </mj-body>
+
+		<!-- DONATE BUTTON (bottom) -->
+		{% if settings.common.SiteSettings.donation_page %}
+		<mj-section background-color="#ffffff" css-class="body">
+			<mj-column>
+				<mj-button
+					background-color="#F2FC67"
+					color="#000000"
+					border="3px solid #000000"
+					font-size="14px"
+					font-weight="400"
+					letter-spacing="1px"
+					inner-padding="14px 32px"
+					text-transform="uppercase"
+					width="100%"
+					href="{{ settings.common.SiteSettings.donation_page }}"
+				>
+					Donate to support the Tracker
+				</mj-button>
+			</mj-column>
+		</mj-section>
+		{% endif %}
+
+		<!-- TALK TO US -->
+		<mj-section background-color="#000000" css-class="body">
+			<mj-column>
+				<mj-text color="#ffffff">
+					<p><strong>TALK TO US:</strong><br />
+					If you&rsquo;re a journalist &mdash; or know one &mdash; who&rsquo;s been arrested, attacked, lost access to government events, or had equipment damaged or seized in the course of reporting, tell us about it. <a href="https://pressfreedomtracker.us/submit-incident/" style="color:#FFF;">Submit an incident report</a> to the Tracker as we work to gather systematic information about press freedom incidents in the United States.</p>
+				</mj-text>
+				<mj-spacer height="16px" />
+				<mj-button
+					background-color="#ffffff"
+					color="#000000"
+					border="3px solid #000000"
+					font-size="14px"
+					font-weight="400"
+					letter-spacing="1px"
+					inner-padding="14px 32px"
+					width="100%"
+					text-transform="uppercase"
+					href="https://pressfreedomtracker.us/submit-incident/"
+				>
+					Submit an incident
+				</mj-button>
+			</mj-column>
+		</mj-section>
+
+		<!-- FORWARD / SUBSCRIBE -->
+		{% if settings.common.SiteSettings.newsletter_subscription_page %}
+		<mj-section background-color="#ffffff" css-class="body">
+			<mj-column>
+				<mj-text>
+					<p><strong>Did a friend forward you this email? Click the button below to get the newsletter in your inbox.</strong> </p>
+				</mj-text>
+				<mj-spacer height="16px" />
+				<mj-button
+					background-color="#ffffff"
+					color="#000000"
+					border="3px solid #DA0A08"
+					inner-padding="14px 32px"
+					width="100%"
+					href="{% fullpageurl settings.common.SiteSettings.newsletter_subscription_page %}"
+				>
+					Sign up here
+				</mj-button>
+			</mj-column>
+		</mj-section>
+		{% endif %}
+
+		<!-- FOOTER -->
+		<mj-section background-color="#000000" css-class="footer">
+			<mj-column>
+				<mj-text align="center" padding-bottom="24px">
+					<a href="https://bsky.app/profile/pressfreedomtracker.us" style="display:inline-block; margin:0 16px; text-decoration:none;">
+						<img
+							src="{{ page.get_base_url }}{% static 'logos/bluesky.png' %}"
+							alt="U.S. Press Freedom Tracker on Bluesky"
+							width="24px"
+						/>
+					</a>
+					<a href="https://x.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
+						<img
+							src="{{ page.get_base_url }}{% static 'logos/x.png' %}"
+							alt="U.S. Press Freedom Tracker on X"
+							width="24px"
+						/>
+					</a>
+					<a href="https://instagram.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
+						<img
+							src="{{ page.get_base_url }}{% static 'logos/instagram.png' %}"
+							alt="U.S. Press Freedom Tracker on Instagram"
+							width="24px"
+						/>
+					</a>
+				</mj-text>
+				<mj-text align="center" color="#ffffff" font-size="14px" font-family="'Roboto Mono', monospace" line-height="1.6">
+					<p>&copy; Copyright Freedom of the Press Foundation</p>
+					<p>Licensed under <a href="https://creativecommons.org/licenses/by/4.0/" style="color:#ffffff;">Creative Commons CC-BY 4.0</a> where not otherwise indicated.</p>
+					<p>49 Flatbush Avenue #1017 Brooklyn NY 11217</p>
+				</mj-text>
+			</mj-column>
+		</mj-section>
+
+	</mj-body>
 </mjml>
 {% endmrml %}

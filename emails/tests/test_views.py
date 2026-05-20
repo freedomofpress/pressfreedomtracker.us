@@ -73,18 +73,18 @@ class EmailSignupThrottleTest(TestCase):
                 response = self.client.post(
                     reverse("email-signup-create"),
                     {"email_address": f"hello{i}@example.com"},
-                    HTTP_CF_CONNECTING_IP=ip,
+                    headers={"cf-connecting-ip": ip},
                 )
                 self.assertEqual(response.status_code, 200)
         response = self.client.post(
             reverse("email-signup-create"),
             {"email_address": "name@example.com"},
-            HTTP_CF_CONNECTING_IP=ip1,
+            headers={"cf-connecting-ip": ip1},
         )
         self.assertEqual(response.status_code, 429)
         response = self.client.post(
             reverse("email-signup-create"),
             {"email_address": "name@example.com"},
-            HTTP_CF_CONNECTING_IP=ip2,
+            headers={"cf-connecting-ip": ip2},
         )
         self.assertEqual(response.status_code, 429)

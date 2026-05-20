@@ -134,10 +134,6 @@ ruff: ## Runs ruff linting in Python3 container.
 			python:3.12.2-slim-bookworm \
 			bash -c "pip install -q ruff && ruff check"
 
-.PHONY: ruff
-ruff: ## Runs ruff linter/formatter.
-	@docker compose run --rm django ruff check .
-
 .PHONY: check-migrations
 check-migrations: ## Check for ungenerated migrations
 	docker compose exec -T django /bin/bash -c "./manage.py makemigrations --dry-run --check"
@@ -145,11 +141,6 @@ check-migrations: ## Check for ungenerated migrations
 .PHONY: bandit
 bandit: ## Runs bandit static code analysis in Python3 container.
 	@docker compose run --rm django ./scripts/bandit
-
-.PHONY: safety
-safety: ## Runs `safety check` to check python dependencies for vulnerabilities
-# Upgrade safety to ensure we are using the latest version.
-	pip install --upgrade safety && ./scripts/safety_check.py
 
 .PHONY: prod-push
 prod-push: ## Publishes prod container image to registry

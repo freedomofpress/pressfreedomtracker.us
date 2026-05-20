@@ -123,7 +123,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 STYLEGUIDE = True
 
-WAGTAILADMIN_BASE_URL = os.environ.get('DJANGO_BASE_URL', 'http://localhost:8000')
+WAGTAILADMIN_BASE_URL = os.environ.get("DJANGO_BASE_URL", "http://localhost:8000")
 
 try:
     from .local import *  # noqa: F403, F401

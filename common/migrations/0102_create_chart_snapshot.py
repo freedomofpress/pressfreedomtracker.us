@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="chartsnapshot",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(("chart_svg__isnull", False), ("snapshot_type", "SVG")),
                     models.Q(
                         ("chart_image__isnull", False),

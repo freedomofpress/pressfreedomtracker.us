@@ -84,7 +84,7 @@ class ChartSnapshot(models.Model):
     DEFAULT_HEIGHT = 800
     DEFAULT_WIDTH = 1190
 
-    last_generated = models.DateTimeField(auto_now=True)
+    last_generated = models.DateTimeField(auto_now=True, null=True)
     chart_type = models.CharField(
         max_length=255,
         choices=ChartType.choices,
@@ -105,7 +105,7 @@ class ChartSnapshot(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=(
+                condition=(
                     Q(snapshot_type=SnapshotType.SVG, chart_svg__isnull=False)
                     | (
                         Q(

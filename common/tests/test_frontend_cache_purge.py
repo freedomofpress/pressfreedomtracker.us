@@ -1,11 +1,10 @@
 from django.urls import reverse
 from django.test import TestCase, Client
 from unittest.mock import patch
-from wagtail.models import Site, Page
+from wagtail.models import Site
 
 from common.models import FooterSettings
 from common.tests.factories import CategoryPageFactory
-from home.tests.factories import HomePageFactory
 from incident.tests.factories import IncidentPageFactory
 
 
@@ -13,23 +12,11 @@ class TestCategoryPageCacheInvalidation(TestCase):
     def setUp(self):
         self.client = Client()
 
-        Page.objects.filter(slug="home").delete()
-        root_page = Page.objects.get(title="Root")
-        self.home_page = HomePageFactory.build(parent=None, slug="home")
-        root_page.add_child(instance=self.home_page)
+        # Get default site
+        site = Site.objects.get(is_default_site=True)
 
-        site, created = Site.objects.get_or_create(
-            is_default_site=True,
-            defaults={
-                "site_name": "Test site",
-                "hostname": "testserver",
-                "port": "1111",
-                "root_page": self.home_page,
-            },
-        )
-        if not created:
-            site.root_page = self.home_page
-            site.save()
+        # Get the root home page
+        self.home_page = site.root_page
 
         self.categorypage = CategoryPageFactory(parent=self.home_page, slug="category")
 
