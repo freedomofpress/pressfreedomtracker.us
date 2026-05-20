@@ -402,6 +402,8 @@ CONTENT_SECURITY_POLICY = {
             "https://scontent.cdninstagram.com",
             "data:",
             "https://cdn.jsdelivr.net",
+            "https://i.ytimg.com",  # YouTube thumbnails
+            "https://i.vimeocdn.com",  # Vimeo thumbnails
         ],
         "media-src": [SELF],
         "object-src": [SELF],
