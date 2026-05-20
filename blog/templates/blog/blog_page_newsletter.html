@@ -63,6 +63,11 @@
 				padding: 20px 0;
 				display: block;
 			}
+			.video-link { display: inline-block; text-decoration: none; line-height: 0; }
+			.video-wrapper { display: inline-block; position: relative; width: 75%; }
+			.video-thumbnail { display: block; width: 100%; height: auto; }
+			.video-placeholder { background-color: #23242C; width: 100%; padding-top: 56.25%; }
+			.video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; background: rgba(0,0,0,0.65); border-radius: 50%; text-align: center; line-height: 72px; color: white; font-size: 28px; }
 			figure { margin: 0; padding: 0; }
 			.image-caption {
 				background-color: #000000;
@@ -310,14 +315,14 @@
 					{% elif block.block_type == "video" %}
 						{% get_embed block.value.video.url as embed_data %}
 						<mj-text align="center">
-							<a target="_blank" href="{{ block.value.video.url }}" style="display: inline-block; text-decoration: none; line-height: 0;">
-								<div style="display: inline-block; position: relative; width: 75%;">
+							<a target="_blank" href="{{ block.value.video.url }}" class="video-link">
+								<div class="video-wrapper">
 									{% if embed_data.thumbnail_url %}
-										<img src="{{ embed_data.thumbnail_url }}" alt="{% if embed_data.title %}{{ embed_data.title }}{% else %}Open video in a new tab{% endif %}" style="display: block; width: 100%; height: auto;" />
+										<img src="{{ embed_data.thumbnail_url }}" alt="{% if embed_data.title %}{{ embed_data.title }}{% else %}Open video in a new tab{% endif %}" class="video-thumbnail" />
 									{% else %}
-										<div style="background-color: #23242C; width: 100%; padding-top: 56.25%;"></div>
+										<div class="video-placeholder"></div>
 									{% endif %}
-									<span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; background: rgba(0,0,0,0.65); border-radius: 50%; text-align: center; line-height: 72px; color: white; font-size: 28px;">&#9654;</span>
+									<span class="video-play">&#9654;</span>
 								</div>
 							</a>
 						</mj-text>
