@@ -1,7 +1,9 @@
 {% load newsletter_richtext mrml from wagtail_newsletter %}
-{% load wagtailsettings_tags wagtailcore_tags wagtailimages_tags %}
+{% load wagtailsettings_tags wagtailcore_tags wagtailimages_tags common_tags %}
 {% load static %}
+{% load get_embed %}
 {% get_settings use_default_site=True %}
+
 
 {% mrml %}
 <mjml>
@@ -306,13 +308,18 @@
 						</mj-text>
 
 					{% elif block.block_type == "video" %}
-						<mj-text>
-							<a href="{{ block.value.video.url }}" class="link-external">
-								Watch video &rarr;
+						{% get_embed block.value.video.url as embed_data %}
+						<mj-text align="center">
+							<a target="_blank" href="{{ block.value.video.url }}" style="display: inline-block; text-decoration: none; line-height: 0;">
+								<div style="display: inline-block; position: relative; width: 75%;">
+									{% if embed_data.thumbnail_url %}
+										<img src="{{ embed_data.thumbnail_url }}" alt="{% if embed_data.title %}{{ embed_data.title }}{% else %}Open video in a new tab{% endif %}" style="display: block; width: 100%; height: auto;" />
+									{% else %}
+										<div style="background-color: #23242C; width: 100%; padding-top: 56.25%;"></div>
+									{% endif %}
+									<span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; background: rgba(0,0,0,0.65); border-radius: 50%; text-align: center; line-height: 72px; color: white; font-size: 28px;">&#9654;</span>
+								</div>
 							</a>
-							{% if block.value.caption %}
-								<p class="meta">{{ block.value.caption|richtext }}</p>
-							{% endif %}
 						</mj-text>
 
 					{% elif block.block_type == "statistics" %}
