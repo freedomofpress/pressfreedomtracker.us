@@ -1,3 +1,5 @@
+import copy
+
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils.html import strip_tags
@@ -49,6 +51,7 @@ from common.blocks import (
     BubbleMapChart,
     HexbinMapChart,
 )
+from common.templatetags.common_tags import first_block_of
 
 
 class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
@@ -354,6 +357,29 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
         for panel in panels:
             panel.permission = "blog.access_newsletter_tab_blogpage"
         return panels
+
+    def get_base_url(self):
+        return self.get_site().root_url
+
+    def newsletter_intro(self):
+        """Returns the newsletter intro text for this page."""
+        if not self.body: # pragma: no cover
+            return None
+        rich_text_block = first_block_of(self.body, "text")
+        if not rich_text_block:
+            return None
+        return rich_text_block
+
+    def newsletter_body(self):
+        """Returns the newsletter body text for this page."""
+        if not self.body: # pragma: no cover
+            return None
+        body = copy.deepcopy(self.body)
+        rich_text_block = first_block_of(body, "text")
+        if not rich_text_block:
+            return body
+        body.remove(rich_text_block)
+        return body
 
     def get_meta_image(self):
         if (
