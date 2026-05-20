@@ -1,7 +1,7 @@
 from unittest import mock
 
 from django.test import TestCase
-
+import wagtail.embeds.exceptions
 from common.templatetags.get_embed import get_embed
 
 
@@ -18,9 +18,8 @@ class TestGetEmbedTag(TestCase):
 
     @mock.patch("common.templatetags.get_embed.wagtail_get_embed")
     def test_returns_empty_string_on_embed_exception(self, mock_get_embed):
-        from wagtail.embeds.exceptions import EmbedException
 
-        mock_get_embed.side_effect = EmbedException()
+        mock_get_embed.side_effect = wagtail.embeds.exceptions.EmbedException()
 
         result = get_embed("https://www.youtube.com/watch?v=notfound")
 

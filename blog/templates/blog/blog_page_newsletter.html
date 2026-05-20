@@ -1,9 +1,8 @@
 {% load newsletter_richtext mrml from wagtail_newsletter %}
-{% load wagtailsettings_tags wagtailcore_tags wagtailimages_tags common_tags %}
+{% load wagtailsettings_tags wagtailcore_tags wagtailimages_tags %}
 {% load static %}
 {% load get_embed %}
 {% get_settings use_default_site=True %}
-
 
 {% mrml %}
 <mjml>
@@ -325,6 +324,9 @@
 									<span class="video-play">&#9654;</span>
 								</div>
 							</a>
+							{% if block.value.caption %}
+								<p class="meta">{{ block.value.caption|richtext }}</p>
+							{% endif %}
 						</mj-text>
 
 					{% elif block.block_type == "statistics" %}
