@@ -112,7 +112,7 @@ function HomepageMainChartsWidth({
 		barChartProps.x = 'monthName'
 		barChartProps.data = groupByMonthSorted(
 			datasetFiltered,
-			filtersApplied.fourWeeks,
+			filtersApplied.sixMonths,
 			currentDate,
 		)
 		barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
