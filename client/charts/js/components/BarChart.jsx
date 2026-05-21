@@ -104,7 +104,7 @@ export default function BarChart({
 	const MIN_LABEL_GAP_PX = 8
 	const xDomainItems = xDomain || dataset.map((d) => d[x])
 	const labelSlotWidth = width / xDomainItems.length
-	const longestLabelChars = Math.max(...xDomainItems.map((d) => xFormat(d).length))
+	const longestLabelChars = Math.max(...xDomainItems.map((d) => String(xFormat(d)).length))
 	const longestLabelPx = longestLabelChars * APPROX_PX_PER_CHAR
 	const labelsWouldCollide = labelSlotWidth < longestLabelPx + MIN_LABEL_GAP_PX
 	const xLabelDisplayInterval = labelsWouldCollide ? 2 : 1
