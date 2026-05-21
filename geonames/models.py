@@ -56,3 +56,7 @@ class GeoName(models.Model):
 
     population = models.BigIntegerField(null=True)
     elevation = models.BigIntegerField(null=True)
+
+    def __repr__(self):
+        class_name = type(self).__name__
+        return f"{class_name}<name={self.name!r}, regcode={self.regcode!r}>"

@@ -528,3 +528,24 @@ WAGTAILEMBEDS_FINDERS = [
         "class": "wagtail.embeds.finders.oembed",
     },
 ]
+
+if all(
+    name in os.environ
+    for name in (
+        "PREPUB_GOOGLE_SHEETS_CREDS",
+        "PREPUB_DOCUMENT_ID",
+        "PREPUB_SHEET_NAME",
+        "PREPUB_HEADER_ROW_INDEX",
+    )
+):
+    PREPUBLICATION_SOURCES = {
+        "default": {
+            "GOOGLE_SHEETS_CREDS": os.environ["PREPUB_GOOGLE_SHEETS_CREDS"],
+            "DOCUMENT_ID": os.environ["PREPUB_DOCUMENT_ID"],
+            "HEADER_ROW_INDEX": os.environ[
+                "PREPUB_HEADER_ROW_INDEX"
+            ],  # zero-based index of the row of the document where the header is.
+            "SHEET_NAME": os.environ["PREPUB_SHEET_NAME"],
+            "GOOGLE_API_VERSION": os.getenv("PREPUB_GOOGLE_API_VERSION", "v4"),
+        }
+    }

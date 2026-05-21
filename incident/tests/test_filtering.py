@@ -308,7 +308,7 @@ class TestFiltering(TestCase):
     def test_should_filter_charges_as_one_field(self):
         """Filter should filter charges regardless of status"""
         category = CategoryPageFactory(
-            title="Arrest / Criminal Charge",
+            title="Arrest/Criminal Charge",
             incident_filters=["charges"],
         )
         charge = ChargeFactory()
@@ -336,7 +336,7 @@ class TestFiltering(TestCase):
     def test_should_filter_charges_by_title_as_one_field(self):
         """Filter should filter charges by title as if current and dropped charges are a single field"""
         category = CategoryPageFactory(
-            title="Arrest / Criminal Charge",
+            title="Arrest/Criminal Charge",
             incident_filters=["charges"],
         )
         charge = ChargeFactory()
@@ -363,7 +363,7 @@ class TestFiltering(TestCase):
 
     def test_should_filter_incidents_by_most_recent_charge_status(self):
         category = CategoryPageFactory(
-            title="Arrest / Criminal Charge",
+            title="Arrest/Criminal Charge",
             incident_filters=["status_of_charges"],
         )
         desired_status = "PENDING_APPEAL"
@@ -413,7 +413,7 @@ class TestFiltering(TestCase):
 
         """
         category = CategoryPageFactory(
-            title="Arrest / Criminal Charge",
+            title="Arrest/Criminal Charge",
             incident_filters=["status_of_charges"],
         )
         undesired_status = "CHARGES_PENDING"
@@ -962,7 +962,7 @@ class DateFilterTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.category = CategoryPageFactory(
-            title="Arrest / Criminal Charge",
+            title="Arrest/Criminal Charge",
             incident_filters=["release_date"],
         )
 
@@ -1239,7 +1239,7 @@ class MultiChoiceFilterTest(TestCase):
         self.dropped = "DROPPED"
         self.quashed = "QUASHED"
         self.category = CategoryPageFactory(
-            title="Subpoena / Legal Order",
+            title="Subpoena/Legal Order",
             incident_filters=["subpoena_statuses"],
         )
 
@@ -2435,7 +2435,7 @@ class LegalOrderTypeFilterTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         CategoryPageFactory(
-            title="Subpoena / Legal Order",
+            title="Subpoena/Legal Order",
             incident_filters=["legal_order_type"],
         )
         cls.legal_order1 = factories.LegalOrderFactory(
@@ -2465,7 +2465,7 @@ class LegalOrderInformationFilterTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         CategoryPageFactory(
-            title="Subpoena / Legal Order",
+            title="Subpoena/Legal Order",
             incident_filters=["legal_order_information_requested"],
         )
         cls.legal_order1 = factories.LegalOrderFactory(
@@ -2497,7 +2497,7 @@ class LegalOrderStatusFilterTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         CategoryPageFactory(
-            title="Subpoena / Legal Order",
+            title="Subpoena/Legal Order",
             incident_filters=["legal_order_status"],
         )
         cls.legal_order1 = factories.LegalOrderFactory(
