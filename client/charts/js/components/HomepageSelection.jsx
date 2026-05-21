@@ -51,6 +51,7 @@ export default function HomepageSelection({
 	currentDate = new Date(),
 	filtersApplied,
 	setFiltersApplied,
+	sevenDayEnabled = false,
 }) {
 	const years = d3
 		.groups(
@@ -176,14 +177,16 @@ export default function HomepageSelection({
 			<ButtonsRow
 				label="from"
 				buttonLabels={[
-					TIME_LABELS.SEVEN_DAYS,
+					...(sevenDayEnabled && isLastNDaysSelectable(originalDataset, currentDate, 7)
+						? [TIME_LABELS.SEVEN_DAYS]
+						: []),
 					TIME_LABELS.FOUR_WEEKS,
 					TIME_LABELS.TWELVE_WEEKS,
 					TIME_LABELS.SIX_MONTHS,
 					TIME_LABELS.ALL_TIME,
 				]}
 				dropDownLabels={years}
-				defaultSelection={TIME_LABELS.FOUR_WEEKS}
+				defaultSelection={filtersApplied.sevenDays ? TIME_LABELS.SEVEN_DAYS : TIME_LABELS.FOUR_WEEKS}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
 			/>

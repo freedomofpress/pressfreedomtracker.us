@@ -23,6 +23,8 @@ chartContainers.forEach((node) => {
 	const databasePath = node.dataset.databasePath
 	const startDate = node.dataset.startDate
 	const endDate = node.dataset.endDate
+	// TODO: add admin controls to add this attr when enabled
+	const sevenDayEnabled = node.dataset.sevenDayEnabled === 'true'
 
 	const params = new URLSearchParams([
 		['fields', fields.join(',')],
@@ -41,7 +43,12 @@ chartContainers.forEach((node) => {
 			dataParser={[(data) => d3.csvParse(data, d3.autoType), JSON.parse]}
 			loadingComponent={false}
 		>
-			<HomepageMainCharts data={[]} selectedTags={selectedTags} databasePath={databasePath} />
+			<HomepageMainCharts
+				data={[]}
+				selectedTags={selectedTags}
+				databasePath={databasePath}
+				sevenDayEnabled={sevenDayEnabled}
+			/>
 		</DataLoader>
 	))
 })

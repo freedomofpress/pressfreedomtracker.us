@@ -8,6 +8,7 @@ import ChartDescription from "./ChartDescription"
 import Flashing from '../../../common/js/components/Flashing'
 import {
 	filterDatasetByFiltersApplied,
+	filterDatasetByLastNDays,
 	groupByMonthSorted,
 	groupByYearsSorted,
 	groupByDaysSorted,
@@ -38,15 +39,20 @@ function HomepageMainChartsWidth({
 	databasePath = '/',
 	loading = false,
 	categories = [],
+	sevenDayEnabled = false,
 }) {
-	const [filtersApplied, setFiltersApplied] = React.useState({
-		tag: null,
-		year: null,
-		sixMonths: false,
-		allTime: null,
-		sevenDays: false,
-		fourWeeks: true,
-		twelveWeeks: false,
+	const [filtersApplied, setFiltersApplied] = React.useState(() => {
+		const sevenDayDefaultable = sevenDayEnabled
+			&& filterDatasetByLastNDays(dataset, currentDate, 7).length > 0
+		return {
+			tag: null,
+			year: null,
+			sixMonths: false,
+			allTime: null,
+			sevenDays: sevenDayDefaultable,
+			fourWeeks: !sevenDayDefaultable,
+			twelveWeeks: false,
+		}
 	})
 
 	const categoriesColorMap = categories.reduce(
@@ -128,6 +134,7 @@ function HomepageMainChartsWidth({
 				filtersApplied={filtersApplied}
 				setFiltersApplied={setFiltersApplied}
 				selectedTags={selectedTags}
+				sevenDayEnabled={sevenDayEnabled}
 			/>
 
 			<div className={'hpChartContainer'} style={{ width: width }}>
