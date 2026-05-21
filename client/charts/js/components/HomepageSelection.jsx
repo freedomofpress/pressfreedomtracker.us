@@ -6,8 +6,18 @@ import {
 	filterDatasetByTag,
 	filterDatasetByYear,
 	filterDatasetByLastSixMonths,
+	filterDatasetByLastNDays,
+	filterDatasetByLastNWeeks,
 	filterDatasetByFiltersApplied,
 } from '../lib/utilities.js'
+
+const TIME_LABELS = {
+	SEVEN_DAYS: 'past 7 days',
+	FOUR_WEEKS: 'past 4 weeks',
+	TWELVE_WEEKS: 'past 12 weeks',
+	SIX_MONTHS: 'past six months',
+	ALL_TIME: 'all time',
+}
 
 export function chooseTrendingTags(dataset, numberOfTags) {
 	const currentDate = new Date();
@@ -53,19 +63,22 @@ export default function HomepageSelection({
 	function updateSelectedTag(label) {
 		const tag = label === 'All incidents' ? null : label
 		const newFiltersToApply = {
+			...filtersApplied,
 			tag: tag,
-			year: filtersApplied.year,
-			sixMonths: filtersApplied.sixMonths,
 		}
 		setFiltersApplied(newFiltersToApply)
 	}
 
 	function updateSelectedYear(label) {
+		const presetLabels = Object.values(TIME_LABELS)
 		const newFiltersToApply = {
 			tag: filtersApplied.tag,
-			year: (label === 'the past six months') || (label === 'all time') ? null : label,
-			sixMonths: label === 'the past six months',
-			allTime: label === 'all time'
+			year: presetLabels.includes(label) ? null : label,
+			sixMonths: label === TIME_LABELS.SIX_MONTHS,
+			allTime: label === TIME_LABELS.ALL_TIME,
+			sevenDays: label === TIME_LABELS.SEVEN_DAYS,
+			fourWeeks: label === TIME_LABELS.FOUR_WEEKS,
+			twelveWeeks: label === TIME_LABELS.TWELVE_WEEKS,
 		}
 
 		setFiltersApplied(newFiltersToApply)
@@ -75,7 +88,7 @@ export default function HomepageSelection({
 		return (
 			filterDatasetByFiltersApplied(
 				originalDataset,
-				{ tag: tag, year: filtersApplied.year, sixMonths: filtersApplied.sixMonths, allTime: filtersApplied.allTime },
+				{ ...filtersApplied, tag },
 				currentDate
 			).length > 0
 		)
@@ -103,16 +116,49 @@ export default function HomepageSelection({
 		return true
 	}
 
+	function isLastNDaysSelectable(originalDataset, currentDate, numberOfDays) {
+		if (filtersApplied.tag !== null) {
+			return (
+				filterDatasetByLastNDays(
+					filterDatasetByTag(originalDataset, filtersApplied.tag),
+					currentDate,
+					numberOfDays
+				).length > 0
+			)
+		}
+		return true
+	}
+
+	function isLastNWeeksSelectable(originalDataset, currentDate, numberOfWeeks) {
+		if (filtersApplied.tag !== null) {
+			return (
+				filterDatasetByLastNWeeks(
+					filterDatasetByTag(originalDataset, filtersApplied.tag),
+					currentDate,
+					numberOfWeeks
+				).length > 0
+			)
+		}
+		return true
+	}
+
 	function isTimeButtonSelectable(year) {
-		if (year === 'the past six months') {
+		if (year === TIME_LABELS.SIX_MONTHS) {
 			return isLastSixMonthsSelectable(originalDataset, currentDate)
 		}
-		else if (year === 'all time') {
+		if (year === TIME_LABELS.ALL_TIME) {
 			return true
 		}
-		else {
-			return isYearSelectable(originalDataset, year)
+		if (year === TIME_LABELS.SEVEN_DAYS) {
+			return isLastNDaysSelectable(originalDataset, currentDate, 7)
 		}
+		if (year === TIME_LABELS.FOUR_WEEKS) {
+			return isLastNWeeksSelectable(originalDataset, currentDate, 4)
+		}
+		if (year === TIME_LABELS.TWELVE_WEEKS) {
+			return isLastNWeeksSelectable(originalDataset, currentDate, 12)
+		}
+		return isYearSelectable(originalDataset, year)
 	}
 
 	return (
@@ -129,9 +175,15 @@ export default function HomepageSelection({
 			/>
 			<ButtonsRow
 				label="from"
-				buttonLabels={['the past six months'].concat(['all time'])}
+				buttonLabels={[
+					TIME_LABELS.SEVEN_DAYS,
+					TIME_LABELS.FOUR_WEEKS,
+					TIME_LABELS.TWELVE_WEEKS,
+					TIME_LABELS.SIX_MONTHS,
+					TIME_LABELS.ALL_TIME,
+				]}
 				dropDownLabels={years}
-				defaultSelection={'the past six months'}
+				defaultSelection={TIME_LABELS.FOUR_WEEKS}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
 			/>

@@ -71,6 +71,10 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 		parameters.push(`state=${filtersApplied.state.replace(' ', '+')}`)
 	}
 
+	if (filtersApplied.weekStart !== undefined && filtersApplied.weekEnd !== undefined) {
+		parameters.push(`date_lower=${filtersApplied.weekStart}&date_upper=${filtersApplied.weekEnd}`)
+	}
+
 	if (filtersApplied.year !== null && filtersApplied.year !== undefined && filtersApplied.monthName === undefined) {
 		parameters.push(`date_lower=${filtersApplied.year}-01-01&date_upper=${filtersApplied.year}-12-31`)
 	}
@@ -115,6 +119,20 @@ export function filterDatasetByLastSixMonths(dataset, currentDate) {
 	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
 }
 
+export function filterDatasetByLastNDays(dataset, currentDate, numberOfDays) {
+	const currentDayStart = d3.utcDay.floor(currentDate)
+	const firstDayStart = d3.utcDay.offset(currentDayStart, -(numberOfDays - 1))
+	return dataset.filter(d => +d.date >= +firstDayStart && +d.date <= +currentDate)
+}
+
+// Rolling window of the last N Monday-starting weeks, ending with partial week
+// containing currentDate.
+export function filterDatasetByLastNWeeks(dataset, currentDate, numberOfWeeks) {
+	const currentWeekStart = d3.utcMonday.floor(currentDate)
+	const firstWeekStart = d3.utcMonday.offset(currentWeekStart, -(numberOfWeeks - 1))
+	return dataset.filter(d => +d.date >= +firstWeekStart && +d.date <= +currentDate)
+}
+
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
 	const datasetFilteredByTag =
 		filtersApplied.tag !== null
@@ -124,12 +142,20 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 		filtersApplied.year !== null
 			? filterDatasetByYear(datasetFilteredByTag, filtersApplied.year)
 			: datasetFilteredByTag
-	const datasetFilteredBySixMonths =
-		filtersApplied.sixMonths !== false
-			? filterDatasetByLastSixMonths(datasetFilteredByYear, currentDate)
-			: datasetFilteredByYear
 
-	return datasetFilteredBySixMonths
+	if (filtersApplied.sevenDays) {
+		return filterDatasetByLastNDays(datasetFilteredByYear, currentDate, 7)
+	}
+	if (filtersApplied.fourWeeks) {
+		return filterDatasetByLastNWeeks(datasetFilteredByYear, currentDate, 4)
+	}
+	if (filtersApplied.twelveWeeks) {
+		return filterDatasetByLastNWeeks(datasetFilteredByYear, currentDate, 12)
+	}
+	if (filtersApplied.sixMonths !== false) {
+		return filterDatasetByLastSixMonths(datasetFilteredByYear, currentDate)
+	}
+	return datasetFilteredByYear
 }
 
 export function filterDatasets(
@@ -220,6 +246,60 @@ export function groupByYearsSorted(dataset) {
 		.map((d) => ({ year: d[0], numberOfIncidents: d[1].length }))
 
 	return datasetGroupedByYear.sort((a, b) => a.year - b.year)
+}
+
+// Group the dataset into rolling calendar days ending with the day that
+// contains currentDate. Each bucket carries display + range strings so the
+// bar chart can label and tooltip them without re-deriving dates.
+export function groupByDaysSorted(dataset, currentDate, numberOfDays) {
+	const currentDayStart = d3.utcDay.floor(currentDate)
+	const days = d3.range(numberOfDays).map((i) =>
+		d3.utcDay.offset(currentDayStart, -(numberOfDays - 1 - i))
+	)
+	const formatWeekday = d3.utcFormat('%a')
+	const formatLong = d3.utcFormat('%a, %b %-d')
+	const formatIso = d3.utcFormat('%Y-%m-%d')
+
+	return days.map((dayStart) => {
+		const dayEnd = d3.utcDay.offset(dayStart, 1)
+		const numberOfIncidents = dataset.filter((d) => {
+			const t = +d.date
+			return t >= +dayStart && t < +dayEnd
+		}).length
+		return {
+			date: formatIso(dayStart),
+			label: formatWeekday(dayStart),
+			range: formatLong(dayStart),
+			numberOfIncidents,
+		}
+	})
+}
+
+// Group the dataset into rolling Monday-starting weeks ending with the week
+// that contains currentDate. Each bucket carries display + range strings so
+// the bar chart can label and tooltip them without re-deriving dates.
+export function groupByWeeksSorted(dataset, currentDate, numberOfWeeks) {
+	const currentWeekStart = d3.utcMonday.floor(currentDate)
+	const weeks = d3.range(numberOfWeeks).map((i) =>
+		d3.utcMonday.offset(currentWeekStart, -(numberOfWeeks - 1 - i))
+	)
+	const formatDay = d3.utcFormat('%b %-d')
+	const formatIso = d3.utcFormat('%Y-%m-%d')
+
+	return weeks.map((weekStart) => {
+		const weekEnd = d3.utcDay.offset(d3.utcMonday.offset(weekStart, 1), -1)
+		const numberOfIncidents = dataset.filter((d) => {
+			const t = +d.date
+			return t >= +weekStart && t <= +weekEnd
+		}).length
+		return {
+			weekStart: formatIso(weekStart),
+			weekEnd: formatIso(weekEnd),
+			label: formatDay(weekStart),
+			range: `${formatDay(weekStart)}–${formatDay(weekEnd)}`,
+			numberOfIncidents,
+		}
+	})
 }
 
 export function groupByCity(dataset) {

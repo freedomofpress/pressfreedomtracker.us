@@ -10,6 +10,8 @@ import {
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
 	groupByYearsSorted,
+	groupByDaysSorted,
+	groupByWeeksSorted,
 	groupByState,
 	countIncidentsOutsideUS,
 	categoriesColors,
@@ -40,8 +42,11 @@ function HomepageMainChartsWidth({
 	const [filtersApplied, setFiltersApplied] = React.useState({
 		tag: null,
 		year: null,
-		sixMonths: true,
-		allTime: null
+		sixMonths: false,
+		allTime: null,
+		sevenDays: false,
+		fourWeeks: true,
+		twelveWeeks: false,
 	})
 
 	const categoriesColorMap = categories.reduce(
@@ -53,10 +58,8 @@ function HomepageMainChartsWidth({
 	const chartHeight = width > mobileBreakpoint ? 500 : 480
 
 	const datasetFiltered = filterDatasetByFiltersApplied(dataset, filtersApplied, currentDate)
-
 	const datasetAggregatedByGeo = groupByState(datasetFiltered)
 	const incidentsOutsideUS = countIncidentsOutsideUS(datasetFiltered)
-
 
 	const barChartProps = {
 		y: 'numberOfIncidents',
@@ -66,7 +69,42 @@ function HomepageMainChartsWidth({
 		height: chartHeight,
 		isMobileView: width < mobileBreakpoint,
 	}
-	if (filtersApplied.allTime) {
+
+	const numberOfWeeks = filtersApplied.fourWeeks ? 4 : filtersApplied.twelveWeeks ? 12 : null
+
+	if (filtersApplied.sevenDays) {
+		const dayData = groupByDaysSorted(datasetFiltered, currentDate, 7)
+		const dayByLabel = Object.fromEntries(dayData.map((d) => [d.label, d]))
+		barChartProps.data = dayData
+		barChartProps.x = 'label'
+		barChartProps.tooltipXFormat = (label) => dayByLabel[label]?.range ?? label
+		barChartProps.searchPageURL = (label) => {
+			const day = dayByLabel[label]
+			if (!day) return null
+			return getFilteredUrl(
+				databasePath,
+				{ ...filtersApplied, weekStart: day.date, weekEnd: day.date },
+				currentDate,
+				categories,
+			)
+		}
+	} else if (numberOfWeeks) {
+		const weekData = groupByWeeksSorted(datasetFiltered, currentDate, numberOfWeeks)
+		const weekByLabel = Object.fromEntries(weekData.map((w) => [w.label, w]))
+		barChartProps.data = weekData
+		barChartProps.x = 'label'
+		barChartProps.tooltipXFormat = (label) => weekByLabel[label]?.range ?? label
+		barChartProps.searchPageURL = (label) => {
+			const week = weekByLabel[label]
+			if (!week) return null
+			return getFilteredUrl(
+				databasePath,
+				{ ...filtersApplied, weekStart: week.weekStart, weekEnd: week.weekEnd },
+				currentDate,
+				categories,
+			)
+		}
+	} else if (filtersApplied.allTime) {
 		barChartProps.data = groupByYearsSorted(datasetFiltered)
 		barChartProps.x = 'year'
 		barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year }, currentDate, categories)
@@ -74,7 +112,7 @@ function HomepageMainChartsWidth({
 		barChartProps.x = 'monthName'
 		barChartProps.data = groupByMonthSorted(
 			datasetFiltered,
-			filtersApplied.sixMonths,
+			filtersApplied.fourWeeks,
 			currentDate,
 		)
 		barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
@@ -131,8 +169,26 @@ function HomepageMainChartsWidth({
 					/>
 				</div>
 				<div className={'hpChart'}>
-					<ChartDescription id={'homepage-bar-chart-label'}>Showing the number of journalists targeted per month.</ChartDescription>
+					<ChartDescription id={'homepage-bar-chart-label'}>
+						{filtersApplied.sevenDays
+							? 'Showing the number of journalists targeted per day.'
+							: numberOfWeeks
+								? 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)'
+								: 'Showing the number of journalists targeted per month.'}
+					</ChartDescription>
 					<BarChart {...barChartProps} />
+					{numberOfWeeks && width > mobileBreakpoint && (
+						<div
+							style={{
+								textAlign: 'center',
+								fontFamily: 'var(--font-base)',
+								fontWeight: 700,
+								fontSize: '13px',
+							}}
+						>
+							week beginning on
+						</div>
+					)}
 				</div>
 			</div>
 		</Flashing>

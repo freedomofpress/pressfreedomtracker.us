@@ -98,10 +98,16 @@ export default function BarChart({
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
 
-	// Calculate the space per label and only show every other label if too crowded
+	// Calculate the space per label (based on the longest found)
+	// to show every other label if too crowded
+	const APPROX_PX_PER_CHAR = 8
+	const MIN_LABEL_GAP_PX = 8
 	const xDomainItems = xDomain || dataset.map((d) => d[x])
-	const xLabelWidth = width / xDomainItems.length
-	const xLabelDisplayInterval = xLabelWidth < 40 ? 2 : 1
+	const labelSlotWidth = width / xDomainItems.length
+	const longestLabelChars = Math.max(...xDomainItems.map((d) => xFormat(d).length))
+	const longestLabelPx = longestLabelChars * APPROX_PX_PER_CHAR
+	const labelsWouldCollide = labelSlotWidth < longestLabelPx + MIN_LABEL_GAP_PX
+	const xLabelDisplayInterval = labelsWouldCollide ? 2 : 1
 
 	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(
 		dataset,
