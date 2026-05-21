@@ -13,6 +13,9 @@
     "stylelint": "stylelint client/**/*.sass"
   },
   "author": "Harris Lapiroff <harris@littleweaverweb.com>",
+  "browserslist": [
+    "baseline widely available"
+  ],
   "devDependencies": {
     "@babel/core": "^7.24.4",
     "@babel/plugin-transform-modules-commonjs": "^7.24.1",
