@@ -609,10 +609,6 @@ class BubbleMapChart(blocks.StructBlock):
         ),
     )
 
-    # "Optional. Clamps the largest bubble to represent this many "
-    # "incidents. Use the same value on multiple map blocks to "
-    # "make them visually comparable. Note: this will flatten all"
-    # "incidents above this count"
     class Meta:
         icon = "table"
         template = "common/blocks/bubble_map_chart.html"
