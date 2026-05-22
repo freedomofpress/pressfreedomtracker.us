@@ -282,6 +282,7 @@ export const generateUSMapSVG = async (req) => {
 					aggregationLocality={aggregationLocalityFnMap[options.aggregationLocality]}
 					width={options.width}
 					height={options.height}
+					fullSize={options.mini !== true}
 					disableAnimation
 				/>
 			</svg>,
