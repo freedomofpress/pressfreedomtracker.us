@@ -1,36 +1,37 @@
 import datetime
 
-import factory
-import wagtail_factories
-from wagtail_factories.blocks import BlockFactory
 from wagtail import blocks
 from wagtail.rich_text import RichText
 
+import factory
+import wagtail_factories
+from wagtail_factories.blocks import BlockFactory
+
 from common.blocks import (
     ALIGNMENT_CHOICES,
+    AlignedCaptionedEmbedBlock,
+    AlignedCaptionedImageBlock,
     Heading1,
     Heading2,
     Heading3,
-    StyledTextBlock,
-    RichTextTemplateBlock,
-    AlignedCaptionedImageBlock,
-    TweetEmbedBlock,
     PullQuoteBlock,
     RichTextBlockQuoteBlock,
-    AlignedCaptionedEmbedBlock,
+    RichTextTemplateBlock,
+    StyledTextBlock,
+    TweetEmbedBlock,
 )
 from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.models import (
-    CategoryPage,
     CategoryIncidentFilter,
-    ChartSnapshot,
     CategoryMethodologyItem,
+    CategoryPage,
+    ChartSnapshot,
     CommonTag,
     CustomImage,
-    SimplePage,
-    PersonPage,
-    OrganizationPage,
     OrganizationIndexPage,
+    OrganizationPage,
+    PersonPage,
+    SimplePage,
     TaxonomyCategoryPage,
     TaxonomySettings,
 )
@@ -136,7 +137,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
 
     class Params:
         arrest = factory.Trait(
-            title="Arrest / Criminal Charge",
+            title="Arrest/Criminal Charge",
             plural_name="Arrests and Criminal Charges",
             slug="arrest-criminal-charge",
         )
@@ -162,7 +163,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
             title="Leak Case", plural_name="Leak Cases", slug="leak-case"
         )
         subpoena = factory.Trait(
-            title="Subpoena / Legal Order",
+            title="Subpoena/Legal Order",
             plural_name="Subpoenas and Legal Orders",
             slug="subpoena",
         )
