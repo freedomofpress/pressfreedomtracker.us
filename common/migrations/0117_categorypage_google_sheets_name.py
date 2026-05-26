@@ -4,15 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0116_alter_chartsnapshot_last_generated'),
+        ("common", "0116_alter_chartsnapshot_last_generated"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='categorypage',
-            name='google_sheets_name',
-            field=models.TextField(blank=True, default=None, help_text='Name of this category in the pre-publication Google sheet. Must match the value there exactly.', null=True, unique=True),
+            model_name="categorypage",
+            name="google_sheets_name",
+            field=models.TextField(
+                blank=True,
+                default=None,
+                help_text="Name of this category in the pre-publication Google sheet. Must match the value there exactly.",
+                null=True,
+                unique=True,
+            ),
         ),
     ]

@@ -249,10 +249,7 @@ class TestPages(TestCase):
 
     def test_get_blog_page_newsletter_intro(self):
         newsletter_intro = first_block_of(self.blog_page.body, "text")
-        self.assertEqual(
-            str(self.blog_page.newsletter_intro()),
-            str(newsletter_intro)
-        )
+        self.assertEqual(str(self.blog_page.newsletter_intro()), str(newsletter_intro))
 
         # Blog page without richtext
         blog_page4 = BlogPageFactory(
@@ -275,8 +272,7 @@ class TestPages(TestCase):
         newsletter_intro = first_block_of(newsletter_body, "text")
         newsletter_body.remove(newsletter_intro)
         self.assertHTMLEqual(
-            str(self.blog_page.newsletter_body()),
-            str(newsletter_body)
+            str(self.blog_page.newsletter_body()), str(newsletter_body)
         )
 
         # Blog page without richtext
@@ -292,15 +288,11 @@ class TestPages(TestCase):
                 ],
             ),
         )
-        self.assertEqual(
-            str(blog_page5.newsletter_body()),
-            str(blog_page5.body)
-        )
+        self.assertEqual(str(blog_page5.newsletter_body()), str(blog_page5.body))
 
     def test_get_blog_page_base_url(self):
         self.assertEqual(
-            self.blog_page2.get_base_url(),
-            self.home_page.get_site().root_url
+            self.blog_page2.get_base_url(), self.home_page.get_site().root_url
         )
 
     def test_get_blog_page_vertical_bar_chart_meta_image(self):
