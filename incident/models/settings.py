@@ -1,12 +1,11 @@
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
 
 from wagtail.admin.panels import (
     FieldPanel,
-    MultiFieldPanel,
     FieldRowPanel,
+    MultiFieldPanel,
 )
-
 from wagtail.contrib.settings.models import (
     BaseGenericSetting,
     register_setting,
