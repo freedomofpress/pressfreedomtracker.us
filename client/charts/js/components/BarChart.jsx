@@ -377,7 +377,7 @@ export default function BarChart({
 							fill: (d) => (hoveredElement?.x === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
 							fontFamily: 'var(--font-base)',
 							fontWeight: 500,
-							fontSize: '14px',
+							fontSize: width < 400 && !isMobileView ? 12 : 14, // 12pt at smallest desktop size to further avoid label collisions
 							text: (d) => xFormat(d[x]),
 						}}
 						duration={250}
