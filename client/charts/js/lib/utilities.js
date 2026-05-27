@@ -125,7 +125,7 @@ export function filterDatasetByLastNDays(dataset, currentDate, numberOfDays) {
 	return dataset.filter(d => +d.date >= +firstDayStart && +d.date <= +currentDate)
 }
 
-// Rolling window of the last N Monday-starting weeks, ending with partial week containing currentDate.
+// Rolling window of the last N mon-sun weeks, ending with partial week containing currentDate.
 export function filterDatasetByLastNWeeks(dataset, currentDate, numberOfWeeks) {
 	const currentWeekStart = d3.utcMonday.floor(currentDate)
 	const firstWeekStart = d3.utcMonday.offset(currentWeekStart, -(numberOfWeeks - 1))
@@ -247,9 +247,6 @@ export function groupByYearsSorted(dataset) {
 	return datasetGroupedByYear.sort((a, b) => a.year - b.year)
 }
 
-// Group the dataset into rolling calendar days ending with the day that
-// contains currentDate. Each bucket carries display + range strings so the
-// bar chart can label and tooltip them without re-deriving dates.
 export function groupByDaysSorted(dataset, currentDate, numberOfDays) {
 	const currentDayStart = d3.utcDay.floor(currentDate)
 	const days = d3.range(numberOfDays).map((i) =>
@@ -274,9 +271,6 @@ export function groupByDaysSorted(dataset, currentDate, numberOfDays) {
 	})
 }
 
-// Group the dataset into rolling Monday-starting weeks ending with the week
-// that contains currentDate. Each bucket carries display + range strings so
-// the bar chart can label and tooltip them without re-deriving dates.
 export function groupByWeeksSorted(dataset, currentDate, numberOfWeeks) {
 	const currentWeekStart = d3.utcMonday.floor(currentDate)
 	const weeks = d3.range(numberOfWeeks).map((i) =>
