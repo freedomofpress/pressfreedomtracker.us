@@ -41,7 +41,6 @@ class DatalistField(forms.ChoiceField):
 
 class FilterForm(forms.Form):
     def __init__(self, *args, **kwargs):
-
         data = kwargs.pop("data", None)
         filters = data.get("filters", None)
         self.id = data.get("id", "")

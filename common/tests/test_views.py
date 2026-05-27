@@ -28,7 +28,6 @@ User = get_user_model()
 
 class DocumentDownloadTest(TestCase):
     def test_serve_inline(self):
-
         document = Document(title="Test")
         document.file.save(
             "test_serve_inline.txt",

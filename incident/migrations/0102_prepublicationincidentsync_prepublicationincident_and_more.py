@@ -5,45 +5,102 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0117_categorypage_google_sheets_name'),
-        ('geonames', '0002_auto_20210914_1400'),
-        ('incident', '0101_alter_incidentindexpage_feed_limit_and_more'),
+        ("common", "0117_categorypage_google_sheets_name"),
+        ("geonames", "0002_auto_20210914_1400"),
+        ("incident", "0101_alter_incidentindexpage_feed_limit_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PrepublicationIncidentSync',
+            name="PrepublicationIncidentSync",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('SUCCESS', 'Success'), ('INVALID_DATA', 'Invalid Data'), ('FAILED', 'Failed')], max_length=255)),
-                ('completed_at', models.DateTimeField(auto_now=True)),
-                ('message', models.TextField(default='')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("SUCCESS", "Success"),
+                            ("INVALID_DATA", "Invalid Data"),
+                            ("FAILED", "Failed"),
+                        ],
+                        max_length=255,
+                    ),
+                ),
+                ("completed_at", models.DateTimeField(auto_now=True)),
+                ("message", models.TextField(default="")),
             ],
             options={
-                'ordering': ['-completed_at'],
+                "ordering": ["-completed_at"],
             },
         ),
         migrations.CreateModel(
-            name='PrepublicationIncident',
+            name="PrepublicationIncident",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-                ('location', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='geonames.geoname')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateField()),
+                (
+                    "location",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="geonames.geoname",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='PrepublicationIncidentCategory',
+            name="PrepublicationIncidentCategory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='+', to='common.categorypage')),
-                ('incident', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categorizations', to='incident.prepublicationincident')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="+",
+                        to="common.categorypage",
+                    ),
+                ),
+                (
+                    "incident",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="categorizations",
+                        to="incident.prepublicationincident",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['sort_order'],
-                'abstract': False,
+                "ordering": ["sort_order"],
+                "abstract": False,
             },
         ),
     ]

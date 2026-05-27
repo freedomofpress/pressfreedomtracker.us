@@ -363,7 +363,7 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
 
     def newsletter_intro(self):
         """Returns the newsletter intro text for this page."""
-        if not self.body: # pragma: no cover
+        if not self.body:  # pragma: no cover
             return None
         rich_text_block = first_block_of(self.body, "text")
         if not rich_text_block:
@@ -372,7 +372,7 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
 
     def newsletter_body(self):
         """Returns the newsletter body text for this page."""
-        if not self.body: # pragma: no cover
+        if not self.body:  # pragma: no cover
             return None
         body = copy.deepcopy(self.body)
         rich_text_block = first_block_of(body, "text")
