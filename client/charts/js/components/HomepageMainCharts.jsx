@@ -189,11 +189,11 @@ function HomepageMainChartsWidth({
 							style={{
 								textAlign: 'center',
 								fontFamily: 'var(--font-base)',
-								fontWeight: 700,
-								fontSize: '13px',
+								fontWeight: 500,
+								fontSize: '14px',
 							}}
 						>
-							week beginning on
+							Week beginning on
 						</div>
 					)}
 				</div>

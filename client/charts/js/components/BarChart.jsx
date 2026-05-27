@@ -98,8 +98,7 @@ export default function BarChart({
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
 
-	// Calculate the space per label (based on the longest found)
-	// to show every other label if too crowded
+	// Estimate label widths based on the longest string found
 	const APPROX_PX_PER_CHAR = 8
 	const MIN_LABEL_GAP_PX = 8
 	const xDomainItems = xDomain || dataset.map((d) => d[x])

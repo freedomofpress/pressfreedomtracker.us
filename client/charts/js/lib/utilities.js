@@ -125,8 +125,7 @@ export function filterDatasetByLastNDays(dataset, currentDate, numberOfDays) {
 	return dataset.filter(d => +d.date >= +firstDayStart && +d.date <= +currentDate)
 }
 
-// Rolling window of the last N Monday-starting weeks, ending with partial week
-// containing currentDate.
+// Rolling window of the last N Monday-starting weeks, ending with partial week containing currentDate.
 export function filterDatasetByLastNWeeks(dataset, currentDate, numberOfWeeks) {
 	const currentWeekStart = d3.utcMonday.floor(currentDate)
 	const firstWeekStart = d3.utcMonday.offset(currentWeekStart, -(numberOfWeeks - 1))
