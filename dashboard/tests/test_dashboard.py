@@ -1,16 +1,17 @@
-from wagtail import hooks
-
 from django.urls import reverse
-from wagtail.test.utils import WagtailPageTestCase
+
+from wagtail import hooks
 from wagtail.models import Page, Site
+from wagtail.test.utils import WagtailPageTestCase
 
 from common.models.settings import (
     SearchSettings,
 )
+from dashboard.wagtail_hooks import add_shortcuts_panel
+from incident.models import PrepublicationIncidentSync
 from incident.tests.factories import (
     IncidentIndexPageFactory,
 )
-from dashboard.wagtail_hooks import add_shortcuts_panel
 
 
 class ShortcutsPanelTest(WagtailPageTestCase):
@@ -37,3 +38,21 @@ class ShortcutsPanelTest(WagtailPageTestCase):
     def test_incident_shortcut(self):
         response = self.client.get(reverse("wagtailadmin_home"))
         self.assertContains(response, "Add a new incident")
+
+    @hooks.register_temporarily("construct_homepage_panels", add_shortcuts_panel)
+    def test_prepublication_status(self):
+        PrepublicationIncidentSync.objects.create(
+            status=PrepublicationIncidentSync.Status.SUCCESS,
+            message="3 incidents retrieved.",
+        )
+        response = self.client.get(reverse("wagtailadmin_home"))
+        self.assertContains(response, "3 incidents retrieved.")
+
+    @hooks.register_temporarily("construct_homepage_panels", add_shortcuts_panel)
+    def test_prepublication_sync_failed_message(self):
+        PrepublicationIncidentSync.objects.create(
+            status=PrepublicationIncidentSync.Status.INVALID_DATA,
+            message="Row 3: Invalid date Jan 13, 2010",
+        )
+        response = self.client.get(reverse("wagtailadmin_home"))
+        self.assertContains(response, "Sync did not succeed")

@@ -29,6 +29,9 @@
 		{% if value.title %}
 			data-title="{{ value.title }}"
 		{% endif %}
+		{% if value.domain_max %}
+			data-domain-max="{{ value.domain_max }}"
+		{% endif %}
 		{% if static_graphic is None %}
 			data-interactive="true"
 		{% endif %}

@@ -18,7 +18,6 @@ class TestGetEmbedTag(TestCase):
 
     @mock.patch("common.templatetags.get_embed.wagtail_get_embed")
     def test_returns_empty_string_on_embed_exception(self, mock_get_embed):
-
         mock_get_embed.side_effect = wagtail.embeds.exceptions.EmbedException()
 
         result = get_embed("https://www.youtube.com/watch?v=notfound")

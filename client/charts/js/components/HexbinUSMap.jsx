@@ -313,6 +313,7 @@ export default function HexbinUSMap({
 							y={32}
 							fontSize="10"
 							fontFamily="var(--font-base)"
+							fontWeight={500}
 							fill="#333"
 						>
 							0
@@ -335,6 +336,7 @@ export default function HexbinUSMap({
 										y={32}
 										fontSize="10"
 										fontFamily="var(--font-base)"
+										fontWeight={500}
 										fill="#333"
 										textAnchor="middle"
 									>
@@ -345,6 +347,7 @@ export default function HexbinUSMap({
 										y={32}
 										fontSize="10"
 										fontFamily="var(--font-base)"
+										fontWeight={500}
 										fill="#333"
 										textAnchor="middle"
 									>
@@ -358,6 +361,7 @@ export default function HexbinUSMap({
 							y={32}
 							fontSize="10"
 							fontFamily="var(--font-base)"
+							fontWeight={500}
 							fill="#333"
 							textAnchor="end"
 						>

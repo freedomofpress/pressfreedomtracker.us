@@ -417,6 +417,13 @@ class CategoryPage(MetadataPageMixin, Page):
         default="other_incident",
         help_text="Please check the styleguide to associate the icons with their name",
     )
+    google_sheets_name = models.TextField(
+        blank=True,
+        null=True,
+        unique=True,
+        default=None,
+        help_text="Name of this category in the pre-publication Google sheet. Must match the value there exactly.",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("description"),
@@ -466,6 +473,10 @@ class CategoryPage(MetadataPageMixin, Page):
     settings_panels = Page.settings_panels + [
         FieldPanel("plural_name"),
         FieldPanel("page_symbol"),
+        FieldPanel(
+            "google_sheets_name",
+            widget=forms.TextInput,
+        ),
     ]
 
     def clean(self):

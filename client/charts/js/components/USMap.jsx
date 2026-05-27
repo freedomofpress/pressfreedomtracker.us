@@ -57,6 +57,8 @@ export default function USMap({
 	// it to be downloaded
 	setSvgEl = () => { },
 	interactive = true,
+	fullSize = true,
+	domainMax,
 }) {
 	const [hoveredElement, setHoveredElement] = useState(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
@@ -93,16 +95,17 @@ export default function USMap({
 	const projection = d3.geoAlbersUsa().scale(1280).translate([480, 300])
 	const hasLatLon = ({ latitude, longitude }) => latitude && longitude
 
-	// Scale markers size depending on the number of incidents in a city/state
-	const markerScale = d3.scaleSqrt().domain([0, d3.max(dataset, d => d.numberOfIncidents)]).range([markerSize.min, markerSize.max])
 
-	// Make markers for incidents < 5 smaller
-	const getMarkerRadius = (numIncidents) => {
-		if (numIncidents < 5) {
-			return markerScale(numIncidents) * 0.6
-		}
-		return markerScale(numIncidents)
-	}
+	// `domainMax` allows editors to fix which value the largest marker should represent,
+	//  which also clamps/flattens any higher values to that size.
+	const scaleDomainMax = domainMax || d3.max(dataset, d => d.numberOfIncidents) || 1
+
+	// Scale markers size depending on the number of incidents in a city/state.
+	const markerScale = d3.scaleSqrt()
+		.domain([0, scaleDomainMax])
+		.range([markerSize.min, markerSize.max])
+		.clamp(true)
+
 	if (!width) return null
 
 	return (
@@ -147,7 +150,7 @@ export default function USMap({
 						marginRight: margins.right,
 						marginLeft: margins.left,
 					}}
-					viewBox={[0, 0, 975, 610]}
+					viewBox={fullSize ? [0, 0, 1070, 610] : [0, 0, 975, 610]}
 				>
 					<g>
 						{topojson.feature(us, us.objects.nation).features.map((d, i) => (
@@ -173,7 +176,7 @@ export default function USMap({
 							opacity={1}
 							cx={projection([d.longitude, d.latitude])[0]}
 							cy={projection([d.longitude, d.latitude])[1]}
-							r={getMarkerRadius(d.numberOfIncidents)}
+							r={markerScale(d.numberOfIncidents)}
 							fill={hoveredElement === null
 								? '#E07A5F'
 								: hoveredElement === `${aggregationLocality(d)}`
@@ -201,7 +204,7 @@ export default function USMap({
 									aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									cx={projection([d.longitude, d.latitude])[0]}
 									cy={projection([d.longitude, d.latitude])[1]}
-									r={getMarkerRadius(d.numberOfIncidents) + 5}
+									r={markerScale(d.numberOfIncidents) + 5}
 									style={{ opacity: 0, cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit' }}
 									onMouseMove={updateTooltipPosition}
 									onMouseEnter={(mouseEvent) => {
@@ -215,6 +218,107 @@ export default function USMap({
 							</DynamicWrapper>
 						))}
 					</g>
+					{/* legend - hidden for thumbnails */}
+					{fullSize && (() => {
+						const values = dataset.filter(hasLatLon).map(d => d.numberOfIncidents).filter(v => v > 0)
+						if (values.length === 0) return null
+						const maxValue = d3.max(values)
+						const minValue = d3.min(values)
+						if (!maxValue) return null
+						const maxMarkerRadius = markerScale(maxValue)
+						const minMarkerRadius = markerScale(minValue)
+						const baselineY = 460 // Y height of legend
+						const centerX = 965 // The center of the legend bubbles, within viewBox
+						const labelRightX = 1065 // The right edge of label text, within viewBox
+						const numberCharWidth = 9.6 // Approx px per char at fontSize 16
+						const isMaxClamped = domainMax && domainMax > 0 && maxValue > domainMax
+						const displayMaxValue = isMaxClamped ? domainMax : maxValue
+						const maxLabelText = isMaxClamped
+							? `${displayMaxValue.toLocaleString()}+`
+							: displayMaxValue.toLocaleString()
+						const minLabelText = minValue.toLocaleString()
+						// If min and max clamp to the same radius, the min entry
+						// is redundant — collapse to a single bubble.
+						const showMin = minValue !== maxValue && minMarkerRadius !== maxMarkerRadius
+						const lineEndForLabel = (text) => labelRightX - text.length * numberCharWidth - 2
+						return (
+							<g
+								role="img"
+								aria-label={`Legend: dot size represents number of incidents, ranging from ${minValue} to ${isMaxClamped ? `${domainMax} or more` : maxValue}`}
+								style={{ pointerEvents: 'none' }}
+							>
+								<text
+									x={labelRightX}
+									y={baselineY - 2 * maxMarkerRadius - 22}
+									fontSize={16}
+									fontFamily="var(--font-base)"
+									fill="#333"
+									fontWeight={500}
+									textAnchor="end"
+								>
+									No. of incidents
+								</text>
+								<circle
+									cx={centerX}
+									cy={baselineY - maxMarkerRadius}
+									r={maxMarkerRadius}
+									fill="#fff"
+									stroke="#333"
+									strokeWidth={markerBorder.normal - 1}
+								/>
+								<line
+									x1={centerX}
+									x2={lineEndForLabel(maxLabelText)}
+									y1={baselineY - 2 * maxMarkerRadius}
+									y2={baselineY - 2 * maxMarkerRadius}
+									stroke="#333"
+									strokeWidth={0.5}
+								/>
+								<text
+									x={labelRightX}
+									y={baselineY - 2 * maxMarkerRadius + 4}
+									fontSize={16}
+									fontFamily="var(--font-base)"
+									fontWeight={500}
+									fill="#333"
+									textAnchor="end"
+								>
+									{maxLabelText}
+								</text>
+								{showMin && (
+									<>
+										<circle
+											cx={centerX}
+											cy={baselineY - minMarkerRadius}
+											r={minMarkerRadius}
+											fill="#fff"
+											stroke="#333"
+											strokeWidth={markerBorder.normal - 1}
+										/>
+										<line
+											x1={centerX}
+											x2={lineEndForLabel(minLabelText)}
+											y1={baselineY - 2 * minMarkerRadius}
+											y2={baselineY - 2 * minMarkerRadius}
+											stroke="#333"
+											strokeWidth={0.5}
+										/>
+										<text
+											x={labelRightX}
+											y={baselineY - 2 * minMarkerRadius + 4}
+											fontSize={16}
+											fontFamily="var(--font-base)"
+											fontWeight={500}
+											fill="#333"
+											textAnchor="end"
+										>
+											{minLabelText}
+										</text>
+									</>
+								)}
+							</g>
+						)
+					})()}
 				</svg>
 
 				{incidentsOutsideUS && searchPageURL && (

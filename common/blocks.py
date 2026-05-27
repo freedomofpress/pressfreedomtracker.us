@@ -600,6 +600,15 @@ class BubbleMapChart(blocks.StructBlock):
         'course of 2023."',
     )
 
+    domain_max = blocks.IntegerBlock(
+        label="Maximum bubble scale",
+        required=False,
+        min_value=1,
+        help_text=(
+            "Optional. Set the value that produces the max bubble size. Use across maps to make visually comparable. Note: set ≥ max incident count as this clamps the size of any point above set value."
+        ),
+    )
+
     class Meta:
         icon = "table"
         template = "common/blocks/bubble_map_chart.html"

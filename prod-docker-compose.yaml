@@ -57,6 +57,7 @@ services:
       DJANGO_WHITENOISE: 'yes'
       DJANGO_CHART_HOST: node-chart-pregenerator
       DJANGO_CHART_PORT: *chart-port
+      GOOGLE_SHEETS_CREDS:
       # More fake testing keys (see above); generate your own for deployment.
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       RECAPTCHA_PRIVATE_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
