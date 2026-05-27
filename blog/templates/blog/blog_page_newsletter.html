@@ -341,9 +341,11 @@
 							{% if block.value.title %}
 								<p><strong>{{ block.value.title }}</strong></p>
 							{% endif %}
-							<a href="{% fullpageurl page %}" class="link-external">
-								View interactive chart on the website &rarr;
-							</a>
+							<img
+								style="max-width:100%"
+								alt="{{ block.value.description }}"
+								src="{{ page.get_base_url }}{{ block.value.png_snapshot_url }}"
+							>
 						</mj-text>
 					{% endif %}
 				{% endfor %}
