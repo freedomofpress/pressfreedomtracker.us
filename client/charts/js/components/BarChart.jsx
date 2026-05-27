@@ -323,7 +323,7 @@ export default function BarChart({
 										<a
 											href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
 											role="link"
-											aria-label={`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
+											aria-label={`${(tooltipXFormat || xFormat)(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
 										/>
 									}
 									wrap={interactive && searchPageURL}
@@ -344,11 +344,7 @@ export default function BarChart({
 										onMouseMove={updateTooltipPosition}
 										onMouseLeave={() => setHoveredElement(null)}
 										shapeRendering="crispEdges"
-									>
-										<title>
-											{`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
-										</title>
-									</rect>
+									/>
 								</DynamicWrapper>
 							</g>
 						)))
@@ -456,7 +452,7 @@ export default function BarChart({
 							<a
 								href={searchPageURL && searchPageURL(xFormat(branchBars[0].data[x]))}
 								role="link"
-								aria-label={`${xFormat(branchBars[0].data[x])}: ${yFormat(branchBars[0].data[y])} ${titleLabel}`}
+								aria-label={`${(tooltipXFormat || xFormat)(branchBars[0].data[x])}: ${yFormat(branchBars[0].data[y])} ${titleLabel}`}
 							/>
 						}
 						wrap={searchPageURL}
