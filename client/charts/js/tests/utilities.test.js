@@ -11,6 +11,7 @@ import {
 	groupByState,
 	countIncidentsOutsideUS,
 	rangeInclusive, groupByYearsSorted,
+	TIME_PRESETS,
 } from '../lib/utilities'
 
 describe(filterDatasetByTag, () => {
@@ -196,7 +197,7 @@ describe(filterDatasetByFiltersApplied, () => {
 					{ date: new Date(Date.UTC(2021, 5, 1)), tags: 'test1' },
 					{ date: new Date(Date.UTC(2021, 6, 1)), tags: 'test1' },
 				],
-				{ tag: null, year: 2021, sixMonths: false }
+				{ tag: null, year: 2021, timePreset: TIME_PRESETS.YEAR }
 			)
 		).toEqual([
 			{ date: new Date(Date.UTC(2021, 0, 1)), tags: 'test1' },
@@ -225,7 +226,7 @@ describe(filterDatasetByFiltersApplied, () => {
 					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
 					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
-				{ tag: null, year: null, sixMonths: true },
+				{ tag: null, year: null, timePreset: TIME_PRESETS.SIX_MONTHS },
 				new Date(Date.UTC(2021, 4, 1))
 			)
 		).toEqual([
@@ -254,7 +255,7 @@ describe(filterDatasetByFiltersApplied, () => {
 					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
 					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
-				{ tag: 'test2', year: null, sixMonths: false },
+				{ tag: 'test2', year: null, timePreset: TIME_PRESETS.ALL_TIME },
 				new Date(Date.UTC(2021, 4, 1))
 			)
 		).toEqual([
@@ -280,7 +281,7 @@ describe(filterDatasetByFiltersApplied, () => {
 					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
 					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
-				{ tag: 'test2', year: null, sixMonths: true },
+				{ tag: 'test2', year: null, timePreset: TIME_PRESETS.SIX_MONTHS },
 				new Date(Date.UTC(2021, 4, 1))
 			)
 		).toEqual([
@@ -306,7 +307,7 @@ describe(filterDatasetByFiltersApplied, () => {
 					{ date: new Date(Date.UTC(2021, 3, 1)), tags: 'test1, test2' },
 					{ date: new Date(Date.UTC(2021, 4, 1)), tags: 'test1' },
 				],
-				{ tag: 'test2', year: 2020, sixMonths: false },
+				{ tag: 'test2', year: 2020, timePreset: TIME_PRESETS.YEAR },
 				new Date(Date.UTC(2021, 4, 1))
 			)
 		).toEqual([{ date: new Date(Date.UTC(2020, 10, 1)), tags: 'test1,test2' }])
