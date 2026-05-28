@@ -9,6 +9,7 @@ import {
 	filterDatasetByLastNDays,
 	filterDatasetByLastNWeeks,
 	filterDatasetByFiltersApplied,
+	TIME_PRESETS,
 } from '../lib/utilities.js'
 
 const TIME_LABELS = {
@@ -71,18 +72,20 @@ export default function HomepageSelection({
 	}
 
 	function updateSelectedYear(label) {
-		const presetLabels = Object.values(TIME_LABELS)
-		const newFiltersToApply = {
-			tag: filtersApplied.tag,
-			year: presetLabels.includes(label) ? null : label,
-			sixMonths: label === TIME_LABELS.SIX_MONTHS,
-			allTime: label === TIME_LABELS.ALL_TIME,
-			sevenDays: label === TIME_LABELS.SEVEN_DAYS,
-			fourWeeks: label === TIME_LABELS.FOUR_WEEKS,
-			twelveWeeks: label === TIME_LABELS.TWELVE_WEEKS,
+		if (typeof label === 'number') {
+			setFiltersApplied({
+				...filtersApplied,
+				year: label,
+				timePreset: TIME_PRESETS.YEAR,
+			})
+			return
 		}
-
-		setFiltersApplied(newFiltersToApply)
+		const presetKey = Object.keys(TIME_LABELS).find((key) => TIME_LABELS[key] === label)
+		setFiltersApplied({
+			...filtersApplied,
+			year: null,
+			timePreset: presetKey ?? TIME_PRESETS.FOUR_WEEKS,
+		})
 	}
 
 	function isTagSelectable(originalDataset, tag, currentDate) {
@@ -95,71 +98,22 @@ export default function HomepageSelection({
 		)
 	}
 
-	function isYearSelectable(originalDataset, year) {
-		if (filtersApplied.tag !== null) {
-			return (
-				filterDatasetByYear(filterDatasetByTag(originalDataset, filtersApplied.tag), year).length >
-				0
-			)
-		}
-		return true
+	function presetHasData(timeFilter) {
+		const taggedDataset = filtersApplied.tag !== null
+			? filterDatasetByTag(originalDataset, filtersApplied.tag)
+			: originalDataset
+		return timeFilter(taggedDataset).length > 0
 	}
 
-	function isLastSixMonthsSelectable(originalDataset, currentDate) {
-		if (filtersApplied.tag !== null) {
-			return (
-				filterDatasetByLastSixMonths(
-					filterDatasetByTag(originalDataset, filtersApplied.tag),
-					currentDate
-				).length > 0
-			)
+	function isTimeButtonSelectable(label) {
+		switch (label) {
+			case TIME_LABELS.SEVEN_DAYS: return presetHasData((d) => filterDatasetByLastNDays(d, currentDate, 7))
+			case TIME_LABELS.FOUR_WEEKS: return presetHasData((d) => filterDatasetByLastNWeeks(d, currentDate, 4))
+			case TIME_LABELS.TWELVE_WEEKS: return presetHasData((d) => filterDatasetByLastNWeeks(d, currentDate, 12))
+			case TIME_LABELS.SIX_MONTHS: return presetHasData((d) => filterDatasetByLastSixMonths(d, currentDate))
+			case TIME_LABELS.ALL_TIME: return true
+			default: return presetHasData((d) => filterDatasetByYear(d, label))
 		}
-		return true
-	}
-
-	function isLastNDaysSelectable(originalDataset, currentDate, numberOfDays) {
-		if (filtersApplied.tag !== null) {
-			return (
-				filterDatasetByLastNDays(
-					filterDatasetByTag(originalDataset, filtersApplied.tag),
-					currentDate,
-					numberOfDays
-				).length > 0
-			)
-		}
-		return true
-	}
-
-	function isLastNWeeksSelectable(originalDataset, currentDate, numberOfWeeks) {
-		if (filtersApplied.tag !== null) {
-			return (
-				filterDatasetByLastNWeeks(
-					filterDatasetByTag(originalDataset, filtersApplied.tag),
-					currentDate,
-					numberOfWeeks
-				).length > 0
-			)
-		}
-		return true
-	}
-
-	function isTimeButtonSelectable(year) {
-		if (year === TIME_LABELS.SIX_MONTHS) {
-			return isLastSixMonthsSelectable(originalDataset, currentDate)
-		}
-		if (year === TIME_LABELS.ALL_TIME) {
-			return true
-		}
-		if (year === TIME_LABELS.SEVEN_DAYS) {
-			return isLastNDaysSelectable(originalDataset, currentDate, 7)
-		}
-		if (year === TIME_LABELS.FOUR_WEEKS) {
-			return isLastNWeeksSelectable(originalDataset, currentDate, 4)
-		}
-		if (year === TIME_LABELS.TWELVE_WEEKS) {
-			return isLastNWeeksSelectable(originalDataset, currentDate, 12)
-		}
-		return isYearSelectable(originalDataset, year)
 	}
 
 	return (
@@ -177,7 +131,7 @@ export default function HomepageSelection({
 			<ButtonsRow
 				label="from"
 				buttonLabels={[
-					...(sevenDayEnabled && isLastNDaysSelectable(originalDataset, currentDate, 7)
+					...(sevenDayEnabled && isTimeButtonSelectable(TIME_LABELS.SEVEN_DAYS)
 						? [TIME_LABELS.SEVEN_DAYS]
 						: []),
 					TIME_LABELS.FOUR_WEEKS,
@@ -186,7 +140,7 @@ export default function HomepageSelection({
 					TIME_LABELS.ALL_TIME,
 				]}
 				dropDownLabels={years}
-				defaultSelection={filtersApplied.sevenDays ? TIME_LABELS.SEVEN_DAYS : TIME_LABELS.FOUR_WEEKS}
+				defaultSelection={TIME_LABELS[filtersApplied.timePreset]}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
 			/>

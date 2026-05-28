@@ -33,6 +33,16 @@ export const monthIndexes = {
 }
 
 
+export const TIME_PRESETS = {
+	SEVEN_DAYS: 'SEVEN_DAYS',
+	FOUR_WEEKS: 'FOUR_WEEKS',
+	TWELVE_WEEKS: 'TWELVE_WEEKS',
+	SIX_MONTHS: 'SIX_MONTHS',
+	ALL_TIME: 'ALL_TIME',
+	YEAR: 'YEAR',
+}
+
+
 // These values are also set in sass at client/common/sass/_responsive.sass
 export const mobileMax = 768;
 export const tabletMax = 1152;
@@ -40,6 +50,14 @@ export const desktopMax = 1440;
 export const tabletMin = mobileMax + 1;
 export const desktopMin = tabletMax + 1;
 export const tabletMinMainColumn = 500;
+
+// Get the right calendar year for links, as 6mo view can span multiple
+function yearForMonthClickInSixMonthsView(currentDate, monthNumber) {
+	const windowStart = d3.utcMonth.offset(d3.utcMonth.floor(currentDate), -5)
+	return (monthNumber - 1) >= windowStart.getUTCMonth()
+		? windowStart.getUTCFullYear()
+		: windowStart.getUTCFullYear() + 1
+}
 
 export function getFilteredUrl(databasePath, filtersApplied, currentDate, categories) {
 	const categoriesSlugs = categories.reduce((acc, { title, slug }) => ({ ...acc, [title]: slug }), {})
@@ -56,11 +74,9 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 
 	if (filtersApplied.monthName !== undefined) {
 		const monthNumber = monthIndexes[filtersApplied.monthName]
-		const year = !filtersApplied.sixMonths
-			? filtersApplied.year
-			: currentDate.getUTCMonth() > 6 || monthNumber <= 6
-				? currentDate.getUTCFullYear()
-				: currentDate.getUTCFullYear() - 1
+		const year = filtersApplied.timePreset === TIME_PRESETS.SIX_MONTHS
+			? yearForMonthClickInSixMonthsView(currentDate, monthNumber)
+			: filtersApplied.year
 		const paddedMonthNumber = String(monthNumber).padStart(2, '0')
 		const firstDayMonth = `${year}-${paddedMonthNumber}-01`
 		const lastDayMonth = `${year}-${paddedMonthNumber}-${new Date(year, monthNumber, 0).getDate()}`
@@ -75,11 +91,11 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 		parameters.push(`date_lower=${filtersApplied.weekStart}&date_upper=${filtersApplied.weekEnd}`)
 	}
 
-	if (filtersApplied.year !== null && filtersApplied.year !== undefined && filtersApplied.monthName === undefined) {
+	if (filtersApplied.timePreset === TIME_PRESETS.YEAR && filtersApplied.monthName === undefined) {
 		parameters.push(`date_lower=${filtersApplied.year}-01-01&date_upper=${filtersApplied.year}-12-31`)
 	}
 
-	if (filtersApplied.sixMonths && filtersApplied.monthName === undefined) {
+	if (filtersApplied.timePreset === TIME_PRESETS.SIX_MONTHS && filtersApplied.monthName === undefined) {
 		const currentMonth = currentDate.getUTCMonth()
 		const currentYear = currentDate.getUTCFullYear()
 
@@ -137,24 +153,21 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 		filtersApplied.tag !== null
 			? filterDatasetByTag(originalDataset, filtersApplied.tag)
 			: originalDataset
-	const datasetFilteredByYear =
-		filtersApplied.year !== null
-			? filterDatasetByYear(datasetFilteredByTag, filtersApplied.year)
-			: datasetFilteredByTag
 
-	if (filtersApplied.sevenDays) {
-		return filterDatasetByLastNDays(datasetFilteredByYear, currentDate, 7)
+	switch (filtersApplied.timePreset) {
+		case TIME_PRESETS.SEVEN_DAYS:
+			return filterDatasetByLastNDays(datasetFilteredByTag, currentDate, 7)
+		case TIME_PRESETS.FOUR_WEEKS:
+			return filterDatasetByLastNWeeks(datasetFilteredByTag, currentDate, 4)
+		case TIME_PRESETS.TWELVE_WEEKS:
+			return filterDatasetByLastNWeeks(datasetFilteredByTag, currentDate, 12)
+		case TIME_PRESETS.SIX_MONTHS:
+			return filterDatasetByLastSixMonths(datasetFilteredByTag, currentDate)
+		case TIME_PRESETS.ALL_TIME:
+			return datasetFilteredByTag
+		case TIME_PRESETS.YEAR:
+			return filterDatasetByYear(datasetFilteredByTag, filtersApplied.year)
 	}
-	if (filtersApplied.fourWeeks) {
-		return filterDatasetByLastNWeeks(datasetFilteredByYear, currentDate, 4)
-	}
-	if (filtersApplied.twelveWeeks) {
-		return filterDatasetByLastNWeeks(datasetFilteredByYear, currentDate, 12)
-	}
-	if (filtersApplied.sixMonths !== false) {
-		return filterDatasetByLastSixMonths(datasetFilteredByYear, currentDate)
-	}
-	return datasetFilteredByYear
 }
 
 export function filterDatasets(

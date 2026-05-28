@@ -17,6 +17,7 @@ import {
 	countIncidentsOutsideUS,
 	categoriesColors,
 	getFilteredUrl,
+	TIME_PRESETS,
 } from '../lib/utilities.js'
 
 import '../../sass/HomepageMainCharts.sass'
@@ -30,6 +31,13 @@ export default function HomepageMainCharts(props) {
 }
 
 const mobileBreakpoint = 950
+
+const CHART_DESCRIPTIONS = {
+	[TIME_PRESETS.SEVEN_DAYS]: 'Showing the number of journalists targeted per day.',
+	[TIME_PRESETS.FOUR_WEEKS]: 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)',
+	[TIME_PRESETS.TWELVE_WEEKS]: 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)',
+}
+const DEFAULT_CHART_DESCRIPTION = 'Showing the number of journalists targeted per month.'
 
 function HomepageMainChartsWidth({
 	data: dataset,
@@ -47,11 +55,7 @@ function HomepageMainChartsWidth({
 		return {
 			tag: null,
 			year: null,
-			sixMonths: false,
-			allTime: null,
-			sevenDays: sevenDayDefaultable,
-			fourWeeks: !sevenDayDefaultable,
-			twelveWeeks: false,
+			timePreset: sevenDayDefaultable ? TIME_PRESETS.SEVEN_DAYS : TIME_PRESETS.FOUR_WEEKS,
 		}
 	})
 
@@ -76,52 +80,66 @@ function HomepageMainChartsWidth({
 		isMobileView: width < mobileBreakpoint,
 	}
 
-	const numberOfWeeks = filtersApplied.fourWeeks ? 4 : filtersApplied.twelveWeeks ? 12 : null
+	const isWeekView = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS
+		|| filtersApplied.timePreset === TIME_PRESETS.TWELVE_WEEKS
 
-	if (filtersApplied.sevenDays) {
-		const dayData = groupByDaysSorted(datasetFiltered, currentDate, 7)
-		const dayByLabel = Object.fromEntries(dayData.map((d) => [d.label, d]))
-		barChartProps.data = dayData
-		barChartProps.x = 'label'
-		barChartProps.tooltipXFormat = (label) => dayByLabel[label]?.range ?? label
-		barChartProps.searchPageURL = (label) => {
-			const day = dayByLabel[label]
-			if (!day) return null
-			return getFilteredUrl(
-				databasePath,
-				{ ...filtersApplied, weekStart: day.date, weekEnd: day.date },
-				currentDate,
-				categories,
-			)
+	// Pick bucket size for bars (day/month/year), format label, and decide what each bar links to
+	switch (filtersApplied.timePreset) {
+		case TIME_PRESETS.SEVEN_DAYS: {
+			const dayData = groupByDaysSorted(datasetFiltered, currentDate, 7)
+			const dayByLabel = Object.fromEntries(dayData.map((d) => [d.label, d]))
+			barChartProps.data = dayData
+			barChartProps.x = 'label'
+			barChartProps.tooltipXFormat = (label) => dayByLabel[label]?.range ?? label
+			barChartProps.searchPageURL = (label) => {
+				const day = dayByLabel[label]
+				if (!day) return null
+				return getFilteredUrl(
+					databasePath,
+					{ ...filtersApplied, weekStart: day.date, weekEnd: day.date },
+					currentDate,
+					categories,
+				)
+			}
+			break
 		}
-	} else if (numberOfWeeks) {
-		const weekData = groupByWeeksSorted(datasetFiltered, currentDate, numberOfWeeks)
-		const weekByLabel = Object.fromEntries(weekData.map((w) => [w.label, w]))
-		barChartProps.data = weekData
-		barChartProps.x = 'label'
-		barChartProps.tooltipXFormat = (label) => weekByLabel[label]?.range ?? label
-		barChartProps.searchPageURL = (label) => {
-			const week = weekByLabel[label]
-			if (!week) return null
-			return getFilteredUrl(
-				databasePath,
-				{ ...filtersApplied, weekStart: week.weekStart, weekEnd: week.weekEnd },
-				currentDate,
-				categories,
-			)
+		case TIME_PRESETS.FOUR_WEEKS:
+		case TIME_PRESETS.TWELVE_WEEKS: {
+			const numberOfWeeks = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS ? 4 : 12
+			const weekData = groupByWeeksSorted(datasetFiltered, currentDate, numberOfWeeks)
+			const weekByLabel = Object.fromEntries(weekData.map((w) => [w.label, w]))
+			barChartProps.data = weekData
+			barChartProps.x = 'label'
+			barChartProps.tooltipXFormat = (label) => weekByLabel[label]?.range ?? label
+			barChartProps.searchPageURL = (label) => {
+				const week = weekByLabel[label]
+				if (!week) return null
+				return getFilteredUrl(
+					databasePath,
+					{ ...filtersApplied, weekStart: week.weekStart, weekEnd: week.weekEnd },
+					currentDate,
+					categories,
+				)
+			}
+			break
 		}
-	} else if (filtersApplied.allTime) {
-		barChartProps.data = groupByYearsSorted(datasetFiltered)
-		barChartProps.x = 'year'
-		barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year }, currentDate, categories)
-	} else {
-		barChartProps.x = 'monthName'
-		barChartProps.data = groupByMonthSorted(
-			datasetFiltered,
-			filtersApplied.sixMonths,
-			currentDate,
-		)
-		barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+		case TIME_PRESETS.ALL_TIME: {
+			barChartProps.data = groupByYearsSorted(datasetFiltered)
+			barChartProps.x = 'year'
+			barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year, timePreset: TIME_PRESETS.YEAR }, currentDate, categories)
+			break
+		}
+		case TIME_PRESETS.SIX_MONTHS:
+		case TIME_PRESETS.YEAR: {
+			barChartProps.x = 'monthName'
+			barChartProps.data = groupByMonthSorted(
+				datasetFiltered,
+				filtersApplied.timePreset === TIME_PRESETS.SIX_MONTHS,
+				currentDate,
+			)
+			barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+			break
+		}
 	}
 
 	return (
@@ -177,14 +195,10 @@ function HomepageMainChartsWidth({
 				</div>
 				<div className={'hpChart'}>
 					<ChartDescription id={'homepage-bar-chart-label'}>
-						{filtersApplied.sevenDays
-							? 'Showing the number of journalists targeted per day.'
-							: numberOfWeeks
-								? 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)'
-								: 'Showing the number of journalists targeted per month.'}
+						{CHART_DESCRIPTIONS[filtersApplied.timePreset] ?? DEFAULT_CHART_DESCRIPTION}
 					</ChartDescription>
 					<BarChart {...barChartProps} />
-					{numberOfWeeks && width > mobileBreakpoint && (
+					{isWeekView && width > mobileBreakpoint && (
 						<div className='hpBarChartAxisLabel'>Week beginning on</div>
 					)}
 				</div>
