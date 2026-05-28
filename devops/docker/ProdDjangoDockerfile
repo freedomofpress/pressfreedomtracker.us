@@ -18,8 +18,9 @@ RUN npm install --global gulp-cli
 COPY ./ /src-files
 RUN cd /src-files && ( npm install && npm run build )
 
-# sha256 for python:3.12.2-slim-bookworm on linux/amd64 as of 2024-02-16
-FROM python:3.12.2-slim-bookworm@sha256:f0c6bc1ab7b1ab270bbb612a31a67a7938d6171183ddce9121f04984ab3df44e
+# sha256 for python:3.14.5-slim-bookworm on linux/amd64 as of 2026-05-20
+FROM python:3.14.5-slim-bookworm@sha256:a9bee15510a364124aa24692899d269835683b883de42f7ebec8c293cf679ccb AS python-base
+
 LABEL MAINTAINER="Freedom of the Press Foundation"
 LABEL APP="pressfreedomtracker.us"
 

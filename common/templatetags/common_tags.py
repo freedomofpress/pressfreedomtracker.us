@@ -126,7 +126,7 @@ def lookup(d, key):
 def add_as_string(value, arg):
     try:
         return str(value) + str(arg)
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         try:
             return value + arg
         except Exception:

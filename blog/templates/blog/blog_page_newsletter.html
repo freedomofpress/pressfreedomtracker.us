@@ -75,7 +75,7 @@
 				font-size: 12px;
 				font-family: 'Roboto Mono', monospace;
 			}
-			.image-caption a { color: #F2FC67; }
+			.image-caption p { display: inline-block; }
 			.btn {
 				display: inline-block;
 				background-color: #ffffff;
@@ -179,12 +179,19 @@
 									alt="{{ lead_img.alt }}"
 									padding="0"
 								/>
-								{% if page.image_caption %}
-									<figcaption class="image-caption">
-										<mj-text color="#ffffff" font-size="12px" font-family="'Roboto Mono', monospace" padding="8px 12px">
-											{{ page.image_caption|richtext }}
-										</mj-text>
-									</figcaption>
+								{% if page.image_caption or lead_item.value.attribution %}
+								<figcaption class="image-caption">
+									<mj-text color="#ffffff" font-size="12px" font-family="'Roboto Mono', monospace" padding="8px 12px">
+										{% if page.image_caption %}
+											{{ page.image_caption|newsletter_richtext }}
+										{% endif %}
+										{% if lead_item.value.attribution %}
+											<span>
+												— {{ lead_item.value.attribution }}
+											</span>
+										{% endif %}
+									</mj-text>
+								</figcaption>
 								{% endif %}
 							</figure>
 						{% else %}
@@ -219,20 +226,16 @@
 								alt="{{ block_img.alt }}"
 								padding="0"
 							/>
-							{% if block.value.caption or block.value.image.credit %}
+							{% if block.value.caption or block.value.image.attribution %}
 								<figcaption class="image-caption">
 									<mj-text color="#ffffff" font-size="12px" font-family="'Roboto Mono', monospace" padding="8px 12px">
 										{% if block.value.caption %}
-											<p>{{ block.value.caption|richtext }}</p>
+											{{ block.value.caption|newsletter_richtext }}
 										{% endif %}
-										{% if block.value.image.credit %}
-											<p>
-												{% if block.value.image.credit_url %}
-													<a href="{{ block.value.image.credit_url }}">{{ block.value.image.credit }}</a>
-												{% else %}
-													{{ block.value.image.credit }}
-												{% endif %}
-											</p>
+										{% if block.value.image.attribution %}
+											<span>
+												— {{ block.value.image.attribution }}
+											</span>
 										{% endif %}
 									</mj-text>
 								</figcaption>
@@ -325,7 +328,7 @@
 								</div>
 							</a>
 							{% if block.value.caption %}
-								<p class="meta">{{ block.value.caption|richtext }}</p>
+								<p class="meta">{{ block.value.caption|newsletter_richtext }}</p>
 							{% endif %}
 						</mj-text>
 

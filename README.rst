@@ -137,7 +137,7 @@ Profiling is not enabled by default, as it does add potential performance overhe
 
     PYINSTRUMENT=yes DJANGO_PROFILE=yes docker compose up
 
-This will enable both middlewares.  To view the cProfile information for any url, append ``?prof`` to the url (or add it to an existing query string with ``&prof``).  This can give you fairly detailed information about which lines of code are causing your view to be slow.  Additional information about the information provided is available in `the Python documentation <https://docs.python.org/3.7/library/profile.html>`_.
+This will enable both middlewares.  To view the cProfile information for any url, append ``?prof`` to the url (or add it to an existing query string with ``&prof``).  This can give you fairly detailed information about which lines of code are causing your view to be slow.  Additional information about the information provided is available in `the Python documentation <https://docs.python.org/3.14/library/profile.html>`_.
 
 Pyinstrument functions similarly to cProfile, but it has a much nicer interface.  Append ``?profile`` (or ``&profile``) to any URL to load it.
 
