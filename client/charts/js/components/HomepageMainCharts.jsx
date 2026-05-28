@@ -185,16 +185,7 @@ function HomepageMainChartsWidth({
 					</ChartDescription>
 					<BarChart {...barChartProps} />
 					{numberOfWeeks && width > mobileBreakpoint && (
-						<div
-							style={{
-								textAlign: 'center',
-								fontFamily: 'var(--font-base)',
-								fontWeight: 500,
-								fontSize: '14px',
-							}}
-						>
-							Week beginning on
-						</div>
+						<div className='hpBarChartAxisLabel'>Week beginning on</div>
 					)}
 				</div>
 			</div>
