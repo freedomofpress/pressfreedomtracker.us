@@ -34,7 +34,7 @@ class BlogIndexPageFeed(Feed):
                     width=655,
                     height=440,
                 )
-        except (IndexError, ChartNotAvailable):
+        except IndexError, ChartNotAvailable:
             if obj.search_image:
                 return obj.search_image.get_rendition("original")
 
