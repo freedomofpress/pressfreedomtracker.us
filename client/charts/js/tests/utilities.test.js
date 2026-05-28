@@ -5,8 +5,12 @@ import {
 	firstDayOfMonth,
 	filterDatasetByTag,
 	filterDatasetByLastSixMonths,
+	filterDatasetByLastNDays,
+	filterDatasetByLastNWeeks,
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
+	groupByDaysSorted,
+	groupByWeeksSorted,
 	groupByCity,
 	groupByState,
 	countIncidentsOutsideUS,
@@ -175,6 +179,135 @@ describe(filterDatasetByLastSixMonths, () => {
 			{ date: new Date(Date.UTC(2020, 10, 1)) },
 			{ date: new Date(Date.UTC(2020, 11, 1)) },
 		])
+	})
+})
+
+describe(filterDatasetByLastNDays, () => {
+	test('filterDatasetByLastNDays includes from lower boundary to currentDate inclusive', () => {
+		// currentDate = Wed May 15 2024 12:00 UTC. 7-day window = May 9 (Thu) → May 15.
+		const currentDate = new Date(Date.UTC(2024, 4, 15, 12, 0))
+		expect(
+			filterDatasetByLastNDays(
+				[
+					{ date: new Date(Date.UTC(2024, 4, 8, 23, 59)) },  // just before window
+					{ date: new Date(Date.UTC(2024, 4, 9, 0, 0)) },    // window lower boundary
+					{ date: new Date(Date.UTC(2024, 4, 12, 6, 0)) },   // middle
+					{ date: new Date(Date.UTC(2024, 4, 15, 12, 0)) },  // currentDate
+					{ date: new Date(Date.UTC(2024, 4, 15, 13, 0)) },  // just after currentDate
+				],
+				currentDate,
+				7,
+			)
+		).toEqual([
+			{ date: new Date(Date.UTC(2024, 4, 9, 0, 0)) },
+			{ date: new Date(Date.UTC(2024, 4, 12, 6, 0)) },
+			{ date: new Date(Date.UTC(2024, 4, 15, 12, 0)) },
+		])
+	})
+})
+
+describe(filterDatasetByLastNWeeks, () => {
+	test('filterDatasetByLastNWeeks 4 weeks anchors on Monday', () => {
+		// currentDate = Wed May 15 2024. Mon of that week = May 13.
+		// 4-week window starts 3 weeks earlier = Mon Apr 22.
+		const currentDate = new Date(Date.UTC(2024, 4, 15))
+		expect(
+			filterDatasetByLastNWeeks(
+				[
+					{ date: new Date(Date.UTC(2024, 3, 21)) },  // Sun Apr 21 — before Monday boundary
+					{ date: new Date(Date.UTC(2024, 3, 22)) },  // Mon Apr 22 — window start
+					{ date: new Date(Date.UTC(2024, 4, 13)) },  // Mon May 13
+					{ date: new Date(Date.UTC(2024, 4, 15)) },  // currentDate
+					{ date: new Date(Date.UTC(2024, 4, 16)) },  // after currentDate
+				],
+				currentDate,
+				4,
+			)
+		).toEqual([
+			{ date: new Date(Date.UTC(2024, 3, 22)) },
+			{ date: new Date(Date.UTC(2024, 4, 13)) },
+			{ date: new Date(Date.UTC(2024, 4, 15)) },
+		])
+	})
+
+	test('filterDatasetByLastNWeeks 12 weeks anchors on Monday 11 weeks earlier', () => {
+		// currentDate = Wed May 15 2024. 12-week window starts 11 weeks back from Mon May 13 = Mon Feb 26.
+		const currentDate = new Date(Date.UTC(2024, 4, 15))
+		expect(
+			filterDatasetByLastNWeeks(
+				[
+					{ date: new Date(Date.UTC(2024, 1, 25)) },  // Sun Feb 25 — excluded
+					{ date: new Date(Date.UTC(2024, 1, 26)) },  // Mon Feb 26 — included
+					{ date: new Date(Date.UTC(2024, 4, 15)) },  // currentDate
+				],
+				currentDate,
+				12,
+			)
+		).toEqual([
+			{ date: new Date(Date.UTC(2024, 1, 26)) },
+			{ date: new Date(Date.UTC(2024, 4, 15)) },
+		])
+	})
+})
+
+describe(groupByDaysSorted, () => {
+	test('groupByDaysSorted returns N daily buckets with weekday labels and counts', () => {
+		// currentDate = Wed May 15 2024. 7-day window: Thu May 9 → Wed May 15.
+		const currentDate = new Date(Date.UTC(2024, 4, 15))
+		const dataset = [
+			{ date: new Date(Date.UTC(2024, 4, 9, 10, 0)) },   // Thu, +1
+			{ date: new Date(Date.UTC(2024, 4, 9, 14, 0)) },   // Thu, +1
+			{ date: new Date(Date.UTC(2024, 4, 12)) },          // Sun, +1
+			{ date: new Date(Date.UTC(2024, 4, 15)) },          // Wed, +1
+		]
+		const result = groupByDaysSorted(dataset, currentDate, 7)
+		expect(result).toHaveLength(7)
+		expect(result[0]).toEqual({
+			date: '2024-05-09',
+			label: 'Thu',
+			range: 'Thu, May 9',
+			numberOfIncidents: 2,
+		})
+		expect(result[3]).toEqual({
+			date: '2024-05-12',
+			label: 'Sun',
+			range: 'Sun, May 12',
+			numberOfIncidents: 1,
+		})
+		expect(result[6]).toEqual({
+			date: '2024-05-15',
+			label: 'Wed',
+			range: 'Wed, May 15',
+			numberOfIncidents: 1,
+		})
+	})
+})
+
+describe(groupByWeeksSorted, () => {
+	test('groupByWeeksSorted returns N Monday-starting buckets with range labels', () => {
+		// currentDate = Wed May 15 2024. 4 weeks: Apr 22, Apr 29, May 6, May 13.
+		const currentDate = new Date(Date.UTC(2024, 4, 15))
+		const dataset = [
+			{ date: new Date(Date.UTC(2024, 3, 22)) },  // Mon Apr 22 — week 1
+			{ date: new Date(Date.UTC(2024, 3, 28)) },  // Sun Apr 28 — week 1
+			{ date: new Date(Date.UTC(2024, 4, 13)) },  // Mon May 13 — week 4
+		]
+		const result = groupByWeeksSorted(dataset, currentDate, 4)
+		expect(result).toHaveLength(4)
+		expect(result[0]).toEqual({
+			weekStart: '2024-04-22',
+			weekEnd: '2024-04-28',
+			label: 'Apr 22',
+			range: 'Apr 22–Apr 28',
+			numberOfIncidents: 2,
+		})
+		expect(result[3]).toEqual({
+			weekStart: '2024-05-13',
+			weekEnd: '2024-05-19',
+			label: 'May 13',
+			range: 'May 13–May 19',
+			numberOfIncidents: 1,
+		})
 	})
 })
 
