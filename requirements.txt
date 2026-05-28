@@ -433,9 +433,9 @@ google-cloud-core==2.4.1 \
     --hash=sha256:9b7749272a812bde58fff28868d0c5e2f585b82f37e09a1f6ed2d4d10f134073 \
     --hash=sha256:a9e6a4422b9ac5c29f79a0ede9485473338e2ce78d91f2370c01e730eab22e61
     # via google-cloud-storage
-google-cloud-storage==2.14.0 \
-    --hash=sha256:2d23fcf59b55e7b45336729c148bb1c464468c69d5efbaee30f7201dd90eb97e \
-    --hash=sha256:8641243bbf2a2042c16a6399551fbb13f062cbc9a2de38d6c0bb5426962e9dbd
+google-cloud-storage==2.19.0 \
+    --hash=sha256:aeb971b5c29cf8ab98445082cbfe7b161a1f48ed275822f59ed3f1524ea54fba \
+    --hash=sha256:cd05e9e7191ba6cb68934d8eb76054d9be4562aa89dbc4236feee4d7d51342b2
     # via django-storages
 google-crc32c==1.5.0 \
     --hash=sha256:024894d9d3cfbc5943f8f230e23950cd4906b2fe004c72e29b209420a1e6b05a \
@@ -509,9 +509,9 @@ google-crc32c==1.5.0 \
     # via
     #   google-cloud-storage
     #   google-resumable-media
-google-resumable-media==2.7.0 \
-    --hash=sha256:5f18f5fa9836f4b083162064a1c2c98c17239bfda9ca50ad970ccf905f3e625b \
-    --hash=sha256:79543cfe433b63fd81c0844b7803aba1bb8950b47bedf7d980c38fa123937e08
+google-resumable-media==2.9.0 \
+    --hash=sha256:c8901e88e389af8bed64d9696c74d8bad961865eb2236e13e0bfca9bb0a65ca3 \
+    --hash=sha256:f7cfb224846a9dd444d125115dfbe8ef02a2b893e78f087762fe716a255a734b
     # via google-cloud-storage
 googleapis-common-protos==1.72.0 \
     --hash=sha256:4299c5a82d5ae1a9702ada957347726b167f9f8d1fc352477702a1e851ff4038 \
