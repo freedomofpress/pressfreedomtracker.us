@@ -205,6 +205,7 @@ MEDIA_URL = "/media/"
 WAGTAILSEARCH_BACKENDS = {
     "default": {
         "BACKEND": "wagtail.search.backends.database",
+        "SEARCH_CONFIG": "unaccented_english",
     },
 }
 

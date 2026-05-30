@@ -101,6 +101,20 @@ class TestFiltering(TestCase):
         incidents = IncidentFilter({"search": "noblesteed"}).get_queryset()
         self.assertQuerySetEqual(incidents, [incident1])
 
+    def test_should_filter_by_search_text_diacritic_insensitive(self):
+        """Searching without accent marks should match text that contains them."""
+        incident1 = IncidentPageFactory(
+            title="Salvador Durán",
+            body=[("rich_text", RichText("reporter"))],
+        )
+        IncidentPageFactory(
+            body=[("rich_text", RichText("unrelated content"))],
+        )
+
+        incidents = IncidentFilter({"search": "Salvador Duran"}).get_queryset()
+
+        self.assertQuerySetEqual(incidents, [incident1])
+
     def test_should_filter_by_search_text_with_null_characters(self):
         """should filter by search text with null characters."""
         incident1 = IncidentPageFactory(
