@@ -128,6 +128,19 @@ class TestFiltering(TestCase):
 
         self.assertQuerySetEqual(incidents, [incident1])
 
+    def test_should_filter_by_targeted_journalist_name_diacritic_insensitive(self):
+        """Searching without accent marks should match incidents targeted at journalists whose names contain them."""
+        journalist = JournalistFactory(title="Salvador Durán")
+        incident1 = IncidentPageFactory()
+        TargetedJournalistFactory(journalist=journalist, incident=incident1)
+        # Re-save to trigger re-indexing with the journalist now attached
+        incident1.save_revision().publish()
+        IncidentPageFactory()
+
+        incidents = IncidentFilter({"search": "Salvador Duran"}).get_queryset()
+
+        self.assertQuerySetEqual(incidents, [incident1])
+
     def test_sorting_by_invalid_value_adds_errors(self):
         incident_filter = IncidentFilter(QueryDict.fromkeys(["sort"], value="INVALID"))
         with self.assertRaises(ValidationError) as cm:

@@ -5,9 +5,14 @@ from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 from wagtail.models import Orderable
 from wagtailautocomplete.edit_handlers import AutocompletePanel
+from modelsearch import index
 
 
-class Journalist(ClusterableModel):
+class Journalist(index.Indexed, ClusterableModel):
+    search_fields = [
+        index.SearchField("title"),
+    ]
+
     @classmethod
     def autocomplete_create(kls, value):
         validate_disallow_AND(value)
@@ -86,7 +91,7 @@ class LawEnforcementOrganization(ClusterableModel):
         verbose_name_plural = "Law enforcement organizations"
 
 
-class TargetedJournalist(Orderable):
+class TargetedJournalist(index.Indexed, Orderable):
     incident = ParentalKey(
         "incident.IncidentPage",
         on_delete=models.CASCADE,
