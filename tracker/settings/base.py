@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "csp",
+    "django_migrations_ruff_formatter.apps.RuffFormatter",
 ]
 
 MIDDLEWARE = [
