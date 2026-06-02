@@ -148,6 +148,16 @@ export function filterDatasetByLastNWeeks(dataset, currentDate, numberOfWeeks) {
 	return dataset.filter(d => +d.date >= +firstWeekStart && +d.date <= +currentDate)
 }
 
+export function resolveDefaultTimePreset(dataset, currentDate, sevenDayEnabled) {
+	if (sevenDayEnabled && filterDatasetByLastNDays(dataset, currentDate, 7).length > 0) {
+		return TIME_PRESETS.SEVEN_DAYS
+	}
+	if (dataset.length > 0 && filterDatasetByLastNWeeks(dataset, currentDate, 4).length === 0) {
+		return TIME_PRESETS.SIX_MONTHS
+	}
+	return TIME_PRESETS.FOUR_WEEKS
+}
+
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
 	const datasetFilteredByTag =
 		filtersApplied.tag !== null

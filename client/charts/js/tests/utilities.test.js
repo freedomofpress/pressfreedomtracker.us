@@ -7,6 +7,7 @@ import {
 	filterDatasetByLastSixMonths,
 	filterDatasetByLastNDays,
 	filterDatasetByLastNWeeks,
+	resolveDefaultTimePreset,
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
 	groupByDaysSorted,
@@ -308,6 +309,39 @@ describe(groupByWeeksSorted, () => {
 			range: 'May 13–May 19',
 			numberOfIncidents: 1,
 		})
+	})
+})
+
+describe(resolveDefaultTimePreset, () => {
+	// currentDate = Wed May 15 2024. last 7 days starts Thu May 9; last 4 weeks starts Mon Apr 22.
+	const currentDate = new Date(Date.UTC(2024, 4, 15))
+	const withinSevenDays = { date: new Date(Date.UTC(2024, 4, 14)) }   // Tue May 14
+	const withinFourWeeks = { date: new Date(Date.UTC(2024, 4, 1)) }    // Wed May 1 (not in last 7 days)
+	const olderThanFourWeeks = { date: new Date(Date.UTC(2024, 2, 1)) } // Mar 1
+
+	test('returns SEVEN_DAYS when enabled and there is data in the last 7 days', () => {
+		expect(resolveDefaultTimePreset([withinSevenDays], currentDate, true))
+			.toBe(TIME_PRESETS.SEVEN_DAYS)
+	})
+
+	test('ignores the 7-day window when not admin-enabled, even with recent data', () => {
+		expect(resolveDefaultTimePreset([withinSevenDays], currentDate, false))
+			.toBe(TIME_PRESETS.FOUR_WEEKS)
+	})
+
+	test('returns FOUR_WEEKS when enabled but no data in the last 7 days', () => {
+		expect(resolveDefaultTimePreset([withinFourWeeks], currentDate, true))
+			.toBe(TIME_PRESETS.FOUR_WEEKS)
+	})
+
+	test('widens to SIX_MONTHS when there is data but none in the last 4 weeks', () => {
+		expect(resolveDefaultTimePreset([olderThanFourWeeks], currentDate, true))
+			.toBe(TIME_PRESETS.SIX_MONTHS)
+	})
+
+	test('returns FOUR_WEEKS for an empty (still-loading) dataset', () => {
+		expect(resolveDefaultTimePreset([], currentDate, true))
+			.toBe(TIME_PRESETS.FOUR_WEEKS)
 	})
 })
 

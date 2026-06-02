@@ -8,7 +8,7 @@ import ChartDescription from "./ChartDescription"
 import Flashing from '../../../common/js/components/Flashing'
 import {
 	filterDatasetByFiltersApplied,
-	filterDatasetByLastNDays,
+	resolveDefaultTimePreset,
 	groupByMonthSorted,
 	groupByYearsSorted,
 	groupByDaysSorted,
@@ -49,15 +49,18 @@ function HomepageMainChartsWidth({
 	categories = [],
 	sevenDayEnabled = false,
 }) {
-	const [filtersApplied, setFiltersApplied] = React.useState(() => {
-		const sevenDayDefaultable = sevenDayEnabled
-			&& filterDatasetByLastNDays(dataset, currentDate, 7).length > 0
-		return {
-			tag: null,
-			year: null,
-			timePreset: sevenDayDefaultable ? TIME_PRESETS.SEVEN_DAYS : TIME_PRESETS.FOUR_WEEKS,
-		}
+	// timePreset is determined by resolveDefaultTimePreset until the user chooses otherwise
+	const [filterSelection, setFiltersApplied] = React.useState({
+		tag: null,
+		year: null,
+		timePreset: null,
 	})
+
+	const filtersApplied = {
+		...filterSelection,
+		timePreset: filterSelection.timePreset
+			?? resolveDefaultTimePreset(dataset, currentDate, sevenDayEnabled),
+	}
 
 	const categoriesColorMap = categories.reduce(
 		(acc, { title }, i) => ({ ...acc, [title]: categoriesColors[i % categoriesColors.length] }),
