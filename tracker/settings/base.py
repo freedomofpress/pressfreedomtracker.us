@@ -228,10 +228,13 @@ WAGTAILIMAGES_MAX_IMAGE_PIXELS = int(
     os.environ.get("WAGTAILIMAGES_MAX_IMAGE_PIXELS", 128000000)
 )
 
-
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = "https://pressfreedomtracker.us"
+
+# Wagtail autosave interval in ms. Sets how often to wait after the last attempt
+# to autosave before autosaving again. Wagtail default is 500.
+WAGTAIL_AUTOSAVE_INTERVAL = int(os.environ.get("WAGTAIL_AUTOSAVE_INTERVAL", 500))
 
 # Named group of wagtail rich text features
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
