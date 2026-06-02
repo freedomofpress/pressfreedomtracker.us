@@ -13,11 +13,11 @@ import {
 } from '../lib/utilities.js'
 
 const TIME_LABELS = {
-	SEVEN_DAYS: 'past 7 days',
-	FOUR_WEEKS: 'past 4 weeks',
-	TWELVE_WEEKS: 'past 12 weeks',
-	SIX_MONTHS: 'past six months',
-	ALL_TIME: 'all time',
+	[TIME_PRESETS.SEVEN_DAYS]: 'past 7 days',
+	[TIME_PRESETS.FOUR_WEEKS]: 'past 4 weeks',
+	[TIME_PRESETS.TWELVE_WEEKS]: 'past 12 weeks',
+	[TIME_PRESETS.SIX_MONTHS]: 'past six months',
+	[TIME_PRESETS.ALL_TIME]: 'all time',
 }
 
 export function chooseTrendingTags(dataset, numberOfTags) {
