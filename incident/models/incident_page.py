@@ -1036,6 +1036,17 @@ class IncidentPage(MetadataPageMixin, Page):
                 index.SearchField("body"),
             ],
         ),
+        index.RelatedFields(
+            "targeted_journalists",
+            [
+                index.RelatedFields(
+                    "journalist",
+                    [
+                        index.SearchField("title"),
+                    ],
+                ),
+            ],
+        ),
     ]
 
     def get_context(self, request, *args, **kwargs):

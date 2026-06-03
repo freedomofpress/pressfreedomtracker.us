@@ -630,7 +630,7 @@ class SearchFilter(Filter):
                 function="",
                 arg_joiner="||",
             ),
-        ).filter(title_and_body_search=SearchQuery(value))
+        ).filter(title_and_body_search=SearchQuery(value, config="unaccented_english"))
 
 
 class ChargesFilter(ManyRelationFilter):

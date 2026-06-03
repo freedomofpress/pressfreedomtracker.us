@@ -101,6 +101,20 @@ class TestFiltering(TestCase):
         incidents = IncidentFilter({"search": "noblesteed"}).get_queryset()
         self.assertQuerySetEqual(incidents, [incident1])
 
+    def test_should_filter_by_search_text_diacritic_insensitive(self):
+        """Searching without accent marks should match text that contains them."""
+        incident1 = IncidentPageFactory(
+            title="Salvador Durán",
+            body=[("rich_text", RichText("reporter"))],
+        )
+        IncidentPageFactory(
+            body=[("rich_text", RichText("unrelated content"))],
+        )
+
+        incidents = IncidentFilter({"search": "Salvador Duran"}).get_queryset()
+
+        self.assertQuerySetEqual(incidents, [incident1])
+
     def test_should_filter_by_search_text_with_null_characters(self):
         """should filter by search text with null characters."""
         incident1 = IncidentPageFactory(
@@ -111,6 +125,19 @@ class TestFiltering(TestCase):
         )
 
         incidents = IncidentFilter(QueryDict("search=eggplant%00")).get_queryset()
+
+        self.assertQuerySetEqual(incidents, [incident1])
+
+    def test_should_filter_by_targeted_journalist_name_diacritic_insensitive(self):
+        """Searching without accent marks should match incidents targeted at journalists whose names contain them."""
+        journalist = JournalistFactory(title="Salvador Durán")
+        incident1 = IncidentPageFactory()
+        TargetedJournalistFactory(journalist=journalist, incident=incident1)
+        # Re-save to trigger re-indexing with the journalist now attached
+        incident1.save_revision().publish()
+        IncidentPageFactory()
+
+        incidents = IncidentFilter({"search": "Salvador Duran"}).get_queryset()
 
         self.assertQuerySetEqual(incidents, [incident1])
 
