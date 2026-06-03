@@ -7,12 +7,12 @@
 U.S. Press Freedom Tracker
 ==========================
 
-.. |prodCI| image:: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml/badge.svg?branch=prod&event=push
-    :target: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml?query=branch%3Aprod
+.. |prodCI| image:: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/check.yaml/badge.svg?branch=prod&event=push
+    :target: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/check.yaml?query=branch%3Aprod
     :alt: Production CI
 
-.. |developCI| image:: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml/badge.svg?branch=develop&event=push
-    :target: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/ci.yaml?query=branch%3Adevelop
+.. |developCI| image:: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/check.yaml/badge.svg?branch=develop&event=push
+    :target: https://github.com/freedomofpress/pressfreedomtracker.us/actions/workflows/check.yaml?query=branch%3Adevelop
     :alt: Develop CI
 
 +---------------------------+
