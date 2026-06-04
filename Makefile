@@ -1,6 +1,5 @@
 .DEFAULT_GOAL := help
 DIR := ${CURDIR}
-WHOAMI := ${USER}
 UID := $(shell id -u)
 RAND_PORT := ${RAND_PORT}
 GIT_REV := $(shell git rev-parse HEAD | cut -c1-10)
@@ -13,7 +12,7 @@ lint: ruff
 .PHONY: ruff
 ruff: ## Runs ruff linting in Python3 container.
 	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_ruff --rm \
-			python:3.14.5-slim-trxie \
+			python:3.14.5-slim-trixie \
 			bash -c "pip install -q ruff && ruff check && ruff format --check"
 
 .PHONY: dev-init
