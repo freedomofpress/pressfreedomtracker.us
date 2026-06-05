@@ -229,6 +229,9 @@ WAGTAILIMAGES_MAX_IMAGE_PIXELS = int(
     os.environ.get("WAGTAILIMAGES_MAX_IMAGE_PIXELS", 128000000)
 )
 
+# Resize OG / Twitter / meta tag images to 1200x630
+WAGTAILMETADATA_IMAGE_FILTER = "fill-1200x630"
+
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = "https://pressfreedomtracker.us"
