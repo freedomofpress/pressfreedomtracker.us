@@ -249,6 +249,19 @@ class TestPages(TestCase):
             self.blog_page2.get_base_url(), self.home_page.get_site().root_url
         )
 
+    def test_get_blog_page_newsletter_preamble(self):
+        self.index.newsletter_preamble = "Test preamble"
+        self.assertEqual(
+            self.blog_page.get_newsletter_preamble(),
+            "Test preamble",
+        )
+
+        self.blog_page.newsletter_preamble = "Preamble override"
+        self.assertEqual(
+            self.blog_page.get_newsletter_preamble(),
+            "Preamble override",
+        )
+
     def test_get_blog_page_vertical_bar_chart_meta_image(self):
         self.assertEqual(
             self.blog_page2.get_meta_image(),
