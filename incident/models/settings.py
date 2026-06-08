@@ -15,10 +15,9 @@ from wagtail.contrib.settings.models import (
 @register_setting
 class PrepublicationSettings(BaseGenericSetting):
     class TimespanUnits(models.TextChoices):
-        HOURS = "HOURS", "Hours"
-        DAYS = "DAYS", "Days"
-        WEEKS = "WEEKS", "Weeks"
-        MONTHS = "MONTHS", "Months"
+        DAY = "DAY", "Days"
+        WEEK = "WEEK", "Weeks"
+        MONTH = "MONTH", "Months"
 
     timespan_length = models.PositiveSmallIntegerField(
         verbose_name="length",
@@ -29,7 +28,7 @@ class PrepublicationSettings(BaseGenericSetting):
         verbose_name="units",
         max_length=20,
         choices=TimespanUnits,
-        default=TimespanUnits.DAYS,
+        default=TimespanUnits.DAY,
     )
 
     panels = [
