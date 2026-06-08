@@ -1,8 +1,16 @@
 import csv
+import datetime
+from collections import Counter
 from io import StringIO
 
+from django.contrib.postgres.aggregates import ArrayAgg
+from django.db.models import (
+    Count,
+    F,
+)
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View
 from django.views.generic.edit import FormView
@@ -14,6 +22,9 @@ from incident.models import (
     IncidentPage,
     LegalOrder,
     LegalOrderUpdate,
+    PrepublicationIncident,
+    PrepublicationIncidentSync,
+    PrepublicationSettings,
 )
 from incident.utils.csv import parse_row
 
@@ -111,3 +122,37 @@ class LegalOrderImportConfirmView(View):
             request, f"Legal orders imported successfully.  Count affected: {count}"
         )
         return HttpResponseRedirect(reverse("import_legal_orders:show_form"))
+
+
+def prepub_list(request):
+    prepub_settings = PrepublicationSettings.load(request_or_site=request)
+    lower_bound = datetime.date.today() - prepub_settings.get_timespan()
+
+    prepubs = (
+        PrepublicationIncident.objects.values(
+            "date",
+            city=F("location__name"),
+            state=F("location__regcode"),
+        )
+        .filter(date__gte=lower_bound)
+        .annotate(
+            categories=ArrayAgg("categorizations__category__title"),
+            incident_count=Count("pk", distinct=True),
+        )
+        .order_by("-date")
+    )
+
+    sync = PrepublicationIncidentSync.objects.get()
+
+    for p in prepubs:
+        p["category_counts"] = Counter(p["categories"])
+
+    return TemplateResponse(
+        request,
+        "incident/prepub_list.html",
+        {
+            "prepubs": prepubs,
+            "updated_time": sync.completed_at.strftime("%H:%M %p %Z"),
+            "timespan_display": prepub_settings.get_timespan_display(),
+        },
+    )

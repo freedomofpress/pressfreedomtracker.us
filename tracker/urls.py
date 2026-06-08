@@ -18,6 +18,7 @@ from drf_spectacular.views import (
 )
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 
+import incident.urls
 from charts.urls import urlpatterns as chart_urls
 from common import views as common_views
 from emails import urls as emails_urls
@@ -58,6 +59,7 @@ urlpatterns = [
         name="redoc",
     ),
     path("429/", common_views.too_many_requests, name="too_many_requests"),
+    path("", include(incident.urls)),
     path(r"", include(api_urls)),
     path(r"", include(wagtail_urls)),
 ]

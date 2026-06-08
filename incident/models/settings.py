@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.template.defaultfilters import pluralize
 
 from wagtail.admin.panels import (
     FieldPanel,
@@ -10,6 +11,8 @@ from wagtail.contrib.settings.models import (
     BaseGenericSetting,
     register_setting,
 )
+
+from dateutil.relativedelta import relativedelta
 
 
 @register_setting
@@ -45,3 +48,15 @@ class PrepublicationSettings(BaseGenericSetting):
             help_text="Prepublication Incidents will only be displayed on the home page and the full listing if they occurred within the given timespan from today's date.",
         )
     ]
+
+    def get_timespan(self):
+        match self.timespan_units:
+            case self.TimespanUnits.DAY:
+                return relativedelta(days=self.timespan_length)
+            case self.TimespanUnits.MONTH:
+                return relativedelta(months=self.timespan_length)
+            case self.TimespanUnits.WEEK:
+                return relativedelta(weeks=self.timespan_length)
+
+    def get_timespan_display(self) -> str:
+        return f"{self.timespan_length} {self.timespan_units.lower()}{pluralize(self.timespan_length)}"
