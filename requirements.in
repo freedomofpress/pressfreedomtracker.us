@@ -42,3 +42,4 @@ wagtail>=7.4,<8.0
 whitenoise
 google-api-python-client
 google-auth-oauthlib
+python-dateutil>=2.9.0
