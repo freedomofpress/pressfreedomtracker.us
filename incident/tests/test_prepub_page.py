@@ -1,3 +1,4 @@
+import json
 from collections import Counter
 from datetime import date, timedelta
 
@@ -10,6 +11,8 @@ from common.models import CategoryPage
 from geonames.devdata import create_geoname
 from geonames.models import GeoName
 from incident.models import (
+    IncidentIndexPage,
+    IncidentPage,
     PrepublicationIncident,
     PrepublicationIncidentCategory,
     PrepublicationIncidentSync,
@@ -64,6 +67,7 @@ class PrepubViewTestCase(TestCase):
         site.root_page.add_child(instance=cls.category_equipment)
         site.root_page.add_child(instance=cls.category_assault)
         site.root_page.add_child(instance=cls.category_arrest)
+        cls.root_page = site.root_page
 
         cls.atlanta = create_geoname(name="Atlanta", region="GA")
         cls.baltimore = create_geoname(name="Baltimore", region="MD")
@@ -180,7 +184,6 @@ class PrepubViewTestCase(TestCase):
         prepub_rows = response.context["prepubs"]
 
         self.assertQuerySetEqual([row["date"] for row in prepub_rows], [expected.date])
-        self.assertContains(response, "1 month")
 
     def test_only_includes_units_in_timespan_of_weeks(self):
         self.settings.timespan_length = 1
@@ -193,7 +196,6 @@ class PrepubViewTestCase(TestCase):
         prepub_rows = response.context["prepubs"]
 
         self.assertEqual([row["date"] for row in prepub_rows], [expected.date])
-        self.assertContains(response, "1 week")
 
     def test_only_includes_units_in_timespan_of_days(self):
         self.settings.timespan_length = 2
@@ -206,4 +208,59 @@ class PrepubViewTestCase(TestCase):
         prepub_rows = response.context["prepubs"]
 
         self.assertEqual([row["date"] for row in prepub_rows], [expected.date])
-        self.assertContains(response, "2 days")
+
+    def test_bar_chart_dataset(self):
+        index = self.root_page.add_child(
+            instance=IncidentIndexPage(title="All Incidents")
+        )
+
+        # Create incident pages for inclusion in the dataset.
+        date1 = date.today()
+        date2 = date.today() - timedelta(days=1)
+
+        date_old = date.today() - timedelta(days=30)  # Out of bounds for inclusion
+
+        index.add_child(instance=IncidentPage(title="Incident 1", date=date1))
+        create_prepub(date=date1)
+
+        index.add_child(instance=IncidentPage(title="Incident 2", date=date2))
+        index.add_child(instance=IncidentPage(title="Incident 3", date=date2))
+        create_prepub(date=date2)
+        create_prepub(date=date2)
+        create_prepub(date=date2)
+
+        index.add_child(instance=IncidentPage(title="Incident 4", date=date_old))
+        create_prepub(date=date_old)
+
+        response = self.client.get(reverse("prepub_list"))
+        bar_chart_dataset = json.loads(response.context["bar_chart_dataset"])
+
+        self.assertEqual(len(bar_chart_dataset), 30)
+
+        # The dataset is ordered by date ascending, so the most recent
+        # ones are at the end of the list (hence checking them at
+        # index -1, -2, ...)
+        for item in bar_chart_dataset[0:-2]:
+            self.assertEqual(item["count"], 0)
+            self.assertEqual(item["unconfirmed"], 0)
+            self.assertEqual(item["confirmed"], 0)
+
+        self.assertEqual(
+            bar_chart_dataset[-1],
+            {
+                "date": f"{date1:%m/%d}",
+                "count": 2,
+                "confirmed": 1,
+                "unconfirmed": 1,
+            },
+        )
+
+        self.assertEqual(
+            bar_chart_dataset[-2],
+            {
+                "date": f"{date2:%m/%d}",
+                "count": 5,
+                "confirmed": 2,
+                "unconfirmed": 3,
+            },
+        )

@@ -1,5 +1,6 @@
 import csv
 import datetime
+import json
 from collections import Counter
 from io import StringIO
 
@@ -124,9 +125,45 @@ class LegalOrderImportConfirmView(View):
         return HttpResponseRedirect(reverse("import_legal_orders:show_form"))
 
 
+def dates_between(lower, upper):
+    """Generator that yields dates in increments of one day between
+    the given dates, inclusive of both endpoints."""
+    current = lower
+    while current <= upper:
+        yield current
+        current += datetime.timedelta(days=1)
+
+
 def prepub_list(request):
     prepub_settings = PrepublicationSettings.load(request_or_site=request)
     lower_bound = datetime.date.today() - prepub_settings.get_timespan()
+    bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(days=29)
+
+    confirmed_by_date = Counter(
+        IncidentPage.objects.live()
+        .filter(date__gte=bar_chart_lower_bound)
+        .values_list("date", flat=True)
+    )
+
+    unconfirmed_by_date = Counter(
+        PrepublicationIncident.objects.filter(date__gte=lower_bound).values_list(
+            "date", flat=True
+        )
+    )
+
+    bar_chart_dataset = []
+
+    for d in dates_between(bar_chart_lower_bound, datetime.date.today()):
+        unconfirmed_count = unconfirmed_by_date.get(d, 0)
+        confirmed_count = confirmed_by_date.get(d, 0)
+        bar_chart_dataset.append(
+            {
+                "date": f"{d:%m/%d}",
+                "count": unconfirmed_count + confirmed_count,
+                "unconfirmed": unconfirmed_count,
+                "confirmed": confirmed_count,
+            }
+        )
 
     prepubs = (
         PrepublicationIncident.objects.values(
@@ -154,5 +191,6 @@ def prepub_list(request):
             "prepubs": prepubs,
             "updated_time": sync.completed_at.strftime("%H:%M %p %Z"),
             "timespan_display": prepub_settings.get_timespan_display(),
+            "bar_chart_dataset": json.dumps(bar_chart_dataset),
         },
     )
