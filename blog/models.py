@@ -1,5 +1,3 @@
-import copy
-
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils.html import strip_tags
@@ -51,7 +49,6 @@ from common.blocks import (
     BubbleMapChart,
     HexbinMapChart,
 )
-from common.templatetags.common_tags import first_block_of
 
 
 class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
@@ -65,6 +62,12 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
             ("bluesky", BlueskyEmbedBlock(group="Social Media")),
         ],
         use_json_field=True,
+    )
+
+    newsletter_preamble = RichTextField(
+        blank=True,
+        null=True,
+        help_text="Newsletter preamble that appears at the top of a newsletter before the newsletter image.",
     )
 
     about_blog_title = models.CharField(max_length=255, blank=True, null=True)
@@ -93,6 +96,12 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         FieldPanel("about_blog_title"),
         FieldPanel("feed_limit"),
         FieldPanel("feed_per_page"),
+        MultiFieldPanel(
+            children=[
+                FieldPanel("newsletter_preamble"),
+            ],
+            heading="Newsletter Campaign Settings",
+        ),
     ]
 
     subpage_types = ["blog.BlogPage"]
@@ -234,6 +243,13 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
         use_json_field=True,
     )
 
+    newsletter_preamble = RichTextField(
+        blank=True,
+        null=True,
+        verbose_name="Newsletter preamble override",
+        help_text="Overrides the newsletter preamble set in the Blog Index Page for this specific Blog Page.",
+    )
+
     introduction = models.TextField(
         help_text="Optional: introduction displayed above the image/video.",
         blank=True,
@@ -307,6 +323,7 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("publication_datetime"),
+        FieldPanel("newsletter_preamble"),
         FieldPanel("body"),
         FieldPanel("link_to_original_post"),
         MultiFieldPanel(
@@ -361,25 +378,14 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
     def get_base_url(self):
         return self.get_site().root_url
 
-    def newsletter_intro(self):
-        """Returns the newsletter intro text for this page."""
-        if not self.body:  # pragma: no cover
-            return None
-        rich_text_block = first_block_of(self.body, "text")
-        if not rich_text_block:
-            return None
-        return rich_text_block
-
-    def newsletter_body(self):
-        """Returns the newsletter body text for this page."""
-        if not self.body:  # pragma: no cover
-            return None
-        body = copy.deepcopy(self.body)
-        rich_text_block = first_block_of(body, "text")
-        if not rich_text_block:
-            return body
-        body.remove(rich_text_block)
-        return body
+    def get_newsletter_preamble(self):
+        # If newsletter preamble is set in the individual blog page
+        # that value is used and overrides the blog index page value,
+        # else, use blog index page newsletter preamble
+        if self.newsletter_preamble:
+            return self.newsletter_preamble
+        parent = self.get_parent().specific
+        return parent.newsletter_preamble
 
     def get_meta_image(self):
         if (
