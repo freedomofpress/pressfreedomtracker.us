@@ -251,12 +251,14 @@ class TestPages(TestCase):
 
     def test_get_blog_page_newsletter_preamble(self):
         self.index.newsletter_preamble = "Test preamble"
+        self.index.save()
         self.assertEqual(
             self.blog_page.get_newsletter_preamble(),
             "Test preamble",
         )
 
         self.blog_page.newsletter_preamble = "Preamble override"
+        self.blog_page.save()
         self.assertEqual(
             self.blog_page.get_newsletter_preamble(),
             "Preamble override",
