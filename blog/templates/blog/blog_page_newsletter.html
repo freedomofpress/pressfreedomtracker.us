@@ -166,10 +166,10 @@
 		</mj-section>
 
 		<!-- INTRODUCTION & LEAD GRAPHIC -->
-		{% if page.newsletter_intro or page.lead_graphic %}
+		{% if page.get_newsletter_preamble or page.lead_graphic %}
 			<mj-section background-color="#fffef0" css-class="intro">
 				<mj-column>
-					<mj-text padding-bottom="24px">{{ page.newsletter_intro }}</mj-text>
+					<mj-text padding-bottom="24px">{{ page.get_newsletter_preamble|newsletter_richtext }}</mj-text>
 					{% for lead_item in page.lead_graphic %}
 						{% if lead_item.block_type == "image" %}
 							<figure>
@@ -209,7 +209,7 @@
 		<!-- BODY -->
 		<mj-section background-color="#ffffff" css-class="body">
 			<mj-column>
-				{% for block in page.newsletter_body %}
+				{% for block in page.body %}
 					{% if block.block_type == "text" %}
 						<mj-text>{{ block.value.text|newsletter_richtext }}</mj-text>
 

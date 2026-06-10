@@ -1,4 +1,3 @@
-import copy
 from unittest import mock
 
 from django.contrib.auth.models import User, Permission
@@ -6,7 +5,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import Client, TestCase
 from django.urls import reverse
 
-import factory
 
 import wagtail.blocks
 from wagtail.models import Site
@@ -17,7 +15,6 @@ from blog.models import BlogIndexPageFeature
 from blog.wagtail_hooks import register_permissions
 from common.exceptions import ChartNotAvailable
 from common.models.charts import ChartSnapshot
-from common.templatetags.common_tags import first_block_of
 from common.tests.factories import (
     CategoryPageFactory,
     CustomImageFactory,
@@ -247,52 +244,24 @@ class TestPages(TestCase):
         response = self.client.get(self.blog_page.url)
         self.assertNotContains(response, "verticalBarChart")
 
-    def test_get_blog_page_newsletter_intro(self):
-        newsletter_intro = first_block_of(self.blog_page.body, "text")
-        self.assertEqual(str(self.blog_page.newsletter_intro()), str(newsletter_intro))
-
-        # Blog page without richtext
-        blog_page4 = BlogPageFactory(
-            parent=self.index,
-            slug="four",
-            body=factory.Faker(
-                "streamfield",
-                fields=[
-                    "heading1",
-                    "heading2",
-                    "heading3",
-                ],
-            ),
-        )
-        newsletter_intro = blog_page4.newsletter_intro()
-        self.assertIsNone(newsletter_intro)
-
-    def test_get_blog_page_newsletter_body(self):
-        newsletter_body = copy.deepcopy(self.blog_page.body)
-        newsletter_intro = first_block_of(newsletter_body, "text")
-        newsletter_body.remove(newsletter_intro)
-        self.assertHTMLEqual(
-            str(self.blog_page.newsletter_body()), str(newsletter_body)
-        )
-
-        # Blog page without richtext
-        blog_page5 = BlogPageFactory(
-            parent=self.index,
-            slug="five",
-            body=factory.Faker(
-                "streamfield",
-                fields=[
-                    "heading1",
-                    "heading2",
-                    "heading3",
-                ],
-            ),
-        )
-        self.assertEqual(str(blog_page5.newsletter_body()), str(blog_page5.body))
-
     def test_get_blog_page_base_url(self):
         self.assertEqual(
             self.blog_page2.get_base_url(), self.home_page.get_site().root_url
+        )
+
+    def test_get_blog_page_newsletter_preamble(self):
+        self.index.newsletter_preamble = "Test preamble"
+        self.index.save()
+        self.assertEqual(
+            self.blog_page.get_newsletter_preamble(),
+            "Test preamble",
+        )
+
+        self.blog_page.newsletter_preamble = "Preamble override"
+        self.blog_page.save()
+        self.assertEqual(
+            self.blog_page.get_newsletter_preamble(),
+            "Preamble override",
         )
 
     def test_get_blog_page_vertical_bar_chart_meta_image(self):
