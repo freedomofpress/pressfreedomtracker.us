@@ -32,10 +32,9 @@
 						<td>{{ row.date|date:"n/j/y" }}</td>
 						<td>{{ row.city }}, {{ row.state }}</td>
 						<td>
-							{{ row.incident_count  }}
-							{% for cat in row.categorizations.all %}
-								<span class="category category-{{ cat.category.page_symbol }}">{{ cat.category.title }}</span>
-							{% endfor %}
+							<span style="--incident-count: {{ row.incident_count }}" class="unconfirmed-incidents--count">
+								{{ row.incident_count  }}
+							</span>
 						</td>
 					</tr>
 				{% endfor %}
