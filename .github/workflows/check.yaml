@@ -333,6 +333,7 @@ jobs:
       - name: Delete dev django image
         if: ${{ needs.build-dev-django.result == 'success' && always() }}
         uses: freedomofpress/actionslib/act/delete-artifact@main
+        continue-on-error: true
         with:
           artifact: ${{ needs.build-dev-django.outputs.artifact-name }}
           error-if-absent: 'false'
@@ -341,6 +342,7 @@ jobs:
       - name: Delete dev node image
         if: ${{ needs.build-dev-node.result == 'success' && always() }}
         uses: freedomofpress/actionslib/act/delete-artifact@main
+        continue-on-error: true
         with:
           artifact: ${{ needs.build-dev-node.outputs.artifact-name }}
           error-if-absent: 'false'
@@ -357,6 +359,7 @@ jobs:
       - name: Delete prod django image
         if: ${{ needs.build-prod-dejango.result == 'success' && always() }}
         uses: freedomofpress/actionslib/act/delete-artifact@main
+        continue-on-error: true
         with:
           artifact: ${{ needs.build-prod-django.outputs.artifact-name }}
           error-if-absent: 'false'
@@ -365,6 +368,7 @@ jobs:
       - name: Delete prod chartgen image
         if: ${{ needs.build-prod-chartgen.result == 'success' && always() }}
         uses: freedomofpress/actionslib/act/delete-artifact@main
+        continue-on-error: true
         with:
           artifact: ${{ needs.build-prod-chartgen.outputs.artifact-name }}
           error-if-absent: 'false'
