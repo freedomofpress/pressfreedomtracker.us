@@ -32,9 +32,14 @@
 						<td>{{ row.date|date:"n/j/y" }}</td>
 						<td>{{ row.city }}, {{ row.state }}</td>
 						<td>
-							<span style="--incident-count: {{ row.incident_count }}" class="unconfirmed-incidents--count">
+							<span style="--incident-count: {{ row.incident_count }}" class="no-js-fallback unconfirmed-incidents--count">
 								{{ row.incident_count  }}
 							</span>
+							<div
+								class="js-unconfirmed-incidents-count"
+								data-incident-count="{{ row.incident_count }}"
+								data-category-counts="{{ row.category_counts }}"
+							></div>
 						</td>
 					</tr>
 				{% endfor %}

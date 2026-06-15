@@ -182,7 +182,9 @@ def prepub_list(request):
     sync = PrepublicationIncidentSync.objects.get()
 
     for p in prepubs:
-        p["category_counts"] = Counter(p["categories"])
+        p["category_counts"] = json.dumps(
+            [{"category": k, "count": v} for k, v in Counter(p["categories"]).items()]
+        )
 
     return TemplateResponse(
         request,
