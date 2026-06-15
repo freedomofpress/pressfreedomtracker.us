@@ -40,7 +40,6 @@ function PrepubIncidentCategoryCount({
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
-	console.log(categoryCounts)
 	return (
 		<>
 			{(hovered || focused) && (

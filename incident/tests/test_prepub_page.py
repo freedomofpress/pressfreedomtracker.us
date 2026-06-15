@@ -1,5 +1,4 @@
 import json
-from collections import Counter
 from datetime import date, timedelta
 
 from django.test import TestCase
@@ -143,7 +142,9 @@ class PrepubViewTestCase(TestCase):
                 "city": "Atlanta",
                 "state": "GA",
                 "categories": [self.category_equipment.title],
-                "category_counts": Counter({self.category_equipment.title: 1}),
+                "category_counts": json.dumps(
+                    [{"category": self.category_equipment.title, "count": 1}]
+                ),
             },
         )
 
@@ -154,23 +155,27 @@ class PrepubViewTestCase(TestCase):
             [self.category_equipment.title, self.category_assault.title],
         )
         self.assertEqual(
-            {**prepub_rows[1]["category_counts"]},
-            {self.category_equipment.title: 1, self.category_assault.title: 1},
+            prepub_rows[1]["category_counts"],
+            json.dumps(
+                [
+                    {"category": self.category_equipment.title, "count": 1},
+                    {"category": self.category_assault.title, "count": 1},
+                ]
+            ),
         )
 
         # Three incidents with multiple, overlapping categories each
         self.assertEqual(prepub_rows[3]["incident_count"], 3)
         self.assertEqual(
-            {
-                # Converting to dict for more readable assertion diffs.
-                **prepub_rows[3]["category_counts"]
-            },
-            {
-                self.category_assault.title: 2,
-                self.category_arrest.title: 2,
-                self.category_equipment.title: 1,
-                self.category_prior_restraint.title: 1,
-            },
+            prepub_rows[3]["category_counts"],
+            json.dumps(
+                [
+                    {"category": self.category_assault.title, "count": 2},
+                    {"category": self.category_equipment.title, "count": 1},
+                    {"category": self.category_arrest.title, "count": 2},
+                    {"category": self.category_prior_restraint.title, "count": 1},
+                ]
+            ),
         )
 
     def test_only_includes_units_in_timespan_of_months(self):
