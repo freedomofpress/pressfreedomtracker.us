@@ -18,18 +18,14 @@ from drf_spectacular.views import (
 )
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 
-import incident.urls
-from charts.urls import urlpatterns as chart_urls
 from common import views as common_views
-from emails import urls as emails_urls
-from incident.api.urls import urlpatterns as api_urls
 
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/autocomplete/", include(autocomplete_admin_urls)),
     path("admin/", include(wagtailadmin_urls)),
-    path("emails/", include(emails_urls)),
+    path("emails/", include("emails.urls")),
     re_path(r"^documents/(\d+)/(.*)$", common_views.serve),
     path("documents/", include(wagtaildocs_urls)),
     path("health/ok/", common_views.health_ok),
@@ -45,7 +41,7 @@ urlpatterns = [
         common_views.SubscribeForSite.as_view(),
         name="subscribe_for_site",
     ),
-    path("charts/", include(chart_urls)),
+    path("charts/", include("charts.urls")),
     path("api/schema/", SpectacularAPIView.as_view(api_version="edge"), name="schema"),
     # Schema UI:
     path(
@@ -59,8 +55,8 @@ urlpatterns = [
         name="redoc",
     ),
     path("429/", common_views.too_many_requests, name="too_many_requests"),
-    path("", include(incident.urls)),
-    path(r"", include(api_urls)),
+    path("", include("incident.urls")),
+    path(r"", include("incident.api.urls")),
     path(r"", include(wagtail_urls)),
 ]
 
