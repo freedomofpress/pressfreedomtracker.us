@@ -186,6 +186,8 @@ def prepub_list(request):
         .order_by("-date")
     )
 
+    sync = PrepublicationIncidentSync.objects.get()
+
     for p in prepubs:
         p["category_counts"] = json.dumps(
             [{"category": k, "count": v} for k, v in Counter(p["categories"]).items()]
@@ -195,7 +197,9 @@ def prepub_list(request):
         request,
         "incident/prepub_list.html",
         {
-            "prepubs": prepubs,
+            "prepubs": PrepublicationIncident.objects.aggregate_with_category_counts(
+                lower_date_bound=lower_bound
+            ),
             "updated_time": sync.completed_at.strftime("%H:%M %p %Z"),
             "timespan_display": prepub_settings.get_timespan_display(),
             "bar_chart_dataset": json.dumps(bar_chart_dataset),
