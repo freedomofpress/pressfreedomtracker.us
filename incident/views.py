@@ -4,11 +4,6 @@ import json
 from collections import Counter
 from io import StringIO
 
-from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models import (
-    Count,
-    F,
-)
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.response import TemplateResponse
@@ -176,26 +171,7 @@ def prepub_list(request):
             }
         )
 
-    prepubs = (
-        PrepublicationIncident.objects.values(
-            "date",
-            city=F("location__name"),
-            state=F("location__regcode"),
-        )
-        .filter(date__gte=lower_bound)
-        .annotate(
-            categories=ArrayAgg("categorizations__category__title"),
-            incident_count=Count("pk", distinct=True),
-        )
-        .order_by("-date")
-    )
-
     sync = PrepublicationIncidentSync.objects.get()
-
-    for p in prepubs:
-        p["category_counts"] = json.dumps(
-            [{"category": k, "count": v} for k, v in Counter(p["categories"]).items()]
-        )
 
     return TemplateResponse(
         request,
