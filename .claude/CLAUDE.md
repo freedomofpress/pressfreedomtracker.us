@@ -20,7 +20,7 @@
 
 ## Tech Stack
 
-- Python 3.14, Django 5.2+, Wagtail 6.3+
+- Python 3.14, Django 5.2+, Wagtail 7.4+
 - PostgreSQL 14
 - Django REST Framework + drf-spectacular (OpenAPI docs)
 - Webpack 5, Babel, React 18, D3 v7, Jest 29 (frontend)
