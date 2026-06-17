@@ -390,6 +390,7 @@ CONTENT_SECURITY_POLICY = {
             SELF,
             # For Social Widgets
             "https://platform.twitter.com",
+            "https://platform.x.com",
             "https://www.instagram.com",
             "https://embed.bsky.app",
             # For recaptcha
@@ -402,6 +403,7 @@ CONTENT_SECURITY_POLICY = {
             "https://analytics.freedom.press",
             # For Social Widgets
             "https://platform.twitter.com",
+            "https://platform.x.com",
             "https://syndication.twitter.com",
             "https://pbs.twimg.com",
             "https://ton.twimg.com",
@@ -429,6 +431,7 @@ CONTENT_SECURITY_POLICY = {
             # For Social Widgets
             UNSAFE_EVAL,
             "https://platform.twitter.com",
+            "https://platform.x.com",
             "https://www.instagram.com",
             "https://embed.bsky.app",
             # Observable Notebooks
