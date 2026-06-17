@@ -15,7 +15,7 @@ env:
   # https://github.com/docker/setup-docker-action?tab=readme-ov-file#inputs.version
   VERSION_DOCKER: latest
   # Must match the version specified in devops/docker/DevDjangoDockerfile
-  VERSION_PYTHON: 3.14.5
+  VERSION_PYTHON: 3.14.6
 
 permissions:
   contents: read
