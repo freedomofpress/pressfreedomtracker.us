@@ -1,5 +1,5 @@
 beautifulsoup4
-bleach>=4.1.0
+bleach>=6.4.0
 cryptography>=48.0.1
 Django>=5.2.13,<6.0
 djangorestframework>=3.14
