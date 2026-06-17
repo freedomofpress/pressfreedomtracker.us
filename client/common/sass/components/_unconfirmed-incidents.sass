@@ -1,0 +1,72 @@
+.unconfirmed-incidents
+	table-layout: fixed
+	border-collapse: collapse
+	width: 90%
+	margin: 10px auto
+
+	thead
+		border: solid 4px #000
+		text-align: left
+		background-color: $section-background
+
+	tbody
+		border: solid 4px #000
+		font-size: 1rem
+
+	th, td
+		padding: 0.6em
+
+	tr > :nth-child(1)
+		width: 10%
+
+	tr > :nth-child(2)
+		width: 15%
+
+	caption
+		padding: 1em
+		color: $gray-text
+		caption-side: bottom
+		font-size: $font-size-small-ui
+		text-align: right
+
+	&--count
+		box-sizing: border-box
+		display: inline-block
+		padding: 3px
+		background-color: $black
+		color: $white
+		border: 3px solid
+		border-color: $black
+		font-size: 1.125rem
+		font-weight: 700
+		line-height: 1
+		// width of one cell * incident count
+		width: calc(var(--incident-count) * 1.6rem)
+		height: 1.6rem
+		cursor: pointer
+
+		&:hover,
+		&:focus-visible
+			background-color: $white
+			color: $black
+
+.category-count-tooltip
+	font-family: var(--font-base)
+	font-size: 0.75rem
+	font-weight: 700
+
+	&--heading
+		margin-top: 0
+		margin-bottom: 10px
+		line-height: 1.67
+
+	&--row
+		display: flex
+		justify-content: space-between
+		min-width: 200px
+		margin: 8px 0
+
+	&--name
+		display: flex
+		gap: 3px
+		align-items: center
