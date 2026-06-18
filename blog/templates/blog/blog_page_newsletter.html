@@ -66,7 +66,8 @@
 			.video-wrapper { display: inline-block; position: relative; width: 75%; }
 			.video-thumbnail { display: block; width: 100%; height: auto; }
 			.video-placeholder { background-color: #23242C; width: 100%; padding-top: 56.25%; }
-			.video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; background: rgba(0,0,0,0.65); border-radius: 50%; text-align: center; line-height: 72px; color: white; font-size: 28px; }
+			.video-play { position: absolute; top: 50%; left: 50%; margin-top: -36px; margin-left: -36px; width: 72px; height: 72px; background: rgba(0,0,0,0.65); border-radius: 50%; text-align: center; line-height: 72px; }
+			.video-play-triangle { display: inline-block; width: 0; height: 0; border-top: 14px solid transparent; border-bottom: 14px solid transparent; border-left: 24px solid white; margin-left: 6px; vertical-align: middle; }
 			figure { margin: 0; padding: 0; }
 			.image-caption {
 				background-color: #000000;
@@ -279,16 +280,11 @@
 						</mj-text>
 
 					{% elif block.block_type == "button" %}
-						<mj-button
-							background-color="#ffffff"
-							color="#000000"
-							border="3px solid #000000"
-							inner-padding="8px 24px"
-							align="left"
-							href="{{ block.value.url }}"
-						>
-							{{ block.value.text }}
-						</mj-button>
+						<mj-text padding="0">
+							<a href="{{ block.value.url }}" style="display:block; background-color:#ffffff; color:#000000; border:3px solid #000000; padding:8px 24px; text-decoration:none; font-weight:500; text-align:center;">
+								{{ block.value.text }}
+							</a>
+						</mj-text>
 
 					{% elif block.block_type == "raw_html" %}
 						<mj-raw>{{ block.value }}</mj-raw>
@@ -317,18 +313,19 @@
 					{% elif block.block_type == "video" %}
 						{% get_embed block.value.video.url as embed_data %}
 						<mj-text align="center">
-							<a target="_blank" href="{{ block.value.video.url }}" class="video-link">
-								<div class="video-wrapper">
-									{% if embed_data.thumbnail_url %}
-										<img src="{{ embed_data.thumbnail_url }}" alt="{% if embed_data.title %}{{ embed_data.title }}{% else %}Open video in a new tab{% endif %}" class="video-thumbnail" />
-									{% else %}
-										<div class="video-placeholder"></div>
-									{% endif %}
-									<span class="video-play">&#9654;</span>
-								</div>
-							</a>
+							<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+								<tr>
+									<td {% if embed_data.thumbnail_url %}background="{{ embed_data.thumbnail_url }}"{% endif %} style="{% if embed_data.thumbnail_url %}background-image:url('{{ embed_data.thumbnail_url }}'); background-size:cover; background-position:center center; background-repeat:no-repeat;{% else %}background-color:#23242C;{% endif %} height:338px; text-align:center; vertical-align:middle; padding:0;">
+										<a target="_blank" href="{{ block.value.video.url }}" style="display:block; width:100%; height:338px; text-decoration:none; text-align:center; line-height:338px;">
+											<span style="display:inline-block; width:72px; height:72px; background:rgba(0,0,0,0.65); border-radius:50%; line-height:72px; text-align:center; vertical-align:middle;">
+												<span style="display:inline-block; width:0; height:0; border-top:14px solid transparent; border-bottom:14px solid transparent; border-left:24px solid white; margin-left:6px; vertical-align:middle;"></span>
+											</span>
+										</a>
+									</td>
+								</tr>
+							</table>
 							{% if block.value.caption %}
-								<p class="meta">{{ block.value.caption|newsletter_richtext }}</p>
+								<p style="font-size:13px; color:#757575; font-family:'Roboto Mono', monospace;">{{ block.value.caption|newsletter_richtext }}</p>
 							{% endif %}
 						</mj-text>
 
