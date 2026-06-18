@@ -1,9 +1,5 @@
-# sha256 as of 2026-01-22
-FROM node:20-alpine@sha256:3960ed74dfe320a67bf8da9555b6bade25ebda2b22b6081d2f60fd7d5d430e9c
-
-ARG NPM_VER=10.9.2
-# Upgrade npm to specified version
-RUN npm install npm@${NPM_VER} --location=global
+# sha256 as of 2026-06-18
+FROM node:22-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS node-assets
 
 RUN apk add --no-cache paxctl python3 make g++ curl
 RUN paxctl -cm /usr/local/bin/node
