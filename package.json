@@ -17,7 +17,7 @@
     "baseline widely available"
   ],
   "devDependencies": {
-    "@babel/core": "^7.24.4",
+    "@babel/core": "^7.29.6",
     "@babel/plugin-transform-modules-commonjs": "^7.24.1",
     "@babel/polyfill": "^7.4.3",
     "@babel/preset-env": "^7.24.4",
