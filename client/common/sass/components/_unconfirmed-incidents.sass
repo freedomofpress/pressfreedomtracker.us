@@ -5,12 +5,12 @@
 	margin: 10px auto
 
 	thead
-		border: solid 4px #000
+		border: solid 3px #000
 		text-align: left
 		background-color: $section-background
 
 	tbody
-		border: solid 4px #000
+		border: solid 3px #000
 		font-size: 1rem
 
 	th, td
@@ -28,6 +28,21 @@
 		caption-side: bottom
 		font-size: $font-size-small-ui
 		text-align: right
+
+	tfoot td
+		padding: 0
+
+		a
+			border-top-style: none
+			border-right-style: none
+
+			&:focus-visible
+				outline: 3px solid #3584e4
+
+			&::after
+				right: -1px
+				top: 0
+				border-top-style: none
 
 	&--count
 		box-sizing: border-box
@@ -54,6 +69,7 @@
 	font-family: var(--font-base)
 	font-size: 0.75rem
 	font-weight: 700
+	z-index: 99
 
 	&--heading
 		margin-top: 0

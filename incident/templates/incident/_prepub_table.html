@@ -10,7 +10,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for row in prepubs %}
+		{% for row in prepubs|slice:row_limit %}
 			<tr>
 				<td>{{ row.date|date:"n/j/y" }}</td>
 				<td>{{ row.city }}, {{ row.state }}</td>
@@ -27,4 +27,13 @@
 			</tr>
 		{% endfor %}
 	</tbody>
+	{% if row_limit %}
+		<tfoot>
+			<tr>
+				<td colspan="4">
+					<a href="{% url 'prepub_list' %}" class="btn btn-primary btn-block">View all {{ prepub_count }}</a>
+				</td>
+			</tr>
+		</tfoot>
+	{% endif %}
 </table>
