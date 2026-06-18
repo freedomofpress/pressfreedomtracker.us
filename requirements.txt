@@ -411,9 +411,9 @@ google-api-python-client==2.196.0 \
     --hash=sha256:2591e9b47dcb17e4e62a09370aaee3bcf323af8f28ccecdabcd0a42a23ca4db5 \
     --hash=sha256:9f335d38f6caaa2747bcf64335ed1a9a19047d53e86538eda6a1b17d37f1743d
     # via -r requirements.in
-google-auth==2.49.1 \
-    --hash=sha256:16d40da1c3c5a0533f57d268fe72e0ebb0ae1cc3b567024122651c045d879b64 \
-    --hash=sha256:195ebe3dca18eddd1b3db5edc5189b76c13e96f29e73043b923ebcf3f1a860f7
+google-auth==2.53.0 \
+    --hash=sha256:6e7449917c599b35126a99ec268ec6880301f2fea41dce198fe8fd83ff642b68 \
+    --hash=sha256:e7e6aa16f6bee7b2b264830fd04f08087a1d5a836df516251a5d15327b246c9c
     # via
     #   google-api-core
     #   google-api-python-client
