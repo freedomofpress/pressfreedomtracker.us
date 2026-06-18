@@ -143,6 +143,10 @@ def prepub_list(request):
         raise Http404
 
     prepub_settings = PrepublicationSettings.load(request_or_site=request)
+
+    if not prepub_settings.is_enabled:
+        raise Http404
+
     lower_bound = datetime.date.today() - prepub_settings.get_timespan()
     bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(days=29)
 

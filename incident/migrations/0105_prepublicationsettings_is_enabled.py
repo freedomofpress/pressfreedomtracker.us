@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('incident', '0104_alter_prepublicationsettings_timespan_units'),
+        ("incident", "0104_alter_prepublicationsettings_timespan_units"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='prepublicationsettings',
-            name='is_enabled',
-            field=models.BooleanField(default=False, help_text='If unchecked, unconfirmed incidents will be hidden on the home page and the full listing page will not be accessible.', verbose_name='Feature is Enabled'),
+            model_name="prepublicationsettings",
+            name="is_enabled",
+            field=models.BooleanField(
+                default=False,
+                help_text="If unchecked, unconfirmed incidents will be hidden on the home page and the full listing page will not be accessible.",
+                verbose_name="Feature is Enabled",
+            ),
         ),
     ]

@@ -78,6 +78,7 @@ class PrepubViewTestCase(TestCase):
         )
 
         cls.settings = PrepublicationSettings.objects.create(
+            is_enabled=True,
             timespan_length=1200,
             timespan_units=PrepublicationSettings.TimespanUnits.DAY,
         )
@@ -95,6 +96,13 @@ class PrepubViewTestCase(TestCase):
         create_prepub(categories=[self.category_equipment])
         response = self.client.get(reverse("prepub_list"))
         self.assertEqual(response.status_code, 200)
+
+    def test_not_found_if_feature_not_enabled(self):
+        create_prepub(categories=[self.category_equipment])
+        self.settings.is_enabled = False
+        self.settings.save()
+        response = self.client.get(reverse("prepub_list"))
+        self.assertEqual(response.status_code, 404)
 
     def test_includes_last_updated_time(self):
         create_prepub()
