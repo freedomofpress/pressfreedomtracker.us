@@ -1,15 +1,17 @@
-from wagtail.models import Site, Page
-from wagtail.test.utils.form_data import (
-    nested_form_data,
-    inline_formset,
-)
-from django.urls import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.urls import reverse
 
-from blog.tests.factories import BlogPageFactory, BlogIndexPageFactory
+from wagtail.models import Page, Site
+from wagtail.test.utils.form_data import (
+    inline_formset,
+    nested_form_data,
+)
+
+from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import CommonTagFactory
 from incident.tests.factories import IncidentPageFactory
+
 from .factories import HomePageFactory
 
 

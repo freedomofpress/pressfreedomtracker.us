@@ -1,23 +1,23 @@
-from __future__ import absolute_import, unicode_literals
-
 import json
 
 from django.db import models
-from modelcluster.fields import ParentalKey
+
 from wagtail.admin.panels import (
     FieldPanel,
-    InlinePanel,
-    PageChooserPanel,
-    MultiFieldPanel,
-    TabbedInterface,
-    ObjectList,
     FieldRowPanel,
+    InlinePanel,
+    MultiFieldPanel,
+    ObjectList,
+    PageChooserPanel,
+    TabbedInterface,
 )
 from wagtail.fields import RichTextField
-from wagtail.models import Page, Orderable, Site
+from wagtail.models import Orderable, Page, Site
+
+from modelcluster.fields import ParentalKey
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
-from common.models import MetadataPageMixin, MediaPageMixin
+from common.models import MediaPageMixin, MetadataPageMixin
 from common.models.settings import SearchSettings
 from incident.utils.incident_filter import get_serialized_filters
 
