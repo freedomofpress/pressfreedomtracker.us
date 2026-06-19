@@ -10,6 +10,7 @@ from wagtail.test.utils.form_data import (
 
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import CommonTagFactory
+from incident.models import PrepublicationIncidentSync, PrepublicationSettings
 from incident.tests.factories import IncidentPageFactory
 
 from .factories import HomePageFactory
@@ -49,6 +50,16 @@ class HomePageTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(response.context["self"], self.home_page)
+
+    def test_get_home_should_succeed_with_prepubs(self):
+        PrepublicationSettings.objects.create(
+            is_enabled=True,
+        )
+        PrepublicationIncidentSync.objects.create(
+            status=PrepublicationIncidentSync.Status.SUCCESS,
+        )
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
 
     def test_hides_empty_blog_section(self):
         self.home_page.featured_blog_posts = []
