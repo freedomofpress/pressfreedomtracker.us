@@ -429,9 +429,9 @@ google-auth-oauthlib==1.4.0 \
     --hash=sha256:18b5e28880eb8eba9065c436becdc0ee8e4b59117a73a510679c82f70cd363d2 \
     --hash=sha256:251314f213a9ee46a5ae73988e84fd7cca8bb68e7ecf4bfd45940f9e7f51d070
     # via -r requirements.in
-google-cloud-core==2.4.1 \
-    --hash=sha256:9b7749272a812bde58fff28868d0c5e2f585b82f37e09a1f6ed2d4d10f134073 \
-    --hash=sha256:a9e6a4422b9ac5c29f79a0ede9485473338e2ce78d91f2370c01e730eab22e61
+google-cloud-core==2.6.0 \
+    --hash=sha256:6d63ac8e5eca6d9e4319d0a1e2265fadcd7f1049904378caecfa01cf52dd869e \
+    --hash=sha256:e76149739f90fac1fc6757c09f47eaccb3145b54adbd7759b0f7c4b235f46c83
     # via google-cloud-storage
 google-cloud-storage==2.19.0 \
     --hash=sha256:aeb971b5c29cf8ab98445082cbfe7b161a1f48ed275822f59ed3f1524ea54fba \
