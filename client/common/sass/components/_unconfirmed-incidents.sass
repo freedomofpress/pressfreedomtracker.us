@@ -1,11 +1,8 @@
 .unconfirmed-incidents
 	table-layout: fixed
 	border-collapse: collapse
-	max-width: 670px
-	margin: 10px 8px
-
-	+desktop-up
-		margin: 10px 0
+	width: min(670px, 100%)
+	margin: 10px 0
 
 	thead
 		border: solid 3px #000
@@ -23,9 +20,13 @@
 
 	tr > :nth-child(1)
 		width: 16%
+		+mobile-down
+			width: 20%
 
 	tr > :nth-child(2)
 		width: 25%
+		+mobile-down
+			width: 33%
 
 	tr:nth-child(even)
 		background-color: $section-background
