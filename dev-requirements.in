@@ -6,7 +6,7 @@ coverage>=5.5
 defusedxml
 django-cprofile-middleware>=1.0.5
 django-debug-toolbar>=3.2.4
-django-silk>=5.0.3
+django-silk>=5.5.0
 ipdb>=0.13.9
 pyinstrument>=4.4.0
 ruff
