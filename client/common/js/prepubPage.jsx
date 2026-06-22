@@ -1,15 +1,29 @@
 import React from 'react'
+import { ParentSize } from '@visx/responsive'
 import { createRoot } from 'react-dom/client'
 import CategoryIcon from './components/categoryIcon'
 import BarChart from '../../charts/js/components/BarChart'
 import Tooltip from '../../charts/js/components/Tooltip'
 
-function PrepubBarChart({
+function PrepubBarChart(props) {
+	return (
+		<ParentSize>
+			{(parent) => <PrepubBarChartWidth {...props} parentWidth={parent.width} />}
+		</ParentSize>
+	)
+}
+
+function PrepubBarChartWidth({
 	width,
 	dataset,
+	parentWidth
 }) {
+	const mobileBreakpoint = 670
+	const chartWidth = parentWidth < mobileBreakpoint ? parentWidth : width
+	const chartHeight = parentWidth < mobileBreakpoint ? 220 : 175
+	const isMobileView = parentWidth < mobileBreakpoint
 	return (
-		<div className={'prepubChartContainer'} style={{ width: width}}>
+		<div className={'prepubChartContainer'} style={{ maxWidth: width}}>
 			<div className={'prepubChart'}>
 				<BarChart
 					data={dataset}
@@ -17,12 +31,13 @@ function PrepubBarChart({
 					y={'count'}
 					titleLabel={'incidents'}
 					categoryColumn={'status'}
+					showCategoryButtons={false}
 					allCategories={["confirmed", "unconfirmed"]}
 					categoriesColors={{"unconfirmed": "#EEEEEE"}}
 					id={'prepub-page-bar-chart'}
-					width={width}
-					height={540}
-					isMobileView={false}
+					width={chartWidth}
+					height={chartHeight}
+					isMobileView={isMobileView}
 				/>
 			</div>
 		</div>
@@ -90,7 +105,7 @@ chartContainers.forEach((node) => {
 	const root = createRoot(node)
 	const chartDataset = JSON.parse(node.dataset.chartDataset)
 	root.render((
-		<PrepubBarChart width={1080} dataset={chartDataset} />
+		<PrepubBarChart width={670} dataset={chartDataset} />
 	))
 })
 

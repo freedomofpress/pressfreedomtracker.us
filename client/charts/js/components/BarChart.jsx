@@ -82,6 +82,7 @@ export default function BarChart({
 	setSvgEl = () => {},
 	interactive = true,
 	disableAnimation = false,
+	showCategoryButtons = true,
 }) {
 	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
@@ -119,7 +120,7 @@ export default function BarChart({
 	)
 
 	const categoryButtonsLabels = calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width)
-	const buttonsHeight = isMobileView || !allCategories
+	const buttonsHeight = isMobileView || !allCategories || !showCategoryButtons
 		? 0
 		: calculateButtonsHeight(categoryButtonsLabels)
 
@@ -218,7 +219,7 @@ export default function BarChart({
 					viewBox={[0, 0, width, height]}
 				>
 					{description ? (<desc>{description}</desc>) : null}
-					{allCategories && (
+					{allCategories && showCategoryButtons && (
 						<CategoryButtons
 							interactive={interactive}
 							categoryButtonsLabels={categoryButtonsLabels}
@@ -391,15 +392,15 @@ export default function BarChart({
 				{
 					// If there are multiple categories, ie a stacked bar chart,
 					// we show the category buttons
-					allCategories && (
+					allCategories && showCategoryButtons && (
 						<CategoryButtons
 							interactive={interactive}
 							datasetStackedByCategory={datasetStackedByCategory}
+							categoryButtonsLabels={categoryButtonsLabels}
 							paddings={paddings}
 							width={width}
 							hoveredElement={!hoveredElement?.x && hoveredElement?.y}
 							setHoveredElement={(el) => setHoveredElement(el ? { y: el } : el)}
-							setButtonsHeight={setButtonsHeight}
 							findColor={findColor}
 							textStyle={textStyle}
 						/>
