@@ -1,8 +1,11 @@
 .unconfirmed-incidents
 	table-layout: fixed
 	border-collapse: collapse
-	width: 90%
-	margin: 10px auto
+	max-width: 670px
+	margin: 10px 8px
+
+	+desktop-up
+		margin: 10px 0
 
 	thead
 		border: solid 3px #000
@@ -15,12 +18,17 @@
 
 	th, td
 		padding: 0.6em
+		+mobile-down
+			padding: 0.4em 0.3em
 
 	tr > :nth-child(1)
-		width: 10%
+		width: 16%
 
 	tr > :nth-child(2)
-		width: 15%
+		width: 25%
+
+	tr:nth-child(even)
+		background-color: $section-background
 
 	caption
 		padding: 1em
@@ -28,6 +36,8 @@
 		caption-side: bottom
 		font-size: $font-size-small-ui
 		text-align: right
+		+mobile-down
+			padding: 0.6em
 
 	tfoot td
 		padding: 0
@@ -47,20 +57,25 @@
 				border-right-style: none
 
 	&--count
+		--count-unit-width: 1.6rem
 		box-sizing: border-box
-		display: inline-block
+		display: inline-flex
 		padding: 3px
 		background-color: $black
 		color: $white
 		border: 3px solid
 		border-color: $black
-		font-size: 1.125rem
+		font-size: 1.075rem
 		font-weight: 700
 		line-height: 1
 		// width of one cell * incident count
-		width: calc(var(--incident-count) * 1.6rem)
+		width: calc(var(--incident-count) * var(--count-unit-width))
 		height: 1.6rem
 		cursor: pointer
+
+		+mobile-down
+			--count-unit-width: 1rem
+			padding: 3px 0
 
 		&:hover,
 		&:focus-visible
