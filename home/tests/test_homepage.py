@@ -51,6 +51,13 @@ class HomePageTest(TestCase):
 
         self.assertEqual(response.context["self"], self.home_page)
 
+    def test_get_home_should_succeed_if_prepub_sync_not_present(self):
+        PrepublicationSettings.objects.create(
+            is_enabled=True,
+        )
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+
     def test_get_home_should_succeed_with_prepubs(self):
         PrepublicationSettings.objects.create(
             is_enabled=True,

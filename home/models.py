@@ -227,8 +227,8 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
             context["export_path"] = None
 
         prepub_settings = PrepublicationSettings.load(request_or_site=request)
-        if prepub_settings.is_enabled:
-            sync = PrepublicationIncidentSync.objects.get()
+        sync = PrepublicationIncidentSync.objects.first()
+        if prepub_settings.is_enabled and sync:
             context["prepubs"] = (
                 PrepublicationIncident.objects.aggregate_with_category_counts(
                     lower_date_bound=datetime.date.today()
