@@ -1,47 +1,22 @@
 import datetime
-from factory import (
-    RelatedFactory,
-    Trait,
-    Faker,
-    SubFactory,
-    LazyAttribute,
-    Iterator,
-    Sequence,
-)
-import factory
 import random
 from operator import itemgetter
-import wagtail_factories
+
 from wagtail.rich_text import RichText
+
+import factory
+import wagtail_factories
+from factory import (
+    Faker,
+    Iterator,
+    LazyAttribute,
+    RelatedFactory,
+    Sequence,
+    SubFactory,
+    Trait,
+)
 from faker.providers import BaseProvider
 
-from incident.models import (
-    Charge,
-    IncidentAuthor,
-    IncidentCategorization,
-    IncidentIndexPage,
-    IncidentPage,
-    IncidentPageUpdates,
-    IncidentPageLinks,
-    Nationality,
-    PoliticianOrPublic,
-    EquipmentBroken,
-    Equipment,
-    EquipmentSeized,
-    State,
-    choices,
-    Journalist,
-    Institution,
-    LawEnforcementOrganization,
-    TargetedJournalist,
-    GovernmentWorker,
-    TopicPage,
-    Venue,
-    LegalOrder,
-    LegalOrderUpdate,
-    IncidentCharge,
-    ChargeUpdate,
-)
 from common.models import CustomImage
 from common.tests.factories import (
     CategoryPageFactory,
@@ -49,8 +24,35 @@ from common.tests.factories import (
     PersonPageFactory,
 )
 from common.tests.utils import StreamfieldProvider
-from menus.factories import MainMenuItemFactory
 from geonames.models import GeoName
+from incident.models import (
+    Charge,
+    ChargeUpdate,
+    Equipment,
+    EquipmentBroken,
+    EquipmentSeized,
+    GovernmentWorker,
+    IncidentAuthor,
+    IncidentCategorization,
+    IncidentCharge,
+    IncidentIndexPage,
+    IncidentPage,
+    IncidentPageLinks,
+    IncidentPageUpdates,
+    Institution,
+    Journalist,
+    LawEnforcementOrganization,
+    LegalOrder,
+    LegalOrderUpdate,
+    Nationality,
+    PoliticianOrPublic,
+    State,
+    TargetedJournalist,
+    TopicPage,
+    Venue,
+    choices,
+)
+from menus.factories import MainMenuItemFactory
 
 
 Faker.add_provider(StreamfieldProvider)

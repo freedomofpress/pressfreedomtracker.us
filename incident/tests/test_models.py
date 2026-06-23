@@ -3,6 +3,7 @@ from datetime import date
 from django.test import TestCase
 
 from incident import choices
+
 from .factories import (
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
