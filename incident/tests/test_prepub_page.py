@@ -8,42 +8,13 @@ from wagtail.models import Site
 
 from common.models import CategoryPage
 from geonames.devdata import create_geoname
-from geonames.models import GeoName
+from incident.devdata import create_prepub
 from incident.models import (
     IncidentIndexPage,
     IncidentPage,
-    PrepublicationIncident,
-    PrepublicationIncidentCategory,
     PrepublicationIncidentSync,
     PrepublicationSettings,
 )
-
-
-def create_prepub(
-    *,
-    date: date = date(2026, 1, 1),
-    location: GeoName = None,
-    categories: list[CategoryPage] | int = 1,
-):
-
-    prepub = PrepublicationIncident.objects.create(
-        date=date, location=location or create_geoname()
-    )
-
-    match categories:
-        case list(category_pages):
-            categorizations_to_add = category_pages
-        case int(number_to_apply):
-            categorizations_to_add = []
-            possible_categories = CategoryPage.objects.all().order_by("?")
-            if possible_categories:
-                categorizations_to_add.extend(possible_categories[:number_to_apply])
-
-    PrepublicationIncidentCategory.objects.bulk_create(
-        PrepublicationIncidentCategory(incident=prepub, category=category)
-        for category in categorizations_to_add
-    )
-    return prepub
 
 
 class PrepubViewTestCase(TestCase):

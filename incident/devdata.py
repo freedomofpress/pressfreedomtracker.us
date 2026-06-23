@@ -17,13 +17,14 @@ from factory import (
 )
 from faker.providers import BaseProvider
 
-from common.models import CustomImage
+from common.models import CategoryPage, CustomImage
 from common.tests.factories import (
     CategoryPageFactory,
     CommonTagFactory,
     PersonPageFactory,
 )
 from common.tests.utils import StreamfieldProvider
+from geonames.devdata import create_geoname
 from geonames.models import GeoName
 from incident.models import (
     Charge,
@@ -46,6 +47,8 @@ from incident.models import (
     LegalOrderUpdate,
     Nationality,
     PoliticianOrPublic,
+    PrepublicationIncident,
+    PrepublicationIncidentCategory,
     State,
     TargetedJournalist,
     TopicPage,
@@ -776,3 +779,31 @@ class TargetedJournalistFactory(factory.django.DjangoModelFactory):
     journalist = factory.SubFactory(JournalistFactory)
     incident = factory.SubFactory(IncidentPageFactory)
     institution = factory.SubFactory(InstitutionFactory)
+
+
+def create_prepub(
+    *,
+    date: datetime.date = datetime.date(2026, 1, 1),
+    date_precision: PrepublicationIncident.DatePrecision = PrepublicationIncident.DatePrecision.DAY,
+    location: GeoName = None,
+    categories: list[CategoryPage] | int = 1,
+):
+
+    prepub = PrepublicationIncident.objects.create(
+        date=date, location=location or create_geoname()
+    )
+
+    match categories:
+        case list(category_pages):
+            categorizations_to_add = category_pages
+        case int(number_to_apply):
+            categorizations_to_add = []
+            possible_categories = CategoryPage.objects.all().order_by("?")
+            if possible_categories:
+                categorizations_to_add.extend(possible_categories[:number_to_apply])
+
+    PrepublicationIncidentCategory.objects.bulk_create(
+        PrepublicationIncidentCategory(incident=prepub, category=category)
+        for category in categorizations_to_add
+    )
+    return prepub
