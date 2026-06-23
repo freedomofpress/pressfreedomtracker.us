@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -10,6 +12,7 @@ from wagtail.test.utils.form_data import (
 
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import CommonTagFactory
+from incident.devdata import create_prepub
 from incident.models import PrepublicationIncidentSync, PrepublicationSettings
 from incident.tests.factories import IncidentPageFactory
 
@@ -62,11 +65,24 @@ class HomePageTest(TestCase):
         PrepublicationSettings.objects.create(
             is_enabled=True,
         )
+        create_prepub(date=date.today())
         PrepublicationIncidentSync.objects.create(
             status=PrepublicationIncidentSync.Status.SUCCESS,
         )
         response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<span>1</span> incident ")
+
+    def test_get_home_should_pluralize_prepub_count(self):
+        PrepublicationSettings.objects.create(
+            is_enabled=True,
+        )
+        create_prepub(date=date.today())
+        create_prepub(date=date.today())
+        PrepublicationIncidentSync.objects.create(
+            status=PrepublicationIncidentSync.Status.SUCCESS,
+        )
+        response = self.client.get("/")
+        self.assertContains(response, "<span>2</span> incidents ")
 
     def test_hides_empty_blog_section(self):
         self.home_page.featured_blog_posts = []
