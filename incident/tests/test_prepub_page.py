@@ -12,6 +12,7 @@ from incident.devdata import create_prepub
 from incident.models import (
     IncidentIndexPage,
     IncidentPage,
+    PrepublicationIncident,
     PrepublicationIncidentSync,
     PrepublicationSettings,
 )
@@ -33,10 +34,14 @@ class PrepubViewTestCase(TestCase):
         cls.category_arrest = CategoryPage(
             title="Test Arrest/Criminal Charge",
         )
+        cls.category_special = CategoryPage(
+            title="Test Special",
+        )
         site.root_page.add_child(instance=cls.category_prior_restraint)
         site.root_page.add_child(instance=cls.category_equipment)
         site.root_page.add_child(instance=cls.category_assault)
         site.root_page.add_child(instance=cls.category_arrest)
+        site.root_page.add_child(instance=cls.category_special)
         cls.root_page = site.root_page
 
         cls.atlanta = create_geoname(name="Atlanta", region="GA")
@@ -121,6 +126,18 @@ class PrepubViewTestCase(TestCase):
             categories=[self.category_arrest, self.category_prior_restraint],
         )
 
+        # Prepubs with imprecise dates should not be counted in the table.
+        create_prepub(
+            date=date(2026, 5, 6),
+            date_precision=PrepublicationIncident.DatePrecision.MONTH,
+            location=self.chicago,
+            categories=[
+                self.category_arrest,
+                self.category_prior_restraint,
+                self.category_special,
+            ],
+        )
+
         response = self.client.get(reverse("prepub_list"))
         prepub_rows = response.context["prepubs"]
         self.assertEqual(
@@ -147,8 +164,8 @@ class PrepubViewTestCase(TestCase):
             prepub_rows[1]["category_counts"],
             json.dumps(
                 [
-                    {"category": self.category_equipment.title, "count": 1},
                     {"category": self.category_assault.title, "count": 1},
+                    {"category": self.category_equipment.title, "count": 1},
                 ]
             ),
         )
@@ -156,15 +173,13 @@ class PrepubViewTestCase(TestCase):
         # Three incidents with multiple, overlapping categories each
         self.assertEqual(prepub_rows[3]["incident_count"], 3)
         self.assertEqual(
-            prepub_rows[3]["category_counts"],
-            json.dumps(
-                [
-                    {"category": self.category_assault.title, "count": 2},
-                    {"category": self.category_equipment.title, "count": 1},
-                    {"category": self.category_arrest.title, "count": 2},
-                    {"category": self.category_prior_restraint.title, "count": 1},
-                ]
-            ),
+            json.loads(prepub_rows[3]["category_counts"]),
+            [
+                {"category": self.category_arrest.title, "count": 2},
+                {"category": self.category_assault.title, "count": 2},
+                {"category": self.category_equipment.title, "count": 1},
+                {"category": self.category_prior_restraint.title, "count": 1},
+            ],
         )
 
     def test_only_includes_units_in_timespan_of_months(self):

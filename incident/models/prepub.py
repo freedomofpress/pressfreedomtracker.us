@@ -1,6 +1,7 @@
 import json
 from collections import Counter
 from datetime import date
+from operator import itemgetter
 
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db import models
@@ -36,7 +37,10 @@ class PrepublicationIncidentQuerySet(models.QuerySet):
             state=F("location__regcode"),
         )
         if lower_date_bound:
-            results = results.filter(date__gte=lower_date_bound)
+            results = results.filter(
+                date__gte=lower_date_bound,
+                date_precision=PrepublicationIncident.DatePrecision.DAY,
+            )
 
         results = results.annotate(
             categories=ArrayAgg("categorizations__category__title"),
@@ -45,11 +49,15 @@ class PrepublicationIncidentQuerySet(models.QuerySet):
 
         for result in results:
             result["category_counts"] = json.dumps(
-                [
-                    {"category": k, "count": v}
-                    for k, v in Counter(result["categories"]).items()
-                ]
+                sorted(
+                    [
+                        {"category": k, "count": v}
+                        for k, v in Counter(result["categories"]).items()
+                    ],
+                    key=itemgetter("category"),
+                )
             )
+
         return results
 
     def fuzzy_date_filter(self, lower: date = None, upper: date = None):
