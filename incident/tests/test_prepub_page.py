@@ -226,6 +226,11 @@ class PrepubViewTestCase(TestCase):
         index.add_child(instance=IncidentPage(title="Incident 4", date=date_old))
         create_prepub(date=date_old)
 
+        # Not included because of imprecise date.
+        create_prepub(
+            date=date1, date_precision=PrepublicationIncident.DatePrecision.MONTH
+        )
+
         response = self.client.get(reverse("prepub_list"))
         bar_chart_dataset = json.loads(response.context["bar_chart_dataset"])
 

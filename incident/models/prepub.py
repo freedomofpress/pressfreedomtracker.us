@@ -21,6 +21,14 @@ from incident.utils.db import MakeDateRange
 
 
 class PrepublicationIncidentQuerySet(models.QuerySet):
+    def all_exact_dates_after(self, lower_bound: date):
+        """Returns a list of exact dates on which prepublication
+        incidents took place, after or on a given lower bound date."""
+        return self.filter(
+            date__gte=lower_bound,
+            date_precision=PrepublicationIncident.DatePrecision.DAY,
+        ).values_list("date", flat=True)
+
     def aggregate_with_category_counts(self, lower_date_bound=None):
         results = PrepublicationIncident.objects.values(
             "date",

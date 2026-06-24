@@ -152,9 +152,7 @@ def prepub_list(request):
     )
 
     unconfirmed_by_date = Counter(
-        PrepublicationIncident.objects.filter(date__gte=lower_bound).values_list(
-            "date", flat=True
-        )
+        PrepublicationIncident.objects.all_exact_dates_after(lower_bound)
     )
 
     bar_chart_dataset = []
