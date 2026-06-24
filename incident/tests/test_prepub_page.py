@@ -239,6 +239,13 @@ class PrepubViewTestCase(TestCase):
 
         index.add_child(instance=IncidentPage(title="Incident 2", date=date2))
         index.add_child(instance=IncidentPage(title="Incident 3", date=date2))
+        index.add_child(
+            instance=IncidentPage(
+                title="Incident Imprecise",
+                date=date2,
+                exact_date_unknown=True,
+            )
+        )
         create_prepub(date=date2)
         create_prepub(date=date2)
         create_prepub(date=date2)

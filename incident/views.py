@@ -147,7 +147,10 @@ def prepub_list(request):
 
     confirmed_by_date = Counter(
         IncidentPage.objects.live()
-        .filter(date__gte=bar_chart_lower_bound)
+        .filter(
+            date__gte=bar_chart_lower_bound,
+            exact_date_unknown=False,
+        )
         .values_list("date", flat=True)
     )
 
