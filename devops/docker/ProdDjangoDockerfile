@@ -1,12 +1,8 @@
-# sha256 as of 2026-01-22
-FROM node:20-alpine@sha256:3960ed74dfe320a67bf8da9555b6bade25ebda2b22b6081d2f60fd7d5d430e9c AS node-assets
+# sha256 as of 2026-06-18
+FROM node:22-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS node-assets
 
 # Make npm output less verbose
 ENV NPM_CONFIG_LOGLEVEL warn
-
-# Upgrade npm to speicifed version
-ARG NPM_VER=11.8.0
-RUN npm install npm@${NPM_VER} --location=global
 
 # Oddly, node-sass requires both python and make to build bindings
 RUN apk add --no-cache paxctl python3 make g++
@@ -18,8 +14,8 @@ RUN npm install --global gulp-cli
 COPY ./ /src-files
 RUN cd /src-files && ( npm install && npm run build )
 
-# sha256 for python:3.14.5-slim-trixie on linux/amd64 as of 2026-05-20
-FROM python:3.14.5-slim-trixie@sha256:a7185a8e40af01bf891414a4df16ef10fc6000cee460a404a13da9029fe41604 AS python-base
+# sha256 for python:3.14.6-slim-trixie on linux/amd64 as of 2026-06-17
+FROM python:3.14.6-slim-trixie@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4d0a4828a6500b1eff50061 AS python-base
 
 LABEL MAINTAINER="Freedom of the Press Foundation"
 LABEL APP="pressfreedomtracker.us"

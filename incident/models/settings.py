@@ -1,25 +1,26 @@
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
+from django.template.defaultfilters import pluralize
 
 from wagtail.admin.panels import (
     FieldPanel,
-    MultiFieldPanel,
     FieldRowPanel,
+    MultiFieldPanel,
 )
-
 from wagtail.contrib.settings.models import (
     BaseGenericSetting,
     register_setting,
 )
 
+from dateutil.relativedelta import relativedelta
+
 
 @register_setting
 class PrepublicationSettings(BaseGenericSetting):
     class TimespanUnits(models.TextChoices):
-        HOURS = "HOURS", "Hours"
-        DAYS = "DAYS", "Days"
-        WEEKS = "WEEKS", "Weeks"
-        MONTHS = "MONTHS", "Months"
+        DAY = "DAY", "Days"
+        WEEK = "WEEK", "Weeks"
+        MONTH = "MONTH", "Months"
 
     timespan_length = models.PositiveSmallIntegerField(
         verbose_name="length",
@@ -30,7 +31,7 @@ class PrepublicationSettings(BaseGenericSetting):
         verbose_name="units",
         max_length=20,
         choices=TimespanUnits,
-        default=TimespanUnits.DAYS,
+        default=TimespanUnits.DAY,
     )
 
     panels = [
@@ -47,3 +48,15 @@ class PrepublicationSettings(BaseGenericSetting):
             help_text="Prepublication Incidents will only be displayed on the home page and the full listing if they occurred within the given timespan from today's date.",
         )
     ]
+
+    def get_timespan(self):
+        match self.timespan_units:
+            case self.TimespanUnits.DAY:
+                return relativedelta(days=self.timespan_length)
+            case self.TimespanUnits.MONTH:
+                return relativedelta(months=self.timespan_length)
+            case self.TimespanUnits.WEEK:
+                return relativedelta(weeks=self.timespan_length)
+
+    def get_timespan_display(self) -> str:
+        return f"{self.timespan_length} {self.timespan_units.lower()}{pluralize(self.timespan_length)}"

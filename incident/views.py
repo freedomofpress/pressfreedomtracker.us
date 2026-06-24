@@ -1,11 +1,21 @@
 import csv
+import datetime
+import json
+from collections import Counter
 from io import StringIO
 
+from django.contrib.postgres.aggregates import ArrayAgg
+from django.db.models import (
+    Count,
+    F,
+)
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
+from django.template.response import TemplateResponse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import View
 from django.views.generic.edit import FormView
+
 from wagtail.admin import messages
 
 from incident.forms import LegalOrderImportForm
@@ -13,6 +23,9 @@ from incident.models import (
     IncidentPage,
     LegalOrder,
     LegalOrderUpdate,
+    PrepublicationIncident,
+    PrepublicationIncidentSync,
+    PrepublicationSettings,
 )
 from incident.utils.csv import parse_row
 
@@ -110,3 +123,76 @@ class LegalOrderImportConfirmView(View):
             request, f"Legal orders imported successfully.  Count affected: {count}"
         )
         return HttpResponseRedirect(reverse("import_legal_orders:show_form"))
+
+
+def dates_between(lower, upper):
+    """Generator that yields dates in increments of one day between
+    the given dates, inclusive of both endpoints."""
+    current = lower
+    while current <= upper:
+        yield current
+        current += datetime.timedelta(days=1)
+
+
+def prepub_list(request):
+    prepub_settings = PrepublicationSettings.load(request_or_site=request)
+    lower_bound = datetime.date.today() - prepub_settings.get_timespan()
+    bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(days=29)
+
+    confirmed_by_date = Counter(
+        IncidentPage.objects.live()
+        .filter(date__gte=bar_chart_lower_bound)
+        .values_list("date", flat=True)
+    )
+
+    unconfirmed_by_date = Counter(
+        PrepublicationIncident.objects.filter(date__gte=lower_bound).values_list(
+            "date", flat=True
+        )
+    )
+
+    bar_chart_dataset = []
+
+    for d in dates_between(bar_chart_lower_bound, datetime.date.today()):
+        unconfirmed_count = unconfirmed_by_date.get(d, 0)
+        confirmed_count = confirmed_by_date.get(d, 0)
+        bar_chart_dataset.append(
+            {
+                "date": f"{d:%m/%d}",
+                "count": unconfirmed_count + confirmed_count,
+                "unconfirmed": unconfirmed_count,
+                "confirmed": confirmed_count,
+            }
+        )
+
+    prepubs = (
+        PrepublicationIncident.objects.values(
+            "date",
+            city=F("location__name"),
+            state=F("location__regcode"),
+        )
+        .filter(date__gte=lower_bound)
+        .annotate(
+            categories=ArrayAgg("categorizations__category__title"),
+            incident_count=Count("pk", distinct=True),
+        )
+        .order_by("-date")
+    )
+
+    sync = PrepublicationIncidentSync.objects.get()
+
+    for p in prepubs:
+        p["category_counts"] = json.dumps(
+            [{"category": k, "count": v} for k, v in Counter(p["categories"]).items()]
+        )
+
+    return TemplateResponse(
+        request,
+        "incident/prepub_list.html",
+        {
+            "prepubs": prepubs,
+            "updated_time": sync.completed_at.strftime("%H:%M %p %Z"),
+            "timespan_display": prepub_settings.get_timespan_display(),
+            "bar_chart_dataset": json.dumps(bar_chart_dataset),
+        },
+    )

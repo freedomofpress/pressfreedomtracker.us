@@ -26,7 +26,7 @@ pillow>=12.2.0
 psycopg[binary]
 Pygments>=2.20.0
 python-json-logger
-requests>=2.33.1
+requests>=2.34.2
 structlog
 typing
 typogrify
@@ -42,3 +42,4 @@ wagtail>=7.4,<8.0
 whitenoise
 google-api-python-client
 google-auth-oauthlib
+python-dateutil>=2.9.0

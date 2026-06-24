@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 export const categorySymbolMap = {
 	'Arrest / Criminal Charge': 'arrest',
+	'Arrest/Criminal Charge': 'arrest',
 	'Border Stop': 'border_stop',
 	'Denial of Access': 'denial_of_access',
 	'Equipment Search or Seizure': 'equipment_search',
