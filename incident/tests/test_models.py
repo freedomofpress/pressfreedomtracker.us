@@ -150,6 +150,19 @@ class TestPrepublicationIncidentQueryset(TestCase):
             date=date(2026, 4, 14),
             date_precision=PrepublicationIncident.DatePrecision.MONTH,
         )
+        cls.prepub2 = create_prepub(
+            date=date(2025, 1, 1),
+            date_precision=PrepublicationIncident.DatePrecision.DAY,
+        )
+        cls.prepub3 = create_prepub(
+            date=date(2025, 3, 1),
+            date_precision=33,
+        )
+
+    def test_str_method(self):
+        self.assertNotIn("14", str(self.prepub1))
+        self.assertIn("2025-01-01", str(self.prepub2))
+        self.assertIn("33", str(self.prepub3))
 
     def test_filters_month_precision_dates_by_any_day_in_same_month(self):
         c = calendar.Calendar()
