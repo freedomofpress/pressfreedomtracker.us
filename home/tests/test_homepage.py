@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -13,7 +13,11 @@ from wagtail.test.utils.form_data import (
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import CommonTagFactory
 from incident.devdata import create_prepub
-from incident.models import PrepublicationIncidentSync, PrepublicationSettings
+from incident.models import (
+    PrepublicationIncident,
+    PrepublicationIncidentSync,
+    PrepublicationSettings,
+)
 from incident.tests.factories import IncidentPageFactory
 
 from .factories import HomePageFactory
@@ -83,6 +87,34 @@ class HomePageTest(TestCase):
         )
         response = self.client.get("/")
         self.assertContains(response, "<span>2</span> incidents ")
+
+    def test_home_page_includes_only_prepubs_before_cutoff(self):
+        prepub_settings = PrepublicationSettings.objects.create(
+            is_enabled=True,
+        )
+        today = date.today()
+
+        # Should be included
+        create_prepub(date=today)
+
+        # Should be included, because it's in the month that
+        # intersects with the lower bound of the dates that are
+        # included.
+        timespan_lower_bound = today - prepub_settings.get_timespan()
+        first_of_month = date(timespan_lower_bound.year, timespan_lower_bound.month, 1)
+        create_prepub(
+            date=first_of_month,
+            date_precision=PrepublicationIncident.DatePrecision.MONTH,
+        )
+
+        # Should not be included, because it's too old.
+        create_prepub(date=(today - timedelta(days=1)) - prepub_settings.get_timespan())
+
+        PrepublicationIncidentSync.objects.create(
+            status=PrepublicationIncidentSync.Status.SUCCESS,
+        )
+        response = self.client.get("/")
+        self.assertEqual(response.context["prepub_count"], 2)
 
     def test_hides_empty_blog_section(self):
         self.home_page.featured_blog_posts = []

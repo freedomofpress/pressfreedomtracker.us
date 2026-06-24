@@ -229,13 +229,15 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         prepub_settings = PrepublicationSettings.load(request_or_site=request)
         sync = PrepublicationIncidentSync.objects.first()
         if prepub_settings.is_enabled and sync:
+            lower_date = datetime.date.today() - prepub_settings.get_timespan()
             context["prepubs"] = (
                 PrepublicationIncident.objects.aggregate_with_category_counts(
-                    lower_date_bound=datetime.date.today()
-                    - prepub_settings.get_timespan()
+                    lower_date_bound=lower_date,
                 )
             )
-            context["prepub_count"] = PrepublicationIncident.objects.count()
+            context["prepub_count"] = PrepublicationIncident.objects.fuzzy_date_filter(
+                lower=lower_date, upper=datetime.date.today()
+            ).count()
             context["update_time"] = sync.completed_at.strftime("%H:%M %p %Z")
             context["timespan_display"] = prepub_settings.get_timespan_display()
 
