@@ -42,12 +42,25 @@ class PrepublicationIncidentQuerySet(models.QuerySet):
 class PrepublicationIncident(models.Model):
     objects = PrepublicationIncidentQuerySet.as_manager()
 
+    DatePrecision = models.IntegerChoices("DatePrecision", "DAY MONTH")
+
     date = models.DateField()
+    date_precision = models.IntegerField(
+        choices=DatePrecision, default=DatePrecision.DAY
+    )
     location = models.ForeignKey(
         GeoName,
         on_delete=models.CASCADE,
         related_name="+",
     )
+
+    def __str__(self):
+        match self.date_precision:
+            case self.DatePrecision.DAY:
+                return self.date.isoformat()
+            case self.DatePrecision.MONTH:
+                return self.date.strftime("%Y-%m")
+        return f"{self.date} ({self.date_precision})"
 
 
 class PrepublicationIncidentCategory(Orderable):

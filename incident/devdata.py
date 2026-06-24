@@ -790,7 +790,9 @@ def create_prepub(
 ):
 
     prepub = PrepublicationIncident.objects.create(
-        date=date, location=location or create_geoname()
+        date=date,
+        location=location or create_geoname(),
+        date_precision=date_precision,
     )
 
     match categories:
