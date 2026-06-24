@@ -87,48 +87,53 @@ class PrepubViewTestCase(TestCase):
         self.assertContains(response, f"Updated {time_representation}")
 
     def test_table_groups_rows_by_date_and_location(self):
+        today = date.today()
+        date1 = today - timedelta(days=1)
+        date2 = today - timedelta(days=30)
+        date3 = today - timedelta(days=60)
+
         create_prepub(
-            date=date(2026, 5, 5),
+            date=date1,
             location=self.atlanta,
             categories=[self.category_equipment],
         )
         create_prepub(
-            date=date(2026, 4, 4),
+            date=date2,
             location=self.atlanta,
             categories=[self.category_equipment],
         )
         create_prepub(
-            date=date(2026, 4, 4),
+            date=date2,
             location=self.atlanta,
             categories=[self.category_assault],
         )
         # Same date as above, different location
         create_prepub(
-            date=date(2026, 4, 4),
+            date=date2,
             location=self.baltimore,
             categories=[self.category_assault],
         )
 
         # Three incidents, one date & location
         create_prepub(
-            date=date(2026, 3, 3),
+            date=date3,
             location=self.chicago,
             categories=[self.category_assault, self.category_equipment],
         )
         create_prepub(
-            date=date(2026, 3, 3),
+            date=date3,
             location=self.chicago,
             categories=[self.category_assault, self.category_arrest],
         )
         create_prepub(
-            date=date(2026, 3, 3),
+            date=date3,
             location=self.chicago,
             categories=[self.category_arrest, self.category_prior_restraint],
         )
 
         # Prepubs with imprecise dates should not be counted in the table.
         create_prepub(
-            date=date(2026, 5, 6),
+            date=today,
             date_precision=PrepublicationIncident.DatePrecision.MONTH,
             location=self.chicago,
             categories=[
@@ -144,7 +149,7 @@ class PrepubViewTestCase(TestCase):
             prepub_rows[0],
             {
                 "incident_count": 1,
-                "date": date(2026, 5, 5),
+                "date": date1,
                 "city": "Atlanta",
                 "state": "GA",
                 "categories": [self.category_equipment.title],
