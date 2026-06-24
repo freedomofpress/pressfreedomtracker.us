@@ -1,8 +1,11 @@
+import calendar
 from datetime import date
 
 from django.test import TestCase
 
 from incident import choices
+from incident.devdata import create_prepub
+from incident.models import PrepublicationIncident
 
 from .factories import (
     IncidentChargeFactory,
@@ -138,3 +141,41 @@ class TestIncidentCharge(TestCase):
                 ("Dec. 13, 2019", "unknown"),
             ],
         )
+
+
+class TestPrepublicationIncidentQueryset(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.prepub1 = create_prepub(
+            date=date(2026, 4, 14),
+            date_precision=PrepublicationIncident.DatePrecision.MONTH,
+        )
+
+    def test_filters_month_precision_dates_by_any_day_in_same_month(self):
+        c = calendar.Calendar()
+        month = self.prepub1.date.month
+        year = self.prepub1.date.year
+
+        for calendar_date in [d for d in c.itermonthdates(year, month)]:
+            with self.subTest(calendar_date):
+                prepubs_in_range_below = (
+                    PrepublicationIncident.objects.fuzzy_date_filter(
+                        lower=date(2026, 3, 28),
+                        upper=calendar_date,
+                    )
+                )
+                prepubs_in_range_above = (
+                    PrepublicationIncident.objects.fuzzy_date_filter(
+                        lower=calendar_date,
+                        upper=date(2026, 5, 3),
+                    )
+                )
+                if calendar_date < date(2026, 4, 1):
+                    self.assertQuerySetEqual(prepubs_in_range_below, [])
+                    self.assertQuerySetEqual(prepubs_in_range_above, [self.prepub1])
+                elif calendar_date >= date(2026, 5, 1):
+                    self.assertQuerySetEqual(prepubs_in_range_below, [self.prepub1])
+                    self.assertQuerySetEqual(prepubs_in_range_above, [])
+                else:
+                    self.assertQuerySetEqual(prepubs_in_range_above, [self.prepub1])
+                    self.assertQuerySetEqual(prepubs_in_range_below, [self.prepub1])
