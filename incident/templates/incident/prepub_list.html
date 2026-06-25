@@ -15,8 +15,6 @@
 		></div>
 
 		<h2>Ongoing Unconfirmed Incidents</h2>
-		{% include "incident/_prepub_table.html" with prepubs=prepubs updated_time=updated_time row_limit=None only %}
+		{% include "incident/_prepub_table.html" with prepubs=prepubs max_incident_count=max_incident_count updated_time=updated_time row_limit=None only %}
 	</section>
-
-
 {% endblock %}
