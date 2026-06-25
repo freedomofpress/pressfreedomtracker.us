@@ -33,8 +33,10 @@
 
 .homepage-unconfirmed
 	display: grid
-	grid-template-columns: 1fr 1fr
 	gap: 2rem
+
+	+tablet-up
+		grid-template-columns: 1fr 1fr
 
 	.homepage-unconfirmed-lede
 		font-size: $font-size-h3
@@ -50,3 +52,10 @@
 
 		a
 			color: inherit
+
+	table.unconfirmed-incidents
+		tr > :nth-child(1)
+			width: 20%
+
+		tr > :nth-child(2)
+			width: 25%
