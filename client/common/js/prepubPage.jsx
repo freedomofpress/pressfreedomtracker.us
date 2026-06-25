@@ -32,7 +32,7 @@ function PrepubBarChartWidth({
 					titleLabel={'incidents'}
 					categoryColumn={'status'}
 					allCategories={["confirmed", "unconfirmed"]}
-					categoriesColors={{"unconfirmed": "#EEEEEE", "confirmed": "#E07A5F"}}
+					categoriesColors={{"unconfirmed": "#F4C280", "confirmed": "#E07A5F"}}
 					id={'prepub-page-bar-chart'}
 					width={chartWidth}
 					height={chartHeight}
