@@ -82,12 +82,22 @@ class PrepubViewTestCase(TestCase):
             timespan_units=PrepublicationSettings.TimespanUnits.DAY,
         )
 
+    def test_not_found_if_sync_absent(self):
+        self.sync.delete()
+        response = self.client.get(reverse("prepub_list"))
+        self.assertEqual(response.status_code, 404)
+
+    def test_not_found_if_prepubs_absent(self):
+        response = self.client.get(reverse("prepub_list"))
+        self.assertEqual(response.status_code, 404)
+
     def test_gets_successfully(self):
         create_prepub(categories=[self.category_equipment])
         response = self.client.get(reverse("prepub_list"))
         self.assertEqual(response.status_code, 200)
 
     def test_includes_last_updated_time(self):
+        create_prepub()
         response = self.client.get(reverse("prepub_list"))
         time_representation = self.sync.completed_at.strftime("%H:%M %p %Z")
         self.assertContains(response, f"Updated {time_representation}")
