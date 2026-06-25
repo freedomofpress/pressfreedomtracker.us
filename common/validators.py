@@ -24,10 +24,6 @@ def tag_validator(library, tag_name):
     return dec
 
 
-def validate_image_format(value):
-    pass
-
-
 def validate_disallow_delimiter(value, delimiter, field_name):
     if delimiter in value:
         raise ValidationError(
