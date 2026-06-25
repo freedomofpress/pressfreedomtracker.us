@@ -7,8 +7,6 @@ from django.template.exceptions import TemplateSyntaxError
 from django.template.library import import_library
 from django.utils.deconstruct import deconstructible
 
-from common.models import CustomImage
-
 
 def tag_validator(library, tag_name):
     def dec(func):
@@ -27,18 +25,7 @@ def tag_validator(library, tag_name):
 
 
 def validate_image_format(value):
-    try:
-        logo_image = CustomImage.objects.get(pk=value)
-    except CustomImage.DoesNotExist:
-        pass
-    else:
-        logo_image_filename = logo_image.file.name.lower().strip()
-        if logo_image_filename.endswith("jpg") or logo_image_filename.endswith(
-            "jpeg"
-        ):  # pragma: no cover
-            raise ValidationError(
-                "Please upload a non JPEG format image for footer logos",
-            )
+    pass
 
 
 def validate_disallow_delimiter(value, delimiter, field_name):
