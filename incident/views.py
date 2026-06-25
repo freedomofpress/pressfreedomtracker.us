@@ -9,7 +9,7 @@ from django.db.models import (
     Count,
     F,
 )
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
@@ -135,6 +135,13 @@ def dates_between(lower, upper):
 
 
 def prepub_list(request):
+    try:
+        sync = PrepublicationIncidentSync.objects.get()
+    except PrepublicationIncidentSync.DoesNotExist:
+        raise Http404
+    if PrepublicationIncident.objects.count() < 1:
+        raise Http404
+
     prepub_settings = PrepublicationSettings.load(request_or_site=request)
     lower_bound = datetime.date.today() - prepub_settings.get_timespan()
     bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(days=29)
@@ -178,8 +185,6 @@ def prepub_list(request):
         )
         .order_by("-date")
     )
-
-    sync = PrepublicationIncidentSync.objects.get()
 
     for p in prepubs:
         p["category_counts"] = json.dumps(
