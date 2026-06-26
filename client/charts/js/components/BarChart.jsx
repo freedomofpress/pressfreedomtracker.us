@@ -30,6 +30,7 @@ const paddingsInternal = {
 }
 
 const borders = {
+	thin: 3,
 	normal: 5,
 	hover: 7,
 	grid: 1,
@@ -168,6 +169,7 @@ export default function BarChart({
 		const isHoveredByKey = !hoveredElement?.x && hoveredElement?.y === key
 		return isHoveredByDate || isHoveredByKey ? barColor : !hoveredElement ? barColor : defaultColor
 	}
+	const mobileThinBorderThreshold = 24
 
 	const selectedElement = dataset.find((d) => d[x] === sliderSelection)
 	const incidentsCount = selectedElement !== undefined ? selectedElement[y] : 0
@@ -394,10 +396,7 @@ export default function BarChart({
 					allCategories && (
 						<CategoryButtons
 							interactive={interactive}
-							datasetStackedByCategory={datasetStackedByCategory}
 							categoryButtonsLabels={categoryButtonsLabels}
-							paddings={paddings}
-							width={width}
 							hoveredElement={!hoveredElement?.x && hoveredElement?.y}
 							setHoveredElement={(el) => setHoveredElement(el ? { y: el } : el)}
 							findColor={findColor}
@@ -476,7 +475,7 @@ export default function BarChart({
 										: sliderSelection === null
 											? getBarColor(branchBars.key, d.data, 'white')
 											: 'white',
-								strokeWidth: borders.normal,
+								strokeWidth: dataset.length > mobileThinBorderThreshold ? borders.thin : borders.normal,
 								stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
 								cursor: searchPageURL ? 'pointer' : 'inherit',
 								shapeRendering: 'crispEdges',
