@@ -14,6 +14,7 @@ export default function Tooltip({ content, x, y }) {
 				border: '5px solid black',
 				pointerEvents: 'none',
 				padding: 12,
+				zIndex: 2,
 			}}
 		>
 			{content}

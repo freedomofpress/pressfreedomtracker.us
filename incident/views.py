@@ -143,6 +143,10 @@ def prepub_list(request):
         raise Http404
 
     prepub_settings = PrepublicationSettings.load(request_or_site=request)
+
+    if not prepub_settings.is_enabled:
+        raise Http404
+
     lower_bound = datetime.date.today() - prepub_settings.get_timespan()
     bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(days=29)
 
@@ -186,6 +190,8 @@ def prepub_list(request):
         .order_by("-date")
     )
 
+    sync = PrepublicationIncidentSync.objects.get()
+
     for p in prepubs:
         p["category_counts"] = json.dumps(
             [{"category": k, "count": v} for k, v in Counter(p["categories"]).items()]
@@ -195,7 +201,9 @@ def prepub_list(request):
         request,
         "incident/prepub_list.html",
         {
-            "prepubs": prepubs,
+            "prepubs": PrepublicationIncident.objects.aggregate_with_category_counts(
+                lower_date_bound=lower_bound
+            ),
             "updated_time": sync.completed_at.strftime("%H:%M %p %Z"),
             "timespan_display": prepub_settings.get_timespan_display(),
             "bar_chart_dataset": json.dumps(bar_chart_dataset),

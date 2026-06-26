@@ -1,24 +1,30 @@
-from __future__ import absolute_import, unicode_literals
-
+import datetime
 import json
 
 from django.db import models
-from modelcluster.fields import ParentalKey
+
 from wagtail.admin.panels import (
     FieldPanel,
-    InlinePanel,
-    PageChooserPanel,
-    MultiFieldPanel,
-    TabbedInterface,
-    ObjectList,
     FieldRowPanel,
+    InlinePanel,
+    MultiFieldPanel,
+    ObjectList,
+    PageChooserPanel,
+    TabbedInterface,
 )
 from wagtail.fields import RichTextField
-from wagtail.models import Page, Orderable, Site
+from wagtail.models import Orderable, Page, Site
+
+from modelcluster.fields import ParentalKey
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
-from common.models import MetadataPageMixin, MediaPageMixin
+from common.models import MediaPageMixin, MetadataPageMixin
 from common.models.settings import SearchSettings
+from incident.models import (
+    PrepublicationIncident,
+    PrepublicationIncidentSync,
+    PrepublicationSettings,
+)
 from incident.utils.incident_filter import get_serialized_filters
 
 
@@ -219,6 +225,19 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
             )  # pragma: no cover
         else:
             context["export_path"] = None
+
+        prepub_settings = PrepublicationSettings.load(request_or_site=request)
+        if prepub_settings.is_enabled:
+            sync = PrepublicationIncidentSync.objects.get()
+            context["prepubs"] = (
+                PrepublicationIncident.objects.aggregate_with_category_counts(
+                    lower_date_bound=datetime.date.today()
+                    - prepub_settings.get_timespan()
+                )
+            )
+            context["prepub_count"] = PrepublicationIncident.objects.count()
+            context["update_time"] = sync.completed_at.strftime("%H:%M %p %Z")
+            context["timespan_display"] = prepub_settings.get_timespan_display()
 
         return context
 

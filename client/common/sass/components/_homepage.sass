@@ -30,3 +30,32 @@
 
 .homepage-section--gray
 	background-color: $section-background
+
+.homepage-unconfirmed
+	display: grid
+	gap: 2rem
+
+	+tablet-up
+		grid-template-columns: 1fr 1fr
+
+	.homepage-unconfirmed-lede
+		font-size: $font-size-h3
+
+		span
+			background-color: $black
+			color: $white
+			padding: 5px
+
+	.homepage-unconfirmed-description
+		font-size: $font-size-p
+		color: $gray-text
+
+		a
+			color: inherit
+
+	table.unconfirmed-incidents
+		tr > :nth-child(1)
+			width: 20%
+
+		tr > :nth-child(2)
+			width: 25%

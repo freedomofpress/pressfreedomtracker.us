@@ -13,6 +13,7 @@ exports[`renders Tooltip with mocked data 1`] = `
         "pointerEvents": "none",
         "position": "fixed",
         "top": "-40px",
+        "zIndex": 2,
       }
     }
   >

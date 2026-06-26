@@ -1,4 +1,12 @@
+import json
+from collections import Counter
+
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.db import models
+from django.db.models import (
+    Count,
+    F,
+)
 
 from wagtail.models import Orderable
 
@@ -6,7 +14,34 @@ from common.models import CategoryPage
 from geonames.models import GeoName
 
 
+class PrepublicationIncidentQuerySet(models.QuerySet):
+    def aggregate_with_category_counts(self, lower_date_bound=None):
+        results = PrepublicationIncident.objects.values(
+            "date",
+            city=F("location__name"),
+            state=F("location__regcode"),
+        )
+        if lower_date_bound:
+            results = results.filter(date__gte=lower_date_bound)
+
+        results = results.annotate(
+            categories=ArrayAgg("categorizations__category__title"),
+            incident_count=Count("pk", distinct=True),
+        ).order_by("-date")
+
+        for result in results:
+            result["category_counts"] = json.dumps(
+                [
+                    {"category": k, "count": v}
+                    for k, v in Counter(result["categories"]).items()
+                ]
+            )
+        return results
+
+
 class PrepublicationIncident(models.Model):
+    objects = PrepublicationIncidentQuerySet.as_manager()
+
     date = models.DateField()
     location = models.ForeignKey(
         GeoName,
