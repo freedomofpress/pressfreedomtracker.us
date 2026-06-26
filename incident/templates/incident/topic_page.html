@@ -21,11 +21,13 @@
 				<div class="topicpage__block">{% include_block block %}</div>
 			{% endfor %}
 
+			{% if page.incident_index_page %}
 			<div class="topicpage__block">
 				<a class="btn btn-secondary" href="{% pageurl page.incident_index_page %}?tags={{ page.incident_tag.title }}">
 					View incidents in database
 				</a>
 			</div>
+			{% endif %}
 		</section>
 
 		<section class="topicpage-body__sidebar">
