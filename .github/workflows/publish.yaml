@@ -22,7 +22,6 @@ jobs:
       containerfile: devops/docker/ProdDjangoDockerfile
       build-args: |
         USERID=1000
-        NPM_VER=9.6.7
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us
       requires-deep-history: true
       add-branch-tags: true
@@ -39,6 +38,5 @@ jobs:
       containerfile: devops/docker/NodeChartPregeneratorDockerfile
       build-args: |
         USERID=1001
-        NPM_VER=10.9.2
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
       add-branch-tags: true
