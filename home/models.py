@@ -231,7 +231,7 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         sync = PrepublicationIncidentSync.objects.first()
         if prepub_settings.is_enabled and sync:
             lower_date = datetime.date.today() - prepub_settings.get_timespan()
-            context["prepubs"] = (
+            context["prepubs"], context["max_incident_count"] = (
                 PrepublicationIncident.objects.aggregate_with_category_counts(
                     lower_date_bound=lower_date,
                 )

@@ -35,7 +35,7 @@
 					<p class="homepage-unconfirmed-description">Unconfirmed incidents are possible press freedom aggressions that our team is working to verify for documentation.  Read more about the reporting process on our <a href="/frequently-asked-questions/">FAQ</a> page.</p>
 				</div>
 				<div>
-					{% include "incident/_prepub_table.html" with prepubs=prepubs updated_time=update_time row_limit=3 prepub_count=prepub_count only %}
+					{% include "incident/_prepub_table.html" with prepubs=prepubs max_incident_count=max_incident_count updated_time=update_time row_limit=3 prepub_count=prepub_count only %}
 				</div>
 			</div>
 		</div>

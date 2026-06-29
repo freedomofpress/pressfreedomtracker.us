@@ -47,18 +47,18 @@ class PrepublicationIncidentQuerySet(models.QuerySet):
             incident_count=Count("pk", distinct=True),
         ).order_by("-date")
 
+        max_count = 1
         for result in results:
+            count = Counter(result["categories"])
             result["category_counts"] = json.dumps(
                 sorted(
-                    [
-                        {"category": k, "count": v}
-                        for k, v in Counter(result["categories"]).items()
-                    ],
+                    [{"category": k, "count": v} for k, v in count.items()],
                     key=itemgetter("category"),
                 )
             )
-
-        return results
+            if (new_max_count := count.most_common(1)[0][1]) > max_count:
+                max_count = new_max_count
+        return results, max_count
 
     def fuzzy_date_filter(self, lower: date = None, upper: date = None):
         """Filter prepublication incidents by date range, accounting

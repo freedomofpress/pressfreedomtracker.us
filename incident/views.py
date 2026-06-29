@@ -173,14 +173,18 @@ def prepub_list(request):
         )
 
     sync = PrepublicationIncidentSync.objects.get()
+    prepubs, max_incident_count = (
+        PrepublicationIncident.objects.aggregate_with_category_counts(
+            lower_date_bound=lower_bound
+        )
+    )
 
     return TemplateResponse(
         request,
         "incident/prepub_list.html",
         {
-            "prepubs": PrepublicationIncident.objects.aggregate_with_category_counts(
-                lower_date_bound=lower_bound
-            ),
+            "prepubs": prepubs,
+            "max_incident_count": max_incident_count,
             "updated_time": sync.completed_at.strftime("%H:%M %p %Z"),
             "timespan_display": prepub_settings.get_timespan_display(),
             "bar_chart_dataset": json.dumps(bar_chart_dataset),

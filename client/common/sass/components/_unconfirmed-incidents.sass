@@ -1,8 +1,9 @@
 .unconfirmed-incidents
+	--max-count: 1
 	table-layout: fixed
 	border-collapse: collapse
-	width: 90%
-	margin: 10px auto
+	width: min(670px, 100%)
+	margin: 10px 0
 
 	thead
 		border: solid 3px #000
@@ -17,10 +18,19 @@
 		padding: 0.6em
 
 	tr > :nth-child(1)
-		width: 10%
+		width: 16%
+		+mobile-down
+			width: 24%
+			padding-right: 0
 
 	tr > :nth-child(2)
-		width: 15%
+		width: 25%
+		+mobile-down
+			width: 36%
+			padding-right: 0
+
+	tr:nth-child(even)
+		background-color: $section-background
 
 	caption
 		padding: 1em
@@ -28,6 +38,8 @@
 		caption-side: bottom
 		font-size: $font-size-small-ui
 		text-align: right
+		+mobile-down
+			padding: 0.6em
 
 	tfoot td
 		padding: 0
@@ -47,25 +59,39 @@
 				border-right-style: none
 
 	&--count
+		--min-unit: 1.6rem
+		--max-unit: 25%
 		box-sizing: border-box
-		display: inline-block
-		padding: 3px
+		display: inline-flex
+		align-items:center
+		padding: 0 3px
 		background-color: $black
 		color: $white
 		border: 3px solid
 		border-color: $black
-		font-size: 1.125rem
+		font-size: 1.075rem
 		font-weight: 700
 		line-height: 1
 		// width of one cell * incident count
-		width: calc(var(--incident-count) * 1.6rem)
+		width: calc(var(--incident-count) * clamp(var(--min-unit), calc(100% / var(--max-count)), var(--max-unit)))
+		min-width: max-content
 		height: 1.6rem
 		cursor: pointer
+		-webkit-font-smoothing: antialiased
+		-moz-osx-font-smoothing: grayscale
+
+		+mobile-down
+			--min-unit: 1rem
+			padding: 0
 
 		&:hover,
 		&:focus-visible
 			background-color: $white
 			color: $black
+
+.unconfirmed-incidents--page-title
+	+mobile-down
+		font-size: 3rem
 
 .category-count-tooltip
 	font-family: var(--font-base)

@@ -24,6 +24,7 @@ rules:
   declaration-block-semicolon-space-before: null
   declaration-block-trailing-semicolon: null
   declaration-block-no-redundant-longhand-properties: null
+  declaration-empty-line-before: never
   max-line-length: null
   max-nesting-depth: null
   selector-list-comma-newline-after: null
