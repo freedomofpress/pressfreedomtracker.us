@@ -20,7 +20,7 @@ from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
 )
-from incident.models import IncidentCategorization
+from incident.models import IncidentCategorization, IncidentPage
 from incident.forms import TopicPageForm
 
 
@@ -266,11 +266,14 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
                 exact_date_unknown=True,
                 date__fuzzy_date__overlap=target_range,
             )
-        incident_qs = (
-            self.incident_index_page.get_incidents()
-            .filter(incident_lookups)
-            .order_by("-date")
-        )
+        if self.incident_index_page_id is None:
+            incident_qs = IncidentPage.objects.none()
+        else:
+            incident_qs = (
+                self.incident_index_page.get_incidents()
+                .filter(incident_lookups)
+                .order_by("-date")
+            )
 
         paginator, entries = paginate(
             request, incident_qs, page_key=DEFAULT_PAGE_KEY, per_page=8, orphans=5

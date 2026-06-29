@@ -197,7 +197,7 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         context["serialized_filters"] = json.dumps(get_serialized_filters())
 
         context["featured_blog_posts"] = [
-            f.page for f in self.featured_blog_posts.select_related("page")
+            f.page for f in self.featured_blog_posts.select_related("page") if f.page_id
         ]
 
         context["featured_incident_pages"] = [
@@ -206,10 +206,11 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
                 "page",
                 "page__teaser_image",
             )
+            if f.page_id
         ]
 
         context["data_viz_tags_json"] = json.dumps(
-            [t.tag.title for t in self.data_viz_tags.all()]
+            [t.tag.title for t in self.data_viz_tags.all() if t.tag_id]
         )
 
         search_settings = SearchSettings.for_site(Site.find_for_request(request))

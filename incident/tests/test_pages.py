@@ -32,6 +32,7 @@ from incident.models.incident_page import IncidentPage
 from incident.models.topic_page import TopicPage
 from incident.models.export import is_exportable, to_row
 from incident.models import IncidentCategorization
+from incident.models.inlines import IncidentPageUpdates
 from .factories import (
     IncidentIndexPageFactory,
     IncidentPageFactory,
@@ -913,6 +914,11 @@ class RecentlyUpdatedMethod(TestCase):
         self.assertTrue(self.inc2.recently_updated())
         self.assertTrue(self.inc3.recently_updated())
 
+    def test_handles_update_with_no_date(self):
+        incident = IncidentPage(title="Update with no date")
+        incident.updates.add(IncidentPageUpdates(title="Update", date=None))
+        self.assertFalse(incident.recently_updated())
+
     def test_runs_no_queries_if_information_cached(self):
         incidents = IncidentPage.objects.with_most_recent_update().all()
         for incident in incidents:
@@ -1452,6 +1458,12 @@ class TestTopicPage(WagtailPageTestCase):
             [incident2, incident1, incident3],
         )
 
+    def test_renders_with_no_incident_index_page(self):
+        topic_page = TopicPageFactory.build(incident_index_page=None)
+        request = RequestFactory().get("/")
+
+        self.assertEqual(list(topic_page.get_context(request)["entries_page"]), [])
+
     def test_filters_incidents_by_date_range(self):
         topic_page = TopicPageFactory(
             parent=self.home_page,
@@ -1579,6 +1591,16 @@ class IncidentPageTests(TestCase):
         self.assertRegex(incident2.unique_date, UNIQUE_DATE_FORMAT)
 
         self.assertNotEqual(incident1.unique_date, incident2.unique_date)
+
+    def test_get_main_category_handles_categorization_without_category(self):
+        incident = IncidentPage(title="No category")
+        incident.categories.add(IncidentCategorization())
+        self.assertIsNone(incident.get_main_category())
+
+    def test_get_category_details_skips_categorization_without_category(self):
+        incident = IncidentPage(title="No category")
+        incident.categories.add(IncidentCategorization())
+        self.assertEqual(incident.get_category_details(index=incident), {})
 
     def test_looks_up_latitude_longitude_from_city_and_state(self):
         incident_index = IncidentIndexPageFactory.build(title="A title")
