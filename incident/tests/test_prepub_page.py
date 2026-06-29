@@ -8,42 +8,14 @@ from wagtail.models import Site
 
 from common.models import CategoryPage
 from geonames.devdata import create_geoname
-from geonames.models import GeoName
+from incident.devdata import create_prepub
 from incident.models import (
     IncidentIndexPage,
     IncidentPage,
     PrepublicationIncident,
-    PrepublicationIncidentCategory,
     PrepublicationIncidentSync,
     PrepublicationSettings,
 )
-
-
-def create_prepub(
-    *,
-    date: date = date(2026, 1, 1),
-    location: GeoName = None,
-    categories: list[CategoryPage] | int = 1,
-):
-
-    prepub = PrepublicationIncident.objects.create(
-        date=date, location=location or create_geoname()
-    )
-
-    match categories:
-        case list(category_pages):
-            categorizations_to_add = category_pages
-        case int(number_to_apply):
-            categorizations_to_add = []
-            possible_categories = CategoryPage.objects.all().order_by("?")
-            if possible_categories:
-                categorizations_to_add.extend(possible_categories[:number_to_apply])
-
-    PrepublicationIncidentCategory.objects.bulk_create(
-        PrepublicationIncidentCategory(incident=prepub, category=category)
-        for category in categorizations_to_add
-    )
-    return prepub
 
 
 class PrepubViewTestCase(TestCase):
@@ -62,10 +34,14 @@ class PrepubViewTestCase(TestCase):
         cls.category_arrest = CategoryPage(
             title="Test Arrest/Criminal Charge",
         )
+        cls.category_special = CategoryPage(
+            title="Test Special",
+        )
         site.root_page.add_child(instance=cls.category_prior_restraint)
         site.root_page.add_child(instance=cls.category_equipment)
         site.root_page.add_child(instance=cls.category_assault)
         site.root_page.add_child(instance=cls.category_arrest)
+        site.root_page.add_child(instance=cls.category_special)
         cls.root_page = site.root_page
 
         cls.atlanta = create_geoname(name="Atlanta", region="GA")
@@ -111,43 +87,60 @@ class PrepubViewTestCase(TestCase):
         self.assertContains(response, f"Updated {time_representation}")
 
     def test_table_groups_rows_by_date_and_location(self):
+        today = date.today()
+        date1 = today - timedelta(days=1)
+        date2 = today - timedelta(days=30)
+        date3 = today - timedelta(days=60)
+
         create_prepub(
-            date=date(2026, 5, 5),
+            date=date1,
             location=self.atlanta,
             categories=[self.category_equipment],
         )
         create_prepub(
-            date=date(2026, 4, 4),
+            date=date2,
             location=self.atlanta,
             categories=[self.category_equipment],
         )
         create_prepub(
-            date=date(2026, 4, 4),
+            date=date2,
             location=self.atlanta,
             categories=[self.category_assault],
         )
         # Same date as above, different location
         create_prepub(
-            date=date(2026, 4, 4),
+            date=date2,
             location=self.baltimore,
             categories=[self.category_assault],
         )
 
         # Three incidents, one date & location
         create_prepub(
-            date=date(2026, 3, 3),
+            date=date3,
             location=self.chicago,
             categories=[self.category_assault, self.category_equipment],
         )
         create_prepub(
-            date=date(2026, 3, 3),
+            date=date3,
             location=self.chicago,
             categories=[self.category_assault, self.category_arrest],
         )
         create_prepub(
-            date=date(2026, 3, 3),
+            date=date3,
             location=self.chicago,
             categories=[self.category_arrest, self.category_prior_restraint],
+        )
+
+        # Prepubs with imprecise dates should not be counted in the table.
+        create_prepub(
+            date=today,
+            date_precision=PrepublicationIncident.DatePrecision.MONTH,
+            location=self.chicago,
+            categories=[
+                self.category_arrest,
+                self.category_prior_restraint,
+                self.category_special,
+            ],
         )
 
         response = self.client.get(reverse("prepub_list"))
@@ -156,7 +149,7 @@ class PrepubViewTestCase(TestCase):
             prepub_rows[0],
             {
                 "incident_count": 1,
-                "date": date(2026, 5, 5),
+                "date": date1,
                 "city": "Atlanta",
                 "state": "GA",
                 "categories": [self.category_equipment.title],
@@ -176,8 +169,8 @@ class PrepubViewTestCase(TestCase):
             prepub_rows[1]["category_counts"],
             json.dumps(
                 [
-                    {"category": self.category_equipment.title, "count": 1},
                     {"category": self.category_assault.title, "count": 1},
+                    {"category": self.category_equipment.title, "count": 1},
                 ]
             ),
         )
@@ -185,15 +178,13 @@ class PrepubViewTestCase(TestCase):
         # Three incidents with multiple, overlapping categories each
         self.assertEqual(prepub_rows[3]["incident_count"], 3)
         self.assertEqual(
-            prepub_rows[3]["category_counts"],
-            json.dumps(
-                [
-                    {"category": self.category_assault.title, "count": 2},
-                    {"category": self.category_equipment.title, "count": 1},
-                    {"category": self.category_arrest.title, "count": 2},
-                    {"category": self.category_prior_restraint.title, "count": 1},
-                ]
-            ),
+            json.loads(prepub_rows[3]["category_counts"]),
+            [
+                {"category": self.category_arrest.title, "count": 2},
+                {"category": self.category_assault.title, "count": 2},
+                {"category": self.category_equipment.title, "count": 1},
+                {"category": self.category_prior_restraint.title, "count": 1},
+            ],
         )
 
     def test_only_includes_units_in_timespan_of_months(self):
@@ -248,12 +239,24 @@ class PrepubViewTestCase(TestCase):
 
         index.add_child(instance=IncidentPage(title="Incident 2", date=date2))
         index.add_child(instance=IncidentPage(title="Incident 3", date=date2))
+        index.add_child(
+            instance=IncidentPage(
+                title="Incident Imprecise",
+                date=date2,
+                exact_date_unknown=True,
+            )
+        )
         create_prepub(date=date2)
         create_prepub(date=date2)
         create_prepub(date=date2)
 
         index.add_child(instance=IncidentPage(title="Incident 4", date=date_old))
         create_prepub(date=date_old)
+
+        # Not included because of imprecise date.
+        create_prepub(
+            date=date1, date_precision=PrepublicationIncident.DatePrecision.MONTH
+        )
 
         response = self.client.get(reverse("prepub_list"))
         bar_chart_dataset = json.loads(response.context["bar_chart_dataset"])
