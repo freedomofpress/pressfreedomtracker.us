@@ -38,3 +38,19 @@ updates:
         update-types:
           - 'version-update:semver-major'
           - 'version-update:semver-minor'
+
+  - package-ecosystem: 'npm'
+    directories:
+      - '/'
+      - '/chart_pregenerator'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: 'all'
+    commit-message:
+      prefix: 'build'
+      include: 'scope'
