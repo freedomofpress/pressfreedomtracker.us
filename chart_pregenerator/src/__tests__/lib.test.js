@@ -50,9 +50,20 @@ const testCategories = `[
     }
 ]`
 
+// Mirror the real incidents API: the `state` column is only returned when
+// the request's `fields` param asks for it. Charts that filter by state must
+// therefore request the field, or every row gets dropped (a blank chart).
 jest.mock('node-fetch', () => jest.fn((path) => Promise.resolve({
 	text: () => {
 		if (path === 'http://app:8000/api/edge/categories/') return Promise.resolve(testCategories)
+		if (/fields=[^&]*state/.test(path)) {
+			const rowStates = ['NJ', 'NY', 'NJ', 'CA', 'NJ', 'TX', 'NJ', 'NY', 'NJ', 'CA', 'NJ', 'TX', 'NJ', 'NY', 'NJ', 'CA', 'NJ', 'TX', 'NJ']
+			const withState = testCsv
+				.split('\n')
+				.map((line, i) => (i === 0 ? `${line},state` : `${line},${rowStates[i - 1]}`))
+				.join('\n')
+			return Promise.resolve(withState)
+		}
 		return Promise.resolve(testCsv)
 	},
 	ok: true,
@@ -67,6 +78,15 @@ test('renders Stacked Bar Chart with dummy data', async () => {
 		query: {
 			options: JSON.stringify({ branchFieldName: 'assailant', branches: { type: 'list', value: [{ title: 'unknown', value: 'UNKNOWN' }, { title: 'law enforcement', value: 'LAW_ENFORCEMENT' }, { title: 'private security', value: 'PRIVATE_SECURITY' }, { title: 'politician', value: 'POLITICIAN' }, { title: 'public figure', value: 'PUBLIC_FIGURE' }, { title: 'private individual', value: 'PRIVATE_INDIVIDUAL' }] } }),
 		},
+	})).toMatchSnapshot()
+})
+
+test('renders state-filtered Bar Chart with dummy data', async () => {
+	// Regression: the pregenerator filters by state client-side, so it must
+	// request the `state` field. Without it the dataset filters to empty and
+	// the chart renders blank (issue #2297).
+	expect(await generateBarChartSVG({
+		query: { options: JSON.stringify({ filterStates: ['NJ'] }) },
 	})).toMatchSnapshot()
 })
 

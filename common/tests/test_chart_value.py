@@ -61,8 +61,13 @@ class TestVerticalBarChartValue(TestCase):
         url = self.vbc_value.png_snapshot_url()
         self.assertEqual(
             url,
-            self.snapshot_png.chart_image.get_rendition("original").url,
+            self.snapshot_png.chart_image.get_rendition("original").full_url,
         )
+        # Newsletter emails require an absolute URL. png_snapshot_url() must
+        # return one on its own (regression: the newsletter template used to
+        # concatenate the site root in front of this, producing a doubled
+        # host like "https://hosthttps://media...").
+        self.assertTrue(url.startswith("http"))
 
     def test_svg_snapshot(self):
         self.assertEqual(
@@ -121,8 +126,13 @@ class TestBubbleMapValue(TestCase):
         url = self.bmc_value.png_snapshot_url()
         self.assertEqual(
             url,
-            self.snapshot_png.chart_image.get_rendition("original").url,
+            self.snapshot_png.chart_image.get_rendition("original").full_url,
         )
+        # Newsletter emails require an absolute URL. png_snapshot_url() must
+        # return one on its own (regression: the newsletter template used to
+        # concatenate the site root in front of this, producing a doubled
+        # host like "https://hosthttps://media...").
+        self.assertTrue(url.startswith("http"))
 
     def test_png_snapshot_meta_url(self):
         meta_image = self.bmc_value.png_snapshot_meta()

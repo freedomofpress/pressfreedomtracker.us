@@ -50,7 +50,7 @@ export const generateBarChartSVG = async (req) => {
 
 	try {
 		const dataKey = ['dataset']
-		const dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories${options.branchFieldName ? `%2C${options.branchFieldName}` : ''}&format=csv`]
+		const dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories%2Cstate${options.branchFieldName ? `%2C${options.branchFieldName}` : ''}&format=csv`]
 		const dataParser = [(data) => d3.csvParse(data, d3.autoType)]
 
 		if (options.branches && options.branches.type === 'url') {
@@ -151,7 +151,7 @@ export const generateTreemapChartSVG = async (req) => {
 
 	try {
 		const dataKey = ['dataset']
-		const dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories${options.branchFieldName ? `%2C${options.branchFieldName}` : ''}&format=csv`]
+		const dataUrl = [`${FPF_BASE_URL}/api/edge/incidents/?fields=tags%2Cdate%2Ccategories%2Cstate${options.branchFieldName ? `%2C${options.branchFieldName}` : ''}&format=csv`]
 		const dataParser = [(data) => d3.csvParse(data, d3.autoType)]
 
 		if (options.branches && options.branches.type === 'url') {

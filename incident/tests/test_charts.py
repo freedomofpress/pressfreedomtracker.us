@@ -98,7 +98,7 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
         url = self.tree_map_chart_value.png_snapshot_url()
         self.assertEqual(
             url,
-            self.snapshot_png.chart_image.get_rendition("original").url,
+            self.snapshot_png.chart_image.get_rendition("original").full_url,
         )
 
     def test_svg_snapshot(self):
