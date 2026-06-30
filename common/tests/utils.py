@@ -134,7 +134,7 @@ def generate_raw_html():
 <dl><dt>Block type</dt><dd>Raw <abbr title="Hypertext Markup Language">HTML</abbr></dd><dt>Tags used</dt><dd><span style="font-family:monospace;">abbr, dd, div, dl, dt, meter, progress, span, table, td, tr</span></dd></dl>
 
 <table style="width: 66%; margin: 0 auto;">
-<tr><td><label for="completion">How close are we?</label></td><td><progress id="completion" max="100" value="{progress}"> {progress}% </progress></td>
+<tr><td><label for="completion">How close are we?</label></td><td><progress id="completion" max="100" value="{progress}"> {progress}% </progress></td></tr>
 <tr><td>Fuel remaining</td><td><meter id="fuel" min="0" max="100" low="33" high="66" optimum="80" value="{fuel}"></meter></td></tr></table></div>"""
     return generate_field(
         "raw_html", body.format(fuel=randrange(0, 101), progress=randrange(0, 101))
