@@ -164,7 +164,9 @@
 		{% if page.get_newsletter_preamble or page.lead_graphic %}
 			<mj-section background-color="#fffef0" css-class="intro">
 				<mj-column>
-					<mj-text padding-bottom="24px">{{ page.get_newsletter_preamble|newsletter_richtext }}</mj-text>
+					{% if page.get_newsletter_preamble %}
+						<mj-text padding-bottom="24px">{{ page.get_newsletter_preamble|newsletter_richtext }}</mj-text>
+					{% endif %}
 					{% for lead_item in page.lead_graphic %}
 						{% if lead_item.block_type == "image" %}
 							<figure>

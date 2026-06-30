@@ -264,6 +264,29 @@ class TestPages(TestCase):
             "Preamble override",
         )
 
+    def test_newsletter_renders_without_preamble(self):
+        # Regression: a newsletter page with a lead graphic but no preamble
+        # set on either the page or its index page must still render. The
+        # intro section is emitted because of the lead graphic, and
+        # get_newsletter_preamble() returns None in that case -- passing None
+        # to the newsletter_richtext filter used to raise ValueError.
+        image = CustomImageFactory.create(
+            file__width=600,
+            file__height=400,
+            collection__name="Photos",
+        )
+        page = BlogPageFactory(parent=self.index, slug="no-preamble")
+        page.newsletter_preamble = None
+        page.body = []
+        page.lead_graphic = [("image", image)]
+        page.save()
+        self.index.newsletter_preamble = None
+        self.index.save()
+
+        self.assertIsNone(page.get_newsletter_preamble())
+        html = page.get_newsletter_html()
+        self.assertIn("Submit an incident", html)
+
     def test_get_blog_page_vertical_bar_chart_meta_image(self):
         self.assertEqual(
             self.blog_page2.get_meta_image(),
