@@ -9,7 +9,7 @@
     "start": "webpack watch --mode development --devtool eval-source-map",
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage",
-    "js-lint": "eslint client/**/*.js",
+    "js-lint": "eslint client/**/*.js chart_pregenerator/src/**/*.jsx",
     "stylelint": "stylelint client/**/*.sass"
   },
   "author": "Harris Lapiroff <harris@littleweaverweb.com>",
