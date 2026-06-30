@@ -20,7 +20,7 @@ class ChartValue(blocks.StructValue):
             snapshot_type=SnapshotType.PNG,
             query=self.options_schema().dump(self),
         )
-        return snapshot.chart_image.get_rendition("original").url
+        return snapshot.chart_image.get_rendition("original").full_url
 
     def svg_snapshot_mini(self):
         options = self.options_schema().dump(self)

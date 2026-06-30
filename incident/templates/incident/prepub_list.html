@@ -3,7 +3,7 @@
 {% block title %}Unconfirmed Incidents{% endblock %}
 
 {% block main %}
-	<h1 class="page-title">Unconfirmed Incidents</h1>
+	<h1 class="unconfirmed-incidents--page-title page-title">Unconfirmed Incidents</h1>
 	<section class="simplepage-body">
 		<p>Unconfirmed incidents are possible press freedom aggressions that our team is working to verify for documentation. Read more about the reporting process on our FAQ page.</p>
 
@@ -15,37 +15,6 @@
 		></div>
 
 		<h2>Ongoing Unconfirmed Incidents</h2>
-		<table class="unconfirmed-incidents">
-			<caption>
-				Updated {{ updated_time }}
-			</caption>
-			<thead>
-				<tr>
-					<th scope="col">Date</th>
-					<th scope="col">Location</th>
-					<th scope="col">Incidents</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for row in prepubs %}
-					<tr>
-						<td>{{ row.date|date:"n/j/y" }}</td>
-						<td>{{ row.city }}, {{ row.state }}</td>
-						<td>
-							<span style="--incident-count: {{ row.incident_count }}" class="no-js-fallback unconfirmed-incidents--count">
-								{{ row.incident_count  }}
-							</span>
-							<div
-								class="js-unconfirmed-incidents-count"
-								data-incident-count="{{ row.incident_count }}"
-								data-category-counts="{{ row.category_counts }}"
-							></div>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+		{% include "incident/_prepub_table.html" with prepubs=prepubs max_incident_count=max_incident_count updated_time=updated_time row_limit=None only %}
 	</section>
-
-
 {% endblock %}

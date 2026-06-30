@@ -141,7 +141,9 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
 
         if not request.GET.get("author") and not request.GET.get("organization"):
             context["featured_blogs"] = [
-                f.page for f in self.featured_blogs.select_related("page").all()
+                f.page
+                for f in self.featured_blogs.select_related("page").all()
+                if f.page_id
             ]
 
         context["incident_listing_heading"] = "Latest"

@@ -293,6 +293,22 @@ class TestSyncPrepubs(TestCase):
         )
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
+    def test_sync_prepubs_imprecise_date_succeeds(self, mock_fetch):
+        mock_fetch.return_value = self.data[:-1] + [
+            self.create_row(incident_date="3/2026")
+        ]
+        _, message = sync_prepubs(self.create_source())
+
+        prepub = PrepublicationIncident.objects.prefetch_related(
+            "categorizations__category",
+        ).get()
+        self.assertEqual(prepub.date, datetime.date(2026, 3, 1))
+        self.assertEqual(
+            prepub.date_precision,
+            PrepublicationIncident.DatePrecision.MONTH,
+        )
+
+    @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
     def test_sync_prepubs_invalid_location(self, mock_fetch):
         mock_fetch.return_value = self.data + [
             self.create_row(city="Invalid City", state="IV")
@@ -399,6 +415,10 @@ class TestSyncPrepubs(TestCase):
             "categorizations__category",
         ).get()
         self.assertEqual(prepub.date, datetime.date(2026, 1, 26))
+        self.assertEqual(
+            prepub.date_precision,
+            PrepublicationIncident.DatePrecision.DAY,
+        )
         self.assertEqual(
             prepub.location,
             GeoName.objects.get(

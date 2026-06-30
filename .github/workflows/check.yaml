@@ -105,7 +105,7 @@ jobs:
           version: ${{ env.VERSION_DOCKER }}
 
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
         with:
           persist-credentials: true
           fetch-depth: 0
@@ -204,18 +204,18 @@ jobs:
       actions: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
         with:
           persist-credentials: true
           fetch-depth: 0
 
       - name: Install Python ${{ env.VERSION_PYTHON }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: ${{ env.VERSION_PYTHON }}
 
       - name: Configure Job Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.5
         with:
           path: |
             ~/.cache/pip
@@ -248,7 +248,7 @@ jobs:
           version: ${{ env.VERSION_DOCKER }}
 
       - name: Checkout
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
         with:
           persist-credentials: false
 

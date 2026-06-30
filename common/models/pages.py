@@ -508,7 +508,7 @@ class CategoryPage(MetadataPageMixin, Page):
         context["incident_qs"] = urlencode(data)
 
         context["featured_blog_posts"] = [
-            f.page for f in self.featured_blogs.select_related("page")
+            f.page for f in self.featured_blogs.select_related("page") if f.page_id
         ]
         context["featured_incident_pages"] = [
             f.page
@@ -516,6 +516,7 @@ class CategoryPage(MetadataPageMixin, Page):
                 "page",
                 "page__teaser_image",
             )
+            if f.page_id
         ]
 
         # Hard code the date and month. The state

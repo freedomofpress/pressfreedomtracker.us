@@ -1108,7 +1108,7 @@ class IncidentPage(MetadataPageMixin, Page):
             return self.updated_days_ago < 30
         else:
             latest_update = self.updates.order_by("-date").first()
-            if latest_update:
+            if latest_update and latest_update.date:
                 delta = (
                     datetime.datetime.now(datetime.timezone.utc) - latest_update.date
                 )
@@ -1132,7 +1132,7 @@ class IncidentPage(MetadataPageMixin, Page):
         Returns the first category in the list of categories
         """
         first_category = self.categories.all().first()
-        if first_category:
+        if first_category and first_category.category_id:
             return first_category.category
         return None
 
@@ -1143,6 +1143,8 @@ class IncidentPage(MetadataPageMixin, Page):
         category_details = {}
         categories_without_metadata = {}
         for category in self.categories.all():
+            if not category.category_id:
+                continue
             category_fields = CATEGORY_FIELD_MAP.get(category.category.slug, [])
 
             if not category_fields:

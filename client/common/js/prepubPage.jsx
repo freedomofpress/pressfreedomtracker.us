@@ -1,15 +1,29 @@
 import React from 'react'
+import { ParentSize } from '@visx/responsive'
 import { createRoot } from 'react-dom/client'
 import CategoryIcon from './components/categoryIcon'
 import BarChart from '../../charts/js/components/BarChart'
 import Tooltip from '../../charts/js/components/Tooltip'
 
-function PrepubBarChart({
+function PrepubBarChart(props) {
+	return (
+		<ParentSize>
+			{(parent) => <PrepubBarChartWidth {...props} parentWidth={parent.width} />}
+		</ParentSize>
+	)
+}
+
+function PrepubBarChartWidth({
 	width,
 	dataset,
+	parentWidth
 }) {
+	const mobileBreakpoint = 670
+	const chartWidth = parentWidth < mobileBreakpoint ? parentWidth : width
+	const chartHeight = parentWidth < mobileBreakpoint ? 280 : 250
+	const isMobileView = parentWidth < mobileBreakpoint
 	return (
-		<div className={'prepubChartContainer'} style={{ width: width}}>
+		<div className={'prepubChartContainer'} style={{ maxWidth: width}}>
 			<div className={'prepubChart'}>
 				<BarChart
 					data={dataset}
@@ -18,11 +32,11 @@ function PrepubBarChart({
 					titleLabel={'incidents'}
 					categoryColumn={'status'}
 					allCategories={["confirmed", "unconfirmed"]}
-					categoriesColors={{"unconfirmed": "#EEEEEE"}}
+					categoriesColors={{"unconfirmed": "#F4C280", "confirmed": "#E07A5F"}}
 					id={'prepub-page-bar-chart'}
-					width={width}
-					height={540}
-					isMobileView={false}
+					width={chartWidth}
+					height={chartHeight}
+					isMobileView={isMobileView}
 				/>
 			</div>
 		</div>
@@ -38,7 +52,29 @@ function PrepubIncidentCategoryCount({
 	const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 })
 
 	const updateTooltipPosition = (MouseEvent) => {
-		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
+		const tooltipWidth = 250 // approximate width of the tooltip in px
+		const tooltipHeight = 150 // approximate height of the tooltip in px
+		const padding = 10 // padding from the mouse pointer
+
+		let x = MouseEvent.clientX
+		let y = MouseEvent.clientY
+
+		// If tooltip would extend beyond the right edge of the window,
+		// position it to the left of the cursor instead
+		if (x + tooltipWidth + padding > window.innerWidth) {
+			x = x - tooltipWidth
+		}
+		// If tooltip would extend beyond the bottom edge of the window,
+		// center it vertically relative to the cursor
+		if (y + tooltipHeight + padding > window.innerHeight) {
+			y = y - tooltipHeight / 2
+		}
+		// If tooltip would extend beyond the top edge of the window,
+		// position it below the cursor instead
+		if (y < tooltipHeight) {
+			y = y + tooltipHeight + padding
+		}
+		setTooltipPosition({ x: x, y: y })
 	}
 	return (
 		<>
@@ -90,7 +126,7 @@ chartContainers.forEach((node) => {
 	const root = createRoot(node)
 	const chartDataset = JSON.parse(node.dataset.chartDataset)
 	root.render((
-		<PrepubBarChart width={1080} dataset={chartDataset} />
+		<PrepubBarChart width={670} dataset={chartDataset} />
 	))
 })
 

@@ -18,12 +18,12 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.29.6",
+    "@babel/eslint-parser": "^7.29.7",
     "@babel/plugin-transform-modules-commonjs": "^7.24.1",
     "@babel/polyfill": "^7.4.3",
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "autoprefixer": "^10.4.2",
-    "babel-eslint": "^10.0.1",
     "babel-jest": "^30.2.0",
     "babel-loader": "^9.1.2",
     "babel-plugin-add-module-exports": "^1.0.4",
@@ -68,7 +68,7 @@
     "react-dom": "^18.2.0",
     "react-modal": "^3.15.1",
     "regenerator-runtime": "^0.13.9",
-    "topojson-client": "^3.1.0",
-    "smartquotes": "^2.3.2"
+    "smartquotes": "^2.3.2",
+    "topojson-client": "^3.1.0"
   }
 }

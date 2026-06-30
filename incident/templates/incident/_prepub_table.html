@@ -1,0 +1,39 @@
+<table class="unconfirmed-incidents" style="--max-count: {{ max_incident_count }}">
+	<caption>
+		Updated {{ updated_time }}
+	</caption>
+	<thead>
+		<tr>
+			<th scope="col">Date</th>
+			<th scope="col">Location</th>
+			<th scope="col">Incidents</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in prepubs|slice:row_limit %}
+			<tr>
+				<td>{{ row.date|date:"n/j/y" }}</td>
+				<td>{{ row.city }}, {{ row.state }}</td>
+				<td>
+					<span style="--incident-count: {{ row.incident_count }}" class="no-js-fallback unconfirmed-incidents--count">
+						{{ row.incident_count  }}
+					</span>
+					<div
+						class="js-unconfirmed-incidents-count"
+						data-incident-count="{{ row.incident_count }}"
+						data-category-counts="{{ row.category_counts }}"
+					></div>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+	{% if row_limit %}
+		<tfoot>
+			<tr>
+				<td colspan="4">
+					<a href="{% url 'prepub_list' %}" class="btn btn-primary btn-block">View all {{ prepub_count }}</a>
+				</td>
+			</tr>
+		</tfoot>
+	{% endif %}
+</table>

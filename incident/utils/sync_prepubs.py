@@ -23,6 +23,16 @@ class PrepubSource:
     google_api_version: str
 
 
+@dataclass
+class DateParseResult:
+    value: datetime.date
+    precision: int
+
+
+class DateParseError(Exception):
+    pass
+
+
 def authenticate_service(source: PrepubSource):
     account_info = json.loads(source.google_sheets_credentials)
 
@@ -45,6 +55,24 @@ def fetch_sheet_data(source: PrepubSource):
         .execute()
     )
     return result.get("values", [])
+
+
+def parse_date(text: str) -> DateParseResult:
+    try:
+        parsed = datetime.strptime(text, "%m/%d/%Y").date()
+        return DateParseResult(
+            value=parsed, precision=PrepublicationIncident.DatePrecision.DAY
+        )
+    except ValueError:
+        pass
+
+    try:
+        parsed = datetime.strptime(text, "%m/%Y").date()
+        return DateParseResult(
+            value=parsed, precision=PrepublicationIncident.DatePrecision.MONTH
+        )
+    except ValueError:
+        raise DateParseError
 
 
 def sync_prepubs(source: PrepubSource):
@@ -102,8 +130,8 @@ def sync_prepubs(source: PrepubSource):
 
         # Date
         try:
-            parsed_date = datetime.strptime(row[idx_incident_date], "%m/%d/%Y").date()
-        except ValueError:
+            parsed_date = parse_date(row[idx_incident_date])
+        except DateParseError:
             errors.append(f'Row {row_number}: Invalid date "{row[idx_incident_date]}"')
             continue
 
@@ -123,7 +151,11 @@ def sync_prepubs(source: PrepubSource):
             errors.append(f'Row {row_number}: Invalid location "{city}, {regcode}"')
             continue
 
-        incident = PrepublicationIncident(date=parsed_date, location=geoname)
+        incident = PrepublicationIncident(
+            date=parsed_date.value,
+            date_precision=parsed_date.precision,
+            location=geoname,
+        )
         for item in categories:
             prepub_categories.append(
                 PrepublicationIncidentCategory(

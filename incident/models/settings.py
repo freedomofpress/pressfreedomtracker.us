@@ -22,6 +22,12 @@ class PrepublicationSettings(BaseGenericSetting):
         WEEK = "WEEK", "Weeks"
         MONTH = "MONTH", "Months"
 
+    is_enabled = models.BooleanField(
+        default=False,
+        verbose_name="Feature is Enabled",
+        help_text="If unchecked, unconfirmed incidents will be hidden on the home page and the full listing page will not be accessible.",
+    )
+
     timespan_length = models.PositiveSmallIntegerField(
         verbose_name="length",
         default=30,
@@ -35,6 +41,7 @@ class PrepublicationSettings(BaseGenericSetting):
     )
 
     panels = [
+        FieldPanel("is_enabled"),
         MultiFieldPanel(
             [
                 FieldRowPanel(
@@ -46,7 +53,7 @@ class PrepublicationSettings(BaseGenericSetting):
             ],
             heading="Timespan to Display",
             help_text="Prepublication Incidents will only be displayed on the home page and the full listing if they occurred within the given timespan from today's date.",
-        )
+        ),
     ]
 
     def get_timespan(self):
