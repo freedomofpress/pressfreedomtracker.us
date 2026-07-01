@@ -2,7 +2,12 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import express from 'express'
 import { Resvg } from '@resvg/resvg-js'
-import { generateBarChartSVG, generateHexbinUSMapSVG, generateTreemapChartSVG, generateUSMapSVG } from './lib'
+import {
+	generateBarChartSVG,
+	generateHexbinUSMapSVG,
+	generateTreemapChartSVG,
+	generateUSMapSVG,
+} from './lib'
 
 const PORT = process.env.PORT || 3000
 const app = express()

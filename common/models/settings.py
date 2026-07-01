@@ -8,7 +8,7 @@ from wagtail.blocks import RichTextBlock
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 
-from common.validators import validate_image_format, validate_template
+from common.validators import validate_template
 from common.blocks import Heading2
 
 from .choices import FILTER_CHOICES
@@ -64,51 +64,14 @@ class FooterSettings(BaseSiteSetting, ClusterableModel):
         on_delete=models.SET_NULL,
         related_name="+",
     )
-    partner_logo_text = models.CharField(max_length=255, blank=True, null=True)
-    partner_logo_link = models.ForeignKey(
-        "wagtailcore.Page",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-    )
 
     panels = [
         FieldPanel("body"),
         FieldPanel("menu"),
-        FieldPanel("partner_logo_text"),
-        FieldPanel("partner_logo_link"),
-        InlinePanel(
-            "footer_logos",
-            label="Footer Logos",
-            min_num=3,
-            max_num=6,
-        ),
     ]
 
     class Meta:
         verbose_name = "Site Footer"
-
-
-class FooterLogos(Orderable):
-    footer = ParentalKey(FooterSettings, related_name="footer_logos")
-    logo_url = models.URLField(
-        max_length=255, help_text="A URL or path for this logo to link to."
-    )
-    logo_image = models.ForeignKey(
-        "common.CustomImage",
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        related_name="+",
-        help_text="A white logo with a transparent background, ideally PNG format",
-        validators=[validate_image_format],
-    )
-
-    panels = [
-        FieldPanel("logo_image"),
-        FieldPanel("logo_url"),
-    ]
 
 
 @register_setting

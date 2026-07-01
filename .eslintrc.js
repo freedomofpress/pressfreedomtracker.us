@@ -55,5 +55,19 @@ module.exports = {
 		"import/no-unresolved": 0,
 		"radix": ["error", "as-needed"],
 		"semi": ["error", "never"]
-	}
+	},
+
+	"overrides": [
+		{
+			// The chart pregenerator is a Node service (not browser code), so
+			// console logging is expected. It also imports shared chart
+			// components without file extensions (resolved by esbuild/babel/jest).
+			"files": ["chart_pregenerator/**/*.js", "chart_pregenerator/**/*.jsx"],
+			"env": { "node": true },
+			"rules": {
+				"no-console": "off",
+				"import/extensions": "off"
+			}
+		}
+	]
 };
