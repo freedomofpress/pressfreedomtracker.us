@@ -178,7 +178,6 @@ export const generateTreemapChartSVG = async (req) => {
 			options.dateRange,
 			filterStates,
 		)
-		console.dir(branches, {depth: null})
 		const categoriesColorMap = branches ? [...(new Set([...branches.map((d) => d.title)]))]
 			.reduce(
 				(acc, category, i) => ({
@@ -293,7 +292,6 @@ export const generateUSMapSVG = async (req) => {
 	}
 }
 
-
 export const generateHexbinUSMapSVG = async (req) => {
 	let options = {
 		filterTags: null,
@@ -330,7 +328,8 @@ export const generateHexbinUSMapSVG = async (req) => {
 			options.dateRange,
 			filterStates,
 		)
-		const datasetAggregatedByGeo = filteredDataset && groupByState(filteredDataset) // Hexbin maps are always state-level
+		// Hexbin maps are always state-level
+		const datasetAggregatedByGeo = filteredDataset && groupByState(filteredDataset)
 		const incidentsOutsideUS = countIncidentsOutsideUS(filteredDataset)
 
 		return ReactDOMServer.renderToString(
@@ -345,7 +344,7 @@ export const generateHexbinUSMapSVG = async (req) => {
 			>
 				<HexbinUSMap
 					data={datasetAggregatedByGeo}
-					aggregationLocality={d => d.state}
+					aggregationLocality={(d) => d.state}
 					incidentsOutsideUS={incidentsOutsideUS}
 					width={options.width}
 					height={options.height}
