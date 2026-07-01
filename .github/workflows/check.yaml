@@ -210,7 +210,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Python ${{ env.VERSION_PYTHON }}
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ env.VERSION_PYTHON }}
 
