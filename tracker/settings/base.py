@@ -117,6 +117,7 @@ if os.environ.get("DJANGO_WHITENOISE"):
     STORAGES["staticfiles"] = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     }
+    WHITENOISE_ROOT = os.path.join(BASE_DIR, "common", "static")
 
 MIDDLEWARE.extend(
     [
