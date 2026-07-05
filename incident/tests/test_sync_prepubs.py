@@ -320,6 +320,16 @@ class TestSyncPrepubs(TestCase):
         )
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
+    def test_sync_prepubs_whitespace_around_location(self, mock_fetch):
+        mock_fetch.return_value = self.data + [
+            self.create_row(city="Albuquerque ", state=" NM")
+        ]
+        sync_prepubs(self.create_source())
+        PrepublicationIncident.objects.prefetch_related(
+            "categorizations__category",
+        ).get(location__name="Albuquerque", location__regcode="NM")
+
+    @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
     def test_sync_prepubs_invalid_washington_dc(self, mock_fetch):
         mock_fetch.return_value = self.data + [
             self.create_row(city="Washington, D.C.", state=" ")

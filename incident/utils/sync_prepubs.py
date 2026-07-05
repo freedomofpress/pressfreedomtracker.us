@@ -158,8 +158,8 @@ def sync_prepubs(source: PrepubSource):
             city = "Washington"
             regcode = "DC"
         else:
-            city = row[idx_city]
-            regcode = row[idx_state]
+            city = row[idx_city].strip()
+            regcode = row[idx_state].strip()
         try:
             geoname = GeoName.objects.get(name=city, regcode=regcode)
         except GeoName.DoesNotExist:
