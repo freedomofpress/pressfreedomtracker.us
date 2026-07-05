@@ -1508,9 +1508,9 @@ requests-oauthlib==2.0.0 \
     # via
     #   -r requirements.txt
     #   google-auth-oauthlib
-rich==13.7.0 \
-    --hash=sha256:5cb5123b5cf9ee70584244246816e9114227e0b98ad9176eede6ad54bf5403fa \
-    --hash=sha256:6da14c108c4866ee9520bbffa71f6fe3962e193b7da68720583850cd4548e235
+rich==15.0.0 \
+    --hash=sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb \
+    --hash=sha256:edd07a4824c6b40189fb7ac9bc4c52536e9780fbbfbddf6f1e2502c31b068c36
     # via bandit
 rpds-py==0.15.2 \
     --hash=sha256:02744236ac1895d7be837878e707a5c35fb8edc5137602f253b63623d7ad5c8c \
