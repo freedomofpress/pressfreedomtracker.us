@@ -49,9 +49,7 @@ class PrepubViewTestCase(TestCase):
         cls.chicago = create_geoname(name="Chicago", region="IL")
         cls.detroit = create_geoname(name="Detroit", region="MI")
 
-        cls.sync = PrepublicationIncidentSync.objects.create(
-            status=PrepublicationIncidentSync.Status.SUCCESS,
-        )
+        cls.sync = PrepublicationIncidentSync.objects.create(successful_rows=0)
 
         cls.settings = PrepublicationSettings.objects.create(
             is_enabled=True,

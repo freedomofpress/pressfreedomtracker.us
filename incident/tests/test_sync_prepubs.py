@@ -11,10 +11,10 @@ from geonames.models import GeoName
 from incident.models import (
     PrepublicationIncident,
     PrepublicationIncidentCategory,
-    PrepublicationIncidentSync,
 )
 from incident.utils.sync_prepubs import (
     PrepubSource,
+    SkippedRow,
     authenticate_service,
     fetch_sheet_data,
     sync_prepubs,
@@ -285,11 +285,11 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data + [
             self.create_row(incident_date="Jan 01, 2024")
         ]
-        _, message = sync_prepubs(self.create_source())
+        result = sync_prepubs(self.create_source())
 
         self.assertIn(
-            'Row 6: Invalid date "Jan 01, 2024"',
-            message,
+            SkippedRow(number=6, reason='Invalid date "Jan 01, 2024"'),
+            result.skipped_rows,
         )
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
@@ -297,7 +297,7 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data[:-1] + [
             self.create_row(incident_date="3/2026")
         ]
-        _, message = sync_prepubs(self.create_source())
+        sync_prepubs(self.create_source())
 
         prepub = PrepublicationIncident.objects.prefetch_related(
             "categorizations__category",
@@ -313,16 +313,16 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data + [
             self.create_row(city="Invalid City", state="IV")
         ]
-        _, message = sync_prepubs(self.create_source())
+        result = sync_prepubs(self.create_source())
         self.assertIn(
-            'Row 6: Invalid location "Invalid City, IV"',
-            message,
+            SkippedRow(number=6, reason='Invalid location "Invalid City, IV"'),
+            result.skipped_rows,
         )
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
     def test_sync_prepubs_invalid_washington_dc(self, mock_fetch):
         mock_fetch.return_value = self.data + [
-            self.create_row(city="Washington, D.C.", state="")
+            self.create_row(city="Washington, D.C.", state=" ")
         ]
         sync_prepubs(self.create_source())
         PrepublicationIncident.objects.prefetch_related(
@@ -332,11 +332,10 @@ class TestSyncPrepubs(TestCase):
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
     def test_sync_prepubs_invalid_category(self, mock_fetch):
         mock_fetch.return_value = self.data + [self.create_row(categories="Invalid")]
-        status, message = sync_prepubs(self.create_source())
-        self.assertEqual(status, PrepublicationIncidentSync.Status.INVALID_DATA)
+        result = sync_prepubs(self.create_source())
         self.assertIn(
-            'Row 6: Invalid category "Invalid"',
-            message,
+            SkippedRow(number=6, reason='Invalid category "Invalid"'),
+            result.skipped_rows,
         )
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
@@ -344,13 +343,12 @@ class TestSyncPrepubs(TestCase):
         mock_fetch.return_value = self.data + [
             self.create_row(categories="Invalid", city="Invalid")
         ]
-        status, message = sync_prepubs(self.create_source())
-        self.assertEqual(status, PrepublicationIncidentSync.Status.INVALID_DATA)
+        result = sync_prepubs(self.create_source())
 
         # Category error should take precedence.
         self.assertIn(
-            'Row 6: Invalid category "Invalid"',
-            message,
+            SkippedRow(number=6, reason='Invalid category "Invalid"'),
+            result.skipped_rows,
         )
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
@@ -361,8 +359,8 @@ class TestSyncPrepubs(TestCase):
                 categories="Prior Restraint, Equipment Search/Seizure",
             )
         ]
-        status, _ = sync_prepubs(self.create_source())
-        self.assertEqual(status, PrepublicationIncidentSync.Status.SUCCESS)
+        result = sync_prepubs(self.create_source())
+        self.assertEqual(result.successful_rows, 2)
 
         prepub = PrepublicationIncident.objects.prefetch_related(
             "categorizations__category",
@@ -391,8 +389,8 @@ class TestSyncPrepubs(TestCase):
                 state="",
             )
         ]
-        status, _ = sync_prepubs(self.create_source())
-        self.assertEqual(status, PrepublicationIncidentSync.Status.SUCCESS)
+        result = sync_prepubs(self.create_source())
+        self.assertEqual(result.successful_rows, 1)
 
     @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
     def test_sync_prepubs(self, mock_fetch):
@@ -436,23 +434,3 @@ class TestSyncPrepubs(TestCase):
 
         with self.assertRaises(PrepublicationIncidentCategory.DoesNotExist):
             PrepublicationIncidentCategory.objects.get(pk=existing_prepub_category.pk)
-
-    @mock.patch("incident.utils.sync_prepubs.fetch_sheet_data")
-    def test_sync_prepubs_keeps_existing_if_errors(self, mock_fetch):
-        existing_prepub = PrepublicationIncident.objects.create(
-            date=datetime.date(2025, 12, 31),
-            location=GeoName.objects.get(
-                name="Madison",
-                regcode="WI",
-            ),
-        )
-        existing_prepub_category = PrepublicationIncidentCategory.objects.create(
-            incident=existing_prepub,
-            category=self.category_prior_restraint,
-        )
-        PrepublicationIncidentCategory.objects.get(pk=existing_prepub_category.pk)
-
-        mock_fetch.return_value = self.data + [self.create_row(categories="Invalid")]
-        sync_prepubs(self.create_source())
-        PrepublicationIncident.objects.get(pk=existing_prepub.pk)
-        PrepublicationIncidentCategory.objects.get(pk=existing_prepub_category.pk)

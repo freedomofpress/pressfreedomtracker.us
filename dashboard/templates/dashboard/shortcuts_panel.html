@@ -1,4 +1,4 @@
-{% load wagtailsettings_tags %}
+{% load wagtailsettings_tags wagtailadmin_tags %}
 {% get_settings use_default_site=True %}
 <section class="panel nice-padding" style="font-size: 1.5em; line-height: 1.6">
 	<ul style="list-style-type: none; padding: 0">
@@ -27,24 +27,31 @@
 		{% endwith %}
 	</ul>
 </section>
-{% if prepub_sync_completed_at %}
-	<section class="panel nice-padding" style="font-size: 1.5em; line-height: 1.6">
-		<p><strong>Prepublication Incidents Sync</strong>
-			<br>
-			Completed at: {{ prepub_sync_completed_at|date:"SHORT_DATETIME_FORMAT" }}
-			{% if not prepub_sync_extended_message %}
-				<br>
-				{{ prepub_sync_message }}
+{% if prepub_sync %}
+	{% panel id="unconfirmed-incidents" heading="Unconfirmed Incidents Sync" classname="w-panel--dashboard" %}
+	<div class="w-mt-0 w-mb-4 w-px-6 w-body-text-large">
+		<dl>
+			<dt>Sync process last run at</dt>
+			<dd>{{ prepub_sync.completed_at|date:"SHORT_DATETIME_FORMAT" }}</dd>
+
+			{% if prepub_sync.error_message  %}
+				<dt>Error message</dt>
+				<dd>{{ prepub_sync.error_message }}</dd>
 			{% endif %}
-		</p>
-		{% if prepub_sync_extended_message %}
-			<p>
-				Sync did not succeed.
-			</p>
+
+			<dt>Unconfirmed incidents synced</dt>
+			<dd>{{ prepub_sync.successful_rows }}</dd>
+		</dl>
+		{% if prepub_sync.skipped_rows.all %}
 			<details>
-				<summary>Details</summary>
-				{{ prepub_sync_message }}
+				<summary style="display: list-item">Rows skipped: {{ prepub_sync.skipped_rows.count }}</summary>
+				<ul>
+					{% for row in prepub_sync.skipped_rows.all %}
+						<li>Row {{ row.number }}: {{ row.reason }}</li>
+					{% endfor %}
+				</ul>
 			</details>
 		{% endif %}
-	</section>
+	</div>
+	{% endpanel %}
 {% endif %}

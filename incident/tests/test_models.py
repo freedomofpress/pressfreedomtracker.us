@@ -5,7 +5,11 @@ from django.test import TestCase
 
 from incident import choices
 from incident.devdata import create_prepub
-from incident.models import PrepublicationIncident
+from incident.models import (
+    PrepublicationIncident,
+    PrepublicationIncidentSync,
+    PrepublicationSyncSkippedRow,
+)
 
 from .factories import (
     IncidentChargeFactory,
@@ -192,3 +196,25 @@ class TestPrepublicationIncidentQueryset(TestCase):
                 else:
                     self.assertQuerySetEqual(prepubs_in_range_above, [self.prepub1])
                     self.assertQuerySetEqual(prepubs_in_range_below, [self.prepub1])
+
+
+class TestPrepublicationIncidentSync(TestCase):
+    def setUp(self):
+        self.instance = PrepublicationIncidentSync.objects.create(successful_rows=0)
+
+    def test_str_method(self):
+        self.assertIn("successful_rows=0", str(self.instance))
+
+
+class TestPrepublicationSyncSkippedRow(TestCase):
+    def setUp(self):
+        self.sync = PrepublicationIncidentSync.objects.create()
+        self.instance = PrepublicationSyncSkippedRow.objects.create(
+            sync=self.sync,
+            number=1,
+            reason="Invalid",
+        )
+
+    def test_str_method(self):
+        self.assertIn("number=1", str(self.instance))
+        self.assertIn("reason='Invalid'", str(self.instance))

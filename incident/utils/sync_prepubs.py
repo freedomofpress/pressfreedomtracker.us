@@ -10,7 +10,6 @@ from geonames.models import GeoName
 from incident.models import (
     PrepublicationIncident,
     PrepublicationIncidentCategory,
-    PrepublicationIncidentSync,
 )
 
 
@@ -27,6 +26,18 @@ class PrepubSource:
 class DateParseResult:
     value: datetime.date
     precision: int
+
+
+@dataclass
+class SkippedRow:
+    number: int
+    reason: str
+
+
+@dataclass
+class PrepubSyncResult:
+    skipped_rows: list[SkippedRow]
+    successful_rows: int
 
 
 class DateParseError(Exception):
@@ -79,8 +90,8 @@ def sync_prepubs(source: PrepubSource):
     values = fetch_sheet_data(source)
 
     prepubs = []
+    skipped_rows = []
     prepub_categories = []
-    errors = []
     header = values[source.header_row_index]
     data_start_index = source.header_row_index + 1
 
@@ -120,19 +131,23 @@ def sync_prepubs(source: PrepubSource):
                     CategoryPage.objects.get(google_sheets_name=category_name)
                 )
             except CategoryPage.DoesNotExist:
-                category_errors.append(
-                    f'Row {row_number}: Invalid category "{category_name}"'
-                )
+                category_errors.append(f'Invalid category "{category_name}"')
 
         if category_errors:
-            errors.extend(category_errors)
+            skipped_rows.append(
+                SkippedRow(number=row_number, reason="; ".join(category_errors))
+            )
             continue
 
         # Date
         try:
             parsed_date = parse_date(row[idx_incident_date])
         except DateParseError:
-            errors.append(f'Row {row_number}: Invalid date "{row[idx_incident_date]}"')
+            skipped_rows.append(
+                SkippedRow(
+                    number=row_number, reason=f'Invalid date "{row[idx_incident_date]}"'
+                )
+            )
             continue
 
         # Location
@@ -148,7 +163,11 @@ def sync_prepubs(source: PrepubSource):
         try:
             geoname = GeoName.objects.get(name=city, regcode=regcode)
         except GeoName.DoesNotExist:
-            errors.append(f'Row {row_number}: Invalid location "{city}, {regcode}"')
+            skipped_rows.append(
+                SkippedRow(
+                    number=row_number, reason=f'Invalid location "{city}, {regcode}"'
+                )
+            )
             continue
 
         incident = PrepublicationIncident(
@@ -164,14 +183,8 @@ def sync_prepubs(source: PrepubSource):
                 )
             )
         prepubs.append(incident)
-    if errors:
-        return (PrepublicationIncidentSync.Status.INVALID_DATA, "\n".join(errors))
-    else:
-        PrepublicationIncident.objects.all().delete()
-        PrepublicationIncident.objects.bulk_create(prepubs)
-        PrepublicationIncidentCategory.objects.bulk_create(prepub_categories)
-        num_created = len(prepubs)
-        return (
-            PrepublicationIncidentSync.Status.SUCCESS,
-            f"{num_created} prepubs retrieved.",
-        )
+    PrepublicationIncident.objects.all().delete()
+    PrepublicationIncident.objects.bulk_create(prepubs)
+    PrepublicationIncidentCategory.objects.bulk_create(prepub_categories)
+    num_created = len(prepubs)
+    return PrepubSyncResult(successful_rows=num_created, skipped_rows=skipped_rows)
