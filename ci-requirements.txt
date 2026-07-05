@@ -93,7 +93,7 @@ pytest==9.1.1 \
     # via
     #   -r ci-requirements.in
     #   pytest-testinfra
-pytest-testinfra==6.4.0 \
-    --hash=sha256:5c3d1f61852a4e2c08bf40dbdf9ff004b10ee8308985883986e53d1610c0b2c3 \
-    --hash=sha256:b3f147cf18608298381b976ba5e161bc625e9f58ca6d8d61eb769fbd99716de6
+pytest-testinfra==10.2.2 \
+    --hash=sha256:537fd5eb88da618c1f461248aa20594cf8d44512e8519b239837e83875e1e9cd \
+    --hash=sha256:b785602b0aa868c858e4ef121a8cc0d13a81c04b74ec0364d70969540f8e7c31
     # via -r ci-requirements.in
