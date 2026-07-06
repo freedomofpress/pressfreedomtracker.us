@@ -1,6 +1,7 @@
 import json
 from unittest import mock
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.test import RequestFactory, TestCase, override_settings
@@ -135,7 +136,9 @@ class MailchimpInterestViewTest(TestCase):
         )
         self.assertRedirects(response, expected_url)
 
+    @override_settings()
     def test_view_reports_error_if_no_api_key(self):
+        del settings.MAILCHIMP_API_KEY
         self.client.force_login(self.user)
         response = self.client.get(reverse("mailchimp_interests"))
         self.assertEqual(response.status_code, 200)

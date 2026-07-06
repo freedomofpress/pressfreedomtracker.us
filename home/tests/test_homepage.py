@@ -70,9 +70,7 @@ class HomePageTest(TestCase):
             is_enabled=True,
         )
         create_prepub(date=date.today())
-        PrepublicationIncidentSync.objects.create(
-            status=PrepublicationIncidentSync.Status.SUCCESS,
-        )
+        PrepublicationIncidentSync.objects.create(successful_rows=1)
         response = self.client.get("/")
         self.assertContains(response, "<span>1</span> incident ")
 
@@ -82,9 +80,7 @@ class HomePageTest(TestCase):
         )
         create_prepub(date=date.today())
         create_prepub(date=date.today())
-        PrepublicationIncidentSync.objects.create(
-            status=PrepublicationIncidentSync.Status.SUCCESS,
-        )
+        PrepublicationIncidentSync.objects.create(successful_rows=2)
         response = self.client.get("/")
         self.assertContains(response, "<span>2</span> incidents ")
 
@@ -110,9 +106,7 @@ class HomePageTest(TestCase):
         # Should not be included, because it's too old.
         create_prepub(date=(today - timedelta(days=1)) - prepub_settings.get_timespan())
 
-        PrepublicationIncidentSync.objects.create(
-            status=PrepublicationIncidentSync.Status.SUCCESS,
-        )
+        PrepublicationIncidentSync.objects.create(successful_rows=2)
         response = self.client.get("/")
         self.assertEqual(response.context["prepub_count"], 2)
 

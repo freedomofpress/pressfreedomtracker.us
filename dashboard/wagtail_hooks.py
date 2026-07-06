@@ -12,14 +12,15 @@ class ShortcutsPanel(Component):
 
     def get_context_data(self, parent_context):
         context = super().get_context_data(parent_context)
-        prepub_sync = PrepublicationIncidentSync.objects.first()
+        prepub_sync = PrepublicationIncidentSync.objects.prefetch_related(
+            "skipped_rows"
+        ).first()
         if prepub_sync:
-            context["prepub_sync_completed_at"] = prepub_sync.completed_at
-            context["prepub_sync_message"] = prepub_sync.message
-            if prepub_sync.status == PrepublicationIncidentSync.Status.SUCCESS:
-                context["prepub_sync_extended_message"] = False
-            else:
+            context["prepub_sync"] = prepub_sync
+            if len(prepub_sync.skipped_rows.all()) > 0:
                 context["prepub_sync_extended_message"] = True
+            else:
+                context["prepub_sync_extended_message"] = False
         return context
 
 

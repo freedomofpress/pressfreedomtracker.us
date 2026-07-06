@@ -8,7 +8,7 @@ from common.models.settings import (
     SearchSettings,
 )
 from dashboard.wagtail_hooks import add_shortcuts_panel
-from incident.models import PrepublicationIncidentSync
+from incident.models import PrepublicationIncidentSync, PrepublicationSyncSkippedRow
 from incident.tests.factories import (
     IncidentIndexPageFactory,
 )
@@ -42,17 +42,31 @@ class ShortcutsPanelTest(WagtailPageTestCase):
     @hooks.register_temporarily("construct_homepage_panels", add_shortcuts_panel)
     def test_prepublication_status(self):
         PrepublicationIncidentSync.objects.create(
-            status=PrepublicationIncidentSync.Status.SUCCESS,
-            message="3 incidents retrieved.",
+            successful_rows=3,
         )
         response = self.client.get(reverse("wagtailadmin_home"))
-        self.assertContains(response, "3 incidents retrieved.")
+        self.assertContains(
+            response, "<dt>Unconfirmed incidents synced</dt><dd>3</dd>", html=True
+        )
+        self.assertNotContains(response, "Rows skipped")
 
     @hooks.register_temporarily("construct_homepage_panels", add_shortcuts_panel)
     def test_prepublication_sync_failed_message(self):
-        PrepublicationIncidentSync.objects.create(
-            status=PrepublicationIncidentSync.Status.INVALID_DATA,
-            message="Row 3: Invalid date Jan 13, 2010",
+        PrepublicationIncidentSync.objects.create(error_message="Connection failed")
+        response = self.client.get(reverse("wagtailadmin_home"))
+        self.assertContains(response, "Error message")
+        self.assertContains(response, "Connection failed")
+
+    @hooks.register_temporarily("construct_homepage_panels", add_shortcuts_panel)
+    def test_prepublication_skipped_rows_message(self):
+        sync = PrepublicationIncidentSync.objects.create()
+        PrepublicationSyncSkippedRow.objects.create(
+            sync=sync, number=3, reason="Invalid date Jan 13, 2010"
+        )
+        PrepublicationSyncSkippedRow.objects.create(
+            sync=sync, number=4, reason="Invalid date Jan 14, 2010"
         )
         response = self.client.get(reverse("wagtailadmin_home"))
-        self.assertContains(response, "Sync did not succeed")
+        self.assertContains(response, "Rows skipped: 2", html=True)
+        self.assertContains(response, "Invalid date Jan 13, 2010")
+        self.assertContains(response, "Invalid date Jan 14, 2010")
