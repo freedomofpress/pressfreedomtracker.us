@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 
 import structlog
 
-from incident.models import PrepublicationIncidentSync
+from incident.models import PrepublicationIncidentSync, PrepublicationSyncSkippedRow
 from incident.utils.sync_prepubs import sync_prepubs, PrepubSource
 
 
@@ -32,30 +32,40 @@ class Command(BaseCommand):
             )
             return
 
+        error_message = ""
         try:
-            status, message = sync_prepubs(source)
+            result = sync_prepubs(source)
+            successful_rows = result.successful_rows
+            skipped_rows = result.skipped_rows
         except Exception as e:
-            message = f"Prepub sync failed: {e}"
-            status = PrepublicationIncidentSync.Status.FAILED
             self.stdout.write(f"Prepub sync failed: {e}")
             logger.exception("Prepub sync failed")
-            raise
+            error_message = str(e)
+            successful_rows = 0
+            skipped_rows = []
 
         structlog.contextvars.bind_contextvars(
-            sync_prepubs_message=message,
-            sync_prepubs_status=status.name,
+            sync_prepubs_successful_rows=successful_rows,
+            sync_prepubs_skipped_rows=len(skipped_rows),
         )
-        if status == PrepublicationIncidentSync.Status.SUCCESS:
-            logger.info("Prepublication sync succeeded")
-        else:
-            logger.warning("Prepublication sync did not succeed")
+        logger.info("Prepublication sync completed")
+
         sync = PrepublicationIncidentSync.objects.first()
         if not sync:
             PrepublicationIncidentSync.objects.create(
-                message=message,
-                status=status,
+                successful_rows=successful_rows,
+                error_message=error_message,
             )
         else:
-            sync.message = message
-            sync.status = status
+            sync.successful_rows = successful_rows
+            sync.error_message = error_message
             sync.save()
+        PrepublicationSyncSkippedRow.objects.all().delete()
+        for skipped_row in skipped_rows:
+            PrepublicationSyncSkippedRow.objects.bulk_create(
+                [
+                    PrepublicationSyncSkippedRow(
+                        sync=sync, number=skipped_row.number, reason=skipped_row.reason
+                    )
+                ]
+            )

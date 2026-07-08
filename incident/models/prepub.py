@@ -134,14 +134,26 @@ class PrepublicationIncidentCategory(Orderable):
 
 
 class PrepublicationIncidentSync(models.Model):
-    class Status(models.TextChoices):
-        SUCCESS = "SUCCESS"
-        INVALID_DATA = "INVALID_DATA"
-        FAILED = "FAILED"
-
-    status = models.CharField(max_length=255, choices=Status.choices)
+    successful_rows = models.IntegerField(null=True, blank=True, default=None)
     completed_at = models.DateTimeField(auto_now=True)
-    message = models.TextField(default="")
+    error_message = models.TextField(default="")
 
     class Meta:
         ordering = ["-completed_at"]
+
+    def __str__(self):
+        completed_at = self.completed_at.astimezone().replace(microsecond=0).isoformat()
+        return f"completed_at={completed_at}, successful_rows={self.successful_rows}"
+
+
+class PrepublicationSyncSkippedRow(models.Model):
+    sync = models.ForeignKey(
+        PrepublicationIncidentSync,
+        on_delete=models.CASCADE,
+        related_name="skipped_rows",
+    )
+    number = models.IntegerField()
+    reason = models.TextField()
+
+    def __str__(self):
+        return f"row number={self.number}, reason='{self.reason}'"
