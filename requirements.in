@@ -1,6 +1,6 @@
 beautifulsoup4
 bleach>=6.4.0
-cryptography>=48.0.1
+cryptography>=49.0.0
 Django>=5.2.13,<6.0
 djangorestframework>=3.14
 django-anymail
