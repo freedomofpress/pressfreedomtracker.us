@@ -1699,9 +1699,9 @@ tqdm==4.66.4 \
     # via
     #   -r requirements.txt
     #   wagtail-inventory
-traitlets==5.14.0 \
-    --hash=sha256:f14949d23829023013c47df20b4a76ccd1a85effb786dc060f34de7948361b33 \
-    --hash=sha256:fcdaa8ac49c04dfa0ed3ee3384ef6dfdb5d6f3741502be247279407679296772
+traitlets==5.15.1 \
+    --hash=sha256:770a53705f84b81ac107e83a1b3328ff2dae16094d8fc3cfc004e4b22dfd8e92 \
+    --hash=sha256:7b1c07854fe25acb39e009bae49f11b79ff6cbb2f27999104e9110e7a6b53722
     # via
     #   ipython
     #   matplotlib-inline
