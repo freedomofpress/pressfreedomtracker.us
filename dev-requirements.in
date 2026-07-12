@@ -1,4 +1,5 @@
--r requirements.txt
+-c requirements.txt
+-r requirements.in
 bandit
 beautifulsoup4
 colorama<1
