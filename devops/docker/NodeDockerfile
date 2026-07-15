@@ -1,16 +1,15 @@
-# sha256 as of 2026-06-18
-FROM node:22-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS node-assets
+# sha256 as of 2026-06-26
+FROM node:26.4.0-trixie@sha256:b46a10d964ad15136ebdf9012142131481caa0697d7a4d4eafe4bbabd818f876 AS node-assets
 
-# Make npm output less verbose
-ENV NPM_CONFIG_LOGLEVEL warn
-
-RUN apk add --no-cache paxctl python3 make g++ jq git
-RUN paxctl -cm /usr/local/bin/node
+ARG USERID
 
 COPY devops/docker/node-start.sh /usr/bin/node-start.sh
 
-ARG USERID
-RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    jq \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 
 USER ${USERID}
 CMD [ "/usr/bin/node-start.sh" ]

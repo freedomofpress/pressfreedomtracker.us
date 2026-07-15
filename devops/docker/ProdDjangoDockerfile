@@ -1,12 +1,5 @@
-# sha256 as of 2026-06-18
-FROM node:22-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS node-assets
-
-# Make npm output less verbose
-ENV NPM_CONFIG_LOGLEVEL warn
-
-# Oddly, node-sass requires both python and make to build bindings
-RUN apk add --no-cache paxctl python3 make g++
-RUN paxctl -cm /usr/local/bin/node
+# sha256 as of 2026-06-26
+FROM node:26.4.0-trixie@sha256:b46a10d964ad15136ebdf9012142131481caa0697d7a4d4eafe4bbabd818f876 AS node-assets
 
 # Install gulp globally so it can be used during builds
 RUN npm install --global gulp-cli
@@ -20,21 +13,22 @@ FROM python:3.14.6-slim-trixie@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4
 LABEL MAINTAINER="Freedom of the Press Foundation"
 LABEL APP="pressfreedomtracker.us"
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential libc6-dev \
     curl \
-    gcc \
     git \
     libpq-dev \
     libssl-dev \
     netcat-traditional \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 
 COPY devops/docker/django-start.sh /usr/local/bin
 RUN  chmod +x /usr/local/bin/django-start.sh
 
 ARG USERID
-RUN getent passwd "${USERID?USERID must be supplied}" || adduser --uid "${USERID}" --disabled-password --gecos "" gcorn
+RUN getent passwd "${USERID?USERID must be supplied}" || \
+    useradd --create-home --no-log-init --uid "${USERID}" --user-group  gcorn
 
 COPY --from=node-assets /src-files/ /django/
 # Unfortunately the chown flag in COPY is not
