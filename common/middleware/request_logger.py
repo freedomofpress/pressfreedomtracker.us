@@ -1,6 +1,7 @@
 import time
 import uuid
 
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 import structlog
 
@@ -26,7 +27,7 @@ class RequestLogMiddleware(object):
         self.response_keys = ("charset", "reason_phrase", "status_code")
 
     def process_exception(self, request, exception):
-        if isinstance(exception, (Http404, PermissionDenied)):
+        if not isinstance(exception, (Http404, PermissionDenied)):
             logger.exception("request_failed")
 
     def __call__(self, request):
