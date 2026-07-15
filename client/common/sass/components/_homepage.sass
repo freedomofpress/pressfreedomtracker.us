@@ -33,13 +33,23 @@
 
 .homepage-unconfirmed
 	display: grid
-	gap: 2rem
+	gap: 1.5rem
+	padding-top: 1rem
+	padding-bottom: .375rem
 
 	+tablet-up
+		gap: 2rem
 		grid-template-columns: 1fr 1fr
+	+desktop-up
+		gap: 6rem
+
+	.homepage-unconfirmed-text
+		> * + *
+			margin: .5rem 0 0.375
 
 	.homepage-unconfirmed-lede
 		font-size: $font-size-h3
+		margin: 0
 
 		span
 			background-color: $black
