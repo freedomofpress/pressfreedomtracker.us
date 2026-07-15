@@ -12,16 +12,12 @@ RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free
     fc-cache -f && \
     rm -rf /var/lib/apt/lists/*
 
-# Ensure npm can correctly set cache information in ~/.npm
-ENV HOME=/home/node
-RUN mkdir -p /home/node/.npm
-
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 COPY chart_pregenerator /opt/chart-pregenerator
 COPY ./client /opt/chart-pregenerator/client
 RUN chown -R "${USERID}" /opt/chart-pregenerator
-RUN chown -R "${USERID}" /home/node/.npm
 WORKDIR /opt/chart-pregenerator
+
 USER ${USERID}
 
 RUN npm install
