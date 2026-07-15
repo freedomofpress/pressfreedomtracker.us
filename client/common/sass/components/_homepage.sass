@@ -33,13 +33,19 @@
 
 .homepage-unconfirmed
 	display: grid
-	gap: 2rem
+	gap: 1.5rem
+	padding-top: 1rem
+	padding-bottom: .875rem
 
 	+tablet-up
+		gap: 2rem
 		grid-template-columns: 1fr 1fr
+	+desktop-up
+		gap: 6rem
 
 	.homepage-unconfirmed-lede
 		font-size: $font-size-h3
+		margin: 0
 
 		span
 			background-color: $black
@@ -49,13 +55,7 @@
 	.homepage-unconfirmed-description
 		font-size: $font-size-p
 		color: $gray-text
+		margin: .5rem 0 0
 
 		a
 			color: inherit
-
-	table.unconfirmed-incidents
-		tr > :nth-child(1)
-			width: 20%
-
-		tr > :nth-child(2)
-			width: 25%
