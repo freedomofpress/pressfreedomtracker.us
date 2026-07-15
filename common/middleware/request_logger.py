@@ -26,7 +26,7 @@ class RequestLogMiddleware(object):
         self.response_keys = ("charset", "reason_phrase", "status_code")
 
     def process_exception(self, request, exception):
-        if not isinstance(exception, Http404):
+        if isinstance(exception, (Http404, PermissionDenied)):
             logger.exception("request_failed")
 
     def __call__(self, request):
