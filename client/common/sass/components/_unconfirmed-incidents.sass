@@ -1,9 +1,22 @@
+.unconfirmed-incidents-page
+	> * + *
+		margin: 2rem 0
+
+// Resize based on the width of its wrapper, not the viewport,
+// so we can match behavior between homepage and /unconfirmed-incidents.
+.unconfirmed-incidents-wrapper
+	container: unconfirmed-incidents / inline-size
+
+=unconfirmed-narrow
+	@container unconfirmed-incidents (max-width: 520px)
+		@content
+
 .unconfirmed-incidents
 	--max-count: 1
 	table-layout: fixed
 	border-collapse: collapse
 	width: min(670px, 100%)
-	margin: 10px 0
+	margin-top: 10px
 
 	thead
 		border: solid 3px #000
@@ -14,32 +27,37 @@
 		border: solid 3px #000
 		font-size: 1rem
 
+		tr
+			background-color: $white
+
+		tr:nth-child(even)
+			background-color: $section-background
+
 	th, td
 		padding: 0.6em
 
+
 	tr > :nth-child(1)
 		width: 16%
-		+mobile-down
+		+unconfirmed-narrow
 			width: 24%
 			padding-right: 0
 
 	tr > :nth-child(2)
 		width: 25%
-		+mobile-down
+		+unconfirmed-narrow
 			width: 36%
 			padding-right: 0
 
-	tr:nth-child(even)
-		background-color: $section-background
 
 	caption
-		padding: 1em
+		padding: 1em .5em 0 0
 		color: $gray-text
 		caption-side: bottom
 		font-size: $font-size-small-ui
 		text-align: right
-		+mobile-down
-			padding: 0.6em
+		+unconfirmed-narrow
+			padding: 0.6em 0 0  0
 
 	tfoot td
 		padding: 0
@@ -80,7 +98,7 @@
 		-webkit-font-smoothing: antialiased
 		-moz-osx-font-smoothing: grayscale
 
-		+mobile-down
+		+unconfirmed-narrow
 			--min-unit: 1rem
 			padding: 0
 

@@ -4,17 +4,18 @@
 
 {% block main %}
 	<h1 class="unconfirmed-incidents--page-title page-title">Unconfirmed Incidents</h1>
-	<section class="simplepage-body">
+	<section class="simplepage-body unconfirmed-incidents-page">
 		<p>Unconfirmed incidents are possible press freedom aggressions that our team is working to verify for documentation. Read more about the reporting process on our FAQ page.</p>
-
-		<h2>Past 30 days</h2>
-
-		<div
-			class="js-prepub-bar-chart"
-			data-chart-dataset="{{ bar_chart_dataset }}"
-		></div>
-
-		<h2>Ongoing Unconfirmed Incidents</h2>
-		{% include "incident/_prepub_table.html" with prepubs=prepubs max_incident_count=max_incident_count updated_time=updated_time row_limit=None only %}
+		<section>
+			<h2>Past 30 days</h2>
+			<div
+				class="js-prepub-bar-chart"
+				data-chart-dataset="{{ bar_chart_dataset }}"
+			></div>
+		</section>
+		<section>
+			<h2>Ongoing Unconfirmed Incidents</h2>
+			{% include "incident/_prepub_table.html" with prepubs=prepubs max_incident_count=max_incident_count updated_time=updated_time row_limit=None only %}
+		</section>
 	</section>
 {% endblock %}

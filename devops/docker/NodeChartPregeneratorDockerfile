@@ -1,22 +1,22 @@
-# sha256 as of 2026-06-18
-FROM node:22-alpine@sha256:21f403ab171f2dc89bad4dd69d7721bfd15f084ccb46cdd225f31f2bc59b5c9a AS node-assets
-
-RUN apk add --no-cache paxctl python3 make g++ curl
-RUN paxctl -cm /usr/local/bin/node
-
-# Install fonts
-RUN apk --no-cache add msttcorefonts-installer fontconfig && \
-    update-ms-fonts && \
-    fc-cache -f
-
-# Make npm output less verbose
-ENV NPM_CONFIG_LOGLEVEL warn
-# Ensure npm can correctly set cache information in ~/.npm
-ENV HOME /home/node
-RUN mkdir -p /home/node/.npm
+# sha256 as of 2026-07-15
+FROM node:26.5.0-trixie@sha256:0473e7dc433a1310f436edee02aa79737ec78a4b345433ab0963d4a256f9ad85 AS node-assets
 
 ARG USERID
-RUN getent passwd "${USERID?USERID must be supplied}" || adduser -D -g "" -u "${USERID}" pft_node
+
+RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
+    echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        fontconfig \
+        ttf-mscorefonts-installer && \
+    fc-cache -f && \
+    rm -rf /var/lib/apt/lists/*
+
+# Ensure npm can correctly set cache information in ~/.npm
+ENV HOME=/home/node
+RUN mkdir -p /home/node/.npm
+
+RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 COPY chart_pregenerator /opt/chart-pregenerator
 COPY ./client /opt/chart-pregenerator/client
 RUN chown -R "${USERID}" /opt/chart-pregenerator
