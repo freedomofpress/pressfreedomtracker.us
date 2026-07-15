@@ -3,15 +3,15 @@ FROM node:26.4.0-trixie@sha256:b46a10d964ad15136ebdf9012142131481caa0697d7a4d4ea
 
 ARG USERID
 
-RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware" > /etc/apt/sources.list
-RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
-
-RUN apt-get update && \
+RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
+    echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
         fontconfig \
-        ttf-mscorefonts-installer \
-    && fc-cache -f \
-    && rm -rf /var/lib/apt/lists/*
+        ttf-mscorefonts-installer && \
+    fc-cache -f && \
+    rm -rf /var/lib/apt/lists/*
+
 
 COPY devops/docker/node-pregenerator-start.sh /usr/bin/node-pregenerator-start.sh
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
