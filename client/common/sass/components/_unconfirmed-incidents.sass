@@ -2,6 +2,15 @@
 	> * + *
 		margin: 2rem 0
 
+// Resize based on the width of its wrapper, not the viewport,
+// so we can match behavior between homepage and /unconfirmed-incidents.
+.unconfirmed-incidents-wrapper
+	container: unconfirmed-incidents / inline-size
+
+=unconfirmed-narrow
+	@container unconfirmed-incidents (max-width: 520px)
+		@content
+
 .unconfirmed-incidents
 	--max-count: 1
 	table-layout: fixed
@@ -30,13 +39,13 @@
 
 	tr > :nth-child(1)
 		width: 16%
-		+mobile-down
+		+unconfirmed-narrow
 			width: 24%
 			padding-right: 0
 
 	tr > :nth-child(2)
 		width: 25%
-		+mobile-down
+		+unconfirmed-narrow
 			width: 36%
 			padding-right: 0
 
@@ -47,7 +56,7 @@
 		caption-side: bottom
 		font-size: $font-size-small-ui
 		text-align: right
-		+mobile-down
+		+unconfirmed-narrow
 			padding: 0.6em 0 0  0
 
 	tfoot td
@@ -89,7 +98,7 @@
 		-webkit-font-smoothing: antialiased
 		-moz-osx-font-smoothing: grayscale
 
-		+mobile-down
+		+unconfirmed-narrow
 			--min-unit: 1rem
 			padding: 0
 
