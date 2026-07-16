@@ -98,10 +98,15 @@ export default function HomepageSelection({
 		)
 	}
 
-	function presetHasData(timeFilter) {
-		const taggedDataset = filtersApplied.tag !== null
+
+	const taggedDataset = React.useMemo(
+		() => (filtersApplied.tag !== null
 			? filterDatasetByTag(originalDataset, filtersApplied.tag)
-			: originalDataset
+			: originalDataset),
+		[originalDataset, filtersApplied.tag]
+	)
+
+	function presetHasData(timeFilter) {
 		return timeFilter(taggedDataset).length > 0
 	}
 
