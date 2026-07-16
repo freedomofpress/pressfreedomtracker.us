@@ -160,6 +160,7 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
+        wrap={false}
         wrapperComponent={
           <a
             aria-label="Nov: 0 incidents"
@@ -168,10 +169,12 @@ exports[`renders BarChart with mocked data 1`] = `
         }
       >
         <rect
+          aria-label="Nov: 0 incidents"
           height={0}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onMouseMove={[Function]}
+          role="img"
           shapeRendering="crispEdges"
           style={
             {
@@ -193,6 +196,7 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
+        wrap={false}
         wrapperComponent={
           <a
             aria-label="Dec: 0 incidents"
@@ -201,10 +205,12 @@ exports[`renders BarChart with mocked data 1`] = `
         }
       >
         <rect
+          aria-label="Dec: 0 incidents"
           height={0}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onMouseMove={[Function]}
+          role="img"
           shapeRendering="crispEdges"
           style={
             {
@@ -226,6 +232,7 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
+        wrap={false}
         wrapperComponent={
           <a
             aria-label="Jan: 0 incidents"
@@ -234,10 +241,12 @@ exports[`renders BarChart with mocked data 1`] = `
         }
       >
         <rect
+          aria-label="Jan: 0 incidents"
           height={0}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onMouseMove={[Function]}
+          role="img"
           shapeRendering="crispEdges"
           style={
             {
@@ -259,6 +268,7 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
+        wrap={false}
         wrapperComponent={
           <a
             aria-label="Feb: 0 incidents"
@@ -267,10 +277,12 @@ exports[`renders BarChart with mocked data 1`] = `
         }
       >
         <rect
+          aria-label="Feb: 0 incidents"
           height={0}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onMouseMove={[Function]}
+          role="img"
           shapeRendering="crispEdges"
           style={
             {
@@ -292,6 +304,7 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
+        wrap={false}
         wrapperComponent={
           <a
             aria-label="Mar: 0 incidents"
@@ -300,10 +313,12 @@ exports[`renders BarChart with mocked data 1`] = `
         }
       >
         <rect
+          aria-label="Mar: 0 incidents"
           height={0}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onMouseMove={[Function]}
+          role="img"
           shapeRendering="crispEdges"
           style={
             {
@@ -325,6 +340,7 @@ exports[`renders BarChart with mocked data 1`] = `
       }
     >
       <DynamicWrapper
+        wrap={false}
         wrapperComponent={
           <a
             aria-label="Apr: 0 incidents"
@@ -333,10 +349,12 @@ exports[`renders BarChart with mocked data 1`] = `
         }
       >
         <rect
+          aria-label="Apr: 0 incidents"
           height={0}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onMouseMove={[Function]}
+          role="img"
           shapeRendering="crispEdges"
           style={
             {
