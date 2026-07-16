@@ -95,6 +95,9 @@ export default function BarChart({
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
 	const formatXForLabel = tooltipXFormat || xFormat
+	const barLabel = (d) => `${formatXForLabel(d[x])}: ${yFormat(d[y])} ${titleLabel}`
+
+	const barIsLink = Boolean(interactive && searchPageURL)
 
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
@@ -127,7 +130,7 @@ export default function BarChart({
 	)
 
 	const categoryButtonsLabels = calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width)
-	const buttonsHeight = isMobileView || !allCategories
+	const buttonsHeight = !allCategories
 		? 0
 		: calculateButtonsHeight(categoryButtonsLabels)
 
@@ -336,10 +339,10 @@ export default function BarChart({
 										<a
 											href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
 											role="link"
-											aria-label={`${formatXForLabel(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
+											aria-label={barLabel(branchEntry.data)}
 										/>
 									}
-									wrap={interactive && searchPageURL}
+									wrap={barIsLink}
 								>
 									<rect
 										x={xScaleOverLayer(branchEntry.data[x])}
@@ -357,6 +360,7 @@ export default function BarChart({
 										onMouseMove={updateTooltipPosition}
 										onMouseLeave={() => setHoveredElement(null)}
 										shapeRendering="crispEdges"
+										{...(!barIsLink && { role: 'img', 'aria-label': barLabel(branchEntry.data) })}
 									/>
 								</DynamicWrapper>
 							</g>
@@ -465,10 +469,10 @@ export default function BarChart({
 							<a
 								href={searchPageURL && searchPageURL(xFormat(branchBars[0].data[x]))}
 								role="link"
-								aria-label={`${formatXForLabel(branchBars[0].data[x])}: ${yFormat(branchBars[0].data[y])} ${titleLabel}`}
+								aria-label={barLabel(branchBars[0].data)}
 							/>
 						}
-						wrap={searchPageURL}
+						wrap={barIsLink}
 					>
 						<AnimatedDataset
 							dataset={branchBars}
