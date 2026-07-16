@@ -179,6 +179,9 @@ export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, c
 			return datasetFilteredByTag
 		case TIME_PRESETS.YEAR:
 			return filterDatasetByYear(datasetFilteredByTag, filtersApplied.year)
+		default:
+			// Keep the return type consistent:
+			return datasetFilteredByTag
 	}
 }
 
