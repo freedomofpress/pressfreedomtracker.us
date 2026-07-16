@@ -129,23 +129,25 @@ export function filterDatasetByYear(dataset, year) {
 	return dataset.filter((d) => d.date.getUTCFullYear() === year)
 }
 
-// Filter to the last six months, inclusive on the *currentDate* end
+// Filter to the last six months, inclusive on the *currentDate* end.
 export function filterDatasetByLastSixMonths(dataset, currentDate) {
 	const sixMonthsAgo = d3.utcMonth.offset(currentDate, -6)
 	return dataset.filter(d => +d.date > +sixMonthsAgo && +d.date <= +currentDate)
 }
 
-export function filterDatasetByLastNDays(dataset, currentDate, numberOfDays) {
-	const currentDayStart = d3.utcDay.floor(currentDate)
-	const firstDayStart = d3.utcDay.offset(currentDayStart, -(numberOfDays - 1))
-	return dataset.filter(d => +d.date >= +firstDayStart && +d.date <= +currentDate)
+// Rolling window ending with a partial period that contains currentDate.
+function filterDatasetByLastNPeriods(dataset, currentDate, interval, numberOfPeriods) {
+	const currentPeriodStart = interval.floor(currentDate)
+	const firstPeriodStart = interval.offset(currentPeriodStart, -(numberOfPeriods - 1))
+	return dataset.filter(d => +d.date >= +firstPeriodStart && +d.date <= +currentDate)
 }
 
-// Rolling window of the last N mon-sun weeks, ending with partial week containing currentDate.
+export function filterDatasetByLastNDays(dataset, currentDate, numberOfDays) {
+	return filterDatasetByLastNPeriods(dataset, currentDate, d3.utcDay, numberOfDays)
+}
+
 export function filterDatasetByLastNWeeks(dataset, currentDate, numberOfWeeks) {
-	const currentWeekStart = d3.utcMonday.floor(currentDate)
-	const firstWeekStart = d3.utcMonday.offset(currentWeekStart, -(numberOfWeeks - 1))
-	return dataset.filter(d => +d.date >= +firstWeekStart && +d.date <= +currentDate)
+	return filterDatasetByLastNPeriods(dataset, currentDate, d3.utcMonday, numberOfWeeks)
 }
 
 export function resolveDefaultTimePreset(dataset, currentDate, sevenDayEnabled) {
