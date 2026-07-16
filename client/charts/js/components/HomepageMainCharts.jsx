@@ -87,44 +87,36 @@ function HomepageMainChartsWidth({
 	const isWeekView = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS
 		|| filtersApplied.timePreset === TIME_PRESETS.TWELVE_WEEKS
 
-	// Pick bucket size for bars (day/month/year), format label, and decide what each bar links to
+	// Bars for day/week views share the same shape.
+	const setDateBucketProps = (buckets, getStart, getEnd) => {
+		const bucketByLabel = Object.fromEntries(buckets.map((b) => [b.label, b]))
+		barChartProps.data = buckets
+		barChartProps.x = 'label'
+		barChartProps.tooltipXFormat = (label) => bucketByLabel[label]?.range ?? label
+		barChartProps.searchPageURL = (label) => {
+			const bucket = bucketByLabel[label]
+			if (!bucket) return null
+			return getFilteredUrl(
+				databasePath,
+				{ ...filtersApplied, weekStart: getStart(bucket), weekEnd: getEnd(bucket) },
+				currentDate,
+				categories,
+			)
+		}
+	}
+
+	// Pick bucket size for bars (day/week/month/year), format label, and decide what each bar links to.
 	switch (filtersApplied.timePreset) {
 		case TIME_PRESETS.SEVEN_DAYS: {
 			const dayData = groupByDaysSorted(datasetFiltered, currentDate, 7)
-			const dayByLabel = Object.fromEntries(dayData.map((d) => [d.label, d]))
-			barChartProps.data = dayData
-			barChartProps.x = 'label'
-			barChartProps.tooltipXFormat = (label) => dayByLabel[label]?.range ?? label
-			barChartProps.searchPageURL = (label) => {
-				const day = dayByLabel[label]
-				if (!day) return null
-				return getFilteredUrl(
-					databasePath,
-					{ ...filtersApplied, weekStart: day.date, weekEnd: day.date },
-					currentDate,
-					categories,
-				)
-			}
+			setDateBucketProps(dayData, (d) => d.date, (d) => d.date)
 			break
 		}
 		case TIME_PRESETS.FOUR_WEEKS:
 		case TIME_PRESETS.TWELVE_WEEKS: {
 			const numberOfWeeks = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS ? 4 : 12
 			const weekData = groupByWeeksSorted(datasetFiltered, currentDate, numberOfWeeks)
-			const weekByLabel = Object.fromEntries(weekData.map((w) => [w.label, w]))
-			barChartProps.data = weekData
-			barChartProps.x = 'label'
-			barChartProps.tooltipXFormat = (label) => weekByLabel[label]?.range ?? label
-			barChartProps.searchPageURL = (label) => {
-				const week = weekByLabel[label]
-				if (!week) return null
-				return getFilteredUrl(
-					databasePath,
-					{ ...filtersApplied, weekStart: week.weekStart, weekEnd: week.weekEnd },
-					currentDate,
-					categories,
-				)
-			}
+			setDateBucketProps(weekData, (w) => w.weekStart, (w) => w.weekEnd)
 			break
 		}
 		case TIME_PRESETS.ALL_TIME: {
