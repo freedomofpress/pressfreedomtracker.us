@@ -1868,9 +1868,9 @@ wagtail-newsletter[mailchimp,mrml]==0.2.4 \
     --hash=sha256:a19789be23bb1d5dcf9ade798dde1a36b598751d9f31ba6e4e94bf50488f0aa4 \
     --hash=sha256:cacf44ff81c2429134e6615914fb8c8a3ff3d5220e43f567fb63df2083762b03
     # via -r requirements.txt
-wcwidth==0.2.12 \
-    --hash=sha256:f01c104efdf57971bcb756f054dd58ddec5204dd15fa31d6503ea57947d97c02 \
-    --hash=sha256:f26ec43d96c8cbfed76a5075dac87680124fa84e0855195a6184da9c187f133c
+wcwidth==0.8.2 \
+    --hash=sha256:91fbef97204b96a3d4d421609b80340b760cf33e26da123ff243d76b1fda8dda \
+    --hash=sha256:d63947694a0539a1d51e01eda7caf800c291020e6cdd7e28ad7b14dd33ad4f85
     # via prompt-toolkit
 webencodings==0.5.1 \
     --hash=sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78 \
