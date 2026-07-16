@@ -23,7 +23,6 @@ chartContainers.forEach((node) => {
 	const databasePath = node.dataset.databasePath
 	const startDate = node.dataset.startDate
 	const endDate = node.dataset.endDate
-	// TODO: add admin controls to add this attr when enabled
 	const sevenDayEnabled = node.dataset.sevenDayEnabled === 'true'
 
 	const params = new URLSearchParams([
