@@ -32,10 +32,11 @@ export default function HomepageMainCharts(props) {
 
 const mobileBreakpoint = 950
 
+const WEEK_CHART_DESCRIPTION = 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)'
 const CHART_DESCRIPTIONS = {
 	[TIME_PRESETS.SEVEN_DAYS]: 'Showing the number of journalists targeted per day.',
-	[TIME_PRESETS.FOUR_WEEKS]: 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)',
-	[TIME_PRESETS.TWELVE_WEEKS]: 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)',
+	[TIME_PRESETS.FOUR_WEEKS]: WEEK_CHART_DESCRIPTION,
+	[TIME_PRESETS.TWELVE_WEEKS]: WEEK_CHART_DESCRIPTION,
 }
 const DEFAULT_CHART_DESCRIPTION = 'Showing the number of journalists targeted per month.'
 
