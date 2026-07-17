@@ -16,6 +16,22 @@ services:
       POSTGRES_USER: tracker
       POSTGRES_DB: trackerdb
     user: postgres
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'pg_isready',
+          '-q',
+          '-h',
+          'localhost',
+          '-U',
+          'freedompress',
+          '--dbname',
+          'freedompressdb',
+        ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
     networks:
       app:
         aliases:
@@ -29,7 +45,8 @@ services:
         USERID: 1234
     image: quay.io/freedomofpress/pressfreedomtrackerus
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     working_dir: /django
     volumes:
       - ${HOST_STATIC_DIR:-fpf-django-media}:/django-media
@@ -60,6 +77,12 @@ services:
       # More fake testing keys (see above); generate your own for deployment.
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
       RECAPTCHA_PRIVATE_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health/ok/']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 45s
     ports:
       - '8000:8000'
     networks:

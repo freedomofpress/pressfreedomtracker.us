@@ -146,16 +146,7 @@ jobs:
         run: make dev-init
 
       - name: Start
-        run: |
-          docker compose --file="$COMPOSE_FILE_DEV" up --detach --pull=missing --no-build
-
-          # Check for failed services and error if any are found
-          sleep 5
-          if [[ $(docker compose --file="$COMPOSE_FILE_DEV" ps --status='[restarting, dead, exited]' --format=json) ]]; then
-            echo "ERROR: One or more services failed to start"
-            docker compose --file="$COMPOSE_FILE_DEV" ps
-            exit 1
-          fi
+        run: docker compose --file="$COMPOSE_FILE_DEV" up --wait --wait-timeout=180 --detach --pull=missing --no-build
 
       - name: Make target '${{ matrix.target }}'
         run: make ${{ matrix.target }}
@@ -275,21 +266,7 @@ jobs:
           docker image tag "$CHARTGEN_IMAGE_URL" quay.io/freedomofpress/pft-chart-pregenerator
 
       - name: Start
-        run: |
-          docker compose --file="$COMPOSE_FILE_PROD" up --detach
-
-          # Check for failed services and error if any are found
-          sleep 5
-          if [[ $(docker compose --file="$COMPOSE_FILE_PROD" ps --status='[restarting, dead, exited]' --format=json) ]]; then
-            echo "ERROR: One or more services failed to start"
-            docker compose --file="$COMPOSE_FILE_PROD" ps
-            exit 1
-          fi
-
-      - name: Verify django
-        run: |
-          docker run --pull=missing --rm --network=pressfreedomtrackerus_app docker.io/curlimages/curl:latest \
-          --ipv4 --retry 24 --retry-delay 5 --retry-all-errors http://django:8000/health/ok/
+        run: docker compose --file="$COMPOSE_FILE_PROD" up --wait --wait-timeout=180 --detach --pull=missing --no-build
 
       - name: Verify database
         run: |
