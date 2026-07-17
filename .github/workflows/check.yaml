@@ -72,7 +72,7 @@ jobs:
     uses: freedomofpress/actionslib/.github/workflows/oci-build.yaml@main
     with:
       context: '.'
-      containerfile: devops/docker/NodeChartPregeneratorDevDockerfile
+      containerfile: devops/docker/NodeChartPregeneratorDockerfile
       build-args: |
         USERID=1001
       registry: localhost/pressfreedomtracker-us-chartgen
