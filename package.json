@@ -42,7 +42,7 @@
     "sass": "^1.54.0",
     "sass-loader": "^13.0.2",
     "stylelint": "^15.6.0",
-    "stylelint-config-recommended": "^12.0.0",
+    "stylelint-config-recommended": "^13.0.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
     "stylelint-config-standard": "^33.0.0",
     "watchpack": "^2.5.2",
