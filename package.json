@@ -47,7 +47,7 @@
     "stylelint-config-standard": "^33.0.0",
     "watchpack": "^2.5.2",
     "webpack": "^5.74.0",
-    "webpack-bundle-tracker": "^1.6.0",
+    "webpack-bundle-tracker": "^3.2.4",
     "webpack-cli": "^5.0.1",
     "webpack-merge": "^6.0.1"
   },

@@ -7,7 +7,7 @@ COPY devops/docker/node-start.sh /usr/bin/node-start.sh
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 
