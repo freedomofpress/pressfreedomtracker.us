@@ -62,7 +62,7 @@
     "invariant": "^2.2.2",
     "money-math": "^2.4.3",
     "prop-types": "^15.7.2",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-animated-dataset": "github:freedomofpress/react-animated-dataset#nested-components",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
