@@ -7,6 +7,7 @@ import {
 	filterDatasetByLastSixMonths,
 	filterDatasetByLastNDays,
 	filterDatasetByLastNWeeks,
+	getFilteredUrl,
 	resolveDefaultTimePreset,
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
@@ -204,6 +205,33 @@ describe(filterDatasetByLastNDays, () => {
 			{ date: new Date(Date.UTC(2024, 4, 12, 6, 0)) },
 			{ date: new Date(Date.UTC(2024, 4, 15, 12, 0)) },
 		])
+	})
+})
+
+describe(getFilteredUrl, () => {
+	const currentDate = new Date(Date.UTC(2024, 4, 15)) // Wed May 15 2024
+
+	test('scopes a rolling-window preset link (e.g. state map) to the whole window', () => {
+		const url = getFilteredUrl(
+			'/',
+			{ tag: null, year: null, timePreset: TIME_PRESETS.FOUR_WEEKS, state: 'New York' },
+			currentDate,
+			[],
+		)
+		// 4-week window anchored on Mon May 13 → starts Mon Apr 22.
+		expect(url).toContain('date_lower=2024-04-22&date_upper=2024-05-15')
+		expect(url).toContain('state=New+York')
+	})
+
+	test('a single-bar link keeps its own bucket range instead of the window', () => {
+		const url = getFilteredUrl(
+			'/',
+			{ tag: null, year: null, timePreset: TIME_PRESETS.FOUR_WEEKS, weekStart: '2024-04-22', weekEnd: '2024-04-28' },
+			currentDate,
+			[],
+		)
+		expect(url).toContain('date_lower=2024-04-22&date_upper=2024-04-28')
+		expect(url).not.toContain('date_upper=2024-05-15')
 	})
 })
 

@@ -107,6 +107,23 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 		parameters.push(`date_lower=${firstDateFormatted}&date_upper=${lastDateFormatted}`)
 	}
 
+
+	const rollingSpans = {
+		[TIME_PRESETS.SEVEN_DAYS]: [d3.utcDay, 7],
+		[TIME_PRESETS.FOUR_WEEKS]: [d3.utcMonday, 4],
+		[TIME_PRESETS.TWELVE_WEEKS]: [d3.utcMonday, 12],
+	}
+	const rollingSpan = rollingSpans[filtersApplied.timePreset]
+
+	// No specific week selected — e.g. the state map link, which scopes to the whole
+	// day/week window. (Week/day bars pass weekStart above, so they skip this.)
+	if (rollingSpan && filtersApplied.weekStart === undefined) {
+		const [interval, count] = rollingSpan
+		const iso = d3.utcFormat('%Y-%m-%d')
+		const windowStart = interval.offset(interval.floor(currentDate), -(count - 1))
+		parameters.push(`date_lower=${iso(windowStart)}&date_upper=${iso(currentDate)}`)
+	}
+
 	if (filtersApplied.tag !== undefined && filtersApplied.tag !== null) {
 		parameters.push(`tags=${filtersApplied.tag.replace(' ', '+')}`)
 	}
