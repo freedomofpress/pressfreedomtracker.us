@@ -28,7 +28,6 @@ Pygments>=2.20.0
 python-json-logger
 requests>=2.34.2
 structlog
-typing
 typogrify
 unittest-xml-reporting
 wagtail-autocomplete>=0.12.0
