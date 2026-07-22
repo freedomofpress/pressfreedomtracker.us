@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
-    "@visx/responsive": "^3.0.0",
+    "@visx/responsive": "^4.0.0",
     "canvg": "^4.0.1",
     "classnames": "^2.3.2",
     "d3": "^7.1.1",
