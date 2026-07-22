@@ -52,7 +52,7 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
-    "@visx/responsive": "^3.0.0",
+    "@visx/responsive": "^4.0.0",
     "canvg": "^4.0.1",
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.2.5",
