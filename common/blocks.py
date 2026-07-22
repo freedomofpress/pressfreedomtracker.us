@@ -9,7 +9,7 @@ from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.rich_text import RichText
 
-import bleach
+import nh3
 
 from common.choices import BACKGROUND_COLOR_CHOICES
 from common.models.charts import (
@@ -194,7 +194,7 @@ class TweetEmbedBlock(blocks.StructBlock):
     def get_searchable_content(self, value):
         tweet_content = value.get("tweet", None)
         if tweet_content and tweet_content.html:
-            return [bleach.clean(tweet_content.html, strip=True, tags={})]
+            return [nh3.clean(tweet_content.html, tags=set())]
         else:
             return []
 
