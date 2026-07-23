@@ -430,9 +430,9 @@ django-permissionedforms==0.1 \
     # via
     #   -r requirements.txt
     #   wagtail
-django-recaptcha==3.0.0 \
-    --hash=sha256:1aed69fd6ac8fd9e99e52665392ae6748f8b6339ace656fad779fe0c6c915a52 \
-    --hash=sha256:253197051288923cae675d7eff91b619e3775311292a5dbaf27a8a55ffebc670
+django-recaptcha==4.1.0 \
+    --hash=sha256:463aa65967e973de466b28ce8e8b6abb2faffb1ce0c7faa1bf0e5b041e0497cb \
+    --hash=sha256:73097b958733f65b729d4e4630c51fc2bf147aca6f026017d18898dfc25cb4c5
     # via
     #   -r requirements.txt
     #   wagtail-django-recaptcha
