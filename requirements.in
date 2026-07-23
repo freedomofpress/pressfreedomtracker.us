@@ -24,7 +24,6 @@ marshmallow>=3.26.2,<4
 pillow>=12.3.0
 psycopg[binary]
 Pygments>=2.20.0
-python-json-logger
 requests>=2.34.2
 structlog
 typing
