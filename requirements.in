@@ -6,7 +6,7 @@ django-anymail
 django-autocomplete-light
 django-csp>=3.7
 django-modelcluster>=6.2.1
-django-recaptcha<4.0
+django-recaptcha<5.0
 django-settings-export
 django-storages[google]>=1.14.6
 django-webpack-loader
