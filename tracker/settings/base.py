@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "geonames",
     "cloudflare",  # Only really needs to be registered for the test runner
     "build",  # App for static output
-    "captcha",
+    "django_recaptcha",
     "wagtailcaptcha",
     "wagtail.contrib.settings",
     "wagtail.contrib.routable_page",
