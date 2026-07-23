@@ -1750,6 +1750,7 @@ wagtail==7.4.2 \
     # via
     #   -r requirements.txt
     #   wagtail-autocomplete
+    #   wagtail-django-recaptcha
     #   wagtail-factories
     #   wagtail-honeypot
     #   wagtail-inventory
@@ -1759,8 +1760,9 @@ wagtail-autocomplete==0.12.0 \
     --hash=sha256:17be82c7e2ab2714b01a2a3edbf29f56ba37ad72f2bebcded560c5ead9b482df \
     --hash=sha256:d1cd315475e8c776c85a75ba5eb76ceb2eb680c18334e7e9424040d7faa9b538
     # via -r requirements.txt
-wagtail-django-recaptcha==1.0 \
-    --hash=sha256:fc177e75da966e9db1dfd9a566c40d30567518d9280b5db4fec4d50a8c853154
+wagtail-django-recaptcha==2.2.0 \
+    --hash=sha256:094a59cbfd9f02d41e9fd0a294fc3e754e5b5fc5da01cc15a8e08007f3ad2f67 \
+    --hash=sha256:d7340ba346f365f475595b733c4f4ef380bd2e331261d5a5604b57baa3a7b786
     # via -r requirements.txt
 wagtail-factories==4.5.0 \
     --hash=sha256:4ad0e9f396fca7f7d349a8752c49f68e18deeffee9c857897b849ff08c6c33a6 \
