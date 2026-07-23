@@ -548,9 +548,9 @@ google-api-core==2.31.0 \
     #   google-api-python-client
     #   google-cloud-core
     #   google-cloud-storage
-google-api-python-client==2.196.0 \
-    --hash=sha256:2591e9b47dcb17e4e62a09370aaee3bcf323af8f28ccecdabcd0a42a23ca4db5 \
-    --hash=sha256:9f335d38f6caaa2747bcf64335ed1a9a19047d53e86538eda6a1b17d37f1743d
+google-api-python-client==2.198.0 \
+    --hash=sha256:dfe3e16fb241af6e9c460a33f65085b3450e05cea09364f6b5d8997fb7e43e2a \
+    --hash=sha256:fabac935474e817da5e662ff61bf7139439d6f92b32d332a7318a2d45931e03e
     # via -r requirements.txt
 google-auth==2.56.0 \
     --hash=sha256:6e88c10217e07a92bfd01cac8ee99e32ccfb08414c3102e6c5b8d58f37a0d1e0 \
