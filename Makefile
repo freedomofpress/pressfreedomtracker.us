@@ -11,9 +11,7 @@ lint: ruff
 
 .PHONY: ruff
 ruff: ## Runs ruff linting in Python3 container.
-	@docker run --rm -v $(PWD):/code -w /code --name fpf_www_ruff --rm \
-			python:3.14.6-slim-trixie \
-			bash -c "pip install -q ruff && ruff check && ruff format --check"
+	@docker compose run --rm -T django /bin/bash -c "ruff check && ruff format --check"
 
 .PHONY: dev-init
 dev-init: ## Initialize docker environment for developer workflow
