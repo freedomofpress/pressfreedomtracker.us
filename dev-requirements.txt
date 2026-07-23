@@ -560,7 +560,6 @@ google-auth==2.56.0 \
     #   google-api-core
     #   google-api-python-client
     #   google-auth-httplib2
-    #   google-auth-oauthlib
     #   google-cloud-core
     #   google-cloud-storage
 google-auth-httplib2==0.4.0 \
@@ -569,10 +568,6 @@ google-auth-httplib2==0.4.0 \
     # via
     #   -r requirements.txt
     #   google-api-python-client
-google-auth-oauthlib==1.4.0 \
-    --hash=sha256:18b5e28880eb8eba9065c436becdc0ee8e4b59117a73a510679c82f70cd363d2 \
-    --hash=sha256:251314f213a9ee46a5ae73988e84fd7cca8bb68e7ecf4bfd45940f9e7f51d070
-    # via -r requirements.txt
 google-cloud-core==2.6.0 \
     --hash=sha256:6d63ac8e5eca6d9e4319d0a1e2265fadcd7f1049904378caecfa01cf52dd869e \
     --hash=sha256:e76149739f90fac1fc6757c09f47eaccb3145b54adbd7759b0f7c4b235f46c83
@@ -1010,12 +1005,6 @@ mrml==0.2.3 \
     # via
     #   -r requirements.txt
     #   wagtail-newsletter
-oauthlib==3.3.1 \
-    --hash=sha256:0f0f8aa759826a193cf66c12ea1af1637f87b9b4622d46e866952bb022e538c9 \
-    --hash=sha256:88119c938d2b8fb88561af5f6ee0eec8cc8d552b7bb1f712743136eb7523b7a1
-    # via
-    #   -r requirements.txt
-    #   requests-oauthlib
 openpyxl==3.1.5 \
     --hash=sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2 \
     --hash=sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050
@@ -1470,14 +1459,7 @@ requests==2.34.2 \
     #   google-cloud-storage
     #   mailchimp-marketing
     #   queryish
-    #   requests-oauthlib
     #   wagtail
-requests-oauthlib==2.0.0 \
-    --hash=sha256:7dd8a5c40426b779b0868c404bdef9768deccf22749cde15852df527e6269b36 \
-    --hash=sha256:b3dffaebd884d8cd778494369603a9e7b58d29111bf6b41bdc2dcd87203af4e9
-    # via
-    #   -r requirements.txt
-    #   google-auth-oauthlib
 rich==15.0.0 \
     --hash=sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb \
     --hash=sha256:edd07a4824c6b40189fb7ac9bc4c52536e9780fbbfbddf6f1e2502c31b068c36
