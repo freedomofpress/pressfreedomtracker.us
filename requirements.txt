@@ -1295,10 +1295,6 @@ tqdm==4.68.4 \
     --hash=sha256:19829c9673638f2a0b8617da4cdcb927e831cd88bcfcb6e78d42a4d1af131520 \
     --hash=sha256:5168118b2368f48c561afda8020fd79195b1bdb0bdf8086b88442c267a315dc2
     # via wagtail-inventory
-typing==3.7.4.3 \
-    --hash=sha256:1187fb9c82fd670d10aa07bbb6cfcfe4bdda42d6fab8d5134f04e8c4d0b71cc9 \
-    --hash=sha256:283d868f5071ab9ad873e5e52268d611e851c870a2ba354193026f2dfb29d8b5
-    # via -r requirements.in
 typing-extensions==4.15.0 \
     --hash=sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466 \
     --hash=sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548
