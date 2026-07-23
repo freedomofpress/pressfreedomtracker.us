@@ -52,7 +52,7 @@ services:
     working_dir: /django
     user: ${UID:?err}
     healthcheck:
-      test: jq '.status' webpack-stats.json |grep -q -e compiling -e error -e done
+      test: jq '.status' build/static/bundles/webpack-stats.json |grep -q -e compiling -e error -e done
       interval: 10s
       start_period: 1m30s
     networks:
@@ -81,10 +81,10 @@ services:
     user: ${UID:?err}
     healthcheck:
       test: ['CMD', 'curl', '--fail', 'http://localhost:3000/']
-      start_period: 10s
       interval: 10s
-      timeout: 20s
-      retries: 4
+      timeout: 5s
+      retries: 10
+      start_period: 45s
     networks:
       app:
         aliases:
@@ -110,10 +110,10 @@ services:
     healthcheck:
       test:
         ['CMD', 'curl', '--fail', 'http://localhost:8000/health/ok/?monitor']
-      start_period: 10s
-      interval: 30s
-      timeout: 20s
-      retries: 4
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 45s
     environment:
       DJANGO_ALLOWED_HOSTS: app localhost
       DJANGO_CREATEDEVDATA: '${DJANGO_CREATEDEVDATA:-no}'

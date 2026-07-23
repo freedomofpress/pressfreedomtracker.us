@@ -1,6 +1,5 @@
 beautifulsoup4
 bleach>=6.4.0
-cryptography>=49.0.0
 Django>=5.2.13,<6.0
 djangorestframework>=3.14
 django-anymail
@@ -22,7 +21,7 @@ Jinja2>=3.1.6
 lxml>=6.1.1
 mailchimp_marketing>=3.0.66
 marshmallow>=3.26.2,<4
-pillow>=12.2.0
+pillow>=12.3.0
 psycopg[binary]
 Pygments>=2.20.0
 python-json-logger
@@ -38,7 +37,7 @@ wagtail-honeypot
 wagtail-inventory>=3.1
 wagtail-metadata>=5.0.0
 wagtail-newsletter[mailchimp,mrml]
-wagtail>=7.4,<8.0
+wagtail>=7.4.2,<8.0
 whitenoise
 google-api-python-client
 google-auth-oauthlib
