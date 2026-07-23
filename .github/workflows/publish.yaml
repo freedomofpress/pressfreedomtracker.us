@@ -43,3 +43,35 @@ jobs:
         USERID=1001
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
       add-branch-tags: true
+
+  notify-django:
+    uses: freedomofpress/actionslib/.github/workflows/update-k8s-trigger.yaml@main
+    needs:
+    - build-django
+    if: ${{ needs.build-django.result == 'success' }}
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    with:
+      trigger: pft/${{ github.ref_name }}
+      sha: ${{ github.sha }}
+    secrets:
+      local-token: ${{ secrets.GITHUB_TOKEN }}
+      k8s-configs-token: ${{ secrets.K8S_CONFIGS_GITHUB_TOKEN }}
+
+  notify-chartgen:
+    uses: freedomofpress/actionslib/.github/workflows/update-k8s-trigger.yaml@main
+    needs:
+    - build-chartgen
+    if: ${{ needs.build-chartgen.result == 'success' }}
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    with:
+      trigger: pft-chartgen/${{ github.ref_name }}
+      sha: ${{ github.sha }}
+    secrets:
+      local-token: ${{ secrets.GITHUB_TOKEN }}
+      k8s-configs-token: ${{ secrets.K8S_CONFIGS_GITHUB_TOKEN }}
