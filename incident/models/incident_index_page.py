@@ -104,7 +104,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
                 "targeted_journalists",
                 "teaser_image__renditions",
                 "updates",
-                "venue",
                 "workers_whose_communications_were_obtained",
             )
         )

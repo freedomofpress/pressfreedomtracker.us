@@ -85,7 +85,6 @@ Available filters:
 
 - border_point
 - city
-- lawsuit_name
 - target_us_citizenship_status
 - third_party_in_possession_of_communications
 
@@ -195,7 +194,6 @@ You can get an object's id by opening it for editing in the admin and looking at
 - targeted_journalists
 - targeted_institutions
 - workers_whose_communications_were_obtained
-- venue
 
 
 Charges

@@ -67,7 +67,6 @@ Here is a sample response:
       "release_date": null,
       "detention_date": null,
       "unnecessary_use_of_force": false,
-      "lawsuit_name": "Christopher Simpson v. Lisa Armstrong",
       "status_of_seized_equipment": null,
       "is_search_warrant_obtained": false,
       "actor": null,
@@ -94,10 +93,6 @@ Here is a sample response:
         "abbreviation": "TX"
       },
       "updates": [],
-      "venue": [
-        "DarkRed Court of South Dakota",
-        "LightSalmon Court of Louisiana"
-      ],
       "workers_whose_communications_were_obtained": [
         "John A. Worker",
         "Tyler H. Worker"
@@ -141,7 +136,6 @@ Here is a sample response:
       "release_date": null,
       "detention_date": null,
       "unnecessary_use_of_force": false,
-      "lawsuit_name": null,
       "status_of_seized_equipment": null,
       "is_search_warrant_obtained": false,
       "actor": null,
@@ -165,7 +159,6 @@ Here is a sample response:
       "equipment_broken": [],
       "state": null,
       "updates": [],
-      "venue": [],
       "workers_whose_communications_were_obtained": [],
       "target_nationality": [],
       "targeted_institutions": [
@@ -212,7 +205,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `release_date`                                | The date of release for an arrest incident.                                                                                                                                             | date             |
 | `detention_date`                              | The date of detention for an arrest incident.                                                                                                                                           | date             |
 | `unnecessary_use_of_force`                    | If unnecessary force was used in the incident.                                                                                                                                          | boolean          |
-| `lawsuit_name`                                | The name of the lawsuit pertaining to the incident.                                                                                                                                     | string           |
 | `status_of_seized_equipment`                  | The status of any equipment seized during the incident. Can be one of: `UNKNOWN`, `CUSTODY`, `RETURNED_FULL`, or `RETURNED_PART`.                                                       | string           |
 | `is_search_warrant_obtained`                  | Whether or not a search warrant was obtained for this incident.                                                                                                                         | boolean          |
 | `actor`                                       | A description of the principal actor involved in the incident. Can be one of: `UNKNOWN`, `LAW_ENFORCEMENT`, `PRIVATE_SECURITY`, `POLITICIAN`, `PUBLIC_FIGURE`, or `PRIVATE_INDIVIDUAL`. | string           |
@@ -235,7 +227,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `equipment_seized`                            | What equipment, and how much, was seized during the incident.                                                                                                                           | array of objects |
 | `equipment_broken`                            | What equipment, and how much, was broken during the incident.                                                                                                                           | array of objects |
 | `updates`                                     | Updates to the article on the Press Freedom Tracker after it was initially published.                                                                                                   | array of strings |
-| `venue`                                       | Courts that are hearing or have heard the case related to the incident.                                                                                                                 | array of strings |
 | `workers_whose_communications_were_obtained`  | Alleged recipient of leak incidents.                                                                                                             | array of strings |
 | `target_nationality`                          | Nationalities of targets of the incident.                                                                                                                                               | array of strings |
 | `target_institutions`                         | Institutions targeted during the incident.                                                                                                                                              | array of strings |
