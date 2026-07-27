@@ -1793,9 +1793,9 @@ traitlets==5.15.1 \
     # via
     #   ipython
     #   matplotlib-inline
-trio==0.24.0 \
-    --hash=sha256:c3bd3a4e3e3025cd9a2241eae75637c43fe0b9e88b4c97b9161a55b9e54cd72c \
-    --hash=sha256:ffa09a74a6bf81b84f8613909fb0beaee84757450183a7a2e0b47b455c0cac5d
+trio==0.33.0 \
+    --hash=sha256:3bd5d87f781d9b0192d592aef28691f8951d6c2e41b7e1da4c25cde6c180ae9b \
+    --hash=sha256:a29b92b73f09d4b48ed249acd91073281a7f1063f09caba5dc70465b5c7aa970
     # via
     #   selenium
     #   trio-websocket
