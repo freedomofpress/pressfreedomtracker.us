@@ -950,9 +950,9 @@ markupsafe==2.1.3 \
     # via
     #   -r requirements.txt
     #   jinja2
-marshmallow==3.26.2 \
-    --hash=sha256:013fa8a3c4c276c24d26d84ce934dc964e2aa794345a0f8c7e5a7191482c8a73 \
-    --hash=sha256:bbe2adb5a03e6e3571b573f42527c6fe926e17467833660bebd11593ab8dfd57
+marshmallow==4.3.0 \
+    --hash=sha256:46c4fe6984707e3cbd485dfebbf0a59874f58d695aad05c1668d15e8c6e13b46 \
+    --hash=sha256:fb43c53b3fe240b8f6af37223d6ef1636f927ad9bea8ab323afad95dff090880
     # via -r requirements.txt
 matplotlib-inline==0.2.2 \
     --hash=sha256:3c821cf1c209f59fb2d2d64abbf5b23b67bcb2210d663f9918dd851c6da1fcf6 \
@@ -1095,7 +1095,6 @@ packaging==23.2 \
     #   -r requirements.txt
     #   django-csp
     #   gunicorn
-    #   marshmallow
 parso==0.8.7 \
     --hash=sha256:a8926eb2a1b915486941fdbd31e86a4baf88fe8c210f25f2f35ecec5b574ca1c \
     --hash=sha256:eaaac4c9fdd5e9e8852dc778d2d7405897ec510f2a298071453e5e3a07914bb1
