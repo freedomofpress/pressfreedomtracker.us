@@ -2,7 +2,7 @@
 bandit
 beautifulsoup4
 colorama<1
-coverage>=5.5
+coverage>=7.15.2
 defusedxml
 django-cprofile-middleware>=1.0.5
 django-debug-toolbar>=3.2.4
