@@ -407,9 +407,9 @@ django-csp==4.0 \
     --hash=sha256:b27010bb702eb20a3dad329178df2b61a2b82d338b70fbdc13c3a3bd28712833 \
     --hash=sha256:d5a0a05463a6b75a4f1fc1828c58c89af8db9364d09fc6e12f122b4d7f3d00dc
     # via -r requirements.txt
-django-debug-toolbar==4.2.0 \
-    --hash=sha256:af99128c06e8e794479e65ab62cc6c7d1e74e1c19beb44dcbf9bad7a9c017327 \
-    --hash=sha256:bc7fdaafafcdedefcc67a4a5ad9dac96efd6e41db15bc74d402a54a2ba4854dc
+django-debug-toolbar==7.0.0 \
+    --hash=sha256:656161388ce48384276342eeb16d532113ec670816fa1546cc3753730aa51b3d \
+    --hash=sha256:ef7494c5b459c149e87cc2da88d86e944064945e86bd7b2d879093586b5fefbf
     # via -r dev-requirements.in
 django-filter==26.1 \
     --hash=sha256:66ea04031b068c77c86e1ac26ced7a3f8f13ce797f5795751707e3deefc58054 \
