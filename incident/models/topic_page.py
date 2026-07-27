@@ -48,7 +48,7 @@ class NongroupingSubquery(models.Subquery):
 
 class IncidentSchema(Schema):
     title = fields.Str()
-    date = fields.DateTime()
+    date = fields.Date()
     url = fields.Function(lambda obj: obj.get_full_url())
     image = fields.Method("get_image")
     description = fields.Method("get_description")
