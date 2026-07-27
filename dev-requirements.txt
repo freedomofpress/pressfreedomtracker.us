@@ -540,9 +540,9 @@ draftjs-exporter==2.1.7 \
     # via
     #   -r requirements.txt
     #   wagtail
-drf-spectacular[sidecar]==0.27.0 \
-    --hash=sha256:18d7ae74b2b5d533fd31f1c591ebaa5cce1447e0976ced927401e3163040dea9 \
-    --hash=sha256:6ab2d20674244e8c940c2883f744b43c34fc68c70ea3aefa802f574108c9699b
+drf-spectacular[sidecar]==0.30.0 \
+    --hash=sha256:006cf5921ebe20a9bd24f7c846261ebbf78780be5961b0d6e87afaa82afd62ff \
+    --hash=sha256:53e79e7ba00e240441b63c32273754a5368e4c2ab44a19f2595277cc1cd559c9
     # via -r requirements.txt
 drf-spectacular-sidecar==2023.12.1 \
     --hash=sha256:179422fd79db83774ccb177dc5ca22822691353f509343782ed8b941fd37b96d \
