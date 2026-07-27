@@ -1698,8 +1698,9 @@ six==1.16.0 \
     #   asttokens
     #   mailchimp-marketing
     #   python-dateutil
-smartypants==2.0.1 \
-    --hash=sha256:8db97f7cbdf08d15b158a86037cd9e116b4cf37703d24e0419a0d64ca5808f0d
+smartypants==2.0.2 \
+    --hash=sha256:39d64ce1d7cc6964b698297bdf391bc12c3251b7f608e6e55d857cd7c5f800c6 \
+    --hash=sha256:9471578606e8ee0740065bf8771f55fec8c83313cb98c5d1c1864ddd389d0f3a
     # via
     #   -r requirements.txt
     #   typogrify
