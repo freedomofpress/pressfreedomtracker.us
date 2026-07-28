@@ -1136,7 +1136,6 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                     "charges": inline_formset([]),
                     "legal_orders": inline_formset([]),
                     "arresting_authority": "null",
-                    "venue": "null",
                     "target_nationality": "null",
                     "targets_whose_communications_were_obtained": "null",
                     "workers_whose_communications_were_obtained": "null",
@@ -1196,7 +1195,6 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                     "charges": inline_formset([]),
                     "legal_orders": inline_formset([]),
                     "arresting_authority": "null",
-                    "venue": "null",
                     "target_nationality": "null",
                     "targets_whose_communications_were_obtained": "null",
                     "workers_whose_communications_were_obtained": "null",
@@ -1557,8 +1555,8 @@ class IncidentPageQueriesTest(TestCase):
             incident.teaser_image.get_rendition("fill-1330x880")
 
     def test_api_selects_and_prefetches(self):
-        # 1 base query, plus 20 prefetches.
-        with self.assertNumQueries(21):
+        # 1 base query, plus 19 prefetches.
+        with self.assertNumQueries(20):
             list(IncidentPage.objects.with_public_associations())
 
 

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders FiltersIntegration with mocked data 1`] = `
 <Context.Provider
@@ -883,11 +883,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "lawsuit_name": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
             "legal_order_type": {
               "enabled": false,
               "parameters": null,
@@ -986,11 +981,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
               "parameters": null,
               "type": "string",
             },
-            "venue": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
             "was_journalist_targeted": {
               "enabled": false,
               "parameters": null,
@@ -1025,7 +1015,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "filterTimeYears": [Function],
             "held_in_contempt": [Function],
             "is_search_warrant_obtained": [Function],
-            "lawsuit_name": [Function],
             "legal_order_type": [Function],
             "politicians_or_public_figures_involved": [Function],
             "recently_updated": [Function],
@@ -1045,7 +1034,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "targeted_journalists": [Function],
             "third_party_business": [Function],
             "unnecessary_use_of_force": [Function],
-            "venue": [Function],
             "was_journalist_targeted": [Function],
           }
         }
@@ -1499,11 +1487,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "lawsuit_name": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "legal_order_type": {
             "enabled": false,
             "parameters": null,
@@ -1602,11 +1585,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "venue": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "was_journalist_targeted": {
             "enabled": false,
             "parameters": null,
@@ -1641,7 +1619,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "filterTimeYears": [Function],
           "held_in_contempt": [Function],
           "is_search_warrant_obtained": [Function],
-          "lawsuit_name": [Function],
           "legal_order_type": [Function],
           "politicians_or_public_figures_involved": [Function],
           "recently_updated": [Function],
@@ -1661,7 +1638,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
           "targeted_journalists": [Function],
           "third_party_business": [Function],
           "unnecessary_use_of_force": [Function],
-          "venue": [Function],
           "was_journalist_targeted": [Function],
         }
       }
@@ -1783,11 +1759,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "parameters": null,
             "type": "string",
           },
-          "lawsuit_name": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
           "legal_order_type": {
             "enabled": false,
             "parameters": null,
@@ -1882,11 +1853,6 @@ exports[`renders FiltersIntegration with mocked data 1`] = `
             "type": "string",
           },
           "unnecessary_use_of_force": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "venue": {
             "enabled": false,
             "parameters": null,
             "type": "string",

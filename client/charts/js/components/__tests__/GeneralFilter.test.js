@@ -247,16 +247,6 @@ test('renders CheckBoxesYear with mocked data', () => {
 					"type": "string",
 					"parameters": null
 				},
-				"lawsuit_name": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
-				"venue": {
-					"enabled": false,
-					"type": "string",
-					"parameters": null
-				},
 				"case_statuses": {
 					"enabled": false,
 					"type": "string",
