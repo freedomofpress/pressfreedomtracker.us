@@ -101,7 +101,7 @@ jobs:
           version: ${{ env.VERSION_DOCKER }}
 
       - name: Checkout
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: true
           fetch-depth: 0
@@ -191,13 +191,13 @@ jobs:
       actions: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: true
           fetch-depth: 0
 
       - name: Install Python ${{ env.VERSION_PYTHON }}
-        uses: actions/setup-python@v6.3.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ env.VERSION_PYTHON }}
 
@@ -235,7 +235,7 @@ jobs:
           version: ${{ env.VERSION_DOCKER }}
 
       - name: Checkout
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 

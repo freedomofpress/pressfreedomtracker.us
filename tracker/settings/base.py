@@ -16,7 +16,6 @@ import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import sys
 
 from csp.constants import SELF, UNSAFE_EVAL, UNSAFE_INLINE
 
@@ -51,7 +50,7 @@ INSTALLED_APPS = [
     "geonames",
     "cloudflare",  # Only really needs to be registered for the test runner
     "build",  # App for static output
-    "captcha",
+    "django_recaptcha",
     "wagtailcaptcha",
     "wagtail.contrib.settings",
     "wagtail.contrib.routable_page",
@@ -453,36 +452,6 @@ CONTENT_SECURITY_POLICY = {
 csp_media_origins = os.environ.get("DJANGO_CSP_MEDIA_ORIGINS", "").split()
 for directive in ("media-src", "img-src", "object-src", "connect-src"):
     CONTENT_SECURITY_POLICY["DIRECTIVES"][directive].extend(csp_media_origins)
-
-
-# Logging
-#
-# Logs are now always JSON. Normally, they go to stdout. To override this for
-# development or legacy deploys, set DJANGO_LOG_DIR in the environment.
-
-log_level = os.environ.get("DJANGO_LOG_LEVEL", "info").upper()
-log_format = os.environ.get("DJANGO_LOG_FORMAT", "json")
-log_stdout = True
-log_handler = {
-    "formatter": log_format,
-    "class": "logging.StreamHandler",
-    "stream": sys.stdout,
-    "level": log_level,
-}
-
-log_dir = os.environ.get("DJANGO_LOG_DIR")
-if log_dir:
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    log_stdout = False
-    log_handler = {
-        "formatter": log_format,
-        "class": "logging.handlers.RotatingFileHandler",
-        "filename": os.path.join(log_dir, "django-other.log"),
-        "backupCount": 5,
-        "maxBytes": 10000000,
-        "level": log_level,
-    }
 
 
 TEST_RUNNER = "common.test_runner.SeededDiscoveryRunner"

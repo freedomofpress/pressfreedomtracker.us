@@ -8,7 +8,7 @@ from django.utils.html import mark_safe
 
 from wagtail.templatetags.wagtailcore_tags import richtext
 
-import bleach
+import nh3
 from bs4 import BeautifulSoup
 
 
@@ -27,10 +27,15 @@ def richtext_inline(value):
     "Returns HTML-formatted rich text stripped of block level elements"
     text = richtext(value)
     return mark_safe(
-        bleach.clean(
+        nh3.clean(
             text,
-            strip=True,
             tags={"a", "abbr", "acronym", "b", "code", "em", "i", "strong", "span"},
+            attributes={
+                "a": {"href", "title"},
+                "abbr": {"title"},
+                "acronym": {"title"},
+            },
+            link_rel=None,
         )
     )
 
