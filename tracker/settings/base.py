@@ -482,12 +482,6 @@ CHART_PREGENERATOR = {
 
 WAGTAILEMBEDS_RESPONSIVE_HTML = True
 
-xdotcom = {
-    "endpoint": "https://api.twitter.com/1/statuses/oembed.{format}",
-    "urls": [
-        r"^https?://x\.com/(?:#!)?[^#?/]+/status/.+$",
-    ],
-}
 bluesky = {
     "endpoint": "https://embed.bsky.app/oembed",
     "urls": [
@@ -502,7 +496,7 @@ WAGTAILEMBEDS_FINDERS = [
     },
     {
         "class": "wagtail.embeds.finders.oembed",
-        "providers": [xdotcom, bluesky],
+        "providers": [bluesky],
     },
     # Handles all other oEmbed providers the default way
     {
