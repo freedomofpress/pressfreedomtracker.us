@@ -7,6 +7,7 @@ from common.utils.chart_pregenerator.types import SnapshotType
 
 
 class ChartValue(blocks.StructValue):
+    # Subclasses can override these per chart type.
     NEWSLETTER_WIDTH = 600
     NEWSLETTER_HEIGHT = 400
     NEWSLETTER_SCALE = 2  # rasterize @2x
