@@ -36,9 +36,9 @@ chardet==7.4.3 \
     --hash=sha256:dc50f28bad067393cce0af9091052c3b8df7a23115afd8ba7b2e0947f0cef1f8 \
     --hash=sha256:e1b98790c284ff813f18f7cf7de5f05ea2435a080030c7f1a8318f3a4f80b131
     # via diff-cover
-diff-cover==10.3.0 \
-    --hash=sha256:2e47d5ab3868d1e92131c11f364f3f4a8583c97123d3bbc6b6cc8ce0a4cc2202 \
-    --hash=sha256:474dbc63e815fbb7567d7b7ca5b104123e96129f25426ebdbc9a1bdbb935b2c6
+diff-cover==10.4.0 \
+    --hash=sha256:04daa3254c8494915e3afde79f89b60dbc8c4cbda0fbd11ae2c7e0014f71b37c \
+    --hash=sha256:fbb185f165b6faa118e44fdbe63a7d6eb36d86e1eea75a74f07496a2bdeac5c1
     # via -r ci-requirements.in
 iniconfig==2.3.0 \
     --hash=sha256:c76315c77db068650d49c5b56314774a7804df16fee4402c1f19d6d15d8c4730 \
