@@ -17,6 +17,9 @@ const config = {
 {
 	(async () => {
 		let ctx = await esbuild.context(config)
+		// Build once before starting nodemon so build/server.js exists — otherwise
+		// nodemon crashes on a cold start and its recovery races esbuild (flaky CI).
+		await ctx.rebuild()
 		await ctx.watch()
 
 		nodemon({
