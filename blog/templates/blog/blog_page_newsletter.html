@@ -191,6 +191,22 @@
 								</figcaption>
 								{% endif %}
 							</figure>
+						{% elif lead_item.block_type == "vertical_bar_chart" or lead_item.block_type == "tree_map_chart" or lead_item.block_type == "bubble_map_chart" or lead_item.block_type == "hexbin_map_chart" %}
+							<mj-text>
+								{% if lead_item.value.title %}
+									<p><strong>{{ lead_item.value.title }}</strong></p>
+								{% endif %}
+								<img
+									style="max-width:100%"
+									alt="{{ lead_item.value.description }}"
+									src="{{ lead_item.value.png_snapshot_url }}"
+								>
+							</mj-text>
+							<mj-text>
+								<a href="{% fullpageurl page %}" class="link-external">
+									View interactive chart on the website &rarr;
+								</a>
+							</mj-text>
 						{% else %}
 							<mj-text>
 								<a href="{% fullpageurl page %}" class="link-external">
