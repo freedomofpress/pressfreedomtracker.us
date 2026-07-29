@@ -578,9 +578,9 @@ filetype==1.2.0 \
     # via
     #   -r requirements.txt
     #   willow
-google-api-core==2.32.0 \
-    --hash=sha256:2b33aad226b19272458c46abfe5c5a38d9531ece0c44502129a1463ce83674ac \
-    --hash=sha256:ae1f0d58a6c8869350bf469f8eb3092e7f8c494a942d9525494afb6c162b0904
+google-api-core==2.33.0 \
+    --hash=sha256:3a36bcc3e319783f4c97da41f6f45ea6ffcaa55848e341de16e09cb70243c2bb \
+    --hash=sha256:a2e22a0c1d0f03eafff1858b38cf46f832d5902b0c052235bf0ab8402929fbdc
     # via
     #   -r requirements.txt
     #   google-api-python-client
