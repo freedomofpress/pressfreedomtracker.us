@@ -409,7 +409,6 @@ django==5.2.16 \
     # via
     #   -r requirements.txt
     #   django-anymail
-    #   django-autocomplete-light
     #   django-csp
     #   django-debug-toolbar
     #   django-filter
@@ -434,10 +433,6 @@ django==5.2.16 \
 django-anymail==15.0 \
     --hash=sha256:23d8ab6589afe8cc1ae7665c26879814ad192f4c3ed837a2a1868b0a056869e0 \
     --hash=sha256:64d33dd1084bfc8e4e12245f56629be40aa0b0498fc7fc7544d87b9b2048be1e
-    # via -r requirements.txt
-django-autocomplete-light==4.0.0 \
-    --hash=sha256:2d4438320eefe1248ad0543e1d1673449f571afcc5c603fb487e5ed2fe4849cf \
-    --hash=sha256:60ecf1bbc00f8a633c3967443ab745d9945b73cd6b4f7f64f236280c956b7ba4
     # via -r requirements.txt
 django-cprofile-middleware==1.0.5 \
     --hash=sha256:b942185a38f3b582935a55c768f126ce9a6f0cefceee3b5d19e6b307ad129889
