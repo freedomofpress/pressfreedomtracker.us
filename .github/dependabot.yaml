@@ -19,11 +19,9 @@ updates:
   - package-ecosystem: 'pip'
     directory: '/'
     schedule:
-      interval: 'weekly'
-      day: 'sunday'
+      interval: 'quarterly'
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 10
     allow:
       - dependency-type: 'all'
     commit-message:
@@ -40,15 +38,11 @@ updates:
           - 'version-update:semver-minor'
 
   - package-ecosystem: 'npm'
-    directories:
-      - '/'
-      - '/chart_pregenerator'
+    directory: '/'
     schedule:
-      interval: 'weekly'
-      day: 'sunday'
+      interval: 'quarterly'
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 10
     allow:
       - dependency-type: 'all'
     commit-message:
