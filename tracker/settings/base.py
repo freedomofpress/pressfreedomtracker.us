@@ -10,8 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-from __future__ import absolute_import, unicode_literals
-
 import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -328,7 +326,7 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
 
 
 # Django-webpack configuration
-WEBPACK_LOADER = {  # noqa: W605
+WEBPACK_LOADER = {
     "DEFAULT": {
         "CACHE": not DEBUG,
         "BUNDLE_DIR_NAME": "bundles/",  # must end with slash
@@ -482,12 +480,6 @@ CHART_PREGENERATOR = {
 
 WAGTAILEMBEDS_RESPONSIVE_HTML = True
 
-xdotcom = {
-    "endpoint": "https://api.twitter.com/1/statuses/oembed.{format}",
-    "urls": [
-        r"^https?://x\.com/(?:#!)?[^#?/]+/status/.+$",
-    ],
-}
 bluesky = {
     "endpoint": "https://embed.bsky.app/oembed",
     "urls": [
@@ -502,7 +494,7 @@ WAGTAILEMBEDS_FINDERS = [
     },
     {
         "class": "wagtail.embeds.finders.oembed",
-        "providers": [xdotcom, bluesky],
+        "providers": [bluesky],
     },
     # Handles all other oEmbed providers the default way
     {
