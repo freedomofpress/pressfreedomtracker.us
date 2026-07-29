@@ -84,7 +84,7 @@ function PrepubIncidentCategoryCount({
 					y={tooltipPosition.y}
 					content={(
 						<div className="category-count-tooltip">
-							<p className="category-count-tooltip--heading">Categories Tracked (unconfirmed)</p>
+							<p className="category-count-tooltip--heading">Categories tracked (unconfirmed)</p>
 							{categoryCounts.map((item) => (
 								<dl className="category-count-tooltip--row">
 									<dt className="category-count-tooltip--name">
