@@ -16,7 +16,10 @@ const config = {
 // eslint-disable-next-line no-lone-blocks
 {
 	(async () => {
-		let ctx = await esbuild.context(config)
+		const ctx = await esbuild.context(config)
+		// Build once before starting nodemon so build/server.js exists — otherwise
+		// nodemon crashes on a cold start and its recovery races esbuild.
+		await ctx.rebuild()
 		await ctx.watch()
 
 		nodemon({
@@ -25,10 +28,10 @@ const config = {
 			delay: 2000,
 			stdin: false,
 		})
-		nodemon.on("start", () => {
-			console.log("App has started")
-		}).on("restart", () => {
-			console.log("App restarted")
+		nodemon.on('start', () => {
+			console.log('App has started')
+		}).on('restart', () => {
+			console.log('App restarted')
 		})
 	})()
 }
