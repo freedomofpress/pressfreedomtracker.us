@@ -46,10 +46,16 @@ class TestVerticalBarChartValue(TestCase):
             "groupByTag": None,
         }
 
+        png_query = {
+            **query,
+            "width": self.vbc_value.NEWSLETTER_WIDTH,
+            "height": self.vbc_value.NEWSLETTER_HEIGHT,
+            "scale": self.vbc_value.NEWSLETTER_SCALE,
+        }
         self.snapshot_png = ChartSnapshotFactory(
             png=True,
             chart_type=ChartType.VERTICAL_BAR,
-            query=query,
+            query=png_query,
         )
         self.snapshot_svg = ChartSnapshotFactory(
             svg=True,
@@ -103,10 +109,16 @@ class TestBubbleMapValue(TestCase):
             "dateRange": ["2022-01-01", "2023-01-01"],
             "aggregationLocality": "state",
         }
+        png_query = {
+            **query,
+            "width": self.bmc_value.NEWSLETTER_WIDTH,
+            "height": self.bmc_value.NEWSLETTER_HEIGHT,
+            "scale": self.bmc_value.NEWSLETTER_SCALE,
+        }
         self.snapshot_png = ChartSnapshotFactory(
             png=True,
             chart_type=ChartType.BUBBLE_MAP,
-            query=query,
+            query=png_query,
         )
 
         meta_query = {**query, "mini": True, "width": 1200, "height": 630}

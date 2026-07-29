@@ -62,10 +62,16 @@ class TestTreeMapChartValue(metaclass=ABCMeta):
             chart_svg="<svg />",
             query=query,
         )
+        png_query = {
+            **query,
+            "width": self.tree_map_chart_value.NEWSLETTER_WIDTH,
+            "height": self.tree_map_chart_value.NEWSLETTER_HEIGHT,
+            "scale": self.tree_map_chart_value.NEWSLETTER_SCALE,
+        }
         self.snapshot_png = ChartSnapshotFactory(
             png=True,
             chart_type=ChartType.TREEMAP,
-            query=query,
+            query=png_query,
         )
 
     def test_branch_field_name(self):
