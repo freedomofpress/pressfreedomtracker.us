@@ -144,13 +144,14 @@ class ChartSnapshot(models.Model):
         if self.snapshot_type == SnapshotType.SVG:
             self.chart_svg = result
         elif self.snapshot_type == SnapshotType.PNG:
+            scale = self.query.get("scale", 1)
             custom_image = get_image_model()(
                 file=result,
                 # Remove the file extension for the title
                 title=result.name.rsplit(".", 1)[0],
                 collection=self.get_or_create_collection(),
-                height=self.query.get("height", self.DEFAULT_HEIGHT),
-                width=self.query.get("width", self.DEFAULT_WIDTH),
+                height=self.query.get("height", self.DEFAULT_HEIGHT) * scale,
+                width=self.query.get("width", self.DEFAULT_WIDTH) * scale,
             )
             custom_image.save()
             previous_image = self.chart_image

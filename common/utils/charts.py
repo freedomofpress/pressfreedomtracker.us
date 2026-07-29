@@ -1,4 +1,5 @@
 import base64
+
 from wagtail import blocks
 
 from common.models.charts import ChartSnapshot
@@ -6,6 +7,10 @@ from common.utils.chart_pregenerator.types import SnapshotType
 
 
 class ChartValue(blocks.StructValue):
+    NEWSLETTER_WIDTH = 600
+    NEWSLETTER_HEIGHT = 400
+    NEWSLETTER_SCALE = 2  # rasterize @2x
+
     def svg_snapshot(self):
         snapshot = ChartSnapshot.get_or_generate(
             chart_type=self.chart_type,
@@ -15,10 +20,14 @@ class ChartValue(blocks.StructValue):
         return snapshot.chart_svg
 
     def png_snapshot_url(self):
+        options = self.options_schema().dump(self)
+        options["width"] = self.NEWSLETTER_WIDTH
+        options["height"] = self.NEWSLETTER_HEIGHT
+        options["scale"] = self.NEWSLETTER_SCALE
         snapshot = ChartSnapshot.get_or_generate(
             chart_type=self.chart_type,
             snapshot_type=SnapshotType.PNG,
-            query=self.options_schema().dump(self),
+            query=options,
         )
         return snapshot.chart_image.get_rendition("original").full_url
 
