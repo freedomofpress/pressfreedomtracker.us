@@ -264,6 +264,33 @@ class TestPages(TestCase):
             "Preamble override",
         )
 
+    def test_newsletter_preview_text_uses_preamble_as_plain_text(self):
+        # The preheader teaser comes from the preamble, with rich-text HTML
+        # stripped and entities decoded so the template doesn't double-encode.
+        self.blog_page.newsletter_preamble = "<p>Intro <b>teaser</b> &amp; more.</p>"
+        self.blog_page.save()
+        self.assertEqual(
+            self.blog_page.get_newsletter_preview_text(),
+            "Intro teaser & more.",
+        )
+
+    def test_newsletter_preview_text_falls_back_to_first_text_block(self):
+        # With no preamble on the page or its index, the teaser falls back to
+        # the first text block, skipping non-text blocks.
+        page = BlogPageFactory(parent=self.index, slug="preview-fallback")
+        page.newsletter_preamble = None
+        page.body = [
+            ("raw_html", "<div>ignore me</div>"),
+            ("text", {"text": "<p>First body paragraph.</p>"}),
+        ]
+        page.save()
+        self.index.newsletter_preamble = None
+        self.index.save()
+        self.assertEqual(
+            page.get_newsletter_preview_text(),
+            "First body paragraph.",
+        )
+
     def test_newsletter_renders_without_preamble(self):
         # Regression: a newsletter page with a lead graphic but no preamble
         # set on either the page or its index page must still render. The
