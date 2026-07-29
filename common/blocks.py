@@ -512,6 +512,7 @@ class SimpleIncidentSet(blocks.StructBlock):
 class BubbleMapChartValue(ChartValue):
     options_schema = BubbleMapChartOptionsSchema
     chart_type = ChartType.BUBBLE_MAP
+    NEWSLETTER_HEIGHT = 470  # taller aspect ratio to avoid bubbles being clipped
 
 
 class VerticalBarChart(blocks.StructBlock):

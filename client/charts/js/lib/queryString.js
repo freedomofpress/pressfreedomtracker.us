@@ -73,8 +73,6 @@ const queryFields = {
 	state: parseString,
 	targeted_journalists: parseString,
 	targeted_institutions: parseString,
-	lawsuit_name: parseString,
-	venue: parseString,
 	case_statuses: parseString,
 	case_type: parseString,
 	case_number: parseString,

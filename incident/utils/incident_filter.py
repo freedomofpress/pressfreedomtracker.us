@@ -1059,6 +1059,7 @@ class IncidentFilter(object):
             if field.name in cls.exclude_fields:
                 continue
             filters[field.name] = cls._get_filter(field)
+
         return filters
 
     @classmethod

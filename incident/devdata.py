@@ -608,7 +608,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
         venues = []
         for i in range(count):
             t = make_venue()
-            t.venue_incidents.add(self)
             venues.append(t)
         if not create:
             self._prefetched_objects_cache = {"venues": venues}

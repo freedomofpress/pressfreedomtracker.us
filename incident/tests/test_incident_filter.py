@@ -25,7 +25,6 @@ from incident.utils.incident_filter import (
     BooleanFilter,
     CommaSeparatedFilter,
     IncidentFilter,
-    ManyRelationFilter,
     ManyRelationValue,
 )
 
@@ -500,17 +499,6 @@ class CleanTest(TestCase):
             incident_filter.clean(strict=False)
 
             self.assertEqual(incident_filter.cleaned_data, {})
-
-    def test_text_param_for_manyrelation_filter_without_text_fields(self):
-        fltr = ManyRelationFilter("venue", IncidentPage.venue, text_fields=[])
-
-        with self.assertRaises(ValidationError) as cm:
-            fltr.clean("???", strict=True)
-
-        self.assertEqual(
-            [str(error) for error in cm.exception],
-            ["Invalid value for venue: ???"],
-        )
 
     def test_param_for_commaseparated_filter(self):
         fltr = CommaSeparatedFilter("tags", CommonTag)

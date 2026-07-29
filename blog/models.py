@@ -1,3 +1,5 @@
+from html import unescape
+
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils.html import strip_tags
@@ -388,6 +390,18 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
             return self.newsletter_preamble
         parent = self.get_parent().specific
         return parent.newsletter_preamble
+
+    def get_newsletter_preview_text(self):
+        # Plain-text teaser for the email preheader (mj-preview)
+        preamble = self.get_newsletter_preamble()
+        if preamble:
+            return unescape(strip_tags(preamble)).strip()
+        for block in self.body:
+            if block.block_type == "text":
+                # Body text isn't written as a teaser, so cap the fallback.
+                text = unescape(strip_tags(str(block.value["text"]))).strip()
+                return truncatewords(text, 30)
+        return ""
 
     def get_meta_image(self):
         if (

@@ -7,6 +7,7 @@
 {% mrml %}
 <mjml>
 	<mj-head>
+		<mj-preview>{{ page.get_newsletter_preview_text }}</mj-preview>
 		<mj-attributes>
 			<mj-all padding="0" />
 			<mj-text font-size="18px" line-height="1.5" font-family="'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif" color="#000000" />
@@ -115,6 +116,15 @@
 	</mj-head>
 	<mj-body background-color="#333333" width="600px">
 
+		<!-- VIEW IN BROWSER -->
+		<mj-section background-color="#333" padding="10px 24px">
+			<mj-column>
+				<mj-text align="center" color="#fff" font-size="12px" font-family="'Roboto Mono', monospace" line-height="1.4" padding="0">
+					<a href="*|ARCHIVE|*" style="color:#C1C1C1;">View this newsletter in your browser</a>
+				</mj-text>
+			</mj-column>
+		</mj-section>
+
 		<!-- HEADER -->
 		<mj-section background-color="#000000" css-class="header">
 			<mj-column>
@@ -191,6 +201,22 @@
 								</figcaption>
 								{% endif %}
 							</figure>
+						{% elif lead_item.block_type == "vertical_bar_chart" or lead_item.block_type == "tree_map_chart" or lead_item.block_type == "bubble_map_chart" or lead_item.block_type == "hexbin_map_chart" %}
+							<mj-text>
+								{% if lead_item.value.title %}
+									<p><strong>{{ lead_item.value.title }}</strong></p>
+								{% endif %}
+								<img
+									style="max-width:100%"
+									alt="{{ lead_item.value.description }}"
+									src="{{ lead_item.value.png_snapshot_url }}"
+								>
+							</mj-text>
+							<mj-text>
+								<a href="{% fullpageurl page %}" class="link-external">
+									View interactive chart on the website &rarr;
+								</a>
+							</mj-text>
 						{% else %}
 							<mj-text>
 								<a href="{% fullpageurl page %}" class="link-external">

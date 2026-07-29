@@ -28,7 +28,6 @@ FILTER_CHOICES = [
     ("links", "Incident page links"),
     ("index_entries", "Index entries"),
     ("legal_order_information_requested", "Information requested in legal order"),
-    ("lawsuit_name", "Lawsuit name"),
     ("case_statuses", "Legal case statuses"),
     ("legal_order_status", "Legal order status"),
     ("legal_order_target", "Legal order target"),
@@ -58,6 +57,5 @@ FILTER_CHOICES = [
     ("target_us_citizenship_status", "US citizenship status"),
     ("unnecessary_use_of_force", "Unnecessary use of force?"),
     ("recently_updated", "Updated in the last"),
-    ("venue", "Venue"),
     ("was_journalist_targeted", "Was journalist targeted?"),
 ]

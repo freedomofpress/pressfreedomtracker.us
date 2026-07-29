@@ -1540,26 +1540,27 @@ class GetSummaryTest(TestCase):
     def test_category_incident_count_filtered(self):
         category2 = CategoryPageFactory(
             title="Other category",
+            incident_filters=["case_number"],
         )
         IncidentPageFactory(
-            lawsuit_name="Lawsuit One",
+            case_number="Lawsuit One",
             categories=[self.category, category2],
             date=timezone.now().date(),
         )
         IncidentPageFactory(
-            lawsuit_name="Lawsuit Two",
+            case_number="Lawsuit Two",
             categories=[self.category, category2],
             date=timezone.now().date(),
         )
         IncidentPageFactory(
-            lawsuit_name="Lawsuit One",
+            case_number="Lawsuit One",
             categories=[category2, self.category],
             date=timezone.now().date(),
         )
         incident_filter = IncidentFilter(
             dict(
                 categories="{},{}".format(self.category.id, category2.id),
-                lawsuit_name="Lawsuit One",
+                case_number="Lawsuit One",
             )
         )
 
@@ -1578,33 +1579,34 @@ class GetSummaryTest(TestCase):
             incident_filter.cleaned_data,
             {
                 "categories": ManyRelationValue(pks=[self.category.id, category2.id]),
-                "lawsuit_name": "Lawsuit One",
+                "case_number": "Lawsuit One",
             },
         )
 
     def test_category_incident_count_filtered_by_title(self):
         category2 = CategoryPageFactory(
             title="Other category",
+            incident_filters=["case_number"],
         )
         IncidentPageFactory(
-            lawsuit_name="Lawsuit One",
+            case_number="Lawsuit One",
             categories=[self.category, category2],
             date=timezone.now().date(),
         )
         IncidentPageFactory(
-            lawsuit_name="Lawsuit Two",
+            case_number="Lawsuit Two",
             categories=[self.category, category2],
             date=timezone.now().date(),
         )
         IncidentPageFactory(
-            lawsuit_name="Lawsuit One",
+            case_number="Lawsuit One",
             categories=[category2, self.category],
             date=timezone.now().date(),
         )
         incident_filter = IncidentFilter(
             dict(
                 categories="{},{}".format(self.category.pk, category2.title),
-                lawsuit_name="Lawsuit One",
+                case_number="Lawsuit One",
             )
         )
 
@@ -1625,7 +1627,7 @@ class GetSummaryTest(TestCase):
                 "categories": ManyRelationValue(
                     pks=[self.category.pk], strings=[category2.title]
                 ),
-                "lawsuit_name": "Lawsuit One",
+                "case_number": "Lawsuit One",
             },
         )
 
