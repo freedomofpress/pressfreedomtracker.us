@@ -2,7 +2,6 @@ beautifulsoup4
 Django>=5.2.13,<6.0
 djangorestframework>=3.14
 django-anymail
-django-autocomplete-light
 django-csp>=3.7
 django-modelcluster>=6.2.1
 django-settings-export
