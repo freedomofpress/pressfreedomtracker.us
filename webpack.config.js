@@ -1,136 +1,101 @@
-var webpack = require("webpack");
-const { merge } = require("webpack-merge");
-var autoprefixer = require("autoprefixer");
-var BundleTracker = require("webpack-bundle-tracker");
-var MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var path = require("path");
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const BundleTracker = require('webpack-bundle-tracker')
+const swcConfig = require('./swc.config')
 
-var TARGET = process.env.npm_lifecycle_event;
-process.env.BABEL_ENV = TARGET;
+const BASE_DIR = path.join(__dirname, 'client')
+const DIST_DIR = path.join(__dirname, 'build/static/bundles')
 
-var target = __dirname + "/build/static/bundles";
+// `npm run build` passes `--mode production`, `npm run start` passes
+// `--mode development`; webpack surfaces that here as `argv.mode`.
+module.exports = (env, argv) => {
+	const isProd = argv.mode === 'production'
 
-var STATIC_URL = process.env.STATIC_URL || "/common/static/";
-var sassData = '$static-url: "' + STATIC_URL + '"';
-console.log("Using STATIC_URL", STATIC_URL);
-
-var common = {
-	entry: {
-		common: __dirname + "/client/common/js/common.js",
-		statistics: __dirname + "/client/statistics/js/searchstats.js",
-		draftail: __dirname + "/client/common/js/draftail_curlify.js",
-		charts: __dirname + "/client/charts/js/index.js",
-		filterSidebar: __dirname + "/client/charts/js/filter-sidebar.js",
-		filterSummary: __dirname + "/client/charts/js/filter-summary.js",
-		searchBar: __dirname + "/client/common/js/search-bar.js",
-		verticalBarChart: __dirname + "/client/charts/js/vertical-bar-chart.js",
-		treeMapChart: __dirname + "/client/charts/js/tree-map-chart.js",
-		bubbleMapChart: __dirname + "/client/charts/js/bubble-map-chart.js",
-		hexbinMapChart: __dirname + "/client/charts/js/hexbin-map-chart.js",
-	},
-
-	output: {
-		path: target,
-		filename: "[name].js",
-		clean: true,
-	},
-
-	resolve: {
-		alias: {
-			"~": __dirname + "/client/common/js",
+	return {
+		// One entry point per output bundle. Each key is the initial file that
+		// webpack starts bundling from.
+		entry: {
+			common: path.resolve(BASE_DIR, 'common/js/common.js'),
+			statistics: path.resolve(BASE_DIR, 'statistics/js/searchstats.js'),
+			draftail: path.resolve(BASE_DIR, 'common/js/draftail_curlify.js'),
+			charts: path.resolve(BASE_DIR, 'charts/js/index.js'),
+			filterSidebar: path.resolve(BASE_DIR, 'charts/js/filter-sidebar.js'),
+			filterSummary: path.resolve(BASE_DIR, 'charts/js/filter-summary.js'),
+			searchBar: path.resolve(BASE_DIR, 'common/js/search-bar.js'),
+			verticalBarChart: path.resolve(BASE_DIR, 'charts/js/vertical-bar-chart.js'),
+			treeMapChart: path.resolve(BASE_DIR, 'charts/js/tree-map-chart.js'),
+			bubbleMapChart: path.resolve(BASE_DIR, 'charts/js/bubble-map-chart.js'),
+			hexbinMapChart: path.resolve(BASE_DIR, 'charts/js/hexbin-map-chart.js'),
 		},
-		extensions: [".js", ".jsx"],
-		modules: ["node_modules"],
-	},
 
-	module: {
-		rules: [
-			{
-				test: /\.jsx?$/,
-				use: [
-					{
-						loader: "babel-loader",
-						options: {
-							presets: [
-								"@babel/preset-react",
-								// Setting `modules` false, prevents babel from trying to use
-								// commonjs imports, which messes up our nice clean ES6 imports
-								// provided directly by Webpack:
-								// https://github.com/webpack/webpack/issues/4961#issuecomment-304938963
-								["@babel/preset-env", { modules: false }],
-							],
-						},
-					},
-				],
-				include: [
-					path.join(__dirname, "/client/common/js"),
-					path.join(__dirname, "/client/statistics/js"),
-					path.join(__dirname, "/client/charts/js"),
-				],
-			},
-			{
-				test: /\.s[ca]ss$/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					"css-loader",
-					"postcss-loader",
-					{
-						loader: "sass-loader",
-
-						options: {
-							sassOptions: {
-								includePaths: [path.resolve(__dirname, "node_modules/")],
-							},
-							additionalData: sassData,
-						},
-					},
-				],
-			},
-			{
-				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
-			},
-			{
-				test: /\.(png|svg|jpg|gif)$/,
-				type: "asset/resource",
-			},
-			{
-				test: /\.(woff|woff2|eot|ttf|otf)$/,
-				type: "asset/resource",
-			},
-		],
-	},
-
-	plugins: [
-		new MiniCssExtractPlugin({
-			filename: "[name]-[hash].css",
-			chunkFilename: "[id]-[hash].css",
-		}),
-		new BundleTracker({
-			path: target,
-			filename: "webpack-stats.json",
-		}),
-	],
-};
-
-if (TARGET === "build") {
-	module.exports = merge(common, {
+		// Production filenames get a content hash for cache-busting; dev keeps the
+		// plain entry name. `clean` removes stale bundles left by previous builds.
 		output: {
-			filename: "[name]-[contenthash].js",
+			path: DIST_DIR,
+			filename: isProd ? '[name]-[contenthash].js' : '[name].js',
+			clean: true,
 		},
+
+		// `~` lets JS import from client/common/js without long relative paths;
+		// `.jsx` in extensions lets those imports omit the extension.
+		resolve: {
+			alias: {
+				'~': path.resolve(BASE_DIR, 'common/js'),
+			},
+			extensions: ['.js', '.jsx'],
+		},
+
+		// Loaders run bottom-up. JS/JSX are transpiled by swc-loader (options in
+		// ./swc.config.js, shared with Jest). Sass is compiled by sass-loader ->
+		// css-loader -> MiniCssExtractPlugin, which writes .css files instead of
+		// injecting <style> tags.
+		module: {
+			rules: [
+				{
+					test: /\.jsx?$/,
+					include: [BASE_DIR],
+					use: { loader: 'swc-loader', options: swcConfig },
+				},
+				{
+					test: /\.s[ca]ss$/,
+					use: [
+						MiniCssExtractPlugin.loader,
+						'css-loader',
+						{
+							loader: 'sass-loader',
+							options: {
+								// The stylesheets use `@import`, which Dart Sass has
+								// deprecated in favour of `@use`.
+								sassOptions: {
+									silenceDeprecations: ['import', 'global-builtin'],
+								},
+							},
+						},
+					],
+				},
+				{
+					test: /\.css$/,
+					use: [MiniCssExtractPlugin.loader, 'css-loader'],
+				},
+				{
+					// Fonts and images referenced from CSS via url() become separate files.
+					test: /\.(png|svg|jpg|gif|woff|woff2|eot|ttf|otf)$/,
+					type: 'asset/resource',
+				},
+			],
+		},
+
 		plugins: [
-			new webpack.DefinePlugin({
-				"process.env": { NODE_ENV: JSON.stringify("production") },
+			new MiniCssExtractPlugin({
+				filename: isProd ? '[name]-[contenthash].css' : '[name].css',
+				chunkFilename: isProd ? '[id]-[contenthash].css' : '[id].css',
+			}),
+			// Django reads this manifest via django-webpack-loader; it must sit
+			// alongside the bundles it describes.
+			new BundleTracker({
+				path: DIST_DIR,
+				filename: 'webpack-stats.json',
 			}),
 		],
-	});
-}
-
-if (TARGET === "start") {
-	module.exports = merge(common, {
-		output: {
-			filename: "[name]-[contenthash].js",
-			pathinfo: true,
-		},
-	});
+	}
 }

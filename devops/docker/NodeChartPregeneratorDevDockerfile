@@ -24,7 +24,8 @@ USER ${USERID}
 COPY chart_pregenerator/package*.json ./
 COPY chart_pregenerator/dev.js ./
 COPY chart_pregenerator/jest.config.js ./
-COPY chart_pregenerator/babel.config.json ./
+# jest.config.js requires ../swc.config.js; WORKDIR is /app, so it lands at /.
+COPY swc.config.js /swc.config.js
 
 RUN npm ci
 CMD [ "/usr/bin/node-pregenerator-start.sh" ]

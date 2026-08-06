@@ -15,6 +15,8 @@ RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 COPY chart_pregenerator /opt/chart-pregenerator
 COPY ./client /opt/chart-pregenerator/client
+# jest.config.js requires ../swc.config.js, relative to the workdir below.
+COPY swc.config.js /opt/swc.config.js
 RUN chown -R "${USERID}" /opt/chart-pregenerator
 WORKDIR /opt/chart-pregenerator
 
