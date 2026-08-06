@@ -17,7 +17,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@visx/responsive": "^3.0.0",
     "canvg": "^4.0.1",
-    "classnames": "^2.3.2",
+    "classnames": "^2.5.1",
     "d3": "^7.1.1",
     "esbuild": "^0.28.1",
     "express": "^4.22.2",
@@ -26,13 +26,11 @@
     "react": "^18.3.1",
     "react-animated-dataset": "^0.4.0",
     "react-dom": "^18.2.0",
-    "regenerator-runtime": "^0.14.1",
     "topojson-client": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.22.10",
-    "@babel/preset-react": "^7.22.5",
-    "babel-jest": "^30.4.1",
+    "@swc/core": "^1.15.47",
+    "@swc/jest": "^0.2.39",
     "jest": "^30.4.2",
     "lodash.debounce": "^4.0.8",
     "nodemon": "^3.0.1"
