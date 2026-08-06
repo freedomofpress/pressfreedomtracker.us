@@ -143,7 +143,11 @@ def prepub_list(request):
         raise Http404
 
     lower_bound = datetime.date.today() - prepub_settings.get_timespan()
-    bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(days=29)
+    # Bar chart is always bucketed by day; capped at 30d to avoid bars colliding.
+    bar_chart_days = min((datetime.date.today() - lower_bound).days, 30)
+    bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(
+        days=bar_chart_days - 1
+    )
 
     confirmed_by_date = Counter(
         IncidentPage.objects.live()
@@ -187,6 +191,7 @@ def prepub_list(request):
             "max_incident_count": max_incident_count,
             "updated_time": sync.completed_at.strftime("%H:%M %p %Z"),
             "timespan_display": prepub_settings.get_timespan_display(),
+            "bar_chart_days": bar_chart_days,
             "bar_chart_dataset": json.dumps(bar_chart_dataset),
         },
     )

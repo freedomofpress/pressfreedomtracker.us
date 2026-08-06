@@ -259,6 +259,8 @@ class PrepubViewTestCase(TestCase):
         response = self.client.get(reverse("prepub_list"))
         bar_chart_dataset = json.loads(response.context["bar_chart_dataset"])
 
+        # A timespan longer than 30 days is capped at 30.
+        self.assertEqual(response.context["bar_chart_days"], 30)
         self.assertEqual(len(bar_chart_dataset), 30)
 
         # The dataset is ordered by date ascending, so the most recent
@@ -288,3 +290,22 @@ class PrepubViewTestCase(TestCase):
                 "unconfirmed": 3,
             },
         )
+
+    def test_bar_chart_dataset_matches_timespan(self):
+        # A timespan shorter than 30d produces one daily bucket per
+        # day of the timespan. The headline reflects the same count.
+        self.settings.timespan_length = 7
+        self.settings.timespan_units = PrepublicationSettings.TimespanUnits.DAY
+        self.settings.save()
+        create_prepub(date=date.today())
+
+        response = self.client.get(reverse("prepub_list"))
+        bar_chart_dataset = json.loads(response.context["bar_chart_dataset"])
+
+        self.assertEqual(response.context["bar_chart_days"], 7)
+        self.assertEqual(len(bar_chart_dataset), 7)
+        self.assertEqual(
+            bar_chart_dataset[0]["date"],
+            f"{date.today() - timedelta(days=6):%m/%d}",
+        )
+        self.assertEqual(bar_chart_dataset[-1]["date"], f"{date.today():%m/%d}")
