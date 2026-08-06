@@ -1,28 +1,28 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders CategorySection with mocked data 1`] = `
-<div
-  className="category-checkbox"
->
-  <input
-    checked={false}
-    className="category-checkbox--input"
-    id="test"
-    onChange={[Function]}
-    type="checkbox"
-  />
-  <label
-    className="category-checkbox--label"
-    htmlFor="test"
+<DocumentFragment>
+  <div
+    class="category-checkbox"
   >
-    <span
-      className="category category-test"
+    <input
+      class="category-checkbox--input"
+      id="test"
+      type="checkbox"
+    />
+    <label
+      class="category-checkbox--label"
+      for="test"
     >
-      test
-    </span>
-    <span>
-      2
-    </span>
-  </label>
-</div>
+      <span
+        class="category category-test"
+      >
+        test
+      </span>
+      <span>
+        2
+      </span>
+    </label>
+  </div>
+</DocumentFragment>
 `;

@@ -1,10 +1,9 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import BarChartYears from '../BarChartYears'
 
 test('renders BarChartYears with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<BarChartYears
 			countYears={[{"year":2012,"count":2,"numberOfIncidents":0}]}
 			x="monthName"
@@ -13,5 +12,6 @@ test('renders BarChartYears with mocked data', () => {
 			width={480}
 			height={500}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

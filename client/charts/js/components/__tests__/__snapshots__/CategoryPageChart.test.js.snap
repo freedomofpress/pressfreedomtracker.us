@@ -1,38 +1,29 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders CategoryPageChart with mocked data 1`] = `
-<div
-  style={
-    {
-      "height": "100%",
-      "width": "100%",
-    }
-  }
->
+<DocumentFragment>
   <div
-    className="flashing flashing--off"
+    style="width: 100%;"
   >
     <div
-      className="cpChartContainer"
-      style={
-        {
-          "width": 0,
-        }
-      }
+      class="flashing flashing--off"
     >
       <div
-        className="cpChart"
+        class="cpChartContainer"
+        style="width: 0px;"
       >
         <div
-          className="chartDescription"
-          id="category-page-chart-label"
+          class="cpChart"
         >
-          Number of 
-          test
-           incidents per year.
+          <div
+            class="chartDescription"
+            id="category-page-chart-label"
+          >
+            Number of test incidents per year.
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

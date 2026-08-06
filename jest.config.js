@@ -11,11 +11,10 @@ module.exports = {
 	transform: {
 		'^.+\\.jsx?$': ['@swc/jest', swcConfig],
 	},
-	// d3 and friends ship ESM only, so they need transpiling despite living in
-	// node_modules.
+	// d3 and friends are ESM-only, so they need transpiling in node_modules.
 	transformIgnorePatterns: [
 		'<rootDir>/node_modules/(?!d3|internmap|delaunator|robust-predicates|react-animated-dataset)',
 	],
-	setupFiles: ['<rootDir>/client/common/js/setupTests.js'],
+	setupFilesAfterEnv: ['<rootDir>/client/common/js/setupTests.js'],
 	testPathIgnorePatterns: ['/node_modules/', '<rootDir>/chart_pregenerator/'],
 }

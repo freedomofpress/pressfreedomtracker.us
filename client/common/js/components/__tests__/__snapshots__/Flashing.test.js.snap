@@ -1,17 +1,21 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders Flashing false 1`] = `
-<div
-  className="flashing flashing--off"
->
-  test
-</div>
+<DocumentFragment>
+  <div
+    class="flashing flashing--off"
+  >
+    test
+  </div>
+</DocumentFragment>
 `;
 
 exports[`renders Flashing true 1`] = `
-<div
-  className="flashing"
->
-  test
-</div>
+<DocumentFragment>
+  <div
+    class="flashing"
+  >
+    test
+  </div>
+</DocumentFragment>
 `;

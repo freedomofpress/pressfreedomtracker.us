@@ -1,11 +1,10 @@
 import React from 'react'
 import * as d3 from 'd3'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import TimeYearsFilter from '../TimeYearsFilter'
 
 test('renders TimeYearsFilter with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<TimeYearsFilter
 			width={500}
 			height={500}
@@ -13,5 +12,6 @@ test('renders TimeYearsFilter with mocked data', () => {
 			dataset={[{ date: d3.timeParse('%m-%d-%Y')('6-1-2020') }]}
 			filterParameters={['2020']}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

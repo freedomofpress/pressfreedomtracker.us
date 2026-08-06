@@ -17,14 +17,10 @@ export const categorySymbolMap = {
 	'Other Incident': 'other_incident',
 }
 
-export default function CategoryIcon({ category }) {
+export default function CategoryIcon({ category = '' }) {
 	return (<div className={classNames('category', `category-${categorySymbolMap[category] || category}`)} />)
 }
 
 CategoryIcon.propTypes = {
 	category: PropTypes.string,
-}
-
-CategoryIcon.defaultProps = {
-	category: '',
 }

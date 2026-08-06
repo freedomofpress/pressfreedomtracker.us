@@ -192,7 +192,11 @@ function RadioFilter({
 	name,
 	label,
 	value,
-	options,
+	options = [
+		{ label: 'Unknown', value: 'NOTHING' },
+		{ label: 'Yes', value: 'JUST_TRUE' },
+		{ label: 'No', value: 'JUST_FALSE' },
+	],
 	handleFilterChange,
 }) {
 	let id = `id_${name}`
@@ -227,13 +231,6 @@ function RadioFilter({
 	)
 }
 
-RadioFilter.defaultProps = {
-	options: [
-		{ label: 'Unknown', value: 'NOTHING' },
-		{ label: 'Yes', value: 'JUST_TRUE' },
-		{ label: 'No', value: 'JUST_FALSE' },
-	],
-}
 
 
 export function BoolFilter(props) {

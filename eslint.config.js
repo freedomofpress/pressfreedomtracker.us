@@ -6,8 +6,6 @@ const jsxA11y = require('eslint-plugin-jsx-a11y')
 const compat = require('eslint-plugin-compat')
 
 module.exports = [
-	// Only hand-written source is linted; everything below is build output,
-	// generated, or vendored.
 	{
 		ignores: [
 			'build/**',
@@ -22,24 +20,19 @@ module.exports = [
 			'**/*.min.js',
 			'webpack-stats.json',
 
-			// Carried over from the previous .eslintrc.js, which excluded these.
 			'client/common/js/curlify.js',
 			'client/common/js/curlify.test.js',
 
-			// FIXME: client/charts/ has never been linted — the previous
-			// .eslintrc.js excluded it too. It currently reports 58 errors,
-			// including 5 conditional hook calls in App.jsx and BarChart.jsx.
-			// Fixing those is a follow-up; this carve-out is temporary and
-			// deliberately explicit so it isn't forgotten again.
+			// FIXME: not yet linted — reports 58 errors, including 5 conditional
+			// hook calls in App.jsx and BarChart.jsx.
 			'client/charts/**',
 		],
 	},
 
 	js.configs.recommended,
 
-	// Browser-shipped app source. eslint-plugin-compat flags any JS API that
-	// isn't Baseline-widely-available for the browsers in package.json's
-	// "browserslist" field.
+	// eslint-plugin-compat flags JS APIs outside the "browserslist" range in
+	// package.json.
 	{
 		...compat.configs['flat/recommended'],
 		files: ['client/**/*.{js,jsx}'],
@@ -55,8 +48,8 @@ module.exports = [
 		},
 	},
 
-	// React source and the JSX-using Jest specs (some are .js). Classic runtime
-	// -> React must be in scope, which react/recommended enforces.
+	// Classic JSX runtime, so React must be in scope — react/recommended
+	// enforces that.
 	{
 		files: ['client/**/*.{js,jsx}', 'chart_pregenerator/src/**/*.{js,jsx}'],
 		plugins: {
@@ -84,7 +77,7 @@ module.exports = [
 		},
 	},
 
-	// The chart pregenerator is a Node service, so logging is expected.
+	// The pregenerator is a Node service, so logging is expected.
 	{
 		files: ['chart_pregenerator/**/*.{js,jsx}'],
 		languageOptions: {
@@ -96,7 +89,6 @@ module.exports = [
 		rules: { 'no-console': 'off' },
 	},
 
-	// Jest specs.
 	{
 		files: [
 			'**/*.test.{js,jsx}',
@@ -106,7 +98,6 @@ module.exports = [
 		languageOptions: { globals: { ...globals.jest } },
 	},
 
-	// Build/tooling config files run in Node as CommonJS.
 	{
 		files: ['*.config.js', 'chart_pregenerator/*.js'],
 		languageOptions: {

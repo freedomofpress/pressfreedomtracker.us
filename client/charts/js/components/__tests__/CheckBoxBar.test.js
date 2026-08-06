@@ -1,15 +1,15 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import CheckBoxBar from '../CheckBoxBar'
 
 test('renders CheckBoxBar with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<CheckBoxBar
 			label="test"
 			count={2}
 			isSelected={false}
 			onClick={() => {}}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

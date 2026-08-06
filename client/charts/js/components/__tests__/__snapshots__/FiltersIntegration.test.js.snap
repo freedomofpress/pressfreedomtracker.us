@@ -1,1899 +1,1139 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders FiltersIntegration with mocked data 1`] = `
-<Context.Provider
-  value={[Function]}
->
+<DocumentFragment>
   <section
     aria-labelledby="filter-sidebar-heading"
-    className="filters__form"
+    class="filters__form"
   >
     <div
-      className="filters__form--header"
+      class="filters__form--header"
     >
       <h2
-        className="filter__heading"
+        class="filter__heading"
         id="filter-sidebar-heading"
       >
         Filters
       </h2>
       <a
-        className="btn btn-ghost"
+        class="btn btn-ghost"
         href="/all-incidents/"
       >
         Clear All
       </a>
     </div>
     <details
-      className="filters__group filters__form--category"
-      open={true}
+      class="filters__group filters__form--category"
+      open=""
     >
       <summary
-        className="filters__form-summary"
+        class="filters__form-summary"
       >
         <h3
-          className="filter__heading"
+          class="filter__heading"
         >
           Category
         </h3>
       </summary>
-      <CategoryFilter
-        dataset={
-          [
-            {
-              "categories": [
-                "Arrest / Criminal Charge",
-              ],
-              "city": "Thomasland",
-              "date": "2023-02-12T00:00:00.000Z",
-              "latitude": null,
-              "longitude": null,
-              "state": "ID",
-              "tags": [
-                "lemur",
-              ],
-            },
-            {
-              "categories": [
-                "Arrest / Criminal Charge",
-              ],
-              "city": "New Brooke",
-              "date": "2022-10-23T00:00:00.000Z",
-              "latitude": null,
-              "longitude": null,
-              "state": "NC",
-              "tags": [
-                "baboon",
-              ],
-            },
-            {
-              "categories": [
-                "Equipment Search or Seizure",
-              ],
-              "city": "East Mary",
-              "date": "2022-05-12T00:00:00.000Z",
-              "latitude": null,
-              "longitude": null,
-              "state": "CT",
-              "tags": [
-                "civet",
-              ],
-            },
-            {
-              "categories": [
-                "Equipment Search or Seizure",
-              ],
-              "city": "Josephmouth",
-              "date": "2022-07-24T00:00:00.000Z",
-              "latitude": null,
-              "longitude": null,
-              "state": "AL",
-              "tags": [
-                "hyena",
-              ],
-            },
-            {
-              "categories": [
-                "Border Stop",
-              ],
-              "city": "North Nancystad",
-              "date": "2022-04-12T00:00:00.000Z",
-              "latitude": null,
-              "longitude": null,
-              "state": "WV",
-              "tags": [
-                "chrysanthemum",
-              ],
-            },
-            {
-              "categories": [
-                "Border Stop",
-              ],
-              "city": "East Kaitlyn",
-              "date": "2022-09-02T00:00:00.000Z",
-              "latitude": null,
-              "longitude": null,
-              "state": "OH",
-              "tags": [
-                "plum",
-              ],
-            },
-            {
-              "categories": [
-                "Assault",
-              ],
-              "city": "New Jamesberg",
-              "date": "2023-01-16T00:00:00.000Z",
-              "latitude": null,
-              "longitude": null,
-              "state": "TX",
-              "tags": [
-                "platypus",
-              ],
-            },
-          ]
-        }
-        filterDefs={
-          [
-            {
-              "filters": [
-                {
-                  "choices": [
-                    [
-                      "UNKNOWN",
-                      "unknown",
-                    ],
-                    [
-                      "DETAINED_NO_PROCESSING",
-                      "detained and released without being processed",
-                    ],
-                    [
-                      "DETAINED_CUSTODY",
-                      "detained and still in custody",
-                    ],
-                    [
-                      "ARRESTED_CUSTODY",
-                      "arrested and still in custody",
-                    ],
-                    [
-                      "ARRESTED_RELEASED",
-                      "arrested and released",
-                    ],
-                    [
-                      "CHARGED_WITHOUT_ARREST",
-                      "charged without arrest",
-                    ],
-                  ],
-                  "name": "arrest_status",
-                  "title": "Arrest status",
-                  "type": "choice",
-                },
-                {
-                  "autocomplete_type": "incident.LawEnforcementOrganization",
-                  "choices": [
-                    "Aaronstad Security Forces",
-                    "Adamsside Security Forces",
-                    "Ambertown Military Police",
-                    "Amyside Police Squad",
-                    "Armstrongton Public Safety Officers",
-                    "Boonefurt Police Squad",
-                    "Bradleyland Police Department",
-                    "Buchananfort Police Squad",
-                    "Charlesberg Police Squad",
-                    "Comptonburgh Security Forces",
-                  ],
-                  "many": false,
-                  "name": "arresting_authority",
-                  "title": "Arresting authority",
-                  "type": "autocomplete",
-                },
-                {
-                  "choices": [
-                    [
-                      "UNKNOWN",
-                      "unknown",
-                    ],
-                    [
-                      "NOT_CHARGED",
-                      "not charged",
-                    ],
-                    [
-                      "CHARGES_PENDING",
-                      "charges pending",
-                    ],
-                    [
-                      "CHARGES_DROPPED",
-                      "charges dropped",
-                    ],
-                    [
-                      "CONVICTED",
-                      "convicted",
-                    ],
-                    [
-                      "ACQUITTED",
-                      "acquitted",
-                    ],
-                    [
-                      "PENDING_APPEAL",
-                      "pending appeal",
-                    ],
-                  ],
-                  "name": "status_of_charges",
-                  "title": "Status of charges",
-                  "type": "choice",
-                },
-                {
-                  "name": "detention_date",
-                  "title": "Detention date",
-                  "type": "date",
-                },
-                {
-                  "name": "release_date",
-                  "title": "Release date",
-                  "type": "date",
-                },
-                {
-                  "name": "unnecessary_use_of_force",
-                  "title": "Unnecessary use of force?",
-                  "type": "bool",
-                },
-                {
-                  "autocomplete_type": "incident.Charge",
-                  "choices": [
-                    "antisocial bootlegging",
-                    "antisocial calumny",
-                    "antisocial cybercrime",
-                    "antisocial espionage",
-                    "antisocial hacking",
-                    "antisocial hooliganism",
-                    "antisocial misdeeds",
-                    "antisocial piracy",
-                    "antisocial plagiarism",
-                  ],
-                  "name": "charges",
-                  "title": "Charges",
-                  "type": "autocomplete",
-                },
-              ],
-              "id": 4,
-              "symbol": "arrest",
-              "title": "Arrest / Criminal Charge",
-              "url": "/arrest-criminal-charge/",
-            },
-            {
-              "filters": [
-                {
-                  "name": "border_point",
-                  "title": "Border point",
-                  "type": "text",
-                },
-                {
-                  "name": "stopped_previously",
-                  "title": "Stopped previously?",
-                  "type": "bool",
-                },
-                {
-                  "choices": [
-                    [
-                      "US_CITIZEN",
-                      "U.S. citizen",
-                    ],
-                    [
-                      "PERMANENT_RESIDENT",
-                      "U.S. permanent resident (green card)",
-                    ],
-                    [
-                      "NON_RESIDENT",
-                      "U.S. non-resident",
-                    ],
-                  ],
-                  "name": "target_us_citizenship_status",
-                  "title": "US citizenship status",
-                  "type": "choice",
-                },
-                {
-                  "name": "denial_of_entry",
-                  "title": "Denied entry?",
-                  "type": "bool",
-                },
-                {
-                  "autocomplete_type": "incident.Nationality",
-                  "choices": [
-                    "Afghanistan",
-                    "Andorra",
-                    "Anguilla",
-                    "Antarctica (the territory South of 60 deg S)",
-                    "Bahamas",
-                    "Belarus",
-                    "Belize",
-                    "Benin",
-                    "Bosnia and Herzegovina",
-                    "Brunei Darussalam",
-                    "Burkina Faso",
-                    "Cameroon",
-                  ],
-                  "many": true,
-                  "name": "target_nationality",
-                  "title": "Target nationality",
-                  "type": "autocomplete",
-                },
-                {
-                  "name": "did_authorities_ask_for_device_access",
-                  "title": "Did authorities ask for device access?",
-                  "type": "radio",
-                },
-                {
-                  "name": "did_authorities_ask_about_work",
-                  "title": "Did authorities ask intrusive questions about journalist's work?",
-                  "type": "radio",
-                },
-              ],
-              "id": 5,
-              "symbol": "border_stop",
-              "title": "Border Stop",
-              "url": "/border-stop/",
-            },
-            {
-              "filters": [
-                {
-                  "autocomplete_type": "incident.PoliticianOrPublic",
-                  "choices": [
-                    "Aaron Singleton",
-                    "Alexandra Pitts",
-                    "Alexis Patterson",
-                    "Alicia Merritt",
-                    "Amber Greene",
-                    "Amy Russell PhD",
-                    "Amy Smith",
-                    "Andre Cole",
-                    "Andre Gentry",
-                    "Andre Patterson",
-                    "Andrew Bass",
-                  ],
-                  "many": true,
-                  "name": "politicians_or_public_figures_involved",
-                  "title": "Government agency or public official involved",
-                  "type": "autocomplete",
-                },
-              ],
-              "id": 6,
-              "symbol": "denial_of_access",
-              "title": "Denial of Access",
-              "url": "/denial-access/",
-            },
-            {
-              "filters": [
-                {
-                  "autocomplete_type": "incident.Equipment",
-                  "choices": [
-                    "graph paper",
-                    "compass",
-                    "planimeter",
-                    "photometer",
-                    "protractor",
-                    "calculator",
-                    "timer",
-                    "abacus",
-                    "ruler",
-                    "hygrometer",
-                    "diffuser",
-                    "multimeter",
-                    "microscope",
-                  ],
-                  "many": true,
-                  "name": "equipment_seized",
-                  "title": "Equipment searched or seized",
-                  "type": "autocomplete",
-                },
-                {
-                  "choices": [
-                    [
-                      "UNKNOWN",
-                      "unknown",
-                    ],
-                    [
-                      "CUSTODY",
-                      "in custody",
-                    ],
-                    [
-                      "RETURNED_FULL",
-                      "returned in full",
-                    ],
-                    [
-                      "RETURNED_PART",
-                      "returned in part",
-                    ],
-                    [
-                      "SEARCHED_WITHOUT_SEIZURE",
-                      "searched without seizure",
-                    ],
-                  ],
-                  "name": "status_of_seized_equipment",
-                  "title": "Status of equipment",
-                  "type": "choice",
-                },
-                {
-                  "name": "is_search_warrant_obtained",
-                  "title": "Search warrant obtained?",
-                  "type": "bool",
-                },
-                {
-                  "choices": [
-                    [
-                      "UNKNOWN",
-                      "unknown",
-                    ],
-                    [
-                      "LAW_ENFORCEMENT",
-                      "law enforcement",
-                    ],
-                    [
-                      "PRIVATE_SECURITY",
-                      "private security",
-                    ],
-                    [
-                      "POLITICIAN",
-                      "politician",
-                    ],
-                    [
-                      "PUBLIC_FIGURE",
-                      "public figure",
-                    ],
-                    [
-                      "PRIVATE_INDIVIDUAL",
-                      "private individual",
-                    ],
-                  ],
-                  "name": "actor",
-                  "title": "Actor",
-                  "type": "choice",
-                },
-              ],
-              "id": 7,
-              "symbol": "equipment_search",
-              "title": "Equipment Search or Seizure",
-              "url": "/equipment-search-seizure-or-damage/",
-            },
-            {
-              "filters": [
-                {
-                  "choices": [
-                    [
-                      "UNKNOWN",
-                      "unknown",
-                    ],
-                    [
-                      "LAW_ENFORCEMENT",
-                      "law enforcement",
-                    ],
-                    [
-                      "PRIVATE_SECURITY",
-                      "private security",
-                    ],
-                    [
-                      "POLITICIAN",
-                      "politician",
-                    ],
-                    [
-                      "PUBLIC_FIGURE",
-                      "public figure",
-                    ],
-                    [
-                      "PRIVATE_INDIVIDUAL",
-                      "private individual",
-                    ],
-                  ],
-                  "name": "assailant",
-                  "title": "Assailant",
-                  "type": "choice",
-                },
-                {
-                  "name": "was_journalist_targeted",
-                  "title": "Was journalist targeted?",
-                  "type": "radio",
-                },
-              ],
-              "id": 8,
-              "symbol": "assault",
-              "title": "Assault",
-              "url": "/assault/",
-            },
-            {
-              "filters": [
-                {
-                  "name": "charged_under_espionage_act",
-                  "title": "Charged under Espionage Act?",
-                  "type": "bool",
-                },
-              ],
-              "id": 9,
-              "symbol": "leak_case",
-              "title": "Leak Case",
-              "url": "/leak-case/",
-            },
-            {
-              "filters": [
-                {
-                  "choices": [
-                    [
-                      "TESTIMONY_ABOUT_SOURCE",
-                      "testimony about confidential source",
-                    ],
-                    [
-                      "OTHER_TESTIMONY",
-                      "other testimony",
-                    ],
-                    [
-                      "JOURNALIST_COMMUNICATIONS",
-                      "journalist communications or work product",
-                    ],
-                  ],
-                  "name": "subpoena_type",
-                  "title": "Subpoena type",
-                  "type": "choice",
-                },
-                {
-                  "choices": [
-                    [
-                      "UNKNOWN",
-                      "unknown",
-                    ],
-                    [
-                      "PENDING",
-                      "pending",
-                    ],
-                    [
-                      "DROPPED",
-                      "dropped",
-                    ],
-                    [
-                      "QUASHED",
-                      "quashed",
-                    ],
-                    [
-                      "UPHELD",
-                      "upheld",
-                    ],
-                    [
-                      "CARRIED_OUT",
-                      "carried out",
-                    ],
-                    [
-                      "IGNORED",
-                      "ignored",
-                    ],
-                    [
-                      "OBJECTED_TO",
-                      "objected to",
-                    ],
-                  ],
-                  "name": "subpoena_statuses",
-                  "title": "Subpoena status",
-                  "type": "choice",
-                },
-                {
-                  "name": "held_in_contempt",
-                  "title": "If subject refused to cooperate, were they held in contempt?",
-                  "type": "radio",
-                },
-                {
-                  "choices": [
-                    [
-                      "HELD_IN_CONTEMPT_NO_JAIL",
-                      "held in contempt but not jailed",
-                    ],
-                    [
-                      "IN_JAIL",
-                      "in jail",
-                    ],
-                    [
-                      "RELEASED",
-                      "released from jail",
-                    ],
-                  ],
-                  "name": "detention_status",
-                  "title": "Detention status",
-                  "type": "choice",
-                },
-                {
-                  "choices": [
-                    [
-                      "TELECOM",
-                      "telecom company",
-                    ],
-                    [
-                      "TECH_COMPANY",
-                      "tech company",
-                    ],
-                    [
-                      "ISP",
-                      "internet service provider",
-                    ],
-                    [
-                      "FINANCIAL",
-                      "bank/financial institution",
-                    ],
-                    [
-                      "TRAVEL",
-                      "travel company",
-                    ],
-                    [
-                      "OTHER",
-                      "other",
-                    ],
-                  ],
-                  "name": "third_party_business",
-                  "title": "Third party business",
-                  "type": "choice",
-                },
-                {
-                  "choices": [
-                    [
-                      "SUBPOENA",
-                      "subpoena",
-                    ],
-                    [
-                      "2703",
-                      "2703(d) court order",
-                    ],
-                    [
-                      "WARRANT",
-                      "warrant",
-                    ],
-                    [
-                      "NATIONAL_SECURITY_LETTER",
-                      "national security letter",
-                    ],
-                    [
-                      "FISA",
-                      "FISA order",
-                    ],
-                    [
-                      "OTHER",
-                      "other",
-                    ],
-                  ],
-                  "name": "legal_order_type",
-                  "title": "Legal order type",
-                  "type": "choice",
-                },
-              ],
-              "id": 10,
-              "symbol": "subpoena",
-              "title": "Subpoena / Legal Order",
-              "url": "/subpoena/",
-            },
-            {
-              "filters": [
-                {
-                  "autocomplete_type": "incident.Equipment",
-                  "choices": [
-                    "graph paper",
-                    "compass",
-                    "planimeter",
-                    "photometer",
-                    "protractor",
-                    "calculator",
-                    "timer",
-                    "abacus",
-                    "ruler",
-                    "hygrometer",
-                    "diffuser",
-                    "multimeter",
-                    "microscope",
-                  ],
-                  "many": true,
-                  "name": "equipment_broken",
-                  "title": "Equipment broken",
-                  "type": "autocomplete",
-                },
-              ],
-              "id": 11,
-              "symbol": "equipment_damage",
-              "title": "Equipment Damage",
-              "url": "/equipment-damage/",
-            },
-            {
-              "filters": [
-                {
-                  "choices": [
-                    [
-                      "PENDING",
-                      "pending",
-                    ],
-                    [
-                      "DROPPED",
-                      "dropped",
-                    ],
-                    [
-                      "STRUCK_DOWN",
-                      "struck down",
-                    ],
-                    [
-                      "UPHELD",
-                      "upheld",
-                    ],
-                    [
-                      "IGNORED",
-                      "ignored",
-                    ],
-                  ],
-                  "name": "status_of_prior_restraint",
-                  "title": "Status of prior restraint",
-                  "type": "choice",
-                },
-              ],
-              "id": 12,
-              "symbol": "prior_restraint",
-              "title": "Prior Restraint",
-              "url": "/prior-restraint/",
-            },
-            {
-              "filters": [],
-              "id": 13,
-              "symbol": "chilling_statement",
-              "title": "Chilling Statement",
-              "url": "/chilling-statement/",
-            },
-            {
-              "filters": [],
-              "id": 14,
-              "symbol": "other_incident",
-              "title": "Other Incident",
-              "url": "/other-incident/",
-            },
-          ]
-        }
-        filterParameters={
-          {
-            "actor": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "arrest_status": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "arresting_authority": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "assailant": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "border_point": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "case_number": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "case_statuses": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "case_type": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "categories": {
-              "enabled": true,
-              "parameters": {},
-              "type": "stringset",
-            },
-            "charged_under_espionage_act": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "charges": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "city": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "date": {
-              "enabled": false,
-              "parameters": {
-                "max": null,
-                "min": null,
-              },
-              "type": "date",
-            },
-            "denial_of_entry": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "detention_date": {
-              "enabled": false,
-              "parameters": {
-                "max": null,
-                "min": null,
-              },
-              "type": "date",
-            },
-            "detention_status": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "did_authorities_ask_about_work": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "did_authorities_ask_for_device_access": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "equipment_broken": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "equipment_seized": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "filterState": {
-              "enabled": true,
-              "parameters": "All",
-              "type": "state",
-            },
-            "filterTimeMonths": {
-              "enabled": true,
-              "parameters": {
-                "max": 2023-02-12T00:00:00.000Z,
-                "min": 2022-04-12T00:00:00.000Z,
-              },
-              "type": "timeMonths",
-            },
-            "filterTimeYears": {
-              "enabled": false,
-              "parameters": [
-                2022,
-                2023,
-              ],
-              "type": "timeYears",
-            },
-            "held_in_contempt": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "is_search_warrant_obtained": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "legal_order_type": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "politicians_or_public_figures_involved": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "recently_updated": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "release_date": {
-              "enabled": false,
-              "parameters": {
-                "max": null,
-                "min": null,
-              },
-              "type": "date",
-            },
-            "search": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "state": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "status_of_charges": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "status_of_prior_restraint": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "status_of_seized_equipment": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "stopped_previously": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "subpoena_statuses": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "subpoena_type": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "tags": {
-              "enabled": true,
-              "parameters": {},
-              "type": "stringset",
-            },
-            "target_nationality": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "target_us_citizenship_status": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "targeted_institutions": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "targeted_journalists": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "third_party_business": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "unnecessary_use_of_force": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-            "was_journalist_targeted": {
-              "enabled": false,
-              "parameters": null,
-              "type": "string",
-            },
-          }
-        }
-        filterWithout={
-          {
-            "actor": [Function],
-            "arrest_status": [Function],
-            "arresting_authority": [Function],
-            "assailant": [Function],
-            "border_point": [Function],
-            "case_number": [Function],
-            "case_statuses": [Function],
-            "case_type": [Function],
-            "categories": [Function],
-            "charged_under_espionage_act": [Function],
-            "charges": [Function],
-            "city": [Function],
-            "date": [Function],
-            "denial_of_entry": [Function],
-            "detention_date": [Function],
-            "detention_status": [Function],
-            "did_authorities_ask_about_work": [Function],
-            "did_authorities_ask_for_device_access": [Function],
-            "equipment_broken": [Function],
-            "equipment_seized": [Function],
-            "filterState": [Function],
-            "filterTimeMonths": [Function],
-            "filterTimeYears": [Function],
-            "held_in_contempt": [Function],
-            "is_search_warrant_obtained": [Function],
-            "legal_order_type": [Function],
-            "politicians_or_public_figures_involved": [Function],
-            "recently_updated": [Function],
-            "release_date": [Function],
-            "search": [Function],
-            "state": [Function],
-            "status_of_charges": [Function],
-            "status_of_prior_restraint": [Function],
-            "status_of_seized_equipment": [Function],
-            "stopped_previously": [Function],
-            "subpoena_statuses": [Function],
-            "subpoena_type": [Function],
-            "tags": [Function],
-            "target_nationality": [Function],
-            "target_us_citizenship_status": [Function],
-            "targeted_institutions": [Function],
-            "targeted_journalists": [Function],
-            "third_party_business": [Function],
-            "unnecessary_use_of_force": [Function],
-            "was_journalist_targeted": [Function],
-          }
-        }
-        height={333.3333333333333}
-        width={500}
-      />
+      <div
+        class="filters__form--fieldset"
+      >
+        <div
+          class="category-graph"
+        >
+          <p
+            class="category-graph--label"
+            id="categories-graph-label"
+          >
+            Filter by one or more categories
+          </p>
+          <svg
+            aria-labelledby="categories-graph-label"
+            class="category-graph--figure"
+            height="333.3333333333333"
+            style="font-family: var(--font-mono);"
+            width="500"
+          >
+            <g />
+            <g />
+            <g />
+            <g>
+              <foreignobject
+                height="14"
+                opacity="1"
+                transform="translate(0, -7)"
+                width="14"
+                x="9.75"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-arrest"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="1"
+                transform="translate(0, -7)"
+                width="14"
+                x="94.29545454545455"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-border_stop"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="0.3"
+                transform="translate(0, -7)"
+                width="14"
+                x="178.8409090909091"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-denial_of_access"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="1"
+                transform="translate(0, -7)"
+                width="14"
+                x="263.3863636363636"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-equipment_search"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="1"
+                transform="translate(0, -7)"
+                width="14"
+                x="52.02272727272727"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-assault"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="0.3"
+                transform="translate(0, -7)"
+                width="14"
+                x="305.65909090909093"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-leak_case"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="0.3"
+                transform="translate(0, -7)"
+                width="14"
+                x="432.47727272727275"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-subpoena"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="0.3"
+                transform="translate(0, -7)"
+                width="14"
+                x="221.11363636363637"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-equipment_damage"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="0.3"
+                transform="translate(0, -7)"
+                width="14"
+                x="390.20454545454544"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-prior_restraint"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="0.3"
+                transform="translate(0, -7)"
+                width="14"
+                x="136.5681818181818"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-chilling_statement"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="0.3"
+                transform="translate(0, -7)"
+                width="14"
+                x="347.9318181818182"
+                y="318.3333333333333"
+              >
+                <div
+                  class="category category-other_incident"
+                />
+              </foreignobject>
+            </g>
+          </svg>
+        </div>
+        <div
+          class="category-checkbox"
+        >
+          <input
+            class="category-checkbox--input"
+            id="arrest"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="arrest"
+          >
+            <span
+              class="category category-arrest"
+            >
+              Arrest / Criminal Charge
+            </span>
+            <span>
+              2
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox"
+        >
+          <input
+            class="category-checkbox--input"
+            id="border_stop"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="border_stop"
+          >
+            <span
+              class="category category-border_stop"
+            >
+              Border Stop
+            </span>
+            <span>
+              2
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox category-checkbox--disabled"
+        >
+          <input
+            class="category-checkbox--input"
+            id="denial_of_access"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="denial_of_access"
+          >
+            <span
+              class="category category-denial_of_access"
+            >
+              Denial of Access
+            </span>
+            <span>
+              0
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox"
+        >
+          <input
+            class="category-checkbox--input"
+            id="equipment_search"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="equipment_search"
+          >
+            <span
+              class="category category-equipment_search"
+            >
+              Equipment Search or Seizure
+            </span>
+            <span>
+              2
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox"
+        >
+          <input
+            class="category-checkbox--input"
+            id="assault"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="assault"
+          >
+            <span
+              class="category category-assault"
+            >
+              Assault
+            </span>
+            <span>
+              1
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox category-checkbox--disabled"
+        >
+          <input
+            class="category-checkbox--input"
+            id="leak_case"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="leak_case"
+          >
+            <span
+              class="category category-leak_case"
+            >
+              Leak Case
+            </span>
+            <span>
+              0
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox category-checkbox--disabled"
+        >
+          <input
+            class="category-checkbox--input"
+            id="subpoena"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="subpoena"
+          >
+            <span
+              class="category category-subpoena"
+            >
+              Subpoena / Legal Order
+            </span>
+            <span>
+              0
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox category-checkbox--disabled"
+        >
+          <input
+            class="category-checkbox--input"
+            id="equipment_damage"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="equipment_damage"
+          >
+            <span
+              class="category category-equipment_damage"
+            >
+              Equipment Damage
+            </span>
+            <span>
+              0
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox category-checkbox--disabled"
+        >
+          <input
+            class="category-checkbox--input"
+            id="prior_restraint"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="prior_restraint"
+          >
+            <span
+              class="category category-prior_restraint"
+            >
+              Prior Restraint
+            </span>
+            <span>
+              0
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox category-checkbox--disabled"
+        >
+          <input
+            class="category-checkbox--input"
+            id="chilling_statement"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="chilling_statement"
+          >
+            <span
+              class="category category-chilling_statement"
+            >
+              Chilling Statement
+            </span>
+            <span>
+              0
+            </span>
+          </label>
+        </div>
+        <div
+          class="category-checkbox category-checkbox--disabled"
+        >
+          <input
+            class="category-checkbox--input"
+            id="other_incident"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="other_incident"
+          >
+            <span
+              class="category category-other_incident"
+            >
+              Other Incident
+            </span>
+            <span>
+              0
+            </span>
+          </label>
+        </div>
+      </div>
     </details>
-    <GeneralFilter
-      dataset={
-        [
-          {
-            "categories": [
-              "Arrest / Criminal Charge",
-            ],
-            "city": "Thomasland",
-            "date": "2023-02-12T00:00:00.000Z",
-            "latitude": null,
-            "longitude": null,
-            "state": "ID",
-            "tags": [
-              "lemur",
-            ],
-          },
-          {
-            "categories": [
-              "Arrest / Criminal Charge",
-            ],
-            "city": "New Brooke",
-            "date": "2022-10-23T00:00:00.000Z",
-            "latitude": null,
-            "longitude": null,
-            "state": "NC",
-            "tags": [
-              "baboon",
-            ],
-          },
-          {
-            "categories": [
-              "Equipment Search or Seizure",
-            ],
-            "city": "East Mary",
-            "date": "2022-05-12T00:00:00.000Z",
-            "latitude": null,
-            "longitude": null,
-            "state": "CT",
-            "tags": [
-              "civet",
-            ],
-          },
-          {
-            "categories": [
-              "Equipment Search or Seizure",
-            ],
-            "city": "Josephmouth",
-            "date": "2022-07-24T00:00:00.000Z",
-            "latitude": null,
-            "longitude": null,
-            "state": "AL",
-            "tags": [
-              "hyena",
-            ],
-          },
-          {
-            "categories": [
-              "Border Stop",
-            ],
-            "city": "North Nancystad",
-            "date": "2022-04-12T00:00:00.000Z",
-            "latitude": null,
-            "longitude": null,
-            "state": "WV",
-            "tags": [
-              "chrysanthemum",
-            ],
-          },
-          {
-            "categories": [
-              "Border Stop",
-            ],
-            "city": "East Kaitlyn",
-            "date": "2022-09-02T00:00:00.000Z",
-            "latitude": null,
-            "longitude": null,
-            "state": "OH",
-            "tags": [
-              "plum",
-            ],
-          },
-          {
-            "categories": [
-              "Assault",
-            ],
-            "city": "New Jamesberg",
-            "date": "2023-01-16T00:00:00.000Z",
-            "latitude": null,
-            "longitude": null,
-            "state": "TX",
-            "tags": [
-              "platypus",
-            ],
-          },
-        ]
-      }
-      filterDef={
-        {
-          "filters": [
-            {
-              "name": "search",
-              "title": "Search terms",
-              "type": "text",
-            },
-            {
-              "name": "date",
-              "title": "Took place",
-              "type": "date",
-            },
-            {
-              "name": "recently_updated",
-              "title": "Updated in the last",
-              "type": "int",
-              "units": "days",
-            },
-            {
-              "name": "city",
-              "title": "City",
-              "type": "text",
-            },
-            {
-              "autocomplete_type": "incident.State",
-              "choices": [
-                "Alaska",
-                "Alabama",
-                "Arkansas",
-                "American Samoa",
-                "Arizona",
-                "California",
-                "Colorado",
-                "Connecticut",
-                "District of Columbia",
-                "Delaware",
-                "Florida",
-                "Georgia",
-                "Guam",
-                "Hawaii",
-                "Iowa",
-                "Idaho",
-                "Illinois",
-                "Indiana",
-                "Kansas",
-                "Kentucky",
-                "Louisiana",
-                "Massachusetts",
-                "Maryland",
-                "Maine",
-                "Michigan",
-                "Minnesota",
-                "Missouri",
-                "Northern Mariana Islands",
-                "Mississippi",
-                "Montana",
-                "North Carolina",
-                "North Dakota",
-                "Nebraska",
-                "New Hampshire",
-                "New Jersey",
-                "New Mexico",
-                "Nevada",
-                "New York",
-                "Ohio",
-                "Oklahoma",
-                "Oregon",
-                "Pennsylvania",
-                "Puerto Rico",
-                "Rhode Island",
-                "South Carolina",
-                "South Dakota",
-                "Tennessee",
-                "Texas",
-                "Utah",
-                "Virginia",
-                "Virgin Islands",
-                "Vermont",
-                "Washington",
-                "Wisconsin",
-                "West Virginia",
-                "Wyoming",
-              ],
-              "many": false,
-              "name": "state",
-              "title": "State",
-              "type": "autocomplete",
-            },
-            {
-              "autocomplete_type": "incident.Journalist",
-              "choices": [
-                "Abigail Peterson",
-                "Adam Buchanan",
-                "Adam Lopez MD",
-                "Alicia Savage",
-                "Amanda Rosales",
-                "Angela Davis",
-                "Angela Johnson",
-                "Anthony Black",
-                "Anthony Ellison",
-                "Anthony Poole",
-                "April Olson",
-                "Ariel Hill",
-                "Austin Henry",
-                "Brandi White",
-                "Candace Glover",
-                "Carl Hall",
-                "Cassie Wall",
-              ],
-              "many": true,
-              "name": "targeted_journalists",
-              "title": "Targeted any of these journalists",
-              "type": "autocomplete",
-            },
-            {
-              "autocomplete_type": "incident.Institution",
-              "choices": [
-                "The Aaronmouth Post 141",
-                "The Alexanderbury Sun 191",
-                "The Alexisberg Post 155",
-                "The Amberport Tribune 100",
-                "The Andrewview Tribune 39",
-                "The Annaberg Tribune 145",
-                "The Anneside Post 41",
-                "The Ashleymouth Tribune 184",
-                "The Austinborough Sun 164",
-                "The Banksberg Herald 142",
-                "The Batesland Post 126",
-                "The Beckyview Daily News 128",
-                "The Bellburgh Post 135",
-              ],
-              "many": true,
-              "name": "targeted_institutions",
-              "title": "Targeted institutions",
-              "type": "autocomplete",
-            },
-            {
-              "autocomplete_type": "common.CommonTag",
-              "choices": [
-                "ammonites",
-                "ants",
-                "aphids",
-                "baboon",
-                "bamboo",
-                "bees",
-                "centipedes",
-                "chrysanthemum",
-                "civet",
-                "clams",
-                "copepods",
-                "crabs",
-                "crickets",
-              ],
-              "many": true,
-              "name": "tags",
-              "title": "Has any of these tags",
-              "type": "autocomplete",
-            },
-            {
-              "name": "case_number",
-              "title": "Case number",
-              "type": "text",
-            },
-            {
-              "choices": [
-                [
-                  "CIVIL",
-                  "Civil",
-                ],
-                [
-                  "CLASS_ACTION",
-                  "Class Action",
-                ],
-              ],
-              "name": "case_type",
-              "title": "Type of case",
-              "type": "choice",
-            },
-            {
-              "choices": [
-                [
-                  "ONGOING",
-                  "ongoing",
-                ],
-                [
-                  "SETTLED",
-                  "settled",
-                ],
-                [
-                  "DISMISSED",
-                  "dismissed",
-                ],
-                [
-                  "UNKNOWN",
-                  "unknown",
-                ],
-                [
-                  "APPEALED",
-                  "appealed",
-                ],
-              ],
-              "name": "case_statuses",
-              "title": "Legal case statuses",
-              "type": "choice",
-            },
-          ],
-          "id": -1,
-          "title": "General",
-        }
-      }
-      filterParameters={
-        {
-          "actor": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "arrest_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "arresting_authority": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "assailant": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "border_point": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_number": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_statuses": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "categories": {
-            "enabled": true,
-            "parameters": {},
-            "type": "stringset",
-          },
-          "charged_under_espionage_act": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "charges": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "city": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "denial_of_entry": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "detention_date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "detention_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_about_work": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_for_device_access": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "equipment_broken": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "equipment_seized": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "filterState": {
-            "enabled": true,
-            "parameters": "All",
-            "type": "state",
-          },
-          "filterTimeMonths": {
-            "enabled": true,
-            "parameters": {
-              "max": 2023-02-12T00:00:00.000Z,
-              "min": 2022-04-12T00:00:00.000Z,
-            },
-            "type": "timeMonths",
-          },
-          "filterTimeYears": {
-            "enabled": false,
-            "parameters": [
-              2022,
-              2023,
-            ],
-            "type": "timeYears",
-          },
-          "held_in_contempt": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "is_search_warrant_obtained": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "legal_order_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "politicians_or_public_figures_involved": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "recently_updated": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "release_date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "search": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "state": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_charges": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_prior_restraint": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_seized_equipment": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "stopped_previously": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "subpoena_statuses": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "subpoena_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "tags": {
-            "enabled": true,
-            "parameters": {},
-            "type": "stringset",
-          },
-          "target_nationality": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "target_us_citizenship_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "targeted_institutions": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "targeted_journalists": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "third_party_business": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "unnecessary_use_of_force": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "was_journalist_targeted": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-        }
-      }
-      filterWithout={
-        {
-          "actor": [Function],
-          "arrest_status": [Function],
-          "arresting_authority": [Function],
-          "assailant": [Function],
-          "border_point": [Function],
-          "case_number": [Function],
-          "case_statuses": [Function],
-          "case_type": [Function],
-          "categories": [Function],
-          "charged_under_espionage_act": [Function],
-          "charges": [Function],
-          "city": [Function],
-          "date": [Function],
-          "denial_of_entry": [Function],
-          "detention_date": [Function],
-          "detention_status": [Function],
-          "did_authorities_ask_about_work": [Function],
-          "did_authorities_ask_for_device_access": [Function],
-          "equipment_broken": [Function],
-          "equipment_seized": [Function],
-          "filterState": [Function],
-          "filterTimeMonths": [Function],
-          "filterTimeYears": [Function],
-          "held_in_contempt": [Function],
-          "is_search_warrant_obtained": [Function],
-          "legal_order_type": [Function],
-          "politicians_or_public_figures_involved": [Function],
-          "recently_updated": [Function],
-          "release_date": [Function],
-          "search": [Function],
-          "state": [Function],
-          "status_of_charges": [Function],
-          "status_of_prior_restraint": [Function],
-          "status_of_seized_equipment": [Function],
-          "stopped_previously": [Function],
-          "subpoena_statuses": [Function],
-          "subpoena_type": [Function],
-          "tags": [Function],
-          "target_nationality": [Function],
-          "target_us_citizenship_status": [Function],
-          "targeted_institutions": [Function],
-          "targeted_journalists": [Function],
-          "third_party_business": [Function],
-          "unnecessary_use_of_force": [Function],
-          "was_journalist_targeted": [Function],
-        }
-      }
-      initialFilterParams={
-        {
-          "actor": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "arrest_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "arresting_authority": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "assailant": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "border_point": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_number": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_statuses": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "categories": {
-            "enabled": true,
-            "parameters": {},
-            "type": "stringset",
-          },
-          "charged_under_espionage_act": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "charges": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "city": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "denial_of_entry": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "detention_date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "detention_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_about_work": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_for_device_access": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "equipment_broken": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "equipment_seized": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "held_in_contempt": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "is_search_warrant_obtained": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "legal_order_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "politicians_or_public_figures_involved": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "recently_updated": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "release_date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "search": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "state": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_charges": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_prior_restraint": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_seized_equipment": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "stopped_previously": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "subpoena_statuses": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "subpoena_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "tags": {
-            "enabled": true,
-            "parameters": {},
-            "type": "stringset",
-          },
-          "target_nationality": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "target_us_citizenship_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "targeted_institutions": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "targeted_journalists": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "third_party_business": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "unnecessary_use_of_force": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "was_journalist_targeted": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-        }
-      }
-      width={500}
-    />
+    <details
+      class="filters__group filters__form--category"
+      open=""
+    >
+      <summary
+        class="filters__form-summary"
+      >
+        <h3
+          class="filter__heading"
+        >
+          Tag
+        </h3>
+      </summary>
+      <div
+        class="filters__form--fieldset"
+      >
+        <div
+          style="display: flex; flex-direction: row; margin-top: 12px; margin-bottom: 12px;"
+        >
+          <div
+            style="display: flex; flex-direction: row-reverse; width: 35px;"
+          >
+            <input
+              name="drone"
+              style="width: 24px; height: 24px;"
+              type="checkbox"
+            />
+          </div>
+          <div
+            style="display: flex; flex-direction: column; justify-content: flex-end;"
+          >
+            <div
+              style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0px;"
+            >
+              <div
+                style="color: black; font-size: 14px; line-height: 20px; font-family: var(--font-base);"
+              >
+                #lemur
+              </div>
+              <div
+                style="font-family: var(--font-mono); font-size: 12px; justify-content: flex-end; padding: 3px;"
+              >
+                1
+              </div>
+            </div>
+            <div
+              style="width: 425px; height: 4px;"
+            >
+              <div
+                style="z-index: -1; width: 420px; height: 3px; border: 1px solid black; background-color: black; transition: all 250ms;"
+              />
+              <div
+                style="top: -4px; left: 1px; position: relative; width: 0px; height: 3px; background-color: rgb(242, 252, 103); transition: all 250ms;"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; margin-top: 12px; margin-bottom: 12px;"
+        >
+          <div
+            style="display: flex; flex-direction: row-reverse; width: 35px;"
+          >
+            <input
+              name="drone"
+              style="width: 24px; height: 24px;"
+              type="checkbox"
+            />
+          </div>
+          <div
+            style="display: flex; flex-direction: column; justify-content: flex-end;"
+          >
+            <div
+              style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0px;"
+            >
+              <div
+                style="color: black; font-size: 14px; line-height: 20px; font-family: var(--font-base);"
+              >
+                #baboon
+              </div>
+              <div
+                style="font-family: var(--font-mono); font-size: 12px; justify-content: flex-end; padding: 3px;"
+              >
+                1
+              </div>
+            </div>
+            <div
+              style="width: 425px; height: 4px;"
+            >
+              <div
+                style="z-index: -1; width: 420px; height: 3px; border: 1px solid black; background-color: black; transition: all 250ms;"
+              />
+              <div
+                style="top: -4px; left: 1px; position: relative; width: 0px; height: 3px; background-color: rgb(242, 252, 103); transition: all 250ms;"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; margin-top: 12px; margin-bottom: 12px;"
+        >
+          <div
+            style="display: flex; flex-direction: row-reverse; width: 35px;"
+          >
+            <input
+              name="drone"
+              style="width: 24px; height: 24px;"
+              type="checkbox"
+            />
+          </div>
+          <div
+            style="display: flex; flex-direction: column; justify-content: flex-end;"
+          >
+            <div
+              style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0px;"
+            >
+              <div
+                style="color: black; font-size: 14px; line-height: 20px; font-family: var(--font-base);"
+              >
+                #civet
+              </div>
+              <div
+                style="font-family: var(--font-mono); font-size: 12px; justify-content: flex-end; padding: 3px;"
+              >
+                1
+              </div>
+            </div>
+            <div
+              style="width: 425px; height: 4px;"
+            >
+              <div
+                style="z-index: -1; width: 420px; height: 3px; border: 1px solid black; background-color: black; transition: all 250ms;"
+              />
+              <div
+                style="top: -4px; left: 1px; position: relative; width: 0px; height: 3px; background-color: rgb(242, 252, 103); transition: all 250ms;"
+              />
+            </div>
+          </div>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_tags"
+          name="tags"
+          placeholder="Find tags..."
+          type="text"
+          value=""
+        />
+      </div>
+    </details>
     <div
-      className="filters__form-actions"
+      class="filters__form--fieldset filters__form--general"
+    >
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_date_after"
+          >
+            Took place after
+          </label>
+        </div>
+        <input
+          id="id_date_after"
+          name="date"
+          type="date"
+          value=""
+        />
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_date_before"
+          >
+            Took place before
+          </label>
+        </div>
+        <input
+          id="id_date_before"
+          name="date"
+          type="date"
+          value=""
+        />
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_city"
+          >
+            City
+          </label>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_city"
+          name="city"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_state"
+          >
+            State
+          </label>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_state"
+          list="state_choices"
+          name="state"
+          type="text"
+          value=""
+        />
+        <datalist
+          id="state_choices"
+        >
+          <option
+            value="Alaska"
+          />
+          <option
+            value="Alabama"
+          />
+          <option
+            value="Arkansas"
+          />
+          <option
+            value="American Samoa"
+          />
+          <option
+            value="Arizona"
+          />
+          <option
+            value="California"
+          />
+          <option
+            value="Colorado"
+          />
+          <option
+            value="Connecticut"
+          />
+          <option
+            value="District of Columbia"
+          />
+          <option
+            value="Delaware"
+          />
+          <option
+            value="Florida"
+          />
+          <option
+            value="Georgia"
+          />
+          <option
+            value="Guam"
+          />
+          <option
+            value="Hawaii"
+          />
+          <option
+            value="Iowa"
+          />
+          <option
+            value="Idaho"
+          />
+          <option
+            value="Illinois"
+          />
+          <option
+            value="Indiana"
+          />
+          <option
+            value="Kansas"
+          />
+          <option
+            value="Kentucky"
+          />
+          <option
+            value="Louisiana"
+          />
+          <option
+            value="Massachusetts"
+          />
+          <option
+            value="Maryland"
+          />
+          <option
+            value="Maine"
+          />
+          <option
+            value="Michigan"
+          />
+          <option
+            value="Minnesota"
+          />
+          <option
+            value="Missouri"
+          />
+          <option
+            value="Northern Mariana Islands"
+          />
+          <option
+            value="Mississippi"
+          />
+          <option
+            value="Montana"
+          />
+          <option
+            value="North Carolina"
+          />
+          <option
+            value="North Dakota"
+          />
+          <option
+            value="Nebraska"
+          />
+          <option
+            value="New Hampshire"
+          />
+          <option
+            value="New Jersey"
+          />
+          <option
+            value="New Mexico"
+          />
+          <option
+            value="Nevada"
+          />
+          <option
+            value="New York"
+          />
+          <option
+            value="Ohio"
+          />
+          <option
+            value="Oklahoma"
+          />
+          <option
+            value="Oregon"
+          />
+          <option
+            value="Pennsylvania"
+          />
+          <option
+            value="Puerto Rico"
+          />
+          <option
+            value="Rhode Island"
+          />
+          <option
+            value="South Carolina"
+          />
+          <option
+            value="South Dakota"
+          />
+          <option
+            value="Tennessee"
+          />
+          <option
+            value="Texas"
+          />
+          <option
+            value="Utah"
+          />
+          <option
+            value="Virginia"
+          />
+          <option
+            value="Virgin Islands"
+          />
+          <option
+            value="Vermont"
+          />
+          <option
+            value="Washington"
+          />
+          <option
+            value="Wisconsin"
+          />
+          <option
+            value="West Virginia"
+          />
+          <option
+            value="Wyoming"
+          />
+        </datalist>
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_targeted_journalists"
+          >
+            Targeted any of these journalists
+          </label>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_targeted_journalists"
+          list="targeted_journalists_choices"
+          name="targeted_journalists"
+          type="text"
+          value=""
+        />
+        <datalist
+          id="targeted_journalists_choices"
+        >
+          <option
+            value="Abigail Peterson"
+          />
+          <option
+            value="Adam Buchanan"
+          />
+          <option
+            value="Adam Lopez MD"
+          />
+          <option
+            value="Alicia Savage"
+          />
+          <option
+            value="Amanda Rosales"
+          />
+          <option
+            value="Angela Davis"
+          />
+          <option
+            value="Angela Johnson"
+          />
+          <option
+            value="Anthony Black"
+          />
+          <option
+            value="Anthony Ellison"
+          />
+          <option
+            value="Anthony Poole"
+          />
+          <option
+            value="April Olson"
+          />
+          <option
+            value="Ariel Hill"
+          />
+          <option
+            value="Austin Henry"
+          />
+          <option
+            value="Brandi White"
+          />
+          <option
+            value="Candace Glover"
+          />
+          <option
+            value="Carl Hall"
+          />
+          <option
+            value="Cassie Wall"
+          />
+        </datalist>
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_targeted_institutions"
+          >
+            Targeted institutions
+          </label>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_targeted_institutions"
+          list="targeted_institutions_choices"
+          name="targeted_institutions"
+          type="text"
+          value=""
+        />
+        <datalist
+          id="targeted_institutions_choices"
+        >
+          <option
+            value="The Aaronmouth Post 141"
+          />
+          <option
+            value="The Alexanderbury Sun 191"
+          />
+          <option
+            value="The Alexisberg Post 155"
+          />
+          <option
+            value="The Amberport Tribune 100"
+          />
+          <option
+            value="The Andrewview Tribune 39"
+          />
+          <option
+            value="The Annaberg Tribune 145"
+          />
+          <option
+            value="The Anneside Post 41"
+          />
+          <option
+            value="The Ashleymouth Tribune 184"
+          />
+          <option
+            value="The Austinborough Sun 164"
+          />
+          <option
+            value="The Banksberg Herald 142"
+          />
+          <option
+            value="The Batesland Post 126"
+          />
+          <option
+            value="The Beckyview Daily News 128"
+          />
+          <option
+            value="The Bellburgh Post 135"
+          />
+        </datalist>
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_case_number"
+          >
+            Case number
+          </label>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_case_number"
+          name="case_number"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_case_type"
+          >
+            Type of case
+          </label>
+        </div>
+        <select
+          id="id_case_type"
+          name="case_type"
+        >
+          <option
+            value=""
+          >
+            ------
+          </option>
+          <option
+            value="CIVIL"
+          >
+            Civil
+          </option>
+          <option
+            value="CLASS_ACTION"
+          >
+            Class Action
+          </option>
+        </select>
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_case_statuses"
+          >
+            Legal case statuses
+          </label>
+        </div>
+        <select
+          id="id_case_statuses"
+          name="case_statuses"
+        >
+          <option
+            value=""
+          >
+            ------
+          </option>
+          <option
+            value="ONGOING"
+          >
+            ongoing
+          </option>
+          <option
+            value="SETTLED"
+          >
+            settled
+          </option>
+          <option
+            value="DISMISSED"
+          >
+            dismissed
+          </option>
+          <option
+            value="UNKNOWN"
+          >
+            unknown
+          </option>
+          <option
+            value="APPEALED"
+          >
+            appealed
+          </option>
+        </select>
+      </div>
+    </div>
+    <div
+      class="filters__form-actions"
     >
       <button
-        className="btn btn-secondary filters__form--submit"
-        onClick={[Function]}
+        class="btn btn-secondary filters__form--submit"
         type="submit"
       >
         Apply filters
       </button>
     </div>
     <div
-      className="incident-index__filters-mobile-controls"
+      class="incident-index__filters-mobile-controls"
     >
       <a
-        className="incident-index__filters-mobile-clear"
+        class="incident-index__filters-mobile-clear"
         href="{{ page.url }}"
       >
         Clear All
       </a>
       <button
-        className="btn btn-secondary filters__form--submit"
-        onClick={[Function]}
+        class="btn btn-secondary filters__form--submit"
         type="submit"
       >
         Apply filters
       </button>
     </div>
   </section>
-</Context.Provider>
+</DocumentFragment>
 `;

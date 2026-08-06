@@ -1,10 +1,9 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import CategoryFilter from '../CategoryFilter'
 
 test('renders CategoryFilter with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<CategoryFilter
 			dataset={[{ categories: ['test'] }]}
 			filterDefs={[{ title: 'test-def', id: 'test-def', symbol: 'test-def', filters: [] }]}
@@ -12,5 +11,6 @@ test('renders CategoryFilter with mocked data', () => {
 			width={500}
 			height={500}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

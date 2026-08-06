@@ -6,8 +6,7 @@ module.exports = {
 	transform: {
 		'^.+\\.jsx?$': ['@swc/jest', swcConfig],
 	},
-	// d3 and friends ship ESM only, so they need transpiling despite living in
-	// node_modules.
+	// d3 and friends are ESM-only, so they need transpiling in node_modules.
 	transformIgnorePatterns: [
 		'<rootDir>/node_modules/(?!d3|tracker|internmap|delaunator|robust-predicates|react-animated-dataset)',
 	],

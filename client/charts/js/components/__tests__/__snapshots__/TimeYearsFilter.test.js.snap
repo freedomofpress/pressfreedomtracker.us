@@ -1,55 +1,95 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders TimeYearsFilter with mocked data 1`] = `
-<div
-  style={
-    {
-      "flexDirection": "row",
-    }
-  }
->
-  <BarChartYears
-    countYears={
-      [
-        {
-          "count": 1,
-          "year": 2020,
-        },
-        {
-          "count": 0,
-          "year": 2021,
-        },
-      ]
-    }
-    height={500}
-    onClick={[Function]}
-    selectedYears={
-      [
-        "2020",
-      ]
-    }
-    width={500}
-  />
-  <CheckBoxesYear
-    onClick={[Function]}
-    options={
-      [
-        {
-          "count": 1,
-          "year": 2020,
-        },
-        {
-          "count": 0,
-          "year": 2021,
-        },
-      ]
-    }
-    selectedYears={
-      [
-        "2020",
-      ]
-    }
-    width={500}
-  />
-</div>
+<DocumentFragment>
+  <div
+    style="flex-direction: row;"
+  >
+    <div
+      style="flex-direction: row; margin-bottom: 10px;"
+    >
+      <svg
+        height="520"
+        style="font-family: var(--font-mono);"
+        width="500"
+      >
+        <g />
+        <g />
+        <g>
+          <g />
+          <text
+            style="font-size: 12px; font-family: var(--font-base);"
+            x="1"
+            y="520"
+          >
+            2020
+          </text>
+        </g>
+        <g>
+          <g />
+          <text
+            style="font-size: 12px; font-family: var(--font-base);"
+            x="450"
+            y="520"
+          >
+            2021
+          </text>
+        </g>
+        <g />
+      </svg>
+    </div>
+    <div
+      style="width: 500px; display: flex; flex-direction: column;"
+    >
+      <div>
+        <div
+          style="display: flex; flex-direction: row; justify-content: space-between;"
+        >
+          <div
+            style="display: flex; flex-direction: row; font-size: 14px; align-items: center; margin-bottom: 16px;"
+          >
+            <input
+              style="width: 20px; height: 20px;"
+              type="checkbox"
+            />
+            <div
+              style="flex-direction: row; margin-left: 10px; font-family: var(--font-base);"
+            >
+              2020
+            </div>
+          </div>
+          <div
+            style="display: flex; font-size: 12px; height: 15px; font-family: Helvetica Neue; background-color: white; padding: 3px;"
+          >
+            1
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          style="display: flex; flex-direction: row; justify-content: space-between;"
+        >
+          <div
+            style="display: flex; flex-direction: row; font-size: 14px; align-items: center; margin-bottom: 16px;"
+          >
+            <input
+              style="width: 20px; height: 20px;"
+              type="checkbox"
+            />
+            <div
+              style="flex-direction: row; margin-left: 10px; font-family: var(--font-base);"
+            >
+              2021
+            </div>
+          </div>
+          <div
+            style="display: flex; font-size: 12px; height: 15px; font-family: Helvetica Neue; background-color: white; padding: 3px;"
+          >
+            0
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
 `;

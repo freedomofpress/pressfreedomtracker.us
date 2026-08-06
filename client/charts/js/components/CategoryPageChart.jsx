@@ -1,5 +1,5 @@
 import React from 'react'
-import { ParentSize } from '@visx/responsive'
+import ParentSize from './ParentSize'
 import Flashing from '../../../common/js/components/Flashing'
 import ChartDescription from "./ChartDescription"
 import BarChart from "./BarChart"

@@ -1,10 +1,9 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import GeneralFilter from '../GeneralFilter'
 
 test('renders CheckBoxesYear with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<GeneralFilter
 			filterDef={{
 				"id": -1,
@@ -416,5 +415,6 @@ test('renders CheckBoxesYear with mocked data', () => {
 			width={200}
 			dataset={[]}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

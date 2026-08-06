@@ -1,16 +1,17 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import Slider from '../Slider'
 
 test('renders CheckBoxesYear with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<Slider
 			elements={["Nov", "Dec", "Jan", "Feb", "Mar", "Apr"]}
 			xScale={(x) => x}
 			y={400}
 			sliderSelection={'Nov'}
+			setSliderSelection={() => {}}
 			idContainer={'barchart-svg'}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

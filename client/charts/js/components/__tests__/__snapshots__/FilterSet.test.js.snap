@@ -1,90 +1,84 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders FilterSet with mocked data 1`] = `
-[
+<DocumentFragment>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_date_after"
+        for="id_date_after"
       >
-        Took place
-         after
+        Took place after
       </label>
     </div>
     <input
       id="id_date_after"
       name="date"
-      onChange={[Function]}
       type="date"
       value=""
     />
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_date_before"
+        for="id_date_before"
       >
-        Took place
-         before
+        Took place before
       </label>
     </div>
     <input
       id="id_date_before"
       name="date"
-      onChange={[Function]}
       type="date"
       value=""
     />
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_city"
+        for="id_city"
       >
         City
       </label>
     </div>
     <input
-      autoComplete="off"
-      className="text-field--single"
+      autocomplete="off"
+      class="text-field--single"
       id="id_city"
       name="city"
-      onChange={[Function]}
       type="text"
       value=""
     />
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_state"
+        for="id_state"
       >
         State
       </label>
     </div>
     <input
-      autoComplete="off"
-      className="text-field--single"
+      autocomplete="off"
+      class="text-field--single"
       id="id_state"
       list="state_choices"
       name="state"
-      onChange={[Function]}
       type="text"
       value=""
     />
@@ -149,26 +143,25 @@ exports[`renders FilterSet with mocked data 1`] = `
         value="Kansas"
       />
     </datalist>
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_targeted_journalists"
+        for="id_targeted_journalists"
       >
         Targeted any of these journalists
       </label>
     </div>
     <input
-      autoComplete="off"
-      className="text-field--single"
+      autocomplete="off"
+      class="text-field--single"
       id="id_targeted_journalists"
       list="targeted_journalists_choices"
       name="targeted_journalists"
-      onChange={[Function]}
       type="text"
       value=""
     />
@@ -215,26 +208,25 @@ exports[`renders FilterSet with mocked data 1`] = `
         value="Austin Henry"
       />
     </datalist>
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_targeted_institutions"
+        for="id_targeted_institutions"
       >
         Targeted Institutions
       </label>
     </div>
     <input
-      autoComplete="off"
-      className="text-field--single"
+      autocomplete="off"
+      class="text-field--single"
       id="id_targeted_institutions"
       list="targeted_institutions_choices"
       name="targeted_institutions"
-      onChange={[Function]}
       type="text"
       value=""
     />
@@ -305,37 +297,36 @@ exports[`renders FilterSet with mocked data 1`] = `
         value="The Bryantmouth Daily News 11"
       />
     </datalist>
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_case_number"
+        for="id_case_number"
       >
         Case number
       </label>
     </div>
     <input
-      autoComplete="off"
-      className="text-field--single"
+      autocomplete="off"
+      class="text-field--single"
       id="id_case_number"
       name="case_number"
-      onChange={[Function]}
       type="text"
       value=""
     />
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_case_type"
+        for="id_case_type"
       >
         Type of case
       </label>
@@ -343,8 +334,6 @@ exports[`renders FilterSet with mocked data 1`] = `
     <select
       id="id_case_type"
       name="case_type"
-      onChange={[Function]}
-      value=""
     >
       <option
         value=""
@@ -362,15 +351,15 @@ exports[`renders FilterSet with mocked data 1`] = `
         Class Action
       </option>
     </select>
-  </div>,
+  </div>
   <div
-    className="filters__field-row"
+    class="filters__field-row"
   >
     <div
-      className="filters__field-label"
+      class="filters__field-label"
     >
       <label
-        htmlFor="id_case_statuses"
+        for="id_case_statuses"
       >
         Legal case statuses
       </label>
@@ -378,8 +367,6 @@ exports[`renders FilterSet with mocked data 1`] = `
     <select
       id="id_case_statuses"
       name="case_statuses"
-      onChange={[Function]}
-      value=""
     >
       <option
         value=""
@@ -412,6 +399,6 @@ exports[`renders FilterSet with mocked data 1`] = `
         appealed
       </option>
     </select>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

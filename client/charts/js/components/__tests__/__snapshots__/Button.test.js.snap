@@ -1,35 +1,16 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders Button with mocked data 1`] = `
-<React.Fragment>
+<DocumentFragment>
   <button
-    className="btn btn-bordered"
-    onClick={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onMouseMove={[Function]}
-    style={
-      {
-        "backgroundColor": "white",
-        "color": "black",
-        "cursor": "pointer",
-        "marginBottom": 3,
-        "minWidth": 50,
-      }
-    }
+    class="btn btn-bordered"
+    style="margin-bottom: 3px; background-color: white; color: black; cursor: pointer; min-width: 50px;"
   >
     <p
-      style={
-        {
-          "fontFamily": "var(--font-base)",
-          "fontSize": "14px",
-          "fontWeight": "500",
-          "margin": 0,
-        }
-      }
+      style="margin: 0px; font-family: var(--font-base); font-size: 14px; font-weight: 500;"
     >
       test
     </p>
   </button>
-</React.Fragment>
+</DocumentFragment>
 `;
