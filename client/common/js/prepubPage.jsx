@@ -23,7 +23,7 @@ function PrepubBarChartWidth({
 	const chartHeight = parentWidth < mobileBreakpoint ? 280 : 250
 	const isMobileView = parentWidth < mobileBreakpoint
 	return (
-		<div className={'prepubChartContainer'} style={{ maxWidth: width}}>
+		<div className={'prepubChartContainer'} style={{ maxWidth: width }}>
 			<div className={'prepubChart'}>
 				<BarChart
 					data={dataset}
@@ -32,7 +32,7 @@ function PrepubBarChartWidth({
 					titleLabel={'incidents'}
 					categoryColumn={'status'}
 					allCategories={["confirmed", "unconfirmed"]}
-					categoriesColors={{"unconfirmed": "#F4C280", "confirmed": "#E07A5F"}}
+					categoriesColors={{ "unconfirmed": "#F4C280", "confirmed": "#E07A5F" }}
 					id={'prepub-page-bar-chart'}
 					width={chartWidth}
 					height={chartHeight}
@@ -86,7 +86,7 @@ function PrepubIncidentCategoryCount({
 						<div className="category-count-tooltip">
 							<p className="category-count-tooltip--heading">Categories tracked (unconfirmed)</p>
 							{categoryCounts.map((item) => (
-								<dl className="category-count-tooltip--row">
+								<dl className="category-count-tooltip--row" key={item.category}>
 									<dt className="category-count-tooltip--name">
 										<CategoryIcon category={item.category} width={14} />
 										{item.category}
@@ -136,7 +136,7 @@ incidentCountContainers.forEach((node) => {
 	const root = createRoot(node)
 	const noJSFallbackElem = node.parentElement.querySelector('.no-js-fallback')
 	// Hide the No JS fallback
-	noJSFallbackElem.style.display ='none'
+	noJSFallbackElem.style.display = 'none'
 	const incidentCount = parseInt(node.dataset.incidentCount)
 	const categoryCounts = JSON.parse(node.dataset.categoryCounts)
 	root.render((

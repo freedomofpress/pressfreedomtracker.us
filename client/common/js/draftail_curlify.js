@@ -18,7 +18,7 @@ import * as curlify from './curlify'
 	const curlifyPlugin = {
 		type: 'curlify',
 
-		handlePastedText(text, html, editorState, { update, setEditorState }) {
+		handlePastedText(text, html, editorState, { setEditorState }) {
 			try {
 				if (html) {
 					let newHTML = curlify.html(html)
@@ -83,9 +83,9 @@ import * as curlify from './curlify'
 				const textContent = currentBlock.getText()
 				const textLength = textContent.length
 
-                console.log("curlifying")
+				console.log("curlifying")
 
-				function replaceCharacter (newCharacter) {
+				function replaceCharacter(newCharacter) {
 					setEditorState(
 						EditorState.push(
 							editorState,

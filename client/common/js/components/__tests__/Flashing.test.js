@@ -1,4 +1,4 @@
-/* eslint-disable no-undef,react/jsx-filename-extension */
+
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 import Flashing from '../Flashing'

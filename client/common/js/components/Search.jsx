@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control, no-case-declarations */
 import React, { useState, createRef } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
@@ -20,7 +19,6 @@ export default function Search({ data = [], selectedTags = [] }) {
 			.split(',')
 			.map((category) => category.trim())
 			.forEach((category) => {
-				// eslint-disable-next-line no-param-reassign
 				categoryMap[category] = true
 			})
 		return categoryMap
@@ -69,20 +67,21 @@ export default function Search({ data = [], selectedTags = [] }) {
 		let currentTagIndex
 
 		switch (event.keyCode) {
-		case 38: // up
-			// select prev tag
-			const dropdownsReversed = allDropdowns.reverse()
-			currentTagIndex = dropdownsReversed.findIndex((tagEl) => tagEl.id === currentId)
-			if (dropdownsReversed[currentTagIndex + 1]) dropdownsReversed[currentTagIndex + 1].querySelector('button').focus()
-			event.preventDefault()
-			break
-		case 40: // down
-			// select next tag
-			currentTagIndex = allDropdowns.findIndex((tagEl) => tagEl.id === currentId) || 0
-			if (allDropdowns[currentTagIndex + 1]) allDropdowns[currentTagIndex + 1].querySelector('button').focus()
-			event.preventDefault()
-			break
-		default:
+			case 38: { // up
+				// select prev tag
+				const dropdownsReversed = allDropdowns.reverse()
+				currentTagIndex = dropdownsReversed.findIndex((tagEl) => tagEl.id === currentId)
+				if (dropdownsReversed[currentTagIndex + 1]) dropdownsReversed[currentTagIndex + 1].querySelector('button').focus()
+				event.preventDefault()
+				break
+			}
+			case 40: // down
+				// select next tag
+				currentTagIndex = allDropdowns.findIndex((tagEl) => tagEl.id === currentId) || 0
+				if (allDropdowns[currentTagIndex + 1]) allDropdowns[currentTagIndex + 1].querySelector('button').focus()
+				event.preventDefault()
+				break
+			default:
 		}
 	}
 
@@ -101,7 +100,7 @@ export default function Search({ data = [], selectedTags = [] }) {
 	// The base markup is the same as incidents/templates/incident/_search_bar.html
 	return (
 		<form
-			className={classNames("search-form", {'smart-search--unselectable': unselectable})}
+			className={classNames("search-form", { 'smart-search--unselectable': unselectable })}
 			onSubmit={handleSubmit}
 			onFocus={() => setSearchActive(true)}
 			onBlur={(e) => {
@@ -262,9 +261,7 @@ export default function Search({ data = [], selectedTags = [] }) {
 }
 
 Search.propTypes = {
-	// eslint-disable-next-line react/forbid-prop-types
 	data: PropTypes.array,
-	// eslint-disable-next-line react/forbid-prop-types
 	selectedTags: PropTypes.array,
 }
 

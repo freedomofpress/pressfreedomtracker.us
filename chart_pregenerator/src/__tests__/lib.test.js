@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+
 import 'node-fetch'
 import { generateBarChartSVG, generateTreemapChartSVG, generateUSMapSVG } from '../lib'
 

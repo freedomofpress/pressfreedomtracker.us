@@ -141,8 +141,8 @@ class SearchStatSource extends React.Component {
 					<fieldset>
 						<legend className="admin-modal__legend">Select dataset for statistic:</legend>
 						{datasets.map((dataset, index) => (
-							<p className="admin-modal__dataset_field">
-								<label className="admin-modal__label" key={index}>
+							<p className="admin-modal__dataset_field" key={index}>
+								<label className="admin-modal__label">
 									<input
 										className="admin-modal__dataset_radio"
 										value={dataset.toUpperCase()}

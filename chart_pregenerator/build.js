@@ -1,6 +1,5 @@
 const esbuild = require('esbuild')
 
-// eslint-disable-next-line no-lone-blocks
 {
 	(async () => {
 		await esbuild.build({
