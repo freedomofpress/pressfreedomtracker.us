@@ -114,7 +114,6 @@ const AutoComplete = ({
 				<ul className="filters__suggestions">
 					{state.filteredSuggestions.map((suggestion, index) => (
 						<li
-							className="filters__suggestions-item filters__suggestions-item--selectable"
 							className={classNames("filters__suggestions-item", "filters__suggestions-item--selectable", {"filters__suggestions-item--active": index === state.activeSuggestion})}
 							onClick={onClick}
 							data-item={suggestion[suggestionsLabelField]}
