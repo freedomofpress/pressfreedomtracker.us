@@ -190,6 +190,7 @@ export default function USMap({
 					<g role="list" aria-label="U.S. Map" style={{ pointerEvents: interactive ? "auto" : "none" }}>
 						{dataset.filter(hasLatLon).map((d) => (
 							<DynamicWrapper
+								key={aggregationLocality(d)}
 								wrapperComponent={
 									<a
 										href={searchPageURL && searchPageURL(d.usCode)}

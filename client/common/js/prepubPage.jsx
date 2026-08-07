@@ -86,7 +86,7 @@ function PrepubIncidentCategoryCount({
 						<div className="category-count-tooltip">
 							<p className="category-count-tooltip--heading">Categories tracked (unconfirmed)</p>
 							{categoryCounts.map((item) => (
-								<dl className="category-count-tooltip--row">
+								<dl className="category-count-tooltip--row" key={item.category}>
 									<dt className="category-count-tooltip--name">
 										<CategoryIcon category={item.category} width={14} />
 										{item.category}
