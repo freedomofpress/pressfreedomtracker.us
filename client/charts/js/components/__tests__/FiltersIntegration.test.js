@@ -1,10 +1,9 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import FiltersIntegration from '../FiltersIntegration'
 
 test('renders FiltersIntegration with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<FiltersIntegration
 			width={500}
 			dataset={[
@@ -1113,5 +1112,6 @@ test('renders FiltersIntegration with mocked data', () => {
 				}
 			]}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

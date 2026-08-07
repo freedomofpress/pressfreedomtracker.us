@@ -1,9 +1,9 @@
 import React from 'react'
-import Renderer from 'react-test-renderer'
+import { render } from '@testing-library/react'
 import FilterSet from '../FilterSet'
 
 test('renders FilterSet with mocked data', () => {
-	expect(Renderer.create(
+	const { asFragment } = render(
 		<FilterSet
 			filters={[
 				{
@@ -474,5 +474,6 @@ test('renders FilterSet with mocked data', () => {
 				},
 			]}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

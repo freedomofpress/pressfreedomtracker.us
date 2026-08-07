@@ -4,7 +4,7 @@ import {
 	groupByState,
 	countIncidentsOutsideUS,
 } from '../lib/utilities'
-import { ParentSize } from '@visx/responsive'
+import ParentSize from './ParentSize'
 import ChartDownloader from './ChartDownloader'
 import HexbinUSMap from './HexbinUSMap'
 

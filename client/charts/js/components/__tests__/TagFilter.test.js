@@ -1,10 +1,9 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import TagFilter from '../TagFilter'
 
 test('renders TagFilter with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<TagFilter
 			dataset={[
 				{
@@ -51,5 +50,6 @@ test('renders TagFilter with mocked data', () => {
 			initialPickedTags={new Set()}
 			filterParameters={new Set()}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

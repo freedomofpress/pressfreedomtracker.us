@@ -1,5 +1,5 @@
 import React from 'react'
-import { ParentSize } from '@visx/responsive'
+import ParentSize from './ParentSize'
 import TreeMap from './TreeMap'
 import HexbinUSMap from './HexbinUSMap'
 import BarChart from './BarChart'

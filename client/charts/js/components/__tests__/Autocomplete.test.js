@@ -1,10 +1,9 @@
 import React from 'react'
-import ShallowRenderer from 'react-test-renderer/shallow'
+import { render } from '@testing-library/react'
 import Autocomplete from '../Autocomplete'
 
 test('renders Autocomplete with mocked data', () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(
+	const { asFragment } = render(
 		<Autocomplete
 			suggestions={[{label: "test label"}]}
 			suggestionsLabelField={'label'}
@@ -14,5 +13,6 @@ test('renders Autocomplete with mocked data', () => {
 			handleSelect={() => {}}
 			suggestionsSidenoteField={'sidenote'}
 		/>
-	)).toMatchSnapshot();
+	)
+	expect(asFragment()).toMatchSnapshot()
 });

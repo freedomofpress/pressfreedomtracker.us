@@ -264,8 +264,3 @@ Search.propTypes = {
 	data: PropTypes.array,
 	selectedTags: PropTypes.array,
 }
-
-Search.defaultProps = {
-	data: [],
-	selectedTags: [],
-}

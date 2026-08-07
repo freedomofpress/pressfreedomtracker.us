@@ -1,17 +1,15 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders Autocomplete with mocked data 1`] = `
-<React.Fragment>
+<DocumentFragment>
   <input
-    autoComplete="off"
-    className="text-field--single"
+    autocomplete="off"
+    class="text-field--single"
     id="id_test autocomplete"
     name="test autocomplete"
-    onChange={[Function]}
-    onKeyDown={[Function]}
     placeholder="test"
     type="text"
     value=""
   />
-</React.Fragment>
+</DocumentFragment>
 `;

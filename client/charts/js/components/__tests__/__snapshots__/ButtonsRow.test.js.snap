@@ -1,46 +1,39 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders ButtonsRow with mocked data 1`] = `
-<div
-  style={
-    {
-      "alignItems": "center",
-      "display": "flex",
-      "margin": 12,
-    }
-  }
->
+<DocumentFragment>
   <div
-    style={
-      {
-        "fontFamily": "var(--font-base)",
-        "fontSize": "18px",
-      }
-    }
+    style="display: flex; align-items: center; margin: 12px;"
   >
-    test
+    <div
+      style="font-family: var(--font-base); font-size: 18px;"
+    >
+      test
+    </div>
+    <div
+      style="margin-left: 10px;"
+    >
+      <button
+        class="btn btn-bordered"
+        style="margin-bottom: 3px; background-color: white; color: black; cursor: pointer; min-width: 50px;"
+      >
+        <p
+          style="margin: 0px; font-family: var(--font-base); font-size: 14px; font-weight: 500;"
+        >
+          test1
+        </p>
+      </button>
+      <button
+        class="btn btn-bordered"
+        style="margin-bottom: 3px; background-color: white; color: black; cursor: pointer; min-width: 50px;"
+      >
+        <p
+          style="margin: 0px; font-family: var(--font-base); font-size: 14px; font-weight: 500;"
+        >
+          test2
+        </p>
+      </button>
+    </div>
   </div>
-  <div
-    style={
-      {
-        "marginLeft": 10,
-      }
-    }
-  >
-    <Button
-      label="test1"
-      onClick={[Function]}
-      selectable={true}
-      selected={false}
-      tooltipIfUnselectable={null}
-    />
-    <Button
-      label="test2"
-      onClick={[Function]}
-      selectable={true}
-      selected={false}
-      tooltipIfUnselectable={null}
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;

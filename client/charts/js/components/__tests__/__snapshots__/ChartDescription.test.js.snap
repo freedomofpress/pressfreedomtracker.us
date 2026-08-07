@@ -1,10 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders ChartDescription with mocked data 1`] = `
-<div
-  className="chartDescription"
-  id="test"
->
-  This is a test
-</div>
+<DocumentFragment>
+  <div
+    class="chartDescription"
+    id="test"
+  >
+    This is a test
+  </div>
+</DocumentFragment>
 `;

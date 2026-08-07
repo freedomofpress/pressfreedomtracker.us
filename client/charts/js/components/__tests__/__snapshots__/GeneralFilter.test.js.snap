@@ -1,442 +1,420 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`renders CheckBoxesYear with mocked data 1`] = `
-<React.Fragment>
+<DocumentFragment>
   <details
-    className="filters__group filters__form--category"
-    open={true}
+    class="filters__group filters__form--category"
+    open=""
   >
     <summary
-      className="filters__form-summary"
+      class="filters__form-summary"
     >
       <h3
-        className="filter__heading"
+        class="filter__heading"
       >
         Tag
       </h3>
     </summary>
-    <TagFilter
-      dataset={[]}
-      filterParameters={{}}
-      initialPickedTags={[]}
-      width={200}
-    />
+    <div
+      class="filters__form--fieldset"
+    >
+      <input
+        autocomplete="off"
+        class="text-field--single"
+        id="id_tags"
+        name="tags"
+        placeholder="Find tags..."
+        type="text"
+        value=""
+      />
+    </div>
   </details>
   <div
-    className="filters__form--fieldset filters__form--general"
+    class="filters__form--fieldset filters__form--general"
   >
-    <FilterSet
-      dataset={[]}
-      filterParameters={
-        {
-          "actor": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "arrest_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "arresting_authority": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "assailant": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "border_point": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_number": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_statuses": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "case_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "categories": {
-            "enabled": true,
-            "parameters": {},
-            "type": "stringset",
-          },
-          "charged_under_espionage_act": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "charges": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "city": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "denial_of_entry": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "detention_date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "detention_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_about_work": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "did_authorities_ask_for_device_access": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "equipment_broken": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "equipment_seized": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "filterState": {
-            "enabled": true,
-            "parameters": "All",
-            "type": "state",
-          },
-          "filterTimeMonths": {
-            "enabled": true,
-            "parameters": {
-              "max": "2023-02-18T00:00:00.000Z",
-              "min": "2022-03-20T00:00:00.000Z",
-            },
-            "type": "timeMonths",
-          },
-          "filterTimeYears": {
-            "enabled": false,
-            "parameters": [
-              2022,
-              2023,
-            ],
-            "type": "timeYears",
-          },
-          "held_in_contempt": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "is_search_warrant_obtained": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "legal_order_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "politicians_or_public_figures_involved": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "recently_updated": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "release_date": {
-            "enabled": false,
-            "parameters": {
-              "max": null,
-              "min": null,
-            },
-            "type": "date",
-          },
-          "search": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "state": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_charges": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_prior_restraint": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "status_of_seized_equipment": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "stopped_previously": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "subpoena_statuses": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "subpoena_type": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "tags": {
-            "enabled": true,
-            "parameters": {},
-            "type": "stringset",
-          },
-          "target_nationality": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "target_us_citizenship_status": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "targeted_institutions": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "targeted_journalists": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "third_party_business": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "unnecessary_use_of_force": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-          "was_journalist_targeted": {
-            "enabled": false,
-            "parameters": null,
-            "type": "string",
-          },
-        }
-      }
-      filters={
-        [
-          {
-            "name": "search",
-            "title": "Search terms",
-            "type": "text",
-          },
-          {
-            "name": "date",
-            "title": "Took place",
-            "type": "date",
-          },
-          {
-            "name": "recently_updated",
-            "title": "Updated in the last",
-            "type": "int",
-            "units": "days",
-          },
-          {
-            "name": "city",
-            "title": "City",
-            "type": "text",
-          },
-          {
-            "autocomplete_type": "incident.State",
-            "choices": [
-              "Alaska",
-              "Alabama",
-              "Arkansas",
-              "American Samoa",
-              "Arizona",
-              "California",
-              "Colorado",
-              "Connecticut",
-              "District of Columbia",
-              "Delaware",
-              "Florida",
-            ],
-            "many": false,
-            "name": "state",
-            "title": "State",
-            "type": "autocomplete",
-          },
-          {
-            "autocomplete_type": "incident.Journalist",
-            "choices": [
-              "Abigail Peterson",
-              "Adam Buchanan",
-              "Adam Lopez MD",
-              "Alicia Savage",
-              "Amanda Rosales",
-              "Angela Davis",
-              "Angela Johnson",
-              "Anthony Black",
-              "Anthony Ellison",
-              "Anthony Poole",
-              "April Olson",
-              "Ariel Hill",
-              "Austin Henry",
-            ],
-            "many": true,
-            "name": "targeted_journalists",
-            "title": "Targeted any of these journalists",
-            "type": "autocomplete",
-          },
-          {
-            "autocomplete_type": "incident.Institution",
-            "choices": [
-              "The Aaronmouth Post 141",
-              "The Alexanderbury Sun 191",
-              "The Alexisberg Post 155",
-              "The Amberport Tribune 100",
-              "The Andrewview Tribune 39",
-              "The Annaberg Tribune 145",
-              "The Anneside Post 41",
-              "The Ashleymouth Tribune 184",
-              "The Austinborough Sun 164",
-              "The Banksberg Herald 142",
-              "The Batesland Post 126",
-              "The Beckyview Daily News 128",
-              "The Bellburgh Post 135",
-              "The Benderton Sun 102",
-              "The Bethfort Daily News 7",
-              "The Blevinsland Tribune 200",
-              "The Bobbymouth Tribune 170",
-              "The Bradleyshire Herald 198",
-              "The Brittanyshire Sun 74",
-              "The Brownview Daily News 148",
-              "The Bryantmouth Daily News 11",
-              "The Burtonview Daily News 207",
-              "The Byrdbury Herald 26",
-              "The Candiceburgh Post 193",
-            ],
-            "many": true,
-            "name": "targeted_institutions",
-            "title": "Targeted institutions",
-            "type": "autocomplete",
-          },
-          {
-            "autocomplete_type": "common.CommonTag",
-            "choices": [
-              "ammonites",
-              "ants",
-              "aphids",
-              "baboon",
-              "bamboo",
-              "bees",
-              "centipedes",
-            ],
-            "many": true,
-            "name": "tags",
-            "title": "Has any of these tags",
-            "type": "autocomplete",
-          },
-          {
-            "name": "case_number",
-            "title": "Case number",
-            "type": "text",
-          },
-          {
-            "choices": [
-              [
-                "CIVIL",
-                "Civil",
-              ],
-              [
-                "CLASS_ACTION",
-                "Class Action",
-              ],
-            ],
-            "name": "case_type",
-            "title": "Type of case",
-            "type": "choice",
-          },
-          {
-            "choices": [
-              [
-                "ONGOING",
-                "ongoing",
-              ],
-              [
-                "SETTLED",
-                "settled",
-              ],
-              [
-                "DISMISSED",
-                "dismissed",
-              ],
-              [
-                "UNKNOWN",
-                "unknown",
-              ],
-              [
-                "APPEALED",
-                "appealed",
-              ],
-            ],
-            "name": "case_statuses",
-            "title": "Legal case statuses",
-            "type": "choice",
-          },
-        ]
-      }
-      handleFilterChange={[Function]}
-      width={200}
-    />
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_date_after"
+        >
+          Took place after
+        </label>
+      </div>
+      <input
+        id="id_date_after"
+        name="date"
+        type="date"
+        value=""
+      />
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_date_before"
+        >
+          Took place before
+        </label>
+      </div>
+      <input
+        id="id_date_before"
+        name="date"
+        type="date"
+        value=""
+      />
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_city"
+        >
+          City
+        </label>
+      </div>
+      <input
+        autocomplete="off"
+        class="text-field--single"
+        id="id_city"
+        name="city"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_state"
+        >
+          State
+        </label>
+      </div>
+      <input
+        autocomplete="off"
+        class="text-field--single"
+        id="id_state"
+        list="state_choices"
+        name="state"
+        type="text"
+        value=""
+      />
+      <datalist
+        id="state_choices"
+      >
+        <option
+          value="Alaska"
+        />
+        <option
+          value="Alabama"
+        />
+        <option
+          value="Arkansas"
+        />
+        <option
+          value="American Samoa"
+        />
+        <option
+          value="Arizona"
+        />
+        <option
+          value="California"
+        />
+        <option
+          value="Colorado"
+        />
+        <option
+          value="Connecticut"
+        />
+        <option
+          value="District of Columbia"
+        />
+        <option
+          value="Delaware"
+        />
+        <option
+          value="Florida"
+        />
+      </datalist>
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_targeted_journalists"
+        >
+          Targeted any of these journalists
+        </label>
+      </div>
+      <input
+        autocomplete="off"
+        class="text-field--single"
+        id="id_targeted_journalists"
+        list="targeted_journalists_choices"
+        name="targeted_journalists"
+        type="text"
+        value=""
+      />
+      <datalist
+        id="targeted_journalists_choices"
+      >
+        <option
+          value="Abigail Peterson"
+        />
+        <option
+          value="Adam Buchanan"
+        />
+        <option
+          value="Adam Lopez MD"
+        />
+        <option
+          value="Alicia Savage"
+        />
+        <option
+          value="Amanda Rosales"
+        />
+        <option
+          value="Angela Davis"
+        />
+        <option
+          value="Angela Johnson"
+        />
+        <option
+          value="Anthony Black"
+        />
+        <option
+          value="Anthony Ellison"
+        />
+        <option
+          value="Anthony Poole"
+        />
+        <option
+          value="April Olson"
+        />
+        <option
+          value="Ariel Hill"
+        />
+        <option
+          value="Austin Henry"
+        />
+      </datalist>
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_targeted_institutions"
+        >
+          Targeted institutions
+        </label>
+      </div>
+      <input
+        autocomplete="off"
+        class="text-field--single"
+        id="id_targeted_institutions"
+        list="targeted_institutions_choices"
+        name="targeted_institutions"
+        type="text"
+        value=""
+      />
+      <datalist
+        id="targeted_institutions_choices"
+      >
+        <option
+          value="The Aaronmouth Post 141"
+        />
+        <option
+          value="The Alexanderbury Sun 191"
+        />
+        <option
+          value="The Alexisberg Post 155"
+        />
+        <option
+          value="The Amberport Tribune 100"
+        />
+        <option
+          value="The Andrewview Tribune 39"
+        />
+        <option
+          value="The Annaberg Tribune 145"
+        />
+        <option
+          value="The Anneside Post 41"
+        />
+        <option
+          value="The Ashleymouth Tribune 184"
+        />
+        <option
+          value="The Austinborough Sun 164"
+        />
+        <option
+          value="The Banksberg Herald 142"
+        />
+        <option
+          value="The Batesland Post 126"
+        />
+        <option
+          value="The Beckyview Daily News 128"
+        />
+        <option
+          value="The Bellburgh Post 135"
+        />
+        <option
+          value="The Benderton Sun 102"
+        />
+        <option
+          value="The Bethfort Daily News 7"
+        />
+        <option
+          value="The Blevinsland Tribune 200"
+        />
+        <option
+          value="The Bobbymouth Tribune 170"
+        />
+        <option
+          value="The Bradleyshire Herald 198"
+        />
+        <option
+          value="The Brittanyshire Sun 74"
+        />
+        <option
+          value="The Brownview Daily News 148"
+        />
+        <option
+          value="The Bryantmouth Daily News 11"
+        />
+        <option
+          value="The Burtonview Daily News 207"
+        />
+        <option
+          value="The Byrdbury Herald 26"
+        />
+        <option
+          value="The Candiceburgh Post 193"
+        />
+      </datalist>
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_case_number"
+        >
+          Case number
+        </label>
+      </div>
+      <input
+        autocomplete="off"
+        class="text-field--single"
+        id="id_case_number"
+        name="case_number"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_case_type"
+        >
+          Type of case
+        </label>
+      </div>
+      <select
+        id="id_case_type"
+        name="case_type"
+      >
+        <option
+          value=""
+        >
+          ------
+        </option>
+        <option
+          value="CIVIL"
+        >
+          Civil
+        </option>
+        <option
+          value="CLASS_ACTION"
+        >
+          Class Action
+        </option>
+      </select>
+    </div>
+    <div
+      class="filters__field-row"
+    >
+      <div
+        class="filters__field-label"
+      >
+        <label
+          for="id_case_statuses"
+        >
+          Legal case statuses
+        </label>
+      </div>
+      <select
+        id="id_case_statuses"
+        name="case_statuses"
+      >
+        <option
+          value=""
+        >
+          ------
+        </option>
+        <option
+          value="ONGOING"
+        >
+          ongoing
+        </option>
+        <option
+          value="SETTLED"
+        >
+          settled
+        </option>
+        <option
+          value="DISMISSED"
+        >
+          dismissed
+        </option>
+        <option
+          value="UNKNOWN"
+        >
+          unknown
+        </option>
+        <option
+          value="APPEALED"
+        >
+          appealed
+        </option>
+      </select>
+    </div>
   </div>
-</React.Fragment>
+</DocumentFragment>
 `;

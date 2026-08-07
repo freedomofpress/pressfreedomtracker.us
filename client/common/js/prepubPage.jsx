@@ -1,5 +1,5 @@
 import React from 'react'
-import { ParentSize } from '@visx/responsive'
+import ParentSize from '../../charts/js/components/ParentSize'
 import { createRoot } from 'react-dom/client'
 import CategoryIcon from './components/categoryIcon'
 import BarChart from '../../charts/js/components/BarChart'

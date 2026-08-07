@@ -1,6 +1,6 @@
 import React from 'react'
 import { filterDatasets, categoriesColors } from '../lib/utilities'
-import { ParentSize } from '@visx/responsive'
+import ParentSize from './ParentSize'
 import ChartDownloader from './ChartDownloader'
 import TreeMap from './TreeMap'
 import TreeMapMini from './TreeMapMini'
