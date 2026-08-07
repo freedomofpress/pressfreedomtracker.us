@@ -1,34 +1,10 @@
-// babel.config.js
-module.exports = (api) => {
-	const isTest = api.env('test')
-	if (isTest) {
-		return {
-			presets: [
-				[
-					'@babel/preset-env',
-					{
-						modules: false,
-						targets: {
-							node: 'current',
-						},
-					},
-				],
-				'@babel/preset-react',
-			],
-			plugins: [
-				'@babel/plugin-transform-modules-commonjs',
-			],
-		}
-	}
-	return {
-		presets: [
-			[
-				'@babel/preset-env',
-				{
-					modules: false,
-				},
-			],
-			'@babel/preset-react',
-		],
-	}
-}
+module.exports = (api) => ({
+	presets: [
+		// The default `modules: 'auto'` keeps ESM for webpack and emits CommonJS
+		// for Jest.
+		['@babel/preset-env', api.env('test') ? { targets: { node: 'current' } } : {}],
+		// Falls back to the slower dev JSX runtime unless NODE_ENV is production,
+		// which the npm scripts set.
+		'@babel/preset-react',
+	],
+})

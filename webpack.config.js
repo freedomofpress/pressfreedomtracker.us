@@ -1,136 +1,81 @@
-var webpack = require("webpack");
-const { merge } = require("webpack-merge");
-var autoprefixer = require("autoprefixer");
-var BundleTracker = require("webpack-bundle-tracker");
-var MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var path = require("path");
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const BundleTracker = require('webpack-bundle-tracker')
 
-var TARGET = process.env.npm_lifecycle_event;
-process.env.BABEL_ENV = TARGET;
+const BASE_DIR = path.join(__dirname, 'client')
+const DIST_DIR = path.join(__dirname, 'build/static/bundles')
 
-var target = __dirname + "/build/static/bundles";
-
-var STATIC_URL = process.env.STATIC_URL || "/common/static/";
-var sassData = '$static-url: "' + STATIC_URL + '"';
-console.log("Using STATIC_URL", STATIC_URL);
-
-var common = {
+module.exports = {
 	entry: {
-		common: __dirname + "/client/common/js/common.js",
-		statistics: __dirname + "/client/statistics/js/searchstats.js",
-		draftail: __dirname + "/client/common/js/draftail_curlify.js",
-		charts: __dirname + "/client/charts/js/index.js",
-		filterSidebar: __dirname + "/client/charts/js/filter-sidebar.js",
-		filterSummary: __dirname + "/client/charts/js/filter-summary.js",
-		searchBar: __dirname + "/client/common/js/search-bar.js",
-		verticalBarChart: __dirname + "/client/charts/js/vertical-bar-chart.js",
-		treeMapChart: __dirname + "/client/charts/js/tree-map-chart.js",
-		bubbleMapChart: __dirname + "/client/charts/js/bubble-map-chart.js",
-		hexbinMapChart: __dirname + "/client/charts/js/hexbin-map-chart.js",
+		common: path.resolve(BASE_DIR, 'common/js/common.js'),
+		statistics: path.resolve(BASE_DIR, 'statistics/js/searchstats.js'),
+		draftail: path.resolve(BASE_DIR, 'common/js/draftail_curlify.js'),
+		charts: path.resolve(BASE_DIR, 'charts/js/index.js'),
+		filterSidebar: path.resolve(BASE_DIR, 'charts/js/filter-sidebar.js'),
+		filterSummary: path.resolve(BASE_DIR, 'charts/js/filter-summary.js'),
+		searchBar: path.resolve(BASE_DIR, 'common/js/search-bar.js'),
+		verticalBarChart: path.resolve(BASE_DIR, 'charts/js/vertical-bar-chart.js'),
+		treeMapChart: path.resolve(BASE_DIR, 'charts/js/tree-map-chart.js'),
+		bubbleMapChart: path.resolve(BASE_DIR, 'charts/js/bubble-map-chart.js'),
+		hexbinMapChart: path.resolve(BASE_DIR, 'charts/js/hexbin-map-chart.js'),
 	},
 
 	output: {
-		path: target,
-		filename: "[name].js",
+		path: DIST_DIR,
+		filename: '[name]-[contenthash].js',
 		clean: true,
 	},
 
 	resolve: {
 		alias: {
-			"~": __dirname + "/client/common/js",
+			'~': path.resolve(BASE_DIR, 'common/js'),
 		},
-		extensions: [".js", ".jsx"],
-		modules: ["node_modules"],
+		extensions: ['.js', '.jsx'],
 	},
 
 	module: {
 		rules: [
 			{
 				test: /\.jsx?$/,
-				use: [
-					{
-						loader: "babel-loader",
-						options: {
-							presets: [
-								"@babel/preset-react",
-								// Setting `modules` false, prevents babel from trying to use
-								// commonjs imports, which messes up our nice clean ES6 imports
-								// provided directly by Webpack:
-								// https://github.com/webpack/webpack/issues/4961#issuecomment-304938963
-								["@babel/preset-env", { modules: false }],
-							],
-						},
-					},
-				],
-				include: [
-					path.join(__dirname, "/client/common/js"),
-					path.join(__dirname, "/client/statistics/js"),
-					path.join(__dirname, "/client/charts/js"),
-				],
+				include: [BASE_DIR],
+				loader: 'babel-loader',
 			},
 			{
 				test: /\.s[ca]ss$/,
 				use: [
 					MiniCssExtractPlugin.loader,
-					"css-loader",
-					"postcss-loader",
+					'css-loader',
 					{
-						loader: "sass-loader",
-
+						loader: 'sass-loader',
 						options: {
 							sassOptions: {
-								includePaths: [path.resolve(__dirname, "node_modules/")],
+								// The stylesheets still use the deprecated `@import`.
+								silenceDeprecations: ['import'],
 							},
-							additionalData: sassData,
 						},
 					},
 				],
 			},
 			{
 				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+				use: [MiniCssExtractPlugin.loader, 'css-loader'],
 			},
 			{
-				test: /\.(png|svg|jpg|gif)$/,
-				type: "asset/resource",
-			},
-			{
-				test: /\.(woff|woff2|eot|ttf|otf)$/,
-				type: "asset/resource",
+				test: /\.(png|svg|jpg|gif|woff|woff2|eot|ttf|otf)$/,
+				type: 'asset/resource',
 			},
 		],
 	},
 
 	plugins: [
 		new MiniCssExtractPlugin({
-			filename: "[name]-[hash].css",
-			chunkFilename: "[id]-[hash].css",
+			filename: '[name]-[contenthash].css',
+			chunkFilename: '[id]-[contenthash].css',
 		}),
+		// django-webpack-loader reads this manifest; it must sit with the bundles.
 		new BundleTracker({
-			path: target,
-			filename: "webpack-stats.json",
+			path: DIST_DIR,
+			filename: 'webpack-stats.json',
 		}),
 	],
-};
-
-if (TARGET === "build") {
-	module.exports = merge(common, {
-		output: {
-			filename: "[name]-[contenthash].js",
-		},
-		plugins: [
-			new webpack.DefinePlugin({
-				"process.env": { NODE_ENV: JSON.stringify("production") },
-			}),
-		],
-	});
-}
-
-if (TARGET === "start") {
-	module.exports = merge(common, {
-		output: {
-			filename: "[name]-[contenthash].js",
-			pathinfo: true,
-		},
-	});
 }
