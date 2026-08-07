@@ -38,7 +38,6 @@
     "stylelint-config-recommended": "^13.0.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
     "stylelint-config-standard": "^33.0.0",
-    "watchpack": "^2.5.2",
     "webpack": "^5.109.2",
     "webpack-bundle-tracker": "^3.2.4",
     "webpack-cli": "^7.2.2"
@@ -46,20 +45,14 @@
   "dependencies": {
     "@visx/responsive": "^3.0.0",
     "canvg": "^4.0.1",
-    "classlist-polyfill": "^1.2.0",
     "classnames": "^2.5.1",
     "d3": "^7.1.1",
-    "date-fns": "^2.14.0",
-    "element-dataset": "^2.2.6",
-    "invariant": "^2.2.2",
-    "money-math": "^2.4.3",
-    "prop-types": "^15.7.2",
+    "lodash": "^4.18.0",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-animated-dataset": "github:freedomofpress/react-animated-dataset#nested-components",
-    "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.3",
-    "regenerator-runtime": "^0.14.1",
     "smartquotes": "^2.3.2",
     "topojson-client": "^3.1.0"
   }
