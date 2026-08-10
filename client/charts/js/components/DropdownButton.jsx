@@ -16,7 +16,7 @@ const ArrowDownSVG = ({stroke}) => (
 	</svg>
 )
 
-export default function DropdownButton({ selected, selectable = true, onChange }) {
+export default function DropdownButton({ value = '', selected, selectable = true, onChange }) {
 	const [hovered, setHovered] = React.useState(false)
 
 	return (
@@ -57,7 +57,7 @@ export default function DropdownButton({ selected, selectable = true, onChange }
 					setHovered(false)
 				}}
 				disabled={!selectable}
-				value={selected}
+				value={value}
 			>
 				{
 					Array.isArray(selectable) &&

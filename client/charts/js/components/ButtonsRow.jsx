@@ -18,10 +18,14 @@ export default function ButtonsRow({
 	tooltipIfUnselectable = null,
 }) {
 	const [selectedButton, setSelectedButton] = React.useState(null)
+	const [lastDropdownValue, setLastDropdownValue] = React.useState(null)
 
 	function changeSelectedButton(buttonLabel) {
 		updateSelection(buttonLabel)
 		setSelectedButton(buttonLabel)
+		if (dropDownLabels.includes(buttonLabel)) {
+			setLastDropdownValue(buttonLabel) // maintain dropdown val when changing selection
+		}
 	}
 
 	return (
@@ -51,7 +55,7 @@ export default function ButtonsRow({
 				))}
 				{dropDownLabels.length > 0 && (
 					<DropdownButton
-						value={dropDownLabels.includes(selectedButton) ? selectedButton : dropDownLabels[0]}
+						value={dropDownLabels.includes(selectedButton) ? selectedButton : (lastDropdownValue ?? dropDownLabels[0])}
 						selected={
 							dropDownLabels.includes(selectedButton) ? selectedButton : ""
 						}

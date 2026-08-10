@@ -112,6 +112,15 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         blank=True,
         null=True,
     )
+    viz_seven_day_enabled = models.BooleanField(
+        "Enable 7-day view",
+        default=False,
+        help_text=(
+            'Show a "past 7 days" option on the homepage charts. It only appears '
+            "when there are incidents within the last 7 days and becomes the "
+            "default view when shown."
+        ),
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -179,6 +188,12 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
                 )
             ],
             heading="Limit Data",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("viz_seven_day_enabled"),
+            ],
+            heading="Chart Options",
         ),
     ]
 

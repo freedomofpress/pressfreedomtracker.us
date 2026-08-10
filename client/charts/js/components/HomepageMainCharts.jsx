@@ -8,12 +8,16 @@ import ChartDescription from "./ChartDescription"
 import Flashing from '../../../common/js/components/Flashing'
 import {
 	filterDatasetByFiltersApplied,
+	resolveDefaultTimePreset,
 	groupByMonthSorted,
 	groupByYearsSorted,
+	groupByDaysSorted,
+	groupByWeeksSorted,
 	groupByState,
 	countIncidentsOutsideUS,
 	categoriesColors,
 	getFilteredUrl,
+	TIME_PRESETS,
 } from '../lib/utilities.js'
 
 import '../../sass/HomepageMainCharts.sass'
@@ -28,6 +32,15 @@ export default function HomepageMainCharts(props) {
 
 const mobileBreakpoint = 950
 
+const WEEK_CHART_DESCRIPTION = 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)'
+const CHART_DESCRIPTIONS = {
+	[TIME_PRESETS.SEVEN_DAYS]: 'Showing the number of journalists targeted per day.',
+	[TIME_PRESETS.FOUR_WEEKS]: WEEK_CHART_DESCRIPTION,
+	[TIME_PRESETS.TWELVE_WEEKS]: WEEK_CHART_DESCRIPTION,
+	[TIME_PRESETS.ALL_TIME]: 'Showing the number of journalists targeted per year.',
+}
+const DEFAULT_CHART_DESCRIPTION = 'Showing the number of journalists targeted per month.'
+
 function HomepageMainChartsWidth({
 	data: dataset,
 	width,
@@ -36,13 +49,20 @@ function HomepageMainChartsWidth({
 	databasePath = '/',
 	loading = false,
 	categories = [],
+	sevenDayEnabled = false,
 }) {
-	const [filtersApplied, setFiltersApplied] = React.useState({
+	// timePreset is determined by resolveDefaultTimePreset until the user chooses otherwise
+	const [filterSelection, setFiltersApplied] = React.useState({
 		tag: null,
 		year: null,
-		sixMonths: true,
-		allTime: null
+		timePreset: null,
 	})
+
+	const filtersApplied = {
+		...filterSelection,
+		timePreset: filterSelection.timePreset
+			?? resolveDefaultTimePreset(dataset, currentDate, sevenDayEnabled),
+	}
 
 	const categoriesColorMap = categories.reduce(
 		(acc, { title }, i) => ({ ...acc, [title]: categoriesColors[i % categoriesColors.length] }),
@@ -53,10 +73,8 @@ function HomepageMainChartsWidth({
 	const chartHeight = width > mobileBreakpoint ? 500 : 480
 
 	const datasetFiltered = filterDatasetByFiltersApplied(dataset, filtersApplied, currentDate)
-
 	const datasetAggregatedByGeo = groupByState(datasetFiltered)
 	const incidentsOutsideUS = countIncidentsOutsideUS(datasetFiltered)
-
 
 	const barChartProps = {
 		y: 'numberOfIncidents',
@@ -66,18 +84,62 @@ function HomepageMainChartsWidth({
 		height: chartHeight,
 		isMobileView: width < mobileBreakpoint,
 	}
-	if (filtersApplied.allTime) {
-		barChartProps.data = groupByYearsSorted(datasetFiltered)
-		barChartProps.x = 'year'
-		barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year }, currentDate, categories)
-	} else {
-		barChartProps.x = 'monthName'
-		barChartProps.data = groupByMonthSorted(
-			datasetFiltered,
-			filtersApplied.sixMonths,
-			currentDate,
-		)
-		barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+
+	const isWeekView = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS
+		|| filtersApplied.timePreset === TIME_PRESETS.TWELVE_WEEKS
+
+	// Bars for day/week views share the same shape.
+	const setDateBucketProps = (buckets, getStart, getEnd) => {
+		const bucketByLabel = Object.fromEntries(buckets.map((b) => [b.label, b]))
+		barChartProps.data = buckets
+		barChartProps.x = 'label'
+		barChartProps.tooltipXFormat = (label) => bucketByLabel[label]?.range ?? label
+		barChartProps.searchPageURL = (label) => {
+			const bucket = bucketByLabel[label]
+			if (!bucket) return null
+			return getFilteredUrl(
+				databasePath,
+				{ ...filtersApplied, weekStart: getStart(bucket), weekEnd: getEnd(bucket) },
+				currentDate,
+				categories,
+			)
+		}
+	}
+
+	// Pick bucket size for bars (day/week/month/year), format label, and decide what each bar links to.
+	switch (filtersApplied.timePreset) {
+		case TIME_PRESETS.SEVEN_DAYS: {
+			const dayData = groupByDaysSorted(datasetFiltered, currentDate, 7)
+			setDateBucketProps(dayData, (d) => d.date, (d) => d.date)
+			break
+		}
+		case TIME_PRESETS.FOUR_WEEKS:
+		case TIME_PRESETS.TWELVE_WEEKS: {
+			const numberOfWeeks = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS ? 4 : 12
+			const weekData = groupByWeeksSorted(datasetFiltered, currentDate, numberOfWeeks)
+			setDateBucketProps(weekData, (w) => w.weekStart, (w) => w.weekEnd)
+			break
+		}
+		case TIME_PRESETS.ALL_TIME: {
+			barChartProps.data = groupByYearsSorted(datasetFiltered)
+			barChartProps.x = 'year'
+			barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year, timePreset: TIME_PRESETS.YEAR }, currentDate, categories)
+			break
+		}
+		case TIME_PRESETS.SIX_MONTHS:
+		case TIME_PRESETS.YEAR:
+		default: {
+			// Month-sized bars for six-month/year views, and fallback for any
+			// unexpected preset so barChartProps.data is never left undefined.
+			barChartProps.x = 'monthName'
+			barChartProps.data = groupByMonthSorted(
+				datasetFiltered,
+				filtersApplied.timePreset === TIME_PRESETS.SIX_MONTHS,
+				currentDate,
+			)
+			barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
+			break
+		}
 	}
 
 	return (
@@ -90,6 +152,7 @@ function HomepageMainChartsWidth({
 				filtersApplied={filtersApplied}
 				setFiltersApplied={setFiltersApplied}
 				selectedTags={selectedTags}
+				sevenDayEnabled={sevenDayEnabled}
 			/>
 
 			<div className={'hpChartContainer'} style={{ width: width }}>
@@ -131,8 +194,13 @@ function HomepageMainChartsWidth({
 					/>
 				</div>
 				<div className={'hpChart'}>
-					<ChartDescription id={'homepage-bar-chart-label'}>Showing the number of journalists targeted per month.</ChartDescription>
+					<ChartDescription id={'homepage-bar-chart-label'}>
+						{CHART_DESCRIPTIONS[filtersApplied.timePreset] ?? DEFAULT_CHART_DESCRIPTION}
+					</ChartDescription>
 					<BarChart {...barChartProps} />
+					{isWeekView && width > mobileBreakpoint && (
+						<div className='hpBarChartAxisLabel'>Week beginning on</div>
+					)}
 				</div>
 			</div>
 		</Flashing>
