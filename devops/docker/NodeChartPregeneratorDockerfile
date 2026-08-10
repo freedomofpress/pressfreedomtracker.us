@@ -13,6 +13,11 @@ RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free
     rm -rf /var/lib/apt/lists/*
 
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
+
+# Installed globally so it resolves for the unprivileged user below. The version
+# is pinned to the "packageManager" field in package.json.
+RUN npm install --global pnpm@11.20.0
+
 COPY chart_pregenerator /opt/chart-pregenerator
 COPY ./client /opt/chart-pregenerator/client
 RUN chown -R "${USERID}" /opt/chart-pregenerator
@@ -20,7 +25,7 @@ WORKDIR /opt/chart-pregenerator
 
 USER ${USERID}
 
-RUN npm install
-RUN npm run build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
 CMD ["node", "./build/server.js"]

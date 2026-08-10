@@ -4,5 +4,5 @@
 
 set -x
 
-npm install && \
-    npm run start
+pnpm install --store-dir /pnpm-store && \
+    pnpm run start

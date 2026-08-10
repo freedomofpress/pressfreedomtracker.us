@@ -10,9 +10,17 @@ module.exports = {
 		'^.+\\.jsx?$': 'babel-jest',
 	},
 	// d3 and friends are ESM-only, so they need transpiling in node_modules.
+	// The optional `.pnpm/` segment matches pnpm's store layout as well as a
+	// flat node_modules.
 	transformIgnorePatterns: [
-		'<rootDir>/node_modules/(?!d3|internmap|delaunator|robust-predicates|react-animated-dataset)',
+		'node_modules/(?!(\\.pnpm/)?(d3|internmap|delaunator|robust-predicates|react-animated-dataset))',
 	],
 	setupFilesAfterEnv: ['<rootDir>/client/common/js/setupTests.js'],
-	testPathIgnorePatterns: ['/node_modules/', '<rootDir>/chart_pregenerator/'],
+	// pnpm's store sits inside the project so it can hard link; it holds temp
+	// checkouts of git dependencies, tests and all.
+	testPathIgnorePatterns: [
+		'/node_modules/',
+		'<rootDir>/.pnpm-store/',
+		'<rootDir>/chart_pregenerator/',
+	],
 }

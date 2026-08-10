@@ -47,8 +47,8 @@ dev-tests: ## Run django tests against developer environment
 
 .PHONY: dev-jest-tests
 dev-jest-tests: ## Run django tests against developer environment
-	docker compose exec node npm test
-	docker compose exec node-chart-pregenerator npm run test
+	docker compose exec node pnpm test
+	docker compose exec node-chart-pregenerator pnpm run test
 
 .PHONY: compile-pip-dependencies
 compile-pip-dependencies: ## Uses pip-compile to update requirements.txt
@@ -125,11 +125,11 @@ help: ## Prints this message and exits
 
 .PHONY: eslint
 eslint:
-	docker compose exec node npm run js-lint
+	docker compose exec node pnpm run js-lint
 
 .PHONY: stylelint
 stylelint:
-	docker compose exec node npm run stylelint
+	docker compose exec node pnpm run stylelint
 
 .PHONY: check-migrations
 check-migrations: ## Check for ungenerated migrations

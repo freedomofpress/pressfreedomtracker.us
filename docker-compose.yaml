@@ -49,6 +49,8 @@ services:
     image: localhost/pressfreedomtracker-us-node
     volumes:
       - ./:/django
+      # Keeping the store off the bind mount roughly halves install time.
+      - pnpm-store:/pnpm-store
     working_dir: /django
     user: ${UID:?err}
     healthcheck:
@@ -145,3 +147,6 @@ services:
       app:
         aliases:
           - app
+
+volumes:
+  pnpm-store:

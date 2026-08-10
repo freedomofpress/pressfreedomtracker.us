@@ -5,6 +5,7 @@ db-snapshots
 logs
 media/
 node_modules
+.pnpm-store
 npm-debug.log
 tracker/settings/local.py
 .versioninfo

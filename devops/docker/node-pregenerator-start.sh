@@ -4,4 +4,4 @@
 
 set -x
 
-npm run dev
+pnpm run dev

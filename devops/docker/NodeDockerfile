@@ -11,5 +11,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 
+# Installed globally so it resolves for the unprivileged user below. The version
+# is pinned to the "packageManager" field in package.json.
+RUN npm install --global pnpm@11.20.0
+
+# Pre-created so the named volume mounted here inherits this ownership and the
+# unprivileged user can write to it.
+RUN mkdir -p /pnpm-store && chown "${USERID}" /pnpm-store
+
 USER ${USERID}
 CMD [ "/usr/bin/node-start.sh" ]

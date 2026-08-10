@@ -16,15 +16,23 @@ RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free
 COPY devops/docker/node-pregenerator-start.sh /usr/bin/node-pregenerator-start.sh
 RUN getent passwd "${USERID}" || useradd --create-home --no-log-init --uid "${USERID}" pft_node
 
+# Installed globally so it resolves for the unprivileged user below. The version
+# is pinned to the "packageManager" field in package.json.
+RUN npm install --global pnpm@11.20.0
+
 WORKDIR /app
 
 RUN chown -R "${USERID}" /app
 USER ${USERID}
 
-COPY chart_pregenerator/package*.json ./
+COPY chart_pregenerator/package.json ./
+COPY chart_pregenerator/pnpm-lock.yaml ./
+# Carries the allowBuilds approvals; without it pnpm silently skips esbuild's
+# postinstall and its binary never lands.
+COPY chart_pregenerator/pnpm-workspace.yaml ./
 COPY chart_pregenerator/dev.js ./
 COPY chart_pregenerator/jest.config.js ./
 COPY chart_pregenerator/babel.config.json ./
 
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 CMD [ "/usr/bin/node-pregenerator-start.sh" ]

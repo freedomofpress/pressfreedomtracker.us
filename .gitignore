@@ -11,6 +11,7 @@ __pycache__
 coverage.xml
 
 node_modules
+.pnpm-store
 npm-debug.log
 webpack-stats.json
 # Do not make a bundles/ ignore line ;-)

@@ -13,6 +13,7 @@ module.exports = [
 			'htmlcov/**',
 			'media/**',
 			'node_modules/**',
+			'.pnpm-store/**',
 			'chart_pregenerator/build/**',
 			'chart_pregenerator/node_modules/**',
 			'tracker/static/**',

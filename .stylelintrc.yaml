@@ -5,6 +5,7 @@ extends:
 customSyntax: postcss-sass
 ignoreFiles:
   - 'node_modules/**/*'
+  - '.pnpm-store/**/*'
 files:
   include:
     - '**/*.s+(a|c)ss'

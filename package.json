@@ -2,6 +2,7 @@
   "name": "tracker",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@11.20.0",
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
@@ -51,6 +52,7 @@
     "canvg": "^4.0.1",
     "classnames": "^2.5.1",
     "d3": "^7.1.1",
+    "d3-selection": "^1.4.1",
     "lodash": "^4.18.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.8",
