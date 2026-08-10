@@ -127,7 +127,10 @@ function HomepageMainChartsWidth({
 			break
 		}
 		case TIME_PRESETS.SIX_MONTHS:
-		case TIME_PRESETS.YEAR: {
+		case TIME_PRESETS.YEAR:
+		default: {
+			// Month-sized bars for six-month/year views, and fallback for any
+			// unexpected preset so barChartProps.data is never left undefined.
 			barChartProps.x = 'monthName'
 			barChartProps.data = groupByMonthSorted(
 				datasetFiltered,
