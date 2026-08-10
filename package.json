@@ -4,10 +4,10 @@
   "private": true,
   "packageManager": "pnpm@11.20.0",
   "description": "",
-  "main": "webpack.config.js",
+  "main": "rspack.config.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --mode production",
-    "start": "NODE_ENV=development webpack watch --mode development --devtool eval-source-map",
+    "build": "NODE_ENV=production rspack build --mode production",
+    "start": "NODE_ENV=development rspack build --watch --mode development --devtool eval-source-map",
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage",
     "js-lint": "eslint .",
@@ -22,6 +22,8 @@
     "@babel/preset-env": "^8.0.2",
     "@babel/preset-react": "^8.0.1",
     "@eslint/js": "^9.39.5",
+    "@rspack/cli": "2.1.8",
+    "@rspack/core": "2.1.8",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "babel-jest": "^30.4.1",
@@ -35,7 +37,6 @@
     "globals": "^17.9.0",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
-    "mini-css-extract-plugin": "^2.10.2",
     "postcss-sass": "^0.5.0",
     "sass": "^1.102.0",
     "sass-loader": "^17.0.0",
@@ -43,9 +44,7 @@
     "stylelint-config-recommended": "^13.0.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
     "stylelint-config-standard": "^33.0.0",
-    "webpack": "^5.109.2",
-    "webpack-bundle-tracker": "^3.2.4",
-    "webpack-cli": "^7.2.2"
+    "webpack-bundle-tracker": "^3.2.4"
   },
   "dependencies": {
     "@visx/responsive": "^4.0.0",

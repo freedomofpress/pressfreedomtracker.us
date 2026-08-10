@@ -1,3 +1,7 @@
+# Containers and CI have no TTY, so pnpm would otherwise abort rather than
+# prompt when it needs to rebuild node_modules.
+confirmModulesPurge: false
+
 allowBuilds:
   esbuild: true
   unrs-resolver: true

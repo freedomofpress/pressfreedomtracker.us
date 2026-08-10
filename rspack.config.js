@@ -1,11 +1,16 @@
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { rspack } = require('@rspack/core')
 const BundleTracker = require('webpack-bundle-tracker')
 
 const BASE_DIR = path.join(__dirname, 'client')
 const DIST_DIR = path.join(__dirname, 'build/static/bundles')
 
 module.exports = {
+	// rspack's browserslist implementation can't parse "baseline widely
+	// available", so the target is pinned here. Keep in sync with the
+	// browserslist field in package.json.
+	target: ['web', 'es2022'],
+
 	entry: {
 		common: path.resolve(BASE_DIR, 'common/js/common.js'),
 		statistics: path.resolve(BASE_DIR, 'statistics/js/searchstats.js'),
@@ -43,7 +48,7 @@ module.exports = {
 			{
 				test: /\.s[ca]ss$/,
 				use: [
-					MiniCssExtractPlugin.loader,
+					rspack.CssExtractRspackPlugin.loader,
 					'css-loader',
 					{
 						loader: 'sass-loader',
@@ -58,7 +63,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, 'css-loader'],
+				use: [rspack.CssExtractRspackPlugin.loader, 'css-loader'],
 			},
 			{
 				test: /\.(png|svg|jpg|gif|woff|woff2|eot|ttf|otf)$/,
@@ -68,7 +73,7 @@ module.exports = {
 	},
 
 	plugins: [
-		new MiniCssExtractPlugin({
+		new rspack.CssExtractRspackPlugin({
 			filename: '[name]-[contenthash].css',
 			chunkFilename: '[id]-[contenthash].css',
 		}),

@@ -14,6 +14,9 @@ services:
       - '5432:5432'
     volumes:
       - ./:/django:ro
+      # Without this the data dir is an anonymous volume, so the database is
+      # lost whenever the container is removed (e.g. `docker compose down`).
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: trackerpassword
       POSTGRES_USER: tracker
@@ -150,3 +153,4 @@ services:
 
 volumes:
   pnpm-store:
+  postgres-data:
