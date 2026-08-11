@@ -345,7 +345,8 @@ describe(resolveDefaultTimePreset, () => {
 	const currentDate = new Date(Date.UTC(2024, 4, 15))
 	const withinSevenDays = { date: new Date(Date.UTC(2024, 4, 14)) }   // Tue May 14
 	const withinFourWeeks = { date: new Date(Date.UTC(2024, 4, 1)) }    // Wed May 1 (not in last 7 days)
-	const olderThanFourWeeks = { date: new Date(Date.UTC(2024, 2, 1)) } // Mar 1
+	const olderThanFourWeeks = { date: new Date(Date.UTC(2024, 2, 1)) }    // Mar 1 (in last 12 weeks)
+	const olderThanTwelveWeeks = { date: new Date(Date.UTC(2024, 0, 1)) }  // Jan 1 (beyond 12 weeks)
 
 	test('returns SEVEN_DAYS when enabled and there is data in the last 7 days', () => {
 		expect(resolveDefaultTimePreset([withinSevenDays], currentDate, true))
@@ -362,8 +363,13 @@ describe(resolveDefaultTimePreset, () => {
 			.toBe(TIME_PRESETS.FOUR_WEEKS)
 	})
 
-	test('widens to SIX_MONTHS when there is data but none in the last 4 weeks', () => {
+	test('widens to TWELVE_WEEKS when data is in the last 12 weeks but not the last 4', () => {
 		expect(resolveDefaultTimePreset([olderThanFourWeeks], currentDate, true))
+			.toBe(TIME_PRESETS.TWELVE_WEEKS)
+	})
+
+	test('widens to SIX_MONTHS when data is older than the last 12 weeks', () => {
+		expect(resolveDefaultTimePreset([olderThanTwelveWeeks], currentDate, true))
 			.toBe(TIME_PRESETS.SIX_MONTHS)
 	})
 

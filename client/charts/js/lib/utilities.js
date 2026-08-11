@@ -171,10 +171,14 @@ export function resolveDefaultTimePreset(dataset, currentDate, sevenDayEnabled) 
 	if (sevenDayEnabled && filterDatasetByLastNDays(dataset, currentDate, 7).length > 0) {
 		return TIME_PRESETS.SEVEN_DAYS
 	}
-	if (dataset.length > 0 && filterDatasetByLastNWeeks(dataset, currentDate, 4).length === 0) {
-		return TIME_PRESETS.SIX_MONTHS
+	// Otherwise widen to the narrowest window that has data (empty/loading stays 4 weeks).
+	if (dataset.length === 0 || filterDatasetByLastNWeeks(dataset, currentDate, 4).length > 0) {
+		return TIME_PRESETS.FOUR_WEEKS
 	}
-	return TIME_PRESETS.FOUR_WEEKS
+	if (filterDatasetByLastNWeeks(dataset, currentDate, 12).length > 0) {
+		return TIME_PRESETS.TWELVE_WEEKS
+	}
+	return TIME_PRESETS.SIX_MONTHS
 }
 
 export function filterDatasetByFiltersApplied(originalDataset, filtersApplied, currentDate) {
