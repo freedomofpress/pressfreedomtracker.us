@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags webpack_loader humanize %}
+{% load wagtailcore_tags static humanize %}
 {% load query_transform from common_tags %}
 
 {% block body %}
 	{{ block.super }}
-	{% render_bundle 'filterSidebar' 'js' %}
-	{% render_bundle 'filterSummary' 'js' %}
+	<script src="{% static 'bundles/filterSidebar.js' %}"></script>
+	<script src="{% static 'bundles/filterSummary.js' %}"></script>
 {% endblock %}
 
 {% block main %}

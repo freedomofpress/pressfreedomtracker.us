@@ -15,7 +15,7 @@ from wagtail.snippets.views.snippets import SnippetViewSet
 
 from draftjs_exporter.dom import DOM
 from taggit.models import Tag, TaggedItem
-from webpack_loader.utils import get_files
+from django.templatetags.static import static
 
 from .models import CategoryPage, CommonTag
 from .views import MailchimpInterestsView, check_chart_health, deploy_info_view
@@ -100,8 +100,8 @@ def register_num_incidents_feature(features):
         feature_name,
         draftail_features.EntityFeature(
             control,
-            js=[get_files("statistics", extension="js")[0]["url"]],
-            css={"all": [get_files("statistics", extension="css")[0]["url"]]},
+            js=[static("bundles/statistics.js")],
+            css={"all": [static("bundles/statistics.css")]},
         ),
     )
 
@@ -182,7 +182,7 @@ def register_curlify(features):
                 "type": feature_name,
             },
             js=[
-                get_files("draftail", extension="js")[0]["url"],
+                static("bundles/draftail.js"),
             ],
         ),
     )

@@ -1,7 +1,6 @@
 var webpack = require("webpack");
 const { merge } = require("webpack-merge");
 var autoprefixer = require("autoprefixer");
-var BundleTracker = require("webpack-bundle-tracker");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var path = require("path");
 
@@ -31,7 +30,12 @@ var common = {
 
 	output: {
 		path: target,
+		// Entry filenames stay stable so templates can reference them with
+		// {% static %}; ManifestStaticFilesStorage adds the cache-busting hash at
+		// collectstatic. Split chunks are resolved by the webpack runtime, not by
+		// Django, so they carry their own hash.
 		filename: "[name].js",
+		chunkFilename: "[name].[contenthash].js",
 		clean: true,
 	},
 
@@ -103,21 +107,14 @@ var common = {
 
 	plugins: [
 		new MiniCssExtractPlugin({
-			filename: "[name]-[hash].css",
-			chunkFilename: "[id]-[hash].css",
-		}),
-		new BundleTracker({
-			path: target,
-			filename: "webpack-stats.json",
+			filename: "[name].css",
+			chunkFilename: "[id].css",
 		}),
 	],
 };
 
 if (TARGET === "build") {
 	module.exports = merge(common, {
-		output: {
-			filename: "[name]-[contenthash].js",
-		},
 		plugins: [
 			new webpack.DefinePlugin({
 				"process.env": { NODE_ENV: JSON.stringify("production") },
@@ -129,7 +126,6 @@ if (TARGET === "build") {
 if (TARGET === "start") {
 	module.exports = merge(common, {
 		output: {
-			filename: "[name]-[contenthash].js",
 			pathinfo: true,
 		},
 	});

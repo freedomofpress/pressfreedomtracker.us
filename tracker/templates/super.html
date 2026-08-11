@@ -1,6 +1,5 @@
 {% load static wagtailmetadata_tags %}
 {% load wagtail_site from wagtailcore_tags %}
-{% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -27,11 +26,11 @@
 			<link rel="icon" href="/favicon.ico" />
 
 			{% block css %}
-				{% render_bundle 'common' 'css' %}
-				{% render_bundle 'common' 'js' attrs='defer'%}
+				<link rel="stylesheet" href="{% static 'bundles/common.css' %}">
+				<script src="{% static 'bundles/common.js' %}" defer></script>
 				{% if page and page.media_js %}
 					{% for js in page.media_js %}
-						{% render_bundle js 'js' attrs='defer' %}
+						<script src="{% static 'bundles/'|add:js|add:'.js' %}" defer></script>
 					{% endfor %}
 				{% endif %}
 			{% endblock %}

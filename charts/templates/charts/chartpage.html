@@ -1,14 +1,14 @@
-{% load render_bundle from webpack_loader %}
+{% load static %}
 
 <!DOCTYPE html>
 
 <html>
     <head>
         <title>U.S. Press Freedom Tracker Charts</title>
-        {% render_bundle 'charts' 'css' %}
+        <link rel="stylesheet" href="{% static 'bundles/charts.css' %}">
     </head>
     <body>
         <div id="react-target"></div>
-        {% render_bundle 'charts' 'js' %}
+        <script src="{% static 'bundles/charts.js' %}"></script>
     </body>
 </html>

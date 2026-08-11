@@ -161,7 +161,6 @@ if DEBUG:
 
     # Disable caching of webpack stats files (can prevent node/django
     # container race condition).
-    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False  # noqa: F405
 
     # Include the wagtail styleguide
     INSTALLED_APPS.append("wagtail.contrib.styleguide")  # noqa: F405
@@ -191,7 +190,6 @@ if ENABLE_DEBUG_TOOLBAR:  # noqa: F405
 
     # Disable caching of webpack stats files (can prevent node/django
     # container race condition).
-    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False  # noqa: F405
 
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
@@ -219,4 +217,3 @@ else:
     }
 
 # Prevent endless waiting if problem loading webpack bundles.
-WEBPACK_LOADER["DEFAULT"]["TIMEOUT"] = 60  # noqa: F405
