@@ -15,7 +15,7 @@ from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
 from common.tests.factories import CategoryPageFactory
 from common.models.choices import FILTER_CHOICES
 from incident.utils.incident_filter import IncidentFilter
-from incident.tests.factories import IncidentPageFactory
+from incident.tests.factories import IncidentPageFactory, IncidentUpdateFactory
 
 
 class ContextTest(TestCase):
@@ -45,6 +45,23 @@ class ContextTest(TestCase):
 
         self.assertEqual(
             list(context["recent_incidents"]), [incident1, incident2, incident3]
+        )
+
+    def test_unpaginated_recent_incidents_sort_by_updates(self):
+        category1 = CategoryPageFactory()
+        category2 = CategoryPageFactory()
+        incident3 = IncidentPageFactory(categories=[category1], date="2022-01-01")
+        incident1 = IncidentPageFactory(categories=[category1], date="2022-03-01")
+        incident2 = IncidentPageFactory(categories=[category1], date="2022-02-01")
+        IncidentUpdateFactory.create_batch(2, page=incident2, date="2022-04-01")
+        IncidentPageFactory(title="Not relevant", categories=[category2])
+
+        request = RequestFactory().get("/")
+
+        context = category1.get_context(request)
+
+        self.assertEqual(
+            list(context["recent_incidents"]), [incident2, incident1, incident3]
         )
 
     def test_incidents_filtered_by_category__and_choice(self):
