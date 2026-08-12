@@ -6,6 +6,7 @@ import BarChart from "./BarChart"
 import {
 	getFilteredUrl,
 	groupByYearsSorted,
+	TIME_PRESETS,
 } from '../lib/utilities.js'
 
 import '../../sass/HomepageMainCharts.sass'
@@ -50,7 +51,7 @@ function CategoryPageChartWidth({
 							height={chartHeight}
 							isMobileView={width < 480}
 							searchPageURL={(year) =>
-								getFilteredUrl(databasePath, {category, year}, new Date(), categories)
+								getFilteredUrl(databasePath, {category, year, timePreset: TIME_PRESETS.YEAR}, new Date(), categories)
 							}
 						/>
 					)}

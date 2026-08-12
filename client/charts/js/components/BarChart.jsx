@@ -80,7 +80,7 @@ export default function BarChart({
 	searchPageURL,
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
-	setSvgEl = () => {},
+	setSvgEl = () => { },
 	interactive = true,
 	disableAnimation = false,
 }) {
@@ -94,14 +94,24 @@ export default function BarChart({
 
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
+	const formatXForLabel = tooltipXFormat || xFormat
+	const barLabel = (d) => `${formatXForLabel(d[x])}: ${yFormat(d[y])} ${titleLabel}`
+
+	const barIsLink = Boolean(interactive && searchPageURL)
+
 	const updateTooltipPosition = (MouseEvent) => {
 		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
 	}
 
-	// Calculate the space per label and only show every other label if too crowded
+	// Estimate label widths based on the longest string found; show every-other if too crowded
+	const APPROX_PX_PER_CHAR = 8
+	const MIN_LABEL_GAP_PX = 8
 	const xDomainItems = xDomain || dataset.map((d) => d[x])
-	const xLabelWidth = width / xDomainItems.length
-	const xLabelDisplayInterval = xLabelWidth < 40 ? 2 : 1
+	const labelSlotWidth = width / xDomainItems.length
+	const longestLabelChars = Math.max(...xDomainItems.map((d) => String(xFormat(d)).length))
+	const longestLabelPx = longestLabelChars * APPROX_PX_PER_CHAR
+	const labelsWouldCollide = labelSlotWidth < longestLabelPx + MIN_LABEL_GAP_PX
+	const xLabelDisplayInterval = labelsWouldCollide ? 2 : 1
 
 	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(
 		dataset,
@@ -133,7 +143,7 @@ export default function BarChart({
 		.range([height - (isMobileView ? paddings.mobile : paddings.bottom), paddings.top + buttonsHeight])
 		.nice(numberOfTicks)
 
-	const gridLines = yScale.ticks(numberOfTicks)
+	const gridLines = yScale.ticks(numberOfTicks).filter(Number.isInteger) // Whole numbers only
 
 	const xScale = d3
 		.scaleBand()
@@ -165,7 +175,7 @@ export default function BarChart({
 	const findColor = (color) => categoriesColors[color] || 'white'
 	const getBarColor = (key, data, defaultColor) => {
 		const barColor = categoriesColors[key] || '#E07A5F'
-		const isHoveredByDate = hoveredElement?.x === (tooltipXFormat || xFormat)(data[x])
+		const isHoveredByDate = hoveredElement?.x === formatXForLabel(data[x])
 		const isHoveredByKey = !hoveredElement?.x && hoveredElement?.y === key
 		return isHoveredByDate || isHoveredByKey ? barColor : !hoveredElement ? barColor : defaultColor
 	}
@@ -183,10 +193,22 @@ export default function BarChart({
 				{hoveredElement?.x && interactive && (
 					<Tooltip
 						content={
-							<div style={{ fontFamily: 'var(--font-base)', fontSize: 12, fontWeight: 500 }}>
-								<div>Number of{
-									(hoveredElement?.y && hoveredElement?.y !== 'count' && hoveredElement?.y !== 'numberOfIncidents') ? ` ${hoveredElement.y.replace('Incident', '')}` : ''
-								} Incidents</div>
+							<div
+								style={{
+									fontFamily: "var(--font-base)",
+									fontSize: 12,
+									fontWeight: 500,
+								}}
+							>
+								<div>
+									Number of
+									{hoveredElement?.y &&
+										hoveredElement?.y !== "count" &&
+										hoveredElement?.y !== "numberOfIncidents"
+										? ` ${hoveredElement.y.replace("Incident", "")}`
+										: ""}{" "}
+									Incidents
+								</div>
 								<div
 									style={{
 										display: 'flex',
@@ -198,7 +220,7 @@ export default function BarChart({
 									<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
 										{hoveredElement?.x}
 									</div>
-									<div>{yFormat(dataset.find((d) => (tooltipXFormat || xFormat)(d[x]) === hoveredElement?.x)[hoveredElement?.y || y])}</div>
+									<div>{yFormat(dataset.find((d) => formatXForLabel(d[x]) === hoveredElement?.x)[hoveredElement?.y || y])}</div>
 								</div>
 							</div>
 						}
@@ -317,10 +339,10 @@ export default function BarChart({
 										<a
 											href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
 											role="link"
-											aria-label={`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
+											aria-label={barLabel(branchEntry.data)}
 										/>
 									}
-									wrap={interactive && searchPageURL}
+									wrap={barIsLink}
 								>
 									<rect
 										x={xScaleOverLayer(branchEntry.data[x])}
@@ -332,17 +354,14 @@ export default function BarChart({
 											cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
 										}}
 										onMouseEnter={() => setHoveredElement({
-											x: (tooltipXFormat || xFormat)(branchEntry.data[x]),
+											x: formatXForLabel(branchEntry.data[x]),
 											y: branchBars.key
 										})}
 										onMouseMove={updateTooltipPosition}
 										onMouseLeave={() => setHoveredElement(null)}
 										shapeRendering="crispEdges"
-									>
-										<title>
-											{`${xFormat(branchEntry.data[x])}: ${yFormat(branchEntry.data[y])} ${titleLabel}`}
-										</title>
-									</rect>
+										{...(!barIsLink && { role: 'img', 'aria-label': barLabel(branchEntry.data) })}
+									/>
 								</DynamicWrapper>
 							</g>
 						)))
@@ -360,10 +379,10 @@ export default function BarChart({
 							x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
 							y: height - paddings.bottom / 2,
 							textAnchor: 'middle',
-							fill: (d) => (hoveredElement?.x === (tooltipXFormat || xFormat)(d[x]) ? '#E07A5F' : 'black'),
+							fill: (d) => (hoveredElement?.x === formatXForLabel(d[x]) ? '#E07A5F' : 'black'),
 							fontFamily: 'var(--font-base)',
 							fontWeight: 500,
-							fontSize: '14px',
+							fontSize: width < 400 && !isMobileView ? 12 : 14, // 12pt at smallest desktop size to further avoid label collisions
 							text: (d) => xFormat(d[x]),
 						}}
 						duration={250}
@@ -450,10 +469,10 @@ export default function BarChart({
 							<a
 								href={searchPageURL && searchPageURL(xFormat(branchBars[0].data[x]))}
 								role="link"
-								aria-label={`${xFormat(branchBars[0].data[x])}: ${yFormat(branchBars[0].data[y])} ${titleLabel}`}
+								aria-label={barLabel(branchBars[0].data)}
 							/>
 						}
-						wrap={searchPageURL}
+						wrap={barIsLink}
 					>
 						<AnimatedDataset
 							dataset={branchBars}
@@ -470,8 +489,9 @@ export default function BarChart({
 								height: (d) => computeBarheight(d[1] - d[0]) || 0,
 								width: xScale.bandwidth(),
 								fill: (d) =>
-									(sliderSelection === d.data[x] || (!hoveredElement?.x && hoveredElement?.y === branchBars.key))
-										? getBarColor(branchBars.key, d.data, 'white')
+									sliderSelection === d.data[x] ||
+										(!hoveredElement?.x && hoveredElement?.y === branchBars.key)
+										? getBarColor(branchBars.key, d.data, "white")
 										: sliderSelection === null
 											? getBarColor(branchBars.key, d.data, 'white')
 											: 'white',
@@ -496,7 +516,7 @@ export default function BarChart({
 								fontSize: '14px',
 							}}
 						>
-							{`${(tooltipXFormat || xFormat)(sliderSelection)}: ${incidentsCount} ${titleLabel}`}
+							{`${formatXForLabel(sliderSelection)}: ${incidentsCount} ${titleLabel}`}
 						</text>
 					</DynamicWrapper>
 				))}
