@@ -314,6 +314,17 @@ class TestPages(TestCase):
         html = page.get_newsletter_html()
         self.assertIn("Submit an incident", html)
 
+    def test_newsletter_links_back_to_the_post(self):
+        html = self.blog_page3.get_newsletter_html()
+        self.assertIn("View this newsletter on pressfreedomtracker.us", html)
+        self.assertIn(self.blog_page3.full_url, html)
+
+    def test_newsletter_web_link_can_be_hidden(self):
+        self.blog_page3.hide_newsletter_web_link = True
+        self.blog_page3.save()
+        html = self.blog_page3.get_newsletter_html()
+        self.assertNotIn("View this newsletter on pressfreedomtracker.us", html)
+
     def test_get_blog_page_vertical_bar_chart_meta_image(self):
         self.assertEqual(
             self.blog_page2.get_meta_image(),
