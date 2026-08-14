@@ -18,9 +18,9 @@ def for_every_cloudflare_backend(func: callable) -> callable:
     """Decorator to run a function once for every Cloudflare backend"""
 
     def inner(*args, backend_settings=None, backends=None, **kwargs):
-        for backend_name, backend in get_backends(
+        for backend in get_backends(
             backend_settings=backend_settings, backends=backends
-        ).items():
+        ).values():
             if not isinstance(backend, CloudflareBackend):
                 continue
             func(*args, backend=backend, **kwargs)
