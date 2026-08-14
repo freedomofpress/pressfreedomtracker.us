@@ -155,7 +155,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name="customrendition",
-            unique_together=set([("image", "filter_spec", "focal_point_key")]),
+            unique_together={("image", "filter_spec", "focal_point_key")},
         ),
         migrations.RunPython(migrate_images, elidable=True),
         migrations.AlterField(

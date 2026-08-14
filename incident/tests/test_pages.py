@@ -738,7 +738,7 @@ class RecentChargeStatusesMethod(TestCase):
 
         self.assertEqual(
             set(incident.most_recent_charge_statuses),
-            set(["PENDING_APPEAL", "UNKNOWN"]),
+            {"PENDING_APPEAL", "UNKNOWN"},
         )
 
     def test_returns_the_most_recent_statuses_without_updates(self):
@@ -843,12 +843,10 @@ class RecentLegalOrderStatusesMethod(TestCase):
         )
         self.assertEqual(
             set(incident.most_recent_legal_order_statuses),
-            set(
-                [
-                    choices.LegalOrderStatus.DROPPED,
-                    choices.LegalOrderStatus.QUASHED,
-                ]
-            ),
+            {
+                choices.LegalOrderStatus.DROPPED,
+                choices.LegalOrderStatus.QUASHED,
+            },
         )
 
     def test_returns_the_most_recent_statuses_without_updates(self):
@@ -857,12 +855,10 @@ class RecentLegalOrderStatusesMethod(TestCase):
         )
         self.assertEqual(
             set(incident.most_recent_legal_order_statuses),
-            set(
-                [
-                    choices.LegalOrderStatus.PENDING,
-                    choices.LegalOrderStatus.QUASHED,
-                ]
-            ),
+            {
+                choices.LegalOrderStatus.PENDING,
+                choices.LegalOrderStatus.QUASHED,
+            },
         )
 
     def test_handles_base_status_more_recent_than_updates(self):
@@ -1125,9 +1121,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                             ("raw_html", "<p>Lorem ipsum dolor sit amet</p>"),
                             (
                                 "rich_text",
-                                rich_text(
-                                    f"<p>Lorem {stats_tag} dolor sit amet</p>"
-                                ),
+                                rich_text(f"<p>Lorem {stats_tag} dolor sit amet</p>"),
                             ),
                         ]
                     ),
@@ -1184,9 +1178,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                             ("raw_html", "<p>Lorem ipsum dolor sit amet</p>"),
                             (
                                 "rich_text",
-                                rich_text(
-                                    f"<p>Lorem {stats_tag} dolor sit amet</p>"
-                                ),
+                                rich_text(f"<p>Lorem {stats_tag} dolor sit amet</p>"),
                             ),
                         ]
                     ),
