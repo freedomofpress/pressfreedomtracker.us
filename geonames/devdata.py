@@ -1,5 +1,6 @@
 import itertools
-from typing import Callable, Generator, TypeVar
+from collections.abc import Callable, Generator
+from typing import TypeVar
 
 from .models import Country, GeoName, Region
 
@@ -7,7 +8,7 @@ from .models import Country, GeoName, Region
 T = TypeVar("T")
 
 
-def sequence(func: Callable[[int], T]) -> Generator[T, None, None]:
+def sequence(func: Callable[[int], T]) -> Generator[T]:
     """
     Generates a sequence of values from a sequence of integers starting at zero,
     passed through the callable, which must take an integer argument.

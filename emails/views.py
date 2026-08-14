@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
-from rest_framework.response import Response
+
 from rest_framework import status
 from rest_framework.decorators import api_view, throttle_classes
+from rest_framework.response import Response
 from rest_framework.throttling import UserRateThrottle
 
 from emails.models import EmailSignup

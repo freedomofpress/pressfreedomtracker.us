@@ -1,15 +1,16 @@
 import json
 
 from django.test import TestCase
+
 from wagtail.models import Site
 
-from incident.tests.factories import (
-    TopicPageFactory,
-    IncidentPageFactory,
-    IncidentIndexPageFactory,
-    TargetedJournalistFactory,
-)
 from common.tests.factories import CategoryPageFactory
+from incident.tests.factories import (
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
+    TargetedJournalistFactory,
+    TopicPageFactory,
+)
 
 
 class TopicPageApi(TestCase):

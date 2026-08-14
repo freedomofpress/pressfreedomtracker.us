@@ -1,11 +1,11 @@
-from xmlrunner.extra.djangotestrunner import XMLTestRunner
-import factory.random
-
 from django.conf import settings
 from django.test.runner import DiscoverRunner
 
+import factory.random
+from xmlrunner.extra.djangotestrunner import XMLTestRunner
 
-class WithSeedMixin(object):
+
+class WithSeedMixin:
     """Modifies a test runner class to use a given constant from
     `settings.RANDOM_SEED` to seed the generation of randomized
     factory objects.

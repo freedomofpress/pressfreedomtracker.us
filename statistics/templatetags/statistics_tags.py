@@ -78,7 +78,7 @@ def num_targets(**kwargs):
     and institution targets for matching incidents.
 
     """
-    from incident.models.items import Journalist, TargetedJournalist, Institution
+    from incident.models.items import Institution, Journalist, TargetedJournalist
     from incident.utils.incident_filter import IncidentFilter
 
     incident_filter = IncidentFilter(kwargs)
@@ -123,7 +123,7 @@ def validate_filter_kwargs(parser, token):
     try:
         kwargs = parse_kwargs(bits)
     except ValueError as exc:
-        raise template.TemplateSyntaxError("{}: {}".format(tag_name, str(exc)))
+        raise template.TemplateSyntaxError(f"{tag_name}: {exc!s}")
 
     incident_filter = IncidentFilter(kwargs)
     incident_filter.clean(strict=True)

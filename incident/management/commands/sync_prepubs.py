@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 import structlog
 
 from incident.models import PrepublicationIncidentSync, PrepublicationSyncSkippedRow
-from incident.utils.sync_prepubs import sync_prepubs, PrepubSource
+from incident.utils.sync_prepubs import PrepubSource, sync_prepubs
 
 
 logger = structlog.get_logger()

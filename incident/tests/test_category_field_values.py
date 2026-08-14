@@ -544,10 +544,10 @@ class CategoryFieldValues(TestCase):
 
     def setUp(self):
         self.index = IncidentIndexPageFactory()
-        self.category1 = CategoryPageFactory(**{"arrest": True})
-        self.category2 = CategoryPageFactory(**{"equipment_damage": True})
+        self.category1 = CategoryPageFactory(arrest=True)
+        self.category2 = CategoryPageFactory(equipment_damage=True)
         # Category 3 has no metadata fields
-        self.category3 = CategoryPageFactory(**{"other_incident": True})
+        self.category3 = CategoryPageFactory(other_incident=True)
         self.category4 = CategoryPageFactory(
             denial_of_access=True,
         )

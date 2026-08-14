@@ -1,11 +1,12 @@
 from django.core.exceptions import ValidationError
+
 from wagtail import blocks
 
 from statistics.registry import (
-    get_stats_choices,
-    get_visualization_choices,
     MAPS,
     VISUALIZATIONS,
+    get_stats_choices,
+    get_visualization_choices,
 )
 from statistics.validators import validate_dataset_params
 from statistics.visualizations import MAP, NUMBER
@@ -24,7 +25,7 @@ class StatisticsBlock(blocks.StructBlock):
     )
 
     def clean(self, value):
-        cleaned_value = super(StatisticsBlock, self).clean(value)
+        cleaned_value = super().clean(value)
         errors = {}
 
         visualization = VISUALIZATIONS[cleaned_value["visualization"]]
@@ -57,7 +58,7 @@ class StatisticsBlock(blocks.StructBlock):
         return cleaned_value
 
     def get_context(self, value, parent_context=None):
-        context = super(StatisticsBlock, self).get_context(
+        context = super().get_context(
             value, parent_context=parent_context
         )
 

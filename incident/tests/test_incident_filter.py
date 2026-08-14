@@ -4,23 +4,25 @@ from unittest import mock
 from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
-from common.models.pages import CommonTag
+
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Site
+
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
-from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Site
 
 from common.models import (
-    CategoryPage,
     CategoryIncidentFilter,
+    CategoryPage,
     GeneralIncidentFilter,
     IncidentFilterSettings,
 )
+from common.models.pages import CommonTag
 from common.tests.factories import CategoryPageFactory
-from incident.models import IncidentPage
 from incident.choices import ARREST_STATUS
+from incident.models import IncidentPage
 from incident.utils.incident_filter import (
     BooleanFilter,
     CommaSeparatedFilter,
@@ -422,10 +424,7 @@ class CleanTest(TestCase):
         self.assertEqual(
             [str(error) for error in cm.exception],
             [
-                "release_date filter only available when filtering on the following category: {} ({})".format(
-                    category1.title,
-                    category1.id,
-                )
+                f"release_date filter only available when filtering on the following category: {category1.title} ({category1.id})"
             ],
         )
 

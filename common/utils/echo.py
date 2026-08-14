@@ -1,4 +1,4 @@
-class Echo(object):
+class Echo:
     """
     An object that implements just the write method of the file-like interface.
     """

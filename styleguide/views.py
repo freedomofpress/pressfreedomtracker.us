@@ -1,10 +1,10 @@
 from django.views.generic import TemplateView
 
+from blog.tests.factories import BlogPageFactory
+from common.choices import CATEGORY_SYMBOL_CHOICES
 from common.devdata import CategoryPageFactory
 from common.models.pages import CategoryPage
-from common.choices import CATEGORY_SYMBOL_CHOICES
 from incident.models import IncidentPage
-from blog.tests.factories import BlogPageFactory
 
 
 class StyleguideView(TemplateView):

@@ -1241,9 +1241,7 @@ class ChoiceFilterTest(TestCase):
         incident_filter = IncidentFilter(
             dict(
                 categories=str(self.category.id),
-                status_of_seized_equipment="{0},{1}".format(
-                    self.custody, self.returned_full
-                ),
+                status_of_seized_equipment=f"{self.custody},{self.returned_full}",
             )
         )
 
@@ -1385,7 +1383,7 @@ class MultiChoiceFilterTest(TestCase):
         incident_filter = IncidentFilter(
             dict(
                 categories=str(self.category.id),
-                subpoena_statuses="{0},{1}".format(self.pending, self.dropped),
+                subpoena_statuses=f"{self.pending},{self.dropped}",
             )
         )
 
@@ -1525,8 +1523,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 1),
                 ("Journalists affected", 0),
                 ("Institutions affected", 0),
-                ("Results in {}".format(timezone.now().year), 1),
-                ("Results in {0:%B}".format(timezone.now().date()), 1),
+                (f"Results in {timezone.now().year}", 1),
+                (f"Results in {timezone.now().date():%B}", 1),
             ),
         )
         self.assertEqual(
@@ -1559,7 +1557,7 @@ class GetSummaryTest(TestCase):
         )
         incident_filter = IncidentFilter(
             dict(
-                categories="{},{}".format(self.category.id, category2.id),
+                categories=f"{self.category.id},{category2.id}",
                 case_number="Lawsuit One",
             )
         )
@@ -1571,8 +1569,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 0),
                 ("Institutions affected", 4),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1605,7 +1603,7 @@ class GetSummaryTest(TestCase):
         )
         incident_filter = IncidentFilter(
             dict(
-                categories="{},{}".format(self.category.pk, category2.title),
+                categories=f"{self.category.pk},{category2.title}",
                 case_number="Lawsuit One",
             )
         )
@@ -1617,8 +1615,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 0),
                 ("Institutions affected", 4),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1663,8 +1661,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 1),
                 ("Journalists affected", 3),
                 ("Institutions affected", 3),
-                ("Results in {}".format(timezone.now().year), 1),
-                ("Results in {0:%B}".format(timezone.now().date()), 1),
+                (f"Results in {timezone.now().year}", 1),
+                (f"Results in {timezone.now().date():%B}", 1),
             ),
         )
         self.assertEqual(
@@ -1703,8 +1701,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 8),
                 ("Institutions affected", 0),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1751,8 +1749,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 2),
                 ("Institutions affected", 0),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1794,8 +1792,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 0),
                 ("Institutions affected", 2),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1849,8 +1847,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 1),
                 ("Journalists affected", 3),
                 ("Institutions affected", 2),
-                ("Results in {}".format(timezone.now().year), 1),
-                ("Results in {0:%B}".format(timezone.now().date()), 1),
+                (f"Results in {timezone.now().year}", 1),
+                (f"Results in {timezone.now().date():%B}", 1),
             ),
         )
         self.assertEqual(
@@ -1888,7 +1886,7 @@ class GetSummaryTest(TestCase):
         )
         incident_filter = IncidentFilter(
             {
-                "categories": "{},{}".format(self.category.id, category2.id),
+                "categories": f"{self.category.id},{category2.id}",
                 "search": "asdf",
             }
         )
@@ -1900,8 +1898,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 10),
                 ("Institutions affected", 4),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -2217,9 +2215,7 @@ class RelationThroughTest(TestCase):
     def test_filter_should_filter_by_multiple_journalists(self):
         incidents = IncidentFilter(
             {
-                "targeted_journalists": "{} AND {}".format(
-                    self.tj1.journalist.pk, self.tj3.journalist.pk
-                ),
+                "targeted_journalists": f"{self.tj1.journalist.pk} AND {self.tj3.journalist.pk}",
             }
         ).get_queryset()
 

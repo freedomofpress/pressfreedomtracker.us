@@ -1,22 +1,24 @@
+from datetime import UTC, datetime, timedelta
 from io import BytesIO
-from datetime import datetime, timedelta, timezone
 from unittest import mock
 
-import factory
-from django.db import IntegrityError
 from django.core.files.images import ImageFile
+from django.db import IntegrityError
 from django.test import TestCase
-from wagtail.models import Collection
-from wagtail.images import get_image_model
 
+from wagtail.images import get_image_model
+from wagtail.models import Collection
+
+import factory
+
+from common.exceptions import (
+    ChartNotAvailable,
+    PregenerationException,
+)
 from common.models.charts import ChartSnapshot
 from common.utils.chart_pregenerator.types import (
     ChartType,
     SnapshotType,
-)
-from common.exceptions import (
-    ChartNotAvailable,
-    PregenerationException,
 )
 
 from .factories import ChartSnapshotFactory
@@ -25,12 +27,12 @@ from .factories import ChartSnapshotFactory
 class TestChartSnapshot(TestCase):
     def test_automatically_updates_last_generated_date(self):
         snapshot = ChartSnapshotFactory(
-            last_generated=datetime.now(tz=timezone.utc) - timedelta(days=90),
+            last_generated=datetime.now(tz=UTC) - timedelta(days=90),
         )
         snapshot.save()
         self.assertAlmostEqual(
             snapshot.last_generated.timestamp(),
-            datetime.now(tz=timezone.utc).timestamp(),
+            datetime.now(tz=UTC).timestamp(),
             places=2,
         )
 
@@ -61,13 +63,13 @@ class TestChartSnapshot(TestCase):
             ChartSnapshotFactory(svg=True, query={"a": 1})
 
     def test_considers_old_snapshots_stale(self):
-        old_datetime = datetime.now(tz=timezone.utc) - timedelta(days=90)
+        old_datetime = datetime.now(tz=UTC) - timedelta(days=90)
         snapshot = ChartSnapshotFactory.build(last_generated=old_datetime)
 
         self.assertTrue(snapshot.is_stale())
 
     def test_considers_new_snapshots_not(self):
-        new_datetime = datetime.now(tz=timezone.utc) - timedelta(hours=3)
+        new_datetime = datetime.now(tz=UTC) - timedelta(hours=3)
         snapshot = ChartSnapshotFactory.build(last_generated=new_datetime)
 
         self.assertFalse(snapshot.is_stale())
@@ -149,7 +151,7 @@ class TestChartSnapshot(TestCase):
     @mock.patch("common.models.charts.request_snapshot")
     def test_does_not_generate_new_rendition_if_one_exists(self, mock_request_snapshot):
         original_snapshot = ChartSnapshotFactory(
-            last_generated=datetime.now(tz=timezone.utc) - timedelta(hours=3),
+            last_generated=datetime.now(tz=UTC) - timedelta(hours=3),
             svg=True,
             chart_type=ChartType.TREEMAP,
             query={"a": 1},
@@ -197,7 +199,7 @@ class TestChartSnapshot(TestCase):
         svg_output = """<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="green" /></svg>"""
         mock_request_snapshot.return_value = svg_output
 
-        old_datetime = datetime.now(tz=timezone.utc) - timedelta(days=90)
+        old_datetime = datetime.now(tz=UTC) - timedelta(days=90)
         ChartSnapshotFactory(
             svg=True,
             chart_type=ChartType.TREEMAP,

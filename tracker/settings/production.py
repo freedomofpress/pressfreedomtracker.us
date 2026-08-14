@@ -1,15 +1,14 @@
-from __future__ import absolute_import, unicode_literals
 
 import logging
 import os
 
 import structlog
 
-from .base import *  # noqa: F403, F401
+from .base import *
 
 
 try:
-    from .local import *  # noqa: F403, F401
+    from .local import *
 except ImportError:
     pass
 
@@ -19,11 +18,11 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Include the host used to access Django from the chart pregenerator service
 if os.environ.get("DJANGO_HOST"):
-    ALLOWED_HOSTS += [os.environ["DJANGO_HOST"]]  # noqa: F405
+    ALLOWED_HOSTS += [os.environ["DJANGO_HOST"]]
 
 
-MIDDLEWARE.insert(1, "common.middleware.request_logger.RequestLogMiddleware")  # noqa: F405
-MIDDLEWARE.append("common.middleware.onion_location.OnionLocationHeaderMiddleware")  # noqa: F405
+MIDDLEWARE.insert(1, "common.middleware.request_logger.RequestLogMiddleware")
+MIDDLEWARE.append("common.middleware.onion_location.OnionLocationHeaderMiddleware")
 
 
 structlog.configure(
@@ -149,7 +148,7 @@ DATABASES = {
 # Static and media files
 #
 if os.environ.get("GS_BUCKET_NAME"):
-    INSTALLED_APPS.append("storages")  # noqa: F405
+    INSTALLED_APPS.append("storages")
 
     GS_BUCKET_NAME = os.environ["GS_BUCKET_NAME"]
 
@@ -176,7 +175,7 @@ if os.environ.get("GS_BUCKET_NAME"):
     GS_STATIC_PATH = os.environ.get("GS_STATIC_PATH", "static")
     GS_FILE_OVERWRITE = os.environ.get("GS_FILE_OVERWRITE") == "True"
 
-    STORAGES["default"] = {  # noqa: F405
+    STORAGES["default"] = {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         "OPTIONS": {
             "location": GS_MEDIA_PATH,
@@ -185,7 +184,7 @@ if os.environ.get("GS_BUCKET_NAME"):
     }
 
     if "GS_STORE_STATIC" in os.environ:
-        STORAGES["staticfiles"] = {  # noqa: F405
+        STORAGES["staticfiles"] = {
             "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
             "OPTIONS": {
                 "location": GS_STATIC_PATH,
@@ -200,7 +199,7 @@ else:
 # Cloudflare caching
 #
 if os.environ.get("CLOUDFLARE_TOKEN") and os.environ.get("CLOUDFLARE_EMAIL"):
-    INSTALLED_APPS.append("wagtail.contrib.frontend_cache")  # noqa: F405
+    INSTALLED_APPS.append("wagtail.contrib.frontend_cache")
     WAGTAILFRONTENDCACHE = {
         "cloudflare": {
             "BACKEND": "wagtail.contrib.frontend_cache.backends.CloudflareBackend",
@@ -215,7 +214,7 @@ ANALYTICS_ENABLED = True
 # Mailgun integration
 #
 if os.environ.get("MAILGUN_API_KEY"):
-    INSTALLED_APPS.append("anymail")  # noqa: F405
+    INSTALLED_APPS.append("anymail")
     EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     ANYMAIL = {
         "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],

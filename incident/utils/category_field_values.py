@@ -13,7 +13,7 @@ def basic_html_val(page, field, index, category):
     # else use just the field value
     display_value = value
     if hasattr(page, f"get_{field}_display"):
-        display_value = getattr(page, "get_{}_display".format(field))()
+        display_value = getattr(page, f"get_{field}_display")()
 
     return render_to_string(
         "incident/category_field/_basic_field.html",
@@ -109,7 +109,7 @@ def arresting_authority_html_val(page, field, index, category):
     if not getattr(page, field):
         return ""
 
-    link = "{}?{}={}".format(index.get_url(), field, getattr(page, field).title)
+    link = f"{index.get_url()}?{field}={getattr(page, field).title}"
     value = getattr(page, field).title
 
     return f'<a href="{link}" class="text-link">{value}</a>'
@@ -235,7 +235,7 @@ def subpoena_statuses_html_val(page, field, index, category):
 
     html = []
     for subpoena_status in getattr(page, field):
-        link = "{}?{}={}".format(index.get_url(), field, subpoena_status)
+        link = f"{index.get_url()}?{field}={subpoena_status}"
         value = dict(choices.SUBPOENA_STATUS).get(subpoena_status).capitalize()
         html.append(f'<a href="{link}" class="text-link">{value}</a>')
     html = ", ".join(html)
@@ -248,11 +248,7 @@ def type_of_denial_html_val(page, field, index, category):
 
     html = []
     for type_of_denial in getattr(page, field):
-        link = "{}?{}={}".format(
-            index.get_url(),
-            field,
-            type_of_denial,
-        )
+        link = f"{index.get_url()}?{field}={type_of_denial}"
         value = choices.TypeOfDenial(type_of_denial).label
         html.append(f'<a href="{link}" class="text-link">{value}</a>')
     html = ", ".join(html)

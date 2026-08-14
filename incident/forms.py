@@ -1,6 +1,6 @@
-from wagtail.admin.forms import WagtailAdminPageForm
-
 from django import forms
+
+from wagtail.admin.forms import WagtailAdminPageForm
 
 
 class TopicPageForm(WagtailAdminPageForm):

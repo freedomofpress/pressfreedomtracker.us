@@ -153,7 +153,7 @@ class ItemFactory(factory.django.DjangoModelFactory):
 
     class Params:
         unique_title = factory.Trait(
-            title=factory.Sequence(lambda n: "Title {n}".format(n=n))
+            title=factory.Sequence(lambda n: f"Title {n}")
         )
 
 
@@ -194,7 +194,7 @@ class IncidentChargeFactory(factory.django.DjangoModelFactory):
     date = Faker(
         "past_datetime",
         start_date="-2y",
-        tzinfo=datetime.timezone.utc,
+        tzinfo=datetime.UTC,
     )
     charge = factory.SubFactory(ChargeFactory)
     status = "CHARGES_PENDING"
@@ -262,7 +262,7 @@ class IncidentUpdateFactory(factory.django.DjangoModelFactory):
         model = IncidentPageUpdates
 
     title = Faker("sentence")
-    date = Faker("past_datetime", start_date="-15d", tzinfo=datetime.timezone.utc)
+    date = Faker("past_datetime", start_date="-15d", tzinfo=datetime.UTC)
     body = Faker("streamfield", fields=["rich_text_paragraph", "raw_html"])
 
 
@@ -289,7 +289,7 @@ class SnippetFactory(factory.django.DjangoModelFactory):
 
     class Params:
         unique_name = factory.Trait(
-            name=factory.Sequence(lambda n: "Name {n}".format(n=n))
+            name=factory.Sequence(lambda n: f"Name {n}")
         )
 
 
@@ -336,7 +336,7 @@ class LegalOrderFactory(factory.django.DjangoModelFactory):
     date = Faker(
         "past_datetime",
         start_date="-2y",
-        tzinfo=datetime.timezone.utc,
+        tzinfo=datetime.UTC,
     )
     updates = factory.RelatedFactoryList(
         LegalOrderUpdateFactory,
@@ -353,7 +353,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     first_published_at = Faker(
         "past_datetime",
         start_date="-90d",
-        tzinfo=datetime.timezone.utc,
+        tzinfo=datetime.UTC,
     )
     last_published_at = factory.LazyAttribute(
         lambda o: o.first_published_at + datetime.timedelta(days=3)
@@ -692,7 +692,7 @@ class TopicPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = TopicPage
 
-    title = factory.Sequence(lambda n: "Category {n}".format(n=n))
+    title = factory.Sequence(lambda n: f"Category {n}")
     incident_tag = factory.SubFactory(CommonTagFactory)
 
 
@@ -702,7 +702,7 @@ class SnippetFactory(factory.django.DjangoModelFactory):
 
     class Params:
         unique_name = factory.Trait(
-            name=factory.Sequence(lambda n: "Name {n}".format(n=n))
+            name=factory.Sequence(lambda n: f"Name {n}")
         )
 
 
@@ -713,7 +713,7 @@ class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
         exclude = ("first_name", "last_name")
 
     title = factory.LazyAttribute(
-        lambda o: "{0} {1}. Worker".format(o.first_name, o.last_name[0])
+        lambda o: f"{o.first_name} {o.last_name[0]}. Worker"
     )
 
     # Lazy values

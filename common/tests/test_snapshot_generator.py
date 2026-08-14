@@ -1,18 +1,19 @@
 import json
-import defusedxml.ElementTree as ET
 from unittest import mock
 
-import requests
 from django.core.files.images import ImageFile
 from django.test import TestCase
+
+import defusedxml.ElementTree as ET
+import requests
 
 from common.exceptions import PregenerationException
 from common.utils.chart_pregenerator.api import (
     request_snapshot,
 )
 from common.utils.chart_pregenerator.types import (
-    SnapshotType,
     ChartType,
+    SnapshotType,
 )
 from incident.tests.factories import IncidentPageFactory
 

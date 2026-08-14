@@ -207,7 +207,7 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
     )
 
     def get_context(self, request, *args, **kwargs):
-        context = super(HomePage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
 
         context["serialized_filters"] = json.dumps(get_serialized_filters())
 

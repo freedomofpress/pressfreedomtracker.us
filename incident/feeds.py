@@ -1,8 +1,8 @@
 import re
 from urllib.parse import urljoin
 
-from django.core.paginator import Paginator
 from django.contrib.syndication.views import Feed
+from django.core.paginator import Paginator
 
 from common.feeds import MRSSFeed
 
@@ -15,7 +15,7 @@ class IncidentIndexPageFeed(Feed):
     def __init__(self, incident_index_page, *args, **kwargs):
         self.incident_index_page = incident_index_page
         self.feed_per_page = self.incident_index_page.feed_per_page
-        super(IncidentIndexPageFeed, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
         if obj.teaser_image:
@@ -41,13 +41,10 @@ class IncidentIndexPageFeed(Feed):
 
         self.paginator = Paginator(incidents, self.feed_per_page)
         self.last_page = self.paginator.page_range.stop - 1
-        return super(IncidentIndexPageFeed, self).get_object(request, *args, **kwargs)
+        return super().get_object(request, *args, **kwargs)
 
     def title(self):
-        return "{}: {}".format(
-            self.incident_index_page.get_site().site_name,
-            self.incident_index_page.title,
-        )
+        return f"{self.incident_index_page.get_site().site_name}: {self.incident_index_page.title}"
 
     def link(self):
         return self._get_complete_url(self.incident_index_page.url)

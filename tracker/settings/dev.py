@@ -1,4 +1,3 @@
-from __future__ import absolute_import, unicode_literals
 
 import os
 import socket
@@ -7,7 +6,7 @@ import sys
 
 import structlog
 
-from .base import *  # noqa: F403, F401
+from .base import *
 
 
 timestamper = structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S")
@@ -126,7 +125,7 @@ STYLEGUIDE = True
 WAGTAILADMIN_BASE_URL = os.environ.get("DJANGO_BASE_URL", "http://localhost:8000")
 
 try:
-    from .local import *  # noqa: F403, F401
+    from .local import *
 except ImportError:
     pass
 
@@ -148,12 +147,12 @@ def get_default_gateway_linux():
 
 if DEBUG:
     if os.environ.get("PYINSTRUMENT", "no").lower() == "yes":
-        MIDDLEWARE = ["pyinstrument.middleware.ProfilerMiddleware"] + MIDDLEWARE  # noqa: F405
+        MIDDLEWARE = ["pyinstrument.middleware.ProfilerMiddleware"] + MIDDLEWARE
 
     if os.environ.get("DJANGO_PROFILE", "no").lower() == "yes":
         # Silk
-        INSTALLED_APPS.append("silk")  # noqa: F405
-        MIDDLEWARE = ["silk.middleware.SilkyMiddleware"] + MIDDLEWARE  # noqa: F405
+        INSTALLED_APPS.append("silk")
+        MIDDLEWARE = ["silk.middleware.SilkyMiddleware"] + MIDDLEWARE
 
         # Django CProfile Middleware
         MIDDLEWARE.append("django_cprofile_middleware.middleware.ProfilerMiddleware")
@@ -161,19 +160,19 @@ if DEBUG:
 
     # Disable caching of webpack stats files (can prevent node/django
     # container race condition).
-    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False  # noqa: F405
+    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False
 
     # Include the wagtail styleguide
-    INSTALLED_APPS.append("wagtail.contrib.styleguide")  # noqa: F405
+    INSTALLED_APPS.append("wagtail.contrib.styleguide")
 
 
-if ENABLE_DEBUG_TOOLBAR:  # noqa: F405
+if ENABLE_DEBUG_TOOLBAR:
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
     INTERNAL_IPS = [get_default_gateway_linux()]
-    INSTALLED_APPS.append("debug_toolbar")  # noqa: F405
+    INSTALLED_APPS.append("debug_toolbar")
     # Needs to be injected relatively early in the MIDDLEWARE list
-    MIDDLEWARE.insert(4, "debug_toolbar.middleware.DebugToolbarMiddleware")  # noqa: F405
+    MIDDLEWARE.insert(4, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
     # Fix for https://github.com/jazzband/django-debug-toolbar/issues/950
     DEBUG_TOOLBAR_CONFIG = {
@@ -191,16 +190,16 @@ if ENABLE_DEBUG_TOOLBAR:  # noqa: F405
 
     # Disable caching of webpack stats files (can prevent node/django
     # container race condition).
-    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False  # noqa: F405
+    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False
 
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
     INTERNAL_IPS = [get_default_gateway_linux()]
-    # INSTALLED_APPS.append('debug_toolbar')  # noqa: F405
+    # INSTALLED_APPS.append('debug_toolbar')
     # Needs to be injected relatively early in the MIDDLEWARE list
-    # MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: F405
+    # MIDDLEWARE.insert(4, 'debug_toolbar.middleware.DebugToolbarMiddleware')
     # Include the wagtail styleguide
-    INSTALLED_APPS.append("wagtail.contrib.styleguide")  # noqa: F405
+    INSTALLED_APPS.append("wagtail.contrib.styleguide")
 
 
 if "DJANGO_NO_DB" in os.environ:
@@ -219,4 +218,4 @@ else:
     }
 
 # Prevent endless waiting if problem loading webpack bundles.
-WEBPACK_LOADER["DEFAULT"]["TIMEOUT"] = 60  # noqa: F405
+WEBPACK_LOADER["DEFAULT"]["TIMEOUT"] = 60

@@ -1,10 +1,11 @@
-from urllib.parse import urljoin
 from collections import namedtuple
-from django.core.paginator import Paginator
-from django.contrib.syndication.views import Feed
+from urllib.parse import urljoin
 
-from common.feeds import MRSSFeed
+from django.contrib.syndication.views import Feed
+from django.core.paginator import Paginator
+
 from common.exceptions import ChartNotAvailable
+from common.feeds import MRSSFeed
 
 
 class BlogIndexPageFeed(Feed):
@@ -15,7 +16,7 @@ class BlogIndexPageFeed(Feed):
     def __init__(self, blog_index_page, *args, **kwargs):
         self.blog_index_page = blog_index_page
         self.feed_per_page = self.blog_index_page.feed_per_page
-        super(BlogIndexPageFeed, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _get_teaser_image(self, obj):
         try:
@@ -54,12 +55,10 @@ class BlogIndexPageFeed(Feed):
 
         self.paginator = Paginator(posts, self.feed_per_page)
         self.last_page = self.paginator.page_range.stop - 1
-        return super(BlogIndexPageFeed, self).get_object(request, *args, **kwargs)
+        return super().get_object(request, *args, **kwargs)
 
     def title(self):
-        return "{}: {}".format(
-            self.blog_index_page.get_site().site_name, self.blog_index_page.title
-        )
+        return f"{self.blog_index_page.get_site().site_name}: {self.blog_index_page.title}"
 
     def link(self):
         return self._get_complete_url(self.blog_index_page.url)

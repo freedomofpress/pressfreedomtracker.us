@@ -1,9 +1,10 @@
-from django.test import TestCase
 from django.core.management import call_command
+from django.test import TestCase
 
-from .factories import CommonTagFactory
 from common.models import CommonTag
 from incident.tests.factories import IncidentPageFactory
+
+from .factories import CommonTagFactory
 
 
 class TestPruneUnusedTags(TestCase):

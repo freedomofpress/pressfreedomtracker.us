@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
-from django.test import TestCase, RequestFactory
+
 from wagtail.models import Site
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import (
@@ -10,12 +11,12 @@ from wagtail.test.utils.form_data import (
     rich_text,
 )
 
-from common.models.pages import CategoryIncidentFilter, CategoryPage
-from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
-from common.tests.factories import CategoryPageFactory
 from common.models.choices import FILTER_CHOICES
-from incident.utils.incident_filter import IncidentFilter
+from common.models.pages import CategoryIncidentFilter, CategoryPage
+from common.models.settings import GeneralIncidentFilter, IncidentFilterSettings
+from common.tests.factories import CategoryPageFactory
 from incident.tests.factories import IncidentPageFactory, IncidentUpdateFactory
+from incident.utils.incident_filter import IncidentFilter
 
 
 class ContextTest(TestCase):
@@ -292,7 +293,7 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTestCase):
             "title": "Test Category",
             "slug": "test-category",
             "methodology": rich_text(
-                "<p>Lorem {} dolor sit amet</p>".format(stats_tag)
+                f"<p>Lorem {stats_tag} dolor sit amet</p>"
             ),
             "page_symbol": "arrest",
             "viz_type": "none",

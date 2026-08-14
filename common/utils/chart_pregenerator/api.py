@@ -1,12 +1,13 @@
 import io
 import json
-import requests
 
-import PIL.Image
-import structlog
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.utils.text import slugify
+
+import PIL.Image
+import requests
+import structlog
 
 from common.exceptions import (
     InvalidChartType,
@@ -14,8 +15,8 @@ from common.exceptions import (
 )
 
 from .types import (
-    SnapshotType,
     ChartType,
+    SnapshotType,
 )
 
 

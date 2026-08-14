@@ -3,7 +3,7 @@ MAPS = {}
 VISUALIZATIONS = {}
 
 
-class Statistics(object):
+class Statistics:
     def statistic(self, store, name=None, fn=None):
         """Register a statistics function as usable elsewhere on the site"""
         if name is None and fn is None:

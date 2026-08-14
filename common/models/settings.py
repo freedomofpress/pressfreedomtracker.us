@@ -1,15 +1,17 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
-from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.blocks import RichTextBlock
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 
-from common.validators import validate_template
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
+
 from common.blocks import Heading2
+from common.validators import validate_template
 
 from .choices import FILTER_CHOICES
 
@@ -233,9 +235,6 @@ class GeneralIncidentFilter(Orderable):
         else:
             raise ValidationError(
                 {
-                    "incident_filter": '"{}" is already in use by the "{}" category'.format(
-                        self.get_incident_filter_display(),
-                        category_incident_filter.category.title,
-                    ),
+                    "incident_filter": f'"{self.get_incident_filter_display()}" is already in use by the "{category_incident_filter.category.title}" category',
                 }
             )

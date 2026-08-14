@@ -1,9 +1,10 @@
-import factory
-import wagtail_factories
 from wagtail.rich_text import RichText
 
-from home.models import HomePage
+import factory
+import wagtail_factories
+
 from common.tests.utils import StreamfieldProvider
+from home.models import HomePage
 
 
 factory.Faker.add_provider(StreamfieldProvider)

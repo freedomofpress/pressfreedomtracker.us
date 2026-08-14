@@ -237,7 +237,7 @@ class OrganizationPage(Page):
             # This organization has no blog posts. Fall back to 404
             raise Http404()
         return redirect(
-            "{}?organization={}".format(blog_index.get_url(request=request), self.pk)
+            f"{blog_index.get_url(request=request)}?organization={self.pk}"
         )  # pragma: no cover
 
 
@@ -343,9 +343,7 @@ class CategoryIncidentFilter(Orderable):
         ).exists():
             raise ValidationError(
                 {
-                    "incident_filter": '"{}" is already in use in general filters'.format(
-                        self.get_incident_filter_display(),
-                    ),
+                    "incident_filter": f'"{self.get_incident_filter_display()}" is already in use in general filters',
                 }
             )
 
@@ -492,7 +490,7 @@ class CategoryPage(MetadataPageMixin, Page):
             get_serialized_filters,
         )
 
-        context = super(CategoryPage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
 
         # request.is_preview is not necessarily set
         if getattr(request, "is_preview", False):
@@ -606,7 +604,7 @@ class CategoryPage(MetadataPageMixin, Page):
         return context
 
     def get_cache_tag(self):
-        return "category-page-{}".format(self.pk)
+        return f"category-page-{self.pk}"
 
     def serve(self, request, *args, **kwargs):
         """
@@ -616,7 +614,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
         """
 
-        response = super(CategoryPage, self).serve(request, *args, **kwargs)
+        response = super().serve(request, *args, **kwargs)
         response["Cache-Tag"] = self.get_cache_tag()
         return response
 

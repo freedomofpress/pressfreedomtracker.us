@@ -1,15 +1,16 @@
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory, TestCase
+
 from wagtail.models import Site
 
 import incident.tests.factories as incident_factories
 from common.models.pages import CategoryPage
-from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
+from common.models.settings import GeneralIncidentFilter, IncidentFilterSettings
 from common.tests.factories import CategoryPageFactory
 from incident.choices import (
     ARREST_STATUS,
     STATUS_OF_CHARGES,
-    LegalOrderType,
     LegalOrderStatus,
+    LegalOrderType,
 )
 from incident.utils.incident_filter import get_serialized_filters
 

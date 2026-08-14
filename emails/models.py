@@ -1,19 +1,20 @@
 from dataclasses import dataclass
-from typing import Optional
 
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils.text import format_lazy
+
+from wagtail.admin.panels import (
+    FieldPanel,
+    HelpPanel,
+    InlinePanel,
+    MultiFieldPanel,
+)
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+
 from marshmallow import Schema, fields, post_load
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
-from wagtail.admin.panels import (
-    HelpPanel,
-    FieldPanel,
-    MultiFieldPanel,
-    InlinePanel,
-)
 
 
 class EmailSignup(models.Model):
@@ -75,7 +76,7 @@ class EmailSettings(BaseSiteSetting, ClusterableModel):
 @dataclass
 class Subscription:
     email: str
-    full_name: Optional[str] = None
+    full_name: str | None = None
 
 
 class SubscriptionSchema(Schema):

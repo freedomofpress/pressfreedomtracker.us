@@ -1036,7 +1036,7 @@ class IncidentPage(MetadataPageMixin, Page):
     ]
 
     def get_context(self, request, *args, **kwargs):
-        context = super(IncidentPage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
 
         related_incidents = self.get_related_incidents(threshold=4)
         context["related_incidents"] = related_incidents
@@ -1064,7 +1064,7 @@ class IncidentPage(MetadataPageMixin, Page):
             self.latitude, self.longitude = get_city_coords(
                 self.city, self.state.abbreviation
             )
-        return super(IncidentPage, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def detention_duration(self):
         """
@@ -1096,7 +1096,7 @@ class IncidentPage(MetadataPageMixin, Page):
             latest_update = self.updates.order_by("-date").first()
             if latest_update and latest_update.date:
                 delta = (
-                    datetime.datetime.now(datetime.timezone.utc) - latest_update.date
+                    datetime.datetime.now(datetime.UTC) - latest_update.date
                 )
                 return delta.days < 30
             return False

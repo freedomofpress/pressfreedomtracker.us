@@ -36,7 +36,7 @@ class RichTextTemplateBlock(blocks.RichTextBlock):
         )
 
     def clean(self, value):
-        cleaned_value = super(RichTextTemplateBlock, self).clean(value)
+        cleaned_value = super().clean(value)
         # cleaned_value is a wagtail.rich_text.RichText instance.
         # RichText.source is the raw HTML value.
         validate_template(cleaned_value.source)
@@ -104,7 +104,7 @@ class AlignedCaptionedImageBlock(blocks.StructBlock):
         return get_searchable_content_for_fields(value, self.child_blocks, ["caption"])
 
     def get_context(self, value, **kwargs):
-        context = super(AlignedCaptionedImageBlock, self).get_context(value, **kwargs)
+        context = super().get_context(value, **kwargs)
         if value["content_warning"] and isinstance(
             value["content_warning"], blocks.list_block.ListValue
         ):
@@ -248,14 +248,14 @@ class StyledTextTemplateBlock(StyledTextBlock):
     text = RichTextTemplateBlock(editor="num-incident-full-features")
 
     def get_context(self, *args, **kwargs):
-        context = super(StyledTextTemplateBlock, self).get_context(*args, **kwargs)
+        context = super().get_context(*args, **kwargs)
         context["render_as_template"] = True
         return context
 
 
 class LogoListBlock(blocks.ListBlock):
     def __init__(self, **kwargs):
-        super(LogoListBlock, self).__init__(
+        super().__init__(
             blocks.StructBlock(
                 [
                     ("logo", ImageChooserBlock(required=True)),
@@ -272,7 +272,7 @@ class LogoListBlock(blocks.ListBlock):
 
 class StatTableBlock(blocks.ListBlock):
     def __init__(self, **kwargs):
-        super(StatTableBlock, self).__init__(
+        super().__init__(
             blocks.StructBlock(
                 [
                     ("header", blocks.TextBlock(required=True)),
@@ -292,7 +292,7 @@ class StatTableBlock(blocks.ListBlock):
 
 class TabbedBlock(blocks.ListBlock):
     def __init__(self, **kwargs):
-        super(TabbedBlock, self).__init__(
+        super().__init__(
             blocks.StructBlock(
                 [
                     ("header", blocks.TextBlock(required=True)),

@@ -1,7 +1,7 @@
 from unittest import mock
 
-from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 from common.tests.factories import CategoryPageFactory
 from statistics.validators import validate_dataset_params
@@ -225,9 +225,7 @@ class CleanTest(TestCase):
         with self.assertRaises(ValidationError) as cm:
             validate_dataset_params(
                 dataset="kwargs",
-                params='categories="{}" arrest_status="hello" subpoena_statuses="puppy"'.format(
-                    category.id,
-                ),
+                params=f'categories="{category.id}" arrest_status="hello" subpoena_statuses="puppy"',
             )
 
         self.assertEqual(

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from incident.models import IncidentPage
 from geonames.cities import get_city_coords
+from incident.models import IncidentPage
 
 
 class Command(BaseCommand):

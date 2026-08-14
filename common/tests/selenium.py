@@ -1,13 +1,15 @@
 import os
 import socket
 
-from django.db import connections
-from django.db.utils import OperationalError
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.management import call_command
+from django.db import connections
+from django.db.utils import OperationalError
+
+from wagtail.models import Locale, Page, Site
+
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-from wagtail.models import Page, Site, Locale
 
 from home.models import HomePage
 

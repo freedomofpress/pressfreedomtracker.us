@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from django.db import models
 from django.db.models import Q
@@ -125,7 +125,7 @@ class ChartSnapshot(models.Model):
 
     def is_stale(self):
         """Returns True if the chart is stale and needs to be regenerated."""
-        now = datetime.now(tz=timezone.utc)
+        now = datetime.now(tz=UTC)
         age = now - self.last_generated
         return age > timedelta(days=1)
 

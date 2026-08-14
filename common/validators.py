@@ -1,7 +1,7 @@
 import html
 
 from django.core.exceptions import ValidationError
-from django.template.base import Parser, Lexer, Node, TokenType
+from django.template.base import Lexer, Node, Parser, TokenType
 from django.template.engine import Engine
 from django.template.exceptions import TemplateSyntaxError
 from django.template.library import import_library
@@ -40,7 +40,7 @@ def validate_disallow_AND(value, field_name=None):
 
 
 @deconstructible
-class TemplateValidator(object):
+class TemplateValidator:
     disallowed_tags = [
         "load",
         "extends",

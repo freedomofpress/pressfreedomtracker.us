@@ -1,48 +1,49 @@
 import datetime
-from factory import RelatedFactory, Trait, Faker, SubFactory, Sequence
-import factory
-import wagtail_factories
 
 from django.utils import timezone
 
+import factory
+import wagtail_factories
+from factory import Faker, RelatedFactory, Sequence, SubFactory, Trait
+
 import incident.models
+from common.tests.factories import (
+    AlignedCaptionedEmbedBlockFactory,
+    AlignedCaptionedImageBlockFactory,
+    CategoryPageFactory,
+    CommonTagFactory,
+    CustomImageFactory,
+    PersonPageFactory,
+    PullQuoteBlockFactory,
+    RawHTMLBlockFactory,
+    RichTextBlockQuoteBlockFactory,
+    RichTextTemplateBlockFactory,
+    TweetEmbedBlockFactory,
+)
+from common.tests.utils import StreamfieldProvider
 from incident.models import (
     Charge,
+    Equipment,
+    EquipmentBroken,
+    EquipmentSeized,
+    GovernmentWorker,
     IncidentAuthor,
     IncidentCategorization,
     IncidentIndexPage,
     IncidentPage,
-    IncidentPageUpdates,
     IncidentPageLinks,
+    IncidentPageUpdates,
+    Institution,
+    Journalist,
+    LawEnforcementOrganization,
     Nationality,
     PoliticianOrPublic,
-    EquipmentBroken,
-    Equipment,
-    EquipmentSeized,
     State,
-    choices,
-    Journalist,
-    Institution,
-    LawEnforcementOrganization,
     TargetedJournalist,
-    GovernmentWorker,
     TopicPage,
     Venue,
+    choices,
 )
-from common.tests.factories import (
-    CustomImageFactory,
-    CategoryPageFactory,
-    CommonTagFactory,
-    PersonPageFactory,
-    RichTextTemplateBlockFactory,
-    AlignedCaptionedImageBlockFactory,
-    RawHTMLBlockFactory,
-    TweetEmbedBlockFactory,
-    RichTextBlockQuoteBlockFactory,
-    PullQuoteBlockFactory,
-    AlignedCaptionedEmbedBlockFactory,
-)
-from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
 
 
@@ -88,7 +89,7 @@ class ItemFactory(factory.django.DjangoModelFactory):
 
     class Params:
         unique_title = factory.Trait(
-            title=factory.Sequence(lambda n: "Title {n}".format(n=n))
+            title=factory.Sequence(lambda n: f"Title {n}")
         )
 
 
@@ -444,7 +445,7 @@ class TopicPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = TopicPage
 
-    title = factory.Sequence(lambda n: "Category {n}".format(n=n))
+    title = factory.Sequence(lambda n: f"Category {n}")
     incident_tag = factory.SubFactory(CommonTagFactory)
 
 
@@ -454,7 +455,7 @@ class SnippetFactory(factory.django.DjangoModelFactory):
 
     class Params:
         unique_name = factory.Trait(
-            name=factory.Sequence(lambda n: "Name {n}".format(n=n))
+            name=factory.Sequence(lambda n: f"Name {n}")
         )
 
 

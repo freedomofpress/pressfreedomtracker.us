@@ -1,24 +1,23 @@
+import copy
 import dataclasses
 import functools
 import itertools
 import operator
 from datetime import date
-import copy
-from typing import List
 
 from django.apps import apps
-from django.core.exceptions import ValidationError, FieldDoesNotExist
 from django.contrib.postgres.search import SearchQuery
+from django.core.exceptions import FieldDoesNotExist, ValidationError
 from django.db.models import (
     BooleanField,
     CharField,
     DateField,
+    F,
     ForeignKey,
+    Func,
     ManyToManyField,
     OuterRef,
     PositiveSmallIntegerField,
-    F,
-    Func,
     Q,
     Subquery,
     TextChoices,
@@ -28,20 +27,22 @@ from django.db.models.fields.related import ManyToOneRel
 from django.db.utils import ProgrammingError
 from django.http import QueryDict
 from django.utils.text import capfirst
+
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Site
+
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
 from psycopg.types.range import Range
-from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Site
 
-from incident.circuits import STATES_BY_CIRCUIT
 from incident import choices
 from incident.choices import STATUS_OF_CHARGES
+from incident.circuits import STATES_BY_CIRCUIT
 
 
-class Filter(object):
+class Filter:
     serialized_type = "text"
     openapi_type = OpenApiTypes.STR
     openapi_style = None
@@ -54,10 +55,7 @@ class Filter(object):
         self.verbose_name = verbose_name
 
     def __repr__(self):
-        return "<{}: {}>".format(
-            self.__class__.__name__,
-            self.name,
-        )  # pragma: no cover
+        return f"<{self.__class__.__name__}: {self.name}>"  # pragma: no cover
 
     def get_value(self, data):
         return data.get(self.name) or None
@@ -222,21 +220,15 @@ class RelationFilter(Filter):
                 return value
             elif strict:
                 raise ValidationError(
-                    'Expected integer for relationship "{}", received "{}"'.format(
-                        self.name,
-                        value,
-                    )
+                    f'Expected integer for relationship "{self.name}", received "{value}"'
                 )
             else:
                 return None
 
     def serialize(self):
-        serialized = super(RelationFilter, self).serialize()
+        serialized = super().serialize()
         related_model = self.model_field.remote_field.model
-        serialized["autocomplete_type"] = "{}.{}".format(
-            related_model._meta.app_label,
-            related_model.__name__,
-        )
+        serialized["autocomplete_type"] = f"{related_model._meta.app_label}.{related_model.__name__}"
         choices = []
         app_label, model_name = serialized["autocomplete_type"].split(".")
         autocomplete_model = apps.get_model(app_label, model_name)
@@ -255,19 +247,19 @@ class DateFilter(Filter):
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None, fuzzy=False):
         self.fuzzy = fuzzy
-        super(DateFilter, self).__init__(
+        super().__init__(
             name, model_field, lookup=lookup, verbose_name=verbose_name
         )
 
     def get_value(self, data):
-        start = data.get("{}_lower".format(self.name)) or None
-        end = data.get("{}_upper".format(self.name)) or None
+        start = data.get(f"{self.name}_lower") or None
+        end = data.get(f"{self.name}_upper") or None
         return start, end
 
     def get_verbose_name(self):
         if self.verbose_name:
             return self.verbose_name
-        return super(DateFilter, self).get_verbose_name()
+        return super().get_verbose_name()
 
     def clean(self, value, strict=False):
         start, end = value
@@ -283,10 +275,7 @@ class DateFilter(Filter):
             value = None
             if strict:
                 raise ValidationError(
-                    "{}_lower must be less than or equal to {}_upper".format(
-                        self.name,
-                        self.name,
-                    )
+                    f"{self.name}_lower must be less than or equal to {self.name}_upper"
                 )
         elif start or end:
             value = (start, end)
@@ -297,7 +286,7 @@ class DateFilter(Filter):
         return value
 
     def get_allowed_parameters(self):
-        return {"{}_lower".format(self.name), "{}_upper".format(self.name)}
+        return {f"{self.name}_lower", f"{self.name}_upper"}
 
     def filter(self, queryset, value):
         lower_date, upper_date = value
@@ -310,7 +299,7 @@ class DateFilter(Filter):
 
         return queryset.filter(
             **{
-                "{0}__contained_by".format(self.lookup): Range(
+                f"{self.lookup}__contained_by": Range(
                     lower=lower_date, upper=upper_date, bounds="[]"
                 )
             }
@@ -387,10 +376,10 @@ class ChoiceFilter(Filter):
         return value or None
 
     def filter(self, queryset, value):
-        return queryset.filter(**{"{}__in".format(self.lookup): value})
+        return queryset.filter(**{f"{self.lookup}__in": value})
 
     def serialize(self):
-        serialized = super(ChoiceFilter, self).serialize()
+        serialized = super().serialize()
         if serialized["type"] == "choice":
             serialized["choices"] = self.get_choice_values_and_labels()
         return serialized
@@ -453,16 +442,16 @@ class MultiChoiceFilter(Filter):
         for key, value in enumerate(values):
             if key == 0:
                 queryset = queryset_initial.filter(
-                    **{"{}__contains".format(self.lookup): [value]}
+                    **{f"{self.lookup}__contains": [value]}
                 )
             else:
                 queryset |= queryset_initial.filter(
-                    **{"{}__contains".format(self.lookup): [value]}
+                    **{f"{self.lookup}__contains": [value]}
                 )
         return queryset.distinct()
 
     def serialize(self):
-        serialized = super(MultiChoiceFilter, self).serialize()
+        serialized = super().serialize()
         if serialized["type"] == "choice":
             serialized["choices"] = self.get_choice_values_and_labels()
         return serialized
@@ -476,8 +465,8 @@ class MultiChoiceFilter(Filter):
 
 @dataclasses.dataclass(eq=True, frozen=True)
 class ManyRelationValue:
-    pks: List[int] = dataclasses.field(default_factory=list)
-    strings: List[str] = dataclasses.field(default_factory=list)
+    pks: list[int] = dataclasses.field(default_factory=list)
+    strings: list[str] = dataclasses.field(default_factory=list)
 
     def __bool__(self):
         return bool(self.pks) or bool(self.strings)
@@ -557,17 +546,14 @@ class ManyRelationFilter(Filter):
         return self.model_field.related_model._meta.verbose_name
 
     def serialize(self):
-        serialized = super(ManyRelationFilter, self).serialize()
+        serialized = super().serialize()
         related_model = self.model_field.remote_field.model
         if isinstance(self.model_field, ManyToOneRel) and hasattr(
             related_model, "_autocomplete_model"
         ):
             serialized["autocomplete_type"] = related_model._autocomplete_model
         else:
-            serialized["autocomplete_type"] = "{}.{}".format(
-                related_model._meta.app_label,
-                related_model.__name__,
-            )
+            serialized["autocomplete_type"] = f"{related_model._meta.app_label}.{related_model.__name__}"
 
         choices = []
         app_label, model_name = serialized["autocomplete_type"].split(".")
@@ -618,7 +604,7 @@ class CommaSeparatedFilter(ManyRelationFilter):
 
 class SearchFilter(Filter):
     def __init__(self):
-        super(SearchFilter, self).__init__(
+        super().__init__(
             "search", CharField(verbose_name="search terms")
         )
 
@@ -670,7 +656,7 @@ class RelationThroughFilter(ManyRelationFilter):
         text_fields=[],
     ):
         lookup = model_field.name + "__" + relation
-        super(RelationThroughFilter, self).__init__(
+        super().__init__(
             name, model_field, lookup, verbose_name, text_fields
         )
         self.relation = relation
@@ -689,10 +675,7 @@ class RelationThroughFilter(ManyRelationFilter):
                 related_model._autocomplete_model
             )  # pragma: no cover
         else:
-            serialized["autocomplete_type"] = "{}.{}".format(
-                related_model._meta.app_label,
-                related_model.__name__,
-            )
+            serialized["autocomplete_type"] = f"{related_model._meta.app_label}.{related_model.__name__}"
 
         choices = []
         app_label, model_name = serialized["autocomplete_type"].split(".")
@@ -781,7 +764,7 @@ class PendingCasesFilter(BooleanFilter):
     """
 
     def __init__(self, name, verbose_name=None):
-        super(PendingCasesFilter, self).__init__(
+        super().__init__(
             name=name,
             model_field=BooleanField(),
             verbose_name=verbose_name,
@@ -806,14 +789,14 @@ class RecentlyUpdatedFilter(IntegerFilter):
     openapi_description = "Include only incidents updated in the last N days"
 
     def __init__(self, name, verbose_name=None):
-        super(RecentlyUpdatedFilter, self).__init__(
+        super().__init__(
             name=name,
             model_field=PositiveSmallIntegerField(),
             verbose_name=verbose_name,
         )
 
     def serialize(self):
-        serialized = super(RecentlyUpdatedFilter, self).serialize()
+        serialized = super().serialize()
         serialized["units"] = "days"
         return serialized
 
@@ -919,7 +902,7 @@ def get_openapi_parameters():
         return []
 
 
-class IncidentFilter(object):
+class IncidentFilter:
     filter_overrides = {
         "categories": {
             "lookup": "categories__category",
@@ -1121,9 +1104,9 @@ class IncidentFilter(object):
         are simply ignored.
         """
         from common.models import (
+            CategoryIncidentFilter,
             CategoryPage,
             GeneralIncidentFilter,
-            CategoryIncidentFilter,
         )
 
         self.cleaned_data = {}
@@ -1237,17 +1220,11 @@ class IncidentFilter(object):
                     )
                     if category:
                         errors.append(
-                            "{} filter only available when filtering on the following category: {} ({})".format(
-                                f.name,
-                                category.title,
-                                category.id,
-                            )
+                            f"{f.name} filter only available when filtering on the following category: {category.title} ({category.id})"
                         )
                     else:
                         errors.append(
-                            "{} filter only available when filtering on a category which provides it (but no category currently does)".format(
-                                f.name
-                            )
+                            f"{f.name} filter only available when filtering on a category which provides it (but no category currently does)"
                         )
 
             invalid_parameters = (
@@ -1314,7 +1291,7 @@ class IncidentFilter(object):
         of particular filters.
 
         """
-        from incident.models.items import Institution, TargetedJournalist, Journalist
+        from incident.models.items import Institution, Journalist, TargetedJournalist
 
         queryset = self._get_queryset()
 
@@ -1364,15 +1341,15 @@ class IncidentFilter(object):
         )
 
         if num_this_year > 0:
-            summary = summary + (("Results in {}".format(THIS_YEAR), num_this_year),)
+            summary = summary + ((f"Results in {THIS_YEAR}", num_this_year),)
 
         if num_this_month > 0:
-            summary = summary + (("Results in {0:%B}".format(TODAY), num_this_month),)
+            summary = summary + ((f"Results in {TODAY:%B}", num_this_month),)
 
         return summary
 
 
-class FilterChoicesIterator(object):
+class FilterChoicesIterator:
     """
     Helper class to get around circular imports.
     """

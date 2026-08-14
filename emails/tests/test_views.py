@@ -1,6 +1,6 @@
 from django.core.cache import cache
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from emails.models import EmailSignup
 

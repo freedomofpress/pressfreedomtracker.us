@@ -3,24 +3,25 @@ from urllib import parse
 
 from django.test import TestCase
 from django.urls import reverse
+
 from wagtail.models import Site
 
 from common.tests.factories import (
-    PersonPageFactory,
     CategoryPageFactory,
-    CustomImageFactory,
     CommonTagFactory,
+    CustomImageFactory,
+    PersonPageFactory,
 )
 from incident import choices
 from incident.models import IncidentPage
 from incident.tests.factories import (
-    IncidentPageFactory,
-    IncidentIndexPageFactory,
-    IncidentUpdateFactory,
-    IncidentLinkFactory,
-    StateFactory,
     EquipmentSeizedFactory,
     IncidentChargeWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentLinkFactory,
+    IncidentPageFactory,
+    IncidentUpdateFactory,
+    StateFactory,
 )
 
 

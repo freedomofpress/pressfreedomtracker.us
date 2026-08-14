@@ -166,7 +166,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
 
     methodology_text = factory.Faker("paragraph", nb_sentences=5)
 
-    title = factory.Sequence(lambda n: "Category {n}".format(n=n))
+    title = factory.Sequence(lambda n: f"Category {n}")
     description = factory.LazyAttribute(lambda _: make_html_string())
     methodology = factory.LazyAttribute(lambda o: RichText(o.methodology_text))
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, "category")
@@ -222,7 +222,7 @@ class OrganizationPageFactory(wagtail_factories.PageFactory):
         model = OrganizationPage
 
     title = factory.Faker("company")
-    slug = factory.Sequence(lambda n: "organization-{n}".format(n=n))
+    slug = factory.Sequence(lambda n: f"organization-{n}")
     website = factory.Faker("uri")
     description = factory.Faker("catch_phrase")
 

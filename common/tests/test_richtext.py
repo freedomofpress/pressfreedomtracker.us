@@ -1,9 +1,10 @@
 from django.test import TestCase
+
 from wagtail.models import Site
 from wagtail.templatetags.wagtailcore_tags import richtext
 
-from home.tests.factories import HomePageFactory
 from common.tests.factories import CategoryPageFactory
+from home.tests.factories import HomePageFactory
 
 
 class RichTextCategoryPageLinksTests(TestCase):

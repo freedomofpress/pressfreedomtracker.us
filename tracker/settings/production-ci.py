@@ -1,4 +1,5 @@
-from .production import *  # noqa: F403, F401
+from .production import *
+
 
 TEST_RUNNER = "common.test_runner.SeededXMLRunner"
 TEST_OUTPUT_DIR = "/home/gcorn"

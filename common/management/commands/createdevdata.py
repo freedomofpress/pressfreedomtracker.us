@@ -1,55 +1,57 @@
 import json
 import math
 import random
-import requests
 import time
-import wagtail_factories
-from itertools import combinations, chain, cycle
+from itertools import chain, combinations, cycle
 
 from django.contrib.auth.models import User
 from django.core import management
-from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
+from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+
 from wagtail.models import Site
 from wagtail.rich_text import RichText
+
 import factory
+import requests
+import wagtail_factories
 from faker import Faker
 
 from blog.choices import BlogTemplateType
-from blog.models import BlogIndexPage, BlogPage
 from blog.devdata import BlogIndexPageFactory, BlogPageFactory
+from blog.models import BlogIndexPage, BlogPage
+from common.devdata import (
+    CustomImageFactory,
+    OrganizationIndexPageFactory,
+    PersonPageFactory,
+    SimplePageFactory,
+    SiteSettingsFactory,
+)
 from common.models import (
-    SimplePage,
-    SimplePageWithSidebar,
-    FooterSettings,
-    SearchSettings,
-    GeneralIncidentFilter,
-    IncidentFilterSettings,
     CategoryPage,
     CommonTag,
     CustomImage,
-)
-from common.devdata import (
-    PersonPageFactory,
-    CustomImageFactory,
-    OrganizationIndexPageFactory,
-    SimplePageFactory,
-    SiteSettingsFactory,
+    FooterSettings,
+    GeneralIncidentFilter,
+    IncidentFilterSettings,
+    SearchSettings,
+    SimplePage,
+    SimplePageWithSidebar,
 )
 from common.tests.utils import make_html_string
 from emails.devdata import EmailSettingsFactory
 from forms.models import FormPage
 from forms.tests.factories import FormPageFactory
-from home.models import HomePage, FeaturedBlogPost, FeaturedIncident
-from incident.models import IncidentIndexPage, IncidentPage
+from home.models import FeaturedBlogPost, FeaturedIncident, HomePage
 from incident.devdata import (
     IncidentIndexPageFactory,
     IncidentLinkFactory,
-    MultimediaIncidentUpdateFactory,
     MultimediaIncidentPageFactory,
+    MultimediaIncidentUpdateFactory,
     TopicPageFactory,
 )
+from incident.models import IncidentIndexPage, IncidentPage
 from menus.models import Menu, MenuItem
 
 
