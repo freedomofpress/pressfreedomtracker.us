@@ -445,6 +445,13 @@ CONTENT_SECURITY_POLICY = {
     }
 }
 
+
+if "DJANGO_SILENCED_SYSTEM_CHECKS" in os.environ:
+    SILENCED_SYSTEM_CHECKS = os.environ["DJANGO_SILENCED_SYSTEM_CHECKS"].split(",")
+else:
+    SILENCED_SYSTEM_CHECKS = []
+
+
 csp_media_origins = os.environ.get("DJANGO_CSP_MEDIA_ORIGINS", "").split()
 for directive in ("media-src", "img-src", "object-src", "connect-src"):
     CONTENT_SECURITY_POLICY["DIRECTIVES"][directive].extend(csp_media_origins)
