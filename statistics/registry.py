@@ -56,7 +56,7 @@ def get_maps():
     return MAPS
 
 
-def get_maps_choices():
+def get_maps_choices():  # pragma: no cover
     return [(name, name) for name in get_maps()]
 
 

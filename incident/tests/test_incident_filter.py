@@ -29,7 +29,25 @@ from incident.utils.incident_filter import (
     CommaSeparatedFilter,
     IncidentFilter,
     ManyRelationValue,
+    RelationFilter,
+    RelationThroughFilter,
 )
+
+
+class RelationFilterTest(TestCase):
+    def test_defaults_to_no_text_fields(self):
+        model_field = IncidentPage._meta.get_field("arresting_authority")
+        fltr = RelationFilter("arresting_authority", model_field)
+        self.assertEqual(fltr.text_fields, [])
+
+
+class RelationThroughFilterTest(TestCase):
+    def test_defaults_to_no_text_fields(self):
+        model_field = IncidentPage._meta.get_field("targeted_journalists")
+        fltr = RelationThroughFilter(
+            "targeted_journalists", model_field, relation="journalist"
+        )
+        self.assertEqual(fltr.text_fields, [])
 
 
 class FilterToOpenApiParametersTest(TestCase):

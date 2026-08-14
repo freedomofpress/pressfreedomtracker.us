@@ -4,6 +4,7 @@ from unittest import mock
 
 from django.test import TestCase
 
+from common.tests.factories import CategoryPageFactory
 from incident import choices
 from incident.devdata import create_prepub
 from incident.models import (
@@ -124,6 +125,20 @@ class TestIncidentPageDetentionDuration(TestCase):
             return_value=datetime(2020, 1, 11, tzinfo=UTC),
         ):
             self.assertEqual(incident.detention_duration(), timedelta(days=10))
+
+
+class TestIncidentCategorization(TestCase):
+    def test_str_includes_incident_and_category(self):
+        index = IncidentIndexPageFactory()
+        category = CategoryPageFactory(title="Test Category")
+        incident = IncidentPageFactory(
+            parent=index, title="Test Incident", categories=[category]
+        )
+        categorization = incident.categories.first()
+        self.assertEqual(
+            str(categorization),
+            f'"{incident}" in category "{category}"',
+        )
 
 
 class TestIncidentCharge(TestCase):

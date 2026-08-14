@@ -31,7 +31,7 @@ from geonames.models import Country, GeoName, Region
 from home.tests.factories import HomePageFactory
 from incident import choices
 from incident.models import IncidentCategorization
-from incident.models.export import is_exportable, to_row
+from incident.models.export import is_exportable, to_json, to_row
 from incident.models.incident_page import IncidentPage
 from incident.models.inlines import IncidentPageUpdates
 from incident.models.topic_page import TopicPage
@@ -373,6 +373,12 @@ class TestExportPage(TestCase):
         self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
             self.assertNotIn("Unpublished incident", line.decode("utf-8"))
+
+    def test_to_json_serializes_default_fields(self):
+        inc = IncidentPageFactory(parent=self.index, title="JSON incident")
+        result = to_json(inc)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result["title"], "JSON incident")
 
 
 class TestFeedsPage(WagtailPageTestCase):
