@@ -9,7 +9,7 @@
 
 ## Key Paths
 
-- Django project settings: `tracker/settings/` (base, dev, production, production-ci)
+- Django project settings: `tracker/settings/` (base, dev, production)
 - Django apps: `incident/`, `blog/`, `common/`, `statistics/`, `charts/`, `home/`, `forms/`, `emails/`, `menus/`, `dashboard/`, `geonames/`, `cloudflare/`, `styleguide/`, `build/`
 - Frontend source: `client/` (common/js, charts/js, statistics/js)
 - Chart pregenerator service: `chart_pregenerator/`
