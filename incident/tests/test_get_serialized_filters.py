@@ -54,7 +54,7 @@ class GetSerializedFiltersTest(TestCase):
                 "legal_order_type",
             ]
         )
-        general, category = get_serialized_filters()
+        _general, category = get_serialized_filters()
         legal_order_type_filter = category["filters"][0]
         self.assertEqual(
             legal_order_type_filter,
@@ -72,7 +72,7 @@ class GetSerializedFiltersTest(TestCase):
                 "legal_order_status",
             ]
         )
-        general, category = get_serialized_filters()
+        _general, category = get_serialized_filters()
         legal_order_type_filter = category["filters"][0]
         self.assertEqual(
             legal_order_type_filter,

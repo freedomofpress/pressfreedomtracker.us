@@ -409,7 +409,7 @@ class IncidentAPITest(APITestCase):
             file__color="green",
         )
 
-        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
+        author1, author2, _author3 = PersonPageFactory.create_batch(3, parent=root_page)
         cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(
             3, parent=root_page
         )

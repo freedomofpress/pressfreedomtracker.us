@@ -9,7 +9,7 @@ from .factories import CommonTagFactory
 
 class TestPruneUnusedTags(TestCase):
     def test_deletes_unused_tags(self):
-        unused_tag, used_tag = CommonTagFactory.create_batch(2)
+        _unused_tag, used_tag = CommonTagFactory.create_batch(2)
         incident = IncidentPageFactory()
         used_tag.tagged_items.add(incident)
 
