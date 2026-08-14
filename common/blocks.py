@@ -12,18 +12,39 @@ from wagtail.rich_text import RichText
 import nh3
 
 from common.choices import BACKGROUND_COLOR_CHOICES
-from common.models.charts import (
-    BubbleMapChartOptionsSchema,
-    HexbinMapChartOptionsSchema,
-)
-from common.models.helpers import get_categories, get_states, get_tags
 from common.search import get_searchable_content_for_fields
 from common.templatetags.render_as_template import render_as_template
 from common.utils import unescape
+from common.utils.chart_options import (
+    BubbleMapChartOptionsSchema,
+    HexbinMapChartOptionsSchema,
+)
 from common.utils.chart_pregenerator.types import ChartType
 from common.utils.charts import ChartValue
 from common.validators import validate_template
 from incident.utils import charts
+
+
+def _get_categories():
+    # Deferred import: common.models.helpers pulls in the common.models
+    # package, which imports this module (common.blocks) at load time
+    # for its StreamField blocks, so importing it up front here would
+    # create a circular import.
+    from common.models.helpers import get_categories
+
+    return get_categories()
+
+
+def _get_states():
+    from common.models.helpers import get_states
+
+    return get_states()
+
+
+def _get_tags():
+    from common.models.helpers import get_tags
+
+    return get_tags()
 
 
 class RichTextTemplateBlock(blocks.RichTextBlock):
@@ -482,13 +503,13 @@ class SimpleIncidentSet(blocks.StructBlock):
         label="Filter by Category",
         required=False,
         widget=forms.CheckboxSelectMultiple,
-        choices=get_categories,
+        choices=_get_categories,
         help_text="If selected, incidents belonging to any of the selected categories will be included.",
     )
     tag = blocks.ChoiceBlock(
         label="Filter by Tag",
         required=False,
-        choices=get_tags,
+        choices=_get_tags,
         help_text="If selected, only incidents with the chosen tag will be included.",
     )
     lower_date = blocks.DateBlock(
@@ -504,7 +525,7 @@ class SimpleIncidentSet(blocks.StructBlock):
     states = blocks.MultipleChoiceBlock(
         label="Filter by State",
         required=False,
-        choices=get_states,
+        choices=_get_states,
         help_text="If selected, only incidents in the chosen states will be included.",
     )
 
@@ -542,7 +563,7 @@ class VerticalBarChart(blocks.StructBlock):
     group_by_tag = blocks.ChoiceBlock(
         label="Group Incidents By Tag",
         required=False,
-        choices=get_tags,
+        choices=_get_tags,
         default=None,
         help_text="If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped "
         "by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.",
