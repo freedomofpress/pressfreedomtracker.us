@@ -6,6 +6,9 @@ import structlog
 from .base import *
 
 
+logger = logging.getLogger(__name__)
+
+
 try:
     from .local import *
 except ImportError:
@@ -161,9 +164,9 @@ if os.environ.get("GS_BUCKET_NAME"):
             os.environ["GS_CREDENTIALS"]
         )
     elif "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
-        logging.warning("Defaulting to global GOOGLE_APPLICATION_CREDENTIALS")
+        logger.warning("Defaulting to global GOOGLE_APPLICATION_CREDENTIALS")
     else:
-        logging.warning(
+        logger.warning(
             "GS_CREDENTIALS or GOOGLE_APPLICATION_CREDENTIALS unset! "
             + "Falling back to credentials of the machine we are running on, "
             + "if it is a GCE instance. This is almost certainly not desired."
