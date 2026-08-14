@@ -9,7 +9,7 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-ignore = ["E501", "E266"]
+ignore = ["E501", "E266", "RUF012"]
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
