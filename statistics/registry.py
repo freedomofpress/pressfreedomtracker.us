@@ -14,11 +14,10 @@ class Statistics:
 
             return decorator
 
-        if name is not None and fn is None:
-            if callable(name):
-                fn_name = getattr(name, "_decorated_function", name).__name__
-                self.statistic(store, name=fn_name, fn=name)
-                return name
+        if name is not None and fn is None and callable(name):
+            fn_name = getattr(name, "_decorated_function", name).__name__
+            self.statistic(store, name=fn_name, fn=name)
+            return name
 
         # TODO: potentially add it to template.Library() also.
         store[name] = fn
