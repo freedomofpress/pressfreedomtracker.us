@@ -123,7 +123,7 @@ def comma_separated_pks(model_list, modifier):
 def lookup(d, key):
     try:
         return d[key]
-    except Exception:
+    except KeyError, IndexError, TypeError:
         return ""
 
 
@@ -134,7 +134,7 @@ def add_as_string(value, arg):
     except ValueError, TypeError:
         try:
             return value + arg
-        except Exception:
+        except ValueError, TypeError:
             return ""
 
 

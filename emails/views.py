@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 from rest_framework import status
 from rest_framework.decorators import api_view, throttle_classes
@@ -37,7 +38,9 @@ def email_signup_create(request):
             return Response("already_signed_up", status=400)
         else:
             return Response(status=400)
-    except Exception:
+    except IntegrityError:
+        # A concurrent request may have inserted the same email address
+        # between our full_clean() uniqueness check and this save().
         return Response(status=400)
 
     return Response("success", status=status.HTTP_200_OK)  # pragma: no cover

@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from urllib.parse import urlencode
 
 from django import forms
@@ -9,6 +8,7 @@ from django.db.models.functions import Coalesce
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template.defaultfilters import truncatewords
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.module_loading import import_string
@@ -163,19 +163,15 @@ class MediaPageMixin:
 
         # If the page is a blog index page, loop through all the posts to see if
         # there is a chart as the primary image
-        try:
+        if hasattr(self, "get_posts"):
             for post in self.get_posts():
                 block_cls_names = block_cls_names + get_page_blocks(post)
-        except Exception:
-            pass
 
         # If the page is a home page, loop through all the panels and posts to see if
         # there is a chart as the primary image
-        try:
+        if hasattr(self, "featured_blog_posts"):
             for blog_post in self.featured_blog_posts.select_related("page"):
                 block_cls_names = block_cls_names + get_page_blocks(blog_post.page)
-        except Exception:
-            pass
 
         for block_cls_name in block_cls_names:
             block_cls = import_string(block_cls_name)
@@ -358,7 +354,7 @@ class CategoryMethodologyItem(Orderable):
 
 def get_year_choices(start_year=2017):
     return ((None, "----"),) + tuple(
-        (x, x) for x in range(start_year, datetime.today().year + 1)
+        (x, x) for x in range(start_year, timezone.now().year + 1)
     )
 
 
