@@ -60,7 +60,7 @@ class PrepublicationIncidentQuerySet(models.QuerySet):
                 max_count = new_max_count
         return results, max_count
 
-    def fuzzy_date_filter(self, lower: date = None, upper: date = None):
+    def fuzzy_date_filter(self, lower: date | None = None, upper: date | None = None):
         """Filter prepublication incidents by date range, accounting
         for date precision.
 
