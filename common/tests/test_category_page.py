@@ -292,9 +292,7 @@ class CategoryPageMethodologyStatisticsTest(WagtailPageTestCase):
         cls.page_data = {
             "title": "Test Category",
             "slug": "test-category",
-            "methodology": rich_text(
-                f"<p>Lorem {stats_tag} dolor sit amet</p>"
-            ),
+            "methodology": rich_text(f"<p>Lorem {stats_tag} dolor sit amet</p>"),
             "page_symbol": "arrest",
             "viz_type": "none",
             "quick_facts": inline_formset([]),

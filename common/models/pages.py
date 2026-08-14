@@ -193,7 +193,6 @@ class OrganizationIndexPage(Page):
     subpage_types = ["common.OrganizationPage"]
     content_panels = Page.content_panels
 
-
     preview_modes = []
 
     def serve(self, request):

@@ -230,7 +230,9 @@ class RelationFilter(Filter):
     def serialize(self):
         serialized = super().serialize()
         related_model = self.model_field.remote_field.model
-        serialized["autocomplete_type"] = f"{related_model._meta.app_label}.{related_model.__name__}"
+        serialized["autocomplete_type"] = (
+            f"{related_model._meta.app_label}.{related_model.__name__}"
+        )
         choices = []
         app_label, model_name = serialized["autocomplete_type"].split(".")
         autocomplete_model = apps.get_model(app_label, model_name)
@@ -249,9 +251,7 @@ class DateFilter(Filter):
 
     def __init__(self, name, model_field, lookup=None, verbose_name=None, fuzzy=False):
         self.fuzzy = fuzzy
-        super().__init__(
-            name, model_field, lookup=lookup, verbose_name=verbose_name
-        )
+        super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
     def get_value(self, data):
         start = data.get(f"{self.name}_lower") or None
@@ -557,7 +557,9 @@ class ManyRelationFilter(Filter):
         ):
             serialized["autocomplete_type"] = related_model._autocomplete_model
         else:
-            serialized["autocomplete_type"] = f"{related_model._meta.app_label}.{related_model.__name__}"
+            serialized["autocomplete_type"] = (
+                f"{related_model._meta.app_label}.{related_model.__name__}"
+            )
 
         choices = []
         app_label, model_name = serialized["autocomplete_type"].split(".")
@@ -608,9 +610,7 @@ class CommaSeparatedFilter(ManyRelationFilter):
 
 class SearchFilter(Filter):
     def __init__(self):
-        super().__init__(
-            "search", CharField(verbose_name="search terms")
-        )
+        super().__init__("search", CharField(verbose_name="search terms"))
 
     def filter(self, queryset, value):
         return queryset.annotate(
@@ -662,9 +662,7 @@ class RelationThroughFilter(ManyRelationFilter):
         if text_fields is None:
             text_fields = []
         lookup = model_field.name + "__" + relation
-        super().__init__(
-            name, model_field, lookup, verbose_name, text_fields
-        )
+        super().__init__(name, model_field, lookup, verbose_name, text_fields)
         self.relation = relation
 
     def serialize(self):
@@ -681,7 +679,9 @@ class RelationThroughFilter(ManyRelationFilter):
                 related_model._autocomplete_model
             )  # pragma: no cover
         else:
-            serialized["autocomplete_type"] = f"{related_model._meta.app_label}.{related_model.__name__}"
+            serialized["autocomplete_type"] = (
+                f"{related_model._meta.app_label}.{related_model.__name__}"
+            )
 
         choices = []
         app_label, model_name = serialized["autocomplete_type"].split(".")

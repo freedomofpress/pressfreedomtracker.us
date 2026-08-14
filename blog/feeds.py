@@ -58,7 +58,9 @@ class BlogIndexPageFeed(Feed):
         return super().get_object(request, *args, **kwargs)
 
     def title(self):
-        return f"{self.blog_index_page.get_site().site_name}: {self.blog_index_page.title}"
+        return (
+            f"{self.blog_index_page.get_site().site_name}: {self.blog_index_page.title}"
+        )
 
     def link(self):
         return self._get_complete_url(self.blog_index_page.url)

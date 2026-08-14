@@ -88,9 +88,7 @@ class ItemFactory(factory.django.DjangoModelFactory):
         abstract = True
 
     class Params:
-        unique_title = factory.Trait(
-            title=factory.Sequence(lambda n: f"Title {n}")
-        )
+        unique_title = factory.Trait(title=factory.Sequence(lambda n: f"Title {n}"))
 
 
 class VenueFactory(ItemFactory):
@@ -454,9 +452,7 @@ class SnippetFactory(factory.django.DjangoModelFactory):
         abstract = True
 
     class Params:
-        unique_name = factory.Trait(
-            name=factory.Sequence(lambda n: f"Name {n}")
-        )
+        unique_name = factory.Trait(name=factory.Sequence(lambda n: f"Name {n}"))
 
 
 class GovernmentWorkerFactory(factory.django.DjangoModelFactory):

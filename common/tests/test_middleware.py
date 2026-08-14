@@ -66,10 +66,13 @@ class RequestLogTestCase(TestCase):
     def test_request_log_404(self, serve):
         serve.side_effect = Http404()
 
-        with capture_logs_with_contextvars() as cap_logs, self.modify_settings(
-            MIDDLEWARE={
-                "append": "common.middleware.request_logger.RequestLogMiddleware",
-            }
+        with (
+            capture_logs_with_contextvars() as cap_logs,
+            self.modify_settings(
+                MIDDLEWARE={
+                    "append": "common.middleware.request_logger.RequestLogMiddleware",
+                }
+            ),
         ):
             self.client.get("/")
 
@@ -82,10 +85,13 @@ class RequestLogTestCase(TestCase):
     def test_request_log_permission_denied(self, serve):
         serve.side_effect = PermissionDenied()
 
-        with capture_logs_with_contextvars() as cap_logs, self.modify_settings(
-            MIDDLEWARE={
-                "append": "common.middleware.request_logger.RequestLogMiddleware",
-            }
+        with (
+            capture_logs_with_contextvars() as cap_logs,
+            self.modify_settings(
+                MIDDLEWARE={
+                    "append": "common.middleware.request_logger.RequestLogMiddleware",
+                }
+            ),
         ):
             self.client.get("/")
 

@@ -1095,9 +1095,7 @@ class IncidentPage(MetadataPageMixin, Page):
         else:
             latest_update = self.updates.order_by("-date").first()
             if latest_update and latest_update.date:
-                delta = (
-                    datetime.datetime.now(datetime.UTC) - latest_update.date
-                )
+                delta = datetime.datetime.now(datetime.UTC) - latest_update.date
                 return delta.days < 30
             return False
 

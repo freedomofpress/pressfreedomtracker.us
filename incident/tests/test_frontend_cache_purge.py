@@ -14,9 +14,7 @@ from incident.tests.factories import (
 
 def assert_never_called_with(magic_mock, argument):
     if argument in magic_mock.call_args_list:
-        raise AssertionError(
-            f"Expected {magic_mock} not called with {argument}"
-        )
+        raise AssertionError(f"Expected {magic_mock} not called with {argument}")
 
 
 class TestIncidentIndexPageCachePurge(TestCase):
@@ -32,9 +30,7 @@ class TestIncidentIndexPageCachePurge(TestCase):
     def test_cache_tag_index(self):
         "Response from IncidentIndexPage should include Cache-Tag header"
         response = self.client.get("/incidents/")
-        self.assertEqual(
-            response["Cache-Tag"], f"incident-index-{self.index.pk}"
-        )
+        self.assertEqual(response["Cache-Tag"], f"incident-index-{self.index.pk}")
 
     def test_cache_tag_subpath(self):
         """
@@ -44,9 +40,7 @@ class TestIncidentIndexPageCachePurge(TestCase):
         """
 
         response = self.client.get("/incidents/?search=test")
-        self.assertEqual(
-            response["Cache-Tag"], f"incident-index-{self.index.pk}"
-        )
+        self.assertEqual(response["Cache-Tag"], f"incident-index-{self.index.pk}")
 
     @patch("incident.signals.purge_page_from_cache")
     def test_cache_purge_on_new_incident(self, purge_page_from_cache):

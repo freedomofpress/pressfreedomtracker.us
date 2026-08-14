@@ -58,9 +58,7 @@ class StatisticsBlock(blocks.StructBlock):
         return cleaned_value
 
     def get_context(self, value, parent_context=None):
-        context = super().get_context(
-            value, parent_context=parent_context
-        )
+        context = super().get_context(value, parent_context=parent_context)
 
         template_string = '{{% {tag_name}{params} as data %}}{{% include "{visualization}" %}}'.format(
             tag_name=value["dataset"],
