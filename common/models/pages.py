@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.functions import Coalesce
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template.defaultfilters import truncatewords
@@ -572,7 +573,14 @@ class CategoryPage(MetadataPageMixin, Page):
             request, incident_qs, page_key=DEFAULT_PAGE_KEY, per_page=8, orphans=5
         )
 
-        context["recent_incidents"] = incident_qs
+        context["recent_incidents"] = incident_qs.annotate(
+            # Incidents without any updates have a null latest_update, so
+            # fall back to the incident date to keep them in the ordering.
+            last_update_or_date=Coalesce(
+                "latest_update",
+                "date",
+            ),
+        ).order_by("-last_update_or_date")
         context["entries_page"] = entries
         context["paginator"] = paginator
 
