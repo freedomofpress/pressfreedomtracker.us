@@ -46,13 +46,15 @@ class TestGenerator(TestCase):
             side_effect=requests.exceptions.HTTPError
         )
 
-        with mock.patch("requests.get", return_value=failed_response):
-            with self.assertRaises(PregenerationException):
-                request_snapshot(
-                    snapshot_type=SnapshotType.SVG,
-                    chart_type=ChartType.VERTICAL_BAR,
-                    query={},
-                )
+        with (
+            mock.patch("requests.get", return_value=failed_response),
+            self.assertRaises(PregenerationException),
+        ):
+            request_snapshot(
+                snapshot_type=SnapshotType.SVG,
+                chart_type=ChartType.VERTICAL_BAR,
+                query={},
+            )
 
     @mock.patch("requests.get")
     def test_converts_query_to_json_options(self, mock_get):

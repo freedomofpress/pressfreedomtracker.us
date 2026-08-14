@@ -15,6 +15,10 @@ from common.middleware.onion_location import OnionLocationHeaderMiddleware
 from common.middleware.request_logger import RequestLogMiddleware
 
 
+class ApplicationError(Exception):
+    """Stand-in for an arbitrary unhandled error raised by a view."""
+
+
 @contextlib.contextmanager
 def capture_logs_with_contextvars():
     """Modified version of structlog.testing.capture_logs that captures
@@ -47,16 +51,18 @@ class RequestLogTestCase(TestCase):
 
     @mock.patch.object(Page, "serve")
     def test_request_log_failed(self, serve):
-        serve.side_effect = Exception("Application Error")
+        serve.side_effect = ApplicationError("Application Error")
 
-        with self.assertRaises(Exception):
-            with capture_logs_with_contextvars() as cap_logs:
-                with self.modify_settings(
-                    MIDDLEWARE={
-                        "append": "common.middleware.request_logger.RequestLogMiddleware",
-                    }
-                ):
-                    self.client.get("/")
+        with (
+            self.assertRaises(ApplicationError),
+            capture_logs_with_contextvars() as cap_logs,
+            self.modify_settings(
+                MIDDLEWARE={
+                    "append": "common.middleware.request_logger.RequestLogMiddleware",
+                }
+            ),
+        ):
+            self.client.get("/")
 
         log_entry = cap_logs[0]
         self.assertEqual(log_entry["event"], "request_failed")
