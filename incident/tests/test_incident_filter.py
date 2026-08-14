@@ -4,6 +4,7 @@ from unittest import mock
 from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
+from django.utils import timezone
 
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Site
@@ -174,7 +175,7 @@ class URLizeFilterTest(TestCase):
         field = IncidentPage._meta.get_field("detention_date")
         filter_ = IncidentFilter._get_filter(field)
 
-        date_value = (date(2022, 2, 2), date.today())
+        date_value = (date(2022, 2, 2), timezone.now().date())
         self.assertEqual(
             filter_.as_url_parameters(date_value),
             {

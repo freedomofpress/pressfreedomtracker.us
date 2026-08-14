@@ -3,7 +3,6 @@ import dataclasses
 import functools
 import itertools
 import operator
-from datetime import date
 
 from django.apps import apps
 from django.contrib.postgres.search import SearchQuery
@@ -26,6 +25,7 @@ from django.db.models import (
 from django.db.models.fields.related import ManyToOneRel
 from django.db.utils import ProgrammingError
 from django.http import QueryDict
+from django.utils import timezone
 from django.utils.text import capfirst
 
 from wagtail.fields import RichTextField, StreamField
@@ -1301,7 +1301,7 @@ class IncidentFilter:
 
         queryset = self._get_queryset()
 
-        TODAY = date.today()
+        TODAY = timezone.now().date()
         THIS_YEAR = TODAY.year
 
         # Add counts for this year and this month if non-zero

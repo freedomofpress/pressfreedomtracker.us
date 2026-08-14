@@ -2,6 +2,8 @@ import datetime
 import random
 from operator import itemgetter
 
+from django.utils import timezone
+
 from wagtail.rich_text import RichText
 
 import factory
@@ -434,8 +436,8 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 size=lambda: random.choice([1, 1, 1, 2, 2, 3]),
             ),
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
-            release_date=datetime.date.today(),
-            detention_date=datetime.date.today() - datetime.timedelta(days=3),
+            release_date=timezone.now().date(),
+            detention_date=timezone.now().date() - datetime.timedelta(days=3),
             unnecessary_use_of_force=factory.Faker("boolean"),
         )
         equipment_search = factory.Trait(

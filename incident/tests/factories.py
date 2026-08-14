@@ -162,7 +162,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     )
 
     title = factory.Sequence(lambda n: f"Incident {n}")
-    date = factory.LazyFunction(datetime.date.today)
+    date = factory.LazyFunction(lambda: timezone.now().date())
     city = None
     state = factory.SubFactory(StateFactory)
     longitude = None
@@ -217,8 +217,8 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.ARREST_STATUS, getter=lambda c: c[0]
             ),
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
-            release_date=datetime.date.today(),
-            detention_date=datetime.date.today() - datetime.timedelta(days=3),
+            release_date=timezone.now().date(),
+            detention_date=timezone.now().date() - datetime.timedelta(days=3),
             unnecessary_use_of_force=False,
         )
         equipment_search = factory.Trait(

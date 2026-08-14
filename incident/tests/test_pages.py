@@ -1629,7 +1629,7 @@ class IncidentPageTests(TestCase):
             regcode="AK2",
         )
         incident = IncidentPage(
-            date=date.today(),
+            date=timezone.now().date(),
             title="Incident with Geodata",
             city=geoname.name,
             state=state,

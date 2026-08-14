@@ -1439,8 +1439,8 @@ class GetSummaryTest(TestCase):
             journalist_targets__institution=None,
         )
 
-        with patch("incident.utils.incident_filter.date") as date_:
-            date_.today = lambda: date(2018, 1, 20)
+        with patch("incident.utils.incident_filter.timezone") as timezone_:
+            timezone_.now.return_value.date.return_value = date(2018, 1, 20)
             summary = IncidentFilter({}).get_summary()
 
         self.assertCountEqual(
@@ -1479,8 +1479,8 @@ class GetSummaryTest(TestCase):
             journalist_targets__institution=None,
         )
 
-        with patch("incident.utils.incident_filter.date") as date_:
-            date_.today = lambda: date(2018, 12, 20)
+        with patch("incident.utils.incident_filter.timezone") as timezone_:
+            timezone_.now.return_value.date.return_value = date(2018, 12, 20)
             summary = IncidentFilter({}).get_summary()
 
         self.assertCountEqual(

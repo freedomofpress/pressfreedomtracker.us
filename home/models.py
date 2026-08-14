@@ -1,7 +1,7 @@
-import datetime
 import json
 
 from django.db import models
+from django.utils import timezone
 
 from wagtail.admin.panels import (
     FieldPanel,
@@ -245,14 +245,14 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         prepub_settings = PrepublicationSettings.load(request_or_site=request)
         sync = PrepublicationIncidentSync.objects.first()
         if prepub_settings.is_enabled and sync:
-            lower_date = datetime.date.today() - prepub_settings.get_timespan()
+            lower_date = timezone.now().date() - prepub_settings.get_timespan()
             context["prepubs"], context["max_incident_count"] = (
                 PrepublicationIncident.objects.aggregate_with_category_counts(
                     lower_date_bound=lower_date,
                 )
             )
             context["prepub_count"] = PrepublicationIncident.objects.fuzzy_date_filter(
-                lower=lower_date, upper=datetime.date.today()
+                lower=lower_date, upper=timezone.now().date()
             ).count()
             context["update_time"] = sync.completed_at.strftime("%H:%M %p %Z")
             context["timespan_display"] = prepub_settings.get_timespan_display()
