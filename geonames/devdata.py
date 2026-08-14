@@ -8,7 +8,7 @@ from .models import Country, GeoName, Region
 T = TypeVar("T")
 
 
-def sequence(func: Callable[[int], T]) -> Generator[T]:
+def sequence[T](func: Callable[[int], T]) -> Generator[T]:
     """
     Generates a sequence of values from a sequence of integers starting at zero,
     passed through the callable, which must take an integer argument.
