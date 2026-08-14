@@ -25,39 +25,42 @@ class MRSSFeed(Rss201rev2Feed):
 
     def add_root_elements(self, handler):
         super().add_root_elements(handler)
-        if self.feed["page"] is not None:
-            if self.feed["page"] >= 1 and self.feed["page"] <= self.feed["last_page"]:
+        if (
+            self.feed["page"] is not None
+            and self.feed["page"] >= 1
+            and self.feed["page"] <= self.feed["last_page"]
+        ):
+            handler.addQuickElement(
+                "link",
+                "",
+                {
+                    "rel": "first",
+                    "href": f"{self.feed['feed_url']}?p=1",
+                },
+            )
+            handler.addQuickElement(
+                "link",
+                "",
+                {
+                    "rel": "last",
+                    "href": f"{self.feed['feed_url']}?p={self.feed['last_page']}",
+                },
+            )
+            if self.feed["page"] > 1:
                 handler.addQuickElement(
                     "link",
                     "",
                     {
-                        "rel": "first",
-                        "href": f"{self.feed['feed_url']}?p=1",
+                        "rel": "previous",
+                        "href": f"{self.feed['feed_url']}?p={self.feed['page'] - 1}",
                     },
                 )
+            if self.feed["page"] < self.feed["last_page"]:
                 handler.addQuickElement(
                     "link",
                     "",
                     {
-                        "rel": "last",
-                        "href": f"{self.feed['feed_url']}?p={self.feed['last_page']}",
+                        "rel": "next",
+                        "href": f"{self.feed['feed_url']}?p={self.feed['page'] + 1}",
                     },
                 )
-                if self.feed["page"] > 1:
-                    handler.addQuickElement(
-                        "link",
-                        "",
-                        {
-                            "rel": "previous",
-                            "href": f"{self.feed['feed_url']}?p={self.feed['page'] - 1}",
-                        },
-                    )
-                if self.feed["page"] < self.feed["last_page"]:
-                    handler.addQuickElement(
-                        "link",
-                        "",
-                        {
-                            "rel": "next",
-                            "href": f"{self.feed['feed_url']}?p={self.feed['page'] + 1}",
-                        },
-                    )
