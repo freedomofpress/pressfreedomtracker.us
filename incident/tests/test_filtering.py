@@ -807,7 +807,7 @@ class TestAllFiltersCombinedWithSearch(TestAllFiltersAtOnce, TestCase):
             return "1"
         elif t == "choice" or t == "radio":
             filter_ = self.available_filters[field["name"]]
-            return list(filter_.get_choices())[0]
+            return next(iter(filter_.get_choices()))
         elif t == "bool":
             return "True"
         elif t == "int":
@@ -837,7 +837,7 @@ class TestAllFiltersForNullCharacterSafety(TestAllFiltersAtOnce, TestCase):
             return "1\x00"
         elif t == "choice" or t == "radio":
             filter_ = self.available_filters[field["name"]]
-            choice = list(filter_.get_choices())[0]
+            choice = next(iter(filter_.get_choices()))
             return f"{choice}\x00"
         elif t == "bool":
             return "True\x00"
