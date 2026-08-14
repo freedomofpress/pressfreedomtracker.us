@@ -1,5 +1,6 @@
 import calendar
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
+from unittest import mock
 
 from django.test import TestCase
 
@@ -14,6 +15,8 @@ from incident.models import (
 from .factories import (
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
     LegalOrderFactory,
     LegalOrderWithUpdatesFactory,
 )
@@ -95,6 +98,32 @@ class TestLegalOrderWithUnknownDateUpdate(TestCase):
                 ("Unknown date", "objected to"),
             ],
         )
+
+
+class TestIncidentPageDetentionDuration(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.index = IncidentIndexPageFactory()
+
+    def test_uses_release_date_as_end_date_when_set(self):
+        incident = IncidentPageFactory(
+            parent=self.index,
+            detention_date=date(2020, 1, 1),
+            release_date=date(2020, 1, 11),
+        )
+        self.assertEqual(incident.detention_duration(), timedelta(days=10))
+
+    def test_defaults_to_today_when_no_release_date(self):
+        incident = IncidentPageFactory(
+            parent=self.index,
+            detention_date=date(2020, 1, 1),
+            release_date=None,
+        )
+        with mock.patch(
+            "django.utils.timezone.now",
+            return_value=datetime(2020, 1, 11, tzinfo=UTC),
+        ):
+            self.assertEqual(incident.detention_duration(), timedelta(days=10))
 
 
 class TestIncidentCharge(TestCase):

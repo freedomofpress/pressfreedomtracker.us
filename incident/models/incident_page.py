@@ -25,6 +25,7 @@ from django.db.models.functions import (
     TruncMonth,
 )
 from django.template.defaultfilters import truncatewords
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 
@@ -1074,7 +1075,7 @@ class IncidentPage(MetadataPageMixin, Page):
         the release_date, if specified.
         """
         start_date = self.detention_date if self.detention_date else self.date
-        end_date = self.release_date if self.release_date else datetime.datetime.today()
+        end_date = self.release_date if self.release_date else timezone.now().date()
         return end_date - start_date
 
     def last_updated(self):
