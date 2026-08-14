@@ -259,8 +259,7 @@ class FormPage(
     def get_form_fields(self):
         fields = []
         for group in self.field_groups.all():
-            for field in group.form_fields.all():
-                fields.append(field)
+            fields.extend(group.form_fields.all())
 
         return fields
 
