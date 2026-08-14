@@ -17,7 +17,7 @@ def migrate_images(apps, schema_editor):
     Image = apps.get_model("wagtailimages.Image")
     CustomImage = apps.get_model("common.CustomImage")
     for original_image in Image.objects.all():
-        values = dict()
+        values = {}
         for field in original_image._meta.fields:
             values[field.name] = getattr(original_image, field.name)
         CustomImage.objects.create(**values)

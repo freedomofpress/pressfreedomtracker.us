@@ -377,16 +377,16 @@ class Command(BaseCommand):
                 sidebar_menu=resources_menu,
                 body=json.dumps(
                     [
-                        dict(
-                            type="text",
-                            value=dict(
-                                text=LIPSUM,
-                                background_color="white",
-                                text_align="left",
-                                font_size="large",
-                                font_family="sans-serif",
-                            ),
-                        ),
+                        {
+                            "type": "text",
+                            "value": {
+                                "text": LIPSUM,
+                                "background_color": "white",
+                                "text_align": "left",
+                                "font_size": "large",
+                                "font_family": "sans-serif",
+                            },
+                        },
                     ]
                 ),
             )
