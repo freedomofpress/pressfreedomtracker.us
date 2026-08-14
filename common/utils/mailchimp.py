@@ -12,10 +12,8 @@ class MailchimpError(Exception):
     """Base class for errors related to Mailchimp."""
 
 
-
 class ApiKeyMissingError(MailchimpError):
     """Raised when the Mailchimp API key cannot be found."""
-
 
 
 class ApiError(MailchimpError):
