@@ -370,7 +370,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     city = factory.Faker("city")
     state = factory.SubFactory(StateFactory)
     longitude = None
-    longitude = None
 
     body = Faker("streamfield", fields=["rich_text_paragraph", "raw_html"])
     teaser = factory.Faker("sentence")
