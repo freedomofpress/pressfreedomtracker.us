@@ -134,7 +134,7 @@ def _serialize_field(obj, field):
     ):
         val = ", ".join([humanize(item) for item in getattr(obj, field.name).all()])
     elif hasattr(field, "choices") and field.choices:
-        val = getattr(obj, "get_%s_display" % field.name)()
+        val = getattr(obj, f"get_{field.name}_display")()
     elif hasattr(obj, field.name):
         val = getattr(obj, field.name)
     return str(val)

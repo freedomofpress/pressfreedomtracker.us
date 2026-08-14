@@ -25,8 +25,6 @@ def parse_kwargs(bits):
         try:
             kwargs[key] = Variable(value).resolve({})
         except VariableDoesNotExist:
-            raise ValueError(
-                f"Value for {key} should be wrapped in quotation marks"
-            )
+            raise ValueError(f"Value for {key} should be wrapped in quotation marks")
 
     return kwargs
