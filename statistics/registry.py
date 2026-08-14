@@ -58,7 +58,7 @@ def get_maps():
 
 
 def get_maps_choices():
-    return [(name, name) for name in get_maps().keys()]
+    return [(name, name) for name in get_maps()]
 
 
 def get_stats():
@@ -71,7 +71,7 @@ def get_stats():
 def get_stats_choices():
     return [
         (name, "{} ({})".format(name, "Map" if name in MAPS else "Number"))
-        for name in get_stats().keys()
+        for name in get_stats()
     ]
 
 
