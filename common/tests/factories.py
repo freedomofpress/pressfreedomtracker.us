@@ -323,6 +323,6 @@ class ChartSnapshotFactory(factory.django.DjangoModelFactory):
 
     svg = True
 
-    last_generated = datetime.datetime(2023, 1, 1, 0, 0)
+    last_generated = datetime.datetime(2023, 1, 1, 0, 0, tzinfo=datetime.UTC)
     query = {}
     chart_type = ChartType.VERTICAL_BAR
