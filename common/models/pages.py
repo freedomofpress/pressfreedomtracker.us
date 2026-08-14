@@ -358,7 +358,7 @@ class CategoryMethodologyItem(Orderable):
 
 
 def get_year_choices(start_year=2017):
-    return tuple([(None, "----")]) + tuple(
+    return ((None, "----"),) + tuple(
         (x, x) for x in range(start_year, datetime.today().year + 1)
     )
 
