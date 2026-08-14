@@ -26,7 +26,9 @@ class DatalistField(forms.ChoiceField):
         "invalid_choice": "Select a valid choice. %(value)s is not one of the available choices.",
     }
 
-    def __init__(self, *, choices=[], list_name="", **kwargs):
+    def __init__(self, *, choices=None, list_name="", **kwargs):
+        if choices is None:
+            choices = []
         self.list_name = list_name
         super().__init__(**kwargs)
         self.choices = choices

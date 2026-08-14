@@ -28,8 +28,10 @@ def for_every_cloudflare_backend(func: callable) -> callable:
     return inner
 
 
-def purge(backend: CloudflareBackend, data={}) -> None:
+def purge(backend: CloudflareBackend, data=None) -> None:
     """Send a delete request to the Cloudflare API"""
+    if data is None:
+        data = {}
     purge_url = f"https://api.cloudflare.com/client/v4/zones/{backend.cloudflare_zoneid}/purge_cache"
     string_data = json.dumps(data)
 

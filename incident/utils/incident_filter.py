@@ -190,8 +190,10 @@ class RelationFilter(Filter):
             return OpenApiTypes.INT
 
     def __init__(
-        self, name, model_field, lookup=None, verbose_name=None, text_fields=[]
+        self, name, model_field, lookup=None, verbose_name=None, text_fields=None
     ):
+        if text_fields is None:
+            text_fields = []
         self.text_fields = text_fields
         super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
@@ -482,8 +484,10 @@ class ManyRelationFilter(Filter):
     }
 
     def __init__(
-        self, name, model_field, lookup=None, verbose_name=None, text_fields=[]
+        self, name, model_field, lookup=None, verbose_name=None, text_fields=None
     ):
+        if text_fields is None:
+            text_fields = []
         self.text_fields = text_fields
         super().__init__(name, model_field, lookup=lookup, verbose_name=verbose_name)
 
@@ -653,8 +657,10 @@ class RelationThroughFilter(ManyRelationFilter):
         relation,
         lookup=None,
         verbose_name=None,
-        text_fields=[],
+        text_fields=None,
     ):
+        if text_fields is None:
+            text_fields = []
         lookup = model_field.name + "__" + relation
         super().__init__(
             name, model_field, lookup, verbose_name, text_fields
