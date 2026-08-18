@@ -1,11 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
+from common.models import CategoryPage
 from common.tests.devdata import (
     PersonPageFactory,
 )
-
-from common.models import CategoryPage
 from incident.devdata import (
     IncidentPageFactory,
     MultimediaIncidentPageFactory,
