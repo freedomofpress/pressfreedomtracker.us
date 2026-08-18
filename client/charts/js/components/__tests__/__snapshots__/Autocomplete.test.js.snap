@@ -2,6 +2,12 @@
 
 exports[`renders Autocomplete with mocked data 1`] = `
 <React.Fragment>
+  <label
+    className="sr-only"
+    htmlFor="id_test autocomplete"
+  >
+    test
+  </label>
   <input
     autoComplete="off"
     className="text-field--single"
