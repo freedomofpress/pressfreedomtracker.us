@@ -8,6 +8,8 @@ exclude = [
     "molecule",
 ]
 
+# exclude RUF012 because it results in a lot of false positives in Django code,
+# especially in migrations
 [tool.ruff.lint]
 ignore = ["E501", "E266", "RUF012"]
 
