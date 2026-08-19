@@ -22,7 +22,7 @@ export default function CheckBoxBar({ label, count, i, onClick, isSelected, barW
 				<input
 					type="checkbox"
 					name="drone"
-					id={"drone" + label}
+					id={`drone-${label}`}
 					checked={isSelected}
 					onChange={onClick}
 					style={{ width: 24, height: 24 }}
@@ -52,7 +52,7 @@ export default function CheckBoxBar({ label, count, i, onClick, isSelected, barW
 							lineHeight: '20px',
 							fontFamily: 'var(--font-base)',
 						}}
-						htmlFor={"drone" + label}
+						htmlFor={`drone-${label}`}
 					>
 						{label}
 					</label>
