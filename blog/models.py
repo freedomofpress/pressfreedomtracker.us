@@ -254,6 +254,12 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
         help_text="Overrides the newsletter preamble set in the Blog Index Page for this specific Blog Page.",
     )
 
+    hide_newsletter_web_link = models.BooleanField(
+        default=False,
+        verbose_name="Hide “View this newsletter on pressfreedomtracker.us” banner",
+        help_text="Check this if the page is never intended to be published.",
+    )
+
     introduction = models.TextField(
         help_text="Optional: introduction displayed above the image/video.",
         blank=True,
@@ -375,6 +381,8 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
     @classmethod
     def get_newsletter_panels(cls):
         panels = [panel.clone() for panel in super().get_newsletter_panels()]
+        # Place hide web link checkbox at end of list but above send buttons.
+        panels.insert(-1, FieldPanel("hide_newsletter_web_link"))
         for panel in panels:
             panel.permission = "blog.access_newsletter_tab_blogpage"
         return panels

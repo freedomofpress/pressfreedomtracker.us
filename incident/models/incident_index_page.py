@@ -4,6 +4,7 @@ import json
 from typing import TYPE_CHECKING
 
 from django.db import models
+from django.db.models.functions import Coalesce
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
@@ -171,11 +172,21 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     def get_incidents(self):
         """Returns all published incident pages"""
-        return IncidentPage.objects.live().order_by(
-            # Incidents should be in reverse-chronological order by the
-            # incident date, not when they were published.
-            "-date",
-            "path",
+        return (
+            IncidentPage.objects.live()
+            .with_most_recent_update()
+            .annotate(
+                # Incidents without any updates have a null latest_update, so
+                # fall back to the incident date to keep them in the ordering.
+                last_update_or_date=Coalesce(
+                    "latest_update",
+                    "date",
+                ),
+            )
+            .order_by(
+                "-last_update_or_date",
+                "path",
+            )
         )
 
     def get_context(self, request, *args, **kwargs):
