@@ -116,14 +116,17 @@
 	</mj-head>
 	<mj-body background-color="#333333" width="600px">
 
-		<!-- VIEW IN BROWSER -->
-		<mj-section background-color="#333" padding="10px 24px">
-			<mj-column>
-				<mj-text align="center" color="#fff" font-size="12px" font-family="'Roboto Mono', monospace" line-height="1.4" padding="0">
-					<a href="*|ARCHIVE|*" style="color:#C1C1C1;">View this newsletter in your browser</a>
-				</mj-text>
-			</mj-column>
-		</mj-section>
+		<!-- VIEW ON THE WEB -->
+		{% fullpageurl page as newsletter_page_url %}
+		{% if not page.hide_newsletter_web_link and newsletter_page_url %}
+			<mj-section background-color="#333" padding="10px 24px">
+				<mj-column>
+					<mj-text align="center" color="#fff" font-size="12px" font-family="'Roboto Mono', monospace" line-height="1.4" padding="0">
+						<a href="{{ newsletter_page_url }}" style="color:#C1C1C1;">View this newsletter at pressfreedomtracker.us&nbsp;&rarr;</a>
+					</mj-text>
+				</mj-column>
+			</mj-section>
+		{% endif %}
 
 		<!-- HEADER -->
 		<mj-section background-color="#000000" css-class="header">
