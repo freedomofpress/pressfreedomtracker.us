@@ -33,7 +33,7 @@ wagtail-honeypot
 wagtail-inventory>=3.1
 wagtail-metadata>=5.0.0
 wagtail-newsletter[mailchimp,mrml]
-wagtail>=7.4.2,<8.0
+wagtail>=7.4.3,<8.0
 whitenoise
 google-api-python-client
 python-dateutil>=2.9.0
