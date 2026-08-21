@@ -376,10 +376,6 @@ def generate_info_table_external_links():
     )
 
 
-class StreamfieldFieldError(Exception):
-    """Raised when StreamfieldProvider.streamfield() is misconfigured."""
-
-
 class StreamfieldProvider(BaseProvider):
     def streamfield(self, fields=None):
         valid_fields = {
@@ -412,11 +408,11 @@ class StreamfieldProvider(BaseProvider):
 
         streamfield_data = []
         if not fields:
-            raise StreamfieldFieldError("no fields found, please provide fields")
+            raise ValueError("no fields found, please provide fields")
         for field in fields:
             if field in valid_fields:
                 streamfield_data.append(valid_fields[field]())
             else:
-                raise StreamfieldFieldError(f"unknown field: {field}")
+                raise ValueError(f"unknown field: {field}")
 
         return streamfield_data
