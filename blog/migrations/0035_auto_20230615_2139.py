@@ -6,7 +6,7 @@ import wagtail.blocks
 import wagtail.fields
 import wagtail.images.blocks
 
-import common.models.helpers
+import common.helpers
 
 
 def update_lead_graphic(apps, schema_editor):
@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "categories",
                                                 wagtail.blocks.MultipleChoiceBlock(
-                                                    choices=common.models.helpers.get_categories,
+                                                    choices=common.helpers.get_categories,
                                                     help_text="If selected, incidents belonging to any of the selected categories will be included.",
                                                     label="Filter by Category",
                                                     required=False,
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "tag",
                                                 wagtail.blocks.ChoiceBlock(
-                                                    choices=common.models.helpers.get_tags,
+                                                    choices=common.helpers.get_tags,
                                                     help_text="If selected, only incidents with the chosen tag will be included.",
                                                     label="Filter by Tag",
                                                     required=False,
@@ -125,7 +125,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "categories",
                                                 wagtail.blocks.MultipleChoiceBlock(
-                                                    choices=common.models.helpers.get_categories,
+                                                    choices=common.helpers.get_categories,
                                                     help_text="If selected, incidents belonging to any of the selected categories will be included.",
                                                     label="Filter by Category",
                                                     required=False,
@@ -134,7 +134,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "tag",
                                                 wagtail.blocks.ChoiceBlock(
-                                                    choices=common.models.helpers.get_tags,
+                                                    choices=common.helpers.get_tags,
                                                     help_text="If selected, only incidents with the chosen tag will be included.",
                                                     label="Filter by Tag",
                                                     required=False,
@@ -181,7 +181,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "categories",
                                                 wagtail.blocks.MultipleChoiceBlock(
-                                                    choices=common.models.helpers.get_categories,
+                                                    choices=common.helpers.get_categories,
                                                     help_text="If selected, incidents belonging to any of the selected categories will be included.",
                                                     label="Filter by Category",
                                                     required=False,
@@ -190,7 +190,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "tag",
                                                 wagtail.blocks.ChoiceBlock(
-                                                    choices=common.models.helpers.get_tags,
+                                                    choices=common.helpers.get_tags,
                                                     help_text="If selected, only incidents with the chosen tag will be included.",
                                                     label="Filter by Tag",
                                                     required=False,
@@ -257,7 +257,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "categories",
                                                 wagtail.blocks.MultipleChoiceBlock(
-                                                    choices=common.models.helpers.get_categories,
+                                                    choices=common.helpers.get_categories,
                                                     help_text="If selected, incidents belonging to any of the selected categories will be included.",
                                                     label="Filter by Category",
                                                     required=False,
@@ -266,7 +266,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "tag",
                                                 wagtail.blocks.ChoiceBlock(
-                                                    choices=common.models.helpers.get_tags,
+                                                    choices=common.helpers.get_tags,
                                                     help_text="If selected, only incidents with the chosen tag will be included.",
                                                     label="Filter by Tag",
                                                     required=False,
@@ -325,7 +325,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "categories",
                                                 wagtail.blocks.MultipleChoiceBlock(
-                                                    choices=common.models.helpers.get_categories,
+                                                    choices=common.helpers.get_categories,
                                                     help_text="If selected, incidents belonging to any of the selected categories will be included.",
                                                     label="Filter by Category",
                                                     required=False,
@@ -334,7 +334,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "tag",
                                                 wagtail.blocks.ChoiceBlock(
-                                                    choices=common.models.helpers.get_tags,
+                                                    choices=common.helpers.get_tags,
                                                     help_text="If selected, only incidents with the chosen tag will be included.",
                                                     label="Filter by Tag",
                                                     required=False,
@@ -381,7 +381,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "categories",
                                                 wagtail.blocks.MultipleChoiceBlock(
-                                                    choices=common.models.helpers.get_categories,
+                                                    choices=common.helpers.get_categories,
                                                     help_text="If selected, incidents belonging to any of the selected categories will be included.",
                                                     label="Filter by Category",
                                                     required=False,
@@ -390,7 +390,7 @@ class Migration(migrations.Migration):
                                             (
                                                 "tag",
                                                 wagtail.blocks.ChoiceBlock(
-                                                    choices=common.models.helpers.get_tags,
+                                                    choices=common.helpers.get_tags,
                                                     help_text="If selected, only incidents with the chosen tag will be included.",
                                                     label="Filter by Tag",
                                                     required=False,

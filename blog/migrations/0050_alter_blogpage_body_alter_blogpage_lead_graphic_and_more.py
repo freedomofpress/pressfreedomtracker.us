@@ -4,7 +4,7 @@ from django.db import migrations
 
 import wagtail.fields
 
-import common.models.helpers
+import common.helpers
 import statistics.registry
 
 
@@ -273,7 +273,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.MultipleChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_categories,
+                            "choices": common.helpers.get_categories,
                             "help_text": "If selected, incidents belonging to any of the selected categories will be included.",
                             "label": "Filter by Category",
                             "required": False,
@@ -283,7 +283,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.ChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_tags,
+                            "choices": common.helpers.get_tags,
                             "help_text": "If selected, only incidents with the chosen tag will be included.",
                             "label": "Filter by Tag",
                             "required": False,
@@ -311,7 +311,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.MultipleChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_states,
+                            "choices": common.helpers.get_states,
                             "help_text": "If selected, only incidents in the chosen states will be included.",
                             "label": "Filter by State",
                             "required": False,
@@ -366,7 +366,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.ChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_tags,
+                            "choices": common.helpers.get_tags,
                             "help_text": "If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.",
                             "label": "Group Incidents By Tag",
                             "required": False,
@@ -469,7 +469,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.MultipleChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_categories,
+                            "choices": common.helpers.get_categories,
                             "help_text": "If selected, incidents belonging to any of the selected categories will be included.",
                             "label": "Filter by Category",
                             "required": False,
@@ -479,7 +479,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.ChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_tags,
+                            "choices": common.helpers.get_tags,
                             "help_text": "If selected, only incidents with the chosen tag will be included.",
                             "label": "Filter by Tag",
                             "required": False,
@@ -507,7 +507,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.MultipleChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_states,
+                            "choices": common.helpers.get_states,
                             "help_text": "If selected, only incidents in the chosen states will be included.",
                             "label": "Filter by State",
                             "required": False,
@@ -562,7 +562,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.ChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_tags,
+                            "choices": common.helpers.get_tags,
                             "help_text": "If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.",
                             "label": "Group Incidents By Tag",
                             "required": False,
@@ -666,7 +666,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.MultipleChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_categories,
+                            "choices": common.helpers.get_categories,
                             "help_text": "If selected, incidents belonging to any of the selected categories will be included.",
                             "label": "Filter by Category",
                             "required": False,
@@ -676,7 +676,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.ChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_tags,
+                            "choices": common.helpers.get_tags,
                             "help_text": "If selected, only incidents with the chosen tag will be included.",
                             "label": "Filter by Tag",
                             "required": False,
@@ -704,7 +704,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.MultipleChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_states,
+                            "choices": common.helpers.get_states,
                             "help_text": "If selected, only incidents in the chosen states will be included.",
                             "label": "Filter by State",
                             "required": False,
@@ -759,7 +759,7 @@ class Migration(migrations.Migration):
                         "wagtail.blocks.ChoiceBlock",
                         [],
                         {
-                            "choices": common.models.helpers.get_tags,
+                            "choices": common.helpers.get_tags,
                             "help_text": "If selected, turns this vertical bar chart into a stacked bar chart with incidents grouped by whether or not it has the tag selected. Note that if this field is selected, the group by selection above will be ignored.",
                             "label": "Group Incidents By Tag",
                             "required": False,
