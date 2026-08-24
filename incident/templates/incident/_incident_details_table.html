@@ -1,6 +1,6 @@
 {% load wagtailcore_tags case_tags %}
 
-<dl class="details-table__incident-details" aria-labelledby="incident-details-title">
+<dl class="details-table__incident-details" aria-labelledby="incident-details-title-{{ incident.pk }}">
 	{% if incident.updates.all.exists %}
 		{% with latest_update=incident.get_updates_by_desc_date|first %}
 			<div class="details-table__row">
