@@ -10,7 +10,7 @@ import statistics.registry
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("blog", "0051_blogindexpage_newsletter_preamble_and_more"),
+        ("blog", "0052_blogpage_hide_newsletter_web_link"),
     ]
 
     operations = [
