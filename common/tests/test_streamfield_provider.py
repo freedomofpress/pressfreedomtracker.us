@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from faker import Faker
 
-from common.tests.utils import StreamfieldFieldError, StreamfieldProvider
+from common.tests.utils import StreamfieldProvider
 
 
 class TestStreamfieldProvider(TestCase):
@@ -11,9 +11,9 @@ class TestStreamfieldProvider(TestCase):
         self.fake.add_provider(StreamfieldProvider)
 
     def test_raises_if_no_fields_given(self):
-        with self.assertRaises(StreamfieldFieldError):
+        with self.assertRaises(ValueError):
             self.fake.streamfield(fields=[])
 
     def test_raises_if_unknown_field_given(self):
-        with self.assertRaises(StreamfieldFieldError):
+        with self.assertRaises(ValueError):
             self.fake.streamfield(fields=["not_a_real_field"])
