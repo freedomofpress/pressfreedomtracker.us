@@ -30,7 +30,7 @@ from incident.utils.incident_filter import (
 
 
 if TYPE_CHECKING:
-    from django.http import HttpRequest  # noqa: F401
+    from django.http import HttpRequest
 
 
 class SummarySchema(Schema):
@@ -69,7 +69,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
     @path("export/")
     @method_decorator(require_http_methods(["HEAD", "GET", "OPTIONS"]))
-    def export_view(self, request: "HttpRequest") -> HttpResponse:
+    def export_view(self, request: HttpRequest) -> HttpResponse:
         if request.method == "GET":
             response = self.export_view_GET(request)
         else:  # Method is HEAD or OPTIONS
@@ -81,7 +81,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
 
         return response
 
-    def export_view_GET(self, request: "HttpRequest") -> HttpResponse:
+    def export_view_GET(self, request: HttpRequest) -> HttpResponse:
         export_format = request.GET.get("format", "csv")
         allowed_fields = request.GET.get("fields")
         if not allowed_fields:
@@ -145,7 +145,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
             incident_list.append(to_json(incident, fields))
         return JsonResponse(incident_list, safe=False)
 
-    def export_view_OPTIONS(self, request: "HttpRequest") -> HttpResponse:
+    def export_view_OPTIONS(self, request: HttpRequest) -> HttpResponse:
         return HttpResponse()
 
     def handle_options_request(self, request, *args, **kwargs):
@@ -190,7 +190,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         )
 
     def get_context(self, request, *args, **kwargs):
-        context = super(IncidentIndexPage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
 
         # Before perf change:
         # context['all_incident_count'] = len(IncidentFilter({}).get_queryset())
@@ -266,10 +266,10 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         return context
 
     def get_cache_tag(self):
-        return "incident-index-{}".format(self.pk)
+        return f"incident-index-{self.pk}"
 
     def serve(self, request, *args, **kwargs):
-        response = super(IncidentIndexPage, self).serve(request, *args, **kwargs)
+        response = super().serve(request, *args, **kwargs)
 
         # We set a cache tag here so that elsewhere we can purge all subroutes
         # of the incident index page (including paginated and filtered URLs)

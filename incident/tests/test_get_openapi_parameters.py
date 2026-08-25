@@ -3,17 +3,19 @@ from unittest import mock
 
 from django.db.utils import ProgrammingError
 from django.test import TestCase
-from drf_spectacular.utils import OpenApiParameter
+
 from wagtail.models import Site
 
+from drf_spectacular.utils import OpenApiParameter
+
 from common.models.pages import CategoryPage
-from common.models.settings import IncidentFilterSettings, GeneralIncidentFilter
+from common.models.settings import GeneralIncidentFilter, IncidentFilterSettings
 from common.tests.factories import CategoryPageFactory
 from incident.models import IncidentPage
 from incident.utils.incident_filter import (
-    get_openapi_parameters,
     IncidentFilter,
     SearchFilter,
+    get_openapi_parameters,
 )
 
 

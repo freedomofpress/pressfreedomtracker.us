@@ -1,4 +1,3 @@
-import typing
 import dataclasses
 import itertools
 from datetime import date
@@ -137,8 +136,8 @@ class ChoiceColumn:
 class EnumeratedColumns:
     def __init__(
         self,
-        prefix_format: typing.Optional[str],
-        suffix_format: typing.Optional[str],
+        prefix_format: str | None,
+        suffix_format: str | None,
         column_set: ColumnSet,
     ):
         self.prefix_format = prefix_format
@@ -194,7 +193,7 @@ class EnumeratedColumns:
 @dataclasses.dataclass
 class ColumnSpec:
     key: str
-    column: typing.Union[ChoiceColumn, EnumeratedColumns, DateColumn]
+    column: ChoiceColumn | EnumeratedColumns | DateColumn
 
     def get_value(self, row, prefix, suffix):
         result = self.column.get_value(row, prefix, suffix)

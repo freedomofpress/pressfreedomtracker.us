@@ -1,27 +1,29 @@
-from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.postgres.fields import DateRangeField
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.http import JsonResponse
-from marshmallow import Schema, fields
-from psycopg.types.range import Range
-from wagtail.contrib.routable_page.models import RoutablePageMixin, path
+
+from wagtail import blocks
 from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
 )
-from wagtail import blocks
-from wagtail.fields import StreamField, RichTextField
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
+
+from marshmallow import Schema, fields
+from psycopg.types.range import Range
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 import common.blocks
-from common.models import MetadataPageMixin, CategoryPage
+from common.models import CategoryPage, MetadataPageMixin
 from common.utils import (
     DEFAULT_PAGE_KEY,
     paginate,
 )
-from incident.models import IncidentCategorization, IncidentPage
 from incident.forms import TopicPageForm
+from incident.models import IncidentCategorization, IncidentPage
 
 
 class FuzzyDate(models.Transform):
@@ -252,7 +254,7 @@ class TopicPage(RoutablePageMixin, MetadataPageMixin, Page):
     base_form_class = TopicPageForm
 
     def get_context(self, request, *args, **kwargs):
-        context = super(TopicPage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
 
         incident_lookups = models.Q(tags=self.incident_tag)
         if self.start_date or self.end_date:

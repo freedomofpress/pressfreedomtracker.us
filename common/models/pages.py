@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from urllib.parse import urlencode
 
 from django import forms
@@ -9,6 +8,7 @@ from django.db.models.functions import Coalesce
 from django.http import Http404
 from django.shortcuts import redirect
 from django.template.defaultfilters import truncatewords
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.utils.module_loading import import_string
@@ -163,19 +163,15 @@ class MediaPageMixin:
 
         # If the page is a blog index page, loop through all the posts to see if
         # there is a chart as the primary image
-        try:
+        if hasattr(self, "get_posts"):
             for post in self.get_posts():
                 block_cls_names = block_cls_names + get_page_blocks(post)
-        except Exception:
-            pass
 
         # If the page is a home page, loop through all the panels and posts to see if
         # there is a chart as the primary image
-        try:
+        if hasattr(self, "featured_blog_posts"):
             for blog_post in self.featured_blog_posts.select_related("page"):
                 block_cls_names = block_cls_names + get_page_blocks(blog_post.page)
-        except Exception:
-            pass
 
         for block_cls_name in block_cls_names:
             block_cls = import_string(block_cls_name)
@@ -192,8 +188,6 @@ class MediaPageMixin:
 class OrganizationIndexPage(Page):
     subpage_types = ["common.OrganizationPage"]
     content_panels = Page.content_panels
-
-    subpage_types = ["common.OrganizationPage"]
 
     preview_modes = []
 
@@ -237,7 +231,7 @@ class OrganizationPage(Page):
             # This organization has no blog posts. Fall back to 404
             raise Http404()
         return redirect(
-            "{}?organization={}".format(blog_index.get_url(request=request), self.pk)
+            f"{blog_index.get_url(request=request)}?organization={self.pk}"
         )  # pragma: no cover
 
 
@@ -343,9 +337,7 @@ class CategoryIncidentFilter(Orderable):
         ).exists():
             raise ValidationError(
                 {
-                    "incident_filter": '"{}" is already in use in general filters'.format(
-                        self.get_incident_filter_display(),
-                    ),
+                    "incident_filter": f'"{self.get_incident_filter_display()}" is already in use in general filters',
                 }
             )
 
@@ -361,8 +353,8 @@ class CategoryMethodologyItem(Orderable):
 
 
 def get_year_choices(start_year=2017):
-    return tuple([(None, "----")]) + tuple(
-        (x, x) for x in range(start_year, datetime.today().year + 1)
+    return ((None, "----"),) + tuple(
+        (x, x) for x in range(start_year, timezone.now().year + 1)
     )
 
 
@@ -492,7 +484,7 @@ class CategoryPage(MetadataPageMixin, Page):
             get_serialized_filters,
         )
 
-        context = super(CategoryPage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
 
         # request.is_preview is not necessarily set
         if getattr(request, "is_preview", False):
@@ -606,7 +598,7 @@ class CategoryPage(MetadataPageMixin, Page):
         return context
 
     def get_cache_tag(self):
-        return "category-page-{}".format(self.pk)
+        return f"category-page-{self.pk}"
 
     def serve(self, request, *args, **kwargs):
         """
@@ -616,7 +608,7 @@ class CategoryPage(MetadataPageMixin, Page):
 
         """
 
-        response = super(CategoryPage, self).serve(request, *args, **kwargs)
+        response = super().serve(request, *args, **kwargs)
         response["Cache-Tag"] = self.get_cache_tag()
         return response
 

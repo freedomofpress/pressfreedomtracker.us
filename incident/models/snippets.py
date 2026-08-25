@@ -1,8 +1,11 @@
 from django.db import models
-from common.validators import validate_disallow_AND
-from modelcluster.models import ClusterableModel
+
 from wagtail.admin.panels import FieldPanel, FieldRowPanel
 from wagtail.snippets.models import register_snippet
+
+from modelcluster.models import ClusterableModel
+
+from common.validators import validate_disallow_AND
 
 
 @register_snippet
@@ -74,5 +77,5 @@ class State(ClusterableModel):
 
     def __str__(self):
         if self.abbreviation:
-            return "{} ({})".format(self.name, self.abbreviation)
+            return f"{self.name} ({self.abbreviation})"
         return self.name

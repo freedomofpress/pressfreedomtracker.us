@@ -1,8 +1,8 @@
 from django.test import TestCase
 
-from blog.tests.factories import BlogPageFactory, BlogIndexPageFactory
-from blog.utils import BlogFilter
 from blog.models import BlogPage
+from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
+from blog.utils import BlogFilter
 from common.tests.factories import PersonPageFactory
 
 

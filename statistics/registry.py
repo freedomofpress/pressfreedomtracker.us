@@ -3,7 +3,7 @@ MAPS = {}
 VISUALIZATIONS = {}
 
 
-class Statistics(object):
+class Statistics:
     def statistic(self, store, name=None, fn=None):
         """Register a statistics function as usable elsewhere on the site"""
         if name is None and fn is None:
@@ -14,11 +14,10 @@ class Statistics(object):
 
             return decorator
 
-        if name is not None and fn is None:
-            if callable(name):
-                fn_name = getattr(name, "_decorated_function", name).__name__
-                self.statistic(store, name=fn_name, fn=name)
-                return name
+        if name is not None and fn is None and callable(name):
+            fn_name = getattr(name, "_decorated_function", name).__name__
+            self.statistic(store, name=fn_name, fn=name)
+            return name
 
         # TODO: potentially add it to template.Library() also.
         store[name] = fn
@@ -57,8 +56,8 @@ def get_maps():
     return MAPS
 
 
-def get_maps_choices():
-    return [(name, name) for name in get_maps().keys()]
+def get_maps_choices():  # pragma: no cover
+    return [(name, name) for name in get_maps()]
 
 
 def get_stats():
@@ -71,7 +70,7 @@ def get_stats():
 def get_stats_choices():
     return [
         (name, "{} ({})".format(name, "Map" if name in MAPS else "Number"))
-        for name in get_stats().keys()
+        for name in get_stats()
     ]
 
 

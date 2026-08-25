@@ -1,11 +1,13 @@
 from django.db import models
 
-from common.validators import validate_disallow_AND
-from modelcluster.models import ClusterableModel
-from modelcluster.fields import ParentalKey
 from wagtail.models import Orderable
-from wagtailautocomplete.edit_handlers import AutocompletePanel
+
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from modelsearch import index
+from wagtailautocomplete.edit_handlers import AutocompletePanel
+
+from common.validators import validate_disallow_AND
 
 
 class Journalist(index.Indexed, ClusterableModel):
@@ -110,10 +112,7 @@ class TargetedJournalist(index.Indexed, Orderable):
     def summary(self):
         journalist = self.journalist.title
         if self.institution:
-            return "{journalist} ({institution})".format(
-                journalist=journalist,
-                institution=self.institution.title,
-            )
+            return f"{journalist} ({self.institution.title})"
         return journalist
 
     panels = [

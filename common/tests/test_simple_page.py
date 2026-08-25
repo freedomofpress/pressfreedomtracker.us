@@ -1,10 +1,11 @@
 from django.urls import reverse
+
 from wagtail.models import Site
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import (
     nested_form_data,
-    streamfield,
     rich_text,
+    streamfield,
 )
 
 from common.models import SimplePage
@@ -24,7 +25,7 @@ class SimplePageStatisticsTagsTestCase(WagtailPageTestCase):
         self.site = site
         self.category = CategoryPageFactory(parent=self.home_page)
 
-        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        stats_tag = f'{{% num_incidents categories="{self.category.pk}" %}}'
         self.page_data = {
             "title": "Page 1",
             "slug": "page-1",
@@ -35,7 +36,7 @@ class SimplePageStatisticsTagsTestCase(WagtailPageTestCase):
                         nested_form_data(
                             {
                                 "text": rich_text(
-                                    "<p>Lorem {} dolor sit amet</p>".format(stats_tag)
+                                    f"<p>Lorem {stats_tag} dolor sit amet</p>"
                                 ),
                                 "background_color": "gamboge",
                                 "text_align": "left",

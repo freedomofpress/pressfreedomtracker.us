@@ -1,6 +1,8 @@
-from django.urls import reverse
-from django.test import TestCase, Client
 from unittest.mock import patch
+
+from django.test import Client, TestCase
+from django.urls import reverse
+
 from wagtail.models import Site
 
 from common.models import FooterSettings
@@ -23,9 +25,7 @@ class TestCategoryPageCacheInvalidation(TestCase):
     def test_cache_tag_index(self):
         "Response from CategoryPage should include Cache-Tag header"
         response = self.client.get("/category/")
-        self.assertEqual(
-            response["Cache-Tag"], "category-page-{}".format(self.categorypage.pk)
-        )
+        self.assertEqual(response["Cache-Tag"], f"category-page-{self.categorypage.pk}")
 
     def test_cache_tag_subpath(self):
         """
@@ -35,9 +35,7 @@ class TestCategoryPageCacheInvalidation(TestCase):
         """
 
         response = self.client.get("/category/?search=test")
-        self.assertEqual(
-            response["Cache-Tag"], "category-page-{}".format(self.categorypage.pk)
-        )
+        self.assertEqual(response["Cache-Tag"], f"category-page-{self.categorypage.pk}")
 
     @patch("common.signals.purge_page_from_cache")
     def test_cache_invalidated_on_new_incident(self, purge_page_from_cache):

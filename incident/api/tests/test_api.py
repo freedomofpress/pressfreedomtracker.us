@@ -1,20 +1,22 @@
-from rest_framework.test import APITestCase
-from wagtail.models import Site
 from django.urls import reverse
 
-from incident import choices
+from wagtail.models import Site
+
+from rest_framework.test import APITestCase
+
 from common.tests.factories import (
-    PersonPageFactory,
     CategoryPageFactory,
-    CustomImageFactory,
     CommonTagFactory,
+    CustomImageFactory,
+    PersonPageFactory,
 )
+from incident import choices
 from incident.tests import factories
 from incident.tests.factories import (
-    IncidentPageFactory,
     IncidentIndexPageFactory,
-    IncidentUpdateFactory,
     IncidentLinkFactory,
+    IncidentPageFactory,
+    IncidentUpdateFactory,
     StateFactory,
 )
 
@@ -407,7 +409,7 @@ class IncidentAPITest(APITestCase):
             file__color="green",
         )
 
-        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
+        author1, author2, _author3 = PersonPageFactory.create_batch(3, parent=root_page)
         cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(
             3, parent=root_page
         )

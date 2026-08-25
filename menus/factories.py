@@ -1,13 +1,14 @@
+from wagtail.models import Page
+
 from factory import (
-    Sequence,
-    post_generation,
     Faker,
-    Trait,
     LazyAttribute,
+    Sequence,
     SubFactory,
+    Trait,
+    post_generation,
 )
 from factory.django import DjangoModelFactory
-from wagtail.models import Page
 
 from menus.models import Menu, MenuItem
 
@@ -32,8 +33,8 @@ class MenuFactory(DjangoModelFactory):
     class Meta:
         model = Menu
 
-    name = Sequence(lambda n: "Menu {}".format(n))
-    slug = Sequence(lambda n: "menu-{}".format(n))
+    name = Sequence(lambda n: f"Menu {n}")
+    slug = Sequence(lambda n: f"menu-{n}")
 
     @post_generation
     def items(self, create, extracted, **kwargs):

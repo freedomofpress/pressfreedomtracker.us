@@ -1,16 +1,17 @@
 from unittest import mock
 
 from wagtail.models import Page, Site
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.common.by import By
 
-from emails.models import Subscription
-from common.tests.selenium import SeleniumTest
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
+
 from common.tests.factories import SimplePageFactory
-from emails.devdata import EmailSettingsFactory
+from common.tests.selenium import SeleniumTest
 from common.utils import MailchimpError
+from emails.devdata import EmailSettingsFactory
+from emails.models import Subscription
 
 
 class SubscribeFormNoJSTestCase(SeleniumTest):

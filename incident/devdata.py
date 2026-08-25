@@ -2,6 +2,8 @@ import datetime
 import random
 from operator import itemgetter
 
+from django.utils import timezone
+
 from wagtail.rich_text import RichText
 
 import factory
@@ -152,9 +154,7 @@ class ItemFactory(factory.django.DjangoModelFactory):
         abstract = True
 
     class Params:
-        unique_title = factory.Trait(
-            title=factory.Sequence(lambda n: "Title {n}".format(n=n))
-        )
+        unique_title = factory.Trait(title=factory.Sequence(lambda n: f"Title {n}"))
 
 
 class VenueFactory(ItemFactory):
@@ -194,7 +194,7 @@ class IncidentChargeFactory(factory.django.DjangoModelFactory):
     date = Faker(
         "past_datetime",
         start_date="-2y",
-        tzinfo=datetime.timezone.utc,
+        tzinfo=datetime.UTC,
     )
     charge = factory.SubFactory(ChargeFactory)
     status = "CHARGES_PENDING"
@@ -262,7 +262,7 @@ class IncidentUpdateFactory(factory.django.DjangoModelFactory):
         model = IncidentPageUpdates
 
     title = Faker("sentence")
-    date = Faker("past_datetime", start_date="-15d", tzinfo=datetime.timezone.utc)
+    date = Faker("past_datetime", start_date="-15d", tzinfo=datetime.UTC)
     body = Faker("streamfield", fields=["rich_text_paragraph", "raw_html"])
 
 
@@ -288,9 +288,7 @@ class SnippetFactory(factory.django.DjangoModelFactory):
         abstract = True
 
     class Params:
-        unique_name = factory.Trait(
-            name=factory.Sequence(lambda n: "Name {n}".format(n=n))
-        )
+        unique_name = factory.Trait(name=factory.Sequence(lambda n: f"Name {n}"))
 
 
 class StateFactory(SnippetFactory):
@@ -336,7 +334,7 @@ class LegalOrderFactory(factory.django.DjangoModelFactory):
     date = Faker(
         "past_datetime",
         start_date="-2y",
-        tzinfo=datetime.timezone.utc,
+        tzinfo=datetime.UTC,
     )
     updates = factory.RelatedFactoryList(
         LegalOrderUpdateFactory,
@@ -353,7 +351,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     first_published_at = Faker(
         "past_datetime",
         start_date="-90d",
-        tzinfo=datetime.timezone.utc,
+        tzinfo=datetime.UTC,
     )
     last_published_at = factory.LazyAttribute(
         lambda o: o.first_published_at + datetime.timedelta(days=3)
@@ -369,7 +367,6 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     date = factory.Faker("date_between", start_date="-1y", end_date="-30d")
     city = factory.Faker("city")
     state = factory.SubFactory(StateFactory)
-    longitude = None
     longitude = None
 
     body = Faker("streamfield", fields=["rich_text_paragraph", "raw_html"])
@@ -439,8 +436,8 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 size=lambda: random.choice([1, 1, 1, 2, 2, 3]),
             ),
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
-            release_date=datetime.date.today(),
-            detention_date=datetime.date.today() - datetime.timedelta(days=3),
+            release_date=timezone.now().date(),
+            detention_date=timezone.now().date() - datetime.timedelta(days=3),
             unnecessary_use_of_force=factory.Faker("boolean"),
         )
         equipment_search = factory.Trait(
@@ -692,7 +689,7 @@ class TopicPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = TopicPage
 
-    title = factory.Sequence(lambda n: "Category {n}".format(n=n))
+    title = factory.Sequence(lambda n: f"Category {n}")
     incident_tag = factory.SubFactory(CommonTagFactory)
 
 
@@ -701,9 +698,7 @@ class SnippetFactory(factory.django.DjangoModelFactory):
         abstract = True
 
     class Params:
-        unique_name = factory.Trait(
-            name=factory.Sequence(lambda n: "Name {n}".format(n=n))
-        )
+        unique_name = factory.Trait(name=factory.Sequence(lambda n: f"Name {n}"))
 
 
 class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
@@ -712,9 +707,7 @@ class GovernmentWorkerFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ("title",)
         exclude = ("first_name", "last_name")
 
-    title = factory.LazyAttribute(
-        lambda o: "{0} {1}. Worker".format(o.first_name, o.last_name[0])
-    )
+    title = factory.LazyAttribute(lambda o: f"{o.first_name} {o.last_name[0]}. Worker")
 
     # Lazy values
     first_name = factory.Faker("first_name")

@@ -1,10 +1,11 @@
-from django.test import TestCase
 from django.core.management import call_command
+from django.test import TestCase
+
 from wagtail.models import Site
 
 from common.models import (
-    CategoryPage,
     CategoryIncidentFilter,
+    CategoryPage,
     TaxonomyCategoryPage,
 )
 from home.models import HomePage

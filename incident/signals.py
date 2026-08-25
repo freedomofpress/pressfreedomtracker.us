@@ -1,11 +1,13 @@
-import structlog
 from django.db.models.signals import post_delete
+
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
 from wagtail.signals import page_published
 
-from common.models import CategoryPage
+import structlog
+
 from cloudflare.utils import purge_tags_from_cache
-from incident.models import IncidentPage, IncidentIndexPage
+from common.models import CategoryPage
+from incident.models import IncidentIndexPage, IncidentPage
 
 
 logger = structlog.get_logger("wagtail.frontendcache")

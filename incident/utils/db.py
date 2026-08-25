@@ -1,5 +1,5 @@
-from django.db.models import Func, DateField, CharField
 from django.contrib.postgres import fields
+from django.db.models import CharField, DateField, Func
 
 
 class MakeDateRange(Func):

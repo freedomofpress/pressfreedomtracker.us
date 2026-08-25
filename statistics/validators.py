@@ -1,5 +1,5 @@
-from inspect import Parameter
 import inspect
+from inspect import Parameter
 
 from django.core.exceptions import ValidationError
 from django.utils.text import smart_split

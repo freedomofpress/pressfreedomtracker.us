@@ -2,8 +2,9 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from common.models import CommonTag
-from .factories import CommonTagFactory
 from incident.tests.factories import IncidentPageFactory
+
+from .factories import CommonTagFactory
 
 
 class TestUnusedTags(TestCase):

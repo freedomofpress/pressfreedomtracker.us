@@ -6,7 +6,7 @@ def test_mainpage(host):
 
     URL = "http://localhost:8000"
 
-    content = host.check_output("curl -k {}".format(URL))
-    head = host.check_output("curl -I -k {}".format(URL))
+    content = host.check_output(f"curl -k {URL}")
+    head = host.check_output(f"curl -I -k {URL}")
     assert SITE_STRING in content
     assert "HTTP/1.1 200 OK" in head

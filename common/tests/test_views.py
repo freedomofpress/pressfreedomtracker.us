@@ -44,7 +44,7 @@ class DocumentDownloadTest(TestCase):
 
         self.assertEqual(
             response["content-disposition"],
-            'inline; filename="{}"'.format(document.filename),
+            f'inline; filename="{document.filename}"',
         )
 
 

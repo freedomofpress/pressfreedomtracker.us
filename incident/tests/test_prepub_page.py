@@ -1,8 +1,9 @@
 import json
-from datetime import date, timedelta
+from datetime import timedelta
 
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from wagtail.models import Site
 
@@ -85,7 +86,7 @@ class PrepubViewTestCase(TestCase):
         self.assertContains(response, f"Updated {time_representation}")
 
     def test_table_groups_rows_by_date_and_location(self):
-        today = date.today()
+        today = timezone.now().date()
         date1 = today - timedelta(days=1)
         date2 = today - timedelta(days=30)
         date3 = today - timedelta(days=60)
@@ -190,8 +191,8 @@ class PrepubViewTestCase(TestCase):
         self.settings.timespan_units = PrepublicationSettings.TimespanUnits.MONTH
         self.settings.save()
 
-        expected = create_prepub(date=date.today())
-        create_prepub(date=date.today() - timedelta(days=60))
+        expected = create_prepub(date=timezone.now().date())
+        create_prepub(date=timezone.now().date() - timedelta(days=60))
         response = self.client.get(reverse("prepub_list"))
         prepub_rows = response.context["prepubs"]
 
@@ -202,8 +203,8 @@ class PrepubViewTestCase(TestCase):
         self.settings.timespan_units = PrepublicationSettings.TimespanUnits.WEEK
         self.settings.save()
 
-        expected = create_prepub(date=date.today())
-        create_prepub(date=date.today() - timedelta(days=8))
+        expected = create_prepub(date=timezone.now().date())
+        create_prepub(date=timezone.now().date() - timedelta(days=8))
         response = self.client.get(reverse("prepub_list"))
         prepub_rows = response.context["prepubs"]
 
@@ -214,8 +215,8 @@ class PrepubViewTestCase(TestCase):
         self.settings.timespan_units = PrepublicationSettings.TimespanUnits.DAY
         self.settings.save()
 
-        expected = create_prepub(date=date.today())
-        create_prepub(date=date.today() - timedelta(days=3))
+        expected = create_prepub(date=timezone.now().date())
+        create_prepub(date=timezone.now().date() - timedelta(days=3))
         response = self.client.get(reverse("prepub_list"))
         prepub_rows = response.context["prepubs"]
 
@@ -227,10 +228,12 @@ class PrepubViewTestCase(TestCase):
         )
 
         # Create incident pages for inclusion in the dataset.
-        date1 = date.today()
-        date2 = date.today() - timedelta(days=1)
+        date1 = timezone.now().date()
+        date2 = timezone.now().date() - timedelta(days=1)
 
-        date_old = date.today() - timedelta(days=30)  # Out of bounds for inclusion
+        date_old = timezone.now().date() - timedelta(
+            days=30
+        )  # Out of bounds for inclusion
 
         index.add_child(instance=IncidentPage(title="Incident 1", date=date1))
         create_prepub(date=date1)
@@ -297,7 +300,7 @@ class PrepubViewTestCase(TestCase):
         self.settings.timespan_length = 7
         self.settings.timespan_units = PrepublicationSettings.TimespanUnits.DAY
         self.settings.save()
-        create_prepub(date=date.today())
+        create_prepub(date=timezone.now().date())
 
         response = self.client.get(reverse("prepub_list"))
         bar_chart_dataset = json.loads(response.context["bar_chart_dataset"])
@@ -306,6 +309,8 @@ class PrepubViewTestCase(TestCase):
         self.assertEqual(len(bar_chart_dataset), 7)
         self.assertEqual(
             bar_chart_dataset[0]["date"],
-            f"{date.today() - timedelta(days=6):%m/%d}",
+            f"{timezone.now().date() - timedelta(days=6):%m/%d}",
         )
-        self.assertEqual(bar_chart_dataset[-1]["date"], f"{date.today():%m/%d}")
+        self.assertEqual(
+            bar_chart_dataset[-1]["date"], f"{timezone.now().date():%m/%d}"
+        )

@@ -1,14 +1,15 @@
 import random
-from datetime import timezone
-from faker import Faker
+from datetime import UTC
 
 import factory
 import wagtail_factories
+from faker import Faker
 
-from blog.models import BlogAuthor, BlogPage, BlogIndexPage
+from blog.models import BlogAuthor, BlogIndexPage, BlogPage
 from common.tests.factories import OrganizationPageFactory
 from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
+
 
 fake = Faker()
 factory.Faker.add_provider(StreamfieldProvider)
@@ -72,7 +73,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
         )
 
     title = factory.Sequence(
-        lambda n: fake.text(random.randint(5, 58))[:-1] + " ({})".format(n)
+        lambda n: fake.text(random.randint(5, 58))[:-1] + f" ({n})"
     )
     body = factory.Faker(
         "streamfield",
@@ -98,7 +99,7 @@ class BlogPageFactory(wagtail_factories.PageFactory):
         variable_nb_sentences=True,
     )
     publication_datetime = factory.Faker(
-        "date_time_this_month", after_now=False, before_now=True, tzinfo=timezone.utc
+        "date_time_this_month", after_now=False, before_now=True, tzinfo=UTC
     )
     first_published_at = factory.LazyAttribute(lambda o: o.publication_datetime)
     organization = factory.SubFactory(OrganizationPageFactory)

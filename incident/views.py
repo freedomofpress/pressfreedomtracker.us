@@ -8,6 +8,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.views.generic import View
 from django.views.generic.edit import FormView
 
@@ -142,10 +143,10 @@ def prepub_list(request):
     if not prepub_settings.is_enabled:
         raise Http404
 
-    lower_bound = datetime.date.today() - prepub_settings.get_timespan()
+    lower_bound = timezone.now().date() - prepub_settings.get_timespan()
     # Bar chart is always bucketed by day; capped at 30d to avoid bars colliding.
-    bar_chart_days = min((datetime.date.today() - lower_bound).days, 30)
-    bar_chart_lower_bound = datetime.date.today() - datetime.timedelta(
+    bar_chart_days = min((timezone.now().date() - lower_bound).days, 30)
+    bar_chart_lower_bound = timezone.now().date() - datetime.timedelta(
         days=bar_chart_days - 1
     )
 
@@ -164,7 +165,7 @@ def prepub_list(request):
 
     bar_chart_dataset = []
 
-    for d in dates_between(bar_chart_lower_bound, datetime.date.today()):
+    for d in dates_between(bar_chart_lower_bound, timezone.now().date()):
         unconfirmed_count = unconfirmed_by_date.get(d, 0)
         confirmed_count = confirmed_by_date.get(d, 0)
         bar_chart_dataset.append(

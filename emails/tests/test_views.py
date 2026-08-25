@@ -1,6 +1,9 @@
+from unittest import mock
+
 from django.core.cache import cache
-from django.urls import reverse
+from django.db import IntegrityError
 from django.test import TestCase
+from django.urls import reverse
 
 from emails.models import EmailSignup
 
@@ -33,6 +36,15 @@ class EmailSignupTest(TestCase):
         response = self.client.post(
             reverse("email-signup-create"), {"email_address": "hello@example.com"}
         )
+        self.assertEqual(response.status_code, 400)
+
+    def test_should_reject_signup_on_concurrent_duplicate_insert(self):
+        # Simulates a race condition where another request inserts the same
+        # email address between our uniqueness check and this save().
+        with mock.patch.object(EmailSignup, "save", side_effect=IntegrityError):
+            response = self.client.post(
+                reverse("email-signup-create"), {"email_address": "hello@example.com"}
+            )
         self.assertEqual(response.status_code, 400)
 
     def test_signup_should_permit_leading_or_trailing_whitespace(self):

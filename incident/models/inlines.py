@@ -184,7 +184,7 @@ class IncidentPageUpdates(models.Model):
     ]
 
     def __str__(self):
-        return "({}) {}".format(self.date, self.title)
+        return f"({self.date}) {self.title}"
 
     class Meta:
         indexes = [
@@ -201,7 +201,7 @@ class IncidentCategorization(Orderable):
         return self.category.title
 
     def __str__(self):
-        return '"{}" in category "{}"'.format(self.incident_page, self.category)
+        return f'"{self.incident_page}" in category "{self.category}"'
 
 
 class IncidentPageLinks(Orderable):
@@ -211,9 +211,9 @@ class IncidentPageLinks(Orderable):
     publication = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        value = "{} ({})".format(self.title, self.url)
+        value = f"{self.title} ({self.url})"
         if self.publication:
-            value += " via {}".format(self.publication)
+            value += f" via {self.publication}"
         return value
 
 
@@ -239,7 +239,7 @@ class EquipmentSeized(Orderable):
 
     @property
     def summary(self):
-        return "{0.equipment}: count of {0.quantity}".format(self)
+        return f"{self.equipment}: count of {self.quantity}"
 
 
 class EquipmentBroken(Orderable):
@@ -264,4 +264,4 @@ class EquipmentBroken(Orderable):
 
     @property
     def summary(self):
-        return "{0.equipment}: count of {0.quantity}".format(self)
+        return f"{self.equipment}: count of {self.quantity}"

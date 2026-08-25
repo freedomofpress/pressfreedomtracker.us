@@ -1,7 +1,9 @@
 from unittest import mock
 
 from django.test import TestCase
+
 import wagtail.embeds.exceptions
+
 from common.templatetags.get_embed import get_embed
 
 

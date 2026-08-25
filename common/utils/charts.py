@@ -2,7 +2,6 @@ import base64
 
 from wagtail import blocks
 
-from common.models.charts import ChartSnapshot
 from common.utils.chart_pregenerator.types import SnapshotType
 
 
@@ -13,6 +12,12 @@ class ChartValue(blocks.StructValue):
     NEWSLETTER_SCALE = 2  # rasterize @2x
 
     def svg_snapshot(self):
+        # Deferred import: common.models.charts pulls in the common.models
+        # package, which imports common.blocks (and, transitively, this
+        # module) at load time for its StreamField blocks, so importing it
+        # up front here would create a circular import.
+        from common.models.charts import ChartSnapshot
+
         snapshot = ChartSnapshot.get_or_generate(
             chart_type=self.chart_type,
             snapshot_type=SnapshotType.SVG,
@@ -21,6 +26,8 @@ class ChartValue(blocks.StructValue):
         return snapshot.chart_svg
 
     def png_snapshot_url(self):
+        from common.models.charts import ChartSnapshot
+
         options = self.options_schema().dump(self)
         options["width"] = self.NEWSLETTER_WIDTH
         options["height"] = self.NEWSLETTER_HEIGHT
@@ -33,6 +40,8 @@ class ChartValue(blocks.StructValue):
         return snapshot.chart_image.get_rendition("original").full_url
 
     def svg_snapshot_mini(self):
+        from common.models.charts import ChartSnapshot
+
         options = self.options_schema().dump(self)
         options["mini"] = True
         options["width"] = 655
@@ -49,6 +58,8 @@ class ChartValue(blocks.StructValue):
         )
 
     def png_snapshot_meta(self):
+        from common.models.charts import ChartSnapshot
+
         options = self.options_schema().dump(self)
         options["mini"] = True
         options["width"] = 1200

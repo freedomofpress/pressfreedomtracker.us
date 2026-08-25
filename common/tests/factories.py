@@ -188,7 +188,7 @@ class CategoryPageFactory(wagtail_factories.PageFactory):
             slug="prior-restraint",
         )
 
-    title = factory.Sequence(lambda n: "Category {n}".format(n=n))
+    title = factory.Sequence(lambda n: f"Category {n}")
     methodology = RichText("Methodology")
     taxonomy = factory.RelatedFactory(TaxonomyCategoryPageFactory, "category")
     page_symbol = factory.Iterator(CATEGORY_SYMBOL_CHOICES, getter=lambda c: c[0])
@@ -242,7 +242,7 @@ class OrganizationPageFactory(wagtail_factories.PageFactory):
         model = OrganizationPage
 
     title = factory.Sequence(lambda n: f"Organization {n}")
-    slug = factory.Sequence(lambda n: "organization-{n}".format(n=n))
+    slug = factory.Sequence(lambda n: f"organization-{n}")
     website = "https://freedom.press"
     description = "Organization Description"
 
@@ -323,6 +323,6 @@ class ChartSnapshotFactory(factory.django.DjangoModelFactory):
 
     svg = True
 
-    last_generated = datetime.datetime(2023, 1, 1, 0, 0)
+    last_generated = datetime.datetime(2023, 1, 1, 0, 0, tzinfo=datetime.UTC)
     query = {}
     chart_type = ChartType.VERTICAL_BAR

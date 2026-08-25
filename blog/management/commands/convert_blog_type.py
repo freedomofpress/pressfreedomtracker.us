@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from blog.models import BlogPage
 from blog.choices import BlogTemplateType
+from blog.models import BlogPage
 
 
 class Command(BaseCommand):

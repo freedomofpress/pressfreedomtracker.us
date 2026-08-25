@@ -1,16 +1,22 @@
 import contextlib
 from unittest import mock
 
-import structlog
 from django.conf import settings
-from django.test import TestCase, RequestFactory
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.contrib.auth import get_user_model
+from django.test import RequestFactory, TestCase
+
 from wagtail.models import Page
 
-from common.middleware.request_logger import RequestLogMiddleware
+import structlog
+
 from common.middleware.onion_location import OnionLocationHeaderMiddleware
+from common.middleware.request_logger import RequestLogMiddleware
+
+
+class ApplicationError(Exception):
+    """Stand-in for an arbitrary unhandled error raised by a view."""
 
 
 @contextlib.contextmanager
@@ -45,16 +51,18 @@ class RequestLogTestCase(TestCase):
 
     @mock.patch.object(Page, "serve")
     def test_request_log_failed(self, serve):
-        serve.side_effect = Exception("Application Error")
+        serve.side_effect = ApplicationError("Application Error")
 
-        with self.assertRaises(Exception):
-            with capture_logs_with_contextvars() as cap_logs:
-                with self.modify_settings(
-                    MIDDLEWARE={
-                        "append": "common.middleware.request_logger.RequestLogMiddleware",
-                    }
-                ):
-                    self.client.get("/")
+        with (
+            self.assertRaises(ApplicationError),
+            capture_logs_with_contextvars() as cap_logs,
+            self.modify_settings(
+                MIDDLEWARE={
+                    "append": "common.middleware.request_logger.RequestLogMiddleware",
+                }
+            ),
+        ):
+            self.client.get("/")
 
         log_entry = cap_logs[0]
         self.assertEqual(log_entry["event"], "request_failed")
@@ -64,13 +72,15 @@ class RequestLogTestCase(TestCase):
     def test_request_log_404(self, serve):
         serve.side_effect = Http404()
 
-        with capture_logs_with_contextvars() as cap_logs:
-            with self.modify_settings(
+        with (
+            capture_logs_with_contextvars() as cap_logs,
+            self.modify_settings(
                 MIDDLEWARE={
                     "append": "common.middleware.request_logger.RequestLogMiddleware",
                 }
-            ):
-                self.client.get("/")
+            ),
+        ):
+            self.client.get("/")
 
         log_entry = cap_logs[0]
         self.assertEqual(log_entry["event"], "request_finished")
@@ -81,13 +91,15 @@ class RequestLogTestCase(TestCase):
     def test_request_log_permission_denied(self, serve):
         serve.side_effect = PermissionDenied()
 
-        with capture_logs_with_contextvars() as cap_logs:
-            with self.modify_settings(
+        with (
+            capture_logs_with_contextvars() as cap_logs,
+            self.modify_settings(
                 MIDDLEWARE={
                     "append": "common.middleware.request_logger.RequestLogMiddleware",
                 }
-            ):
-                self.client.get("/")
+            ),
+        ):
+            self.client.get("/")
 
         log_entry = cap_logs[0]
         self.assertEqual(log_entry["event"], "request_finished")

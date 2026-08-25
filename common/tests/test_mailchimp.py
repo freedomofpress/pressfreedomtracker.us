@@ -2,12 +2,15 @@ from unittest import mock
 
 from django.conf import settings
 from django.test import TestCase, override_settings
-from mailchimp_marketing.api_client import ApiClientError
+
 from wagtail.models import Site
+
+from mailchimp_marketing.api_client import ApiClientError
 
 from emails.devdata import EmailSettingsFactory
 from emails.models import MailchimpGroup, Subscription
-from ..utils import subscribe_for_site, ApiKeyMissingError, ApiError, compute_email_hash
+
+from ..utils import ApiError, ApiKeyMissingError, compute_email_hash, subscribe_for_site
 
 
 class MailchimpSubscribeTestCase(TestCase):

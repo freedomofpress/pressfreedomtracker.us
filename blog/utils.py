@@ -12,7 +12,7 @@ def string_to_int_or_none(s):
         return None
 
 
-class BlogFilter(object):
+class BlogFilter:
     @classmethod
     def from_querystring(cls, query):
         """Parse a dict-like querystring object and return a `BlogFilter` for

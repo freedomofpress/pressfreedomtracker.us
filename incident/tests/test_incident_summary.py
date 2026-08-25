@@ -2,6 +2,7 @@ import json
 from urllib import parse
 
 from django.test import TestCase
+
 from wagtail.models import Site
 
 from common.tests.factories import CategoryPageFactory
@@ -55,7 +56,7 @@ class IncidentSummaryAPIGet(TestCase):
             + self.incident_index.reverse_subpage("summary", args=())
         )
         query_string = parse.urlencode({"categories": self.category.pk})
-        url = "{base}?{query_string}".format(base=base_url, query_string=query_string)
+        url = f"{base_url}?{query_string}"
         self.response = self.client.get(url)
         self.response_data = json.loads(self.response.content.decode("utf-8"))
 

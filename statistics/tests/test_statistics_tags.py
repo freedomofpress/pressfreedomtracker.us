@@ -72,7 +72,7 @@ class NumIncidentsTest(TestCase):
 
     def test_manyrelationfilter_gets_integer_id(self):
         """Valid template tag with integer id instead of string"""
-        template_string = "{{% num_incidents categories={} %}}".format(self.category.id)
+        template_string = f"{{% num_incidents categories={self.category.id} %}}"
         self.validator(template_string)
         result = render_as_template(template_string)
         self.assertEqual(result, "1")
@@ -116,12 +116,7 @@ class NumTargetsTest(TestCase):
 
     def test_invalid_args_validated(self):
         # Matched incident page
-        template_string = (
-            "{{% num_targets categories={} status_of_seized_equipment={} %}}".format(
-                str(self.category.id),
-                self.custody,
-            )
-        )
+        template_string = f"{{% num_targets categories={self.category.id!s} status_of_seized_equipment={self.custody} %}}"
         with self.assertRaises(ValidationError):
             self.validator(template_string)
 
@@ -139,12 +134,7 @@ class NumTargetsTest(TestCase):
             institution_targets=5,
             journalist_targets=0,
         )
-        template_string = (
-            '{{% num_targets categories={} status_of_seized_equipment="{}" %}}'.format(
-                str(self.category.id),
-                self.custody,
-            )
-        )
+        template_string = f'{{% num_targets categories={self.category.id!s} status_of_seized_equipment="{self.custody}" %}}'
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, "3")
@@ -160,9 +150,7 @@ class NumTargetsTest(TestCase):
             institution_targets=5,
             journalist_targets=0,
         )
-        template_string = "{{% num_targets categories={} %}}".format(
-            str(self.category.id),
-        )
+        template_string = f"{{% num_targets categories={self.category.id!s} %}}"
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, "8")
@@ -180,9 +168,7 @@ class NumTargetsTest(TestCase):
             institution_targets=0,
             journalist_targets=2,
         )
-        template_string = "{{% num_targets categories={} %}}".format(
-            str(self.category.id),
-        )
+        template_string = f"{{% num_targets categories={self.category.id!s} %}}"
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, "4")
@@ -202,12 +188,7 @@ class TestIncidentsInMultiValue(TestCase):
 
     def test_invalid_args_validated(self):
         # Matched incident page
-        template_string = (
-            "{{% num_journalist_targets categories={} subpoena_statuses={} %}}".format(
-                str(self.category.id),
-                self.pending,
-            )
-        )
+        template_string = f"{{% num_journalist_targets categories={self.category.id!s} subpoena_statuses={self.pending} %}}"
         with self.assertRaisesRegex(ValidationError, "wrapped in quotation marks"):
             self.validator(template_string)
 
@@ -223,10 +204,7 @@ class TestIncidentsInMultiValue(TestCase):
             categories=[self.category],
             institution_targets=5,
         )
-        template_string = '{{% num_institution_targets categories={} subpoena_statuses="{}" %}}'.format(
-            str(self.category.id),
-            self.pending,
-        )
+        template_string = f'{{% num_institution_targets categories={self.category.id!s} subpoena_statuses="{self.pending}" %}}'
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, "3")
@@ -242,11 +220,7 @@ class TestIncidentsInMultiValue(TestCase):
             categories=[self.category],
             institution_targets=5,
         )
-        template_string = '{{% num_institution_targets categories={} subpoena_statuses="{},{}" %}}'.format(
-            str(self.category.id),
-            self.pending,
-            self.dropped,
-        )
+        template_string = f'{{% num_institution_targets categories={self.category.id!s} subpoena_statuses="{self.pending},{self.dropped}" %}}'
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, "8")
@@ -263,10 +237,7 @@ class NumInstitutionTargetsTest(TestCase):
         self.validator = TemplateValidator()
 
     def test_invalid_args_should_raise_validation_error(self):
-        template_string = "{{% num_institution_targets categories={} status_of_seized_equipment={} %}}".format(
-            str(self.category.pk),
-            self.custody,
-        )
+        template_string = f"{{% num_institution_targets categories={self.category.pk!s} status_of_seized_equipment={self.custody} %}}"
         with self.assertRaisesRegex(ValidationError, "wrapped in quotation marks"):
             self.validator(template_string)
 
@@ -282,10 +253,7 @@ class NumInstitutionTargetsTest(TestCase):
             categories=[self.category],
             institution_targets=5,
         )
-        template_string = '{{% num_institution_targets categories={} status_of_seized_equipment="{}" %}}'.format(
-            str(self.category.id),
-            self.custody,
-        )
+        template_string = f'{{% num_institution_targets categories={self.category.id!s} status_of_seized_equipment="{self.custody}" %}}'
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, "3")
@@ -299,8 +267,8 @@ class NumInstitutionTargetsTest(TestCase):
             categories=[self.category],
             institution_targets=5,
         )
-        template_string = "{{% num_institution_targets categories={} %}}".format(
-            str(self.category.id),
+        template_string = (
+            f"{{% num_institution_targets categories={self.category.id!s} %}}"
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
@@ -323,8 +291,8 @@ class NumInstitutionTargetsTest(TestCase):
         incident2.targeted_institutions = [inst1]
         incident2.save()
 
-        template_string = "{{% num_institution_targets categories={} %}}".format(
-            str(self.category.id),
+        template_string = (
+            f"{{% num_institution_targets categories={self.category.id!s} %}}"
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
@@ -342,10 +310,7 @@ class NumJournalistTargetsTest(TestCase):
         self.validator = TemplateValidator()
 
     def test_invalid_args_should_raise_validation_error(self):
-        template_string = "{{% num_journalist_targets categories={} status_of_seized_equipment={} %}}".format(
-            str(self.category.pk),
-            self.custody,
-        )
+        template_string = f"{{% num_journalist_targets categories={self.category.pk!s} status_of_seized_equipment={self.custody} %}}"
         with self.assertRaisesRegex(ValidationError, "wrapped in quotation marks"):
             self.validator(template_string)
 
@@ -359,10 +324,7 @@ class NumJournalistTargetsTest(TestCase):
             incident__status_of_seized_equipment=self.custody,
         )
 
-        template_string = '{{% num_journalist_targets categories={} status_of_seized_equipment="{}" %}}'.format(
-            str(self.category.id),
-            self.custody,
-        )
+        template_string = f'{{% num_journalist_targets categories={self.category.id!s} status_of_seized_equipment="{self.custody}" %}}'
         self.validator(template_string)
         rendered = render_as_template(template_string)
         self.assertEqual(rendered, "1")
@@ -374,8 +336,8 @@ class NumJournalistTargetsTest(TestCase):
             incident__status_of_seized_equipment=self.returned_full,
         )
 
-        template_string = "{{% num_journalist_targets categories={} %}}".format(
-            str(self.category.id),
+        template_string = (
+            f"{{% num_journalist_targets categories={self.category.id!s} %}}"
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
@@ -393,8 +355,8 @@ class NumJournalistTargetsTest(TestCase):
             journalist=tj.journalist,
         )
 
-        template_string = "{{% num_journalist_targets categories={} %}}".format(
-            str(self.category.id),
+        template_string = (
+            f"{{% num_journalist_targets categories={self.category.id!s} %}}"
         )
         self.validator(template_string)
         rendered = render_as_template(template_string)
