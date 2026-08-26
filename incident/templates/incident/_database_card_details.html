@@ -9,7 +9,7 @@
 </button>
 <div class="incident-database-card__details-container database-card-table__container" id="incident-details-{{ incident.pk }}" data-visible="false">
 	<div class="incident-database-card__main-details">
-		<h3 class="heading-table incident-database-card__details-title" id="incident-details-title">Incident Details</h3>
+		<h3 class="heading-table incident-database-card__details-title" id="incident-details-title-{{ incident.pk }}">Incident Details</h3>
 
 		{% include "incident/_database_card_table.html" with incident=incident index=index only %}
 	</div>
@@ -18,8 +18,8 @@
 <div id="category-details-{{ incident.pk }}" class="incident-database-card__category-details database-card-table__container" data-visible="false">
 	{% get_category_details incident index as all_details %}
 	{% for category, category_detail in all_details.items %}
-		<dl class="database-card-table__category-details" aria-labelledby="{{ category.slug }}-details-title">
-			<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title">
+		<dl class="database-card-table__category-details" aria-labelledby="{{ category.slug }}-details-title-{{ incident.pk }}">
+			<h3 class="heading-table category category-{{ category.page_symbol }}" id="{{ category.slug }}-details-title-{{ incident.pk }}">
 				<a class="text-link text-link--card" href="{% pageurl category %}">{{ category.title }}</a>
 			</h3>
 

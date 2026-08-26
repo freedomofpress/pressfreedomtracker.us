@@ -9,33 +9,35 @@ from django.db.models import (
     Subquery,
 )
 from django.utils.functional import cached_property
-from rest_framework.decorators import action
+
 from drf_spectacular.utils import (
-    extend_schema,
     OpenApiParameter,
+    extend_schema,
 )
-from rest_framework import viewsets, status
-from rest_framework.settings import api_settings
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 from rest_framework.utils.urls import remove_query_param
-from rest_framework_csv.renderers import PaginatedCSVRenderer, CSVRenderer
+from rest_framework_csv.renderers import CSVRenderer, PaginatedCSVRenderer
 
 from common.models import CategoryPage
+from incident import models
 from incident.api.serializers import (
+    CategorySerializer,
+    CSVIncidentSerializer,
+    EquipmentSerializer,
+    FlatIncidentSerializer,
     IncidentSerializer,
     ItemSerializer,
-    EquipmentSerializer,
-    CategorySerializer,
-    FlatIncidentSerializer,
-    CSVIncidentSerializer,
 )
-from incident import models
 from incident.utils.incident_filter import (
+    DateFilter,
     IncidentFilter,
     get_openapi_parameters,
-    DateFilter,
 )
+
 
 if TYPE_CHECKING:
     from django.http import HttpResponse
@@ -82,7 +84,7 @@ class HeaderCursorPagination(CursorPagination):
             (next_url, "next"),
         ):
             if url is not None:
-                links.append('<{}>; rel="{}"'.format(url, label))
+                links.append(f'<{url}>; rel="{label}"')
         headers = {"Link": ", ".join(links)} if links else {}
 
         if self.use_envelope:
@@ -136,7 +138,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, *args, **kwargs):
         return super().list(*args, **kwargs)
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -313,7 +315,7 @@ class JournalistViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Journalist.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -327,7 +329,7 @@ class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Institution.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -341,7 +343,7 @@ class GovernmentWorkerViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.GovernmentWorker.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -355,7 +357,7 @@ class ChargeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Charge.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -369,7 +371,7 @@ class NationalityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Nationality.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -383,7 +385,7 @@ class PoliticianOrPublicViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.PoliticianOrPublic.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -397,7 +399,7 @@ class VenueViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Venue.objects.all()
     serializer_class = ItemSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -411,7 +413,7 @@ class EquipmentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.Equipment.objects.all()
     serializer_class = EquipmentSerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API
@@ -425,7 +427,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CategoryPage.objects.all()
     serializer_class = CategorySerializer
 
-    def dispatch(self, *args, **kwargs) -> "HttpResponse":
+    def dispatch(self, *args, **kwargs) -> HttpResponse:
         response = super().dispatch(*args, **kwargs)
 
         # Allow requests from any orign to allow this to be an accessible API

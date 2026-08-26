@@ -10,7 +10,7 @@ def get_page_for_request(request):
     if site:
         path = request.path
         path_components = [component for component in path.split("/") if component]
-        page, args, kwargs = site.root_page.specific.route(request, path_components)
+        page, _args, _kwargs = site.root_page.specific.route(request, path_components)
         return page
 
     return None

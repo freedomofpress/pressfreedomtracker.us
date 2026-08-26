@@ -259,13 +259,12 @@ class FormPage(
     def get_form_fields(self):
         fields = []
         for group in self.field_groups.all():
-            for field in group.form_fields.all():
-                fields.append(field)
+            fields.extend(group.form_fields.all())
 
         return fields
 
     def get_context(self, request, *args, **kwargs):
-        context = super(FormPage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
         if getattr(self, "csrf_failure_data", {}):
             context["top_level_error"] = "Submission failed, please try again."
         if request.GET.get("embed", None):
@@ -279,7 +278,7 @@ class FormPage(
             self.csrf_failure_key(),
             {},
         )
-        response = super(FormPage, self).serve(request, *args, **kwargs)
+        response = super().serve(request, *args, **kwargs)
         if "embed" in request.GET:
             response.xframe_options_exempt = True
         return response
@@ -295,11 +294,11 @@ class FormPage(
             value = field.value()
             if isinstance(value, list):
                 value = ", ".join(value)  # pragma: no cover
-            content.append("{}: {}".format(field.label, value))
+            content.append(f"{field.label}: {value}")
 
             if fields.get(field.name):
                 if fields.get(field.name).append_to_subject and value:
-                    subject = "{0} - {1}".format(subject, field.value())
+                    subject = f"{subject} - {field.value()}"
                 if fields.get(field.name).use_as_reply_to and value:
                     reply_to = [value]
         content = "\n".join(content)

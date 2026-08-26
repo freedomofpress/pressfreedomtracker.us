@@ -4,7 +4,7 @@ from urllib import parse
 from django.db.models import TextChoices
 from django.urls import reverse
 
-from common.models.charts import (
+from common.utils.chart_options import (
     TreeMapOptionsSchema,
     VerticalBarChartOptionsSchema,
 )

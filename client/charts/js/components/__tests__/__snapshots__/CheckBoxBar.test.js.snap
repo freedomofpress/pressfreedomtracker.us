@@ -23,6 +23,7 @@ exports[`renders CheckBoxBar with mocked data 1`] = `
     <input
       checked={false}
       disabled={false}
+      id="drone-test"
       name="drone"
       onChange={[Function]}
       style={
@@ -53,7 +54,8 @@ exports[`renders CheckBoxBar with mocked data 1`] = `
         }
       }
     >
-      <div
+      <label
+        htmlFor="drone-test"
         style={
           {
             "color": "black",
@@ -64,7 +66,7 @@ exports[`renders CheckBoxBar with mocked data 1`] = `
         }
       >
         test
-      </div>
+      </label>
       <div
         style={
           {

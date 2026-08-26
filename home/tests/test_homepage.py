@@ -3,6 +3,7 @@ from datetime import date, timedelta
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from wagtail.models import Page, Site
 from wagtail.test.utils.form_data import (
@@ -69,7 +70,7 @@ class HomePageTest(TestCase):
         PrepublicationSettings.objects.create(
             is_enabled=True,
         )
-        create_prepub(date=date.today())
+        create_prepub(date=timezone.now().date())
         PrepublicationIncidentSync.objects.create(successful_rows=1)
         response = self.client.get("/")
         self.assertContains(response, "<span>1</span> incident ")
@@ -78,8 +79,8 @@ class HomePageTest(TestCase):
         PrepublicationSettings.objects.create(
             is_enabled=True,
         )
-        create_prepub(date=date.today())
-        create_prepub(date=date.today())
+        create_prepub(date=timezone.now().date())
+        create_prepub(date=timezone.now().date())
         PrepublicationIncidentSync.objects.create(successful_rows=2)
         response = self.client.get("/")
         self.assertContains(response, "<span>2</span> incidents ")
@@ -88,7 +89,7 @@ class HomePageTest(TestCase):
         prepub_settings = PrepublicationSettings.objects.create(
             is_enabled=True,
         )
-        today = date.today()
+        today = timezone.now().date()
 
         # Should be included
         create_prepub(date=today)

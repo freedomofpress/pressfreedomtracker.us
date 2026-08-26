@@ -217,12 +217,12 @@ WAGTAILIMAGES_EXTENSIONS = ["avif", "gif", "jpg", "jpeg", "png", "webp", "svg"]
 
 # The size needs to be set to an integer in units of bytes, e.g. 1 MB should be set to 1 * 1024 * 1024
 WAGTAILIMAGES_MAX_UPLOAD_SIZE = int(
-    os.environ.get("WAGTAILIMAGES_MAX_UPLOAD_SIZE", 10 * 1024 * 1024)
+    os.environ.get("WAGTAILIMAGES_MAX_UPLOAD_SIZE", "10485760")  # 10 MB
 )
 
 # The size needs to be set in pixels, e.g. 128 megapixels should be set to 128000000
 WAGTAILIMAGES_MAX_IMAGE_PIXELS = int(
-    os.environ.get("WAGTAILIMAGES_MAX_IMAGE_PIXELS", 128000000)
+    os.environ.get("WAGTAILIMAGES_MAX_IMAGE_PIXELS", "128000000")
 )
 
 # Resize OG / Twitter / meta tag images to 1200x630
@@ -234,7 +234,7 @@ WAGTAILADMIN_BASE_URL = "https://pressfreedomtracker.us"
 
 # Wagtail autosave interval in ms. Sets how often to wait after the last attempt
 # to autosave before autosaving again. Wagtail default is 500.
-WAGTAIL_AUTOSAVE_INTERVAL = int(os.environ.get("WAGTAIL_AUTOSAVE_INTERVAL", 500))
+WAGTAIL_AUTOSAVE_INTERVAL = int(os.environ.get("WAGTAIL_AUTOSAVE_INTERVAL", "500"))
 
 # Named group of wagtail rich text features
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
@@ -444,6 +444,13 @@ CONTENT_SECURITY_POLICY = {
         ],
     }
 }
+
+
+if "DJANGO_SILENCED_SYSTEM_CHECKS" in os.environ:
+    SILENCED_SYSTEM_CHECKS = os.environ["DJANGO_SILENCED_SYSTEM_CHECKS"].split(",")
+else:
+    SILENCED_SYSTEM_CHECKS = []
+
 
 csp_media_origins = os.environ.get("DJANGO_CSP_MEDIA_ORIGINS", "").split()
 for directive in ("media-src", "img-src", "object-src", "connect-src"):

@@ -66,9 +66,9 @@ class TestFiltering(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                search="eggplant",
-            )
+            {
+                "search": "eggplant",
+            }
         ).get_queryset()
 
         self.assertEqual({incident1}, set(incidents))
@@ -236,9 +236,9 @@ class TestFiltering(TestCase):
         IncidentPageFactory(title="Not relevant", categories=[category2])
 
         incidents = IncidentFilter(
-            dict(
-                categories=str(category1.id),
-            )
+            {
+                "categories": str(category1.id),
+            }
         ).get_queryset()
         self.assertEqual(set(incidents), {incident1})
 
@@ -252,9 +252,9 @@ class TestFiltering(TestCase):
         IncidentPageFactory(categories=[category2])
 
         incidents = IncidentFilter(
-            dict(
-                categories=f"{category2.pk},{category3.pk}",
-            )
+            {
+                "categories": f"{category2.pk},{category3.pk}",
+            }
         ).get_queryset()
         self.assertQuerySetEqual([], incidents)
 
@@ -269,9 +269,9 @@ class TestFiltering(TestCase):
         IncidentPageFactory(categories=[category1])
 
         incidents = IncidentFilter(
-            dict(
-                categories=f"{category1.pk},{category3.pk}",
-            )
+            {
+                "categories": f"{category1.pk},{category3.pk}",
+            }
         ).get_queryset()
         self.assertQuerySetEqual(incidents, [incident1])
 
@@ -297,12 +297,12 @@ class TestFiltering(TestCase):
             city=city,
         )
         IncidentPageFactory(city="other")
-        incidents = IncidentFilter(dict(city=city)).get_queryset()
+        incidents = IncidentFilter({"city": city}).get_queryset()
 
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
 
-        incidents = IncidentFilter(dict(city=uppercase_city)).get_queryset()
+        incidents = IncidentFilter({"city": uppercase_city}).get_queryset()
         self.assertEqual(len(incidents), 1)
         self.assertTrue(target in incidents)
 
@@ -325,9 +325,9 @@ class TestFiltering(TestCase):
         IncidentPageFactory(state=alaska, title="Alaska")
 
         incidents = IncidentFilter(
-            dict(
-                circuits=circuit,
-            )
+            {
+                "circuits": circuit,
+            }
         ).get_queryset()
 
         self.assertEqual(set(incidents), {target1, target2})
@@ -353,10 +353,10 @@ class TestFiltering(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                categories=str(category.id),
-                charges=str(charge.pk),
-            )
+            {
+                "categories": str(category.id),
+                "charges": str(charge.pk),
+            }
         ).get_queryset()
         self.assertQuerySetEqual(incidents, [target1, target2])
 
@@ -380,10 +380,10 @@ class TestFiltering(TestCase):
             charge=charge,
         )
         incidents = IncidentFilter(
-            dict(
-                categories=str(category.id),
-                charges=charge.title,
-            )
+            {
+                "categories": str(category.id),
+                "charges": charge.title,
+            }
         ).get_queryset()
 
         self.assertQuerySetEqual(incidents, [target1, target2])
@@ -420,10 +420,10 @@ class TestFiltering(TestCase):
             update3__date="2022-01-04",
         )
         incidents = IncidentFilter(
-            dict(
-                categories=str(category.id),
-                status_of_charges=desired_status,
-            )
+            {
+                "categories": str(category.id),
+                "status_of_charges": desired_status,
+            }
         ).get_queryset(strict=True)
 
         self.assertQuerySetEqual(incidents, [target1])
@@ -456,19 +456,19 @@ class TestFiltering(TestCase):
             update3=None,
         )
         incidents = IncidentFilter(
-            dict(
-                categories=str(category.id),
-                status_of_charges=undesired_status,
-            )
+            {
+                "categories": str(category.id),
+                "status_of_charges": undesired_status,
+            }
         ).get_queryset(strict=True)
 
         self.assertQuerySetEqual(incidents, [])
 
         incidents = IncidentFilter(
-            dict(
-                categories=str(category.id),
-                status_of_charges=desired_status,
-            )
+            {
+                "categories": str(category.id),
+                "status_of_charges": desired_status,
+            }
         ).get_queryset(strict=True)
         self.assertQuerySetEqual(incidents, [target1])
 
@@ -493,10 +493,10 @@ class TestBooleanFiltering(TestCase):
     def test_should_filter_by_true_boolean_field(self):
         """should filter by boolean when true"""
         incidents = IncidentFilter(
-            dict(
-                charged_under_espionage_act="True",
-                categories=str(self.category.id),
-            )
+            {
+                "charged_under_espionage_act": "True",
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual(set(incidents), {self.true_bool})
@@ -504,10 +504,10 @@ class TestBooleanFiltering(TestCase):
     def test_should_filter_by_false_boolean_field(self):
         """should filter by boolean when false"""
         incidents = IncidentFilter(
-            dict(
-                charged_under_espionage_act="False",
-                categories=str(self.category.id),
-            )
+            {
+                "charged_under_espionage_act": "False",
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual(set(incidents), {self.false_bool})
@@ -515,10 +515,10 @@ class TestBooleanFiltering(TestCase):
     def test_should_return_all_with_invalid_bool(self):
         """Should return all incidents when filter is invalid"""
         incidents = IncidentFilter(
-            dict(
-                charged_under_espionage_act="Hello",
-                categories=str(self.category.id),
-            )
+            {
+                "charged_under_espionage_act": "Hello",
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual(set(incidents), {self.true_bool, self.false_bool})
@@ -807,7 +807,7 @@ class TestAllFiltersCombinedWithSearch(TestAllFiltersAtOnce, TestCase):
             return "1"
         elif t == "choice" or t == "radio":
             filter_ = self.available_filters[field["name"]]
-            return list(filter_.get_choices())[0]
+            return next(iter(filter_.get_choices()))
         elif t == "bool":
             return "True"
         elif t == "int":
@@ -837,7 +837,7 @@ class TestAllFiltersForNullCharacterSafety(TestAllFiltersAtOnce, TestCase):
             return "1\x00"
         elif t == "choice" or t == "radio":
             filter_ = self.available_filters[field["name"]]
-            choice = list(filter_.get_choices())[0]
+            choice = next(iter(filter_.get_choices()))
             return f"{choice}\x00"
         elif t == "bool":
             return "True\x00"
@@ -860,10 +860,10 @@ class FuzzyDateFilterTest(TestCase):
         IncidentPageFactory(date=date(2017, 2, 1))
 
         incidents = IncidentFilter(
-            dict(
-                date_upper="2017-01-31",
-                date_lower="2017-01-01",
-            )
+            {
+                "date_upper": "2017-01-31",
+                "date_lower": "2017-01-01",
+            }
         ).get_queryset()
 
         self.assertEqual(len(incidents), 1)
@@ -877,10 +877,10 @@ class FuzzyDateFilterTest(TestCase):
         IncidentPageFactory(date=date(2017, 4, 1))
 
         incidents = IncidentFilter(
-            dict(
-                date_upper=target_date.isoformat(),
-                date_lower="2017-01-01",
-            )
+            {
+                "date_upper": target_date.isoformat(),
+                "date_lower": "2017-01-01",
+            }
         ).get_queryset()
 
         self.assertEqual(len(incidents), 1)
@@ -893,9 +893,9 @@ class FuzzyDateFilterTest(TestCase):
         IncidentPageFactory(date=date(2017, 2, 1))
 
         incidents = IncidentFilter(
-            dict(
-                date_upper="2017-01-31",
-            )
+            {
+                "date_upper": "2017-01-31",
+            }
         ).get_queryset()
 
         self.assertEqual({incident2, incident1}, set(incidents))
@@ -906,10 +906,10 @@ class FuzzyDateFilterTest(TestCase):
         # InexactDateIncidentPageFactory creates pages in 2017-03
         targets = InexactDateIncidentPageFactory.create_batch(15)
         incidents = IncidentFilter(
-            dict(
-                date_lower="2017-03-15",
-                date_upper="2017-04-15",
-            )
+            {
+                "date_lower": "2017-03-15",
+                "date_upper": "2017-04-15",
+            }
         ).get_queryset()
         for target in targets:
             self.assertIn(target, incidents)
@@ -921,10 +921,10 @@ class FuzzyDateFilterTest(TestCase):
         targets = InexactDateIncidentPageFactory.create_batch(15)
 
         incidents = IncidentFilter(
-            dict(
-                date_lower="2017-02-20",
-                date_upper="2017-03-03",
-            )
+            {
+                "date_lower": "2017-02-20",
+                "date_upper": "2017-03-03",
+            }
         ).get_queryset()
 
         for target in targets:
@@ -940,10 +940,10 @@ class FuzzyDateFilterTest(TestCase):
         InexactDateIncidentPageFactory.create_batch(15)
 
         incidents = IncidentFilter(
-            dict(
-                date_lower="2017-02-02",
-                date_upper="2017-02-28",
-            )
+            {
+                "date_lower": "2017-02-02",
+                "date_upper": "2017-02-28",
+            }
         ).get_queryset()
         self.assertEqual(len(incidents), 0)
 
@@ -956,10 +956,10 @@ class FuzzyDateFilterTest(TestCase):
         InexactDateIncidentPageFactory.create_batch(15)
 
         incident_filter = IncidentFilter(
-            dict(
-                date_lower="2017-04-01",
-                date_upper="2017-04-15",
-            )
+            {
+                "date_lower": "2017-04-01",
+                "date_upper": "2017-04-15",
+            }
         )
         incidents = incident_filter.get_queryset()
         self.assertEqual(
@@ -975,9 +975,9 @@ class FuzzyDateFilterTest(TestCase):
         incident2 = IncidentPageFactory(date=date(2017, 2, 1))
 
         incidents = IncidentFilter(
-            dict(
-                date_lower="2017-01-01",
-            )
+            {
+                "date_lower": "2017-01-01",
+            }
         ).get_queryset()
 
         self.assertEqual({incident2, incident1}, set(incidents))
@@ -1011,10 +1011,10 @@ class DateFilterTest(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                release_date_lower=self.date_lower.isoformat(),
-                categories=str(self.category.id),
-            )
+            {
+                "release_date_lower": self.date_lower.isoformat(),
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual(len(incidents), 1)
@@ -1034,10 +1034,10 @@ class DateFilterTest(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                release_date_upper=self.date_upper.isoformat(),
-                categories=str(self.category.id),
-            )
+            {
+                "release_date_upper": self.date_upper.isoformat(),
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual(len(incidents), 1)
@@ -1066,11 +1066,11 @@ class DateFilterTest(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                release_date_lower=self.date_lower.isoformat(),
-                release_date_upper=self.date_upper.isoformat(),
-                categories=str(self.category.id),
-            )
+            {
+                "release_date_lower": self.date_lower.isoformat(),
+                "release_date_upper": self.date_upper.isoformat(),
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual(len(incidents), 2)
@@ -1095,11 +1095,11 @@ class DateFilterTest(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                release_date_lower=self.date_lower.isoformat(),
-                release_date_upper=self.date_lower.isoformat(),
-                categories=str(self.category.id),
-            )
+            {
+                "release_date_lower": self.date_lower.isoformat(),
+                "release_date_upper": self.date_lower.isoformat(),
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual(len(incidents), 1)
@@ -1120,10 +1120,10 @@ class DateFilterTest(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                date_upper="2017-12-31",
-                categories=str(self.category.id),
-            )
+            {
+                "date_upper": "2017-12-31",
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual({incident1, incident2}, set(incidents))
@@ -1144,10 +1144,10 @@ class DateFilterTest(TestCase):
         )
 
         incidents = IncidentFilter(
-            dict(
-                date_upper="2017-11-31",
-                categories=str(self.category.id),
-            )
+            {
+                "date_upper": "2017-11-31",
+                "categories": str(self.category.id),
+            }
         ).get_queryset()
 
         self.assertEqual({incident1, incident2}, set(incidents))
@@ -1175,10 +1175,10 @@ class ChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                status_of_seized_equipment=self.custody,
-            )
+            {
+                "categories": str(self.category.id),
+                "status_of_seized_equipment": self.custody,
+            }
         )
 
         incidents = incident_filter.get_queryset()
@@ -1208,10 +1208,10 @@ class ChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                status_of_seized_equipment="hello",
-            )
+            {
+                "categories": str(self.category.id),
+                "status_of_seized_equipment": "hello",
+            }
         )
 
         incidents = incident_filter.get_queryset()
@@ -1239,12 +1239,10 @@ class ChoiceFilterTest(TestCase):
         )
 
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                status_of_seized_equipment="{0},{1}".format(
-                    self.custody, self.returned_full
-                ),
-            )
+            {
+                "categories": str(self.category.id),
+                "status_of_seized_equipment": f"{self.custody},{self.returned_full}",
+            }
         )
 
         incidents = incident_filter.get_queryset()
@@ -1282,10 +1280,10 @@ class MultiChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                subpoena_statuses=self.pending,
-            )
+            {
+                "categories": str(self.category.id),
+                "subpoena_statuses": self.pending,
+            }
         )
 
         incidents = incident_filter.get_queryset()
@@ -1315,10 +1313,10 @@ class MultiChoiceFilterTest(TestCase):
             categories=[self.category],
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                subpoena_statuses="hello",
-            )
+            {
+                "categories": str(self.category.id),
+                "subpoena_statuses": "hello",
+            }
         )
 
         incidents = incident_filter.get_queryset()
@@ -1346,10 +1344,10 @@ class MultiChoiceFilterTest(TestCase):
         )
 
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                subpoena_statuses=self.pending,
-            )
+            {
+                "categories": str(self.category.id),
+                "subpoena_statuses": self.pending,
+            }
         )
 
         incidents = incident_filter.get_queryset()
@@ -1383,10 +1381,10 @@ class MultiChoiceFilterTest(TestCase):
         )
 
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                subpoena_statuses="{0},{1}".format(self.pending, self.dropped),
-            )
+            {
+                "categories": str(self.category.id),
+                "subpoena_statuses": f"{self.pending},{self.dropped}",
+            }
         )
 
         incidents = incident_filter.get_queryset()
@@ -1441,8 +1439,8 @@ class GetSummaryTest(TestCase):
             journalist_targets__institution=None,
         )
 
-        with patch("incident.utils.incident_filter.date") as date_:
-            date_.today = lambda: date(2018, 1, 20)
+        with patch("incident.utils.incident_filter.timezone") as timezone_:
+            timezone_.now.return_value.date.return_value = date(2018, 1, 20)
             summary = IncidentFilter({}).get_summary()
 
         self.assertCountEqual(
@@ -1481,8 +1479,8 @@ class GetSummaryTest(TestCase):
             journalist_targets__institution=None,
         )
 
-        with patch("incident.utils.incident_filter.date") as date_:
-            date_.today = lambda: date(2018, 12, 20)
+        with patch("incident.utils.incident_filter.timezone") as timezone_:
+            timezone_.now.return_value.date.return_value = date(2018, 12, 20)
             summary = IncidentFilter({}).get_summary()
 
         self.assertCountEqual(
@@ -1512,10 +1510,10 @@ class GetSummaryTest(TestCase):
             institution_targets=0,
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                status_of_seized_equipment=self.custody,
-            )
+            {
+                "categories": str(self.category.id),
+                "status_of_seized_equipment": self.custody,
+            }
         )
 
         summary = incident_filter.get_summary()
@@ -1525,8 +1523,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 1),
                 ("Journalists affected", 0),
                 ("Institutions affected", 0),
-                ("Results in {}".format(timezone.now().year), 1),
-                ("Results in {0:%B}".format(timezone.now().date()), 1),
+                (f"Results in {timezone.now().year}", 1),
+                (f"Results in {timezone.now().date():%B}", 1),
             ),
         )
         self.assertEqual(
@@ -1558,10 +1556,10 @@ class GetSummaryTest(TestCase):
             date=timezone.now().date(),
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories="{},{}".format(self.category.id, category2.id),
-                case_number="Lawsuit One",
-            )
+            {
+                "categories": f"{self.category.id},{category2.id}",
+                "case_number": "Lawsuit One",
+            }
         )
 
         summary = incident_filter.get_summary()
@@ -1571,8 +1569,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 0),
                 ("Institutions affected", 4),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1604,10 +1602,10 @@ class GetSummaryTest(TestCase):
             date=timezone.now().date(),
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories="{},{}".format(self.category.pk, category2.title),
-                case_number="Lawsuit One",
-            )
+            {
+                "categories": f"{self.category.pk},{category2.title}",
+                "case_number": "Lawsuit One",
+            }
         )
 
         summary = incident_filter.get_summary()
@@ -1617,8 +1615,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 0),
                 ("Institutions affected", 4),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1650,10 +1648,10 @@ class GetSummaryTest(TestCase):
             journalist_targets__institution=None,
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-                status_of_seized_equipment=self.custody,
-            )
+            {
+                "categories": str(self.category.id),
+                "status_of_seized_equipment": self.custody,
+            }
         )
 
         summary = incident_filter.get_summary()
@@ -1663,8 +1661,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 1),
                 ("Journalists affected", 3),
                 ("Institutions affected", 3),
-                ("Results in {}".format(timezone.now().year), 1),
-                ("Results in {0:%B}".format(timezone.now().date()), 1),
+                (f"Results in {timezone.now().year}", 1),
+                (f"Results in {timezone.now().date():%B}", 1),
             ),
         )
         self.assertEqual(
@@ -1691,9 +1689,9 @@ class GetSummaryTest(TestCase):
             journalist_targets__institution=None,
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-            )
+            {
+                "categories": str(self.category.id),
+            }
         )
 
         summary = incident_filter.get_summary()
@@ -1703,8 +1701,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 8),
                 ("Institutions affected", 0),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1739,9 +1737,9 @@ class GetSummaryTest(TestCase):
         )
 
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-            )
+            {
+                "categories": str(self.category.id),
+            }
         )
 
         summary = incident_filter.get_summary()
@@ -1751,8 +1749,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 2),
                 ("Institutions affected", 0),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1782,9 +1780,9 @@ class GetSummaryTest(TestCase):
         incident2.save()
 
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-            )
+            {
+                "categories": str(self.category.id),
+            }
         )
 
         summary = incident_filter.get_summary()
@@ -1794,8 +1792,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 0),
                 ("Institutions affected", 2),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -1814,9 +1812,9 @@ class GetSummaryTest(TestCase):
             incident__title="Test Incident",
         )
         incident_filter = IncidentFilter(
-            dict(
-                categories=str(self.category.id),
-            )
+            {
+                "categories": str(self.category.id),
+            }
         )
         summary = incident_filter.get_summary()
         institutions_affected = dict(summary)["Institutions affected"]
@@ -1849,8 +1847,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 1),
                 ("Journalists affected", 3),
                 ("Institutions affected", 2),
-                ("Results in {}".format(timezone.now().year), 1),
-                ("Results in {0:%B}".format(timezone.now().date()), 1),
+                (f"Results in {timezone.now().year}", 1),
+                (f"Results in {timezone.now().date():%B}", 1),
             ),
         )
         self.assertEqual(
@@ -1888,7 +1886,7 @@ class GetSummaryTest(TestCase):
         )
         incident_filter = IncidentFilter(
             {
-                "categories": "{},{}".format(self.category.id, category2.id),
+                "categories": f"{self.category.id},{category2.id}",
                 "search": "asdf",
             }
         )
@@ -1900,8 +1898,8 @@ class GetSummaryTest(TestCase):
                 ("Total Results", 2),
                 ("Journalists affected", 10),
                 ("Institutions affected", 4),
-                ("Results in {}".format(timezone.now().year), 2),
-                ("Results in {0:%B}".format(timezone.now().date()), 2),
+                (f"Results in {timezone.now().year}", 2),
+                (f"Results in {timezone.now().date():%B}", 2),
             ),
         )
         self.assertEqual(
@@ -2217,9 +2215,7 @@ class RelationThroughTest(TestCase):
     def test_filter_should_filter_by_multiple_journalists(self):
         incidents = IncidentFilter(
             {
-                "targeted_journalists": "{} AND {}".format(
-                    self.tj1.journalist.pk, self.tj3.journalist.pk
-                ),
+                "targeted_journalists": f"{self.tj1.journalist.pk} AND {self.tj3.journalist.pk}",
             }
         ).get_queryset()
 

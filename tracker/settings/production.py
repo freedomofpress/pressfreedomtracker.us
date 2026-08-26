@@ -1,15 +1,16 @@
-from __future__ import absolute_import, unicode_literals
-
 import logging
 import os
 
 import structlog
 
-from .base import *  # noqa: F403, F401
+from .base import *
+
+
+logger = logging.getLogger(__name__)
 
 
 try:
-    from .local import *  # noqa: F403, F401
+    from .local import *
 except ImportError:
     pass
 
@@ -19,11 +20,11 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Include the host used to access Django from the chart pregenerator service
 if os.environ.get("DJANGO_HOST"):
-    ALLOWED_HOSTS += [os.environ["DJANGO_HOST"]]  # noqa: F405
+    ALLOWED_HOSTS += [os.environ["DJANGO_HOST"]]
 
 
-MIDDLEWARE.insert(1, "common.middleware.request_logger.RequestLogMiddleware")  # noqa: F405
-MIDDLEWARE.append("common.middleware.onion_location.OnionLocationHeaderMiddleware")  # noqa: F405
+MIDDLEWARE.insert(1, "common.middleware.request_logger.RequestLogMiddleware")
+MIDDLEWARE.append("common.middleware.onion_location.OnionLocationHeaderMiddleware")
 
 
 structlog.configure(
@@ -142,14 +143,14 @@ DATABASES = {
         "PASSWORD": os.environ["DJANGO_DB_PASSWORD"],
         "HOST": os.environ["DJANGO_DB_HOST"],
         "PORT": os.environ["DJANGO_DB_PORT"],
-        "CONN_MAX_AGE": os.environ.get("DJANGO_DB_MAX_AGE", 600),
+        "CONN_MAX_AGE": int(os.environ.get("DJANGO_DB_MAX_AGE", "600")),
     }
 }
 
 # Static and media files
 #
 if os.environ.get("GS_BUCKET_NAME"):
-    INSTALLED_APPS.append("storages")  # noqa: F405
+    INSTALLED_APPS.append("storages")
 
     GS_BUCKET_NAME = os.environ["GS_BUCKET_NAME"]
 
@@ -163,9 +164,9 @@ if os.environ.get("GS_BUCKET_NAME"):
             os.environ["GS_CREDENTIALS"]
         )
     elif "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
-        logging.warning("Defaulting to global GOOGLE_APPLICATION_CREDENTIALS")
+        logger.warning("Defaulting to global GOOGLE_APPLICATION_CREDENTIALS")
     else:
-        logging.warning(
+        logger.warning(
             "GS_CREDENTIALS or GOOGLE_APPLICATION_CREDENTIALS unset! "
             + "Falling back to credentials of the machine we are running on, "
             + "if it is a GCE instance. This is almost certainly not desired."
@@ -176,7 +177,7 @@ if os.environ.get("GS_BUCKET_NAME"):
     GS_STATIC_PATH = os.environ.get("GS_STATIC_PATH", "static")
     GS_FILE_OVERWRITE = os.environ.get("GS_FILE_OVERWRITE") == "True"
 
-    STORAGES["default"] = {  # noqa: F405
+    STORAGES["default"] = {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         "OPTIONS": {
             "location": GS_MEDIA_PATH,
@@ -185,7 +186,7 @@ if os.environ.get("GS_BUCKET_NAME"):
     }
 
     if "GS_STORE_STATIC" in os.environ:
-        STORAGES["staticfiles"] = {  # noqa: F405
+        STORAGES["staticfiles"] = {
             "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
             "OPTIONS": {
                 "location": GS_STATIC_PATH,
@@ -200,7 +201,7 @@ else:
 # Cloudflare caching
 #
 if os.environ.get("CLOUDFLARE_TOKEN") and os.environ.get("CLOUDFLARE_EMAIL"):
-    INSTALLED_APPS.append("wagtail.contrib.frontend_cache")  # noqa: F405
+    INSTALLED_APPS.append("wagtail.contrib.frontend_cache")
     WAGTAILFRONTENDCACHE = {
         "cloudflare": {
             "BACKEND": "wagtail.contrib.frontend_cache.backends.CloudflareBackend",
@@ -215,7 +216,7 @@ ANALYTICS_ENABLED = True
 # Mailgun integration
 #
 if os.environ.get("MAILGUN_API_KEY"):
-    INSTALLED_APPS.append("anymail")  # noqa: F405
+    INSTALLED_APPS.append("anymail")
     EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
     ANYMAIL = {
         "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],

@@ -1,4 +1,5 @@
-from django.test import TestCase, RequestFactory, Client
+from django.test import Client, RequestFactory, TestCase
+
 from wagtail.models import Site
 
 from .factories import FormPageFactory

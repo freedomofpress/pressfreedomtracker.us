@@ -18,6 +18,12 @@ def capitalize_choice_labels(choices):
     return [(x[0], capfirst(x[1])) for x in choices]
 
 
+class DatalistFieldTest(TestCase):
+    def test_defaults_to_no_choices(self):
+        field = DatalistField()
+        self.assertEqual(field.choices, [])
+
+
 class FilterFormTest(TestCase):
     def test_filter_type_text(self):
         request = RequestFactory().get("/")

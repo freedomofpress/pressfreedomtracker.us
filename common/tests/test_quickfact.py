@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from common.tests.factories import CategoryPageFactory
 from common.models.pages import QuickFact
+from common.tests.factories import CategoryPageFactory
 
 
 class CleanTest(TestCase):

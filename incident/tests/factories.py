@@ -1,48 +1,49 @@
 import datetime
-from factory import RelatedFactory, Trait, Faker, SubFactory, Sequence
-import factory
-import wagtail_factories
 
 from django.utils import timezone
 
+import factory
+import wagtail_factories
+from factory import Faker, RelatedFactory, Sequence, SubFactory, Trait
+
 import incident.models
+from common.tests.factories import (
+    AlignedCaptionedEmbedBlockFactory,
+    AlignedCaptionedImageBlockFactory,
+    CategoryPageFactory,
+    CommonTagFactory,
+    CustomImageFactory,
+    PersonPageFactory,
+    PullQuoteBlockFactory,
+    RawHTMLBlockFactory,
+    RichTextBlockQuoteBlockFactory,
+    RichTextTemplateBlockFactory,
+    TweetEmbedBlockFactory,
+)
+from common.tests.utils import StreamfieldProvider
 from incident.models import (
     Charge,
+    Equipment,
+    EquipmentBroken,
+    EquipmentSeized,
+    GovernmentWorker,
     IncidentAuthor,
     IncidentCategorization,
     IncidentIndexPage,
     IncidentPage,
-    IncidentPageUpdates,
     IncidentPageLinks,
+    IncidentPageUpdates,
+    Institution,
+    Journalist,
+    LawEnforcementOrganization,
     Nationality,
     PoliticianOrPublic,
-    EquipmentBroken,
-    Equipment,
-    EquipmentSeized,
     State,
-    choices,
-    Journalist,
-    Institution,
-    LawEnforcementOrganization,
     TargetedJournalist,
-    GovernmentWorker,
     TopicPage,
     Venue,
+    choices,
 )
-from common.tests.factories import (
-    CustomImageFactory,
-    CategoryPageFactory,
-    CommonTagFactory,
-    PersonPageFactory,
-    RichTextTemplateBlockFactory,
-    AlignedCaptionedImageBlockFactory,
-    RawHTMLBlockFactory,
-    TweetEmbedBlockFactory,
-    RichTextBlockQuoteBlockFactory,
-    PullQuoteBlockFactory,
-    AlignedCaptionedEmbedBlockFactory,
-)
-from common.tests.utils import StreamfieldProvider
 from menus.factories import MainMenuItemFactory
 
 
@@ -87,9 +88,7 @@ class ItemFactory(factory.django.DjangoModelFactory):
         abstract = True
 
     class Params:
-        unique_title = factory.Trait(
-            title=factory.Sequence(lambda n: "Title {n}".format(n=n))
-        )
+        unique_title = factory.Trait(title=factory.Sequence(lambda n: f"Title {n}"))
 
 
 class VenueFactory(ItemFactory):
@@ -163,7 +162,7 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
     )
 
     title = factory.Sequence(lambda n: f"Incident {n}")
-    date = factory.LazyFunction(datetime.date.today)
+    date = factory.LazyFunction(lambda: timezone.now().date())
     city = None
     state = factory.SubFactory(StateFactory)
     longitude = None
@@ -218,8 +217,8 @@ class IncidentPageFactory(wagtail_factories.PageFactory):
                 choices.ARREST_STATUS, getter=lambda c: c[0]
             ),
             arresting_authority=SubFactory(LawEnforcementOrganizationFactory),
-            release_date=datetime.date.today(),
-            detention_date=datetime.date.today() - datetime.timedelta(days=3),
+            release_date=timezone.now().date(),
+            detention_date=timezone.now().date() - datetime.timedelta(days=3),
             unnecessary_use_of_force=False,
         )
         equipment_search = factory.Trait(
@@ -444,7 +443,7 @@ class TopicPageFactory(wagtail_factories.PageFactory):
     class Meta:
         model = TopicPage
 
-    title = factory.Sequence(lambda n: "Category {n}".format(n=n))
+    title = factory.Sequence(lambda n: f"Category {n}")
     incident_tag = factory.SubFactory(CommonTagFactory)
 
 
@@ -453,9 +452,7 @@ class SnippetFactory(factory.django.DjangoModelFactory):
         abstract = True
 
     class Params:
-        unique_name = factory.Trait(
-            name=factory.Sequence(lambda n: "Name {n}".format(n=n))
-        )
+        unique_name = factory.Trait(name=factory.Sequence(lambda n: f"Name {n}"))
 
 
 class GovernmentWorkerFactory(factory.django.DjangoModelFactory):

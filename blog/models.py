@@ -2,55 +2,55 @@ from html import unescape
 
 from django.db import models
 from django.shortcuts import get_object_or_404
-from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
+from django.utils.html import strip_tags
 
-from modelcluster.fields import ParentalKey
+from wagtail import blocks
 from wagtail.admin.panels import (
     FieldPanel,
+    InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    InlinePanel,
 )
-from wagtail import blocks
-from wagtail.fields import StreamField, RichTextField
-from wagtail.models import Page, Orderable
-from wagtail.permission_policies.base import ModelPermissionPolicy
-from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, path
-from wagtail_newsletter.models import NewsletterPageMixin
+from wagtail.fields import RichTextField, StreamField
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.models import Orderable, Page
+from wagtail.permission_policies.base import ModelPermissionPolicy
 
-from common.utils import DEFAULT_PAGE_KEY, paginate
-from common.exceptions import ChartNotAvailable
+from modelcluster.fields import ParentalKey
+from wagtail_newsletter.models import NewsletterPageMixin
 
 from blog.choices import BlogTemplateType
 from blog.feeds import BlogIndexPageFeed
 from blog.utils import BlogFilter
-from statistics.blocks import StatisticsBlock
-from common.models import (
-    PersonPage,
-    OrganizationPage,
-    MetadataPageMixin,
-    MediaPageMixin,
-)
 from common.blocks import (
+    AlignedCaptionedEmbedBlock,
+    AlignedCaptionedImageBlock,
+    AsideBlock,
     BlueskyEmbedBlock,
+    BubbleMapChart,
+    ButtonBlock,
     Heading1,
     Heading2,
     Heading3,
-    InstagramEmbedBlock,
-    StyledTextBlock,
-    AlignedCaptionedImageBlock,
-    AlignedCaptionedEmbedBlock,
-    TweetEmbedBlock,
-    RichTextBlockQuoteBlock,
-    AsideBlock,
-    ButtonBlock,
-    VerticalBarChart,
-    TreeMapChart,
-    BubbleMapChart,
     HexbinMapChart,
+    InstagramEmbedBlock,
+    RichTextBlockQuoteBlock,
+    StyledTextBlock,
+    TreeMapChart,
+    TweetEmbedBlock,
+    VerticalBarChart,
 )
+from common.exceptions import ChartNotAvailable
+from common.models import (
+    MediaPageMixin,
+    MetadataPageMixin,
+    OrganizationPage,
+    PersonPage,
+)
+from common.utils import DEFAULT_PAGE_KEY, paginate
+from statistics.blocks import StatisticsBlock
 
 
 class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
@@ -116,7 +116,7 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         return BlogPage.objects.child_of(self).live().order_by("-publication_datetime")
 
     def get_context(self, request, *args, **kwargs):
-        context = super(BlogIndexPage, self).get_context(request, *args, **kwargs)
+        context = super().get_context(request, *args, **kwargs)
 
         post_filters = BlogFilter.from_querystring(request.GET)
         entry_qs = post_filters.filter(self.get_posts())
@@ -161,11 +161,11 @@ class BlogIndexPage(RoutablePageMixin, MetadataPageMixin, MediaPageMixin, Page):
         return context
 
     def get_cache_tag(self):
-        return "blog-index-{}".format(self.pk)
+        return f"blog-index-{self.pk}"
 
     # The following method is in large part copied from incident_index_page.py.
     def serve(self, request, *args, **kwargs):
-        response = super(BlogIndexPage, self).serve(request, *args, **kwargs)
+        response = super().serve(request, *args, **kwargs)
 
         # We set a cache tag here so that elsewhere we can purge all subroutes
         # of the blog (including paginated and filtered URLs) simultaneously
@@ -433,7 +433,7 @@ class BlogPage(NewsletterPageMixin, MetadataPageMixin, MediaPageMixin, Page):
                 return self.teaser_graphic[0].value.png_snapshot_meta()
             except ChartNotAvailable:
                 pass
-        return super(BlogPage, self).get_meta_image()
+        return super().get_meta_image()
 
     def get_meta_description(self):
         if self.teaser_text:

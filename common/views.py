@@ -50,7 +50,7 @@ def read_version_info_file(p):
         with open(p, "r") as f:
             return f.read()
     except FileNotFoundError:
-        return "<file not found at {}>".format(p)
+        return f"<file not found at {p}>"
 
 
 # Wrap the wagtail document serving view to serve docs as inline rather

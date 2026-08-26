@@ -1,8 +1,9 @@
-from structlog import get_logger
-
 from django.db.models.signals import post_delete
-from wagtail.signals import page_published
+
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
+from wagtail.signals import page_published
+
+from structlog import get_logger
 
 from blog.models import BlogIndexPage, BlogPage
 from cloudflare.utils import purge_tags_from_cache

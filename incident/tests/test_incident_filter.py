@@ -4,29 +4,50 @@ from unittest import mock
 from django.core.exceptions import ValidationError
 from django.db.models import TextField
 from django.test import TestCase
-from common.models.pages import CommonTag
+from django.utils import timezone
+
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Site
+
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
-from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Site
 
 from common.models import (
-    CategoryPage,
     CategoryIncidentFilter,
+    CategoryPage,
     GeneralIncidentFilter,
     IncidentFilterSettings,
 )
+from common.models.pages import CommonTag
 from common.tests.factories import CategoryPageFactory
-from incident.models import IncidentPage
 from incident.choices import ARREST_STATUS
+from incident.models import IncidentPage
 from incident.utils.incident_filter import (
     BooleanFilter,
     CommaSeparatedFilter,
     IncidentFilter,
     ManyRelationValue,
+    RelationFilter,
+    RelationThroughFilter,
 )
+
+
+class RelationFilterTest(TestCase):
+    def test_defaults_to_no_text_fields(self):
+        model_field = IncidentPage._meta.get_field("arresting_authority")
+        fltr = RelationFilter("arresting_authority", model_field)
+        self.assertEqual(fltr.text_fields, [])
+
+
+class RelationThroughFilterTest(TestCase):
+    def test_defaults_to_no_text_fields(self):
+        model_field = IncidentPage._meta.get_field("targeted_journalists")
+        fltr = RelationThroughFilter(
+            "targeted_journalists", model_field, relation="journalist"
+        )
+        self.assertEqual(fltr.text_fields, [])
 
 
 class FilterToOpenApiParametersTest(TestCase):
@@ -172,7 +193,7 @@ class URLizeFilterTest(TestCase):
         field = IncidentPage._meta.get_field("detention_date")
         filter_ = IncidentFilter._get_filter(field)
 
-        date_value = (date(2022, 2, 2), date.today())
+        date_value = (date(2022, 2, 2), timezone.now().date())
         self.assertEqual(
             filter_.as_url_parameters(date_value),
             {
@@ -422,10 +443,7 @@ class CleanTest(TestCase):
         self.assertEqual(
             [str(error) for error in cm.exception],
             [
-                "release_date filter only available when filtering on the following category: {} ({})".format(
-                    category1.title,
-                    category1.id,
-                )
+                f"release_date filter only available when filtering on the following category: {category1.title} ({category1.id})"
             ],
         )
 

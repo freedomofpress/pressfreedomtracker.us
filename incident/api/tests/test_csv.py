@@ -3,24 +3,25 @@ from urllib import parse
 
 from django.test import TestCase
 from django.urls import reverse
+
 from wagtail.models import Site
 
 from common.tests.factories import (
-    PersonPageFactory,
     CategoryPageFactory,
-    CustomImageFactory,
     CommonTagFactory,
+    CustomImageFactory,
+    PersonPageFactory,
 )
 from incident import choices
 from incident.models import IncidentPage
 from incident.tests.factories import (
-    IncidentPageFactory,
-    IncidentIndexPageFactory,
-    IncidentUpdateFactory,
-    IncidentLinkFactory,
-    StateFactory,
     EquipmentSeizedFactory,
     IncidentChargeWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentLinkFactory,
+    IncidentPageFactory,
+    IncidentUpdateFactory,
+    StateFactory,
 )
 
 
@@ -581,7 +582,7 @@ class IncidentCSVTestCase(TestCase):
             file__color="green",
         )
 
-        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
+        author1, author2, _author3 = PersonPageFactory.create_batch(3, parent=root_page)
         cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(
             3, parent=root_page
         )

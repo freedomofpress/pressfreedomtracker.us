@@ -1,10 +1,10 @@
-import datetime
 import re
 import urllib.parse
 from functools import partial
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils import timezone
 from django.utils.html import strip_tags
 from django.utils.text import capfirst
 
@@ -332,11 +332,11 @@ class TestCategoryFieldValuesByField(TestCase):
         )
 
     def test_detention_date(self):
-        self.incident.detention_date = datetime.date.today()
+        self.incident.detention_date = timezone.now().date()
         self.assert_date("detention_date", CAT_FIELD_VALUES["detention_date"])
 
     def test_release_date(self):
-        self.incident.release_date = datetime.date.today()
+        self.incident.release_date = timezone.now().date()
         self.assert_date("release_date", CAT_FIELD_VALUES["release_date"])
 
     def test_unnecessary_use_of_force(self):
@@ -530,7 +530,7 @@ class TestCategoryFieldValuesByField(TestCase):
 class CategoryFieldValuesCompleteness(TestCase):
     def test_all_categories_provide_details(self):
         index = IncidentIndexPageFactory()
-        for category_name in IncidentPageFactory._meta.parameters.keys():
+        for category_name in IncidentPageFactory._meta.parameters:
             with self.subTest(category_name=category_name):
                 category = CategoryPageFactory(**{category_name: True})
                 incident = IncidentPageFactory(parent=index, categories=[category])
@@ -544,10 +544,10 @@ class CategoryFieldValues(TestCase):
 
     def setUp(self):
         self.index = IncidentIndexPageFactory()
-        self.category1 = CategoryPageFactory(**{"arrest": True})
-        self.category2 = CategoryPageFactory(**{"equipment_damage": True})
+        self.category1 = CategoryPageFactory(arrest=True)
+        self.category2 = CategoryPageFactory(equipment_damage=True)
         # Category 3 has no metadata fields
-        self.category3 = CategoryPageFactory(**{"other_incident": True})
+        self.category3 = CategoryPageFactory(other_incident=True)
         self.category4 = CategoryPageFactory(
             denial_of_access=True,
         )

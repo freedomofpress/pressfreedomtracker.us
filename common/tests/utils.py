@@ -1,13 +1,15 @@
-from random import choice, randrange, shuffle
 import functools
+from random import choice, randrange, shuffle
+
+from wagtail.models import Page
 
 from faker import Faker
 from faker.providers import BaseProvider
-from wagtail.models import Page
 
-from common.models import CustomImage
+from common.blocks import ALIGNMENT_CHOICES, StyledTextBlock
 from common.choices import BACKGROUND_COLOR_CHOICES
-from common.blocks import StyledTextBlock, ALIGNMENT_CHOICES
+from common.models import CustomImage
+
 
 fake = Faker()
 
@@ -60,17 +62,15 @@ def generate_styled_text_paragraphs(as_type="text"):
     font_size = "normal"
     font_family = choice([c[0] for c in StyledTextBlock.FONT_FAMILY_CHOICES])
     paragraphs = (
-        "<h3>{}</h3>".format(fake.sentence()),
-        "<p>{} <b>This sentence is in bold text.</b> {} ".format(
-            fake.text(max_nb_chars=200), fake.text(max_nb_chars=200)
-        ),
+        f"<h3>{fake.sentence()}</h3>",
+        f"<p>{fake.text(max_nb_chars=200)} <b>This sentence is in bold text.</b> {fake.text(max_nb_chars=200)} ",
         '<a href="{}">This is a link to a fake url!</a> '.format(
             fake.url(schemes=["https"])
         ),
-        "{}</p>".format(fake.paragraph(nb_sentences=20, variable_nb_sentences=True)),
-        "<p>{}</p>".format(fake.paragraph(nb_sentences=20, variable_nb_sentences=True)),
+        f"{fake.paragraph(nb_sentences=20, variable_nb_sentences=True)}</p>",
+        f"<p>{fake.paragraph(nb_sentences=20, variable_nb_sentences=True)}</p>",
         "<ul>",
-        "".join(["<li>{}</li>".format(fake.word()) for i in range(10)]),
+        "".join([f"<li>{fake.word()}</li>" for i in range(10)]),
         "</ul><br />",
         '<p><a href="{}">This is a link to a fake url!</a></p>'.format(
             fake.url(schemes=["https"])
@@ -95,7 +95,7 @@ def generate_bare_image():
 
 
 def generate_rich_text_paragraph():
-    paragraph = "<p>{}</p>".format(fake.text(max_nb_chars=200))
+    paragraph = f"<p>{fake.text(max_nb_chars=200)}</p>"
     return generate_field("rich_text", paragraph)
 
 
@@ -105,17 +105,15 @@ def generate_rich_text_line():
 
 def generate_rich_text():
     paragraphs = (
-        "<h3>{}</h3>".format(fake.sentence()),
-        "<p>{} <b>This sentence is in bold text.</b> {} ".format(
-            fake.text(max_nb_chars=200), fake.text(max_nb_chars=200)
-        ),
+        f"<h3>{fake.sentence()}</h3>",
+        f"<p>{fake.text(max_nb_chars=200)} <b>This sentence is in bold text.</b> {fake.text(max_nb_chars=200)} ",
         '<a href="{}">This is a link to a fake url!</a> '.format(
             fake.url(schemes=["https"])
         ),
-        "{}</p>".format(fake.paragraph(nb_sentences=20, variable_nb_sentences=True)),
-        "<p>{}</p>".format(fake.paragraph(nb_sentences=20, variable_nb_sentences=True)),
+        f"{fake.paragraph(nb_sentences=20, variable_nb_sentences=True)}</p>",
+        f"<p>{fake.paragraph(nb_sentences=20, variable_nb_sentences=True)}</p>",
         "<ul>",
-        "".join(["<li>{}</li>".format(fake.word()) for i in range(10)]),
+        "".join([f"<li>{fake.word()}</li>" for i in range(10)]),
         "</ul><br />",
         '<p><a href="{}">This is a link to a fake url!</a></p>'.format(
             fake.url(schemes=["https"])
@@ -151,8 +149,8 @@ def generate_aligned_captioned_image(as_type="aligned_image"):
 
 
 def generate_block_quote():
-    text = "<p>{}</p>".format(fake.sentence())
-    source_text = "<p>{}</p>".format(fake.name())
+    text = f"<p>{fake.sentence()}</p>"
+    source_text = f"<p>{fake.name()}</p>"
     source_url = fake.url(schemes=["https"])
 
     return generate_field(
@@ -410,11 +408,11 @@ class StreamfieldProvider(BaseProvider):
 
         streamfield_data = []
         if not fields:
-            raise Exception("no fields found, please provide fields")
+            raise ValueError("no fields found, please provide fields")
         for field in fields:
             if field in valid_fields:
                 streamfield_data.append(valid_fields[field]())
             else:
-                raise Exception("unknown field: {}".format(field))
+                raise ValueError(f"unknown field: {field}")
 
         return streamfield_data

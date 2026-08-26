@@ -1,8 +1,9 @@
 import unittest
 
 from wagtail.models import Page
-from selenium.webdriver.support.ui import WebDriverWait
+
 from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 
 from common.tests.selenium import SeleniumTest
 from incident.tests.factories import IncidentIndexPageFactory, IncidentPageFactory

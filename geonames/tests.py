@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from .cities import get_city_coords
-from .models import Country, Region, GeoName
+from .models import Country, GeoName, Region
 
 
 class CitiesTestCase(TestCase):

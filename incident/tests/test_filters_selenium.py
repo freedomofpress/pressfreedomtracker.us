@@ -1,33 +1,35 @@
+import itertools
 import unittest
 import urllib.parse
-import itertools
 from datetime import timedelta
 
 from django.utils import timezone
+
 from wagtail.models import Page, Site
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import Select, WebDriverWait
 
-from common.tests.selenium import SeleniumTest
-from common.tests.factories import CategoryPageFactory
 from common.models.settings import (
-    SearchSettings,
-    IncidentFilterSettings,
     GeneralIncidentFilter,
+    IncidentFilterSettings,
+    SearchSettings,
 )
+from common.tests.factories import CategoryPageFactory
+from common.tests.selenium import SeleniumTest
 from home.tests.factories import HomePageFactory
+from incident import choices
+from incident.models import State
 from incident.tests.factories import (
+    EquipmentBrokenFactory,
+    EquipmentFactory,
     IncidentIndexPageFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
     StateFactory,
-    EquipmentFactory,
-    EquipmentBrokenFactory,
 )
-from incident import choices
-from incident.models import State
 
 
 def powerset(iterable):
@@ -282,7 +284,7 @@ class RelationFilterTest(FilterTest):
     def test_filters_autocomplete_mouse_input(self):
         self.autocomplete_input.click()
         self.browser.find_element_by_xpath(
-            f'//span[normalize-space(text()) = "{str(self.vermont)}"]'
+            f'//span[normalize-space(text()) = "{self.vermont!s}"]'
         ).click()
 
         self.apply_filters()

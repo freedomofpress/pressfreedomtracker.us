@@ -3,13 +3,14 @@ import uuid
 
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
+
 import structlog
 
 
 logger = structlog.get_logger("request_log")
 
 
-class RequestLogMiddleware(object):
+class RequestLogMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.

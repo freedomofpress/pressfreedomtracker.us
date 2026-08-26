@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from common.models import helpers
+from common import helpers
 from incident.models import State
 
 from .factories import CategoryPageFactory, CommonTagFactory

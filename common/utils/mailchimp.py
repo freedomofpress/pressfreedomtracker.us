@@ -1,21 +1,19 @@
 import hashlib
 from collections import defaultdict
 
-import mailchimp_marketing
 from django.conf import settings
+
+import mailchimp_marketing
+
 from emails.models import EmailSettings
 
 
 class MailchimpError(Exception):
     """Base class for errors related to Mailchimp."""
 
-    pass
-
 
 class ApiKeyMissingError(MailchimpError):
     """Raised when the Mailchimp API key cannot be found."""
-
-    pass
 
 
 class ApiError(MailchimpError):

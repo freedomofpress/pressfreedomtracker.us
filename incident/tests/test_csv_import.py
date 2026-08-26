@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from incident.utils.csv import DateColumn, ColumnNotFound
+from incident.utils.csv import ColumnNotFound, DateColumn
 
 
 class RequiredDateColumnTestCase(TestCase):

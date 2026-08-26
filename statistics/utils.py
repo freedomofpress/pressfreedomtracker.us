@@ -15,20 +15,16 @@ def parse_kwargs(bits):
     for bit in bits:
         match = kwarg_re.match(bit)
         if not match:
-            raise ValueError("Invalid param formatting: '{}'".format(bit))
+            raise ValueError(f"Invalid param formatting: '{bit}'")
 
         key, value = match.groups()
         if key in kwargs:
             # The keyword argument has already been supplied once
-            raise ValueError("Received multiple values for param '{}'".format(key))
+            raise ValueError(f"Received multiple values for param '{key}'")
 
         try:
             kwargs[key] = Variable(value).resolve({})
         except VariableDoesNotExist:
-            raise ValueError(
-                "Value for {} should be wrapped in quotation marks".format(
-                    key,
-                )
-            )
+            raise ValueError(f"Value for {key} should be wrapped in quotation marks")
 
     return kwargs

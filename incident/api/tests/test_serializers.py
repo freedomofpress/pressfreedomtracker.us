@@ -1,8 +1,9 @@
 from django.test import TestCase
+
 from wagtail.models import Site
 
-from incident.api.serializers import CategorySerializer
 from common.tests.factories import CategoryPageFactory
+from incident.api.serializers import CategorySerializer
 
 
 class CategorySerializerTest(TestCase):

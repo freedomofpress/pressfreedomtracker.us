@@ -1,14 +1,14 @@
 from factory import (
     Faker,
-    RelatedFactory,
     LazyAttribute,
-    Trait,
+    RelatedFactory,
     Sequence,
+    Trait,
 )
 from factory.django import DjangoModelFactory
 from wagtail_factories import PageFactory
 
-from forms.models import GroupedFormField, FieldGroup, FormPage
+from forms.models import FieldGroup, FormPage, GroupedFormField
 
 
 class FormFieldFactory(DjangoModelFactory):

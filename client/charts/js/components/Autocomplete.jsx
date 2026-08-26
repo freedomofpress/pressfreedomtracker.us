@@ -151,6 +151,7 @@ const AutoComplete = ({
 
 	return (
 		<>
+			<label htmlFor={id} className="sr-only">{placeholder}</label>
 			<input
 				type="text"
 				name={name}

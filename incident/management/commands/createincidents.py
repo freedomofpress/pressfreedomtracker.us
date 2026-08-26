@@ -2,14 +2,14 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
 from common.models import CategoryPage
-from incident.models import IncidentIndexPage
 from common.tests.devdata import (
     PersonPageFactory,
 )
 from incident.devdata import (
-    MultimediaIncidentPageFactory,
     IncidentPageFactory,
+    MultimediaIncidentPageFactory,
 )
+from incident.models import IncidentIndexPage
 
 
 FACTORY_ARGS_BY_FOR_CATEGORY = {

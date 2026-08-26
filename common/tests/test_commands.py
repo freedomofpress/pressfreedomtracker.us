@@ -1,9 +1,10 @@
 import os
 from unittest import mock
 
-import wagtail_factories
 from django.core import management
 from django.test import TestCase
+
+import wagtail_factories
 
 from common.devdata import CustomImageFactory
 from common.management.commands.createdevdata import Command

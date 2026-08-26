@@ -1,51 +1,54 @@
 import calendar
 import csv
 import json
-from datetime import timedelta, date
+from datetime import date, timedelta
 from urllib import parse
 
-import wagtail_factories
-from wagtail.models import Site, Page
-from wagtail.test.utils import WagtailPageTestCase
-from wagtail.test.utils.form_data import (
-    nested_form_data,
-    streamfield,
-    inline_formset,
-    rich_text,
-)
-from django.test import TestCase, Client, RequestFactory
+from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from common.models import IncidentFilterSettings, GeneralIncidentFilter, SearchSettings
+from wagtail.models import Page, Site
+from wagtail.test.utils import WagtailPageTestCase
+from wagtail.test.utils.form_data import (
+    inline_formset,
+    nested_form_data,
+    rich_text,
+    streamfield,
+)
+
+import wagtail_factories
+
+from common.models import GeneralIncidentFilter, IncidentFilterSettings, SearchSettings
 from common.tests.factories import (
-    SimplePageFactory,
     CategoryPageFactory,
-    PersonPageFactory,
     CommonTagFactory,
     CustomImageFactory,
+    PersonPageFactory,
+    SimplePageFactory,
 )
-from geonames.models import Country, Region, GeoName
+from geonames.models import Country, GeoName, Region
 from home.tests.factories import HomePageFactory
 from incident import choices
-from incident.models.incident_page import IncidentPage
-from incident.models.topic_page import TopicPage
-from incident.models.export import is_exportable, to_row
 from incident.models import IncidentCategorization
+from incident.models.export import is_exportable, to_json, to_row
+from incident.models.incident_page import IncidentPage
 from incident.models.inlines import IncidentPageUpdates
+from incident.models.topic_page import TopicPage
+
 from .factories import (
-    IncidentIndexPageFactory,
-    IncidentPageFactory,
-    IncidentLinkFactory,
-    IncidentUpdateFactory,
-    TopicPageFactory,
-    StateFactory,
-    InstitutionFactory,
-    TargetedJournalistFactory,
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
-    LegalOrderWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentLinkFactory,
+    IncidentPageFactory,
+    IncidentUpdateFactory,
+    InstitutionFactory,
     LegalOrderFactory,
+    LegalOrderWithUpdatesFactory,
+    StateFactory,
+    TargetedJournalistFactory,
+    TopicPageFactory,
 )
 
 
@@ -370,6 +373,12 @@ class TestExportPage(TestCase):
         self.assertEqual(to_row(inc), csv_line)
         for line in content_lines:
             self.assertNotIn("Unpublished incident", line.decode("utf-8"))
+
+    def test_to_json_serializes_default_fields(self):
+        inc = IncidentPageFactory(parent=self.index, title="JSON incident")
+        result = to_json(inc)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result["title"], "JSON incident")
 
 
 class TestFeedsPage(WagtailPageTestCase):
@@ -735,7 +744,7 @@ class RecentChargeStatusesMethod(TestCase):
 
         self.assertEqual(
             set(incident.most_recent_charge_statuses),
-            set(["PENDING_APPEAL", "UNKNOWN"]),
+            {"PENDING_APPEAL", "UNKNOWN"},
         )
 
     def test_returns_the_most_recent_statuses_without_updates(self):
@@ -840,12 +849,10 @@ class RecentLegalOrderStatusesMethod(TestCase):
         )
         self.assertEqual(
             set(incident.most_recent_legal_order_statuses),
-            set(
-                [
-                    choices.LegalOrderStatus.DROPPED,
-                    choices.LegalOrderStatus.QUASHED,
-                ]
-            ),
+            {
+                choices.LegalOrderStatus.DROPPED,
+                choices.LegalOrderStatus.QUASHED,
+            },
         )
 
     def test_returns_the_most_recent_statuses_without_updates(self):
@@ -854,12 +861,10 @@ class RecentLegalOrderStatusesMethod(TestCase):
         )
         self.assertEqual(
             set(incident.most_recent_legal_order_statuses),
-            set(
-                [
-                    choices.LegalOrderStatus.PENDING,
-                    choices.LegalOrderStatus.QUASHED,
-                ]
-            ),
+            {
+                choices.LegalOrderStatus.PENDING,
+                choices.LegalOrderStatus.QUASHED,
+            },
         )
 
     def test_handles_base_status_more_recent_than_updates(self):
@@ -1104,7 +1109,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
         self.site.clear_site_root_paths_cache()
 
     def test_can_preview_incident_page(self):
-        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        stats_tag = f'{{% num_incidents categories="{self.category.pk}" %}}'
         incident_page = IncidentPageFactory(parent=self.category)
 
         preview_url = reverse(
@@ -1122,9 +1127,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                             ("raw_html", "<p>Lorem ipsum dolor sit amet</p>"),
                             (
                                 "rich_text",
-                                rich_text(
-                                    "<p>Lorem {} dolor sit amet</p>".format(stats_tag)
-                                ),
+                                rich_text(f"<p>Lorem {stats_tag} dolor sit amet</p>"),
                             ),
                         ]
                     ),
@@ -1167,7 +1170,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
         self.assertEqual(response.context["page"], incident_page)
 
     def test_can_create_incident_page(self):
-        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        stats_tag = f'{{% num_incidents categories="{self.category.pk}" %}}'
         self.assertCanCreate(
             self.index_page,
             IncidentPage,
@@ -1181,9 +1184,7 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                             ("raw_html", "<p>Lorem ipsum dolor sit amet</p>"),
                             (
                                 "rich_text",
-                                rich_text(
-                                    "<p>Lorem {} dolor sit amet</p>".format(stats_tag)
-                                ),
+                                rich_text(f"<p>Lorem {stats_tag} dolor sit amet</p>"),
                             ),
                         ]
                     ),
@@ -1255,7 +1256,7 @@ class TestTopicPage(WagtailPageTestCase):
         self.site.clear_site_root_paths_cache()
 
     def test_can_create_topic_page(self):
-        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        stats_tag = f'{{% num_incidents categories="{self.category.pk}" %}}'
 
         form_data = nested_form_data(
             {
@@ -1346,7 +1347,7 @@ class TestTopicPage(WagtailPageTestCase):
             "wagtailadmin_pages:preview_on_edit", args=(topic_page.pk,)
         )
 
-        stats_tag = '{{% num_incidents categories="{}" %}}'.format(self.category.pk)
+        stats_tag = f'{{% num_incidents categories="{self.category.pk}" %}}'
         form_data = nested_form_data(
             {
                 "title": "Vampires",
@@ -1517,7 +1518,7 @@ class IncidentPageQueriesTest(TestCase):
             file__color="red",
         )
 
-        author1, author2, author3 = PersonPageFactory.create_batch(3, parent=root_page)
+        author1, author2, _author3 = PersonPageFactory.create_batch(3, parent=root_page)
         cls.cat1, cls.cat2, cls.cat3 = CategoryPageFactory.create_batch(
             3, parent=root_page
         )
@@ -1634,7 +1635,7 @@ class IncidentPageTests(TestCase):
             regcode="AK2",
         )
         incident = IncidentPage(
-            date=date.today(),
+            date=timezone.now().date(),
             title="Incident with Geodata",
             city=geoname.name,
             state=state,

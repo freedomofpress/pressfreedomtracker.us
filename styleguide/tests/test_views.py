@@ -1,9 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from incident.tests.factories import IncidentPageFactory
 from common.models import CustomImage, CustomRendition
 from common.tests.factories import CustomImageFactory
+from incident.tests.factories import IncidentPageFactory
 
 
 class StyleguideTestCase(TestCase):

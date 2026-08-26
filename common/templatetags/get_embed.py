@@ -1,4 +1,5 @@
 from django import template
+
 from wagtail.embeds.embeds import get_embed as wagtail_get_embed
 from wagtail.embeds.exceptions import EmbedException
 

@@ -72,7 +72,7 @@ def is_exportable(field):
     return not (name.startswith("tagged_") or name in EXCLUDED_FIELDS)
 
 
-def to_row(obj, allowed_fields=[]):
+def to_row(obj, allowed_fields=None):
     """Flatten a model object into a list of strings suitable for a CSV
 
     This function attempts to introspect an object's fields and turn
@@ -82,6 +82,8 @@ def to_row(obj, allowed_fields=[]):
     of the objects on the other end of the relationship.
 
     """
+    if allowed_fields is None:
+        allowed_fields = []
     row = []
 
     model = type(obj)
@@ -95,7 +97,9 @@ def to_row(obj, allowed_fields=[]):
     return row
 
 
-def to_json(obj, allowed_fields=[]):
+def to_json(obj, allowed_fields=None):
+    if allowed_fields is None:
+        allowed_fields = []
     incident_dict = {}
     model = type(obj)
     if allowed_fields:
@@ -134,7 +138,7 @@ def _serialize_field(obj, field):
     ):
         val = ", ".join([humanize(item) for item in getattr(obj, field.name).all()])
     elif hasattr(field, "choices") and field.choices:
-        val = getattr(obj, "get_%s_display" % field.name)()
+        val = getattr(obj, f"get_{field.name}_display")()
     elif hasattr(obj, field.name):
         val = getattr(obj, field.name)
     return str(val)

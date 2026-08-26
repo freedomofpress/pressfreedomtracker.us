@@ -70,7 +70,9 @@ def fetch_sheet_data(source: PrepubSource):
 
 def parse_date(text: str) -> DateParseResult:
     try:
-        parsed = datetime.strptime(text, "%m/%d/%Y").date()
+        # .date() discards the naive datetime strptime() produces, so it's
+        # never exposed as a naive datetime; DTZ007 doesn't apply here.
+        parsed = datetime.strptime(text, "%m/%d/%Y").date()  # noqa: DTZ007
         return DateParseResult(
             value=parsed, precision=PrepublicationIncident.DatePrecision.DAY
         )
@@ -78,7 +80,8 @@ def parse_date(text: str) -> DateParseResult:
         pass
 
     try:
-        parsed = datetime.strptime(text, "%m/%Y").date()
+        # Same as above: only the date component is kept.
+        parsed = datetime.strptime(text, "%m/%Y").date()  # noqa: DTZ007
         return DateParseResult(
             value=parsed, precision=PrepublicationIncident.DatePrecision.MONTH
         )

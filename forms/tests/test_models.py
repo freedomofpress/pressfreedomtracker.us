@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AnonymousUser
 from django.core import mail
-from django.test import TestCase, RequestFactory
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
+
 from wagtail.models import Site
 from wagtail.test.utils import WagtailTestUtils
 from wagtail.test.utils.form_data import (
@@ -10,12 +11,12 @@ from wagtail.test.utils.form_data import (
     rich_text,
 )
 
-from home.tests.factories import HomePageFactory
 from forms.tests.factories import (
     FormPageFactory,
-    FormPageWithReplyToFieldFactory,
     FormPageWithAppendSubjectFieldsFactory,
+    FormPageWithReplyToFieldFactory,
 )
+from home.tests.factories import HomePageFactory
 
 
 class FormPageTestCase(TestCase):
