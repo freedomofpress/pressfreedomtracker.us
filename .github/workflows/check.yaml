@@ -83,7 +83,11 @@ jobs:
       registry: localhost/pressfreedomtracker-us-chartgen
 
   test:
-    name: Test:${{ matrix.target }}
+    # This job name is also the branch-protection check name, so it is decoupled
+    # from the just recipe: `name` pins the published check where a recipe has
+    # since been renamed, defaulting to the recipe name otherwise. Renaming a
+    # pinned check means updating the repo's required checks in the same breath.
+    name: Test:${{ matrix.name || matrix.target }}
     runs-on: ubuntu-latest
     needs:
       - build-dev-django
@@ -91,14 +95,16 @@ jobs:
       - build-dev-chartgen
     strategy:
       matrix:
-        target:
-          - check-migrations
-          - dev-tests
-          - dev-jest-tests
-          - ruff
-          - bandit
-          - eslint
-          - stylelint
+        include:
+          - target: check-migrations
+          - target: test
+            name: dev-tests
+          - target: test-js
+            name: dev-jest-tests
+          - target: ruff
+          - target: bandit
+          - target: eslint
+          - target: stylelint
     steps:
       - name: Install Docker
         uses: docker/setup-docker-action@v5.4.0
@@ -147,14 +153,19 @@ jobs:
           docker image tag "$NODE_IMAGE_URL" localhost/pressfreedomtracker-us-node
           docker image tag "$CHARTGEN_IMAGE_URL" localhost/pressfreedomtracker-us-node-chart-pregenerator
 
+      - name: Install just
+        uses: taiki-e/install-action@288e746965032cfcc232e09af2daf5f23c14d780 # v2.86.1
+        with:
+          tool: just
+
       - name: Create env config
-        run: make dev-init
+        run: just dev-init
 
       - name: Start
         run: docker compose --file="$COMPOSE_FILE_DEV" up --wait --wait-timeout=180 --detach --pull=missing --no-build
 
-      - name: Make target '${{ matrix.target }}'
-        run: make ${{ matrix.target }}
+      - name: Run target '${{ matrix.target }}'
+        run: just ${{ matrix.target }}
 
       - name: Collect logs on failure
         if: ${{ failure() }}
@@ -165,9 +176,9 @@ jobs:
 
       - name: Save HTML coverage
         uses: actions/upload-artifact@v7
-        if: ${{ matrix.target == 'dev-tests' }}
+        if: ${{ matrix.target == 'test' }}
         with:
-          name: test-${{ matrix.target }}-${{ github.run_id }}-htmlcov
+          name: test-${{ matrix.name }}-${{ github.run_id }}-htmlcov
           path: htmlcov
           if-no-files-found: error
           overwrite: true
@@ -175,9 +186,9 @@ jobs:
 
       - name: Save PyTest coverage
         uses: actions/upload-artifact@v7
-        if: ${{ matrix.target == 'dev-tests'}}
+        if: ${{ matrix.target == 'test' }}
         with:
-          name: test-${{ matrix.target }}-${{ github.run_id }}-pytestcov
+          name: test-${{ matrix.name }}-${{ github.run_id }}-pytestcov
           path: coverage.xml
           if-no-files-found: error
           overwrite: true

@@ -20,16 +20,10 @@ webpack-stats.json
 .manage_cmds_ran/
 logs/
 
-# devops virtualenv
-.molecule
 .cache
-*.retry
 
 # Functional tests
 geckodriver.log
-
-# pip+docker install artifacts
-src/
 
 # developer postgres testing
 import.db
@@ -42,9 +36,6 @@ test-results
 
 # docker-compose
 .env
-
-# Ignore files created to communicate system deployment info
-.versioninfo
 
 # Jetbrains IDE
 .idea

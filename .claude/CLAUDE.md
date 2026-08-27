@@ -31,9 +31,8 @@
 
 ## Development
 
-- `make dev-init` for initial setup (creates `.env` with UID)
-- `docker compose up` to start services (postgresql, django, node, node-chart-pregenerator, selenium)
-- `docker compose exec django ./manage.py createdevdata` to seed dev data
+- `just dev` (or `just dev-init` then `docker compose up`) to start services (postgresql, django, node, node-chart-pregenerator, selenium)
+- `just createdevdata` to seed dev data
 - Web app at `http://localhost:8000`
 - Wagtail admin at `/admin` (dev credentials: `test` / `test`)
 - API docs at `/api/schema/swagger-ui/`
@@ -42,26 +41,28 @@
 
 ## Testing
 
-- Django tests: `make dev-tests` (runs with coverage via `coverage run ./manage.py test --noinput --failfast`)
-- Jest tests: `make dev-jest-tests` (runs both main frontend and chart pregenerator tests)
-- Migration check: `make check-migrations`
+- Django tests: `just test` (runs with coverage via `coverage run ./manage.py test --noinput`)
+- Jest tests: `just test-js` (runs both main frontend and chart pregenerator tests)
+- Migration check: `just check-migrations`
 - CI enforces **100% coverage on changed lines** using `diff-cover` against `origin/develop`
 - Tests use a custom `SeededDiscoveryRunner` with fixed seed (`876394101`) for reproducibility
 - Tests live in `tests/` subdirectories within each Django app (e.g., `incident/tests/`)
 
 ## Linting and Code Quality
 
-- `make ruff` — linter/formatter
-- `make bandit` — security static analysis
-- `make eslint` — JavaScript linting (airbnb config)
-- `make stylelint` — SCSS linting (sass-guidelines config)
+- `just ruff` — linter/formatter (`just ruff-fix` applies fixes)
+- `just bandit` — security static analysis
+- `just eslint` — JavaScript linting (airbnb config)
+- `just stylelint` — SCSS linting (sass-guidelines config)
+- `just lint` — all of the above plus the migration check
 - Ruff configured in `pyproject.toml`: `select = ["I", "F4"]` (isort + unused imports), target py312, Django/Wagtail-aware import section ordering
 
 ## Dependency Management
 
 - Uses pip-tools (`pip-compile`) for reproducible, hash-verified pinning
-- Edit `.in` files, then `make compile-pip-dependencies` to recompile
-- `make pip-update PACKAGE=name` to upgrade a specific package
+- Edit `.in` files, then `just pip-compile` to recompile
+- `just pip-compile --upgrade-package=name` to upgrade a specific package
+- `just pip-check` fails if the lockfiles drift from the `.in` files (CI runs it)
 - pip-compile runs inside a Docker container matching the production Python version
 
 ## Frontend Build System
@@ -76,8 +77,8 @@
 ## Database
 
 - Dev credentials: user `tracker`, password `trackerpassword`, db `trackerdb`, port `5432`
-- `make dev-import-db` — import a database dump (place as `import.db` in repo root)
-- `make dev-save-db` / `make dev-restore-db` — save/restore DB snapshots per branch
+- `just import-db` — import a database dump (place as `import.db` in repo root)
+- `just save-db` / `just restore-db` — save/restore DB snapshots per branch
 
 ## Debugging
 
