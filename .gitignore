@@ -6,7 +6,6 @@ db.sqlite3*
 /pressfreedom/settings/local.py
 *.pyc
 __pycache__
-.pytest_cache
 .coverage
 coverage.xml
 

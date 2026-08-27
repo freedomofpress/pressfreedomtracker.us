@@ -9,11 +9,10 @@ on:
   merge_group:
 
 env:
+  CONTAINER_ENGINE: docker
+  VERSION_DOCKER: v29.6.2
   COMPOSE_FILE_DEV: docker-compose.yaml
   COMPOSE_FILE_PROD: prod-docker-compose.yaml
-  # See here for valid options:
-  # https://github.com/docker/setup-docker-action?tab=readme-ov-file#inputs.version
-  VERSION_DOCKER: latest
   # Must match PYTHON_IMAGE in ci/containers/Containerfile
   VERSION_PYTHON: 3.14.6
 
@@ -33,6 +32,9 @@ jobs:
       context: '.'
       containerfile: ci/containers/Containerfile
       target: dev
+      # All five build jobs share one Containerfile, so hadolint only needs to
+      # run in one of them. Honours .hadolint.yaml at the repo root.
+      lint: true
       build-args: |
         USERID=1001
       registry: localhost/pressfreedomtracker-us-dev-django
@@ -82,6 +84,27 @@ jobs:
       # Likewise: the chartgen stages default to 1001, the uid publish.yaml ships.
       registry: localhost/pressfreedomtracker-us-chartgen
 
+  lint-lockfiles:
+    # Standalone, with no `needs`, so it runs alongside the image builds rather
+    # than waiting on them: it uses a throwaway pip-tools container, not the dev
+    # image. The dev image installs the checked-in dev-requirements.txt, so
+    # nothing else in CI would notice the lockfiles drifting from the .in files.
+    name: Lint:Lockfiles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install just
+        uses: taiki-e/install-action@288e746965032cfcc232e09af2daf5f23c14d780 # v2.86.1
+        with:
+          tool: just
+
+      - name: Recompile lockfiles and fail on drift
+        run: just pip-check
+
   test:
     # This job name is also the branch-protection check name, so it is decoupled
     # from the just recipe: `name` pins the published check where a recipe has
@@ -94,17 +117,30 @@ jobs:
       - build-dev-node
       - build-dev-chartgen
     strategy:
+      # A failing linter shouldn't cancel the Django suite's feedback.
+      fail-fast: false
       matrix:
         include:
+          # These run in a one-shot container via `compose run --no-deps`, so
+          # they need no service stack and the compose-up below is skipped.
           - target: check-migrations
-          - target: test
-            name: dev-tests
+            stack: false
+          - target: bandit
+            stack: false
+          - target: ruff
+            stack: false
+          - target: eslint
+            stack: false
+          - target: stylelint
+            stack: false
           - target: test-js
             name: dev-jest-tests
-          - target: ruff
-          - target: bandit
-          - target: eslint
-          - target: stylelint
+            stack: false
+          # The Django suite needs live postgres, selenium, the built asset
+          # bundles and the chart pregenerator.
+          - target: test
+            name: dev-tests
+            stack: true
     steps:
       - name: Install Docker
         uses: docker/setup-docker-action@v5.4.0
@@ -114,8 +150,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
         with:
-          persist-credentials: true
-          fetch-depth: 0
+          persist-credentials: false
 
       - name: Download dev django image
         uses: actions/download-artifact@v8
@@ -161,14 +196,18 @@ jobs:
       - name: Create env config
         run: just dev-init
 
+      # --no-build asserts the images restored above are the ones under test:
+      # compose errors out if a tag is missing rather than silently rebuilding
+      # from source, which would mask a broken artifact hand-off.
       - name: Start
+        if: ${{ matrix.stack }}
         run: docker compose --file="$COMPOSE_FILE_DEV" up --wait --wait-timeout=180 --detach --pull=missing --no-build
 
       - name: Run target '${{ matrix.target }}'
         run: just ${{ matrix.target }}
 
       - name: Collect logs on failure
-        if: ${{ failure() }}
+        if: ${{ failure() && matrix.stack }}
         run: |
           docker compose --file="$COMPOSE_FILE_DEV" logs django
           docker compose --file="$COMPOSE_FILE_DEV" logs node-chart-pregenerator
@@ -289,13 +328,10 @@ jobs:
           docker compose --file="$COMPOSE_FILE_PROD" exec django \
           /bin/bash -c "./manage.py createdevdata --no-download"
 
+      # Against the published port, from outside the container: the artifact
+      # under test is not modified to test it.
       - name: Verify site skeleton
-        run: |
-          docker compose --file="$COMPOSE_FILE_PROD" exec django \
-          pip install --requirement=/django/requirements.txt --require-hashes --no-color --disable-pip-version-check
-
-          docker compose --file="$COMPOSE_FILE_PROD" exec django \
-          ./scripts/pytest
+        run: curl --fail --silent --show-error http://localhost:8000/ | grep -q 'Press Freedom Tracker'
 
       - name: Collect logs on failure
         if: ${{ failure() }}
