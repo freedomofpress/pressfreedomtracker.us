@@ -1,10 +1,66 @@
+# We ignore all files in the repo by default,
+# then selectively permit paths for inclusion.
+# We do this to avoid non-source-code files, such as
+# .env, *.db, db-snapshots/, coverage.xml, etc. from
+# making it into the built artifact.
+
+
+# ignore everything
+*
+
+# permit Django apps and the project package
+!blog
+!charts
+!cloudflare
+!common
+!dashboard
+!emails
+!forms
+!geonames
+!home
+!incident
+!menus
+!statistics
+!styleguide
+!tracker
+# `build` is an INSTALLED_APP (a namespace package) as well as webpack's
+# output directory, so Django will not start without it.
+!build
+
+# permit backend packaging tooling
+!manage.py
+!requirements.txt
+!dev-requirements.txt
+!pyproject.toml
+!scripts
+# read at request time by statistics/views.py
+!STATISTICS.rst
+
+# permit frontend packaging tooling
+!client
+!package.json
+!package-lock.json
+!webpack.config.js
+!babel.config.js
+!postcss.config.js
+# the chart pregenerator is its own npm project; the `chartgen` stage copies it wholesale
+!chart_pregenerator
+
+# permit general build tooling,
+# e.g. for git version info
+!ci
+!.git
+
+# re-exclude unwanted artifact cruft, possibly included by the grants above
+**/__pycache__
 **/*.pyc
-.env
-client/build/
-db-snapshots
-logs
-media/
 **/node_modules
-npm-debug.log
 tracker/settings/local.py
-.versioninfo
+# Stale dev bundles from a host `npm run start` would otherwise survive the
+# prod asset build and break collectstatic's manifest rewriting.
+build/static/bundles
+# esbuild output and jest coverage are rebuilt in-image; `client` here is a
+# gitignored convenience symlink some developers keep.
+chart_pregenerator/build
+chart_pregenerator/coverage
+chart_pregenerator/client
