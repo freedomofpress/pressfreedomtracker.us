@@ -286,7 +286,13 @@ for production use, run:
 
 .. code:: bash
 
-    docker build --build-arg USERID=1000 -t TAG -f devops/docker/ProdDjangoDockerfile .
+    docker build -t TAG -f ci/containers/Containerfile --target prod .
+
+and for the chart pregenerator service:
+
+.. code:: bash
+
+    docker build -t TAG -f ci/containers/Containerfile --target chartgen .
 
 Running
 -------------

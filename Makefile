@@ -19,7 +19,7 @@ dev-init: ## Initialize docker environment for developer workflow
 
 .PHONY: open-browser
 open-browser: ## Opens a web-browser pointing to the compose env
-	@./devops/scripts/browser-open.sh
+	@./ci/scripts/browser-open.sh
 
 .PHONY: dev-import-db
 dev-import-db: ## Import a postgres export file located at import.db
@@ -27,7 +27,7 @@ dev-import-db: ## Import a postgres export file located at import.db
 
 .PHONY: save-db
 dev-save-db: ## Export developer db to file
-	./devops/scripts/savedb.sh
+	./ci/scripts/savedb.sh
 
 .PHONY: ci-go
 ci-go: ## Stands up a prod like environment under one docker container

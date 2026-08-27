@@ -2,26 +2,41 @@
 networks:
   app:
 
+x-variables:
+  db-name: &db-name trackerdb
+  db-username: &db-username tracker
+  db-password: &db-password trackerpassword
+
 x-chart-pregenerator:
   host: &chart-host ${NODE_CHART_PREGENERATOR_HOST:-chartgenerator}
   port: &chart-port ${NODE_CHART_PREGENERATOR_PORT:-3000}
 
 services:
   postgresql:
-    image: postgres:17
+    image: docker.io/library/postgres:17
     init: true
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes:
       - ./:/django:ro
     environment:
-      POSTGRES_PASSWORD: trackerpassword
-      POSTGRES_USER: tracker
-      POSTGRES_DB: trackerdb
+      POSTGRES_PASSWORD: *db-password
+      POSTGRES_USER: *db-username
+      POSTGRES_DB: *db-name
     user: postgres
     healthcheck:
       test:
-        ['CMD', 'pg_isready', '-q', '-U', 'tracker', '--dbname', 'trackerdb']
+        [
+          'CMD',
+          'pg_isready',
+          '-q',
+          '-h',
+          'localhost',
+          '-U',
+          *db-username,
+          '--dbname',
+          *db-name,
+        ]
       timeout: 45s
       interval: 10s
       retries: 10
@@ -31,7 +46,8 @@ services:
           - db
 
   selenium:
-    image: selenium/standalone-firefox-debug:latest
+    image: docker.io/selenium/standalone-firefox-debug:latest
+    init: true
     ports:
       - '127.0.0.1::5900'
     networks:
@@ -40,41 +56,44 @@ services:
           - selenium
 
   node:
-    init: true
+    image: localhost/pressfreedomtracker-us-node
     build:
       context: .
-      dockerfile: devops/docker/NodeDockerfile
+      dockerfile: ci/containers/Containerfile
+      target: node-dev
       args:
         USERID: ${UID:?err}
-    image: localhost/pressfreedomtracker-us-node
+    init: true
     volumes:
-      - ./:/django
+      - ./:/django:z
     working_dir: /django
     user: ${UID:?err}
     healthcheck:
       test: jq '.status' build/static/bundles/webpack-stats.json |grep -q -e compiling -e error -e done
       interval: 10s
       start_period: 1m30s
+    userns_mode: keep-id
     networks:
       - app
 
   node-chart-pregenerator:
-    init: true
+    image: localhost/pressfreedomtracker-us-node-chart-pregenerator
     build:
       context: .
-      dockerfile: devops/docker/NodeChartPregeneratorDevDockerfile
+      dockerfile: ci/containers/Containerfile
+      target: chartgen-dev
       args:
         USERID: ${UID:?err}
-    image: localhost/pressfreedomtracker-us-node-chart-pregenerator
+    init: true
     volumes:
-      - ./:/django
-      - ./client:/app/client
-      - ./chart_pregenerator/src:/app/src
+      - ./:/django:z
+      - ./client:/app/client:z
+      - ./chart_pregenerator/src:/app/src:z
     environment:
+      DEPLOY_ENV: dev
       DJANGO_HOST: app
       DJANGO_PORT: 8000
       PORT: *chart-port
-      DEPLOY_ENV: dev
     ports:
       - target: *chart-port
         published: *chart-port
@@ -85,6 +104,7 @@ services:
       timeout: 5s
       retries: 10
       start_period: 45s
+    userns_mode: keep-id
     networks:
       app:
         aliases:
@@ -94,19 +114,48 @@ services:
     init: true
     stdin_open: true
     tty: true
+    image: localhost/pressfreedomtracker-us-django
     build:
       context: .
-      dockerfile: devops/docker/DevDjangoDockerfile
+      dockerfile: ci/containers/Containerfile
+      target: dev
       args:
         USERID: ${UID:?err}
-    image: localhost/pressfreedomtracker-us-django
     depends_on:
-      node:
-        condition: service_healthy
       postgresql:
+        condition: service_healthy
+      node:
         condition: service_healthy
       node-chart-pregenerator:
         condition: service_healthy
+    environment:
+      DEPLOY_ENV: dev
+      DJANGO_ALLOWED_HOSTS: app localhost
+      DJANGO_CHART_HOST: node-chart-pregenerator
+      DJANGO_CHART_PORT: *chart-port
+      DJANGO_CREATEDEVDATA: '${DJANGO_CREATEDEVDATA:-no}'
+      DJANGO_DB_HOST: db
+      DJANGO_DB_NAME: *db-name
+      DJANGO_DB_PASSWORD: *db-password
+      DJANGO_DB_PORT: 5432
+      DJANGO_DB_USER: *db-username
+      DJANGO_PROFILE: '${DJANGO_PROFILE:-no}'
+      DJANGO_XMLTEST_OUTPUT: 'yes'
+      MAILCHIMP_API_KEY:
+      NEWSLETTER_FROM_NAME:
+      NEWSLETTER_REPLY_TO:
+      PREPUB_DOCUMENT_ID:
+      PREPUB_GOOGLE_SHEETS_CREDS:
+      PREPUB_HEADER_ROW_INDEX:
+      PREPUB_SHEET_NAME:
+      PYINSTRUMENT: '${PYINSTRUMENT:-no}'
+      SELENIUM_HOST: selenium
+    working_dir: /django
+    userns_mode: keep-id
+    volumes:
+      - ./:/django:z
+    ports:
+      - '127.0.0.1:8000:8000'
     healthcheck:
       test:
         ['CMD', 'curl', '--fail', 'http://localhost:8000/health/ok/?monitor']
@@ -114,33 +163,6 @@ services:
       timeout: 5s
       retries: 10
       start_period: 45s
-    environment:
-      DJANGO_ALLOWED_HOSTS: app localhost
-      DJANGO_CREATEDEVDATA: '${DJANGO_CREATEDEVDATA:-no}'
-      DJANGO_DB_PASSWORD: trackerpassword
-      DJANGO_DB_USER: tracker
-      DJANGO_DB_NAME: trackerdb
-      DJANGO_DB_PORT: 5432
-      DJANGO_DB_HOST: db
-      DJANGO_XMLTEST_OUTPUT: 'yes'
-      DEPLOY_ENV: dev
-      DJANGO_PROFILE: '${DJANGO_PROFILE:-no}'
-      PYINSTRUMENT: '${PYINSTRUMENT:-no}'
-      SELENIUM_HOST: selenium
-      DJANGO_CHART_HOST: node-chart-pregenerator
-      DJANGO_CHART_PORT: *chart-port
-      MAILCHIMP_API_KEY:
-      NEWSLETTER_REPLY_TO:
-      NEWSLETTER_FROM_NAME:
-      PREPUB_GOOGLE_SHEETS_CREDS:
-      PREPUB_HEADER_ROW_INDEX:
-      PREPUB_SHEET_NAME:
-      PREPUB_DOCUMENT_ID:
-    working_dir: /django
-    volumes:
-      - ./:/django
-    ports:
-      - '127.0.0.1:8000:8000'
     networks:
       app:
         aliases:

@@ -22,7 +22,8 @@ jobs:
       packages: write
     with:
       context: '.'
-      containerfile: devops/docker/ProdDjangoDockerfile
+      containerfile: ci/containers/Containerfile
+      target: prod
       build-args: |
         USERID=1000
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us
@@ -38,7 +39,8 @@ jobs:
       packages: write
     with:
       context: '.'
-      containerfile: devops/docker/NodeChartPregeneratorDockerfile
+      containerfile: ci/containers/Containerfile
+      target: chartgen
       build-args: |
         USERID=1001
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen

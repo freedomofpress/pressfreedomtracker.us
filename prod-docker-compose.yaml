@@ -8,7 +8,8 @@ x-chart-pregenerator:
 
 services:
   postgresql:
-    image: postgres:17
+    image: docker.io/library/postgres:14
+    init: true
     ports:
       - '127.0.0.1::5432'
     environment:
@@ -25,9 +26,9 @@ services:
           '-h',
           'localhost',
           '-U',
-          'freedompress',
+          'tracker',
           '--dbname',
-          'freedompressdb',
+          'trackerdb',
         ]
       timeout: 45s
       interval: 10s
@@ -38,42 +39,44 @@ services:
           - db
 
   django:
+    init: true
     build:
       context: .
-      dockerfile: devops/docker/ProdDjangoDockerfile
+      dockerfile: ci/containers/Containerfile
+      target: prod
       args:
-        USERID: 1234
-    image: quay.io/freedomofpress/pressfreedomtrackerus
+        USERID: 1000
+    image: ghcr.io/freedomofpress/pressfreedomtracker-us
     depends_on:
       postgresql:
         condition: service_healthy
     working_dir: /django
     volumes:
-      - ${HOST_STATIC_DIR:-fpf-django-media}:/django-media
-      - ${HOST_MEDIA_DIR:-fpf-django-static}:/django-static
+      - ${HOST_MEDIA_DIR:-pft-django-media}:/django-media
+      - ${HOST_STATIC_DIR:-pft-django-static}:/django-static
     environment:
-      DJANGO_ALLOWED_HOSTS: app localhost
-      DJANGO_COLLECT_STATIC: 'yes'
-      DJANGO_CREATEDEVDATA: '${DJANGO_CREATEDEVDATA:-no}'
-      DJANGO_SETTINGS_MODULE: tracker.settings.production
-      DJANGO_SILENCED_SYSTEM_CHECKS: django_recaptcha.recaptcha_test_key_error
-      # Arbitrary key for this "prod-like" testing setup. Do not use in real life.
-      DJANGO_SECRET_KEY: 64a235ef65834d8b42fa2802dd4290cf61c773c3f31332039ec5c48165f744da
-      DJANGO_STATIC_ROOT: /django-static
-      DJANGO_MEDIA_ROOT: /django-media
       DEPLOY_ENV: prod
-      DJANGO_DB_PASSWORD: trackerpassword
-      DJANGO_DB_USER: tracker
-      DJANGO_DB_NAME: trackerdb
-      DJANGO_DB_PORT: 5432
-      DJANGO_DB_HOST: db
-      DJANGO_XMLTEST_OUTPUT: 'yes'
+      DJANGO_ALLOWED_HOSTS: app localhost
       DJANGO_APP_NAME: tracker
-      DJANGO_ONION_HOSTNAME: pfts5wyphb5x.onion
-      DJANGO_JSON_LOG: 'yes'
-      DJANGO_WHITENOISE: 'yes'
       DJANGO_CHART_HOST: node-chart-pregenerator
       DJANGO_CHART_PORT: *chart-port
+      DJANGO_COLLECT_STATIC: 'yes'
+      DJANGO_CREATEDEVDATA: '${DJANGO_CREATEDEVDATA:-no}'
+      DJANGO_DB_HOST: db
+      DJANGO_DB_NAME: trackerdb
+      DJANGO_DB_PASSWORD: trackerpassword
+      DJANGO_DB_PORT: 5432
+      DJANGO_DB_USER: tracker
+      DJANGO_JSON_LOG: 'yes'
+      DJANGO_MEDIA_ROOT: /django-media
+      DJANGO_ONION_HOSTNAME: pfts5wyphb5x.onion
+      # Arbitrary key for this "prod-like" testing setup. Do not use in real life.
+      DJANGO_SECRET_KEY: 64a235ef65834d8b42fa2802dd4290cf61c773c3f31332039ec5c48165f744da
+      DJANGO_SETTINGS_MODULE: tracker.settings.production
+      DJANGO_SILENCED_SYSTEM_CHECKS: django_recaptcha.recaptcha_test_key_error
+      DJANGO_STATIC_ROOT: /django-static
+      DJANGO_WHITENOISE: 'yes'
+      DJANGO_XMLTEST_OUTPUT: 'yes'
       GOOGLE_SHEETS_CREDS:
       # More fake testing keys (see above); generate your own for deployment.
       RECAPTCHA_PUBLIC_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
@@ -84,26 +87,26 @@ services:
       timeout: 5s
       retries: 10
       start_period: 45s
-    ports:
-      - '8000:8000'
     networks:
       app:
         aliases:
           - app
+    ports:
+      - '127.0.0.1:8000:8000'
 
   node-chart-pregenerator:
     read_only: true
     init: true
     build:
       context: .
-      dockerfile: devops/docker/NodeChartPregeneratorDockerfile
+      dockerfile: ci/containers/Containerfile
+      target: chartgen
       args:
-        USERID: 1234
-    image: quay.io/freedomofpress/pft-chart-pregenerator
+        USERID: 1001
+    image: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
     environment:
       DJANGO_HOST: app
       PORT: *chart-port
-      DEPLOY_ENV: dev
     ports:
       - target: *chart-port
         published: *chart-port
@@ -119,5 +122,5 @@ services:
           - *chart-host
 
 volumes:
-  fpf-django-static:
-  fpf-django-media:
+  pft-django-static:
+  pft-django-media:

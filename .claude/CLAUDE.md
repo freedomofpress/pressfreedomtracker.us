@@ -15,7 +15,7 @@
 - Chart pregenerator service: `chart_pregenerator/`
 - Templates: each app has its own `templates/` directory
 - Compiled bundles output: `build/static/bundles/`
-- DevOps/Docker: `devops/docker/`, `devops/scripts/`
+- Container builds and CI helper scripts: `ci/` (`ci/containers/Containerfile`, `ci/scripts/`)
 - Requirements: `requirements.txt`, `dev-requirements.txt`, `ci-requirements.txt` (compiled from `.in` files via pip-compile)
 
 ## Tech Stack
