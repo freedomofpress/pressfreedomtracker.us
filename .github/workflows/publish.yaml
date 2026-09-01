@@ -48,7 +48,7 @@ jobs:
   notify-django:
     uses: freedomofpress/actionslib/.github/workflows/update-k8s-trigger.yaml@main
     needs:
-    - build-django
+      - build-django
     if: ${{ needs.build-django.result == 'success' }}
     permissions:
       contents: read
@@ -64,7 +64,7 @@ jobs:
   notify-chartgen:
     uses: freedomofpress/actionslib/.github/workflows/update-k8s-trigger.yaml@main
     needs:
-    - build-chartgen
+      - build-chartgen
     if: ${{ needs.build-chartgen.result == 'success' }}
     permissions:
       contents: read
