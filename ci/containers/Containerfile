@@ -177,13 +177,17 @@ EXPOSE 8000
 # ---- dev django (code bind-mounted by compose) ----
 FROM python-base AS dev
 
-# The checked-in lockfile: dev-requirements.in is `-r requirements.txt` plus
-# dev extras, so this superset covers both. Drift is `just pip-check`'s job.
+# The checked-in lockfile, not a freshly recompiled one. dev-requirements.in is
+# `-r requirements.txt` plus dev extras, so this superset covers both. Lockfile
+# drift is caught explicitly by `just pip-check` rather than as a build artifact.
 COPY dev-requirements.txt /requirements.txt
 RUN pip install --no-deps --no-cache-dir --require-hashes -r /requirements.txt
 
-# Re-declared: ARG goes out of scope at the end of its declaring stage, so the
-# `USER` below is not guaranteed to resolve without it.
+# Re-declared for portability, not because buildah needs it: ARG is documented as
+# going out of scope at the end of the declaring stage, so `USER ${USERID}` below
+# is only guaranteed to resolve where the ARG is in scope. buildah does carry the
+# parent's value through (verified: this target builds to uid 1000 with no
+# --build-arg and no re-declaration), but Docker/BuildKit is not obliged to.
 ARG USERID=1000
 USER ${USERID}
 CMD [ "django-start.sh" ]
