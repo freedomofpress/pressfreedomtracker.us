@@ -40,8 +40,7 @@ jobs:
       context: '.'
       containerfile: ci/containers/Containerfile
       target: chartgen
-      build-args: |
-        USERID=1001
+      build-args: USERID=1001
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen
       add-branch-tags: true
 
