@@ -35,8 +35,7 @@ jobs:
       # All five build jobs share one Containerfile, so hadolint only needs to
       # run in one of them. Honours .hadolint.yaml at the repo root.
       lint: true
-      build-args: |
-        USERID=1001
+      build-args: USERID=1001
       registry: localhost/pressfreedomtracker-us-dev-django
 
   build-dev-node:
@@ -46,8 +45,7 @@ jobs:
       context: '.'
       containerfile: ci/containers/Containerfile
       target: node-dev
-      build-args: |
-        USERID=1001
+      build-args: USERID=1001
       registry: localhost/pressfreedomtracker-us-dev-node
 
   build-dev-chartgen:
@@ -57,8 +55,7 @@ jobs:
       context: '.'
       containerfile: ci/containers/Containerfile
       target: chartgen-dev
-      build-args: |
-        USERID=1001
+      build-args: USERID=1001
       registry: localhost/pressfreedomtracker-us-dev-chartgen
 
   build-prod-django:
