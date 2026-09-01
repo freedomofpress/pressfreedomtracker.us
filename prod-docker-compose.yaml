@@ -8,7 +8,7 @@ x-chart-pregenerator:
 
 services:
   postgresql:
-    image: docker.io/library/postgres:14
+    image: docker.io/library/postgres:17
     init: true
     ports:
       - '127.0.0.1::5432'
