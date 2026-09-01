@@ -347,10 +347,10 @@ jobs:
       - build-prod-chartgen
       - test
       - test-prod
-    if: ${{ always() }}
     permissions:
       contents: read
       actions: write
+    if: ${{ always() }}
     steps:
       - name: Delete dev django image
         if: ${{ needs.build-dev-django.result == 'success' && always() }}
