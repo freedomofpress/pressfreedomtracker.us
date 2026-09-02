@@ -8,7 +8,7 @@ x-chart-pregenerator:
 
 services:
   postgresql:
-    image: postgres:14
+    image: postgres:17
     init: true
     ports:
       - '5432:5432'
