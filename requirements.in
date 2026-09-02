@@ -1,6 +1,6 @@
 beautifulsoup4
 Django>=5.2.13,<6.0
-djangorestframework>=3.14
+djangorestframework>=3.17.2
 django-anymail
 django-csp>=3.7
 django-modelcluster>=6.2.1
@@ -9,7 +9,7 @@ django-storages[google]>=1.14.6
 django-webpack-loader
 django-widget-tweaks
 djangorestframework-csv
-djangorestframework>=3.14
+djangorestframework>=3.17.2
 docutils
 drf-spectacular[sidecar]>=0.30.0
 factory_boy>=3.3.3
