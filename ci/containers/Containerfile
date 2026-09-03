@@ -1,0 +1,237 @@
+# Multi-stage container build for the pressfreedomtracker.us website.
+# Build targets:
+#
+#   node-dev      dev webpack watcher              (docker-compose.yaml `node` service)
+#   chartgen-dev  dev chart pregenerator, sources bind-mounted
+#                 (docker-compose.yaml `node-chart-pregenerator` service)
+#   dev           dev Django, code bind-mounted    (docker-compose.yaml `django` service)
+#   prod          prod Django, code + built assets baked in (prod-docker-compose.yaml)
+#                 and the published ghcr.io/freedomofpress/pressfreedomtracker-us image
+#   chartgen      prod chart pregenerator, server bundle baked in (prod-docker-compose.yaml)
+#                 and the published ghcr.io/freedomofpress/pressfreedomtracker-us-chartgen image
+#
+# `assets`, `prod-deps` and `version` are internal build stages feeding `prod`,
+# and `chartgen-base` feeds both chartgen targets; none are targeted directly.
+
+# ---- pinned base image digests ----
+# Bump the tag/digest here; every stage below references these, so this is
+# the only place that needs editing on update -- except PYTHON_IMAGE, which is
+# also mirrored by the justfile's `python_builder` and must be bumped with it.
+# Names are fully qualified: an unqualified `node:` or `python:` resolves against
+# the builder's unqualified-search-registries, which under podman can reach a
+# non-Docker-Hub registry first.
+# sha256 for node:26.5.0-trixie as of 2026-07-15
+ARG NODE_IMAGE=docker.io/library/node:26.5.0-trixie@sha256:0473e7dc433a1310f436edee02aa79737ec78a4b345433ab0963d4a256f9ad85
+# sha256 for python:3.14.6-slim-trixie on linux/amd64 as of 2026-06-17
+ARG PYTHON_IMAGE=docker.io/library/python:3.14.6-slim-trixie@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4d0a4828a6500b1eff50061
+
+# ---- node runtime base (dev watch service) ----
+FROM ${NODE_IMAGE} AS node-base
+
+# jq backs the `node` service healthcheck, which polls the `status` field of
+# build/static/bundles/webpack-stats.json.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ci/containers/node-start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/node-start.sh
+
+# node:*-trixie ships a `node` account at uid 1000, so a developer whose host uid
+# is 1000 collides with it; reuse whichever account holds the uid rather than
+# failing. Only the numeric uid matters here -- nothing references the account
+# name -- so the unconditional useradd used in python-base below would buy nothing.
+ARG USERID
+RUN getent passwd "${USERID?USERID must be supplied}" || \
+    useradd --create-home --no-log-init --uid "${USERID}" pft_node
+USER ${USERID}
+
+FROM node-base AS node-dev
+# No WORKDIR: compose sets `working_dir: /django` over the bind-mounted checkout,
+# and node-start.sh uses only relative paths.
+CMD [ "node-start.sh" ]
+
+# ---- chart pregenerator base (shared by chartgen-dev + chartgen) ----
+FROM ${NODE_IMAGE} AS chartgen-base
+
+# Not derived from node-base: that stage ends with a USER switch, and the font
+# install below needs root. ttf-mscorefonts-installer lives in Debian's non-free
+# component and fetches its payload from SourceForge at build time, so this
+# stage depends on more than the registry being reachable.
+# The pipefail SHELL satisfies hadolint DL4006 for the debconf pipe; both
+# chartgen leaf stages inherit it.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN echo "deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
+    echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        fontconfig \
+        ttf-mscorefonts-installer && \
+    fc-cache -f && \
+    rm -rf /var/lib/apt/lists/*
+
+# Defaults to 1001, the uid publish.yaml ships, so a bare build of the `chartgen`
+# target is the deployed artifact; the dev compose file overrides it with the
+# host uid. Same getent-or-useradd idiom as node-base, for the same reason.
+ARG USERID=1001
+RUN getent passwd "${USERID}" || \
+    useradd --create-home --no-log-init --uid "${USERID}" pft_node
+
+# ---- dev chart pregenerator (src + client bind-mounted by compose) ----
+FROM chartgen-base AS chartgen-dev
+
+COPY ci/containers/chartgen-start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/chartgen-start.sh
+
+# Dependencies are installed into the image at /app; compose mounts only
+# chart_pregenerator/src and client/ over it, so node_modules never touches the
+# host checkout and `npm ci` runs once per image build rather than per start.
+ARG USERID=1001
+WORKDIR /app
+RUN chown "${USERID}" /app
+USER ${USERID}
+COPY --chown=${USERID} \
+    chart_pregenerator/package.json chart_pregenerator/package-lock.json \
+    chart_pregenerator/dev.js chart_pregenerator/jest.config.js \
+    chart_pregenerator/babel.config.json ./
+RUN npm ci
+CMD [ "chartgen-start.sh" ]
+
+# ---- prod chart pregenerator (server bundle baked in) ----
+FROM chartgen-base AS chartgen
+
+LABEL org.opencontainers.image.vendor="Freedom of the Press Foundation"
+LABEL org.opencontainers.image.title="pressfreedomtracker.us chart pregenerator"
+
+# The service imports its chart components straight out of client/, so both
+# trees are copied in; the esbuild bundle in build/ is what CMD runs.
+ARG USERID=1001
+COPY --chown=${USERID} chart_pregenerator /opt/chart-pregenerator
+COPY --chown=${USERID} client /opt/chart-pregenerator/client
+WORKDIR /opt/chart-pregenerator
+USER ${USERID}
+RUN npm install && npm run build
+CMD [ "node", "./build/server.js" ]
+
+# ---- prod asset build (built once, copied into `prod`) ----
+FROM ${NODE_IMAGE} AS assets
+
+COPY ./ /src-files
+WORKDIR /src-files
+
+# node_modules and .git are build-time only; stripping them lets `prod` copy this
+# tree wholesale rather than filtering during chown, and keeps the packages and
+# the git history out of the published image. Both still exist in the COPY layer
+# above, but `assets` is a discarded stage that is never pushed -- `prod` only
+# ever sees the result.
+RUN npm install && npm run build && \
+    rm -rf node_modules .git
+
+# ---- python base (shared by dev + prod) ----
+FROM ${PYTHON_IMAGE} AS python-base
+
+# The previous Dev and Prod images installed the same set; Dev merely split it
+# across two stages. `gcc` is omitted as redundant -- build-essential depends on
+# it. The -dev headers are retained for any dependency that lacks a cp314 wheel
+# and falls back to an sdist.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    libpq-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libz-dev \
+    netcat-traditional \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ci/containers/django-start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/django-start.sh
+
+# Created unconditionally, because `prod` addresses this account by name (COPY
+# --chown, chown, USER) -- a conditional useradd would defer the failure to those
+# lines instead of this one. python:*-slim-trixie has nothing between uid 100 and
+# `nobody`, so the uid is free both for the 1000 default and for any host uid dev
+# passes in; a genuine collision fails loudly, right here.
+ARG USERID=1000
+RUN useradd --create-home --no-log-init --uid "${USERID}" --user-group gcorn
+
+# Directories for named-volume permission handling; see
+# https://github.com/docker/compose/issues/3270
+# /django is pre-created and app-owned before any stage sets it as WORKDIR -- the
+# prod build's collectstatic writes ./static into it as an unprivileged user, and
+# production never re-runs collectstatic (its root filesystem is read-only), so
+# that baked output is what actually gets served.
+RUN mkdir -p /django /django-media /django-static /django-logs /deploy && \
+    chown -R gcorn:gcorn /django /django-media /django-static /django-logs /deploy
+
+# Set here rather than only in `prod` so one-shot invocations
+# (`compose run --rm --no-deps django ...`, `docker run`) land in the app root
+# whether or not the caller passes -w.
+WORKDIR /django
+
+EXPOSE 8000
+
+# ---- dev django (code bind-mounted by compose) ----
+FROM python-base AS dev
+
+# The checked-in lockfile, not a freshly recompiled one. dev-requirements.in is
+# `-r requirements.txt` plus dev extras, so this superset covers both. Lockfile
+# drift is caught explicitly by `just pip-check` rather than as a build artifact.
+COPY dev-requirements.txt /requirements.txt
+RUN pip install --no-deps --no-cache-dir --require-hashes -r /requirements.txt
+
+# Re-declared for portability, not because buildah needs it: ARG is documented as
+# going out of scope at the end of the declaring stage, so `USER ${USERID}` below
+# is only guaranteed to resolve where the ARG is in scope. buildah does carry the
+# parent's value through (verified: this target builds to uid 1000 with no
+# --build-arg and no re-declaration), but Docker/BuildKit is not obliged to.
+ARG USERID=1000
+USER ${USERID}
+CMD [ "django-start.sh" ]
+
+# ---- prod python dependencies ----
+# Kept apart from the app source so editing code does not reinstall the wheel set.
+FROM python-base AS prod-deps
+
+COPY requirements.txt ./
+RUN pip install --no-deps --no-cache-dir --require-hashes -r requirements.txt
+
+# ---- deployment version metadata ----
+# The report covers git facts plus the python and OS versions, all of which
+# come from python-base and so match `prod` exactly. Only the two generated
+# text files are copied into `prod`.
+FROM python-base AS version
+
+# .git is bind-mounted rather than COPYed so it is readable for the length of this
+# one command and never lands in an image layer. Requires BuildKit or buildah;
+# only the long-deprecated DOCKER_BUILDKIT=0 builder would choke.
+# Built in /version rather than /django, which python-base hands to the app
+# user -- git refuses to operate on a repo it does not own.
+WORKDIR /version
+COPY ci/scripts/version-file.sh /usr/local/bin/
+# safe.directory: the mounted .git carries the host checkout's ownership, which
+# need not match the build user. Scoped to this discarded stage.
+RUN --mount=type=bind,source=.git,target=/version/.git,ro \
+    git config --global --add safe.directory /version && \
+    version-file.sh
+
+# ---- prod django (code + built assets baked in) ----
+FROM prod-deps AS prod
+
+# Previously attached to the node asset stage, i.e. to an image that is discarded
+# and never published, so the released image carried no labels at all.
+LABEL org.opencontainers.image.vendor="Freedom of the Press Foundation"
+LABEL org.opencontainers.image.title="pressfreedomtracker.us"
+
+COPY --from=assets --chown=gcorn:gcorn /src-files/ /django/
+COPY --from=version --chown=gcorn:gcorn /deploy/ /deploy/
+
+RUN mkdir -p /etc/gunicorn && chown -R gcorn: /etc/gunicorn
+COPY ci/containers/gunicorn/gunicorn.py /etc/gunicorn/gunicorn.py
+
+USER gcorn
+RUN env DJANGO_WHITENOISE=1 DJANGO_DISABLE_DEBUG=1 DJANGO_NO_DB=1 ./manage.py collectstatic -c --noinput
+CMD [ "django-start.sh" ]

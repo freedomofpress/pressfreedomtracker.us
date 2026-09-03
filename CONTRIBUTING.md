@@ -30,10 +30,10 @@ To get started working with the code, clone the repo and follow the instructions
 
 ### Code guidelines
 
-- Python code should follow [PEP8](https://www.python.org/dev/peps/pep-0008) where possible. One exception to this is line lengths beyond 79 characters are allowed. You can check your compliance with the `make lint` command.
+- Python code should follow [PEP8](https://www.python.org/dev/peps/pep-0008) where possible. One exception to this is line lengths beyond 79 characters are allowed. You can check your compliance with the `just lint` command.
 - Writing tests is strongly encouraged, especially if significant behavior is added or changed.
-  - Django-based tests are found in the `tests/` subdirectories of each separate app. Run the entire test suite with `make dev-tests`
-  - JavaScript, jest-based tests are found in the `client/common/js/tests/` directory. Run this test suite with `make dev-jest-tests`
+  - Django-based tests are found in the `tests/` subdirectories of each separate app. Run the entire test suite with `just test`
+  - JavaScript, jest-based tests are found in the `client/common/js/tests/` directory. Run this test suite with `just test-js`
 - JavaScript, CSS/SASS, and HTML markup should mimic the styles and patterns in the existing codebase.
 
 ## Conduct and communication
