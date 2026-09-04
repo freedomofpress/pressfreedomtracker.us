@@ -31,3 +31,8 @@ repos:
       - id: ruff-check
         args: [--fix]
       - id: ruff-format
+
+  - repo: https://github.com/kytta/mirrors-svgo
+    rev: v4.1.0
+    hooks:
+      - id: svgo
