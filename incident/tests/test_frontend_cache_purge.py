@@ -1,11 +1,14 @@
 from unittest.mock import patch
+from urllib.parse import urljoin
 
 from django.test import Client, TestCase
+from django.urls import reverse
 
 from wagtail.models import Site
 
 from common.tests.factories import CategoryPageFactory
-from incident.models import IncidentCategorization
+from home.tests.factories import HomePageFactory
+from incident.models import IncidentCategorization, PrepublicationSettings
 from incident.tests.factories import (
     IncidentIndexPageFactory,
     IncidentPageFactory,
@@ -108,3 +111,34 @@ class TestIncidentPageCachePurge(TestCase):
         incident1.save_revision().publish()  # Should not trigger purge on incident2
 
         assert_never_called_with(purge_page_from_cache, incident2)
+
+
+@patch("incident.signals.purge_page_from_cache")
+@patch("incident.signals.purge_urls_from_cache")
+class TestPrepublicationSettingsCachePurge(TestCase):
+    def setUp(self):
+        self.prepub_list_url = urljoin(
+            Site.objects.get().root_url, reverse("prepub_list")
+        )
+        self.home_page = HomePageFactory()
+
+    def test_cache_purged_when_feature_enabled(
+        self, purge_urls_from_cache, purge_page_from_cache
+    ):
+        "Should purge the unconfirmed incidents URL when the feature is enabled"
+        PrepublicationSettings.objects.create(is_enabled=True)
+
+        purge_urls_from_cache.assert_called_once_with([self.prepub_list_url])
+        purge_page_from_cache.assert_called_once_with(self.home_page)
+
+    def test_cache_purged_when_feature_toggled(
+        self, purge_urls_from_cache, purge_page_from_cache
+    ):
+        "Should purge the unconfirmed incidents when the feature is toggled"
+        prepub_settings = PrepublicationSettings.objects.create()
+        self.assertFalse(purge_urls_from_cache.called)
+
+        prepub_settings.is_enabled = True
+        prepub_settings.save()
+        purge_urls_from_cache.assert_called_once_with([self.prepub_list_url])
+        purge_page_from_cache.assert_called_once_with(self.home_page)

@@ -8,7 +8,7 @@ import requests
 import structlog
 
 
-__all__ = ["purge_all_from_cache", "purge_tags_from_cache"]
+__all__ = ["purge_all_from_cache", "purge_tags_from_cache", "purge_urls_from_cache"]
 
 
 logger = structlog.get_logger("wagtail.frontendcache")
@@ -93,6 +93,12 @@ def purge(backend: CloudflareBackend, data=None) -> None:
 def purge_tags_from_cache(tags: Iterable, backend: CloudflareBackend) -> None:
     "Purge tags by list. Requires an enterprise Cloudflare subscription"
     purge(backend=backend, data={"tags": tags})
+
+
+@for_every_cloudflare_backend
+def purge_urls_from_cache(urls: Iterable, backend: CloudflareBackend) -> None:
+    "Purge urls by list. Requires an enterprise Cloudflare subscription"
+    purge(backend=backend, data={"files": urls})
 
 
 @for_every_cloudflare_backend
