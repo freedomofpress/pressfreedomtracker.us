@@ -4,7 +4,11 @@ from django.test import TestCase, override_settings
 
 from requests.exceptions import HTTPError, InvalidURL
 
-from cloudflare.utils import purge_all_from_cache, purge_tags_from_cache
+from cloudflare.utils import (
+    purge_all_from_cache,
+    purge_tags_from_cache,
+    purge_urls_from_cache,
+)
 
 
 WAGTAILFRONTENDCACHE_SETTINGS = {
@@ -47,6 +51,31 @@ class TestCacheTags(TestCase):
         requests_delete.assert_called_with(
             "https://api.cloudflare.com/client/v4/zones/CLOUDFLARE_FAKE_ZONE/purge_cache",
             json={},
+            headers={
+                "X-Auth-Email": "CLOUDFLARE_FAKE_EMAIL",
+                "Content-Type": "application/json",
+                "X-Auth-Key": "CLOUDFLARE_FAKE_TOKEN",
+            },
+            timeout=5,
+        )
+
+
+@override_settings(WAGTAILFRONTENDCACHE=WAGTAILFRONTENDCACHE_SETTINGS)
+class TestCacheURLs(TestCase):
+    @patch("cloudflare.utils.requests.delete")
+    def test_cache_url_purge(self, requests_delete):
+        """
+        Should fire an appropriate looking HTTP request to Cloudflare's
+        purge API endpoint
+        """
+        purge_urls_from_cache(
+            ["http://example.com/path-1/", "http://example.com/path-2/"]
+        )
+        requests_delete.assert_called_with(
+            "https://api.cloudflare.com/client/v4/zones/CLOUDFLARE_FAKE_ZONE/purge_cache",
+            json={
+                "files": ["http://example.com/path-1/", "http://example.com/path-2/"]
+            },
             headers={
                 "X-Auth-Email": "CLOUDFLARE_FAKE_EMAIL",
                 "Content-Type": "application/json",
