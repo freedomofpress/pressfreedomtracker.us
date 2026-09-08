@@ -10,9 +10,6 @@
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage"
   },
-  "overrides": {
-    "path-to-regexp": "^0.1.13"
-  },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
     "@visx/responsive": "^3.0.0",
