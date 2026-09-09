@@ -22,17 +22,17 @@
     }
 
     &::after {
-      content: url(../icons/plus.svg);
+      content: url("../icons/plus.svg");
       margin-left: 6px;
     }
 
     &[aria-expanded='true']::after {
-      content: url(../icons/cross.svg);
+      content: url("../icons/cross.svg");
     }
 
     details.disclose[open] & {
       &::after {
-        content: url(../icons/cross.svg);
+        content: url("../icons/cross.svg");
       }
     }
   }

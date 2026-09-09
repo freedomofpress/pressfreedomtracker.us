@@ -72,7 +72,7 @@
     text-align: right;
 
     @include unconfirmed-narrow {
-      padding: 0.6em 0 0 0;
+      padding: 0.6em 0 0;
     }
   }
 
@@ -102,9 +102,7 @@
     --max-unit: 25%;
     box-sizing: border-box;
     display: inline-flex;
-
-    align-items:center {}
-
+    align-items: center;
     padding: 0 3px;
     background-color: $black;
     color: $white;

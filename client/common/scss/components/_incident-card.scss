@@ -38,7 +38,7 @@
         height: 1rem;
         background-size: contain;
         background-color: transparent;
-        background-image: url(../icons/plus.svg);
+        background-image: url("../icons/plus.svg");
         background-repeat: no-repeat;
         margin-left: 0.5rem;
       }
@@ -66,7 +66,7 @@
         }
 
         .incident-card--inner .incident-card-collapsible__toggle-icon {
-          background-image: url(../icons/cross.svg);
+          background-image: url("../icons/cross.svg");
         }
       }
     }

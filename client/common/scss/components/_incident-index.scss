@@ -50,30 +50,6 @@
   grid-column: 1 / -1;
 }
 
-.incident-index__sort-details {
-  &[open] {
-    > summary::before {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 80;
-      display: block;
-      cursor: default;
-      content: " ";
-      background: transparent;
-    }
-
-    summary div {
-      @include tablet-up {
-        background-color: $black;
-        color: $white;
-      }
-    }
-  }
-}
-
 .incident-index__sort-button {
   color: $gray-text;
   padding: 0;
@@ -96,6 +72,30 @@
 
     span {
       font-weight: 700;
+    }
+  }
+}
+
+.incident-index__sort-details {
+  &[open] {
+    > summary::before {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 80;
+      display: block;
+      cursor: default;
+      content: " ";
+      background: transparent;
+    }
+
+    summary div {
+      @include tablet-up {
+        background-color: $black;
+        color: $white;
+      }
     }
   }
 }
@@ -177,7 +177,7 @@
   font-size: $font-size-p;
 
   &--selected::before {
-    content: url(../icons/check.svg);
+    content: url("../icons/check.svg");
     position: absolute;
     left: 0.5rem;
   }
@@ -221,7 +221,7 @@
     @include tablet-up {
       .incident-index__download-button::after {
         background: $black;
-        content: url(../icons/arrow-down-white.svg);
+        content: url("../icons/arrow-down-white.svg");
       }
     }
   }
@@ -320,30 +320,30 @@
     transition: color 0.01s ease-in 0.08s;
 
     &::after {
-      content: url(../icons/arrow-down.svg);
+      content: url("../icons/arrow-down.svg");
       height: 16px;
       width: 24px;
       border: 3px solid;
       border-color: $black;
       position: absolute;
-      right: 0px;
-      top: 0px;
+      right: 0;
+      top: 0;
       padding: 0.75rem 0.5rem;
 
-      //padding left of parent
+      // padding left of parent
       transition: content 0.01s ease-in 0.08s;
     }
 
     &:focus {
-      //margin: -3px 0
-      //border-width: 6px 3px 6px 6px
+      // margin: -3px 0
+      // border-width: 6px 3px 6px 6px
 
       &::after {
         border-width: 6px;
         right: -3px;
         top: -3px;
 
-        //box-shadow: rgba(9, 105, 218, 0.3) 0px 0px 0px 3px
+        // box-shadow: rgba(9, 105, 218, 0.3) 0px 0px 0px 3px
 
       }
     }
@@ -353,7 +353,7 @@
       border-color: $tag-inactive;
 
       &::after {
-        content: url(../icons/arrow-down-inactive.svg);
+        content: url("../icons/arrow-down-inactive.svg");
         border-color: $tag-inactive;
       }
     }
@@ -403,7 +403,6 @@
     grid-row: span 2;
     align-self: start;
     margin-top: 0;
-    position: static;
     max-width: none;
     height: 100vh;
     overflow-y: scroll;

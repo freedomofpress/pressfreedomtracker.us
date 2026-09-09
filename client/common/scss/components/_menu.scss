@@ -37,7 +37,7 @@
     position: absolute;
     z-index: 9999;
     background-color: transparent;
-    background-image: url(../icons/icon-menu-open.svg);
+    background-image: url("../icons/icon-menu-open.svg");
     background-repeat: no-repeat;
     border: 0;
     width: 3rem;
@@ -52,7 +52,7 @@
 
   &[aria-expanded="true"] {
     @include tablet-down {
-      background-image: url(../icons/icon-menu-close.svg);
+      background-image: url("../icons/icon-menu-close.svg");
       top: 0.45rem;
     }
   }

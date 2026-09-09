@@ -2,7 +2,6 @@
 $mobile-max: 768px;
 $tablet-max: 1152px;
 $desktop-max: 1440px;
-
 $tablet-min: $mobile-max + 1px;
 $desktop-min: $tablet-max + 1px;
 
@@ -40,7 +39,6 @@ $desktop-min: $tablet-max + 1px;
   // We specify L/R padding/margins separately to avoid
   // interference with someone using T/B padding/margins
   // alongside this mixin
-
   padding-left: 16px;
   padding-right: 16px;
 

@@ -34,7 +34,7 @@
     transition: color 0.01s ease-in 0.08s;
 
     &::after {
-      content: url(../icons/arrow-left.svg);
+      content: url("../icons/arrow-left.svg");
       height: 24px;
       width: 16px;
       border: 3px solid;
@@ -44,7 +44,7 @@
       top: -3px;
       padding: 0.5rem 0.75rem;
 
-      //padding left of parent
+      // padding left of parent
       transition: content 0.01s ease-in 0.08s;
     }
 
@@ -53,7 +53,7 @@
       border-color: $tag-inactive;
 
       &::after {
-        content: url(../icons/arrow-left-inactive.svg);
+        content: url("../icons/arrow-left-inactive.svg");
         border-color: $tag-inactive;
       }
     }
@@ -74,7 +74,7 @@
       color: $white;
 
       &::after {
-        content: url(../icons/arrow-left-white.svg);
+        content: url("../icons/arrow-left-white.svg");
 
         // background-color: $black
 
