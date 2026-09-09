@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './Flashing.sass'
+import './Flashing.scss'
 
 export default function Flashing({ flashing = true, children }) {
 	return <div className={flashing ? 'flashing' : 'flashing flashing--off'}>{children}</div>
