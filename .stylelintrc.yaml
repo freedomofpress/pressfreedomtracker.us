@@ -2,7 +2,7 @@ extends:
   - stylelint-config-standard
   - stylelint-config-recommended
   - stylelint-config-sass-guidelines
-customSyntax: postcss-sass
+customSyntax: postcss-scss
 ignoreFiles:
   - 'node_modules/**/*'
 files:
