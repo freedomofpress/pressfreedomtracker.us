@@ -1,0 +1,49 @@
+.card-title {
+  margin: 0;
+
+  &-big {
+    font-size: $font-size-card-title-l;
+    line-height: 1.1;
+    font-weight: 500;
+
+    @include tablet-up {
+      font-size: $font-size-card-title-l-tab;
+    }
+
+
+    @include desktop-up {
+      font-size: $font-size-card-title-l-desktop;
+    }
+  }
+
+  &-database {
+    font-weight: 500;
+    font-size: $font-size-database-card-title;
+    line-height: 1.25;
+
+    @include tablet-up {
+      font-size: $font-size-database-card-title-tab;
+    }
+
+
+    @include desktop-up {
+      font-size: $font-size-card-title-desktop;
+    }
+  }
+
+  &-small {
+    font-weight: 700;
+    font-size: $font-size-p;
+    line-height: 1.25;
+
+    @include tablet-up {
+      font-size: $font-size-card-title-tab;
+      font-weight: 500;
+    }
+
+
+    @include desktop-up {
+      font-size: $font-size-card-title-desktop;
+    }
+  }
+}

@@ -1,0 +1,54 @@
+.article-content {
+  @include constrain-to-desktop;
+
+  &__inner {
+    @include desktop-up {
+      max-width: 908px;
+      margin: auto;
+    }
+  }
+
+  &__block {
+    @include desktop-up {
+      max-width: 673px;
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .details-table {
+    margin-bottom: 2rem;
+
+    @include tablet-up {
+      margin-bottom: 3.25rem;
+    }
+  }
+}
+
+.article-meta {
+  @include constrain-to-desktop;
+}
+
+.article-actions {
+  text-align: right;
+  margin-top: 2rem;
+  margin-bottom: 3.25rem;
+
+  @include constrain-to-desktop;
+
+  @include desktop-up {
+    max-width: 908px;
+  }
+}
+
+.newsletter-actions {
+  margin-top: 2rem;
+  margin-bottom: 3.25rem;
+
+  @include constrain-to-desktop;
+}

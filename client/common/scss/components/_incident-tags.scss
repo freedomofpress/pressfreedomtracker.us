@@ -1,0 +1,14 @@
+.incident-tags {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 6px;
+
+  @include constrain-to-desktop;
+
+  @include tablet-up {
+    margin-bottom: 3.25rem;
+    flex-direction: row;
+  }
+}

@@ -1,0 +1,82 @@
+.homepage-section {
+  padding: 2rem 0;
+
+  &:last-of-type {
+    margin-bottom: 2rem;
+
+    @include tablet-up {
+      margin-bottom: 40px;
+    }
+
+
+    @include desktop-up {
+      margin-bottom: 104px;
+    }
+  }
+}
+
+.homepage-section-inner {
+  overflow-x: hidden;
+
+  @include constrain-to-desktop;
+}
+
+.homepage-section-paragraph {
+  max-width: 673px;
+}
+
+.homepage-section-header {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.homepage-section-actions {
+  text-align: right;
+  margin-top: 2rem;
+  margin-bottom: 3px;
+}
+
+.homepage-section--gray {
+  background-color: $section-background;
+}
+
+.homepage-unconfirmed {
+  display: grid;
+  gap: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 0.875rem;
+
+  @include tablet-up {
+    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+  }
+
+
+  @include desktop-up {
+    gap: 6rem;
+  }
+
+
+  .homepage-unconfirmed-lede {
+    font-size: $font-size-h3;
+    margin: 0;
+
+    span {
+      background-color: $black;
+      color: $white;
+      padding: 5px;
+    }
+  }
+
+  .homepage-unconfirmed-description {
+    font-size: $font-size-p;
+    color: $gray-text;
+    margin: 0.5rem 0 0;
+
+    a {
+      color: inherit;
+    }
+  }
+}

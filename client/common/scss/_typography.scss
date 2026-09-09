@@ -1,0 +1,53 @@
+// Font sizes
+$font-size-number: 0.75rem;
+$font-size-small-ui: 0.8125rem;
+$font-size-small-p: 0.875rem;
+
+// Mobile
+$font-size-p: 1rem;
+$font-size-database-card-title: 1.375rem;
+$font-size-card-title-l: 1.625rem;
+$font-size-h4: 1.75rem;
+$font-size-h3: 2rem;
+$font-size-h2: 2.5rem;
+$font-size-h1: 3.75rem;
+
+// Desktop
+$font-size-p-desktop: 1.125rem;
+$font-size-card-title-desktop: 1.375rem;
+$font-size-card-title-l-desktop: 1.625rem;
+$font-size-h4-desktop: 2rem;
+$font-size-h3-desktop: 3.75rem;
+$font-size-h2-desktop: 6.25rem;
+$font-size-h1-desktop: 9.0625rem;
+
+// Tablet
+$font-size-database-card-title-tab: 1.125rem;
+$font-size-card-title-tab: 1.375rem;
+$font-size-card-title-l-tab: 1.75rem;
+$font-size-h4-tab: 2rem;
+$font-size-h3-tab: 2.5rem;
+$font-size-h2-tab: 3.75rem;
+$font-size-h1-tab: 5rem;
+
+// CSS variables for fonts
+:root {
+  --font-base: 'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --font-mono: 'Roboto Mono', monospace;
+};
+
+body {
+  font-weight: 400;
+  font-family: var(--font-base);
+  font-size: $font-size-p;
+  line-height: 1.5;
+  color: $black;
+
+  @include desktop-up {
+    font-size: $font-size-p-desktop;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1rem 0;
+}

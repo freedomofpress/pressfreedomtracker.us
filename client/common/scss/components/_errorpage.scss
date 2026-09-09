@@ -1,0 +1,5 @@
+.errorpage-body {
+  margin-bottom: 3rem;
+
+  @include constrain-to-desktop;
+}
