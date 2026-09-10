@@ -1,10 +1,12 @@
+@use "../colors";
+
 .methodology-section-header {
   font-size: 2rem;
   font-weight: 400;
   margin-top: 0;
   margin-bottom: 1rem;
   border-bottom: 1px solid;
-  border-color: $black;
+  border-color: colors.$black;
 }
 
 .methodology-summary {
@@ -13,7 +15,7 @@
 
 .methodology-details-table {
   border-top: 1px solid;
-  border-color: $black;
+  border-color: colors.$black;
 
   .details-table {
     &__row {

@@ -1,9 +1,14 @@
+@use "../colors";
+@use "../grid";
+@use "../responsive";
+@use "../typography";
+
 .incident-index__body {
   grid-template-rows: auto 1fr;
   align-items: start;
 
-  @include constrain-to-desktop;
-  @include grid-container;
+  @include responsive.constrain-to-desktop;
+  @include grid.grid-container;
 }
 
 .incident-index__body-header {
@@ -11,9 +16,9 @@
   position: relative;
   grid-column: 1 / -1;
 
-  @include grid-columns(9, 2rem);
+  @include grid.grid-columns(9, 2rem);
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     grid-column: 4 / -1;
     grid-row: 1;
     position: sticky;
@@ -21,7 +26,7 @@
     z-index: 10;
     background: #fff;
     border-bottom: solid 3px;
-    border-color: $black;
+    border-color: colors.$black;
   }
 
 
@@ -41,7 +46,7 @@
   justify-content: space-between;
   grid-column: 1 / -1;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     margin-bottom: 32px;
   }
 }
@@ -51,7 +56,7 @@
 }
 
 .incident-index__sort-button {
-  color: $gray-text;
+  color: colors.$gray-text;
   padding: 0;
   cursor: pointer;
   line-height: 1.5;
@@ -66,7 +71,7 @@
   }
 
   div {
-    color: $black;
+    color: colors.$black;
     display: inline-block;
     padding: 5px;
 
@@ -92,9 +97,9 @@
     }
 
     summary div {
-      @include tablet-up {
-        background-color: $black;
-        color: $white;
+      @include responsive.tablet-up {
+        background-color: colors.$black;
+        color: colors.$white;
       }
     }
   }
@@ -112,7 +117,7 @@
   pointer-events: none;
   flex-direction: column;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     position: absolute;
     padding: 0;
     margin: 0;
@@ -133,7 +138,7 @@
     content: "";
     pointer-events: none;
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       display: none;
     }
   }
@@ -145,7 +150,7 @@
   margin: auto 0;
   overflow: hidden;
   pointer-events: auto;
-  background-color: $black;
+  background-color: colors.$black;
 }
 
 .incident-index__sort-header {
@@ -153,10 +158,10 @@
 }
 
 .incident-index__sort-title {
-  color: $white;
+  color: colors.$white;
   font-weight: 400;
   margin: 0;
-  font-size: $font-size-p;
+  font-size: typography.$font-size-p;
 }
 
 .incident-index__sort-list {
@@ -169,12 +174,12 @@
   justify-content: space-between;
   width: 100%;
   padding: 0.5rem 2rem;
-  color: $white;
-  background-color: $black;
+  color: colors.$white;
+  background-color: colors.$black;
   border: 0;
   cursor: pointer;
   text-decoration: none;
-  font-size: $font-size-p;
+  font-size: typography.$font-size-p;
 
   &--selected::before {
     content: url("../icons/check.svg");
@@ -186,7 +191,7 @@
 .incident-index__sort-selection {
   display: none;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     display: inline;
   }
 }
@@ -197,14 +202,14 @@
   flex-direction: column;
   margin-bottom: 32px;
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     flex-direction: row;
   }
 
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     margin-bottom: 52px;
   }
 }
@@ -218,9 +223,9 @@
   position: relative;
 
   &[open] {
-    @include tablet-up {
+    @include responsive.tablet-up {
       .incident-index__download-button::after {
-        background: $black;
+        background: colors.$black;
         content: url("../icons/arrow-down-white.svg");
       }
     }
@@ -236,7 +241,7 @@
   left: 0;
   right: 0;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     left: auto;
   }
 }
@@ -244,19 +249,19 @@
 .incident-index__download-wrapper {
   display: flex;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     width: 20rem;
   }
 }
 
 .incident-index__download-list {
-  background: $black;
+  background: colors.$black;
   position: relative;
   flex: auto;
 }
 
 .incident-index__incident-count {
-  color: $gray-text;
+  color: colors.$gray-text;
 }
 
 .incident-index__download-item {
@@ -265,17 +270,17 @@
   justify-content: space-between;
   width: 100%;
   padding: 0.5rem 0.75rem;
-  color: $white;
-  font-size: $font-size-small-p;
+  color: colors.$white;
+  font-size: typography.$font-size-small-p;
   text-decoration: none;
 
   &--downloadable {
     &:hover {
-      color: $black;
-      background-color: $accent-color;
+      color: colors.$black;
+      background-color: colors.$accent-color;
 
       .incident-index__incident-count {
-        color: $black;
+        color: colors.$black;
       }
     }
   }
@@ -290,7 +295,7 @@
   width: calc(100% - 1.5rem - 6px);
   text-align: center;
   border: 3px solid;
-  border-color: $black;
+  border-color: colors.$black;
   list-style-type: none;
 
   &::-webkit-details-marker {
@@ -306,11 +311,11 @@
   }
 
   &[disabled] {
-    color: $tag-inactive;
-    border-color: $tag-inactive;
+    color: colors.$tag-inactive;
+    border-color: colors.$tag-inactive;
   }
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     width: auto;
     border: none;
 
@@ -324,7 +329,7 @@
       height: 16px;
       width: 24px;
       border: 3px solid;
-      border-color: $black;
+      border-color: colors.$black;
       position: absolute;
       right: 0;
       top: 0;
@@ -349,12 +354,12 @@
     }
 
     &[disabled] {
-      color: $tag-inactive;
-      border-color: $tag-inactive;
+      color: colors.$tag-inactive;
+      border-color: colors.$tag-inactive;
 
       &::after {
         content: url("../icons/arrow-down-inactive.svg");
-        border-color: $tag-inactive;
+        border-color: colors.$tag-inactive;
       }
     }
   }
@@ -365,7 +370,7 @@
 }
 
 .incident-index__filters {
-  background: $section-background;
+  background: colors.$section-background;
   box-sizing: border-box;
   position: fixed;
   z-index: 10000;
@@ -384,7 +389,7 @@
     }
 
     .incident-index__filters-mobile-controls {
-      background-color: $white;
+      background-color: colors.$white;
       padding: 2rem;
       display: flex;
       justify-content: space-between;
@@ -398,7 +403,7 @@
     }
   }
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     grid-column: 1 / 4;
     grid-row: span 2;
     align-self: start;
@@ -414,20 +419,20 @@
 .incident-index__results {
   grid-column: 1 / -1;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     grid-column: 4 / -1;
     display: grid;
 
-    @include grid-columns(9, 2rem);
+    @include grid.grid-columns(9, 2rem);
   }
 }
 
 .incident-index__column-header {
   display: none;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     grid-column: span 3;
-    font-size: $font-size-small-p;
+    font-size: typography.$font-size-small-p;
     font-weight: 700;
     display: block;
   }
@@ -435,7 +440,7 @@
 
 .incident-index__filters-mobile-clear {
   text-decoration: none;
-  color: $gray-text;
+  color: colors.$gray-text;
 }
 
 .mobile-filter-toggle {
@@ -446,11 +451,11 @@
   font-weight: 500;
   line-height: 1.714;
   padding: 0.5rem 0.75rem;
-  color: $white;
+  color: colors.$white;
   border: 0;
-  background-color: $black;
+  background-color: colors.$black;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     display: none;
   }
 }

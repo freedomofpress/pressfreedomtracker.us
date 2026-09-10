@@ -1,20 +1,24 @@
+@use "../colors";
+@use "../grid";
+@use "../responsive";
+
 .blog-list {
   padding-top: 32px;
   padding-bottom: 32px;
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
   &--featured {
-    background-color: $section-background;
+    background-color: colors.$section-background;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       max-width: none;
       padding-left: max(calc((100% - 1440px) / 2), 32px);
       padding-right: max(calc((100% - 1440px) / 2), 32px);
     }
 
 
-    @include tablet-down {
+    @include responsive.tablet-down {
       overflow-x: hidden;
     }
   }
@@ -23,10 +27,10 @@
     padding: 0;
     grid-auto-flow: dense;
 
-    @include grid-container;
+    @include grid.grid-container;
 
     &--featured-flex {
-      @include tablet-down {
+      @include responsive.tablet-down {
         display: flex;
         transition: transform 0.9s ease-in-out;
       }
@@ -39,7 +43,7 @@
     margin-bottom: 2rem;
 
     &:not(&--featured) {
-      @include tablet-down {
+      @include responsive.tablet-down {
         grid-column: 1 / -1;
 
         .card-image-small {
@@ -52,7 +56,7 @@
       }
 
 
-      @include mobile-down {
+      @include responsive.mobile-down {
         .blog-card--title {
           font-size: 1rem;
           line-height: 1.25;
@@ -66,7 +70,7 @@
 
 
       .blog-card__teaser--sm {
-        @include tablet-down {
+        @include responsive.tablet-down {
           display: block;
         }
       }
@@ -75,12 +79,12 @@
     &--featured {
       grid-column: span 4;
 
-      @include tablet-down {
+      @include responsive.tablet-down {
         flex: 0 0 534px;
       }
 
 
-      @include mobile-down {
+      @include responsive.mobile-down {
         flex: 0 0 328px;
       }
     }

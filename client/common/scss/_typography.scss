@@ -1,3 +1,6 @@
+@use "colors";
+@use "responsive";
+
 // Font sizes
 $font-size-number: 0.75rem;
 $font-size-small-ui: 0.8125rem;
@@ -41,9 +44,9 @@ body {
   font-family: var(--font-base);
   font-size: $font-size-p;
   line-height: 1.5;
-  color: $black;
+  color: colors.$black;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     font-size: $font-size-p-desktop;
   }
 }

@@ -1,17 +1,20 @@
+@use "../responsive";
+@use "../typography";
+
 .article-title {
-  font-size: $font-size-h2;
+  font-size: typography.$font-size-h2;
   line-height: 1;
   font-weight: 400;
   letter-spacing: -0.03em;
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
-  @include tablet-up {
-    font-size: $font-size-h2-tab;
+  @include responsive.tablet-up {
+    font-size: typography.$font-size-h2-tab;
   }
 
 
-  @include desktop-up {
-    font-size: $font-size-h2-desktop;
+  @include responsive.desktop-up {
+    font-size: typography.$font-size-h2-desktop;
   }
 }

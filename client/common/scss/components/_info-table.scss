@@ -1,3 +1,6 @@
+@use "../colors";
+@use "../responsive";
+
 .info-table {
   margin-bottom: 2em;
 
@@ -12,10 +15,10 @@
 
     &__row {
       padding: 0.25rem 0;
-      border-color: $tag-inactive;
+      border-color: colors.$tag-inactive;
 
-      @include desktop-up {
-        border-color: $black;
+      @include responsive.desktop-up {
+        border-color: colors.$black;
         margin: 0 -2rem;
         padding: 0.25rem 2rem;
       }
@@ -23,14 +26,14 @@
 
     &__link {
       a {
-        color: $gray-text;
+        color: colors.$gray-text;
         text-decoration: none;
       }
     }
 
     &--collapsed {
       .list-table__row:nth-child(n+8) {
-        @include tablet-down {
+        @include responsive.tablet-down {
           display: none;
         }
       }
@@ -38,12 +41,12 @@
   }
 
   &--col-2 {
-    @include tablet-up {
+    @include responsive.tablet-up {
       grid-template-columns: 240px 1fr;
     }
 
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-template-columns: 400px 1fr;
     }
   }
@@ -51,23 +54,23 @@
   &--col-3 {
     grid-template-columns: 1fr auto;
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       grid-template-columns: 240px 2fr 1fr;
     }
 
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-template-columns: 400px 2fr 1fr;
     }
   }
 
   &--col-3-desktop {
-    @include tablet-up {
+    @include responsive.tablet-up {
       grid-template-columns: 1fr auto;
     }
 
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-template-columns: 400px 1fr min-content 1fr;
 
       .info-table-row__hover-only {
@@ -101,13 +104,13 @@
   &__title {
     font-weight: 700;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-column: 1;
     }
   }
 
   &__url {
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-column: 2;
     }
   }
@@ -115,14 +118,14 @@
   &__col-right {
     text-align: right;
 
-    @include mobile-down {
+    @include responsive.mobile-down {
       grid-column: 2;
       grid-row: (1 / span) 2;
       align-self: center;
     }
 
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       grid-column: unset;
       grid-row: unset;
     }
@@ -132,7 +135,7 @@
       grid-column: 2;
       grid-row: (1 / span) 3;
 
-      @include desktop-up {
+      @include responsive.desktop-up {
         grid-column: 4;
         grid-row: unset;
       }
@@ -149,7 +152,7 @@
   margin-inline: auto;
   display: block;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     display: none;
   }
 

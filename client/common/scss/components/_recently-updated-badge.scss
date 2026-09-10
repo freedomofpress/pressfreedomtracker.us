@@ -1,11 +1,13 @@
+@use "../colors";
+
 .recently-updated-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   width: fit-content;
   height: fit-content;
-  background: $black;
-  color: $white;
+  background: colors.$black;
+  color: colors.$white;
   font-weight: 400;
   text-decoration: none;
   outline-offset: 2px;
@@ -16,7 +18,7 @@
     width: 11px;
     height: 11px;
     flex-shrink: 0;
-    background: $white;
+    background: colors.$white;
     border-radius: 50%;
   }
 

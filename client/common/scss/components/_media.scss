@@ -1,8 +1,12 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .inline-media {
   width: 100%;
   margin-inline: 0;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     &.left {
       margin-bottom: 1em;
       margin-right: 1em;
@@ -23,7 +27,7 @@
     line-height: 1;
 
     p {
-      font-size: $font-size-small-p;
+      font-size: typography.$font-size-small-p;
       letter-spacing: -0.01em;
       line-height: 1.43;
       display: inline;
@@ -34,20 +38,20 @@
     }
 
     .media-attribution {
-      font-size: $font-size-small-p;
+      font-size: typography.$font-size-small-p;
       text-transform: uppercase;
     }
 
     a {
-      color: $black;
+      color: colors.$black;
 
       &:focus {
-        outline: $black solid 3px;
+        outline: colors.$black solid 3px;
         outline-offset: 2px;
       }
 
       &:hover {
-        background-color: $accent-color;
+        background-color: colors.$accent-color;
       }
     }
   }

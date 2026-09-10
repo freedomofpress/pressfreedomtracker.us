@@ -1,9 +1,12 @@
+@use "../colors";
+@use "../typography";
+
 .disclose {
   &-summary {
-    font-size: $font-size-small-p;
+    font-size: typography.$font-size-small-p;
     font-weight: 400;
     line-height: 1.43;
-    color: $black;
+    color: colors.$black;
     text-transform: capitalize;
     text-decoration: underline;
     cursor: pointer;
@@ -13,12 +16,12 @@
     border: 0;
 
     &:hover {
-      background-color: $accent-color;
+      background-color: colors.$accent-color;
     }
 
     &:focus {
       border: 3px solid;
-      border-color: $black;
+      border-color: colors.$black;
     }
 
     &::after {

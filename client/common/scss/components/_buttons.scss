@@ -1,18 +1,21 @@
+@use "../colors";
+@use "../typography";
+
 .btn {
   position: relative;
   display: inline-block;
   font-family: var(--font-base);
-  font-size: $font-size-small-p;
+  font-size: typography.$font-size-small-p;
   font-weight: 500;
   line-height: 1.7145;
   padding: 0.5rem 0.75rem;
-  background-color: $white;
-  color: $black;
+  background-color: colors.$white;
+  color: colors.$black;
   text-decoration: none;
   z-index: 1;
 
   &:focus, &:focus-visible {
-    outline: $black solid 3px;
+    outline: colors.$black solid 3px;
     z-index: 2;
   }
 
@@ -26,7 +29,7 @@
 
   &-primary {
     border: 3px solid;
-    border-color: $black;
+    border-color: colors.$black;
 
     // the calc here makes space on right edge for the ">"
     // which is 16px (inner-width) + 1.5rem (padding) + 3px (border) wide
@@ -38,7 +41,7 @@
       height: 24px;
       width: 16px;
       border: 3px solid;
-      border-color: $black;
+      border-color: colors.$black;
       position: absolute;
       right: -3px;
       top: -3px;
@@ -49,19 +52,19 @@
     }
 
     &[disabled] {
-      color: $tag-inactive;
-      border-color: $tag-inactive;
+      color: colors.$tag-inactive;
+      border-color: colors.$tag-inactive;
 
       &::after {
         content: url("../icons/arrow-left-inactive.svg");
-        border-color: $tag-inactive;
+        border-color: colors.$tag-inactive;
       }
     }
 
     &:not([disabled])::before {
       content: "";
       position: absolute;
-      background: $black;
+      background: colors.$black;
       bottom: 0;
       left: 0;
       right: 100%;
@@ -71,7 +74,7 @@
     }
 
     &:not([disabled]):hover {
-      color: $white;
+      color: colors.$white;
 
       &::after {
         content: url("../icons/arrow-left-white.svg");
@@ -88,13 +91,13 @@
 
   &-secondary {
     border: 3px solid;
-    border-color: $black;
+    border-color: colors.$black;
     transition: color 0.01s ease-in 0.08s;
 
     &:not([disabled])::before {
       content: "";
       position: absolute;
-      background: $black;
+      background: colors.$black;
       bottom: 0;
       left: 0;
       right: 100%;
@@ -104,7 +107,7 @@
     }
 
     &:hover {
-      color: $white;
+      color: colors.$white;
 
       &::before {
         right: 0;
@@ -112,18 +115,18 @@
     }
 
     &[disabled] {
-      color: $tag-inactive;
-      border-color: $tag-inactive;
+      color: colors.$tag-inactive;
+      border-color: colors.$tag-inactive;
     }
   }
 
   &-bordered {
     padding: 8px;
     border: 0;
-    outline: $black solid 3px;
+    outline: colors.$black solid 3px;
 
     &:focus, &:focus-visible {
-      outline: $black solid 5px;
+      outline: colors.$black solid 5px;
     }
   }
 
@@ -135,7 +138,7 @@
     &:not([disabled])::before {
       content: "";
       position: absolute;
-      background: $black;
+      background: colors.$black;
       bottom: 0;
       left: 0;
       right: 100%;
@@ -145,7 +148,7 @@
     }
 
     &:hover {
-      color: $white;
+      color: colors.$white;
 
       &::before {
         right: 0;
@@ -153,7 +156,7 @@
     }
 
     &[disabled] {
-      color: $tag-inactive;
+      color: colors.$tag-inactive;
     }
   }
 
@@ -161,24 +164,24 @@
     font-weight: 400;
     line-height: 1.23;
     padding: 0.25rem 0.5rem;
-    background-color: $accent-background-tags;
+    background-color: colors.$accent-background-tags;
 
     &:not([disabled]):hover {
-      background-color: $accent-color;
+      background-color: colors.$accent-color;
     }
 
     &[disabled] {
-      color: $gray-text;
+      color: colors.$gray-text;
     }
   }
 
   &-tag-database {
-    background-color: $tag-inactive-bg;
+    background-color: colors.$tag-inactive-bg;
     text-transform: capitalize;
-    color: $black;
+    color: colors.$black;
 
     &:not([disabled]):hover {
-      background-color: $accent-color;
+      background-color: colors.$accent-color;
     }
   }
 

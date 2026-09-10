@@ -1,15 +1,19 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .homepage-section {
   padding: 2rem 0;
 
   &:last-of-type {
     margin-bottom: 2rem;
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       margin-bottom: 40px;
     }
 
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       margin-bottom: 104px;
     }
   }
@@ -18,7 +22,7 @@
 .homepage-section-inner {
   overflow-x: hidden;
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 }
 
 .homepage-section-paragraph {
@@ -39,7 +43,7 @@
 }
 
 .homepage-section--gray {
-  background-color: $section-background;
+  background-color: colors.$section-background;
 }
 
 .homepage-unconfirmed {
@@ -48,31 +52,31 @@
   padding-top: 1rem;
   padding-bottom: 0.875rem;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     gap: 2rem;
     grid-template-columns: 1fr 1fr;
   }
 
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     gap: 6rem;
   }
 
 
   .homepage-unconfirmed-lede {
-    font-size: $font-size-h3;
+    font-size: typography.$font-size-h3;
     margin: 0;
 
     span {
-      background-color: $black;
-      color: $white;
+      background-color: colors.$black;
+      color: colors.$white;
       padding: 5px;
     }
   }
 
   .homepage-unconfirmed-description {
-    font-size: $font-size-p;
-    color: $gray-text;
+    font-size: typography.$font-size-p;
+    color: colors.$gray-text;
     margin: 0.5rem 0 0;
 
     a {

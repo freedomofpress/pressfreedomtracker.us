@@ -1,19 +1,22 @@
+@use "../responsive";
+@use "../typography";
+
 .page-title {
-  font-size: $font-size-h1;
+  font-size: typography.$font-size-h1;
   text-transform: uppercase;
   line-height: 1;
   font-weight: 300;
   letter-spacing: -0.04em;
   margin-bottom: 32px;
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
-  @include tablet-up {
-    font-size: $font-size-h1-tab;
+  @include responsive.tablet-up {
+    font-size: typography.$font-size-h1-tab;
   }
 
 
-  @include desktop-up {
-    font-size: $font-size-h1-desktop;
+  @include responsive.desktop-up {
+    font-size: typography.$font-size-h1-desktop;
   }
 }

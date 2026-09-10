@@ -1,3 +1,5 @@
+@use "responsive";
+
 @mixin grid-columns($column-count, $gutter) {
   grid-template-columns: repeat($column-count, minmax(0, 1fr));
   grid-column-gap: $gutter;
@@ -9,13 +11,13 @@
   // 8 equal width cols, 16px gutter
   @include grid-columns(8, 1rem);
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     // 8 equal width cols, 24px gutter
     @include grid-columns(8, 1.5rem);
   }
 
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     // 12 equal width cols, 32px gutter
     @include grid-columns(12, 2rem);
   }

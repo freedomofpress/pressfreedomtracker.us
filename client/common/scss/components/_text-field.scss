@@ -1,8 +1,11 @@
+@use "../colors";
+@use "../typography";
+
 .text-field {
   width: 100%;
   max-width: 668px;
   height: 300px;
-  border-color: $black;
+  border-color: colors.$black;
   border: 2px solid;
 
   &--single {
@@ -12,13 +15,13 @@
     border-width: 0;
     border-bottom: 2px solid;
     font-style: italic;
-    font-size: $font-size-small-ui;
+    font-size: typography.$font-size-small-ui;
     line-height: 1.33;
     padding: 0.125rem;
     border-radius: 0;
 
     &:focus {
-      background: $tag-inactive-bg;
+      background: colors.$tag-inactive-bg;
       outline: 3px solid #000;
 
       // Remove the border bottom to make the outline
@@ -35,7 +38,7 @@
     border: 3px solid;
     padding: 12px 23px;
     font-style: italic;
-    font-size: $font-size-small-p;
+    font-size: typography.$font-size-small-p;
     appearance: none;
     border-radius: 0;
   }

@@ -1,3 +1,7 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .unconfirmed-incidents-page {
   > * + * {
     margin: 2rem 0;
@@ -26,7 +30,7 @@
   thead {
     border: solid 3px #000;
     text-align: left;
-    background-color: $section-background;
+    background-color: colors.$section-background;
   }
 
   tbody {
@@ -34,11 +38,11 @@
     font-size: 1rem;
 
     tr {
-      background-color: $white;
+      background-color: colors.$white;
     }
 
     tr:nth-child(even) {
-      background-color: $section-background;
+      background-color: colors.$section-background;
     }
   }
 
@@ -66,9 +70,9 @@
 
   caption {
     padding: 1em 0.5em 0 0;
-    color: $gray-text;
+    color: colors.$gray-text;
     caption-side: bottom;
-    font-size: $font-size-small-ui;
+    font-size: typography.$font-size-small-ui;
     text-align: right;
 
     @include unconfirmed-narrow {
@@ -104,10 +108,10 @@
     display: inline-flex;
     align-items: center;
     padding: 0 3px;
-    background-color: $black;
-    color: $white;
+    background-color: colors.$black;
+    color: colors.$white;
     border: 3px solid;
-    border-color: $black;
+    border-color: colors.$black;
     font-size: 1.075rem;
     font-weight: 700;
     line-height: 1;
@@ -128,14 +132,14 @@
 
     &:hover,
     &:focus-visible {
-      background-color: $white;
-      color: $black;
+      background-color: colors.$white;
+      color: colors.$black;
     }
   }
 }
 
 .unconfirmed-incidents--page-title {
-  @include mobile-down {
+  @include responsive.mobile-down {
     font-size: 3rem;
   }
 }

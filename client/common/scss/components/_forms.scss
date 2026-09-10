@@ -1,37 +1,41 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .formpage-body {
   .styled-text {
     margin-bottom: 2em;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       max-width: 50%;
     }
   }
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 }
 
 .formpage-form {
   padding: 2em 0;
-  background-color: $section-background;
-  border-bottom: $black 3px solid;
+  background-color: colors.$section-background;
+  border-bottom: colors.$black 3px solid;
   margin-bottom: 2em;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     margin: 4rem -2rem 2rem;
     padding: 2rem;
   }
 
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
   &__top-level-error {
     font-style: italic;
-    color: $error;
+    color: colors.$error;
   }
 }
 
 .form {
-  @include desktop-up {
+  @include responsive.desktop-up {
     max-width: 50%;
   }
 
@@ -76,7 +80,7 @@
     &__error__message {
       padding-top: 0.25em;
       font-style: italic;
-      color: $error;
+      color: colors.$error;
       display: none;
       clear: left;
 
@@ -88,15 +92,15 @@
 
   .form-item {
     font-family: var(--font-base);
-    font-size: $font-size-p-desktop;
+    font-size: typography.$font-size-p-desktop;
     font-style: italic;
     padding: 0.15em;
     padding-bottom: 0;
     display: block;
-    border: 1px solid $section-background;
-    border-bottom-color: $black;
+    border: 1px solid colors.$section-background;
+    border-bottom-color: colors.$black;
     appearance: none;
-    background-color: $white;
+    background-color: colors.$white;
     height: 1.5em;
     width: 100%;
     margin-top: 0.75em;
@@ -108,21 +112,21 @@
 
     &:focus {
       outline: none;
-      border-color: $black;
-      background-color: $tag-inactive-bg;
+      border-color: colors.$black;
+      background-color: colors.$tag-inactive-bg;
     }
   }
 
   .form-field--error {
     .form-label {
-      color: $error;
+      color: colors.$error;
     }
 
     .form-item {
-      border-color: $error;
+      border-color: colors.$error;
 
       &:focus {
-        border-color: $error;
+        border-color: colors.$error;
       }
     }
   }
@@ -189,7 +193,7 @@
     input[type='radio'] {
       font: inherit;
       appearance: none;
-      background-color: $section-background;
+      background-color: colors.$section-background;
       position: relative;
       top: 0.25em;
       color: currentColor;

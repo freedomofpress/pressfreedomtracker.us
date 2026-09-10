@@ -1,3 +1,7 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .special-blog-card {
   display: grid;
   grid-template: "container";
@@ -7,13 +11,13 @@
   margin-left: -16px;
   margin-right: -16px;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     margin-left: -24px;
     margin-right: -24px;
   }
 
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     margin-left: -32px;
     margin-right: -32px;
   }
@@ -44,22 +48,22 @@
   &__title {
     margin: 0;
     line-height: 1.2;
-    font-size: $font-size-h2;
+    font-size: typography.$font-size-h2;
     font-weight: 400;
-    color: $white;
+    color: colors.$white;
     text-decoration: var(--title-text-decoration);
 
-    @include desktop-up {
-      font-size: $font-size-h3-desktop;
+    @include responsive.desktop-up {
+      font-size: typography.$font-size-h3-desktop;
     }
   }
 
   &__metadata {
-    font-size: $font-size-p;
+    font-size: typography.$font-size-p;
     font-weight: 700;
 
-    @include desktop-up {
-      font-size: $font-size-p-desktop;
+    @include responsive.desktop-up {
+      font-size: typography.$font-size-p-desktop;
       line-height: 1;
     }
   }
@@ -70,10 +74,10 @@
     flex-direction: column;
     gap: 1rem;
     place-self: end left;
-    color: $white;
+    color: colors.$white;
     padding: 0 1.5rem 1rem;
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       max-width: 75%;
     }
 

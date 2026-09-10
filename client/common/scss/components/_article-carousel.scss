@@ -1,11 +1,15 @@
+@use "../colors";
+@use "../grid";
+@use "../responsive";
+
 .article-carousel {
   &__items {
     padding: 0;
 
-    @include grid-container;
+    @include grid.grid-container;
 
     &--flex {
-      @include tablet-down {
+      @include responsive.tablet-down {
         display: flex;
         transition: transform 0.9s ease-in-out;
         overflow-x: auto;
@@ -26,7 +30,7 @@
     text-align: right;
 
     &--visible {
-      @include tablet-down {
+      @include responsive.tablet-down {
         display: block;
       }
     }
@@ -36,7 +40,7 @@
       border-width: 0;
 
       &[disabled] .arrow-path {
-        stroke: $gray-text;
+        stroke: colors.$gray-text;
       }
     }
   }
@@ -46,13 +50,13 @@
     margin-bottom: 2rem;
     grid-column: span 4;
 
-    @include tablet-down {
+    @include responsive.tablet-down {
       flex: 0 0 534px;
       scroll-snap-align: start;
     }
 
 
-    @include mobile-down {
+    @include responsive.mobile-down {
       flex: 0 0 328px;
     }
 
@@ -62,12 +66,12 @@
     &--latest {
       grid-column: 1 / -1;
 
-      @include tablet-up {
+      @include responsive.tablet-up {
         grid-column: span 4;
       }
 
 
-      @include desktop-up {
+      @include responsive.desktop-up {
         grid-column: span 3;
       }
     }

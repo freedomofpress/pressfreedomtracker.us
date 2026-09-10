@@ -1,16 +1,19 @@
+@use "../colors";
+@use "../responsive";
+
 .special-blog__hero {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  color: $white;
+  color: colors.$white;
   height: 600px;
 
   &-text {
     width: calc(100% - 64px);
 
-    @include constrain-to-desktop;
+    @include responsive.constrain-to-desktop;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       display: flex;
       justify-content: space-between;
     }
@@ -46,7 +49,7 @@
       z-index: 0;
     }
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       height: 662px;
     }
   }

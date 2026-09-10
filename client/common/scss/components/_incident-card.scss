@@ -1,6 +1,10 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .incident-card {
   border-top: 1px solid;
-  border-color: $black;
+  border-color: colors.$black;
   padding-top: 2rem;
 
   &-collapsible {
@@ -8,7 +12,7 @@
       display: none;
     }
 
-    @include mobile-down {
+    @include responsive.mobile-down {
       padding-top: 0.5rem;
 
       .incident-card__image-wrapper {
@@ -29,7 +33,7 @@
         background: none;
         border: 2px solid black;
         padding: 8px 10px;
-        font-size: $font-size-small-p;
+        font-size: typography.$font-size-small-p;
         cursor: pointer;
       }
 
@@ -86,7 +90,7 @@
   }
 
   &--inner {
-    @include tablet-up {
+    @include responsive.tablet-up {
       transition: transform 0.15s ease-in-out;
 
       &:hover {

@@ -1,18 +1,22 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .footer-info {
-  background-color: $black;
-  color: $gray-text;
+  background-color: colors.$black;
+  color: colors.$gray-text;
   padding: 32px 0;
 
   &--inner {
-    @include constrain-to-desktop;
+    @include responsive.constrain-to-desktop;
   }
 
   a {
-    color: $white;
+    color: colors.$white;
 
     &:hover {
-      background-color: $accent-color;
-      color: $black;
+      background-color: colors.$accent-color;
+      color: colors.$black;
 
       svg {
         filter: invert(1);
@@ -20,7 +24,7 @@
     }
 
     &:focus {
-      border-color: $white;
+      border-color: colors.$white;
     }
   }
 
@@ -29,7 +33,7 @@
   }
 
   &__body {
-    font-size: $font-size-small-p;
+    font-size: typography.$font-size-small-p;
     line-height: 1.43;
     margin-bottom: 2rem;
   }
@@ -40,7 +44,7 @@
     justify-content: space-between;
     gap: 2rem;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       align-items: center;
     }
 
@@ -51,7 +55,7 @@
       &:not(:last-of-type) {
         margin-right: 2rem;
 
-        @include desktop-up {
+        @include responsive.desktop-up {
           margin-right: 3.5rem;
         }
       }
@@ -75,7 +79,7 @@
           &:not(:first-of-type) {
             margin-left: 2rem;
 
-            @include desktop-up {
+            @include responsive.desktop-up {
               margin-left: 3.5rem;
             }
           }
@@ -85,7 +89,7 @@
 
     &-link {
       display: inline-block;
-      font-size: $font-size-small-p;
+      font-size: typography.$font-size-small-p;
 
       &:hover {
         background-color: transparent;

@@ -1,8 +1,10 @@
+@use "../colors";
+
 .category-checkbox {
   &--label {
     border: 3px solid;
     border-bottom-width: 0;
-    border-color: $black;
+    border-color: colors.$black;
     padding: 1rem 0.75rem;
     display: flex;
     justify-content: space-between;
@@ -31,12 +33,12 @@
     width: 1px;
 
     &:checked + label {
-      background-color: $accent-color;
+      background-color: colors.$accent-color;
       border-bottom-width: 3px;
     }
 
     &:focus-visible + label {
-      outline: 1px solid $accent-background-tags;
+      outline: 1px solid colors.$accent-background-tags;
       outline-offset: 3px;
     }
   }

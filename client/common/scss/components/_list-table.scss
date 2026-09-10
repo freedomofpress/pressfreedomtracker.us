@@ -1,12 +1,16 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .list-table {
   position: relative;
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
   &__row {
     padding: 0.25rem 2rem;
     border-bottom: 1px solid;
-    border-color: $black;
+    border-color: colors.$black;
     list-style: none;
 
     &:first-of-type {
@@ -15,25 +19,25 @@
   }
 
   &__col {
-    font-size: $font-size-small-p;
+    font-size: typography.$font-size-small-p;
     line-height: 1.43;
   }
 
   &__link {
     font-size: 13px;
     line-height: 1.5;
-    color: $gray-text;
+    color: colors.$gray-text;
   }
 
   &__item {
     text-decoration: none;
-    color: $black;
+    color: colors.$black;
     display: grid;
     grid-column-gap: 32px;
 
     &:focus {
       border: 3px solid;
-      border-color: $black;
+      border-color: colors.$black;
     }
   }
 
@@ -42,7 +46,7 @@
     margin: 0;
 
     .list-table__item {
-      @include desktop-up {
+      @include responsive.desktop-up {
         grid-template-columns: 1fr 200px 110px;
       }
     }
@@ -53,7 +57,7 @@
     margin: 0;
 
     .list-table__item {
-      @include desktop-up {
+      @include responsive.desktop-up {
         grid-template-columns: 1fr 440px 200px 120px;
       }
     }
@@ -70,7 +74,7 @@
       margin: 0;
     }
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       display: grid;
       grid-template-columns: 1fr 440px 200px 120px;
       grid-column-gap: 32px;

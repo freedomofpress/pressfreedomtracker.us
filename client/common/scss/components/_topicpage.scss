@@ -1,15 +1,18 @@
+@use "../grid";
+@use "../responsive";
+
 .topicpage {
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
   &__inner {
-    @include desktop-up {
+    @include responsive.desktop-up {
       max-width: 908px;
       margin: auto;
     }
   }
 
   &__block {
-    @include desktop-up {
+    @include responsive.desktop-up {
       max-width: 673px;
       margin-left: auto;
       margin-right: 0;
@@ -22,12 +25,12 @@
 }
 
 .topicpage-body {
-  @include grid-container;
+  @include grid.grid-container;
 
   &__content {
     grid-column: 1 / -1;
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       grid-column: 1 / 9;
     }
   }
@@ -35,7 +38,7 @@
   &__sidebar {
     grid-column: 1 / -1;
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       grid-column: 9 / -1;
     }
   }

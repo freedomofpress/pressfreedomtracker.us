@@ -1,16 +1,21 @@
+@use "../colors";
+@use "../grid";
+@use "../responsive";
+@use "../typography";
+
 .incident-database-card {
   grid-column: 1 / -1;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   border-bottom: solid 1px;
-  border-color: $black;
+  border-color: colors.$black;
   display: flex;
   flex-direction: column;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     display: grid;
 
-    @include grid-columns(9, 2rem);
+    @include grid.grid-columns(9, 2rem);
   }
 
 
@@ -19,7 +24,7 @@
   }
 
   &__title-link {
-    color: $black;
+    color: colors.$black;
     text-decoration: none;
 
     &:hover {
@@ -27,7 +32,7 @@
     }
 
     &:focus {
-      outline: $black solid 3px;
+      outline: colors.$black solid 3px;
       display: inline-block;
     }
   }
@@ -35,13 +40,13 @@
   &__section {
     flex: 1 1;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-column: span 3;
     }
   }
 
   &__details-title {
-    @include desktop-up {
+    @include responsive.desktop-up {
       display: none;
     }
   }
@@ -51,7 +56,7 @@
     flex-wrap: wrap;
     gap: 2rem;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-column: span 3;
       flex-direction: row;
     }
@@ -64,7 +69,7 @@
   &__category-details {
     flex: 1;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-column: span 3;
     }
   }
@@ -72,7 +77,7 @@
   &__details-toggle {
     align-self: flex-start;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       display: none;
     }
   }
@@ -89,7 +94,7 @@
   &__row {
     padding: 0.5rem 0;
     border-bottom: 1px solid;
-    border-color: $gray-border;
+    border-color: colors.$gray-border;
 
     &.table-small, + tablet-up {
       display: flex;
@@ -104,9 +109,9 @@
       display: block;
       line-height: 0.5;
 
-      @include tablet-up {
+      @include responsive.tablet-up {
         padding: 0.3rem 0;
-        border-color: $gray-border;
+        border-color: colors.$gray-border;
       }
 
 
@@ -129,7 +134,7 @@
   }
 
   &__label {
-    font-size: $font-size-small-p;
+    font-size: typography.$font-size-small-p;
     line-height: 1.43;
     white-space: nowrap;
     margin-right: 0.5rem;
@@ -141,7 +146,7 @@
 
   &__value {
     margin-left: 0;
-    font-size: $font-size-small-p;
+    font-size: typography.$font-size-small-p;
     line-height: 1.43;
   }
 
@@ -156,19 +161,19 @@
     top: 6px;
     right: 24px;
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       display: none;
     }
   }
 
   .database-card-toggle-btn {
-    @include desktop-up {
+    @include responsive.desktop-up {
       display: none;
     }
   }
 
   &__container {
-    @include tablet-down {
+    @include responsive.tablet-down {
       margin-top: 1rem;
 
       &[data-visible='false'] {
@@ -185,15 +190,15 @@
 .heading-table {
   margin: 0;
   border-bottom: 1px solid;
-  border-color: $gray-border;
+  border-color: colors.$gray-border;
   padding: 0.25rem 0 0;
 
-  @include tablet-down {
+  @include responsive.tablet-down {
     padding: 0.3rem 0;
   }
 
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     border-bottom: none;
   }
 }

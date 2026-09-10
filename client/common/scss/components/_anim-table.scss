@@ -1,5 +1,8 @@
+@use "../colors";
+@use "../responsive";
+
 .anim-table-row {
-  @include desktop-up {
+  @include responsive.desktop-up {
     transition: transform 0.2s ease-in-out;
 
     &:hover {
@@ -13,6 +16,6 @@
   a.anim-table-mainLink--hovered {
     font-size: 16px;
     line-height: 1;
-    color: $black;
+    color: colors.$black;
   }
 }

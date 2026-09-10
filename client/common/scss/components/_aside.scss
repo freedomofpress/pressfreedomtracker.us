@@ -1,8 +1,10 @@
+@use "../colors";
+
 .aside {
   &--reversed {
     * > span {
-      color: $white;
-      background-color: $black;
+      color: colors.$white;
+      background-color: colors.$black;
       padding: 5px 1px;
     }
 
@@ -33,25 +35,25 @@
 
     /* code necessary */
     ol, ul {
-      background-color: $black;
-      color: $white;
+      background-color: colors.$black;
+      color: colors.$white;
 
       li {
-        background-color: $white;
+        background-color: colors.$white;
       }
     }
 
     a {
-      color: $white;
+      color: colors.$white;
     }
 
     a:focus {
-      border-color: $white;
+      border-color: colors.$white;
     }
 
     a:hover {
-      background-color: $accent-color;
-      color: $black;
+      background-color: colors.$accent-color;
+      color: colors.$black;
     }
   }
 }

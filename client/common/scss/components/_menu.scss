@@ -1,3 +1,6 @@
+@use "../colors";
+@use "../responsive";
+
 .header {
   display: flex;
   align-items: center;
@@ -7,7 +10,7 @@
   margin-top: 1rem;
   z-index: 1000;
 
-  @include constrain-to-desktop;
+  @include responsive.constrain-to-desktop;
 
   &.menu-expanded {
     background-color: #F8F8F8;
@@ -32,7 +35,7 @@
 .mobile-nav-toggle {
   display: none;
 
-  @include tablet-down {
+  @include responsive.tablet-down {
     display: block;
     position: absolute;
     z-index: 9999;
@@ -51,7 +54,7 @@
 
 
   &[aria-expanded="true"] {
-    @include tablet-down {
+    @include responsive.tablet-down {
       background-image: url("../icons/icon-menu-close.svg");
       top: 0.45rem;
     }
@@ -65,7 +68,7 @@
   align-items: center;
   justify-content: space-between;
 
-  @include tablet-down {
+  @include responsive.tablet-down {
     flex-direction: column;
     background-color: #F8F8F8;
     align-items: stretch;
@@ -81,7 +84,7 @@
 
 
   &[data-visible="true"] {
-    @include tablet-down {
+    @include responsive.tablet-down {
       max-height: 100vh;
       background-color: #F8F8F8;
     }
@@ -95,7 +98,7 @@
   margin: 0;
   padding: 0;
 
-  @include tablet-down {
+  @include responsive.tablet-down {
     margin-top: 10rem;
     flex-direction: column;
 
@@ -117,10 +120,10 @@
   a > span {
     display: none;
 
-    @include tablet-down {
+    @include responsive.tablet-down {
       display: inline;
       font-weight: 400;
-      color: $gray-text;
+      color: colors.$gray-text;
     }
   }
 }
@@ -134,7 +137,7 @@
   margin-bottom: 2rem;
   padding: 0;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     margin-bottom: 0;
   }
 }

@@ -1,17 +1,21 @@
+@use "../colors";
+@use "../grid";
+@use "../responsive";
+
 .related-incidents {
-  background-color: $section-background;
+  background-color: colors.$section-background;
   padding-top: 2rem;
   padding-bottom: 5rem;
 
   &__inner {
-    @include constrain-to-desktop;
+    @include responsive.constrain-to-desktop;
   }
 
   &__actions {
     text-align: right;
     margin-top: 2rem;
 
-    @include constrain-to-desktop;
+    @include responsive.constrain-to-desktop;
   }
 
   &__container {
@@ -20,19 +24,19 @@
     list-style-type: none;
     grid-auto-flow: row;
 
-    @include grid-container;
+    @include grid.grid-container;
   }
 
   &__item {
     grid-column: 1 / -1;
     margin-bottom: 2rem;
 
-    @include tablet-up {
+    @include responsive.tablet-up {
       grid-column: span 4;
     }
 
 
-    @include desktop-up {
+    @include responsive.desktop-up {
       grid-column: span 3;
     }
   }

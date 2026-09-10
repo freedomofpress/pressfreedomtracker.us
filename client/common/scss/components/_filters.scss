@@ -1,3 +1,7 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
 .filters__form {
   select {
     max-width: 200px;
@@ -32,7 +36,7 @@
 
     .filter-widget--label {
       font-size: 0.875rem;
-      color: $gray-text;
+      color: colors.$gray-text;
     }
   }
 }
@@ -43,7 +47,7 @@
   display: block;
   cursor: pointer;
   top: 0;
-  background-color: $section-background;
+  background-color: colors.$section-background;
 
   &::before {
     float: right;
@@ -77,20 +81,20 @@
 
 .filters__field-label {
   margin-bottom: 0.25rem;
-  font-size: $font-size-small-ui;
+  font-size: typography.$font-size-small-ui;
 }
 
 .filters__form-actions {
   display: none;
 
-  @include tablet-up {
+  @include responsive.tablet-up {
     display: block;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     margin: 0 -2rem -1rem;
     padding: 1rem 2rem;
     position: sticky;
     bottom: 0;
-    background-color: $section-background;
+    background-color: colors.$section-background;
   }
 }
 
@@ -112,7 +116,7 @@
 .filters__suggestions {
   position: relative;
   z-index: 99;
-  font-size: $font-size-small-p;
+  font-size: typography.$font-size-small-p;
   margin: auto 0;
   max-height: 13rem;
   overflow-y: auto;
@@ -124,7 +128,7 @@
 
 .filters__suggestion-tooltip-text {
   margin-left: 0.25rem;
-  color: $gray-text;
+  color: colors.$gray-text;
 }
 
 .filters__suggestions-item {
@@ -133,11 +137,11 @@
   justify-content: space-between;
   width: 100%;
   padding: 0.5rem 0.75rem;
-  background-color: $white;
+  background-color: colors.$white;
 
   &--active {
-    color: $black;
-    background-color: $accent-color;
+    color: colors.$black;
+    background-color: colors.$accent-color;
 
     .filters__suggestion-tooltip {
       display: inline;
@@ -149,8 +153,8 @@
     cursor: pointer;
 
     &:hover {
-      color: $black;
-      background-color: $accent-color;
+      color: colors.$black;
+      background-color: colors.$accent-color;
 
       .filters__suggestion-tooltip {
         display: inline;
@@ -164,14 +168,14 @@
   margin: 0;
   padding: 0;
 
-  @include desktop-up {
+  @include responsive.desktop-up {
     &:not(:empty) {
       margin-bottom: 32px;
     }
   }
 
 
-  @include tablet-down {
+  @include responsive.tablet-down {
     margin-bottom: 8px;
   }
 
