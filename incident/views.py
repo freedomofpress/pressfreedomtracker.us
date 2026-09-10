@@ -130,6 +130,10 @@ def dates_between(lower, upper):
         current += datetime.timedelta(days=1)
 
 
+def prepub_sync(request):
+    raise Http404
+
+
 def prepub_list(request):
     try:
         sync = PrepublicationIncidentSync.objects.get()
