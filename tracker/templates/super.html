@@ -1,16 +1,18 @@
+{% load i18n %}
 {% load static wagtailmetadata_tags %}
 {% load wagtail_site from wagtailcore_tags %}
 {% load render_bundle from webpack_loader %}
+{% get_current_language as LANGUAGE_CODE %}
 
-<!DOCTYPE html>
-<html class="no-js" lang="en">
+<!doctype html>
+<html class="no-js" lang="{{ LANGUAGE_CODE }}">
 	<head>
-		{% if request.in_preview_panel %}
-			<base target="_blank">
-		{% endif %}
 		{% block head %}
 			<meta charset="utf-8" />
-			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
+			<link rel="icon" href="/favicon.ico" sizes="any" />
+			<link rel="icon" href="{% static 'favicon/favicon.svg' %}" type="image/svg+xml" />
+			<link rel="apple-touch-icon" href="{% static 'icons/apple-touch-icon.png' %}" />
 			<title>
 				{% block title %}
 					{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
@@ -23,8 +25,6 @@
 				{% endblock %}
 			</title>
 			<meta name="description" content="" />
-			<meta name="viewport" content="width=device-width, initial-scale=1" />
-			<link rel="icon" href="/favicon.ico" />
 
 			{% block css %}
 				{% render_bundle 'common' 'css' %}
@@ -49,6 +49,9 @@
 					{% endif %}
 				{% endwith %}
 			{% endblock %}
+			{% if request.in_preview_panel %}
+				<base target="_blank" />
+			{% endif %}
 		{% endblock %}
 	</head>
 
