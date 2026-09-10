@@ -5,8 +5,7 @@
   width: 100%;
   max-width: 668px;
   height: 300px;
-  border-color: colors.$black;
-  border: 2px solid;
+  border: 2px solid colors.$black;
 
   &--single {
     box-sizing: border-box;
