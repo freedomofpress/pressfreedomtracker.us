@@ -2,7 +2,7 @@
 
 @mixin grid-columns($column-count, $gutter) {
   grid-template-columns: repeat($column-count, minmax(0, 1fr));
-  grid-column-gap: $gutter;
+  column-gap: $gutter;
 }
 
 @mixin grid-container {

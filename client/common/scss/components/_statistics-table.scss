@@ -22,7 +22,7 @@
     &--inner {
       display: grid;
       grid-template-columns: 1fr 30px auto;
-      grid-gap: 14px;
+      gap: 14px;
       align-items: center;
 
       @include responsive.tablet-up {

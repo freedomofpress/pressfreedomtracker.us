@@ -93,7 +93,7 @@
 
   &::before {
     content: " ";
-    background: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(0deg, #000 0%, rgb(0, 0, 0, 0) 100%);
     z-index: 1;
     position: absolute;
     height: 600px;
