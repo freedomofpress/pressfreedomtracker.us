@@ -118,14 +118,7 @@
 		line-height: 1;
 
 		// width of one cell * incident count
-		width: calc(
-			var(--incident-count) *
-				clamp(
-					var(--min-unit),
-					calc(100% / var(--max-count)),
-					var(--max-unit)
-				)
-		);
+		width: calc(var(--incident-count) * clamp(var(--min-unit), calc(100% / var(--max-count)), var(--max-unit)));
 		min-width: max-content;
 		height: 1.6rem;
 		cursor: pointer;
