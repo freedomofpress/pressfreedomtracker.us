@@ -18,6 +18,7 @@ from incident.models import (
 from incident.views import (
     LegalOrderImportConfirmView,
     LegalOrderImportView,
+    prepub_sync,
 )
 
 
@@ -50,6 +51,13 @@ def incident_legal_order_import_url():
                 namespace="import_legal_orders",
             ),
         ),
+    ]
+
+
+@hooks.register("register_admin_urls")
+def register_prepub_sync_url():
+    return [
+        path("prepub_sync/", prepub_sync, name="prepub-sync"),
     ]
 
 

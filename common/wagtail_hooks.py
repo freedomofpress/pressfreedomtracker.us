@@ -1,4 +1,5 @@
 from django.urls import path, re_path
+from django.utils.html import format_html
 
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from wagtail import hooks
@@ -224,3 +225,11 @@ class TagsSnippetViewSet(SnippetViewSet):
 
 
 register_snippet(TagsSnippetViewSet)
+
+
+@hooks.register("insert_global_admin_css")
+def wagtail_admin_css():
+    return format_html(
+        '<link rel="stylesheet" href="{}">',
+        get_files("wagtail-admin", extension="css")[0]["url"],
+    )

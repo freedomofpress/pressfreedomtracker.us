@@ -52,6 +52,12 @@
 				</ul>
 			</details>
 		{% endif %}
+		<form method="post" action="{% url 'prepub-sync' %}">
+			{% csrf_token %}
+			<button type="submit" class="button btn-rerun-sync">
+				{% include "wagtailadmin/icons/rotate.svg" %} Rerun sync
+			</button>
+		</form>
 	</div>
 	{% endpanel %}
 {% endif %}
