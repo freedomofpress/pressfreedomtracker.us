@@ -55,11 +55,9 @@
 			scroll-snap-align: start;
 		}
 
-
 		@include responsive.mobile-down {
 			flex: 0 0 328px;
 		}
-
 
 		// The "Latest Incidents" carousel collapses to multiple rows
 		// over smaller viewport sizes
@@ -69,7 +67,6 @@
 			@include responsive.tablet-up {
 				grid-column: span 4;
 			}
-
 
 			@include responsive.desktop-up {
 				grid-column: span 3;

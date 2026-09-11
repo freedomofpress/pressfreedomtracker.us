@@ -28,9 +28,8 @@
 
 	@include responsive.desktop-up {
 		width: 906px;
-		margin-left: calc( 673px - 906px );
+		margin-left: calc(673px - 906px);
 	}
-
 
 	&__text {
 		font-size: typography.$font-size-h3;
@@ -42,7 +41,6 @@
 			letter-spacing: -0.02em;
 			line-height: 1.1;
 		}
-
 
 		@include responsive.desktop-up {
 			font-size: typography.$font-size-h3-desktop;

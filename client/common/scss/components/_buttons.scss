@@ -14,7 +14,8 @@
 	text-decoration: none;
 	z-index: 1;
 
-	&:focus, &:focus-visible {
+	&:focus,
+	&:focus-visible {
 		outline: colors.$black solid 3px;
 		z-index: 2;
 	}
@@ -80,7 +81,6 @@
 				content: url("../icons/arrow-left-white.svg");
 
 				// background-color: $black
-
 			}
 
 			&::before {
@@ -125,7 +125,8 @@
 		border: 0;
 		outline: colors.$black solid 3px;
 
-		&:focus, &:focus-visible {
+		&:focus,
+		&:focus-visible {
 			outline: colors.$black solid 5px;
 		}
 	}

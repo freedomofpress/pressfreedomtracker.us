@@ -2,7 +2,7 @@
 	display: table;
 	margin: auto;
 	outline: solid 1px;
-	outline-color: #00F;
+	outline-color: #00f;
 }
 
 h1,
@@ -14,7 +14,7 @@ h5 {
 	font-family: var(--font-base);
 }
 
-input[type='radio'] {
+input[type="radio"] {
 	appearance: none;
 	display: flex;
 	background-color: #000;
@@ -27,7 +27,7 @@ input[type='radio'] {
 	transition: 120ms transform ease-in-out;
 }
 
-input[type='radio']::before {
+input[type="radio"]::before {
 	content: "";
 	width: 100%;
 	height: 100%;
@@ -37,13 +37,13 @@ input[type='radio']::before {
 	transition: 120ms transform ease-in-out;
 }
 
-input[type='radio']:checked {
+input[type="radio"]:checked {
 	&::before {
 		transform: scale(0.5);
 	}
 }
 
-input[type='checkbox'] {
+input[type="checkbox"] {
 	appearance: none;
 	display: flex;
 	background-color: #000;
@@ -55,7 +55,7 @@ input[type='checkbox'] {
 	transition: 120ms transform ease-in-out;
 }
 
-input[type='checkbox']::before {
+input[type="checkbox"]::before {
 	content: "";
 	width: 100%;
 	height: 100%;
@@ -64,7 +64,7 @@ input[type='checkbox']::before {
 	transition: 120ms transform ease-in-out;
 }
 
-input[type='checkbox']:checked {
+input[type="checkbox"]:checked {
 	&::before {
 		transform: scale(0.5);
 	}

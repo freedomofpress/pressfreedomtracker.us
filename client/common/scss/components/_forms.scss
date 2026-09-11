@@ -25,7 +25,6 @@
 		padding: 2rem;
 	}
 
-
 	@include responsive.constrain-to-desktop;
 
 	&__top-level-error {
@@ -38,7 +37,6 @@
 	@include responsive.desktop-up {
 		max-width: 50%;
 	}
-
 
 	.fieldset {
 		padding: 0;
@@ -131,8 +129,8 @@
 		}
 	}
 
-	.form-item[type='number']::-webkit-inner-spin-button,
-	.form-item[type='number']::-webkit-outer-spin-button {
+	.form-item[type="number"]::-webkit-inner-spin-button,
+	.form-item[type="number"]::-webkit-outer-spin-button {
 		appearance: none;
 	}
 
@@ -189,8 +187,8 @@
 			}
 		}
 
-		input[type='checkbox'],
-		input[type='radio'] {
+		input[type="checkbox"],
+		input[type="radio"] {
 			font: inherit;
 			appearance: none;
 			background-color: colors.$section-background;
@@ -215,13 +213,13 @@
 			}
 		}
 
-		input[type='checkbox'] {
+		input[type="checkbox"] {
 			&:checked::before {
 				transform: scale(1);
 			}
 		}
 
-		input[type='radio'] {
+		input[type="radio"] {
 			border-radius: 50%;
 
 			&::before {

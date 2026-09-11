@@ -28,7 +28,8 @@
 		}
 	}
 
-	&__nav, &__body {
+	&__nav,
+	&__body {
 		max-width: 725px;
 	}
 
@@ -47,7 +48,6 @@
 		@include responsive.desktop-up {
 			align-items: center;
 		}
-
 
 		&-item {
 			list-style: none;

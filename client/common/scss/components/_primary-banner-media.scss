@@ -9,7 +9,6 @@
 		margin-bottom: 3.25rem;
 	}
 
-
 	&__inner {
 		@include responsive.desktop-up {
 			max-width: 908px;
@@ -17,7 +16,8 @@
 		}
 	}
 
-	img, video {
+	img,
+	video {
 		width: 100%;
 		height: auto;
 	}
@@ -30,7 +30,8 @@
 		> .rich-text {
 			display: inline-block;
 
-			p, a {
+			p,
+			a {
 				font-size: 0.875rem;
 				margin: 0;
 			}

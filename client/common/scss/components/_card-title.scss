@@ -13,7 +13,6 @@
 			font-size: typography.$font-size-card-title-l-tab;
 		}
 
-
 		@include responsive.desktop-up {
 			font-size: typography.$font-size-card-title-l-desktop;
 		}
@@ -27,7 +26,6 @@
 		@include responsive.tablet-up {
 			font-size: typography.$font-size-database-card-title-tab;
 		}
-
 
 		@include responsive.desktop-up {
 			font-size: typography.$font-size-card-title-desktop;
@@ -43,7 +41,6 @@
 			font-size: typography.$font-size-card-title-tab;
 			font-weight: 500;
 		}
-
 
 		@include responsive.desktop-up {
 			font-size: typography.$font-size-card-title-desktop;

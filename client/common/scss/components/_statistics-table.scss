@@ -18,7 +18,6 @@
 			padding: 0.25rem 0;
 		}
 
-
 		&--inner {
 			display: grid;
 			grid-template-columns: 1fr 30px auto;
@@ -26,7 +25,9 @@
 			align-items: center;
 
 			@include responsive.tablet-up {
-				grid-template-columns: clamp(20rem, calc(10.66rem + 12.96vw), 27.25rem) clamp(0rem, calc(-17.58rem + 24.39vw), 4.38rem) 30px 1fr;
+				grid-template-columns:
+					clamp(20rem, calc(10.66rem + 12.96vw), 27.25rem)
+					clamp(0rem, calc(-17.58rem + 24.39vw), 4.38rem) 30px 1fr;
 			}
 		}
 	}

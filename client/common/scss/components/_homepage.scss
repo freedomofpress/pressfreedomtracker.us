@@ -12,7 +12,6 @@
 			margin-bottom: 40px;
 		}
 
-
 		@include responsive.desktop-up {
 			margin-bottom: 104px;
 		}
@@ -57,11 +56,9 @@
 		grid-template-columns: 1fr 1fr;
 	}
 
-
 	@include responsive.desktop-up {
 		gap: 6rem;
 	}
-
 
 	.homepage-unconfirmed-lede {
 		font-size: typography.$font-size-h3;

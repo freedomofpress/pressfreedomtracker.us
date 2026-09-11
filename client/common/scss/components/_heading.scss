@@ -11,11 +11,9 @@
 		font-size: typography.$font-size-h3-tab;
 	}
 
-
 	@include responsive.desktop-up {
 		font-size: typography.$font-size-h3-desktop;
 	}
-
 
 	&-regular {
 		font-size: typography.$font-size-h4;
@@ -25,7 +23,6 @@
 		@include responsive.tablet-up {
 			font-size: typography.$font-size-h4-tab;
 		}
-
 
 		@include responsive.desktop-up {
 			font-size: typography.$font-size-h4-desktop;

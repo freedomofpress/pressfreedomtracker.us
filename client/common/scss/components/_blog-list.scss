@@ -17,7 +17,6 @@
 			padding-right: max(calc((100% - 1440px) / 2), 32px);
 		}
 
-
 		@include responsive.tablet-down {
 			overflow-x: hidden;
 		}
@@ -55,7 +54,6 @@
 				}
 			}
 
-
 			@include responsive.mobile-down {
 				.blog-card--title {
 					font-size: 1rem;
@@ -67,7 +65,6 @@
 					margin-top: 0.75rem;
 				}
 			}
-
 
 			.blog-card__teaser--sm {
 				@include responsive.tablet-down {
@@ -82,7 +79,6 @@
 			@include responsive.tablet-down {
 				flex: 0 0 534px;
 			}
-
 
 			@include responsive.mobile-down {
 				flex: 0 0 328px;

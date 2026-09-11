@@ -29,7 +29,7 @@
 			margin-left: 6px;
 		}
 
-		&[aria-expanded='true']::after {
+		&[aria-expanded="true"]::after {
 			content: url("../icons/cross.svg");
 		}
 

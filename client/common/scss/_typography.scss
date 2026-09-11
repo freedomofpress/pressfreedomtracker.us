@@ -35,9 +35,11 @@ $font-size-h1-tab: 5rem;
 
 // CSS variables for fonts
 :root {
-	--font-base: 'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-	--font-mono: 'Roboto Mono', monospace;
-};
+	--font-base:
+		"Helvetica Neue", "Segoe UI", "Roboto", "Helvetica", "Arial",
+		sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	--font-mono: "Roboto Mono", monospace;
+}
 
 body {
 	font-weight: 400;
@@ -51,6 +53,11 @@ body {
 	}
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	margin: 1rem 0;
 }

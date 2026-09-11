@@ -16,12 +16,10 @@
 		margin-right: -24px;
 	}
 
-
 	@include responsive.desktop-up {
 		margin-left: -32px;
 		margin-right: -32px;
 	}
-
 
 	--scale: 1;
 	--title-text-decoration: none;
@@ -80,7 +78,6 @@
 		@include responsive.tablet-up {
 			max-width: 75%;
 		}
-
 
 		p {
 			margin: 0;

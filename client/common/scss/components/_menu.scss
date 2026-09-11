@@ -13,7 +13,7 @@
 	@include responsive.constrain-to-desktop;
 
 	&.menu-expanded {
-		background-color: #F8F8F8;
+		background-color: #f8f8f8;
 	}
 
 	&__title-wrapper {
@@ -52,7 +52,6 @@
 		aspect-ratio: 1;
 	}
 
-
 	&[aria-expanded="true"] {
 		@include responsive.tablet-down {
 			background-image: url("../icons/icon-menu-close.svg");
@@ -70,7 +69,7 @@
 
 	@include responsive.tablet-down {
 		flex-direction: column;
-		background-color: #F8F8F8;
+		background-color: #f8f8f8;
 		align-items: stretch;
 		position: fixed;
 		z-index: 1000;
@@ -82,11 +81,10 @@
 		transition: max-height 350ms ease-out;
 	}
 
-
 	&[data-visible="true"] {
 		@include responsive.tablet-down {
 			max-height: 100vh;
-			background-color: #F8F8F8;
+			background-color: #f8f8f8;
 		}
 	}
 }
@@ -115,7 +113,6 @@
 			}
 		}
 	}
-
 
 	a > span {
 		display: none;

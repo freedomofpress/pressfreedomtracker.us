@@ -20,7 +20,6 @@
 			align-items: center;
 		}
 
-
 		@include responsive.desktop-up {
 			padding: 0.25rem 2rem;
 			border-color: colors.$black;
@@ -36,11 +35,9 @@
 			width: 17.5rem;
 		}
 
-
 		@include responsive.desktop-up {
 			width: 29.375rem;
 		}
-
 
 		&--bold {
 			font-weight: 700;
@@ -107,11 +104,11 @@
 
 	&__container {
 		@include responsive.tablet-down {
-			&[data-visible='false'] {
+			&[data-visible="false"] {
 				display: none;
 			}
 
-			&[data-visible='true'] {
+			&[data-visible="true"] {
 				display: block;
 			}
 		}

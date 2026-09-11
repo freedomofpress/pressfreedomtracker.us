@@ -56,7 +56,8 @@
 		margin: 6px 0;
 	}
 
-	&--tag, &--category {
+	&--tag,
+	&--category {
 		width: 100%;
 		list-style: none;
 
@@ -74,12 +75,14 @@
 			cursor: pointer;
 			box-sizing: border-box;
 
-			&:hover, &:focus {
+			&:hover,
+			&:focus {
 				background-color: colors.$accent-color;
 				outline: none;
 			}
 
-			&--hash, &--category-label {
+			&--hash,
+			&--category-label {
 				display: inline-block;
 				padding: 4px;
 				margin-right: 8px;
@@ -105,7 +108,8 @@
 	}
 }
 
-.search-tag-pill, .search-category-pill {
+.search-tag-pill,
+.search-category-pill {
 	position: absolute;
 	top: 3px;
 	bottom: 3px;
@@ -116,7 +120,8 @@
 	font-weight: bold;
 	cursor: text;
 
-	&--tag-hash, &--category-label {
+	&--tag-hash,
+	&--category-label {
 		color: colors.$gray-text;
 		font-weight: normal;
 		margin-right: 4px;

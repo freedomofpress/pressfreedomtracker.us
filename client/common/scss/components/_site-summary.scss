@@ -10,11 +10,9 @@
 		font-size: 1.75rem;
 	}
 
-
 	@include responsive.desktop-up {
 		font-size: 2rem;
 	}
-
 
 	img {
 		max-width: 100%;
