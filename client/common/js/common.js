@@ -1,4 +1,4 @@
-import '../sass/common.sass'
+import '../scss/common.scss'
 import './menu'
 import './home'
 import './categoryPage'

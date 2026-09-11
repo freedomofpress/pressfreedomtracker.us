@@ -1,0 +1,144 @@
+@use "../colors";
+@use "../responsive";
+
+.header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	background-color: transparent;
+	transition: background-color 350ms ease-out;
+	margin-top: 1rem;
+	z-index: 1000;
+
+	@include responsive.constrain-to-desktop;
+
+	&.menu-expanded {
+		background-color: #f8f8f8;
+	}
+
+	&__title-wrapper {
+		display: inline-block;
+		flex-shrink: 0;
+	}
+}
+
+.site-title-link {
+	z-index: 1010;
+	text-decoration: none;
+	font-weight: 700;
+
+	&:hover {
+		background-color: transparent;
+	}
+}
+
+.mobile-nav-toggle {
+	display: none;
+
+	@include responsive.tablet-down {
+		display: block;
+		position: absolute;
+		z-index: 9999;
+		background-color: transparent;
+		background-image: url("../icons/icon-menu-open.svg");
+		background-repeat: no-repeat;
+		border: 0;
+		width: 3rem;
+
+		// fix for button not displaying iPad Pro
+		height: 3rem;
+		top: 0.5rem;
+		right: 1rem;
+		aspect-ratio: 1;
+	}
+
+	&[aria-expanded="true"] {
+		@include responsive.tablet-down {
+			background-image: url("../icons/icon-menu-close.svg");
+			top: 0.45rem;
+		}
+	}
+}
+
+.top-nav-bar {
+	box-sizing: border-box;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: space-between;
+
+	@include responsive.tablet-down {
+		flex-direction: column;
+		background-color: #f8f8f8;
+		align-items: stretch;
+		position: fixed;
+		z-index: 1000;
+		inset: 0;
+		padding: 0 1rem;
+		max-width: 100%;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 350ms ease-out;
+	}
+
+	&[data-visible="true"] {
+		@include responsive.tablet-down {
+			max-height: 100vh;
+			background-color: #f8f8f8;
+		}
+	}
+}
+
+.primary-navigation {
+	display: flex;
+	gap: 1rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	@include responsive.tablet-down {
+		margin-top: 10rem;
+		flex-direction: column;
+
+		a {
+			display: flex;
+			text-decoration: none;
+			justify-content: space-between;
+			border-bottom: solid 1px #c1c1c1;
+			padding-bottom: 4px;
+			font-weight: 700;
+
+			&:hover {
+				background-color: transparent;
+			}
+		}
+	}
+
+	a > span {
+		display: none;
+
+		@include responsive.tablet-down {
+			display: inline;
+			font-weight: 400;
+			color: colors.$gray-text;
+		}
+	}
+}
+
+.secondary-navigation {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	list-style: none;
+	margin: 0;
+	margin-bottom: 2rem;
+	padding: 0;
+
+	@include responsive.desktop-up {
+		margin-bottom: 0;
+	}
+}
+
+.overflow-hidden {
+	overflow: hidden;
+}

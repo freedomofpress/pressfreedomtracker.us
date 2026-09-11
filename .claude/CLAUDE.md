@@ -24,7 +24,7 @@
 - PostgreSQL 14
 - Django REST Framework + drf-spectacular (OpenAPI docs)
 - Webpack 5, Babel, React 18, D3 v7, Jest 29 (frontend)
-- ESLint (airbnb config), Stylelint (sass-guidelines)
+- ESLint (airbnb config), Stylelint (stylelint-config-standard-scss)
 - Ruff (primary linter)
 - Bandit (security)
 - structlog for logging
@@ -53,7 +53,7 @@
 - `just ruff` — linter/formatter (`just ruff-fix` applies fixes)
 - `just bandit` — security static analysis
 - `just eslint` — JavaScript linting (airbnb config)
-- `just stylelint` — SCSS linting (sass-guidelines config)
+- `just stylelint` — SCSS linting
 - `just lint` — all of the above plus the migration check
 - Ruff configured in `pyproject.toml`: `select = ["I", "F4"]` (isort + unused imports), target py312, Django/Wagtail-aware import section ordering
 

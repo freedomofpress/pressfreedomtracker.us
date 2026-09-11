@@ -1,0 +1,30 @@
+@use "../grid";
+@use "../responsive";
+
+.search-block {
+	margin-bottom: 32px;
+
+	@include responsive.constrain-to-desktop;
+	@include grid.grid-container;
+}
+
+.search-block-all-btn {
+	grid-column: 1 / -1;
+	grid-row: 1;
+	margin-bottom: 16px;
+
+	@include responsive.desktop-up {
+		grid-column: 1 / 4;
+		margin-bottom: 0;
+	}
+}
+
+.search-block-search-bar {
+	grid-column: 1 / -1;
+	grid-row: 2;
+
+	@include responsive.desktop-up {
+		grid-row: 1;
+		grid-column: 4 / 13;
+	}
+}

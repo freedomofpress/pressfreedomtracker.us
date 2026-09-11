@@ -1,0 +1,57 @@
+// These values are also set in js at client/charts/js/lib/utilities.js
+$mobile-max: 768px;
+$tablet-max: 1152px;
+$desktop-max: 1440px;
+$tablet-min: $mobile-max + 1px;
+$desktop-min: $tablet-max + 1px;
+
+@mixin tablet-up {
+	@media (min-width: $tablet-min) {
+		@content;
+	}
+}
+
+@mixin tablet-only {
+	@media (min-width: $tablet-min) and (max-width: $tablet-max) {
+		@content;
+	}
+}
+
+@mixin desktop-up {
+	@media (min-width: $desktop-min) {
+		@content;
+	}
+}
+
+@mixin tablet-down {
+	@media (max-width: $tablet-max) {
+		@content;
+	}
+}
+
+@mixin mobile-down {
+	@media (max-width: $tablet-min) {
+		@content;
+	}
+}
+
+@mixin constrain-to-desktop {
+	// We specify L/R padding/margins separately to avoid
+	// interference with someone using T/B padding/margins
+	// alongside this mixin
+	padding-left: 16px;
+	padding-right: 16px;
+
+	@include tablet-up {
+		padding-left: 24px;
+		padding-right: 24px;
+	}
+
+	@include desktop-up {
+		max-width: 1440px;
+		padding-left: 32px;
+		padding-right: 32px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}

@@ -1,0 +1,42 @@
+@use "../colors";
+@use "../typography";
+
+.disclose {
+	&-summary {
+		font-size: typography.$font-size-small-p;
+		font-weight: 400;
+		line-height: 1.43;
+		color: colors.$black;
+		text-transform: capitalize;
+		text-decoration: underline;
+		cursor: pointer;
+		list-style: none;
+		display: inline-block;
+		background-color: transparent;
+		border: 0;
+
+		&:hover {
+			background-color: colors.$accent-color;
+		}
+
+		&:focus {
+			border: 3px solid;
+			border-color: colors.$black;
+		}
+
+		&::after {
+			content: url("../icons/plus.svg");
+			margin-left: 6px;
+		}
+
+		&[aria-expanded="true"]::after {
+			content: url("../icons/cross.svg");
+		}
+
+		details.disclose[open] & {
+			&::after {
+				content: url("../icons/cross.svg");
+			}
+		}
+	}
+}

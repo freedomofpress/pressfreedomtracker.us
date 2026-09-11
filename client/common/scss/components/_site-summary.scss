@@ -1,0 +1,48 @@
+@use "../colors";
+@use "../responsive";
+
+.site-summary {
+	font-size: 1.125rem;
+
+	@include responsive.constrain-to-desktop;
+
+	@include responsive.tablet-up {
+		font-size: 1.75rem;
+	}
+
+	@include responsive.desktop-up {
+		font-size: 2rem;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	a {
+		color: colors.$black;
+
+		&:focus {
+			outline: colors.$black solid 3px;
+			outline-offset: 2px;
+		}
+
+		&:hover {
+			background-color: colors.$accent-color;
+		}
+	}
+
+	&--blog {
+		font-size: 1.125rem;
+
+		> * {
+			@include responsive.desktop-up {
+				max-width: 50%;
+			}
+		}
+	}
+
+	&--error {
+		margin-bottom: 104px;
+	}
+}
