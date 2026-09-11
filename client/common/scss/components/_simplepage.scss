@@ -1,13 +1,13 @@
 @use "../responsive";
 
 .simplepage-body {
-  .styled-text {
-    margin-bottom: 2em;
+	.styled-text {
+		margin-bottom: 2em;
 
-    @include responsive.desktop-up {
-      max-width: 50%;
-    }
-  }
+		@include responsive.desktop-up {
+			max-width: 50%;
+		}
+	}
 
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 }

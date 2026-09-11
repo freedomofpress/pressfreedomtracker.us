@@ -2,20 +2,20 @@
 @use "../responsive";
 
 .anim-table-row {
-  @include responsive.desktop-up {
-    transition: transform 0.2s ease-in-out;
+	@include responsive.desktop-up {
+		transition: transform 0.2s ease-in-out;
 
-    &:hover {
-      transform: translateX(48px);
-      width: calc(100% - 48px);
-      cursor: pointer;
-    }
-  }
+		&:hover {
+			transform: translateX(48px);
+			width: calc(100% - 48px);
+			cursor: pointer;
+		}
+	}
 
 
-  a.anim-table-mainLink--hovered {
-    font-size: 16px;
-    line-height: 1;
-    color: colors.$black;
-  }
+	a.anim-table-mainLink--hovered {
+		font-size: 16px;
+		line-height: 1;
+		color: colors.$black;
+	}
 }

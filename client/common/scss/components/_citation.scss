@@ -2,20 +2,20 @@
 @use "../responsive";
 
 .citation {
-  border-top: 5px solid;
-  border-color: colors.$black;
+	border-top: 5px solid;
+	border-color: colors.$black;
 
-  &--inner {
-    padding: 32px 0;
+	&--inner {
+		padding: 32px 0;
 
-    @include responsive.constrain-to-desktop;
-  }
+		@include responsive.constrain-to-desktop;
+	}
 
-  &-content {
-    max-width: 670px;
-  }
+	&-content {
+		max-width: 670px;
+	}
 
-  &-link {
-    text-align: right;
-  }
+	&-link {
+		text-align: right;
+	}
 }

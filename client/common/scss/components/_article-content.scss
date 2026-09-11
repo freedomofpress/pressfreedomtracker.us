@@ -1,56 +1,56 @@
 @use "../responsive";
 
 .article-content {
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 
-  &__inner {
-    @include responsive.desktop-up {
-      max-width: 908px;
-      margin: auto;
-    }
-  }
+	&__inner {
+		@include responsive.desktop-up {
+			max-width: 908px;
+			margin: auto;
+		}
+	}
 
-  &__block {
-    @include responsive.desktop-up {
-      max-width: 673px;
-      margin-left: auto;
-      margin-right: 0;
-    }
-  }
+	&__block {
+		@include responsive.desktop-up {
+			max-width: 673px;
+			margin-left: auto;
+			margin-right: 0;
+		}
+	}
 
-  img {
-    max-width: 100%;
-    height: auto;
-  }
+	img {
+		max-width: 100%;
+		height: auto;
+	}
 
-  .details-table {
-    margin-bottom: 2rem;
+	.details-table {
+		margin-bottom: 2rem;
 
-    @include responsive.tablet-up {
-      margin-bottom: 3.25rem;
-    }
-  }
+		@include responsive.tablet-up {
+			margin-bottom: 3.25rem;
+		}
+	}
 }
 
 .article-meta {
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 }
 
 .article-actions {
-  text-align: right;
-  margin-top: 2rem;
-  margin-bottom: 3.25rem;
+	text-align: right;
+	margin-top: 2rem;
+	margin-bottom: 3.25rem;
 
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 
-  @include responsive.desktop-up {
-    max-width: 908px;
-  }
+	@include responsive.desktop-up {
+		max-width: 908px;
+	}
 }
 
 .newsletter-actions {
-  margin-top: 2rem;
-  margin-bottom: 3.25rem;
+	margin-top: 2rem;
+	margin-bottom: 3.25rem;
 
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 }

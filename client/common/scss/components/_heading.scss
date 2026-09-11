@@ -2,39 +2,39 @@
 @use "../typography";
 
 .heading {
-  font-size: typography.$font-size-h3;
-  line-height: 1;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+	font-size: typography.$font-size-h3;
+	line-height: 1;
+	font-weight: 400;
+	letter-spacing: -0.02em;
 
-  @include responsive.tablet-up {
-    font-size: typography.$font-size-h3-tab;
-  }
-
-
-  @include responsive.desktop-up {
-    font-size: typography.$font-size-h3-desktop;
-  }
+	@include responsive.tablet-up {
+		font-size: typography.$font-size-h3-tab;
+	}
 
 
-  &-regular {
-    font-size: typography.$font-size-h4;
-    line-height: 1;
-    font-weight: 400;
-
-    @include responsive.tablet-up {
-      font-size: typography.$font-size-h4-tab;
-    }
+	@include responsive.desktop-up {
+		font-size: typography.$font-size-h3-desktop;
+	}
 
 
-    @include responsive.desktop-up {
-      font-size: typography.$font-size-h4-desktop;
-    }
-  }
+	&-regular {
+		font-size: typography.$font-size-h4;
+		line-height: 1;
+		font-weight: 400;
 
-  &-table {
-    font-size: typography.$font-size-small-p;
-    line-height: 1.43;
-    font-weight: 700;
-  }
+		@include responsive.tablet-up {
+			font-size: typography.$font-size-h4-tab;
+		}
+
+
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-h4-desktop;
+		}
+	}
+
+	&-table {
+		font-size: typography.$font-size-small-p;
+		line-height: 1.43;
+		font-weight: 700;
+	}
 }

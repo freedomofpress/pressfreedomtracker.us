@@ -1,7 +1,7 @@
 @use "../responsive";
 
 .errorpage-body {
-  margin-bottom: 3rem;
+	margin-bottom: 3rem;
 
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 }

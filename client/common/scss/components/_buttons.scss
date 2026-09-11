@@ -2,191 +2,191 @@
 @use "../typography";
 
 .btn {
-  position: relative;
-  display: inline-block;
-  font-family: var(--font-base);
-  font-size: typography.$font-size-small-p;
-  font-weight: 500;
-  line-height: 1.7145;
-  padding: 0.5rem 0.75rem;
-  background-color: colors.$white;
-  color: colors.$black;
-  text-decoration: none;
-  z-index: 1;
+	position: relative;
+	display: inline-block;
+	font-family: var(--font-base);
+	font-size: typography.$font-size-small-p;
+	font-weight: 500;
+	line-height: 1.7145;
+	padding: 0.5rem 0.75rem;
+	background-color: colors.$white;
+	color: colors.$black;
+	text-decoration: none;
+	z-index: 1;
 
-  &:focus, &:focus-visible {
-    outline: colors.$black solid 3px;
-    z-index: 2;
-  }
+	&:focus, &:focus-visible {
+		outline: colors.$black solid 3px;
+		z-index: 2;
+	}
 
-  &:not([disabled]):hover {
-    cursor: pointer;
-  }
+	&:not([disabled]):hover {
+		cursor: pointer;
+	}
 
-  &.transparent {
-    background-color: transparent;
-  }
+	&.transparent {
+		background-color: transparent;
+	}
 
-  &-primary {
-    border: 3px solid;
-    border-color: colors.$black;
+	&-primary {
+		border: 3px solid;
+		border-color: colors.$black;
 
-    // the calc here makes space on right edge for the ">"
-    // which is 16px (inner-width) + 1.5rem (padding) + 3px (border) wide
-    padding: 0.5rem calc(1rem + 1.5rem + 19px) 0.5rem 1rem;
-    transition: color 0.01s ease-in 0.08s;
+		// the calc here makes space on right edge for the ">"
+		// which is 16px (inner-width) + 1.5rem (padding) + 3px (border) wide
+		padding: 0.5rem calc(1rem + 1.5rem + 19px) 0.5rem 1rem;
+		transition: color 0.01s ease-in 0.08s;
 
-    &::after {
-      content: url("../icons/arrow-left.svg");
-      height: 24px;
-      width: 16px;
-      border: 3px solid;
-      border-color: colors.$black;
-      position: absolute;
-      right: -3px;
-      top: -3px;
-      padding: 0.5rem 0.75rem;
+		&::after {
+			content: url("../icons/arrow-left.svg");
+			height: 24px;
+			width: 16px;
+			border: 3px solid;
+			border-color: colors.$black;
+			position: absolute;
+			right: -3px;
+			top: -3px;
+			padding: 0.5rem 0.75rem;
 
-      // padding left of parent
-      transition: content 0.01s ease-in 0.08s;
-    }
+			// padding left of parent
+			transition: content 0.01s ease-in 0.08s;
+		}
 
-    &[disabled] {
-      color: colors.$tag-inactive;
-      border-color: colors.$tag-inactive;
+		&[disabled] {
+			color: colors.$tag-inactive;
+			border-color: colors.$tag-inactive;
 
-      &::after {
-        content: url("../icons/arrow-left-inactive.svg");
-        border-color: colors.$tag-inactive;
-      }
-    }
+			&::after {
+				content: url("../icons/arrow-left-inactive.svg");
+				border-color: colors.$tag-inactive;
+			}
+		}
 
-    &:not([disabled])::before {
-      content: "";
-      position: absolute;
-      background: colors.$black;
-      bottom: 0;
-      left: 0;
-      right: 100%;
-      top: 0;
-      z-index: -1;
-      transition: right 0.09s ease-in;
-    }
+		&:not([disabled])::before {
+			content: "";
+			position: absolute;
+			background: colors.$black;
+			bottom: 0;
+			left: 0;
+			right: 100%;
+			top: 0;
+			z-index: -1;
+			transition: right 0.09s ease-in;
+		}
 
-    &:not([disabled]):hover {
-      color: colors.$white;
+		&:not([disabled]):hover {
+			color: colors.$white;
 
-      &::after {
-        content: url("../icons/arrow-left-white.svg");
+			&::after {
+				content: url("../icons/arrow-left-white.svg");
 
-        // background-color: $black
+				// background-color: $black
 
-      }
+			}
 
-      &::before {
-        right: 0;
-      }
-    }
-  }
+			&::before {
+				right: 0;
+			}
+		}
+	}
 
-  &-secondary {
-    border: 3px solid;
-    border-color: colors.$black;
-    transition: color 0.01s ease-in 0.08s;
+	&-secondary {
+		border: 3px solid;
+		border-color: colors.$black;
+		transition: color 0.01s ease-in 0.08s;
 
-    &:not([disabled])::before {
-      content: "";
-      position: absolute;
-      background: colors.$black;
-      bottom: 0;
-      left: 0;
-      right: 100%;
-      top: 0;
-      z-index: -1;
-      transition: right 0.09s ease-in;
-    }
+		&:not([disabled])::before {
+			content: "";
+			position: absolute;
+			background: colors.$black;
+			bottom: 0;
+			left: 0;
+			right: 100%;
+			top: 0;
+			z-index: -1;
+			transition: right 0.09s ease-in;
+		}
 
-    &:hover {
-      color: colors.$white;
+		&:hover {
+			color: colors.$white;
 
-      &::before {
-        right: 0;
-      }
-    }
+			&::before {
+				right: 0;
+			}
+		}
 
-    &[disabled] {
-      color: colors.$tag-inactive;
-      border-color: colors.$tag-inactive;
-    }
-  }
+		&[disabled] {
+			color: colors.$tag-inactive;
+			border-color: colors.$tag-inactive;
+		}
+	}
 
-  &-bordered {
-    padding: 8px;
-    border: 0;
-    outline: colors.$black solid 3px;
+	&-bordered {
+		padding: 8px;
+		border: 0;
+		outline: colors.$black solid 3px;
 
-    &:focus, &:focus-visible {
-      outline: colors.$black solid 5px;
-    }
-  }
+		&:focus, &:focus-visible {
+			outline: colors.$black solid 5px;
+		}
+	}
 
-  &-ghost {
-    transition: color 0.01s ease-in 0.08s;
-    border-width: 0;
-    background-color: transparent;
+	&-ghost {
+		transition: color 0.01s ease-in 0.08s;
+		border-width: 0;
+		background-color: transparent;
 
-    &:not([disabled])::before {
-      content: "";
-      position: absolute;
-      background: colors.$black;
-      bottom: 0;
-      left: 0;
-      right: 100%;
-      top: 0;
-      z-index: -1;
-      transition: right 0.09s ease-in;
-    }
+		&:not([disabled])::before {
+			content: "";
+			position: absolute;
+			background: colors.$black;
+			bottom: 0;
+			left: 0;
+			right: 100%;
+			top: 0;
+			z-index: -1;
+			transition: right 0.09s ease-in;
+		}
 
-    &:hover {
-      color: colors.$white;
+		&:hover {
+			color: colors.$white;
 
-      &::before {
-        right: 0;
-      }
-    }
+			&::before {
+				right: 0;
+			}
+		}
 
-    &[disabled] {
-      color: colors.$tag-inactive;
-    }
-  }
+		&[disabled] {
+			color: colors.$tag-inactive;
+		}
+	}
 
-  &-tag {
-    font-weight: 400;
-    line-height: 1.23;
-    padding: 0.25rem 0.5rem;
-    background-color: colors.$accent-background-tags;
+	&-tag {
+		font-weight: 400;
+		line-height: 1.23;
+		padding: 0.25rem 0.5rem;
+		background-color: colors.$accent-background-tags;
 
-    &:not([disabled]):hover {
-      background-color: colors.$accent-color;
-    }
+		&:not([disabled]):hover {
+			background-color: colors.$accent-color;
+		}
 
-    &[disabled] {
-      color: colors.$gray-text;
-    }
-  }
+		&[disabled] {
+			color: colors.$gray-text;
+		}
+	}
 
-  &-tag-database {
-    background-color: colors.$tag-inactive-bg;
-    text-transform: capitalize;
-    color: colors.$black;
+	&-tag-database {
+		background-color: colors.$tag-inactive-bg;
+		text-transform: capitalize;
+		color: colors.$black;
 
-    &:not([disabled]):hover {
-      background-color: colors.$accent-color;
-    }
-  }
+		&:not([disabled]):hover {
+			background-color: colors.$accent-color;
+		}
+	}
 
-  &-block {
-    display: block;
-    text-align: center;
-  }
+	&-block {
+		display: block;
+		text-align: center;
+	}
 }

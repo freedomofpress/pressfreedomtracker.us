@@ -2,44 +2,44 @@
 @use "../responsive";
 
 .incident {
-  margin: 2rem auto;
+	margin: 2rem auto;
 
-  @include responsive.desktop-up {
-    max-width: 673px;
-    margin-left: auto;
-    margin-right: 0;
-    margin-bottom: 3.25rem;
-  }
-
-
-  &-update {
-    margin: 2rem auto;
-
-    @include responsive.desktop-up {
-      max-width: 673px;
-      margin-left: auto;
-      margin-right: 0;
-      margin-bottom: 3.25rem;
-    }
+	@include responsive.desktop-up {
+		max-width: 673px;
+		margin-left: auto;
+		margin-right: 0;
+		margin-bottom: 3.25rem;
+	}
 
 
-    &__link {
-      display: block;
-      border-bottom: 1px solid;
-      border-color: colors.$black;
-      text-decoration: none;
-    }
-  }
+	&-update {
+		margin: 2rem auto;
 
-  &-cta {
-    margin: 2rem auto;
-    font-style: italic;
+		@include responsive.desktop-up {
+			max-width: 673px;
+			margin-left: auto;
+			margin-right: 0;
+			margin-bottom: 3.25rem;
+		}
 
-    @include responsive.desktop-up {
-      max-width: 673px;
-      margin-left: auto;
-      margin-right: 0;
-      margin-bottom: 3.25rem;
-    }
-  }
+
+		&__link {
+			display: block;
+			border-bottom: 1px solid;
+			border-color: colors.$black;
+			text-decoration: none;
+		}
+	}
+
+	&-cta {
+		margin: 2rem auto;
+		font-style: italic;
+
+		@include responsive.desktop-up {
+			max-width: 673px;
+			margin-left: auto;
+			margin-right: 0;
+			margin-bottom: 3.25rem;
+		}
+	}
 }

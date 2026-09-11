@@ -1,16 +1,16 @@
 @use "../responsive";
 
 .incident-tags {
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  gap: 6px;
+	margin-bottom: 2rem;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	gap: 6px;
 
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 
-  @include responsive.tablet-up {
-    margin-bottom: 3.25rem;
-    flex-direction: row;
-  }
+	@include responsive.tablet-up {
+		margin-bottom: 3.25rem;
+		flex-direction: row;
+	}
 }

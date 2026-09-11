@@ -2,51 +2,51 @@
 @use "../typography";
 
 .card-title {
-  margin: 0;
+	margin: 0;
 
-  &-big {
-    font-size: typography.$font-size-card-title-l;
-    line-height: 1.1;
-    font-weight: 500;
+	&-big {
+		font-size: typography.$font-size-card-title-l;
+		line-height: 1.1;
+		font-weight: 500;
 
-    @include responsive.tablet-up {
-      font-size: typography.$font-size-card-title-l-tab;
-    }
-
-
-    @include responsive.desktop-up {
-      font-size: typography.$font-size-card-title-l-desktop;
-    }
-  }
-
-  &-database {
-    font-weight: 500;
-    font-size: typography.$font-size-database-card-title;
-    line-height: 1.25;
-
-    @include responsive.tablet-up {
-      font-size: typography.$font-size-database-card-title-tab;
-    }
+		@include responsive.tablet-up {
+			font-size: typography.$font-size-card-title-l-tab;
+		}
 
 
-    @include responsive.desktop-up {
-      font-size: typography.$font-size-card-title-desktop;
-    }
-  }
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-card-title-l-desktop;
+		}
+	}
 
-  &-small {
-    font-weight: 700;
-    font-size: typography.$font-size-p;
-    line-height: 1.25;
+	&-database {
+		font-weight: 500;
+		font-size: typography.$font-size-database-card-title;
+		line-height: 1.25;
 
-    @include responsive.tablet-up {
-      font-size: typography.$font-size-card-title-tab;
-      font-weight: 500;
-    }
+		@include responsive.tablet-up {
+			font-size: typography.$font-size-database-card-title-tab;
+		}
 
 
-    @include responsive.desktop-up {
-      font-size: typography.$font-size-card-title-desktop;
-    }
-  }
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-card-title-desktop;
+		}
+	}
+
+	&-small {
+		font-weight: 700;
+		font-size: typography.$font-size-p;
+		line-height: 1.25;
+
+		@include responsive.tablet-up {
+			font-size: typography.$font-size-card-title-tab;
+			font-weight: 500;
+		}
+
+
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-card-title-desktop;
+		}
+	}
 }

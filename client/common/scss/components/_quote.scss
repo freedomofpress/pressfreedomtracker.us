@@ -2,52 +2,52 @@
 @use "../typography";
 
 .blockquote {
-  font-size: typography.$font-size-p;
-  font-style: italic;
-  line-height: 1.5;
+	font-size: typography.$font-size-p;
+	font-style: italic;
+	line-height: 1.5;
 
-  &__link {
-    display: inline-block;
-  }
+	&__link {
+		display: inline-block;
+	}
 
-  &__citation {
-    font-style: normal;
-    text-transform: uppercase;
-  }
+	&__citation {
+		font-style: normal;
+		text-transform: uppercase;
+	}
 
-  // &__link
+	// &__link
 
-  @include responsive.tablet-up {
-    font-size: typography.$font-size-database-card-title-tab;
-    line-height: 1.333;
-  }
+	@include responsive.tablet-up {
+		font-size: typography.$font-size-database-card-title-tab;
+		line-height: 1.333;
+	}
 }
 
 .pullquote {
-  width: 100%;
+	width: 100%;
 
-  @include responsive.desktop-up {
-    width: 906px;
-    margin-left: calc( 673px - 906px );
-  }
-
-
-  &__text {
-    font-size: typography.$font-size-h3;
-    letter-spacing: -0.01em;
-    line-height: 1;
-
-    @include responsive.tablet-up {
-      font-size: typography.$font-size-h3-tab;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
+	@include responsive.desktop-up {
+		width: 906px;
+		margin-left: calc( 673px - 906px );
+	}
 
 
-    @include responsive.desktop-up {
-      font-size: typography.$font-size-h3-desktop;
-      line-height: 1;
-      max-width: 900px;
-    }
-  }
+	&__text {
+		font-size: typography.$font-size-h3;
+		letter-spacing: -0.01em;
+		line-height: 1;
+
+		@include responsive.tablet-up {
+			font-size: typography.$font-size-h3-tab;
+			letter-spacing: -0.02em;
+			line-height: 1.1;
+		}
+
+
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-h3-desktop;
+			line-height: 1;
+			max-width: 900px;
+		}
+	}
 }

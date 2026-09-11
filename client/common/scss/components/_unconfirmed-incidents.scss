@@ -3,169 +3,169 @@
 @use "../typography";
 
 .unconfirmed-incidents-page {
-  > * + * {
-    margin: 2rem 0;
-  }
+	> * + * {
+		margin: 2rem 0;
+	}
 }
 
 // Resize based on the width of its wrapper, not the viewport,
 // so we can match behavior between homepage and /unconfirmed-incidents.
 .unconfirmed-incidents-wrapper {
-  container: unconfirmed-incidents / inline-size;
+	container: unconfirmed-incidents / inline-size;
 }
 
 @mixin unconfirmed-narrow {
-  @container unconfirmed-incidents (max-width: 520px) {
-    @content;
-  }
+	@container unconfirmed-incidents (max-width: 520px) {
+		@content;
+	}
 }
 
 .unconfirmed-incidents {
-  --max-count: 1;
-  table-layout: fixed;
-  border-collapse: collapse;
-  width: min(670px, 100%);
-  margin-top: 10px;
+	--max-count: 1;
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: min(670px, 100%);
+	margin-top: 10px;
 
-  thead {
-    border: solid 3px #000;
-    text-align: left;
-    background-color: colors.$section-background;
-  }
+	thead {
+		border: solid 3px #000;
+		text-align: left;
+		background-color: colors.$section-background;
+	}
 
-  tbody {
-    border: solid 3px #000;
-    font-size: 1rem;
+	tbody {
+		border: solid 3px #000;
+		font-size: 1rem;
 
-    tr {
-      background-color: colors.$white;
-    }
+		tr {
+			background-color: colors.$white;
+		}
 
-    tr:nth-child(even) {
-      background-color: colors.$section-background;
-    }
-  }
+		tr:nth-child(even) {
+			background-color: colors.$section-background;
+		}
+	}
 
-  th, td {
-    padding: 0.6em;
-  }
+	th, td {
+		padding: 0.6em;
+	}
 
-  tr > :nth-child(1) {
-    width: 16%;
+	tr > :nth-child(1) {
+		width: 16%;
 
-    @include unconfirmed-narrow {
-      width: 24%;
-      padding-right: 0;
-    }
-  }
+		@include unconfirmed-narrow {
+			width: 24%;
+			padding-right: 0;
+		}
+	}
 
-  tr > :nth-child(2) {
-    width: 25%;
+	tr > :nth-child(2) {
+		width: 25%;
 
-    @include unconfirmed-narrow {
-      width: 36%;
-      padding-right: 0;
-    }
-  }
+		@include unconfirmed-narrow {
+			width: 36%;
+			padding-right: 0;
+		}
+	}
 
-  caption {
-    padding: 1em 0.5em 0 0;
-    color: colors.$gray-text;
-    caption-side: bottom;
-    font-size: typography.$font-size-small-ui;
-    text-align: right;
+	caption {
+		padding: 1em 0.5em 0 0;
+		color: colors.$gray-text;
+		caption-side: bottom;
+		font-size: typography.$font-size-small-ui;
+		text-align: right;
 
-    @include unconfirmed-narrow {
-      padding: 0.6em 0 0;
-    }
-  }
+		@include unconfirmed-narrow {
+			padding: 0.6em 0 0;
+		}
+	}
 
-  tfoot td {
-    padding: 0;
-    border: solid 3px #000;
+	tfoot td {
+		padding: 0;
+		border: solid 3px #000;
 
-    a {
-      border-style: none;
+		a {
+			border-style: none;
 
-      &:focus-visible {
-        outline: 3px solid #3584e4;
-      }
+			&:focus-visible {
+				outline: 3px solid #3584e4;
+			}
 
-      &::after {
-        right: -1px;
-        top: 0;
-        border-top-style: none;
-        border-bottom-style: none;
-        border-right-style: none;
-      }
-    }
-  }
+			&::after {
+				right: -1px;
+				top: 0;
+				border-top-style: none;
+				border-bottom-style: none;
+				border-right-style: none;
+			}
+		}
+	}
 
-  &--count {
-    --min-unit: 1.6rem;
-    --max-unit: 25%;
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    padding: 0 3px;
-    background-color: colors.$black;
-    color: colors.$white;
-    border: 3px solid;
-    border-color: colors.$black;
-    font-size: 1.075rem;
-    font-weight: 700;
-    line-height: 1;
+	&--count {
+		--min-unit: 1.6rem;
+		--max-unit: 25%;
+		box-sizing: border-box;
+		display: inline-flex;
+		align-items: center;
+		padding: 0 3px;
+		background-color: colors.$black;
+		color: colors.$white;
+		border: 3px solid;
+		border-color: colors.$black;
+		font-size: 1.075rem;
+		font-weight: 700;
+		line-height: 1;
 
-    // width of one cell * incident count
-    width: calc(var(--incident-count) * clamp(var(--min-unit), calc(100% / var(--max-count)), var(--max-unit)));
-    min-width: max-content;
-    height: 1.6rem;
-    cursor: pointer;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+		// width of one cell * incident count
+		width: calc(var(--incident-count) * clamp(var(--min-unit), calc(100% / var(--max-count)), var(--max-unit)));
+		min-width: max-content;
+		height: 1.6rem;
+		cursor: pointer;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 
-    @include unconfirmed-narrow {
-      --min-unit: 1rem;
-      padding: 0;
-    }
+		@include unconfirmed-narrow {
+			--min-unit: 1rem;
+			padding: 0;
+		}
 
 
-    &:hover,
-    &:focus-visible {
-      background-color: colors.$white;
-      color: colors.$black;
-    }
-  }
+		&:hover,
+		&:focus-visible {
+			background-color: colors.$white;
+			color: colors.$black;
+		}
+	}
 }
 
 .unconfirmed-incidents--page-title {
-  @include responsive.mobile-down {
-    font-size: 3rem;
-  }
+	@include responsive.mobile-down {
+		font-size: 3rem;
+	}
 }
 
 .category-count-tooltip {
-  font-family: var(--font-base);
-  font-size: 0.75rem;
-  font-weight: 700;
-  z-index: 99;
+	font-family: var(--font-base);
+	font-size: 0.75rem;
+	font-weight: 700;
+	z-index: 99;
 
-  &--heading {
-    margin-top: 0;
-    margin-bottom: 10px;
-    line-height: 1.67;
-  }
+	&--heading {
+		margin-top: 0;
+		margin-bottom: 10px;
+		line-height: 1.67;
+	}
 
-  &--row {
-    display: flex;
-    justify-content: space-between;
-    min-width: 200px;
-    margin: 8px 0;
-  }
+	&--row {
+		display: flex;
+		justify-content: space-between;
+		min-width: 200px;
+		margin: 8px 0;
+	}
 
-  &--name {
-    display: flex;
-    gap: 3px;
-    align-items: center;
-  }
+	&--name {
+		display: flex;
+		gap: 3px;
+		align-items: center;
+	}
 }

@@ -3,77 +3,77 @@
 @use "../responsive";
 
 .article-carousel {
-  &__items {
-    padding: 0;
+	&__items {
+		padding: 0;
 
-    @include grid.grid-container;
+		@include grid.grid-container;
 
-    &--flex {
-      @include responsive.tablet-down {
-        display: flex;
-        transition: transform 0.9s ease-in-out;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        -ms-overflow-style: none;
+		&--flex {
+			@include responsive.tablet-down {
+				display: flex;
+				transition: transform 0.9s ease-in-out;
+				overflow-x: auto;
+				scroll-snap-type: x mandatory;
+				scroll-behavior: smooth;
+				-webkit-overflow-scrolling: touch;
+				-ms-overflow-style: none;
 
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
-    }
-  }
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			}
+		}
+	}
 
-  &__scroller {
-    display: none;
-    text-align: right;
+	&__scroller {
+		display: none;
+		text-align: right;
 
-    &--visible {
-      @include responsive.tablet-down {
-        display: block;
-      }
-    }
+		&--visible {
+			@include responsive.tablet-down {
+				display: block;
+			}
+		}
 
-    &--button {
-      background: transparent;
-      border-width: 0;
+		&--button {
+			background: transparent;
+			border-width: 0;
 
-      &[disabled] .arrow-path {
-        stroke: colors.$gray-text;
-      }
-    }
-  }
+			&[disabled] .arrow-path {
+				stroke: colors.$gray-text;
+			}
+		}
+	}
 
-  &__item {
-    list-style-type: none;
-    margin-bottom: 2rem;
-    grid-column: span 4;
+	&__item {
+		list-style-type: none;
+		margin-bottom: 2rem;
+		grid-column: span 4;
 
-    @include responsive.tablet-down {
-      flex: 0 0 534px;
-      scroll-snap-align: start;
-    }
-
-
-    @include responsive.mobile-down {
-      flex: 0 0 328px;
-    }
+		@include responsive.tablet-down {
+			flex: 0 0 534px;
+			scroll-snap-align: start;
+		}
 
 
-    // The "Latest Incidents" carousel collapses to multiple rows
-    // over smaller viewport sizes
-    &--latest {
-      grid-column: 1 / -1;
-
-      @include responsive.tablet-up {
-        grid-column: span 4;
-      }
+		@include responsive.mobile-down {
+			flex: 0 0 328px;
+		}
 
 
-      @include responsive.desktop-up {
-        grid-column: span 3;
-      }
-    }
-  }
+		// The "Latest Incidents" carousel collapses to multiple rows
+		// over smaller viewport sizes
+		&--latest {
+			grid-column: 1 / -1;
+
+			@include responsive.tablet-up {
+				grid-column: span 4;
+			}
+
+
+			@include responsive.desktop-up {
+				grid-column: span 3;
+			}
+		}
+	}
 }

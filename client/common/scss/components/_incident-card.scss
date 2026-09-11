@@ -3,121 +3,121 @@
 @use "../typography";
 
 .incident-card {
-  border-top: 1px solid;
-  border-color: colors.$black;
-  padding-top: 2rem;
+	border-top: 1px solid;
+	border-color: colors.$black;
+	padding-top: 2rem;
 
-  &-collapsible {
-    &__show-more {
-      display: none;
-    }
+	&-collapsible {
+		&__show-more {
+			display: none;
+		}
 
-    @include responsive.mobile-down {
-      padding-top: 0.5rem;
+		@include responsive.mobile-down {
+			padding-top: 0.5rem;
 
-      .incident-card__image-wrapper {
-        display: none;
-      }
+			.incident-card__image-wrapper {
+				display: none;
+			}
 
-      &.closed &__show-more,
-      &.open &__show-more {
-        display: flex;
-        gap: 8px;
-        margin: 0.5rem 0;
-      }
+			&.closed &__show-more,
+			&.open &__show-more {
+				display: flex;
+				gap: 8px;
+				margin: 0.5rem 0;
+			}
 
-      &__toggle-button {
-        display: flex;
-        align-items: center;
-        color: black;
-        background: none;
-        border: 2px solid black;
-        padding: 8px 10px;
-        font-size: typography.$font-size-small-p;
-        cursor: pointer;
-      }
+			&__toggle-button {
+				display: flex;
+				align-items: center;
+				color: black;
+				background: none;
+				border: 2px solid black;
+				padding: 8px 10px;
+				font-size: typography.$font-size-small-p;
+				cursor: pointer;
+			}
 
-      &__toggle-icon {
-        width: 1rem;
-        height: 1rem;
-        background-size: contain;
-        background-color: transparent;
-        background-image: url("../icons/plus.svg");
-        background-repeat: no-repeat;
-        margin-left: 0.5rem;
-      }
+			&__toggle-icon {
+				width: 1rem;
+				height: 1rem;
+				background-size: contain;
+				background-color: transparent;
+				background-image: url("../icons/plus.svg");
+				background-repeat: no-repeat;
+				margin-left: 0.5rem;
+			}
 
-      &.closed {
-        .incident-card__categories,
-        .database-card-table__incident-details,
-        .tag-list {
-          display: none;
-        }
-      }
+			&.closed {
+				.incident-card__categories,
+				.database-card-table__incident-details,
+				.tag-list {
+					display: none;
+				}
+			}
 
-      &.open {
-        .incident-card__image-wrapper--expanded {
-          display: block;
-        }
+			&.open {
+				.incident-card__image-wrapper--expanded {
+					display: block;
+				}
 
-        .incident-card--inner .incident-card__categories,
-        .incident-card--inner .database-card-table__incident-details {
-          display: block;
-        }
+				.incident-card--inner .incident-card__categories,
+				.incident-card--inner .database-card-table__incident-details {
+					display: block;
+				}
 
-        .incident-card--inner .tag-list {
-          display: flex;
-        }
+				.incident-card--inner .tag-list {
+					display: flex;
+				}
 
-        .incident-card--inner .incident-card-collapsible__toggle-icon {
-          background-image: url("../icons/cross.svg");
-        }
-      }
-    }
-  }
+				.incident-card--inner .incident-card-collapsible__toggle-icon {
+					background-image: url("../icons/cross.svg");
+				}
+			}
+		}
+	}
 
-  &__categories {
-    list-style-type: none;
-    padding: 0;
-  }
+	&__categories {
+		list-style-type: none;
+		padding: 0;
+	}
 
-  &__image-wrapper {
-    position: relative;
+	&__image-wrapper {
+		position: relative;
 
-    &--expanded {
-      display: none;
-    }
-  }
+		&--expanded {
+			display: none;
+		}
+	}
 
-  &--inner {
-    @include responsive.tablet-up {
-      transition: transform 0.15s ease-in-out;
+	&--inner {
+		@include responsive.tablet-up {
+			transition: transform 0.15s ease-in-out;
 
-      &:hover {
-        transform: translateY(-0.5rem);
-        cursor: pointer;
+			&:hover {
+				transform: translateY(-0.5rem);
+				cursor: pointer;
 
-        .text-link--card {
-          background-color: transparent;
-          text-decoration: underline;
-        }
-      }
-    }
-  }
+				.text-link--card {
+					background-color: transparent;
+					text-decoration: underline;
+				}
+			}
+		}
+	}
 }
 
 .dl-inline {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0 1em;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0 1em;
 
-  dt {
-    font-weight: 700;
-    grid-column: 1;
-  }
+	dt {
+		font-weight: 700;
+		grid-column: 1;
+	}
 
-  dd {
-    grid-column: 2;
-    margin-left: 0;
-  }
+	dd {
+		grid-column: 2;
+		margin-left: 0;
+	}
 }

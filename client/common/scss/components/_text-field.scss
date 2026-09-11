@@ -2,43 +2,43 @@
 @use "../typography";
 
 .text-field {
-  width: 100%;
-  max-width: 668px;
-  height: 300px;
-  border: 2px solid colors.$black;
+	width: 100%;
+	max-width: 668px;
+	height: 300px;
+	border: 2px solid colors.$black;
 
-  &--single {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 668px;
-    border-width: 0;
-    border-bottom: 2px solid;
-    font-style: italic;
-    font-size: typography.$font-size-small-ui;
-    line-height: 1.33;
-    padding: 0.125rem;
-    border-radius: 0;
+	&--single {
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 668px;
+		border-width: 0;
+		border-bottom: 2px solid;
+		font-style: italic;
+		font-size: typography.$font-size-small-ui;
+		line-height: 1.33;
+		padding: 0.125rem;
+		border-radius: 0;
 
-    &:focus {
-      background: colors.$tag-inactive-bg;
-      outline: 3px solid #000;
+		&:focus {
+			background: colors.$tag-inactive-bg;
+			outline: 3px solid #000;
 
-      // Remove the border bottom to make the outline
-      // the only border on the bottom, but add 2px
-      // padding to make up for it
-      border-bottom: 0;
-      padding-bottom: calc(0.125rem + 2px);
-    }
-  }
+			// Remove the border bottom to make the outline
+			// the only border on the bottom, but add 2px
+			// padding to make up for it
+			border-bottom: 0;
+			padding-bottom: calc(0.125rem + 2px);
+		}
+	}
 
-  &--search-bar {
-    width: 100%;
-    margin: 0;
-    border: 3px solid;
-    padding: 12px 23px;
-    font-style: italic;
-    font-size: typography.$font-size-small-p;
-    appearance: none;
-    border-radius: 0;
-  }
+	&--search-bar {
+		width: 100%;
+		margin: 0;
+		border: 3px solid;
+		padding: 12px 23px;
+		font-style: italic;
+		font-size: typography.$font-size-small-p;
+		appearance: none;
+		border-radius: 0;
+	}
 }

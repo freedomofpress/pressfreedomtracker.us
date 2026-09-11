@@ -3,56 +3,56 @@
 @use "../typography";
 
 .inline-media {
-  width: 100%;
-  margin-inline: 0;
+	width: 100%;
+	margin-inline: 0;
 
-  @include responsive.tablet-up {
-    &.left {
-      margin-bottom: 1em;
-      margin-right: 1em;
-      float: left;
-      max-width: 60%;
-    }
+	@include responsive.tablet-up {
+		&.left {
+			margin-bottom: 1em;
+			margin-right: 1em;
+			float: left;
+			max-width: 60%;
+		}
 
-    &.right {
-      margin-bottom: 1em;
-      margin-left: 1em;
-      float: right;
-      max-width: 60%;
-    }
-  }
+		&.right {
+			margin-bottom: 1em;
+			margin-left: 1em;
+			float: right;
+			max-width: 60%;
+		}
+	}
 
 
-  &__caption {
-    line-height: 1;
+	&__caption {
+		line-height: 1;
 
-    p {
-      font-size: typography.$font-size-small-p;
-      letter-spacing: -0.01em;
-      line-height: 1.43;
-      display: inline;
+		p {
+			font-size: typography.$font-size-small-p;
+			letter-spacing: -0.01em;
+			line-height: 1.43;
+			display: inline;
 
-      &:first-of-type {
-        margin-top: 0.25em;
-      }
-    }
+			&:first-of-type {
+				margin-top: 0.25em;
+			}
+		}
 
-    .media-attribution {
-      font-size: typography.$font-size-small-p;
-      text-transform: uppercase;
-    }
+		.media-attribution {
+			font-size: typography.$font-size-small-p;
+			text-transform: uppercase;
+		}
 
-    a {
-      color: colors.$black;
+		a {
+			color: colors.$black;
 
-      &:focus {
-        outline: colors.$black solid 3px;
-        outline-offset: 2px;
-      }
+			&:focus {
+				outline: colors.$black solid 3px;
+				outline-offset: 2px;
+			}
 
-      &:hover {
-        background-color: colors.$accent-color;
-      }
-    }
-  }
+			&:hover {
+				background-color: colors.$accent-color;
+			}
+		}
+	}
 }

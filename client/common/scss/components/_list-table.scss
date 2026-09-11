@@ -3,81 +3,81 @@
 @use "../typography";
 
 .list-table {
-  position: relative;
+	position: relative;
 
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 
-  &__row {
-    padding: 0.25rem 2rem;
-    border-bottom: 1px solid;
-    border-color: colors.$black;
-    list-style: none;
+	&__row {
+		padding: 0.25rem 2rem;
+		border-bottom: 1px solid;
+		border-color: colors.$black;
+		list-style: none;
 
-    &:first-of-type {
-      border-top: 1px solid;
-    }
-  }
+		&:first-of-type {
+			border-top: 1px solid;
+		}
+	}
 
-  &__col {
-    font-size: typography.$font-size-small-p;
-    line-height: 1.43;
-  }
+	&__col {
+		font-size: typography.$font-size-small-p;
+		line-height: 1.43;
+	}
 
-  &__link {
-    font-size: 13px;
-    line-height: 1.5;
-    color: colors.$gray-text;
-  }
+	&__link {
+		font-size: 13px;
+		line-height: 1.5;
+		color: colors.$gray-text;
+	}
 
-  &__item {
-    text-decoration: none;
-    color: colors.$black;
-    display: grid;
-    column-gap: 32px;
+	&__item {
+		text-decoration: none;
+		color: colors.$black;
+		display: grid;
+		column-gap: 32px;
 
-    &:focus {
-      border: 3px solid;
-      border-color: colors.$black;
-    }
-  }
+		&:focus {
+			border: 3px solid;
+			border-color: colors.$black;
+		}
+	}
 
-  &--col-2 {
-    padding: 0;
-    margin: 0;
+	&--col-2 {
+		padding: 0;
+		margin: 0;
 
-    .list-table__item {
-      @include responsive.desktop-up {
-        grid-template-columns: 1fr 200px 110px;
-      }
-    }
-  }
+		.list-table__item {
+			@include responsive.desktop-up {
+				grid-template-columns: 1fr 200px 110px;
+			}
+		}
+	}
 
-  &--col-3 {
-    padding: 0;
-    margin: 0;
+	&--col-3 {
+		padding: 0;
+		margin: 0;
 
-    .list-table__item {
-      @include responsive.desktop-up {
-        grid-template-columns: 1fr 440px 200px 120px;
-      }
-    }
-  }
+		.list-table__item {
+			@include responsive.desktop-up {
+				grid-template-columns: 1fr 440px 200px 120px;
+			}
+		}
+	}
 
-  > .heading-table {
-    margin: 0.25rem 2rem;
-  }
+	> .heading-table {
+		margin: 0.25rem 2rem;
+	}
 
-  &__headings {
-    margin: 0.25rem 2rem;
+	&__headings {
+		margin: 0.25rem 2rem;
 
-    > .heading-table {
-      margin: 0;
-    }
+		> .heading-table {
+			margin: 0;
+		}
 
-    @include responsive.desktop-up {
-      display: grid;
-      grid-template-columns: 1fr 440px 200px 120px;
-      column-gap: 32px;
-    }
-  }
+		@include responsive.desktop-up {
+			display: grid;
+			grid-template-columns: 1fr 440px 200px 120px;
+			column-gap: 32px;
+		}
+	}
 }

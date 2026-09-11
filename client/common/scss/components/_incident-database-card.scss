@@ -4,201 +4,201 @@
 @use "../typography";
 
 .incident-database-card {
-  grid-column: 1 / -1;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: solid 1px;
-  border-color: colors.$black;
-  display: flex;
-  flex-direction: column;
+	grid-column: 1 / -1;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+	border-bottom: solid 1px;
+	border-color: colors.$black;
+	display: flex;
+	flex-direction: column;
 
-  @include responsive.desktop-up {
-    display: grid;
+	@include responsive.desktop-up {
+		display: grid;
 
-    @include grid.grid-columns(9, 2rem);
-  }
+		@include grid.grid-columns(9, 2rem);
+	}
 
 
-  &__title {
-    margin-top: 0;
-  }
+	&__title {
+		margin-top: 0;
+	}
 
-  &__title-link {
-    color: colors.$black;
-    text-decoration: none;
+	&__title-link {
+		color: colors.$black;
+		text-decoration: none;
 
-    &:hover {
-      text-decoration: underline;
-    }
+		&:hover {
+			text-decoration: underline;
+		}
 
-    &:focus {
-      outline: colors.$black solid 3px;
-      display: inline-block;
-    }
-  }
+		&:focus {
+			outline: colors.$black solid 3px;
+			display: inline-block;
+		}
+	}
 
-  &__section {
-    flex: 1 1;
+	&__section {
+		flex: 1 1;
 
-    @include responsive.desktop-up {
-      grid-column: span 3;
-    }
-  }
+		@include responsive.desktop-up {
+			grid-column: span 3;
+		}
+	}
 
-  &__details-title {
-    @include responsive.desktop-up {
-      display: none;
-    }
-  }
+	&__details-title {
+		@include responsive.desktop-up {
+			display: none;
+		}
+	}
 
-  &__details-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
+	&__details-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2rem;
 
-    @include responsive.desktop-up {
-      grid-column: span 3;
-      flex-direction: row;
-    }
-  }
+		@include responsive.desktop-up {
+			grid-column: span 3;
+			flex-direction: row;
+		}
+	}
 
-  &__main-details {
-    flex: 1;
-  }
+	&__main-details {
+		flex: 1;
+	}
 
-  &__category-details {
-    flex: 1;
+	&__category-details {
+		flex: 1;
 
-    @include responsive.desktop-up {
-      grid-column: span 3;
-    }
-  }
+		@include responsive.desktop-up {
+			grid-column: span 3;
+		}
+	}
 
-  &__details-toggle {
-    align-self: flex-start;
+	&__details-toggle {
+		align-self: flex-start;
 
-    @include responsive.desktop-up {
-      display: none;
-    }
-  }
+		@include responsive.desktop-up {
+			display: none;
+		}
+	}
 }
 
 .database-card-table {
-  position: relative;
+	position: relative;
 
-  &__incident-details {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+	&__incident-details {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 
-  &__row {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid;
-    border-color: colors.$gray-border;
+	&__row {
+		padding: 0.5rem 0;
+		border-bottom: 1px solid;
+		border-color: colors.$gray-border;
 
-    &.table-small, + tablet-up {
-      display: flex;
-    }
+		&.table-small, + tablet-up {
+			display: flex;
+		}
 
-    &.table-small, + desktop-up {
-      padding: 0.25rem 0 0;
-      border: 0;
-    }
+		&.table-small, + desktop-up {
+			padding: 0.25rem 0 0;
+			border: 0;
+		}
 
-    &--inline {
-      display: block;
-      line-height: 0.5;
+		&--inline {
+			display: block;
+			line-height: 0.5;
 
-      @include responsive.tablet-up {
-        padding: 0.3rem 0;
-        border-color: colors.$gray-border;
-      }
+			@include responsive.tablet-up {
+				padding: 0.3rem 0;
+				border-color: colors.$gray-border;
+			}
 
 
-      dt, dd {
-        margin-right: 0.25rem;
-        display: inline-block;
-        white-space: normal;
-        vertical-align: top;
-      }
-    }
-  }
+			dt, dd {
+				margin-right: 0.25rem;
+				display: inline-block;
+				white-space: normal;
+				vertical-align: top;
+			}
+		}
+	}
 
-  &__category-details {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
+	&__category-details {
+		margin-top: 0;
+		margin-bottom: 0.5rem;
 
-    .database-card-table__row--inline {
-      padding-left: 19px;
-    }
-  }
+		.database-card-table__row--inline {
+			padding-left: 19px;
+		}
+	}
 
-  &__label {
-    font-size: typography.$font-size-small-p;
-    line-height: 1.43;
-    white-space: nowrap;
-    margin-right: 0.5rem;
+	&__label {
+		font-size: typography.$font-size-small-p;
+		line-height: 1.43;
+		white-space: nowrap;
+		margin-right: 0.5rem;
 
-    &--bold {
-      font-weight: 700;
-    }
-  }
+		&--bold {
+			font-weight: 700;
+		}
+	}
 
-  &__value {
-    margin-left: 0;
-    font-size: typography.$font-size-small-p;
-    line-height: 1.43;
-  }
+	&__value {
+		margin-left: 0;
+		font-size: typography.$font-size-small-p;
+		line-height: 1.43;
+	}
 
-  &__list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
+	&__list {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
 
-  .details-toggle-btn {
-    position: absolute;
-    top: 6px;
-    right: 24px;
+	.details-toggle-btn {
+		position: absolute;
+		top: 6px;
+		right: 24px;
 
-    @include responsive.desktop-up {
-      display: none;
-    }
-  }
+		@include responsive.desktop-up {
+			display: none;
+		}
+	}
 
-  .database-card-toggle-btn {
-    @include responsive.desktop-up {
-      display: none;
-    }
-  }
+	.database-card-toggle-btn {
+		@include responsive.desktop-up {
+			display: none;
+		}
+	}
 
-  &__container {
-    @include responsive.tablet-down {
-      margin-top: 1rem;
+	&__container {
+		@include responsive.tablet-down {
+			margin-top: 1rem;
 
-      &[data-visible='false'] {
-        display: none;
-      }
+			&[data-visible='false'] {
+				display: none;
+			}
 
-      &[data-visible='true'] {
-        display: block;
-      }
-    }
-  }
+			&[data-visible='true'] {
+				display: block;
+			}
+		}
+	}
 }
 
 .heading-table {
-  margin: 0;
-  border-bottom: 1px solid;
-  border-color: colors.$gray-border;
-  padding: 0.25rem 0 0;
+	margin: 0;
+	border-bottom: 1px solid;
+	border-color: colors.$gray-border;
+	padding: 0.25rem 0 0;
 
-  @include responsive.tablet-down {
-    padding: 0.3rem 0;
-  }
+	@include responsive.tablet-down {
+		padding: 0.3rem 0;
+	}
 
 
-  @include responsive.desktop-up {
-    border-bottom: none;
-  }
+	@include responsive.desktop-up {
+		border-bottom: none;
+	}
 }

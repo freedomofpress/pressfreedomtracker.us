@@ -2,46 +2,46 @@
 @use "../responsive";
 
 .categorypage-section {
-  padding: 2rem 0;
+	padding: 2rem 0;
 }
 
 .categorypage-section-inner {
-  @include responsive.constrain-to-desktop;
+	@include responsive.constrain-to-desktop;
 }
 
 .categorypage-section--flex {
-  @include responsive.desktop-up {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
+	@include responsive.desktop-up {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
 
-    > * {
-      flex: 1;
-      max-width: 50%;
-    }
-  }
+		> * {
+			flex: 1;
+			max-width: 50%;
+		}
+	}
 }
 
 .categorypage-section--gray {
-  background-color: colors.$section-background;
+	background-color: colors.$section-background;
 }
 
 .categorypage-count {
-  font-size: 1.75rem;
+	font-size: 1.75rem;
 
-  @include responsive.desktop-up {
-    font-size: 2rem;
-  }
+	@include responsive.desktop-up {
+		font-size: 2rem;
+	}
 }
 
 .details-table__categorypage {
-  border-top: 1px solid;
-  border-color: colors.$black;
+	border-top: 1px solid;
+	border-color: colors.$black;
 
-  .details-table {
-    &__row {
-      padding: 0.25rem 0;
-      align-items: flex-start;
-    }
-  }
+	.details-table {
+		&__row {
+			padding: 0.25rem 0;
+			align-items: flex-start;
+		}
+	}
 }

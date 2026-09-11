@@ -2,24 +2,24 @@
 @use "../responsive";
 
 .emails-signup {
-  border-top: 1px solid;
-  border-color: colors.$black;
+	border-top: 1px solid;
+	border-color: colors.$black;
 
-  &--inner {
-    padding: 32px 0;
+	&--inner {
+		padding: 32px 0;
 
-    @include responsive.constrain-to-desktop;
-  }
+		@include responsive.constrain-to-desktop;
+	}
 
-  &-content {
-    max-width: 670px;
-  }
+	&-content {
+		max-width: 670px;
+	}
 
-  &__input-container {
-    margin-bottom: 1rem;
-  }
+	&__input-container {
+		margin-bottom: 1rem;
+	}
 
-  &__submit-btn {
-    text-align: right;
-  }
+	&__submit-btn {
+		text-align: right;
+	}
 }
