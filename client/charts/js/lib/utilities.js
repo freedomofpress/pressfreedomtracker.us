@@ -68,7 +68,7 @@ export function getFilteredUrl(databasePath, filtersApplied, currentDate, catego
 
 	const parameters = []
 
-	if (!!parseInt(filtersApplied.category)) {
+	if (parseInt(filtersApplied.category)) {
 		parameters.push(`categories=${filtersApplied.category}`)
 	}
 
