@@ -67,7 +67,7 @@ const AutoComplete = ({
 				return {...state, activeSuggestion: Math.max(0, state.activeSuggestion - 1)}
 			case 'INCREMENT_ACTIVE_SUGGESTION':
 				return {...state, activeSuggestion: Math.min(state.filteredSuggestions.length - 1, state.activeSuggestion + 1)}
-			case 'FILTER_SUGGESTIONS':
+			case 'FILTER_SUGGESTIONS': {
 				const filteredSuggestions = suggestions.filter(
 					suggestion =>
 					suggestion[suggestionsLabelField].toLowerCase().indexOf(payload.toLowerCase()) > -1
@@ -78,6 +78,7 @@ const AutoComplete = ({
 					userInput: payload,
 					showSuggestions: true,
 				}
+			}
 
 			default:
 				throw new Error(`Unknown action type: ${type}`)
