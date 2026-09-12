@@ -16,7 +16,6 @@ export default ({
 	isMobileView = false,
 	creditUrl = '',
 	branchFieldName,
-	categories,
 	branches,
 	interactive = true,
 	fullSize = true,

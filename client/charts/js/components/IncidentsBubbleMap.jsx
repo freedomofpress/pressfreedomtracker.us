@@ -18,9 +18,7 @@ export default ({
 	filterStates = new Set(),
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	aggregationLocality = 'state', // Whether to group incidents by state or city
-	isMobileView = false,
 	creditUrl = '',
-	categories,
 	interactive = true,
 	fullSize,
 	domainMax,
