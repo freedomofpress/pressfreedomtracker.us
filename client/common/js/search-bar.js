@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension, import/no-import-module-exports */
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import Search from './components/Search'

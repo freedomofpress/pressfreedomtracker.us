@@ -15,7 +15,7 @@ const app = express()
 const getRenderScale = (req) => {
 	try {
 		return JSON.parse(req?.query?.options || '{}').scale || 1
-	} catch (e) {
+	} catch {
 		return 1
 	}
 }

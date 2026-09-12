@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ParentSize } from '@visx/responsive'
 import { createRoot } from 'react-dom/client'
 import CategoryIcon from './components/categoryIcon'
@@ -41,6 +42,12 @@ function PrepubBarChartWidth({
 			</div>
 		</div>
 	)
+}
+
+PrepubBarChartWidth.propTypes = {
+	width: PropTypes.number.isRequired,
+	dataset: PropTypes.array.isRequired,
+	parentWidth: PropTypes.number.isRequired,
 }
 
 function PrepubIncidentCategoryCount({
@@ -86,7 +93,7 @@ function PrepubIncidentCategoryCount({
 						<div className="category-count-tooltip">
 							<p className="category-count-tooltip--heading">Categories tracked (unconfirmed)</p>
 							{categoryCounts.map((item) => (
-								<dl className="category-count-tooltip--row">
+								<dl key={item.category} className="category-count-tooltip--row">
 									<dt className="category-count-tooltip--name">
 										<CategoryIcon category={item.category} width={14} />
 										{item.category}
@@ -118,6 +125,14 @@ function PrepubIncidentCategoryCount({
 			</span>
 		</>
 	)
+}
+
+PrepubIncidentCategoryCount.propTypes = {
+	incidentCount: PropTypes.number.isRequired,
+	categoryCounts: PropTypes.arrayOf(PropTypes.shape({
+		category: PropTypes.string.isRequired,
+		count: PropTypes.number.isRequired,
+	})).isRequired,
 }
 
 const chartContainers = Array.from(document.getElementsByClassName('js-prepub-bar-chart'))
