@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path')
 const esbuild = require('esbuild')
 const nodemon = require('nodemon')
@@ -13,7 +12,6 @@ const config = {
 	logLevel: 'info',
 }
 
-// eslint-disable-next-line no-lone-blocks
 {
 	(async () => {
 		const ctx = await esbuild.context(config)
