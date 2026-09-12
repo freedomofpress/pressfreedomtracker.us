@@ -341,7 +341,6 @@ export default function BarChart({
 									wrapperComponent={
 										<a
 											href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
-											role="link"
 											aria-label={barLabel(branchEntry.data)}
 										/>
 									}
@@ -471,7 +470,6 @@ export default function BarChart({
 						wrapperComponent={
 							<a
 								href={searchPageURL && searchPageURL(xFormat(branchBars[0].data[x]))}
-								role="link"
 								aria-label={barLabel(branchBars[0].data)}
 							/>
 						}

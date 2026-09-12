@@ -193,7 +193,6 @@ export default function USMap({
 								wrapperComponent={
 									<a
 										href={searchPageURL && searchPageURL(d.usCode)}
-										role="link"
 										aria-label={`${aggregationLocality(d)}: ${d.numberOfIncidents} incidents`}
 									/>
 								}
@@ -326,7 +325,6 @@ export default function USMap({
 						{interactive ? (
 							<a
 								href={searchPageURL()}
-								role="link"
 								aria-label="Incidents recorded outside of the US"
 							>
 								<rect
