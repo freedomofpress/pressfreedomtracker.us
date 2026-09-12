@@ -84,13 +84,16 @@ export default function BarChart({
 	interactive = true,
 	disableAnimation = false,
 }) {
-	if (!data.length) return null
 	const dataset = data.map((d, i) => ({ ...d, index: i }))
 
 	// State to keep track of the current hovered element
 	const [hoveredElement, setHoveredElement] = useState(null)
-	const [sliderSelection, setSliderSelection] = useState(dataset[0].index)
+	// Hooks must run unconditionally on every render, so fall back to
+	// `undefined` here rather than returning early above when data is empty.
+	const [sliderSelection, setSliderSelection] = useState(dataset[0]?.index)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+
+	if (!data.length) return null
 
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
