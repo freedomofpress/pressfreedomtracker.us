@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import * as d3 from 'd3'
 import { countBy } from 'lodash'
@@ -234,4 +235,18 @@ export default function CategoryFilter({
 			)}
 		</div>
 	)
+}
+
+CategoryFilter.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	filterDefs: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		title: PropTypes.string,
+		symbol: PropTypes.string,
+		filters: PropTypes.array,
+	})).isRequired,
+	filterParameters: PropTypes.object.isRequired,
+	filterWithout: PropTypes.object,
 }

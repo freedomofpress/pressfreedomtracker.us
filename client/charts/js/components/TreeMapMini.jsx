@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { computeMinimumNumberOfIncidents, stackDatasetByCategory } from './TreeMap'
 import { colors } from '../lib/utilities'
@@ -53,4 +54,13 @@ export default function TreeMapMini({
 			))}
 		</svg>
 	)
+}
+
+TreeMapMini.propTypes = {
+	data: PropTypes.array.isRequired,
+	categoryColumn: PropTypes.string.isRequired,
+	allCategories: PropTypes.array,
+	categoriesColors: PropTypes.object,
+	width: PropTypes.number,
+	height: PropTypes.number,
 }

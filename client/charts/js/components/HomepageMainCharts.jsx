@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ParentSize } from '@visx/responsive'
 import TreeMap from './TreeMap'
 import HexbinUSMap from './HexbinUSMap'
@@ -205,4 +206,17 @@ function HomepageMainChartsWidth({
 			</div>
 		</Flashing>
 	)
+}
+
+HomepageMainChartsWidth.propTypes = {
+	data: PropTypes.array.isRequired,
+	width: PropTypes.number.isRequired,
+	currentDate: PropTypes.instanceOf(Date),
+	selectedTags: PropTypes.array,
+	databasePath: PropTypes.string,
+	loading: PropTypes.bool,
+	categories: PropTypes.arrayOf(PropTypes.shape({
+		title: PropTypes.string,
+	})),
+	sevenDayEnabled: PropTypes.bool,
 }

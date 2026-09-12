@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ParentSize } from '@visx/responsive'
 import Flashing from '../../../common/js/components/Flashing'
 import ChartDescription from "./ChartDescription"
@@ -59,4 +60,15 @@ function CategoryPageChartWidth({
 			</div>
 		</Flashing>
 	)
+}
+
+CategoryPageChartWidth.propTypes = {
+	data: PropTypes.array.isRequired,
+	width: PropTypes.number.isRequired,
+	categories: PropTypes.array,
+	category: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	categoryName: PropTypes.string.isRequired,
+	vizType: PropTypes.string.isRequired,
+	databasePath: PropTypes.string,
+	loading: PropTypes.bool,
 }

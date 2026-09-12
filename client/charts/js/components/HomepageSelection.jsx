@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { sortBy } from 'lodash'
 import ButtonsRow from './ButtonsRow'
@@ -151,4 +152,18 @@ export default function HomepageSelection({
 			/>
 		</div>
 	)
+}
+
+HomepageSelection.propTypes = {
+	data: PropTypes.array.isRequired,
+	numberOfTags: PropTypes.number,
+	selectedTags: PropTypes.array,
+	currentDate: PropTypes.instanceOf(Date),
+	filtersApplied: PropTypes.shape({
+		tag: PropTypes.string,
+		year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		timePreset: PropTypes.string,
+	}).isRequired,
+	setFiltersApplied: PropTypes.func.isRequired,
+	sevenDayEnabled: PropTypes.bool,
 }

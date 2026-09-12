@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
@@ -485,4 +486,21 @@ export default function TreeMap({
 			</>
 		</>
 	)
+}
+
+TreeMap.propTypes = {
+	data: PropTypes.array.isRequired,
+	categoryColumn: PropTypes.string.isRequired,
+	id: PropTypes.string,
+	categoryDivider: PropTypes.string,
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	isHomePageDesktopView: PropTypes.bool,
+	minimumBarHeight: PropTypes.number.isRequired,
+	searchPageURL: PropTypes.func,
+	categoriesColors: PropTypes.object,
+	allCategories: PropTypes.array,
+	setSvgEl: PropTypes.func,
+	interactive: PropTypes.bool,
+	disableAnimation: PropTypes.bool,
 }
