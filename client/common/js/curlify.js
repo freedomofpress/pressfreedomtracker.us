@@ -17,7 +17,7 @@ const replacers = [
 	{
 		// Handle the case where a beginning double quote is followed
 		// by a non-word character such as ' or [.
-		matcher: new RegExp(`(${nonWord}|^)"(${word}|'|\\\[)`, 'g'),
+		matcher: new RegExp(`(${nonWord}|^)"(${word}|'|\\[)`, 'g'),
 		replacement: '$1\u201c$2',
 	}
 ]
