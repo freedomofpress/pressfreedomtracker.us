@@ -114,6 +114,7 @@ const AutoComplete = ({
 			suggestionListComponent = (
 				<ul className="filters__suggestions">
 					{state.filteredSuggestions.map((suggestion, index) => (
+						// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- keyboard users already navigate this list via the input's onKeyDown (arrow keys move activeSuggestion, Enter selects it); making each <li> independently focusable would add extra tab stops and conflict with that combobox pattern.
 						<li
 							className={classNames("filters__suggestions-item", "filters__suggestions-item--selectable", {"filters__suggestions-item--active": index === state.activeSuggestion})}
 							onClick={onClick}
