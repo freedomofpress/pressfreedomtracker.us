@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import * as d3 from 'd3'
 
 // Takes a best guess at the width of a letter to calculate the width of a button

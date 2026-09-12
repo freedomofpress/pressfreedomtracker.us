@@ -50,7 +50,7 @@ export default function DropdownButton({ value = '', selected, selectable = true
 						onChange(e.target.value)
 					}
 				}}
-				onMouseEnter={(e) => {
+				onMouseEnter={() => {
 					setHovered(true)
 				}}
 				onMouseLeave={() => {

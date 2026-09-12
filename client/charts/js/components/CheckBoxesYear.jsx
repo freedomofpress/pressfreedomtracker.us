@@ -5,7 +5,7 @@ export default function CheckBoxesYear({ width, options, selectedYears, onClick 
 
 	return (
 		<div style={{ width, display: 'flex', flexDirection: 'column' }}>
-			{options.map((d, i) => (
+			{options.map((d) => (
 				<div key={d.year}>
 					<div
 						style={{
