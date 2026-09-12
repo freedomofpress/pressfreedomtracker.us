@@ -8,7 +8,7 @@ import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
 import HexbinUSMap from './HexbinUSMap'
 
-export default ({
+export default function IncidentsHexbinMap({
 	dataset,
 	title,
 	description,
@@ -19,7 +19,7 @@ export default ({
 	creditUrl = '',
 	interactive = true,
 	fullSize,
-}) => {
+}) {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange, filterStates)
 	const datasetAggregatedByGeo = filteredDataset && groupByState(filteredDataset) // Hexbin maps are always state-level

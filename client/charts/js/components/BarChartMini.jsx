@@ -1,14 +1,14 @@
 import React from 'react'
 import * as d3 from 'd3'
 
-export default ({
+export default function BarChartMini({
 	data,
 	allCategories,
 	categoriesColors = {},
 	x,
 	width = 655,
 	height = 440,
-}) => {
+}) {
 	const stackedData = d3.stack().keys(allCategories || [x])(data)
 
 	const xScale = d3.scaleLinear().domain([0, d3.max(stackedData.flat(), d => d[1])]).range([0, width])
