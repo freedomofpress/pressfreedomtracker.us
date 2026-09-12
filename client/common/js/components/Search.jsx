@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/label-has-associated-control, no-case-declarations */
+/* eslint-disable no-case-declarations */
 import React, { useState, createRef } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
@@ -20,7 +20,6 @@ export default function Search({ data = [], selectedTags = [] }) {
 			.split(',')
 			.map((category) => category.trim())
 			.forEach((category) => {
-				// eslint-disable-next-line no-param-reassign
 				categoryMap[category] = true
 			})
 		return categoryMap
@@ -262,9 +261,7 @@ export default function Search({ data = [], selectedTags = [] }) {
 }
 
 Search.propTypes = {
-	// eslint-disable-next-line react/forbid-prop-types
 	data: PropTypes.array,
-	// eslint-disable-next-line react/forbid-prop-types
 	selectedTags: PropTypes.array,
 }
 
