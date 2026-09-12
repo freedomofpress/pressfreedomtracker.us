@@ -15,15 +15,7 @@ const jsFiles = [
 
 module.exports = [
 	{
-		ignores: [
-			'client/statistics/js/searchstats.js',
-			'client/charts/**',
-			'client/common/js/curlify.js',
-			'client/common/js/draftail_curlify.js',
-			'**/*.test.js',
-			'coverage/**',
-			'build/**',
-		],
+		ignores: ['coverage/**', 'build/**'],
 	},
 
 	{ files: jsFiles, ...js.configs.recommended },
@@ -45,6 +37,9 @@ module.exports = [
 				// webpack injects a `module` binding into each bundled chunk for
 				// its Hot Module Replacement API (module.hot).
 				module: 'readonly',
+				// Matomo/Piwik's tracking snippet defines this on `window` before
+				// our bundles run.
+				_paq: 'readonly',
 			},
 		},
 
@@ -69,6 +64,11 @@ module.exports = [
 			'react-hooks/rules-of-hooks': 'error',
 			'react-hooks/exhaustive-deps': 'warn',
 
+			// Allow a leading underscore to mark a parameter as intentionally
+			// unused, e.g. one kept only for signature consistency with sibling
+			// callback functions.
+			'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+
 			// webpack.config.js only populates module.exports when run via the
 			// `build`/`start` npm scripts (it branches on npm_lifecycle_event),
 			// so requiring it here (e.g. from eslint-import-resolver-webpack)
@@ -76,6 +76,15 @@ module.exports = [
 			// extension-less imports. Leave path resolution unchecked until
 			// that export is restructured.
 			'import/no-unresolved': 'off',
+		},
+	},
+
+	{
+		files: ['**/*.test.js'],
+		languageOptions: {
+			globals: {
+				...globals.jest,
+			},
 		},
 	},
 
