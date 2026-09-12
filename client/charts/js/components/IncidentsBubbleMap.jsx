@@ -1,15 +1,16 @@
-import React from 'react'
+import React from "react";
+import PropTypes from "prop-types";
 import {
 	filterDatasets,
 	groupByState,
 	groupByCity,
-	countIncidentsOutsideUS
-} from '../lib/utilities'
-import { ParentSize } from '@visx/responsive'
-import ChartDownloader from './ChartDownloader'
-import USMap from './USMap'
+	countIncidentsOutsideUS,
+} from "../lib/utilities";
+import { ParentSize } from "@visx/responsive";
+import ChartDownloader from "./ChartDownloader";
+import USMap from "./USMap";
 
-export default ({
+export default function IncidentsBubbleMap({
 	dataset,
 	title,
 	description,
@@ -17,21 +18,30 @@ export default ({
 	filterTags = null, // Array or string of valid tags or tag
 	filterStates = new Set(),
 	dateRange = [null, null], // Array representing the min and max of dates to show
-	aggregationLocality = 'state', // Whether to group incidents by state or city
-	isMobileView = false,
-	creditUrl = '',
-	categories,
+	aggregationLocality = "state", // Whether to group incidents by state or city
+	creditUrl = "",
 	interactive = true,
 	fullSize,
 	domainMax,
-}) => {
-	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
-	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
+}) {
+	const aggregationLocalityMap = { state: groupByState, city: groupByCity };
+	const aggregationLocalityFnMap = {
+		state: (d) => d.state,
+		city: (d) => `${d.city}, ${d.state}`,
+	};
 
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange, filterStates)
-	const datasetAggregatedByGeo = filteredDataset && aggregationLocalityMap[aggregationLocality](filteredDataset)
-	const incidentsOutsideUS = countIncidentsOutsideUS(filteredDataset)
+	const filteredDataset = filterDatasets(
+		dataset,
+		filterCategories,
+		filterTags,
+		dateRange,
+		filterStates,
+	);
+	const datasetAggregatedByGeo =
+		filteredDataset &&
+		aggregationLocalityMap[aggregationLocality](filteredDataset);
+	const incidentsOutsideUS = countIncidentsOutsideUS(filteredDataset);
 
 	return (
 		<ParentSize>
@@ -43,7 +53,7 @@ export default ({
 						aggregationLocality={aggregationLocalityFnMap[aggregationLocality]}
 						incidentsOutsideUS={incidentsOutsideUS}
 						width={fullSize ? parent.width : 655}
-						height={fullSize ? (parent.width * 0.7) : 440}
+						height={fullSize ? parent.width * 0.7 : 440}
 						overridePaddings={{ map: 0, bottom: 0 }}
 						interactive={interactive}
 						fullSize={fullSize}
@@ -55,12 +65,29 @@ export default ({
 					<ChartDownloader
 						chartTitle={title}
 						creditUrl={creditUrl}
-						downloadFileName={title ? `${title}.png` : 'chart.png'}
+						downloadFileName={title ? `${title}.png` : "chart.png"}
 					>
 						{usmap}
 					</ChartDownloader>
-				) : usmap
+				) : (
+					usmap
+				);
 			}}
 		</ParentSize>
-	)
+	);
 }
+
+IncidentsBubbleMap.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	title: PropTypes.string,
+	description: PropTypes.string,
+	filterCategories: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterTags: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterStates: PropTypes.instanceOf(Set),
+	dateRange: PropTypes.array,
+	aggregationLocality: PropTypes.oneOf(["state", "city"]),
+	creditUrl: PropTypes.string,
+	interactive: PropTypes.bool,
+	fullSize: PropTypes.bool,
+	domainMax: PropTypes.number,
+};

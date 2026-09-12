@@ -16,36 +16,36 @@
  */
 class ContentWarningImage extends HTMLElement {
 	constructor() {
-		super()
+		super();
 
 		// State
-		this.blurred = true
+		this.blurred = true;
 	}
 
 	connectedCallback() {
 		// Elements
-		this.classList.add('cw-image-container')
-		this.imgElem = this.querySelector('img')
-		this.dismissBtn = document.createElement('button')
-		this.dismissBtn.classList.add('btn', 'btn-bordered')
-		this.dismissBtn.textContent = this.dataset.warningText
-		this.appendChild(this.dismissBtn)
+		this.classList.add("cw-image-container");
+		this.imgElem = this.querySelector("img");
+		this.dismissBtn = document.createElement("button");
+		this.dismissBtn.classList.add("btn", "btn-bordered");
+		this.dismissBtn.textContent = this.dataset.warningText;
+		this.appendChild(this.dismissBtn);
 
 		// Events
-		this.dismissBtn.addEventListener('click', (e) => this.handleDismiss(e))
+		this.dismissBtn.addEventListener("click", (e) => this.handleDismiss(e));
 
 		// Run first DOM update
-		this.updateDom()
+		this.updateDom();
 	}
 
 	handleDismiss() {
-		this.blurred = false
-		this.updateDom()
+		this.blurred = false;
+		this.updateDom();
 	}
 
 	updateDom() {
-		this.classList.toggle('blurred', this.blurred)
+		this.classList.toggle("blurred", this.blurred);
 	}
 }
 
-customElements.define('cw-image', ContentWarningImage)
+customElements.define("cw-image", ContentWarningImage);

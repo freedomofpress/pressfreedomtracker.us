@@ -1,65 +1,67 @@
 function parseCategories(urlParams, filterName, filters) {
-	let params = urlParams[filterName]
-	let result
+	let params = urlParams[filterName];
+	let result;
 	// Set-up object with keys as integer ids, values as titles.
-	let categories = Object.fromEntries(filters.filter(({id}) => id > 0).map(
-		({id, title}) => [id, title]
-	))
+	let categories = Object.fromEntries(
+		filters.filter(({ id }) => id > 0).map(({ id, title }) => [id, title]),
+	);
 
 	if (params) {
-		result = new Set(params.split(',').map((param) => {
-			// +string evaluates to NaN if string is not numeric
-			if (categories[+param]) {
-				return categories[+param]
-			} else {
-				return param
-			}
-		}))
+		result = new Set(
+			params.split(",").map((param) => {
+				// +string evaluates to NaN if string is not numeric
+				if (categories[+param]) {
+					return categories[+param];
+				} else {
+					return param;
+				}
+			}),
+		);
 	} else {
-		result = new Set()
+		result = new Set();
 	}
 
 	return {
 		enabled: true,
-		type: 'stringset',
+		type: "stringset",
 		parameters: result,
-	}
+	};
 }
 
-function parseDateRange(urlParams, filterName, filters) {
-	let lowerValue = urlParams[`${filterName}_lower`]
-	let upperValue = urlParams[`${filterName}_upper`]
+function parseDateRange(urlParams, filterName, _filters) {
+	let lowerValue = urlParams[`${filterName}_lower`];
+	let upperValue = urlParams[`${filterName}_upper`];
 	return {
 		enabled: false,
-		type: 'date',
+		type: "date",
 		parameters: {
 			min: lowerValue ? new Date(lowerValue) : null,
 			max: upperValue ? new Date(upperValue) : null,
 		},
-	}
+	};
 }
 
-function parseString(urlParams, filterName, filters) {
+function parseString(urlParams, filterName, _filters) {
 	return {
 		enabled: false,
-		type: 'string',
+		type: "string",
 		parameters: urlParams[filterName],
-	}
+	};
 }
 
-function parseStringSet(urlParams, filterName, filters) {
-	let params = urlParams[filterName]
-	let result
+function parseStringSet(urlParams, filterName, _filters) {
+	let params = urlParams[filterName];
+	let result;
 	if (params) {
-		result = new Set(params.split(','))
+		result = new Set(params.split(","));
 	} else {
-		result = new Set()
+		result = new Set();
 	}
 	return {
 		enabled: true,
-		type: 'stringset',
+		type: "stringset",
 		parameters: result,
-	}
+	};
 }
 
 const queryFields = {
@@ -114,12 +116,12 @@ const queryFields = {
 
 	tags: parseStringSet,
 	categories: parseCategories,
-}
+};
 
 export function decode(searchParams, filters) {
-	let r = {}
+	let r = {};
 	for (const [filterName, parseFn] of Object.entries(queryFields)) {
-		r[filterName] = parseFn(searchParams, filterName, filters)
+		r[filterName] = parseFn(searchParams, filterName, filters);
 	}
-	return r
+	return r;
 }

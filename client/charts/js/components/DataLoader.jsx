@@ -1,114 +1,156 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import * as d3 from 'd3'
-import 'regenerator-runtime/runtime'
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import * as d3 from "d3";
+import "regenerator-runtime/runtime";
 
 function Loader() {
-	return <div>Loading...</div>
+	return <div>Loading...</div>;
 }
 
-export function loadData({ dataUrl, dataParser, dataKey, fetchCache, setFetchCache, fetchFn }) {
+export function loadData({
+	dataUrl,
+	dataParser,
+	dataKey,
+	fetchCache,
+	setFetchCache,
+	fetchFn,
+}) {
 	// Convert singular strings into arrays
-	const dataUrls = (typeof dataUrl === "string" ? [dataUrl] : dataUrl).filter(d => d)
-	const dataKeys = (typeof dataKey === "string" ? [dataKey] : dataKey).filter(d => d)
-	const dataParsers = (typeof dataParser === "function" ? [dataParser] : dataParser).filter(d => d)
+	const dataUrls = (typeof dataUrl === "string" ? [dataUrl] : dataUrl).filter(
+		(d) => d,
+	);
+	const dataKeys = (typeof dataKey === "string" ? [dataKey] : dataKey).filter(
+		(d) => d,
+	);
+	const dataParsers = (
+		typeof dataParser === "function" ? [dataParser] : dataParser
+	).filter((d) => d);
 
 	// Make sure that we have arrays
-	if (!Array.isArray(dataUrls) || !Array.isArray(dataKeys) || !Array.isArray(dataParsers))
-		return
+	if (
+		!Array.isArray(dataUrls) ||
+		!Array.isArray(dataKeys) ||
+		!Array.isArray(dataParsers)
+	)
+		return;
 
 	// Only fetch the data endpoints that we have url, key, and parser for
-	const numDataFetchers = Math.min(dataKeys.length, dataUrls.length, dataParsers.length);
+	const numDataFetchers = Math.min(
+		dataKeys.length,
+		dataUrls.length,
+		dataParsers.length,
+	);
 
-	const fetchData = []
+	const fetchData = [];
 
 	// Generate the promise for fetching data
 	for (let i = 0; i < numDataFetchers; i++) {
 		// Get the url, key, and parser for this entry
-		const dataUrlEntry = dataUrls[i]
-		const dataKeyEntry = dataKeys[i]
-		const dataParserEntry = dataParsers[i]
+		const dataUrlEntry = dataUrls[i];
+		const dataKeyEntry = dataKeys[i];
+		const dataParserEntry = dataParsers[i];
 
 		// Get the cache key
-		const fetchCacheKey = `${dataKeyEntry}-${dataUrlEntry}-${btoa(dataParserEntry.toString())}`
+		const fetchCacheKey = `${dataKeyEntry}-${dataUrlEntry}-${btoa(dataParserEntry.toString())}`;
 
 		// If this data has already been fetched, then simply get it from the cache
-		if (fetchCache && fetchCache[fetchCacheKey]) fetchData.push(Promise.resolve(fetchCache[fetchCacheKey]))
+		if (fetchCache && fetchCache[fetchCacheKey])
+			fetchData.push(Promise.resolve(fetchCache[fetchCacheKey]));
 
 		// Otherwise we load it and save it to the cache
 		else if (fetchFn || fetch) {
 			fetchData.push(
 				(fetchFn || fetch)(dataUrlEntry)
-					.then(response => {
+					.then((response) => {
 						if (response.ok) {
-							return response.text()
+							return response.text();
 						}
-						let message = `Fetch returned ${response.status} status`
-						console.error(message)
-						return Promise.reject(new Error(message))
+						let message = `Fetch returned ${response.status} status`;
+						console.error(message);
+						return Promise.reject(new Error(message));
 					})
-					.then(text => dataParserEntry(text))
-					.then(data => {
-						if (setFetchCache) setFetchCache({...fetchCache, [fetchCacheKey]: data})
-						return Promise.resolve(data)
-					})
-			)
+					.then((text) => dataParserEntry(text))
+					.then((data) => {
+						if (setFetchCache)
+							setFetchCache({ ...fetchCache, [fetchCacheKey]: data });
+						return Promise.resolve(data);
+					}),
+			);
 		}
 	}
 
 	// Wait for all the data to be loaded (or attempted to be loaded)
-	return Promise.allSettled(fetchData)
-		.then(parsedData => {
-			const data = {}
+	return Promise.allSettled(fetchData).then((parsedData) => {
+		const data = {};
 
-			// Save each successful response value into the data object
-			parsedData.forEach(({value}, i) => {
-				if (value) data[dataKeys[i]] = value
-			})
+		// Save each successful response value into the data object
+		parsedData.forEach(({ value }, i) => {
+			if (value) data[dataKeys[i]] = value;
+		});
 
-			return Promise.resolve(data)
-		}
-	)
+		return Promise.resolve(data);
+	});
 }
 
-function DataLoader({ dataUrl, dataParser, dataKey, loadingComponent, children }) {
-	const [data, setData] = useState({})
-	const [loading, setLoading] = useState(true)
-	const [fetchCache, setFetchCache] = useState({})
+function DataLoader({
+	dataUrl,
+	dataParser,
+	dataKey,
+	loadingComponent,
+	children,
+}) {
+	const [data, setData] = useState({});
+	const [loading, setLoading] = useState(true);
+	const [fetchCache, setFetchCache] = useState({});
 
 	// Every time dataUrl or dataParser changes, fetch new data and parse it
 	useEffect(() => {
-		setLoading(true)
+		setLoading(true);
 
-		loadData({ dataUrl, dataParser, dataKey, fetchCache, setFetchCache })
-			.then((data) => {
+		loadData({ dataUrl, dataParser, dataKey, fetchCache, setFetchCache }).then(
+			(data) => {
 				// Set the data and unset loading
-				setData(data)
-				setLoading(false)
-			}
-		)
-	}, [dataUrl, dataParser, dataKey])
+				setData(data);
+				setLoading(false);
+			},
+		);
+		// fetchCache is intentionally excluded: loadData calls setFetchCache as
+		// part of this same effect, so depending on fetchCache would make the
+		// effect refire on its own cache update. Each run already closes over
+		// the fetchCache value from the render that changed dataUrl/dataParser/
+		// dataKey, which is what determines whether a re-fetch is needed.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dataUrl, dataParser, dataKey]);
 
 	// If data hasn't loaded yet, return the loading component instead
-	if (loading && loadingComponent) return loadingComponent
+	if (loading && loadingComponent) return loadingComponent;
 
 	// Clone children with the added data prop and return it
-	return React.cloneElement(children, data)
+	return React.cloneElement(children, data);
 }
 
 DataLoader.propTypes = {
-	dataUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
-	dataParser: PropTypes.oneOfType([PropTypes.func, PropTypes.arrayOf(PropTypes.func)]),
-	dataKey: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+	dataUrl: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.arrayOf(PropTypes.string),
+	]).isRequired,
+	dataParser: PropTypes.oneOfType([
+		PropTypes.func,
+		PropTypes.arrayOf(PropTypes.func),
+	]),
+	dataKey: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.arrayOf(PropTypes.string),
+	]),
 	loadingComponent: PropTypes.node,
 	children: PropTypes.node,
-}
+};
 
 DataLoader.defaultProps = {
 	dataParser: (data) => d3.csvParse(data, d3.autoType),
-	dataKey: 'data',
+	dataKey: "data",
 	loadingComponent: <Loader />,
 	children: [],
-}
+};
 
-export default DataLoader
+export default DataLoader;

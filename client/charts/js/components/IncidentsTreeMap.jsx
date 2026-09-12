@@ -1,11 +1,12 @@
-import React from 'react'
-import { filterDatasets, categoriesColors } from '../lib/utilities'
-import { ParentSize } from '@visx/responsive'
-import ChartDownloader from './ChartDownloader'
-import TreeMap from './TreeMap'
-import TreeMapMini from './TreeMapMini'
+import React from "react";
+import PropTypes from "prop-types";
+import { filterDatasets, categoriesColors } from "../lib/utilities";
+import { ParentSize } from "@visx/responsive";
+import ChartDownloader from "./ChartDownloader";
+import TreeMap from "./TreeMap";
+import TreeMapMini from "./TreeMapMini";
 
-export default ({
+export default function IncidentsTreeMap({
 	dataset,
 	title,
 	description,
@@ -14,57 +15,88 @@ export default ({
 	filterStates = new Set(),
 	dateRange = [null, null], // Array representing the min and max of dates to show
 	isMobileView = false,
-	creditUrl = '',
+	creditUrl = "",
 	branchFieldName,
-	categories,
 	branches,
 	interactive = true,
 	fullSize = true,
-}) => {
+}) {
 	// Filter down to the categories and tags and date range we want
-	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange, filterStates)
+	const filteredDataset = filterDatasets(
+		dataset,
+		filterCategories,
+		filterTags,
+		dateRange,
+		filterStates,
+	);
 
-	const categoriesColorMap = [...(new Set([...branches.map(d => d.title)]))]
-		.reduce(
-			(acc, category, i) => ({ ...acc, [category]: categoriesColors[i % categoriesColors.length] }),
-			{}
-		)
+	const categoriesColorMap = [
+		...new Set([...branches.map((d) => d.title)]),
+	].reduce(
+		(acc, category, i) => ({
+			...acc,
+			[category]: categoriesColors[i % categoriesColors.length],
+		}),
+		{},
+	);
 
 	return (
 		<ParentSize>
 			{(parent) => {
 				const treemap = fullSize ? (
-						<TreeMap
-							data={filteredDataset}
-							categoryColumn={branchFieldName}
-							description={description}
-							titleLabel={'incidents'}
-							width={parent.width}
-							height={Math.min(parent.width * 0.75, 600)}
-							isMobileView={isMobileView}
-							categoriesColors={categoriesColorMap}
-							allCategories={Object.keys(categoriesColorMap)}
-							minimumBarHeight={35}
-							interactive={interactive}
-						/>
-					) : (
-						<TreeMapMini
-							data={filteredDataset}
-							categoryColumn={branchFieldName}
-							categoriesColors={categoriesColorMap}
-						 	allCategories={Object.keys(categoriesColorMap)}
-						/>
-				)
+					<TreeMap
+						data={filteredDataset}
+						categoryColumn={branchFieldName}
+						description={description}
+						titleLabel={"incidents"}
+						width={parent.width}
+						height={Math.min(parent.width * 0.75, 600)}
+						isMobileView={isMobileView}
+						categoriesColors={categoriesColorMap}
+						allCategories={Object.keys(categoriesColorMap)}
+						minimumBarHeight={35}
+						interactive={interactive}
+					/>
+				) : (
+					<TreeMapMini
+						data={filteredDataset}
+						categoryColumn={branchFieldName}
+						categoriesColors={categoriesColorMap}
+						allCategories={Object.keys(categoriesColorMap)}
+					/>
+				);
 				return interactive ? (
 					<ChartDownloader
 						chartTitle={title}
 						creditUrl={creditUrl}
-						downloadFileName={title ? `${title}.png` : 'chart.png'}
+						downloadFileName={title ? `${title}.png` : "chart.png"}
 					>
 						{treemap}
 					</ChartDownloader>
-				) : treemap
+				) : (
+					treemap
+				);
 			}}
 		</ParentSize>
-	)
+	);
 }
+
+IncidentsTreeMap.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	title: PropTypes.string,
+	description: PropTypes.string,
+	filterCategories: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterTags: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterStates: PropTypes.instanceOf(Set),
+	dateRange: PropTypes.array,
+	isMobileView: PropTypes.bool,
+	creditUrl: PropTypes.string,
+	branchFieldName: PropTypes.string.isRequired,
+	branches: PropTypes.arrayOf(
+		PropTypes.shape({
+			title: PropTypes.string,
+		}),
+	).isRequired,
+	interactive: PropTypes.bool,
+	fullSize: PropTypes.bool,
+};

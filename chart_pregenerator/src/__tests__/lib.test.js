@@ -1,6 +1,9 @@
-/* eslint-disable no-undef */
-import 'node-fetch'
-import { generateBarChartSVG, generateTreemapChartSVG, generateUSMapSVG } from '../lib'
+import "node-fetch";
+import {
+	generateBarChartSVG,
+	generateTreemapChartSVG,
+	generateUSMapSVG,
+} from "../lib";
 
 const testCsv = `date,assailant,tags,categories
 2023-07-15,,"platypus, storks, tarsier","Arrest / Criminal Charge, Border Stop, Leak Case"
@@ -21,7 +24,7 @@ const testCsv = `date,assailant,tags,categories
 2023-07-07,,"Important Animals, kangaroo, mongoose, rabbits","Equipment Damage, Equipment Search or Seizure, Prior Restraint"
 2023-07-06,,"aphids, shrews, tarsier","Leak Case, Other Incident, Prior Restraint"
 2023-07-05,,"civet, flamingoes","Border Stop, Equipment Damage"
-2023-07-04,unknown,"octopuses, orchid, tarsier","Assault, Leak Case, Subpoena / Legal Order"`
+2023-07-04,unknown,"octopuses, orchid, tarsier","Assault, Leak Case, Subpoena / Legal Order"`;
 
 const testCategories = `[
     {
@@ -48,60 +51,119 @@ const testCategories = `[
         "slug": "denial-access",
         "url": "http://localhost:8000/denial-access/"
     }
-]`
+]`;
 
 // Mirror the real incidents API: the `state` column is only returned when
 // the request's `fields` param asks for it. Charts that filter by state must
 // therefore request the field, or every row gets dropped (a blank chart).
-jest.mock('node-fetch', () => jest.fn((path) => Promise.resolve({
-	text: () => {
-		if (path === 'http://app:8000/api/edge/categories/') return Promise.resolve(testCategories)
-		if (/fields=[^&]*state/.test(path)) {
-			const rowStates = ['NJ', 'NY', 'NJ', 'CA', 'NJ', 'TX', 'NJ', 'NY', 'NJ', 'CA', 'NJ', 'TX', 'NJ', 'NY', 'NJ', 'CA', 'NJ', 'TX', 'NJ']
-			const withState = testCsv
-				.split('\n')
-				.map((line, i) => (i === 0 ? `${line},state` : `${line},${rowStates[i - 1]}`))
-				.join('\n')
-			return Promise.resolve(withState)
-		}
-		return Promise.resolve(testCsv)
-	},
-	ok: true,
-})))
+jest.mock("node-fetch", () =>
+	jest.fn((path) =>
+		Promise.resolve({
+			text: () => {
+				if (path === "http://app:8000/api/edge/categories/")
+					return Promise.resolve(testCategories);
+				if (/fields=[^&]*state/.test(path)) {
+					const rowStates = [
+						"NJ",
+						"NY",
+						"NJ",
+						"CA",
+						"NJ",
+						"TX",
+						"NJ",
+						"NY",
+						"NJ",
+						"CA",
+						"NJ",
+						"TX",
+						"NJ",
+						"NY",
+						"NJ",
+						"CA",
+						"NJ",
+						"TX",
+						"NJ",
+					];
+					const withState = testCsv
+						.split("\n")
+						.map((line, i) =>
+							i === 0 ? `${line},state` : `${line},${rowStates[i - 1]}`,
+						)
+						.join("\n");
+					return Promise.resolve(withState);
+				}
+				return Promise.resolve(testCsv);
+			},
+			ok: true,
+		}),
+	),
+);
 
-test('renders Bar Chart with dummy data', async () => {
-	expect(await generateBarChartSVG()).toMatchSnapshot()
-})
+test("renders Bar Chart with dummy data", async () => {
+	expect(await generateBarChartSVG()).toMatchSnapshot();
+});
 
-test('renders Stacked Bar Chart with dummy data', async () => {
-	expect(await generateBarChartSVG({
-		query: {
-			options: JSON.stringify({ branchFieldName: 'assailant', branches: { type: 'list', value: [{ title: 'unknown', value: 'UNKNOWN' }, { title: 'law enforcement', value: 'LAW_ENFORCEMENT' }, { title: 'private security', value: 'PRIVATE_SECURITY' }, { title: 'politician', value: 'POLITICIAN' }, { title: 'public figure', value: 'PUBLIC_FIGURE' }, { title: 'private individual', value: 'PRIVATE_INDIVIDUAL' }] } }),
-		},
-	})).toMatchSnapshot()
-})
+test("renders Stacked Bar Chart with dummy data", async () => {
+	expect(
+		await generateBarChartSVG({
+			query: {
+				options: JSON.stringify({
+					branchFieldName: "assailant",
+					branches: {
+						type: "list",
+						value: [
+							{ title: "unknown", value: "UNKNOWN" },
+							{ title: "law enforcement", value: "LAW_ENFORCEMENT" },
+							{ title: "private security", value: "PRIVATE_SECURITY" },
+							{ title: "politician", value: "POLITICIAN" },
+							{ title: "public figure", value: "PUBLIC_FIGURE" },
+							{ title: "private individual", value: "PRIVATE_INDIVIDUAL" },
+						],
+					},
+				}),
+			},
+		}),
+	).toMatchSnapshot();
+});
 
-test('renders state-filtered Bar Chart with dummy data', async () => {
+test("renders state-filtered Bar Chart with dummy data", async () => {
 	// Regression: the pregenerator filters by state client-side, so it must
 	// request the `state` field. Without it the dataset filters to empty and
 	// the chart renders blank (issue #2297).
-	expect(await generateBarChartSVG({
-		query: { options: JSON.stringify({ filterStates: ['NJ'] }) },
-	})).toMatchSnapshot()
-})
+	expect(
+		await generateBarChartSVG({
+			query: { options: JSON.stringify({ filterStates: ["NJ"] }) },
+		}),
+	).toMatchSnapshot();
+});
 
-test('renders Treemap Chart with dummy data', async () => {
-	expect(await generateTreemapChartSVG()).toMatchSnapshot()
-})
+test("renders Treemap Chart with dummy data", async () => {
+	expect(await generateTreemapChartSVG()).toMatchSnapshot();
+});
 
-test('renders grouped Treemap Chart with dummy data', async () => {
-	expect(await generateTreemapChartSVG({
-		query: {
-			options: JSON.stringify({ branchFieldName: 'assailant', branches: { type: 'list', value: [{ title: 'unknown', value: 'UNKNOWN' }, { title: 'law enforcement', value: 'LAW_ENFORCEMENT' }, { title: 'private security', value: 'PRIVATE_SECURITY' }, { title: 'politician', value: 'POLITICIAN' }, { title: 'public figure', value: 'PUBLIC_FIGURE' }, { title: 'private individual', value: 'PRIVATE_INDIVIDUAL' }] } }),
-		},
-	})).toMatchSnapshot()
-})
+test("renders grouped Treemap Chart with dummy data", async () => {
+	expect(
+		await generateTreemapChartSVG({
+			query: {
+				options: JSON.stringify({
+					branchFieldName: "assailant",
+					branches: {
+						type: "list",
+						value: [
+							{ title: "unknown", value: "UNKNOWN" },
+							{ title: "law enforcement", value: "LAW_ENFORCEMENT" },
+							{ title: "private security", value: "PRIVATE_SECURITY" },
+							{ title: "politician", value: "POLITICIAN" },
+							{ title: "public figure", value: "PUBLIC_FIGURE" },
+							{ title: "private individual", value: "PRIVATE_INDIVIDUAL" },
+						],
+					},
+				}),
+			},
+		}),
+	).toMatchSnapshot();
+});
 
-test('renders Bubble Map with dummy data', async () => {
-	expect(await generateUSMapSVG()).toMatchSnapshot()
-})
+test("renders Bubble Map with dummy data", async () => {
+	expect(await generateUSMapSVG()).toMatchSnapshot();
+});

@@ -1,21 +1,29 @@
-import React from 'react'
+import React from "react";
+import PropTypes from "prop-types";
 
-const RADIO_BOX_WIDTH = 35
+const RADIO_BOX_WIDTH = 35;
 
-export default function CheckBoxBar({ label, count, i, onClick, isSelected, barWidth, width }) {
+export default function CheckBoxBar({
+	label,
+	count,
+	onClick,
+	isSelected,
+	barWidth,
+	width,
+}) {
 	return (
 		<div
 			style={{
-				display: 'flex',
-				flexDirection: 'row',
+				display: "flex",
+				flexDirection: "row",
 				marginTop: 12,
 				marginBottom: 12,
 			}}
 		>
 			<div
 				style={{
-					display: 'flex',
-					flexDirection: 'row-reverse',
+					display: "flex",
+					flexDirection: "row-reverse",
 					width: RADIO_BOX_WIDTH,
 				}}
 			>
@@ -32,25 +40,25 @@ export default function CheckBoxBar({ label, count, i, onClick, isSelected, barW
 
 			<div
 				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'flex-end',
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "flex-end",
 				}}
 			>
 				<div
 					style={{
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
+						display: "flex",
+						flexDirection: "row",
+						justifyContent: "space-between",
 						marginBottom: 0,
 					}}
 				>
 					<label
 						style={{
-							color: 'black',
+							color: "black",
 							fontSize: 14,
-							lineHeight: '20px',
-							fontFamily: 'var(--font-base)',
+							lineHeight: "20px",
+							fontFamily: "var(--font-base)",
 						}}
 						htmlFor={`drone-${label}`}
 					>
@@ -58,10 +66,10 @@ export default function CheckBoxBar({ label, count, i, onClick, isSelected, barW
 					</label>
 					<div
 						style={{
-							fontFamily: 'var(--font-mono)',
+							fontFamily: "var(--font-mono)",
 							fontSize: 12,
-							justifyContent: 'flex-end',
-							backgroundColor: isSelected ? '#F2FC67' : null,
+							justifyContent: "flex-end",
+							backgroundColor: isSelected ? "#F2FC67" : null,
 							padding: 3,
 						}}
 					>
@@ -74,24 +82,33 @@ export default function CheckBoxBar({ label, count, i, onClick, isSelected, barW
 							zIndex: -1,
 							width: barWidth,
 							height: 3,
-							border: '1px solid black',
-							backgroundColor: 'black',
-							transition: 'all 250ms ',
+							border: "1px solid black",
+							backgroundColor: "black",
+							transition: "all 250ms ",
 						}}
 					/>
 					<div
 						style={{
 							top: -4,
 							left: 1,
-							position: 'relative',
+							position: "relative",
 							width: isSelected ? barWidth : 0,
 							height: 3,
-							backgroundColor: '#F2FC67',
-							transition: 'all 250ms ',
+							backgroundColor: "#F2FC67",
+							transition: "all 250ms ",
 						}}
 					/>
 				</div>
 			</div>
 		</div>
-	)
+	);
 }
+
+CheckBoxBar.propTypes = {
+	label: PropTypes.string.isRequired,
+	count: PropTypes.number.isRequired,
+	onClick: PropTypes.func.isRequired,
+	isSelected: PropTypes.bool.isRequired,
+	barWidth: PropTypes.number.isRequired,
+	width: PropTypes.number.isRequired,
+};

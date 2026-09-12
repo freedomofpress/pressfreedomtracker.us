@@ -1,37 +1,44 @@
-import * as d3 from 'd3'
-import React from 'react'
-import { AnimatedDataset } from 'react-animated-dataset'
+import * as d3 from "d3";
+import React from "react";
+import PropTypes from "prop-types";
+import { AnimatedDataset } from "react-animated-dataset";
 
 const margins = {
 	top: 20,
 	left: 1,
 	right: 40,
 	bottom: 1,
-}
+};
 
-export default function BarChartYears({ width, height, countYears, selectedYears, onClick }) {
-	const internalLeftMargin = 10
-	const internalBottomMargin = 20
-	const barsWidth = 10
+export default function BarChartYears({
+	width,
+	height,
+	countYears,
+	selectedYears,
+	onClick,
+}) {
+	const internalLeftMargin = 10;
+	const internalBottomMargin = 20;
+	const barsWidth = 10;
 
 	const xScale = d3
 		.scaleLinear()
 		.domain(d3.extent(countYears.map((d) => d.year)))
-		.range([0 + margins.left + internalLeftMargin, width - margins.right])
+		.range([0 + margins.left + internalLeftMargin, width - margins.right]);
 
 	const yScale = d3
 		.scaleLinear()
 		.domain([0, d3.max(countYears.map((d) => d.count))])
 		.range([0, height - margins.bottom - margins.top])
-		.nice()
+		.nice();
 
 	return (
-		<div style={{ flexDirection: 'row', marginBottom: 10 }}>
+		<div style={{ flexDirection: "row", marginBottom: 10 }}>
 			<svg
 				width={width}
 				height={height + internalBottomMargin}
-				key={'BarChartYears'}
-				style={{ fontFamily: 'var(--font-mono)' }}
+				key={"BarChartYears"}
+				style={{ fontFamily: "var(--font-mono)" }}
 			>
 				<AnimatedDataset
 					dataset={yScale.ticks(3)}
@@ -44,7 +51,7 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 						x2: width,
 						y1: (tick) => height - margins.bottom - yScale(tick),
 						y2: (tick) => height - margins.bottom - yScale(tick),
-						stroke: 'black',
+						stroke: "black",
 						strokeWidth: (_, i) => (i === 0 ? 3 : 1),
 						opacity: 1,
 					}}
@@ -61,7 +68,7 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 						x: width,
 						y: (tick) => height - margins.bottom - yScale(tick) - 4,
 						text: (tick) => tick,
-						textAnchor: 'end',
+						textAnchor: "end",
 						fontSize: 12,
 						opacity: 1,
 					}}
@@ -81,9 +88,9 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 							attrs={{
 								x: (d) => xScale(d.year),
 								y: (d) => height - margins.bottom - yScale(d.count),
-								fill: (d) => 'black',
+								fill: (_d) => "black",
 								width: barsWidth,
-								stroke: 'black',
+								stroke: "black",
 								strokeWidth: 2,
 								height: (d) => yScale(d.count),
 								key: (d) => d,
@@ -97,7 +104,7 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 						<text
 							x={xScale(d.year) - internalLeftMargin}
 							y={height + internalBottomMargin}
-							style={{ fontSize: 12, fontFamily: 'var(--font-base)' }}
+							style={{ fontSize: 12, fontFamily: "var(--font-base)" }}
 						>
 							{d.year}
 						</text>
@@ -113,13 +120,16 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 					attrs={{
 						x: (d) => xScale(d.year),
 						y: (d) =>
-							selectedYears.includes(d.year) ? height - margins.bottom - yScale(d.count) : height,
-						fill: (d) => '#F2FC67',
+							selectedYears.includes(d.year)
+								? height - margins.bottom - yScale(d.count)
+								: height,
+						fill: (_d) => "#F2FC67",
 						width: barsWidth,
-						stroke: 'black',
+						stroke: "black",
 						strokeWidth: 2,
-						height: (d) => (selectedYears.includes(d.year) ? yScale(d.count) : 0),
-						key: (d, i) => d,
+						height: (d) =>
+							selectedYears.includes(d.year) ? yScale(d.count) : 0,
+						key: (d, _i) => d,
 					}}
 					events={{
 						onClick: (_, d) => onClick(d),
@@ -129,5 +139,19 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 				/>
 			</svg>
 		</div>
-	)
+	);
 }
+
+BarChartYears.propTypes = {
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	countYears: PropTypes.arrayOf(
+		PropTypes.shape({
+			year: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+				.isRequired,
+			count: PropTypes.number.isRequired,
+		}),
+	).isRequired,
+	selectedYears: PropTypes.array.isRequired,
+	onClick: PropTypes.func.isRequired,
+};

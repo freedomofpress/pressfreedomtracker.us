@@ -1,11 +1,10 @@
-import React, { useContext } from 'react'
-import TagFilter from './TagFilter'
-import FilterSet from './FilterSet'
-import { FiltersDispatch } from '../lib/context'
-import {
-	SET_PARAMETER,
-} from '../lib/actionTypes'
-import { trackMatomoEvent } from '../lib/utilities'
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
+import TagFilter from "./TagFilter";
+import FilterSet from "./FilterSet";
+import { FiltersDispatch } from "../lib/context";
+import { SET_PARAMETER } from "../lib/actionTypes";
+import { trackMatomoEvent } from "../lib/utilities";
 
 export default function GeneralFilter({
 	filterDef,
@@ -25,9 +24,14 @@ export default function GeneralFilter({
 				filterName: event.target.name,
 				value: event.target.value,
 			},
-		})
+		});
 		// Fire matomo event
-		trackMatomoEvent(['Filter', event.target.name, 'Change', event.target.value])
+		trackMatomoEvent([
+			"Filter",
+			event.target.name,
+			"Change",
+			event.target.value,
+		]);
 	}
 
 	return (
@@ -58,5 +62,17 @@ export default function GeneralFilter({
 				/>
 			</div>
 		</>
-	)
+	);
 }
+
+GeneralFilter.propTypes = {
+	filterDef: PropTypes.shape({
+		filters: PropTypes.array,
+	}),
+	filterParameters: PropTypes.object,
+	setFilterParameters: PropTypes.func.isRequired,
+	width: PropTypes.number.isRequired,
+	dataset: PropTypes.array.isRequired,
+	filterWithout: PropTypes.object,
+	initialFilterParams: PropTypes.object,
+};

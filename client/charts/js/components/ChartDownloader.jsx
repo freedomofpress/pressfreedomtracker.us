@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import classNames from 'classnames'
-import { Canvg } from 'canvg'
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import { Canvg } from "canvg";
 
 /**
  * Helper function to wrap text into multiple lines
@@ -10,35 +11,35 @@ import { Canvg } from 'canvg'
  * @returns {string[]} Array of text lines
  */
 const wrapText = (text, maxWidth, fontSize) => {
-	if (!text) return []
+	if (!text) return [];
 
 	// Approximate character width based on height
-	const avgCharWidth = fontSize * 0.5
-	const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth)
+	const avgCharWidth = fontSize * 0.5;
+	const maxCharsPerLine = Math.floor(maxWidth / avgCharWidth);
 
-	const words = text.split(' ')
-	const lines = []
-	let currentLine = ''
+	const words = text.split(" ");
+	const lines = [];
+	let currentLine = "";
 
 	for (const word of words) {
-		const testLine = currentLine ? `${currentLine} ${word}` : word
+		const testLine = currentLine ? `${currentLine} ${word}` : word;
 
 		if (testLine.length <= maxCharsPerLine) {
-			currentLine = testLine
+			currentLine = testLine;
 		} else {
 			if (currentLine) {
-				lines.push(currentLine)
+				lines.push(currentLine);
 			}
-			currentLine = word
+			currentLine = word;
 		}
 	}
 
 	if (currentLine) {
-		lines.push(currentLine)
+		lines.push(currentLine);
 	}
 
-	return lines
-}
+	return lines;
+};
 
 /**
  * ChartDownloader Wrapper Component
@@ -78,58 +79,65 @@ const wrapText = (text, maxWidth, fontSize) => {
  */
 const ChartDownloader = ({
 	children,
-	downloadFileName = 'chart.png',
+	downloadFileName = "chart.png",
 	imageWidth = 1200,
 	showDownloadButton = true,
 	showCredit = true,
 	chartTitle,
 	creditUrl,
 }) => {
-	const [svgEl, setSvgEl] = useState()
+	const [svgEl, setSvgEl] = useState();
 
 	const downloadImage = () => {
 		if (svgEl) {
+			const TITLE_FONT_SIZE = 80;
+			const CREDIT_FONT_SIZE = 24;
+			const PADDING = 10;
 
-			const TITLE_FONT_SIZE = 80
-			const CREDIT_FONT_SIZE = 24
-			const PADDING = 10
+			const titleLineHeight = TITLE_FONT_SIZE * 1.2;
+			const creditLineHeight = CREDIT_FONT_SIZE * 1.2;
 
-			const titleLineHeight = TITLE_FONT_SIZE * 1.2
-			const creditLineHeight = CREDIT_FONT_SIZE * 1.2
-
-			const titleMaxWidth = imageWidth - (PADDING * 2)
+			const titleMaxWidth = imageWidth - PADDING * 2;
 
 			// Wrap the title text
-			const titleLines = wrapText(chartTitle, titleMaxWidth, TITLE_FONT_SIZE)
-			const numberOfTitleLines = titleLines.length
+			const titleLines = wrapText(chartTitle, titleMaxWidth, TITLE_FONT_SIZE);
+			const numberOfTitleLines = titleLines.length;
 
 			// Get element heights and calculate final dimensions
-			const titleAreaHeight = chartTitle ? (numberOfTitleLines * titleLineHeight) + PADDING : 0
-			const creditAreaHeight = showCredit ?
-				(creditUrl ? (creditLineHeight * 2) : creditLineHeight) + PADDING : 0
-			const { width: svgWidth, height: svgHeight } = svgEl.getBoundingClientRect()
-			const chartImageHeight = ((svgHeight / svgWidth) * imageWidth)
-			const totalImageHeight = titleAreaHeight + chartImageHeight + creditAreaHeight
+			const titleAreaHeight = chartTitle
+				? numberOfTitleLines * titleLineHeight + PADDING
+				: 0;
+			const creditAreaHeight = showCredit
+				? (creditUrl ? creditLineHeight * 2 : creditLineHeight) + PADDING
+				: 0;
+			const { width: svgWidth, height: svgHeight } =
+				svgEl.getBoundingClientRect();
+			const chartImageHeight = (svgHeight / svgWidth) * imageWidth;
+			const totalImageHeight =
+				titleAreaHeight + chartImageHeight + creditAreaHeight;
 
 			// Get offset positions
-			const titleStartY = titleLineHeight
-			const chartStartY = titleAreaHeight
-			const creditStartY = titleAreaHeight + chartImageHeight + (creditLineHeight * 0.8) // 0.8 to position at baseline
+			const titleStartY = titleLineHeight;
+			const chartStartY = titleAreaHeight;
+			const creditStartY =
+				titleAreaHeight + chartImageHeight + creditLineHeight * 0.8; // 0.8 to position at baseline
 
 			// Create an offscreen canvas for rendering
-			const canvas = new OffscreenCanvas(imageWidth, totalImageHeight)
-			const ctx = canvas.getContext('2d')
+			const canvas = new OffscreenCanvas(imageWidth, totalImageHeight);
+			const ctx = canvas.getContext("2d");
 
 			// Generate the title text elements with line breaks
-			const titleTextElements = titleLines.map((line, index) => {
-				if (index === 0) {
-					return `<tspan x="${PADDING}">${escapeXml(line)}</tspan>`
-				} else {
-					return `<tspan x="${PADDING}" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`
-				}
-			}).join('\n')
+			const titleTextElements = titleLines
+				.map((line, index) => {
+					if (index === 0) {
+						return `<tspan x="${PADDING}">${escapeXml(line)}</tspan>`;
+					} else {
+						return `<tspan x="${PADDING}" dy="${titleLineHeight}">${escapeXml(line)}</tspan>`;
+					}
+				})
+				.join("\n");
 
-			const svgStringData = new XMLSerializer().serializeToString(svgEl)
+			const svgStringData = new XMLSerializer().serializeToString(svgEl);
 			const scaledSvgString = `
 				<svg
 					width="${imageWidth}"
@@ -143,21 +151,33 @@ const ChartDownloader = ({
 						height="${totalImageHeight}"
 						fill="white"
 					/>
-					${chartTitle ? `
+					${
+						chartTitle
+							? `
 					<text x="${PADDING}" y="${titleStartY}" font-size="${TITLE_FONT_SIZE}" >
 						${titleTextElements}
 					</text>
-					` : ""}
-					${showCredit ? `
+					`
+							: ""
+					}
+					${
+						showCredit
+							? `
 						<text x="${PADDING}" y="${creditStartY}" font-size="${CREDIT_FONT_SIZE}">
 							<tspan>Source: U.S. Press Freedom Tracker Database</tspan>
-							${creditUrl ? `
+							${
+								creditUrl
+									? `
 								<tspan x="${PADDING}" dy="${creditLineHeight}" fill="#767676">
 									${creditUrl}
 								</tspan>
-							` : ""}
+							`
+									: ""
+							}
 						</text>
-					` : ""}
+					`
+							: ""
+					}
 					<svg x="0" y="${chartStartY}" width="${imageWidth}" height="${chartImageHeight}">
 						${svgStringData}
 					</svg>
@@ -165,44 +185,56 @@ const ChartDownloader = ({
 			`;
 
 			// Render it with canvg
-			const canvg = Canvg.fromString(ctx, scaledSvgString)
-			canvg.render()
+			const canvg = Canvg.fromString(ctx, scaledSvgString);
+			canvg
+				.render()
 				.then(() => canvas.convertToBlob())
 				.then((blob) => {
 					// Create and download the blob
-					const downloadUrl = URL.createObjectURL(blob)
-					const a = document.createElement("a")
-					a.href = downloadUrl
-					a.download = downloadFileName
-					a.click()
-					URL.revokeObjectURL(downloadUrl)
-				})
+					const downloadUrl = URL.createObjectURL(blob);
+					const a = document.createElement("a");
+					a.href = downloadUrl;
+					a.download = downloadFileName;
+					a.click();
+					URL.revokeObjectURL(downloadUrl);
+				});
 		}
-	}
+	};
 
 	// Escape text for safe use in SVG with browser textContent escaping
 	const escapeXml = (text) => {
-		if (!text) return ''
-		const div = document.createElement('div')
-		div.textContent = text
-		return div.innerHTML
-	}
+		if (!text) return "";
+		const div = document.createElement("div");
+		div.textContent = text;
+		return div.innerHTML;
+	};
 
 	// Clone children with the added data prop and return it
-	const chartEl = React.cloneElement(children, { setSvgEl, downloadImage })
+	const chartEl = React.cloneElement(children, { setSvgEl, downloadImage });
 
 	return (
 		<>
 			{chartEl}
-			{showDownloadButton
-				? (
-					<button className={classNames('btn', 'btn-secondary')} onClick={downloadImage}>
-						Download Chart as PNG
-					</button>
-				)
-				: null}
+			{showDownloadButton ? (
+				<button
+					className={classNames("btn", "btn-secondary")}
+					onClick={downloadImage}
+				>
+					Download Chart as PNG
+				</button>
+			) : null}
 		</>
-	)
-}
+	);
+};
 
-export default ChartDownloader
+ChartDownloader.propTypes = {
+	children: PropTypes.node.isRequired,
+	downloadFileName: PropTypes.string,
+	imageWidth: PropTypes.number,
+	showDownloadButton: PropTypes.bool,
+	showCredit: PropTypes.bool,
+	chartTitle: PropTypes.string,
+	creditUrl: PropTypes.string,
+};
+
+export default ChartDownloader;

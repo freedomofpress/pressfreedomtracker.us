@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import * as d3 from "d3";
 import FiltersIntegration from "./FiltersIntegration";
 import { decode } from "../lib/queryString";
 import "../../scss/base.scss";
 
-export default function FilterSidebar({ serializedFilters, initialDataset = null }) {
+export default function FilterSidebar({
+	serializedFilters,
+	initialDataset = null,
+}) {
 	const [dataset, setDataset] = useState(initialDataset);
-	let filters = JSON.parse(serializedFilters)
+	let filters = JSON.parse(serializedFilters);
 
 	useEffect(() => {
-		const fetchPromise = fetch(`/api/edge/incidents/homepage_csv/`).then((r) => r.text())
+		const fetchPromise = fetch(`/api/edge/incidents/homepage_csv/`).then((r) =>
+			r.text(),
+		);
 		setDataset(null);
 		fetchPromise
 			.then((str) => d3.csvParse(str, d3.autoType))
@@ -32,7 +38,7 @@ export default function FilterSidebar({ serializedFilters, initialDataset = null
 						justifyContent: "center",
 						alignItems: "center",
 						opacity: 0.4,
-						fontFamily: 'var(--font-base)',
+						fontFamily: "var(--font-base)",
 					}}
 				>
 					<div>LOADING...</div>
@@ -43,9 +49,9 @@ export default function FilterSidebar({ serializedFilters, initialDataset = null
 
 	const urlParams = new Proxy(new URLSearchParams(window.location.search), {
 		get: (searchParams, prop) => searchParams.get(prop),
-	})
+	});
 
-	let initialFilterParams = decode(urlParams, filters)
+	let initialFilterParams = decode(urlParams, filters);
 
 	return (
 		<FiltersIntegration
@@ -56,3 +62,8 @@ export default function FilterSidebar({ serializedFilters, initialDataset = null
 		/>
 	);
 }
+
+FilterSidebar.propTypes = {
+	serializedFilters: PropTypes.string.isRequired,
+	initialDataset: PropTypes.array,
+};

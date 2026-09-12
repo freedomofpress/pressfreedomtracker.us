@@ -1,28 +1,20 @@
-import React, { useContext } from 'react'
-import PropTypes from 'prop-types'
-import TagFilter from './TagFilter'
-import {
-	SET_PARAMETER,
-} from '../lib/actionTypes'
-import { FiltersDispatch } from '../lib/context'
-import { trackMatomoEvent } from '../lib/utilities'
-
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
+import TagFilter from "./TagFilter";
+import { SET_PARAMETER } from "../lib/actionTypes";
+import { FiltersDispatch } from "../lib/context";
+import { trackMatomoEvent } from "../lib/utilities";
 
 function isDateValid(date) {
-	return !Number.isNaN(new Date(date).getYear())
+	return !Number.isNaN(new Date(date).getYear());
 }
 
-
-function DateFilter({
-	name,
-	label,
-	value,
-}) {
+function DateFilter({ name, label, value }) {
 	const updateFilters = useContext(FiltersDispatch);
-	let lowerId = `id_${name}_after`
-	let upperId = `id_${name}_before`
-	let lowerValue = value.min?.toISOString()?.split('T')[0]
-	let upperValue = value.max?.toISOString()?.split('T')[0]
+	let lowerId = `id_${name}_after`;
+	let upperId = `id_${name}_before`;
+	let lowerValue = value.min?.toISOString()?.split("T")[0];
+	let upperValue = value.max?.toISOString()?.split("T")[0];
 	return (
 		<>
 			<div className={"filters__field-row"}>
@@ -35,8 +27,8 @@ function DateFilter({
 					name={name}
 					id={lowerId}
 					onChange={(event) => {
-						let newMinDate = event.target.value
-						newMinDate = isDateValid(newMinDate) ? new Date(newMinDate) : null
+						let newMinDate = event.target.value;
+						newMinDate = isDateValid(newMinDate) ? new Date(newMinDate) : null;
 						// maybe change this to SET_MIN_PARAMETER if
 						// it is easy to do.
 						updateFilters({
@@ -45,12 +37,12 @@ function DateFilter({
 								filterName: name,
 								value: {
 									min: newMinDate,
-									max: isDateValid(upperValue) ? new Date(upperValue) : null
-								}
+									max: isDateValid(upperValue) ? new Date(upperValue) : null,
+								},
 							},
-						})
+						});
 						// Fire matomo event
-						trackMatomoEvent(['Filter', name, 'Change', event.target.value])
+						trackMatomoEvent(["Filter", name, "Change", event.target.value]);
 					}}
 				/>
 			</div>
@@ -64,34 +56,38 @@ function DateFilter({
 					value={upperValue ?? ""}
 					id={upperId}
 					onChange={(event) => {
-						let newMaxDate = event.target.value
-						newMaxDate = isDateValid(newMaxDate) ? new Date(newMaxDate) : null
+						let newMaxDate = event.target.value;
+						newMaxDate = isDateValid(newMaxDate) ? new Date(newMaxDate) : null;
 						updateFilters({
 							type: SET_PARAMETER,
 							payload: {
 								filterName: name,
 								value: {
 									min: isDateValid(lowerValue) ? new Date(lowerValue) : null,
-									max: newMaxDate
-								}
+									max: newMaxDate,
+								},
 							},
-						})
+						});
 						// Fire matomo event
-						trackMatomoEvent(['Filter', name, 'Change', event.target.value])
+						trackMatomoEvent(["Filter", name, "Change", event.target.value]);
 					}}
 				/>
 			</div>
 		</>
-	)
+	);
 }
 
-function TextFilter({
-	name,
-	label,
-	value,
-	handleFilterChange,
-}) {
-	let id = `id_${name}`
+DateFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.shape({
+		min: PropTypes.instanceOf(Date),
+		max: PropTypes.instanceOf(Date),
+	}),
+};
+
+function TextFilter({ name, label, value, handleFilterChange }) {
+	let id = `id_${name}`;
 	return (
 		<div className={"filters__field-row"}>
 			<div className={"filters__field-label"}>
@@ -108,7 +104,7 @@ function TextFilter({
 				id={id}
 			/>
 		</div>
-	)
+	);
 }
 
 TextFilter.propTypes = {
@@ -116,50 +112,38 @@ TextFilter.propTypes = {
 	label: PropTypes.string.isRequired,
 	value: PropTypes.string,
 	handleFilterChange: PropTypes.func.isRequired,
-}
+};
 
-function SelectFilter({
-	name,
-	label,
-	value,
-	choices,
-	handleFilterChange,
-}) {
-	let id = `id_${name}`
+function SelectFilter({ name, label, value, choices, handleFilterChange }) {
+	let id = `id_${name}`;
 	return (
 		<div className={"filters__field-row"}>
 			<div className="filters__field-label">
 				<label htmlFor={id}>{label}</label>
 			</div>
-			<select
-				id={id}
-				name={name}
-				value={value}
-				onChange={handleFilterChange}
-			>
+			<select id={id} name={name} value={value} onChange={handleFilterChange}>
 				<option value="">------</option>
 				{choices.map(([value, choice]) => (
-					<option
-						key={value}
-						value={value}
-					>
+					<option key={value} value={value}>
 						{choice}
 					</option>
 				))}
 			</select>
 		</div>
-			)
+	);
 }
 
-function DatalistFilter({
-	name,
-	label,
-	value,
-	choices,
-	handleFilterChange,
-}) {
-	let id = `id_${name}`
-	let choicesId = `${name}_choices`
+SelectFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	choices: PropTypes.arrayOf(PropTypes.array).isRequired,
+	handleFilterChange: PropTypes.func.isRequired,
+};
+
+function DatalistFilter({ name, label, value, choices, handleFilterChange }) {
+	let id = `id_${name}`;
+	let choicesId = `${name}_choices`;
 
 	return (
 		<div className={"filters__field-row"}>
@@ -177,35 +161,33 @@ function DatalistFilter({
 				list={choicesId}
 			/>
 
-			<datalist
-				id={choicesId}
-			>
+			<datalist id={choicesId}>
 				{choices.map((choice, index) => (
 					<option key={index} value={choice}></option>
 				))}
 			</datalist>
 		</div>
-	)
+	);
 }
 
-function RadioFilter({
-	name,
-	label,
-	value,
-	options,
-	handleFilterChange,
-}) {
-	let id = `id_${name}`
+DatalistFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	choices: PropTypes.arrayOf(PropTypes.string).isRequired,
+	handleFilterChange: PropTypes.func.isRequired,
+};
+
+function RadioFilter({ name, label, value, options, handleFilterChange }) {
+	let id = `id_${name}`;
 
 	return (
 		<div className={"filters__field-row"}>
-			<div className="filters__field-label">
-				{label}
-			</div>
+			<div className="filters__field-label">{label}</div>
 
 			<ul id={id}>
-				{options.map( (option, index) => {
-					let optionId = `id_${name}_${index}`
+				{options.map((option, index) => {
+					let optionId = `id_${name}_${index}`;
 					return (
 						<li key={option.value}>
 							<label htmlFor={optionId}>
@@ -220,42 +202,61 @@ function RadioFilter({
 								{option.label}
 							</label>
 						</li>
-					)
+					);
 				})}
 			</ul>
 		</div>
-	)
+	);
 }
 
 RadioFilter.defaultProps = {
 	options: [
-		{ label: 'Unknown', value: 'NOTHING' },
-		{ label: 'Yes', value: 'JUST_TRUE' },
-		{ label: 'No', value: 'JUST_FALSE' },
+		{ label: "Unknown", value: "NOTHING" },
+		{ label: "Yes", value: "JUST_TRUE" },
+		{ label: "No", value: "JUST_FALSE" },
 	],
-}
+};
 
+RadioFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	options: PropTypes.arrayOf(
+		PropTypes.shape({
+			label: PropTypes.string.isRequired,
+			value: PropTypes.string.isRequired,
+		}),
+	),
+	handleFilterChange: PropTypes.func.isRequired,
+};
 
 export function BoolFilter(props) {
 	return (
 		<RadioFilter
 			options={[
-				{ label: 'Yes', value: '1' },
-				{ label: 'No', value: '0' },
+				{ label: "Yes", value: "1" },
+				{ label: "No", value: "0" },
 			]}
 			{...props}
 		/>
-	)
+	);
 }
 
-export default function FilterSet({ filters, handleFilterChange, filterParameters, width, dataset, filterWithout}) {
+export default function FilterSet({
+	filters,
+	handleFilterChange,
+	filterParameters,
+	width,
+	dataset,
+	filterWithout: _filterWithout,
+}) {
 	const components = filters.map((filter, index) => {
-		if (filter.name === 'search' || filter.name === 'tags') {
-			return
-		} else if (!filterParameters.hasOwnProperty(filter.name)) {
-			console.warn(`no filter parameters defined for filter "${filter.name}"`)
-			return
-		} else if (filter.name == 'tags') {
+		if (filter.name === "search" || filter.name === "tags") {
+			return;
+		} else if (!Object.hasOwn(filterParameters, filter.name)) {
+			console.warn(`no filter parameters defined for filter "${filter.name}"`);
+			return;
+		} else if (filter.name == "tags") {
 			return (
 				<details
 					className="filters__group filters__form--category"
@@ -271,9 +272,9 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 						filterParameters={filterParameters.tags.parameters}
 					/>
 				</details>
-			)
+			);
 		}
-		if (filter.type === 'text') {
+		if (filter.type === "text") {
 			return (
 				<TextFilter
 					key={index}
@@ -282,8 +283,8 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					value={filterParameters[filter.name].parameters || ""}
 					handleFilterChange={handleFilterChange}
 				/>
-			)
-		} else if (filter.type === 'date') {
+			);
+		} else if (filter.type === "date") {
 			return (
 				<DateFilter
 					key={index}
@@ -291,8 +292,8 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					label={filter.title}
 					value={filterParameters[filter.name].parameters || {}}
 				/>
-			)
-		} else if (filter.type === 'radio') {
+			);
+		} else if (filter.type === "radio") {
 			return (
 				<RadioFilter
 					key={index}
@@ -301,8 +302,8 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					value={filterParameters[filter.name].parameters || ""}
 					handleFilterChange={handleFilterChange}
 				/>
-			)
-		} else if (filter.type === 'bool') {
+			);
+		} else if (filter.type === "bool") {
 			return (
 				<BoolFilter
 					key={index}
@@ -311,8 +312,8 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					value={filterParameters[filter.name].parameters || ""}
 					handleFilterChange={handleFilterChange}
 				/>
-			)
-		} else if (filter.type === 'choice') {
+			);
+		} else if (filter.type === "choice") {
 			return (
 				<SelectFilter
 					key={index}
@@ -322,8 +323,8 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					value={filterParameters[filter.name].parameters || ""}
 					handleFilterChange={handleFilterChange}
 				/>
-			)
-		} else if (filter.type == 'autocomplete') {
+			);
+		} else if (filter.type == "autocomplete") {
 			return (
 				<DatalistFilter
 					key={index}
@@ -333,18 +334,16 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 					value={filterParameters[filter.name].parameters || ""}
 					handleFilterChange={handleFilterChange}
 				/>
-			)
+			);
 		} else {
-			console.warn(`no filter defined for type "${filter.type}"`)
+			console.warn(`no filter defined for type "${filter.type}"`);
 		}
-	})
-	return components
+	});
+	return components;
 }
-
-
 
 FilterSet.propTypes = {
 	filters: PropTypes.array.isRequired,
 	handleFilterChange: PropTypes.func.isRequired,
 	filterParameters: PropTypes.object.isRequired,
-}
+};

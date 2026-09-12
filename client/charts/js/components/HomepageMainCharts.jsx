@@ -1,11 +1,12 @@
-import React from 'react'
-import { ParentSize } from '@visx/responsive'
-import TreeMap from './TreeMap'
-import HexbinUSMap from './HexbinUSMap'
-import BarChart from './BarChart'
-import HomepageSelection from './HomepageSelection'
-import ChartDescription from "./ChartDescription"
-import Flashing from '../../../common/js/components/Flashing'
+import React from "react";
+import PropTypes from "prop-types";
+import { ParentSize } from "@visx/responsive";
+import TreeMap from "./TreeMap";
+import HexbinUSMap from "./HexbinUSMap";
+import BarChart from "./BarChart";
+import HomepageSelection from "./HomepageSelection";
+import ChartDescription from "./ChartDescription";
+import Flashing from "../../../common/js/components/Flashing";
 import {
 	filterDatasetByFiltersApplied,
 	resolveDefaultTimePreset,
@@ -18,35 +19,39 @@ import {
 	categoriesColors,
 	getFilteredUrl,
 	TIME_PRESETS,
-} from '../lib/utilities.js'
+} from "../lib/utilities.js";
 
-import '../../scss/HomepageMainCharts.scss'
+import "../../scss/HomepageMainCharts.scss";
 
 export default function HomepageMainCharts(props) {
 	return (
 		<ParentSize debounceTime={0}>
 			{(parent) => <HomepageMainChartsWidth {...props} width={parent.width} />}
 		</ParentSize>
-	)
+	);
 }
 
-const mobileBreakpoint = 950
+const mobileBreakpoint = 950;
 
-const WEEK_CHART_DESCRIPTION = 'Showing the number of journalists targeted per week. (Monday–Sunday weeks.)'
+const WEEK_CHART_DESCRIPTION =
+	"Showing the number of journalists targeted per week. (Monday–Sunday weeks.)";
 const CHART_DESCRIPTIONS = {
-	[TIME_PRESETS.SEVEN_DAYS]: 'Showing the number of journalists targeted per day.',
+	[TIME_PRESETS.SEVEN_DAYS]:
+		"Showing the number of journalists targeted per day.",
 	[TIME_PRESETS.FOUR_WEEKS]: WEEK_CHART_DESCRIPTION,
 	[TIME_PRESETS.TWELVE_WEEKS]: WEEK_CHART_DESCRIPTION,
-	[TIME_PRESETS.ALL_TIME]: 'Showing the number of journalists targeted per year.',
-}
-const DEFAULT_CHART_DESCRIPTION = 'Showing the number of journalists targeted per month.'
+	[TIME_PRESETS.ALL_TIME]:
+		"Showing the number of journalists targeted per year.",
+};
+const DEFAULT_CHART_DESCRIPTION =
+	"Showing the number of journalists targeted per month.";
 
 function HomepageMainChartsWidth({
 	data: dataset,
 	width,
 	currentDate = new Date(),
 	selectedTags = [],
-	databasePath = '/',
+	databasePath = "/",
 	loading = false,
 	categories = [],
 	sevenDayEnabled = false,
@@ -56,89 +61,128 @@ function HomepageMainChartsWidth({
 		tag: null,
 		year: null,
 		timePreset: null,
-	})
+	});
 
 	const filtersApplied = {
 		...filterSelection,
-		timePreset: filterSelection.timePreset
-			?? resolveDefaultTimePreset(dataset, currentDate, sevenDayEnabled),
-	}
+		timePreset:
+			filterSelection.timePreset ??
+			resolveDefaultTimePreset(dataset, currentDate, sevenDayEnabled),
+	};
 
 	const categoriesColorMap = categories.reduce(
-		(acc, { title }, i) => ({ ...acc, [title]: categoriesColors[i % categoriesColors.length] }),
-		{}
-	)
+		(acc, { title }, i) => ({
+			...acc,
+			[title]: categoriesColors[i % categoriesColors.length],
+		}),
+		{},
+	);
 
-	const chartWidth = width > mobileBreakpoint ? width / 3 : width
-	const chartHeight = width > mobileBreakpoint ? 500 : 480
+	const chartWidth = width > mobileBreakpoint ? width / 3 : width;
+	const chartHeight = width > mobileBreakpoint ? 500 : 480;
 
-	const datasetFiltered = filterDatasetByFiltersApplied(dataset, filtersApplied, currentDate)
-	const datasetAggregatedByGeo = groupByState(datasetFiltered)
-	const incidentsOutsideUS = countIncidentsOutsideUS(datasetFiltered)
+	const datasetFiltered = filterDatasetByFiltersApplied(
+		dataset,
+		filtersApplied,
+		currentDate,
+	);
+	const datasetAggregatedByGeo = groupByState(datasetFiltered);
+	const incidentsOutsideUS = countIncidentsOutsideUS(datasetFiltered);
 
 	const barChartProps = {
-		y: 'numberOfIncidents',
-		titleLabel: 'incidents',
-		id: 'homepage-bar-chart-label',
+		y: "numberOfIncidents",
+		titleLabel: "incidents",
+		id: "homepage-bar-chart-label",
 		width: chartWidth,
 		height: chartHeight,
 		isMobileView: width < mobileBreakpoint,
-	}
+	};
 
-	const isWeekView = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS
-		|| filtersApplied.timePreset === TIME_PRESETS.TWELVE_WEEKS
+	const isWeekView =
+		filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS ||
+		filtersApplied.timePreset === TIME_PRESETS.TWELVE_WEEKS;
 
 	// Bars for day/week views share the same shape.
 	const setDateBucketProps = (buckets, getStart, getEnd) => {
-		const bucketByLabel = Object.fromEntries(buckets.map((b) => [b.label, b]))
-		barChartProps.data = buckets
-		barChartProps.x = 'label'
-		barChartProps.tooltipXFormat = (label) => bucketByLabel[label]?.range ?? label
+		const bucketByLabel = Object.fromEntries(buckets.map((b) => [b.label, b]));
+		barChartProps.data = buckets;
+		barChartProps.x = "label";
+		barChartProps.tooltipXFormat = (label) =>
+			bucketByLabel[label]?.range ?? label;
 		barChartProps.searchPageURL = (label) => {
-			const bucket = bucketByLabel[label]
-			if (!bucket) return null
+			const bucket = bucketByLabel[label];
+			if (!bucket) return null;
 			return getFilteredUrl(
 				databasePath,
-				{ ...filtersApplied, weekStart: getStart(bucket), weekEnd: getEnd(bucket) },
+				{
+					...filtersApplied,
+					weekStart: getStart(bucket),
+					weekEnd: getEnd(bucket),
+				},
 				currentDate,
 				categories,
-			)
-		}
-	}
+			);
+		};
+	};
 
 	// Pick bucket size for bars (day/week/month/year), format label, and decide what each bar links to.
 	switch (filtersApplied.timePreset) {
 		case TIME_PRESETS.SEVEN_DAYS: {
-			const dayData = groupByDaysSorted(datasetFiltered, currentDate, 7)
-			setDateBucketProps(dayData, (d) => d.date, (d) => d.date)
-			break
+			const dayData = groupByDaysSorted(datasetFiltered, currentDate, 7);
+			setDateBucketProps(
+				dayData,
+				(d) => d.date,
+				(d) => d.date,
+			);
+			break;
 		}
 		case TIME_PRESETS.FOUR_WEEKS:
 		case TIME_PRESETS.TWELVE_WEEKS: {
-			const numberOfWeeks = filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS ? 4 : 12
-			const weekData = groupByWeeksSorted(datasetFiltered, currentDate, numberOfWeeks)
-			setDateBucketProps(weekData, (w) => w.weekStart, (w) => w.weekEnd)
-			break
+			const numberOfWeeks =
+				filtersApplied.timePreset === TIME_PRESETS.FOUR_WEEKS ? 4 : 12;
+			const weekData = groupByWeeksSorted(
+				datasetFiltered,
+				currentDate,
+				numberOfWeeks,
+			);
+			setDateBucketProps(
+				weekData,
+				(w) => w.weekStart,
+				(w) => w.weekEnd,
+			);
+			break;
 		}
 		case TIME_PRESETS.ALL_TIME: {
-			barChartProps.data = groupByYearsSorted(datasetFiltered)
-			barChartProps.x = 'year'
-			barChartProps.searchPageURL = (year) => getFilteredUrl(databasePath, { ...filtersApplied, year, timePreset: TIME_PRESETS.YEAR }, currentDate, categories)
-			break
+			barChartProps.data = groupByYearsSorted(datasetFiltered);
+			barChartProps.x = "year";
+			barChartProps.searchPageURL = (year) =>
+				getFilteredUrl(
+					databasePath,
+					{ ...filtersApplied, year, timePreset: TIME_PRESETS.YEAR },
+					currentDate,
+					categories,
+				);
+			break;
 		}
 		case TIME_PRESETS.SIX_MONTHS:
 		case TIME_PRESETS.YEAR:
 		default: {
 			// Month-sized bars for six-month/year views, and fallback for any
 			// unexpected preset so barChartProps.data is never left undefined.
-			barChartProps.x = 'monthName'
+			barChartProps.x = "monthName";
 			barChartProps.data = groupByMonthSorted(
 				datasetFiltered,
 				filtersApplied.timePreset === TIME_PRESETS.SIX_MONTHS,
 				currentDate,
-			)
-			barChartProps.searchPageURL = (monthName) => getFilteredUrl(databasePath, { ...filtersApplied, monthName }, currentDate, categories)
-			break
+			);
+			barChartProps.searchPageURL = (monthName) =>
+				getFilteredUrl(
+					databasePath,
+					{ ...filtersApplied, monthName },
+					currentDate,
+					categories,
+				);
+			break;
 		}
 	}
 
@@ -146,7 +190,7 @@ function HomepageMainChartsWidth({
 		<Flashing flashing={loading}>
 			<HomepageSelection
 				width={width}
-				height={'40px'}
+				height={"40px"}
 				data={dataset}
 				numberOfTags={5}
 				filtersApplied={filtersApplied}
@@ -155,54 +199,81 @@ function HomepageMainChartsWidth({
 				sevenDayEnabled={sevenDayEnabled}
 			/>
 
-			<div className={'hpChartContainer'} style={{ width: width }}>
-				<div className={'hpChart'}>
-					<ChartDescription id={'homepage-treemap-chart-label'}>
-						Showing incidents grouped by type of attack. An incident can fall under more than one
-						category.
+			<div className={"hpChartContainer"} style={{ width: width }}>
+				<div className={"hpChart"}>
+					<ChartDescription id={"homepage-treemap-chart-label"}>
+						Showing incidents grouped by type of attack. An incident can fall
+						under more than one category.
 					</ChartDescription>
 					<TreeMap
 						data={datasetFiltered}
 						width={chartWidth}
 						height={chartHeight}
-						id={'homepage-treemap-chart-label'}
+						id={"homepage-treemap-chart-label"}
 						isHomePageDesktopView={width > mobileBreakpoint}
 						minimumBarHeight={35}
-						categoryColumn={'categories'}
-						titleLabel={'incidents'}
+						categoryColumn={"categories"}
+						titleLabel={"incidents"}
 						searchPageURL={(category) =>
-							getFilteredUrl(databasePath, { category }, currentDate, categories)
+							getFilteredUrl(
+								databasePath,
+								{ category },
+								currentDate,
+								categories,
+							)
 						}
 						categoriesColors={categoriesColorMap}
 						allCategories={Object.keys(categoriesColorMap)}
 					/>
 				</div>
-				<div className={'hpChart'}>
-					<ChartDescription id={'homepage-usmap-chart-label'}>
-						Showing incidents distribution in the U.S. Incidents are grouped by state.
+				<div className={"hpChart"}>
+					<ChartDescription id={"homepage-usmap-chart-label"}>
+						Showing incidents distribution in the U.S. Incidents are grouped by
+						state.
 					</ChartDescription>
 					<HexbinUSMap
 						data={datasetAggregatedByGeo}
 						incidentsOutsideUS={incidentsOutsideUS}
 						width={chartWidth}
 						height={chartHeight}
-						id={'homepage-usmap-chart-label'}
+						id={"homepage-usmap-chart-label"}
 						searchPageURL={(state) =>
-							getFilteredUrl(databasePath, { ...filtersApplied, state }, currentDate, categories)
+							getFilteredUrl(
+								databasePath,
+								{ ...filtersApplied, state },
+								currentDate,
+								categories,
+							)
 						}
 						addBottomBorder={true}
 					/>
 				</div>
-				<div className={'hpChart'}>
-					<ChartDescription id={'homepage-bar-chart-label'}>
-						{CHART_DESCRIPTIONS[filtersApplied.timePreset] ?? DEFAULT_CHART_DESCRIPTION}
+				<div className={"hpChart"}>
+					<ChartDescription id={"homepage-bar-chart-label"}>
+						{CHART_DESCRIPTIONS[filtersApplied.timePreset] ??
+							DEFAULT_CHART_DESCRIPTION}
 					</ChartDescription>
 					<BarChart {...barChartProps} />
 					{isWeekView && width > mobileBreakpoint && (
-						<div className='hpBarChartAxisLabel'>Week beginning on</div>
+						<div className="hpBarChartAxisLabel">Week beginning on</div>
 					)}
 				</div>
 			</div>
 		</Flashing>
-	)
+	);
 }
+
+HomepageMainChartsWidth.propTypes = {
+	data: PropTypes.array.isRequired,
+	width: PropTypes.number.isRequired,
+	currentDate: PropTypes.instanceOf(Date),
+	selectedTags: PropTypes.array,
+	databasePath: PropTypes.string,
+	loading: PropTypes.bool,
+	categories: PropTypes.arrayOf(
+		PropTypes.shape({
+			title: PropTypes.string,
+		}),
+	),
+	sevenDayEnabled: PropTypes.bool,
+};

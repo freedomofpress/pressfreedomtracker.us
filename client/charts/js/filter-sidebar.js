@@ -5,7 +5,7 @@ import FilterSidebar from "./components/FilterSidebar";
 function renderSidebar() {
 	let el = document.getElementById("filter-sidebar");
 	let root = createRoot(el);
-	root.render(<FilterSidebar {...(el.dataset)} />);
+	root.render(<FilterSidebar {...el.dataset} />);
 }
 
 // First render
