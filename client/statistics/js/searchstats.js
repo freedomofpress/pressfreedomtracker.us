@@ -1,5 +1,6 @@
 import '../scss/statistics.scss'
 import ReactModal from 'react-modal'
+import PropTypes from 'prop-types'
 
 const React = window.React
 const Modifier = window.DraftJS.Modifier
@@ -141,8 +142,8 @@ class SearchStatSource extends React.Component {
 					<fieldset>
 						<legend className="admin-modal__legend">Select dataset for statistic:</legend>
 						{datasets.map((dataset, index) => (
-							<p className="admin-modal__dataset_field">
-								<label className="admin-modal__label" key={index}>
+							<p className="admin-modal__dataset_field" key={index}>
+								<label className="admin-modal__label">
 									<input
 										className="admin-modal__dataset_radio"
 										value={dataset.toUpperCase()}
@@ -186,6 +187,16 @@ class SearchStatSource extends React.Component {
 	}
 }
 
+SearchStatSource.propTypes = {
+	entityKey: PropTypes.string,
+	editorState: PropTypes.object.isRequired,
+	entityType: PropTypes.shape({
+		type: PropTypes.string.isRequired,
+	}).isRequired,
+	onComplete: PropTypes.func.isRequired,
+	onClose: PropTypes.func.isRequired,
+}
+
 const getStatAttributes = (data) => {
 	const searchUrl = data.search || null
 	const { dataset } = data
@@ -224,6 +235,11 @@ const SearchStat = function (props) {
 	return (
 		<TooltipEntity {...props} {...getStatAttributes(data)} />
 	)
+}
+
+SearchStat.propTypes = {
+	entityKey: PropTypes.string.isRequired,
+	contentState: PropTypes.object.isRequired,
 }
 
 window.draftail.registerPlugin(
