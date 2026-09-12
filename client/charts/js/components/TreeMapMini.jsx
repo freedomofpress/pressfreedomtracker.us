@@ -1,8 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import * as d3 from 'd3'
-import { computeMinimumNumberOfIncidents, stackDatasetByCategory } from './TreeMap'
-import { colors } from '../lib/utilities'
+import React from "react";
+import PropTypes from "prop-types";
+import * as d3 from "d3";
+import {
+	computeMinimumNumberOfIncidents,
+	stackDatasetByCategory,
+} from "./TreeMap";
+import { colors } from "../lib/utilities";
 
 export default function TreeMapMini({
 	data,
@@ -12,29 +15,42 @@ export default function TreeMapMini({
 	width = 655,
 	height = 440,
 }) {
-	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(data, width, 0)
+	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(
+		data,
+		width,
+		0,
+	);
 
 	const datasetStackedByCategory = stackDatasetByCategory(
-		data, [], categoryColumn, ',', minimumNumberOfIncidents, allCategories
-	)
+		data,
+		[],
+		categoryColumn,
+		",",
+		minimumNumberOfIncidents,
+		allCategories,
+	);
 
 	const getCategoryColour = (category) => {
-		return categoriesColors[category]
-	}
+		return categoriesColors[category];
+	};
 
-	const colorScale = categoriesColors !== undefined ? getCategoryColour : d3.scaleOrdinal(colors)
+	const colorScale =
+		categoriesColors !== undefined
+			? getCategoryColour
+			: d3.scaleOrdinal(colors);
 
-	const colorsByCategory = datasetStackedByCategory
-		.map((d) => ({
-			category: d.category,
-			color: colorScale(d.category),
-		}))
+	const colorsByCategory = datasetStackedByCategory.map((d) => ({
+		category: d.category,
+		color: colorScale(d.category),
+	}));
 
-	const xScale = d3.scaleLinear()
+	const xScale = d3
+		.scaleLinear()
 		.domain([0, d3.max(datasetStackedByCategory, (d) => d.endPoint)])
-		.range([0, width])
+		.range([0, width]);
 
-	const findColor = (cat) => colorsByCategory.find((d) => d.category === cat)?.color || "#EEEEEE"
+	const findColor = (cat) =>
+		colorsByCategory.find((d) => d.category === cat)?.color || "#EEEEEE";
 
 	return (
 		<svg
@@ -53,7 +69,7 @@ export default function TreeMapMini({
 				/>
 			))}
 		</svg>
-	)
+	);
 }
 
 TreeMapMini.propTypes = {
@@ -63,4 +79,4 @@ TreeMapMini.propTypes = {
 	categoriesColors: PropTypes.object,
 	width: PropTypes.number,
 	height: PropTypes.number,
-}
+};

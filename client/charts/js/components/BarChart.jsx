@@ -1,20 +1,26 @@
-import React, { useState, useCallback } from 'react'
-import PropTypes from 'prop-types'
-import * as d3 from 'd3'
-import { AnimatedDataset } from 'react-animated-dataset'
-import StaticDataset from './StaticDataset'
-import DynamicWrapper from './DynamicWrapper'
-import Slider from './Slider'
-import Tooltip from './Tooltip'
-import CategoryButtons, { calculateCategoriesLabelsLegend, calculateButtonsHeight } from './CategoryButtons.jsx'
-import { computeMinimumNumberOfIncidents, stackDatasetByCategory } from './TreeMap'
+import React, { useState, useCallback } from "react";
+import PropTypes from "prop-types";
+import * as d3 from "d3";
+import { AnimatedDataset } from "react-animated-dataset";
+import StaticDataset from "./StaticDataset";
+import DynamicWrapper from "./DynamicWrapper";
+import Slider from "./Slider";
+import Tooltip from "./Tooltip";
+import CategoryButtons, {
+	calculateCategoriesLabelsLegend,
+	calculateButtonsHeight,
+} from "./CategoryButtons.jsx";
+import {
+	computeMinimumNumberOfIncidents,
+	stackDatasetByCategory,
+} from "./TreeMap";
 
 const margins = {
 	top: 0,
 	left: 0,
 	right: 2,
 	bottom: 0,
-}
+};
 
 const paddings = {
 	left: 10,
@@ -22,28 +28,28 @@ const paddings = {
 	bottom: 40,
 	top: 40,
 	mobile: 80,
-}
+};
 
 const paddingsInternal = {
 	left: 10,
 	right: 40,
-}
+};
 
 const borders = {
 	thin: 3,
 	normal: 5,
 	hover: 7,
 	grid: 1,
-}
+};
 
 const textStyle = {
-	fontFamily: 'var(--font-base)',
-	fontWeight: '500',
-	fontSize: '14px',
-	lineHeight: '17px',
-}
+	fontFamily: "var(--font-base)",
+	fontWeight: "500",
+	fontSize: "14px",
+	lineHeight: "17px",
+};
 
-const textPadding = 10
+const textPadding = 10;
 
 /**
  * BarChart
@@ -58,13 +64,13 @@ export default function BarChart({
 	allCategories,
 	categoriesColors = {},
 	categoryColumn,
-	categoryDivider = ',',
+	categoryDivider = ",",
 	x,
 	y,
 	// A format function for the labels on the x-axis
-	xFormat = x => x,
+	xFormat = (x) => x,
 	// A format function for the labels on the y-axis
-	yFormat = y => y,
+	yFormat = (y) => y,
 	xDomain,
 	yDomain,
 	// An extra, optional format function for labels on the x-axis that show up
@@ -74,94 +80,107 @@ export default function BarChart({
 	isMobileView,
 	width,
 	height,
-	id = '',
+	id = "",
 	numberOfTicks = 4,
 	description,
 	searchPageURL,
 	// function prop received from ChartDownloader that binds the svg element to allow
 	// it to be downloaded
-	setSvgEl = () => { },
+	setSvgEl = () => {},
 	interactive = true,
 	disableAnimation = false,
 }) {
-	const dataset = data.map((d, i) => ({ ...d, index: i }))
+	const dataset = data.map((d, i) => ({ ...d, index: i }));
 
 	// State to keep track of the current hovered element
-	const [hoveredElement, setHoveredElement] = useState(null)
+	const [hoveredElement, setHoveredElement] = useState(null);
 	// Hooks must run unconditionally on every render, so fall back to
 	// `undefined` here rather than returning early above when data is empty.
-	const [sliderSelection, setSliderSelection] = useState(dataset[0]?.index)
-	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+	const [sliderSelection, setSliderSelection] = useState(dataset[0]?.index);
+	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
 	// Stable identity (setSliderSelection/setHoveredElement are useState setters,
 	// which React guarantees never change) so Slider's effect can safely depend
 	// on it without refiring on every unrelated BarChart re-render.
 	const handleSliderSelection = useCallback((d) => {
-		setSliderSelection(d)
-		setHoveredElement(null)
-	}, [])
+		setSliderSelection(d);
+		setHoveredElement(null);
+	}, []);
 
-	if (!data.length) return null
+	if (!data.length) return null;
 
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
 
-	const formatXForLabel = tooltipXFormat || xFormat
-	const barLabel = (d) => `${formatXForLabel(d[x])}: ${yFormat(d[y])} ${titleLabel}`
+	const formatXForLabel = tooltipXFormat || xFormat;
+	const barLabel = (d) =>
+		`${formatXForLabel(d[x])}: ${yFormat(d[y])} ${titleLabel}`;
 
-	const barIsLink = Boolean(interactive && searchPageURL)
+	const barIsLink = Boolean(interactive && searchPageURL);
 
 	const updateTooltipPosition = (MouseEvent) => {
-		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY })
-	}
+		setTooltipPosition({ x: MouseEvent.clientX, y: MouseEvent.clientY });
+	};
 
 	// Estimate label widths based on the longest string found; show every-other if too crowded
-	const APPROX_PX_PER_CHAR = 8
-	const MIN_LABEL_GAP_PX = 8
-	const xDomainItems = xDomain || dataset.map((d) => d[x])
-	const labelSlotWidth = width / xDomainItems.length
-	const longestLabelChars = Math.max(...xDomainItems.map((d) => String(xFormat(d)).length))
-	const longestLabelPx = longestLabelChars * APPROX_PX_PER_CHAR
-	const labelsWouldCollide = labelSlotWidth < longestLabelPx + MIN_LABEL_GAP_PX
-	const xLabelDisplayInterval = labelsWouldCollide ? 2 : 1
+	const APPROX_PX_PER_CHAR = 8;
+	const MIN_LABEL_GAP_PX = 8;
+	const xDomainItems = xDomain || dataset.map((d) => d[x]);
+	const labelSlotWidth = width / xDomainItems.length;
+	const longestLabelChars = Math.max(
+		...xDomainItems.map((d) => String(xFormat(d)).length),
+	);
+	const longestLabelPx = longestLabelChars * APPROX_PX_PER_CHAR;
+	const labelsWouldCollide = labelSlotWidth < longestLabelPx + MIN_LABEL_GAP_PX;
+	const xLabelDisplayInterval = labelsWouldCollide ? 2 : 1;
 
 	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(
 		dataset,
 		width,
-		35
-	)
+		35,
+	);
 
 	// Used when we have a stacked bar chart
 	const datasetStackedByCategory = stackDatasetByCategory(
-		dataset.map(d => ({ [categoryColumn]: Object.keys(d).join(', ') })),
+		dataset.map((d) => ({ [categoryColumn]: Object.keys(d).join(", ") })),
 		[],
 		categoryColumn,
 		categoryDivider,
 		minimumNumberOfIncidents,
-		allCategories
-	)
+		allCategories,
+	);
 
-	const categoryButtonsLabels = calculateCategoriesLabelsLegend(datasetStackedByCategory, paddings, width)
+	const categoryButtonsLabels = calculateCategoriesLabelsLegend(
+		datasetStackedByCategory,
+		paddings,
+		width,
+	);
 	const buttonsHeight = !allCategories
 		? 0
-		: calculateButtonsHeight(categoryButtonsLabels)
+		: calculateButtonsHeight(categoryButtonsLabels);
 
-	const stackedData = d3.stack().keys(allCategories || [y])(dataset)
+	const stackedData = d3.stack().keys(allCategories || [y])(dataset);
 
 	const yScale = d3
 		.scaleLinear()
 		// Default to domain max 100 if there's no data
-		.domain(yDomain || [0, d3.max(stackedData.flat(), d => d[1]) || 100])
-		.range([height - (isMobileView ? paddings.mobile : paddings.bottom), paddings.top + buttonsHeight])
-		.nice(numberOfTicks)
+		.domain(yDomain || [0, d3.max(stackedData.flat(), (d) => d[1]) || 100])
+		.range([
+			height - (isMobileView ? paddings.mobile : paddings.bottom),
+			paddings.top + buttonsHeight,
+		])
+		.nice(numberOfTicks);
 
-	const gridLines = yScale.ticks(numberOfTicks).filter(Number.isInteger) // Whole numbers only
+	const gridLines = yScale.ticks(numberOfTicks).filter(Number.isInteger); // Whole numbers only
 
 	const xScale = d3
 		.scaleBand()
 		.domain(xDomainItems)
-		.range([paddings.left + paddingsInternal.left, width - paddings.right - paddingsInternal.right])
+		.range([
+			paddings.left + paddingsInternal.left,
+			width - paddings.right - paddingsInternal.right,
+		])
 		.paddingInner(0.3)
-		.paddingOuter(0.2)
+		.paddingOuter(0.2);
 
 	// xScaleOverLayer is for the bars that are only used for hover / click events,
 	// this is similar to xScale, except that it does not leave gaps between bars
@@ -169,7 +188,10 @@ export default function BarChart({
 	const xScaleOverLayer = d3
 		.scaleBand()
 		.domain(xDomainItems)
-		.range([paddings.left + paddingsInternal.left, width - paddings.right - paddingsInternal.right])
+		.range([
+			paddings.left + paddingsInternal.left,
+			width - paddings.right - paddingsInternal.right,
+		]);
 
 	// Used for the Slider component on mobile devices where we are unable to label all of the points
 	// due to space limitations
@@ -177,25 +199,31 @@ export default function BarChart({
 		.scalePoint()
 		.domain(xDomainItems)
 		.range([paddings.left, width - paddings.right])
-		.padding(0.3)
+		.padding(0.3);
 
 	const computeBarheight = (y_) => {
-		return height - yScale(y_) - (isMobileView ? paddings.mobile : paddings.bottom)
-	}
+		return (
+			height - yScale(y_) - (isMobileView ? paddings.mobile : paddings.bottom)
+		);
+	};
 
-	const findColor = (color) => categoriesColors[color] || 'white'
+	const findColor = (color) => categoriesColors[color] || "white";
 	const getBarColor = (key, data, defaultColor) => {
-		const barColor = categoriesColors[key] || '#E07A5F'
-		const isHoveredByDate = hoveredElement?.x === formatXForLabel(data[x])
-		const isHoveredByKey = !hoveredElement?.x && hoveredElement?.y === key
-		return isHoveredByDate || isHoveredByKey ? barColor : !hoveredElement ? barColor : defaultColor
-	}
-	const mobileThinBorderThreshold = 24
+		const barColor = categoriesColors[key] || "#E07A5F";
+		const isHoveredByDate = hoveredElement?.x === formatXForLabel(data[x]);
+		const isHoveredByKey = !hoveredElement?.x && hoveredElement?.y === key;
+		return isHoveredByDate || isHoveredByKey
+			? barColor
+			: !hoveredElement
+				? barColor
+				: defaultColor;
+	};
+	const mobileThinBorderThreshold = 24;
 
-	const selectedElement = dataset.find((d) => d[x] === sliderSelection)
-	const incidentsCount = selectedElement !== undefined ? selectedElement[y] : 0
+	const selectedElement = dataset.find((d) => d[x] === sliderSelection);
+	const incidentsCount = selectedElement !== undefined ? selectedElement[y] : 0;
 
-	if (!width) return null
+	if (!width) return null;
 
 	// Desktop
 	if (!isMobileView) {
@@ -214,24 +242,32 @@ export default function BarChart({
 								<div>
 									Number of
 									{hoveredElement?.y &&
-										hoveredElement?.y !== "count" &&
-										hoveredElement?.y !== "numberOfIncidents"
+									hoveredElement?.y !== "count" &&
+									hoveredElement?.y !== "numberOfIncidents"
 										? ` ${hoveredElement.y.replace("Incident", "")}`
 										: ""}{" "}
 									Incidents
 								</div>
 								<div
 									style={{
-										display: 'flex',
-										justifyContent: 'space-between',
+										display: "flex",
+										justifyContent: "space-between",
 										gap: 15,
 										marginTop: 8,
 									}}
 								>
-									<div style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}>
+									<div
+										style={{ borderLeft: `solid 3px #E07A5F`, paddingLeft: 3 }}
+									>
 										{hoveredElement?.x}
 									</div>
-									<div>{yFormat(dataset.find((d) => formatXForLabel(d[x]) === hoveredElement?.x)[hoveredElement?.y || y])}</div>
+									<div>
+										{yFormat(
+											dataset.find(
+												(d) => formatXForLabel(d[x]) === hoveredElement?.x,
+											)[hoveredElement?.y || y],
+										)}
+									</div>
 								</div>
 							</div>
 						}
@@ -252,7 +288,7 @@ export default function BarChart({
 					}}
 					viewBox={[0, 0, width, height]}
 				>
-					{description ? (<desc>{description}</desc>) : null}
+					{description ? <desc>{description}</desc> : null}
 					{allCategories && (
 						<CategoryButtons
 							interactive={interactive}
@@ -278,9 +314,9 @@ export default function BarChart({
 								x2: width - paddings.right,
 								y1: (d) => yScale(d),
 								y2: (d) => yScale(d),
-								stroke: 'black',
+								stroke: "black",
 								strokeWidth: (d) => (d === 0 ? borders.normal : borders.grid),
-								shapeRendering: 'crispEdges',
+								shapeRendering: "crispEdges",
 							}}
 							duration={250}
 							keyFn={(d) => d}
@@ -297,9 +333,9 @@ export default function BarChart({
 								opacity: 1,
 								x: width - paddings.right,
 								y: (d) => yScale(d) - textPadding,
-								textAnchor: 'end',
-								fontFamily: 'var(--font-mono)',
-								fontSize: '12px',
+								textAnchor: "end",
+								fontFamily: "var(--font-mono)",
+								fontSize: "12px",
 								text: (d) => d,
 							}}
 							duration={250}
@@ -309,7 +345,7 @@ export default function BarChart({
 					{
 						// These are the actual bars that are visibly displayed,
 						// using animatedDataset to allow for load-in animations
-						stackedData.map(branchBars => (
+						stackedData.map((branchBars) => (
 							<Dataset
 								dataset={branchBars}
 								tag="rect"
@@ -324,11 +360,14 @@ export default function BarChart({
 									y: (d) => yScale(d[1]),
 									height: (d) => computeBarheight(d[1] - d[0]) || 0,
 									width: xScale.bandwidth(),
-									fill: (d) => getBarColor(branchBars.key, d.data, 'white'),
+									fill: (d) => getBarColor(branchBars.key, d.data, "white"),
 									strokeWidth: borders.normal,
-									stroke: (d) => hoveredElement?.x ? getBarColor(branchBars.key, d.data, 'black') : 'black',
-									cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
-									shapeRendering: 'crispEdges',
+									stroke: (d) =>
+										hoveredElement?.x
+											? getBarColor(branchBars.key, d.data, "black")
+											: "black",
+									cursor: interactive && searchPageURL ? "pointer" : "inherit",
+									shapeRendering: "crispEdges",
 								}}
 								duration={250}
 								durationByAttr={{ fill: 0, stroke: 0 }}
@@ -340,57 +379,79 @@ export default function BarChart({
 					{
 						// These elements are for the hover and link targets,
 						// they are not actually visibly displayed
-						stackedData.map(branchBars => branchBars.map((branchEntry) => (
-							<g
-								key={branchBars.key + branchEntry.data.index}
-								style={{ pointerEvents: interactive ? "auto" : "none" }}
-							>
-								<DynamicWrapper
-									wrapperComponent={
-										<a
-											href={searchPageURL && searchPageURL(xFormat(branchEntry.data[x]))}
-											aria-label={barLabel(branchEntry.data)}
-										/>
-									}
-									wrap={barIsLink}
+						stackedData.map((branchBars) =>
+							branchBars.map((branchEntry) => (
+								<g
+									key={branchBars.key + branchEntry.data.index}
+									style={{ pointerEvents: interactive ? "auto" : "none" }}
 								>
-									<rect
-										x={xScaleOverLayer(branchEntry.data[x])}
-										y={yScale(branchEntry[1])}
-										height={computeBarheight(branchEntry[1] - branchEntry[0]) || 0}
-										width={xScaleOverLayer.bandwidth()}
-										style={{
-											opacity: 0,
-											cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit',
-										}}
-										onMouseEnter={() => setHoveredElement({
-											x: formatXForLabel(branchEntry.data[x]),
-											y: branchBars.key
-										})}
-										onMouseMove={updateTooltipPosition}
-										onMouseLeave={() => setHoveredElement(null)}
-										shapeRendering="crispEdges"
-										{...(!barIsLink && { role: 'img', 'aria-label': barLabel(branchEntry.data) })}
-									/>
-								</DynamicWrapper>
-							</g>
-						)))
+									<DynamicWrapper
+										wrapperComponent={
+											<a
+												href={
+													searchPageURL &&
+													searchPageURL(xFormat(branchEntry.data[x]))
+												}
+												aria-label={barLabel(branchEntry.data)}
+											/>
+										}
+										wrap={barIsLink}
+									>
+										<rect
+											x={xScaleOverLayer(branchEntry.data[x])}
+											y={yScale(branchEntry[1])}
+											height={
+												computeBarheight(branchEntry[1] - branchEntry[0]) || 0
+											}
+											width={xScaleOverLayer.bandwidth()}
+											style={{
+												opacity: 0,
+												cursor:
+													interactive && searchPageURL ? "pointer" : "inherit",
+											}}
+											onMouseEnter={() =>
+												setHoveredElement({
+													x: formatXForLabel(branchEntry.data[x]),
+													y: branchBars.key,
+												})
+											}
+											onMouseMove={updateTooltipPosition}
+											onMouseLeave={() => setHoveredElement(null)}
+											shapeRendering="crispEdges"
+											{...(!barIsLink && {
+												role: "img",
+												"aria-label": barLabel(branchEntry.data),
+											})}
+										/>
+									</DynamicWrapper>
+								</g>
+							)),
+						)
 					}
 					<Dataset
 						dataset={dataset.filter((d, i) => i % xLabelDisplayInterval === 0)}
 						tag="text"
 						init={{
 							opacity: 0,
-							x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
+							x: (d) =>
+								xScale(d[x]) !== undefined
+									? xScale(d[x]) + xScale.bandwidth() / 2
+									: 0,
 							y: height - paddings.bottom / 2,
 						}}
 						attrs={{
 							opacity: 1,
-							x: (d) => (xScale(d[x]) !== undefined ? xScale(d[x]) + xScale.bandwidth() / 2 : 0),
+							x: (d) =>
+								xScale(d[x]) !== undefined
+									? xScale(d[x]) + xScale.bandwidth() / 2
+									: 0,
 							y: height - paddings.bottom / 2,
-							textAnchor: 'middle',
-							fill: (d) => (hoveredElement?.x === formatXForLabel(d[x]) ? '#E07A5F' : 'black'),
-							fontFamily: 'var(--font-base)',
+							textAnchor: "middle",
+							fill: (d) =>
+								hoveredElement?.x === formatXForLabel(d[x])
+									? "#E07A5F"
+									: "black",
+							fontFamily: "var(--font-base)",
 							fontWeight: 500,
 							fontSize: width < 400 && !isMobileView ? 12 : 14, // 12pt at smallest desktop size to further avoid label collisions
 							text: (d) => xFormat(d[x]),
@@ -401,7 +462,7 @@ export default function BarChart({
 					/>
 				</svg>
 			</>
-		)
+		);
 	}
 	// Mobile
 	else {
@@ -418,7 +479,7 @@ export default function BarChart({
 				}}
 				id="barchart-svg"
 			>
-				{description ? (<desc>{description}</desc>) : null}
+				{description ? <desc>{description}</desc> : null}
 				{
 					// If there are multiple categories, ie a stacked bar chart,
 					// we show the category buttons
@@ -446,9 +507,9 @@ export default function BarChart({
 							x2: width - paddings.right,
 							y1: (d) => yScale(d),
 							y2: (d) => yScale(d),
-							stroke: 'black',
+							stroke: "black",
 							strokeWidth: (d) => (d === 0 ? borders.normal : borders.grid),
-							shapeRendering: 'crispEdges',
+							shapeRendering: "crispEdges",
 						}}
 						duration={250}
 						keyFn={(d) => d}
@@ -463,21 +524,23 @@ export default function BarChart({
 							opacity: 1,
 							x: width - paddings.right,
 							y: (d) => yScale(d) - textPadding,
-							textAnchor: 'end',
-							fontFamily: 'var(--font-mono)',
-							fontSize: '12px',
+							textAnchor: "end",
+							fontFamily: "var(--font-mono)",
+							fontSize: "12px",
 							text: (d) => d,
 						}}
 						duration={250}
 						keyFn={(d) => d}
 					/>
 				</g>
-				{stackedData.map(branchBars => (
+				{stackedData.map((branchBars) => (
 					<DynamicWrapper
 						key={branchBars.key}
 						wrapperComponent={
 							<a
-								href={searchPageURL && searchPageURL(xFormat(branchBars[0].data[x]))}
+								href={
+									searchPageURL && searchPageURL(xFormat(branchBars[0].data[x]))
+								}
 								aria-label={barLabel(branchBars[0].data)}
 							/>
 						}
@@ -499,15 +562,18 @@ export default function BarChart({
 								width: xScale.bandwidth(),
 								fill: (d) =>
 									sliderSelection === d.data[x] ||
-										(!hoveredElement?.x && hoveredElement?.y === branchBars.key)
+									(!hoveredElement?.x && hoveredElement?.y === branchBars.key)
 										? getBarColor(branchBars.key, d.data, "white")
 										: sliderSelection === null
-											? getBarColor(branchBars.key, d.data, 'white')
-											: 'white',
-								strokeWidth: dataset.length > mobileThinBorderThreshold ? borders.thin : borders.normal,
-								stroke: (d) => (sliderSelection === d[x] ? '#E07A5F' : 'black'),
-								cursor: searchPageURL ? 'pointer' : 'inherit',
-								shapeRendering: 'crispEdges',
+											? getBarColor(branchBars.key, d.data, "white")
+											: "white",
+								strokeWidth:
+									dataset.length > mobileThinBorderThreshold
+										? borders.thin
+										: borders.normal,
+								stroke: (d) => (sliderSelection === d[x] ? "#E07A5F" : "black"),
+								cursor: searchPageURL ? "pointer" : "inherit",
+								shapeRendering: "crispEdges",
 							}}
 							duration={250}
 							durationByAttr={{ fill: 0, stroke: 0 }}
@@ -519,10 +585,10 @@ export default function BarChart({
 							y={height - paddings.mobile / 2 - 7}
 							textAnchor="middle"
 							style={{
-								fill: 'black',
-								fontFamily: 'var(--font-base)',
+								fill: "black",
+								fontFamily: "var(--font-base)",
 								fontWeight: 500,
-								fontSize: '14px',
+								fontSize: "14px",
 							}}
 						>
 							{`${formatXForLabel(sliderSelection)}: ${incidentsCount} ${titleLabel}`}
@@ -535,10 +601,10 @@ export default function BarChart({
 					y={height - paddings.bottom / 2}
 					setSliderSelection={handleSliderSelection}
 					sliderSelection={sliderSelection}
-					idContainer={'barchart-svg'}
+					idContainer={"barchart-svg"}
 				/>
 			</svg>
-		)
+		);
 	}
 }
 
@@ -566,4 +632,4 @@ BarChart.propTypes = {
 	setSvgEl: PropTypes.func,
 	interactive: PropTypes.bool,
 	disableAnimation: PropTypes.bool,
-}
+};

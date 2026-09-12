@@ -1,95 +1,113 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from "react";
+import PropTypes from "prop-types";
 
 const textStyle = {
-	fontFamily: 'var(--font-base)',
-	fontWeight: '500',
-	fontSize: '14px',
-}
+	fontFamily: "var(--font-base)",
+	fontWeight: "500",
+	fontSize: "14px",
+};
 
-const ArrowDownSVG = ({stroke}) => (
-	<svg width="10" height="6" viewBox="0 0 24 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<path
-			d="M22 2L12 12L2 2"
-			stroke={stroke || 'black'}
-			strokeWidth="3"
-		/>
+const ArrowDownSVG = ({ stroke }) => (
+	<svg
+		width="10"
+		height="6"
+		viewBox="0 0 24 15"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path d="M22 2L12 12L2 2" stroke={stroke || "black"} strokeWidth="3" />
 	</svg>
-)
+);
 
 ArrowDownSVG.propTypes = {
 	stroke: PropTypes.string,
-}
+};
 
-export default function DropdownButton({ value = '', selected, selectable = true, onChange }) {
-	const [hovered, setHovered] = React.useState(false)
+export default function DropdownButton({
+	value = "",
+	selected,
+	selectable = true,
+	onChange,
+}) {
+	const [hovered, setHovered] = React.useState(false);
 
 	return (
-		<div style={{display:'inline-block', position:'relative'}}>
+		<div style={{ display: "inline-block", position: "relative" }}>
 			<select
-				className='btn btn-bordered'
+				className="btn btn-bordered"
 				style={{
 					marginBottom: 3,
-					backgroundColor: selected || (hovered && selectable) ? 'black' : 'white',
-					color: selected || (hovered && selectable) ? 'white' : selectable ? 'black' : 'grey',
-					cursor: selectable ? 'pointer' : 'default',
+					backgroundColor:
+						selected || (hovered && selectable) ? "black" : "white",
+					color:
+						selected || (hovered && selectable)
+							? "white"
+							: selectable
+								? "black"
+								: "grey",
+					cursor: selectable ? "pointer" : "default",
 					minWidth: 50,
 					fontFamily: textStyle.fontFamily,
 					fontSize: textStyle.fontSize,
 					fontWeight: textStyle.fontWeight,
-					position: 'relative',
+					position: "relative",
 					borderRadius: 0,
-					paddingRight: '2rem',
-					appearance: 'none',
-					WebkitAppearance: 'none',
-					MozAppearance: 'none',
-				}
-				}
+					paddingRight: "2rem",
+					appearance: "none",
+					WebkitAppearance: "none",
+					MozAppearance: "none",
+				}}
 				onMouseDown={(e) => {
 					if (selectable) {
-						onChange(e.target.value)
+						onChange(e.target.value);
 					}
 				}}
 				onChange={(e) => {
 					if (selectable) {
-						onChange(e.target.value)
+						onChange(e.target.value);
 					}
 				}}
 				onMouseEnter={() => {
-					setHovered(true)
+					setHovered(true);
 				}}
 				onMouseLeave={() => {
-					setHovered(false)
+					setHovered(false);
 				}}
 				disabled={!selectable}
 				value={value}
 			>
-				{
-					Array.isArray(selectable) &&
+				{Array.isArray(selectable) &&
 					selectable.map((option) => (
 						<option key={option} value={option}>
 							{option}
 						</option>
-					))
-				}
-			</select >
+					))}
+			</select>
 			<div
 				aria-hidden={true}
 				style={{
-					position: 'absolute',
-					right: '0.875rem',
-					top: '48%',
-					transform: 'translateY(-50%)',
-					pointerEvents: 'none',
-					display: 'flex',
-					alignItems: 'center',
+					position: "absolute",
+					right: "0.875rem",
+					top: "48%",
+					transform: "translateY(-50%)",
+					pointerEvents: "none",
+					display: "flex",
+					alignItems: "center",
 					zIndex: 99,
 				}}
 			>
-				<ArrowDownSVG stroke={selected || (hovered && selectable) ? 'white' : selectable ? 'black' : 'grey'} />
+				<ArrowDownSVG
+					stroke={
+						selected || (hovered && selectable)
+							? "white"
+							: selectable
+								? "black"
+								: "grey"
+					}
+				/>
 			</div>
 		</div>
-	)
+	);
 }
 
 DropdownButton.propTypes = {
@@ -97,4 +115,4 @@ DropdownButton.propTypes = {
 	selected: PropTypes.bool.isRequired,
 	selectable: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
 	onChange: PropTypes.func.isRequired,
-}
+};

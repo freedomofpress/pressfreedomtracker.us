@@ -1,19 +1,18 @@
-import React, {useReducer} from 'react'
-import classNames from "classnames"
+import React, { useReducer } from "react";
+import classNames from "classnames";
 
-import PropTypes from 'prop-types'
-
+import PropTypes from "prop-types";
 
 const initialState = {
 	// The active selection's index
-    activeSuggestion: 0,
-    // The suggestions that match the user's input
-    filteredSuggestions: [],
-    // Whether or not the suggestion list is shown
-    showSuggestions: false,
-    // What the user has entered
-    userInput: ""
-}
+	activeSuggestion: 0,
+	// The suggestions that match the user's input
+	filteredSuggestions: [],
+	// Whether or not the suggestion list is shown
+	showSuggestions: false,
+	// What the user has entered
+	userInput: "",
+};
 
 const propTypes = {
 	suggestions: PropTypes.array.isRequired,
@@ -24,31 +23,27 @@ const propTypes = {
 	handleSelect: PropTypes.func.isRequired,
 	itemNameSingular: PropTypes.string.isRequired,
 	itemNamePlural: PropTypes.string.isRequired,
-}
+};
 
-const filterSuggestions = query => ({
-	type: 'FILTER_SUGGESTIONS',
+const filterSuggestions = (query) => ({
+	type: "FILTER_SUGGESTIONS",
 	payload: query,
-})
+});
 
-
-const selectSuggestion = query => ({
-	type: 'SELECT_SUGGESTION',
+const selectSuggestion = (query) => ({
+	type: "SELECT_SUGGESTION",
 	payload: query,
-})
-
+});
 
 const incrementActiveSuggestion = {
-	type: 'INCREMENT_ACTIVE_SUGGESTION',
+	type: "INCREMENT_ACTIVE_SUGGESTION",
 	payload: null,
-}
-
+};
 
 const decrementActiveSuggestion = {
-	type: 'DECREMENT_ACTIVE_SUGGESTION',
+	type: "DECREMENT_ACTIVE_SUGGESTION",
 	payload: null,
-}
-
+};
 
 const AutoComplete = ({
 	suggestions,
@@ -60,56 +55,72 @@ const AutoComplete = ({
 	itemNameSingular,
 	itemNamePlural,
 }) => {
-	const reducer = (state, {type, payload}) => {
+	const reducer = (state, { type, payload }) => {
 		switch (type) {
-			case 'SELECT_SUGGESTION':
-				return initialState
-			case 'DECREMENT_ACTIVE_SUGGESTION':
-				return {...state, activeSuggestion: Math.max(0, state.activeSuggestion - 1)}
-			case 'INCREMENT_ACTIVE_SUGGESTION':
-				return {...state, activeSuggestion: Math.min(state.filteredSuggestions.length - 1, state.activeSuggestion + 1)}
-			case 'FILTER_SUGGESTIONS': {
+			case "SELECT_SUGGESTION":
+				return initialState;
+			case "DECREMENT_ACTIVE_SUGGESTION":
+				return {
+					...state,
+					activeSuggestion: Math.max(0, state.activeSuggestion - 1),
+				};
+			case "INCREMENT_ACTIVE_SUGGESTION":
+				return {
+					...state,
+					activeSuggestion: Math.min(
+						state.filteredSuggestions.length - 1,
+						state.activeSuggestion + 1,
+					),
+				};
+			case "FILTER_SUGGESTIONS": {
 				const filteredSuggestions = suggestions.filter(
-					suggestion =>
-					suggestion[suggestionsLabelField].toLowerCase().indexOf(payload.toLowerCase()) > -1
-				)
+					(suggestion) =>
+						suggestion[suggestionsLabelField]
+							.toLowerCase()
+							.indexOf(payload.toLowerCase()) > -1,
+				);
 				return {
 					activeSuggestion: 0,
 					filteredSuggestions,
 					userInput: payload,
 					showSuggestions: true,
-				}
+				};
 			}
 
 			default:
-				throw new Error(`Unknown action type: ${type}`)
+				throw new Error(`Unknown action type: ${type}`);
 		}
-	}
+	};
 
-	const [state, dispatch] = useReducer(reducer, initialState)
+	const [state, dispatch] = useReducer(reducer, initialState);
 
-	const id = `id_${name}`
-	const onChange = (event) => dispatch(filterSuggestions(event.target.value))
+	const id = `id_${name}`;
+	const onChange = (event) => dispatch(filterSuggestions(event.target.value));
 	const onClick = (event) => {
-		let val = event.currentTarget.dataset.item
-		handleSelect(val)
-		dispatch(selectSuggestion(val))
-	}
+		let val = event.currentTarget.dataset.item;
+		handleSelect(val);
+		dispatch(selectSuggestion(val));
+	};
 
 	const onKeyDown = (event) => {
-		if (event.keyCode === 13) { // Enter key
-			let val = state.filteredSuggestions[state.activeSuggestion][suggestionsLabelField]
-			handleSelect(val)
-			dispatch(selectSuggestion(val))
-
-		} else if (event.keyCode === 38) { // up arrow
-			dispatch(decrementActiveSuggestion)
-		} else if (event.keyCode === 40) { // down arrow
-			dispatch(incrementActiveSuggestion)
+		if (event.keyCode === 13) {
+			// Enter key
+			let val =
+				state.filteredSuggestions[state.activeSuggestion][
+					suggestionsLabelField
+				];
+			handleSelect(val);
+			dispatch(selectSuggestion(val));
+		} else if (event.keyCode === 38) {
+			// up arrow
+			dispatch(decrementActiveSuggestion);
+		} else if (event.keyCode === 40) {
+			// down arrow
+			dispatch(incrementActiveSuggestion);
 		}
-	}
+	};
 
-	let suggestionListComponent
+	let suggestionListComponent;
 	if (state.showSuggestions && state.userInput) {
 		if (state.filteredSuggestions.length) {
 			suggestionListComponent = (
@@ -117,20 +128,23 @@ const AutoComplete = ({
 					{state.filteredSuggestions.map((suggestion, index) => (
 						// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- keyboard users already navigate this list via the input's onKeyDown (arrow keys move activeSuggestion, Enter selects it); making each <li> independently focusable would add extra tab stops and conflict with that combobox pattern.
 						<li
-							className={classNames("filters__suggestions-item", "filters__suggestions-item--selectable", {"filters__suggestions-item--active": index === state.activeSuggestion})}
+							className={classNames(
+								"filters__suggestions-item",
+								"filters__suggestions-item--selectable",
+								{
+									"filters__suggestions-item--active":
+										index === state.activeSuggestion,
+								},
+							)}
 							onClick={onClick}
 							data-item={suggestion[suggestionsLabelField]}
 							key={index}
 						>
 							<span>
 								{suggestion[suggestionsLabelField]}
-								<span
-									className="filters__suggestion-tooltip"
-								>
+								<span className="filters__suggestion-tooltip">
 									&ndash;
-									<span
-										className="filters__suggestion-tooltip-text"
-									>
+									<span className="filters__suggestion-tooltip-text">
 										Add {itemNameSingular}
 									</span>
 								</span>
@@ -139,7 +153,7 @@ const AutoComplete = ({
 						</li>
 					))}
 				</ul>
-			)
+			);
 		} else {
 			suggestionListComponent = (
 				<ul className="filters__suggestions">
@@ -147,13 +161,15 @@ const AutoComplete = ({
 						No {itemNamePlural} found
 					</li>
 				</ul>
-			)
+			);
 		}
 	}
 
 	return (
 		<>
-			<label htmlFor={id} className="sr-only">{placeholder}</label>
+			<label htmlFor={id} className="sr-only">
+				{placeholder}
+			</label>
 			<input
 				type="text"
 				name={name}
@@ -167,10 +183,9 @@ const AutoComplete = ({
 			/>
 			{suggestionListComponent}
 		</>
-	)
-}
+	);
+};
 
+AutoComplete.propTypes = propTypes;
 
-AutoComplete.propTypes = propTypes
-
-export default AutoComplete
+export default AutoComplete;

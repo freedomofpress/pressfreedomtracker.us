@@ -1,41 +1,46 @@
-import React from "react"
-import { createRoot } from "react-dom/client"
-import HexbinMapChart from './components/IncidentsHexbinMap'
-import DataLoader from "../../charts/js/components/DataLoader"
-import * as d3 from 'd3'
+import React from "react";
+import { createRoot } from "react-dom/client";
+import HexbinMapChart from "./components/IncidentsHexbinMap";
+import DataLoader from "../../charts/js/components/DataLoader";
+import * as d3 from "d3";
 
 function engageCharts() {
-	const charts = document.querySelectorAll('.chart-hexbin-map:not(.engaged)')
+	const charts = document.querySelectorAll(".chart-hexbin-map:not(.engaged)");
 	charts.forEach((chartNode) => {
-		chartNode.classList.add('engaged')
-		let root = createRoot(chartNode)
-		const categoryKeys = Object.keys(chartNode.dataset || {}).filter(d => d.indexOf('category') === 0)
-		const filterCategories = categoryKeys.map(k => chartNode.dataset[k])
-		const filterTag = chartNode.dataset?.tag
-		const lowerValue= chartNode.dataset?.lowerDate
-		const upperValue = chartNode.dataset?.upperDate
-		const filterStates = new Set(JSON.parse(chartNode.dataset?.states || '[]'))
-		const groupBy = chartNode.dataset?.groupBy
-		const title = chartNode.dataset?.title
-		const description = chartNode.dataset?.description
-		const interactive = !!chartNode.dataset?.interactive
-		const fullSize = !!chartNode.dataset?.fullSize
+		chartNode.classList.add("engaged");
+		let root = createRoot(chartNode);
+		const categoryKeys = Object.keys(chartNode.dataset || {}).filter(
+			(d) => d.indexOf("category") === 0,
+		);
+		const filterCategories = categoryKeys.map((k) => chartNode.dataset[k]);
+		const filterTag = chartNode.dataset?.tag;
+		const lowerValue = chartNode.dataset?.lowerDate;
+		const upperValue = chartNode.dataset?.upperDate;
+		const filterStates = new Set(JSON.parse(chartNode.dataset?.states || "[]"));
+		const groupBy = chartNode.dataset?.groupBy;
+		const title = chartNode.dataset?.title;
+		const description = chartNode.dataset?.description;
+		const interactive = !!chartNode.dataset?.interactive;
+		const fullSize = !!chartNode.dataset?.fullSize;
 
-		const filterUpperDate = upperValue ? new Date(upperValue) : null
-		const filterLowerDate = lowerValue ? new Date(lowerValue) : null
+		const filterUpperDate = upperValue ? new Date(upperValue) : null;
+		const filterLowerDate = lowerValue ? new Date(lowerValue) : null;
 
-		root.render((
+		root.render(
 			<DataLoader
 				dataUrl={[`/api/edge/incidents/homepage_csv/?`]}
-				dataKey={['dataset']}
+				dataKey={["dataset"]}
 				dataParser={[(data) => d3.csvParse(data, d3.autoType)]}
-				loadingComponent={(
+				loadingComponent={
 					<svg
 						viewBox="0 0 655 440"
 						width="100%"
-						style={{ display: fullSize ? 'none' : 'block', backgroundColor: '#fafafa' }}
+						style={{
+							display: fullSize ? "none" : "block",
+							backgroundColor: "#fafafa",
+						}}
 					/>
-				)}
+				}
 			>
 				<HexbinMapChart
 					filterCategories={filterCategories}
@@ -49,23 +54,23 @@ function engageCharts() {
 					interactive={interactive}
 					fullSize={fullSize}
 				/>
-			</DataLoader>
-		))
-	})
+			</DataLoader>,
+		);
+	});
 }
 
 engageCharts();
 
 // Add listener for query change to rerun
-let previousUrl = '';
+let previousUrl = "";
 
-const observer = new MutationObserver(function(_mutations) {
+const observer = new MutationObserver(function (_mutations) {
 	if (window.location.href !== previousUrl) {
 		previousUrl = window.location.href;
 		engageCharts();
 	}
 });
-const config = {subtree: true, childList: true};
+const config = { subtree: true, childList: true };
 
 // start listening to changes
 observer.observe(document, config);

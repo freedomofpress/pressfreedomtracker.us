@@ -1,8 +1,8 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { countBy, range } from 'lodash'
-import BarChartYears from './BarChartYears'
-import CheckBoxesYear from './CheckBoxesYear'
+import React from "react";
+import PropTypes from "prop-types";
+import { countBy, range } from "lodash";
+import BarChartYears from "./BarChartYears";
+import CheckBoxesYear from "./CheckBoxesYear";
 
 export default function TimeYearsFilter({
 	width,
@@ -12,30 +12,34 @@ export default function TimeYearsFilter({
 	filterParameters: selectedYears,
 	setFilterParameters: setSelectedYears,
 }) {
-	const [minDateYear, maxDateYear] = dateExtents.map((date) => date.getUTCFullYear())
-	const allYears = range(minDateYear, maxDateYear)
+	const [minDateYear, maxDateYear] = dateExtents.map((date) =>
+		date.getUTCFullYear(),
+	);
+	const allYears = range(minDateYear, maxDateYear);
 
-	const initializeYears = Object.fromEntries(allYears.map((year) => [year, 0]))
+	const initializeYears = Object.fromEntries(allYears.map((year) => [year, 0]));
 
 	const countedYears = countBy(dataset, (d) => {
-		return d.date.getUTCFullYear()
-	})
+		return d.date.getUTCFullYear();
+	});
 
-	const years = { ...initializeYears, ...countedYears }
+	const years = { ...initializeYears, ...countedYears };
 
 	const countYears = Object.entries(years).map(([year, count]) => ({
 		year: Number(year),
 		count,
-	}))
+	}));
 
 	function onYearClick(d) {
 		const newYears = (oldYears) =>
-			oldYears.includes(d.year) ? oldYears.filter((year) => year !== d.year) : [...oldYears, d.year]
-		setSelectedYears('filterTimeYears', newYears)
+			oldYears.includes(d.year)
+				? oldYears.filter((year) => year !== d.year)
+				: [...oldYears, d.year];
+		setSelectedYears("filterTimeYears", newYears);
 	}
 
 	return (
-		<div style={{ flexDirection: 'row' }}>
+		<div style={{ flexDirection: "row" }}>
 			<BarChartYears
 				width={width}
 				height={height}
@@ -53,7 +57,7 @@ export default function TimeYearsFilter({
 				onClick={onYearClick}
 			/>
 		</div>
-	)
+	);
 }
 
 TimeYearsFilter.propTypes = {
@@ -63,4 +67,4 @@ TimeYearsFilter.propTypes = {
 	dataset: PropTypes.array.isRequired,
 	filterParameters: PropTypes.array.isRequired,
 	setFilterParameters: PropTypes.func.isRequired,
-}
+};

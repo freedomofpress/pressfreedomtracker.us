@@ -1,12 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import Button from './Button'
-import DropdownButton from './DropdownButton'
+import React from "react";
+import PropTypes from "prop-types";
+import Button from "./Button";
+import DropdownButton from "./DropdownButton";
 
 const labelStyle = {
-	fontFamily: 'var(--font-base)',
-	fontSize: '18px',
-}
+	fontFamily: "var(--font-base)",
+	fontSize: "18px",
+};
 
 export default function ButtonsRow({
 	label,
@@ -17,19 +17,19 @@ export default function ButtonsRow({
 	isButtonSelectable,
 	tooltipIfUnselectable = null,
 }) {
-	const [selectedButton, setSelectedButton] = React.useState(null)
-	const [lastDropdownValue, setLastDropdownValue] = React.useState(null)
+	const [selectedButton, setSelectedButton] = React.useState(null);
+	const [lastDropdownValue, setLastDropdownValue] = React.useState(null);
 
 	function changeSelectedButton(buttonLabel) {
-		updateSelection(buttonLabel)
-		setSelectedButton(buttonLabel)
+		updateSelection(buttonLabel);
+		setSelectedButton(buttonLabel);
 		if (dropDownLabels.includes(buttonLabel)) {
-			setLastDropdownValue(buttonLabel) // maintain dropdown val when changing selection
+			setLastDropdownValue(buttonLabel); // maintain dropdown val when changing selection
 		}
 	}
 
 	return (
-		<div style={{ display: 'flex', alignItems: 'center', margin: 12 }}>
+		<div style={{ display: "flex", alignItems: "center", margin: 12 }}>
 			<div
 				style={{
 					...labelStyle,
@@ -46,7 +46,7 @@ export default function ButtonsRow({
 							selectedButton === buttonLabel
 						}
 						onClick={() => {
-							changeSelectedButton(buttonLabel)
+							changeSelectedButton(buttonLabel);
 						}}
 						selectable={isButtonSelectable(buttonLabel)}
 						tooltipIfUnselectable={tooltipIfUnselectable}
@@ -55,7 +55,11 @@ export default function ButtonsRow({
 				))}
 				{dropDownLabels.length > 0 && (
 					<DropdownButton
-						value={dropDownLabels.includes(selectedButton) ? selectedButton : (lastDropdownValue ?? dropDownLabels[0])}
+						value={
+							dropDownLabels.includes(selectedButton)
+								? selectedButton
+								: (lastDropdownValue ?? dropDownLabels[0])
+						}
 						selected={
 							dropDownLabels.includes(selectedButton) ? selectedButton : ""
 						}
@@ -65,7 +69,7 @@ export default function ButtonsRow({
 				)}
 			</div>
 		</div>
-	)
+	);
 }
 
 ButtonsRow.propTypes = {
@@ -76,4 +80,4 @@ ButtonsRow.propTypes = {
 	updateSelection: PropTypes.func.isRequired,
 	isButtonSelectable: PropTypes.func.isRequired,
 	tooltipIfUnselectable: PropTypes.string,
-}
+};

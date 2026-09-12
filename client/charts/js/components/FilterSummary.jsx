@@ -1,64 +1,76 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import CategoryIcon, { categorySymbolMap } from '../../../common/js/components/categoryIcon'
+import React from "react";
+import PropTypes from "prop-types";
+import CategoryIcon, {
+	categorySymbolMap,
+} from "../../../common/js/components/categoryIcon";
 
 export default function FilterSummary({ serializedFilters }) {
-	const categoryFilters = JSON.parse(serializedFilters)
+	const categoryFilters = JSON.parse(serializedFilters);
 
-	const idMap = categoryFilters.reduce((acc, val) => ({ ...acc, [val.id]: val.title }), {});
-	const allFilters = categoryFilters.flatMap(category => category.filters).reduce(
-		(acc, val) => ({...acc, [val.name]: val})
-	)
+	const idMap = categoryFilters.reduce(
+		(acc, val) => ({ ...acc, [val.id]: val.title }),
+		{},
+	);
+	const allFilters = categoryFilters
+		.flatMap((category) => category.filters)
+		.reduce((acc, val) => ({ ...acc, [val.name]: val }));
 
 	const displayText = (filterName, value) => {
-		const filter = allFilters[filterName]
+		const filter = allFilters[filterName];
 		if (filter?.type == "bool") {
-			return (value === '1') ? filter.present_summary_name : filter.absent_summary_name
+			return value === "1"
+				? filter.present_summary_name
+				: filter.absent_summary_name;
 		} else {
-			return value.replaceAll("_", " ").toLowerCase()
+			return value.replaceAll("_", " ").toLowerCase();
 		}
-	}
+	};
 
-	const searchParams = new URLSearchParams(window.location.search)
+	const searchParams = new URLSearchParams(window.location.search);
 	const {
 		categories: categoriesStr,
 		tags: tagsStr,
 		date_lower,
 		date_upper,
 		...restFilters
-	} = Object.fromEntries(searchParams)
+	} = Object.fromEntries(searchParams);
 
-	const categories = [...new Set(
-		(categoriesStr ? categoriesStr.split(',').map(d => d.trim()) : [])
-			.map(category => {
-				if (categorySymbolMap[category]) return category;
-				if (idMap[category]) return idMap[category];
-				return null;
-			})
-			.filter(d => d)
-	)]
+	const categories = [
+		...new Set(
+			(categoriesStr ? categoriesStr.split(",").map((d) => d.trim()) : [])
+				.map((category) => {
+					if (categorySymbolMap[category]) return category;
+					if (idMap[category]) return idMap[category];
+					return null;
+				})
+				.filter((d) => d),
+		),
+	];
 
-	const tags = tagsStr ? tagsStr.split(',').map(d => d.trim()) : []
+	const tags = tagsStr ? tagsStr.split(",").map((d) => d.trim()) : [];
 
 	const clearFilter = (filterKey, newFilterValue) => {
 		const url = new URL(window.location);
-		const newSearchParams = new URLSearchParams(window.location.search)
+		const newSearchParams = new URLSearchParams(window.location.search);
 
-		if (newFilterValue) newSearchParams.set(filterKey, newFilterValue)
-		else newSearchParams.delete(filterKey)
+		if (newFilterValue) newSearchParams.set(filterKey, newFilterValue);
+		else newSearchParams.delete(filterKey);
 
-		url.search = newSearchParams.toString()
-		window.location = url.toString()
-	}
+		url.search = newSearchParams.toString();
+		window.location = url.toString();
+	};
 
 	return (
 		<ul className="filters-summary">
-			{categories.map(category => (
+			{categories.map((category) => (
 				<li key={category}>
 					<button
-						onClick={() => clearFilter(
-							"categories", categories.filter(d => d !== category).join(',')
-						)}
+						onClick={() =>
+							clearFilter(
+								"categories",
+								categories.filter((d) => d !== category).join(","),
+							)
+						}
 						className="btn btn-tag"
 						aria-label={`Removes filter: ${category.toLowerCase()}`}
 					>
@@ -92,12 +104,12 @@ export default function FilterSummary({ serializedFilters }) {
 					</button>
 				</li>
 			)}
-			{tags.map(tag => (
+			{tags.map((tag) => (
 				<li key={tag}>
 					<button
-						onClick={() => clearFilter(
-							"tags", tags.filter(d => d !== tag).join(',')
-						)}
+						onClick={() =>
+							clearFilter("tags", tags.filter((d) => d !== tag).join(","))
+						}
 						className="btn btn-tag"
 						aria-label={`Removes tag: ${tag.toLowerCase()}`}
 					>
@@ -106,7 +118,7 @@ export default function FilterSummary({ serializedFilters }) {
 					</button>
 				</li>
 			))}
-			{Object.keys(restFilters).map(filterKey => (
+			{Object.keys(restFilters).map((filterKey) => (
 				<li key={restFilters[filterKey]}>
 					<button
 						onClick={() => clearFilter(filterKey)}
@@ -119,9 +131,9 @@ export default function FilterSummary({ serializedFilters }) {
 				</li>
 			))}
 		</ul>
-	)
+	);
 }
 
 FilterSummary.propTypes = {
 	serializedFilters: PropTypes.string.isRequired,
-}
+};
