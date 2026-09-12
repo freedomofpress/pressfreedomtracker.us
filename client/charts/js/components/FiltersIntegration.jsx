@@ -21,7 +21,7 @@ import {
 
 export function filterReducer(state, {type, payload}) {
 	switch (type) {
-		case TOGGLE_PARAMETER_ITEM:
+		case TOGGLE_PARAMETER_ITEM: {
 			let { item } = payload
 			let old = state[payload.filterName].parameters
 			if (old.has(item)) {
@@ -30,7 +30,8 @@ export function filterReducer(state, {type, payload}) {
 				old.add(item)
 			}
 			return {...state}
-		case DELETE_PARAMETER_ITEMS:
+		}
+		case DELETE_PARAMETER_ITEMS: {
 			let { items } = payload
 
 			state[payload.filterName].parameters = difference(
@@ -38,6 +39,7 @@ export function filterReducer(state, {type, payload}) {
 				new Set(items),
 			)
 			return {...state}
+		}
 
 		case SET_PARAMETER:
 			if (!Object.hasOwn(state, payload.filterName)) {
