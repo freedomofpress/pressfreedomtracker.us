@@ -2,7 +2,7 @@ import React from 'react'
 
 const RADIO_BOX_WIDTH = 35
 
-export default function CheckBoxBar({ label, count, i, onClick, isSelected, barWidth, width }) {
+export default function CheckBoxBar({ label, count, onClick, isSelected, barWidth, width }) {
 	return (
 		<div
 			style={{

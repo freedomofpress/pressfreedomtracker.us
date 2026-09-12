@@ -1,7 +1,6 @@
 import React from 'react'
 import Button from './Button'
 import DropdownButton from './DropdownButton'
-import { toNumbers } from 'canvg'
 
 const labelStyle = {
 	fontFamily: 'var(--font-base)',

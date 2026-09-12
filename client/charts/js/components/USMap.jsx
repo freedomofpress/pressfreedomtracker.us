@@ -207,7 +207,7 @@ export default function USMap({
 									r={markerScale(d.numberOfIncidents) + 5}
 									style={{ opacity: 0, cursor: (interactive && searchPageURL) ? 'pointer' : 'inherit' }}
 									onMouseMove={updateTooltipPosition}
-									onMouseEnter={(mouseEvent) => {
+									onMouseEnter={() => {
 										setHoveredElement(`${aggregationLocality(d)}`)
 									}}
 									onMouseLeave={() => {
