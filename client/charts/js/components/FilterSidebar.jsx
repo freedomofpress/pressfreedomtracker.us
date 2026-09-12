@@ -66,4 +66,4 @@ export default function FilterSidebar({
 FilterSidebar.propTypes = {
 	serializedFilters: PropTypes.string.isRequired,
 	initialDataset: PropTypes.array,
-}
+};
