@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { sortBy, countBy } from 'lodash'
 import { AnimatedDataset } from 'react-animated-dataset'
@@ -216,4 +217,16 @@ export default function TimeMonthsFilter({
 			</div>
 		</div>
 	)
+}
+
+TimeMonthsFilter.propTypes = {
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	dateExtents: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
+	dataset: PropTypes.array.isRequired,
+	filterParameters: PropTypes.shape({
+		min: PropTypes.instanceOf(Date).isRequired,
+		max: PropTypes.instanceOf(Date).isRequired,
+	}).isRequired,
+	setFilterParameters: PropTypes.func.isRequired,
 }

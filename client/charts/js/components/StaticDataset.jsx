@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 /**
  * Static version of React Animated Dataset used for server-side rendering
@@ -31,4 +32,12 @@ export default function StaticDataset({ dataset, tag, attrs, keyFn, children }) 
 	))
 
 	return (<g>{items}</g>)
+}
+
+StaticDataset.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	tag: PropTypes.string.isRequired,
+	attrs: PropTypes.object.isRequired,
+	keyFn: PropTypes.func.isRequired,
+	children: PropTypes.node,
 }

@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import React from 'react'
+import PropTypes from 'prop-types'
 import { AnimatedDataset } from 'react-animated-dataset'
 
 const margins = {
@@ -130,4 +131,15 @@ export default function BarChartYears({ width, height, countYears, selectedYears
 			</svg>
 		</div>
 	)
+}
+
+BarChartYears.propTypes = {
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	countYears: PropTypes.arrayOf(PropTypes.shape({
+		year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+		count: PropTypes.number.isRequired,
+	})).isRequired,
+	selectedYears: PropTypes.array.isRequired,
+	onClick: PropTypes.func.isRequired,
 }

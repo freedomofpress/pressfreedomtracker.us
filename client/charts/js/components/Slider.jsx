@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { clamp, first, last } from 'lodash'
 
@@ -104,4 +105,13 @@ export default function Slider({ elements, xScale, y, setSliderSelection, slider
 			/>
 		</>
 	)
+}
+
+Slider.propTypes = {
+	elements: PropTypes.array.isRequired,
+	xScale: PropTypes.func.isRequired,
+	y: PropTypes.number.isRequired,
+	setSliderSelection: PropTypes.func.isRequired,
+	sliderSelection: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.instanceOf(Date)]),
+	idContainer: PropTypes.string.isRequired,
 }

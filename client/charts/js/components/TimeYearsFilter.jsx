@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { countBy, range } from 'lodash'
 import BarChartYears from './BarChartYears'
 import CheckBoxesYear from './CheckBoxesYear'
@@ -53,4 +54,13 @@ export default function TimeYearsFilter({
 			/>
 		</div>
 	)
+}
+
+TimeYearsFilter.propTypes = {
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	dateExtents: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
+	dataset: PropTypes.array.isRequired,
+	filterParameters: PropTypes.array.isRequired,
+	setFilterParameters: PropTypes.func.isRequired,
 }
