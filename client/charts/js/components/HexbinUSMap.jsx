@@ -209,7 +209,6 @@ export default function HexbinUSMap({
 									wrapperComponent={
 										<a
 											href={searchPageURL && dataPoint && searchPageURL(dataPoint.usCode)}
-											role="link"
 											aria-label={`${stateName}: ${incidents} incidents`}
 											style={{
 												mixBlendMode: 'darken' }
@@ -375,7 +374,6 @@ export default function HexbinUSMap({
 						{interactive ? (
 							<a
 								href={searchPageURL()}
-								role="link"
 								aria-label="Incidents recorded outside of the US"
 							>
 								<rect
