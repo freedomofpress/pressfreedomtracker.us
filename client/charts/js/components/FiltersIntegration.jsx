@@ -129,7 +129,7 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 				if (category.id !== -1) {
 					categories.push(category.title)
 				}
-				category.filters.forEach( ({name, type})=> {
+				category.filters.forEach( ({name})=> {
 					let filter = filtersParameters[name]
 					if (filter && filter.parameters) {
 						if (name == 'tags' && filter.parameters?.size > 0) {
