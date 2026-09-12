@@ -9,7 +9,7 @@ import "../../scss/base.scss";
 
 export default function App() {
 	const [dataset, setDataset] = useState(null);
-	const [source, useSource] = useState("api");
+	const [source, setSource] = useState("api");
 
 	const randomizeJson = (json) => {
 		// TEMPORARY - RANDOMIZE SOME COLUMNS
@@ -61,7 +61,7 @@ export default function App() {
 					padding: ".7em",
 					margin: 3,
 				}}
-				onClick={() => useSource("api")}
+				onClick={() => setSource("api")}
 			>
 				live api
 			</button>
@@ -73,7 +73,7 @@ export default function App() {
 					padding: ".7em",
 					margin: 3,
 				}}
-				onClick={() => useSource("static_prod")}
+				onClick={() => setSource("static_prod")}
 			>
 				static prod dataset
 			</button>
