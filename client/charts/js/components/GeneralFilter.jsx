@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
 import TagFilter from './TagFilter'
 import FilterSet from './FilterSet'
 import { FiltersDispatch } from '../lib/context'
@@ -59,4 +60,16 @@ export default function GeneralFilter({
 			</div>
 		</>
 	)
+}
+
+GeneralFilter.propTypes = {
+	filterDef: PropTypes.shape({
+		filters: PropTypes.array,
+	}),
+	filterParameters: PropTypes.object,
+	setFilterParameters: PropTypes.func.isRequired,
+	width: PropTypes.number.isRequired,
+	dataset: PropTypes.array.isRequired,
+	filterWithout: PropTypes.object,
+	initialFilterParams: PropTypes.object,
 }

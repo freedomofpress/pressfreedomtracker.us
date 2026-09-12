@@ -85,6 +85,15 @@ function DateFilter({
 	)
 }
 
+DateFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.shape({
+		min: PropTypes.instanceOf(Date),
+		max: PropTypes.instanceOf(Date),
+	}),
+}
+
 function TextFilter({
 	name,
 	label,
@@ -151,6 +160,14 @@ function SelectFilter({
 			)
 }
 
+SelectFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	choices: PropTypes.arrayOf(PropTypes.array).isRequired,
+	handleFilterChange: PropTypes.func.isRequired,
+}
+
 function DatalistFilter({
 	name,
 	label,
@@ -186,6 +203,14 @@ function DatalistFilter({
 			</datalist>
 		</div>
 	)
+}
+
+DatalistFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	choices: PropTypes.arrayOf(PropTypes.string).isRequired,
+	handleFilterChange: PropTypes.func.isRequired,
 }
 
 function RadioFilter({
@@ -233,6 +258,17 @@ RadioFilter.defaultProps = {
 		{ label: 'Yes', value: 'JUST_TRUE' },
 		{ label: 'No', value: 'JUST_FALSE' },
 	],
+}
+
+RadioFilter.propTypes = {
+	name: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	options: PropTypes.arrayOf(PropTypes.shape({
+		label: PropTypes.string.isRequired,
+		value: PropTypes.string.isRequired,
+	})),
+	handleFilterChange: PropTypes.func.isRequired,
 }
 
 

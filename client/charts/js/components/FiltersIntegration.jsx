@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import CategoryFilter from './CategoryFilter'
 import GeneralFilter from './GeneralFilter'
@@ -227,4 +228,16 @@ export default function FiltersIntegration({ width, dataset: dirtyDataset, initi
 			</section>
 		</FiltersDispatch.Provider>
 	)
+}
+
+FiltersIntegration.propTypes = {
+	width: PropTypes.number.isRequired,
+	dataset: PropTypes.array.isRequired,
+	initialFilterParams: PropTypes.object,
+	filters: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		title: PropTypes.string,
+		symbol: PropTypes.string,
+		filters: PropTypes.array,
+	})).isRequired,
 }
