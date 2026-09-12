@@ -5,7 +5,7 @@ import FilterSummary from "./components/FilterSummary";
 function renderSummary() {
 	let el = document.getElementById("filter-summary");
 	let root = createRoot(el);
-	root.render(<FilterSummary {...(el.dataset)} />);
+	root.render(<FilterSummary {...el.dataset} />);
 }
 
 // First render
