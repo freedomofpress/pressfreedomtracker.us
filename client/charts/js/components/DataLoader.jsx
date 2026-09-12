@@ -87,6 +87,12 @@ function DataLoader({ dataUrl, dataParser, dataKey, loadingComponent, children }
 				setLoading(false)
 			}
 		)
+		// fetchCache is intentionally excluded: loadData calls setFetchCache as
+		// part of this same effect, so depending on fetchCache would make the
+		// effect refire on its own cache update. Each run already closes over
+		// the fetchCache value from the render that changed dataUrl/dataParser/
+		// dataKey, which is what determines whether a re-fetch is needed.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dataUrl, dataParser, dataKey])
 
 	// If data hasn't loaded yet, return the loading component instead

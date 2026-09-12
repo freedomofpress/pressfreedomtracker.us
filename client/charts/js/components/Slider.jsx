@@ -7,9 +7,10 @@ export default function Slider({ elements, xScale, y, setSliderSelection, slider
 	const onMouseOrTouchMoveRef = useRef(null)
 	const [mousePosition, setMousePosition] = useState({ x: null, y: null })
 
+	const firstElement = first(elements)
 	useEffect(() => {
-		setSliderSelection(first(elements))
-	}, [first(elements)])
+		setSliderSelection(firstElement)
+	}, [firstElement, setSliderSelection])
 
 	function stopMovingSlider(_event) {
 		window.removeEventListener('mouseup', onSliderReleaseRef.current)
