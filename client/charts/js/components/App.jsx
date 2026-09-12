@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import * as d3 from "d3";
 import { sample } from "lodash";
 import HomepageMainCharts from "./HomepageMainCharts";
-import DataLoader from '../../../charts/js/components/DataLoader'
+import DataLoader from "../../../charts/js/components/DataLoader";
 import FiltersIntegration from "./FiltersIntegration";
-import IncidentsTimeBarChart from './IncidentsTimeBarChart';
+import IncidentsTimeBarChart from "./IncidentsTimeBarChart";
 import "../../scss/base.scss";
 
 export default function App() {
@@ -33,10 +33,12 @@ export default function App() {
 		});
 
 		return json;
-	}
+	};
 
 	useEffect(() => {
-		const fetchPromise = import("../data/incidents.csv.js").then(({ csv }) => csv);
+		const fetchPromise = import("../data/incidents.csv.js").then(
+			({ csv }) => csv,
+		);
 
 		setDataset(null);
 		fetchPromise
@@ -91,7 +93,7 @@ export default function App() {
 						justifyContent: "center",
 						alignItems: "center",
 						opacity: 0.4,
-						fontFamily: 'var(--font-base)',
+						fontFamily: "var(--font-base)",
 					}}
 				>
 					<div>LOADING...</div>
@@ -110,9 +112,16 @@ export default function App() {
 			<h1>Homepage Charts</h1>
 			<div className="chartContainer" style={{ width: "90%" }}>
 				<DataLoader
-					dataUrl={['/api/edge/categories/', source === "api" && `/api/edge/incidents/homepage_csv/`]}
-					dataKey={['categories', source === "api" && 'data']}
-					dataParser={[JSON.parse, source === "api" && (r => randomizeJson(d3.csvParse(r, d3.autoType)))]}
+					dataUrl={[
+						"/api/edge/categories/",
+						source === "api" && `/api/edge/incidents/homepage_csv/`,
+					]}
+					dataKey={["categories", source === "api" && "data"]}
+					dataParser={[
+						JSON.parse,
+						source === "api" &&
+							((r) => randomizeJson(d3.csvParse(r, d3.autoType))),
+					]}
 					loadingComponent={false}
 				>
 					<HomepageMainCharts data={dataset} />
@@ -121,7 +130,11 @@ export default function App() {
 
 			<h1>Filters Integration</h1>
 			<div className="chartContainer">
-				<FiltersIntegration dataset={dataset} width={300} urlParams={urlParams} />
+				<FiltersIntegration
+					dataset={dataset}
+					width={300}
+					urlParams={urlParams}
+				/>
 			</div>
 
 			<h1>Incidents Bar Chart</h1>
