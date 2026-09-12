@@ -192,11 +192,19 @@ export default function CategoryFilter({
 								>
 									<div
 										className={classNames('category', `category-${d.symbol}`)}
+										role="button"
+										tabIndex={0}
 										onClick={() => {
 											if (d.count === 0) {
 												return null
 											} else {
 												return onCategoryClick(d)
+											}
+										}}
+										onKeyDown={(event) => {
+											if (d.count > 0 && (event.key === 'Enter' || event.key === ' ')) {
+												event.preventDefault()
+												onCategoryClick(d)
 											}
 										}}
 									/>
