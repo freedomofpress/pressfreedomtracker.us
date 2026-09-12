@@ -55,6 +55,7 @@ repos:
         additional_dependencies:
           - stylelint
           - stylelint-config-standard-scss
+          - fpf-wagtail-common@github:freedomofpress/fpf-wagtail-common#v0.2.0
 
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v9.39.1
@@ -71,6 +72,7 @@ repos:
           - eslint-plugin-react@7.37.5
           - eslint-plugin-react-hooks@7.1.1
           - globals@17.12.0
+          - fpf-wagtail-common@github:freedomofpress/fpf-wagtail-common#v0.2.0
 
   - repo: https://github.com/JoC0de/pre-commit-prettier
     rev: v3.9.6
@@ -79,3 +81,4 @@ repos:
         files: \.jsx?$
         additional_dependencies:
           - prettier
+          - fpf-wagtail-common@github:freedomofpress/fpf-wagtail-common#v0.2.0
