@@ -248,7 +248,7 @@ export function BoolFilter(props) {
 	)
 }
 
-export default function FilterSet({ filters, handleFilterChange, filterParameters, width, dataset, filterWithout}) {
+export default function FilterSet({ filters, handleFilterChange, filterParameters, width, dataset, filterWithout: _filterWithout}) {
 	const components = filters.map((filter, index) => {
 		if (filter.name === 'search' || filter.name === 'tags') {
 			return
