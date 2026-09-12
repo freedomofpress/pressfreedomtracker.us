@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Tooltip from './Tooltip'
 
 const textStyle = {
@@ -64,4 +65,12 @@ export default function Button({ label, selected, selectable = true, onClick, to
 		</button>
 	</>
 	)
+}
+
+Button.propTypes = {
+	label: PropTypes.string.isRequired,
+	selected: PropTypes.bool.isRequired,
+	selectable: PropTypes.bool,
+	onClick: PropTypes.func.isRequired,
+	tooltipIfUnselectable: PropTypes.string,
 }

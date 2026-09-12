@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 
 // Takes a best guess at the width of a letter to calculate the width of a button
@@ -95,3 +96,14 @@ export default function CategoryButtons({
 		</>
 	)
 };
+
+CategoryButtons.propTypes = {
+	interactive: PropTypes.bool.isRequired,
+	categoryButtonsLabels: PropTypes.array.isRequired,
+	hoveredElement: PropTypes.string,
+	setHoveredElement: PropTypes.func.isRequired,
+	toggleSelectedCategory: PropTypes.func,
+	selectedElements: PropTypes.array,
+	findColor: PropTypes.func.isRequired,
+	textStyle: PropTypes.object,
+}

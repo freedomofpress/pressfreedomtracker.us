@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export default function CheckBoxesYear({ width, options, selectedYears, onClick }) {
 	const side = 20
@@ -52,4 +53,14 @@ export default function CheckBoxesYear({ width, options, selectedYears, onClick 
 			))}
 		</div>
 	)
+}
+
+CheckBoxesYear.propTypes = {
+	width: PropTypes.number.isRequired,
+	options: PropTypes.arrayOf(PropTypes.shape({
+		year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+		count: PropTypes.number,
+	})).isRequired,
+	selectedYears: PropTypes.array.isRequired,
+	onClick: PropTypes.func.isRequired,
 }

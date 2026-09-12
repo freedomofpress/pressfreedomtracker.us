@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Button from './Button'
 import DropdownButton from './DropdownButton'
 
@@ -65,4 +66,14 @@ export default function ButtonsRow({
 			</div>
 		</div>
 	)
+}
+
+ButtonsRow.propTypes = {
+	label: PropTypes.string.isRequired,
+	buttonLabels: PropTypes.array.isRequired,
+	dropDownLabels: PropTypes.array,
+	defaultSelection: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	updateSelection: PropTypes.func.isRequired,
+	isButtonSelectable: PropTypes.func.isRequired,
+	tooltipIfUnselectable: PropTypes.string,
 }

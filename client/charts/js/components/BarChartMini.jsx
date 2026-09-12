@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 
 export default function BarChartMini({
@@ -33,4 +34,13 @@ export default function BarChartMini({
 			)))}
 		</svg>
 	)
+}
+
+BarChartMini.propTypes = {
+	data: PropTypes.array.isRequired,
+	allCategories: PropTypes.array,
+	categoriesColors: PropTypes.object,
+	x: PropTypes.string.isRequired,
+	width: PropTypes.number,
+	height: PropTypes.number,
 }
