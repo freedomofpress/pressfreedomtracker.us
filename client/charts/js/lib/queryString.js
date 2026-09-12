@@ -26,7 +26,7 @@ function parseCategories(urlParams, filterName, filters) {
 	}
 }
 
-function parseDateRange(urlParams, filterName, filters) {
+function parseDateRange(urlParams, filterName, _filters) {
 	let lowerValue = urlParams[`${filterName}_lower`]
 	let upperValue = urlParams[`${filterName}_upper`]
 	return {
@@ -39,7 +39,7 @@ function parseDateRange(urlParams, filterName, filters) {
 	}
 }
 
-function parseString(urlParams, filterName, filters) {
+function parseString(urlParams, filterName, _filters) {
 	return {
 		enabled: false,
 		type: 'string',
@@ -47,7 +47,7 @@ function parseString(urlParams, filterName, filters) {
 	}
 }
 
-function parseStringSet(urlParams, filterName, filters) {
+function parseStringSet(urlParams, filterName, _filters) {
 	let params = urlParams[filterName]
 	let result
 	if (params) {

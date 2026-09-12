@@ -18,7 +18,7 @@ import * as curlify from './curlify'
 	const curlifyPlugin = {
 		type: 'curlify',
 
-		handlePastedText(text, html, editorState, { update, setEditorState }) {
+		handlePastedText(text, html, editorState, { setEditorState }) {
 			try {
 				if (html) {
 					let newHTML = curlify.html(html)
