@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const textStyle = {
 	fontFamily: 'var(--font-base)',
@@ -15,6 +16,10 @@ const ArrowDownSVG = ({stroke}) => (
 		/>
 	</svg>
 )
+
+ArrowDownSVG.propTypes = {
+	stroke: PropTypes.string,
+}
 
 export default function DropdownButton({ value = '', selected, selectable = true, onChange }) {
 	const [hovered, setHovered] = React.useState(false)
@@ -85,4 +90,11 @@ export default function DropdownButton({ value = '', selected, selectable = true
 			</div>
 		</div>
 	)
+}
+
+DropdownButton.propTypes = {
+	value: PropTypes.string,
+	selected: PropTypes.bool.isRequired,
+	selectable: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+	onChange: PropTypes.func.isRequired,
 }

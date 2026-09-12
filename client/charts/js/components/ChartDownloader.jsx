@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { Canvg } from 'canvg'
 
@@ -203,6 +204,16 @@ const ChartDownloader = ({
 				: null}
 		</>
 	)
+}
+
+ChartDownloader.propTypes = {
+	children: PropTypes.node.isRequired,
+	downloadFileName: PropTypes.string,
+	imageWidth: PropTypes.number,
+	showDownloadButton: PropTypes.bool,
+	showCredit: PropTypes.bool,
+	chartTitle: PropTypes.string,
+	creditUrl: PropTypes.string,
 }
 
 export default ChartDownloader

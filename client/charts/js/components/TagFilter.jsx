@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { flatMap, countBy } from 'lodash'
 import {
@@ -119,4 +120,11 @@ export default function TagFilter({
 			/>
 		</div>
 	)
+}
+
+TagFilter.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	width: PropTypes.number.isRequired,
+	initialPickedTags: PropTypes.oneOfType([PropTypes.instanceOf(Set), PropTypes.array]),
+	filterParameters: PropTypes.oneOfType([PropTypes.instanceOf(Set), PropTypes.array]),
 }

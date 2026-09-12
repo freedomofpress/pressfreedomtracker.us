@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import CategoryIcon, { categorySymbolMap } from '../../../common/js/components/categoryIcon'
 
 export default function FilterSummary({ serializedFilters }) {
@@ -119,4 +120,8 @@ export default function FilterSummary({ serializedFilters }) {
 			))}
 		</ul>
 	)
+}
+
+FilterSummary.propTypes = {
+	serializedFilters: PropTypes.string.isRequired,
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const RADIO_BOX_WIDTH = 35
 
@@ -91,4 +92,13 @@ export default function RadioBar({ label, count, onClick, isSelected, barWidth, 
 			</div>
 		</div>
 	)
+}
+
+RadioBar.propTypes = {
+	label: PropTypes.string.isRequired,
+	count: PropTypes.number.isRequired,
+	onClick: PropTypes.func.isRequired,
+	isSelected: PropTypes.bool.isRequired,
+	barWidth: PropTypes.number.isRequired,
+	width: PropTypes.number.isRequired,
 }
