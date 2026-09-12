@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ParentSize } from '@visx/responsive'
 import BarChart from './BarChart'
 import BarChartMini from './BarChartMini'
@@ -155,4 +156,22 @@ export default function IncidentsTimeBarChart({
 			}}
 		</ParentSize>
 	)
+}
+
+IncidentsTimeBarChart.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	title: PropTypes.string,
+	description: PropTypes.string,
+	filterCategories: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterTags: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterStates: PropTypes.instanceOf(Set),
+	dateRange: PropTypes.array,
+	timePeriod: PropTypes.string,
+	isMobileView: PropTypes.bool,
+	creditUrl: PropTypes.string,
+	interactive: PropTypes.bool,
+	fullSize: PropTypes.bool,
+	branchFieldName: PropTypes.string,
+	branches: PropTypes.array,
+	groupByTag: PropTypes.string,
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { filterDatasets, categoriesColors } from '../lib/utilities'
 import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
@@ -66,4 +67,22 @@ export default function IncidentsTreeMap({
 			}}
 		</ParentSize>
 	)
+}
+
+IncidentsTreeMap.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	title: PropTypes.string,
+	description: PropTypes.string,
+	filterCategories: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterTags: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterStates: PropTypes.instanceOf(Set),
+	dateRange: PropTypes.array,
+	isMobileView: PropTypes.bool,
+	creditUrl: PropTypes.string,
+	branchFieldName: PropTypes.string.isRequired,
+	branches: PropTypes.arrayOf(PropTypes.shape({
+		title: PropTypes.string,
+	})).isRequired,
+	interactive: PropTypes.bool,
+	fullSize: PropTypes.bool,
 }

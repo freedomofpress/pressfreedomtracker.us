@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
 	filterDatasets,
 	groupByState,
@@ -55,4 +56,17 @@ export default function IncidentsHexbinMap({
 			}}
 		</ParentSize>
 	)
+}
+
+IncidentsHexbinMap.propTypes = {
+	dataset: PropTypes.array.isRequired,
+	title: PropTypes.string,
+	description: PropTypes.string,
+	filterCategories: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterTags: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+	filterStates: PropTypes.instanceOf(Set),
+	dateRange: PropTypes.array,
+	creditUrl: PropTypes.string,
+	interactive: PropTypes.bool,
+	fullSize: PropTypes.bool,
 }

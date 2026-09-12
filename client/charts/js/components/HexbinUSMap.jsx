@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
 import DynamicWrapper from './DynamicWrapper'
@@ -605,4 +606,20 @@ export default function HexbinUSMap({
 
 		</>
 	)
+}
+
+HexbinUSMap.propTypes = {
+	data: PropTypes.array.isRequired,
+	description: PropTypes.string,
+	incidentsOutsideUS: PropTypes.number,
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	id: PropTypes.string,
+	searchPageURL: PropTypes.func,
+	aggregationLocality: PropTypes.func,
+	addBottomBorder: PropTypes.bool,
+	overridePaddings: PropTypes.object,
+	setSvgEl: PropTypes.func,
+	interactive: PropTypes.bool,
+	fullSize: PropTypes.bool,
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 import { AnimatedDataset } from 'react-animated-dataset'
@@ -555,4 +556,21 @@ export default function USMap({
 			</svg>
 		</>
 	)
+}
+
+USMap.propTypes = {
+	data: PropTypes.array.isRequired,
+	description: PropTypes.string,
+	incidentsOutsideUS: PropTypes.number,
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired,
+	id: PropTypes.string,
+	searchPageURL: PropTypes.func,
+	aggregationLocality: PropTypes.func,
+	addBottomBorder: PropTypes.bool,
+	overridePaddings: PropTypes.object,
+	setSvgEl: PropTypes.func,
+	interactive: PropTypes.bool,
+	fullSize: PropTypes.bool,
+	domainMax: PropTypes.number,
 }
