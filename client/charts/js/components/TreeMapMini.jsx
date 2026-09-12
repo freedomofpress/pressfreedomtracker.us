@@ -3,14 +3,14 @@ import * as d3 from 'd3'
 import { computeMinimumNumberOfIncidents, stackDatasetByCategory } from './TreeMap'
 import { colors } from '../lib/utilities'
 
-export default ({
+export default function TreeMapMini({
 	data,
 	categoryColumn,
 	allCategories,
 	categoriesColors,
 	width = 655,
 	height = 440,
-}) => {
+}) {
 	const minimumNumberOfIncidents = computeMinimumNumberOfIncidents(data, width, 0)
 
 	const datasetStackedByCategory = stackDatasetByCategory(

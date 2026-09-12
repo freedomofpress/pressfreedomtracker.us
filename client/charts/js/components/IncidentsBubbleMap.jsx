@@ -9,7 +9,7 @@ import { ParentSize } from '@visx/responsive'
 import ChartDownloader from './ChartDownloader'
 import USMap from './USMap'
 
-export default ({
+export default function IncidentsBubbleMap({
 	dataset,
 	title,
 	description,
@@ -22,7 +22,7 @@ export default ({
 	interactive = true,
 	fullSize,
 	domainMax,
-}) => {
+}) {
 	const aggregationLocalityMap = { state: groupByState, city: groupByCity }
 	const aggregationLocalityFnMap = { state: d => d.state, city: d => `${d.city}, ${d.state}` }
 

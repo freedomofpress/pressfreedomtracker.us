@@ -5,7 +5,7 @@ import ChartDownloader from './ChartDownloader'
 import TreeMap from './TreeMap'
 import TreeMapMini from './TreeMapMini'
 
-export default ({
+export default function IncidentsTreeMap({
 	dataset,
 	title,
 	description,
@@ -19,7 +19,7 @@ export default ({
 	branches,
 	interactive = true,
 	fullSize = true,
-}) => {
+}) {
 	// Filter down to the categories and tags and date range we want
 	const filteredDataset = filterDatasets(dataset, filterCategories, filterTags, dateRange, filterStates)
 
