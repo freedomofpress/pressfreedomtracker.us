@@ -252,7 +252,7 @@ export default function FilterSet({ filters, handleFilterChange, filterParameter
 	const components = filters.map((filter, index) => {
 		if (filter.name === 'search' || filter.name === 'tags') {
 			return
-		} else if (!filterParameters.hasOwnProperty(filter.name)) {
+		} else if (!Object.hasOwn(filterParameters, filter.name)) {
 			console.warn(`no filter parameters defined for filter "${filter.name}"`)
 			return
 		} else if (filter.name == 'tags') {

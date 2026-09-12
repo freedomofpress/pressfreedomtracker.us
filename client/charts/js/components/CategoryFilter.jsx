@@ -86,7 +86,7 @@ export default function CategoryFilter({
 		let targetCategory
 		if (typeof d == 'string') {
 			targetCategory = d
-		} else if (d.hasOwnProperty('category')) {
+		} else if (Object.hasOwn(d, 'category')) {
 			targetCategory = d.category
 		} else {
 			console.log("else")
