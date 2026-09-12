@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
 import { AnimatedDataset } from 'react-animated-dataset'
@@ -92,6 +92,14 @@ export default function BarChart({
 	// `undefined` here rather than returning early above when data is empty.
 	const [sliderSelection, setSliderSelection] = useState(dataset[0]?.index)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+
+	// Stable identity (setSliderSelection/setHoveredElement are useState setters,
+	// which React guarantees never change) so Slider's effect can safely depend
+	// on it without refiring on every unrelated BarChart re-render.
+	const handleSliderSelection = useCallback((d) => {
+		setSliderSelection(d)
+		setHoveredElement(null)
+	}, [])
 
 	if (!data.length) return null
 
@@ -525,10 +533,7 @@ export default function BarChart({
 					elements={dataset.map((d) => d[x])}
 					xScale={xSlider}
 					y={height - paddings.bottom / 2}
-					setSliderSelection={(d) => {
-						setSliderSelection(d);
-						setHoveredElement(null);
-					}}
+					setSliderSelection={handleSliderSelection}
 					sliderSelection={sliderSelection}
 					idContainer={'barchart-svg'}
 				/>
