@@ -21,6 +21,7 @@ const propTypes = {
 	name: PropTypes.string.isRequired,
 	placeholder: PropTypes.string.isRequired,
 	handleSelect: PropTypes.func.isRequired,
+	itemNameSingular: PropTypes.string.isRequired,
 	itemNamePlural: PropTypes.string.isRequired,
 };
 
