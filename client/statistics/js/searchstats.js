@@ -1,134 +1,152 @@
-import '../scss/statistics.scss'
-import ReactModal from 'react-modal'
-import PropTypes from 'prop-types'
+import "../scss/statistics.scss";
+import ReactModal from "react-modal";
+import PropTypes from "prop-types";
 
-const React = window.React
-const Modifier = window.DraftJS.Modifier
-const EditorState = window.DraftJS.EditorState
-const TooltipEntity = window.draftail.TooltipEntity
-const Icon = window.wagtail.components.Icon
+const React = window.React;
+const Modifier = window.DraftJS.Modifier;
+const EditorState = window.DraftJS.EditorState;
+const TooltipEntity = window.draftail.TooltipEntity;
+const Icon = window.wagtail.components.Icon;
 
-ReactModal.setAppElement('#wagtail')
+ReactModal.setAppElement("#wagtail");
 
 class SearchStatSource extends React.Component {
 	constructor(props) {
-		super(props)
+		super(props);
 
-		this.inputRef = React.createRef()
+		this.inputRef = React.createRef();
 
-		const { entityKey, editorState } = props
-		let state
+		const { entityKey, editorState } = props;
+		let state;
 		if (entityKey) {
-			const contentState = editorState.getCurrentContent()
-			const { search, dataset } = contentState.getEntity(entityKey).getData()
+			const contentState = editorState.getCurrentContent();
+			const { search, dataset } = contentState.getEntity(entityKey).getData();
 			state = {
 				isLoading: false,
 				url: search,
-				dataset: dataset || 'TOTAL',
-			}
+				dataset: dataset || "TOTAL",
+			};
 		} else {
 			state = {
 				isLoading: false,
-				url: '',
-				dataset: 'TOTAL',
-			}
+				url: "",
+				dataset: "TOTAL",
+			};
 		}
 
-		this.onAfterOpen = this.onAfterOpen.bind(this)
-		this.onChangeUrl = this.onChangeUrl.bind(this)
-		this.onChangeDataset = this.onChangeDataset.bind(this)
-		this.onConfirm = this.onConfirm.bind(this)
-		this.onRequestClose = this.onRequestClose.bind(this)
-		this.state = state
+		this.onAfterOpen = this.onAfterOpen.bind(this);
+		this.onChangeUrl = this.onChangeUrl.bind(this);
+		this.onChangeDataset = this.onChangeDataset.bind(this);
+		this.onConfirm = this.onConfirm.bind(this);
+		this.onRequestClose = this.onRequestClose.bind(this);
+		this.state = state;
 	}
 
 	onAfterOpen() {
-		const input = this.inputRef.current
+		const input = this.inputRef.current;
 
 		if (input) {
-			input.focus()
-			input.select()
+			input.focus();
+			input.select();
 		}
 	}
 
 	onChangeDataset(e) {
 		if (e.target instanceof HTMLInputElement) {
-			const dataset = e.target.value
-			this.setState({ dataset })
+			const dataset = e.target.value;
+			this.setState({ dataset });
 		}
 	}
 
 	onChangeUrl(e) {
 		if (e.target instanceof HTMLInputElement) {
-			const url = e.target.value
-			this.setState({ url })
+			const url = e.target.value;
+			this.setState({ url });
 		}
 	}
 
 	onRequestClose(e) {
-		const { onClose } = this.props
-		e.preventDefault()
+		const { onClose } = this.props;
+		e.preventDefault();
 
-		onClose()
+		onClose();
 	}
 
 	onConfirm(e) {
-		e.preventDefault()
+		e.preventDefault();
 
-		this.setState({ isLoading: true })
+		this.setState({ isLoading: true });
 
-		const { editorState, entityType, onComplete } = this.props
-		const content = editorState.getCurrentContent()
-		const selection = editorState.getSelection()
-		let nextState
-		const { url, dataset } = this.state
+		const { editorState, entityType, onComplete } = this.props;
+		const content = editorState.getCurrentContent();
+		const selection = editorState.getSelection();
+		let nextState;
+		const { url, dataset } = this.state;
 
-		const summaryUrl = new URL(url)
-		summaryUrl.pathname = '/all-incidents/summary/'
+		const summaryUrl = new URL(url);
+		summaryUrl.pathname = "/all-incidents/summary/";
 
 		fetch(summaryUrl.href)
 			.then((response) => response.json())
 			.then((data) => {
-				this.setState({ isLoading: false })
-				const params = {}
-				let count
-				if (dataset === 'TOTAL') {
-					count = data.total
-				} else if (dataset === 'INSTITUTIONS') {
-					count = data.institutions
-				} else if (dataset === 'JOURNALISTS') {
-					count = data.journalists
+				this.setState({ isLoading: false });
+				const params = {};
+				let count;
+				if (dataset === "TOTAL") {
+					count = data.total;
+				} else if (dataset === "INSTITUTIONS") {
+					count = data.institutions;
+				} else if (dataset === "JOURNALISTS") {
+					count = data.journalists;
 				} else {
-					count = 0
+					count = 0;
 				}
 
 				for (const [key, value] of summaryUrl.searchParams.entries()) {
-					params[`param_${key}`] = value
+					params[`param_${key}`] = value;
 				}
 
-				const contentWithEntity = content.createEntity(entityType.type, 'IMMUTABLE', {
-					count,
-					search: url,
-					dataset,
-					...params,
-				})
+				const contentWithEntity = content.createEntity(
+					entityType.type,
+					"IMMUTABLE",
+					{
+						count,
+						search: url,
+						dataset,
+						...params,
+					},
+				);
 
-				const entityKey = contentWithEntity.getLastCreatedEntityKey()
-				const text = `${count}`
+				const entityKey = contentWithEntity.getLastCreatedEntityKey();
+				const text = `${count}`;
 
-				const newContent = Modifier.replaceText(content, selection, text, null, entityKey)
-				nextState = EditorState.push(editorState, newContent, 'insert-characters')
+				const newContent = Modifier.replaceText(
+					content,
+					selection,
+					text,
+					null,
+					entityKey,
+				);
+				nextState = EditorState.push(
+					editorState,
+					newContent,
+					"insert-characters",
+				);
 			})
 			.catch((error) => {
-				window.alert('Error while constructing statistics. Please check that the URL is correct.')
-				console.error(error)
+				window.alert(
+					"Error while constructing statistics. Please check that the URL is correct.",
+				);
+				console.error(error);
 			})
-			.finally(() => { onComplete(nextState) })
+			.finally(() => {
+				onComplete(nextState);
+			});
 	}
 
 	render() {
-		const { url } = this.state
-		const datasets = ['Total', 'Journalists', 'Institutions']
+		const { url } = this.state;
+		const datasets = ["Total", "Journalists", "Institutions"];
 		return (
 			<ReactModal
 				isOpen
@@ -140,7 +158,9 @@ class SearchStatSource extends React.Component {
 			>
 				<form onSubmit={this.onConfirm}>
 					<fieldset>
-						<legend className="admin-modal__legend">Select dataset for statistic:</legend>
+						<legend className="admin-modal__legend">
+							Select dataset for statistic:
+						</legend>
 						{datasets.map((dataset, index) => (
 							<p className="admin-modal__dataset_field" key={index}>
 								<label className="admin-modal__label">
@@ -158,7 +178,9 @@ class SearchStatSource extends React.Component {
 					</fieldset>
 
 					<p>
-						<label className="admin-modal__label" htmlFor="url">Enter a URL:</label>
+						<label className="admin-modal__label" htmlFor="url">
+							Enter a URL:
+						</label>
 						<input
 							ref={this.inputRef}
 							type="url"
@@ -171,19 +193,26 @@ class SearchStatSource extends React.Component {
 						/>
 					</p>
 					<p>
-						Perform a search on the
-						{' '}
-						<a href="https://pressfreedomtracker.us/">main site</a>
-						{' '}
-						for incidents to include in this statistic and copy the URL here.
+						Perform a search on the{" "}
+						<a href="https://pressfreedomtracker.us/">main site</a> for
+						incidents to include in this statistic and copy the URL here.
 					</p>
-					<button className="button button-secondary no" onClick={this.onRequestClose}>Cancel</button>
-					<button className="button" type="submit" disabled={this.state.isLoading}>
-						{this.state.isLoading ? 'Loading...' : 'Save'}
+					<button
+						className="button button-secondary no"
+						onClick={this.onRequestClose}
+					>
+						Cancel
+					</button>
+					<button
+						className="button"
+						type="submit"
+						disabled={this.state.isLoading}
+					>
+						{this.state.isLoading ? "Loading..." : "Save"}
 					</button>
 				</form>
 			</ReactModal>
-		)
+		);
 	}
 }
 
@@ -195,28 +224,28 @@ SearchStatSource.propTypes = {
 	}).isRequired,
 	onComplete: PropTypes.func.isRequired,
 	onClose: PropTypes.func.isRequired,
-}
+};
 
 const getStatAttributes = (data) => {
-	const searchUrl = data.search || null
-	const { dataset } = data
-	const icon = <Icon name="cog" />
+	const searchUrl = data.search || null;
+	const { dataset } = data;
+	const icon = <Icon name="cog" />;
 
-	const url = searchUrl
-	let label
-	if (dataset === 'TOTAL') {
-		label = 'Incident count'
-	} else if (dataset === 'INSTITUTIONS') {
-		label = 'Institutions affected'
-	} else if (dataset === 'JOURNALISTS') {
-		label = 'Journalists affected'
+	const url = searchUrl;
+	let label;
+	if (dataset === "TOTAL") {
+		label = "Incident count";
+	} else if (dataset === "INSTITUTIONS") {
+		label = "Institutions affected";
+	} else if (dataset === "JOURNALISTS") {
+		label = "Journalists affected";
 	} else {
-		label = ''
+		label = "";
 	}
 
 	for (const [key, value] of Object.entries(data)) {
-		if (key.startsWith('param_')) {
-			label += ` ${key.replace('param_', '')}='${value}'`
+		if (key.startsWith("param_")) {
+			label += ` ${key.replace("param_", "")}='${value}'`;
 		}
 	}
 
@@ -224,28 +253,24 @@ const getStatAttributes = (data) => {
 		url,
 		icon,
 		label,
-	}
-}
+	};
+};
 
 const SearchStat = function (props) {
-	const { entityKey, contentState } = props
+	const { entityKey, contentState } = props;
 
-	const data = contentState.getEntity(entityKey).getData()
+	const data = contentState.getEntity(entityKey).getData();
 
-	return (
-		<TooltipEntity {...props} {...getStatAttributes(data)} />
-	)
-}
+	return <TooltipEntity {...props} {...getStatAttributes(data)} />;
+};
 
 SearchStat.propTypes = {
 	entityKey: PropTypes.string.isRequired,
 	contentState: PropTypes.object.isRequired,
-}
+};
 
-window.draftail.registerPlugin(
-	{
-		type: 'SEARCHSTAT',
-		source: SearchStatSource,
-		decorator: SearchStat,
-	},
-)
+window.draftail.registerPlugin({
+	type: "SEARCHSTAT",
+	source: SearchStatSource,
+	decorator: SearchStat,
+});
