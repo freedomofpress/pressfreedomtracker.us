@@ -11,7 +11,7 @@ export default function Slider({ elements, xScale, y, setSliderSelection, slider
 		setSliderSelection(first(elements))
 	}, [first(elements)])
 
-	function stopMovingSlider(event) {
+	function stopMovingSlider(_event) {
 		window.removeEventListener('mouseup', onSliderReleaseRef.current)
 		window.removeEventListener('touchend', onSliderReleaseRef.current)
 		onSliderReleaseRef.current = null
