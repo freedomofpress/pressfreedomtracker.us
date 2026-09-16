@@ -4,11 +4,13 @@ import json
 from collections import Counter
 from io import StringIO
 
+from django.core.management import call_command
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 from django.views.generic import View
 from django.views.generic.edit import FormView
 
@@ -128,6 +130,12 @@ def dates_between(lower, upper):
     while current <= upper:
         yield current
         current += datetime.timedelta(days=1)
+
+
+@require_POST
+def prepub_sync(request):
+    call_command("sync_prepubs")
+    return redirect("wagtailadmin_home")
 
 
 def prepub_list(request):
