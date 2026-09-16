@@ -43,7 +43,7 @@ export const TIME_PRESETS = {
 }
 
 
-// These values are also set in sass at client/common/sass/_responsive.sass
+// These values are also set in sass at client/common/scss/_responsive.scss
 export const mobileMax = 768;
 export const tabletMax = 1152;
 export const desktopMax = 1440;

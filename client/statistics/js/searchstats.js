@@ -1,4 +1,4 @@
-import '../sass/statistics.sass'
+import '../scss/statistics.scss'
 import ReactModal from 'react-modal'
 
 const React = window.React

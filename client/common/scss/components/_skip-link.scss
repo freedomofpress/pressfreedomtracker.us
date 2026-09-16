@@ -1,0 +1,27 @@
+@use "../colors";
+
+.skip-link {
+	position: absolute;
+	background: colors.$black;
+	padding: 1.5rem 3rem;
+	font-weight: 700;
+	line-height: 1;
+	z-index: 1011;
+
+	&:link,
+	&:visited {
+		color: colors.$white;
+		text-decoration: none;
+	}
+
+	&:not(:focus) {
+		white-space: nowrap;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		border: 0;
+		padding: 0;
+		clip-path: inset(50%);
+		margin: -1px;
+	}
+}

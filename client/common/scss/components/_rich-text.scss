@@ -1,0 +1,35 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
+.rich-text {
+	p {
+		font-size: typography.$font-size-p;
+		line-height: 1.33;
+		font-weight: 400;
+
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-p-desktop;
+		}
+	}
+
+	a {
+		font-size: typography.$font-size-p;
+		font-weight: 400;
+		line-height: 1.33;
+		color: colors.$black;
+
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-p-desktop;
+		}
+
+		&:focus {
+			outline: colors.$black solid 3px;
+			outline-offset: 2px;
+		}
+
+		&:hover {
+			background-color: colors.$accent-color;
+		}
+	}
+}

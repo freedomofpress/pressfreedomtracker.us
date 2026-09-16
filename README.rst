@@ -37,6 +37,12 @@ The installation instructions below assume you have the following software on yo
 
 * `docker <https://docs.docker.com/engine/installation/>`_
 * `docker compose <https://docs.docker.com/compose/install/>`_
+* `just <https://github.com/casey/just#installation>`_, which runs the
+  project's developer commands.  Run ``just`` on its own at any point to
+  list them.
+
+`Podman <https://podman.io/docs/installation>`_ works too, provided it has
+"compose" support.  Set ``CONTAINER_ENGINE=podman`` to select it.
 
 Local Development instructions
 ------------------------------
@@ -48,14 +54,12 @@ environment, run the following your first run:
 
 .. code:: bash
 
-    # One-time command to run and forget
-    make dev-init
-
-    # Starts up the environment
-    docker compose up
+    # Starts up the environment (records your host UID in .env on the way,
+    # so a bare `docker compose up` works afterwards too)
+    just dev
 
     # Inject development data (also only needs to be run once)
-    docker compose exec django ./manage.py createdevdata
+    just createdevdata
 
     # install pre-commit and set up hooks
     pip install pre-commit
@@ -65,7 +69,7 @@ environment, run the following your first run:
     # Add wagtail inventory to search wagtail pages by block type
     docker compose exec django ./manage.py block_inventory
 
-You should be able to hit the web server interface by running ``make open-browser``
+You should be able to hit the web server interface by running ``just open-browser``
 
 If you run into any issues starting the application locally, check the `troubleshooting doc <TROUBLESHOOTING.md>`_ for solutions to common problems.
 
@@ -88,7 +92,7 @@ To test your frontend code with jest, you can run the following command:
 
 .. code:: bash
 
-    docker compose exec node npm test
+    just test-js
 
 If tests need to be updated, you can run the following command:
 
@@ -161,11 +165,11 @@ Add the desired dependency to the appropriate ``.in`` file, then run:
 
 .. code:: bash
 
-    make compile-pip-dependencies
+    just pip-compile
 
 All requirements files will be regenerated based on compatible versions. Multiple ``.in``
-files can be merged into a single ``.txt`` file, for use with ``pip``. The Makefile
-target handles the merging of multiple files.
+files can be merged into a single ``.txt`` file, for use with ``pip``. The just
+recipe handles the merging of multiple files.
 
 This process is the same if a requirement needs to be changed (i.e. its version number restricted) or removed.  Make the appropriate change in the correct ``requirements.in`` file, then run the above command to compile the dependencies.
 
@@ -176,7 +180,7 @@ There are separate commands to upgrade a package without changing the ``requirem
 
 .. code:: bash
 
-    make pip-update PACKAGE=package-name
+    just pip-compile --upgrade-package=package-name
 
 will update the package named ``package-name`` to the latest version allowed by the constraints in ``requirements.in`` and compile a new ``dev-requirements.txt`` and ``requirements.txt`` based on that version.
 
@@ -184,7 +188,7 @@ If the package appears only in ``dev-requirements.in``, then you must use this c
 
 .. code:: bash
 
-    make pip-dev-update PACKAGE=package-name
+    just pip-compile-dev --upgrade-package=package-name
 
 which will update the package named ``package-name`` to the latest version allowed by the constraints in ``requirements.in`` and compile a new ``dev-requirements.txt``.
 
@@ -196,15 +200,15 @@ Database import
 +++++++++++++++
 
 Drop a postgres database dump into the root of the repo and rename it to
-``import.db``. To import it into a running dev session (ensure ``make dev-go`` has
-already been started) run ``make dev-import-db``. Note that this will not pull in
+``import.db``. To import it into a running dev session (ensure ``just dev`` has
+already been started) run ``just import-db``. Note that this will not pull in
 images that are referenced from an external site backup.
 
 
 Connect to postgresql service from host
 +++++++++++++++++++++++++++++++++++++++
 
-The postgresql service is exposed to your host on port ``15432``. If you have a GUI
+The postgresql service is exposed to your host on ``127.0.0.1:5432``. If you have a GUI
 database manipulation application you'd like to utilize, your settings will be:
 
 * username - ``tracker``
@@ -222,7 +226,7 @@ reverse nginx proxy, and debug mode off using the following command:
 
     docker compose -f prod-docker-compose.yaml up
 
-All subsequent docker compose files will need that explicit ``-f`` flag pointing
+All subsequent docker compose commands will need that explicit ``-f`` flag pointing
 to the production-like compose file.
 
 Database snapshots
@@ -235,13 +239,13 @@ therefore helpful to be able to easily restore the database to a
 known-good state when making experimental changes.  There are two
 commands provided to assist in this.
 
-``make dev-save-db``: Saves a snapshot of the current state of the
+``just save-db``: Saves a snapshot of the current state of the
 database to a file in the ``db-snapshots`` folder.  This file is named
 for the currently checked-out git branch.
 
-``make dev-restore-db``: Restores the most recent snapshot for the
+``just restore-db``: Restores the most recent snapshot for the
 currently checked-out git branch.  If none can be found, that is,
-``make dev-save-db`` has never been run for the current branch, this
+``just save-db`` has never been run for the current branch, this
 command will do nothing.  If a saved database is found, all data in
 database will be replaced with that from the file.  Note that this
 command will terminate all connections to the database and delete all
@@ -250,7 +254,7 @@ data there, so care is encouraged.
 Workflow suggestions.  I find it helpful to have one snapshot for each
 active branch I'm working on or reviewing, as well as for develop.
 Checking out a new branch and running its migrations should be
-followed by running ``make dev-save-db`` to give you a baseline to
+followed by running ``just save-db`` to give you a baseline to
 return to when needed.
 
 When checking out a new branch after working on another, it can be
@@ -286,7 +290,13 @@ for production use, run:
 
 .. code:: bash
 
-    docker build --build-arg USERID=1000 -t TAG -f devops/docker/ProdDjangoDockerfile .
+    docker build -t TAG -f ci/containers/Containerfile --target prod .
+
+and for the chart pregenerator service:
+
+.. code:: bash
+
+    docker build -t TAG -f ci/containers/Containerfile --target chartgen .
 
 Running
 -------------

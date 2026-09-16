@@ -1,0 +1,30 @@
+@use "../responsive";
+@use "../typography";
+
+.paragraph {
+	font-size: typography.$font-size-p;
+	line-height: 1.33;
+	font-weight: 400;
+
+	&-subtitle {
+		line-height: 1.5;
+		font-weight: 700;
+
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-p-desktop;
+		}
+	}
+
+	&-notes {
+		font-size: typography.$font-size-small-p;
+	}
+
+	&-small-ui {
+		font-size: typography.$font-size-small-ui;
+	}
+
+	&-number {
+		font-family: var(--font-mono);
+		font-size: typography.$font-size-number;
+	}
+}

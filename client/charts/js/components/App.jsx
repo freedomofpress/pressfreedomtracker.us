@@ -5,7 +5,7 @@ import HomepageMainCharts from "./HomepageMainCharts";
 import DataLoader from '../../../charts/js/components/DataLoader'
 import FiltersIntegration from "./FiltersIntegration";
 import IncidentsTimeBarChart from './IncidentsTimeBarChart';
-import "../../sass/base.sass";
+import "../../scss/base.scss";
 
 export default function App() {
 	const [dataset, setDataset] = useState(null);

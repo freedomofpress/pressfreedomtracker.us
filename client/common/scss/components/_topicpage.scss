@@ -1,0 +1,45 @@
+@use "../grid";
+@use "../responsive";
+
+.topicpage {
+	@include responsive.constrain-to-desktop;
+
+	&__inner {
+		@include responsive.desktop-up {
+			max-width: 908px;
+			margin: auto;
+		}
+	}
+
+	&__block {
+		@include responsive.desktop-up {
+			max-width: 673px;
+			margin-left: auto;
+			margin-right: 0;
+		}
+	}
+
+	img {
+		max-width: 100%;
+	}
+}
+
+.topicpage-body {
+	@include grid.grid-container;
+
+	&__content {
+		grid-column: 1 / -1;
+
+		@include responsive.tablet-up {
+			grid-column: 1 / 9;
+		}
+	}
+
+	&__sidebar {
+		grid-column: 1 / -1;
+
+		@include responsive.tablet-up {
+			grid-column: 9 / -1;
+		}
+	}
+}

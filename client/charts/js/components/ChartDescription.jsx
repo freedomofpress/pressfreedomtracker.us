@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../sass/ChartDescription.sass'
+import '../../scss/ChartDescription.scss'
 
 export default function ChartDescription({ id, children }) {
 	return (

@@ -20,7 +20,7 @@ import {
 	TIME_PRESETS,
 } from '../lib/utilities.js'
 
-import '../../sass/HomepageMainCharts.sass'
+import '../../scss/HomepageMainCharts.scss'
 
 export default function HomepageMainCharts(props) {
 	return (

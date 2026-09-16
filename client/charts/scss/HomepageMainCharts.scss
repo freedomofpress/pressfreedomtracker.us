@@ -1,0 +1,25 @@
+@mixin large-screen {
+	@media (width >= 1000px) {
+		@content;
+	}
+}
+
+.hpChartContainer {
+	@include large-screen {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
+	}
+}
+
+.hpChart {
+	display: table;
+	width: 100%;
+}
+
+.hpBarChartAxisLabel {
+	text-align: center;
+	font-family: var(--font-base);
+	font-weight: 500;
+	font-size: 14px;
+}
