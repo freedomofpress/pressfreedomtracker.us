@@ -10,7 +10,7 @@
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage",
     "js-lint": "eslint client/**/*.js chart_pregenerator/src/**/*.jsx",
-    "stylelint": "stylelint client/**/*.scss"
+    "stylelint": "stylelint \"client/**/*.scss\""
   },
   "author": "Harris Lapiroff <harris@littleweaverweb.com>",
   "browserslist": [
