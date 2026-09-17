@@ -1,25 +1,30 @@
-import React from 'react'
+import React from "react";
 
-export default function CheckBoxesYear({ width, options, selectedYears, onClick }) {
-	const side = 20
+export default function CheckBoxesYear({
+	width,
+	options,
+	selectedYears,
+	onClick,
+}) {
+	const side = 20;
 
 	return (
-		<div style={{ width, display: 'flex', flexDirection: 'column' }}>
+		<div style={{ width, display: "flex", flexDirection: "column" }}>
 			{options.map((d) => (
 				<div key={d.year}>
 					<div
 						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
+							display: "flex",
+							flexDirection: "row",
+							justifyContent: "space-between",
 						}}
 					>
 						<div
 							style={{
-								display: 'flex',
-								flexDirection: 'row',
+								display: "flex",
+								flexDirection: "row",
 								fontSize: 14,
-								alignItems: 'center',
+								alignItems: "center",
 								marginBottom: 16,
 							}}
 						>
@@ -30,18 +35,26 @@ export default function CheckBoxesYear({ width, options, selectedYears, onClick 
 								onChange={() => onClick(d)}
 							/>
 
-							<div style={{ flexDirection: 'row', marginLeft: 10, fontFamily: 'var(--font-base)' }}>
+							<div
+								style={{
+									flexDirection: "row",
+									marginLeft: 10,
+									fontFamily: "var(--font-base)",
+								}}
+							>
 								{d.year}
 							</div>
 						</div>
 
 						<div
 							style={{
-								display: 'flex',
+								display: "flex",
 								fontSize: 12,
 								height: 15,
-								fontFamily: 'Helvetica Neue',
-								backgroundColor: selectedYears.includes(d.year) ? '#F2FC67' : 'white',
+								fontFamily: "Helvetica Neue",
+								backgroundColor: selectedYears.includes(d.year)
+									? "#F2FC67"
+									: "white",
 								padding: 3,
 							}}
 						>
@@ -51,5 +64,5 @@ export default function CheckBoxesYear({ width, options, selectedYears, onClick 
 				</div>
 			))}
 		</div>
-	)
+	);
 }
