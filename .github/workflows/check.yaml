@@ -130,6 +130,10 @@ jobs:
             stack: false
           - target: stylelint
             stack: false
+          - target: pnglint
+            stack: false
+          - target: svglint
+            stack: false
           - target: test-js
             name: dev-jest-tests
             stack: false
