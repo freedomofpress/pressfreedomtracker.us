@@ -27,6 +27,7 @@ var common = {
 		treeMapChart: __dirname + "/client/charts/js/tree-map-chart.js",
 		bubbleMapChart: __dirname + "/client/charts/js/bubble-map-chart.js",
 		hexbinMapChart: __dirname + "/client/charts/js/hexbin-map-chart.js",
+		"shortcuts-panel": __dirname + "/client/common/js/shortcuts-panel.js",
 	},
 
 	output: {
