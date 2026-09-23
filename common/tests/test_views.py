@@ -372,3 +372,30 @@ class TooManyRequestsTestCase(TestCase):
     def test_too_many_requests_uses_correct_template(self):
         with self.assertTemplateUsed("429.html"):
             self.response = self.client.get(reverse("too_many_requests"))
+
+
+class SyncPrepubViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create(username="testadmin", is_superuser=True)
+
+    def test_forbidden_if_not_logged_in(self):
+        target_url = reverse("prepub-sync")
+
+        response = self.client.get(target_url)
+        expected_url = (
+            reverse("wagtailadmin_login") + "?" + urlencode({"next": target_url})
+        )
+        self.assertRedirects(response, expected_url)
+
+    def test_disallows_get_requests(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("prepub-sync"))
+        self.assertEqual(response.status_code, 405)
+
+    @mock.patch("incident.views.call_command")
+    def test_succeeds_if_posted_while_logged_in(self, mock_call_command):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse("prepub-sync"))
+        mock_call_command.assert_called_once_with("sync_prepubs")
+        self.assertRedirects(response, reverse("wagtailadmin_home"))
