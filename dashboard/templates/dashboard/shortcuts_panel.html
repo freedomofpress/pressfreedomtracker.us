@@ -52,6 +52,13 @@
 				</ul>
 			</details>
 		{% endif %}
+		<form method="post" action="{% url 'prepub-sync' %}">
+			{# We can't use the csrf_token tag here because this template is part of a Component that does not render with a RequestContext #}
+			<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+			<button type="submit" class="button btn-rerun-sync">
+				{% include "wagtailadmin/icons/rotate.svg" %} Rerun sync
+			</button>
+		</form>
 	</div>
 	{% endpanel %}
 {% endif %}

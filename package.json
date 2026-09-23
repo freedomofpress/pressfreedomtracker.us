@@ -10,7 +10,7 @@
     "test": "jest --passWithNoTests --coverage",
     "test-update": "jest -u --passWithNoTests --coverage",
     "js-lint": "eslint client/**/*.js chart_pregenerator/src/**/*.jsx",
-    "stylelint": "stylelint client/**/*.scss"
+    "stylelint": "stylelint \"client/**/*.scss\""
   },
   "author": "Harris Lapiroff <harris@littleweaverweb.com>",
   "browserslist": [
@@ -43,6 +43,7 @@
     "sass-loader": "^17.0.1",
     "stylelint": "^17.15.0",
     "stylelint-config-standard-scss": "^17.0.0",
+    "svgo": "4.1.0",
     "watchpack": "^2.5.2",
     "webpack": "^5.74.0",
     "webpack-bundle-tracker": "^3.2.4",
