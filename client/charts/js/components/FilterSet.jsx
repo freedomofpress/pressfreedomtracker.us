@@ -210,7 +210,6 @@ export default function FilterSet({
 	filterParameters,
 	width,
 	dataset,
-	filterWithout: _filterWithout,
 }) {
 	const components = filters.map((filter, index) => {
 		if (filter.name === "search" || filter.name === "tags") {
