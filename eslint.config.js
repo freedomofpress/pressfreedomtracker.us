@@ -76,6 +76,9 @@ module.exports = [
 			// extension-less imports. Leave path resolution unchecked until
 			// that export is restructured.
 			"import/no-unresolved": "off",
+
+			// prop-types is going away in React 19
+			"react/prop-types": "off",
 		},
 	},
 
