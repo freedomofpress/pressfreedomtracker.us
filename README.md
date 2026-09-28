@@ -348,16 +348,6 @@ changing things appropriately:
 This list is incomplete; please open an issues if you run into something
 missing.
 
-## Adobe Font Licenses
-
-Licenses for [Source Serif
-Pro](https://github.com/adobe-fonts/source-serif-pro) and [Source Sans
-Pro](https://github.com/adobe-fonts/source-sans-pro) are available at
-the paths below.
-
-- [common/static/fonts/LICENSE.SourceSansPro.txt]{.title-ref}
-- [common/static/fonts/LICENSE.SourceSerifPro.txt]{.title-ref}
-
 ## Design decision notes
 
 ### Search
