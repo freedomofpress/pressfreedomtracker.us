@@ -42,6 +42,7 @@
 		"postcss": "^8.5.28",
 		"postcss-loader": "^8.2.1",
 		"postcss-scss": "^4.0.9",
+		"prettier": "^3.9.9",
 		"react-test-renderer": "^18.2.0",
 		"sass": "^1.104.0",
 		"sass-loader": "^17.0.1",
