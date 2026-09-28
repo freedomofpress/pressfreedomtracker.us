@@ -15,7 +15,11 @@ const jsFiles = [
 
 module.exports = [
 	{
-		ignores: ["coverage/**", "build/**"],
+		ignores: [
+			"coverage/**",
+			"build/**",
+			"build/static/js/picturefill.3.0.2.min.js",
+		],
 	},
 
 	{ files: jsFiles, ...js.configs.recommended },
