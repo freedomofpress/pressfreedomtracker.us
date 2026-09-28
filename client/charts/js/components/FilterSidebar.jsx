@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import * as d3 from "d3";
 import FiltersIntegration from "./FiltersIntegration";
 import { decode } from "../lib/queryString";
@@ -62,8 +61,3 @@ export default function FilterSidebar({
 		/>
 	);
 }
-
-FilterSidebar.propTypes = {
-	serializedFilters: PropTypes.string.isRequired,
-	initialDataset: PropTypes.array,
-};
