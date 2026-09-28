@@ -1,8 +1,7 @@
 # U.S. Press Freedom Tracker
 
-[!NOTE]
-By contributing to this project, you agree to abide by our [Code of
-Conduct](https://github.com/freedomofpress/.github/blob/main/CODE_OF_CONDUCT.md).
+> [!NOTE]
+> By contributing to this project, you agree to abide by our [Code of Conduct](https://github.com/freedomofpress/.github/blob/main/CODE_OF_CONDUCT.md).
 
 This is the code that powers the U.S. Press Freedom Tracker website. It
 is built with Wagtail and served at
