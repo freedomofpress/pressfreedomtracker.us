@@ -35,14 +35,8 @@ Prerequisites
 
 The installation instructions below assume you have the following software on your machine:
 
-* `docker <https://docs.docker.com/engine/installation/>`_
-* `docker compose <https://docs.docker.com/compose/install/>`_
-* `just <https://github.com/casey/just#installation>`_, which runs the
-  project's developer commands.  Run ``just`` on its own at any point to
-  list them.
-
-`Podman <https://podman.io/docs/installation>`_ works too, provided it has
-"compose" support.  Set ``CONTAINER_ENGINE=podman`` to select it.
+* `docker <https://docs.docker.com/engine/installation/>`_ or `podman <https://podman.io/docs/installation>`_, with "compose" support
+* `just <https://github.com/casey/just>`_
 
 Local Development instructions
 ------------------------------
@@ -65,11 +59,11 @@ environment, run the following your first run:
     pip install pre-commit
     pre-commit install
 
-    # NOTE: temporarily not available due to incompatibility with wagtail 2.7
-    # Add wagtail inventory to search wagtail pages by block type
-    docker compose exec django ./manage.py block_inventory
+You should be able to hit the web server interface by running ``just open-browser``:
 
-You should be able to hit the web server interface by running ``just open-browser``
+.. code:: bash
+
+    just open-browser
 
 If you run into any issues starting the application locally, check the `troubleshooting doc <TROUBLESHOOTING.md>`_ for solutions to common problems.
 
@@ -81,12 +75,12 @@ by default.  To disable this behavior, run the command with the
 
     docker compose exec django ./manage.py createdevdata --no-download
 
-To reset your database back to its initial state, I recommend removing the postgresql docker container and re-running the dev data command.  First, stop your containers by pressing control+c if they are running.  Then run these two commands.
+To reset your database back to its initial state, remove the postgresql container and re-run the createdevdata command.  First, stop your containers by pressing Control-C if they are running. Then, run these two commands.
 
 .. code:: bash
 
     docker compose rm -f postgresql && docker compose up --build
-    docker compose exec django ./manage.py createdevdata
+    just createdevdata
 
 To test your frontend code with jest, you can run the following command:
 
@@ -208,8 +202,7 @@ images that are referenced from an external site backup.
 Connect to postgresql service from host
 +++++++++++++++++++++++++++++++++++++++
 
-The postgresql service is exposed to your host on ``127.0.0.1:5432``. If you have a GUI
-database manipulation application you'd like to utilize, your settings will be:
+To connect to the database, use the following credentials:
 
 * username - ``tracker``
 * password - ``trackerpassword``
