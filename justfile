@@ -50,6 +50,14 @@ alias compose := dev
 build: env-check
     {{compose}} build
 
+# Build the production image locally.
+build-prod: env-check
+    {{compose}} --file=prod-docker-compose.yaml build
+
+# Run the webapp prod-like (gunicorn, DEBUG off), via containers; `dev`'s analog.
+prod: build-prod
+    {{compose}} --file=prod-docker-compose.yaml up
+
 # The static checks below run with `--no-deps`: their tooling is baked into the
 # dev images, so they need neither postgres, selenium, the webpack watcher nor
 # the chart pregenerator. That keeps them usable without `just dev` running,
@@ -146,6 +154,10 @@ open-browser:
     COMPOSE="{{compose}}" ./ci/scripts/browser-open.sh
 
 alias browser := open-browser
+
+# Attach to the running Django container's console, e.g. for ipdb.
+attach:
+    {{engine}} attach $({{compose}} ps -q django)
 
 # Recompile prod + ci + dev lockfiles (forward flags, e.g. --upgrade or --upgrade-package=NAME).
 pip-compile *FLAGS: (_pip-lock "requirements.txt" "requirements.in" FLAGS) (_pip-lock "ci-requirements.txt" "ci-requirements.in" FLAGS) (_pip-lock "dev-requirements.txt" "dev-requirements.in" FLAGS)
