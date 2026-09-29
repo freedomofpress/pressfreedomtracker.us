@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import * as d3 from "d3";
-import "regenerator-runtime/runtime";
 
 function Loader() {
 	return <div>Loading...</div>;
