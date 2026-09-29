@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import * as d3 from "d3";
 import "regenerator-runtime/runtime";
 
@@ -124,23 +123,6 @@ function DataLoader({
 	// Clone children with the added data prop and return it
 	return React.cloneElement(children, data);
 }
-
-DataLoader.propTypes = {
-	dataUrl: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.arrayOf(PropTypes.string),
-	]).isRequired,
-	dataParser: PropTypes.oneOfType([
-		PropTypes.func,
-		PropTypes.arrayOf(PropTypes.func),
-	]),
-	dataKey: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.arrayOf(PropTypes.string),
-	]),
-	loadingComponent: PropTypes.node,
-	children: PropTypes.node,
-};
 
 DataLoader.defaultProps = {
 	dataParser: (data) => d3.csvParse(data, d3.autoType),

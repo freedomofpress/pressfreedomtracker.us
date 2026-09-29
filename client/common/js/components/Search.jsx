@@ -1,6 +1,5 @@
 import React, { useState, createRef } from "react";
 import classNames from "classnames";
-import PropTypes from "prop-types";
 import CategoryIcon from "./categoryIcon";
 import { chooseTrendingTags } from "../../../charts/js/components/HomepageSelection";
 
@@ -302,11 +301,6 @@ export default function Search({ data = [], selectedTags = [] }) {
 		</form>
 	);
 }
-
-Search.propTypes = {
-	data: PropTypes.array,
-	selectedTags: PropTypes.array,
-};
 
 Search.defaultProps = {
 	data: [],

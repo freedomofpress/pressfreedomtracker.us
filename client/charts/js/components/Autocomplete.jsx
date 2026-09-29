@@ -1,8 +1,6 @@
 import React, { useReducer } from "react";
 import classNames from "classnames";
 
-import PropTypes from "prop-types";
-
 const initialState = {
 	// The active selection's index
 	activeSuggestion: 0,
@@ -12,16 +10,6 @@ const initialState = {
 	showSuggestions: false,
 	// What the user has entered
 	userInput: "",
-};
-
-const propTypes = {
-	suggestions: PropTypes.array.isRequired,
-	suggestionsLabelField: PropTypes.string.isRequired,
-	suggestionsSidenoteField: PropTypes.string.isRequired,
-	name: PropTypes.string.isRequired,
-	placeholder: PropTypes.string.isRequired,
-	handleSelect: PropTypes.func.isRequired,
-	itemNamePlural: PropTypes.string.isRequired,
 };
 
 const filterSuggestions = (query) => ({
@@ -185,7 +173,5 @@ const AutoComplete = ({
 		</>
 	);
 };
-
-AutoComplete.propTypes = propTypes;
 
 export default AutoComplete;
