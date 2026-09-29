@@ -69,7 +69,6 @@ var common = {
 				use: [
 					MiniCssExtractPlugin.loader,
 					"css-loader",
-					"postcss-loader",
 					{
 						loader: "sass-loader",
 
@@ -84,7 +83,7 @@ var common = {
 			},
 			{
 				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+				use: [MiniCssExtractPlugin.loader, "css-loader"],
 			},
 			{
 				test: /\.(png|svg|jpg|gif)$/,
