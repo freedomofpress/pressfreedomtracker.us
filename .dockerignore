@@ -42,7 +42,7 @@
 !package-lock.json
 !webpack.config.js
 !babel.config.js
-!postcss.config.js
+
 # the chart pregenerator is its own npm project; the `chartgen` stage copies it wholesale
 !chart_pregenerator
 
