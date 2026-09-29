@@ -137,6 +137,11 @@ test-js: node-modules
 createdevdata:
     {{compose}} exec django bash -c "./manage.py createdevdata"
 
+# Wipe the postgresql container and re-seed a fresh database via createdevdata.
+reset-db: env-check && createdevdata
+    {{compose}} rm -f postgresql
+    {{compose}} up --build --wait
+
 # Import a postgres export file located at ./import.db.
 import-db:
     {{compose}} exec -T postgresql bash -c "sed 's/OWNER TO [a-z]*/OWNER TO tracker/g' /django/import.db | psql trackerdb -U tracker > /dev/null"
