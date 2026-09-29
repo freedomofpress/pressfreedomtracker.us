@@ -145,7 +145,17 @@ function DatalistFilter({ name, label, value, choices, handleFilterChange }) {
 	);
 }
 
-function RadioFilter({ name, label, value, options, handleFilterChange }) {
+function RadioFilter({
+	name,
+	label,
+	value,
+	options = [
+		{ label: "Unknown", value: "NOTHING" },
+		{ label: "Yes", value: "JUST_TRUE" },
+		{ label: "No", value: "JUST_FALSE" },
+	],
+	handleFilterChange,
+}) {
 	let id = `id_${name}`;
 
 	return (
@@ -175,14 +185,6 @@ function RadioFilter({ name, label, value, options, handleFilterChange }) {
 		</div>
 	);
 }
-
-RadioFilter.defaultProps = {
-	options: [
-		{ label: "Unknown", value: "NOTHING" },
-		{ label: "Yes", value: "JUST_TRUE" },
-		{ label: "No", value: "JUST_FALSE" },
-	],
-};
 
 export function BoolFilter(props) {
 	return (

@@ -92,10 +92,10 @@ export function loadData({
 
 function DataLoader({
 	dataUrl,
-	dataParser,
-	dataKey,
-	loadingComponent,
-	children,
+	dataParser = (data) => d3.csvParse(data, d3.autoType),
+	dataKey = "data",
+	loadingComponent = <Loader />,
+	children = [],
 }) {
 	const [data, setData] = useState({});
 	const [loading, setLoading] = useState(true);
@@ -122,12 +122,5 @@ function DataLoader({
 	// Clone children with the added data prop and return it
 	return React.cloneElement(children, data);
 }
-
-DataLoader.defaultProps = {
-	dataParser: (data) => d3.csvParse(data, d3.autoType),
-	dataKey: "data",
-	loadingComponent: <Loader />,
-	children: [],
-};
 
 export default DataLoader;
