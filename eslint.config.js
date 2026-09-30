@@ -59,13 +59,7 @@ module.exports = [
 			react: {
 				version: "detect",
 			},
-			"import/resolver": {
-				webpack: {
-					config: {
-						extensions: [".js", ".jsx"],
-					},
-				},
-			},
+			"import/resolver": { node: { extensions: [".js", ".jsx"] } },
 		},
 
 		plugins: {
