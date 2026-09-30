@@ -4,7 +4,6 @@ var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var path = require("path");
 
 var TARGET = process.env.npm_lifecycle_event;
-process.env.BABEL_ENV = TARGET;
 
 var target = __dirname + "/build/static/bundles";
 
@@ -43,21 +42,11 @@ var common = {
 		rules: [
 			{
 				test: /\.jsx?$/,
-				use: [
-					{
-						loader: "babel-loader",
-						options: {
-							presets: [
-								"@babel/preset-react",
-								// Setting `modules` false, prevents babel from trying to use
-								// commonjs imports, which messes up our nice clean ES6 imports
-								// provided directly by Webpack:
-								// https://github.com/webpack/webpack/issues/4961#issuecomment-304938963
-								["@babel/preset-env", { modules: false }],
-							],
-						},
-					},
-				],
+				loader: "babel-loader",
+				// webpack's --mode doesn't set NODE_ENV for the Node process, so
+				// without this Babel defaults to 'development' and preset-react
+				// emits jsxDEV calls, which the production React runtime lacks.
+				options: { envName: TARGET === "build" ? "production" : "development" },
 				include: [
 					path.join(__dirname, "/client/common/js"),
 					path.join(__dirname, "/client/statistics/js"),
