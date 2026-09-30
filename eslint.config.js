@@ -24,6 +24,8 @@ module.exports = [
 			"build/static/js/picturefill.3.0.2.min.js",
 			"coverage/**",
 			"build/**",
+			"chart_pregenerator/build/**",
+			"static/**",
 			".venv/**",
 		],
 	},
