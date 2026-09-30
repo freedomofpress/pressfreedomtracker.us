@@ -70,11 +70,6 @@ module.exports = [
 			"react-hooks/rules-of-hooks": "error",
 			"react-hooks/exhaustive-deps": "warn",
 
-			// Allow a leading underscore to mark a parameter as intentionally
-			// unused, e.g. one kept only for signature consistency with sibling
-			// callback functions.
-			"no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-
 			// webpack.config.js only populates module.exports when run via the
 			// `build`/`start` npm scripts (it branches on npm_lifecycle_event),
 			// so requiring it here (e.g. from eslint-import-resolver-webpack)
