@@ -201,24 +201,16 @@ export default function CategoryFilter({
 									transform={"translate(0, -7)"}
 									opacity={d.count === 0 ? 0.3 : 1}
 								>
-									<div
+									<div // eslint-disable-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
+										// These icons being tabbable would make this harder to use and more confusing without additional work that I think is out of scope here.
+										// Clicking on the icons themselves is also kind of a shortcut for the checkbox elements that follow, which do have accessible names and states.
 										className={classNames("category", `category-${d.symbol}`)}
 										role="button"
-										tabIndex={0}
 										onClick={() => {
 											if (d.count === 0) {
 												return null;
 											} else {
 												return onCategoryClick(d);
-											}
-										}}
-										onKeyDown={(event) => {
-											if (
-												d.count > 0 &&
-												(event.key === "Enter" || event.key === " ")
-											) {
-												event.preventDefault();
-												onCategoryClick(d);
 											}
 										}}
 									/>
