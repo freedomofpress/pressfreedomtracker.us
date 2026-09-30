@@ -23,7 +23,9 @@ class Journalist(index.Indexed, ClusterableModel):
         instance.save()
         return instance
 
-    title = models.CharField(max_length=255, validators=[validate_disallow_AND])
+    title = models.CharField(
+        max_length=255, unique=True, validators=[validate_disallow_AND]
+    )
 
     class Meta:
         ordering = ["title"]
