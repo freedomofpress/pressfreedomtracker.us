@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { ParentSize } from "@visx/responsive";
 import { createRoot } from "react-dom/client";
 import CategoryIcon from "./components/categoryIcon";
@@ -41,12 +40,6 @@ function PrepubBarChartWidth({ width, dataset, parentWidth }) {
 		</div>
 	);
 }
-
-PrepubBarChartWidth.propTypes = {
-	width: PropTypes.number.isRequired,
-	dataset: PropTypes.array.isRequired,
-	parentWidth: PropTypes.number.isRequired,
-};
 
 function PrepubIncidentCategoryCount({ incidentCount, categoryCounts }) {
 	const [hovered, setHovered] = React.useState(false);
@@ -125,16 +118,6 @@ function PrepubIncidentCategoryCount({ incidentCount, categoryCounts }) {
 		</>
 	);
 }
-
-PrepubIncidentCategoryCount.propTypes = {
-	incidentCount: PropTypes.number.isRequired,
-	categoryCounts: PropTypes.arrayOf(
-		PropTypes.shape({
-			category: PropTypes.string.isRequired,
-			count: PropTypes.number.isRequired,
-		}),
-	).isRequired,
-};
 
 const chartContainers = Array.from(
 	document.getElementsByClassName("js-prepub-bar-chart"),
