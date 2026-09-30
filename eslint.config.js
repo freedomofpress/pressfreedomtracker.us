@@ -11,6 +11,7 @@ const jsFiles = [
 	"client/**/*.jsx",
 	"chart_pregenerator/**/*.js",
 	"chart_pregenerator/**/*.jsx",
+	"tracker/**/*.js",
 ];
 
 // Top-level build tooling config files (babel.config.js, webpack.config.js,
@@ -20,9 +21,10 @@ const nodeConfigFiles = ["*.config.js"];
 module.exports = [
 	{
 		ignores: [
+			"build/static/js/picturefill.3.0.2.min.js",
 			"coverage/**",
 			"build/**",
-			"build/static/js/picturefill.3.0.2.min.js",
+			".venv/**",
 		],
 	},
 
