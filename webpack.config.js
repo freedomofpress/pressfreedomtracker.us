@@ -35,7 +35,6 @@ var common = {
 
 	resolve: {
 		extensions: [".js", ".jsx"],
-		modules: ["node_modules"],
 	},
 
 	module: {
@@ -47,11 +46,7 @@ var common = {
 				// without this Babel defaults to 'development' and preset-react
 				// emits jsxDEV calls, which the production React runtime lacks.
 				options: { envName: TARGET === "build" ? "production" : "development" },
-				include: [
-					path.join(__dirname, "/client/common/js"),
-					path.join(__dirname, "/client/statistics/js"),
-					path.join(__dirname, "/client/charts/js"),
-				],
+				include: [path.join(__dirname, "/client")],
 			},
 			{
 				test: /\.s[ca]ss$/,
