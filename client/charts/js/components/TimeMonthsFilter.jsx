@@ -178,7 +178,7 @@ export default function TimeMonthsFilter({
 					dataset={[monthFrequencies]}
 					tag="path"
 					attrs={{
-						d: (_d) =>
+						d: () =>
 							lineGenerator(
 								sortBy(closeLineArea(monthFrequenciesSelected), (d) => d.date),
 							),

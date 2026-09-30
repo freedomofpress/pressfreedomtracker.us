@@ -19,7 +19,7 @@ export default function Slider({
 		setSliderSelection(firstElement);
 	}, [firstElement, setSliderSelection]);
 
-	function stopMovingSlider(_event) {
+	function stopMovingSlider() {
 		window.removeEventListener("mouseup", onSliderReleaseRef.current);
 		window.removeEventListener("touchend", onSliderReleaseRef.current);
 		onSliderReleaseRef.current = null;

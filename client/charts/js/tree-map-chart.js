@@ -84,7 +84,7 @@ engageCharts();
 // Add listener for query change to rerun
 let previousUrl = "";
 
-const observer = new MutationObserver(function (_mutations) {
+const observer = new MutationObserver(function () {
 	if (window.location.href !== previousUrl) {
 		previousUrl = window.location.href;
 		engageCharts();
