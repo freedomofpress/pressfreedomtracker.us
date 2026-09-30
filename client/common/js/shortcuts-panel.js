@@ -1,1 +1,1 @@
-import '../scss/shortcuts-panel.scss'
+import "../scss/shortcuts-panel.scss";
