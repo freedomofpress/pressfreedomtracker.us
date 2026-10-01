@@ -26,6 +26,7 @@ module.exports = defineConfig([
 			react.configs.flat.recommended,
 			jsxA11y.flatConfigs.recommended,
 			importPlugin.flatConfigs.recommended,
+			importPlugin.flatConfigs.react,
 		],
 		plugins: {
 			"react-hooks": reactHooks,
@@ -46,18 +47,11 @@ module.exports = defineConfig([
 			react: {
 				version: "detect",
 			},
+			"import/resolver": { node: { extensions: [".js", ".jsx"] } },
 		},
 		rules: {
 			"react-hooks/rules-of-hooks": "error",
 			"react-hooks/exhaustive-deps": "warn",
-
-			// webpack.config.js only populates module.exports when run via the
-			// `build`/`start` npm scripts (it branches on npm_lifecycle_event),
-			// so requiring it here (e.g. from eslint-import-resolver-webpack)
-			// yields an empty config and can't actually resolve aliases or
-			// extension-less imports. Leave path resolution unchecked until
-			// that export is restructured.
-			"import/no-unresolved": "off",
 
 			// prop-types is going away in React 19
 			"react/prop-types": "off",
@@ -76,6 +70,10 @@ module.exports = defineConfig([
 		files: ["chart_pregenerator/**/*.{js,jsx}"],
 		languageOptions: {
 			globals: globals.node,
+		},
+		rules: {
+			// pregenerator's ../client imports and its own packages only resolve in its container.
+			"import/no-unresolved": "off",
 		},
 	},
 
