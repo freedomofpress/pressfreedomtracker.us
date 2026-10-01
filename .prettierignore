@@ -1,1 +1,8 @@
+# Prettier only formats JavaScript here, matching the pre-commit hook.
+*
+!*/
+!*.js
+!*.jsx
+
 build/static/js/picturefill.3.0.2.min.js
+chart_pregenerator/build/
