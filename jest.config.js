@@ -1,4 +1,8 @@
 // jest.config.js
+
+// Run in UTC so date snapshots don't depend on the machine's timezone.
+process.env.TZ = "UTC";
+
 module.exports = {
 	testEnvironment: "jsdom",
 	verbose: true,
