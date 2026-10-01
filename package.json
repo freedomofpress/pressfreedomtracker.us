@@ -43,9 +43,9 @@
 		"stylelint": "^17.15.0",
 		"stylelint-config-standard-scss": "^17.0.0",
 		"svgo": "4.1.0",
-		"webpack": "^5.74.0",
+		"webpack": "^5.111.1",
 		"webpack-bundle-tracker": "^3.2.4",
-		"webpack-cli": "^5.0.1"
+		"webpack-cli": "^7.2.3"
 	},
 	"dependencies": {
 		"@visx/responsive": "^3.0.0",
