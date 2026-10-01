@@ -9,7 +9,7 @@ const globals = require("globals");
 module.exports = defineConfig([
 	globalIgnores([
 		"build/",
-		"coverage/",
+		"**/coverage/",
 		"htmlcov/",
 		"chart_pregenerator/build/",
 		"static/",
