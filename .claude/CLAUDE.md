@@ -52,7 +52,7 @@
 
 - `just ruff` — linter/formatter (`just ruff-fix` applies fixes)
 - `just bandit` — security static analysis
-- `just eslint` — JavaScript linting (airbnb config)
+- `just eslint` — JavaScript linting
 - `just stylelint` — SCSS linting
 - `just lint` — all of the above plus the migration check
 - Ruff configured in `pyproject.toml`: `select = ["I", "F4"]` (isort + unused imports), target py312, Django/Wagtail-aware import section ordering
