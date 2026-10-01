@@ -3,7 +3,6 @@ const react = require("eslint-plugin-react");
 const reactHooks = require("eslint-plugin-react-hooks");
 const jsxA11y = require("eslint-plugin-jsx-a11y");
 const importPlugin = require("eslint-plugin-import");
-const prettier = require("eslint-config-prettier");
 const globals = require("globals");
 
 const jsFiles = [
@@ -34,7 +33,6 @@ module.exports = [
 	{ files: jsFiles, ...react.configs.flat.recommended },
 	{ files: jsFiles, ...jsxA11y.flatConfigs.recommended },
 	{ files: jsFiles, ...importPlugin.flatConfigs.recommended },
-	{ files: jsFiles, ...prettier },
 
 	{
 		files: jsFiles,
@@ -118,5 +116,4 @@ module.exports = [
 			},
 		},
 	},
-	{ files: nodeConfigFiles, ...prettier },
 ];
