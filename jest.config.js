@@ -7,8 +7,6 @@ module.exports = {
 	testEnvironment: "jsdom",
 	verbose: true,
 	moduleNameMapper: {
-		"^WagtailAutocomplete/(.*)$":
-			"<rootDir>/client/autocomplete/js/components/$1",
 		"^.+\\.(css|less|scss|sass|svg)$": "babel-jest",
 	},
 	transformIgnorePatterns: [
