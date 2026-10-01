@@ -36,9 +36,6 @@ var common = {
 	},
 
 	resolve: {
-		alias: {
-			"~": __dirname + "/client/common/js",
-		},
 		extensions: [".js", ".jsx"],
 		modules: ["node_modules"],
 	},

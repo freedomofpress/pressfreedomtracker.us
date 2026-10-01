@@ -70,7 +70,6 @@
 - Webpack entries in `webpack.config.js`: `common`, `statistics`, `draftail`, `charts`, `filterSidebar`, `filterSummary`, `searchBar`, `verticalBarChart`, `treeMapChart`, `bubbleMapChart`, `hexbinMapChart`
 - Output: `build/static/bundles/`
 - `npm run start` = dev watch mode, `npm run build` = production build
-- Module alias `~` maps to `client/common/js/` (both webpack and Jest)
 - SCSS compiled via sass-loader + postcss-loader with Autoprefixer
 - `webpack-bundle-tracker` writes `webpack-stats.json` for Django integration via `django-webpack-loader`
 
