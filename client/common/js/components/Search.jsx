@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 import React, { useState, createRef } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -78,8 +77,8 @@ export default function Search({ data = [], selectedTags = [] }) {
 		let currentTagIndex;
 
 		switch (event.keyCode) {
-			case 38: // up
-				// select prev tag
+			case 38: {
+				// up: select prev tag
 				const dropdownsReversed = allDropdowns.reverse();
 				currentTagIndex = dropdownsReversed.findIndex(
 					(tagEl) => tagEl.id === currentId,
@@ -90,6 +89,7 @@ export default function Search({ data = [], selectedTags = [] }) {
 						.focus();
 				event.preventDefault();
 				break;
+			}
 			case 40: // down
 				// select next tag
 				currentTagIndex =
