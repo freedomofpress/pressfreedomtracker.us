@@ -132,7 +132,6 @@ exports[`renders CategoryFilter with mocked data 1`] = `
           <div
             className="category category-test-def"
             onClick={[Function]}
-            role="button"
           />
         </foreignObject>
       </g>
@@ -148,7 +147,6 @@ exports[`renders CategoryFilter with mocked data 1`] = `
           <div
             className="category category-undefined"
             onClick={[Function]}
-            role="button"
           />
         </foreignObject>
       </g>

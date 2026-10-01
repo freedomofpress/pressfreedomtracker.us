@@ -201,11 +201,10 @@ export default function CategoryFilter({
 									transform={"translate(0, -7)"}
 									opacity={d.count === 0 ? 0.3 : 1}
 								>
-									<div // eslint-disable-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
-										// These icons being tabbable would make this harder to use and more confusing without additional work that I think is out of scope here.
-										// Clicking on the icons themselves is also kind of a shortcut for the checkbox elements that follow, which do have accessible names and states.
+									{/* These duplicate functionality of more accessible native checkbox inputs which follow. */}
+									{/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+									<div
 										className={classNames("category", `category-${d.symbol}`)}
-										role="button"
 										onClick={() => {
 											if (d.count === 0) {
 												return null;
