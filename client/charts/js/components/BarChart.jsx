@@ -94,19 +94,17 @@ export default function BarChart({
 
 	// State to keep track of the current hovered element
 	const [hoveredElement, setHoveredElement] = useState(null);
-	// Hooks must run unconditionally on every render, so fall back to
-	// `undefined` here rather than returning early above when data is empty.
 	const [sliderSelection, setSliderSelection] = useState(dataset[0]?.index);
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
-	// Stable identity (setSliderSelection/setHoveredElement are useState setters,
-	// which React guarantees never change) so Slider's effect can safely depend
-	// on it without refiring on every unrelated BarChart re-render.
+	// Memoized: Slider's effect depends on this, and a new function each render
+	// would re-run it, resetting the slider and clearing the hover.
 	const handleSliderSelection = useCallback((d) => {
 		setSliderSelection(d);
 		setHoveredElement(null);
 	}, []);
 
+	// Hooks above must run on every render, so this can't return any earlier.
 	if (!data.length) return null;
 
 	const Dataset = disableAnimation ? StaticDataset : AnimatedDataset;
