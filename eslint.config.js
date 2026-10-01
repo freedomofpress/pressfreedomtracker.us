@@ -1,3 +1,4 @@
+const { defineConfig, globalIgnores } = require("eslint/config");
 const js = require("@eslint/js");
 const react = require("eslint-plugin-react");
 const reactHooks = require("eslint-plugin-react-hooks");
@@ -17,25 +18,24 @@ const jsFiles = [
 // etc.), not matched by "*.config.js" for files nested in subdirectories.
 const nodeConfigFiles = ["*.config.js"];
 
-module.exports = [
-	{
-		ignores: [
-			"build/static/js/picturefill.3.0.2.min.js",
-			"coverage/**",
-			"build/**",
-			"chart_pregenerator/build/**",
-			"static/**",
-			".venv/**",
-		],
-	},
-
-	{ files: jsFiles, ...js.configs.recommended },
-	{ files: jsFiles, ...react.configs.flat.recommended },
-	{ files: jsFiles, ...jsxA11y.flatConfigs.recommended },
-	{ files: jsFiles, ...importPlugin.flatConfigs.recommended },
+module.exports = defineConfig([
+	globalIgnores([
+		"build/static/js/picturefill.3.0.2.min.js",
+		"coverage/**",
+		"build/**",
+		"chart_pregenerator/build/**",
+		"static/**",
+		".venv/**",
+	]),
 
 	{
 		files: jsFiles,
+		extends: [
+			js.configs.recommended,
+			react.configs.flat.recommended,
+			jsxA11y.flatConfigs.recommended,
+			importPlugin.flatConfigs.recommended,
+		],
 
 		languageOptions: {
 			// eslint-plugin-import's recommended config hardcodes ecmaVersion: 2018,
@@ -107,7 +107,7 @@ module.exports = [
 
 	{
 		files: nodeConfigFiles,
-		...js.configs.recommended,
+		extends: [js.configs.recommended],
 		languageOptions: {
 			ecmaVersion: "latest",
 			sourceType: "commonjs",
@@ -116,4 +116,4 @@ module.exports = [
 			},
 		},
 	},
-];
+]);
