@@ -10,6 +10,7 @@ module.exports = defineConfig([
 	globalIgnores([
 		"build/",
 		"coverage/",
+		"htmlcov/",
 		"chart_pregenerator/build/",
 		"static/",
 		".venv/",
