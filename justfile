@@ -89,6 +89,14 @@ svglint: node-modules
         {{svgo}} --config=svgo.config.mjs -r {{svg_paths}}
     git diff --exit-code -- {{svg_paths}}
 
+# Lint JavaScript with eslint.
+eslint: node-modules
+    {{compose}} run --rm --no-deps node npm run js-lint
+
+# Lint SASS with stylelint.
+stylelint: node-modules
+    {{compose}} run --rm --no-deps node npm run stylelint
+
 # Jest, eslint and stylelint read sources directly rather than webpack's output,
 # so no build is needed -- but node_modules lives in the bind-mounted tree,
 # populated by the `node` service, so install it if absent. The guard is
@@ -97,14 +105,6 @@ svglint: node-modules
 [private]
 node-modules: env-check
     [ -d node_modules ] || {{compose}} run --rm --no-deps node npm ci
-
-# Lint JavaScript with eslint.
-eslint: node-modules
-    {{compose}} run --rm --no-deps node npm run js-lint
-
-# Lint SASS with stylelint.
-stylelint: node-modules
-    {{compose}} run --rm --no-deps node npm run stylelint
 
 # Run all project linters.
 lint: ruff bandit check-migrations eslint stylelint pnglint svglint
