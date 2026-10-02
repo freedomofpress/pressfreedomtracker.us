@@ -24,6 +24,8 @@ svg_paths := "client/common/icons"
 # A binary in the bind-mounted node_modules, put there by the `node-modules`
 # recipe rather than baked into the image.
 svgo := "node_modules/.bin/svgo"
+# Written by container-side installs; see the `node-modules` recipe.
+node_marker := "node_modules/.container-install"
 
 # Show available recipes.
 default:
@@ -46,9 +48,16 @@ env-check:
 # unless nothing has populated it yet. The guard is deliberately host-side, and
 # skipping the install when the tree is already populated keeps a running
 # `just dev` watcher undisturbed.
+# Existence alone isn't enough: a host-side `npm install` leaves only the host
+# platform's native optional deps (e.g. @unrs/resolver-binding-darwin-arm64), so
+# jest in the Linux container can't resolve anything. Container installs (here
+# and in node-start.sh) touch node_modules/.container-install; reinstall if it's missing (a host
+# `npm ci` wipes it) or older than package-lock.json (a host `npm install
+# <pkg>`, or a pull/rebase that changed the lockfile).
 [private]
 node-modules: env-check
-    [ -d node_modules ] || {{compose}} run --rm --no-deps node npm ci
+    [ {{node_marker}} -nt package-lock.json ] || \
+        {{compose}} run --rm --no-deps node sh -c 'npm ci && touch {{node_marker}}'
 
 # Run the webapp locally, via containers (--build keeps images in sync with the Containerfile).
 dev: env-check
