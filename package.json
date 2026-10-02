@@ -16,6 +16,9 @@
 	"browserslist": [
 		"baseline widely available"
 	],
+	"overrides": {
+		"d3-color": "^3.1.0"
+	},
 	"devDependencies": {
 		"@babel/core": "^7.29.6",
 		"@babel/plugin-transform-modules-commonjs": "^7.24.1",
