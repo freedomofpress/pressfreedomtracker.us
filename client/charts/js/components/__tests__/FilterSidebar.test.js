@@ -3,11 +3,11 @@ import { render } from "@testing-library/react";
 import FilterSidebar from "../FilterSidebar";
 
 beforeEach(() => {
-	global.fetch = jest.fn(() => new Promise(() => {}));
+	globalThis.fetch = jest.fn(() => new Promise(() => {}));
 });
 
 afterEach(() => {
-	delete global.fetch;
+	delete globalThis.fetch;
 });
 
 test("renders FilterSidebar with mocked data", () => {
