@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import TagFilter from "./TagFilter";
 import { SET_PARAMETER } from "../lib/actionTypes";
 import { FiltersDispatch } from "../lib/context";
@@ -97,13 +96,6 @@ function TextFilter({ name, label, value, handleFilterChange }) {
 		</div>
 	);
 }
-
-TextFilter.propTypes = {
-	name: PropTypes.string.isRequired,
-	label: PropTypes.string.isRequired,
-	value: PropTypes.string,
-	handleFilterChange: PropTypes.func.isRequired,
-};
 
 function SelectFilter({ name, label, value, choices, handleFilterChange }) {
 	let id = `id_${name}`;
@@ -302,9 +294,3 @@ export default function FilterSet({
 	});
 	return components;
 }
-
-FilterSet.propTypes = {
-	filters: PropTypes.array.isRequired,
-	handleFilterChange: PropTypes.func.isRequired,
-	filterParameters: PropTypes.object.isRequired,
-};

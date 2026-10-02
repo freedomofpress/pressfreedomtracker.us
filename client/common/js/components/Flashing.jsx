@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import "./Flashing.scss";
 
@@ -10,8 +9,3 @@ export default function Flashing({ flashing = true, children }) {
 		</div>
 	);
 }
-
-Flashing.propTypes = {
-	flashing: PropTypes.bool,
-	children: PropTypes.node.isRequired,
-};

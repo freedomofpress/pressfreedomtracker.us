@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
 
 export default function CategorySection({
@@ -31,12 +30,3 @@ export default function CategorySection({
 		</div>
 	);
 }
-
-CategorySection.propTypes = {
-	symbol: PropTypes.string.isRequired,
-	label: PropTypes.string.isRequired,
-	count: PropTypes.number.isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	onClick: PropTypes.func.isRequired,
-	children: PropTypes.node,
-};

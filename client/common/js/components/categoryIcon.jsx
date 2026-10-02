@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import React from "react";
-import PropTypes from "prop-types";
 
 export const categorySymbolMap = {
 	"Arrest / Criminal Charge": "arrest",
@@ -27,10 +26,6 @@ export default function CategoryIcon({ category }) {
 		/>
 	);
 }
-
-CategoryIcon.propTypes = {
-	category: PropTypes.string,
-};
 
 CategoryIcon.defaultProps = {
 	category: "",

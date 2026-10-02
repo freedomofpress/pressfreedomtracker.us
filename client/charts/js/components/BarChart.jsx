@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import PropTypes from "prop-types";
 import * as d3 from "d3";
 import { AnimatedDataset } from "react-animated-dataset";
 import StaticDataset from "./StaticDataset";
@@ -605,15 +604,3 @@ export default function BarChart({
 		);
 	}
 }
-
-BarChart.propTypes = {
-	data: PropTypes.array.isRequired,
-	x: PropTypes.string.isRequired,
-	y: PropTypes.string.isRequired,
-	titleLabel: PropTypes.string.isRequired,
-	isMobileView: PropTypes.bool.isRequired,
-	width: PropTypes.number.isRequired,
-	height: PropTypes.number.isRequired,
-	numberOfTicks: PropTypes.number,
-	searchPageURL: PropTypes.func,
-};
