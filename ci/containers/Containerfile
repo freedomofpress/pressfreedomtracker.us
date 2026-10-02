@@ -96,7 +96,7 @@ USER ${USERID}
 COPY --chown=${USERID} \
     chart_pregenerator/package.json chart_pregenerator/package-lock.json \
     chart_pregenerator/dev.js chart_pregenerator/jest.config.js \
-    chart_pregenerator/babel.config.json ./
+    chart_pregenerator/babel.config.js ./
 RUN npm ci
 CMD [ "chartgen-start.sh" ]
 

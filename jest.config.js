@@ -7,7 +7,8 @@ module.exports = {
 	testEnvironment: "jsdom",
 	verbose: true,
 	moduleNameMapper: {
-		"^.+\\.(css|less|scss|sass|svg)$": "babel-jest",
+		"^.+\\.(css|less|scss|sass|svg)$":
+			"<rootDir>/client/common/js/styleMock.js",
 	},
 	transformIgnorePatterns: [
 		"<rootDir>/node_modules/(?!d3|internmap|delaunator|robust-predicates|react-animated-dataset)",
