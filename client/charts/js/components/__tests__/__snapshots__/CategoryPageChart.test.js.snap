@@ -3,29 +3,25 @@
 exports[`renders CategoryPageChart with mocked data 1`] = `
 <div>
   <div
-    style="width: 100%; height: 100%; position: relative;"
+    style="width: 100%;"
   >
     <div
-      style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; overflow: hidden;"
+      class="flashing flashing--off"
     >
       <div
-        class="flashing flashing--off"
+        class="cpChartContainer"
+        style="width: 0px;"
       >
         <div
-          class="cpChartContainer"
-          style="width: 0px;"
+          class="cpChart"
         >
           <div
-            class="cpChart"
+            class="chartDescription"
+            id="category-page-chart-label"
           >
-            <div
-              class="chartDescription"
-              id="category-page-chart-label"
-            >
-              Number of 
-              test
-               incidents per year.
-            </div>
+            Number of 
+            test
+             incidents per year.
           </div>
         </div>
       </div>
