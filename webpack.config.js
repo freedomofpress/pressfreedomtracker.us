@@ -15,7 +15,10 @@ console.log("Using STATIC_URL", STATIC_URL);
 const common = {
 	entry: {
 		common: __dirname + "/client/common/js/common.js",
-		statistics: __dirname + "/client/statistics/js/searchstats.js",
+		statistics: {
+			import: __dirname + "/client/statistics/js/searchstats.js",
+			layer: "wagtail-admin",
+		},
 		draftail: __dirname + "/client/common/js/draftail_curlify.js",
 		charts: __dirname + "/client/charts/js/index.js",
 		filterSidebar: __dirname + "/client/charts/js/filter-sidebar.js",
@@ -36,6 +39,15 @@ const common = {
 
 	resolve: {
 		extensions: [".js", ".jsx"],
+	},
+
+	// The statistics entry (wagtail-admin layer) is for a Draftail plugin intended to
+	// be rendered by Wagtail's React. React imports anywhere in that bundle should resolve
+	// to globals that Wagtail will provide at runtime, instead of our bundled copy.
+	externals: {
+		byLayer: {
+			"wagtail-admin": { react: "React", "react-dom": "ReactDOM" },
+		},
 	},
 
 	module: {
