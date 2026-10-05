@@ -1,10 +1,6 @@
-const webpack = require("webpack");
 const BundleTracker = require("webpack-bundle-tracker");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-
-const isProd = process.env.npm_lifecycle_event === "build";
-const isDev = process.env.npm_lifecycle_event === "start";
 
 const target = __dirname + "/build/static/bundles";
 
@@ -12,122 +8,103 @@ const STATIC_URL = process.env.STATIC_URL || "/common/static/";
 const scssData = '$static-url: "' + STATIC_URL + '";';
 console.log("Using STATIC_URL", STATIC_URL);
 
-const common = {
-	entry: {
-		common: __dirname + "/client/common/js/common.js",
-		statistics: {
-			import: __dirname + "/client/statistics/js/searchstats.js",
-			layer: "wagtail-admin",
+// Exported as a function so the config is defined whenever it's loaded, not
+// only under `npm run build`/`start`. argv.mode comes from --mode in those
+// scripts; webpack sets process.env.NODE_ENV from it, so no DefinePlugin.
+module.exports = (env, argv) => {
+	const isProd = argv.mode === "production";
+
+	return {
+		entry: {
+			common: __dirname + "/client/common/js/common.js",
+			statistics: {
+				import: __dirname + "/client/statistics/js/searchstats.js",
+				layer: "wagtail-admin",
+			},
+			draftail: __dirname + "/client/common/js/draftail_curlify.js",
+			charts: __dirname + "/client/charts/js/index.js",
+			filterSidebar: __dirname + "/client/charts/js/filter-sidebar.js",
+			filterSummary: __dirname + "/client/charts/js/filter-summary.js",
+			searchBar: __dirname + "/client/common/js/search-bar.js",
+			verticalBarChart: __dirname + "/client/charts/js/vertical-bar-chart.js",
+			treeMapChart: __dirname + "/client/charts/js/tree-map-chart.js",
+			bubbleMapChart: __dirname + "/client/charts/js/bubble-map-chart.js",
+			hexbinMapChart: __dirname + "/client/charts/js/hexbin-map-chart.js",
+			"shortcuts-panel": __dirname + "/client/common/js/shortcuts-panel.js",
 		},
-		draftail: __dirname + "/client/common/js/draftail_curlify.js",
-		charts: __dirname + "/client/charts/js/index.js",
-		filterSidebar: __dirname + "/client/charts/js/filter-sidebar.js",
-		filterSummary: __dirname + "/client/charts/js/filter-summary.js",
-		searchBar: __dirname + "/client/common/js/search-bar.js",
-		verticalBarChart: __dirname + "/client/charts/js/vertical-bar-chart.js",
-		treeMapChart: __dirname + "/client/charts/js/tree-map-chart.js",
-		bubbleMapChart: __dirname + "/client/charts/js/bubble-map-chart.js",
-		hexbinMapChart: __dirname + "/client/charts/js/hexbin-map-chart.js",
-		"shortcuts-panel": __dirname + "/client/common/js/shortcuts-panel.js",
-	},
 
-	output: {
-		path: target,
-		filename: "[name].js",
-		clean: true,
-	},
-
-	resolve: {
-		extensions: [".js", ".jsx"],
-	},
-
-	// The statistics entry (wagtail-admin layer) is for a Draftail plugin intended to
-	// be rendered by Wagtail's React. React imports anywhere in that bundle should resolve
-	// to globals that Wagtail will provide at runtime, instead of our bundled copy.
-	externals: {
-		byLayer: {
-			"wagtail-admin": { react: "React", "react-dom": "ReactDOM" },
-		},
-	},
-
-	module: {
-		rules: [
-			{
-				test: /\.jsx?$/,
-				loader: "babel-loader",
-				// webpack's --mode doesn't set NODE_ENV for the Node process, so
-				// without this Babel defaults to 'development' and preset-react
-				// emits jsxDEV calls, which the production React runtime lacks.
-				options: { envName: isProd ? "production" : "development" },
-				include: [path.join(__dirname, "/client")],
-			},
-			{
-				test: /\.s[ca]ss$/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					"css-loader",
-					{
-						loader: "sass-loader",
-
-						options: {
-							sassOptions: {
-								loadPaths: [path.resolve(__dirname, "node_modules/")],
-							},
-							additionalData: scssData,
-						},
-					},
-				],
-			},
-			{
-				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, "css-loader"],
-			},
-			{
-				test: /\.(png|svg|jpg|gif)$/,
-				type: "asset/resource",
-			},
-			{
-				test: /\.(woff|woff2|eot|ttf|otf)$/,
-				type: "asset/resource",
-			},
-		],
-	},
-
-	plugins: [
-		new MiniCssExtractPlugin({
-			filename: "[name]-[hash].css",
-			chunkFilename: "[id]-[hash].css",
-		}),
-		new BundleTracker({
-			path: target,
-			filename: "webpack-stats.json",
-		}),
-	],
-};
-
-if (isProd) {
-	module.exports = {
-		...common,
 		output: {
-			...common.output,
-			filename: "[name]-[contenthash].js",
+			path: target,
+			filename: isProd ? "[name]-[contenthash].js" : "[name].js",
+			pathinfo: !isProd,
+			clean: true,
 		},
+
+		resolve: {
+			extensions: [".js", ".jsx"],
+		},
+
+		// The statistics entry (wagtail-admin layer) is for a Draftail plugin intended to
+		// be rendered by Wagtail's React. React imports anywhere in that bundle should resolve
+		// to globals that Wagtail will provide at runtime, instead of our bundled copy.
+		externals: {
+			byLayer: {
+				"wagtail-admin": { react: "React", "react-dom": "ReactDOM" },
+			},
+		},
+
+		module: {
+			rules: [
+				{
+					test: /\.jsx?$/,
+					loader: "babel-loader",
+					// webpack's --mode doesn't set NODE_ENV for the Node process, so
+					// without this Babel defaults to 'development' and preset-react
+					// emits jsxDEV calls, which the production React runtime lacks.
+					options: { envName: isProd ? "production" : "development" },
+					include: [path.join(__dirname, "/client")],
+				},
+				{
+					test: /\.s[ca]ss$/,
+					use: [
+						MiniCssExtractPlugin.loader,
+						"css-loader",
+						{
+							loader: "sass-loader",
+
+							options: {
+								sassOptions: {
+									loadPaths: [path.resolve(__dirname, "node_modules/")],
+								},
+								additionalData: scssData,
+							},
+						},
+					],
+				},
+				{
+					test: /\.css$/,
+					use: [MiniCssExtractPlugin.loader, "css-loader"],
+				},
+				{
+					test: /\.(png|svg|jpg|gif)$/,
+					type: "asset/resource",
+				},
+				{
+					test: /\.(woff|woff2|eot|ttf|otf)$/,
+					type: "asset/resource",
+				},
+			],
+		},
+
 		plugins: [
-			...common.plugins,
-			new webpack.DefinePlugin({
-				"process.env": { NODE_ENV: JSON.stringify("production") },
+			new MiniCssExtractPlugin({
+				filename: isProd ? "[name]-[contenthash].css" : "[name].css",
+				chunkFilename: isProd ? "[id]-[contenthash].css" : "[id].css",
+			}),
+			new BundleTracker({
+				path: target,
+				filename: "webpack-stats.json",
 			}),
 		],
 	};
-}
-
-if (isDev) {
-	module.exports = {
-		...common,
-		output: {
-			...common.output,
-			filename: "[name]-[contenthash].js",
-			pathinfo: true,
-		},
-	};
-}
+};
