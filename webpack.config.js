@@ -60,7 +60,7 @@ module.exports = (env, argv) => {
 					include: [path.join(__dirname, "/client")],
 				},
 				{
-					test: /\.s[ca]ss$/,
+					test: /\.scss$/,
 					use: [
 						MiniCssExtractPlugin.loader,
 						"css-loader",
