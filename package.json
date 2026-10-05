@@ -59,5 +59,6 @@
 		"react-modal": "^3.16.3",
 		"smartquotes": "^2.3.2",
 		"topojson-client": "^3.1.0"
-	}
+	},
+	"prettier": "fpf-wagtail-common/config/prettier.json"
 }
