@@ -26,6 +26,18 @@ wait_for_postgres() {
     done
 }
 
+# When in dev, install editable any dev packages checked out into develop-pkgs/.
+if [ "${DEPLOY_ENV}" == "dev" ] && [ -d ./develop-pkgs ]; then
+    for d in ./develop-pkgs/*; do
+        # Using --no-deps avoids accidentally unlocking other deps.
+        # Note: editable_mode=compat is only required for setuptools-based packages.
+        # It ensures setuptools writes a .pth path insertion file, which other
+        # build systems like Poetry do automatically. Other build systems will
+        # ignore this setting.
+        [ -f "${d}/pyproject.toml" ] && pip install --editable "$d" --no-deps --config-settings editable_mode=compat
+    done
+fi
+
 django_start() {
     ./manage.py migrate
     if [ "${DJANGO_COLLECT_STATIC}" == "yes" ]; then
