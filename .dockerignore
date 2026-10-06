@@ -56,8 +56,6 @@
 **/*.pyc
 **/node_modules
 tracker/settings/local.py
-# Stale dev bundles from a host `npm run start` would otherwise survive the
-# prod asset build and break collectstatic's manifest rewriting.
 build/static/bundles
 # esbuild output and jest coverage are rebuilt in-image; `client` here is a
 # gitignored convenience symlink some developers keep.
