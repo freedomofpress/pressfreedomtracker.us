@@ -2,14 +2,451 @@
 
 exports[`renders FilterSidebar with mocked data 1`] = `
 <div>
-  <div>
+  <section
+    aria-labelledby="filter-sidebar-heading"
+    class="filters__form"
+  >
     <div
-      style="height: 100vh; display: flex; justify-content: center; align-items: center; opacity: 0.4; font-family: var(--font-base);"
+      class="filters__form--header"
     >
-      <div>
-        LOADING...
+      <h2
+        class="filter__heading"
+        id="filter-sidebar-heading"
+      >
+        Filters
+      </h2>
+      <a
+        class="btn btn-ghost"
+        href="/all-incidents/"
+      >
+        Clear All
+      </a>
+    </div>
+    <details
+      class="filters__group filters__form--category"
+      open=""
+    >
+      <summary
+        class="filters__form-summary"
+      >
+        <h3
+          class="filter__heading"
+        >
+          Category
+        </h3>
+      </summary>
+      <div
+        class="filters__form--fieldset"
+      >
+        <div
+          class="category-graph"
+        >
+          <p
+            class="category-graph--label"
+            id="categories-graph-label"
+          >
+            Filter by one or more categories
+          </p>
+          <svg
+            aria-labelledby="categories-graph-label"
+            class="category-graph--figure"
+            height="181.33333333333334"
+            style="font-family: var(--font-mono);"
+            width="272"
+          >
+            <g />
+            <g />
+            <g />
+            <g>
+              <foreignobject
+                height="14"
+                opacity="1"
+                transform="translate(0, -7)"
+                width="14"
+                x="4.050000000000001"
+                y="166.33333333333334"
+              >
+                <div
+                  class="category category-arrest"
+                />
+              </foreignobject>
+            </g>
+            <g>
+              <foreignobject
+                height="14"
+                opacity="1"
+                transform="translate(0, -7)"
+                width="14"
+                x="122.55000000000001"
+                y="166.33333333333334"
+              >
+                <div
+                  class="category category-undefined"
+                />
+              </foreignobject>
+            </g>
+          </svg>
+        </div>
+        <div
+          class="category-checkbox"
+        >
+          <input
+            class="category-checkbox--input"
+            id="arrest"
+            type="checkbox"
+          />
+          <label
+            class="category-checkbox--label"
+            for="arrest"
+          >
+            <span
+              class="category category-arrest"
+            >
+              Arrest / Criminal Charge
+            </span>
+            <span>
+              2
+            </span>
+          </label>
+        </div>
+      </div>
+    </details>
+    <details
+      class="filters__group filters__form--category"
+      open=""
+    >
+      <summary
+        class="filters__form-summary"
+      >
+        <h3
+          class="filter__heading"
+        >
+          Tag
+        </h3>
+      </summary>
+      <div
+        class="filters__form--fieldset"
+      >
+        <div
+          style="display: flex; flex-direction: row; margin-top: 12px; margin-bottom: 12px;"
+        >
+          <div
+            style="display: flex; flex-direction: row-reverse; width: 35px;"
+          >
+            <input
+              id="drone-#lemur"
+              name="drone"
+              style="width: 24px; height: 24px;"
+              type="checkbox"
+            />
+          </div>
+          <div
+            style="display: flex; flex-direction: column; justify-content: flex-end;"
+          >
+            <div
+              style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0px;"
+            >
+              <label
+                for="drone-#lemur"
+                style="color: black; font-size: 14px; line-height: 20px; font-family: var(--font-base);"
+              >
+                #lemur
+              </label>
+              <div
+                style="font-family: var(--font-mono); font-size: 12px; justify-content: flex-end; padding: 3px;"
+              >
+                1
+              </div>
+            </div>
+            <div
+              style="width: 197px; height: 4px;"
+            >
+              <div
+                style="z-index: -1; width: 192px; height: 3px; border: 1px solid black; background-color: black; transition: all 250ms;"
+              />
+              <div
+                style="top: -4px; left: 1px; position: relative; width: 0px; height: 3px; background-color: rgb(242, 252, 103); transition: all 250ms;"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; margin-top: 12px; margin-bottom: 12px;"
+        >
+          <div
+            style="display: flex; flex-direction: row-reverse; width: 35px;"
+          >
+            <input
+              id="drone-#baboon"
+              name="drone"
+              style="width: 24px; height: 24px;"
+              type="checkbox"
+            />
+          </div>
+          <div
+            style="display: flex; flex-direction: column; justify-content: flex-end;"
+          >
+            <div
+              style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0px;"
+            >
+              <label
+                for="drone-#baboon"
+                style="color: black; font-size: 14px; line-height: 20px; font-family: var(--font-base);"
+              >
+                #baboon
+              </label>
+              <div
+                style="font-family: var(--font-mono); font-size: 12px; justify-content: flex-end; padding: 3px;"
+              >
+                1
+              </div>
+            </div>
+            <div
+              style="width: 197px; height: 4px;"
+            >
+              <div
+                style="z-index: -1; width: 192px; height: 3px; border: 1px solid black; background-color: black; transition: all 250ms;"
+              />
+              <div
+                style="top: -4px; left: 1px; position: relative; width: 0px; height: 3px; background-color: rgb(242, 252, 103); transition: all 250ms;"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-direction: row; margin-top: 12px; margin-bottom: 12px;"
+        >
+          <div
+            style="display: flex; flex-direction: row-reverse; width: 35px;"
+          >
+            <input
+              id="drone-#civet"
+              name="drone"
+              style="width: 24px; height: 24px;"
+              type="checkbox"
+            />
+          </div>
+          <div
+            style="display: flex; flex-direction: column; justify-content: flex-end;"
+          >
+            <div
+              style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0px;"
+            >
+              <label
+                for="drone-#civet"
+                style="color: black; font-size: 14px; line-height: 20px; font-family: var(--font-base);"
+              >
+                #civet
+              </label>
+              <div
+                style="font-family: var(--font-mono); font-size: 12px; justify-content: flex-end; padding: 3px;"
+              >
+                1
+              </div>
+            </div>
+            <div
+              style="width: 197px; height: 4px;"
+            >
+              <div
+                style="z-index: -1; width: 192px; height: 3px; border: 1px solid black; background-color: black; transition: all 250ms;"
+              />
+              <div
+                style="top: -4px; left: 1px; position: relative; width: 0px; height: 3px; background-color: rgb(242, 252, 103); transition: all 250ms;"
+              />
+            </div>
+          </div>
+        </div>
+        <label
+          class="sr-only"
+          for="id_tags"
+        >
+          Find tags...
+        </label>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_tags"
+          name="tags"
+          placeholder="Find tags..."
+          type="text"
+          value=""
+        />
+      </div>
+    </details>
+    <div
+      class="filters__form--fieldset filters__form--general"
+    >
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_date_after"
+          >
+            Took place
+             after
+          </label>
+        </div>
+        <input
+          id="id_date_after"
+          name="date"
+          type="date"
+          value=""
+        />
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_date_before"
+          >
+            Took place
+             before
+          </label>
+        </div>
+        <input
+          id="id_date_before"
+          name="date"
+          type="date"
+          value=""
+        />
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_city"
+          >
+            City
+          </label>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_city"
+          name="city"
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
+            for="id_state"
+          >
+            State
+          </label>
+        </div>
+        <input
+          autocomplete="off"
+          class="text-field--single"
+          id="id_state"
+          list="state_choices"
+          name="state"
+          type="text"
+          value=""
+        />
+        <datalist
+          id="state_choices"
+        >
+          <option
+            value="Alaska"
+          />
+          <option
+            value="Alabama"
+          />
+          <option
+            value="Arkansas"
+          />
+          <option
+            value="American Samoa"
+          />
+          <option
+            value="Arizona"
+          />
+          <option
+            value="California"
+          />
+          <option
+            value="Colorado"
+          />
+          <option
+            value="Connecticut"
+          />
+          <option
+            value="District of Columbia"
+          />
+          <option
+            value="Delaware"
+          />
+          <option
+            value="Florida"
+          />
+          <option
+            value="Georgia"
+          />
+          <option
+            value="Guam"
+          />
+          <option
+            value="Hawaii"
+          />
+          <option
+            value="Iowa"
+          />
+          <option
+            value="Idaho"
+          />
+          <option
+            value="Illinois"
+          />
+          <option
+            value="Indiana"
+          />
+          <option
+            value="Kansas"
+          />
+        </datalist>
       </div>
     </div>
-  </div>
+    <div
+      class="filters__form-actions"
+    >
+      <button
+        class="btn btn-secondary filters__form--submit"
+        type="submit"
+      >
+        Apply filters
+      </button>
+    </div>
+    <div
+      class="incident-index__filters-mobile-controls"
+    >
+      <a
+        class="incident-index__filters-mobile-clear"
+        href="{{ page.url }}"
+      >
+        Clear All
+      </a>
+      <button
+        class="btn btn-secondary filters__form--submit"
+        type="submit"
+      >
+        Apply filters
+      </button>
+    </div>
+  </section>
 </div>
 `;
