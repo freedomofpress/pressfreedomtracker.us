@@ -155,10 +155,6 @@ if DEBUG:
         MIDDLEWARE.append("django_cprofile_middleware.middleware.ProfilerMiddleware")
         DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
-    # Disable caching of webpack stats files (can prevent node/django
-    # container race condition).
-    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False
-
     # Include the wagtail styleguide
     INSTALLED_APPS.append("wagtail.contrib.styleguide")
 
@@ -184,10 +180,6 @@ if ENABLE_DEBUG_TOOLBAR:
             "debug_toolbar.panels.redirects.TemplatesPanel",
         },
     }
-
-    # Disable caching of webpack stats files (can prevent node/django
-    # container race condition).
-    WEBPACK_LOADER["DEFAULT"]["CACHE"] = False
 
     # Obtain the default gateway from docker, needed for
     # debug toolbar whitelisting
