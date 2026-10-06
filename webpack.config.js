@@ -2,10 +2,6 @@ const BundleTracker = require("webpack-bundle-tracker");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
-const STATIC_URL = process.env.STATIC_URL || "/common/static/";
-const scssData = '$static-url: "' + STATIC_URL + '";';
-console.log("Using STATIC_URL", STATIC_URL);
-
 module.exports = {
 	context: __dirname,
 
@@ -64,7 +60,6 @@ module.exports = {
 							sassOptions: {
 								loadPaths: [path.resolve(__dirname, "node_modules")],
 							},
-							additionalData: scssData,
 						},
 					},
 				],
