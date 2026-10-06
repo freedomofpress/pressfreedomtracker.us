@@ -693,8 +693,8 @@ filetype==1.2.0 \
     # via
     #   -r requirements.txt
     #   willow
-fpf-wagtail-common @ https://github.com/freedomofpress/fpf-wagtail-common/releases/download/v0.3.0/fpf_wagtail_common-0.3.0-py3-none-any.whl \
-    --hash=sha256:5705d4d30daf3c0f64697604efa0074acd4c334df2d736f866d725d2b1e9b15d
+fpf-wagtail-common @ https://github.com/freedomofpress/fpf-wagtail-common/releases/download/v0.4.0/fpf_wagtail_common-0.4.0-py3-none-any.whl \
+    --hash=sha256:47e7b0203c9b439f4310791575a891c4986f1e407c394e4bef881adac3ba4197
     # via -r requirements.txt
 google-api-core==2.40.0 \
     --hash=sha256:4b9e0a80024c269ae173136d5439f4ed284651d6e5e2773ba5c694f481f9c0f4 \
