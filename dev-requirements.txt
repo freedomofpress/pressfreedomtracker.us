@@ -502,9 +502,9 @@ django-recaptcha==4.1.0 \
 django-settings-export==1.2.1 \
     --hash=sha256:fceeae49fc597f654c1217415d8e049fc81c930b7154f5d8f28c432db738ff79
     # via -r requirements.txt
-django-silk==5.5.0 \
-    --hash=sha256:41fcabe65d59d31ccdb69daeb3c3e6d30879ab2c00b0875b111fda0f69aec065 \
-    --hash=sha256:82b5a690d623935be916dd145e2f605a4ac9454d54e03df6a7ffcf38333c8444
+django-silk==5.6.0 \
+    --hash=sha256:761300bde25b8ce3c381dc0710e82c792c099c0ee6558fad3165dc560a06dd48 \
+    --hash=sha256:bb741fb8af45eba663e8ed832207d16ecd731496313311f6dfae5fe776bed38e
     # via -r dev-requirements.in
 django-storages[google]==1.14.6 \
     --hash=sha256:11b7b6200e1cb5ffcd9962bd3673a39c7d6a6109e8096f0e03d46fab3d3aabd9 \
