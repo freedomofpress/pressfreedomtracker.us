@@ -301,8 +301,3 @@ export default function Search({ data = [], selectedTags = [] }) {
 		</form>
 	);
 }
-
-Search.defaultProps = {
-	data: [],
-	selectedTags: [],
-};
