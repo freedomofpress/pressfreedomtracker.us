@@ -52,11 +52,6 @@ module.exports = {
 				test: /\.scss$/,
 				type: "css",
 				loader: "sass-loader",
-				options: {
-					sassOptions: {
-						loadPaths: [path.resolve(__dirname, "node_modules")],
-					},
-				},
 			},
 		],
 	},
