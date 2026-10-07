@@ -1016,9 +1016,9 @@ mdurl==0.1.2 \
     --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8 \
     --hash=sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba
     # via markdown-it-py
-modelsearch==1.3.1 \
-    --hash=sha256:a92847f01788d0d615e8715fabb8e823029288840297fb9e7235ee03ad49b6a8 \
-    --hash=sha256:f3b2e304dbef9f7c838423f591cfe0c60f4cef584bae8793d2aa8ac35a3c46e0
+modelsearch==1.3.2 \
+    --hash=sha256:52ede0f65e91efdb9d715f603e0bb3db96a95c80eba695abcd4628c03759999e \
+    --hash=sha256:8738ad7dc6fd2f70f622e717c52fbdcc60285e6b74acc41a7bf3fe911718532b
     # via
     #   -r requirements.txt
     #   wagtail
