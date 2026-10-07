@@ -24,6 +24,10 @@ svg_paths := "client/common/icons"
 # A binary in the bind-mounted node_modules, put there by the `node-modules`
 # recipe rather than baked into the image.
 svgo := "node_modules/.bin/svgo"
+# Prefix for compose: git facts go in as env and build-args, since neither the
+# build context nor a worktree's bind-mount carries a usable .git. Hex and base64
+# values hold no whitespace, so the unquoted expansion splits cleanly.
+git_facts := 'args="$(./ci/scripts/version-file.sh --build-args)" && env $args'
 
 # Show available recipes.
 default:
@@ -52,7 +56,7 @@ node-modules: env-check
 
 # Run the webapp locally, via containers (--build keeps images in sync with the Containerfile).
 dev: env-check
-    {{compose}} up --build
+    {{git_facts}} {{compose}} up --build
 
 alias compose := dev
 
@@ -62,7 +66,7 @@ build: env-check
 
 # Build the production image locally.
 build-prod: env-check
-    {{compose}} --file=prod-docker-compose.yaml build
+    {{git_facts}} {{compose}} --file=prod-docker-compose.yaml build
 
 # Run the webapp prod-like (gunicorn, DEBUG off), via containers; `dev`'s analog.
 prod: build-prod
@@ -141,7 +145,7 @@ createdevdata:
 # Wipe the postgresql container and re-seed a fresh database via createdevdata.
 reset-db: env-check && createdevdata
     {{compose}} rm -f postgresql
-    {{compose}} up --build --wait
+    {{git_facts}} {{compose}} up --build --wait
 
 # Import a postgres export file located at ./import.db.
 import-db:

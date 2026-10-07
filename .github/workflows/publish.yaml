@@ -13,8 +13,13 @@ permissions:
   actions: read
 
 jobs:
+  git-facts:
+    name: Git facts
+    uses: ./.github/workflows/git-facts.yaml
+
   build-django:
     name: Build:Django
+    needs: git-facts
     uses: freedomofpress/actionslib/.github/workflows/oci-build.yaml@main
     permissions:
       contents: read
@@ -24,9 +29,11 @@ jobs:
       context: '.'
       containerfile: ci/containers/Containerfile
       target: prod
-      build-args: USERID=1000
+      # No blank lines: buildah-build passes each line on as a --build-arg.
+      build-args: |
+        USERID=1000
+        ${{ needs.git-facts.outputs.build-args }}
       registry: ghcr.io/freedomofpress/pressfreedomtracker-us
-      requires-deep-history: true
       add-branch-tags: true
 
   build-chartgen:

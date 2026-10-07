@@ -122,13 +122,11 @@ FROM ${NODE_IMAGE} AS assets
 COPY ./ /src-files
 WORKDIR /src-files
 
-# node_modules and .git are build-time only; stripping them lets `prod` copy this
-# tree wholesale rather than filtering during chown, and keeps the packages and
-# the git history out of the published image. Both still exist in the COPY layer
-# above, but `assets` is a discarded stage that is never pushed -- `prod` only
-# ever sees the result.
+# node_modules is build-time only; stripping it lets `prod` copy this tree
+# wholesale rather than filtering during chown, and keeps the packages out of
+# the published image.
 RUN npm install && npm run build && \
-    rm -rf node_modules .git
+    rm -rf node_modules
 
 # ---- oxipng (dev-only lint tooling; see `just pnglint`) ----
 # Named stage purely so `dev` below can COPY --from it; `--from` can't expand
@@ -218,18 +216,12 @@ RUN pip install --no-deps --no-cache-dir --require-hashes -r requirements.txt
 # text files are copied into `prod`.
 FROM python-base AS version
 
-# .git is bind-mounted rather than COPYed so it is readable for the length of this
-# one command and never lands in an image layer. Requires BuildKit or buildah;
-# only the long-deprecated DOCKER_BUILDKIT=0 builder would choke.
-# Built in /version rather than /django, which python-base hands to the app
-# user -- git refuses to operate on a repo it does not own.
-WORKDIR /version
+# Git facts arrive as build-args from the host (see version-file.sh), scoped to
+# this discarded stage so they neither reach `prod`'s history nor bust its cache.
+ARG GIT_COMMIT
+ARG GIT_INFO_B64
 COPY ci/scripts/version-file.sh /usr/local/bin/
-# safe.directory: the mounted .git carries the host checkout's ownership, which
-# need not match the build user. Scoped to this discarded stage.
-RUN --mount=type=bind,source=.git,target=/version/.git,ro \
-    git config --global --add safe.directory /version && \
-    version-file.sh
+RUN version-file.sh --deploy
 
 # ---- prod django (code + built assets baked in) ----
 FROM prod-deps AS prod
@@ -240,11 +232,12 @@ LABEL org.opencontainers.image.vendor="Freedom of the Press Foundation"
 LABEL org.opencontainers.image.title="pressfreedomtracker.us"
 
 COPY --from=assets --chown=gcorn:gcorn /src-files/ /django/
-COPY --from=version --chown=gcorn:gcorn /deploy/ /deploy/
 
 RUN mkdir -p /etc/gunicorn && chown -R gcorn: /etc/gunicorn
 COPY ci/containers/gunicorn/gunicorn.py /etc/gunicorn/gunicorn.py
 
 USER gcorn
 RUN env DJANGO_WHITENOISE=1 DJANGO_DISABLE_DEBUG=1 DJANGO_NO_DB=1 ./manage.py collectstatic -c --noinput
+# Last, as the version report is dated and so changes every build.
+COPY --from=version --chown=gcorn:gcorn /deploy/ /deploy/
 CMD [ "django-start.sh" ]
