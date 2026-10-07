@@ -45,6 +45,8 @@ module.exports = {
 		rules: [
 			{
 				test: /\.jsx?$/,
+				// Babel gets its env from NODE_ENV, which is set by --config-node-env in
+				// the npm scripts, so prod builds don't get dev/debug JSX transforms.
 				loader: "babel-loader",
 				include: path.resolve(__dirname, "client"),
 			},
