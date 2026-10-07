@@ -14,7 +14,7 @@ env:
   COMPOSE_FILE_DEV: docker-compose.yaml
   COMPOSE_FILE_PROD: prod-docker-compose.yaml
   # Must match PYTHON_IMAGE in ci/containers/Containerfile
-  VERSION_PYTHON: 3.14.6
+  VERSION_PYTHON: 3.14.8
 
 permissions:
   contents: read
