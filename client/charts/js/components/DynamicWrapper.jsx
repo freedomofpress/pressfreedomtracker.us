@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /**
  * DynamicWrapper allows for elements to be allowed to conditionally wrap, based on
@@ -10,7 +10,12 @@ import React from 'react'
  * @returns {React.DetailedReactHTMLElement<{}, HTMLElement>|*}
  * @constructor
  */
-export default function DynamicWrapper({ wrap = true, children, wrapperComponent }) {
-	if (wrap && wrapperComponent) return React.cloneElement(wrapperComponent, {}, children)
-	else return children
+export default function DynamicWrapper({
+	wrap = true,
+	children,
+	wrapperComponent,
+}) {
+	if (wrap && wrapperComponent)
+		return React.cloneElement(wrapperComponent, {}, children);
+	else return children;
 }

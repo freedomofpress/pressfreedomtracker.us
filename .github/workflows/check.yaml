@@ -14,7 +14,7 @@ env:
   COMPOSE_FILE_DEV: docker-compose.yaml
   COMPOSE_FILE_PROD: prod-docker-compose.yaml
   # Must match PYTHON_IMAGE in ci/containers/Containerfile
-  VERSION_PYTHON: 3.14.6
+  VERSION_PYTHON: 3.14.8
 
 permissions:
   contents: read
@@ -95,7 +95,7 @@ jobs:
           persist-credentials: false
 
       - name: Install just
-        uses: taiki-e/install-action@94c31af3204a9f15ab40b35ad084410b905bbc73 # v2.87.17
+        uses: taiki-e/install-action@4cef1412cce204788f482e778a0b9187f9626a29 # v2.87.21
         with:
           tool: just
 
@@ -190,7 +190,7 @@ jobs:
           docker image tag "$CHARTGEN_IMAGE_URL" localhost/pressfreedomtracker-us-node-chart-pregenerator
 
       - name: Install just
-        uses: taiki-e/install-action@94c31af3204a9f15ab40b35ad084410b905bbc73 # v2.87.17
+        uses: taiki-e/install-action@4cef1412cce204788f482e778a0b9187f9626a29 # v2.87.21
         with:
           tool: just
 

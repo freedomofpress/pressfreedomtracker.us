@@ -24,7 +24,7 @@
 - PostgreSQL 17
 - Django REST Framework + drf-spectacular (OpenAPI docs)
 - Webpack 5, Babel, React 18, D3 v7, Jest 29 (frontend)
-- ESLint (airbnb config), Stylelint (stylelint-config-standard-scss)
+- ESLint, Prettier, Stylelint (stylelint-config-standard-scss)
 - Ruff (primary linter)
 - Bandit (security)
 - structlog for logging
@@ -52,7 +52,7 @@
 
 - `just ruff` — linter/formatter (`just ruff-fix` applies fixes)
 - `just bandit` — security static analysis
-- `just eslint` — JavaScript linting (airbnb config)
+- `just eslint` — JavaScript linting
 - `just stylelint` — SCSS linting
 - `just lint` — all of the above plus the migration check
 - Ruff configured in `pyproject.toml`: `select = ["I", "F4"]` (isort + unused imports), target py312, Django/Wagtail-aware import section ordering
@@ -67,11 +67,10 @@
 
 ## Frontend Build System
 
-- Webpack entries in `webpack.config.js`: `common`, `statistics`, `draftail`, `charts`, `filterSidebar`, `filterSummary`, `searchBar`, `verticalBarChart`, `treeMapChart`, `bubbleMapChart`, `hexbinMapChart`
+- Webpack entries in `webpack.config.js`: `common`, `statistics`, `draftail`, `charts`, `filterSidebar`, `filterSummary`, `searchBar`, `verticalBarChart`, `treeMapChart`, `bubbleMapChart`, `hexbinMapChart`, `shortcuts-panel`
 - Output: `build/static/bundles/`
 - `npm run start` = dev watch mode, `npm run build` = production build
-- Module alias `~` maps to `client/common/js/` (both webpack and Jest)
-- SCSS compiled via sass-loader + postcss-loader with Autoprefixer
+- SCSS compiled via sass-loader
 - `webpack-bundle-tracker` writes `webpack-stats.json` for Django integration via `django-webpack-loader`
 
 ## Database

@@ -10,7 +10,7 @@ compose := engine + " compose"
 # resolves hashes against this interpreter, and the app installs the result. The
 # tag alone is not enough -- Docker Hub rebuilds it in place for patches, so
 # without the digest the two can silently drift apart.
-python_builder := "docker.io/library/python:3.14.6-slim-trixie@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4d0a4828a6500b1eff50061"
+python_builder := "docker.io/library/python:3.14.8-slim-trixie@sha256:f85c5697265c178cc6887276c55fe16cf3d14ca35c3df6a5eab3b360534a55d2"
 
 # pinning a specific, recent version of pip-tools, so that the dev-env
 # reuses the same tooling predictably.
@@ -40,6 +40,16 @@ dev-init:
 env-check:
     [ -f .env ] || echo "UID=$(id -u)" > .env
 
+
+# node_modules lives in the bind-mounted tree, populated by the `node` service's
+# runtime `npm install` -- so a one-shot `compose run` finds it already there,
+# unless nothing has populated it yet. The guard is deliberately host-side, and
+# skipping the install when the tree is already populated keeps a running
+# `just dev` watcher undisturbed.
+[private]
+node-modules: env-check
+    [ -d node_modules ] || {{compose}} run --rm --no-deps node npm ci
+
 # Run the webapp locally, via containers (--build keeps images in sync with the Containerfile).
 dev: env-check
     {{compose}} up --build
@@ -49,6 +59,14 @@ alias compose := dev
 # Build all containers locally.
 build: env-check
     {{compose}} build
+
+# Build the production image locally.
+build-prod: env-check
+    {{compose}} --file=prod-docker-compose.yaml build
+
+# Run the webapp prod-like (gunicorn, DEBUG off), via containers; `dev`'s analog.
+prod: build-prod
+    {{compose}} --file=prod-docker-compose.yaml up
 
 # The static checks below run with `--no-deps`: their tooling is baked into the
 # dev images, so they need neither postgres, selenium, the webpack watcher nor
@@ -89,15 +107,6 @@ svglint: node-modules
         {{svgo}} --config=svgo.config.mjs -r {{svg_paths}}
     git diff --exit-code -- {{svg_paths}}
 
-# Jest, eslint and stylelint read sources directly rather than webpack's output,
-# so no build is needed -- but node_modules lives in the bind-mounted tree,
-# populated by the `node` service, so install it if absent. The guard is
-# deliberately host-side, and skipping the install when the tree is already
-# populated keeps a running `just dev` watcher undisturbed.
-[private]
-node-modules: env-check
-    [ -d node_modules ] || {{compose}} run --rm --no-deps node npm ci
-
 # Lint JavaScript with eslint.
 eslint: node-modules
     {{compose}} run --rm --no-deps node npm run js-lint
@@ -129,6 +138,11 @@ test-js: node-modules
 createdevdata:
     {{compose}} exec django bash -c "./manage.py createdevdata"
 
+# Wipe the postgresql container and re-seed a fresh database via createdevdata.
+reset-db: env-check && createdevdata
+    {{compose}} rm -f postgresql
+    {{compose}} up --build --wait
+
 # Import a postgres export file located at ./import.db.
 import-db:
     {{compose}} exec -T postgresql bash -c "sed 's/OWNER TO [a-z]*/OWNER TO tracker/g' /django/import.db | psql trackerdb -U tracker > /dev/null"
@@ -146,6 +160,10 @@ open-browser:
     COMPOSE="{{compose}}" ./ci/scripts/browser-open.sh
 
 alias browser := open-browser
+
+# Attach to the running Django container's console, e.g. for ipdb.
+attach:
+    {{engine}} attach $({{compose}} ps -q django)
 
 # Recompile prod + ci + dev lockfiles (forward flags, e.g. --upgrade or --upgrade-package=NAME).
 pip-compile *FLAGS: (_pip-lock "requirements.txt" "requirements.in" FLAGS) (_pip-lock "ci-requirements.txt" "ci-requirements.in" FLAGS) (_pip-lock "dev-requirements.txt" "dev-requirements.in" FLAGS)
