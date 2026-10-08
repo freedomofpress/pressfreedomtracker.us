@@ -17,7 +17,10 @@
 		"baseline widely available"
 	],
 	"overrides": {
-		"d3-color": "^3.1.0"
+		"d3-color": "^3.1.0",
+		"babel-preset-current-node-syntax": {
+			"@babel/core": "$@babel/core"
+		}
 	},
 	"devDependencies": {
 		"@babel/core": "^8.0.6",
