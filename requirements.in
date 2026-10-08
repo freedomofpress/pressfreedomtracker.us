@@ -37,3 +37,7 @@ wagtail>=7.4.3,<8.0
 whitenoise
 google-api-python-client
 python-dateutil>=2.9.0
+
+# fpf-wagtail-common builds wheel files and attaches them as assets on new releases.
+# See https://github.com/freedomofpress/fpf-wagtail-common/releases
+https://github.com/freedomofpress/fpf-wagtail-common/releases/download/v0.1.0/fpf_wagtail_common-0.1.0-py3-none-any.whl

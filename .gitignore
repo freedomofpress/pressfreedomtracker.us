@@ -46,3 +46,6 @@ tracker/settings/local.py
 .DS_Store
 .claude/settings.local.json
 .claude/worktrees/
+
+# upstream dependencies checked out for in-place development
+develop-pkgs/
