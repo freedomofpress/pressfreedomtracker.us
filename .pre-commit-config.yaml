@@ -61,6 +61,8 @@ repos:
     hooks:
       - id: eslint
         files: \.(jsx?|mjs)$ # *.js, *.jsx, *.mjs
+        # Replace the hook's default types: [javascript], which excludes .jsx,
+        # so the files pattern alone decides what is linted
         types: [file]
         additional_dependencies:
           - eslint@9.39.5
