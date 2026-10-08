@@ -145,8 +145,8 @@ gunicorn, a reverse nginx proxy, and debug mode off using the
 `prod-docker-compose.yaml` file. Note that build time for this
 container takes much longer than the developer environment:
 
-Run it via `just prod`, which builds the image first
-(`just build-prod` builds alone):
+Run it via `just prod`, which builds the image first with git facts
+passed in as build-args (`just build-prod` builds alone):
 
 ```bash
 just prod

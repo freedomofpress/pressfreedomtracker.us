@@ -58,8 +58,13 @@ jobs:
       build-args: USERID=1001
       registry: localhost/pressfreedomtracker-us-dev-chartgen
 
+  git-facts:
+    name: Git facts
+    uses: ./.github/workflows/git-facts.yaml
+
   build-prod-django:
     name: Build:Prod:Django
+    needs: git-facts
     uses: freedomofpress/actionslib/.github/workflows/oci-build.yaml@main
     with:
       context: '.'
@@ -69,7 +74,7 @@ jobs:
       # publish.yaml and the k8s securityContext, so the image tested here is
       # the same artifact that gets deployed.
       registry: localhost/pressfreedomtracker-us
-      requires-deep-history: true
+      build-args: ${{ needs.git-facts.outputs.build-args }}
 
   build-prod-chartgen:
     name: Build:Prod:Chartgen
