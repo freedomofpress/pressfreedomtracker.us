@@ -1806,9 +1806,9 @@ ruff==0.16.10 \
     --hash=sha256:eff4728c4eaae93f0955cd264d24b2ab348e74bf59986ccf282ba6dc16b3b017 \
     --hash=sha256:f33f43a864a8483eebd160e713336c8bab02c934feaff0a33cf5ccb41546d09a
     # via -r dev-requirements.in
-selenium==4.46.0 \
-    --hash=sha256:54f7e1a4df5f7508ac8c38ce2ea584db1b27083dd79962b22524219219df5cbe \
-    --hash=sha256:f03e864770a21ab32009961c9d015cb2c6275eba45c926c272e02d90af423aad
+selenium==4.50.0 \
+    --hash=sha256:80402fb6f48e0ee2183ec1d58b257a593dcd5c8130c1e6419ee7509f2128be5d \
+    --hash=sha256:f724a38a7fd8b0561c6767c620bd9b2c7bd8012d4cb664b2ad23064e5d67d0df
     # via -r dev-requirements.in
 six==1.17.0 \
     --hash=sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274 \
