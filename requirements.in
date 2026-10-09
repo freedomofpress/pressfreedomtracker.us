@@ -26,7 +26,7 @@ requests>=2.34.2
 structlog
 typogrify
 unittest-xml-reporting
-wagtail-autocomplete>=0.12.0
+wagtail-autocomplete>=0.12.1
 wagtail-django-recaptcha
 wagtail-factories>=4.5.0
 wagtail-honeypot
