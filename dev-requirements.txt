@@ -2025,9 +2025,9 @@ wagtail==7.4.3 \
     #   wagtail-inventory
     #   wagtail-metadata
     #   wagtail-newsletter
-wagtail-autocomplete==0.12.0 \
-    --hash=sha256:17be82c7e2ab2714b01a2a3edbf29f56ba37ad72f2bebcded560c5ead9b482df \
-    --hash=sha256:d1cd315475e8c776c85a75ba5eb76ceb2eb680c18334e7e9424040d7faa9b538
+wagtail-autocomplete==0.12.1 \
+    --hash=sha256:87ae8b42bc67016417e6c108befef84a451bdfe0eb8e9b5e86a9bbdb420bb55d \
+    --hash=sha256:b0e1363f6ffc502287841b02bc8c4959ee5d85ac984fa3a0d203dc3226dec725
     # via -r requirements.txt
 wagtail-django-recaptcha==2.2.0 \
     --hash=sha256:094a59cbfd9f02d41e9fd0a294fc3e754e5b5fc5da01cc15a8e08007f3ad2f67 \
