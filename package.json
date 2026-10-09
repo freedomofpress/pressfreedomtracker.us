@@ -42,7 +42,7 @@
 		"mini-css-extract-plugin": "^2.10.2",
 		"prettier": "^3.9.9",
 		"resize-observer-polyfill": "^1.5.1",
-		"sass": "^1.104.0",
+		"sass": "^1.105.1",
 		"sass-loader": "^17.0.1",
 		"stylelint": "^17.15.0",
 		"stylelint-config-standard-scss": "^17.0.0",
