@@ -633,9 +633,9 @@ django-widget-tweaks==1.5.1 \
     --hash=sha256:084acc9eeb5a3208f2670522de6284287973e54d54488ce6d402f4b99bc5f452 \
     --hash=sha256:3f5080f8365740fc1c14607498c975cbfed896dd0c40e1b563095716ee31e3b5
     # via -r requirements.txt
-djangorestframework==3.17.2 \
-    --hash=sha256:89ed713b6dc83e1539f214b7d10808ae19bb8511004beba886225da6d5c9dafa \
-    --hash=sha256:cb0546a7415d5b46c04e0f4fe0a54b2109f4fdd5e83ca773c8c6183a6493d042
+djangorestframework==3.18.1 \
+    --hash=sha256:605d79fa2ec2f02905492e5ea13d903c2d842d0b4c915a57f7bf02ab9f3c91dd \
+    --hash=sha256:f1409d698967aaf82d5d98d76b549c8fba8bd92ebd0d83d24454508f72168dc2
     # via
     #   -r requirements.txt
     #   djangorestframework-csv
