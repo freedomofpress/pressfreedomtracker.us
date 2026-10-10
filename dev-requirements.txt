@@ -2081,9 +2081,9 @@ wagtail-honeypot==1.3.1 \
     --hash=sha256:793f7bf91cdc8cf9b2516c4e6a274f939bfa94ef977fe031cabeef6c5e47cd91 \
     --hash=sha256:e09cbb99ef6e18b98a3c36b06d9c2b7bd357477af4470404146af55d567528ff
     # via -r requirements.txt
-wagtail-inventory==3.3 \
-    --hash=sha256:9817745787b9adf7c5bfb00af8df6c9ade8e4b0dca4eeef0001f1cd99207a5c3 \
-    --hash=sha256:f079afbdb8a7d6f98fbe0d23887867807d980faff9e3b0cbd44c9beb378e1610
+wagtail-inventory==3.4 \
+    --hash=sha256:c2f75eaae683b18fd10450b1e4d397fa2ac13f2b3d09bdac7743a3c1d79b57cf \
+    --hash=sha256:d13043c1ca6444cfe5003606a91e26f20f989223373223893e5693794b6225ea
     # via -r requirements.txt
 wagtail-metadata==5.0.0 \
     --hash=sha256:3b9109928bad53306b21b64cf9205d84cbb88fc625bac0a38305bebb9c26e64a \
