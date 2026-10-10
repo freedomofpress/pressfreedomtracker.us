@@ -30,7 +30,7 @@ wagtail-autocomplete>=0.12.1
 wagtail-django-recaptcha
 wagtail-factories>=4.5.0
 wagtail-honeypot
-wagtail-inventory>=3.1
+wagtail-inventory>=3.4
 wagtail-metadata>=5.0.0
 wagtail-newsletter[mailchimp,mrml]
 wagtail>=7.4.3,<8.0
