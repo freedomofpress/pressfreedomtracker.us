@@ -70,7 +70,7 @@
 - Webpack entries in `webpack.config.js`: `common`, `statistics`, `draftail`, `charts`, `filterSidebar`, `filterSummary`, `searchBar`, `verticalBarChart`, `treeMapChart`, `bubbleMapChart`, `hexbinMapChart`, `shortcuts-panel`
 - Output: `build/static/bundles/`
 - `npm run start` = dev watch mode, `npm run build` = production build
-- SCSS compiled via sass-loader
+- SCSS compiled via sass-loader and emitted as CSS files by webpack's built-in CSS support
 - `webpack-bundle-tracker` writes `webpack-stats.json` for Django integration via `django-webpack-loader`
 
 ## Database
