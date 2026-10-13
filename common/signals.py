@@ -1,4 +1,4 @@
-from django.db.models.signals import post_delete, post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.urls import reverse
 
@@ -7,7 +7,7 @@ from wagtail.contrib.frontend_cache.utils import (
     purge_url_from_cache,
 )
 from wagtail.contrib.settings.models import BaseSiteSetting
-from wagtail.signals import page_published
+from wagtail.signals import page_published, page_unpublished
 
 import structlog
 
@@ -61,17 +61,17 @@ def purge_cache_for_settings(sender, **kwargs):
 
 
 page_published.connect(purge_category_from_frontend_cache, sender=IncidentPage)
-post_delete.connect(purge_category_from_frontend_cache, sender=IncidentPage)
+page_unpublished.connect(purge_category_from_frontend_cache, sender=IncidentPage)
 
 # Some simple pages have sidebar content from incidents,
 # blogs, and the homepage
 page_published.connect(purge_simple_page_from_frontend_cache, sender=IncidentPage)
 page_published.connect(purge_simple_page_from_frontend_cache, sender=BlogPage)
 page_published.connect(purge_simple_page_from_frontend_cache, sender=HomePage)
-post_delete.connect(purge_simple_page_from_frontend_cache, sender=IncidentPage)
-post_delete.connect(purge_simple_page_from_frontend_cache, sender=BlogPage)
-post_delete.connect(purge_simple_page_from_frontend_cache, sender=HomePage)
+page_unpublished.connect(purge_simple_page_from_frontend_cache, sender=IncidentPage)
+page_unpublished.connect(purge_simple_page_from_frontend_cache, sender=BlogPage)
+page_unpublished.connect(purge_simple_page_from_frontend_cache, sender=HomePage)
 
-# Purge sitemap from frontend cache everytime a new page is created or deleted
+# Purge sitemap from frontend cache everytime a page is published or unpublished
 page_published.connect(purge_sitemap_from_frontend_cache)
-post_delete.connect(purge_sitemap_from_frontend_cache)
+page_unpublished.connect(purge_sitemap_from_frontend_cache)

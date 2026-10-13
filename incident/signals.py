@@ -1,12 +1,12 @@
 from urllib.parse import urljoin
 
-from django.db.models.signals import post_delete, post_save, pre_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
 from wagtail.models import Site
-from wagtail.signals import page_published
+from wagtail.signals import page_published, page_unpublished
 
 import structlog
 
@@ -83,11 +83,11 @@ def purge_prepub_list_homepage_from_frontend_cache(instance=None, **kwargs):
 page_published.connect(
     purge_incident_from_frontend_cache_for_category, sender=CategoryPage
 )
-post_delete.connect(
+page_unpublished.connect(
     purge_incident_from_frontend_cache_for_category, sender=CategoryPage
 )
 
 # IncidentIndexPage cache
 page_published.connect(purge_incident_index_from_frontend_cache, sender=CategoryPage)
 page_published.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)
-post_delete.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)
+page_unpublished.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)
