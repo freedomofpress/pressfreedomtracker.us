@@ -37,8 +37,8 @@ class TestCategoryPageCacheInvalidation(TestCase):
         response = self.client.get("/category/?search=test")
         self.assertEqual(response["Cache-Tag"], f"category-page-{self.categorypage.pk}")
 
-    @patch("common.signals.purge_page_from_cache")
-    def test_cache_invalidated_on_new_incident(self, purge_page_from_cache):
+    @patch("common.signals.PurgeBatch")
+    def test_cache_invalidated_on_new_incident(self, purge_batch_cls):
         """
         To some extent this test is just testing django's signals functionality
         which maybe is redundant--and runs counter to the "don't test your
@@ -46,12 +46,14 @@ class TestCategoryPageCacheInvalidation(TestCase):
         was being made, since I was not able to test locally with a real Cloudflare
         instance.
         """
-        self.assertFalse(purge_page_from_cache.called)
+        batch = purge_batch_cls.return_value
+        self.assertFalse(batch.add_page.called)
 
         # should trigger a cache purge on category page
         IncidentPageFactory().save_revision().publish()
 
-        purge_page_from_cache.assert_called_with(self.categorypage)
+        batch.add_page.assert_called_with(self.categorypage)
+        batch.purge.assert_called()
 
     @patch("common.signals.purge_tags_from_cache")
     def test_cache_tag_purge_on_new_incident(self, purge_tags_from_cache):

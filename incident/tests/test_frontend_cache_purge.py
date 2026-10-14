@@ -45,15 +45,17 @@ class TestIncidentIndexPageCachePurge(TestCase):
         response = self.client.get("/incidents/?search=test")
         self.assertEqual(response["Cache-Tag"], f"incident-index-{self.index.pk}")
 
-    @patch("incident.signals.purge_page_from_cache")
-    def test_cache_purge_on_new_incident(self, purge_page_from_cache):
+    @patch("incident.signals.PurgeBatch")
+    def test_cache_purge_on_new_incident(self, purge_batch_cls):
         "Should purge page cache for incident index page on incident creation"
-        assert_never_called_with(purge_page_from_cache, self.index)
+        batch = purge_batch_cls.return_value
+        assert_never_called_with(batch.add_page, self.index)
 
         # should trigger a cache purge on index page
         IncidentPageFactory(parent=self.index).save_revision().publish()
 
-        purge_page_from_cache.assert_any_call(self.index)
+        batch.add_page.assert_any_call(self.index)
+        batch.purge.assert_called()
 
     @patch("incident.signals.purge_tags_from_cache")
     def test_cache_tag_purge_on_new_incident(self, purge_tags_from_cache):
@@ -65,9 +67,9 @@ class TestIncidentIndexPageCachePurge(TestCase):
         purge_tags_from_cache.assert_any_call([self.index.get_cache_tag()])
 
 
-@patch("incident.signals.purge_page_from_cache")
+@patch("incident.signals.PurgeBatch")
 class TestIncidentPageCachePurge(TestCase):
-    def test_cache_purged_on_category_change(self, purge_page_from_cache):
+    def test_cache_purged_on_category_change(self, purge_batch_cls):
         "Should purge cache for an incident in a category when category changes"
         category = CategoryPageFactory.create()
         incident = IncidentPageFactory.create()
@@ -75,15 +77,17 @@ class TestIncidentPageCachePurge(TestCase):
         incident.save()
 
         # Cache purging should not have occurred yet
-        assert_never_called_with(purge_page_from_cache, incident)
+        assert_never_called_with(purge_batch_cls.return_value.add_page, incident)
 
         # Should trigger purge on incident page
         category.title = "New Category Name"
         category.save_revision().publish()
 
-        purge_page_from_cache.assert_any_call(incident)
+        batch = purge_batch_cls.return_value
+        batch.add_page.assert_any_call(incident)
+        batch.purge.assert_called()
 
-    def test_cache_not_purged_on_wrong_category_change(self, purge_page_from_cache):
+    def test_cache_not_purged_on_wrong_category_change(self, purge_batch_cls):
         """
         Should not purge cache for an incident when a category changes if the
         incident is not in that category.
@@ -97,9 +101,9 @@ class TestIncidentPageCachePurge(TestCase):
         # Should NOT trigger purge on incident page
         category.save_revision().publish()
 
-        assert_never_called_with(purge_page_from_cache, incident)
+        assert_never_called_with(purge_batch_cls.return_value.add_page, incident)
 
-    def test_cache_not_purged_on_unrelated_incident(self, purge_page_from_cache):
+    def test_cache_not_purged_on_unrelated_incident(self, purge_batch_cls):
         """
         Should not purge cache for an incident when another unrelated incident
         changes
@@ -110,10 +114,10 @@ class TestIncidentPageCachePurge(TestCase):
         incident1.title = "New Incident Name"
         incident1.save_revision().publish()  # Should not trigger purge on incident2
 
-        assert_never_called_with(purge_page_from_cache, incident2)
+        assert_never_called_with(purge_batch_cls.return_value.add_page, incident2)
 
 
-@patch("incident.signals.purge_page_from_cache")
+@patch("incident.signals.PurgeBatch")
 @patch("incident.signals.purge_urls_from_cache")
 class TestPrepublicationSettingsCachePurge(TestCase):
     def setUp(self):
@@ -123,16 +127,19 @@ class TestPrepublicationSettingsCachePurge(TestCase):
         self.home_page = HomePageFactory()
 
     def test_cache_purged_when_feature_enabled(
-        self, purge_urls_from_cache, purge_page_from_cache
+        self, purge_urls_from_cache, purge_batch_cls
     ):
         "Should purge the unconfirmed incidents URL when the feature is enabled"
         PrepublicationSettings.objects.create(is_enabled=True)
 
         purge_urls_from_cache.assert_called_once_with([self.prepub_list_url])
-        purge_page_from_cache.assert_called_once_with(self.home_page)
+        batch = purge_batch_cls.return_value
+        batch.add_pages.assert_called_once()
+        self.assertEqual(list(batch.add_pages.call_args.args[0]), [self.home_page])
+        batch.purge.assert_called_once()
 
     def test_cache_purged_when_feature_toggled(
-        self, purge_urls_from_cache, purge_page_from_cache
+        self, purge_urls_from_cache, purge_batch_cls
     ):
         "Should purge the unconfirmed incidents when the feature is toggled"
         prepub_settings = PrepublicationSettings.objects.create()
@@ -141,4 +148,7 @@ class TestPrepublicationSettingsCachePurge(TestCase):
         prepub_settings.is_enabled = True
         prepub_settings.save()
         purge_urls_from_cache.assert_called_once_with([self.prepub_list_url])
-        purge_page_from_cache.assert_called_once_with(self.home_page)
+        batch = purge_batch_cls.return_value
+        batch.add_pages.assert_called_once()
+        self.assertEqual(list(batch.add_pages.call_args.args[0]), [self.home_page])
+        batch.purge.assert_called_once()
