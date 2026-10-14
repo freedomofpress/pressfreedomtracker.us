@@ -3,8 +3,10 @@
 set -e
 
 # node_modules lives in the bind-mounted checkout, not the image, so it has to be
-# populated at runtime.
+# populated at runtime. The marker tells the justfile's `node-modules` guard that
+# this tree was installed for Linux, not by a host-side `npm install`.
 npm install
+touch node_modules/.container-install
 
 # `.node_complete` is the handshake consumed by django-start.sh's wait_for_node():
 # it signals that node_modules is populated, so Django's own tooling can rely on
