@@ -1,15 +1,13 @@
 import React from "react";
-import ShallowRenderer from "react-test-renderer/shallow";
+import { render } from "@testing-library/react";
 import Flashing from "../Flashing";
 
 test("renders Flashing true", () => {
-	const renderer = new ShallowRenderer();
-	expect(renderer.render(<Flashing flashing>test</Flashing>)).toMatchSnapshot();
+	const { container } = render(<Flashing flashing>test</Flashing>);
+	expect(container).toMatchSnapshot();
 });
 
 test("renders Flashing false", () => {
-	const renderer = new ShallowRenderer();
-	expect(
-		renderer.render(<Flashing flashing={false}>test</Flashing>),
-	).toMatchSnapshot();
+	const { container } = render(<Flashing flashing={false}>test</Flashing>);
+	expect(container).toMatchSnapshot();
 });

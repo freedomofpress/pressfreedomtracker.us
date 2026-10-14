@@ -5,8 +5,8 @@
 	"description": "",
 	"main": "webpack.config.js",
 	"scripts": {
-		"build": "webpack --mode production",
-		"start": "webpack watch --mode development --devtool eval-source-map",
+		"build": "webpack --config-node-env production",
+		"start": "webpack watch --config-node-env development --devtool eval-source-map",
 		"test": "jest --passWithNoTests --coverage",
 		"test-update": "jest -u --passWithNoTests --coverage",
 		"js-lint": "eslint .",
@@ -17,30 +17,32 @@
 		"baseline widely available"
 	],
 	"overrides": {
-		"d3-color": "^3.1.0"
+		"d3-color": "^3.1.0",
+		"babel-preset-current-node-syntax": {
+			"@babel/core": "$@babel/core"
+		}
 	},
 	"devDependencies": {
 		"@babel/core": "^8.0.6",
 		"@babel/preset-env": "^8.0.6",
 		"@babel/preset-react": "^8.0.1",
 		"@eslint/js": "^9.39.5",
+		"@testing-library/react": "^16.3.3",
 		"babel-jest": "^30.5.2",
 		"babel-loader": "^10.1.1",
-		"css-loader": "^7.1.5",
 		"eslint": "^9.39.5",
 		"eslint-plugin-import": "^2.32.0",
 		"eslint-plugin-jsx-a11y": "^6.10.2",
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.1.1",
-		"globals": "^17.12.0",
+		"globals": "^17.13.0",
 		"jest": "^30.5.2",
 		"jest-environment-jsdom": "^30.5.2",
-		"mini-css-extract-plugin": "^2.6.1",
 		"prettier": "^3.9.9",
-		"react-test-renderer": "^18.2.0",
-		"sass": "^1.104.0",
+		"resize-observer-polyfill": "^1.5.1",
+		"sass": "^1.105.1",
 		"sass-loader": "^17.0.1",
-		"stylelint": "^17.15.0",
+		"stylelint": "^17.16.0",
 		"stylelint-config-standard-scss": "^17.0.0",
 		"svgo": "4.1.0",
 		"webpack": "^5.111.1",
@@ -48,13 +50,14 @@
 		"webpack-cli": "^7.2.3"
 	},
 	"dependencies": {
-		"@visx/responsive": "^3.0.0",
+		"@visx/responsive": "^4.0.0",
 		"canvg": "^4.0.1",
 		"classnames": "^2.5.1",
-		"d3": "^7.1.1",
-		"react": "^18.3.1",
+		"d3": "^7.9.0",
+		"lodash": "^4.18.0",
+		"react": "^19.3.0",
 		"react-animated-dataset": "github:freedomofpress/react-animated-dataset#nested-components",
-		"react-dom": "^18.2.0",
+		"react-dom": "^19.3.0",
 		"react-modal": "^3.16.3",
 		"smartquotes": "^2.3.2",
 		"topojson-client": "^3.1.0"

@@ -90,12 +90,18 @@ export function loadData({
 	});
 }
 
+// Module-level so they keep a stable identity: `dataParser` is a dependency of
+// the effect below, so a default allocated per render would re-fire it forever.
+const defaultDataParser = (data) => d3.csvParse(data, d3.autoType);
+const defaultLoadingComponent = <Loader />;
+const defaultChildren = [];
+
 function DataLoader({
 	dataUrl,
-	dataParser,
-	dataKey,
-	loadingComponent,
-	children,
+	dataParser = defaultDataParser,
+	dataKey = "data",
+	loadingComponent = defaultLoadingComponent,
+	children = defaultChildren,
 }) {
 	const [data, setData] = useState({});
 	const [loading, setLoading] = useState(true);
@@ -122,12 +128,5 @@ function DataLoader({
 	// Clone children with the added data prop and return it
 	return React.cloneElement(children, data);
 }
-
-DataLoader.defaultProps = {
-	dataParser: (data) => d3.csvParse(data, d3.autoType),
-	dataKey: "data",
-	loadingComponent: <Loader />,
-	children: [],
-};
 
 export default DataLoader;

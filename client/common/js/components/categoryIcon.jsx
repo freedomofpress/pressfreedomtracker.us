@@ -16,7 +16,7 @@ export const categorySymbolMap = {
 	"Other Incident": "other_incident",
 };
 
-export default function CategoryIcon({ category }) {
+export default function CategoryIcon({ category = "" }) {
 	return (
 		<div
 			className={classNames(
@@ -26,7 +26,3 @@ export default function CategoryIcon({ category }) {
 		/>
 	);
 }
-
-CategoryIcon.defaultProps = {
-	category: "",
-};

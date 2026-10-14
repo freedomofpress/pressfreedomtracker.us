@@ -1,12 +1,10 @@
 import React from "react";
-import ShallowRenderer from "react-test-renderer/shallow";
+import { render } from "@testing-library/react";
 import ChartDescription from "../ChartDescription";
 
 test("renders ChartDescription with mocked data", () => {
-	const renderer = new ShallowRenderer();
-	expect(
-		renderer.render(
-			<ChartDescription id="test">This is a test</ChartDescription>,
-		),
-	).toMatchSnapshot();
+	const { container } = render(
+		<ChartDescription id="test">This is a test</ChartDescription>,
+	);
+	expect(container).toMatchSnapshot();
 });
