@@ -6,7 +6,7 @@ from django.urls import reverse
 from wagtail.models import Site
 
 from common.models import FooterSettings
-from common.tests.factories import CategoryPageFactory
+from common.tests.factories import CategoryPageFactory, SimplePageFactory
 from incident.tests.factories import IncidentPageFactory
 
 
@@ -53,6 +53,20 @@ class TestCategoryPageCacheInvalidation(TestCase):
         IncidentPageFactory().save_revision().publish()
 
         batch.add_page.assert_called_with(self.categorypage)
+        batch.purge.assert_called()
+
+    @patch("common.signals.PurgeBatch")
+    def test_simple_page_purged_on_new_incident(self, purge_batch_cls):
+        """
+        SimplePages show sidebar content from incidents, so they should be
+        purged when an incident is published.
+        """
+        simple_page = SimplePageFactory(parent=self.home_page, slug="simple")
+        batch = purge_batch_cls.return_value
+
+        IncidentPageFactory().save_revision().publish()
+
+        batch.add_page.assert_any_call(simple_page)
         batch.purge.assert_called()
 
     @patch("common.signals.purge_tags_from_cache")
