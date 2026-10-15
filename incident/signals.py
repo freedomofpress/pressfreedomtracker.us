@@ -1,12 +1,12 @@
 from urllib.parse import urljoin
 
-from django.db.models.signals import post_delete, post_save, pre_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 
-from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
+from wagtail.contrib.frontend_cache.utils import PurgeBatch
 from wagtail.models import Site
-from wagtail.signals import page_published
+from wagtail.signals import page_published, page_unpublished
 
 import structlog
 
@@ -31,21 +31,25 @@ def purge_incident_from_frontend_cache_for_category(
     changes.
     """
     incidents = IncidentPage.objects.filter(categories__category=instance)
+    batch = PurgeBatch()
     for incident in incidents:
-        purge_page_from_cache(incident)
+        batch.add_page(incident)
         logger.info(
             f"Purged page IncidentPage with title: {incident.title} and slug: {incident.slug}"
         )
+    batch.purge()
 
 
 def purge_incident_index_from_frontend_cache(**kwargs):
     tags = []
+    batch = PurgeBatch()
     for incident_index_page in IncidentIndexPage.objects.live():
-        purge_page_from_cache(incident_index_page)
+        batch.add_page(incident_index_page)
         tags.append(incident_index_page.get_cache_tag())
         logger.info(
             f"Purged page IncidentIndexPage with title: {incident_index_page.title} and slug: {incident_index_page.slug}"
         )
+    batch.purge()
     purge_tags_from_cache(tags)
 
 
@@ -75,19 +79,20 @@ def purge_prepub_list_homepage_from_frontend_cache(instance=None, **kwargs):
     logger.info(f"Purged URLs from cache: {urls}")
 
     # Purge homepage
-    for home_page in HomePage.objects.live():
-        purge_page_from_cache(home_page)
+    batch = PurgeBatch()
+    batch.add_pages(HomePage.objects.live())
+    batch.purge()
 
 
 # IncidentPage cache
 page_published.connect(
     purge_incident_from_frontend_cache_for_category, sender=CategoryPage
 )
-post_delete.connect(
+page_unpublished.connect(
     purge_incident_from_frontend_cache_for_category, sender=CategoryPage
 )
 
 # IncidentIndexPage cache
 page_published.connect(purge_incident_index_from_frontend_cache, sender=CategoryPage)
 page_published.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)
-post_delete.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)
+page_unpublished.connect(purge_incident_index_from_frontend_cache, sender=IncidentPage)
