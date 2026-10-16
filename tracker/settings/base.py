@@ -350,6 +350,7 @@ WAGTAIL_NEWSLETTER_FROM_NAME = os.environ.get(
 WAGTAIL_NEWSLETTER_REPLY_TO = os.environ.get(
     "NEWSLETTER_REPLY_TO", "newsletter@pressfreedomtracker.us"
 )
+WAGTAIL_NEWSLETTER_CAMPAIGN_BACKEND = "blog.backends.DisableTrackingBackend"
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY", "")
 RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY", "")
