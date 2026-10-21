@@ -1,7 +1,5 @@
-from django.db.models.signals import post_delete
-
 from wagtail.contrib.frontend_cache.utils import purge_page_from_cache
-from wagtail.signals import page_published
+from wagtail.signals import page_published, page_unpublished
 
 import structlog
 
@@ -31,8 +29,8 @@ page_published.connect(purge_homepage_from_frontend_cache, sender=IncidentPage)
 page_published.connect(purge_homepage_from_frontend_cache, sender=IncidentIndexPage)
 page_published.connect(purge_homepage_from_frontend_cache, sender=BlogPage)
 page_published.connect(purge_homepage_from_frontend_cache, sender=BlogIndexPage)
-post_delete.connect(purge_homepage_from_frontend_cache, sender=CategoryPage)
-post_delete.connect(purge_homepage_from_frontend_cache, sender=IncidentPage)
-post_delete.connect(purge_homepage_from_frontend_cache, sender=IncidentIndexPage)
-post_delete.connect(purge_homepage_from_frontend_cache, sender=BlogPage)
-post_delete.connect(purge_homepage_from_frontend_cache, sender=BlogIndexPage)
+page_unpublished.connect(purge_homepage_from_frontend_cache, sender=CategoryPage)
+page_unpublished.connect(purge_homepage_from_frontend_cache, sender=IncidentPage)
+page_unpublished.connect(purge_homepage_from_frontend_cache, sender=IncidentIndexPage)
+page_unpublished.connect(purge_homepage_from_frontend_cache, sender=BlogPage)
+page_unpublished.connect(purge_homepage_from_frontend_cache, sender=BlogIndexPage)
