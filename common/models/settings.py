@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.blocks import RichTextBlock
@@ -109,10 +110,16 @@ class SiteSettings(BaseSiteSetting):
         blank=True,
         help_text='Page linked by "Donate" button in newsletter and other pages',
     )
+    banner_enabled = models.BooleanField(
+        default=False,
+        verbose_name="Show banner",
+        help_text="Turning the banner on, or editing its message while it is on, shows it again to visitors who dismissed it.",
+    )
+    banner_published_at = models.DateTimeField(null=True, blank=True, editable=False)
     banner_content = RichTextField(
         blank=True,
         null=True,
-        help_text="If set an alert banner will appear on the site with this message",
+        help_text="Message for the dismissible banner at the top of the site.",
         validators=[validate_template],
         editor="num-incident-emphasis-features",
         verbose_name="Banner Content",
@@ -136,9 +143,34 @@ class SiteSettings(BaseSiteSetting):
         FieldPanel("donation_page"),
         FieldPanel("incident_footer"),
         MultiFieldPanel(
-            [FieldPanel("banner_content"), FieldPanel("homepage_only")], "Alert Banner"
+            [
+                FieldPanel("banner_enabled"),
+                FieldPanel("banner_content"),
+                FieldPanel("homepage_only"),
+            ],
+            "Alert Banner",
         ),
     ]
+
+    @property
+    def banner_key(self):
+        return int(self.banner_published_at.timestamp())
+
+    def save(self, *args, **kwargs):
+        if self.banner_enabled:
+            previous = (
+                type(self)
+                .objects.filter(pk=self.pk)
+                .values("banner_enabled", "banner_content")
+                .first()
+            )
+            if (
+                not previous
+                or not previous["banner_enabled"]
+                or previous["banner_content"] != self.banner_content
+            ):
+                self.banner_published_at = timezone.now()
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Site Settings"
