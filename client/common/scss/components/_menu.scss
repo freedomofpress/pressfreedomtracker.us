@@ -12,6 +12,10 @@
 
 	@include responsive.constrain-to-desktop;
 
+	@include responsive.tablet-down {
+		position: relative;
+	}
+
 	&.menu-expanded {
 		background-color: #f8f8f8;
 	}
@@ -47,7 +51,7 @@
 
 		// fix for button not displaying iPad Pro
 		height: 3rem;
-		top: 0.5rem;
+		top: -0.5rem;
 		right: 1rem;
 		aspect-ratio: 1;
 	}
@@ -55,7 +59,7 @@
 	&[aria-expanded="true"] {
 		@include responsive.tablet-down {
 			background-image: url("../icons/icon-menu-close.svg");
-			top: 0.45rem;
+			top: -0.55rem;
 		}
 	}
 }
