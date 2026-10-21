@@ -1,5 +1,6 @@
 import "../scss/common.scss";
 import "./menu";
+import "./siteBanner";
 import "./home";
 import "./categoryPage";
 import "./prepubPage";

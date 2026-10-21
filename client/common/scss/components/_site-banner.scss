@@ -1,0 +1,69 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
+.site-banner {
+	position: relative;
+	background-color: colors.$accent-color;
+	font-size: typography.$font-size-small-p;
+	font-weight: 700;
+	line-height: 1.43;
+	text-align: center;
+
+	&__content {
+		padding: 0.75rem 3rem;
+
+		p {
+			margin: 0;
+		}
+
+		a {
+			color: colors.$black;
+
+			&:hover {
+				text-decoration: underline;
+				text-decoration-thickness: 2px;
+			}
+
+			&:focus {
+				outline: colors.$black solid 3px;
+				outline-offset: 2px;
+			}
+		}
+	}
+
+	&__dismiss {
+		position: absolute;
+		top: 50%;
+		left: 16px;
+		transform: translateY(-50%);
+		display: grid;
+		place-items: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		padding: 0;
+		border: 2px solid colors.$black;
+		border-radius: 50%;
+		background-color: transparent;
+		color: colors.$black;
+		cursor: pointer;
+
+		&[hidden] {
+			display: none;
+		}
+
+		&:hover {
+			background-color: colors.$black;
+			color: colors.$accent-color;
+		}
+
+		@include responsive.tablet-up {
+			left: 24px;
+		}
+
+		&:focus-visible {
+			outline: colors.$black solid 3px;
+			outline-offset: 2px;
+		}
+	}
+}
