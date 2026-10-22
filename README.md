@@ -296,6 +296,10 @@ which will update the package named `package-name` to the latest version
 allowed by the constraints in `requirements.in` and compile a new
 `dev-requirements.txt`.
 
+### Working on dependencies in place
+
+To work on any upstream dependency in-place during development, you can clone the dependency into the `develop-pkgs/` subdirectory. When you start the ``django`` and ``node`` containers after doing so, a Python package (providing a ``pyproject.toml``) will be installed editable, and any Node package (providing a ``package.json``) will be built and watched, so they can be worked on in-place while running the full freedom.press Django project.
+
 ## Managing CMS Content
 
 You can log in to the Wagtail interface at `/admin` with the following
