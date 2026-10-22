@@ -1,6 +1,3 @@
-from datetime import UTC, datetime
-from unittest.mock import patch
-
 from django.test import TestCase
 
 from wagtail.models import Page, Site
@@ -62,50 +59,10 @@ class SiteBannerTest(TestCase):
             self.client.get(self.simple_page.url), 'class="site-banner"'
         )
 
-    def test_banner_key_is_rendered(self):
+    def test_dismissal_expiration_is_rendered(self):
+        self.site_settings.banner_dismissal_expiration = 7
         self.set_banner("<p>Donate</p>", homepage_only=False)
 
         self.assertContains(
-            self.client.get(self.simple_page.url),
-            f'data-banner-key="{self.site_settings.banner_key}"',
+            self.client.get(self.simple_page.url), 'data-dismissal-days="7"'
         )
-
-
-@patch("common.models.settings.timezone.now")
-class BannerPublishedAtTest(TestCase):
-    first = datetime(2026, 12, 1, tzinfo=UTC)
-    later = datetime(2027, 12, 1, tzinfo=UTC)
-
-    def setUp(self):
-        self.site_settings = SiteSettings.for_site(
-            Site.objects.get(is_default_site=True)
-        )
-
-    def publish(self, now, at, content="<p>Donate</p>", enabled=True):
-        now.return_value = at
-        self.site_settings.banner_enabled = enabled
-        self.site_settings.banner_content = content
-        self.site_settings.save()
-        return self.site_settings.banner_published_at
-
-    def test_enabling_sets_published_at(self, now):
-        self.assertEqual(self.publish(now, self.first), self.first)
-        self.assertEqual(self.site_settings.banner_key, int(self.first.timestamp()))
-
-    def test_saving_unchanged_banner_keeps_published_at(self, now):
-        self.publish(now, self.first)
-        self.assertEqual(self.publish(now, self.later), self.first)
-
-    def test_editing_enabled_banner_republishes(self, now):
-        self.publish(now, self.first)
-        self.assertEqual(
-            self.publish(now, self.later, content="<p>Donate today</p>"), self.later
-        )
-
-    def test_reenabling_same_message_republishes(self, now):
-        self.publish(now, self.first)
-        self.publish(now, self.first, enabled=False)
-        self.assertEqual(self.publish(now, self.later), self.later)
-
-    def test_saving_disabled_banner_does_not_publish(self, now):
-        self.assertIsNone(self.publish(now, self.first, enabled=False))
