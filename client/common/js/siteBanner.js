@@ -6,7 +6,7 @@ if (dismissButton) {
 	dismissButton.addEventListener("click", () => {
 		banner.hidden = true;
 		try {
-			localStorage.setItem("dismissedBanner", banner.dataset.bannerKey);
+			localStorage.setItem("siteBannerDismissedAt", Date.now());
 		} catch {
 			// Storage can be unavailable (e.g. blocked cookies); the banner just returns on the next page.
 		}
