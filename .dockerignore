@@ -46,10 +46,8 @@
 # the chart pregenerator is its own npm project; the `chartgen` stage copies it wholesale
 !chart_pregenerator
 
-# permit general build tooling,
-# e.g. for git version info
+# permit general build tooling, e.g. the version report script
 !ci
-!.git
 
 # re-exclude unwanted artifact cruft, possibly included by the grants above
 **/__pycache__
