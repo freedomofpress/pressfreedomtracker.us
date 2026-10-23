@@ -46,9 +46,17 @@
 		text-transform: uppercase;
 		text-decoration: none;
 		color: colors.$gray-dark;
+		display: flex;
+		align-items: center;
+		gap: 0.325rem;
 
 		@include responsive.mobile-down {
 			font-size: 0.75rem;
+		}
+
+		.fpf-banner__arrow {
+			width: 0.7em;
+			height: 0.7em;
 		}
 
 		&:hover {
