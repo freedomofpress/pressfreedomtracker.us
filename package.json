@@ -59,7 +59,6 @@
 		"react-animated-dataset": "github:freedomofpress/react-animated-dataset#nested-components",
 		"react-dom": "^19.3.0",
 		"react-modal": "^3.16.3",
-		"smartquotes": "^2.3.2",
 		"topojson-client": "^3.1.0"
 	}
 }

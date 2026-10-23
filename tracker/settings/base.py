@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "wagtailmetadata",
     "webpack_loader",
     "wagtailautocomplete",
+    "fpfwagtailcommon.curlify",
     "widget_tweaks",
     "wagtailinventory",
     "wagtail_honeypot",
