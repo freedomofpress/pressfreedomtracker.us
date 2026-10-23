@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% load pageurl richtext from wagtailcore_tags %}
+
+{% block banner %}
+	{% include "common/_banner.html" %}
+{% endblock %}
+
 {% block main %}
 
 	<h1 class="page-title" id="title">

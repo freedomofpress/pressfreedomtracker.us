@@ -1,0 +1,26 @@
+{% load render_as_template typogrify_tags wagtailcore_tags %}
+{% with site_settings=settings.common.SiteSettings %}
+	{% if site_settings.banner_enabled and site_settings.banner_content %}
+		<section class="site-banner" aria-label="Announcement" data-dismissal-days="{{ site_settings.banner_dismissal_expiration }}">
+			{# Inline so a dismissed banner is hidden before first paint instead of after the deferred bundle runs. #}
+			<script>
+				try {
+					const banner = document.currentScript.parentElement;
+					const dismissedAt = Number(localStorage.getItem("siteBannerDismissedAt"));
+					if (Date.now() - dismissedAt < banner.dataset.dismissalDays * 24 * 60 * 60 * 1000) {
+						banner.hidden = true;
+					}
+				} catch (e) {}
+			</script>
+			<button type="button" class="site-banner__dismiss" hidden>
+				<svg aria-hidden="true" width="10" height="10" viewBox="0 0 12 12" fill="none">
+					<path stroke="currentColor" stroke-width="1.5" d="m.5.5 11 11m0-11-11 11" />
+				</svg>
+				<span class="sr-only">Dismiss announcement</span>
+			</button>
+			<div class="site-banner__content">
+				{% filter typogrify|richtext %}{% render_as_template site_settings.banner_content %}{% endfilter %}
+			</div>
+		</section>
+	{% endif %}
+{% endwith %}

@@ -109,10 +109,15 @@ class SiteSettings(BaseSiteSetting):
         blank=True,
         help_text='Page linked by "Donate" button in newsletter and other pages',
     )
+    banner_enabled = models.BooleanField(
+        default=False,
+        verbose_name="Show banner",
+        help_text="Show a dismissible banner at the top of the site.",
+    )
     banner_content = RichTextField(
         blank=True,
         null=True,
-        help_text="If set an alert banner will appear on the site with this message",
+        help_text="Message shown in the banner.",
         validators=[validate_template],
         editor="num-incident-emphasis-features",
         verbose_name="Banner Content",
@@ -121,6 +126,11 @@ class SiteSettings(BaseSiteSetting):
         default=True,
         verbose_name="Homepage Only",
         help_text="Show banner <em>only</em> on homepage (if not set, will show sitewide)",
+    )
+    banner_dismissal_expiration = models.PositiveIntegerField(
+        default=30,
+        verbose_name="Dismissal expiration",
+        help_text="Number of days after a visitor dismisses the banner before it is shown to them again.",
     )
     incident_footer = RichTextField(
         blank=True,
@@ -136,7 +146,13 @@ class SiteSettings(BaseSiteSetting):
         FieldPanel("donation_page"),
         FieldPanel("incident_footer"),
         MultiFieldPanel(
-            [FieldPanel("banner_content"), FieldPanel("homepage_only")], "Alert Banner"
+            [
+                FieldPanel("banner_enabled"),
+                FieldPanel("banner_content"),
+                FieldPanel("homepage_only"),
+                FieldPanel("banner_dismissal_expiration"),
+            ],
+            "Alert Banner",
         ),
     ]
 

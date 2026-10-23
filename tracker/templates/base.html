@@ -2,12 +2,21 @@
 {% load static %}
 
 {% block body %}
-	{% block menu %}
-		{% include "common/_menu.html" %}
+	<a href="#title" class="skip-link">Skip to content</a>
+	{% block banner %}
+		{% if not settings.common.SiteSettings.homepage_only %}
+			{% include "common/_banner.html" %}
+		{% endif %}
 	{% endblock %}
-	<main>
-		{% block main %}{% endblock %}
-	</main>
+	{% include "common/_fpf_banner.html" %}
+	<div class="page-body">
+		{% block menu %}
+			{% include "common/_menu.html" %}
+		{% endblock %}
+		<main>
+			{% block main %}{% endblock %}
+		</main>
+	</div>
 	{% include "common/_footer.html" %}
 	{% if django_settings.ANALYTICS_ENABLED %}
 		<script type="text/javascript" src="{% static 'js/piwik.js' %}"></script>
