@@ -16,8 +16,8 @@
 
 	@include responsive.full-bleed;
 
-	@include responsive.mobile-down {
-		font-size: 0.875rem;
+	@media (width <= 360px) {
+		font-size: typography.$font-size-number;
 	}
 
 	&__org {
@@ -26,6 +26,10 @@
 		gap: 0.5rem;
 		margin: 0;
 		text-wrap: balance;
+
+		@include responsive.mobile-down {
+			gap: 0.75rem;
+		}
 	}
 
 	&__mark {
@@ -50,8 +54,8 @@
 		align-items: center;
 		gap: 0.325rem;
 
-		@include responsive.mobile-down {
-			font-size: 0.75rem;
+		@media (width <= 360px) {
+			font-size: 0.625rem;
 		}
 
 		.fpf-banner__arrow {
@@ -59,8 +63,10 @@
 			height: 0.7em;
 		}
 
-		&:hover {
+		&:hover,
+		&:focus-visible {
 			color: colors.$black;
+			text-decoration: underline;
 		}
 
 		&:focus-visible {
