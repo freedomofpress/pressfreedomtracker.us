@@ -18,6 +18,22 @@ wait_for_node() {
     fi
 }
 
+# When in dev, install editable any dev packages checked out into develop-pkgs/.
+install_develop_pkgs() {
+    if [ "${DEPLOY_ENV}" == "dev" ] && [ -d ./develop-pkgs ]; then
+        for d in ./develop-pkgs/*; do
+            # Using --no-deps avoids accidentally unlocking other deps.
+            # Note: editable_mode=compat is only required for setuptools-based packages.
+            # It ensures setuptools writes a .pth path insertion file, which other
+            # build systems like Poetry do automatically. Other build systems will
+            # ignore this setting.
+            if [ -f "${d}/pyproject.toml" ]; then
+                pip install --editable "$d" --no-deps --config-settings editable_mode=compat
+            fi
+        done
+    fi
+}
+
 wait_for_postgres() {
     echo "Waiting for postgres to start..."
     until nc -z "${DJANGO_DB_HOST?}" "${DJANGO_DB_PORT?}"
@@ -37,13 +53,14 @@ django_start() {
     # exec so the server is PID 1 and receives SIGTERM directly; without it bash
     # holds PID 1, swallows the signal, and shutdown waits for SIGKILL.
     if [ "${DEPLOY_ENV}" == "dev" ]; then
-        ./ci/scripts/version-file.sh || echo "WARNING: version file creation failed"
+        ./ci/scripts/version-file.sh --deploy || echo "WARNING: version file creation failed"
         exec ./manage.py runserver 0.0.0.0:8000
     else
         exec gunicorn -c /etc/gunicorn/gunicorn.py "${DJANGO_APP_NAME?}.wsgi"
     fi
 }
 
+install_develop_pkgs
 wait_for_postgres
 wait_for_node
 django_start

@@ -10,7 +10,6 @@ module.exports = {
 			import: "./client/statistics/js/searchstats.js",
 			layer: "wagtail-admin",
 		},
-		draftail: "./client/common/js/draftail_curlify.js",
 		charts: "./client/charts/js/index.js",
 		filterSidebar: "./client/charts/js/filter-sidebar.js",
 		filterSummary: "./client/charts/js/filter-summary.js",

@@ -1,6 +1,6 @@
 beautifulsoup4
 Django>=5.2.18,<6.0
-djangorestframework>=3.18.1
+djangorestframework>=3.18.2
 django-anymail
 django-csp>=3.7
 django-modelcluster>=6.2.1
@@ -9,7 +9,7 @@ django-storages[google]>=1.14.6
 django-webpack-loader
 django-widget-tweaks
 djangorestframework-csv
-djangorestframework>=3.18.1
+djangorestframework>=3.18.2
 docutils
 drf-spectacular[sidecar]>=0.30.0
 factory_boy>=3.3.3
@@ -35,5 +35,9 @@ wagtail-metadata>=5.0.0
 wagtail-newsletter[mailchimp,mrml]
 wagtail>=7.4.3,<8.0
 whitenoise
+
+# fpf-wagtail-common builds wheel files and attaches them as assets on new releases.
+# See https://github.com/freedomofpress/fpf-wagtail-common/releases
+https://github.com/freedomofpress/fpf-wagtail-common/releases/download/v0.3.0/fpf_wagtail_common-0.3.0-py3-none-any.whl
 google-api-python-client
 python-dateutil>=2.9.0

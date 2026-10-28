@@ -449,9 +449,9 @@ django-widget-tweaks==1.5.1 \
     --hash=sha256:084acc9eeb5a3208f2670522de6284287973e54d54488ce6d402f4b99bc5f452 \
     --hash=sha256:3f5080f8365740fc1c14607498c975cbfed896dd0c40e1b563095716ee31e3b5
     # via -r requirements.in
-djangorestframework==3.18.1 \
-    --hash=sha256:605d79fa2ec2f02905492e5ea13d903c2d842d0b4c915a57f7bf02ab9f3c91dd \
-    --hash=sha256:f1409d698967aaf82d5d98d76b549c8fba8bd92ebd0d83d24454508f72168dc2
+djangorestframework==3.18.2 \
+    --hash=sha256:8249bad7715eb37274ce5820fc5d9fd786b7579806589565f52a71c02b35f54b \
+    --hash=sha256:a92d6a4e128a2550bd2fe2e02008a9e47fe52c180e130bb438f5ba70ee933a3f
     # via
     #   -r requirements.in
     #   djangorestframework-csv
@@ -495,6 +495,9 @@ filetype==1.2.0 \
     --hash=sha256:66b56cd6474bf41d8c54660347d37afcc3f7d1970648de365c102ef77548aadb \
     --hash=sha256:7ce71b6880181241cf7ac8697a2f1eb6a8bd9b429f7ad6d27b8db9ba5f1c2d25
     # via willow
+fpf-wagtail-common @ https://github.com/freedomofpress/fpf-wagtail-common/releases/download/v0.3.0/fpf_wagtail_common-0.3.0-py3-none-any.whl \
+    --hash=sha256:5705d4d30daf3c0f64697604efa0074acd4c334df2d736f866d725d2b1e9b15d
+    # via -r requirements.in
 google-api-core==2.40.0 \
     --hash=sha256:4b9e0a80024c269ae173136d5439f4ed284651d6e5e2773ba5c694f481f9c0f4 \
     --hash=sha256:ebee7d1b138b5362beecec260e6e8988ac97346562c7382ccb6f0ad8435c599f
@@ -1625,6 +1628,7 @@ wagtail==7.4.3 \
     --hash=sha256:e359e457ba7838b1c398f7169e34e203cefd75df9062eb8ecadb4be8f1c52912
     # via
     #   -r requirements.in
+    #   fpf-wagtail-common
     #   wagtail-autocomplete
     #   wagtail-django-recaptcha
     #   wagtail-factories

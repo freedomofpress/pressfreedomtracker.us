@@ -145,8 +145,8 @@ gunicorn, a reverse nginx proxy, and debug mode off using the
 `prod-docker-compose.yaml` file. Note that build time for this
 container takes much longer than the developer environment:
 
-Run it via `just prod`, which builds the image first
-(`just build-prod` builds alone):
+Run it via `just prod`, which builds the image first with git facts
+passed in as build-args (`just build-prod` builds alone):
 
 ```bash
 just prod
@@ -295,6 +295,10 @@ just pip-compile-dev --upgrade-package=package-name
 which will update the package named `package-name` to the latest version
 allowed by the constraints in `requirements.in` and compile a new
 `dev-requirements.txt`.
+
+### Working on dependencies in place
+
+To work on any upstream dependency in-place during development, you can clone the dependency into the `develop-pkgs/` subdirectory. When you start the ``django`` and ``node`` containers after doing so, a Python package (providing a ``pyproject.toml``) will be installed editable, and any Node package (providing a ``package.json``) will be built and watched, so they can be worked on in-place while running the full freedom.press Django project.
 
 ## Managing CMS Content
 

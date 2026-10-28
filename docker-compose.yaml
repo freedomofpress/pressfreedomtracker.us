@@ -141,6 +141,10 @@ services:
       DJANGO_DB_USER: *db-username
       DJANGO_PROFILE: '${DJANGO_PROFILE:-no}'
       DJANGO_XMLTEST_OUTPUT: 'yes'
+      # Set by `just dev`; version-file.sh prefers live git, which a worktree's
+      # .git (pointing outside the bind-mount) can't supply.
+      GIT_COMMIT: ${GIT_COMMIT:-}
+      GIT_INFO_B64: ${GIT_INFO_B64:-}
       MAILCHIMP_API_KEY:
       NEWSLETTER_FROM_NAME:
       NEWSLETTER_REPLY_TO:

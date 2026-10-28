@@ -33,6 +33,10 @@ test-results
 .node_complete
 .vscode
 
+# Dependencies checked out for in-place development (see README)
+develop-pkgs/*
+!develop-pkgs/.gitkeep
+
 # docker-compose
 .env
 
