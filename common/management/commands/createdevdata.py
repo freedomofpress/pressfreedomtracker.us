@@ -4,7 +4,6 @@ import random
 import time
 from itertools import chain, combinations, cycle
 
-from django.contrib.auth.models import User
 from django.core import management
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
@@ -649,18 +648,6 @@ class Command(BaseCommand):
         )
         EmailSettingsFactory(site=site)
 
-        # Create superuser
-        if not User.objects.filter(is_superuser=True).exists():
-            User.objects.create_superuser(
-                "test",
-                "test@pressfreedom",
-                "test",
-            )
-            self.stdout.write(
-                "Superuser created:\n"
-                "\tname: test\n"
-                "\temail: test@pressfreedom\n"
-                "\tpassword: test"
-            )
+        management.call_command("loaddata", "devuser", verbosity=0)
 
         self.stdout.write("Done.")
