@@ -1,5 +1,6 @@
 from io import StringIO
 
+from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import TestCase
 
@@ -21,6 +22,14 @@ class CreateQADataCommand(TestCase):
         self.assertEqual(site.root_page.specific, home)
         self.assertEqual(site.site_name, "Press Freedom Tracker (QA)")
         self.assertIn("press freedom incidents", home.about)
+
+    def test_loads_devuser(self):
+        """Should load the `test` superuser, for tests that use the admin."""
+        self.call()
+
+        user = User.objects.get(username="test")
+        self.assertTrue(user.is_superuser)
+        self.assertTrue(user.check_password("test"))
 
     def test_idempotent(self):
         """Should not create extra data when re-run."""
