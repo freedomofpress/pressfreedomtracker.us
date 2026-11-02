@@ -3,12 +3,17 @@
 @use "../typography";
 
 .site-banner {
+	display: block;
 	position: relative;
 	background-color: colors.$accent-color;
 	font-size: typography.$font-size-small-p;
 	font-weight: 700;
 	line-height: 1.43;
 	text-align: center;
+
+	&[hidden] {
+		display: none;
+	}
 
 	&__content {
 		padding: 0.75rem 3rem;
@@ -48,8 +53,6 @@
 		color: colors.$black;
 		cursor: pointer;
 
-		&[hidden] {
-			display: none;
 		}
 
 		&:hover {

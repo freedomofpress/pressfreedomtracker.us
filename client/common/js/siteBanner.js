@@ -1,14 +1,15 @@
-const banner = document.querySelector(".site-banner");
-const dismissButton = banner?.querySelector(".site-banner__dismiss");
-
-if (dismissButton) {
-	dismissButton.hidden = false;
-	dismissButton.addEventListener("click", () => {
-		banner.hidden = true;
-		try {
-			localStorage.setItem("siteBannerDismissedAt", Date.now());
-		} catch {
-			// Storage can be unavailable (e.g. blocked cookies); the banner just returns on the next page.
-		}
-	});
+class SiteBanner extends HTMLElement {
+	connectedCallback() {
+		const dismissButton = this.querySelector(".site-banner__dismiss");
+		dismissButton.addEventListener("click", () => {
+			this.hidden = true;
+			try {
+				localStorage.setItem("siteBannerDismissedAt", Date.now());
+			} catch {
+				// if localStorage is unavailable the banner returns on the next page.
+			}
+		});
+	}
 }
+
+customElements.define("site-banner", SiteBanner);

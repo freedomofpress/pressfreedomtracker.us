@@ -47,17 +47,15 @@ class SiteBannerTest(TestCase):
         )
 
         home_response = self.client.get("/")
-        self.assertContains(home_response, 'class="site-banner"')
+        self.assertContains(home_response, "<site-banner")
         self.assertContains(home_response, 'href="https://freedom.press/donate/"')
         self.assertNotContains(self.client.get(self.simple_page.url), "site-banner")
 
     def test_sitewide_banner(self):
         self.set_banner("<p>Donate</p>", homepage_only=False)
 
-        self.assertContains(self.client.get("/"), 'class="site-banner"', count=1)
-        self.assertContains(
-            self.client.get(self.simple_page.url), 'class="site-banner"'
-        )
+        self.assertContains(self.client.get("/"), "<site-banner", count=1)
+        self.assertContains(self.client.get(self.simple_page.url), "<site-banner")
 
     def test_dismissal_expiration_is_rendered(self):
         self.site_settings.banner_dismissal_expiration = 7
