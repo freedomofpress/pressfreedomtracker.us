@@ -3,6 +3,11 @@
 
 {% block body %}
 	<a href="#title" class="skip-link">Skip to content</a>
+	{% block banner %}
+		{% if not settings.common.SiteSettings.homepage_only %}
+			{% include "common/_banner.html" %}
+		{% endif %}
+	{% endblock %}
 	{% include "common/_fpf_banner.html" %}
 	<div class="page-body">
 		{% block menu %}
