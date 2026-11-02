@@ -16,7 +16,7 @@
 	}
 
 	&__content {
-		padding: 0.75rem 3rem;
+		padding: 0.75rem 3.5rem;
 
 		p {
 			margin: 0;
@@ -53,6 +53,11 @@
 		color: colors.$black;
 		cursor: pointer;
 
+		// Increase tap target
+		&::after {
+			content: "";
+			position: absolute;
+			inset: -0.75rem;
 		}
 
 		&:hover {
