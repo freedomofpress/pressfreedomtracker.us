@@ -12,7 +12,7 @@ module.exports = defineConfig([
 	...fpfEslintConfig({
 		files: sourceFiles,
 		react: true,
-		ignores: ["chart_pregenerator/build/", "static/"],
+		ignores: ["chart_pregenerator/build/"],
 	}),
 
 	{
