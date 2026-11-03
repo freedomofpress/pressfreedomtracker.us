@@ -1,10 +1,18 @@
 import json
 
+from django.db import connection
 from django.test import TestCase
+from django.test.utils import CaptureQueriesContext
 
 from wagtail.models import Site
 
-from incident.tests.factories import IncidentIndexPageFactory, IncidentPageFactory
+from common.tests.factories import PersonPageFactory
+from incident.tests.factories import (
+    IncidentChargeWithUpdatesFactory,
+    IncidentIndexPageFactory,
+    IncidentPageFactory,
+    LegalOrderWithUpdatesFactory,
+)
 
 
 class IncidentExportTestCase(TestCase):
@@ -165,3 +173,32 @@ class IncidentExportTestCase(TestCase):
 
         expected_data = ["Took a Wrong Turn", "2010-01-01", "Albuquerque"]
         self.assertEqual(data, expected_data)
+
+
+class IncidentExportQueryCountTestCase(TestCase):
+    def setUp(self):
+        site = Site.objects.get(is_default_site=True)
+        self.incident_index = IncidentIndexPageFactory.build(slug="incidents")
+        site.root_page.add_child(instance=self.incident_index)
+        self.export_url = self.incident_index.get_full_url() + "export/?format=json"
+
+    def create_incident(self):
+        incident = IncidentPageFactory(
+            journalist_targets=2,
+            authors=PersonPageFactory.create_batch(2),
+        )
+        IncidentChargeWithUpdatesFactory(incident_page=incident)
+        LegalOrderWithUpdatesFactory(incident_page=incident)
+
+    def test_query_count_does_not_grow_with_incidents(self):
+        # Get the number of queries that a single incident requires on export
+        self.create_incident()
+        with CaptureQueriesContext(connection) as single:
+            self.client.get(self.export_url)
+
+        # Create more incidents and then assert that they use no more queries
+        # than the single incident did
+        self.create_incident()
+        self.create_incident()
+        with self.assertNumQueries(len(single)):
+            self.client.get(self.export_url)
