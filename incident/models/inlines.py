@@ -137,10 +137,10 @@ class LegalOrder(ClusterableModel):
                 date_text_template.format(date=update.date) if update.date else ""
             )
         else:
-            status = self.status.label
+            status = self.get_status_display()
             date_text = date_text_template.format(date=self.date)
-        info = self.information_requested.label
-        order_type = self.order_type.label
+        info = self.get_information_requested_display()
+        order_type = self.get_order_type_display()
 
         return f"{order_type} for {info} ({status}{date_text})"
 
