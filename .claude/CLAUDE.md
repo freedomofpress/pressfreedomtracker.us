@@ -24,7 +24,7 @@
 - PostgreSQL 17
 - Django REST Framework + drf-spectacular (OpenAPI docs)
 - Webpack 5, Babel, React 18, D3 v7, Jest 29 (frontend)
-- ESLint, Prettier, Stylelint (stylelint-config-standard-scss)
+- ESLint, Prettier and Stylelint, extending shared configs from fpf-wagtail-common
 - Ruff (primary linter)
 - Bandit (security)
 - structlog for logging
