@@ -56,7 +56,8 @@ class IncidentCharge(ClusterableModel):
 
     @property
     def summary(self):
-        if update := self.updates.order_by("-date").first():
+        # Read updates through .all() so a prefetch can serve them
+        if update := max(self.updates.all(), key=lambda u: u.date, default=None):
             status = update.get_status_display()
             date = update.date
         else:
@@ -129,7 +130,8 @@ class LegalOrder(ClusterableModel):
     def summary(self):
         """Summary of a legal order, used in the CSV export feature."""
         date_text_template = " as of {date}"
-        if update := self.updates.last():
+        # Read updates through .all() so a prefetch can serve them
+        if update := next(reversed(list(self.updates.all())), None):
             status = update.get_status_display()
             date_text = (
                 date_text_template.format(date=update.date) if update.date else ""
