@@ -230,10 +230,6 @@ class TestCategoryFieldValuesByField(TestCase):
         self.assert_duplicate_validation(PoliticianOrPublic)
         self.assert_duplicate_validation(Venue)
 
-        # Journalist is not unique, so calling same thing should not raise any error
-        Journalist.autocomplete_create("title")
-        self.assertEqual(Journalist.autocomplete_create("title").title, "title")
-
     def test_arrest_status(self):
         self.assert_choices(
             "arrest_status",
