@@ -14,5 +14,11 @@ module.exports = {
 		"<rootDir>/node_modules/(?!d3|internmap|delaunator|robust-predicates|react-animated-dataset)",
 	],
 	setupFiles: ["<rootDir>/client/common/js/setupTests.js"],
-	testPathIgnorePatterns: ["/node_modules/", "<rootDir>/chart_pregenerator/"],
+	testPathIgnorePatterns: [
+		"/node_modules/",
+		"<rootDir>/chart_pregenerator/",
+		// e2e/ holds the Playwright suite, which is run by `just qa`
+		// rather than jest, and whose specs jest cannot load.
+		"<rootDir>/e2e/",
+	],
 };
