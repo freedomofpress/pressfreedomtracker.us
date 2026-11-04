@@ -48,10 +48,21 @@ $desktop-min: $tablet-max + 1px;
 	}
 
 	@include desktop-up {
-		max-width: 1440px;
+		max-width: $desktop-max;
 		padding-left: 32px;
 		padding-right: 32px;
 		margin-left: auto;
 		margin-right: auto;
+	}
+}
+
+// Like constrain-to-desktop, but the background spans the full viewport
+@mixin full-bleed {
+	@include constrain-to-desktop;
+
+	@include desktop-up {
+		max-width: none;
+		padding-left: max(calc((100% - #{$desktop-max}) / 2), 32px);
+		padding-right: max(calc((100% - #{$desktop-max}) / 2), 32px);
 	}
 }

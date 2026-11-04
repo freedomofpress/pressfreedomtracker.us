@@ -11,11 +11,7 @@
 	&--featured {
 		background-color: colors.$section-background;
 
-		@include responsive.desktop-up {
-			max-width: none;
-			padding-left: max(calc((100% - 1440px) / 2), 32px);
-			padding-right: max(calc((100% - 1440px) / 2), 32px);
-		}
+		@include responsive.full-bleed;
 
 		@include responsive.tablet-down {
 			overflow-x: hidden;

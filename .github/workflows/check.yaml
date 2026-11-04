@@ -100,7 +100,7 @@ jobs:
           persist-credentials: false
 
       - name: Install just
-        uses: taiki-e/install-action@e407f7bafb71fd004bc5c2da3032e5470cbb6ef0 # v2.87.24
+        uses: taiki-e/install-action@1e29709c0ec63babbe8f266397a465f29a825f91 # v2.87.31
         with:
           tool: just
 
@@ -149,7 +149,7 @@ jobs:
             stack: true
     steps:
       - name: Install Docker
-        uses: docker/setup-docker-action@v5.5.0
+        uses: docker/setup-docker-action@v5.6.0
         with:
           version: ${{ env.VERSION_DOCKER }}
 
@@ -195,7 +195,7 @@ jobs:
           docker image tag "$CHARTGEN_IMAGE_URL" localhost/pressfreedomtracker-us-node-chart-pregenerator
 
       - name: Install just
-        uses: taiki-e/install-action@e407f7bafb71fd004bc5c2da3032e5470cbb6ef0 # v2.87.24
+        uses: taiki-e/install-action@1e29709c0ec63babbe8f266397a465f29a825f91 # v2.87.31
         with:
           tool: just
 
@@ -258,7 +258,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Python ${{ env.VERSION_PYTHON }}
-        uses: actions/setup-python@v7.0.0
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: ${{ env.VERSION_PYTHON }}
 
@@ -291,7 +291,7 @@ jobs:
       - build-prod-chartgen
     steps:
       - name: Install Docker
-        uses: docker/setup-docker-action@v5.5.0
+        uses: docker/setup-docker-action@v5.6.0
         with:
           version: ${{ env.VERSION_DOCKER }}
 
