@@ -456,32 +456,13 @@
 		<!-- FOOTER -->
 		<mj-section background-color="#000000" css-class="footer">
 			<mj-column>
-				<mj-text align="center" padding-bottom="24px">
-					<a href="https://bsky.app/profile/pressfreedomtracker.us" style="display:inline-block; margin:0 16px; text-decoration:none;">
-						<img
-							src="{{ page.get_base_url }}{% static 'logos/bluesky.png' %}"
-							alt="U.S. Press Freedom Tracker on Bluesky"
-							width="24px"
-						/>
-					</a>
-					<a href="https://x.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
-						<img
-							src="{{ page.get_base_url }}{% static 'logos/x.png' %}"
-							alt="U.S. Press Freedom Tracker on X"
-							width="24px"
-						/>
-					</a>
-					<a href="https://instagram.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
-						<img
-							src="{{ page.get_base_url }}{% static 'logos/instagram.png' %}"
-							alt="U.S. Press Freedom Tracker on Instagram"
-							width="24px"
-						/>
-					</a>
-				</mj-text>
-				<mj-text align="center" color="#ffffff" font-size="14px" font-family="'Roboto Mono', monospace" line-height="1.6">
+				<mj-social mj-class="mono" padding-bottom="24px" icon-size="24px" icon-padding="0" inner-padding="0 16px" mode="horizontal">
+					<mj-social-element href="https://bsky.app/profile/pressfreedomtracker.us" src="{{ page.get_base_url }}{% static 'logos/bluesky.png' %}" alt="U.S. Press Freedom Tracker on Bluesky"></mj-social-element>
+					<mj-social-element href="https://x.com/uspresstracker" src="{{ page.get_base_url }}{% static 'logos/x.png' %}" alt="U.S. Press Freedom Tracker on X"></mj-social-element>
+					<mj-social-element href="https://instagram.com/uspresstracker" src="{{ page.get_base_url }}{% static 'logos/instagram.png' %}" alt="U.S. Press Freedom Tracker on Instagram"></mj-social-element>
+				</mj-social>
+				<mj-text mj-class="center-text small mono white" padding-bottom="24px">
 					<p>&copy; Copyright Freedom of the Press Foundation</p>
-					<p>Licensed under <a href="https://creativecommons.org/licenses/by/4.0/" style="color:#ffffff;">Creative Commons CC-BY 4.0</a> where not otherwise indicated.</p>
 					<p>49 Flatbush Avenue #1017 Brooklyn NY 11217</p>
 					<p>Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons CC-BY 4.0</a> where not otherwise indicated.</p>
 				</mj-text>
