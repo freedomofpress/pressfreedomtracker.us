@@ -6,7 +6,11 @@ from django.test import TestCase
 
 from wagtail.models import Page, Site
 
+from common.management.commands.createcategories import CATEGORIES
+from common.management.commands.createqadata import INCIDENTS_PER_CATEGORY
+from common.models import CategoryPage, SearchSettings
 from home.models import HomePage
+from incident.models import IncidentIndexPage, IncidentPage
 
 
 class CreateQADataCommand(TestCase):
@@ -31,6 +35,28 @@ class CreateQADataCommand(TestCase):
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.check_password("test"))
 
+    def test_builds_categories(self):
+        self.call()
+
+        home = HomePage.objects.get(slug="home")
+        categories = CategoryPage.objects.child_of(home)
+        self.assertEqual(categories.count(), len(CATEGORIES))
+        for category in categories:
+            self.assertEqual(category.viz_type, "bar")
+
+    def test_builds_incidents(self):
+        self.call()
+
+        site = Site.objects.get(is_default_site=True)
+        index = IncidentIndexPage.objects.get(slug="all-incidents")
+        self.assertEqual(SearchSettings.for_site(site).search_page.specific, index)
+
+        for category in CategoryPage.objects.all():
+            incidents = IncidentPage.objects.child_of(index).filter(
+                categories__category=category
+            )
+            self.assertEqual(incidents.count(), INCIDENTS_PER_CATEGORY)
+
     def test_idempotent(self):
         """Should not create extra data when re-run."""
         self.call()
@@ -38,9 +64,12 @@ class CreateQADataCommand(TestCase):
 
         self.assertEqual(HomePage.objects.count(), 1)
         self.assertEqual(Site.objects.filter(is_default_site=True).count(), 1)
+        self.assertEqual(CategoryPage.objects.count(), len(CATEGORIES))
+        self.assertEqual(
+            IncidentPage.objects.count(), len(CATEGORIES) * INCIDENTS_PER_CATEGORY
+        )
 
     def test_creates_root(self):
-        """Should create a root page on an empty page tree."""
         Site.objects.all().delete()
         Page.objects.all().delete()
 
