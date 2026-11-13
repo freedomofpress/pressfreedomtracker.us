@@ -16,6 +16,7 @@
 - Templates: each app has its own `templates/` directory
 - Compiled bundles output: `build/static/bundles/`
 - Container builds and CI helper scripts: `ci/` (`ci/containers/Containerfile`, `ci/scripts/`)
+- Playwright end-to-end tests: `e2e/` (configured by `playwright.config.ts`)
 - Requirements: `requirements.txt`, `dev-requirements.txt`, `ci-requirements.txt` (compiled from `.in` files via pip-compile)
 
 ## Tech Stack
@@ -43,6 +44,7 @@
 
 - Django tests: `just test` (runs with coverage via `coverage run ./manage.py test --noinput`)
 - Jest tests: `just test-js` (runs both main frontend and chart pregenerator tests)
+- Playwright for end-to-end, functional and visual-regression tests in `e2e/`.
 - Migration check: `just check-migrations`
 - CI enforces **100% coverage on changed lines** using `diff-cover` against `origin/develop`
 - Tests use a custom `SeededDiscoveryRunner` with fixed seed (`876394101`) for reproducibility

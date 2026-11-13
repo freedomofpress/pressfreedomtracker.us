@@ -1,3 +1,9 @@
+# Pinned so node hooks don't install nodejs.org's "latest", which can be a
+# pre-release that nodeenv fails to parse. Must stay in step with NODE_IMAGE in
+# ci/containers/Containerfile.
+default_language_version:
+  node: 26.10.0
+
 repos:
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.33.0
@@ -24,6 +30,13 @@ repos:
       - id: check-json
       - id: check-toml
       - id: check-yaml
+        exclude: '^(.*/)?[^/]*compose[^/]*\.ya?ml$'
+      # Compose files use custom tags (`!reset`, `!override`) that check-yaml's
+      # safe loader rejects, so they are only checked for syntax.
+      - id: check-yaml
+        name: check yaml (syntax only)
+        args: [--unsafe]
+        files: '^(.*/)?[^/]*compose[^/]*\.ya?ml$'
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.0
