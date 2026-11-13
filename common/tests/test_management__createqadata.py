@@ -18,8 +18,10 @@ from common.models import (
     IncidentFilterSettings,
     SearchSettings,
 )
+from forms.models import FormPage
 from home.models import HomePage
 from incident.models import IncidentIndexPage, IncidentPage
+from menus.models import Menu
 
 
 class CreateQADataCommand(TestCase):
@@ -85,6 +87,23 @@ class CreateQADataCommand(TestCase):
             GENERAL_INCIDENT_FILTERS,
         )
 
+    def test_builds_incident_form(self):
+        """Should create the incident form, with required fields to fill in."""
+        self.call()
+
+        form = FormPage.objects.get(slug="submit-incident")
+        self.assertTrue(form.live)
+        self.assertTrue(any(field.required for field in form.get_form_fields()))
+
+    def test_links_incident_form_from_navigation(self):
+        """Should link the incident form from the header's secondary navigation."""
+        self.call()
+
+        menu = Menu.objects.get(slug="secondary-navigation")
+        item = menu.menu_items.get()
+        self.assertEqual(item.text, "Submit an Incident")
+        self.assertEqual(item.link_page.specific, FormPage.objects.get())
+
     def test_idempotent(self):
         """Should not create extra data when re-run."""
         self.call()
@@ -97,6 +116,8 @@ class CreateQADataCommand(TestCase):
             IncidentPage.objects.count(), len(CATEGORIES) * INCIDENTS_PER_CATEGORY
         )
         self.assertEqual(CommonTag.objects.filter(title__in=TAGS).count(), len(TAGS))
+        self.assertEqual(FormPage.objects.count(), 1)
+        self.assertEqual(Menu.objects.filter(slug="secondary-navigation").count(), 1)
 
     def test_creates_root(self):
         Site.objects.all().delete()

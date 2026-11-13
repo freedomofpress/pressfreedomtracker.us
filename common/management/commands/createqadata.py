@@ -16,9 +16,11 @@ from common.models import (
     IncidentFilterSettings,
     SearchSettings,
 )
+from forms.models import FieldGroup, FormPage, GroupedFormField
 from home.models import HomePage
 from home.tests.factories import HomePageFactory
 from incident.devdata import IncidentIndexPageFactory, IncidentPageFactory
+from menus.models import Menu, MenuItem
 
 
 # Seed for factory_boy and Faker, so every run generates the same content.
@@ -141,6 +143,154 @@ class Command(BaseCommand):
             for i, incident_filter in enumerate(GENERAL_INCIDENT_FILTERS)
         )
 
+    def generate_incident_form(self):
+        self.stdout.write("Building incident submission form")
+        home_page = self.get_home_page()
+
+        form = home_page.add_child(
+            instance=FormPage(
+                title="Submit an Incident",
+                slug="submit-incident",
+                button_text="Submit",
+                thank_you_text="<p>Thank you for submitting information.</p>",
+                to_address="submissions@example.com",
+                from_address="noreply@example.com",
+                subject="Submission - Press Freedom Tracker",
+            )
+        )
+
+        groups = [
+            {
+                "title": "Your Details",
+                "fields": [
+                    {
+                        "label": "Name",
+                        "field_type": "singleline",
+                        "placeholder": "Your name",
+                    },
+                    {
+                        "label": "Email",
+                        "field_type": "email",
+                        "placeholder": "Your email",
+                    },
+                    {
+                        "label": "Phone number",
+                        "field_type": "singleline",
+                        "placeholder": "Your phone number",
+                    },
+                    {
+                        "label": "Affiliation",
+                        "field_type": "singleline",
+                        "placeholder": "Your affiliation",
+                    },
+                ],
+            },
+            {
+                "title": "Incident Date",
+                "template": "date_single",
+                "fields": [
+                    {"label": "Month", "field_type": "number", "placeholder": "MM"},
+                    {"label": "Day", "field_type": "number", "placeholder": "DD"},
+                    {
+                        "label": "Year",
+                        "field_type": "singleline",
+                        "placeholder": "YYYY",
+                    },
+                ],
+            },
+            {
+                "title": "How Did You Learn About The Incident?",
+                "fields": [
+                    {
+                        "label": "Learned about",
+                        "field_type": "radio",
+                        "choices": [
+                            "It happened to me",
+                            "It happened to someone I know",
+                            "I witnessed it",
+                            "I read or heard about it",
+                        ],
+                    },
+                ],
+            },
+            {
+                "title": "Describe the Incident",
+                "fields": [
+                    {
+                        "label": "Category",
+                        "field_type": "checkboxes",
+                        "required": False,
+                        "choices": [
+                            "Arrest",
+                            "Border Stop",
+                            "Equipment search or seizure",
+                            "Equipment or property damage",
+                            "Denial of access",
+                            "Threat",
+                            "Leak Investigation",
+                            "Assault",
+                            "Subpoena or other legal order",
+                            "Harassment/Other incident",
+                        ],
+                    },
+                    {
+                        "label": "Description",
+                        "field_type": "multiline",
+                        "placeholder": "Describe what happened...",
+                    },
+                ],
+            },
+            {
+                "title": "Do You Prefer We Keep Your Name Off The Record?",
+                "fields": [
+                    {
+                        "label": "Off the record",
+                        "field_type": "radio",
+                        "choices": [
+                            "No. I consent to document my name on the record.",
+                            "Yes. I'd prefer to keep my name off the record.",
+                        ],
+                    },
+                ],
+            },
+        ]
+        for i, group in enumerate(groups):
+            field_group = FieldGroup.objects.create(
+                page=form,
+                title=group["title"],
+                template=group.get("template", "default"),
+                sort_order=i,
+            )
+            for j, field in enumerate(group["fields"]):
+                GroupedFormField.objects.create(
+                    group=field_group,
+                    sort_order=j,
+                    label=field["label"],
+                    field_type=field["field_type"],
+                    placeholder=field.get("placeholder", ""),
+                    # One choice per line
+                    choices="\n".join(field.get("choices", [])),
+                    # Every field is required unless it says otherwise
+                    required=field.get("required", True),
+                )
+
+        return form
+
+    def generate_navigation(self):
+        self.stdout.write("Building navigation")
+
+        # Menus don't get deleted with the page tree
+        Menu.objects.filter(slug="secondary-navigation").delete()
+        menu = Menu.objects.create(
+            name="Secondary Navigation", slug="secondary-navigation"
+        )
+        MenuItem.objects.create(
+            menu=menu,
+            text="Submit an Incident",
+            link_page=FormPage.objects.get(slug="submit-incident"),
+            sort_order=1,
+        )
+
     @transaction.atomic
     def handle(self, *args, **options):
         self.stdout.write("Creating QA data... ", "")
@@ -155,5 +305,7 @@ class Command(BaseCommand):
         self.generate_categories()
         self.generate_incidents()
         self.generate_incident_filters()
+        self.generate_incident_form()
+        self.generate_navigation()
 
         self.stdout.write(self.style.SUCCESS("Done"))
