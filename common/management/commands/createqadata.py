@@ -16,6 +16,7 @@ from common.models import (
     IncidentFilterSettings,
     SearchSettings,
 )
+from emails.devdata import EmailSettingsFactory
 from forms.models import FieldGroup, FormPage, GroupedFormField
 from home.models import HomePage
 from home.tests.factories import HomePageFactory
@@ -291,6 +292,18 @@ class Command(BaseCommand):
             sort_order=1,
         )
 
+    def generate_email_settings(self):
+        self.stdout.write("Configuring email signup")
+
+        # The footer's email signup form shows once there's a Mailchimp group
+        # to sign up to
+        EmailSettingsFactory(
+            site=self.get_site(),
+            signup_prompt=(
+                "Sign up to receive emails from the U.S. Press Freedom Tracker"
+            ),
+        )
+
     @transaction.atomic
     def handle(self, *args, **options):
         self.stdout.write("Creating QA data... ", "")
@@ -307,5 +320,6 @@ class Command(BaseCommand):
         self.generate_incident_filters()
         self.generate_incident_form()
         self.generate_navigation()
+        self.generate_email_settings()
 
         self.stdout.write(self.style.SUCCESS("Done"))

@@ -18,6 +18,7 @@ from common.models import (
     IncidentFilterSettings,
     SearchSettings,
 )
+from emails.models import EmailSettings
 from forms.models import FormPage
 from home.models import HomePage
 from incident.models import IncidentIndexPage, IncidentPage
@@ -103,6 +104,13 @@ class CreateQADataCommand(TestCase):
         item = menu.menu_items.get()
         self.assertEqual(item.text, "Submit an Incident")
         self.assertEqual(item.link_page.specific, FormPage.objects.get())
+
+    def test_configures_email_signup(self):
+        """Should configure a Mailchimp group, so the footer signup form shows."""
+        self.call()
+
+        site = Site.objects.get(is_default_site=True)
+        self.assertTrue(EmailSettings.for_site(site).mailchimp_groups.exists())
 
     def test_idempotent(self):
         """Should not create extra data when re-run."""
