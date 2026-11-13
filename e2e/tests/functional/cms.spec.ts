@@ -8,6 +8,10 @@ import {
 
 import { adminLogin } from "../helpers/admin";
 
+// The saved session with Django sessionid cookie retained
+const storageState = process.env.E2E_STORAGE_STATE || undefined;
+test.use({ storageState });
+
 // CMS lifecycle tests, originating with our QA checklist item:
 //
 //  "Verify basic CMS functionality (saving drafts, publishing changes)
@@ -147,7 +151,7 @@ async function deletePage(
   // tests ran with.
   const context = await browser.newContext({
     baseURL: use.baseURL,
-    storageState: use.storageState,
+    storageState,
   });
   const page = await context.newPage();
 

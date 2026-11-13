@@ -1,3 +1,5 @@
+from itertools import cycle
+
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -6,9 +8,14 @@ from wagtail.models import Page, Site
 
 import factory.random
 
-from common.devdata import CategoryPageFactory
+from common.devdata import CategoryPageFactory, CommonTagFactory
 from common.management.commands.createcategories import CATEGORIES
-from common.models import CategoryPage, SearchSettings
+from common.models import (
+    CategoryPage,
+    GeneralIncidentFilter,
+    IncidentFilterSettings,
+    SearchSettings,
+)
 from home.models import HomePage
 from home.tests.factories import HomePageFactory
 from incident.devdata import IncidentIndexPageFactory, IncidentPageFactory
@@ -19,6 +26,23 @@ SEED = "pressfreedomtracker-qa"
 
 # Incidents created in each category.
 INCIDENTS_PER_CATEGORY = 2
+
+# The filters shown in the "General" section of the incident filter sidebar,
+GENERAL_INCIDENT_FILTERS = [
+    "date",
+    "recently_updated",
+    "city",
+    "state",
+    "targeted_journalists",
+    "targeted_institutions",
+    "tags",
+    "case_number",
+    "case_type",
+    "case_statuses",
+]
+
+# Tags given to incidents, in turn, for the sidebar's tag filter.
+TAGS = ["protest", "courthouse", "press pass"]
 
 
 class Command(BaseCommand):
@@ -93,14 +117,29 @@ class Command(BaseCommand):
         search_settings.search_page = index
         search_settings.save()
 
+        tags = cycle([CommonTagFactory(title=title) for title in TAGS])
         for category in CategoryPage.objects.child_of(home_page):
-            IncidentPageFactory.create_batch(
+            for incident in IncidentPageFactory.create_batch(
                 INCIDENTS_PER_CATEGORY,
                 parent=index,
                 categories=[category],
-            )
+            ):
+                incident.tags.add(next(tags))
+                incident.save()
 
         return index
+
+    def generate_incident_filters(self):
+        self.stdout.write("Configuring incident filters")
+        settings = IncidentFilterSettings.for_site(self.get_site())
+        GeneralIncidentFilter.objects.bulk_create(
+            GeneralIncidentFilter(
+                incident_filter_settings=settings,
+                incident_filter=incident_filter,
+                sort_order=i,
+            )
+            for i, incident_filter in enumerate(GENERAL_INCIDENT_FILTERS)
+        )
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -111,9 +150,10 @@ class Command(BaseCommand):
 
         call_command("loaddata", "devuser", verbosity=0)
 
-        # Generate the page tree
+        # Generate the page tree and content
         self.generate_home_page()
         self.generate_categories()
         self.generate_incidents()
+        self.generate_incident_filters()
 
         self.stdout.write(self.style.SUCCESS("Done"))

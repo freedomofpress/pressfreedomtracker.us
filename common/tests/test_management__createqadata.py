@@ -7,8 +7,17 @@ from django.test import TestCase
 from wagtail.models import Page, Site
 
 from common.management.commands.createcategories import CATEGORIES
-from common.management.commands.createqadata import INCIDENTS_PER_CATEGORY
-from common.models import CategoryPage, SearchSettings
+from common.management.commands.createqadata import (
+    GENERAL_INCIDENT_FILTERS,
+    INCIDENTS_PER_CATEGORY,
+    TAGS,
+)
+from common.models import (
+    CategoryPage,
+    CommonTag,
+    IncidentFilterSettings,
+    SearchSettings,
+)
 from home.models import HomePage
 from incident.models import IncidentIndexPage, IncidentPage
 
@@ -57,6 +66,25 @@ class CreateQADataCommand(TestCase):
             )
             self.assertEqual(incidents.count(), INCIDENTS_PER_CATEGORY)
 
+    def test_tags_incidents(self):
+        """Should give every incident one of the QA tags."""
+        self.call()
+
+        for incident in IncidentPage.objects.all():
+            # get() also checks there's exactly one
+            self.assertIn(incident.tags.get().title, TAGS)
+
+    def test_configures_general_incident_filters(self):
+        """Should configure the sidebar's general incident filters."""
+        self.call()
+
+        site = Site.objects.get(is_default_site=True)
+        settings = IncidentFilterSettings.for_site(site)
+        self.assertEqual(
+            [f.incident_filter for f in settings.general_incident_filters.all()],
+            GENERAL_INCIDENT_FILTERS,
+        )
+
     def test_idempotent(self):
         """Should not create extra data when re-run."""
         self.call()
@@ -68,6 +96,7 @@ class CreateQADataCommand(TestCase):
         self.assertEqual(
             IncidentPage.objects.count(), len(CATEGORIES) * INCIDENTS_PER_CATEGORY
         )
+        self.assertEqual(CommonTag.objects.filter(title__in=TAGS).count(), len(TAGS))
 
     def test_creates_root(self):
         Site.objects.all().delete()

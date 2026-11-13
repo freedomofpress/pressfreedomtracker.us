@@ -1,3 +1,4 @@
+import { readFileSync } from "fs";
 import path from "path";
 
 import { defineConfig, devices } from "@playwright/test";
@@ -14,8 +15,21 @@ const baseURL = process.env.E2E_BASE_URL ?? "http://localhost:8000";
 // environment-specific screenshots separately.
 const envSeg = process.env.E2E_ENV ? `${process.env.E2E_ENV}/` : "";
 
-// Optional saved auth state, captured with npx playwright open --save-storage
+// Optional saved session for a deployed environment, captured with
+// `just qa-auth ENV`.
 const storageState = process.env.E2E_STORAGE_STATE || undefined;
+const savedState = storageState && JSON.parse(readFileSync(storageState, "utf8"));
+
+// Because the Wagtail userbar (the bird icon in the bottom right) collides
+// with Filters button. For non-admin tests, this gives us a saves state
+// that does not have the Django sessionid cookie, so we're not logged
+// into the admin and the Wagtail userbar does not appear.
+const visitorStorageState = savedState && {
+  ...savedState,
+  cookies: savedState.cookies.filter(
+    (cookie: { name: string }) => cookie.name !== "sessionid",
+  ),
+};
 
 export default defineConfig({
   // The suite itself lives in e2e/, alongside its compose overlay; only this
@@ -52,7 +66,7 @@ export default defineConfig({
   },
   use: {
     baseURL,
-    storageState,
+    storageState: visitorStorageState,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     reducedMotion: "reduce",
