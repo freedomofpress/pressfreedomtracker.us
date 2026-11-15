@@ -136,6 +136,120 @@ test.describe("CMS content lifecycle", () => {
       expect(unpublished.status(), `${publicPath} should 404 once unpublished`).toBe(404);
     });
   });
+
+  // Test an incident page's lifecycle
+  test.describe("incident page", { tag: ["@qa", "@cms", "@incident"] }, () => {
+    // The tests in this scope have to be run serially
+    test.describe.configure({ mode: "serial" });
+
+    // Incident data for testing
+    const suffix = Date.now();
+    const title = `QA test incident ${suffix}`;
+    const editedTitle = `${title} (edited)`;
+    const slug = `qa-test-incident-${suffix}`;
+    const incidents = "/all-incidents/";
+    const publicPath = `${incidents}${slug}/`;
+
+    // Searching the incident database for the suffix should find only this incident
+    const searchPath = `${incidents}?search=${suffix}`;
+
+    // The page this test builds, passed along from the step that creates it.
+    let page_id: number | null = null;
+
+    test.afterAll(async ({ browser }, workerInfo) => {
+      await deletePage(browser, workerInfo.project.use, page_id);
+    });
+
+    test("saves a draft", async ({ page }) => {
+      test.setTimeout(60_000);
+
+      // Navigate to the incident database via the page explorer:
+      // Pages > Home > Incident Database.
+      await page.getByRole('button', { name: 'Pages' }).click();
+      await page.getByRole('link', { name: 'View child pages of \'Home\'' }).click();
+      await page.getByRole('link', { name: 'Incident Database', exact: true }).click();
+
+      // Add a child page (incidents are the only allowed child type)
+      await page.getByRole('link', { name: 'Add child page' }).click();
+      await expect(
+        page.locator("#id_title"),
+        "an incident should be creatable under the incident database",
+      ).toBeVisible();
+      await page.locator("#id_title").fill(title);
+
+      // An incident needs a date
+      await page.locator("#id_date").fill("2026-01-01");
+
+      // An incident needs a category, "Arrest/Criminal Charge" should always be visible
+      await page.getByRole("button", { name: "Choose a page (Category page)" }).click();
+      await page.getByRole("table").getByRole("link", { name: "Arrest/Criminal Charge" }).click();
+
+      // Body is required to publish
+      const body = page.locator("[data-contentpath='body']");
+      await body.getByRole("button", { name: "Insert a block" }).click();
+      await page.getByRole("option", { name: /^raw html$/i }).click();
+      await body.getByRole("textbox").fill("<p>QA test body copy.</p>");
+
+      // Edit the slug
+      await page.getByRole("tab", { name: /promote/i }).click();
+      await page.locator("#id_slug").fill(slug);
+
+      // Save a draft
+      await page.getByRole("button", { name: "Save draft" }).click();
+      await expect(page.locator(".messages li.success")).toContainText(/created/i);
+
+      // Get the page id from the URL
+      page_id = Number(page.url().match(/\/pages\/(\d+)\//)?.[1]);
+      expect(page_id, "the editor URL should carry the new page id").not.toBeNaN();
+
+      const draft = await page.request.get(publicPath);
+      expect(draft.status(), `${publicPath} should 404 while it is a draft`).toBe(404);
+
+      const preview = await page.request.get(`/admin/pages/${page_id}/view_draft/`);
+      expect(preview.status(), "draft preview should render").toBe(200);
+    });
+
+    test("publishes", async ({ page }) => {
+      await page.goto(`/admin/pages/${page_id}/edit/`);
+      await publish(page);
+
+      const live = await page.goto(publicPath, { waitUntil: "domcontentloaded" });
+      expect(live?.status(), `${publicPath} should be live after publishing`).toBe(200);
+      expect(await page.title()).toContain(title);
+
+      // And it's listed in the incident database
+      await page.goto(searchPath, { waitUntil: "domcontentloaded" });
+      await expect(
+        page.locator(".incident-database-card__title", { hasText: title }),
+        "the published incident should be in the incident database",
+      ).toBeVisible();
+    });
+
+    test("publishes an edit", async ({ page }) => {
+      await page.goto(`/admin/pages/${page_id}/edit/`);
+      await page.locator("#id_title").fill(editedTitle);
+      await publish(page);
+
+      await page.goto(publicPath, { waitUntil: "domcontentloaded" });
+      expect(
+        await page.title(),
+        "the published edit should be visible on the live page",
+      ).toContain(editedTitle);
+    });
+
+    test("unpublishes", async ({ page }) => {
+      await page.goto(`/admin/pages/${page_id}/unpublish/`);
+      await page.getByRole("button", { name: /yes, unpublish it/i }).click();
+      await expect(page.locator(".messages li.success")).toContainText(/unpublished/i);
+
+      const unpublished = await page.request.get(publicPath);
+      expect(unpublished.status(), `${publicPath} should 404 once unpublished`).toBe(404);
+
+      // And it's no longer listed in the incident database
+      await page.goto(searchPath, { waitUntil: "domcontentloaded" });
+      await expect(page.locator(".incident-database-card")).toHaveCount(0);
+    });
+  });
 });
 
 // Perform a page deletion, used at the end of the lifecycle tests to remove

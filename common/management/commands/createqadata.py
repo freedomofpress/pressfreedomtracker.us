@@ -112,7 +112,7 @@ class Command(BaseCommand):
 
         index = IncidentIndexPageFactory(
             parent=home_page,
-            title="All Incidents",
+            title="Incident Database",
             slug="all-incidents",
         )
 
