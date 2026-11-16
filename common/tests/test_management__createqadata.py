@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from wagtail.models import Page, Site
 
+from blog.models import BlogIndexPage, BlogPage
 from common.management.commands.createcategories import CATEGORIES
 from common.management.commands.createqadata import (
     GENERAL_INCIDENT_FILTERS,
@@ -112,6 +113,26 @@ class CreateQADataCommand(TestCase):
         site = Site.objects.get(is_default_site=True)
         self.assertTrue(EmailSettings.for_site(site).mailchimp_groups.exists())
 
+    def test_builds_blog(self):
+        """Should create the blog, with a regular post and a special post."""
+        self.call()
+
+        index = BlogIndexPage.objects.get(slug="blog")
+        posts = BlogPage.objects.child_of(index)
+        self.assertEqual(
+            sorted(post.blog_type for post in posts), ["default", "special"]
+        )
+        for post in posts:
+            self.assertTrue(post.authors.exists())
+
+    def test_features_incidents_and_posts_on_home_page(self):
+        """Should feature incidents and blog posts on the home page."""
+        self.call()
+
+        home = HomePage.objects.get(slug="home")
+        self.assertTrue(home.featured_incidents.exists())
+        self.assertTrue(home.featured_blog_posts.exists())
+
     def test_idempotent(self):
         """Should not create extra data when re-run."""
         self.call()
@@ -125,6 +146,7 @@ class CreateQADataCommand(TestCase):
         )
         self.assertEqual(CommonTag.objects.filter(title__in=TAGS).count(), len(TAGS))
         self.assertEqual(FormPage.objects.count(), 1)
+        self.assertEqual(BlogPage.objects.count(), 2)
         self.assertEqual(Menu.objects.filter(slug="secondary-navigation").count(), 1)
 
     def test_creates_root(self):

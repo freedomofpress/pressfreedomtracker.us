@@ -8,7 +8,10 @@ from wagtail.models import Page, Site
 
 import factory.random
 
-from common.devdata import CategoryPageFactory, CommonTagFactory
+from blog.choices import BlogTemplateType
+from blog.devdata import BlogIndexPageFactory, BlogPageFactory
+from blog.models import BlogPage
+from common.devdata import CategoryPageFactory, CommonTagFactory, PersonPageFactory
 from common.management.commands.createcategories import CATEGORIES
 from common.models import (
     CategoryPage,
@@ -18,9 +21,10 @@ from common.models import (
 )
 from emails.devdata import EmailSettingsFactory
 from forms.models import FieldGroup, FormPage, GroupedFormField
-from home.models import HomePage
+from home.models import FeaturedBlogPost, FeaturedIncident, HomePage
 from home.tests.factories import HomePageFactory
 from incident.devdata import IncidentIndexPageFactory, IncidentPageFactory
+from incident.models import IncidentPage
 from menus.models import Menu, MenuItem
 
 
@@ -277,6 +281,57 @@ class Command(BaseCommand):
 
         return form
 
+    def generate_blog(self):
+        self.stdout.write("Building blog")
+        home_page = self.get_home_page()
+
+        index = BlogIndexPageFactory(parent=home_page, title="Analysis", slug="blog")
+        author = PersonPageFactory(parent=home_page, title="QA Author")
+
+        # A regular post, with the details shown in its header
+        BlogPageFactory(
+            parent=index,
+            title="QA blog post",
+            slug="qa-blog-post",
+            authors=[author],
+            organization=None,
+            teaser_graphic=[],
+            body=[{"type": "raw_html", "value": "<p>QA blog post body.</p>"}],
+        )
+
+        # A post with a chart of all incidents as its lead graphic
+        BlogPageFactory(
+            parent=index,
+            title="QA special blog post",
+            slug="qa-special-blog-post",
+            blog_type=BlogTemplateType.SPECIAL,
+            authors=[author],
+            organization=None,
+            teaser_graphic=[],
+            lead_graphic=[
+                {
+                    "type": "vertical_bar_chart",
+                    "value": {
+                        "title": "Incidents",
+                        "incident_set": {"categories": [], "tag": None},
+                        "description": "Bar chart of all incidents.",
+                    },
+                }
+            ],
+            body=[{"type": "raw_html", "value": "<p>QA special blog post body.</p>"}],
+        )
+
+        return index
+
+    def generate_home_page_features(self):
+        self.stdout.write("Featuring incidents and blog posts on the home page")
+        home_page = self.get_home_page()
+
+        for incident in IncidentPage.objects.live().order_by("path")[:3]:
+            FeaturedIncident.objects.create(home_page=home_page, page=incident)
+        for post in BlogPage.objects.live().order_by("path"):
+            FeaturedBlogPost.objects.create(home_page=home_page, page=post)
+
     def generate_navigation(self):
         self.stdout.write("Building navigation")
 
@@ -319,6 +374,8 @@ class Command(BaseCommand):
         self.generate_incidents()
         self.generate_incident_filters()
         self.generate_incident_form()
+        self.generate_blog()
+        self.generate_home_page_features()
         self.generate_navigation()
         self.generate_email_settings()
 
