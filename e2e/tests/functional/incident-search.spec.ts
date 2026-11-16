@@ -72,6 +72,7 @@ test.describe("incident category filter", { tag: ["@qa", "@search"] }, () => {
 
     // Apply the category filter
     await page.getByRole("button", { name: "Apply filters" }).filter({ visible: true }).first().click();
+    await page.waitForURL(/[?&]categories=/);
 
     // The category should be in the filter summary
     await expect(

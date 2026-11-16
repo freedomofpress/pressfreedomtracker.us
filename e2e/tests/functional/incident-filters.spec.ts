@@ -63,7 +63,10 @@ async function openFilter(page: Page, type: string): Promise<Filter> {
 }
 
 async function applyFilters(page: Page) {
+  const unfiltered = page.url();
   await page.getByRole("button", { name: "Apply filters" }).filter({ visible: true }).first().click();
+  // Wait for the filter page to load
+  await page.waitForURL((url) => url.href !== unfiltered);
 }
 
 test.describe("incident filters", { tag: ["@qa", "@search"] }, () => {
