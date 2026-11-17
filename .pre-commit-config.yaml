@@ -1,3 +1,9 @@
+# Pinned so node hooks don't install nodejs.org's "latest", which can be a
+# pre-release that nodeenv fails to parse. Must stay in step with NODE_IMAGE in
+# ci/containers/Containerfile.
+default_language_version:
+  node: 26.10.0
+
 repos:
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.33.0
