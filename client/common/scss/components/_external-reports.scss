@@ -1,0 +1,118 @@
+@use "../colors";
+@use "../responsive";
+@use "../typography";
+
+.external-reports {
+	margin-block: 1.5rem;
+	padding: 2rem;
+	border: 3px solid colors.$black;
+	background: colors.$white;
+	color: colors.$black;
+
+	&__heading {
+		margin: 0;
+	}
+
+	&__note p {
+		margin: 0.25rem 0 0;
+	}
+
+	&__list {
+		margin: 1.25rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: 2rem;
+		padding-block: 1.25rem;
+		border-top: 1px solid colors.$black;
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+	}
+
+	&__body {
+		flex: 1;
+	}
+
+	&__meta {
+		margin: 0 0 0.25rem;
+		font-size: typography.$font-size-small-p;
+		text-transform: uppercase;
+		color: colors.$gray-text;
+	}
+
+	&__separator {
+		margin-inline: 0.25rem;
+	}
+
+	&__title {
+		margin: 0;
+		font-size: typography.$font-size-p;
+		line-height: 1.4;
+
+		@include responsive.desktop-up {
+			font-size: typography.$font-size-p-desktop;
+		}
+	}
+
+	&__preview {
+		margin: 0.75rem 0 0;
+		font-size: typography.$font-size-small-p;
+		line-height: 1.45;
+		color: colors.$gray-text;
+	}
+
+	&__icon {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		isolation: isolate;
+		width: 3rem;
+		height: 3rem;
+		border: 3px solid colors.$black;
+		transition: color 0.01s ease-in 0.08s;
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0 100% 0 0;
+			background: colors.$black;
+			z-index: -1;
+			transition: right 0.09s ease-in;
+		}
+
+		&:any-link:hover {
+			background-color: transparent;
+			color: colors.$white;
+
+			&::before {
+				right: 0;
+			}
+		}
+	}
+
+	a {
+		color: colors.$black;
+
+		&:hover {
+			background-color: colors.$accent-color;
+			color: colors.$black;
+		}
+
+		&:focus {
+			outline: colors.$black solid 3px;
+			outline-offset: 2px;
+		}
+	}
+
+	&__icon:any-link {
+		color: colors.$black;
+	}
+}

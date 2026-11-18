@@ -1,0 +1,35 @@
+{% load wagtailcore_tags %}
+<section class="article-content__block external-reports" aria-labelledby="external-reports-title-{{ incident.pk }}">
+	<h3 class="external-reports__heading" id="external-reports-title-{{ incident.pk }}">External reporting</h3>
+	{% if note %}
+		<div class="rich-text external-reports__note">{{ note|richtext }}</div>
+	{% endif %}
+	<ul class="external-reports__list">
+		{% for report in incident.external_reports.all %}
+			<li class="external-reports__item">
+				<div class="external-reports__body">
+					{% if report.publication or report.document %}
+						<p class="external-reports__meta">
+							{{ report.publication }}{% if report.publication and report.document %} <span class="external-reports__separator" aria-hidden="true">&bull;</span> {% endif %}{% if report.document %}{{ report.document.file_extension|upper }} ({{ report.document.get_file_size|filesizeformat }}){% endif %}
+						</p>
+					{% endif %}
+					<p class="external-reports__title">
+						{% if report.href %}<a href="{{ report.href }}">{{ report.title }}</a>{% else %}{{ report.title }}{% endif %}
+					</p>
+					{% if report.preview_text %}
+						<p class="external-reports__preview">{{ report.preview_text }}</p>
+					{% endif %}
+				</div>
+				{% if report.href %}
+					<a class="external-reports__icon" href="{{ report.href }}" tabindex="-1" aria-hidden="true">
+						{% if report.document %}
+							<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
+						{% else %}
+							<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18 18 6M8 6h10v10"/></svg>
+						{% endif %}
+					</a>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+</section>

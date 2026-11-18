@@ -71,6 +71,17 @@ class EquipmentAmountSerializer(serializers.Serializer):
     equipment = serializers.StringRelatedField(read_only=True)
 
 
+class ExternalReportSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    url = serializers.SerializerMethodField()
+    publication = serializers.CharField()
+    preview_text = serializers.CharField()
+
+    @extend_schema_field(OpenApiTypes.URI)
+    def get_url(self, obj):
+        return obj.get_full_url(self.context.get("request"))
+
+
 class StateSerializer(serializers.Serializer):
     name = serializers.CharField()
     abbreviation = serializers.CharField()
@@ -139,6 +150,7 @@ class BaseIncidentSerializer(VariableFieldSerializer):
 
     date = serializers.DateField()
     exact_date_unknown = serializers.BooleanField()
+    externally_reported = serializers.BooleanField()
     city = serializers.CharField()
     longitude = serializers.FloatField()
     latitude = serializers.FloatField()
@@ -214,6 +226,7 @@ class BaseIncidentSerializer(VariableFieldSerializer):
 
 
 class IncidentSerializer(BaseIncidentSerializer):
+    external_reports = ExternalReportSerializer(many=True)
     equipment_seized = EquipmentAmountSerializer(many=True, read_only=True)
     equipment_broken = EquipmentAmountSerializer(many=True, read_only=True)
     state = StateSerializer()
@@ -243,6 +256,7 @@ class IncidentSerializer(BaseIncidentSerializer):
 
 
 class FlatIncidentSerializer(BaseIncidentSerializer):
+    external_reports = FlatStringRelatedField()
     equipment_seized = FlatSummaryField()
     equipment_broken = FlatSummaryField()
     state = serializers.CharField(source="state.abbreviation", default="")
@@ -268,6 +282,7 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     title = serializers.CharField()
     date = serializers.DateField()
     exact_date_unknown = serializers.BooleanField()
+    externally_reported = serializers.BooleanField()
     city = serializers.CharField()
     longitude = serializers.FloatField()
     latitude = serializers.FloatField()

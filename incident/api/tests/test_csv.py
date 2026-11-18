@@ -16,6 +16,7 @@ from incident import choices
 from incident.models import IncidentPage
 from incident.tests.factories import (
     EquipmentSeizedFactory,
+    ExternalReportFactory,
     IncidentChargeWithUpdatesFactory,
     IncidentIndexPageFactory,
     IncidentPageFactory,
@@ -609,6 +610,7 @@ class IncidentCSVTestCase(TestCase):
         cls.incident.tags = tags
         cls.incident.save()
         IncidentUpdateFactory.create_batch(2, page=cls.incident)
+        ExternalReportFactory.create_batch(3, page=cls.incident)
 
     def test_csv_requests_are_successful(self):
         response = self.client.get(
@@ -694,6 +696,9 @@ class IncidentCSVTestCase(TestCase):
                 "categories": ", ".join(
                     [cat.category.title for cat in inc.categories.all()]
                 ),
+                "external_reports": ", ".join(
+                    [str(report) for report in inc.external_reports.all()]
+                ),
                 "equipment_seized": ", ".join(
                     [e.summary for e in inc.equipment_seized.all()]
                 ),
@@ -702,6 +707,7 @@ class IncidentCSVTestCase(TestCase):
                 ),
                 "date": inc.date.isoformat(),
                 "exact_date_unknown": str(inc.exact_date_unknown),
+                "externally_reported": str(inc.externally_reported),
                 "city": inc.city,
                 "state": inc.state.abbreviation,
                 "latitude": "",
@@ -793,10 +799,12 @@ class IncidentCSVTestCase(TestCase):
             "authors",
             "updates",
             "categories",
+            "external_reports",
             "equipment_seized",
             "equipment_broken",
             "date",
             "exact_date_unknown",
+            "externally_reported",
             "city",
             "state",
             "introduction",

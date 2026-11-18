@@ -17,5 +17,31 @@ class TopicPageForm(WagtailAdminPageForm):
             )  # pragma: no cover
 
 
+class IncidentPageForm(WagtailAdminPageForm):
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.is_deferred_validation:
+            return cleaned_data
+
+        if cleaned_data.get("externally_reported"):
+            if not self._has_external_reports():
+                self.add_error(
+                    "externally_reported",
+                    "Add at least one external report for an incident reported by others.",
+                )
+        elif not cleaned_data.get("body"):
+            self.add_error("body", forms.Field.default_error_messages["required"])
+        return cleaned_data
+
+    def _has_external_reports(self):
+        reports = self.formsets["external_reports"]
+        # Formsets are cleaned after the parent form, so force it here.
+        reports.is_valid()
+        return any(
+            form.cleaned_data and not form.cleaned_data.get("DELETE")
+            for form in reports.forms
+        )
+
+
 class LegalOrderImportForm(forms.Form):
     csv_file = forms.FileField()

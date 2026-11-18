@@ -13,6 +13,7 @@ from common.tests.factories import (
 from incident import choices
 from incident.tests import factories
 from incident.tests.factories import (
+    ExternalReportFactory,
     IncidentIndexPageFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
@@ -440,6 +441,7 @@ class IncidentAPITest(APITestCase):
         cls.incident.tags = tags
         cls.incident.save()
         IncidentUpdateFactory.create_batch(2, page=cls.incident)
+        ExternalReportFactory.create_batch(3, page=cls.incident)
 
     def test_api_requests_are_successful(self):
         response = self.client.get(
@@ -475,6 +477,15 @@ class IncidentAPITest(APITestCase):
                 "authors": [author.author.title for author in inc.authors.all()],
                 "updates": [str(update) for update in inc.updates.all()],
                 "categories": [cat.category.title for cat in inc.categories.all()],
+                "external_reports": [
+                    {
+                        "title": report.title,
+                        "url": report.get_full_url(),
+                        "publication": report.publication,
+                        "preview_text": report.preview_text,
+                    }
+                    for report in inc.external_reports.all()
+                ],
                 "equipment_seized": [
                     {"equipment": e.equipment.name, "quantity": e.quantity}
                     for e in inc.equipment_seized.all()
@@ -485,6 +496,7 @@ class IncidentAPITest(APITestCase):
                 ],
                 "date": inc.date.isoformat(),
                 "exact_date_unknown": inc.exact_date_unknown,
+                "externally_reported": inc.externally_reported,
                 "city": inc.city,
                 "state": {
                     "name": inc.state.name,

@@ -58,6 +58,7 @@ from common.models import MetadataPageMixin
 from geonames.cities import get_city_coords
 from incident import choices
 from incident.circuits import CIRCUITS_BY_STATE
+from incident.forms import IncidentPageForm
 from incident.models.category_fields import CAT_FIELD_VALUES, CATEGORY_FIELD_MAP
 from incident.models.inlines import (
     ChargeUpdate,
@@ -316,6 +317,7 @@ class IncidentQuerySet(PageQuerySet):
             ),
             "equipment_broken__equipment",
             "equipment_seized__equipment",
+            "external_reports__document",
             "politicians_or_public_figures_involved",
             "tags",
             "target_nationality",
@@ -510,6 +512,12 @@ class IncidentPage(MetadataPageMixin, Page):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
+    externally_reported = models.BooleanField(
+        default=False,
+        verbose_name="Reported by others",
+        help_text="An incident stub relying on outside reporting. The body is optional and at least one external report is required.",
+    )
+
     body = StreamField(
         [
             (
@@ -536,6 +544,7 @@ class IncidentPage(MetadataPageMixin, Page):
             ("statistics", StatisticsBlock()),
         ],
         use_json_field=True,
+        blank=True,
     )
 
     introduction = models.TextField(
@@ -819,7 +828,10 @@ class IncidentPage(MetadataPageMixin, Page):
 
     objects = IncidentPageManager()
 
+    base_form_class = IncidentPageForm
+
     content_panels = Page.content_panels + [
+        FieldPanel("externally_reported"),
         MultiFieldPanel(
             heading="Introduction, Video, Image and Teaser",
             children=[
@@ -848,6 +860,11 @@ class IncidentPage(MetadataPageMixin, Page):
             "authors", label="Authors", help_text="Author pages must already exist."
         ),
         InlinePanel("updates", label="Updates"),
+        InlinePanel(
+            "external_reports",
+            label="External reporting",
+            help_text="Outside reporting or documents that this incident is based on. Required when the incident is reported by others.",
+        ),
         MultiFieldPanel(
             heading="Arrest/Criminal Charge",
             classname="collapsible collapsed",

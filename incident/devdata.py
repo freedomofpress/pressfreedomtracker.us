@@ -13,6 +13,7 @@ from factory import (
     Iterator,
     LazyAttribute,
     RelatedFactory,
+    Sequence,
     SubFactory,
     Trait,
 )
@@ -33,6 +34,7 @@ from incident.models import (
     Equipment,
     EquipmentBroken,
     EquipmentSeized,
+    ExternalReport,
     GovernmentWorker,
     IncidentAuthor,
     IncidentCategorization,
@@ -269,6 +271,16 @@ class MultimediaIncidentUpdateFactory(IncidentUpdateFactory):
         "streamfield",
         fields=["rich_text_paragraph", "bare_image", "raw_html", "blockquote"],
     )
+
+
+class ExternalReportFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ExternalReport
+
+    sort_order = Sequence(int)
+    title = Faker("sentence")
+    url = Faker("url", schemes=["https"])
+    publication = Faker("company")
 
 
 class SnippetFactory(factory.django.DjangoModelFactory):

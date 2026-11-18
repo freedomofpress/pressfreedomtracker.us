@@ -4,7 +4,7 @@ from django.utils import timezone
 
 import factory
 import wagtail_factories
-from factory import Faker, RelatedFactory, SubFactory, Trait
+from factory import Faker, RelatedFactory, Sequence, SubFactory, Trait
 
 import incident.models
 from common.tests.factories import (
@@ -26,6 +26,7 @@ from incident.models import (
     Equipment,
     EquipmentBroken,
     EquipmentSeized,
+    ExternalReport,
     GovernmentWorker,
     IncidentAuthor,
     IncidentCategorization,
@@ -126,6 +127,16 @@ class IncidentUpdateWithBodyFactory(IncidentUpdateFactory):
             "video": factory.SubFactory(AlignedCaptionedEmbedBlockFactory),
         }
     )
+
+
+class ExternalReportFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ExternalReport
+
+    sort_order = Sequence(int)
+    title = "External report"
+    url = "https://freedom.press"
+    publication = ""
 
 
 class StateFactory(factory.django.DjangoModelFactory):

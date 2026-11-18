@@ -138,6 +138,12 @@ class SiteSettings(BaseSiteSetting):
         default='<p>The <a href="https://pressfreedomtracker.us/">U.S. Press Freedom Tracker</a> catalogues press freedom violations in the United States. Email tips to tips@pressfreedomtracker.us.</p>',
         verbose_name="Incident Footer Call to Action",
     )
+    externally_reported_note = RichTextField(
+        blank=True,
+        default="<p>Verified by U.S. Press Freedom Tracker reporters.</p>",
+        verbose_name="Reported by others note",
+        help_text="Shown above the external reporting on incidents marked as reported by others.",
+    )
 
     panels = [
         FieldPanel("incident_sidebar_note"),
@@ -145,6 +151,7 @@ class SiteSettings(BaseSiteSetting):
         FieldPanel("newsletter_subscription_page"),
         FieldPanel("donation_page"),
         FieldPanel("incident_footer"),
+        FieldPanel("externally_reported_note"),
         MultiFieldPanel(
             [
                 FieldPanel("banner_enabled"),

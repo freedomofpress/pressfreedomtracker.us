@@ -1,3 +1,6 @@
+from urllib.parse import urljoin
+
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from wagtail import blocks
@@ -5,6 +8,7 @@ from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
 )
+from wagtail.documents import get_document_model_string
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Orderable
@@ -204,6 +208,61 @@ class IncidentCategorization(Orderable):
 
     def __str__(self):
         return f'"{self.incident_page}" in category "{self.category}"'
+
+
+class ExternalReport(Orderable):
+    page = ParentalKey("incident.IncidentPage", related_name="external_reports")
+    title = models.CharField(max_length=255)
+    publication = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    url = models.URLField(max_length=1024, blank=True, verbose_name="URL")
+    document = models.ForeignKey(
+        get_document_model_string(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    preview_text = models.TextField(
+        blank=True,
+        help_text="A short excerpt or summary shown under the title.",
+    )
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("publication"),
+        FieldPanel("preview_text"),
+        FieldPanel("url"),
+        FieldPanel("document"),
+    ]
+
+    def clean(self):
+        super().clean()
+        if self.url and self.document_id:
+            raise ValidationError("Use either a URL or a document, not both.")
+        if not self.url and not self.document_id:
+            raise ValidationError("Add a URL or a document.")
+
+    @property
+    def href(self):
+        if self.document:
+            return self.document.url
+        return self.url
+
+    def get_full_url(self, request=None):
+        if self.document:
+            return urljoin(self.page.get_full_url(request), self.document.url)
+        return self.url
+
+    def __str__(self):
+        value = self.title
+        if full_url := self.get_full_url():
+            value += f" ({full_url})"
+        if self.publication:
+            value += f" via {self.publication}"
+        return value
 
 
 class EquipmentSeized(Orderable):

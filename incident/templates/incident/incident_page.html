@@ -35,7 +35,7 @@
 				{% include "incident/_incident_update.html" with update=update only %}
 			{% endfor %}
 
-			{% include "incident/_incident.html" with incident=page only %}
+			{% include "incident/_incident.html" with incident=page externally_reported_note=settings.common.SiteSettings.externally_reported_note only %}
 
 			{% with incident_cta=settings.common.SiteSettings.incident_footer %}
 				{% if incident_cta %}
