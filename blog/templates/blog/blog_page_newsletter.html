@@ -12,6 +12,11 @@
 			<mj-all padding="0" />
 			<mj-text font-size="18px" line-height="1.5" font-family="'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif" color="#000000" />
 			<mj-button font-size="16px" font-weight="500" border-radius="0px" color="#000000" font-family="'Helvetica Neue', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif" />
+			<mj-class name="center-text" align="center" />
+			<mj-class name="small" font-size="14px" line-height="1.6" />
+			<mj-class name="mono" font-family="'Roboto Mono', monospace" />
+			<mj-class name="gray" color="#C1C1C1" />
+			<mj-class name="white" color="#FFFFFF" />
 		</mj-attributes>
 		<mj-style inline="inline">
 			a { color: #000000; text-decoration: underline; }
@@ -30,6 +35,8 @@
 				border-top: 2px solid #000000;
 			}
 			.footer { padding: 32px 24px; }
+			.footer p { margin: 0; }
+			.footer p + p { margin-top: 16px; }
 			.footer a { color: #ffffff; text-decoration: underline; }
 			.meta { font-size: 13px; color: #757575; font-family: 'Roboto Mono', monospace; }
 			.meta a { color: #757575; }
@@ -449,33 +456,17 @@
 		<!-- FOOTER -->
 		<mj-section background-color="#000000" css-class="footer">
 			<mj-column>
-				<mj-text align="center" padding-bottom="24px">
-					<a href="https://bsky.app/profile/pressfreedomtracker.us" style="display:inline-block; margin:0 16px; text-decoration:none;">
-						<img
-							src="{{ page.get_base_url }}{% static 'logos/bluesky.png' %}"
-							alt="U.S. Press Freedom Tracker on Bluesky"
-							width="24px"
-						/>
-					</a>
-					<a href="https://x.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
-						<img
-							src="{{ page.get_base_url }}{% static 'logos/x.png' %}"
-							alt="U.S. Press Freedom Tracker on X"
-							width="24px"
-						/>
-					</a>
-					<a href="https://instagram.com/uspresstracker" style="display:inline-block; margin:0 16px; text-decoration:none;">
-						<img
-							src="{{ page.get_base_url }}{% static 'logos/instagram.png' %}"
-							alt="U.S. Press Freedom Tracker on Instagram"
-							width="24px"
-						/>
-					</a>
-				</mj-text>
-				<mj-text align="center" color="#ffffff" font-size="14px" font-family="'Roboto Mono', monospace" line-height="1.6">
-					<p>&copy; Copyright Freedom of the Press Foundation</p>
-					<p>Licensed under <a href="https://creativecommons.org/licenses/by/4.0/" style="color:#ffffff;">Creative Commons CC-BY 4.0</a> where not otherwise indicated.</p>
+				<mj-social mj-class="mono" padding-bottom="24px" icon-size="24px" icon-padding="0" inner-padding="0 16px" mode="horizontal">
+					<mj-social-element href="https://bsky.app/profile/pressfreedomtracker.us" src="{{ page.get_base_url }}{% static 'logos/bluesky.png' %}" alt="U.S. Press Freedom Tracker on Bluesky"></mj-social-element>
+					<mj-social-element href="https://x.com/uspresstracker" src="{{ page.get_base_url }}{% static 'logos/x.png' %}" alt="U.S. Press Freedom Tracker on X"></mj-social-element>
+					<mj-social-element href="https://instagram.com/uspresstracker" src="{{ page.get_base_url }}{% static 'logos/instagram.png' %}" alt="U.S. Press Freedom Tracker on Instagram"></mj-social-element>
+				</mj-social>
+				<mj-text mj-class="center-text small mono white" padding-bottom="16px"><p>&copy; Copyright Freedom of the Press Foundation</p></mj-text>
+				<mj-text mj-class="center-text small mono gray">
 					<p>49 Flatbush Avenue #1017 Brooklyn NY 11217</p>
+					<p>Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons CC-BY 4.0</a> where not otherwise indicated.</p>
+					<p>This email was sent to <a href="mailto:*|EMAIL|*">*|EMAIL|*</a>.</p>
+					<p>To unsubscribe from all Freedom of the Press Foundation emails, <a href="*|UNSUB|*">opt out here</a>. To change which emails you receive from us, <a href="*|UPDATE_PROFILE|*">update your subscription preferences</a>.</p>
 				</mj-text>
 			</mj-column>
 		</mj-section>
