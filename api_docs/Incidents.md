@@ -85,7 +85,6 @@ Here is a sample response:
       "third_party_in_possession_of_communications": null,
       "third_party_business": null,
       "status_of_prior_restraint": null,
-      "links": [],
       "equipment_seized": [],
       "equipment_broken": [],
       "state": {
@@ -154,7 +153,6 @@ Here is a sample response:
       "third_party_in_possession_of_communications": null,
       "third_party_business": null,
       "status_of_prior_restraint": null,
-      "links": [],
       "equipment_seized": [],
       "equipment_broken": [],
       "state": null,
@@ -223,7 +221,6 @@ This table describes all the fields on the incident objects in the `results` obj
 | `third_party_in_possession_of_communications` | A description of what third-party possess communications in an incident involving a legal order for a journalist's records.                                                             | string           |
 | `third_party_business`                        | What type of business the above third-party is engaged in. Can be one of: `TELECOM`, `TECH_COMPANY`, `ISP`, `FINANCIAL`, `TRAVEL` or `OTHER`.                                           | string           |
 | `status_of_prior_restraint`                   | Status of prior restraint related to the incident. Can be one of `PENDING`, `DROPPED`, `STRUCK_DOWN`, `UPHELD`, or `IGNORED`.                                                           | string           |
-| `links`                                       | A collection of links pertaining to the incident.                                                                                                                                       | array of objects |
 | `equipment_seized`                            | What equipment, and how much, was seized during the incident.                                                                                                                           | array of objects |
 | `equipment_broken`                            | What equipment, and how much, was broken during the incident.                                                                                                                           | array of objects |
 | `updates`                                     | Updates to the article on the Press Freedom Tracker after it was initially published.                                                                                                   | array of strings |

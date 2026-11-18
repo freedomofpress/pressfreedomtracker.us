@@ -25,7 +25,6 @@ from incident.tests.factories import (
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
     IncidentIndexPageFactory,
-    IncidentLinkFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
     InstitutionFactory,
@@ -87,7 +86,6 @@ class IncidentExportTestCase(TestCase):
             "authors",
             "updates",
             "categories",
-            "links",
             "equipment_seized",
             "equipment_broken",
             "date",
@@ -253,7 +251,6 @@ class IncidentExportRowTestCase(TestCase):
         ),
         ("updates", "(2024-01-05 03:04:05+00:00) Update A"),
         ("categories", "Category A"),
-        ("links", "Link A (https://example.com/link)"),
         ("equipment_seized", "Camera: count of 2"),
         ("equipment_broken", "Phone: count of 1"),
         ("targeted_journalists", "Journalist A (Institution B)"),
@@ -377,9 +374,6 @@ class IncidentExportRowTestCase(TestCase):
             journalist=JournalistFactory(title="Journalist A"),
             institution=InstitutionFactory(title="Institution B"),
         )
-        IncidentLinkFactory(
-            page=incident, title="Link A", url="https://example.com/link"
-        )
         IncidentUpdateFactory(
             page=incident,
             title="Update A",
@@ -449,7 +443,6 @@ class IncidentExportRowTestCase(TestCase):
             ),
             ("updates", "(2024-01-05 03:04:05+00:00) Update A"),
             ("categories", "Category A"),
-            ("links", "Link A (https://example.com/link)"),
             ("equipment_seized", "Camera: count of 2"),
             ("equipment_broken", "Phone: count of 1"),
             ("targeted_journalists", "Journalist A (Institution B)"),

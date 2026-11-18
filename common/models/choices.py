@@ -25,7 +25,6 @@ FILTER_CHOICES = [
     ),
     ("tags", "Has any of these tags"),
     ("authors", "Incident author"),
-    ("links", "Incident page links"),
     ("index_entries", "Index entries"),
     ("legal_order_information_requested", "Information requested in legal order"),
     ("case_statuses", "Legal case statuses"),

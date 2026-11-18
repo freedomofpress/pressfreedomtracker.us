@@ -40,7 +40,6 @@ from .factories import (
     IncidentChargeFactory,
     IncidentChargeWithUpdatesFactory,
     IncidentIndexPageFactory,
-    IncidentLinkFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
     InstitutionFactory,
@@ -1145,7 +1144,6 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                     "politicians_or_public_figures_involved": "null",
                     "related_incidents": "null",
                     "updates": inline_formset([]),
-                    "links": inline_formset([]),
                     "categories": inline_formset(
                         [
                             {"category": str(self.category.pk)},
@@ -1202,7 +1200,6 @@ class IncidentPageStatisticsTagsTestCase(WagtailPageTestCase):
                     "politicians_or_public_figures_involved": "null",
                     "related_incidents": "null",
                     "updates": inline_formset([]),
-                    "links": inline_formset([]),
                     "categories": inline_formset(
                         [
                             {"category": str(self.category.pk)},
@@ -1548,7 +1545,6 @@ class IncidentPageQueriesTest(TestCase):
             incident.tags = tags
             incident.save()
             IncidentUpdateFactory.create_batch(2, page=incident)
-            IncidentLinkFactory.create_batch(3, page=incident)
             IncidentChargeWithUpdatesFactory.create_batch(3, incident_page=incident)
 
             # Pre-generate renditions to avoid INSERT queries that we
@@ -1557,7 +1553,7 @@ class IncidentPageQueriesTest(TestCase):
 
     def test_api_selects_and_prefetches(self):
         # 1 base query, plus 19 prefetches.
-        with self.assertNumQueries(20):
+        with self.assertNumQueries(19):
             list(IncidentPage.objects.with_public_associations())
 
 

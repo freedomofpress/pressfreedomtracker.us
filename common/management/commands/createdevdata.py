@@ -46,7 +46,6 @@ from forms.tests.factories import FormPageFactory
 from home.models import FeaturedBlogPost, FeaturedIncident, HomePage
 from incident.devdata import (
     IncidentIndexPageFactory,
-    IncidentLinkFactory,
     MultimediaIncidentPageFactory,
     MultimediaIncidentUpdateFactory,
     TopicPageFactory,
@@ -459,7 +458,6 @@ class Command(BaseCommand):
                 page=incident,
             )
             MultimediaIncidentUpdateFactory(page=incident)
-            IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
 
         tag_groups = [

@@ -18,7 +18,6 @@ from incident.tests.factories import (
     EquipmentSeizedFactory,
     IncidentChargeWithUpdatesFactory,
     IncidentIndexPageFactory,
-    IncidentLinkFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
     StateFactory,
@@ -107,8 +106,6 @@ class PerformantCSVTestCase(TestCase):
             subpoena=True,
         )
         EquipmentSeizedFactory.create_batch(3, incident=cls.incident)
-        IncidentLinkFactory.create_batch(3, page=cls.incident)
-        IncidentLinkFactory(page=cls.incident, publication="Galactic Express")
 
         IncidentChargeWithUpdatesFactory(
             incident_page=cls.incident,
@@ -152,7 +149,6 @@ class PerformantCSVTestCase(TestCase):
             "third_party_business",
             "status_of_prior_restraint",
             "state",
-            "links",
             "equipment_broken",
             "equipment_seized",
             "status_of_charges",
@@ -190,12 +186,6 @@ class PerformantCSVTestCase(TestCase):
         self.assertEqual(
             self.result["state"],
             self.incident.state.abbreviation,
-        )
-
-    def test_links_are_correct(self):
-        self.assertEqual(
-            self.result["links"],
-            ", ".join(str(link) for link in self.incident.links.all()),
         )
 
     def test_equipment_broken_is_correct(self):
@@ -619,7 +609,6 @@ class IncidentCSVTestCase(TestCase):
         cls.incident.tags = tags
         cls.incident.save()
         IncidentUpdateFactory.create_batch(2, page=cls.incident)
-        IncidentLinkFactory.create_batch(3, page=cls.incident)
 
     def test_csv_requests_are_successful(self):
         response = self.client.get(
@@ -705,7 +694,6 @@ class IncidentCSVTestCase(TestCase):
                 "categories": ", ".join(
                     [cat.category.title for cat in inc.categories.all()]
                 ),
-                "links": ", ".join([str(link) for link in inc.links.all()]),
                 "equipment_seized": ", ".join(
                     [e.summary for e in inc.equipment_seized.all()]
                 ),
@@ -805,7 +793,6 @@ class IncidentCSVTestCase(TestCase):
             "authors",
             "updates",
             "categories",
-            "links",
             "equipment_seized",
             "equipment_broken",
             "date",

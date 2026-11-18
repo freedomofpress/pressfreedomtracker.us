@@ -549,7 +549,6 @@ class CategoryPage(MetadataPageMixin, Page):
                 "categories__category",
                 "equipment_broken__equipment",
                 "equipment_seized__equipment",
-                "links",
                 "politicians_or_public_figures_involved",
                 "tags",
                 "target_nationality",

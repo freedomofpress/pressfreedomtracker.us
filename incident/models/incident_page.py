@@ -213,34 +213,6 @@ class IncidentQuerySet(PageQuerySet):
                 )
                 .values("equipment_seized_summary"),
             ),
-            "link_summary": Subquery(
-                IncidentPage.objects.only("links")
-                .annotate(
-                    link_summary=StringAgg(
-                        expression=Concat(
-                            "links__title",
-                            Value(" ("),
-                            "links__url",
-                            Value(")"),
-                            Case(
-                                When(
-                                    links__publication__isnull=True,
-                                    then=Value(""),
-                                ),
-                                default=Concat(
-                                    Value(" via "),
-                                    "links__publication",
-                                ),
-                            ),
-                            output_field=models.CharField(),
-                        ),
-                        delimiter=", ",
-                    )
-                )
-                .filter(pk=OuterRef("pk"))
-                .values("link_summary"),
-                output_field=models.CharField(),
-            ),
             "category_summary": Subquery(
                 IncidentPage.objects.only("categories")
                 .annotate(
@@ -344,7 +316,6 @@ class IncidentQuerySet(PageQuerySet):
             ),
             "equipment_broken__equipment",
             "equipment_seized__equipment",
-            "links",
             "politicians_or_public_figures_involved",
             "tags",
             "target_nationality",
@@ -877,12 +848,6 @@ class IncidentPage(MetadataPageMixin, Page):
             "authors", label="Authors", help_text="Author pages must already exist."
         ),
         InlinePanel("updates", label="Updates"),
-        InlinePanel(
-            "links",
-            label="Sources",
-            help_text="Links to resources and news articles related to this"
-            "incident. Displayed as footnotes.",
-        ),
         MultiFieldPanel(
             heading="Arrest/Criminal Charge",
             classname="collapsible collapsed",

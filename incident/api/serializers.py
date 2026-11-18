@@ -71,12 +71,6 @@ class EquipmentAmountSerializer(serializers.Serializer):
     equipment = serializers.StringRelatedField(read_only=True)
 
 
-class IncidentLinkSerializer(serializers.Serializer):
-    title = serializers.CharField()
-    url = serializers.URLField()
-    publication = serializers.CharField()
-
-
 class StateSerializer(serializers.Serializer):
     name = serializers.CharField()
     abbreviation = serializers.CharField()
@@ -220,7 +214,6 @@ class BaseIncidentSerializer(VariableFieldSerializer):
 
 
 class IncidentSerializer(BaseIncidentSerializer):
-    links = IncidentLinkSerializer(many=True)
     equipment_seized = EquipmentAmountSerializer(many=True, read_only=True)
     equipment_broken = EquipmentAmountSerializer(many=True, read_only=True)
     state = StateSerializer()
@@ -250,7 +243,6 @@ class IncidentSerializer(BaseIncidentSerializer):
 
 
 class FlatIncidentSerializer(BaseIncidentSerializer):
-    links = FlatStringRelatedField()
     equipment_seized = FlatSummaryField()
     equipment_broken = FlatSummaryField()
     state = serializers.CharField(source="state.abbreviation", default="")
@@ -332,7 +324,6 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     tags = serializers.CharField(source="tag_summary")
     categories = serializers.CharField(source="category_summary")
     state = serializers.CharField(source="state_abbreviation")
-    links = serializers.CharField(source="link_summary")
     equipment_broken = serializers.CharField(source="equipment_broken_summary")
     equipment_seized = serializers.CharField(source="equipment_seized_summary")
     status_of_charges = serializers.CharField(source="status_of_charges_summary")
