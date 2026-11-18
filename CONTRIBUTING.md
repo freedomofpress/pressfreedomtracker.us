@@ -34,6 +34,7 @@ To get started working with the code, clone the repo and follow the instructions
 - Writing tests is strongly encouraged, especially if significant behavior is added or changed.
   - Django-based tests are found in the `tests/` subdirectories of each separate app. Run the entire test suite with `just test`
   - JavaScript, jest-based tests are found in the `client/common/js/tests/` directory. Run this test suite with `just test-js`
+  - Browser end-to-end and visual-regression tests live in `e2e/` and run with Playwright. Run them with `just qa`. Update visual baseline images with `just qa-update`.
 - JavaScript, CSS/SASS, and HTML markup should mimic the styles and patterns in the existing codebase.
 
 ## Conduct and communication
