@@ -225,6 +225,14 @@ class ExternalReport(Orderable):
         on_delete=models.SET_NULL,
         related_name="+",
     )
+    image = models.ForeignKey(
+        "common.CustomImage",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Optional. Shown beside the item.",
+    )
     preview_text = models.TextField(
         blank=True,
         help_text="A short excerpt or summary shown under the title.",
@@ -236,6 +244,7 @@ class ExternalReport(Orderable):
         FieldPanel("preview_text"),
         FieldPanel("url"),
         FieldPanel("document"),
+        FieldPanel("image"),
     ]
 
     def clean(self):

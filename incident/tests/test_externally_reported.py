@@ -16,7 +16,7 @@ from wagtail.test.utils.form_data import (
 import wagtail_factories
 
 from common.models import SiteSettings
-from common.tests.factories import CategoryPageFactory
+from common.tests.factories import CategoryPageFactory, CustomImageFactory
 from incident.models import ExternalReport
 from incident.models.incident_page import IncidentPage
 
@@ -210,6 +210,11 @@ class ExternallyReportedDisplayTestCase(TestCase):
             response,
             'Florida DCF <span class="external-reports__separator" aria-hidden="true">&bull;</span> PDF',
         )
+
+    def test_stub_page_shows_report_image(self):
+        ExternalReportFactory(page=self.stub, image=CustomImageFactory())
+        response = self.client.get(self.stub.url)
+        self.assertContains(response, "external-reports__image")
 
     def test_stub_page_shows_editable_note(self):
         settings = SiteSettings.for_site(Site.objects.get(is_default_site=True))

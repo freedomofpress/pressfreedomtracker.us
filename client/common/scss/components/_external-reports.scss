@@ -24,19 +24,39 @@
 	}
 
 	&__item {
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-areas: "body icon";
 		align-items: center;
-		gap: 2rem;
+		gap: 1rem 2rem;
 		padding-block: 1.25rem;
 		border-top: 1px solid colors.$black;
 
 		&:last-child {
 			padding-bottom: 0;
 		}
+
+		&--with-image {
+			grid-template-areas:
+				"image image"
+				"body icon";
+
+			@include responsive.tablet-up {
+				grid-template-columns: 10rem 1fr auto;
+				grid-template-areas: "image body icon";
+			}
+		}
+	}
+
+	&__image {
+		grid-area: image;
+		display: block;
+		width: 10rem;
+		height: auto;
 	}
 
 	&__body {
-		flex: 1;
+		grid-area: body;
 	}
 
 	&__meta {
@@ -44,6 +64,8 @@
 		font-size: typography.$font-size-small-p;
 		text-transform: uppercase;
 		color: colors.$gray-text;
+		font-weight: 500;
+		letter-spacing: 0.5px;
 	}
 
 	&__separator {
@@ -61,13 +83,14 @@
 	}
 
 	&__preview {
-		margin: 0.75rem 0 0;
-		font-size: typography.$font-size-small-p;
+		margin: 0.5rem 0 0;
+		font-size: typography.$font-size-p;
 		line-height: 1.45;
-		color: colors.$gray-text;
+		color: colors.$black;
 	}
 
 	&__icon {
+		grid-area: icon;
 		display: flex;
 		flex-shrink: 0;
 		align-items: center;

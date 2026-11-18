@@ -4,10 +4,10 @@
 	<a class="incident-update__link text-link" href="#incident-original" id="incident-original">
 		{{ incident.date|date:"F j, Y" }}
 	</a>
-	{% if incident.externally_reported %}
-		{% include "incident/_external_reports.html" with incident=incident note=externally_reported_note only %}
-	{% endif %}
 	{% for block in incident.body %}
 		<div class="article-content__block {% if block.block_type == 'rich_text' %}rich-text{% endif %}">{% include_block block %}</div>
 	{% endfor %}
+	{% if incident.externally_reported %}
+		{% include "incident/_external_reports.html" with incident=incident note=externally_reported_note only %}
+	{% endif %}
 </div>

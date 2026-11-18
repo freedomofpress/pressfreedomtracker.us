@@ -12,6 +12,7 @@ import statistics.registry
 
 class Migration(migrations.Migration):
     dependencies = [
+        ("common", "0122_external_reporting"),
         ("incident", "0109_alter_journalist_title"),
         ("wagtaildocs", "0014_alter_document_file_size"),
     ]
@@ -250,6 +251,17 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.SET_NULL,
                         related_name="+",
                         to="wagtaildocs.document",
+                    ),
+                ),
+                (
+                    "image",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="Optional. Shown beside the item.",
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="common.customimage",
                     ),
                 ),
                 (

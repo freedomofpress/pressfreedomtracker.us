@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 <section class="article-content__block external-reports" aria-labelledby="external-reports-title-{{ incident.pk }}">
 	<h3 class="external-reports__heading" id="external-reports-title-{{ incident.pk }}">External reporting</h3>
 	{% if note %}
@@ -6,7 +6,10 @@
 	{% endif %}
 	<ul class="external-reports__list">
 		{% for report in incident.external_reports.all %}
-			<li class="external-reports__item">
+			<li class="external-reports__item{% if report.image %} external-reports__item--with-image{% endif %}">
+				{% if report.image %}
+					{% image report.image fill-192x144 class="external-reports__image" alt="" %}
+				{% endif %}
 				<div class="external-reports__body">
 					{% if report.publication or report.document %}
 						<p class="external-reports__meta">
