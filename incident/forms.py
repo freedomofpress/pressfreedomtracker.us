@@ -27,7 +27,7 @@ class IncidentPageForm(WagtailAdminPageForm):
             if not self._has_external_reports():
                 self.add_error(
                     "externally_reported",
-                    "Add at least one external report for an incident reported by others.",
+                    "Add at least one external report for an incident that relies on external reporting.",
                 )
         elif not cleaned_data.get("body"):
             self.add_error("body", forms.Field.default_error_messages["required"])

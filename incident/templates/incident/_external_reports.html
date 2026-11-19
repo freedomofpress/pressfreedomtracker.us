@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 <section class="external-reports" aria-labelledby="external-reports-title-{{ incident.pk }}">
-	<h3 class="external-reports__heading" id="external-reports-title-{{ incident.pk }}">Externally reported</h3>
+	<h3 class="external-reports__heading" id="external-reports-title-{{ incident.pk }}">{{ heading }}</h3>
 	{% if note %}
 		<div class="rich-text external-reports__note">{{ note|richtext }}</div>
 	{% endif %}

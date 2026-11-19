@@ -573,8 +573,8 @@ class IncidentPage(MetadataPageMixin, Page):
 
     externally_reported = models.BooleanField(
         default=False,
-        verbose_name="Reported by others",
-        help_text="An incident stub relying on outside reporting. The body is optional and at least one external report is required.",
+        verbose_name="Relies on external reporting",
+        help_text="An incident stub. The body is optional and at least one external report is required.",
     )
 
     body = StreamField(
@@ -890,7 +890,6 @@ class IncidentPage(MetadataPageMixin, Page):
     base_form_class = IncidentPageForm
 
     content_panels = Page.content_panels + [
-        FieldPanel("externally_reported"),
         MultiFieldPanel(
             heading="Introduction, Video, Image and Teaser",
             children=[
@@ -901,6 +900,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel("teaser"),
             ],
         ),
+        FieldPanel("externally_reported"),
         FieldPanel("body"),
         MultiFieldPanel(
             heading="Details",
@@ -922,7 +922,7 @@ class IncidentPage(MetadataPageMixin, Page):
         InlinePanel(
             "external_reports",
             label="External reporting",
-            help_text="Outside reporting or documents that this incident is based on. Required when the incident is reported by others.",
+            help_text="Outside reporting or documents that this incident is based on. Required when the incident relies on external reporting.",
         ),
         MultiFieldPanel(
             heading="Arrest/Criminal Charge",

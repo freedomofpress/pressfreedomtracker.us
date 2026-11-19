@@ -138,11 +138,17 @@ class SiteSettings(BaseSiteSetting):
         default='<p>The <a href="https://pressfreedomtracker.us/">U.S. Press Freedom Tracker</a> catalogues press freedom violations in the United States. Email tips to tips@pressfreedomtracker.us.</p>',
         verbose_name="Incident Footer Call to Action",
     )
+    externally_reported_heading = models.CharField(
+        max_length=255,
+        default="Externally reported",
+        verbose_name="External reporting heading",
+        help_text="Heading above the external reporting on incidents that rely on it.",
+    )
     externally_reported_note = RichTextField(
         blank=True,
         default="<p>Incident coverage from other news sources.</p>",
-        verbose_name="Reported by others note",
-        help_text="Shown above the external reporting on incidents marked as reported by others.",
+        verbose_name="External reporting note",
+        help_text="Shown above the external reporting on incidents that rely on it.",
     )
 
     panels = [
@@ -151,6 +157,7 @@ class SiteSettings(BaseSiteSetting):
         FieldPanel("newsletter_subscription_page"),
         FieldPanel("donation_page"),
         FieldPanel("incident_footer"),
+        FieldPanel("externally_reported_heading"),
         FieldPanel("externally_reported_note"),
         MultiFieldPanel(
             [

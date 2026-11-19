@@ -36,7 +36,7 @@ FILTER_CHOICES = [
     ("name_of_business", "Name of business"),
     ("primary_video", "Primary video"),
     ("release_date", "Release date"),
-    ("externally_reported", "Reported by others"),
+    ("externally_reported", "Relies on external reporting"),
     ("is_search_warrant_obtained", "Search warrant obtained?"),
     ("pending_cases", "Show only pending cases"),
     ("state", "State"),

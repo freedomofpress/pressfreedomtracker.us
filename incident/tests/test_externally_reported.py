@@ -216,6 +216,17 @@ class ExternallyReportedDisplayTestCase(TestCase):
         response = self.client.get(self.stub.url)
         self.assertContains(response, "external-reports__image")
 
+    def test_stub_page_shows_default_heading(self):
+        response = self.client.get(self.stub.url)
+        self.assertContains(response, ">Externally reported</h3>")
+
+    def test_stub_page_shows_editable_heading(self):
+        settings = SiteSettings.for_site(Site.objects.get(is_default_site=True))
+        settings.externally_reported_heading = "Reported elsewhere"
+        settings.save()
+        response = self.client.get(self.stub.url)
+        self.assertContains(response, ">Reported elsewhere</h3>")
+
     def test_stub_page_shows_editable_note(self):
         settings = SiteSettings.for_site(Site.objects.get(is_default_site=True))
         settings.externally_reported_note = "<p>Verified by our reporters.</p>"

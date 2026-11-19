@@ -30,7 +30,7 @@
 
 		<section class="article-content__inner">
 			{% if page.externally_reported %}
-				{% include "incident/_external_reports.html" with incident=page note=settings.common.SiteSettings.externally_reported_note only %}
+				{% include "incident/_external_reports.html" with incident=page heading=settings.common.SiteSettings.externally_reported_heading note=settings.common.SiteSettings.externally_reported_note only %}
 			{% endif %}
 
 			{% include 'common/_video_or_image.html' with video=page.primary_video image=page.teaser_image caption=page.image_caption %}
