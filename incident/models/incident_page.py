@@ -1276,7 +1276,11 @@ class IncidentPage(MetadataPageMixin, Page):
         if self.teaser:
             return self.teaser
 
-        return truncatewords(strip_tags(self.body.render_as_block()), 20)
+        return (
+            truncatewords(strip_tags(self.body.render_as_block()), 20)
+            or self._get_ssssettings().default_description
+            or ""
+        )
 
     @cached_property
     def get_tags(self):

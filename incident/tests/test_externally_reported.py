@@ -15,7 +15,7 @@ from wagtail.test.utils.form_data import (
 
 import wagtail_factories
 
-from common.models import SiteSettings
+from common.models import SiteSettings, SocialSharingSEOSettings
 from common.tests.factories import CategoryPageFactory, CustomImageFactory
 from incident.models import ExternalReport
 from incident.models.incident_page import IncidentPage
@@ -226,3 +226,16 @@ class ExternallyReportedDisplayTestCase(TestCase):
     def test_full_incident_page_has_no_external_reporting(self):
         response = self.client.get(self.full.url)
         self.assertNotContains(response, "external-reports")
+
+    def test_meta_description_falls_back_to_site_default(self):
+        settings = SocialSharingSEOSettings.for_site(
+            Site.objects.get(is_default_site=True)
+        )
+        settings.default_description = "Tracking press freedom violations."
+        settings.save()
+        self.assertEqual(
+            self.stub.get_meta_description(), "Tracking press freedom violations."
+        )
+
+    def test_meta_description_is_empty_without_site_default(self):
+        self.assertEqual(self.stub.get_meta_description(), "")
