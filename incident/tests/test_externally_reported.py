@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from urllib.parse import urljoin
 
 from django.contrib.auth import get_user_model
@@ -45,7 +46,14 @@ class IncidentPageFormTestCase(TestCase):
             username="editor", email="editor@example.com", password="password"
         )
 
-    def make_form(self, externally_reported, body=None, external_reports=None):
+    def make_form(
+        self,
+        externally_reported,
+        body=None,
+        external_reports=None,
+        instance=None,
+        initial_reports=0,
+    ):
         data = nested_form_data(
             {
                 "title": "An incident",
@@ -65,7 +73,9 @@ class IncidentPageFormTestCase(TestCase):
                 "politicians_or_public_figures_involved": "null",
                 "related_incidents": "null",
                 "updates": inline_formset([]),
-                "external_reports": inline_formset(external_reports or []),
+                "external_reports": inline_formset(
+                    external_reports or [], initial=initial_reports
+                ),
                 "categories": inline_formset([{"category": str(self.category.pk)}]),
                 "authors": inline_formset([]),
                 "equipment_seized": inline_formset([]),
@@ -75,7 +85,7 @@ class IncidentPageFormTestCase(TestCase):
         form_class = IncidentPage.get_edit_handler().get_form_class()
         return form_class(
             data,
-            instance=IncidentPage(),
+            instance=instance or IncidentPage(),
             for_user=self.user,
             parent_page=self.index,
         )
@@ -134,6 +144,69 @@ class IncidentPageFormTestCase(TestCase):
                 form = self.make_form(externally_reported=externally_reported)
                 form.defer_required_fields()
                 self.assertTrue(form.is_valid(), form.errors)
+
+    @patch("incident.forms.fetch_preview_image")
+    def test_save_fetches_preview_image_for_new_links(self, fetch):
+        fetch.return_value = CustomImageFactory()
+        form = self.make_form(
+            externally_reported=True,
+            external_reports=[
+                {
+                    "title": "Editorial",
+                    "publication": "Sentinel",
+                    "url": "https://example.com/editorial",
+                }
+            ],
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+        page = form.save(commit=False)
+
+        fetch.assert_called_once_with(
+            "https://example.com/editorial", "Editorial", "Sentinel"
+        )
+        self.assertEqual(page.external_reports.get().image, fetch.return_value)
+
+    @patch("incident.forms.fetch_preview_image")
+    def test_save_skips_documents_and_chosen_images(self, fetch):
+        form = self.make_form(
+            externally_reported=True,
+            external_reports=[
+                {"title": "Letter", "document": str(make_document().pk)},
+                {
+                    "title": "Editorial",
+                    "url": "https://example.com/editorial",
+                    "image": str(CustomImageFactory().pk),
+                },
+            ],
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+        form.save(commit=False)
+
+        fetch.assert_not_called()
+
+    @patch("incident.forms.fetch_preview_image")
+    def test_save_does_not_refill_a_cleared_image(self, fetch):
+        page = IncidentPageFactory(parent=self.index, externally_reported=True)
+        report = ExternalReportFactory(page=page, url="https://example.com/editorial")
+        form = self.make_form(
+            externally_reported=True,
+            instance=page,
+            initial_reports=1,
+            external_reports=[
+                {
+                    "id": str(report.pk),
+                    "title": report.title,
+                    "url": report.url,
+                }
+            ],
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+
+        form.save(commit=False)
+
+        fetch.assert_not_called()
 
 
 class ExternalReportTestCase(TestCase):
