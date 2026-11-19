@@ -157,8 +157,13 @@ class SiteSettings(BaseSiteSetting):
         FieldPanel("newsletter_subscription_page"),
         FieldPanel("donation_page"),
         FieldPanel("incident_footer"),
-        FieldPanel("externally_reported_heading"),
-        FieldPanel("externally_reported_note"),
+        MultiFieldPanel(
+            [
+                FieldPanel("externally_reported_heading"),
+                FieldPanel("externally_reported_note"),
+            ],
+            "External reporting (incident stubs)",
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("banner_enabled"),
