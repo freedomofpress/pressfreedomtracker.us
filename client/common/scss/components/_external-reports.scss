@@ -60,10 +60,7 @@
 	&__meta {
 		margin: 0 0 0.25rem;
 		font-size: typography.$font-size-small-p;
-		text-transform: uppercase;
 		color: colors.$gray-text;
-		font-weight: 500;
-		letter-spacing: 0.5px;
 	}
 
 	&__separator {
@@ -73,6 +70,7 @@
 	&__title {
 		margin: 0;
 		font-size: typography.$font-size-p;
+		font-weight: 500;
 		line-height: 1.4;
 
 		@include responsive.desktop-up {

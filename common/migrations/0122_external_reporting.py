@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             name="externally_reported_note",
             field=wagtail.fields.RichTextField(
                 blank=True,
-                default="<p>Verified by U.S. Press Freedom Tracker reporters.</p>",
+                default="<p>Incident coverage from other news sources.</p>",
                 help_text="Shown above the external reporting on incidents marked as reported by others.",
                 verbose_name="Reported by others note",
             ),

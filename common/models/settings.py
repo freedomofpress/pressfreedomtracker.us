@@ -140,7 +140,7 @@ class SiteSettings(BaseSiteSetting):
     )
     externally_reported_note = RichTextField(
         blank=True,
-        default="<p>Verified by U.S. Press Freedom Tracker reporters.</p>",
+        default="<p>Incident coverage from other news sources.</p>",
         verbose_name="Reported by others note",
         help_text="Shown above the external reporting on incidents marked as reported by others.",
     )
