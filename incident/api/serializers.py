@@ -339,6 +339,7 @@ class CSVIncidentSerializer(VariableFieldSerializer):
     tags = serializers.CharField(source="tag_summary")
     categories = serializers.CharField(source="category_summary")
     state = serializers.CharField(source="state_abbreviation")
+    external_reports = serializers.CharField(source="external_report_summary")
     equipment_broken = serializers.CharField(source="equipment_broken_summary")
     equipment_seized = serializers.CharField(source="equipment_seized_summary")
     status_of_charges = serializers.CharField(source="status_of_charges_summary")

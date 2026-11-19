@@ -1,10 +1,13 @@
 import csv
 from urllib import parse
 
+from django.core.files.base import ContentFile
 from django.test import TestCase
 from django.urls import reverse
 
 from wagtail.models import Site
+
+import wagtail_factories
 
 from common.tests.factories import (
     CategoryPageFactory,
@@ -107,6 +110,12 @@ class PerformantCSVTestCase(TestCase):
             subpoena=True,
         )
         EquipmentSeizedFactory.create_batch(3, incident=cls.incident)
+        ExternalReportFactory.create_batch(2, page=cls.incident)
+        ExternalReportFactory(page=cls.incident, publication="Galactic Express")
+        cls.document = wagtail_factories.DocumentFactory(
+            file__from_file=ContentFile(b"%PDF-1.4", name="letter.pdf"),
+        )
+        ExternalReportFactory(page=cls.incident, url="", document=cls.document)
 
         IncidentChargeWithUpdatesFactory(
             incident_page=cls.incident,
@@ -150,6 +159,7 @@ class PerformantCSVTestCase(TestCase):
             "third_party_business",
             "status_of_prior_restraint",
             "state",
+            "external_reports",
             "equipment_broken",
             "equipment_seized",
             "status_of_charges",
@@ -172,6 +182,7 @@ class PerformantCSVTestCase(TestCase):
 
         self.headers = next(reader)
         self.result = dict(zip(self.headers, next(reader)))
+        self.other_result = dict(zip(self.headers, next(reader)))
 
     def test_requests_are_successful(self):
         self.assertEqual(self.response.status_code, 200)
@@ -188,6 +199,19 @@ class PerformantCSVTestCase(TestCase):
             self.result["state"],
             self.incident.state.abbreviation,
         )
+
+    def test_external_reports_are_correct(self):
+        reports = list(self.incident.external_reports.all())
+        self.assertEqual(
+            self.result["external_reports"],
+            ", ".join(
+                [str(report) for report in reports[:3]]
+                + [f"External report (http://testserver{self.document.url})"]
+            ),
+        )
+
+    def test_external_reports_are_empty_without_reports(self):
+        self.assertEqual(self.other_result["external_reports"], "")
 
     def test_equipment_broken_is_correct(self):
         self.assertEqual(

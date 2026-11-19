@@ -205,6 +205,7 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
             annotated_fields = {
                 "categories": "category_summary",
                 "tags": "tag_summary",
+                "external_reports": "external_report_summary",
                 "equipment_broken": "equipment_broken_summary",
                 "equipment_seized": "equipment_seized_summary",
                 "status_of_charges": "status_of_charges_summary",

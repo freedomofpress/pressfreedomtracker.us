@@ -214,6 +214,65 @@ class IncidentQuerySet(PageQuerySet):
                 )
                 .values("equipment_seized_summary"),
             ),
+            "external_report_summary": Subquery(
+                IncidentPage.objects.only("external_reports")
+                .annotate(
+                    external_report_summary=StringAgg(
+                        expression=Concat(
+                            "external_reports__title",
+                            Case(
+                                When(
+                                    external_reports__document__isnull=False,
+                                    then=Concat(
+                                        # Document.url is computed in Python, so we
+                                        # must build /documents/<id>/<filename> here.
+                                        Value(f" ({base_uri}documents/"),
+                                        Cast(
+                                            "external_reports__document_id",
+                                            models.CharField(),
+                                        ),
+                                        Value("/"),
+                                        models.Func(
+                                            "external_reports__document__file",
+                                            Value("^.*/"),
+                                            Value(""),
+                                            function="regexp_replace",
+                                            output_field=models.CharField(),
+                                        ),
+                                        Value(")"),
+                                        output_field=models.CharField(),
+                                    ),
+                                ),
+                                When(external_reports__url="", then=Value("")),
+                                default=Concat(
+                                    Value(" ("),
+                                    "external_reports__url",
+                                    Value(")"),
+                                    output_field=models.CharField(),
+                                ),
+                                output_field=models.CharField(),
+                            ),
+                            Case(
+                                When(
+                                    external_reports__publication="",
+                                    then=Value(""),
+                                ),
+                                default=Concat(
+                                    Value(" via "),
+                                    "external_reports__publication",
+                                ),
+                            ),
+                            output_field=models.CharField(),
+                        ),
+                        delimiter=", ",
+                        order_by=("external_reports__sort_order",),
+                        filter=Q(external_reports__isnull=False),
+                    )
+                )
+                .filter(pk=OuterRef("pk"))
+                .values("external_report_summary"),
+                output_field=models.CharField(),
+            ),
             "category_summary": Subquery(
                 IncidentPage.objects.only("categories")
                 .annotate(
