@@ -1,5 +1,5 @@
 {% load wagtailcore_tags wagtailimages_tags %}
-<section class="article-content__block external-reports" aria-labelledby="external-reports-title-{{ incident.pk }}">
+<section class="external-reports" aria-labelledby="external-reports-title-{{ incident.pk }}">
 	<h3 class="external-reports__heading" id="external-reports-title-{{ incident.pk }}">External reporting</h3>
 	{% if note %}
 		<div class="rich-text external-reports__note">{{ note|richtext }}</div>
@@ -7,8 +7,23 @@
 	<ul class="external-reports__list">
 		{% for report in incident.external_reports.all %}
 			<li class="external-reports__item{% if report.image %} external-reports__item--with-image{% endif %}">
-				{% if report.image %}
-					{% image report.image fill-192x144 class="external-reports__image" alt="" %}
+				{% if report.href %}
+					<a class="external-reports__media" href="{{ report.href }}" tabindex="-1" aria-hidden="true">
+						{% if report.image %}
+							{% image report.image fill-640x480 class="external-reports__image" alt="" %}
+						{% endif %}
+						<span class="external-reports__icon">
+							{% if report.document %}
+								<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
+							{% else %}
+								<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18 18 6M8 6h10v10"/></svg>
+							{% endif %}
+						</span>
+					</a>
+				{% elif report.image %}
+					<div class="external-reports__media">
+						{% image report.image fill-640x480 class="external-reports__image" alt="" %}
+					</div>
 				{% endif %}
 				<div class="external-reports__body">
 					{% if report.publication or report.document %}
@@ -23,15 +38,6 @@
 						<p class="external-reports__preview">{{ report.preview_text }}</p>
 					{% endif %}
 				</div>
-				{% if report.href %}
-					<a class="external-reports__icon" href="{{ report.href }}" tabindex="-1" aria-hidden="true">
-						{% if report.document %}
-							<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
-						{% else %}
-							<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18 18 6M8 6h10v10"/></svg>
-						{% endif %}
-					</a>
-				{% endif %}
 			</li>
 		{% endfor %}
 	</ul>

@@ -4,7 +4,7 @@
 
 .external-reports {
 	margin-block: 1.5rem;
-	padding: 2rem;
+	padding: 1.5rem 2rem;
 	border: 3px solid colors.$black;
 	background: colors.$white;
 	color: colors.$black;
@@ -25,8 +25,7 @@
 
 	&__item {
 		display: grid;
-		grid-template-columns: 1fr auto;
-		grid-template-areas: "body icon";
+		grid-template-columns: auto 1fr;
 		align-items: center;
 		gap: 1rem 2rem;
 		padding-block: 1.25rem;
@@ -37,26 +36,25 @@
 		}
 
 		&--with-image {
-			grid-template-areas:
-				"image image"
-				"body icon";
-
-			@include responsive.tablet-up {
-				grid-template-columns: 10rem 1fr auto;
-				grid-template-areas: "image body icon";
+			@include responsive.mobile-down {
+				grid-template-columns: 1fr;
 			}
 		}
 	}
 
-	&__image {
-		grid-area: image;
+	&__media {
+		position: relative;
 		display: block;
-		width: 10rem;
-		height: auto;
 	}
 
-	&__body {
-		grid-area: body;
+	&__image {
+		display: block;
+		width: 100%;
+		height: auto;
+
+		@include responsive.tablet-up {
+			width: 20rem;
+		}
 	}
 
 	&__meta {
@@ -90,9 +88,7 @@
 	}
 
 	&__icon {
-		grid-area: icon;
 		display: flex;
-		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
 		position: relative;
@@ -100,6 +96,8 @@
 		width: 3rem;
 		height: 3rem;
 		border: 3px solid colors.$black;
+		background: colors.$white;
+		color: colors.$black;
 		transition: color 0.01s ease-in 0.08s;
 
 		&::before {
@@ -111,8 +109,17 @@
 			transition: right 0.09s ease-in;
 		}
 
-		&:any-link:hover {
-			background-color: transparent;
+		.external-reports__image+& {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+		}
+	}
+
+	&__media:any-link:hover {
+		background-color: transparent;
+
+		.external-reports__icon {
 			color: colors.$white;
 
 			&::before {
@@ -133,9 +140,5 @@
 			outline: colors.$black solid 3px;
 			outline-offset: 2px;
 		}
-	}
-
-	&__icon:any-link {
-		color: colors.$black;
 	}
 }
