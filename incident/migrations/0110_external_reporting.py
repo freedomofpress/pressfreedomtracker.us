@@ -23,8 +23,8 @@ class Migration(migrations.Migration):
             name="externally_reported",
             field=models.BooleanField(
                 default=False,
-                help_text="An incident stub relying on outside reporting. The body is optional and at least one external report is required.",
-                verbose_name="Reported by others",
+                help_text="An incident stub. The body is optional and at least one external report is required.",
+                verbose_name="Relies on external reporting",
             ),
         ),
         migrations.AlterField(
