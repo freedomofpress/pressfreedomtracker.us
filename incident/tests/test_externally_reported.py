@@ -6,6 +6,7 @@ from django.core.files.base import ContentFile
 from django.test import TestCase
 
 from wagtail.models import Site
+from wagtail.rich_text import RichText
 from wagtail.test.utils.form_data import (
     inline_formset,
     nested_form_data,
@@ -237,6 +238,16 @@ class ExternallyReportedDisplayTestCase(TestCase):
     def test_full_incident_page_has_no_external_reporting(self):
         response = self.client.get(self.full.url)
         self.assertNotContains(response, "external-reports")
+
+    def test_incident_without_body_omits_date_anchor(self):
+        response = self.client.get(self.stub.url)
+        self.assertNotContains(response, "incident-original")
+
+    def test_incident_with_body_shows_date_anchor(self):
+        self.full.body = [("rich_text", RichText("<p>Our write-up</p>"))]
+        self.full.save()
+        response = self.client.get(self.full.url)
+        self.assertContains(response, "incident-original")
 
     def test_meta_description_falls_back_to_site_default(self):
         settings = SocialSharingSEOSettings.for_site(
