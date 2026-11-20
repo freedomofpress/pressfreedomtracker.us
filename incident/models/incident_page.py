@@ -922,7 +922,6 @@ class IncidentPage(MetadataPageMixin, Page):
         InlinePanel(
             "external_reports",
             label="External reporting",
-            help_text="Outside reporting or documents that this incident is based on. Required when the incident relies on external reporting.",
         ),
         MultiFieldPanel(
             heading="Arrest/Criminal Charge",

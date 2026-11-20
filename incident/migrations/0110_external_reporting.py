@@ -257,7 +257,7 @@ class Migration(migrations.Migration):
                     "image",
                     models.ForeignKey(
                         blank=True,
-                        help_text="Optional. Shown beside the item.",
+                        help_text="Automatically populated by the URL's OpenGraph image on first save if blank.",
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
                         related_name="+",

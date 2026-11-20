@@ -231,7 +231,7 @@ class ExternalReport(Orderable):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Optional. Shown beside the item.",
+        help_text="Automatically populated by the URL's OpenGraph image on first save if blank.",
     )
     preview_text = models.TextField(
         blank=True,
