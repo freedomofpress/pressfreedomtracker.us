@@ -13,8 +13,7 @@ from incident.utils.preview_images import (
     COLLECTION_NAME,
     MAX_REDIRECTS,
     fetch_preview_image,
-    find_preview_image_alt,
-    find_preview_image_url,
+    find_preview_image_url_and_alt,
 )
 
 
@@ -55,34 +54,32 @@ def article_and_image():
     ]
 
 
-class FindPreviewImageUrlTestCase(SimpleTestCase):
+class FindPreviewImageTestCase(SimpleTestCase):
     def test_prefers_og_image_and_resolves_relative_urls(self):
         html = (
             '<meta name="twitter:image" content="https://cdn.example/t.png">'
             '<meta property="og:image" content="/og.png">'
         )
-        self.assertEqual(
-            find_preview_image_url(html, "https://news.example/a/b"),
-            "https://news.example/og.png",
-        )
+        url, _ = find_preview_image_url_and_alt(html, "https://news.example/a/b")
+        self.assertEqual(url, "https://news.example/og.png")
 
     def test_falls_back_to_twitter_image(self):
         html = '<meta name="twitter:image" content="https://cdn.example/t.png">'
-        self.assertEqual(
-            find_preview_image_url(html, ARTICLE_URL), "https://cdn.example/t.png"
-        )
+        url, _ = find_preview_image_url_and_alt(html, ARTICLE_URL)
+        self.assertEqual(url, "https://cdn.example/t.png")
 
     def test_alt_prefers_og_and_falls_back_to_twitter(self):
         twitter = '<meta name="twitter:image:alt" content="From Twitter">'
         og = '<meta property="og:image:alt" content=" From Open Graph ">'
-        self.assertEqual(find_preview_image_alt(twitter + og), "From Open Graph")
-        self.assertEqual(find_preview_image_alt(twitter), "From Twitter")
+        _, alt = find_preview_image_url_and_alt(twitter + og, ARTICLE_URL)
+        self.assertEqual(alt, "From Open Graph")
+        _, alt = find_preview_image_url_and_alt(twitter, ARTICLE_URL)
+        self.assertEqual(alt, "From Twitter")
 
-    def test_alt_is_empty_when_missing(self):
-        self.assertEqual(find_preview_image_alt("<title>Hi</title>"), "")
-
-    def test_returns_none_without_preview_image(self):
-        self.assertIsNone(find_preview_image_url("<title>Hi</title>", ARTICLE_URL))
+    def test_returns_none_and_empty_alt_without_preview_image(self):
+        self.assertEqual(
+            find_preview_image_url_and_alt("<title>Hi</title>", ARTICLE_URL), (None, "")
+        )
 
 
 @patch(

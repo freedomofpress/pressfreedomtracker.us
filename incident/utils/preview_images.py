@@ -53,20 +53,13 @@ class _MetaImageParser(HTMLParser):
             self.found.setdefault(key, attrs["content"])
 
 
-def _first_meta(html, keys):
+def find_preview_image_url_and_alt(html, base_url):
     parser = _MetaImageParser()
     parser.feed(html)
-    return next((parser.found[key] for key in keys if key in parser.found), None)
-
-
-def find_preview_image_url(html, base_url):
-    if url := _first_meta(html, IMAGE_KEYS):
-        return urljoin(base_url, url)
-    return None
-
-
-def find_preview_image_alt(html):
-    return (_first_meta(html, ALT_KEYS) or "").strip()
+    found = parser.found
+    url = next((found[key] for key in IMAGE_KEYS if key in found), None)
+    alt = next((found[key] for key in ALT_KEYS if key in found), "")
+    return (urljoin(base_url, url) if url else None), alt.strip()
 
 
 def _check_public(url):
@@ -118,7 +111,7 @@ def _get_collection():
 def _download(page_url, title, attribution):
     final_url, response, html = _get(page_url, MAX_PAGE_BYTES)
     html = html.decode(response.encoding or "utf-8", errors="replace")
-    image_url = find_preview_image_url(html, final_url)
+    image_url, alt = find_preview_image_url_and_alt(html, final_url)
     if not image_url:
         raise FetchError(f"No preview image on {page_url}")
 
@@ -135,7 +128,7 @@ def _download(page_url, title, attribution):
 
     image = get_image_model()(
         title=title[:255],
-        description=find_preview_image_alt(html)[:255],
+        description=alt[:255],
         attribution=attribution or None,
         slug=page_url[:1000],
         collection=_get_collection(),
