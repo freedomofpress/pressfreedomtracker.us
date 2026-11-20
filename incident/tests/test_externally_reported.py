@@ -1,6 +1,5 @@
 from unittest.mock import patch
 from urllib.parse import urljoin
-from xml.etree import ElementTree
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -16,6 +15,7 @@ from wagtail.test.utils.form_data import (
     streamfield,
 )
 
+import defusedxml.ElementTree as ET
 import wagtail_factories
 
 from common.models import SiteSettings, SocialSharingSEOSettings
@@ -375,7 +375,7 @@ class ExternallyReportedFeedTestCase(TestCase):
 
     def get_description(self, page):
         response = self.client.get(self.index.url + self.index.reverse_subpage("feed"))
-        for item in ElementTree.fromstring(response.content).iter("item"):
+        for item in ET.fromstring(response.content).iter("item"):
             if item.findtext("title") == page.title:
                 return item.findtext("description")
         self.fail(f"{page.title!r} is not in the feed")
