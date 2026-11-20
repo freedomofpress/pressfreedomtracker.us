@@ -7,22 +7,22 @@
 	<ul class="external-reports__list">
 		{% for report in incident.external_reports.all %}
 			<li class="external-reports__item{% if report.image %} external-reports__item--with-image{% endif %}">
-				{% if report.href %}
-					<a class="external-reports__media" href="{{ report.href }}" tabindex="-1" aria-hidden="true">
-						{% if report.image %}
-							{% image report.image fill-640x480 class="external-reports__image" alt="" %}
-						{% endif %}
-						<span class="external-reports__icon">
-							{% if report.document %}
-								<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
-							{% else %}
-								<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18 18 6M8 6h10v10"/></svg>
-							{% endif %}
-						</span>
-					</a>
-				{% elif report.image %}
+				{% if report.href or report.image %}
 					<div class="external-reports__media">
-						{% image report.image fill-640x480 class="external-reports__image" alt="" %}
+						{% if report.image %}
+							{% image report.image fill-640x480 class="external-reports__image" alt=report.image.description %}
+						{% endif %}
+						{% if report.href %}
+							<a class="external-reports__media-link" href="{{ report.href }}" tabindex="-1" aria-hidden="true">
+								<span class="external-reports__icon">
+									{% if report.document %}
+										<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 3v17M5 13l7 7 7-7"/></svg>
+									{% else %}
+										<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 18 18 6M8 6h10v10"/></svg>
+									{% endif %}
+								</span>
+							</a>
+						{% endif %}
 					</div>
 				{% endif %}
 				<div class="external-reports__body">

@@ -290,6 +290,16 @@ class ExternallyReportedDisplayTestCase(TestCase):
         response = self.client.get(self.stub.url)
         self.assertContains(response, "external-reports__image")
 
+    def test_report_image_alt_is_its_description(self):
+        ExternalReportFactory(
+            page=self.stub,
+            image=CustomImageFactory(
+                title="Report title", description="Protesters outside a courthouse"
+            ),
+        )
+        response = self.client.get(self.stub.url)
+        self.assertContains(response, 'alt="Protesters outside a courthouse"')
+
     def test_stub_page_shows_default_heading(self):
         response = self.client.get(self.stub.url)
         self.assertContains(response, ">Externally reported</h3>")

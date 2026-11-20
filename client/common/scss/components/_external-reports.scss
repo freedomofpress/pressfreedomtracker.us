@@ -44,7 +44,15 @@
 
 	&__media {
 		position: relative;
+	}
+
+	&__media-link {
 		display: block;
+
+		.external-reports__image + & {
+			position: absolute;
+			inset: 0;
+		}
 	}
 
 	&__image {
@@ -107,16 +115,14 @@
 			transition: right 0.09s ease-in;
 		}
 
-		.external-reports__image+& {
+		.external-reports__image + .external-reports__media-link & {
 			position: absolute;
 			right: 4px;
 			bottom: 4px;
 		}
 	}
 
-	&__media:any-link:hover {
-		background-color: transparent;
-
+	&__media-link:hover {
 		.external-reports__icon {
 			color: colors.$white;
 
@@ -126,7 +132,8 @@
 		}
 	}
 
-	a {
+	&__note a,
+	&__title a {
 		color: colors.$black;
 
 		&:hover {
