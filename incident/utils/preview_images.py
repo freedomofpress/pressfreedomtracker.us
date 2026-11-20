@@ -25,12 +25,7 @@ MAX_PAGE_BYTES = 2 * 1024 * 1024
 MAX_REDIRECTS = 5
 FAILURE_TTL = 60 * 60
 COLLECTION_NAME = "External reporting previews"
-IMAGE_EXTENSIONS = {
-    "image/jpeg": "jpg",
-    "image/png": "png",
-    "image/gif": "gif",
-    "image/webp": "webp",
-}
+IMAGE_EXTENSIONS = {"JPEG": "jpg", "PNG": "png", "GIF": "gif", "WEBP": "webp"}
 IMAGE_KEYS = ("og:image", "og:image:secure_url", "twitter:image")
 ALT_KEYS = ("og:image:alt", "twitter:image:alt")
 
@@ -115,13 +110,10 @@ def _download(page_url, title, attribution):
     if not image_url:
         raise FetchError(f"No preview image on {page_url}")
 
-    _, response, data = _get(image_url, settings.WAGTAILIMAGES_MAX_UPLOAD_SIZE)
-    content_type = response.headers.get("Content-Type", "").split(";")[0].strip()
-    extension = IMAGE_EXTENSIONS.get(content_type)
-    if not extension:
-        raise FetchError(f"Unsupported image type {content_type!r} at {image_url}")
-
-    with PIL.Image.open(BytesIO(data)) as pil_image:
+    _, _, data = _get(image_url, settings.WAGTAILIMAGES_MAX_UPLOAD_SIZE)
+    # Unlisted formats raise UnidentifiedImageError rather than being opened.
+    with PIL.Image.open(BytesIO(data), formats=list(IMAGE_EXTENSIONS)) as pil_image:
+        extension = IMAGE_EXTENSIONS[pil_image.format]
         width, height = pil_image.size
     if width * height > settings.WAGTAILIMAGES_MAX_IMAGE_PIXELS:
         raise FetchError(f"{image_url} has too many pixels")

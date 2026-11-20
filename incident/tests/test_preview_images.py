@@ -154,6 +154,32 @@ class FetchPreviewImageTestCase(TestCase):
         self.assertIsNone(fetch_preview_image(ARTICLE_URL, "Story"))
         get.assert_not_called()
 
+    def test_trusts_image_content_over_content_type(self, get, getaddrinfo):
+        get.side_effect = [
+            fake_response(ARTICLE_URL, ARTICLE_HTML),
+            fake_response(
+                IMAGE_URL,
+                png_bytes(),
+                headers={"Content-Type": "application/octet-stream"},
+            ),
+        ]
+
+        image = fetch_preview_image(ARTICLE_URL, "Story")
+
+        self.assertTrue(image.file.name.endswith(".png"))
+
+    def test_refuses_unsupported_image_formats(self, get, getaddrinfo):
+        bmp = BytesIO()
+        PIL.Image.new("RGB", (4, 3)).save(bmp, "BMP")
+        get.side_effect = [
+            fake_response(ARTICLE_URL, ARTICLE_HTML),
+            fake_response(
+                IMAGE_URL, bmp.getvalue(), headers={"Content-Type": "image/bmp"}
+            ),
+        ]
+
+        self.assertIsNone(fetch_preview_image(ARTICLE_URL, "Story"))
+
     def test_refuses_non_image_responses(self, get, getaddrinfo):
         get.side_effect = [
             fake_response(ARTICLE_URL, ARTICLE_HTML),
