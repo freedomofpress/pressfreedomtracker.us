@@ -4,10 +4,14 @@
 
 .external-reports {
 	margin-block: 1.5rem;
-	padding: 1.5rem 2rem;
+	padding: 1rem 1.5rem;
 	border: 3px solid colors.$black;
 	background: colors.$white;
 	color: colors.$black;
+
+	@include responsive.tablet-up {
+		padding: 1.5rem 2rem;
+	}
 
 	&__heading {
 		margin: 0;
@@ -132,7 +136,6 @@
 		}
 	}
 
-	&__note a,
 	&__title a {
 		color: colors.$black;
 
