@@ -227,6 +227,14 @@ class ExternalReportTestCase(TestCase):
         report = ExternalReport(title="Letter", document=document)
         self.assertEqual(report.href, document.url)
 
+    def test_file_details_describe_the_document(self):
+        report = ExternalReport(title="Letter", document=make_document())
+        self.assertEqual(report.file_details, "PDF (8\xa0bytes)")
+
+    def test_file_details_are_empty_without_a_document(self):
+        report = ExternalReport(title="Editorial", url="https://example.com")
+        self.assertEqual(report.file_details, "")
+
     def test_str_includes_href_and_publication(self):
         report = ExternalReport(
             title="Editorial", url="https://example.com", publication="Sentinel"

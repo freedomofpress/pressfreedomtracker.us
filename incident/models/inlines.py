@@ -2,6 +2,7 @@ from urllib.parse import urljoin
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.template.defaultfilters import filesizeformat
 
 from wagtail import blocks
 from wagtail.admin.panels import (
@@ -259,6 +260,13 @@ class ExternalReport(Orderable):
         if self.document:
             return self.document.url
         return self.url
+
+    @property
+    def file_details(self):
+        if not self.document:
+            return ""
+        size = filesizeformat(self.document.get_file_size())
+        return f"{self.document.file_extension.upper()} ({size})"
 
     def get_full_url(self, request=None):
         if self.document:

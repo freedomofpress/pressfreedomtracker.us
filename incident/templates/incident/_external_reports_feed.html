@@ -8,8 +8,8 @@
 				{% image report.image fill-640x480 as rendition %}
 				<img src="{{ rendition.full_url }}" width="{{ rendition.width }}" height="{{ rendition.height }}" alt="{{ report.image.description }}">
 			{% endif %}
-			{% if report.publication or report.document %}
-				<p>{{ report.publication }}{% if report.publication and report.document %} &bull; {% endif %}{% if report.document %}{{ report.document.file_extension|upper }} ({{ report.document.get_file_size|filesizeformat }}){% endif %}</p>
+			{% if report.publication or report.file_details %}
+				<p>{{ report.publication }}{% if report.publication and report.file_details %} &bull; {% endif %}{{ report.file_details }}</p>
 			{% endif %}
 			<p>{% if report.href %}<a href="{{ report.get_full_url }}">{{ report.title }}</a>{% else %}{{ report.title }}{% endif %}</p>
 			{% if report.preview_text %}

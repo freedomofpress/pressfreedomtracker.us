@@ -26,9 +26,9 @@
 					</div>
 				{% endif %}
 				<div class="external-reports__body">
-					{% if report.publication or report.document %}
+					{% if report.publication or report.file_details %}
 						<p class="external-reports__meta">
-							{{ report.publication }}{% if report.publication and report.document %} <span class="external-reports__separator" aria-hidden="true">&bull;</span> {% endif %}{% if report.document %}{{ report.document.file_extension|upper }} ({{ report.document.get_file_size|filesizeformat }}){% endif %}
+							{{ report.publication }}{% if report.publication and report.file_details %} <span class="external-reports__separator" aria-hidden="true">&bull;</span> {% endif %}{{ report.file_details }}
 						</p>
 					{% endif %}
 					<p class="external-reports__title">
