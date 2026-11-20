@@ -1,5 +1,6 @@
 from unittest.mock import patch
 from urllib.parse import urljoin
+from xml.etree import ElementTree
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -344,3 +345,89 @@ class ExternallyReportedDisplayTestCase(TestCase):
 
     def test_meta_description_is_empty_without_site_default(self):
         self.assertEqual(self.stub.get_meta_description(), "")
+
+
+class ExternallyReportedFeedTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        site = Site.objects.get(is_default_site=True)
+        cls.index = IncidentIndexPageFactory(parent=site.root_page)
+        cls.stub = IncidentPageFactory(
+            parent=cls.index, externally_reported=True, body=[]
+        )
+        ExternalReportFactory(
+            page=cls.stub,
+            title="Intimidation won't make the Sentinel back down",
+            url="https://example.com/sentinel-editorial",
+            publication="Orlando Sentinel",
+            preview_text="The Sentinel will keep reporting on Hope Florida.",
+            image=CustomImageFactory(description="The Sentinel's front page"),
+        )
+        cls.document = make_document()
+        ExternalReportFactory(
+            page=cls.stub,
+            title="Cease and desist",
+            publication="Florida DCF",
+            url="",
+            document=cls.document,
+        )
+        cls.full = IncidentPageFactory(parent=cls.index)
+
+    def get_description(self, page):
+        response = self.client.get(self.index.url + self.index.reverse_subpage("feed"))
+        for item in ElementTree.fromstring(response.content).iter("item"):
+            if item.findtext("title") == page.title:
+                return item.findtext("description")
+        self.fail(f"{page.title!r} is not in the feed")
+
+    def test_stub_description_lists_external_reports(self):
+        description = self.get_description(self.stub)
+        self.assertIn("<h3>Externally reported</h3>", description)
+        self.assertIn("Incident coverage from other news sources.", description)
+        self.assertIn(
+            '<a href="https://example.com/sentinel-editorial">'
+            "Intimidation won&#x27;t make the Sentinel back down</a>",
+            description,
+        )
+        self.assertIn("<p>Orlando Sentinel</p>", description)
+        self.assertIn(
+            "<p>The Sentinel will keep reporting on Hope Florida.</p>", description
+        )
+        self.assertIn("Florida DCF &bull; PDF (8\xa0bytes)", description)
+
+    def test_stub_description_uses_absolute_urls(self):
+        description = self.get_description(self.stub)
+        report = self.stub.external_reports.get(document=self.document)
+        self.assertIn(f'<a href="{report.get_full_url()}">', description)
+        self.assertRegex(description, r'<img src="https?://[^"]+"')
+        self.assertIn('alt="The Sentinel&#x27;s front page"', description)
+
+    def test_full_incident_description_has_no_external_reports(self):
+        self.assertNotIn("Externally reported", self.get_description(self.full))
+
+    def test_stub_with_body_lists_external_reports_before_body(self):
+        page = IncidentPageFactory(
+            parent=self.index,
+            externally_reported=True,
+            body=[("rich_text", RichText("<p>Our write-up</p>"))],
+        )
+        ExternalReportFactory(page=page, title="Sentinel editorial")
+
+        description = self.get_description(page)
+
+        self.assertLess(
+            description.index("Sentinel editorial"),
+            description.index("Our write-up"),
+        )
+
+    def test_reports_are_hidden_when_not_externally_reported(self):
+        page = IncidentPageFactory(
+            parent=self.index,
+            body=[("rich_text", RichText("<p>Our write-up</p>"))],
+        )
+        ExternalReportFactory(page=page, title="Sentinel editorial")
+
+        description = self.get_description(page)
+
+        self.assertIn("Our write-up", description)
+        self.assertNotIn("Sentinel editorial", description)

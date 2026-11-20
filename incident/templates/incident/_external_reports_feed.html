@@ -1,0 +1,20 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<h3>{{ heading }}</h3>
+{% if note %}{{ note|richtext }}{% endif %}
+<ul>
+	{% for report in reports %}
+		<li>
+			{% if report.image %}
+				{% image report.image fill-640x480 as rendition %}
+				<img src="{{ rendition.full_url }}" width="{{ rendition.width }}" height="{{ rendition.height }}" alt="{{ report.image.description }}">
+			{% endif %}
+			{% if report.publication or report.document %}
+				<p>{{ report.publication }}{% if report.publication and report.document %} &bull; {% endif %}{% if report.document %}{{ report.document.file_extension|upper }} ({{ report.document.get_file_size|filesizeformat }}){% endif %}</p>
+			{% endif %}
+			<p>{% if report.href %}<a href="{{ report.get_full_url }}">{{ report.title }}</a>{% else %}{{ report.title }}{% endif %}</p>
+			{% if report.preview_text %}
+				<p>{{ report.preview_text }}</p>
+			{% endif %}
+		</li>
+	{% endfor %}
+</ul>
