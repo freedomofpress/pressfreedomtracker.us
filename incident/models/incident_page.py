@@ -58,6 +58,7 @@ from common.models import MetadataPageMixin
 from geonames.cities import get_city_coords
 from incident import choices
 from incident.circuits import CIRCUITS_BY_STATE
+from incident.forms import IncidentPageForm
 from incident.models.category_fields import CAT_FIELD_VALUES, CATEGORY_FIELD_MAP
 from incident.models.inlines import (
     ChargeUpdate,
@@ -213,32 +214,63 @@ class IncidentQuerySet(PageQuerySet):
                 )
                 .values("equipment_seized_summary"),
             ),
-            "link_summary": Subquery(
-                IncidentPage.objects.only("links")
+            "external_report_summary": Subquery(
+                IncidentPage.objects.only("external_reports")
                 .annotate(
-                    link_summary=StringAgg(
+                    external_report_summary=StringAgg(
                         expression=Concat(
-                            "links__title",
-                            Value(" ("),
-                            "links__url",
-                            Value(")"),
+                            "external_reports__title",
                             Case(
                                 When(
-                                    links__publication__isnull=True,
+                                    external_reports__document__isnull=False,
+                                    then=Concat(
+                                        # Document.url is computed in Python, so we
+                                        # must build /documents/<id>/<filename> here.
+                                        Value(f" ({base_uri}documents/"),
+                                        Cast(
+                                            "external_reports__document_id",
+                                            models.CharField(),
+                                        ),
+                                        Value("/"),
+                                        models.Func(
+                                            "external_reports__document__file",
+                                            Value("^.*/"),
+                                            Value(""),
+                                            function="regexp_replace",
+                                            output_field=models.CharField(),
+                                        ),
+                                        Value(")"),
+                                        output_field=models.CharField(),
+                                    ),
+                                ),
+                                When(external_reports__url="", then=Value("")),
+                                default=Concat(
+                                    Value(" ("),
+                                    "external_reports__url",
+                                    Value(")"),
+                                    output_field=models.CharField(),
+                                ),
+                                output_field=models.CharField(),
+                            ),
+                            Case(
+                                When(
+                                    external_reports__publication="",
                                     then=Value(""),
                                 ),
                                 default=Concat(
                                     Value(" via "),
-                                    "links__publication",
+                                    "external_reports__publication",
                                 ),
                             ),
                             output_field=models.CharField(),
                         ),
                         delimiter=", ",
+                        order_by=("external_reports__sort_order",),
+                        filter=Q(external_reports__isnull=False),
                     )
                 )
                 .filter(pk=OuterRef("pk"))
-                .values("link_summary"),
+                .values("external_report_summary"),
                 output_field=models.CharField(),
             ),
             "category_summary": Subquery(
@@ -344,7 +376,7 @@ class IncidentQuerySet(PageQuerySet):
             ),
             "equipment_broken__equipment",
             "equipment_seized__equipment",
-            "links",
+            "external_reports__document",
             "politicians_or_public_figures_involved",
             "tags",
             "target_nationality",
@@ -539,6 +571,12 @@ class IncidentPage(MetadataPageMixin, Page):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
+    externally_reported = models.BooleanField(
+        default=False,
+        verbose_name="Relies on external reporting",
+        help_text="An incident stub. The body is optional and at least one external report is required.",
+    )
+
     body = StreamField(
         [
             (
@@ -565,6 +603,7 @@ class IncidentPage(MetadataPageMixin, Page):
             ("statistics", StatisticsBlock()),
         ],
         use_json_field=True,
+        blank=True,
     )
 
     introduction = models.TextField(
@@ -848,6 +887,8 @@ class IncidentPage(MetadataPageMixin, Page):
 
     objects = IncidentPageManager()
 
+    base_form_class = IncidentPageForm
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             heading="Introduction, Video, Image and Teaser",
@@ -859,6 +900,7 @@ class IncidentPage(MetadataPageMixin, Page):
                 FieldPanel("teaser"),
             ],
         ),
+        FieldPanel("externally_reported"),
         FieldPanel("body"),
         MultiFieldPanel(
             heading="Details",
@@ -878,10 +920,8 @@ class IncidentPage(MetadataPageMixin, Page):
         ),
         InlinePanel("updates", label="Updates"),
         InlinePanel(
-            "links",
-            label="Sources",
-            help_text="Links to resources and news articles related to this"
-            "incident. Displayed as footnotes.",
+            "external_reports",
+            label="External reporting",
         ),
         MultiFieldPanel(
             heading="Arrest/Criminal Charge",
@@ -1235,7 +1275,11 @@ class IncidentPage(MetadataPageMixin, Page):
         if self.teaser:
             return self.teaser
 
-        return truncatewords(strip_tags(self.body.render_as_block()), 20)
+        return (
+            truncatewords(strip_tags(self.body.render_as_block()), 20)
+            or self._get_ssssettings().default_description
+            or ""
+        )
 
     @cached_property
     def get_tags(self):

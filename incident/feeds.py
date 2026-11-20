@@ -3,8 +3,11 @@ from urllib.parse import urljoin
 
 from django.contrib.syndication.views import Feed
 from django.core.paginator import Paginator
+from django.template.loader import render_to_string
+from django.utils.functional import cached_property
 
 from common.feeds import MRSSFeed
+from common.models import SiteSettings
 
 
 class IncidentIndexPageFeed(Feed):
@@ -73,8 +76,25 @@ class IncidentIndexPageFeed(Feed):
     def item_title(self, obj):
         return self._get_cleaned_feed(obj.title)
 
+    @cached_property
+    def _site_settings(self):
+        return SiteSettings.for_site(self.incident_index_page.get_site())
+
+    def _render_external_reports(self, obj):
+        return render_to_string(
+            "incident/_external_reports_feed.html",
+            {
+                "heading": self._site_settings.externally_reported_heading,
+                "note": self._site_settings.externally_reported_note,
+                "reports": obj.external_reports.all(),
+            },
+        )
+
     def item_description(self, obj):
-        return self._get_cleaned_feed(obj.body.render_as_block())
+        description = obj.body.render_as_block()
+        if obj.externally_reported:
+            description = self._render_external_reports(obj) + description
+        return self._get_cleaned_feed(description)
 
     def item_link(self, obj):
         return self._get_complete_url(obj.url)

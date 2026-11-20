@@ -44,8 +44,8 @@ from forms.models import FormPage
 from forms.tests.factories import FormPageFactory
 from home.models import FeaturedBlogPost, FeaturedIncident, HomePage
 from incident.devdata import (
+    ExternalReportFactory,
     IncidentIndexPageFactory,
-    IncidentLinkFactory,
     MultimediaIncidentPageFactory,
     MultimediaIncidentUpdateFactory,
     TopicPageFactory,
@@ -458,8 +458,14 @@ class Command(BaseCommand):
                 page=incident,
             )
             MultimediaIncidentUpdateFactory(page=incident)
-            IncidentLinkFactory.create_batch(3, page=incident)
         home_page.save()
+
+        incidents = list(IncidentPage.objects.all())
+        for incident in random.sample(incidents, min(5, len(incidents))):
+            incident.externally_reported = True
+            incident.body = []
+            incident.save()
+            ExternalReportFactory.create_batch(2, page=incident)
 
         tag_groups = [
             ["summer", "autumn", "winter", "spring"],

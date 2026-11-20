@@ -26,12 +26,12 @@ from incident.models import (
     Equipment,
     EquipmentBroken,
     EquipmentSeized,
+    ExternalReport,
     GovernmentWorker,
     IncidentAuthor,
     IncidentCategorization,
     IncidentIndexPage,
     IncidentPage,
-    IncidentPageLinks,
     IncidentPageUpdates,
     Institution,
     Journalist,
@@ -129,14 +129,14 @@ class IncidentUpdateWithBodyFactory(IncidentUpdateFactory):
     )
 
 
-class IncidentLinkFactory(factory.django.DjangoModelFactory):
+class ExternalReportFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = IncidentPageLinks
+        model = ExternalReport
 
     sort_order = Sequence(int)
-    title = "Link"
+    title = "External report"
     url = "https://freedom.press"
-    publication = None
+    publication = ""
 
 
 class StateFactory(factory.django.DjangoModelFactory):

@@ -56,6 +56,7 @@ Here is a sample response:
       "latest_revision_created_at": "2021-04-22T04:45:30Z",
       "date": "2021-03-21",
       "exact_date_unknown": false,
+      "externally_reported": false,
       "city": "Carterstad",
       "body": "<div class=\"rich-text\"><p>Lorem ipsum dolor sit amet.</p></div>",
       "teaser": "<div class=\"rich-text\">Mind although win turn.</div>",
@@ -85,7 +86,7 @@ Here is a sample response:
       "third_party_in_possession_of_communications": null,
       "third_party_business": null,
       "status_of_prior_restraint": null,
-      "links": [],
+      "external_reports": [],
       "equipment_seized": [],
       "equipment_broken": [],
       "state": {
@@ -125,6 +126,7 @@ Here is a sample response:
       "latest_revision_created_at": null,
       "date": "2021-02-20",
       "exact_date_unknown": false,
+      "externally_reported": false,
       "city": "Bairdview",
       "body": "<div class=\"rich-text\"><p>Lorem ipsum dolor sit amet.</p></div>",
       "teaser": "<div class=\"rich-text\">Memory himself never pass thing relate store.</div>",
@@ -154,7 +156,7 @@ Here is a sample response:
       "third_party_in_possession_of_communications": null,
       "third_party_business": null,
       "status_of_prior_restraint": null,
-      "links": [],
+      "external_reports": [],
       "equipment_seized": [],
       "equipment_broken": [],
       "state": null,
@@ -193,6 +195,7 @@ This table describes all the fields on the incident objects in the `results` obj
 | `latest_revision_created_at`                  | When the article about this incident was most recently updated.                                                                                                                         | datetime         |
 | `date`                                        | When the incident happened.                                                                                                                                                             | date             |
 | `exact_date_unknown`                          | This field will be set to `true` if the exact date of the incident is not known, meaning the `date` field is not a precise value.                                                       | boolean          |
+| `externally_reported`                         | This field will be set to `true` if the incident is documented through outside reporting (listed in `external_reports`) rather than a Tracker write-up.                                 | boolean          |
 | `city`                                        | The city the incident happened in.                                                                                                                                                      | string           |
 | state                                         | The state the incident happened in.                                                                                                                                                     | object           |
 | `body`                                        | The HTML content of the article about this incident on the Press Freedom Tracker website                                                                                                | string           |
@@ -223,7 +226,7 @@ This table describes all the fields on the incident objects in the `results` obj
 | `third_party_in_possession_of_communications` | A description of what third-party possess communications in an incident involving a legal order for a journalist's records.                                                             | string           |
 | `third_party_business`                        | What type of business the above third-party is engaged in. Can be one of: `TELECOM`, `TECH_COMPANY`, `ISP`, `FINANCIAL`, `TRAVEL` or `OTHER`.                                           | string           |
 | `status_of_prior_restraint`                   | Status of prior restraint related to the incident. Can be one of `PENDING`, `DROPPED`, `STRUCK_DOWN`, `UPHELD`, or `IGNORED`.                                                           | string           |
-| `links`                                       | A collection of links pertaining to the incident.                                                                                                                                       | array of objects |
+| `external_reports`                            | Outside reporting or documents the incident is based on. Each object has `title`, `url`, `publication` and `preview_text`.                                                              | array of objects |
 | `equipment_seized`                            | What equipment, and how much, was seized during the incident.                                                                                                                           | array of objects |
 | `equipment_broken`                            | What equipment, and how much, was broken during the incident.                                                                                                                           | array of objects |
 | `updates`                                     | Updates to the article on the Press Freedom Tracker after it was initially published.                                                                                                   | array of strings |
