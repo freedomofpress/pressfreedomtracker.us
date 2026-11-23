@@ -374,6 +374,14 @@ class TooManyRequestsTestCase(TestCase):
             self.response = self.client.get(reverse("too_many_requests"))
 
 
+class AnalyticsTestCase(TestCase):
+    def test_tracker_follows_analytics_setting(self):
+        for enabled in (False, True):
+            with self.settings(ANALYTICS_ENABLED=enabled):
+                response = self.client.get(reverse("too_many_requests"))
+                self.assertEqual(b"piwik.js" in response.content, enabled)
+
+
 class SyncPrepubViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):

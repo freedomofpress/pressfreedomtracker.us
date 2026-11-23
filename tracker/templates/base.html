@@ -18,7 +18,7 @@
 		</main>
 	</div>
 	{% include "common/_footer.html" %}
-	{% if django_settings.ANALYTICS_ENABLED %}
+	{% if analytics_enabled %}
 		<script type="text/javascript" src="{% static 'js/piwik.js' %}"></script>
 		<noscript><p><img src="https://analytics.freedom.press/piwik.php?idsite=5" style="border:0;" alt="" /></p></noscript>
 	{% endif %}

@@ -887,17 +887,6 @@ sendgrid = ["cryptography"]
 uts46 = ["uts46"]
 
 [[package]]
-name = "django-cprofile-middleware"
-version = "1.0.5"
-description = "Easily add cProfile profiling to django views."
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "django-cprofile-middleware-1.0.5.tar.gz", hash = "sha256:b942185a38f3b582935a55c768f126ce9a6f0cefceee3b5d19e6b307ad129889"},
-]
-
-[[package]]
 name = "django-csp"
 version = "4.0"
 description = "Django Content Security Policy support."
@@ -1006,20 +995,6 @@ django = "*"
 
 [package.extras]
 testing = ["coveralls", "tox", "tox-gh-actions"]
-
-[[package]]
-name = "django-settings-export"
-version = "1.2.1"
-description = "This Django app allows you to export certain settings to your templates."
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "django-settings-export-1.2.1.tar.gz", hash = "sha256:fceeae49fc597f654c1217415d8e049fc81c930b7154f5d8f28c432db738ff79"},
-]
-
-[package.dependencies]
-django = "*"
 
 [[package]]
 name = "django-silk"
@@ -4860,4 +4835,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.14,<3.15"
-content-hash = "b2be72f7c0ba6a439b98e951810397addaf944df9b19dbf4d70d6618285e95b8"
+content-hash = "ed29ceba51dcaa443db00ae4a70f35096ebe3d223f634052b212d825a0e1e776"

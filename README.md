@@ -255,23 +255,22 @@ toolbar.
 
 There are a couple of options preconfigured in this repo for profiling
 the application. They are
-[django-cprofile-middleware](https://pypi.org/project/django-cprofile-middleware/),
-[silk](https://github.com/jazzband/django-silk) middleware, and
+[silk](https://github.com/jazzband/django-silk) middleware and
 [pyinstrument](https://pypi.org/project/pyinstrument/).
 
 Profiling is not enabled by default, as it does add potential
-performance overhead if you don't actively need it. To enable silk (and
-cprofile), set `DJANGO_PROFILE=yes` when starting docker compose. To
+performance overhead if you don't actively need it. To enable silk,
+set `DJANGO_PROFILE=yes` when starting docker compose. To
 enable pyinstrument, set `PYINSTRUMENT=yes`:
 
 ```bash
 PYINSTRUMENT=yes DJANGO_PROFILE=yes docker compose up
 ```
 
-This will enable both middlewares. To view the cProfile information for
-any url, append `?prof` to the url (or add it to an existing query
-string with `&prof`). This can give you fairly detailed information
-about which lines of code are causing your view to be slow. Additional
+This will enable both middlewares. Silk runs cProfile on every request;
+open one at `http://localhost:8000/silk` and its Profiling tab can give
+you fairly detailed information about which lines of code are causing
+your view to be slow. Additional
 information about the information provided is available in [the Python
 documentation](https://docs.python.org/3.14/library/profile.html).
 

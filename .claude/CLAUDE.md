@@ -85,7 +85,7 @@
 
 - `import ipdb; ipdb.set_trace()` in code, then `docker attach $(docker compose ps -q django)` to interact
 - Detach without stopping: `Ctrl+P` then `Ctrl+Q`
-- Profiling (when enabled in `tracker/settings/local.py`): `?prof` (cProfile), `?profile` (pyinstrument), `/silk` (Silk UI)
+- Profiling (when enabled in `tracker/settings/local.py`): `?profile` (pyinstrument), `/silk` (Silk UI, with per-request cProfile)
 
 ## Git Branching
 
