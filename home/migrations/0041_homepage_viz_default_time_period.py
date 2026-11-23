@@ -14,15 +14,15 @@ class Migration(migrations.Migration):
             name="viz_default_time_period",
             field=models.CharField(
                 choices=[
-                    ("AUTOMATIC", "Automatic"),
+                    ("SEVEN_DAYS", "Past 7 days"),
                     ("FOUR_WEEKS", "Past 4 weeks"),
                     ("TWELVE_WEEKS", "Past 12 weeks"),
                     ("SIX_MONTHS", "Past six months"),
                     ("YEAR", "Current year"),
                     ("ALL_TIME", "All time"),
                 ],
-                default="AUTOMATIC",
-                help_text="Automatic picks the shortest period that has data.",
+                default="TWELVE_WEEKS",
+                help_text="If the chosen period has no data, the next larger period is automatically selected.",
                 max_length=20,
                 verbose_name="Default time period",
             ),
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             name="viz_seven_day_enabled",
             field=models.BooleanField(
                 default=False,
-                help_text='Show a "past 7 days" option for homepage charts. Only visible to users if there is also data within that range.',
+                help_text='Show a "past 7 days" option for homepage charts. Only visible to users if there is data within that range.',
                 verbose_name="Enable 7-day view",
             ),
         ),

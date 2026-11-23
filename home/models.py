@@ -118,15 +118,18 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         default=False,
         help_text=(
             'Show a "past 7 days" option for homepage charts. Only visible '
-            "to users if there is also data within that range."
+            "to users if there is data within that range."
         ),
     )
     viz_default_time_period = models.CharField(
         "Default time period",
         max_length=20,
         choices=VizTimePeriod,
-        default=VizTimePeriod.AUTOMATIC,
-        help_text=("Automatic picks the shortest period that has data."),
+        default=VizTimePeriod.TWELVE_WEEKS,
+        help_text=(
+            "If the chosen period has no data, the next larger period is "
+            "automatically selected."
+        ),
     )
 
     content_panels = Page.content_panels + [

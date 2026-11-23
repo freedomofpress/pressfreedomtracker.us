@@ -236,13 +236,13 @@ function resolveDefaultYear(dataset, currentDate) {
 	return d3.max(dataset, (d) => d.date.getUTCFullYear());
 }
 
-// Presets other than YEAR start at the configured one (or the shortest for
-// automatic) and widen until a window has data.
+// Presets other than YEAR start at the configured one and widen until a
+// window has data.
 export function resolveDefaultTimeFilters(
 	dataset,
 	currentDate,
 	sevenDayEnabled,
-	configuredPreset = null,
+	configuredPreset,
 ) {
 	if (configuredPreset === TIME_PRESETS.YEAR) {
 		return {
@@ -250,15 +250,15 @@ export function resolveDefaultTimeFilters(
 			year: resolveDefaultYear(dataset, currentDate),
 		};
 	}
-	let startPreset = TIME_PRESETS.FOUR_WEEKS;
-	// SEVEN_DAYS isn't an admin choice; only sevenDayEnabled can start there.
+	let startPreset = PRESETS_SHORTEST_FIRST.includes(configuredPreset)
+		? configuredPreset
+		: TIME_PRESETS.TWELVE_WEEKS;
+	// The 7-day button isn't rendered unless enabled, nor before data loads.
 	if (
-		configuredPreset !== TIME_PRESETS.SEVEN_DAYS &&
-		PRESETS_SHORTEST_FIRST.includes(configuredPreset)
+		startPreset === TIME_PRESETS.SEVEN_DAYS &&
+		(!sevenDayEnabled || dataset.length === 0)
 	) {
-		startPreset = configuredPreset;
-	} else if (sevenDayEnabled && dataset.length > 0) {
-		startPreset = TIME_PRESETS.SEVEN_DAYS;
+		startPreset = TIME_PRESETS.FOUR_WEEKS;
 	}
 	if (dataset.length === 0) {
 		return { timePreset: startPreset, year: null };
