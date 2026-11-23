@@ -235,13 +235,61 @@ class IncidentExportQueryCountTestCase(TestCase):
 
 
 class ExportIncidentSerializerTestCase(TestCase):
+    def setUp(self):
+        site = Site.objects.get(is_default_site=True)
+        self.incident_index = IncidentIndexPageFactory.build(slug="incidents")
+        site.root_page.add_child(instance=self.incident_index)
+
+    def serialize(self, **kwargs):
+        incident = IncidentPageFactory(parent=self.incident_index, **kwargs)
+        incident.refresh_from_db()
+        return incident, ExportIncidentSerializer(incident).data
+
     def test_field_order_lists_every_api_field(self):
-        """A field added to the API must also be added to FIELD_ORDER, or
-        it would be left out of the export."""
         self.assertCountEqual(
             ExportIncidentSerializer.FIELD_ORDER,
             FlatIncidentSerializer().fields.keys(),
+            FlatIncidentSerializer().fields.keys() - {"url"} | {"slug"},
         )
+
+    def test_overridden_fields(self):
+        incident, data = self.serialize(
+            first_published_at=datetime.datetime(
+                2024, 1, 2, 3, 4, 5, tzinfo=datetime.UTC
+            ),
+            state=StateFactory(name="New York", abbreviation="NY"),
+            case_type="CIVIL",
+            case_statuses=[
+                choices.LegalCaseStatus.VERDICT_ISSUED,
+                choices.LegalCaseStatus.UNKNOWN,
+            ],
+            subpoena_statuses=["UNKNOWN"],
+            type_of_denial=[choices.TypeOfDenial.OTHER],
+        )
+
+        self.assertEqual(data["first_published_at"], "2024-01-02 03:04:05+00:00")
+        self.assertEqual(data["state"], "New York (NY)")
+        self.assertEqual(data["case_type"], "Civil")
+        self.assertEqual(data["case_statuses"], "['VERDICT_ISSUED', 'UNKNOWN']")
+        self.assertEqual(data["subpoena_statuses"], "['UNKNOWN']")
+        self.assertEqual(data["type_of_denial"], "['OTHER']")
+        self.assertEqual(data["slug"], incident.get_full_url())
+        self.assertNotIn("url", data)
+
+    def test_none_values_are_strings(self):
+        _, data = self.serialize(
+            state=None,
+            case_type=None,
+            case_statuses=None,
+            latitude=None,
+            exact_date_unknown=True,
+        )
+
+        self.assertEqual(data["state"], "None")
+        self.assertEqual(data["case_type"], "None")
+        self.assertEqual(data["case_statuses"], "None")
+        self.assertEqual(data["latitude"], "None")
+        self.assertEqual(data["exact_date_unknown"], "True")
 
 
 class IncidentExportNewTestCase(TestCase):

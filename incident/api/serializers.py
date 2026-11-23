@@ -280,12 +280,24 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
 
 
 class ExportIncidentSerializer(FlatIncidentSerializer):
+    # These fields are overridden here for consistency with the export format.
+    # They differ in export from what the API returns.
+    slug = serializers.SerializerMethodField(method_name="get_url")
+    case_type = serializers.CharField(source="get_case_type_display")
+    state = serializers.StringRelatedField()
+    first_published_at = serializers.CharField()
+    last_published_at = serializers.CharField()
+    latest_revision_created_at = serializers.CharField()
+    case_statuses = serializers.CharField()
+    subpoena_statuses = serializers.CharField()
+    type_of_denial = serializers.CharField()
+
     # Set the ordering of export fields explicitly
     FIELD_ORDER = [
         "first_published_at",
         "last_published_at",
         "title",
-        "url",
+        "slug",
         "latest_revision_created_at",
         "charges",
         "legal_orders",
@@ -347,6 +359,14 @@ class ExportIncidentSerializer(FlatIncidentSerializer):
     def get_fields(self):
         fields = super().get_fields()
         return {name: fields[name] for name in self.FIELD_ORDER}
+
+    def to_representation(self, instance):
+        # Export as the object representation ("None" for None, "True"/"False"
+        # for bools
+        return {
+            name: str(value)
+            for name, value in super().to_representation(instance).items()
+        }
 
 
 class CSVIncidentSerializer(VariableFieldSerializer):
