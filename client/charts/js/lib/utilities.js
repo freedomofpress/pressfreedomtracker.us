@@ -236,43 +236,53 @@ function resolveDefaultYear(dataset, currentDate) {
 	return d3.max(dataset, (d) => d.date.getUTCFullYear());
 }
 
-// Presets other than YEAR start at the configured one and widen until a
-// window has data.
+function timePresetHasData(dataset, timePreset, currentDate) {
+	return (
+		filterDatasetByFiltersApplied(
+			dataset,
+			{ tag: null, timePreset },
+			currentDate,
+		).length > 0
+	);
+}
+
+export function visibleTimePresets(dataset, currentDate, sevenDayEnabled) {
+	return PRESETS_SHORTEST_FIRST.filter(
+		(preset) =>
+			preset !== TIME_PRESETS.SEVEN_DAYS ||
+			(sevenDayEnabled && timePresetHasData(dataset, preset, currentDate)),
+	);
+}
+
+// Presets other than YEAR start at the default and widen to the next visible
+// preset with data.
 export function resolveDefaultTimeFilters(
 	dataset,
 	currentDate,
 	sevenDayEnabled,
-	configuredPreset,
+	defaultTimePeriod,
 ) {
-	if (configuredPreset === TIME_PRESETS.YEAR) {
+	if (defaultTimePeriod === TIME_PRESETS.YEAR) {
 		return {
 			timePreset: TIME_PRESETS.YEAR,
 			year: resolveDefaultYear(dataset, currentDate),
 		};
 	}
-	let startPreset = PRESETS_SHORTEST_FIRST.includes(configuredPreset)
-		? configuredPreset
-		: TIME_PRESETS.TWELVE_WEEKS;
-	// The 7-day button isn't rendered unless enabled, nor before data loads.
-	if (
-		startPreset === TIME_PRESETS.SEVEN_DAYS &&
-		(!sevenDayEnabled || dataset.length === 0)
-	) {
-		startPreset = TIME_PRESETS.FOUR_WEEKS;
-	}
-	if (dataset.length === 0) {
-		return { timePreset: startPreset, year: null };
-	}
-	const timePreset = PRESETS_SHORTEST_FIRST.slice(
-		PRESETS_SHORTEST_FIRST.indexOf(startPreset),
-	).find(
-		(preset) =>
-			filterDatasetByFiltersApplied(
-				dataset,
-				{ tag: null, timePreset: preset },
-				currentDate,
-			).length > 0,
+	const startIndex = PRESETS_SHORTEST_FIRST.indexOf(
+		PRESETS_SHORTEST_FIRST.includes(defaultTimePeriod)
+			? defaultTimePeriod
+			: TIME_PRESETS.TWELVE_WEEKS,
 	);
+	const candidates = visibleTimePresets(
+		dataset,
+		currentDate,
+		sevenDayEnabled,
+	).filter((preset) => PRESETS_SHORTEST_FIRST.indexOf(preset) >= startIndex);
+	// Before data loads nothing has data, so the first candidate is used.
+	const timePreset =
+		candidates.find((preset) =>
+			timePresetHasData(dataset, preset, currentDate),
+		) ?? candidates[0];
 	return { timePreset, year: null };
 }
 

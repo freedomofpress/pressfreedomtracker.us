@@ -9,6 +9,7 @@ import {
 	filterDatasetByLastNDays,
 	filterDatasetByLastNWeeks,
 	filterDatasetByFiltersApplied,
+	visibleTimePresets,
 	TIME_PRESETS,
 } from "../lib/utilities.js";
 
@@ -156,15 +157,11 @@ export default function HomepageSelection({
 			/>
 			<ButtonsRow
 				label="from"
-				buttonLabels={[
-					...(sevenDayEnabled && isTimeButtonSelectable(TIME_LABELS.SEVEN_DAYS)
-						? [TIME_LABELS.SEVEN_DAYS]
-						: []),
-					TIME_LABELS.FOUR_WEEKS,
-					TIME_LABELS.TWELVE_WEEKS,
-					TIME_LABELS.SIX_MONTHS,
-					TIME_LABELS.ALL_TIME,
-				]}
+				buttonLabels={visibleTimePresets(
+					taggedDataset,
+					currentDate,
+					sevenDayEnabled,
+				).map((preset) => TIME_LABELS[preset])}
 				dropDownLabels={years}
 				defaultSelection={
 					filtersApplied.timePreset === TIME_PRESETS.YEAR

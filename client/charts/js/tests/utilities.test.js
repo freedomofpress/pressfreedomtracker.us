@@ -9,6 +9,7 @@ import {
 	filterDatasetByLastNWeeks,
 	getFilteredUrl,
 	resolveDefaultTimeFilters,
+	visibleTimePresets,
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
 	groupByDaysSorted,
@@ -367,6 +368,35 @@ describe(groupByWeeksSorted, () => {
 			range: "May 13–May 19",
 			numberOfIncidents: 1,
 		});
+	});
+});
+
+describe(visibleTimePresets, () => {
+	const currentDate = new Date(Date.UTC(2024, 4, 15));
+	const withinSevenDays = { date: new Date(Date.UTC(2024, 4, 14)) };
+	const withinFourWeeks = { date: new Date(Date.UTC(2024, 4, 1)) };
+	const longerPresets = [
+		TIME_PRESETS.FOUR_WEEKS,
+		TIME_PRESETS.TWELVE_WEEKS,
+		TIME_PRESETS.SIX_MONTHS,
+		TIME_PRESETS.ALL_TIME,
+	];
+
+	test("includes SEVEN_DAYS when enabled and it has data", () => {
+		expect(visibleTimePresets([withinSevenDays], currentDate, true)).toEqual([
+			TIME_PRESETS.SEVEN_DAYS,
+			...longerPresets,
+		]);
+	});
+
+	test("omits SEVEN_DAYS when disabled or when it has no data", () => {
+		expect(visibleTimePresets([withinSevenDays], currentDate, false)).toEqual(
+			longerPresets,
+		);
+		expect(visibleTimePresets([withinFourWeeks], currentDate, true)).toEqual(
+			longerPresets,
+		);
+		expect(visibleTimePresets([], currentDate, true)).toEqual(longerPresets);
 	});
 });
 
