@@ -1,3 +1,5 @@
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
 from wagtail.models import Site
@@ -13,10 +15,12 @@ from common.tests.factories import (
 from incident import choices
 from incident.tests import factories
 from incident.tests.factories import (
+    IncidentChargeWithUpdatesFactory,
     IncidentIndexPageFactory,
     IncidentLinkFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
+    LegalOrderWithUpdatesFactory,
     StateFactory,
 )
 
@@ -442,6 +446,8 @@ class IncidentAPITest(APITestCase):
         cls.incident.save()
         IncidentUpdateFactory.create_batch(2, page=cls.incident)
         IncidentLinkFactory.create_batch(3, page=cls.incident)
+        IncidentChargeWithUpdatesFactory(incident_page=cls.incident)
+        LegalOrderWithUpdatesFactory(incident_page=cls.incident)
 
     def test_api_requests_are_successful(self):
         response = self.client.get(
@@ -558,6 +564,9 @@ class IncidentAPITest(APITestCase):
                 "type_of_denial": [
                     choices.TypeOfDenial(e).label for e in inc.type_of_denial
                 ],
+                "charges": [charge.summary for charge in inc.charges.all()],
+                "legal_orders": [order.summary for order in inc.legal_orders.all()],
+                "legal_order_target": inc.get_legal_order_target_display(),
             },
         )
 
@@ -573,6 +582,22 @@ class IncidentAPITest(APITestCase):
         )
 
         self.assertEqual(len(response.json()), 1)
+
+    def test_query_count_does_not_grow_with_incidents(self):
+        url = reverse("incidentpage-list", kwargs={"version": self.version})
+        self.client.get(url, headers={"accept": "application/json"})
+        with CaptureQueriesContext(connection) as single:
+            self.client.get(url, headers={"accept": "application/json"})
+
+        # Create two more incidents with charges and legal orders
+        for _ in range(2):
+            incident = IncidentPageFactory(parent=self.incident_index)
+            IncidentChargeWithUpdatesFactory(incident_page=incident)
+            LegalOrderWithUpdatesFactory(incident_page=incident)
+
+        # Assert that they use no more queries than the single incident did
+        with self.assertNumQueries(len(single)):
+            self.client.get(url, headers={"accept": "application/json"})
 
     def test_dynamic_fields(self):
         response = self.client.get(

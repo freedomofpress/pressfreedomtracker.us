@@ -21,7 +21,6 @@ from common.utils import DEFAULT_PAGE_KEY, Echo, paginate
 from incident.feeds import IncidentIndexPageFeed
 from incident.models.export import is_exportable, to_json, to_row
 from incident.models.incident_page import IncidentPage
-from incident.models.inlines import LegalOrder
 from incident.utils.forms import get_filter_forms
 from incident.utils.incident_filter import (
     IncidentFilter,
@@ -90,16 +89,7 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
         else:
             allowed_fields = allowed_fields.split(",")
         incident_filter = IncidentFilter(request.GET)
-        incidents = (
-            incident_filter.get_queryset()
-            .with_public_associations()
-            .prefetch_related(
-                models.Prefetch(
-                    "legal_orders",
-                    queryset=LegalOrder.objects.prefetch_related("updates"),
-                ),
-            )
-        )
+        incidents = incident_filter.get_queryset().with_public_associations()
         if export_format == "json":
             return self.export_format_json(incidents, allowed_fields)
         else:

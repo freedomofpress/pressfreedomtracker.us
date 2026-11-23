@@ -344,6 +344,10 @@ class IncidentQuerySet(PageQuerySet):
             ),
             "equipment_broken__equipment",
             "equipment_seized__equipment",
+            models.Prefetch(
+                "legal_orders",
+                queryset=LegalOrder.objects.prefetch_related("updates"),
+            ),
             "links",
             "politicians_or_public_figures_involved",
             "tags",

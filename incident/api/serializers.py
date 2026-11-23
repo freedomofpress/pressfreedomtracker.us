@@ -248,6 +248,10 @@ class IncidentSerializer(BaseIncidentSerializer):
         child=ChoiceField(choices.TypeOfDenial.choices),
     )
 
+    charges = SummaryField(many=True, read_only=True)
+    legal_orders = SummaryField(many=True, read_only=True)
+    legal_order_target = serializers.CharField(source="get_legal_order_target_display")
+
 
 class FlatIncidentSerializer(BaseIncidentSerializer):
     links = FlatStringRelatedField()
@@ -269,6 +273,10 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
 
     subpoena_statuses = FlatListField(child=ChoiceField(choices.SUBPOENA_STATUS))
     type_of_denial = FlatListField(child=ChoiceField(choices.TypeOfDenial.choices))
+
+    charges = FlatSummaryField()
+    legal_orders = FlatSummaryField()
+    legal_order_target = serializers.CharField(source="get_legal_order_target_display")
 
 
 class CSVIncidentSerializer(VariableFieldSerializer):

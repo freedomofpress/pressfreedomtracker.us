@@ -1550,14 +1550,15 @@ class IncidentPageQueriesTest(TestCase):
             IncidentUpdateFactory.create_batch(2, page=incident)
             IncidentLinkFactory.create_batch(3, page=incident)
             IncidentChargeWithUpdatesFactory.create_batch(3, incident_page=incident)
+            LegalOrderWithUpdatesFactory.create_batch(2, incident_page=incident)
 
             # Pre-generate renditions to avoid INSERT queries that we
             # don't want to count.
             incident.teaser_image.get_rendition("fill-1330x880")
 
     def test_api_selects_and_prefetches(self):
-        # 1 base query, plus 19 prefetches.
-        with self.assertNumQueries(20):
+        # 1 base query, plus 21 prefetches.
+        with self.assertNumQueries(22):
             list(IncidentPage.objects.with_public_associations())
 
 
