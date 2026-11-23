@@ -217,15 +217,7 @@ export function filterDatasetByLastNWeeks(dataset, currentDate, numberOfWeeks) {
 	);
 }
 
-const CONFIGURABLE_DEFAULT_PRESETS = [
-	TIME_PRESETS.FOUR_WEEKS,
-	TIME_PRESETS.TWELVE_WEEKS,
-	TIME_PRESETS.SIX_MONTHS,
-	TIME_PRESETS.YEAR,
-	TIME_PRESETS.ALL_TIME,
-];
-
-const ROLLING_PRESETS_SHORTEST_FIRST = [
+const PRESETS_SHORTEST_FIRST = [
 	TIME_PRESETS.SEVEN_DAYS,
 	TIME_PRESETS.FOUR_WEEKS,
 	TIME_PRESETS.TWELVE_WEEKS,
@@ -233,39 +225,7 @@ const ROLLING_PRESETS_SHORTEST_FIRST = [
 	TIME_PRESETS.ALL_TIME,
 ];
 
-// Starts at the configured preset (or the shortest one for automatic) and
-// widens until a window has data.
-export function resolveDefaultTimePreset(
-	dataset,
-	currentDate,
-	sevenDayEnabled,
-	configuredPreset = null,
-) {
-	if (configuredPreset === TIME_PRESETS.YEAR) {
-		return TIME_PRESETS.YEAR;
-	}
-	let startPreset = TIME_PRESETS.FOUR_WEEKS;
-	if (CONFIGURABLE_DEFAULT_PRESETS.includes(configuredPreset)) {
-		startPreset = configuredPreset;
-	} else if (sevenDayEnabled && dataset.length > 0) {
-		startPreset = TIME_PRESETS.SEVEN_DAYS;
-	}
-	if (dataset.length === 0) {
-		return startPreset;
-	}
-	return ROLLING_PRESETS_SHORTEST_FIRST.slice(
-		ROLLING_PRESETS_SHORTEST_FIRST.indexOf(startPreset),
-	).find(
-		(timePreset) =>
-			filterDatasetByFiltersApplied(
-				dataset,
-				{ tag: null, timePreset },
-				currentDate,
-			).length > 0,
-	);
-}
-
-export function resolveDefaultYear(dataset, currentDate) {
+function resolveDefaultYear(dataset, currentDate) {
 	const currentYear = currentDate.getUTCFullYear();
 	if (
 		dataset.length === 0 ||
@@ -274,6 +234,46 @@ export function resolveDefaultYear(dataset, currentDate) {
 		return currentYear;
 	}
 	return d3.max(dataset, (d) => d.date.getUTCFullYear());
+}
+
+// Presets other than YEAR start at the configured one (or the shortest for
+// automatic) and widen until a window has data.
+export function resolveDefaultTimeFilters(
+	dataset,
+	currentDate,
+	sevenDayEnabled,
+	configuredPreset = null,
+) {
+	if (configuredPreset === TIME_PRESETS.YEAR) {
+		return {
+			timePreset: TIME_PRESETS.YEAR,
+			year: resolveDefaultYear(dataset, currentDate),
+		};
+	}
+	let startPreset = TIME_PRESETS.FOUR_WEEKS;
+	// SEVEN_DAYS isn't an admin choice; only sevenDayEnabled can start there.
+	if (
+		configuredPreset !== TIME_PRESETS.SEVEN_DAYS &&
+		PRESETS_SHORTEST_FIRST.includes(configuredPreset)
+	) {
+		startPreset = configuredPreset;
+	} else if (sevenDayEnabled && dataset.length > 0) {
+		startPreset = TIME_PRESETS.SEVEN_DAYS;
+	}
+	if (dataset.length === 0) {
+		return { timePreset: startPreset, year: null };
+	}
+	const timePreset = PRESETS_SHORTEST_FIRST.slice(
+		PRESETS_SHORTEST_FIRST.indexOf(startPreset),
+	).find(
+		(preset) =>
+			filterDatasetByFiltersApplied(
+				dataset,
+				{ tag: null, timePreset: preset },
+				currentDate,
+			).length > 0,
+	);
+	return { timePreset, year: null };
 }
 
 export function filterDatasetByFiltersApplied(

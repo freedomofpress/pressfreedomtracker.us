@@ -8,8 +8,7 @@ import {
 	filterDatasetByLastNDays,
 	filterDatasetByLastNWeeks,
 	getFilteredUrl,
-	resolveDefaultTimePreset,
-	resolveDefaultYear,
+	resolveDefaultTimeFilters,
 	filterDatasetByFiltersApplied,
 	groupByMonthSorted,
 	groupByDaysSorted,
@@ -371,7 +370,7 @@ describe(groupByWeeksSorted, () => {
 	});
 });
 
-describe(resolveDefaultTimePreset, () => {
+describe(resolveDefaultTimeFilters, () => {
 	// currentDate = Wed May 15 2024. last 7 days starts Thu May 9; last 4 weeks starts Mon Apr 22.
 	const currentDate = new Date(Date.UTC(2024, 4, 15));
 	const withinSevenDays = { date: new Date(Date.UTC(2024, 4, 14)) }; // Tue May 14
@@ -381,92 +380,82 @@ describe(resolveDefaultTimePreset, () => {
 	const olderThanSixMonths = { date: new Date(Date.UTC(2023, 10, 1)) }; // Nov 1 2023
 
 	test("returns SEVEN_DAYS when enabled and there is data in the last 7 days", () => {
-		expect(resolveDefaultTimePreset([withinSevenDays], currentDate, true)).toBe(
-			TIME_PRESETS.SEVEN_DAYS,
-		);
+		expect(
+			resolveDefaultTimeFilters([withinSevenDays], currentDate, true),
+		).toEqual({ timePreset: TIME_PRESETS.SEVEN_DAYS, year: null });
 	});
 
 	test("ignores the 7-day window when not admin-enabled, even with recent data", () => {
 		expect(
-			resolveDefaultTimePreset([withinSevenDays], currentDate, false),
-		).toBe(TIME_PRESETS.FOUR_WEEKS);
+			resolveDefaultTimeFilters([withinSevenDays], currentDate, false),
+		).toEqual({ timePreset: TIME_PRESETS.FOUR_WEEKS, year: null });
 	});
 
 	test("returns FOUR_WEEKS when enabled but no data in the last 7 days", () => {
-		expect(resolveDefaultTimePreset([withinFourWeeks], currentDate, true)).toBe(
-			TIME_PRESETS.FOUR_WEEKS,
-		);
+		expect(
+			resolveDefaultTimeFilters([withinFourWeeks], currentDate, true),
+		).toEqual({ timePreset: TIME_PRESETS.FOUR_WEEKS, year: null });
 	});
 
 	test("widens to TWELVE_WEEKS when data is in the last 12 weeks but not the last 4", () => {
 		expect(
-			resolveDefaultTimePreset([olderThanFourWeeks], currentDate, true),
-		).toBe(TIME_PRESETS.TWELVE_WEEKS);
+			resolveDefaultTimeFilters([olderThanFourWeeks], currentDate, true),
+		).toEqual({ timePreset: TIME_PRESETS.TWELVE_WEEKS, year: null });
 	});
 
 	test("widens to SIX_MONTHS when data is older than the last 12 weeks", () => {
 		expect(
-			resolveDefaultTimePreset([olderThanTwelveWeeks], currentDate, true),
-		).toBe(TIME_PRESETS.SIX_MONTHS);
+			resolveDefaultTimeFilters([olderThanTwelveWeeks], currentDate, true),
+		).toEqual({ timePreset: TIME_PRESETS.SIX_MONTHS, year: null });
 	});
 
 	test("returns FOUR_WEEKS for an empty (still-loading) dataset", () => {
-		expect(resolveDefaultTimePreset([], currentDate, true)).toBe(
-			TIME_PRESETS.FOUR_WEEKS,
-		);
+		expect(resolveDefaultTimeFilters([], currentDate, true)).toEqual({
+			timePreset: TIME_PRESETS.FOUR_WEEKS,
+			year: null,
+		});
 	});
 
 	test("returns a configured preset that has data, even when a shorter one does too", () => {
 		expect(
-			resolveDefaultTimePreset(
+			resolveDefaultTimeFilters(
 				[withinSevenDays],
 				currentDate,
 				true,
 				TIME_PRESETS.SIX_MONTHS,
 			),
-		).toBe(TIME_PRESETS.SIX_MONTHS);
+		).toEqual({ timePreset: TIME_PRESETS.SIX_MONTHS, year: null });
 	});
 
 	test("widens a configured preset with no data to the next longer one that has data", () => {
 		expect(
-			resolveDefaultTimePreset(
+			resolveDefaultTimeFilters(
 				[olderThanFourWeeks],
 				currentDate,
 				false,
 				TIME_PRESETS.FOUR_WEEKS,
 			),
-		).toBe(TIME_PRESETS.TWELVE_WEEKS);
+		).toEqual({ timePreset: TIME_PRESETS.TWELVE_WEEKS, year: null });
 		expect(
-			resolveDefaultTimePreset(
+			resolveDefaultTimeFilters(
 				[olderThanSixMonths],
 				currentDate,
 				false,
 				TIME_PRESETS.TWELVE_WEEKS,
 			),
-		).toBe(TIME_PRESETS.ALL_TIME);
+		).toEqual({ timePreset: TIME_PRESETS.ALL_TIME, year: null });
 	});
 
 	test("widens automatic to ALL_TIME when there is no data in the last six months", () => {
 		expect(
-			resolveDefaultTimePreset([olderThanSixMonths], currentDate, true),
-		).toBe(TIME_PRESETS.ALL_TIME);
-	});
-
-	test("returns YEAR when configured, regardless of data", () => {
-		expect(
-			resolveDefaultTimePreset(
-				[olderThanSixMonths],
-				currentDate,
-				false,
-				TIME_PRESETS.YEAR,
-			),
-		).toBe(TIME_PRESETS.YEAR);
+			resolveDefaultTimeFilters([olderThanSixMonths], currentDate, true),
+		).toEqual({ timePreset: TIME_PRESETS.ALL_TIME, year: null });
 	});
 
 	test("returns the configured preset for an empty (still-loading) dataset", () => {
 		expect(
-			resolveDefaultTimePreset([], currentDate, false, TIME_PRESETS.ALL_TIME),
-		).toBe(TIME_PRESETS.ALL_TIME);
+			resolveDefaultTimeFilters([], currentDate, false, TIME_PRESETS.ALL_TIME),
+		).toEqual({ timePreset: TIME_PRESETS.ALL_TIME, year: null });
 	});
 
 	test("treats AUTOMATIC, unknown values and SEVEN_DAYS as automatic", () => {
@@ -476,35 +465,56 @@ describe(resolveDefaultTimePreset, () => {
 			TIME_PRESETS.SEVEN_DAYS,
 		]) {
 			expect(
-				resolveDefaultTimePreset(
+				resolveDefaultTimeFilters(
 					[withinSevenDays],
 					currentDate,
 					false,
 					configured,
 				),
-			).toBe(TIME_PRESETS.FOUR_WEEKS);
+			).toEqual({ timePreset: TIME_PRESETS.FOUR_WEEKS, year: null });
 		}
 	});
-});
 
-describe(resolveDefaultYear, () => {
-	const currentDate = new Date(Date.UTC(2025, 0, 1, 2)); // Dec 31 2024 in US time zones
+	describe("when YEAR is configured", () => {
+		const newYearsEveInUS = new Date(Date.UTC(2025, 0, 1, 2));
 
-	test("returns the current UTC year when it has data", () => {
-		const dataset = [{ date: new Date(Date.UTC(2025, 0, 1)) }];
-		expect(resolveDefaultYear(dataset, currentDate)).toBe(2025);
-	});
+		test("returns the current UTC year when it has data", () => {
+			const dataset = [{ date: new Date(Date.UTC(2025, 0, 1)) }];
+			expect(
+				resolveDefaultTimeFilters(
+					dataset,
+					newYearsEveInUS,
+					false,
+					TIME_PRESETS.YEAR,
+				),
+			).toEqual({ timePreset: TIME_PRESETS.YEAR, year: 2025 });
+		});
 
-	test("returns the latest year with data when the current year has none", () => {
-		const dataset = [
-			{ date: new Date(Date.UTC(2023, 5, 1)) },
-			{ date: new Date(Date.UTC(2024, 11, 31)) },
-		];
-		expect(resolveDefaultYear(dataset, currentDate)).toBe(2024);
-	});
+		test("returns the latest year with data when the current year has none", () => {
+			const dataset = [
+				{ date: new Date(Date.UTC(2023, 5, 1)) },
+				{ date: new Date(Date.UTC(2024, 11, 31)) },
+			];
+			expect(
+				resolveDefaultTimeFilters(
+					dataset,
+					newYearsEveInUS,
+					false,
+					TIME_PRESETS.YEAR,
+				),
+			).toEqual({ timePreset: TIME_PRESETS.YEAR, year: 2024 });
+		});
 
-	test("returns the current year for an empty (still-loading) dataset", () => {
-		expect(resolveDefaultYear([], currentDate)).toBe(2025);
+		test("returns the current year for an empty (still-loading) dataset", () => {
+			expect(
+				resolveDefaultTimeFilters(
+					[],
+					newYearsEveInUS,
+					false,
+					TIME_PRESETS.YEAR,
+				),
+			).toEqual({ timePreset: TIME_PRESETS.YEAR, year: 2025 });
+		});
 	});
 });
 

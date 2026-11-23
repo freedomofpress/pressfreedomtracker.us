@@ -8,8 +8,7 @@ import ChartDescription from "./ChartDescription";
 import Flashing from "../../../common/js/components/Flashing";
 import {
 	filterDatasetByFiltersApplied,
-	resolveDefaultTimePreset,
-	resolveDefaultYear,
+	resolveDefaultTimeFilters,
 	groupByMonthSorted,
 	groupByYearsSorted,
 	groupByDaysSorted,
@@ -57,30 +56,25 @@ function HomepageMainChartsWidth({
 	sevenDayEnabled = false,
 	defaultTimePeriod = null,
 }) {
-	// timePreset is determined by resolveDefaultTimePreset until the user chooses otherwise
+	// timePreset and year come from resolveDefaultTimeFilters until the user chooses otherwise
 	const [filterSelection, setFiltersApplied] = React.useState({
 		tag: null,
 		year: null,
 		timePreset: null,
 	});
 
-	let filtersApplied = filterSelection;
-	if (filterSelection.timePreset === null) {
-		const timePreset = resolveDefaultTimePreset(
-			dataset,
-			currentDate,
-			sevenDayEnabled,
-			defaultTimePeriod,
-		);
-		filtersApplied = {
-			...filterSelection,
-			timePreset,
-			year:
-				timePreset === TIME_PRESETS.YEAR
-					? resolveDefaultYear(dataset, currentDate)
-					: null,
-		};
-	}
+	const filtersApplied =
+		filterSelection.timePreset === null
+			? {
+					...filterSelection,
+					...resolveDefaultTimeFilters(
+						dataset,
+						currentDate,
+						sevenDayEnabled,
+						defaultTimePeriod,
+					),
+				}
+			: filterSelection;
 
 	const categoriesColorMap = categories.reduce(
 		(acc, { title }, i) => ({
