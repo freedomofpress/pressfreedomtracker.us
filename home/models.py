@@ -20,22 +20,13 @@ from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 from common.models import MediaPageMixin, MetadataPageMixin
 from common.models.settings import SearchSettings
+from home.choices import VizTimePeriod
 from incident.models import (
     PrepublicationIncident,
     PrepublicationIncidentSync,
     PrepublicationSettings,
 )
 from incident.utils.incident_filter import get_serialized_filters
-
-
-# Values match TIME_PRESETS in client/charts/js/lib/utilities.js
-class VizTimePeriod(models.TextChoices):
-    AUTOMATIC = "AUTOMATIC", "Automatic"
-    FOUR_WEEKS = "FOUR_WEEKS", "Past 4 weeks"
-    TWELVE_WEEKS = "TWELVE_WEEKS", "Past 12 weeks"
-    SIX_MONTHS = "SIX_MONTHS", "Past six months"
-    YEAR = "YEAR", "Current year"
-    ALL_TIME = "ALL_TIME", "All time"
 
 
 class HomePage(MetadataPageMixin, MediaPageMixin, Page):

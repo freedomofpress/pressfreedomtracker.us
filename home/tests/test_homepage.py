@@ -13,7 +13,7 @@ from wagtail.test.utils.form_data import (
 
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import CommonTagFactory
-from home.models import VizTimePeriod
+from home.choices import VizTimePeriod
 from incident.devdata import create_prepub
 from incident.models import (
     PrepublicationIncident,
