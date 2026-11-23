@@ -15,6 +15,10 @@ from common.tests.factories import (
     PersonPageFactory,
 )
 from incident import choices
+from incident.api.serializers import (
+    ExportIncidentSerializer,
+    FlatIncidentSerializer,
+)
 from incident.tests.factories import (
     ChargeFactory,
     ChargeUpdateFactory,
@@ -228,6 +232,16 @@ class IncidentExportQueryCountTestCase(TestCase):
         self.create_incident()
         with self.assertNumQueries(len(single)):
             self.client.get(self.export_url)
+
+
+class ExportIncidentSerializerTestCase(TestCase):
+    def test_field_order_lists_every_api_field(self):
+        """A field added to the API must also be added to FIELD_ORDER, or
+        it would be left out of the export."""
+        self.assertCountEqual(
+            ExportIncidentSerializer.FIELD_ORDER,
+            FlatIncidentSerializer().fields.keys(),
+        )
 
 
 class IncidentExportRowTestCase(TestCase):

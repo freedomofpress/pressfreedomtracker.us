@@ -279,6 +279,76 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
     legal_order_target = serializers.CharField(source="get_legal_order_target_display")
 
 
+class ExportIncidentSerializer(FlatIncidentSerializer):
+    # Set the ordering of export fields explicitly
+    FIELD_ORDER = [
+        "first_published_at",
+        "last_published_at",
+        "title",
+        "url",
+        "latest_revision_created_at",
+        "charges",
+        "legal_orders",
+        "updates",
+        "categories",
+        "links",
+        "equipment_seized",
+        "equipment_broken",
+        "targeted_journalists",
+        "authors",
+        "date",
+        "exact_date_unknown",
+        "city",
+        "state",
+        "latitude",
+        "longitude",
+        "body",
+        "introduction",
+        "teaser",
+        "teaser_image",
+        "primary_video",
+        "image_caption",
+        "arrest_status",
+        "arresting_authority",
+        "release_date",
+        "detention_date",
+        "unnecessary_use_of_force",
+        "case_number",
+        "case_statuses",
+        "case_type",
+        "status_of_seized_equipment",
+        "is_search_warrant_obtained",
+        "actor",
+        "border_point",
+        "target_us_citizenship_status",
+        "denial_of_entry",
+        "stopped_previously",
+        "did_authorities_ask_for_device_access",
+        "did_authorities_ask_about_work",
+        "assailant",
+        "was_journalist_targeted",
+        "charged_under_espionage_act",
+        "subpoena_type",
+        "subpoena_statuses",
+        "name_of_business",
+        "third_party_business",
+        "legal_order_target",
+        "legal_order_venue",
+        "status_of_prior_restraint",
+        "mistakenly_released_materials",
+        "type_of_denial",
+        "targeted_institutions",
+        "tags",
+        "target_nationality",
+        "workers_whose_communications_were_obtained",
+        "politicians_or_public_figures_involved",
+    ]
+
+    def get_fields(self):
+        fields = super().get_fields()
+        return {name: fields[name] for name in self.FIELD_ORDER}
+
+
 class CSVIncidentSerializer(VariableFieldSerializer):
     # Ordinary fields directly on IncidentPage/Page
     title = serializers.CharField()
