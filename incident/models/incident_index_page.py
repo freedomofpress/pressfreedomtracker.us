@@ -1,11 +1,10 @@
 import copy
-import csv
 import json
 from typing import TYPE_CHECKING
 
 from django.db import models
 from django.db.models.functions import Coalesce
-from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_http_methods
 
@@ -17,9 +16,8 @@ from marshmallow import EXCLUDE, Schema, fields
 
 from common.models import MetadataPageMixin
 from common.models.settings import SearchSettings
-from common.utils import DEFAULT_PAGE_KEY, Echo, paginate
+from common.utils import DEFAULT_PAGE_KEY, paginate
 from incident.feeds import IncidentIndexPageFeed
-from incident.models.export import is_exportable, to_json, to_row
 from incident.models.incident_page import IncidentPage
 from incident.utils.forms import get_filter_forms
 from incident.utils.incident_filter import (
@@ -70,71 +68,6 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     @path("export/")
     @method_decorator(require_http_methods(["HEAD", "GET", "OPTIONS"]))
     def export_view(self, request: HttpRequest) -> HttpResponse:
-        if request.method == "GET":
-            response = self.export_view_GET(request)
-        else:  # Method is HEAD or OPTIONS
-            response = self.export_view_OPTIONS(request)
-
-        # Allow requests from any orign to allow this to be an accessible API
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET,OPTIONS,HEAD"
-
-        return response
-
-    def export_view_GET(self, request: HttpRequest) -> HttpResponse:
-        export_format = request.GET.get("format", "csv")
-        allowed_fields = request.GET.get("fields")
-        if not allowed_fields:
-            allowed_fields = []
-        else:
-            allowed_fields = allowed_fields.split(",")
-        incident_filter = IncidentFilter(request.GET)
-        incidents = incident_filter.get_queryset().with_public_associations()
-        if export_format == "json":
-            return self.export_format_json(incidents, allowed_fields)
-        else:
-            return self.export_format_csv(incidents, allowed_fields)
-
-    def export_format_csv(self, incidents, allowed_fields):
-        if allowed_fields:
-            incident_fields = [
-                f for f in IncidentPage._meta.get_fields() if f.name in allowed_fields
-            ]
-        else:
-            incident_fields = IncidentPage._meta.get_fields()
-        headers = [field.name for field in incident_fields if is_exportable(field)]
-
-        # Helper function to combine data with headers
-        def stream(headers, data):
-            if headers:
-                yield headers
-            for incident in data:
-                yield to_row(incident, allowed_fields)
-
-        pseudo_buffer = Echo()
-        writer = csv.writer(pseudo_buffer)
-        response = StreamingHttpResponse(
-            (writer.writerow(row) for row in stream(headers, incidents)),
-            content_type="text/csv",
-        )
-
-        response["Content-Disposition"] = 'attachment; filename="incidents.csv"'
-        return response
-
-    def export_format_json(self, incidents, fields):
-        incident_list = []
-        for incident in incidents:
-            incident_list.append(to_json(incident, fields))
-        return JsonResponse(incident_list, safe=False)
-
-    def export_view_OPTIONS(self, request: HttpRequest) -> HttpResponse:
-        return HttpResponse()
-
-    # Temporary: serves the export through IncidentExportViewSet so that its
-    # performance can be compared with export/.  Remove when export/ uses it.
-    @path("export-new/")
-    @method_decorator(require_http_methods(["HEAD", "GET", "OPTIONS"]))
-    def export_new_view(self, request: HttpRequest) -> HttpResponse:
         # Imported here because the API views import incident.models.
         from incident.api.views import IncidentExportViewSet
 

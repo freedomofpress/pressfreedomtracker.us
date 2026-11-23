@@ -248,7 +248,6 @@ class ExportIncidentSerializerTestCase(TestCase):
     def test_field_order_lists_every_api_field(self):
         self.assertCountEqual(
             ExportIncidentSerializer.FIELD_ORDER,
-            FlatIncidentSerializer().fields.keys(),
             FlatIncidentSerializer().fields.keys() - {"url"} | {"slug"},
         )
 
@@ -292,110 +291,9 @@ class ExportIncidentSerializerTestCase(TestCase):
         self.assertEqual(data["exact_date_unknown"], "True")
 
 
-class IncidentExportNewTestCase(TestCase):
-    """The temporary export-new/ route, which serves the export through
-    IncidentExportViewSet."""
-
-    def setUp(self):
-        site = Site.objects.get(is_default_site=True)
-        self.incident_index = IncidentIndexPageFactory.build(slug="incidents")
-        site.root_page.add_child(instance=self.incident_index)
-        self.url = self.incident_index.get_full_url() + "export-new/"
-        IncidentPageFactory(parent=self.incident_index, title="New export")
-
-    def test_csv(self):
-        response = self.client.get(self.url)
-        content = b"".join(response.streaming_content).decode("utf-8")
-        rows = list(csv.reader(io.StringIO(content)))
-
-        self.assertEqual(response["Content-Type"], "text/csv")
-        self.assertEqual(rows[0], ExportIncidentSerializer.FIELD_ORDER)
-        self.assertEqual(len(rows), 2)
-
-    def test_json(self):
-        response = self.client.get(self.url + "?format=json")
-        data = response.json()
-
-        self.assertEqual(len(data), 1)
-        self.assertEqual(list(data[0]), ExportIncidentSerializer.FIELD_ORDER)
-        self.assertEqual(data[0]["title"], "New export")
-
-
 class IncidentExportRowTestCase(TestCase):
     """Pin the export's column order and the values it writes for an
     incident with every exported column populated."""
-
-    # Column order and values for the incident created in setUp.
-    # latitude and longitude are None because IncidentPage.save() derives
-    # them from geonames data, which the test database does not have.
-    EXPECTED_EXPORT_ROW = [
-        ("first_published_at", "2024-01-02 03:04:05+00:00"),
-        ("last_published_at", "2024-01-03 03:04:05+00:00"),
-        ("title", "Golden incident"),
-        ("slug", "http://localhost/incidents/golden-incident/"),
-        ("latest_revision_created_at", "2024-01-04 03:04:05+00:00"),
-        ("charges", "Charge A (charges pending as of 2024-01-06)"),
-        (
-            "legal_orders",
-            (
-                "subpoena for other (unknown as of 2024-01-04), "
-                "subpoena for other (pending as of 2024-01-03)"
-            ),
-        ),
-        ("updates", "(2024-01-05 03:04:05+00:00) Update A"),
-        ("categories", "Category A"),
-        ("links", "Link A (https://example.com/link)"),
-        ("equipment_seized", "Camera: count of 2"),
-        ("equipment_broken", "Phone: count of 1"),
-        ("targeted_journalists", "Journalist A (Institution B)"),
-        ("authors", "Author A"),
-        ("date", "2024-01-01"),
-        ("exact_date_unknown", "False"),
-        ("city", "New York"),
-        ("state", "New York (NY)"),
-        ("latitude", "None"),
-        ("longitude", "None"),
-        ("body", ""),
-        ("introduction", "Introduction text"),
-        ("teaser", "Teaser text"),
-        ("teaser_image", "None"),
-        ("primary_video", "https://example.com/video"),
-        ("image_caption", "Image caption"),
-        ("arrest_status", "unknown"),
-        ("arresting_authority", "New York City Police Department"),
-        ("release_date", "2024-01-05"),
-        ("detention_date", "2024-01-03"),
-        ("unnecessary_use_of_force", "True"),
-        ("case_number", "CASE-1"),
-        ("case_statuses", "['ONGOING']"),
-        ("case_type", "Civil"),
-        ("status_of_seized_equipment", "unknown"),
-        ("is_search_warrant_obtained", "True"),
-        ("actor", "unknown"),
-        ("border_point", "JFK International Airport"),
-        ("target_us_citizenship_status", "U.S. citizen"),
-        ("denial_of_entry", "True"),
-        ("stopped_previously", "True"),
-        ("did_authorities_ask_for_device_access", "unknown"),
-        ("did_authorities_ask_about_work", "unknown"),
-        ("assailant", "unknown"),
-        ("was_journalist_targeted", "unknown"),
-        ("charged_under_espionage_act", "True"),
-        ("subpoena_type", "testimony about confidential source"),
-        ("subpoena_statuses", "['UNKNOWN']"),
-        ("name_of_business", "Megacorp Industries"),
-        ("third_party_business", "telecom company"),
-        ("legal_order_target", "Journalist"),
-        ("legal_order_venue", "State"),
-        ("status_of_prior_restraint", "pending"),
-        ("mistakenly_released_materials", "True"),
-        ("type_of_denial", "['OTHER']"),
-        ("targeted_institutions", "Institution A"),
-        ("tags", "Tag A"),
-        ("target_nationality", "Nationality A"),
-        ("workers_whose_communications_were_obtained", "Worker A"),
-        ("politicians_or_public_figures_involved", "Politician A"),
-    ]
 
     def setUp(self):
         site = Site.objects.get(is_default_site=True)
