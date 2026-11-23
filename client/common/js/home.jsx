@@ -26,6 +26,7 @@ chartContainers.forEach((node) => {
 	const startDate = node.dataset.startDate;
 	const endDate = node.dataset.endDate;
 	const sevenDayEnabled = node.dataset.sevenDayEnabled === "true";
+	const defaultTimePeriod = node.dataset.defaultTimePeriod;
 
 	const params = new URLSearchParams([
 		["fields", fields.join(",")],
@@ -52,6 +53,7 @@ chartContainers.forEach((node) => {
 				selectedTags={selectedTags}
 				databasePath={databasePath}
 				sevenDayEnabled={sevenDayEnabled}
+				defaultTimePeriod={defaultTimePeriod}
 			/>
 		</DataLoader>,
 	);

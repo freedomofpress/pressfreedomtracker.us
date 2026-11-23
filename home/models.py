@@ -28,6 +28,16 @@ from incident.models import (
 from incident.utils.incident_filter import get_serialized_filters
 
 
+# Values match TIME_PRESETS in client/charts/js/lib/utilities.js
+class VizTimePeriod(models.TextChoices):
+    AUTOMATIC = "AUTOMATIC", "Automatic"
+    FOUR_WEEKS = "FOUR_WEEKS", "Past 4 weeks"
+    TWELVE_WEEKS = "TWELVE_WEEKS", "Past 12 weeks"
+    SIX_MONTHS = "SIX_MONTHS", "Past six months"
+    YEAR = "YEAR", "Current year"
+    ALL_TIME = "ALL_TIME", "All time"
+
+
 class HomePage(MetadataPageMixin, MediaPageMixin, Page):
     about = RichTextField(
         blank=True, null=True, help_text="Headings and line breaks will be stripped"
@@ -116,10 +126,16 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         "Enable 7-day view",
         default=False,
         help_text=(
-            'Show a "past 7 days" option on the homepage charts. It only appears '
-            "when there are incidents within the last 7 days and becomes the "
-            "default view when shown."
+            'Show a "past 7 days" option for homepage charts. Only visible '
+            "to users if there is also data within that range."
         ),
+    )
+    viz_default_time_period = models.CharField(
+        "Default time period",
+        max_length=20,
+        choices=VizTimePeriod,
+        default=VizTimePeriod.AUTOMATIC,
+        help_text=("Automatic picks the shortest period that has data."),
     )
 
     content_panels = Page.content_panels + [
@@ -191,6 +207,7 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         ),
         MultiFieldPanel(
             [
+                FieldPanel("viz_default_time_period"),
                 FieldPanel("viz_seven_day_enabled"),
             ],
             heading="Chart Options",

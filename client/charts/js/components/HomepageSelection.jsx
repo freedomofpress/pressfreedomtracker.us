@@ -166,7 +166,11 @@ export default function HomepageSelection({
 					TIME_LABELS.ALL_TIME,
 				]}
 				dropDownLabels={years}
-				defaultSelection={TIME_LABELS[filtersApplied.timePreset]}
+				defaultSelection={
+					filtersApplied.timePreset === TIME_PRESETS.YEAR
+						? filtersApplied.year
+						: TIME_LABELS[filtersApplied.timePreset]
+				}
 				updateSelection={updateSelectedYear}
 				isButtonSelectable={(year) => isTimeButtonSelectable(year)}
 			/>
