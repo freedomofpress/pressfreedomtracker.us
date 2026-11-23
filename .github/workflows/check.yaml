@@ -108,6 +108,9 @@ jobs:
       - name: Verify lockfiles and fail on drift
         run: just lock-check
 
+      - name: Verify wheels exist for every container arch
+        run: just check-wheels
+
   test:
     # This job name is also the branch-protection check name, so it is decoupled
     # from the just recipe: `name` pins the published check where a recipe has
@@ -277,8 +280,9 @@ jobs:
         run: |
           python -m venv "$RUNNER_TEMP/poetry"
           "$RUNNER_TEMP/poetry/bin/pip" install --no-deps --disable-pip-version-check --no-color --no-input \
-            --require-hashes --requirement=ci/containers/bootstrap-requirements.txt
-          POETRY_VIRTUALENVS_CREATE=false "$RUNNER_TEMP/poetry/bin/poetry" install --only=dev --no-interaction
+            --only-binary=:all: --require-hashes --requirement=ci/containers/bootstrap-requirements.txt
+          POETRY_VIRTUALENVS_CREATE=false POETRY_INSTALLER_ONLY_BINARY=:all: \
+            "$RUNNER_TEMP/poetry/bin/poetry" install --only=dev --no-interaction
 
       - name: Download coverage artifact
         uses: actions/download-artifact@v8
