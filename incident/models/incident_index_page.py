@@ -130,6 +130,16 @@ class IncidentIndexPage(RoutablePageMixin, MetadataPageMixin, Page):
     def export_view_OPTIONS(self, request: HttpRequest) -> HttpResponse:
         return HttpResponse()
 
+    # Temporary: serves the export through IncidentExportViewSet so that its
+    # performance can be compared with export/.  Remove when export/ uses it.
+    @path("export-new/")
+    @method_decorator(require_http_methods(["HEAD", "GET", "OPTIONS"]))
+    def export_new_view(self, request: HttpRequest) -> HttpResponse:
+        # Imported here because the API views import incident.models.
+        from incident.api.views import IncidentExportViewSet
+
+        return IncidentExportViewSet.as_view({"get": "list"})(request)
+
     def handle_options_request(self, request, *args, **kwargs):
         """
         Override Wagtail's default OPTIONS handling to add CORS headers,

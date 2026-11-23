@@ -244,6 +244,35 @@ class ExportIncidentSerializerTestCase(TestCase):
         )
 
 
+class IncidentExportNewTestCase(TestCase):
+    """The temporary export-new/ route, which serves the export through
+    IncidentExportViewSet."""
+
+    def setUp(self):
+        site = Site.objects.get(is_default_site=True)
+        self.incident_index = IncidentIndexPageFactory.build(slug="incidents")
+        site.root_page.add_child(instance=self.incident_index)
+        self.url = self.incident_index.get_full_url() + "export-new/"
+        IncidentPageFactory(parent=self.incident_index, title="New export")
+
+    def test_csv(self):
+        response = self.client.get(self.url)
+        content = b"".join(response.streaming_content).decode("utf-8")
+        rows = list(csv.reader(io.StringIO(content)))
+
+        self.assertEqual(response["Content-Type"], "text/csv")
+        self.assertEqual(rows[0], ExportIncidentSerializer.FIELD_ORDER)
+        self.assertEqual(len(rows), 2)
+
+    def test_json(self):
+        response = self.client.get(self.url + "?format=json")
+        data = response.json()
+
+        self.assertEqual(len(data), 1)
+        self.assertEqual(list(data[0]), ExportIncidentSerializer.FIELD_ORDER)
+        self.assertEqual(data[0]["title"], "New export")
+
+
 class IncidentExportRowTestCase(TestCase):
     """Pin the export's column order and the values it writes for an
     incident with every exported column populated."""
