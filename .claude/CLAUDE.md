@@ -17,7 +17,7 @@
 - Compiled bundles output: `build/static/bundles/`
 - Container builds and CI helper scripts: `ci/` (`ci/containers/Containerfile`, `ci/scripts/`)
 - Playwright end-to-end tests: `e2e/` (configured by `playwright.config.ts`)
-- Requirements: `requirements.txt`, `dev-requirements.txt`, `ci-requirements.txt` (compiled from `.in` files via pip-compile)
+- Requirements: declared in `pyproject.toml`, locked in `poetry.lock`, installed by Poetry in the images; Poetry itself is pinned by `ci/containers/bootstrap-requirements.txt`, rendered by `just lock`
 
 ## Tech Stack
 
@@ -61,11 +61,11 @@
 
 ## Dependency Management
 
-- Uses pip-tools (`pip-compile`) for reproducible, hash-verified pinning
-- Edit `.in` files, then `just pip-compile` to recompile
-- `just pip-compile --upgrade-package=name` to upgrade a specific package
-- `just pip-check` fails if the lockfiles drift from the `.in` files (CI runs it)
-- pip-compile runs inside a Docker container matching the production Python version
+- Uses Poetry for reproducible, hash-verified pinning; groups: main (`[project]`), `dev`, `bootstrap` (Poetry itself)
+- Edit `pyproject.toml`, then `just lock` to re-resolve
+- `just lock-upgrade name` to upgrade a specific package (no name upgrades everything)
+- `just lock-check` fails if `poetry.lock` or the bootstrap file drift from `pyproject.toml` (CI runs it)
+- Poetry runs inside a container built from the Containerfile's `poetry` stage, on the production Python
 
 ## Frontend Build System
 
