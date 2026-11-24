@@ -89,9 +89,9 @@ jobs:
 
   lint-lockfiles:
     # Standalone, with no `needs`, so it runs alongside the image builds rather
-    # than waiting on them: it uses a throwaway pip-tools container, not the dev
-    # image. The dev image installs the checked-in dev-requirements.txt, so
-    # nothing else in CI would notice the lockfiles drifting from the .in files.
+    # than waiting on them: it uses a throwaway Poetry container, not the dev
+    # image. The dev image installs the checked-in poetry.lock, so
+    # nothing else in CI would notice the lockfiles drifting from pyproject.toml.
     name: Lint:Lockfiles
     runs-on: ubuntu-latest
     steps:
@@ -105,8 +105,11 @@ jobs:
         with:
           tool: just
 
-      - name: Recompile lockfiles and fail on drift
-        run: just pip-check
+      - name: Verify lockfiles and fail on drift
+        run: just lock-check
+
+      - name: Verify wheels exist for every container arch
+        run: just check-wheels
 
   test:
     # This job name is also the branch-protection check name, so it is decoupled
@@ -268,11 +271,18 @@ jobs:
         with:
           path: |
             ~/.cache/pip
-          key: ${{ runner.os }}-py${{ env.VERSION_PYTHON }}-${{ hashFiles('./ci-requirements.txt') }}
+            ~/.cache/pypoetry
+          key: ${{ runner.os }}-py${{ env.VERSION_PYTHON }}-${{ hashFiles('poetry.lock', 'ci/containers/bootstrap-requirements.txt') }}
 
+      # As in the Containerfile's `poetry` stage: Poetry in a venv of its own,
+      # installing the lock's `dev` group, hash-checked, into the job's Python.
       - name: Install requirements
         run: |
-          python -m pip install --requirement=ci-requirements.txt --require-hashes --disable-pip-version-check --no-color --no-input
+          python -m venv "$RUNNER_TEMP/poetry"
+          "$RUNNER_TEMP/poetry/bin/pip" install --no-deps --disable-pip-version-check --no-color --no-input \
+            --only-binary=:all: --require-hashes --requirement=ci/containers/bootstrap-requirements.txt
+          POETRY_VIRTUALENVS_CREATE=false POETRY_INSTALLER_ONLY_BINARY=:all: \
+            "$RUNNER_TEMP/poetry/bin/poetry" install --only=dev --no-interaction
 
       - name: Download coverage artifact
         uses: actions/download-artifact@v8

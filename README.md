@@ -255,23 +255,22 @@ toolbar.
 
 There are a couple of options preconfigured in this repo for profiling
 the application. They are
-[django-cprofile-middleware](https://pypi.org/project/django-cprofile-middleware/),
-[silk](https://github.com/jazzband/django-silk) middleware, and
+[silk](https://github.com/jazzband/django-silk) middleware and
 [pyinstrument](https://pypi.org/project/pyinstrument/).
 
 Profiling is not enabled by default, as it does add potential
-performance overhead if you don't actively need it. To enable silk (and
-cprofile), set `DJANGO_PROFILE=yes` when starting docker compose. To
+performance overhead if you don't actively need it. To enable silk,
+set `DJANGO_PROFILE=yes` when starting docker compose. To
 enable pyinstrument, set `PYINSTRUMENT=yes`:
 
 ```bash
 PYINSTRUMENT=yes DJANGO_PROFILE=yes docker compose up
 ```
 
-This will enable both middlewares. To view the cProfile information for
-any url, append `?prof` to the url (or add it to an existing query
-string with `&prof`). This can give you fairly detailed information
-about which lines of code are causing your view to be slow. Additional
+This will enable both middlewares. Silk runs cProfile on every request;
+open one at `http://localhost:8000/silk` and its Profiling tab can give
+you fairly detailed information about which lines of code are causing
+your view to be slow. Additional
 information about the information provided is available in [the Python
 documentation](https://docs.python.org/3.14/library/profile.html).
 
@@ -338,54 +337,50 @@ have a clean starting point.
 
 ## Dependency Management
 
+We use [Poetry](https://python-poetry.org/) to manage Python dependencies.
+You don't need to install it locally: the `just` recipes run a pinned
+`poetry` in a throwaway container built from the Containerfile's `poetry`
+stage. A host install works fine for day-to-day `poetry add` / `poetry remove`;
+follow up with `just lock`, and CI's `just lock-check` catches anything missed.
+The container images install `poetry.lock` directly, verifying hashes: the
+prod image takes the application dependencies, the dev image adds the `dev`
+group, and CI's `Test:coverage` job installs the `dev` group on its own.
+Poetry itself is bootstrapped from
+`ci/containers/bootstrap-requirements.txt`, a hash-pinned file rendered from the
+lock's `bootstrap` group; commit it alongside `poetry.lock`.
+
 ### Adding new requirements
 
-New requirements should be added to `*requirements.in` files, for use
-with `pip-compile`. There are three Python requirements files:
-
-- `requirements.in` production application dependencies
-- `dev-requirements.in` local testing and CI requirements
-- `ci-requirements.in` additional tooling used only in CI (coverage
-  diffing, testinfra)
-
-Add the desired dependency to the appropriate `.in` file, then run:
+Edit `pyproject.toml` -- `dependencies` under `[project]` for the
+application, `dev` under `[dependency-groups]` for tooling -- and then run:
 
 ```bash
-just pip-compile
+just lock
 ```
 
-All requirements files will be regenerated based on compatible versions.
-Multiple `.in` files can be merged into a single `.txt` file, for use
-with `pip`. The just recipe handles the merging of multiple files.
-
-This process is the same if a requirement needs to be changed (i.e. its
-version number restricted) or removed. Make the appropriate change in
-the correct `requirements.in` file, then run the above command to
-compile the dependencies.
+This is also the route for changing a requirement (i.e. restricting its version
+number) or removing one.
 
 ### Upgrading existing requirements
 
-There are separate commands to upgrade a package without changing the
-`requirements.in` files. The command
+`just lock` leaves an already-locked package alone as long as it still
+satisfies its constraint. To raise versions without editing `pyproject.toml`:
 
 ```bash
-just pip-compile --upgrade-package=package-name
+just lock-upgrade package-name
 ```
 
-will update the package named `package-name` to the latest version
-allowed by the constraints in `requirements.in` and compile a new
-`dev-requirements.txt` and `requirements.txt` based on that version.
+will update the package named `package-name` to the latest version allowed by
+the constraints in `pyproject.toml`, and rewrite the bootstrap file. Naming no
+package upgrades everything.
 
-If the package appears only in `dev-requirements.in`, then you must use
-this command:
+`just lock-check` fails if `poetry.lock` no longer matches
+`pyproject.toml`, or if the bootstrap file no longer matches the lock, so
+neither can go stale unnoticed; CI runs it as `Lint:Lockfiles`.
 
-```bash
-just pip-compile-dev --upgrade-package=package-name
-```
-
-which will update the package named `package-name` to the latest version
-allowed by the constraints in `requirements.in` and compile a new
-`dev-requirements.txt`.
+Dependabot PRs update `poetry.lock` but not the bootstrap file, so one
+that bumps Poetry, or a package it depends on, fails `Lint:Lockfiles` on arrival.
+Check out the branch, run `just lock`, and push.
 
 ### Working on dependencies in place
 

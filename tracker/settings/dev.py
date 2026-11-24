@@ -147,13 +147,10 @@ if DEBUG:
         MIDDLEWARE = ["pyinstrument.middleware.ProfilerMiddleware"] + MIDDLEWARE
 
     if os.environ.get("DJANGO_PROFILE", "no").lower() == "yes":
-        # Silk
+        # Silk, with cProfile per request
         INSTALLED_APPS.append("silk")
         MIDDLEWARE = ["silk.middleware.SilkyMiddleware"] + MIDDLEWARE
-
-        # Django CProfile Middleware
-        MIDDLEWARE.append("django_cprofile_middleware.middleware.ProfilerMiddleware")
-        DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
+        SILKY_PYTHON_PROFILER = True
 
     # Include the wagtail styleguide
     INSTALLED_APPS.append("wagtail.contrib.styleguide")

@@ -154,7 +154,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django_settings_export.settings_export",
+                "common.context_processors.analytics",
                 "wagtail.contrib.settings.context_processors.settings",
             ],
             "builtins": ["statistics.templatetags.statistics_tags"],
@@ -334,13 +334,6 @@ WEBPACK_LOADER = {
 
 # Disable analytics by default
 ANALYTICS_ENABLED = False
-
-# Export analytics settings for use in site templates
-SETTINGS_EXPORT = [
-    "ANALYTICS_ENABLED",
-]
-# Prevent template variable name collision with wagtail settings
-SETTINGS_EXPORT_VARIABLE_NAME = "django_settings"
 
 MAILCHIMP_API_KEY = os.environ.get("MAILCHIMP_API_KEY", "")
 
