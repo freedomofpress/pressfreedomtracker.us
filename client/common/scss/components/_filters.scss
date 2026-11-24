@@ -84,6 +84,21 @@
 	font-size: typography.$font-size-small-ui;
 }
 
+.filters__field-container {
+	display: flex;
+	gap: 0.75rem;
+
+	input {
+		flex: 1;
+	}
+
+	span {
+		font-size: typography.$font-size-small-ui;
+		align-self: end;
+		flex: 4;
+	}
+}
+
 .filters__form-actions {
 	display: none;
 

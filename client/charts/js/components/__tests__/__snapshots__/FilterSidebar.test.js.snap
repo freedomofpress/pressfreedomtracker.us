@@ -323,6 +323,38 @@ exports[`renders FilterSidebar with mocked data 1`] = `
           class="filters__field-label"
         >
           <label
+            for="id_recently_updated"
+          >
+            Updated in the last
+          </label>
+        </div>
+        <div
+          class="filters__field-container"
+        >
+          <input
+            autocomplete="off"
+            class="text-field--single"
+            id="id_recently_updated"
+            inputmode="numeric"
+            name="recently_updated"
+            pattern="[0-9]*"
+            type="text"
+            value=""
+          />
+          <span
+            class="filters__field-unit"
+          >
+            days
+          </span>
+        </div>
+      </div>
+      <div
+        class="filters__field-row"
+      >
+        <div
+          class="filters__field-label"
+        >
+          <label
             for="id_city"
           >
             City

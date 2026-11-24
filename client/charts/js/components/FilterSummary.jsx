@@ -20,6 +20,13 @@ export default function FilterSummary({ serializedFilters }) {
 			return value === "1"
 				? filter.present_summary_name
 				: filter.absent_summary_name;
+		} else if (filter?.type == "int") {
+			if (filter?.units && filter?.unitsSingular) {
+				let units = value === 1 ? filter.unitsSingular : filter.units;
+				return `${filter.title}: ${value} ${units}`;
+			} else {
+				return `${filter.title}: ${value}`;
+			}
 		} else {
 			return value.replaceAll("_", " ").toLowerCase();
 		}
