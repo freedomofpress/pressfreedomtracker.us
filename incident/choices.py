@@ -9,11 +9,14 @@ class LegalOrderTarget(TextChoices):
 
 class LegalOrderType(TextChoices):
     SUBPOENA = "SUBPOENA", "subpoena"
+    ADMINISTRATIVE_SUBPOENA = "ADMINISTRATIVE_SUBPOENA", "adminstrative subpoena"
     COURT_ORDER_2703 = "2703", "2703(d) court order"
-    WARRANT = "WARRANT", "warrant"
-    MOTION_TO_COMPEL = "MOTION_TO_COMPEL", "Motion to compel"
-    NATIONAL_SECURITY_LETTER = "NATIONAL_SECURITY_LETTER", "national security letter"
-    FISA = "FISA", "FISA order"
+    ARREST_WARRANT = "ARREST_WARRANT", "arrest warrant"
+    SEARCH_WARRANT = "SEARCH_WARRANT", "search warrant"
+    COURT_AUTHORIZED_DISCOVERY = (
+        "COURT_AUTHORIZED_DISCOVERY",
+        "court-authorized discovery",
+    )
     OTHER = "OTHER", "other"
 
 
@@ -23,10 +26,10 @@ class InformationRequested(TextChoices):
         "testimony about confidential source",
     )
     OTHER_TESTIMONY = "OTHER_TESTIMONY", "other testimony"
-    JOURNALIST_COMMUNICATIONS = (
-        "JOURNALIST_COMMUNICATIONS",
-        "communications or work product",
-    )
+    COMMUNICATIONS = "COMMUNICATIONS", "communications"
+    WORK_PRODUCT = "WORK_PRODUCT", "work product"
+    ACCOUNT_INFORMATION = "ACCOUNT_INFORMATION", "account/user information"
+    SOURCE_IDENTITY = "SOURCE_IDENTITY", "source identity"
     OTHER = "OTHER", "other"
 
 
