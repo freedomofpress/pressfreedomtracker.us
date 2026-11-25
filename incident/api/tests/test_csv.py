@@ -1,10 +1,13 @@
 import csv
 from urllib import parse
 
+from django.core.files.base import ContentFile
 from django.test import TestCase
 from django.urls import reverse
 
 from wagtail.models import Site
+
+import wagtail_factories
 
 from common.tests.factories import (
     CategoryPageFactory,
@@ -16,9 +19,9 @@ from incident import choices
 from incident.models import IncidentPage
 from incident.tests.factories import (
     EquipmentSeizedFactory,
+    ExternalReportFactory,
     IncidentChargeWithUpdatesFactory,
     IncidentIndexPageFactory,
-    IncidentLinkFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
     StateFactory,
@@ -107,8 +110,12 @@ class PerformantCSVTestCase(TestCase):
             subpoena=True,
         )
         EquipmentSeizedFactory.create_batch(3, incident=cls.incident)
-        IncidentLinkFactory.create_batch(3, page=cls.incident)
-        IncidentLinkFactory(page=cls.incident, publication="Galactic Express")
+        ExternalReportFactory.create_batch(2, page=cls.incident)
+        ExternalReportFactory(page=cls.incident, publication="Galactic Express")
+        cls.document = wagtail_factories.DocumentFactory(
+            file__from_file=ContentFile(b"%PDF-1.4", name="letter.pdf"),
+        )
+        ExternalReportFactory(page=cls.incident, url="", document=cls.document)
 
         IncidentChargeWithUpdatesFactory(
             incident_page=cls.incident,
@@ -152,7 +159,7 @@ class PerformantCSVTestCase(TestCase):
             "third_party_business",
             "status_of_prior_restraint",
             "state",
-            "links",
+            "external_reports",
             "equipment_broken",
             "equipment_seized",
             "status_of_charges",
@@ -175,6 +182,7 @@ class PerformantCSVTestCase(TestCase):
 
         self.headers = next(reader)
         self.result = dict(zip(self.headers, next(reader)))
+        self.other_result = dict(zip(self.headers, next(reader)))
 
     def test_requests_are_successful(self):
         self.assertEqual(self.response.status_code, 200)
@@ -192,11 +200,18 @@ class PerformantCSVTestCase(TestCase):
             self.incident.state.abbreviation,
         )
 
-    def test_links_are_correct(self):
+    def test_external_reports_are_correct(self):
+        reports = list(self.incident.external_reports.all())
         self.assertEqual(
-            self.result["links"],
-            ", ".join(str(link) for link in self.incident.links.all()),
+            self.result["external_reports"],
+            ", ".join(
+                [str(report) for report in reports[:3]]
+                + [f"External report (http://testserver{self.document.url})"]
+            ),
         )
+
+    def test_external_reports_are_empty_without_reports(self):
+        self.assertEqual(self.other_result["external_reports"], "")
 
     def test_equipment_broken_is_correct(self):
         self.assertEqual(
@@ -619,7 +634,7 @@ class IncidentCSVTestCase(TestCase):
         cls.incident.tags = tags
         cls.incident.save()
         IncidentUpdateFactory.create_batch(2, page=cls.incident)
-        IncidentLinkFactory.create_batch(3, page=cls.incident)
+        ExternalReportFactory.create_batch(3, page=cls.incident)
 
     def test_csv_requests_are_successful(self):
         response = self.client.get(
@@ -705,7 +720,9 @@ class IncidentCSVTestCase(TestCase):
                 "categories": ", ".join(
                     [cat.category.title for cat in inc.categories.all()]
                 ),
-                "links": ", ".join([str(link) for link in inc.links.all()]),
+                "external_reports": ", ".join(
+                    [str(report) for report in inc.external_reports.all()]
+                ),
                 "equipment_seized": ", ".join(
                     [e.summary for e in inc.equipment_seized.all()]
                 ),
@@ -714,6 +731,7 @@ class IncidentCSVTestCase(TestCase):
                 ),
                 "date": inc.date.isoformat(),
                 "exact_date_unknown": str(inc.exact_date_unknown),
+                "externally_reported": str(inc.externally_reported),
                 "city": inc.city,
                 "state": inc.state.abbreviation,
                 "latitude": "",
@@ -805,11 +823,12 @@ class IncidentCSVTestCase(TestCase):
             "authors",
             "updates",
             "categories",
-            "links",
+            "external_reports",
             "equipment_seized",
             "equipment_broken",
             "date",
             "exact_date_unknown",
+            "externally_reported",
             "city",
             "state",
             "introduction",

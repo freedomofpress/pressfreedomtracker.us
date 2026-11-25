@@ -1,10 +1,15 @@
+from urllib.parse import urljoin
+
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.template.defaultfilters import filesizeformat
 
 from wagtail import blocks
 from wagtail.admin.panels import (
     FieldPanel,
     InlinePanel,
 )
+from wagtail.documents import get_document_model_string
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Orderable
@@ -206,14 +211,72 @@ class IncidentCategorization(Orderable):
         return f'"{self.incident_page}" in category "{self.category}"'
 
 
-class IncidentPageLinks(Orderable):
-    page = ParentalKey("incident.IncidentPage", related_name="links")
-    title = models.CharField(max_length=255, null=False, blank=False)
-    url = models.URLField(max_length=1024, blank=False)
-    publication = models.CharField(max_length=255, null=True, blank=True)
+class ExternalReport(Orderable):
+    page = ParentalKey("incident.IncidentPage", related_name="external_reports")
+    title = models.CharField(max_length=255)
+    publication = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    url = models.URLField(max_length=1024, blank=True, verbose_name="URL")
+    document = models.ForeignKey(
+        get_document_model_string(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    image = models.ForeignKey(
+        "common.CustomImage",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Automatically populated by the URL's OpenGraph image on first save if blank.",
+    )
+    preview_text = models.TextField(
+        blank=True,
+        help_text="A short excerpt or summary shown under the title.",
+    )
+
+    panels = [
+        FieldPanel("title"),
+        FieldPanel("publication"),
+        FieldPanel("preview_text"),
+        FieldPanel("url"),
+        FieldPanel("document"),
+        FieldPanel("image"),
+    ]
+
+    def clean(self):
+        super().clean()
+        if self.url and self.document_id:
+            raise ValidationError("Use either a URL or a document, not both.")
+        if not self.url and not self.document_id:
+            raise ValidationError("Add a URL or a document.")
+
+    @property
+    def href(self):
+        if self.document:
+            return self.document.url
+        return self.url
+
+    @property
+    def file_details(self):
+        if not self.document:
+            return ""
+        size = filesizeformat(self.document.get_file_size())
+        return f"{self.document.file_extension.upper()} ({size})"
+
+    def get_full_url(self, request=None):
+        if self.document:
+            return urljoin(self.page.get_full_url(request), self.document.url)
+        return self.url
 
     def __str__(self):
-        value = f"{self.title} ({self.url})"
+        value = self.title
+        if full_url := self.get_full_url():
+            value += f" ({full_url})"
         if self.publication:
             value += f" via {self.publication}"
         return value

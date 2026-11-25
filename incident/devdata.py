@@ -34,13 +34,13 @@ from incident.models import (
     Equipment,
     EquipmentBroken,
     EquipmentSeized,
+    ExternalReport,
     GovernmentWorker,
     IncidentAuthor,
     IncidentCategorization,
     IncidentCharge,
     IncidentIndexPage,
     IncidentPage,
-    IncidentPageLinks,
     IncidentPageUpdates,
     Institution,
     Journalist,
@@ -273,9 +273,9 @@ class MultimediaIncidentUpdateFactory(IncidentUpdateFactory):
     )
 
 
-class IncidentLinkFactory(factory.django.DjangoModelFactory):
+class ExternalReportFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = IncidentPageLinks
+        model = ExternalReport
 
     sort_order = Sequence(int)
     title = Faker("sentence")

@@ -1013,6 +1013,7 @@ class IncidentFilter:
         "latitude",
         "_revisions",
         "legal_orders",
+        "external_reports",
         "held_in_contempt",  # Deprecated field
         "detention_status",  # Deprecated field
         "_workflow_states",
