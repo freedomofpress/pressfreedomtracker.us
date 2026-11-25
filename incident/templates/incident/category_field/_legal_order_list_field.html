@@ -3,10 +3,12 @@
 	{% for item in items %}
 		<li class="details-table__list">
 			<a href="{% pageurl index %}?categories={{ category | urlencode }}&legal_order_type={{ item.order_type }}" class="text-link">{{ item.get_order_type_display }}</a>
-			for
-			<a href="{% pageurl index %}?legal_order_information_requested={{ item.information_requested }}" class="text-link">
-				{{ item.get_information_requested_display }}
-			</a>
+			{% if item.information_requested %}
+				for
+				<a href="{% pageurl index %}?legal_order_information_requested={{ item.information_requested }}" class="text-link">
+					{{ item.get_information_requested_display }}
+				</a>
+			{% endif %}
 			<ul class="details-table__sublist">
 				{% for date, status in item.entries_display %}
 					<li class="details-table__sublist-item">
