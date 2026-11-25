@@ -2454,8 +2454,8 @@ class TargetedInstitutionsFilterTest(TestCase):
 
 
 class LegalOrderTypeFilterTest(TestCase):
-    desired_type = choices.LegalOrderType.MOTION_TO_COMPEL
-    other_type = choices.LegalOrderType.WARRANT
+    desired_type = choices.LegalOrderType.SEARCH_WARRANT
+    other_type = choices.LegalOrderType.SUBPOENA
 
     @classmethod
     def setUpTestData(cls):

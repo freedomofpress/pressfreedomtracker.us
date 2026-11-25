@@ -282,7 +282,7 @@ class TestCategoryFieldValuesByField(TestCase):
     def test_legal_orders(self):
         LegalOrderFactory(
             incident_page=self.incident,
-            order_type=choices.LegalOrderType.NATIONAL_SECURITY_LETTER,
+            order_type=choices.LegalOrderType.SUBPOENA,
             information_requested=choices.InformationRequested.TESTIMONY_ABOUT_SOURCE,
             status=choices.LegalOrderStatus.PENDING,
             date="2022-01-01",

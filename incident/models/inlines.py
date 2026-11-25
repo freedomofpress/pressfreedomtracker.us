@@ -100,6 +100,7 @@ class LegalOrder(ClusterableModel):
     )
 
     information_requested = models.CharField(
+        blank=True,
         max_length=1000,
         choices=choices.InformationRequested.choices,
     )
