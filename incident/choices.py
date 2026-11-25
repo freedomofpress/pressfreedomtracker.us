@@ -193,16 +193,6 @@ THIRD_PARTY_BUSINESS = [
 ]
 
 
-LEGAL_ORDER_TYPE = [
-    ("SUBPOENA", "subpoena"),
-    ("2703", "2703(d) court order"),
-    ("WARRANT", "warrant"),
-    ("NATIONAL_SECURITY_LETTER", "national security letter"),
-    ("FISA", "FISA order"),
-    ("OTHER", "other"),
-]
-
-
 STATUS_OF_PRIOR_RESTRAINT = [
     ("PENDING", "pending"),
     ("DROPPED", "dropped"),
