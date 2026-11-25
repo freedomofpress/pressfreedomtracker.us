@@ -20,6 +20,7 @@ from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 from common.models import MediaPageMixin, MetadataPageMixin
 from common.models.settings import SearchSettings
+from home.choices import VizTimePeriod
 from incident.models import (
     PrepublicationIncident,
     PrepublicationIncidentSync,
@@ -116,9 +117,18 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         "Enable 7-day view",
         default=False,
         help_text=(
-            'Show a "past 7 days" option on the homepage charts. It only appears '
-            "when there are incidents within the last 7 days and becomes the "
-            "default view when shown."
+            'Show a "past 7 days" option for homepage charts. Only visible '
+            "to users if there is data within that range."
+        ),
+    )
+    viz_default_time_period = models.CharField(
+        "Default time period",
+        max_length=20,
+        choices=VizTimePeriod,
+        default=VizTimePeriod.TWELVE_WEEKS,
+        help_text=(
+            "If the chosen period has no data, the next larger period is "
+            "automatically selected."
         ),
     )
 
@@ -191,6 +201,7 @@ class HomePage(MetadataPageMixin, MediaPageMixin, Page):
         ),
         MultiFieldPanel(
             [
+                FieldPanel("viz_default_time_period"),
                 FieldPanel("viz_seven_day_enabled"),
             ],
             heading="Chart Options",

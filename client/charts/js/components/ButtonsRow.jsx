@@ -18,6 +18,8 @@ export default function ButtonsRow({
 }) {
 	const [selectedButton, setSelectedButton] = React.useState(null);
 	const [lastDropdownValue, setLastDropdownValue] = React.useState(null);
+	const activeSelection = selectedButton ?? defaultSelection;
+	const dropdownSelected = dropDownLabels.includes(activeSelection);
 
 	function changeSelectedButton(buttonLabel) {
 		updateSelection(buttonLabel);
@@ -40,10 +42,7 @@ export default function ButtonsRow({
 				{buttonLabels.map((buttonLabel) => (
 					<Button
 						label={buttonLabel}
-						selected={
-							(defaultSelection === buttonLabel && selectedButton === null) ||
-							selectedButton === buttonLabel
-						}
+						selected={activeSelection === buttonLabel}
 						onClick={() => {
 							changeSelectedButton(buttonLabel);
 						}}
@@ -55,13 +54,11 @@ export default function ButtonsRow({
 				{dropDownLabels.length > 0 && (
 					<DropdownButton
 						value={
-							dropDownLabels.includes(selectedButton)
-								? selectedButton
+							dropdownSelected
+								? activeSelection
 								: (lastDropdownValue ?? dropDownLabels[0])
 						}
-						selected={
-							dropDownLabels.includes(selectedButton) ? selectedButton : ""
-						}
+						selected={dropdownSelected ? activeSelection : ""}
 						onChange={(e) => changeSelectedButton(Number(e))}
 						selectable={dropDownLabels}
 					/>

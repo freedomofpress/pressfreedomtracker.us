@@ -13,6 +13,7 @@ from wagtail.test.utils.form_data import (
 
 from blog.tests.factories import BlogIndexPageFactory, BlogPageFactory
 from common.tests.factories import CommonTagFactory
+from home.choices import VizTimePeriod
 from incident.devdata import create_prepub
 from incident.models import (
     PrepublicationIncident,
@@ -58,6 +59,14 @@ class HomePageTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(response.context["self"], self.home_page)
+
+    def test_charts_receive_default_time_period(self):
+        self.home_page.viz_default_time_period = VizTimePeriod.SIX_MONTHS
+        self.home_page.save()
+
+        response = self.client.get("/")
+
+        self.assertContains(response, 'data-default-time-period="SIX_MONTHS"')
 
     def test_get_home_should_succeed_if_prepub_sync_not_present(self):
         PrepublicationSettings.objects.create(

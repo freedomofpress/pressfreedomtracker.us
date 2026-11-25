@@ -217,28 +217,73 @@ export function filterDatasetByLastNWeeks(dataset, currentDate, numberOfWeeks) {
 	);
 }
 
-export function resolveDefaultTimePreset(
+const PRESETS_SHORTEST_FIRST = [
+	TIME_PRESETS.SEVEN_DAYS,
+	TIME_PRESETS.FOUR_WEEKS,
+	TIME_PRESETS.TWELVE_WEEKS,
+	TIME_PRESETS.SIX_MONTHS,
+	TIME_PRESETS.ALL_TIME,
+];
+
+function resolveDefaultYear(dataset, currentDate) {
+	const currentYear = currentDate.getUTCFullYear();
+	if (
+		dataset.length === 0 ||
+		filterDatasetByYear(dataset, currentYear).length > 0
+	) {
+		return currentYear;
+	}
+	return d3.max(dataset, (d) => d.date.getUTCFullYear());
+}
+
+function timePresetHasData(dataset, timePreset, currentDate) {
+	return (
+		filterDatasetByFiltersApplied(
+			dataset,
+			{ tag: null, timePreset },
+			currentDate,
+		).length > 0
+	);
+}
+
+export function visibleTimePresets(dataset, currentDate, sevenDayEnabled) {
+	return PRESETS_SHORTEST_FIRST.filter(
+		(preset) =>
+			preset !== TIME_PRESETS.SEVEN_DAYS ||
+			(sevenDayEnabled && timePresetHasData(dataset, preset, currentDate)),
+	);
+}
+
+// Presets other than YEAR start at the default and widen to the next visible
+// preset with data.
+export function resolveDefaultTimeFilters(
 	dataset,
 	currentDate,
 	sevenDayEnabled,
+	defaultTimePeriod,
 ) {
-	if (
-		sevenDayEnabled &&
-		filterDatasetByLastNDays(dataset, currentDate, 7).length > 0
-	) {
-		return TIME_PRESETS.SEVEN_DAYS;
+	if (defaultTimePeriod === TIME_PRESETS.YEAR) {
+		return {
+			timePreset: TIME_PRESETS.YEAR,
+			year: resolveDefaultYear(dataset, currentDate),
+		};
 	}
-	// Otherwise widen to the narrowest window that has data (empty/loading stays 4 weeks).
-	if (
-		dataset.length === 0 ||
-		filterDatasetByLastNWeeks(dataset, currentDate, 4).length > 0
-	) {
-		return TIME_PRESETS.FOUR_WEEKS;
-	}
-	if (filterDatasetByLastNWeeks(dataset, currentDate, 12).length > 0) {
-		return TIME_PRESETS.TWELVE_WEEKS;
-	}
-	return TIME_PRESETS.SIX_MONTHS;
+	const startIndex = PRESETS_SHORTEST_FIRST.indexOf(
+		PRESETS_SHORTEST_FIRST.includes(defaultTimePeriod)
+			? defaultTimePeriod
+			: TIME_PRESETS.TWELVE_WEEKS,
+	);
+	const candidates = visibleTimePresets(
+		dataset,
+		currentDate,
+		sevenDayEnabled,
+	).filter((preset) => PRESETS_SHORTEST_FIRST.indexOf(preset) >= startIndex);
+	// Before data loads nothing has data, so the first candidate is used.
+	const timePreset =
+		candidates.find((preset) =>
+			timePresetHasData(dataset, preset, currentDate),
+		) ?? candidates[0];
+	return { timePreset, year: null };
 }
 
 export function filterDatasetByFiltersApplied(

@@ -55,6 +55,7 @@
 				{% if page.viz_data_start %}data-start-date="{{ page.viz_data_start|date:'c' }}"{% endif %}
 				{% if page.viz_data_end %}data-end-date="{{ page.viz_data_end|date:'c' }}"{% endif %}
 				data-seven-day-enabled="{{ page.viz_seven_day_enabled|yesno:'true,false' }}"
+				data-default-time-period="{{ page.viz_default_time_period }}"
 			></div>
 		</div>
 	{% endwith %}
