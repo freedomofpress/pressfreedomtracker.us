@@ -198,6 +198,32 @@ export function BoolFilter(props) {
 	);
 }
 
+export function IntFilter({ name, label, value, units, handleFilterChange }) {
+	let id = `id_${name}`;
+	return (
+		<div className={"filters__field-row"}>
+			<div className={"filters__field-label"}>
+				<label htmlFor={id}>{label}</label>
+			</div>
+
+			<div className="filters__field-container">
+				<input
+					value={value}
+					type="text"
+					name={name}
+					className="text-field--single"
+					autoComplete="off"
+					inputMode="numeric"
+					pattern="[0-9]*"
+					onChange={handleFilterChange}
+					id={id}
+				/>
+				{units && <span className={"filters__field-unit"}>{units}</span>}
+			</div>
+		</div>
+	);
+}
+
 export default function FilterSet({
 	filters,
 	handleFilterChange,
@@ -288,6 +314,17 @@ export default function FilterSet({
 					choices={filter.choices}
 					value={filterParameters[filter.name].parameters || ""}
 					handleFilterChange={handleFilterChange}
+				/>
+			);
+		} else if (filter.type == "int") {
+			return (
+				<IntFilter
+					key={index}
+					name={filter.name}
+					label={filter.title}
+					value={filterParameters[filter.name].parameters || ""}
+					handleFilterChange={handleFilterChange}
+					units={filter.units}
 				/>
 			);
 		} else {

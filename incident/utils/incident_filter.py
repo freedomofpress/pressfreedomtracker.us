@@ -804,6 +804,7 @@ class RecentlyUpdatedFilter(IntegerFilter):
     def serialize(self):
         serialized = super().serialize()
         serialized["units"] = "days"
+        serialized["unitsSingular"] = "day"
         return serialized
 
     def filter(self, queryset, value):
