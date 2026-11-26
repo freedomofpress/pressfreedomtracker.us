@@ -61,7 +61,7 @@ repos:
         files: '^client/common/icons/'
 
   - repo: https://github.com/thibaudcolas/pre-commit-stylelint
-    rev: v17.16.0
+    rev: v18.0.0
     hooks:
       - id: stylelint
         files: \.scss$
