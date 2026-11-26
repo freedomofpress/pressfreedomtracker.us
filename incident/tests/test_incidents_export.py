@@ -15,6 +15,10 @@ from common.tests.factories import (
     PersonPageFactory,
 )
 from incident import choices
+from incident.api.serializers import (
+    ExportIncidentSerializer,
+    FlatIncidentSerializer,
+)
 from incident.tests.factories import (
     ChargeFactory,
     ChargeUpdateFactory,
@@ -230,81 +234,66 @@ class IncidentExportQueryCountTestCase(TestCase):
             self.client.get(self.export_url)
 
 
+class ExportIncidentSerializerTestCase(TestCase):
+    def setUp(self):
+        site = Site.objects.get(is_default_site=True)
+        self.incident_index = IncidentIndexPageFactory.build(slug="incidents")
+        site.root_page.add_child(instance=self.incident_index)
+
+    def serialize(self, **kwargs):
+        incident = IncidentPageFactory(parent=self.incident_index, **kwargs)
+        incident.refresh_from_db()
+        return incident, ExportIncidentSerializer(incident).data
+
+    def test_field_order_lists_every_api_field(self):
+        self.assertCountEqual(
+            ExportIncidentSerializer.FIELD_ORDER,
+            FlatIncidentSerializer().fields.keys() - {"url"} | {"slug"},
+        )
+
+    def test_overridden_fields(self):
+        incident, data = self.serialize(
+            first_published_at=datetime.datetime(
+                2024, 1, 2, 3, 4, 5, tzinfo=datetime.UTC
+            ),
+            state=StateFactory(name="New York", abbreviation="NY"),
+            case_type="CIVIL",
+            case_statuses=[
+                choices.LegalCaseStatus.VERDICT_ISSUED,
+                choices.LegalCaseStatus.UNKNOWN,
+            ],
+            subpoena_statuses=["UNKNOWN"],
+            type_of_denial=[choices.TypeOfDenial.OTHER],
+        )
+
+        self.assertEqual(data["first_published_at"], "2024-01-02 03:04:05+00:00")
+        self.assertEqual(data["state"], "New York (NY)")
+        self.assertEqual(data["case_type"], "Civil")
+        self.assertEqual(data["case_statuses"], "['VERDICT_ISSUED', 'UNKNOWN']")
+        self.assertEqual(data["subpoena_statuses"], "['UNKNOWN']")
+        self.assertEqual(data["type_of_denial"], "['OTHER']")
+        self.assertEqual(data["slug"], incident.get_full_url())
+        self.assertNotIn("url", data)
+
+    def test_none_values_are_strings(self):
+        _, data = self.serialize(
+            state=None,
+            case_type=None,
+            case_statuses=None,
+            latitude=None,
+            exact_date_unknown=True,
+        )
+
+        self.assertEqual(data["state"], "None")
+        self.assertEqual(data["case_type"], "None")
+        self.assertEqual(data["case_statuses"], "None")
+        self.assertEqual(data["latitude"], "None")
+        self.assertEqual(data["exact_date_unknown"], "True")
+
+
 class IncidentExportRowTestCase(TestCase):
     """Pin the export's column order and the values it writes for an
     incident with every exported column populated."""
-
-    # Column order and values for the incident created in setUp.
-    # latitude and longitude are None because IncidentPage.save() derives
-    # them from geonames data, which the test database does not have.
-    EXPECTED_EXPORT_ROW = [
-        ("first_published_at", "2024-01-02 03:04:05+00:00"),
-        ("last_published_at", "2024-01-03 03:04:05+00:00"),
-        ("title", "Golden incident"),
-        ("slug", "http://localhost/incidents/golden-incident/"),
-        ("latest_revision_created_at", "2024-01-04 03:04:05+00:00"),
-        ("charges", "Charge A (charges pending as of 2024-01-06)"),
-        (
-            "legal_orders",
-            (
-                "subpoena for other (unknown as of 2024-01-04), "
-                "subpoena for other (pending as of 2024-01-03)"
-            ),
-        ),
-        ("updates", "(2024-01-05 03:04:05+00:00) Update A"),
-        ("categories", "Category A"),
-        ("links", "Link A (https://example.com/link)"),
-        ("equipment_seized", "Camera: count of 2"),
-        ("equipment_broken", "Phone: count of 1"),
-        ("targeted_journalists", "Journalist A (Institution B)"),
-        ("authors", "Author A"),
-        ("date", "2024-01-01"),
-        ("exact_date_unknown", "False"),
-        ("city", "New York"),
-        ("state", "New York (NY)"),
-        ("latitude", "None"),
-        ("longitude", "None"),
-        ("body", ""),
-        ("introduction", "Introduction text"),
-        ("teaser", "Teaser text"),
-        ("teaser_image", "None"),
-        ("primary_video", "https://example.com/video"),
-        ("image_caption", "Image caption"),
-        ("arrest_status", "unknown"),
-        ("arresting_authority", "New York City Police Department"),
-        ("release_date", "2024-01-05"),
-        ("detention_date", "2024-01-03"),
-        ("unnecessary_use_of_force", "True"),
-        ("case_number", "CASE-1"),
-        ("case_statuses", "['ONGOING']"),
-        ("case_type", "Civil"),
-        ("status_of_seized_equipment", "unknown"),
-        ("is_search_warrant_obtained", "True"),
-        ("actor", "unknown"),
-        ("border_point", "JFK International Airport"),
-        ("target_us_citizenship_status", "U.S. citizen"),
-        ("denial_of_entry", "True"),
-        ("stopped_previously", "True"),
-        ("did_authorities_ask_for_device_access", "unknown"),
-        ("did_authorities_ask_about_work", "unknown"),
-        ("assailant", "unknown"),
-        ("was_journalist_targeted", "unknown"),
-        ("charged_under_espionage_act", "True"),
-        ("subpoena_type", "testimony about confidential source"),
-        ("subpoena_statuses", "['UNKNOWN']"),
-        ("name_of_business", "Megacorp Industries"),
-        ("third_party_business", "telecom company"),
-        ("legal_order_target", "Journalist"),
-        ("legal_order_venue", "State"),
-        ("status_of_prior_restraint", "pending"),
-        ("mistakenly_released_materials", "True"),
-        ("type_of_denial", "['OTHER']"),
-        ("targeted_institutions", "Institution A"),
-        ("tags", "Tag A"),
-        ("target_nationality", "Nationality A"),
-        ("workers_whose_communications_were_obtained", "Worker A"),
-        ("politicians_or_public_figures_involved", "Politician A"),
-    ]
 
     def setUp(self):
         site = Site.objects.get(is_default_site=True)

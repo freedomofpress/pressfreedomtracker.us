@@ -248,6 +248,10 @@ class IncidentSerializer(BaseIncidentSerializer):
         child=ChoiceField(choices.TypeOfDenial.choices),
     )
 
+    charges = SummaryField(many=True, read_only=True)
+    legal_orders = SummaryField(many=True, read_only=True)
+    legal_order_target = serializers.CharField(source="get_legal_order_target_display")
+
 
 class FlatIncidentSerializer(BaseIncidentSerializer):
     links = FlatStringRelatedField()
@@ -269,6 +273,100 @@ class FlatIncidentSerializer(BaseIncidentSerializer):
 
     subpoena_statuses = FlatListField(child=ChoiceField(choices.SUBPOENA_STATUS))
     type_of_denial = FlatListField(child=ChoiceField(choices.TypeOfDenial.choices))
+
+    charges = FlatSummaryField()
+    legal_orders = FlatSummaryField()
+    legal_order_target = serializers.CharField(source="get_legal_order_target_display")
+
+
+class ExportIncidentSerializer(FlatIncidentSerializer):
+    # These fields are overridden here for consistency with the export format.
+    # They differ in export from what the API returns.
+    slug = serializers.SerializerMethodField(method_name="get_url")
+    case_type = serializers.CharField(source="get_case_type_display")
+    state = serializers.StringRelatedField()
+    first_published_at = serializers.CharField()
+    last_published_at = serializers.CharField()
+    latest_revision_created_at = serializers.CharField()
+    case_statuses = serializers.CharField()
+    subpoena_statuses = serializers.CharField()
+    type_of_denial = serializers.CharField()
+
+    # Set the ordering of export fields explicitly
+    FIELD_ORDER = [
+        "first_published_at",
+        "last_published_at",
+        "title",
+        "slug",
+        "latest_revision_created_at",
+        "charges",
+        "legal_orders",
+        "updates",
+        "categories",
+        "links",
+        "equipment_seized",
+        "equipment_broken",
+        "targeted_journalists",
+        "authors",
+        "date",
+        "exact_date_unknown",
+        "city",
+        "state",
+        "latitude",
+        "longitude",
+        "body",
+        "introduction",
+        "teaser",
+        "teaser_image",
+        "primary_video",
+        "image_caption",
+        "arrest_status",
+        "arresting_authority",
+        "release_date",
+        "detention_date",
+        "unnecessary_use_of_force",
+        "case_number",
+        "case_statuses",
+        "case_type",
+        "status_of_seized_equipment",
+        "is_search_warrant_obtained",
+        "actor",
+        "border_point",
+        "target_us_citizenship_status",
+        "denial_of_entry",
+        "stopped_previously",
+        "did_authorities_ask_for_device_access",
+        "did_authorities_ask_about_work",
+        "assailant",
+        "was_journalist_targeted",
+        "charged_under_espionage_act",
+        "subpoena_type",
+        "subpoena_statuses",
+        "name_of_business",
+        "third_party_business",
+        "legal_order_target",
+        "legal_order_venue",
+        "status_of_prior_restraint",
+        "mistakenly_released_materials",
+        "type_of_denial",
+        "targeted_institutions",
+        "tags",
+        "target_nationality",
+        "workers_whose_communications_were_obtained",
+        "politicians_or_public_figures_involved",
+    ]
+
+    def get_fields(self):
+        fields = super().get_fields()
+        return {name: fields[name] for name in self.FIELD_ORDER}
+
+    def to_representation(self, instance):
+        # Export as the object representation ("None" for None, "True"/"False"
+        # for bools
+        return {
+            name: str(value)
+            for name, value in super().to_representation(instance).items()
+        }
 
 
 class CSVIncidentSerializer(VariableFieldSerializer):

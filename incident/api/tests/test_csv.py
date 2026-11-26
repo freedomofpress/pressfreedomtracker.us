@@ -21,6 +21,7 @@ from incident.tests.factories import (
     IncidentLinkFactory,
     IncidentPageFactory,
     IncidentUpdateFactory,
+    LegalOrderWithUpdatesFactory,
     StateFactory,
 )
 
@@ -620,6 +621,8 @@ class IncidentCSVTestCase(TestCase):
         cls.incident.save()
         IncidentUpdateFactory.create_batch(2, page=cls.incident)
         IncidentLinkFactory.create_batch(3, page=cls.incident)
+        IncidentChargeWithUpdatesFactory(incident_page=cls.incident)
+        LegalOrderWithUpdatesFactory(incident_page=cls.incident)
 
     def test_csv_requests_are_successful(self):
         response = self.client.get(
@@ -783,6 +786,11 @@ class IncidentCSVTestCase(TestCase):
                 "type_of_denial": ", ".join(
                     [choices.TypeOfDenial(e).label for e in inc.type_of_denial]
                 ),
+                "charges": ", ".join(charge.summary for charge in inc.charges.all()),
+                "legal_orders": ", ".join(
+                    order.summary for order in inc.legal_orders.all()
+                ),
+                "legal_order_target": inc.get_legal_order_target_display(),
             },
         )
 
@@ -854,9 +862,18 @@ class IncidentCSVTestCase(TestCase):
             "type_of_denial",
             "longitude",
             "latitude",
+            "charges",
+            "legal_orders",
+            "legal_order_target",
         }
 
         self.assertEqual(
             set(headers),
             expected_headers,
+        )
+        # Added after the API was published, so they go last to keep the
+        # positions of the earlier columns.
+        self.assertEqual(
+            headers[-3:],
+            ["charges", "legal_orders", "legal_order_target"],
         )

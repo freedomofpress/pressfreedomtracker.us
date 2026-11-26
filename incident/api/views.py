@@ -8,6 +8,7 @@ from django.db.models import (
     OuterRef,
     Subquery,
 )
+from django.http import StreamingHttpResponse
 from django.utils.functional import cached_property
 
 from drf_spectacular.utils import (
@@ -17,10 +18,15 @@ from drf_spectacular.utils import (
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import CursorPagination
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.utils.urls import remove_query_param
-from rest_framework_csv.renderers import CSVRenderer, PaginatedCSVRenderer
+from rest_framework_csv.renderers import (
+    CSVRenderer,
+    CSVStreamingRenderer,
+    PaginatedCSVRenderer,
+)
 
 from common.models import CategoryPage
 from incident import models
@@ -28,6 +34,7 @@ from incident.api.serializers import (
     CategorySerializer,
     CSVIncidentSerializer,
     EquipmentSerializer,
+    ExportIncidentSerializer,
     FlatIncidentSerializer,
     IncidentSerializer,
     ItemSerializer,
@@ -309,6 +316,37 @@ class IncidentViewSet(viewsets.ReadOnlyModelViewSet):
 
         incidents = list(incidents)  # CSV Renderer requires a list
         return Response(incidents)
+
+
+class IncidentExportViewSet(IncidentViewSet):
+    """All incidents matching the request's filters, unpaginated, as CSV
+    (the default) or JSON.  Serves IncidentIndexPage's export/ route."""
+
+    serializer_class = ExportIncidentSerializer
+    renderer_classes = (CSVStreamingRenderer, JSONRenderer)
+    pagination_class = None
+    versioning_class = None
+
+    can_apply_csv_serializer = False
+
+    def get_serializer_class(self):
+        return self.serializer_class
+
+    def list(self, request, *args, **kwargs):
+        if not self.csv_format_is_requested:
+            return super().list(request, *args, **kwargs)
+
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer()
+        rows = (serializer.to_representation(incident) for incident in queryset)
+        response = StreamingHttpResponse(
+            request.accepted_renderer.render(
+                rows, renderer_context=self.get_renderer_context()
+            ),
+            content_type="text/csv",
+        )
+        response["Content-Disposition"] = 'attachment; filename="incidents.csv"'
+        return response
 
 
 class JournalistViewSet(viewsets.ReadOnlyModelViewSet):
