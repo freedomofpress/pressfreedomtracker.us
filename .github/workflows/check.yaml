@@ -150,7 +150,7 @@ jobs:
             stack: true
     steps:
       - name: Install Docker
-        uses: docker/setup-docker-action@v5.6.0
+        uses: docker/setup-docker-action@v5.7.0
         with:
           version: ${{ env.VERSION_DOCKER }}
 
@@ -292,7 +292,7 @@ jobs:
       - build-prod-chartgen
     steps:
       - name: Install Docker
-        uses: docker/setup-docker-action@v5.6.0
+        uses: docker/setup-docker-action@v5.7.0
         with:
           version: ${{ env.VERSION_DOCKER }}
 
@@ -361,7 +361,7 @@ jobs:
           preinstalled-runtimes: true
 
       - name: Install Docker
-        uses: docker/setup-docker-action@v5.5.0
+        uses: docker/setup-docker-action@v5.7.0
         with:
           version: ${{ env.VERSION_DOCKER }}
 
